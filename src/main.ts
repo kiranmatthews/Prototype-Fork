@@ -4780,7 +4780,10 @@ function updateBaseCamera(dt: number): void {
   const waterDeath=player.waterDeathSurface;
   // Water jumps retain the swimming follow height instead of anchoring to the seabed.
   const swimmingView = player.swimming || player.waterJumping;
-  const floorY = waterDeath??player.groundBelowY;
+  const railFollow = player.state === 'grind';
+  // A caught rail is support, even over open water. Retaining the airborne
+  // apex anchor here loses the rider once the spring camera eases back down.
+  const floorY = waterDeath??(railFollow ? subject.y : player.groundBelowY);
   const anchorGoal =
     waterDeath??(swimmingView ? subject.y :
     floorY !== null
@@ -4788,7 +4791,7 @@ function updateBaseCamera(dt: number): void {
       : Math.max(camAnchorY, subject.y - maxRise));
   camAnchorY +=
     (anchorGoal - camAnchorY) *
-    (snapped ? 1 : Math.min(1, 4.5 * dt));
+    (snapped || railFollow ? 1 : Math.min(1, 4.5 * dt));
   // camAirLift: how much the rig rides UP with airborne height. 1 = classic
   // full-follow (the camera rises with the jump, so airs read small and snappy
   // on screen); 0 = pure ground anchor (the skater does all the on-screen
@@ -4843,7 +4846,9 @@ function updateBaseCamera(dt: number): void {
     // without a second Y delay, on ramps as well as in the air. The shared
     // side-scrolls use this too so the close shot cannot lag behind a jump.
     // Other default and partial-follow courses retain their existing damping.
-    if (level.cameraAirLift === 1 || inTurn || springFollow) camera.position.y = camTarget.y;
+    // A fast descending rail is already interpolated support; a second
+    // vertical spring can leave the rider below the frame on its slope.
+    if (level.cameraAirLift === 1 || inTurn || springFollow || railFollow) camera.position.y = camTarget.y;
     else camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 

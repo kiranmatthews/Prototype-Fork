@@ -27,10 +27,10 @@ await withSkateRuntime(async({server,level,player:p,CONST,THREE})=>{
   for(;frames<1000;frames++){
    const target=targetMover?targetMover.mesh.position.clone():new THREE.Vector3(...point(...j.to));
    const dx=target.x-p.pos.x,dz=target.z-p.pos.z,forward=dx*p.axisF.x+dz*p.axisF.z,side=dx*p.axisL.x+dz*p.axisL.z;
-   const input=makeInput({moveY:launched?(Math.abs(forward)>1.5?Math.sign(forward):0):0,moveX:launched&&Math.abs(side)>2?Math.sign(side):0,jumpHeld:true});
+   const input=makeInput({moveY:launched?(Math.abs(forward)>1.5?Math.sign(forward):0):0,moveX:launched&&Math.abs(side)>2?Math.sign(side):0,jumpHeld:true,grindHeld:!!j.rail&&p.vVel<5});
    const before=p.vVel;tick(input);peak=Math.max(peak,p.pos.y);
    if(!launched&&p.vVel>15&&!p.grounded){launched=true;launchAt=frames;departure=p.pos.toArray();}
-   if(launched&&frames>launchAt+8&&((before<0&&p.vVel>15)||p.grounded||p.state==='finished')){landed=true;break;}
+   if(launched&&frames>launchAt+8&&((before<0&&p.vVel>15)||p.grounded||p.state==='finished'||p.state==='grind'&&p.grindRail?.object.userData.sourceName===j.rail)){landed=true;break;}
    if(p.state==='dead')break;
   }
   const target=targetMover?targetMover.mesh.position:new THREE.Vector3(...point(...j.to));

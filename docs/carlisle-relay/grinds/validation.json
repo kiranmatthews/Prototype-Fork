@@ -1,0 +1,201 @@
+{
+  "validatedAt": "2026-10-29T06:34:09.411066+00:00",
+  "delivery": "LOCAL ONLY / HOLD: no integration or publication authorized",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "parentCommit": "eeeeb8c876d324f4665376eb96e216b8f7600e3b",
+  "scope": {
+    "courseMetres": 4000,
+    "acts": 3,
+    "redesignedTailMetres": 650,
+    "replacedTailSprings": 13,
+    "newTailSprings": 5,
+    "requiredGrinds": 4,
+    "chargedRailExits": 2,
+    "primarySpringTransfers": 55,
+    "movingPlatforms": 28,
+    "checkpoints": 17,
+    "components": 1038
+  },
+  "sourceSha256": {
+    "src/levels/carlisle-tidal-relay.ts": "ecc7c400ea39bc22ce7372255cf523916df490c2c9b3cbd13fe140c9b146ef45",
+    "src/levels/carlisle-slippery-crossings.ts": "598ab9d2460df934a7860cc797653f4bd3d8226030764fc5ad3cdd7ef428b046",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/player.ts": "549c47626e29f8da0de8b0f840deec43d5922389d2ef5de6b1cb551527bc2e85",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/editor.ts": "66dfe7d01aaa3dfeae9cc384c046a291cc04568da5f94869be2f9412a27a3629",
+    "tools/carlisle-grind-pilot.mjs": "e24d2a1f1884c7c7b04a47cd4f22409bb040531808027e89629d465dfcf212c5",
+    "tools/test-carlisle-grinds.mjs": "bc7e8b7afb9dfc9c54782a11eb8b1c6c7773f9ac62abd2a9fb66556e707ebe7a",
+    "tools/test-carlisle-grind-gaps.mjs": "dc9b9ebfed77d1a0fdaa860da21010d2c5ec997554eb65999aa279874fec79d8",
+    "tools/carlisle-grinds-browser.mjs": "d4bad6381b075d788a17ce5a606876907b8cde0906f5b8fd921477e0574a013e",
+    "tools/test-carlisle-relay.mjs": "0834ffca5e28af64b4a2659634b74cfb027c29f504b23f66ebbeb389bb3ee451",
+    "tools/carlisle-relay-browser.mjs": "ce1a4b73bd5297fdcc831f3e0d21da37cb651bbe42c92909ba8467f8713d9255"
+  },
+  "unchangedRuntimeFromParent": [
+    "src/player.ts",
+    "src/level.ts",
+    "src/tuning.ts",
+    "src/editor.ts"
+  ],
+  "cameraCorrection": "Only while grinding: treat the rail rider height as support and follow vertical movement without a second damping delay. Existing angles, FOV, spring overhead view and controls remain intact.",
+  "native": {
+    "continuousSections": 9,
+    "machineryPhasesSeconds": [
+      0,
+      7,
+      53
+    ],
+    "noBailsOrDeaths": true,
+    "railCoveragePhaseZero": [
+      {
+        "rail": "Rigging \u00b7 sweeping cable",
+        "lengthMetres": 115.204,
+        "sampledSpanMetres": 105.05,
+        "minimumCoveragePercent": 91.2
+      },
+      {
+        "rail": "Crown \u00b7 outer cable",
+        "lengthMetres": 74.646,
+        "sampledSpanMetres": 64.231,
+        "minimumCoveragePercent": 86.0
+      },
+      {
+        "rail": "Crown \u00b7 return cable",
+        "lengthMetres": 77.277,
+        "sampledSpanMetres": 66.687,
+        "minimumCoveragePercent": 86.3
+      },
+      {
+        "rail": "Homecoming \u00b7 diving cable",
+        "lengthMetres": 135.561,
+        "sampledSpanMetres": 123.897,
+        "minimumCoveragePercent": 91.4
+      }
+    ],
+    "springTransfers": 110,
+    "nativeNeutralAndHeldPhysics": true,
+    "rigidMovingCarry": true,
+    "slipperyCrossings": 23,
+    "floorSupportProbes": 1797,
+    "lethalSpikeContacts": 36
+  },
+  "negativeCases": {
+    "emptyRailFloorProbes": 12,
+    "failedBypassAttempts": 8,
+    "variants": [
+      "on foot without Grind",
+      "maximum downhill-speed board entry without Grind",
+      "grind without charged exit jump"
+    ],
+    "limitation": "Bounded shortcut attempts, not exhaustive exploit proof."
+  },
+  "browser": [
+    {
+      "mode": "lite",
+      "base": "http://127.0.0.1:5483",
+      "source": {
+        "components": 1038,
+        "rails": [
+          "Crane outrigger shortcut",
+          "Rigging \u00b7 sweeping cable",
+          "Crown \u00b7 outer cable",
+          "Crown \u00b7 return cable",
+          "Homecoming \u00b7 diving cable"
+        ],
+        "build": "Codex/sol fork \u00b7 build 10-29 01:17 UTC",
+        "canvas": [
+          720,
+          450
+        ]
+      },
+      "continuousSections": 3,
+      "railCatches": 4,
+      "chargedRailExits": 2,
+      "reboundLaunches": 5,
+      "finishState": "finished",
+      "consoleErrors": [],
+      "recordedInFrameRailSamples": 284,
+      "visibilityAssertion": "Head and feet inside viewport on every polled grind frame after 0.7 seconds; report retains one in four samples."
+    },
+    {
+      "mode": "full",
+      "base": "http://127.0.0.1:5484",
+      "source": {
+        "components": 1038,
+        "rails": [
+          "Crane outrigger shortcut",
+          "Rigging \u00b7 sweeping cable",
+          "Crown \u00b7 outer cable",
+          "Crown \u00b7 return cable",
+          "Homecoming \u00b7 diving cable"
+        ],
+        "build": "Codex/sol fork \u00b7 build 10-29 06:26 UTC",
+        "canvas": [
+          1440,
+          900
+        ]
+      },
+      "continuousSections": 3,
+      "railCatches": 4,
+      "chargedRailExits": 2,
+      "reboundLaunches": 5,
+      "finishState": "finished",
+      "consoleErrors": [],
+      "recordedInFrameRailSamples": 274,
+      "visibilityAssertion": "Head and feet inside viewport on every polled grind frame after 0.7 seconds; report retains one in four samples."
+    }
+  ],
+  "existingControls": {
+    "sourceMatches": true,
+    "mountedLateralTravelMetres": 4.400471571475747,
+    "abandonShip": "Emergency Eject",
+    "groundCamera": {
+      "fov": 49,
+      "pitch": 25.35000000000001,
+      "spring": 0
+    },
+    "giantBounceCamera": {
+      "fov": 71.99908633880712,
+      "pitch": 79.99999990128018,
+      "spring": 1
+    },
+    "recoveredCamera": {
+      "fov": 49,
+      "pitch": 25.350000000000083,
+      "spring": 0
+    },
+    "checkpoint": 0,
+    "respawnCheckpoint": 0,
+    "movingTransforms": 28,
+    "finish": "finished",
+    "consoleErrors": []
+  },
+  "requiredChecks": {
+    "checkLevels": "PASS on final level geometry; subsequent runtime change was the separately exercised grind camera only.",
+    "build": "PASS TypeScript and Vite after the camera correction.",
+    "releaseSize": "PASS: 997251760 bytes / 1000000000 budget; 1849 files.",
+    "productionBuild": "Codex/sol fork \u00b7 build 10-29 06:26 UTC",
+    "checkAll": "Not requested or run."
+  },
+  "visualReview": {
+    "maxNative": [
+      1440,
+      900
+    ],
+    "reviewed": [
+      "full-1-rail-1-settled.png",
+      "full-2-rail-2-settled.png",
+      "full-3-rail-1-settled.png",
+      "full-normal.png"
+    ],
+    "normalPresentation": "Reviewed full-normal.png at normal 480p/CRT, using a fresh gameplay flow after the finished run; full-presentation-browser.json confirms the current production build, supported player and no console errors.",
+    "priorCameraEvidence": "before-camera/ contains superseded diagnostic captures."
+  },
+  "testBoundaries": "Native and browser routes begin with placement at each section entry, then use ordinary inputs continuously through that section. No mid-route state/velocity/clock writes. This is not a single uninterrupted 4 km clear.",
+  "timing": {
+    "requestUtc": "2026-10-29T05:41:19Z",
+    "firstContinuousKeyboardClearApproxUtc": "2026-10-29T06:02:00Z",
+    "cameraCorrectedPlayableApproxUtc": "2026-10-29T06:23:00Z",
+    "cameraCorrectedPromptToPlayableMinutes": 42
+  }
+}

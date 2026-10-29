@@ -1,0 +1,329 @@
+{
+  "emptySpans": 12,
+  "rows": [
+    {
+      "name": "Rigging slingshot",
+      "variant": "feet without Grind",
+      "completed": false,
+      "seconds": 4.116666666666666,
+      "catches": [],
+      "launches": [
+        "Rigging · rail catch"
+      ],
+      "end": {
+        "at": [
+          -105.90553677025046,
+          -23.2337499880788,
+          -3272.1552607213894
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          -0.2719396446403695,
+          0,
+          -0.9623143091905417
+        ],
+        "side": [
+          0.9623143091905417,
+          0,
+          -0.2719396446403695
+        ],
+        "speed": 12.007497657713703,
+        "vy": -52,
+        "surface": "Rigging · rail catch",
+        "spring": true,
+        "mounted": false,
+        "railT": 0,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 4.133333333333324
+      }
+    },
+    {
+      "name": "Rigging slingshot",
+      "variant": "full-speed board without Grind",
+      "completed": false,
+      "seconds": 4.116666666666666,
+      "catches": [],
+      "launches": [
+        "Rigging · rail catch"
+      ],
+      "end": {
+        "at": [
+          -133.70631924604578,
+          -23.2337499880788,
+          -3366.0977323073603
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.001105117694275839,
+          0,
+          -0.9999993893572544
+        ],
+        "side": [
+          0.9999993893572544,
+          0,
+          0.001105117694275839
+        ],
+        "speed": 28.303249461429818,
+        "vy": -52,
+        "surface": "Rigging · rail catch",
+        "spring": true,
+        "mounted": false,
+        "railT": 0,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 4.133333333333324
+      }
+    },
+    {
+      "name": "Rigging slingshot",
+      "variant": "grind without exit jump",
+      "completed": false,
+      "seconds": 15.516666666666667,
+      "catches": [
+        "Rigging · sweeping cable"
+      ],
+      "launches": [
+        "Rigging · rail catch"
+      ],
+      "end": {
+        "at": [
+          -134.04799009139708,
+          -23.07925479303806,
+          -3376.490130057161
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.0281964325896583,
+          0,
+          -0.9996024015523457
+        ],
+        "side": [
+          0.9996024015523457,
+          0,
+          0.0281964325896583
+        ],
+        "speed": 19.299892896339585,
+        "vy": -52,
+        "surface": "rail (50-50)",
+        "spring": false,
+        "mounted": false,
+        "railT": 115.20352988226074,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 15.533333333333685
+      }
+    },
+    {
+      "name": "Broken crown",
+      "variant": "feet without Grind",
+      "completed": false,
+      "seconds": 3.3333333333333335,
+      "catches": [],
+      "launches": [
+        "Crown · first catch"
+      ],
+      "end": {
+        "at": [
+          -86.98837495854045,
+          -23.048888876967894,
+          -3484.4287944332664
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.23028282948649167,
+          0,
+          -0.9731237426163722
+        ],
+        "side": [
+          0.9731237426163722,
+          0,
+          0.23028282948649167
+        ],
+        "speed": 9,
+        "vy": -52,
+        "surface": "Crown · first catch",
+        "spring": true,
+        "mounted": false,
+        "railT": 115.20352988226074,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 3.349999999999993
+      }
+    },
+    {
+      "name": "Broken crown",
+      "variant": "full-speed board without Grind",
+      "completed": false,
+      "seconds": 3.3333333333333335,
+      "catches": [],
+      "launches": [
+        "Crown · first catch"
+      ],
+      "end": {
+        "at": [
+          -68.88393198307962,
+          -23.048888876967894,
+          -3563.5498813004233
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.2378808999984565,
+          0,
+          -0.971294330991345
+        ],
+        "side": [
+          0.971294330991345,
+          0,
+          0.2378808999984565
+        ],
+        "speed": 23.136542155466188,
+        "vy": -52,
+        "surface": "Crown · first catch",
+        "spring": true,
+        "mounted": false,
+        "railT": 115.20352988226074,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 3.349999999999993
+      }
+    },
+    {
+      "name": "Broken crown",
+      "variant": "grind without exit jump",
+      "completed": false,
+      "seconds": 12.533333333333333,
+      "catches": [
+        "Crown · outer cable"
+      ],
+      "launches": [
+        "Crown · first catch"
+      ],
+      "end": {
+        "at": [
+          -68.1558988970007,
+          -23.6125881263714,
+          -3562.0370914418504
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.23843466610901645,
+          0,
+          -0.9711585400939857
+        ],
+        "side": [
+          0.9711585400939857,
+          0,
+          0.23843466610901645
+        ],
+        "speed": 19.293214028623982,
+        "vy": -52,
+        "surface": "rail (Nosegrind)",
+        "spring": false,
+        "mounted": false,
+        "railT": 74.64550617088679,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 12.550000000000203
+      }
+    },
+    {
+      "name": "Homecoming cable",
+      "variant": "feet without Grind",
+      "completed": false,
+      "seconds": 3.7333333333333334,
+      "catches": [],
+      "launches": [
+        "Homecoming · final catch"
+      ],
+      "end": {
+        "at": [
+          -61.90561045385979,
+          -22.89055554363447,
+          -3717.5389561241855
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.08043065794765598,
+          0,
+          -0.9967602065000927
+        ],
+        "side": [
+          0.9967602065000927,
+          0,
+          0.08043065794765598
+        ],
+        "speed": 8.999999999999998,
+        "vy": -52,
+        "surface": "Homecoming · final catch",
+        "spring": true,
+        "mounted": false,
+        "railT": 74.64550617088679,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 3.7499999999999916
+      }
+    },
+    {
+      "name": "Homecoming cable",
+      "variant": "full-speed board without Grind",
+      "completed": false,
+      "seconds": 3.7333333333333334,
+      "catches": [],
+      "launches": [
+        "Homecoming · final catch"
+      ],
+      "end": {
+        "at": [
+          -53.23603337735298,
+          -22.89055554363447,
+          -3805.5013058076674
+        ],
+        "state": "dead",
+        "grounded": false,
+        "forward": [
+          0.03886206212373052,
+          0,
+          -0.9992445847376362
+        ],
+        "side": [
+          0.9992445847376362,
+          0,
+          0.03886206212373052
+        ],
+        "speed": 30.5,
+        "vy": -52,
+        "surface": "Homecoming · final catch",
+        "spring": true,
+        "mounted": false,
+        "railT": 74.64550617088679,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": true,
+        "deaths": 1,
+        "time": 3.7499999999999916
+      }
+    }
+  ]
+}

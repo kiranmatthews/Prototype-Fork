@@ -1,0 +1,62 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "mode": "full",
+  "errors": [],
+  "rows": [],
+  "source": {
+    "components": 1038,
+    "rails": [
+      "Crane outrigger shortcut",
+      "Rigging · sweeping cable",
+      "Crown · outer cable",
+      "Crown · return cable",
+      "Homecoming · diving cable"
+    ],
+    "build": "Codex/sol fork · build 10-29 06:26 UTC",
+    "canvas": [
+      1440,
+      900
+    ]
+  },
+  "normalPresentation": {
+    "at": [
+      -92.97901796365174,
+      24,
+      -3230.2468050405596
+    ],
+    "state": "ride",
+    "grounded": true,
+    "forward": [
+      -0.366846441813488,
+      0,
+      -0.9302815101509773
+    ],
+    "side": [
+      0.9302815101509773,
+      0,
+      -0.366846441813488
+    ],
+    "speed": 0,
+    "vy": 0,
+    "surface": "Pendulum receiving quay · tilted slick · safe 5",
+    "spring": false,
+    "mounted": false,
+    "railT": 0,
+    "railTime": 0,
+    "balance": 0,
+    "balanceVel": 0,
+    "bail": false,
+    "deaths": 0,
+    "time": 0.8166666666666675,
+    "screenFeet": [
+      -4.621547612493903e-14,
+      -0.7957223433552306,
+      0.9706482260839894
+    ],
+    "screenHead": [
+      -5.371396470504702e-14,
+      -0.1733470396569893,
+      0.9658381554680634
+    ]
+  }
+}

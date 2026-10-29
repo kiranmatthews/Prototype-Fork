@@ -1,0 +1,6844 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "mode": "lite",
+  "errors": [],
+  "rows": [
+    {
+      "name": "Homecoming cable",
+      "completed": true,
+      "catches": [
+        "Homecoming · diving cable"
+      ],
+      "launches": [
+        "Homecoming · final catch"
+      ],
+      "pops": [],
+      "samples": [
+        {
+          "at": [
+            -63.14622758404015,
+            24,
+            -3670.6936592526445
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.1338153014230897,
+            0,
+            -0.991006289134962
+          ],
+          "side": [
+            0.991006289134962,
+            0,
+            0.1338153014230897
+          ],
+          "speed": 0,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 5",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.18333333333333332,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.139537987188845,
+            24,
+            -3670.743209724826
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13375345437079564,
+            0,
+            -0.9910146383600392
+          ],
+          "side": [
+            0.9910146383600392,
+            0,
+            0.13375345437079564
+          ],
+          "speed": 1,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 5",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.26666666666666666,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.12171292066887,
+            24,
+            -3670.87534618742
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13358852643745356,
+            0,
+            -0.991036884078625
+          ],
+          "side": [
+            0.991036884078625,
+            0,
+            0.13358852643745356
+          ],
+          "speed": 2,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 5",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.35,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.092791899060025,
+            24,
+            -3671.0900739655485
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13332051093723593,
+            0,
+            -0.9910729747921868
+          ],
+          "side": [
+            0.9910729747921868,
+            0,
+            0.13332051093723593
+          ],
+          "speed": 2.999999999999999,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 5",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.4333333333333333,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.05547198288361,
+            24,
+            -3671.3676149361963
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13297409067434054,
+            0,
+            -0.9911195140896644
+          ],
+          "side": [
+            0.9911195140896644,
+            0,
+            0.13297409067434054
+          ],
+          "speed": 3.4013988350898936,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.5166666666666666,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.025229775078124,
+            24,
+            -3671.5925448804064
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13269332792003594,
+            0,
+            -0.9911571422965714
+          ],
+          "side": [
+            0.9911571422965714,
+            0,
+            0.13269332792003594
+          ],
+          "speed": 3.4065176963111305,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.5833333333333335,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.98802234041632,
+            23.999975324152715,
+            -3671.8745210023676
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13234145642817616,
+            0,
+            -0.9912041862857868
+          ],
+          "side": [
+            0.9912041862857868,
+            0,
+            0.13234145642817616
+          ],
+          "speed": 3.418175321104303,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.6666666666666671,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.946799625903914,
+            23.999754206567474,
+            -3672.2150732593304
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13191705553293342,
+            0,
+            -0.9912607580548728
+          ],
+          "side": [
+            0.9912607580548728,
+            0,
+            0.13191705553293342
+          ],
+          "speed": 3.4398233680492205,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.7666666666666674,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.91962331384059,
+            23.99942794959404,
+            -3672.501801306092
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13156090357428124,
+            0,
+            -0.9913080896727912
+          ],
+          "side": [
+            0.9913080896727912,
+            0,
+            0.13156090357428124
+          ],
+          "speed": 3.4637381817445996,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.850000000000001,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.902485529589015,
+            23.997610232854083,
+            -3672.792156757726
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.1312018701108013,
+            0,
+            -0.991355672440234
+          ],
+          "side": [
+            0.991355672440234,
+            0,
+            0.1312018701108013
+          ],
+          "speed": 3.493369498256252,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.9333333333333346,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.90413128228709,
+            23.99463478645655,
+            -3673.1469874044456
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13076665790900188,
+            0,
+            -0.9914131737975395
+          ],
+          "side": [
+            0.9914131737975395,
+            0,
+            0.13076665790900188
+          ],
+          "speed": 3.531428580551177,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.0333333333333345,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.929914838212405,
+            23.985902704197354,
+            -3673.448805247453
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.1304003014171003,
+            0,
+            -0.9914614270814217
+          ],
+          "side": [
+            0.9914614270814217,
+            0,
+            0.1304003014171003
+          ],
+          "speed": 3.5629959292592965,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.1166666666666676,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.98355233356056,
+            23.97058898197596,
+            -3673.7602920836193
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.13002646098531306,
+            0,
+            -0.9915105241214713
+          ],
+          "side": [
+            0.9915105241214713,
+            0,
+            0.13002646098531306
+          ],
+          "speed": 3.7957066639260253,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.2000000000000006,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.049058488636035,
+            23.958610238490625,
+            -3674.0251072813985
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12971176639349355,
+            0,
+            -0.991551742300461
+          ],
+          "side": [
+            0.991551742300461,
+            0,
+            0.12971176639349355
+          ],
+          "speed": 3.8200760135812395,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.266666666666667,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.162858480258286,
+            23.94378385131577,
+            -3674.362562960002
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12931552283503875,
+            0,
+            -0.991603497146869
+          ],
+          "side": [
+            0.991603497146869,
+            0,
+            0.12931552283503875
+          ],
+          "speed": 3.8507019149251906,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.35,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.31012227153561,
+            23.930871217449788,
+            -3674.7068964665864
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12891610475375592,
+            0,
+            -0.9916555036579582
+          ],
+          "side": [
+            0.9916555036579582,
+            0,
+            0.12891610475375592
+          ],
+          "speed": 3.881497289731261,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.4333333333333331,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.485879451468534,
+            23.93105195772826,
+            -3675.035776012354
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12854014148181808,
+            0,
+            -0.9917043067506736
+          ],
+          "side": [
+            0.9917043067506736,
+            0,
+            0.12854014148181808
+          ],
+          "speed": 3.655062576728184,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.5166666666666662,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.64224364355427,
+            23.951875192216356,
+            -3675.29886219545
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.1282418705326753,
+            0,
+            -0.9917429216496989
+          ],
+          "side": [
+            0.9917429216496989,
+            0,
+            0.1282418705326753
+          ],
+          "speed": 3.4455848525981443,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.5833333333333326,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.849769076964556,
+            23.94103260106638,
+            -3675.616108558366
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12788518032064325,
+            0,
+            -0.9917889799016506
+          ],
+          "side": [
+            0.9917889799016506,
+            0,
+            0.12788518032064325
+          ],
+          "speed": 3.4639243637928843,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.6666666666666656,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.06630485498252,
+            23.96883279637316,
+            -3675.9201990402835
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12754918673092352,
+            0,
+            -0.9918322463825624
+          ],
+          "side": [
+            0.9918322463825624,
+            0,
+            0.12754918673092352
+          ],
+          "speed": 3.10718472699624,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.7499999999999987,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.28637852110964,
+            23.96383873006746,
+            -3676.210550181633
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.1272397377619113,
+            0,
+            -0.9918719923126573
+          ],
+          "side": [
+            0.9918719923126573,
+            0,
+            0.1272397377619113
+          ],
+          "speed": 3.1273576519688553,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.8333333333333317,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.46378912479247,
+            23.990231725370467,
+            -3676.4321946818095
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12700493555295947,
+            0,
+            -0.9919020850594017
+          ],
+          "side": [
+            0.9919020850594017,
+            0,
+            0.12700493555295947
+          ],
+          "speed": 2.7873833427190626,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.8999999999999981,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.6844897453848,
+            23.989030373182267,
+            -3676.6957057861937
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12672725683759695,
+            0,
+            -0.9919376000406568
+          ],
+          "side": [
+            0.9919376000406568,
+            0,
+            0.12672725683759695
+          ],
+          "speed": 2.809233386064172,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.9833333333333312,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.85883690762502,
+            23.99671052671769,
+            -3676.903559681507
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12650825938950794,
+            0,
+            -0.9919655539917891
+          ],
+          "side": [
+            0.9919655539917891,
+            0,
+            0.12650825938950794
+          ],
+          "speed": 2.7094549530023957,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · ice 6",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.0499999999999976,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -65.01051752362201,
+            24,
+            -3677.170321310725
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12621623023694567,
+            0,
+            -0.9920027536376973
+          ],
+          "side": [
+            0.9920027536376973,
+            0,
+            0.12621623023694567
+          ],
+          "speed": 3.3856934533951475,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 7",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.1333333333333306,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.90406397223175,
+            24,
+            -3677.5038078247944
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12580613462537626,
+            0,
+            -0.9920548455053388
+          ],
+          "side": [
+            0.9920548455053388,
+            0,
+            0.12580613462537626
+          ],
+          "speed": 4.627513090017685,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 7",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.2166666666666637,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.52887522125143,
+            24,
+            -3677.9075927958515
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12527211843923852,
+            0,
+            -0.9921224200378427
+          ],
+          "side": [
+            0.9921224200378427,
+            0,
+            0.12527211843923852
+          ],
+          "speed": 5.869157476524253,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 7",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.2999999999999967,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.42083847627929,
+            24,
+            -3678.774641886805
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.12407930932715328,
+            0,
+            -0.9922723038545903
+          ],
+          "side": [
+            0.9922723038545903,
+            0,
+            0.12407930932715328
+          ],
+          "speed": 10.031160809340284,
+          "vy": 0,
+          "surface": "Eye catch · tilted slick · safe 7",
+          "spring": false,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.449999999999996,
+          "input": {
+            "moveX": 1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.311989551383824,
+            27.670000011920926,
+            -3678.7509335055593
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.1239387307596847,
+            0,
+            -0.9922898724756181
+          ],
+          "side": [
+            0.9922898724756181,
+            0,
+            0.1239387307596847
+          ],
+          "speed": 10.365933405894864,
+          "vy": 53.92500000000001,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.533333333333329,
+          "input": {
+            "moveX": 1,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -60.99313502936661,
+            32.02625001192093,
+            -3678.472850377154
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.12406677700591878,
+            0,
+            -0.9922738708861398
+          ],
+          "side": [
+            0.9922738708861398,
+            0,
+            0.12406677700591878
+          ],
+          "speed": 10.627240376809587,
+          "vy": 51.175000000000026,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.6166666666666623,
+          "input": {
+            "moveX": 1,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -59.94002358394152,
+            35.34625001192094,
+            -3678.28342371874
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.12413047502391707,
+            0,
+            -0.9922659044683217
+          ],
+          "side": [
+            0.9922659044683217,
+            0,
+            0.12413047502391707
+          ],
+          "speed": 10.888529122115465,
+          "vy": 48.97500000000004,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.6833333333333287,
+          "input": {
+            "moveX": 1,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -58.770120247323966,
+            39.29000001192094,
+            -3678.271350336572
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.12396686733501293,
+            0,
+            -0.9922863577632938
+          ],
+          "side": [
+            0.9922863577632938,
+            0,
+            0.12396686733501293
+          ],
+          "speed": 10.888497793272052,
+          "vy": 46.22500000000005,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.7666666666666617,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -58.05385690020922,
+            43.004583345254275,
+            -3678.8283924126154
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.12319975185840155,
+            0,
+            -0.9923818927923
+          ],
+          "side": [
+            0.9923818927923,
+            0,
+            0.12319975185840155
+          ],
+          "speed": 10.888497793272052,
+          "vy": 43.475000000000065,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.8499999999999948,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -57.33759355309447,
+            46.49000001192095,
+            -3679.3854344886586
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.12243255523654142,
+            0,
+            -0.9924768357086483
+          ],
+          "side": [
+            0.9924768357086483,
+            0,
+            0.12243255523654142
+          ],
+          "speed": 10.888497793272052,
+          "vy": 40.72500000000008,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.933333333333328,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.83362414995119,
+            49.74625001192096,
+            -3680.194121597515
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.12140013769201922,
+            0,
+            -0.9926036502896606
+          ],
+          "side": [
+            0.9926036502896606,
+            0,
+            0.12140013769201922
+          ],
+          "speed": 10.364697883083235,
+          "vy": 37.975000000000094,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.016666666666661,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.707935185205514,
+            52.7733333452543,
+            -3681.3327031918866
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.1200351392159851,
+            0,
+            -0.9927696436502271
+          ],
+          "side": [
+            0.9927696436502271,
+            0,
+            0.1200351392159851
+          ],
+          "speed": 9.053909780510194,
+          "vy": 35.22500000000011,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.099999999999994,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.770892537059204,
+            55.57125001192098,
+            -3682.585664480939
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.118563363826205,
+            0,
+            -0.9929464883659215
+          ],
+          "side": [
+            0.9929464883659215,
+            0,
+            0.118563363826205
+          ],
+          "speed": 8.52901642466903,
+          "vy": 32.47500000000012,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.183333333333327,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.70029776133301,
+            58.14000001192099,
+            -3683.6488737067757
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11729539562278027,
+            0,
+            -0.9930970698605929
+          ],
+          "side": [
+            0.9930970698605929,
+            0,
+            0.11729539562278027
+          ],
+          "speed": 8.396086043218668,
+          "vy": 29.72500000000012,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.26666666666666,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.45745743655683,
+            60.030000011921,
+            -3684.255335247137
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11666850933170521,
+            0,
+            -0.9931709112385028
+          ],
+          "side": [
+            0.9931709112385028,
+            0,
+            0.11666850933170521
+          ],
+          "speed": 8.262654423095041,
+          "vy": 27.525000000000116,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.3333333333333264,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.370357419057605,
+            62.186250011921004,
+            -3685.246792723116
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11548185734952882,
+            0,
+            -0.9933095895153248
+          ],
+          "side": [
+            0.9933095895153248,
+            0,
+            0.11548185734952882
+          ],
+          "speed": 8.258570484038446,
+          "vy": 24.775000000000112,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.4166666666666594,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.2170551917457,
+            64.11333334525435,
+            -3686.1635534322827
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11437525097633859,
+            0,
+            -0.9934376185569477
+          ],
+          "side": [
+            0.9934376185569477,
+            0,
+            0.11437525097633859
+          ],
+          "speed": 7.994786367987981,
+          "vy": 22.02500000000011,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.4999999999999925,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.07454462216787,
+            65.81125001192102,
+            -3687.0760749233277
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11327490388337773,
+            0,
+            -0.9935636849997143
+          ],
+          "side": [
+            0.9935636849997143,
+            0,
+            0.11327490388337773
+          ],
+          "speed": 8.124074634069238,
+          "vy": 19.275000000000105,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.5833333333333255,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.11440478402441,
+            67.28000001192103,
+            -3688.176084775946
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11197511285704966,
+            0,
+            -0.9937110113612766
+          ],
+          "side": [
+            0.9937110113612766,
+            0,
+            0.11197511285704966
+          ],
+          "speed": 7.85394203806074,
+          "vy": 16.5250000000001,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.6666666666666585,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.958145971821125,
+            68.51958334525438,
+            -3689.0053681577015
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11097150072877503,
+            0,
+            -0.9938235889864979
+          ],
+          "side": [
+            0.9938235889864979,
+            0,
+            0.11097150072877503
+          ],
+          "speed": 7.324818653575955,
+          "vy": 13.775000000000098,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.7499999999999916,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.76589971634083,
+            69.34625001192104,
+            -3689.5781027778166
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.11026762598739995,
+            0,
+            -0.9939019321135777
+          ],
+          "side": [
+            0.9939019321135777,
+            0,
+            0.11026762598739995
+          ],
+          "speed": 7.582621989781906,
+          "vy": 11.575000000000095,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.816666666666658,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.66705695617255,
+            70.17333334525439,
+            -3690.4515239612188
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10921874372885779,
+            0,
+            -0.9940177392875292
+          ],
+          "side": [
+            0.9940177392875292,
+            0,
+            0.10921874372885779
+          ],
+          "speed": 7.317678159269442,
+          "vy": 8.825000000000092,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.899999999999991,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.68314174158068,
+            70.77125001192107,
+            -3691.4474132166024
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10803898206255931,
+            0,
+            -0.9941466583733438
+          ],
+          "side": [
+            0.9941466583733438,
+            0,
+            0.10803898206255931
+          ],
+          "speed": 7.180945026329528,
+          "vy": 6.075000000000092,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.983333333333324,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.61830433565449,
+            71.27958334525441,
+            -3693.146465813066
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10602502363633641,
+            0,
+            -0.9943634619005841
+          ],
+          "side": [
+            0.9943634619005841,
+            0,
+            0.10602502363633641
+          ],
+          "speed": 5.448958383020936,
+          "vy": 0.5750000000000928,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.149999999999991,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.548773234667244,
+            71.04666667858775,
+            -3693.838495173765
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10525327823838405,
+            0,
+            -0.9944454471815302
+          ],
+          "side": [
+            0.9944454471815302,
+            0,
+            0.10525327823838405
+          ],
+          "speed": 5.833649154036396,
+          "vy": -6.474999999999907,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.233333333333324,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.165026169801706,
+            70.01125001192109,
+            -3694.136937447196
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10487875584829254,
+            0,
+            -0.9944850157602748
+          ],
+          "side": [
+            0.9944850157602748,
+            0,
+            0.10487875584829254
+          ],
+          "speed": 5.833649154036396,
+          "vy": -16.391666666666577,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.316666666666657,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.18720502236477,
+            68.58791667858777,
+            -3694.7338783272044
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10422264202280247,
+            0,
+            -0.9945539909375393
+          ],
+          "side": [
+            0.9945539909375393,
+            0,
+            0.10422264202280247
+          ],
+          "speed": 5.034567025220538,
+          "vy": -24.324999999999914,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.383333333333323,
+          "input": {
+            "moveX": -1,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.21821588488346,
+            66.06500001192111,
+            -3695.3234678450794
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10357562978455495,
+            0,
+            -0.9946215807606091
+          ],
+          "side": [
+            0.9946215807606091,
+            0,
+            0.10357562978455495
+          ],
+          "speed": 3.49596225579378,
+          "vy": -34.24166666666658,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.466666666666656,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.20394922080246,
+            62.71569445636556,
+            -3695.7434750458615
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10311040112855296,
+            0,
+            -0.9946699177008969
+          ],
+          "side": [
+            0.9946699177008969,
+            0,
+            0.10311040112855296
+          ],
+          "speed": 2.962582616164624,
+          "vy": -44.15833333333325,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.549999999999989,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.115123948519596,
+            58.576111123032234,
+            -3696.0169242614725
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10279812318757588,
+            0,
+            -0.9947022398030034
+          ],
+          "side": [
+            0.9947022398030034,
+            0,
+            0.10279812318757588
+          ],
+          "speed": 2.6957888178981695,
+          "vy": -52,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.633333333333322,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.18882384761716,
+            55.109444456365566,
+            -3696.3682119016266
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.1024190710386333,
+            0,
+            -0.9947413401923051
+          ],
+          "side": [
+            0.9947413401923051,
+            0,
+            0.1024190710386333
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "Homecoming · final catch",
+          "spring": true,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 5.3676115007321235,
+          "railLength": 135.5608500560591,
+          "balance": -0.1,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.716666666666655,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.03812771512162,
+            54.15,
+            -3697.096164091283
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.1017156314742297,
+            0,
+            -0.9948135153453631
+          ],
+          "side": [
+            0.9948135153453631,
+            0,
+            0.1017156314742297
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 6.009278167398793,
+          "railLength": 135.5608500560591,
+          "balance": 0.13329520204511217,
+          "balanceVel": -1.4311342323433087,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.899999999999988,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.0039988807224,
+            54.15,
+            -3697.4444961493286
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.10132708545344865,
+            0,
+            -0.9948531659262634
+          ],
+          "side": [
+            0.9948531659262634,
+            0,
+            0.10132708545344865
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 6.359278167398794,
+          "railLength": 135.5608500560591,
+          "balance": 0.10164170912658842,
+          "balanceVel": 1.4164339466843057,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.999999999999988,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.98124632445626,
+            54.15,
+            -3697.6767175213595
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.10106804530209774,
+            0,
+            -0.994879515428282
+          ],
+          "side": [
+            0.994879515428282,
+            0,
+            0.10106804530209774
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 6.592611500732128,
+          "railLength": 135.5608500560591,
+          "balance": 0.09051046004756685,
+          "balanceVel": -0.9702758588291045,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.066666666666654,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.947117490057046,
+            54.15,
+            -3698.0250495794053
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.10067947100039931,
+            0,
+            -0.9949189133387102
+          ],
+          "side": [
+            0.9949189133387102,
+            0,
+            0.10067947100039931
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 6.94261150073213,
+          "railLength": 135.5608500560591,
+          "balance": 0.10437922491848217,
+          "balanceVel": 1.7923705067568267,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.166666666666654,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.924364933790905,
+            54.15,
+            -3698.257270951436
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.10042041215957796,
+            0,
+            -0.9949450943754136
+          ],
+          "side": [
+            0.9949450943754136,
+            0,
+            0.10042041215957796
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 7.175944834065464,
+          "railLength": 135.5608500560591,
+          "balance": 0.10752949570658042,
+          "balanceVel": 0.5600770598249041,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.23333333333332,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.890236099391686,
+            54.15,
+            -3698.605603009482
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.10003181007041669,
+            0,
+            -0.9949842395606254
+          ],
+          "side": [
+            0.9949842395606254,
+            0,
+            0.10003181007041669
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 7.5259448340654655,
+          "railLength": 135.5608500560591,
+          "balance": 0.14337642260490321,
+          "balanceVel": 1.6357654304112403,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.33333333333332,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.867483543125545,
+            54.15,
+            -3698.8378243815127
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09977273286913306,
+            0,
+            -0.9950102520958387
+          ],
+          "side": [
+            0.9950102520958387,
+            0,
+            0.09977273286913306
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 7.7592781673988,
+          "railLength": 135.5608500560591,
+          "balance": 0.13190324364056996,
+          "balanceVel": -0.4984864355200842,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.399999999999986,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.83904284779287,
+            54.15,
+            -3699.128101096551
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09944887617551056,
+            0,
+            -0.9950426729680633
+          ],
+          "side": [
+            0.9950426729680633,
+            0,
+            0.09944887617551056
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 8.050944834065467,
+          "railLength": 135.5608500560591,
+          "balance": 0.09746722645168096,
+          "balanceVel": 0.6291689735123737,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.483333333333319,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.81060215246019,
+            54.15,
+            -3699.4183778115894
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09912500825341546,
+            0,
+            -0.9950749885002439
+          ],
+          "side": [
+            0.9950749885002439,
+            0,
+            0.09912500825341546
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 8.342611500732135,
+          "railLength": 135.5608500560591,
+          "balance": 0.11136193229781781,
+          "balanceVel": -0.43998470848412274,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.566666666666652,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.782161457127515,
+            54.15,
+            -3699.7086545266275
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09880112920570906,
+            0,
+            -0.9951071986814669
+          ],
+          "side": [
+            0.9951071986814669,
+            0,
+            0.09880112920570906
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 8.634278167398802,
+          "railLength": 135.5608500560591,
+          "balance": 0.05968024813970195,
+          "balanceVel": -0.12083570379338887,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.649999999999985,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.75372076179483,
+            54.15,
+            -3699.998931241666
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.098477239135262,
+            0,
+            -0.9951393035009203
+          ],
+          "side": [
+            0.9951393035009203,
+            0,
+            0.098477239135262
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 8.92594483406547,
+          "railLength": 135.5608500560591,
+          "balance": 0.028775650528894692,
+          "balanceVel": 0.9529584210639226,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.733333333333318,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.725280066462155,
+            54.15,
+            -3700.289207956704
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09815333814495772,
+            0,
+            -0.9951713029478902
+          ],
+          "side": [
+            0.9951713029478902,
+            0,
+            0.09815333814495772
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 9.217611500732138,
+          "railLength": 135.5608500560591,
+          "balance": 0.03201865496070219,
+          "balanceVel": 0.15251512080102414,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.816666666666651,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.69683937112948,
+            54.15,
+            -3700.5794846717426
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0978294263376888,
+            0,
+            -0.9952031970117654
+          ],
+          "side": [
+            0.9952031970117654,
+            0,
+            0.0978294263376888
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 9.509278167398806,
+          "railLength": 135.5608500560591,
+          "balance": 0.01652605533025135,
+          "balanceVel": 1.106091296488359,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.899999999999984,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.6683986757968,
+            54.15,
+            -3700.8697613867807
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09750550381636029,
+            0,
+            -0.9952349856820335
+          ],
+          "side": [
+            0.9952349856820335,
+            0,
+            0.09750550381636029
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 9.800944834065474,
+          "railLength": 135.5608500560591,
+          "balance": 0.0018018022207306542,
+          "balanceVel": -0.3329752600585911,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.983333333333317,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.6413133278256,
+            54.14946453235584,
+            -3701.1601315355815
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0971816273153056,
+            0,
+            -0.9952666634185781
+          ],
+          "side": [
+            0.9952666634185781,
+            0,
+            0.0971816273153056
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 10.092611500732142,
+          "railLength": 135.5608500560591,
+          "balance": 0.022099172375395222,
+          "balanceVel": -0.09910711750911327,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.06666666666665,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.62436654959744,
+            54.142477335736636,
+            -3701.5148223799097
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09678789687449048,
+            0,
+            -0.9953050301383054
+          ],
+          "side": [
+            0.9953050301383054,
+            0,
+            0.09678789687449048
+          ],
+          "speed": 3.5885291500363916,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 10.447775701150931,
+          "railLength": 135.5608500560591,
+          "balance": -0.008283485185427989,
+          "balanceVel": -0.9967534886426942,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.16666666666665,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.609921552622666,
+            54.136521629426696,
+            -3701.8171517138
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09645227907844388,
+            0,
+            -0.9953376099899842
+          ],
+          "side": [
+            0.9953376099899842,
+            0,
+            0.09645227907844388
+          ],
+          "speed": 3.6623034417333846,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 10.750508511572145,
+          "railLength": 135.5608500560591,
+          "balance": -0.000308737635357742,
+          "balanceVel": -0.5927180541918364,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.249999999999983,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.595183208570944,
+            54.130444975425306,
+            -3702.1256207115835
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09617555335924664,
+            0,
+            -0.9953643870141439
+          ],
+          "side": [
+            0.9953643870141439,
+            0,
+            0.09617555335924664
+          ],
+          "speed": 3.7360777334303776,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 11.059389179634774,
+          "railLength": 135.5608500560591,
+          "balance": 0.001444534284472311,
+          "balanceVel": 1.1813844257758883,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.333333333333316,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.58015151744229,
+            54.12424737373246,
+            -3702.4402293732605
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09584730340181621,
+            0,
+            -0.995396049033047
+          ],
+          "side": [
+            0.995396049033047,
+            0,
+            0.09584730340181621
+          ],
+          "speed": 3.8098520251273706,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 11.374417705338825,
+          "railLength": 135.5608500560591,
+          "balance": 0.004768330848081842,
+          "balanceVel": -0.8483748992498689,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.416666666666649,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.564826479236686,
+            54.11792882434816,
+            -3702.7609776988315
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09549085973010124,
+            0,
+            -0.9954303068060598
+          ],
+          "side": [
+            0.9954303068060598,
+            0,
+            0.09549085973010124
+          ],
+          "speed": 3.8836263168243637,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 11.69559408868429,
+          "railLength": 135.5608500560591,
+          "balance": 0.016652467027186507,
+          "balanceVel": -0.65400446097076,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.499999999999982,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.54920809395414,
+            54.111489327272416,
+            -3703.087865688296
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09512758070875288,
+            0,
+            -0.9954650889852943
+          ],
+          "side": [
+            0.9954650889852943,
+            0,
+            0.09512758070875288
+          ],
+          "speed": 3.9574006085213567,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 12.02291832967117,
+          "railLength": 135.5608500560591,
+          "balance": 0.06141483017969856,
+          "balanceVel": 0.021256587909094626,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.583333333333315,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.53329636159466,
+            54.10492888250521,
+            -3703.4208933416544
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09475746578079106,
+            0,
+            -0.9955003880857116
+          ],
+          "side": [
+            0.9955003880857116,
+            0,
+            0.09475746578079106
+          ],
+          "speed": 4.03117490021835,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 12.356390428299463,
+          "railLength": 135.5608500560591,
+          "balance": 0.09809992875423518,
+          "balanceVel": -0.3687565393812102,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.666666666666648,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.51709128215823,
+            54.09824749004655,
+            -3703.7600606589062
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09438051439281088,
+            0,
+            -0.995536196480544
+          ],
+          "side": [
+            0.995536196480544,
+            0,
+            0.09438051439281088
+          ],
+          "speed": 4.104949191915343,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 12.696010384569174,
+          "railLength": 135.5608500560591,
+          "balance": 0.07308638913236314,
+          "balanceVel": 0.6519261878430458,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.749999999999981,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.502693930195534,
+            54.09062223128486,
+            -3704.1053260208173
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09399697322294476,
+            0,
+            -0.9955724830593325
+          ],
+          "side": [
+            0.9955724830593325,
+            0,
+            0.09399697322294476
+          ],
+          "speed": 4.178723483612336,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 13.041778198480305,
+          "railLength": 135.5608500560591,
+          "balance": 0.10580505848281108,
+          "balanceVel": 0.5455985564311316,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.833333333333314,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.52280195849541,
+            54.06895457637171,
+            -3704.46363576421
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09360228330183223,
+            0,
+            -0.9956096687762145
+          ],
+          "side": [
+            0.9956096687762145,
+            0,
+            0.09360228330183223
+          ],
+          "speed": 4.404725138425935,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 13.40130523818868,
+          "railLength": 135.5608500560591,
+          "balance": 0.13652747316302383,
+          "balanceVel": 0.5392051826060618,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.916666666666647,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.543963326129294,
+            54.04615188261459,
+            -3704.8407152119635
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09318690292669574,
+            0,
+            -0.9956486333656721
+          ],
+          "side": [
+            0.9956486333656721,
+            0,
+            0.09318690292669574
+          ],
+          "speed": 4.630726793239534,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 13.77966574913152,
+          "railLength": 135.5608500560591,
+          "balance": 0.10915933419710008,
+          "balanceVel": -0.6691442273001009,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.9999999999999805,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.566178033097195,
+            54.0222141500135,
+            -3705.2365643640787
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09275083003241243,
+            0,
+            -0.9956893509163882
+          ],
+          "side": [
+            0.9956893509163882,
+            0,
+            0.09275083003241243
+          ],
+          "speed": 4.856728448053133,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 14.176859731308829,
+          "railLength": 135.5608500560591,
+          "balance": 0.13267202577260076,
+          "balanceVel": 0.49802659321641696,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.0833333333333135,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.58944607939912,
+            53.99714137856844,
+            -3705.6511832205547
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09229406250920492,
+            0,
+            -0.9957317942224939
+          ],
+          "side": [
+            0.9957317942224939,
+            0,
+            0.09229406250920492
+          ],
+          "speed": 5.082730102866732,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 14.592887184720603,
+          "railLength": 135.5608500560591,
+          "balance": 0.15355443511661127,
+          "balanceVel": 0.4162670718798742,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.1666666666666465,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.61376746503505,
+            53.97093356827943,
+            -3706.0845717813922
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09181659821111733,
+            0,
+            -0.9957759347829903
+          ],
+          "side": [
+            0.9957759347829903,
+            0,
+            0.09181659821111733
+          ],
+          "speed": 5.308731757680331,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 15.027748109366843,
+          "railLength": 135.5608500560591,
+          "balance": 0.09062082469423713,
+          "balanceVel": -1.5367455981827953,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.24999999999998,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.63914219000501,
+            53.94359071914644,
+            -3706.536730046591
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09131843496490205,
+            0,
+            -0.9958217428011706
+          ],
+          "side": [
+            0.9958217428011706,
+            0,
+            0.09131843496490205
+          ],
+          "speed": 5.53473341249393,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 15.481442505247552,
+          "railLength": 135.5608500560591,
+          "balance": 0.041875834529627315,
+          "balanceVel": -1.3890215569511413,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.333333333333313,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.669550397331086,
+            53.913572604175755,
+            -3707.007093909177
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09080057632029571,
+            0,
+            -0.9958690954838906
+          ],
+          "side": [
+            0.9958690954838906,
+            0,
+            0.09080057632029571
+          ],
+          "speed": 5.760735067307529,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 15.953970372362726,
+          "railLength": 135.5608500560591,
+          "balance": 0.030000673357415283,
+          "balanceVel": -0.9250280203156815,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.416666666666646,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.733787766509415,
+            53.8733917401766,
+            -3707.3965006630892
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.09037557407591437,
+            0,
+            -0.9959077545688901
+          ],
+          "side": [
+            0.9959077545688901,
+            0,
+            0.09037557407591437
+          ],
+          "speed": 6.064591013955685,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 16.350680041293568,
+          "railLength": 135.5608500560591,
+          "balance": 0.026812914760297256,
+          "balanceVel": 0.14246484981214905,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.483333333333312,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.818697164889436,
+            53.82028039654286,
+            -3707.911221200726
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08981378119742409,
+            0,
+            -0.9959585757987233
+          ],
+          "side": [
+            0.9959585757987233,
+            0,
+            0.08981378119742409
+          ],
+          "speed": 6.4444109472658795,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 16.875053622455386,
+          "railLength": 135.5608500560591,
+          "balance": -0.01954144178142453,
+          "balanceVel": 0.009417738863584546,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.566666666666645,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.92735371707588,
+            53.752315064184685,
+            -3708.5698969189166
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08909483241167902,
+            0,
+            -0.9960231477418258
+          ],
+          "side": [
+            0.9960231477418258,
+            0,
+            0.08909483241167902
+          ],
+          "speed": 6.900194867238113,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 17.546082112513687,
+          "railLength": 135.5608500560591,
+          "balance": -0.03250867918108067,
+          "balanceVel": 0.8455674542551543,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.666666666666645,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.02353857233994,
+            53.692150853888116,
+            -3709.1529692449317
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08845837260220907,
+            0,
+            -0.9960798744661838
+          ],
+          "side": [
+            0.9960798744661838,
+            0,
+            0.08845837260220907
+          ],
+          "speed": 7.280014800548308,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 18.140089348115705,
+          "railLength": 135.5608500560591,
+          "balance": -0.027966797727521156,
+          "balanceVel": 0.695721027573412,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.749999999999978,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.12484863527856,
+            53.62878079510844,
+            -3709.7671105656646
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08778796682407713,
+            0,
+            -0.9961391834883792
+          ],
+          "side": [
+            0.9961391834883792,
+            0,
+            0.08778796682407713
+          ],
+          "speed": 7.659834733858503,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 18.765748244826906,
+          "railLength": 135.5608500560591,
+          "balance": -0.025033210468368837,
+          "balanceVel": 0.7450432443604291,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.833333333333311,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.2988658713429,
+            53.53618685135359,
+            -3710.399239561104
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08710457251677123,
+            0,
+            -0.9961991735826076
+          ],
+          "side": [
+            0.9961991735826076,
+            0,
+            0.08710457251677123
+          ],
+          "speed": 8.159117652935613,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 19.428036427054245,
+          "railLength": 135.5608500560591,
+          "balance": -0.019592729046150538,
+          "balanceVel": 0.7492790361565188,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.916666666666644,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.48686749828741,
+            53.43651162459816,
+            -3711.0728109810498
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08637658589717766,
+            0,
+            -0.996262558469778
+          ],
+          "side": [
+            0.996262558469778,
+            0,
+            0.08637658589717766
+          ],
+          "speed": 8.688266318454453,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 20.134420331408155,
+          "railLength": 135.5608500560591,
+          "balance": -0.07221231706479728,
+          "balanceVel": -0.5178170987971393,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.999999999999977,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.686605048785665,
+            53.330614213171174,
+            -3711.788429817398
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08566503485202674,
+            0,
+            -0.9963239943932901
+          ],
+          "side": [
+            0.9963239943932901,
+            0,
+            0.08566503485202674
+          ],
+          "speed": 9.217414983973292,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 20.884899957888635,
+          "railLength": 135.5608500560591,
+          "balance": -0.06165599518222121,
+          "balanceVel": -0.6912253585472399,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.083333333333314,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -56.89878258704587,
+            53.218229211685774,
+            -3712.545812876351
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0849351910541205,
+            0,
+            -0.9963864778892776
+          ],
+          "side": [
+            0.9963864778892776,
+            0,
+            0.0849351910541205
+          ],
+          "speed": 9.746563649492131,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 21.679475306495682,
+          "railLength": 135.5608500560591,
+          "balance": -0.0561652928466282,
+          "balanceVel": -0.6877744649270012,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.166666666666652,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -57.2071244715327,
+            53.06751187139559,
+            -3713.318666539363
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08419822879786015,
+            0,
+            -0.9964490244198662
+          ],
+          "side": [
+            0.9964490244198662,
+            0,
+            0.08419822879786015
+          ],
+          "speed": 10.414927818626577,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 22.52510715241008,
+          "railLength": 135.5608500560591,
+          "balance": -0.01712083401678094,
+          "balanceVel": -0.22006011870996423,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.24999999999999,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -57.53577510192258,
+            52.906867627492446,
+            -3714.1424237268466
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08341266793503996,
+            0,
+            -0.9965150911190249
+          ],
+          "side": [
+            0.9965150911190249,
+            0,
+            0.08341266793503996
+          ],
+          "speed": 11.083291987761022,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 23.426436012419018,
+          "railLength": 135.5608500560591,
+          "balance": -0.0031041301537554702,
+          "balanceVel": -0.5374461000074784,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.333333333333327,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -57.884734478215506,
+            52.73629647997636,
+            -3715.0170844388003
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08257849877158005,
+            0,
+            -0.9965845631659322
+          ],
+          "side": [
+            0.9965845631659322,
+            0,
+            0.08257849877158005
+          ],
+          "speed": 11.751656156895468,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 24.383461886522493,
+          "railLength": 135.5608500560591,
+          "balance": -0.05465975759533551,
+          "balanceVel": 0.38146506033843486,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.416666666666664,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -58.325716026531005,
+            52.52904284316729,
+            -3715.9065825133057
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08173746962630223,
+            0,
+            -0.9966538948196055
+          ],
+          "side": [
+            0.9966538948196055,
+            0,
+            0.08173746962630223
+          ],
+          "speed": 12.494984346706346,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 25.398683575409716,
+          "railLength": 135.5608500560591,
+          "balance": -0.0410143155741776,
+          "balanceVel": 0.8919614492763283,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.500000000000002,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -58.81676206051588,
+            52.300377897794775,
+            -3716.8419760170705
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.08085531018208889,
+            0,
+            -0.9967258493765264
+          ],
+          "side": [
+            0.9967258493765264,
+            0,
+            0.08085531018208889
+          ],
+          "speed": 13.288288550301512,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 26.479597481148335,
+          "railLength": 135.5608500560591,
+          "balance": -0.01773952153342806,
+          "balanceVel": 1.270705681325846,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.58333333333334,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -59.33784046501386,
+            52.05772780665689,
+            -3717.8345781781427
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07991912247436285,
+            0,
+            -0.9968013512545655
+          ],
+          "side": [
+            0.9968013512545655,
+            0,
+            0.07991912247436285
+          ],
+          "speed": 14.081592753896679,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 27.62662007051989,
+          "railLength": 135.5608500560591,
+          "balance": 0.016103053274651197,
+          "balanceVel": 0.2251825595927241,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.666666666666677,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -60.063781954800625,
+            51.72555003873211,
+            -3719.0647361334127
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07876562740543336,
+            0,
+            -0.9968931617477514
+          ],
+          "side": [
+            0.9968931617477514,
+            0,
+            0.07876562740543336
+          ],
+          "speed": 15.089907924841894,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 29.09312814649277,
+          "railLength": 135.5608500560591,
+          "balance": 0.041596155323749565,
+          "balanceVel": -1.1068927296850788,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.766666666666682,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -60.5759657497871,
+            51.49120049470558,
+            -3719.9322365438366
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07795214481186431,
+            0,
+            -0.9969571019453295
+          ],
+          "side": [
+            0.9969571019453295,
+            0,
+            0.07795214481186431
+          ],
+          "speed": 15.76963138902284,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 30.127443819156433,
+          "railLength": 135.5608500560591,
+          "balance": 0.04779851632134249,
+          "balanceVel": -0.13775773496383925,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.833333333333352,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -61.386315558591605,
+            51.12042517917586,
+            -3721.30474929923
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07660256350733273,
+            0,
+            -0.9970617068487311
+          ],
+          "side": [
+            0.9970617068487311,
+            0,
+            0.07660256350733273
+          ],
+          "speed": 16.789216585294266,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 31.763882761174553,
+          "railLength": 135.5608500560591,
+          "balance": 0.03264711348356786,
+          "balanceVel": 1.8399426162345367,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.933333333333357,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -61.95459817534446,
+            50.860407635829425,
+            -3722.2672658959973
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07568844347549726,
+            0,
+            -0.9971315156609266
+          ],
+          "side": [
+            0.9971315156609266,
+            0,
+            0.07568844347549726
+          ],
+          "speed": 17.46894004947522,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 32.911485677868384,
+          "railLength": 135.5608500560591,
+          "balance": 0.040256994006276615,
+          "balanceVel": -0.7931759987427667,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.000000000000027,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.69650703352911,
+            50.52094745702895,
+            -3723.523858246775
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07449494276017019,
+            0,
+            -0.9972213914187558
+          ],
+          "side": [
+            0.9972213914187558,
+            0,
+            0.07449494276017019
+          ],
+          "speed": 18.31859437970141,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 34.409713398502625,
+          "railLength": 135.5608500560591,
+          "balance": 0.07678586094797578,
+          "balanceVel": -0.0006526472553565754,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.083333333333364,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.473477655317744,
+            50.16544477865354,
+            -3724.839835714017
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07324493271735324,
+            0,
+            -0.9973139825708003
+          ],
+          "side": [
+            0.9973139825708003,
+            0,
+            0.07324493271735324
+          ],
+          "speed": 19.1682487099276,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 35.97874564665572,
+          "railLength": 135.5608500560591,
+          "balance": 0.11493253651234,
+          "balanceVel": -0.37057959348433755,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.166666666666702,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -64.28551004071036,
+            49.79389960070319,
+            -3726.215198297725
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.07193840498598766,
+            0,
+            -0.997409076501749
+          ],
+          "side": [
+            0.997409076501749,
+            0,
+            0.07193840498598766
+          ],
+          "speed": 20.01790304015379,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 37.61858242232766,
+          "railLength": 135.5608500560591,
+          "balance": 0.10387059349019864,
+          "balanceVel": -0.9531386050601311,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.250000000000039,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -65.13260418970697,
+            49.4063119231779,
+            -3727.6499459978963
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0705753522506515,
+            0,
+            -0.9975064509338757
+          ],
+          "side": [
+            0.9975064509338757,
+            0,
+            0.0705753522506515
+          ],
+          "speed": 20.86755737037998,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 39.32922372551845,
+          "railLength": 135.5608500560591,
+          "balance": 0.08843225107377728,
+          "balanceVel": -0.4273325451604858,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.333333333333377,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -66.01476010230755,
+            49.002681746077684,
+            -3729.1440788145333
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06915576843021201,
+            0,
+            -0.9976058739265857
+          ],
+          "side": [
+            0.9976058739265857,
+            0,
+            0.06915576843021201
+          ],
+          "speed": 21.71721170060617,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 41.110669556228096,
+          "railLength": 135.5608500560591,
+          "balance": 0.10068600000916642,
+          "balanceVel": -0.6033411308477544,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.416666666666714,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -66.93197777851212,
+            48.58300906940253,
+            -3730.6975967476346
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06781011303596417,
+            0,
+            -0.9976982452475546
+          ],
+          "side": [
+            0.9976982452475546,
+            0,
+            0.06781011303596417
+          ],
+          "speed": 22.56686603083236,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 42.962919914456585,
+          "railLength": 135.5608500560591,
+          "balance": 0.11642724450711114,
+          "balanceVel": 0.3725538279177496,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.500000000000052,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -67.88425721832068,
+            48.14729389315244,
+            -3732.310499797201
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06658984616698611,
+            0,
+            -0.9977804329547946
+          ],
+          "side": [
+            0.9977804329547946,
+            0,
+            0.06658984616698611
+          ],
+          "speed": 23.416520361058552,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 44.885974800203925,
+          "railLength": 135.5608500560591,
+          "balance": 0.12733367440275759,
+          "balanceVel": 0.32662826121757216,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.583333333333389,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -68.87159842173321,
+            47.69553621732741,
+            -3733.9827879632317
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06532452845613657,
+            0,
+            -0.9978640718965602
+          ],
+          "side": [
+            0.9978640718965602,
+            0,
+            0.06532452845613657
+          ],
+          "speed": 24.266174691284743,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 46.87983421347011,
+          "railLength": 135.5608500560591,
+          "balance": 0.13798818402846239,
+          "balanceVel": 0.335335963858991,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.666666666666726,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -69.8920602190538,
+            47.22554268980665,
+            -3735.7149399053174
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06401367076894687,
+            0,
+            -0.9979490217213927
+          ],
+          "side": [
+            0.9979490217213927,
+            0,
+            0.06401367076894687
+          ],
+          "speed": 25.115829021510933,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 48.94449815425515,
+          "railLength": 135.5608500560591,
+          "balance": 0.10117687900941971,
+          "balanceVel": -1.1354256777241392,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.750000000000064,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -70.68990050450424,
+            46.78546208126018,
+            -3737.157970844438
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06291869776002859,
+            0,
+            -0.9980186558738179
+          ],
+          "side": [
+            0.9980186558738179,
+            0,
+            0.06291869776002859
+          ],
+          "speed": 25.889428502148192,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 50.65112006738243,
+          "railLength": 135.5608500560591,
+          "balance": 0.07786242720320974,
+          "balanceVel": 0.48207993131047666,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.816666666666734,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -71.85632620256722,
+            46.0188154427068,
+            -3739.4183066455225
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.06102765744007723,
+            0,
+            -0.9981360754062427
+          ],
+          "side": [
+            0.9981360754062427,
+            0,
+            0.06102765744007723
+          ],
+          "speed": 27.14019950454429,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 53.31001216668902,
+          "railLength": 135.5608500560591,
+          "balance": 0.10797639325836493,
+          "balanceVel": 1.6242092887625774,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.916666666666739,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -72.7784522272289,
+            45.249899691200916,
+            -3741.4042632593964
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0594991644033077,
+            0,
+            -0.9982283553552805
+          ],
+          "side": [
+            0.9982283553552805,
+            0,
+            0.0594991644033077
+          ],
+          "speed": 28.37534529237963,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 55.63204551534486,
+          "railLength": 135.5608500560591,
+          "balance": 0.12602592319164768,
+          "balanceVel": 1.72682967238564,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.000000000000076,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -73.46192590858784,
+            44.52412188834739,
+            -3743.066747648615
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0582157470480606,
+            0,
+            -0.9983040252326124
+          ],
+          "side": [
+            0.9983040252326124,
+            0,
+            0.0582157470480606
+          ],
+          "speed": 29.498556269650262,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 57.57053565888979,
+          "railLength": 135.5608500560591,
+          "balance": 0.12142225026193135,
+          "balanceVel": -0.3681512454069298,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.066666666666746,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -74.24635848397554,
+            43.48723977703046,
+            -3745.2240220000094
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.056545847633021146,
+            0,
+            -0.9984000035634332
+          ],
+          "side": [
+            0.9984000035634332,
+            0,
+            0.056545847633021146
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 60.09085545941227,
+          "railLength": 135.5608500560591,
+          "balance": 0.09608410233691297,
+          "balanceVel": -0.3532315543349772,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.150000000000084,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -74.9352112619793,
+            42.354184448894685,
+            -3747.3904130464
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.054864527723446826,
+            0,
+            -0.9984938074909044
+          ],
+          "side": [
+            0.9984938074909044,
+            0,
+            0.054864527723446826
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 62.63252212607893,
+          "railLength": 135.5608500560591,
+          "balance": 0.08138749898655401,
+          "balanceVel": -0.7545152557785646,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.233333333333421,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -75.52809097103889,
+            41.14255970234551,
+            -3749.5439579880463
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0534438046991802,
+            0,
+            -0.9985708586471347
+          ],
+          "side": [
+            0.9985708586471347,
+            0,
+            0.0534438046991802
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 65.17418879274561,
+          "railLength": 135.5608500560591,
+          "balance": 0.1115755467014641,
+          "balanceVel": -1.0439601688036269,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.316666666666759,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -75.99764756943607,
+            39.83638670880236,
+            -3751.673159283435
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.05225249648215941,
+            0,
+            -0.9986339051981871
+          ],
+          "side": [
+            0.9986339051981871,
+            0,
+            0.05225249648215941
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 67.71585545941231,
+          "railLength": 135.5608500560591,
+          "balance": 0.0671921866406826,
+          "balanceVel": 0.26636542248819883,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.400000000000096,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -76.4190297729015,
+            38.49529917797387,
+            -3753.7903828611365
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.051066410114311414,
+            0,
+            -0.9986952597054003
+          ],
+          "side": [
+            0.9986952597054003,
+            0,
+            0.051066410114311414
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 70.25752212607901,
+          "railLength": 135.5608500560591,
+          "balance": 0.024222339695160924,
+          "balanceVel": 0.35945433326085974,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.483333333333434,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -76.82268904438037,
+            37.14136689900631,
+            -3755.9031999428935
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.049882197816879324,
+            0,
+            -0.9987551082927973
+          ],
+          "side": [
+            0.9987551082927973,
+            0,
+            0.049882197816879324
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 72.79918879274571,
+          "railLength": 135.5608500560591,
+          "balance": 0.04071931616323203,
+          "balanceVel": -0.8447674769638789,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.566666666666771,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -77.22634831585923,
+            35.787434620038745,
+            -3758.0160170246504
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04857293156841137,
+            0,
+            -0.9988196385328287
+          ],
+          "side": [
+            0.9988196385328287,
+            0,
+            0.04857293156841137
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 75.34085545941241,
+          "railLength": 135.5608500560591,
+          "balance": 0.03991228041815566,
+          "balanceVel": -0.6378160676167676,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.650000000000109,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -77.58515961001144,
+            34.43157894609995,
+            -3760.1344505875113
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.047381339787358284,
+            0,
+            -0.9988768736135375
+          ],
+          "side": [
+            0.9988768736135375,
+            0,
+            0.047381339787358284
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 77.88252212607911,
+          "railLength": 135.5608500560591,
+          "balance": 0.04364823270218233,
+          "balanceVel": -0.6604938521681838,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.733333333333446,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -77.82961430091498,
+            33.07081886111012,
+            -3762.2672054584796
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04617872197246417,
+            0,
+            -0.9989331937807402
+          ],
+          "side": [
+            0.9989331937807402,
+            0,
+            0.04617872197246417
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 80.42418879274581,
+          "railLength": 135.5608500560591,
+          "balance": 0.04830911872329297,
+          "balanceVel": -0.5920824323233576,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.816666666666784,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -77.74051309343375,
+            31.71404617204112,
+            -3764.4128731176165
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.044960423342784724,
+            0,
+            -0.9989887688722219
+          ],
+          "side": [
+            0.9989887688722219,
+            0,
+            0.044960423342784724
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 82.96585545941251,
+          "railLength": 135.5608500560591,
+          "balance": 0.02345198603047218,
+          "balanceVel": 0.39100967132242115,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.900000000000121,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -77.36242487127407,
+            30.382012952463526,
+            -3766.5361477336905
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04380650825887143,
+            0,
+            -0.9990400341498659
+          ],
+          "side": [
+            0.9990400341498659,
+            0,
+            0.04380650825887143
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 85.50752212607921,
+          "railLength": 135.5608500560591,
+          "balance": 0.048299683066426694,
+          "balanceVel": -0.6550374682948367,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.983333333333459,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -76.66509144209702,
+            29.096637975982908,
+            -3768.604190775667
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04314985834305477,
+            0,
+            -0.9990686111198641
+          ],
+          "side": [
+            0.9990686111198641,
+            0,
+            0.04314985834305477
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 88.04918879274591,
+          "railLength": 135.5608500560591,
+          "balance": 0.02930156409898718,
+          "balanceVel": 0.49024694240838884,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.066666666666796,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -75.64094985368416,
+            27.88242306116934,
+            -3770.5787819061106
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04251793797193211,
+            0,
+            -0.9990957035993173
+          ],
+          "side": [
+            0.9990957035993173,
+            0,
+            0.04251793797193211
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 90.59085545941261,
+          "railLength": 135.5608500560591,
+          "balance": 0.027115335487634944,
+          "balanceVel": 1.254111298544378,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.150000000000134,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -74.31015443100618,
+            26.759838723010766,
+            -3772.4264651021194
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04192149583384529,
+            0,
+            -0.9991209076918833
+          ],
+          "side": [
+            0.9991209076918833,
+            0,
+            0.04192149583384529
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 93.13252212607931,
+          "railLength": 135.5608500560591,
+          "balance": 0.08258762720918163,
+          "balanceVel": 0.6375735081268168,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.233333333333471,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -72.67780050264048,
+            25.759689451066535,
+            -3774.0983477328155
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.041375904833788404,
+            0,
+            -0.9991436505824302
+          ],
+          "side": [
+            0.9991436505824302,
+            0,
+            0.041375904833788404
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 95.67418879274601,
+          "railLength": 135.5608500560591,
+          "balance": 0.11523402864730026,
+          "balanceVel": 0.5526755987245653,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.316666666666809,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -70.92236134471844,
+            24.822418507977872,
+            -3775.678115486826
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04082910858574116,
+            0,
+            -0.999166144288373
+          ],
+          "side": [
+            0.999166144288373,
+            0,
+            0.04082910858574116
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 98.21585545941271,
+          "railLength": 135.5608500560591,
+          "balance": 0.06704822852843183,
+          "balanceVel": -1.3403234192625466,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.400000000000146,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -69.14747115956006,
+            23.89508415997502,
+            -3777.2433264253536
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.04031793709212881,
+            0,
+            -0.9991869014096587
+          ],
+          "side": [
+            0.9991869014096587,
+            0,
+            0.04031793709212881
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 100.75752212607941,
+          "railLength": 135.5608500560591,
+          "balance": 0.03420462306583037,
+          "balanceVel": -1.2043029042176303,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.483333333333483,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -67.37258097440167,
+            22.96774981197217,
+            -3778.8085373638814
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.03980675543482616,
+            0,
+            -0.9992073970011189
+          ],
+          "side": [
+            0.9992073970011189,
+            0,
+            0.03980675543482616
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 103.29918879274611,
+          "railLength": 135.5608500560591,
+          "balance": 0.035355846040632445,
+          "balanceVel": -0.8097427184505757,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.566666666666821,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -65.59769078924329,
+            22.040415463969317,
+            -3780.3737483024092
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.039295564015234125,
+            0,
+            -0.9992276310474628
+          ],
+          "side": [
+            0.9992276310474628,
+            0,
+            0.039295564015234125
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 105.84085545941281,
+          "railLength": 135.5608500560591,
+          "balance": 0.012245907724125035,
+          "balanceVel": -1.3292225213404292,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.650000000000158,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -63.822800604084904,
+            21.113081115966466,
+            -3781.9389592409375
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.03878436323477498,
+            0,
+            -0.9992476035340154
+          ],
+          "side": [
+            0.9992476035340154,
+            0,
+            0.03878436323477498
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 108.38252212607951,
+          "railLength": 135.5608500560591,
+          "balance": 0.051912373147746875,
+          "balanceVel": 0.6241385289490042,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.733333333333496,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -62.04791041892652,
+            20.185746767963614,
+            -3783.5041701794653
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.03827315349489126,
+            0,
+            -0.9992673144467183
+          ],
+          "side": [
+            0.9992673144467183,
+            0,
+            0.03827315349489126
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 110.92418879274621,
+          "railLength": 135.5608500560591,
+          "balance": 0.07001506899188967,
+          "balanceVel": 1.889906910679029,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.816666666666833,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -60.627998270799814,
+            19.443879289561334,
+            -3784.7563389302873
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.038206552597241136,
+            0,
+            -0.9992698631193849
+          ],
+          "side": [
+            0.9992698631193849,
+            0,
+            0.038206552597241136
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 112.95752212607957,
+          "railLength": 135.5608500560591,
+          "balance": 0.08163998763125185,
+          "balanceVel": 0.7195819418088142,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.883333333333503,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -58.88680742783369,
+            18.52047378702423,
+            -3786.3596914602035
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.03815858321614282,
+            0,
+            -0.9992716960501468
+          ],
+          "side": [
+            0.9992716960501468,
+            0,
+            0.03815858321614282
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 115.49918879274627,
+          "railLength": 135.5608500560591,
+          "balance": 0.10620109896058572,
+          "balanceVel": -0.2840643009482171,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.96666666666684,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -57.30124461613177,
+            17.618519894138647,
+            -3788.122776958472
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.038106196573167064,
+            0,
+            -0.9992736951319828
+          ],
+          "side": [
+            0.9992736951319828,
+            0,
+            0.038106196573167064
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 118.04085545941297,
+          "railLength": 135.5608500560591,
+          "balance": 0.06795406889926568,
+          "balanceVel": 0.0434535374600557,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.050000000000178,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -55.98633371985135,
+            16.763558444386064,
+            -3790.115599081524
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.038047508259276885,
+            0,
+            -0.9992759314199758
+          ],
+          "side": [
+            0.9992759314199758,
+            0,
+            0.038047508259276885
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 120.58252212607967,
+          "railLength": 135.5608500560591,
+          "balance": 0.04201162256608455,
+          "balanceVel": 0.1057543183226104,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.133333333333516,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -54.99386966712567,
+            15.978463508438328,
+            -3792.313256383152
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.03798329045395665,
+            0,
+            -0.999278374451429
+          ],
+          "side": [
+            0.999278374451429,
+            0,
+            0.03798329045395665
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 123.12418879274637,
+          "railLength": 135.5608500560591,
+          "balance": 0.021304934235561512,
+          "balanceVel": 0.19092322961142266,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.216666666666853,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -54.3552483720942,
+            15.283602032684035,
+            -3794.668398901567
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0379149348507693,
+            0,
+            -0.9992809703558163
+          ],
+          "side": [
+            0.9992809703558163,
+            0,
+            0.0379149348507693
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 125.66585545941307,
+          "railLength": 135.5608500560591,
+          "balance": 0.008709233360087665,
+          "balanceVel": 0.28836605482985644,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.30000000000019,
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -54.07262619800347,
+            14.691709172748963,
+            -3797.121533238586
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.03784416134231421,
+            0,
+            -0.9992836531497434
+          ],
+          "side": [
+            0.9992836531497434,
+            0,
+            0.03784416134231421
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 128.20752212607977,
+          "railLength": 135.5608500560591,
+          "balance": 0.03296981228974547,
+          "balanceVel": -0.4012201940248895,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.383333333333528,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.976834763028364,
+            14.158183041310584,
+            -3799.6046218869374
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.0377727297947875,
+            0,
+            -0.9992863557979013
+          ],
+          "side": [
+            0.9992863557979013,
+            0,
+            0.0377727297947875
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 130.7491887927464,
+          "railLength": 135.5608500560591,
+          "balance": 0.009836560904455185,
+          "balanceVel": -0.3003651404572285,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.466666666666866,
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.88411678120237,
+            13.625629918850443,
+            -3802.088139551873
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            0.037934456826729135,
+            0,
+            -0.9992802294578139
+          ],
+          "side": [
+            0.9992802294578139,
+            0,
+            0.037934456826729135
+          ],
+          "speed": 30.5,
+          "vy": 0,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Homecoming · diving cable",
+          "railT": 133.29085545941302,
+          "railLength": 135.5608500560591,
+          "balance": 0.02778814500411053,
+          "balanceVel": -0.1601215410326,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.550000000000203,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.80130918077342,
+            13.15,
+            -3804.306200540757
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.0385338219819053,
+            0,
+            -0.9992572964774722
+          ],
+          "side": [
+            0.9992572964774722,
+            0,
+            0.0385338219819053
+          ],
+          "speed": 30.5,
+          "vy": 1.125,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0.6256370801819231,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.63333333333354,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": true,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.7064863610846,
+            13.126226715819127,
+            -3806.846097797993
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.03922013820423136,
+            0,
+            -0.9992305943871218
+          ],
+          "side": [
+            0.9992305943871218,
+            0,
+            0.03922013820423136
+          ],
+          "speed": 30.5,
+          "vy": -1.6337357014692253,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.716666666666878,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.63062810533354,
+            12.852033343968609,
+            -3808.878015603782
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.039769178541745616,
+            0,
+            -0.9992088932941474
+          ],
+          "side": [
+            0.9992088932941474,
+            0,
+            0.039769178541745616
+          ],
+          "speed": 30.5,
+          "vy": -5.774397348076129,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.783333333333548,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.53580528564472,
+            12.079166898295597,
+            -3811.417912861018
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.040455449375159235,
+            0,
+            -0.999181343208456
+          ],
+          "side": [
+            0.999181343208456,
+            0,
+            0.040455449375159235
+          ],
+          "speed": 30.5,
+          "vy": -11.60773068140946,
+          "surface": "rail (50-50)",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.866666666666886,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.43461426266604,
+            12,
+            -3813.9397279143104
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.041136901439655246,
+            0,
+            -0.9991535194052733
+          ],
+          "side": [
+            0.9991535194052733,
+            0,
+            0.041136901439655246
+          ],
+          "speed": 30.073729608432192,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 1",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.950000000000223,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.331910731641344,
+            11.999927540954758,
+            -3816.4192046674852
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.041806930108480966,
+            0,
+            -0.9991257081042929
+          ],
+          "side": [
+            0.9991257081042929,
+            0,
+            0.041806930108480966
+          ],
+          "speed": 29.61387149448799,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.03333333333356,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.22932114751853,
+            12.000313859200233,
+            -3818.8667100976045
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.042468313193306385,
+            0,
+            -0.9990978142176645
+          ],
+          "side": [
+            0.9990978142176645,
+            0,
+            0.042468313193306385
+          ],
+          "speed": 29.25170932559999,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.116666666666898,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -53.13992633745526,
+            11.999956126619685,
+            -3820.802940890069
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.04344208711034617,
+            0,
+            -0.9990559469156354
+          ],
+          "side": [
+            0.9990559469156354,
+            0,
+            0.04344208711034617
+          ],
+          "speed": 28.96909291142258,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.183333333333568,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -52.996611539255575,
+            11.991955799417788,
+            -3823.1956799575296
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.04480407226983176,
+            0,
+            -0.9989957933385103
+          ],
+          "side": [
+            0.9989957933385103,
+            0,
+            0.04480407226983176
+          ],
+          "speed": 28.63154480882128,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.266666666666906,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -52.80142781334184,
+            11.968109033731078,
+            -3825.5577839742737
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.04614984788462703,
+            0,
+            -0.9989345281549866
+          ],
+          "side": [
+            0.9989345281549866,
+            0,
+            0.04614984788462703
+          ],
+          "speed": 28.322855690542657,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.350000000000243,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -52.60204380152999,
+            11.941067592033635,
+            -3827.425717165112
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.04721511131724091,
+            0,
+            -0.9988847447344967
+          ],
+          "side": [
+            0.9988847447344967,
+            0,
+            0.04721511131724091
+          ],
+          "speed": 28.099488768274504,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.416666666666913,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -52.28554311299429,
+            11.935815299751955,
+            -3829.7239096935323
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.04853001309855049,
+            0,
+            -0.9988217247480425
+          ],
+          "side": [
+            0.9988217247480425,
+            0,
+            0.04853001309855049
+          ],
+          "speed": 27.592142900937347,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.50000000000025,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -52.00231395440607,
+            11.995918441988476,
+            -3831.53052008727
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.049563523706643506,
+            0,
+            -0.9987709733055828
+          ],
+          "side": [
+            0.9987709733055828,
+            0,
+            0.049563523706643506
+          ],
+          "speed": 27.36370071537245,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · ice 2",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.56666666666692,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -51.671372589963084,
+            12,
+            -3833.7684653519505
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.05084311193869342,
+            0,
+            -0.9987066526104598
+          ],
+          "side": [
+            0.9987066526104598,
+            0,
+            0.05084311193869342
+          ],
+          "speed": 26.979278740893736,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.650000000000258,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -51.38639589084448,
+            12,
+            -3835.9771270557467
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.05210461577676067,
+            0,
+            -0.9986416319254651
+          ],
+          "side": [
+            0.9986416319254651,
+            0,
+            0.05210461577676067
+          ],
+          "speed": 26.555526501704485,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.733333333333595,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -51.147652646158726,
+            12,
+            -3838.156352965777
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.052811302669207416,
+            0,
+            -0.9986045094582647
+          ],
+          "side": [
+            0.9986045094582647,
+            0,
+            0.052811302669207416
+          ],
+          "speed": 26.143824437414562,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.816666666666933,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -50.98905473442488,
+            12,
+            -3839.8785571173207
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.052811302669207416,
+            0,
+            -0.9986045094582647
+          ],
+          "side": [
+            0.9986045094582647,
+            0,
+            0.052811302669207416
+          ],
+          "speed": 25.822787017740456,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.883333333333603,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -50.83598077171698,
+            12,
+            -3842.005208770453
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.052811302669207416,
+            0,
+            -0.9986045094582647
+          ],
+          "side": [
+            0.9986045094582647,
+            0,
+            0.052811302669207416
+          ],
+          "speed": 25.43147952151158,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.96666666666694,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -50.81970078767231,
+            12,
+            -3843.6874838668145
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.052811302669207416,
+            0,
+            -0.9986045094582647
+          ],
+          "side": [
+            0.9986045094582647,
+            0,
+            0.052811302669207416
+          ],
+          "speed": 25.12613160895613,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.03333333333361,
+          "input": {
+            "moveX": -1,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -50.91922899301867,
+            12,
+            -3845.7600737003795
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.052811302669207416,
+            0,
+            -0.9986045094582647
+          ],
+          "side": [
+            0.9986045094582647,
+            0,
+            0.052811302669207416
+          ],
+          "speed": 24.75369422486637,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.116666666666948,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -50.8821247226484,
+            12,
+            -3847.803735398907
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            0.052811302669207416,
+            0,
+            -0.9986045094582647
+          ],
+          "side": [
+            0.9986045094582647,
+            0,
+            0.052811302669207416
+          ],
+          "speed": 24.391136804473863,
+          "vy": 0,
+          "surface": "Home harbour · tilted slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 135.5608500560591,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.200000000000285,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        }
+      ],
+      "end": {
+        "at": [
+          -50.818093886202824,
+          12.726666669150193,
+          -3849.0144891350806
+        ],
+        "state": "finished",
+        "grounded": true,
+        "forward": [
+          0.052811302669207416,
+          0,
+          -0.9986045094582647
+        ],
+        "side": [
+          0.9986045094582647,
+          0,
+          0.052811302669207416
+        ],
+        "speed": 0,
+        "vy": 0,
+        "surface": "warp plinth rim",
+        "spring": false,
+        "mounted": true,
+        "railT": 135.5608500560591,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": false,
+        "deaths": 0,
+        "time": 14.250000000000288
+      }
+    }
+  ],
+  "source": {
+    "components": 1038,
+    "rails": [
+      "Crane outrigger shortcut",
+      "Rigging · sweeping cable",
+      "Crown · outer cable",
+      "Crown · return cable",
+      "Homecoming · diving cable"
+    ],
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "canvas": [
+      720,
+      450
+    ]
+  }
+}

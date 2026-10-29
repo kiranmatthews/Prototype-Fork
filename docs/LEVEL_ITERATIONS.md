@@ -6155,3 +6155,54 @@ The final production preview passes all three keyboard crossing routes,
 downhill drift, spike death and dry checkpoint recovery with no console errors.
 Reviewed the final banks at MAX/native resolution and normal 480p/CRT.
 Production preview stamp: `Codex/sol fork · build 10-29 05:37 UTC`.
+
+
+## 29 October 2026 NZDT — Carlisle required grind finale
+
+Reworked the final three sections (3,350–4,000 m) to replace thirteen similar
+spring transfers with five springs and four required grind lines. Rigging
+Slingshot bends out over the sea and demands a charged rail jump into a turning,
+vertically moving rebound. Broken Crown links two cables with a raised spring
+and a sideways aerial catch. Homecoming uses a high vertical bounce into a long
+descending cable, then straightens into the harbour and finish approach.
+
+Rails have no walking floors below them. Their native chrome and sparse fruit
+mark catches and exits. The two raised rebound pads are outside the ordinary
+rail run-off arc; the final cable intentionally permits a clean run-off. Small
+dry catches protect those fast landings before the slippery crossing resumes.
+Shared movement, trampoline, grind and tuning code is unchanged.
+The course retains its 4 km survey, three acts and 17 checkpoints; it now has
+55 primary spring transfers and 28 moving decks.
+
+First continuous traversal of all three sequences with real keyboard input:
+approximately **21 minutes** (05:41:19–06:02 UTC). The final harbour run-out
+was then aligned and verified continuously through the finish gate. Native
+input-only routes pass at phases 0, 7 and 53; the four rail catches and two
+charged exits are observed. Eight direct no-grind/no-exit-jump attempts fail,
+including maximum-downhill-speed board entries from the front of each launch
+pad. This is a bounded shortcut check, not a claim about every possible exploit.
+All 110 primary transfer checks, 23 slippery crossings, 1,797 floor probes and
+36 spike contacts pass. See [the grind evidence](carlisle-relay/grinds/).
+
+Visual review found a camera transition bug: without ground below a caught
+rail, the course camera held its previous bounce-apex height and lost the rider.
+The camera now uses the rail rider's height as supported ground while grinding.
+This leaves its existing pitch, FOV, ordinary jumps, bounce view and control
+frame intact. The browser checks both the rider's head and feet after each
+rail catch settles. Resolution-switch screenshots are taken separately from
+the continuous control run so shader compilation cannot hold a balance input.
+
+This increment remains under the user's local-only publication hold.
+
+Camera-corrected prompt-to-playable time: approximately **42 minutes**
+(05:41:19–06:23 UTC). Final required level checks, build/type checking and
+release-size validation pass. Chrome lite and production full-render runs
+clear all three sequences using ordinary keyboard inputs, including the
+Homecoming finish gate, with no deaths or console errors. The existing
+abandon-ship gesture, mounted lateral steering, 80-degree big-bounce camera,
+25.35-degree ground/recovery camera and checkpoint respawn also pass.
+MAX/native 1440×900 views keep the rider's head and feet in frame on all four
+grinds. The normal 480p/CRT launch view was also reviewed after resetting the
+finish-camera flow. Final production stamp: `Codex/sol fork · build 10-29 06:26 UTC`.
+Exact source hashes, test boundaries and reports are recorded in
+[the validation manifest](carlisle-relay/grinds/validation.json).

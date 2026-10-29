@@ -33,10 +33,11 @@ try{
  await place(point(65,.35));await page.waitForFunction(()=>window.__game.player.pos.y>8);report.bounce=await snap();
  assert.ok(Math.hypot(report.bounce.position[0]-point(65,0)[0],report.bounce.position[2]-point(65,0)[2])<.2);
  await page.screenshot({path:`${out}/${mode}-native-bounce.png`});
- // Follow a giant held bounce through its apex with real movement input.
- await page.keyboard.down('Space');await place(point(3835,24.35));await page.keyboard.down('ArrowUp');
+ // Use the unchanged lighthouse ascent for the giant-air regression; the
+ // homecoming spring now deliberately targets a nearby required grind.
+ await page.keyboard.down('Space');await place(point(1170,63.35,-3));await page.keyboard.down('ArrowUp');
  await page.waitForFunction(()=>window.__game.player.pos.y>90&&window.__game.player.vVel<2,null,{timeout:15000});
- report.apex=await page.evaluate(target=>{const g=window.__game,v=g.player.pos.clone().set(...target).project(g.camera);return{height:g.player.pos.y,targetNdc:v.toArray(),canvas:[g.renderer.domElement.width,g.renderer.domElement.height],preset:g.renderQualitySettings.regularResolution};},point(3875,52,-4));
+ report.apex=await page.evaluate(target=>{const g=window.__game,v=g.player.pos.clone().set(...target).project(g.camera);return{height:g.player.pos.y,targetNdc:v.toArray(),canvas:[g.renderer.domElement.width,g.renderer.domElement.height],preset:g.renderQualitySettings.regularResolution};},point(1204,78,3));
  await page.screenshot({path:`${out}/${mode}-giant-bounce-apex.png`});await page.keyboard.up('ArrowUp');await page.keyboard.up('Space');
  report.airCamera=await cameraSample();assert.ok(report.airCamera.fov>70);assert.ok(report.airCamera.pitch>78&&report.airCamera.pitch<82);assert.ok(report.airCamera.spring>.99);
  assert.ok(Math.abs(report.apex.targetNdc[0])<1&&Math.abs(report.apex.targetNdc[1])<1,'next landing left the camera at the apex');

@@ -18,7 +18,8 @@ const smooth = (v: number) => { const t = Math.max(0, Math.min(1, v)); return t 
 export function buildCarlisleCrossings(components: CustomComponent[], roads: CarlisleRoad[],
   point: (s: number, y: number, u?: number) => Point, yaw: (s: number) => number,
   group: (s: number) => number, stops: { s: number; y: number }[],
-  jumps: { from: [number, number, number?]; to: [number, number, number?] }[]): CarlisleCrossing[] {
+  jumps: { from: [number, number, number?]; to: [number, number, number?] }[],
+  railCatches: {s: number; y: number}[] = []): CarlisleCrossing[] {
   const runs: CarlisleRoad[][] = [];
   for (const road of [...roads].sort((a, b) => a.a - b.a)) {
     const previous = runs[runs.length - 1];
@@ -54,6 +55,8 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
     for (const jump of jumps) for (const station of [jump.from, jump.to])
       if (station[0] >= a - 8 && station[0] <= b + 8 && station[1] === y)
         anchors.push({ s: station[0], radius: jump.from === station ? 8 : 7 });
+    for (const catchAt of railCatches) if (catchAt.s >= a && catchAt.s <= b && catchAt.y === y)
+      anchors.push({s: catchAt.s, radius: 7});
     if (b > 3990) anchors.push({ s: 4000, radius: 18 });
     const clearance = (s: number) => Math.min(...anchors.map(p => Math.abs(s - p.s) - p.radius));
     const bounds = (s: number): [number, number] => {

@@ -20,20 +20,22 @@ export const CARLISLE_RELAY_LENGTH=4000;
 export const CARLISLE_RELAY_ACTS=[
  {name:'I · THE BREAKWATER',from:0,to:1280,idea:'Learn the springs, weave through the groynes, climb the lighthouse.'},
  {name:'II · THE TIDAL ENGINE',from:1280,to:2700,idea:'Orbiting docks, opposing rotors and an open spring-terrace climb.'},
- {name:'III · THE STORM CROWN',from:2700,to:4000,idea:'Exposed headlands, moving spring chains and the homeward dive.'},
+ {name:'III · THE STORM CROWN',from:2700,to:4000,idea:'Exposed headlands give way to spring-to-rail catches, charged grind exits and the homeward cable dive.'},
 ];
 export const CARLISLE_RELAY_SECTIONS=[
  ['Foam steps',0,180],['Scissor groyne',180,390],['Lift and skip',390,605],['Surf sockets',605,825],
  ['Twin winches',825,1040],['Beacon chimney',1040,1280],['Tide dial',1280,1510],['Pinwheel handoffs',1510,1745],
  ['Dredger terraces',1745,1980],['Cross-thread springs',1980,2220],['Counterweight stacks',2220,2460],['Harbour scissors',2460,2700],
- ['Storm fingers',2700,2910],['Helical turbine',2910,3130],['Pendulum pier',3130,3350],['Double helix',3350,3570],
- ['The storm eye',3570,3790],['Homecoming',3790,4000],
+ ['Storm fingers',2700,2910],['Helical turbine',2910,3130],['Pendulum pier',3130,3350],['Rigging slingshot',3350,3570],
+ ['Broken crown',3570,3790],['Homecoming cable',3790,4000],
 ] as const;
 for(const [i,[nm]] of CARLISLE_RELAY_SECTIONS.entries())groups.push({id:i+1,nm:`${String(i+1).padStart(2,'0')} · ${nm}`,editorOnly:true});
 groups.push({id:90,nm:'Coastline massing and camera',editorOnly:true});
 const group=(s:number)=>{const i=CARLISLE_RELAY_SECTIONS.findIndex(q=>s<q[2]);return i<0?18:i+1;};
 let deckLayer=0;
-export const CARLISLE_RELAY_JUMPS:{name:string;from:Station;to:Station;up:number;moving:boolean}[]=[];
+export const CARLISLE_RELAY_JUMPS:{name:string;from:Station;to:Station;up:number;moving:boolean;rail?:string}[]=[];
+export type CarlisleGrindBeat={name:string;start:Station;launches:string[];rails:{name:string;knots:Station[];popTo?:Station}[];finish:Station;gate?:boolean};
+export const CARLISLE_RELAY_GRINDS:CarlisleGrindBeat[]=[];
 export const CARLISLE_RELAY_STOPS:{name:string;s:number;y:number;p:P}[]=[];
 export const CARLISLE_RELAY_WALK:{name:string;s:number;y:number;u:number;p:P}[]=[];
 const add=(c:CustomComponent)=>{C.push(c);return c;};
@@ -82,6 +84,14 @@ function chain(name:string,marks:Station[],motion?:Record<number,Partial<CustomC
  const excursion=(m:Partial<CustomComponent>|undefined)=>m?(Math.abs(m.amp??0)+Math.hypot(...(m.orbit??[0,0]))):0;
  for(let i=0;i<marks.length-1;i++)spring(`${name} · ${i+1}`,marks[i],marks[i+1],motion?.[i],excursion(motion?.[i])+excursion(motion?.[i+1]));}
 function rail(nm:string,a:number,b:number,y:number,u:number){const p=carlislePoint(a,y,u),n=Math.ceil((b-a)/6);add({t:'rail',nm,p,pts:Array.from({length:n+1},(_,i)=>{const q=carlislePoint(a+(b-a)*i/n,y,u);return[q[0]-p[0],q[2]-p[2],0,0];}),grp:group(a)});}
+function grindLine(nm:string,knots:Station[],popTo?:Station){
+ const p=point(knots[0]);add({t:'rail',nm,p,pts:knots.map(k=>{const q=point(k);return[q[0]-p[0],q[2]-p[2],9,q[1]-p[1]];}),grp:group(knots[0][0])});
+ // Sparse fruit on the entry and departure makes the thin native rail legible
+ // from the bounce camera without adding a walkable bridge below it.
+ for(const k of knots)add({t:'wumpa',nm:`${nm} · grind line`,p:point([k[0],k[1]+1,k[2]]),grp:group(k[0])});
+ return{name:nm,knots,popTo};
+}
+function springToRail(name:string,from:Station,to:Station,railName:string){spring(name,from,to);CARLISLE_RELAY_JUMPS[CARLISLE_RELAY_JUMPS.length-1].rail=railName;}
 
 // I — surf-side springs, a scissor pier, changing tides and a lighthouse climb.
 rest('Foam steps · start',0,0);road('Shore approach',12,61,0,16);
@@ -136,12 +146,21 @@ chain('Storm fingers',[[2747,24],[2780,43,-7],[2814,27,8],[2848,55,-6],[2884,28,
 chain('Helical turbine',[[2950,24],[2981,38,-4],[3014,53,4],[3048,66,-4],[3084,35],[3115,24]],{1:{axis:'z',orbit:[3,3],speed:.35,spin:-16},2:{axis:'x',orbit:[3,3],speed:.35,spin:16},3:{axis:'y',orbit:[3,3],speed:.35,spin:-16}});
 road('Turbine catch',3108,3163,24,19);rest('Pendulum pier',3145,24);road('Pendulum boarding quay',3150,3190,24,18);
 moving('Pendulum pier · translating and turning',3240,24,32,100,{axis:'z',amp:19,speed:.23,spin:3});walk('Pendulum centre',3240,24);walk('Pendulum disembark',3290,24);
-road('Pendulum receiving quay',3288,3360,24,18);rest('Double helix',3360,24);
-chain('Double helix',[[3380,24],[3410,40,-4],[3442,58,4],[3478,41,-4],[3515,61,4],[3551,24]],{1:{spin:17},2:{spin:-17},3:{axis:'y',amp:4,speed:.5},4:{spin:15}});
-for(const [s,y] of [[3426,23],[3497,23]]){moving('Helix cross-beam',s,y,9,70,{spin:8});box('Helix mast',s,y-1,6,6,0,55,DARK);}
-road('Helix catch',3544,3602,24,20);rest('The storm eye',3585,24);
-chain('Storm eye',[[3608,24],[3642,42,-5],[3678,60,5],[3714,43,-5],[3752,64,5],[3788,24]],{0:{axis:'x',amp:3,speed:.5},1:{axis:'y',amp:3,speed:.4,spin:-12},2:{axis:'y',orbit:[3,3],speed:.4,spin:12},3:{axis:'z',amp:3,speed:.5}});
-road('Eye catch',3781,3828,24,21);rest('Homecoming',3810,24);chain('Homecoming',[[3835,24],[3875,52,-4],[3917,74,4],[3958,12]]);
+road('Pendulum receiving quay',3288,3360,24,18);rest('Rigging slingshot',3360,24);
+const rigging=grindLine('Rigging · sweeping cable',[[3390,38,-6],[3408,38,-6],[3434,36,-27],[3462,34,-27],[3478,34,-12],[3490,34,-12]],[3506,35.2,-12]);
+springToRail('Rigging · rail catch',[3380,24],[3398,38,-6],rigging.name);
+spring('Rigging · moving rebound',[3506,35.2,-12],[3551,24],{axis:'y',amp:.5,speed:.5,spin:8},.5);
+CARLISLE_RELAY_GRINDS.push({name:'Rigging slingshot',start:[3370,24],launches:['Rigging · rail catch','Rigging · moving rebound'],rails:[rigging],finish:[3551,24]});
+road('Rigging catch',3544,3602,24,20);rest('Broken crown',3585,24);
+const crownA=grindLine('Crown · outer cable',[[3613,34,4],[3630,34,4],[3654,32,20],[3672,30,16],[3684,30,16]],[3700,31.2,16]);
+const crownB=grindLine('Crown · return cable',[[3719,49,-6],[3735,49,-6],[3750,40,-23],[3767,29,-12],[3780,25,0]]);
+springToRail('Crown · first catch',[3608,24],[3620,34,4],crownA.name);
+springToRail('Crown · crosswind rebound',[3700,31.2,16],[3727,49,-6],crownB.name);
+CARLISLE_RELAY_GRINDS.push({name:'Broken crown',start:[3594,24],launches:['Crown · first catch','Crown · crosswind rebound'],rails:[crownA,crownB],finish:[3788,24]});
+road('Eye catch',3781,3828,24,21);rest('Homecoming cable',3810,24);
+const home=grindLine('Homecoming · diving cable',[[3841,54,4],[3860,54,4],[3892,45,-18],[3917,29,-24],[3940,16,0],[3954,13,0]]);
+springToRail('Homecoming · final catch',[3835,24],[3847,54,4],home.name);
+CARLISLE_RELAY_GRINDS.push({name:'Homecoming cable',start:[3820,24],launches:['Homecoming · final catch'],rails:[home],finish:[3958,12],gate:true});
 road('Home harbour',3950,4020,12,s=>s<3985?18:30);add({t:'gate',nm:'Carlisle Coast · 4 km',p:carlislePoint(4000,12),yaw:frame(4000).yaw,grp:18});
 add({t:'crystal',p:carlislePoint(3990,13),grp:18});add({t:'clock',p:carlislePoint(14,0,-5),grp:1});
 for(let s=0;s<=4000;s+=18){const before=CARLISLE_RELAY_STOPS.filter(q=>q.s<=s);add({t:'camnode',nm:`Coast camera · ${s} m`,p:carlislePoint(s,before.length?before[before.length-1].y:0),radius:0,grp:90});}
@@ -151,7 +170,7 @@ for(const [i,[,a,b]] of CARLISLE_RELAY_SECTIONS.entries()){const y=i<6?-8:i<12?4
 add({t:'mesh',nm:'Grey sea',p:[0,-25,-2000],vertices:[-1400,0,-2200,1400,0,-2200,1400,0,2200,-1400,0,2200],indices:[0,2,1,0,3,2],tex:'solid',color:'#677d89',solid:false,grp:90});
 add({t:'pit',nm:'Sea reset',p:[0,-23,-2000],s:[2800,1,4400],invisible:true,grp:90});
 for(const [i,stop] of CARLISLE_RELAY_STOPS.entries())for(const u of [-7,7])add({t:'crate',kind:i===0&&u<0?'mask':'wood',p:carlislePoint(stop.s+12,stop.y,u),grp:group(stop.s)});
-export const CARLISLE_RELAY_CROSSINGS=buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS);
+export const CARLISLE_RELAY_CROSSINGS=buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS,CARLISLE_RELAY_GRINDS.map(g=>({s:g.finish[0],y:g.finish[1]})));
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
  sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,

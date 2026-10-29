@@ -7,10 +7,11 @@ course. The older Uga Ambush level and its save key remain separate.
 | --- | --- | --- |
 | The Breakwater | 0–1,280 m | Surf steps, a scissor groyne, tide lifts, opposing winches and a lighthouse climb. |
 | The Tidal Engine | 1,280–2,700 m | Elliptical docks, three pinwheels, open spring terraces, moving springs, counterweights and crossing crane arms. |
-| The Storm Crown | 2,700–4,000 m | Exposed headlands, helical platforms, a travelling pier, opposing spirals and the homeward dive. |
+| The Storm Crown | 2,700–4,000 m | Exposed headlands, helical platforms, a travelling pier, required spring-to-rail catches and the homeward cable dive. |
 
-There are 18 named sections, 63 primary spring transfers, one optional recovery
-spring, 37 moving decks and 17 checkpoints. Distance is the surveyed horizontal
+There are 18 named sections, 55 primary spring transfers, one optional recovery
+spring, 28 moving decks, four required grind rails and 17 checkpoints. The
+earlier crane outrigger remains an optional fifth rail. Distance is the surveyed horizontal
 centreline; vertical arcs and lateral steering add travel. Gold/silver/bronze
 targets are 500/620/780 seconds and remain provisional greybox targets.
 
@@ -51,6 +52,16 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
 
 ## Reproducible checks
 
+- `node tools/test-carlisle-grinds.mjs`: continuous late-section routes at
+  three machinery phases, all four catches, both charged rail exits, the moving
+  rebound and the final cable through the finish gate.
+- `node tools/test-carlisle-grind-gaps.mjs`: open-water support probes;
+  direct no-grind attempts on foot and at maximum downhill board speed;
+  run-offs without the two required exit jumps.
+- `node tools/carlisle-grinds-browser.mjs [--lite]`: all three routes with
+  real keyboard controls, rail and apex views, console checks, MAX/native and
+  normal CRT review. `--finale` isolates the final cable and finish run;
+  `--presentation` captures just the normal 480p/CRT launch view.
 - `node tools/test-slippery-gravity.mjs`: opt-in downhill vector acceleration,
   retained foot momentum, countersteering, board side-slip, unchanged legacy
   ice and portable capture.
@@ -67,7 +78,7 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
   `CARLISLE_REPLAY_LIVES` explicitly supplies missing starting life inventory.
 - `node tools/test-carlisle-relay.mjs`: native flights, neutral/held parity,
   source validity, 4 km survey and three-act structure. `PHASES=0,7` exercises
-  all 63 transfers at two machinery timings.
+  all 55 transfers, including native rail catches, at two machinery timings.
 - `node tools/test-kinetic-platforms.mjs`: stationary rider carry, live rim
   grinding, on-foot and mounted entry at three mover phases, capture round-trip
   and invalid motion rejection.
@@ -77,6 +88,7 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
 - `node tools/test-carlisle-route.mjs`: ordinary input-only route pilot; optional
   `START_S` starts once at a checkpoint, and `END_S` bounds a section review.
   It does not edit positions, velocity, gravity or machine clocks during play.
+  Use the specialized crossing/grind pilots above for the revised late sections.
 - `node tools/carlisle-relay-browser.mjs [--lite]`: real browser spawn, walking,
   neutral and giant held bounces, normal ground/adaptive air camera, visible
   landing at apex, mounted entry/steering/abandon-ship, continuous terrace
@@ -134,3 +146,34 @@ and rebuilding preserves the field, and disabling slip in the editor clears
 it. There are no global tuning changes.
 
 ![Slippery bank and visible spike line](slippery/full-crossing-1-slide.png)
+
+## Required grinds in the final 650 metres
+
+The last three sections replace thirteen similar spring transfers with five
+springs and four long, exposed grind lines. The rails use the game's ordinary
+catch, speed, balance and charged-exit rules. They have no floor underneath;
+fruit marks the bright native rails and their entry/exit points.
+
+- **Rigging slingshot:** bounce onto a sweeping outboard cable, balance through
+  its curve, then charge and release a rail jump onto a raised, turning spring.
+  That moving rebound sends the rider back to the coast.
+- **Broken crown:** catch the outer cable, jump its broken end into a rebound
+  spring, then cross the gap sideways onto the higher return cable. Its descent
+  leads to a small dry catch before the next checkpoint.
+- **Homecoming cable:** a short forward, high vertical bounce catches the final
+  cable. The long descending curve builds speed, straightens toward the harbour
+  and feeds the finish approach. Its launch cannot clear the whole water gap
+  in the tested maximum-speed direct attempt.
+
+The two raised rebound pads sit beyond the ordinary rail run-off arc; the
+player has to jump off. The final cable intentionally rewards a clean run-off.
+Dry landing areas use the same seven-metre clearance as trampoline catches.
+Shared player physics, trampoline controls and tuning are unchanged from the
+slippery-crossing revision. The camera now treats a caught rail as supported
+height instead of retaining the bounce apex over a void; its existing angles,
+FOV and temporary bounce view remain unchanged. Browser checks keep both the
+rider's head and feet inside the frame after each catch settles.
+See `grinds/validation.json` for the final
+source hashes, bounded traversal evidence and exact shortcut-test scope.
+
+![Required cable catch inside a trampoline challenge](grinds/full-1-rail-1-settled.png)
