@@ -2,6 +2,7 @@ import type { Player, PlayerAnimationClipHint } from './player';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
+import { LAUNCH_CLIPS, isLaunchClip } from './animation/launchJump';
 import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
@@ -44,6 +45,7 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.double-jump',
   'player.slide-jump',
   'player.fall',
+  LAUNCH_CLIPS.rise, LAUNCH_CLIPS.gather, LAUNCH_CLIPS.boardRise, LAUNCH_CLIPS.boardGather,
   ROLL_LANDING_CLIP_ID,
   'player.rope-climb',
   'player.rope-release',
@@ -146,6 +148,7 @@ const CROUCH_CRAWL_CLIP_IDS = new Set<ClipId>([
 ]);
 
 const AIRBORNE_CLIP_IDS = new Set<ClipId>([
+  ...Object.values(LAUNCH_CLIPS),
   'player.jump',
   'player.double-jump',
   'player.slide-jump',
@@ -154,6 +157,8 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (isLaunchClip(to)) return to === LAUNCH_CLIPS.rise || to === LAUNCH_CLIPS.boardRise ? .045 : .14;
+  if (isLaunchClip(from)) return to === LAND_CLIP_ID ? LAND_IMPACT_CROSSFADE_SECONDS : .12;
   if (to === SLOPE_SLIDE_CLIP_ID) return .12;
   if (from === SLOPE_SLIDE_CLIP_ID) return .14;
   if (to === ROLL_LANDING_CLIP_ID) return .045;
@@ -264,6 +269,7 @@ export class CharacterAnimationRuntime {
   private runtimeSpeed: number;
   private manualClipId: ClipId | null;
   private currentClipId: ClipId | null = null;
+  private previousLaunchId = -1;
   private requestedClipId: ClipId | null = null;
   private elapsedSeconds = 0;
   /** Integrated live-speed clock; unlike wall time it does not jump after unfreezing. */
@@ -473,6 +479,9 @@ export class CharacterAnimationRuntime {
     const justLanded = grounded && !this.previousGrounded;
     this.previousGrounded = grounded;
     const hint = intent.clipId;
+    const launchId = intent.motion.inputs?.launchId ?? -1;
+    if (this.manualClipId === null && isLaunchClip(hint) && launchId !== this.previousLaunchId) this.restartPending = true;
+    this.previousLaunchId = launchId;
     const recoveryHintChanged = this.manualClipId === null && this.currentClipId === LAND_CLIP_ID &&
       this.transient?.kind === 'landing' && hint !== this.previousHint &&
       (hint === 'player.run' || hint === 'player.idle') &&
@@ -841,6 +850,13 @@ export class CharacterAnimationRuntime {
       this.switchOutgoingCrawlContactPhase = null;
       this.switchOutgoingCrawlContactOwnership = 0;
     }
+    if (this.manualClipId === null && clip.metadata?.launchUpperBodyOnly) {
+      // Crossfades can carry the outgoing foot pose's channels into an
+      // otherwise upper-body-only board clip. Drop those before the deck solve.
+      const owned = new Set(clip.tracks.filter(track => track.kind !== 'scalar').map(track => track.target));
+      pose = {joints:Object.fromEntries(Object.entries(pose.joints).filter(([id])=>owned.has(id))),
+        scalars:Object.fromEntries(Object.entries(pose.scalars).filter(([id])=>id.startsWith('deform.arm.')||id==='deform.torso.length'))};
+    }
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
     // from the fully composed joint pose, and limbs never inherit parent scale.
@@ -1189,4 +1205,5 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   'player.bail',
   'player.death',
   'player.spin',
+  ...Object.values(LAUNCH_CLIPS),
 ];

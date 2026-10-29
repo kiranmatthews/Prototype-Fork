@@ -9,6 +9,7 @@ import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, 
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
+import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
 import { kookSquawkHits } from './enemies/kookSquawk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -334,6 +335,7 @@ export interface PlayerWorldFruitSnapshot {
 
 /** Presentation-only route into the browser-authored player clip catalog. */
 export type PlayerAnimationClipHint =
+  | LaunchClipId
   | 'player.swim'
   | 'player.swim-idle'
   | 'player.idle'
@@ -1114,20 +1116,29 @@ export class Player {
   private airPeakY = 0; // highest feet position in this authored air; huge-drop landing evidence
   private launchVy = 0; // vertical pop this air started with — scales the double-jump window
   private trampolineAir = false;
-  private trampolineLaunchY = 0;
   private trampolineLaunchSpeed = 0;
+  private trampolineElapsed = 0;
+  private trampolineLaunchId = 0;
 
   private get trampolineAirStrength(): number {
     const rise = this.trampolineLaunchSpeed ** 2 / (2 * Math.max(1, TUNING.riseGravity));
     return THREE.MathUtils.smoothstep(rise, 12, 55);
   }
 
-  /** Presentation only: widen during large spring airs, including a board eject. */
-  get trampolineCameraTarget(): number {
+  /** Actual trajectory drives both presentation owners, including a board eject.
+   * No animation state feeds back into the ballistic controller. */
+  get launchPresentation(): LaunchPresentation | null {
     if (!this.trampolineAir || this.state !== 'air' || this.isBailing || this.vertAir ||
-        (!this.bounceJump && !this.emergencyEjectLandingPending)) return 0;
-    const floor = this.groundHit?.y ?? this.trampolineLaunchY;
-    return this.trampolineAirStrength * THREE.MathUtils.smoothstep(this.pos.y - floor, 1.5, 18);
+        this.slamActive || this.doubleJumpAir || this.swimming ||
+        (!this.bounceJump && !this.emergencyEjectLandingPending) ||
+        this.trampolineAirStrength < LAUNCH_JUMP.minimumStrength) return null;
+    const floor = this.groundBelowIsFatal ? null : this.groundBelowY;
+    const contactTime = floor !== null && this.vVel < 0
+      ? Math.max(0, this.pos.y - floor) / Math.max(1, -this.vVel) : Infinity;
+    return {id:this.trampolineLaunchId,strength:this.trampolineAirStrength,elapsed:this.trampolineElapsed,
+      rise:launchRiseProgress(this.trampolineElapsed,this.vVel,this.trampolineLaunchSpeed),
+      gather:THREE.MathUtils.clamp(1-contactTime/LAUNCH_JUMP.gatherSeconds,0,1),
+      verticalSpeed:this.vVel,board:this.airFromSkate};
   }
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
@@ -2155,6 +2166,8 @@ export class Player {
       return this.animationPlanarSpeed > 0.001 ? 'player.crawl' : 'player.crouch';
     }
     if (this.sliding || this.slidePose > 0.25) return 'player.slide';
+    const launch = this.launchPresentation;
+    if (launch) return launchClip(launch);
     if (this.state === 'air' || !this.grounded) {
       if (this.doubleJumpAir) return 'player.double-jump';
       // Board flight is procedural skating, not the on-foot stretch jump.
@@ -2191,6 +2204,7 @@ export class Player {
       !this.doubleJumpAir &&
       !this.slideJumpAir &&
       !this.slamActive &&
+      !this.launchPresentation &&
       !this.airFromSkate;
     return sampleForwardRollPresentation(
       this.flipTimer,
@@ -2258,7 +2272,11 @@ export class Player {
       : 0;
     const forwardRoll = this.forwardRollPresentation();
     let actionProgress = 0;
-    if (clipId === ROLL_LANDING_CLIP_ID) {
+    if (isLaunchClip(clipId)) {
+      const launch = this.launchPresentation;
+      actionProgress = clipId === LAUNCH_CLIPS.gather || clipId === LAUNCH_CLIPS.boardGather
+        ? launch?.gather ?? 0 : launch?.rise ?? 0;
+    } else if (clipId === ROLL_LANDING_CLIP_ID) {
       actionProgress = this.rollLandingT / this.rollLandingDuration;
     } else if (clipId === JUMP_CHARGE_CLIP_ID) {
       actionProgress = this.chargePose;
@@ -2321,6 +2339,7 @@ export class Player {
         actionProgress,
         inputs: {
           travelSign,
+          launchId: this.trampolineLaunchId,
           iceEffort,
           iceSideSlip,
           slopeSlide: clipId === SLOPE_SLIDE_CLIP_ID ? 1 : 0,
@@ -3440,8 +3459,9 @@ export class Player {
     this.floatAir = false;
     this.bounceRefresh();
     this.trampolineAir = true;
-    this.trampolineLaunchY = this.pos.y;
     this.trampolineLaunchSpeed = this.vVel;
+    this.trampolineElapsed = 0;
+    this.trampolineLaunchId++;
     // Presentation-only impact stamp: the native launch has already been resolved.
     // Save the contact in deck space now so moving/spinning nets keep the dent attached.
     if (hit.mesh) {
@@ -4094,6 +4114,7 @@ export class Player {
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
     this.runLevel = level;
+    if (this.trampolineAir) this.trampolineElapsed += dt;
     if (this.kiteReleased) this.kiteReleaseT += dt;
     if (this.kiteVisual) this.kiteVisual.root.visible = this.kiteTowing || this.kiteVisual.flyingAway;
     // Detached sockets are a final presentation layer. Never let them enter
@@ -19422,7 +19443,8 @@ export class Player {
     const bodyDropPose = recoveringBail ? 0 : this.dropPose;
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
-    if (this.state === 'dead' && this.bailing) {
+    const launchOwnsBody = !this.airFromSkate && isLaunchClip(this.animationClipHint);
+    if ((this.state === 'dead' && this.bailing) || launchOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
       this.bodyGroup.rotation.x = 0;
@@ -19470,6 +19492,9 @@ export class Player {
       (this.grounded ? 0.1 * bodyDropPose : 0) +
       walkMagnitude * 0.075 * this.walkAmp + // reference bounce: each step hops
       breathe * 0.015 * this.idleAmp;
+    // Launch keys already contain their load, waist pivot and extension.
+    // Retiring the ordinary charge/run offsets prevents a second visual dip.
+    if (launchOwnsBody) this.bodyGroup.position.y = 0;
     // The somersault wheels around the WAIST, not the feet (the rig's origin):
     // counter-translate so the hip stays pinned on the jump arc while the
     // body rotates about it. The offset lives in the group frame, so the

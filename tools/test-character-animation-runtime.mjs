@@ -68,14 +68,16 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 31);
-  assert.equal(new Set(allIds).size, 31);
+  assert.equal(allIds.length, 37);
+  assert.equal(new Set(allIds).size, 37);
   for (const id of ['player.swim', 'player.swim-idle', 'player.death'])
     assert.ok(allIds.includes(id), `missing authored ${id} route`);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
     'player.jump-charge',
-    'player.jump', 'player.double-jump', 'player.slide-jump', 'player.fall', 'player.roll-land', 'player.rope-climb',
+    'player.jump', 'player.double-jump', 'player.slide-jump', 'player.fall',
+    'player.launch-rise', 'player.launch-gather', 'player.launch-board-rise', 'player.launch-board-gather',
+    'player.roll-land', 'player.rope-climb',
     'player.rope-release', 'player.slam',
   ]);
 

@@ -10,6 +10,7 @@ import { RUN_STOP_CLIP_ID, RUN_STOP_DURATION } from './runStop';
 import { buildIceWalkClip, ICE_WALK_CLIP_ID } from './iceWalk';
 import { buildSlopeSlideClip, SLOPE_SLIDE_CLIP_ID } from './slopeSlide';
 import { buildRollLandingClip, ROLL_LANDING_CLIP_ID } from './rollLanding';
+import { buildLaunchClips, LAUNCH_CLIPS } from './launchJump';
 import { QUATERNIUS_IDLE_DURATION, QUATERNIUS_IDLE_ROOT_KEYS,
   QUATERNIUS_IDLE_ROTATION_KEYS, QUATERNIUS_IDLE_SOURCE } from './quaterniusIdle.generated';
 import { CROUCH_CLIP_IDS, CROUCH_TRANSITION_DURATION, QUATERNIUS_CRAWL_PALMS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
@@ -120,6 +121,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.double-jump',
   'player.slide-jump',
   'player.fall',
+  ...Object.values(LAUNCH_CLIPS),
   'player.land',
   ROLL_LANDING_CLIP_ID,
   'player.crouch-enter',
@@ -148,7 +150,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 34;
+export const PLAYER_STARTER_CATALOG_VERSION = 35;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -410,6 +412,8 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.walk': 17,
   [ICE_WALK_CLIP_ID]: 32,
   [SLOPE_SLIDE_CLIP_ID]: 34,
+  [LAUNCH_CLIPS.rise]: 35, [LAUNCH_CLIPS.float]: 35, [LAUNCH_CLIPS.gather]: 35,
+  [LAUNCH_CLIPS.boardRise]: 35, [LAUNCH_CLIPS.boardFloat]: 35, [LAUNCH_CLIPS.boardGather]: 35,
   'player.swim': 20,
   'player.swim-idle': 20,
   'player.run': 1,
@@ -1535,6 +1539,8 @@ export function createPlayerStarterClips(
   const rigId = typeof rig === 'string' ? rig : rig.id;
   const includeTorsoRoot = typeof rig === 'string' ||
     rig.joints.some((joint) => joint.id === 'torsoRoot');
+  const availableJoints = typeof rig === 'string' ? null : new Set(
+    rig.joints.flatMap(joint => [joint.id, ...(joint.aliases ?? [])]));
   return [
     buildIdle(rigId, includeTorsoRoot),
     buildWalk(rigId, includeTorsoRoot),
@@ -1549,6 +1555,7 @@ export function createPlayerStarterClips(
     buildDoubleJump(rigId),
     buildDoubleJump(rigId, true),
     buildFall(rigId),
+    ...buildLaunchClips(rigId, includeTorsoRoot),
     buildLand(rigId),
     buildRollLandingClip(rigId),
     buildQuaterniusCrouchTransition(rigId, includeTorsoRoot, true),
@@ -1569,7 +1576,14 @@ export function createPlayerStarterClips(
     placeholder('player.bail', 'Bail', 1.1, rigId),
     buildDeath(rigId, includeTorsoRoot),
     placeholder('player.spin', 'Spin', 0.8, rigId),
-  ].map(clip=>withCharacterElasticity(clip,typeof rig==='string'?undefined:rig));
+  ].map(clip=>{
+    // Starter poses may include optional fingers/tail. Keep them on the live
+    // rider, but only author supported joints on smaller/aliased rigs. Saved
+    // user clips are not filtered or rewritten here.
+    if(availableJoints)clip.tracks=clip.tracks.filter(track=>
+      track.kind==='scalar'||availableJoints.has(track.target));
+    return withCharacterElasticity(clip,typeof rig==='string'?undefined:rig);
+  });
 }
 
 function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {

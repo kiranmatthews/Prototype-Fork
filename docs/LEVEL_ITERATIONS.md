@@ -6606,3 +6606,35 @@ tuning changes. `src/player.ts` owns only the optional visual impact stamp.
 
 Local test: http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour .
 The user's local-only hold remains in force; no integration, push or publication.
+
+## Carlisle Coast — Jak-inspired launch animation and camera (30 October 2026 NZDT)
+
+Brief: study the final-boss blue eco launches in Jak and Daxter, verify the
+OpenGOAL state/camera logic, then adapt the full move to the existing rider and
+Carlisle springs. Prompt-to-first-playable approximately 22 minutes; focused
+implementation/build validation approximately 50 minutes (20:42:47–21:32:42 UTC).
+Reference review and rig/pose notes were recorded before implementation.
+
+Added six editable launch clips: trajectory-driven load/extension/opening,
+asymmetric floating loop and contact-driven gathering, with board variants that
+retain deck foot ownership. Shared per-segment elasticity supplies compression,
+stretch and rebound. Ground contact uses the existing finite landing recovery.
+The new reversible camera layer eases in, follows ascent, lingers on descent,
+allows stick orbit and returns smoothly after contact. It removes the previous
+launch-specific FOV zoom. Native impulse, gravity, steering, level geometry and
+ordinary edge grinding remain unchanged.
+
+Validation: four actual spring transfers spanning short/tall arcs and foot/board;
+supported landing and finite recovery; interruption/respawn; camera orbit,
+bounded lag, unchanged lens and 30/60/120 Hz behavior; catalog/alias compatibility;
+runtime routing; all 39 clips' elasticity and saved-edit preservation; required
+production build. Real-browser lite, full 720p and MAX/native reviews include
+front, side, three-quarter and gameplay views, normal/slow playback and frame
+stepping. The long launch completes with zero deaths and no browser errors or
+warnings. No full-suite run or level-data changes.
+
+Study, source links, approximation boundaries, tuning points and local review
+instructions: [CARLISLE_LAUNCH_STUDY.md](CARLISLE_LAUNCH_STUDY.md). The local review
+is `/launch-review.html?playtest&level=carlisle-coast&launchReview` on port 5491.
+This isolated checkpoint starts at `a9e3d4e` and preserves other chats' later
+uncommitted Carlisle artwork. Local only; no integration, push or publication.
