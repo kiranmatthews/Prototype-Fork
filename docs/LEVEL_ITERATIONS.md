@@ -6364,3 +6364,22 @@ No Tripo credits were spent. Focused checks and final build/release results:
 Prompt-to-playable: approximately 21 minutes, 11:46–12:07 UTC; final native and
 normal review by 12:11 UTC. This is a new local commit after `9ec6b8af`, handed
 to the active release coordinator for integration and publication.
+
+
+## 30 October 2026 NZDT — Ancient Gates: local mechanism audio
+
+The constant bump was caused by Z-only range checks on crushers and phase pads
+in a course that runs along X. Local mechanism cues now use full 3D distance
+with a smooth fade to silence; the crusher peak gain is halved from 0.8 to 0.4.
+The same fix covers falling platforms and snapping ropes. All scenery, level
+data, hazard timing, collision and movement remain unchanged.
+
+Focused runtime regression checks exercise all three axes, diagonal range,
+muted distant transitions, single-event playback and the stable human listener.
+The existing SFX/mixer lifecycle check, build and release-size gate pass. Lite
+and full-render browser audio samples are recorded alongside the checks in
+[the audio correction evidence](ancient-gates/tripo/audio-fix/).
+
+Prompt-to-playable: approximately 7 minutes, 12:18–12:25 UTC; browser and final
+verification followed. This is a separate local commit after `16c86a4e`, for the
+active release coordinator to integrate and publish.

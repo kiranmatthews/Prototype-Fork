@@ -10271,8 +10271,7 @@ export class Level {
           this.groundMeshes.splice(at, 1);
         }
         for (const t of pad.torches) t.wantBurn = on ? 1 : 0;
-        if (Math.abs(pad.mesh.position.z - this.playerPos.z) < 40)
-          sfx.play(on ? "woosh2" : "crunch", 0.32, on ? 1.5 : 1.2);
+        this.playNearbySound(on ? "woosh2" : "crunch", pad.mesh.position, 0.32, on ? 1.5 : 1.2, 40);
       }
       if (warn) {
         // strobe the fire down and back up ~4 times over the last beat
@@ -10345,8 +10344,7 @@ export class Level {
           c.t = 0;
           const floor = this.groundMeshes.indexOf(c.mesh);
           if (floor !== -1) this.groundMeshes.splice(floor, 1);
-          if (Math.abs(c.base.z - this.playerPos.z) < 45)
-            sfx.play("crunch", 0.45, 0.9);
+          this.playNearbySound("crunch", c.base, 0.45, 0.9, 45);
         }
       } else if (c.state === "fall") {
         c.mesh.position.y -= c.fallSpeed * c.t * dt;
@@ -10434,8 +10432,7 @@ export class Level {
           r.t = 0;
           r.active = false;
           r.rail.grindable = false; // it is falling as of now, not next frame
-          if (Math.abs(r.rest[0].z - this.playerPos.z) < 55)
-            sfx.play("crunch", 0.5, 1.15);
+          this.playNearbySound("crunch", r.rest[0], 0.5, 1.15, 55);
           continue;
         }
       } else if (r.state === "sag") {
@@ -10480,8 +10477,7 @@ export class Level {
         y = cr.restY; // resting: a solid wall
         if (!cr.slammed) {
           cr.slammed = true;
-          if (Math.abs(cr.z - this.playerPos.z) < 45)
-            sfx.play("crunch", 0.8, 0.5);
+          this.playNearbySound("crunch", {x:cr.x,y:cr.restY,z:cr.z}, 0.4, 0.5, 45);
         }
       } else {
         y = cr.restY + cr.raise * ((f - 0.7) / 0.3); // slow menacing rise
@@ -10848,6 +10844,15 @@ export class Level {
       else if (plan.sound === "land") sfx.play("crateBounce", 0.35, 1.15);
     }
     this.settleFalling = falling;
+  }
+
+  private playNearbySound(name:string,at:{x:number;y:number;z:number},volume:number,rate:number,range:number):void {
+    // Courses can run along any axis. Fade local mechanisms to silence in 3D
+    // before they reach the normal SFX bus and its user volume setting.
+    const listener=this.raceAudioListener??this.playerPos;
+    const distance=Math.hypot(at.x-listener.x,at.y-listener.y,at.z-listener.z);
+    const gain=Math.max(0,1-distance/range)**2;
+    if(gain>0)sfx.play(name,volume*gain,rate);
   }
 
   private playCrateSound(crate:Crate,name:string,volume:number,rate=1):void {

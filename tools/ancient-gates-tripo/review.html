@@ -20,5 +20,17 @@ document.querySelector('#pit').onclick=()=>{g().player.respawn(g().getLevel(),tr
 document.querySelector('#restore').onclick=()=>{const l=g().getLevel();for(const c of l.crates)if(c.bang)l.triggerBang(c);report.classList.remove('open');frame.focus();};
 document.querySelector('#drop').onclick=()=>{g().getLevel().touchCrumble(0);report.classList.remove('open');frame.focus();};
 document.querySelector('#snapshot').onclick=async()=>{await snap();report.classList.toggle('open');};
+const audioButton=document.createElement('button');audioButton.textContent='Sample audio (6s)';document.querySelector('nav').append(audioButton);
+audioButton.onclick=()=>{
+ const game=g();if(!game)return;const sound=game.sfx,original=sound.play,cues=[];
+ sound.unlock();audioButton.disabled=true;status.textContent='Sampling audio…';
+ sound.play=function(name,volume=1,rate=1,...rest){
+  const result=original.call(this,name,volume,rate,...rest);
+  if(name==='crunch'||name==='woosh2')cues.push({name,volume,rate,started:typeof result==='function',sfxBus:this.sfxBus?.gain.value,position:game.player.pos.toArray()});
+  return result;
+ };
+ setTimeout(()=>{sound.play=original;audioButton.disabled=false;report.textContent=JSON.stringify({level:game.getCurrentLevel().id,position:game.player.pos.toArray(),seconds:6,audioState:sound.ctx?.state,sfxBus:sound.sfxBus?.gain.value,cues,errors},null,2);report.classList.add('open');status.textContent='Audio sample complete';},6000);
+ frame.focus();
+};
 setInterval(()=>{if(g()&&!g().gameFlow.blocksGameplay)status.textContent=(g().player.grounded?'Grounded':'In air')+' · '+Math.round(g().player.pos.x)+'m';},500);start(false);
 </script>
