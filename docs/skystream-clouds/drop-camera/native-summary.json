@@ -1,0 +1,89 @@
+{
+  "base": "3fa158aa6d55dc30dc8b7b8dadd71db3eef968fb",
+  "replayFrames": 8168,
+  "replaySHA256": "26f2770336e1ee7317329ad43c20670d550efd5d64327c82abc2f2b2b2dffb65",
+  "reportedWindow": [
+    3701,
+    3741
+  ],
+  "frozenBefore": 40,
+  "frozenAfter": 0,
+  "shortcuts": [
+    {
+      "name": "Pearl halo \u00b7 round right-hand descent",
+      "before": {
+        "frozenFrames": 19,
+        "offscreenCentreFrames": 46,
+        "landingArcError": -224.0231805663766
+      },
+      "after": {
+        "frozenFrames": 0,
+        "offscreenCentreFrames": 0,
+        "landingArcError": 0.0,
+        "steeringErrorDegrees": 0,
+        "landing": [
+          25.025037241550486,
+          -49.753627600296866,
+          -1001.4200033761321
+        ]
+      }
+    },
+    {
+      "name": "Cloud eye \u00b7 wide left oval",
+      "before": {
+        "frozenFrames": 0,
+        "offscreenCentreFrames": 41,
+        "landingArcError": -263.45688524279535
+      },
+      "after": {
+        "frozenFrames": 0,
+        "offscreenCentreFrames": 0,
+        "landingArcError": 0.0,
+        "steeringErrorDegrees": 0,
+        "landing": [
+          41.44996153664931,
+          -107.36987125669476,
+          -1189.6241862027282
+        ]
+      }
+    },
+    {
+      "name": "Seraph coil \u00b7 tall oval quarter-turn exit",
+      "before": {
+        "frozenFrames": 23,
+        "offscreenCentreFrames": 56,
+        "landingArcError": -270.7836520979872
+      },
+      "after": {
+        "frozenFrames": 0,
+        "offscreenCentreFrames": 0,
+        "landingArcError": 0.0,
+        "steeringErrorDegrees": 1.2074182697257333e-06,
+        "landing": [
+          -111.87446648592025,
+          -167.72758718621992,
+          -1432.3604691269156
+        ]
+      }
+    },
+    {
+      "name": "Last halo \u00b7 oblique return",
+      "before": {
+        "frozenFrames": 4,
+        "offscreenCentreFrames": 40,
+        "landingArcError": -228.90057540742146
+      },
+      "after": {
+        "frozenFrames": 0,
+        "offscreenCentreFrames": 0,
+        "landingArcError": 0.0,
+        "steeringErrorDegrees": 0,
+        "landing": [
+          85.61970369560063,
+          -225,
+          -1635.3256823016563
+        ]
+      }
+    }
+  ]
+}

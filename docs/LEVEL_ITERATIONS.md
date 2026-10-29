@@ -6199,3 +6199,39 @@ The bonus, previous forty-image concept atlas, campaign save key, four source
 levels and published editor pack are unchanged. Shared ownership is limited
 to the authored-mesh crest predicate in `src/player.ts`; all other edits are
 Mayfield data, preview, focused tools and documentation.
+
+## 29 October 2026 — Skystream lower-road shortcut camera
+
+User brief: jumping off the cloud road and landing on a lower section is a valid
+strategy; fix the camera shown in the supplied 8,168-frame replay.
+
+The short ballistic fall forecast incorrectly froze a playable rescue jump.
+Large shortcuts additionally left the camera anchored at the departure height
+and biased to a route section 224–271 metres behind the real landing. Reuse
+Skystream's existing gameplay recovery decision to follow viable drops, follow
+the descending height, reacquire the camera branch on contact, and retain full
+rider framing while yaw eases onto the lower road. Grounded steering reacquires
+that lower road too, while airborne crossings keep their continuity preference.
+No new collision searches or cloud-rendering work is introduced.
+
+All four native input-only shortcuts now have zero frozen or off-screen centre
+frames, correct landing lanes, and matching supported steering. The reported
+replay window has zero frozen frames (40 before). Chrome lite and full native
+1600×1000 playback validates the replay catch and all four shortcuts; full-body
+bounds remain in frame through touchdown, including normal 720p/CRT review.
+Camera-rig, landing-forecast, loop-camera and Skystream void-recovery checks pass.
+The older Slipstream fall replay's late fatal-window assertion also fails on
+the published baseline; all 8,347 old/new hold decisions were identical.
+
+The course, bonus, sky art, cloud rendering and movement tuning retain exact
+source hashes. Evidence and repeatable tools are documented in
+[drop-camera/README.md](skystream-clouds/drop-camera/README.md). No level-data
+changes, unrelated audits or full-suite run. The integrated production build/typecheck, release-size check (997,265,231
+bytes) and packaged browser replay/shortcut smoke pass. Public verification
+is recorded in this chat's shared release handoff.
+
+Timing: first inspection 07:12:58 UTC; repaired native shortcuts and replay by
+approximately 07:35 UTC (~22 minutes). Full native touchdown framing reviewed
+by approximately 07:47 UTC (~34 minutes prompt-to-final-playable). Shared
+validation capacity was intermittently occupied; source review, harnesses and
+documentation continued between available slots.

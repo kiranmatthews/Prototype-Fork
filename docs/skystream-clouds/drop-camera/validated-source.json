@@ -1,0 +1,11 @@
+{
+  "runtimeCommit": "5564e11d9e80ede03ee1d1b94e9a8ec6c4b85cc3",
+  "files": {
+    "src/cameraRig.ts": "8b49e49091e8f5e7ab0688e7748dbb2101691688",
+    "src/main.ts": "ab217fae309e00568e8b3082eba9e0488e6d6647",
+    "src/player.ts": "4fe83327289d87d98d69ec92432f97c15acac3b6",
+    "src/levels/skystream.ts": "09b7d4b96764cef076340ba57d87759fdd7440f3",
+    "src/tuning.ts": "3ecf038cb002170b8b74526c552a26761effe234",
+    "src/cloudPathPass.ts": "91e98f8e4afbd63181a7377b7360eb18efb0eac4"
+  }
+}
