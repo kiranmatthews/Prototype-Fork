@@ -8,6 +8,7 @@ export type CarlisleCrossing = {
   name: string; a: number; b: number; y: number; grade: number;
   slopes: { from: number; to: number; grade: number }[];
   anchors: Anchor[]; hazards: { s: number; u: number; y: number; width: number }[];
+  gaps: { name: string; from: number; to: number }[];
   bounds: (s: number) => [number, number];
   height: (s: number, u: number) => number;
 };
@@ -20,7 +21,8 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
   point: (s: number, y: number, u?: number) => Point, yaw: (s: number) => number,
   group: (s: number) => number, stops: { s: number; y: number }[],
   jumps: { from: [number, number, number?]; to: [number, number, number?] }[],
-  railCatches: {s: number; y: number}[] = []): CarlisleCrossing[] {
+  railCatches: {s: number; y: number}[] = [],
+  cargoGaps: readonly {name: string; from: number; to: number; y: number}[] = []): CarlisleCrossing[] {
   const runs: CarlisleRoad[][] = [];
   for (const road of [...roads].sort((a, b) => a.a - b.a)) {
     const previous = runs[runs.length - 1];
@@ -69,12 +71,14 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
     // pitches. Across the width the surface stays level: no alternating banks.
     const grade = Math.tan((a < 1280 ? 18 : a < 2700 ? 22 : 26) * Math.PI / 180);
     const height = (_s: number, _u: number) => y;
-    const crossing: CarlisleCrossing = { name: `${run[0].name} · downhill slick`, a, b, y, grade, slopes: [], anchors, hazards: [], bounds, height };
+    const gaps = cargoGaps.filter(g => g.from >= a && g.to <= b && g.y === y);
+    const crossing: CarlisleCrossing = { name: `${run[0].name} · downhill slick`, a, b, y, grade, slopes: [], anchors, hazards: [], gaps, bounds, height };
     crossings.push(crossing);
     for (const road of run) for (const c of road.components) removed.add(c);
     // Include every road edge and dry-island edge as a knot, keeping the
     // physical ribbon continuous where widths change and where traction ends.
     const knots = new Set<number>([a, b]);
+    for (const gap of gaps) { knots.add(gap.from); knots.add(gap.to); }
     for (let s = a; s < b; s += .5) knots.add(s);
     for (const r of run) { knots.add(r.a); knots.add(r.b); }
     for (const p of anchors) for (const s of [p.s - p.radius, p.s + p.radius]) if (s > a && s < b) knots.add(s);
@@ -108,11 +112,13 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
           const p = point(s, height(s, u) - down, u); vertices.push(...p.map((v, i) => v - origin[i]));
         }
       }
-      for (let i = 0; i < span.knots.length - 1; i++) for (let j = 0; j < columns; j++) {
+      const open = (i: number) => gaps.some(g => span.knots[i] >= g.from && span.knots[i + 1] <= g.to);
+      for (let i = 0; i < span.knots.length - 1; i++) if (!open(i)) for (let j = 0; j < columns; j++) {
         const k = i * row + j; indices.push(k, k + 1, k + row + 1, k, k + row + 1, k + row);
       }
       const topTriangles = indices.length / 3;
       for (let i = 0; i < span.knots.length - 1; i++) {
+        if (open(i)) continue;
         const k = i * row;
         for (let j = 0; j < columns; j++) { const d = k + layer + j; indices.push(d, d + row, d + row + 1, d, d + row + 1, d + 1); }
         indices.push(k, k + row, k + row + layer, k, k + row + layer, k + layer);
@@ -121,6 +127,17 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
       const last = (span.knots.length - 1) * row;
       for (let j = 0; j < columns; j++) indices.push(j, j + layer, j + layer + 1, j, j + layer + 1, j + 1,
         last + j, last + j + 1, last + j + layer + 1, last + j, last + j + layer + 1, last + j + layer);
+      // Close both exposed dock ends without putting a bottom or side wall
+      // across the water beneath the crate row.
+      for (const gap of gaps) for (const end of [gap.from, gap.to]) {
+        const at = span.knots.indexOf(end); if (at < 0) continue;
+        const k = at * row;
+        for (let j = 0; j < columns; j++) {
+          const face = [k+j,k+j+layer,k+j+layer+1,k+j,k+j+layer+1,k+j+1];
+          if (end === gap.from) face.reverse();
+          indices.push(...face);
+        }
+      }
       components.push({ t: 'mesh', nm: `${crossing.name} · ${span.wet ? 'ice' : 'safe'} ${part + 1}`, p: origin, vertices, indices,
         grindTopTriangles: topTriangles, solid: true, solidSides: true, tex: 'solid', color: span.wet ? '#86a5b7' : '#aeb5b9', grp: group(span.from),
         ...(span.wet ? { slip: true, iceGrip: .02, slipGravity: 1 } : {}) });
@@ -149,7 +166,8 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
     }
   }
   const retained = components.filter(c => !removed.has(c)); components.splice(0, components.length, ...retained);
-  // Rest-side crates and the starting clock sit on their new actual surface.
+  // Grounded props sit on their new actual surface. Cargo stacks are added
+  // after this pass so their explicitly authored tiers cannot be flattened.
   for (const c of components) if (['crate', 'clock'].includes(c.t)) {
     let best: { run: CarlisleCrossing; s: number; u: number; d: number } | null = null;
     for (const run of crossings) for (let s = run.a; s <= run.b; s += .5) {

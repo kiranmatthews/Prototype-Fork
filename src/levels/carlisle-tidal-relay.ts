@@ -2,6 +2,7 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { CONST, TUNING } from '../tuning';
 import { buildCarlisleCrossings, type CarlisleRoad } from './carlisle-slippery-crossings';
 import { fitCarlisleDeckBerths } from './carlisle-deck-surfaces';
+import { buildCarlisleCargo, CARLISLE_CARGO_GAPS } from './carlisle-cargo';
 type P=[number,number,number];
 type Station=[number,number,number?];
 const C:CustomComponent[]=[],groups:CustomGroup[]=[];
@@ -170,8 +171,7 @@ add({t:'mesh',nm:'Grey sea',p:[0,-25,-2000],vertices:[-1400,0,-2200,1400,0,-2200
 // Native pit boxes follow the descending coast so an early miss still resets
 // promptly, even though the finishing harbour is hundreds of metres lower.
 for(let s=-100;s<4100;s+=50){const a=frame(s),b=frame(s+50);add({t:'pit',nm:'Sea reset',p:[0,elevation(s+50)-23,(a.z+b.z)/2],s:[2800,1,Math.abs(b.z-a.z)+.02],invisible:true,grp:90});}
-for(const [i,stop] of CARLISLE_RELAY_STOPS.entries())for(const u of [-7,7])add({t:'crate',kind:i===0&&u<0?'mask':'wood',p:carlislePoint(stop.s+12,stop.y,u),grp:group(stop.s)});
-return buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS,CARLISLE_RELAY_GRINDS.map(g=>({s:g.finish[0],y:g.finish[1]})));
+return buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS,CARLISLE_RELAY_GRINDS.map(g=>({s:g.finish[0],y:g.finish[1]})),CARLISLE_CARGO_GAPS);
 }
 // First locate the dry machinery/launch islands. Then lower the whole route
 // through each slippery span, retaining the drop downstream instead of
@@ -180,6 +180,7 @@ const downhill=authorCourse().flatMap(r=>r.slopes);
 elevation=s=>downhill.reduce((sum,r)=>sum+Math.max(0,Math.min(r.to-r.from,r.to-s))*r.grade,0);
 export const CARLISLE_RELAY_CROSSINGS=authorCourse();
 fitCarlisleDeckBerths(C);
+export const CARLISLE_RELAY_CARGO = buildCarlisleCargo(C,carlislePoint,group);
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
  sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,

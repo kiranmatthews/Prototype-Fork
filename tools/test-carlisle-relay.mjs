@@ -46,7 +46,8 @@ await withSkateRuntime(async({server,level,player:p,CONST,THREE})=>{
  assert.ok(neutral.every(r=>Math.abs(r.up-pad.speed*(r.held?1.25:1))<.6));
  const m=level.movers.find(m=>m.spin&&!m.mesh.userData.trampolineBounce),local=new THREE.Vector3(3,1,3),before=local.clone().applyMatrix4(m.mesh.matrixWorld);level.update(.2);
  assert.ok(before.clone().add(level.moverDelta(level.movers.indexOf(m),before)).distanceTo(local.clone().applyMatrix4(m.mesh.matrixWorld))<1e-6);
- const report={flights,neutral,nativePhysics:true,rigidCarry:true};await mkdir('docs/carlisle-relay',{recursive:true});await writeFile('docs/carlisle-relay/native-physics.json',JSON.stringify(report,null,2)+'\n');
+ const out=process.env.CARLISLE_OUT??'docs/carlisle-relay';
+ const report={flights,neutral,nativePhysics:true,rigidCarry:true};await mkdir(out,{recursive:true});await writeFile(`${out}/native-physics.json`,JSON.stringify(report,null,2)+'\n');
  assert.equal(flights.length,jumps.length*(process.env.PHASES??'0').split(',').length);assert.ok(flights.every(f=>f.landed&&f.distance<15));
  console.log(JSON.stringify({flights:flights.length,neutral,maxPeak:Math.max(...flights.map(f=>f.peak)),movers:level.movers.length}));
 },{levelEntry:{id:'carlisle-coast',name:data.name,data}});

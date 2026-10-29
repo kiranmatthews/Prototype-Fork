@@ -6328,3 +6328,46 @@ Final production stamp: `Codex/sol fork · build 10-29 08:04 UTC`; release outpu
 997,256,305 bytes / 1,849 files. All nine bounded join checks pass, including
 the charged pier departure. No remaining implementation or validation work
 for this increment; saved locally under the publication hold.
+
+## 29 October 2026 NZDT — grouped cargo and crate grind bridges
+
+Removed all 36 isolated crates from the repeated checkpoint-side pairs. Six
+compact formations replace the scattered placement: a starter parcel with the
+mask, a lateral scissor stair, a two-tier winch bundle, forward-facing
+counterweight stairs, rigging parcels and a harbour fan beside the finish.
+Crates use their ordinary 0.96 m grid, native break/settle behavior and derived
+grind lines. Stacks reach at most three crates high.
+
+Three existing dry connectors now contain real 8–10 m water openings crossed
+by 17-, 20- and 21-crate rows. The middle bridge is a raised trestle. Wood
+breaks behind the grinder, while adjacent metal rows retain a return route;
+the trestle also has a supporting metal tier and boarding treads. No invisible
+floor or extra authored rail spans these openings. The nine formations total
+207 crates. The finishing pile sits close to the route with a clear direct
+line through the gate.
+
+First successful real-keyboard bridge traversal: approximately **11 minutes**
+(08:13:59–08:25 UTC). Both rows of all three bridges pass native traversal,
+and the first lite browser pass clears all three wooden rows without bails,
+deaths or console errors. The remaining 20 ordinary crossings, 1,760 floor
+probes, all 26 lethal obstacle contacts and the three original required-grind
+routes through the finish pass. The surface audit remains clear at eight
+machinery phases. Source comparison confirms that only crates and three dry
+floor meshes changed: all spring strengths, slippery spans, machinery,
+checkpoints, cables and level metadata match the previous checkpoint exactly.
+Shared movement, animation, camera, toolkit, tuning and published pack files
+are byte-identical. The user's local-only publication hold remains in force.
+
+Required check:levels, production build/type checking and release-size checks
+pass; the output is 997,258,350 bytes / 1,849 files. Final native and browser
+results, source hashes and bounded section-test scope are recorded in
+[the cargo validation record](carlisle-relay/cargo/validation.json).
+
+The final native pass also confirms normal spin collection and all 55 spring
+transfers. Production Chrome lite and full rendering each clear all three
+wooden bridges with real keyboard controls and no console errors. All six
+piles, bridge approaches and grind catches were reviewed at native 1440×900;
+the stairs and trestle also pass normal 480p/CRT visual review. Loaded browser
+level data matches current source exactly. Final production stamp:
+`Codex/sol fork · build 10-29 08:30 UTC`. The earlier capacity wait is resolved;
+all test browsers are closed and the validated increment remains local.

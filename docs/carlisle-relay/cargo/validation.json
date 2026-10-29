@@ -1,0 +1,108 @@
+{
+  "status": "validated-local-only",
+  "parent": "e6674e8740d51179521ee8d40d6d76b27befded8",
+  "promptStartedUTC": "2026-10-29T08:13:59Z",
+  "firstPlayableMinutesApprox": 11,
+  "completedUTC": "2026-10-29T08:36:08.777Z",
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "productionPreview": "http://127.0.0.1:5484/?playtest&level=carlisle-coast",
+  "layout": {
+    "removedScatteredCrates": 36,
+    "crates": 207,
+    "compactPiles": 6,
+    "crateBridges": 3,
+    "bridgeRows": [
+      17,
+      20,
+      21
+    ],
+    "gapsMetres": [
+      8,
+      10,
+      10
+    ],
+    "maxStackTiers": 3,
+    "slipperySpansUnchanged": true
+  },
+  "checks": {
+    "nativeBridgeRoutes": 6,
+    "nativeWoodCratesBroken": [
+      17,
+      20,
+      21
+    ],
+    "normalSpinCratesBroken": 5,
+    "ordinaryCrossingRoutes": 20,
+    "supportedFloorProbes": 1760,
+    "intentionalMovingBerthProbes": 4,
+    "intentionalCargoGapProbes": 33,
+    "lethalContacts": 26,
+    "nativeSpringTransfers": 55,
+    "requiredGrindRoutes": 3,
+    "requiredGrindPhases": [
+      0
+    ],
+    "overlapPhases": [
+      0,
+      0.8230336921349761,
+      5.4601516150446106,
+      7,
+      7.106218999314562,
+      11.743336922224197,
+      19,
+      53
+    ],
+    "overlapConflicts": 0,
+    "checkLevels": "passed",
+    "buildTypeCheck": "passed",
+    "releaseSize": "passed",
+    "diffCheck": "passed",
+    "checkAll": "not run"
+  },
+  "browser": {
+    "modes": [
+      "lite",
+      "full"
+    ],
+    "realKeyboardCargoRoutes": 6,
+    "consoleErrors": [],
+    "loadedLevelMatchesCurrentSource": true,
+    "maxNativeCanvas": [
+      1440,
+      900
+    ],
+    "normalPresentation": "480p with CRT, reviewed alongside native views",
+    "allSixPilesVisuallyReviewed": true,
+    "buildStamp": "Codex/sol fork · build 10-29 08:30 UTC",
+    "taskBrowsersClosed": true
+  },
+  "release": {
+    "files": 1849,
+    "bytes": 997258350,
+    "published": false
+  },
+  "evidence": [
+    "native.json",
+    "native-physics.json",
+    "crossings.json",
+    "traversal.json",
+    "after-overlap.json",
+    "lite-browser.json",
+    "full-browser.json",
+    "source-parity.json"
+  ],
+  "scope": "Each bridge/section starts once at its approach and uses ordinary controls. This is not a single uninterrupted 4 km clear. Existing checkpoint/pit lifecycle evidence from surface-cleanup is retained: source-parity proves those components and all shared runtime files unchanged. Fresh native finale reaches the gate.",
+  "sourceSha256": {
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-tidal-relay.ts": "11e5070d290c1d584eaffbb85ad9001b155d54ae8c60de4bf70c061f2addfc44",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "tools/test-carlisle-cargo.mjs": "35cf05040ae127018de3842a12d51b8e783d121441796e4e75894fdecf167482",
+    "tools/carlisle-cargo-pilot.mjs": "97f9013393f0ca57157ee9c1012485660e39d4f6204d34deecf40ca6959777ae",
+    "tools/carlisle-cargo-browser.mjs": "c46da5f892000361cb630c7a9a0c95ec8ada35de84f5cb1b48a8f6eb2115267c",
+    "tools/test-carlisle-slippery.mjs": "970bf401fff23e5f14ea5a10bbb782638276c2a0ee1cd875ad58e1db0c2f2141",
+    "tools/test-carlisle-grinds.mjs": "0be4ba5cd5d4e77cd447b432531bf4650bf89f0b74619f5c84aa8be7aaf6e32a",
+    "tools/test-carlisle-relay.mjs": "340652c09727e941f97dcb0b42cec0a9108d1e4d2b9225451264c4870b735f77",
+    "tools/carlisle-surface-audit.mjs": "0801ef1c5a30245cd3cdb3ec1c74182385af45af827a6b5ce5a80cdb85be0490"
+  }
+}

@@ -65,8 +65,15 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
 - `node tools/test-slippery-gravity.mjs`: opt-in downhill vector acceleration,
   retained foot momentum, countersteering, board side-slip, unchanged legacy
   ice and portable capture.
-- `node tools/test-carlisle-slippery.mjs`: 23 continuous input-only crossings,
-  1,797 ground probes and lethal contact with all 36 visible spike obstacles.
+- `node tools/test-carlisle-slippery.mjs`: 20 continuous input-only crossings,
+  1,760 floor probes and lethal contact with all 26 visible spike obstacles.
+  The three open cargo crossings are checked by the crate fixture below.
+- `node tools/test-carlisle-cargo.mjs`: all three crate bridges on their wooden
+  and metal rows, native grind attachment/breaking, empty water gaps, stack
+  placement and spin collection.
+- `node tools/carlisle-cargo-browser.mjs [--lite]`: three continuous crate
+  grinds with real keyboard input, grouped-cargo views, console checks and
+  full/native plus normal 480p/CRT review.
 - `node tools/carlisle-slippery-browser.mjs [--lite]`: real keyboard traversal
   of three representative crossings, neutral downhill drift, visible banks,
   spike death and dry-checkpoint recovery; full mode includes MAX and CRT views.
@@ -150,7 +157,7 @@ height. Springs, rails, machinery, scenery and checkpoints move with their
 section, retaining their intended relative heights. Dry checkpoint islands,
 spring mouths and moving-deck boarding overlaps remain level. Each
 crossing replaces all of its old overlapping floors with one continuous
-ribbon, split only for dry/slippery materials. Shared seam vertices use the
+ribbon, with three dry gaps crossed by cargo rows. Shared seam vertices use the
 same origin; no older flat collider is left underneath a lowered slope. All
 ordinary exposed edges retain their normal grinding behavior.
 
@@ -208,3 +215,24 @@ The grind design baseline is recorded in `grinds/validation.json`; the current
 height-adjusted routes and source hashes are covered by `downhill/validation.json`.
 
 ![Required cable catch inside a trampoline challenge](grinds/full-1-rail-1-settled.png)
+
+## Cargo formations
+
+The repeated pairs seven metres off either side of every checkpoint are gone.
+Six compact formations put cargo within reach: a starter parcel containing the
+mask, a lateral stair on the scissor hub, a two-tier winch bundle, forward-facing
+counterweight stairs, grouped rigging parcels and a harbour fan beside the
+finish line. The tallest stacks are three normal crates high. Their exposed
+rows derive grind lines through the existing crate system.
+
+Three dry connectors now have actual 8–10 m water gaps. A 17-crate row leaves
+the Tide Dial landing, a raised 20-crate trestle follows the Dredger discharge,
+and a 21-crate causeway connects the Broken Crown landing to the Homecoming
+checkpoint. Each bridge begins and ends on supported dry ground. Wooden rows
+break behind a grinder; an adjacent metal row stays available, and the raised
+trestle has metal support beneath its wood. These are native crates, with no
+invisible floor or extra authored rail. The complete cargo layout has 207
+crates in nine formations; spring launch values, all slippery spans, machinery,
+checkpoints, required cable grinds, camera and player physics are unchanged.
+
+Current cargo evidence and test boundaries are in `cargo/validation.json`.

@@ -1,0 +1,22 @@
+{
+  "parent": "e6674e8740d51179521ee8d40d6d76b27befded8",
+  "beforeCrates": 36,
+  "afterCrates": 207,
+  "beforeComponents": 1012,
+  "afterComponents": 1183,
+  "changedNonCrateComponents": [
+    "Dial catch · dry connector · safe 1",
+    "Discharge catch · dry connector · safe 1",
+    "Eye catch · dry connector · safe 1"
+  ],
+  "allSpringsGrindsSlopesAndLevelMetadataUnchanged": true,
+  "unchangedRuntime": {
+    "src/player.ts": "5ac27e6eb8f76408165d02d0899cb7e038381b391800e10190f9aa8bbacbe9ac",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/characterAnimationRuntime.ts": "8a535702154f3954476ca5f11b1d8797d91a100c54c126e21be97997c5aaba9c",
+    "src/editor.ts": "66dfe7d01aaa3dfeae9cc384c046a291cc04568da5f94869be2f9412a27a3629",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  }
+}

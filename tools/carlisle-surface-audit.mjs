@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {withSkateRuntime} from './jungle-cup-harness.mjs';
-const before=process.argv.includes('--before'),out='docs/carlisle-relay/surface-cleanup';
+const before=process.argv.includes('--before'),out=process.env.CARLISLE_OUT??'docs/carlisle-relay/surface-cleanup';
 let data;
 if(before)data=JSON.parse(await readFile('/private/tmp/carlisle-before-surfaces.json','utf8'));
 else{const b=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});data=(await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))).CARLISLE_TIDAL_RELAY_LEVEL;}

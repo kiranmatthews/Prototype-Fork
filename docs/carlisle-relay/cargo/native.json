@@ -1,0 +1,1550 @@
+{
+  "bridges": [
+    {
+      "name": "Dial cargo bridge",
+      "metal": false,
+      "done": true,
+      "grindFrames": 105,
+      "crateCatch": true,
+      "seconds": 2.783333333333333,
+      "broken": 17,
+      "end": {
+        "at": [
+          -90.20223042361106,
+          139.44588790392947,
+          -1472.3893986822873
+        ],
+        "time": 2.7833333333333283,
+        "state": "ride",
+        "grounded": true,
+        "side": [
+          -1,
+          0,
+          0
+        ],
+        "balance": 0,
+        "balanceVel": 0,
+        "crateRail": false,
+        "bail": false,
+        "deaths": 0,
+        "vy": 0
+      },
+      "samples": [
+        {
+          "at": [
+            -89.72223042361105,
+            139.56588790392948,
+            -1450.6588413704899
+          ],
+          "time": 0,
+          "state": "ride",
+          "grounded": true,
+          "side": [
+            0.9874838155885488,
+            0,
+            0.15772036631545308
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 0
+        },
+        {
+          "at": [
+            -89.69857213005851,
+            139.6617212372628,
+            -1450.806963904718
+          ],
+          "time": 0.3333333333333333,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9874835615212726,
+            0,
+            0.1577219570169711
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 12.95,
+          "frame": 20
+        },
+        {
+          "at": [
+            -89.56057015946865,
+            142.0533879039295,
+            -1453.689447116329
+          ],
+          "time": 0.6666666666666671,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9875041500918216,
+            0,
+            0.15759299969043347
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 1.9499999999999955,
+          "frame": 40
+        },
+        {
+          "at": [
+            -90.20223042361106,
+            140.55588790392946,
+            -1456.525431719601
+          ],
+          "time": 1.0000000000000013,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9875096716918755,
+            0,
+            0.1575583965233339
+          ],
+          "balance": -0.007112773693332412,
+          "balanceVel": 0.5492399355157076,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 60
+        },
+        {
+          "at": [
+            -90.20223042361106,
+            140.55588790392946,
+            -1459.5149398438223
+          ],
+          "time": 1.3333333333333335,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9875096716918755,
+            0,
+            0.1575583965233339
+          ],
+          "balance": -0.02884079999245629,
+          "balanceVel": 0.19425734219021162,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 80
+        },
+        {
+          "at": [
+            -90.20223042361106,
+            140.55588790392946,
+            -1462.5044479680435
+          ],
+          "time": 1.6666666666666656,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9875096716918755,
+            0,
+            0.1575583965233339
+          ],
+          "balance": -0.026841195443913227,
+          "balanceVel": 0.03230609906313098,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 100
+        },
+        {
+          "at": [
+            -90.20223042361106,
+            140.55588790392946,
+            -1465.4939560922646
+          ],
+          "time": 1.9999999999999978,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9875096716918755,
+            0,
+            0.1575583965233339
+          ],
+          "balance": -0.021167136786274722,
+          "balanceVel": -0.8873541864599699,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 120
+        },
+        {
+          "at": [
+            -90.20223042361106,
+            140.55588790392946,
+            -1468.4834642164858
+          ],
+          "time": 2.33333333333333,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9875096716918755,
+            0,
+            0.1575583965233339
+          ],
+          "balance": -0.028451876180318726,
+          "balanceVel": -0.9279614216433147,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 140
+        },
+        {
+          "at": [
+            -90.20223042361106,
+            140.43974283997088,
+            -1471.3430708388105
+          ],
+          "time": 2.666666666666662,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            -1,
+            0,
+            0
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": -4.55299792695252,
+          "frame": 160
+        }
+      ]
+    },
+    {
+      "name": "Dial cargo bridge",
+      "metal": true,
+      "done": true,
+      "grindFrames": 107,
+      "crateCatch": true,
+      "seconds": 2.783333333333333,
+      "broken": 0,
+      "end": {
+        "at": [
+          -88.28223042361104,
+          139.44588790392947,
+          -1472.3893976696609
+        ],
+        "time": 2.7833333333333283,
+        "state": "ride",
+        "grounded": true,
+        "side": [
+          -1,
+          0,
+          0
+        ],
+        "balance": 0,
+        "balanceVel": 0,
+        "crateRail": false,
+        "bail": false,
+        "deaths": 0,
+        "vy": 0
+      },
+      "samples": [
+        {
+          "at": [
+            -88.76223042361104,
+            139.56588790392948,
+            -1450.6588413704899
+          ],
+          "time": 0,
+          "state": "ride",
+          "grounded": true,
+          "side": [
+            0.9874852542541386,
+            0,
+            0.15771135859740518
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 0
+        },
+        {
+          "at": [
+            -88.73857348121585,
+            139.6617212372628,
+            -1450.80696412052
+          ],
+          "time": 0.3333333333333333,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9874850002013731,
+            0,
+            0.15771294930123644
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 12.95,
+          "frame": 20
+        },
+        {
+          "at": [
+            -88.60059780425928,
+            142.0533879039295,
+            -1453.6894485908495
+          ],
+          "time": 0.6666666666666671,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9875055875848702,
+            0,
+            0.15758399185406033
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 1.9499999999999955,
+          "frame": 40
+        },
+        {
+          "at": [
+            -88.28223042361104,
+            140.55588790392946,
+            -1456.5281309331867
+          ],
+          "time": 1.0000000000000013,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.987508332238847,
+            0,
+            0.15756679142145083
+          ],
+          "balance": -0.010791501422682061,
+          "balanceVel": 0.44300577822548814,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 60
+        },
+        {
+          "at": [
+            -88.28223042361104,
+            140.55588790392946,
+            -1459.5176379322672
+          ],
+          "time": 1.3333333333333335,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.987508332238847,
+            0,
+            0.15756679142145083
+          ],
+          "balance": -0.02114783850166494,
+          "balanceVel": 0.7976055686507754,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 80
+        },
+        {
+          "at": [
+            -88.28223042361104,
+            140.55588790392946,
+            -1462.507144931348
+          ],
+          "time": 1.6666666666666656,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.987508332238847,
+            0,
+            0.15756679142145083
+          ],
+          "balance": -0.022016266555445523,
+          "balanceVel": 0.7724423571911618,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 100
+        },
+        {
+          "at": [
+            -88.28223042361104,
+            140.55588790392946,
+            -1465.4966519304285
+          ],
+          "time": 1.9999999999999978,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.987508332238847,
+            0,
+            0.15756679142145083
+          ],
+          "balance": -0.023027254538945933,
+          "balanceVel": 0.06918236748905113,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 120
+        },
+        {
+          "at": [
+            -88.28223042361104,
+            140.55588790392946,
+            -1468.4861589295092
+          ],
+          "time": 2.33333333333333,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.987508332238847,
+            0,
+            0.15756679142145083
+          ],
+          "balance": -0.03264601740827981,
+          "balanceVel": -0.03644621126488071,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 140
+        },
+        {
+          "at": [
+            -88.28223042361104,
+            140.43974283997088,
+            -1471.3430702199832
+          ],
+          "time": 2.666666666666662,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            -1,
+            0,
+            0
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": -4.55299792695252,
+          "frame": 160
+        }
+      ]
+    },
+    {
+      "name": "Discharge cargo trestle",
+      "metal": false,
+      "done": true,
+      "grindFrames": 184,
+      "crateCatch": true,
+      "seconds": 3.8666666666666667,
+      "broken": 20,
+      "end": {
+        "at": [
+          -48.02531212467162,
+          127.44658972508923,
+          -1943.102008597519
+        ],
+        "time": 3.866666666666658,
+        "state": "ride",
+        "grounded": true,
+        "side": [
+          -1,
+          0,
+          0
+        ],
+        "balance": 0,
+        "balanceVel": 0,
+        "crateRail": false,
+        "bail": false,
+        "deaths": 0,
+        "vy": 0
+      },
+      "samples": [
+        {
+          "at": [
+            -48.50531212467162,
+            127.56658972508923,
+            -1918.883415058054
+          ],
+          "time": 0,
+          "state": "ride",
+          "grounded": true,
+          "side": [
+            0.9468255837278373,
+            0,
+            0.3217472828143856
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 0
+        },
+        {
+          "at": [
+            -48.45705003224946,
+            127.66242305842256,
+            -1919.0254388956132
+          ],
+          "time": 0.3333333333333333,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9468255837278373,
+            0,
+            0.3217472828143856
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 12.95,
+          "frame": 20
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1923.0661564013508
+          ],
+          "time": 0.6666666666666671,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.010729963465841034,
+          "balanceVel": 0.6899003057332418,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 40
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1925.1557868917748
+          ],
+          "time": 1.0000000000000013,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.02781729868110637,
+          "balanceVel": -0.1195247741586492,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 60
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1927.2454173821986
+          ],
+          "time": 1.3333333333333335,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.03380311722654648,
+          "balanceVel": -0.9321945896991186,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 80
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1929.3350478726225
+          ],
+          "time": 1.6666666666666656,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.025411788320474957,
+          "balanceVel": 0.919789704207538,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 100
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1931.4246783630465
+          ],
+          "time": 1.9999999999999978,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.023991940821752166,
+          "balanceVel": 0.01791668046132211,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 120
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1933.5143088534703
+          ],
+          "time": 2.33333333333333,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.018585685721571793,
+          "balanceVel": 0.7512913759914057,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 140
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1935.6039393438944
+          ],
+          "time": 2.666666666666662,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.03083111196131416,
+          "balanceVel": -0.049836601022512056,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 160
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1937.6935698343184
+          ],
+          "time": 2.9999999999999942,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.019636451011676093,
+          "balanceVel": 0.6439102464519195,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 180
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.5165897250892,
+            -1939.7832003247422
+          ],
+          "time": 3.3333333333333264,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.946647357030793,
+            0,
+            0.3222712854515809
+          ],
+          "balance": -0.024241761771891388,
+          "balanceVel": 0.6056904053974983,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 200
+        },
+        {
+          "at": [
+            -48.02531212467162,
+            129.47632795991316,
+            -1941.8482303032654
+          ],
+          "time": 3.6666666666666585,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            -1,
+            0,
+            0
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": -3.478979423691614,
+          "frame": 220
+        }
+      ]
+    },
+    {
+      "name": "Discharge cargo trestle",
+      "metal": true,
+      "done": true,
+      "grindFrames": 130,
+      "crateCatch": true,
+      "seconds": 2.8833333333333333,
+      "broken": 0,
+      "end": {
+        "at": [
+          -47.06531212467163,
+          127.44658972508923,
+          -1943.4629531560524
+        ],
+        "time": 2.883333333333328,
+        "state": "ride",
+        "grounded": true,
+        "side": [
+          -1,
+          0,
+          0
+        ],
+        "balance": 0,
+        "balanceVel": 0,
+        "crateRail": false,
+        "bail": false,
+        "deaths": 0,
+        "vy": 0
+      },
+      "samples": [
+        {
+          "at": [
+            -47.545312124671625,
+            127.56658972508923,
+            -1918.883415058054
+          ],
+          "time": 0,
+          "state": "ride",
+          "grounded": true,
+          "side": [
+            0.946612807536244,
+            0,
+            0.32237275413463534
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 0
+        },
+        {
+          "at": [
+            -47.49695621155143,
+            127.66242305842256,
+            -1919.0254069791845
+          ],
+          "time": 0.3333333333333333,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.946612807536244,
+            0,
+            0.32237275413463534
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 12.95,
+          "frame": 20
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.55658972508922,
+            -1923.8196968063876
+          ],
+          "time": 0.6666666666666671,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9464789656087491,
+            0,
+            0.3227654994887041
+          ],
+          "balance": -0.00740684658331937,
+          "balanceVel": -0.5813271094810994,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 40
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.55658972508922,
+            -1926.7747391374987
+          ],
+          "time": 1.0000000000000013,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9464789656087491,
+            0,
+            0.3227654994887041
+          ],
+          "balance": -0.023104890922575554,
+          "balanceVel": -0.9508062715008683,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 60
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.55658972508922,
+            -1929.72978146861
+          ],
+          "time": 1.3333333333333335,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9464789656087491,
+            0,
+            0.3227654994887041
+          ],
+          "balance": -0.029227280783388498,
+          "balanceVel": 0.2680747266819651,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 80
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.55658972508922,
+            -1932.6848237997215
+          ],
+          "time": 1.6666666666666656,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9464789656087491,
+            0,
+            0.3227654994887041
+          ],
+          "balance": -0.016145598588022697,
+          "balanceVel": 0.3590487400155873,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 100
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.55658972508922,
+            -1935.6398661308328
+          ],
+          "time": 1.9999999999999978,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9464789656087491,
+            0,
+            0.3227654994887041
+          ],
+          "balance": -0.023354691714480576,
+          "balanceVel": 0.3951498413198147,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 120
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.55658972508922,
+            -1938.5949084619442
+          ],
+          "time": 2.33333333333333,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9464789656087491,
+            0,
+            0.3227654994887041
+          ],
+          "balance": -0.03148173473136796,
+          "balanceVel": -0.17778599870381215,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 140
+        },
+        {
+          "at": [
+            -47.06531212467163,
+            128.6552257146724,
+            -1941.5421756408314
+          ],
+          "time": 2.666666666666662,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            -1,
+            0,
+            0
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0.36813797337538157,
+          "frame": 160
+        }
+      ]
+    },
+    {
+      "name": "Crown cargo causeway",
+      "metal": false,
+      "done": true,
+      "grindFrames": 131,
+      "crateCatch": true,
+      "seconds": 3.216666666666667,
+      "broken": 21,
+      "end": {
+        "at": [
+          -67.02998649913968,
+          24,
+          -3663.906910646255
+        ],
+        "time": 3.21666666666666,
+        "state": "ride",
+        "grounded": true,
+        "side": [
+          -1,
+          0,
+          0
+        ],
+        "balance": 0,
+        "balanceVel": 0,
+        "crateRail": false,
+        "bail": false,
+        "deaths": 0,
+        "vy": 0
+      },
+      "samples": [
+        {
+          "at": [
+            -66.54998649913968,
+            24.12,
+            -3638.337998471728
+          ],
+          "time": 0,
+          "state": "ride",
+          "grounded": true,
+          "side": [
+            0.9848758269288899,
+            0,
+            0.17326166780663085
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 0
+        },
+        {
+          "at": [
+            -66.52399724896868,
+            24.215833333333332,
+            -3638.4857298457673
+          ],
+          "time": 0.3333333333333333,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9848758269288899,
+            0,
+            0.17326166780663085
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 12.95,
+          "frame": 20
+        },
+        {
+          "at": [
+            -66.34287833182995,
+            26.607499999999995,
+            -3641.3657413379497
+          ],
+          "time": 0.6666666666666671,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9852281578294066,
+            0,
+            0.17124683068621746
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 1.9499999999999955,
+          "frame": 40
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.11,
+            -3644.1741057861827
+          ],
+          "time": 1.0000000000000013,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9853335641933072,
+            0,
+            0.17063928994845678
+          ],
+          "balance": -0.007112773693332412,
+          "balanceVel": 0.5492399355157076,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 60
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.11,
+            -3647.161785980105
+          ],
+          "time": 1.3333333333333335,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9853335641933072,
+            0,
+            0.17063928994845678
+          ],
+          "balance": -0.02884079999245629,
+          "balanceVel": 0.19425734219021162,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 80
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.11,
+            -3650.1494661740276
+          ],
+          "time": 1.6666666666666656,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9853335641933072,
+            0,
+            0.17063928994845678
+          ],
+          "balance": -0.026841195443913227,
+          "balanceVel": 0.03230609906313098,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 100
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.11,
+            -3653.1371463679498
+          ],
+          "time": 1.9999999999999978,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9853335641933072,
+            0,
+            0.17063928994845678
+          ],
+          "balance": -0.021167136786274722,
+          "balanceVel": -0.8873541864599699,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 120
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.11,
+            -3656.1248265618724
+          ],
+          "time": 2.33333333333333,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9853335641933072,
+            0,
+            0.17063928994845678
+          ],
+          "balance": -0.028451876180318726,
+          "balanceVel": -0.9279614216433147,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 140
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.11,
+            -3659.1125067557946
+          ],
+          "time": 2.666666666666662,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9853335641933072,
+            0,
+            0.17063928994845678
+          ],
+          "balance": -0.026737183769244034,
+          "balanceVel": 0.6951119335103628,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 160
+        },
+        {
+          "at": [
+            -67.02998649913968,
+            25.20863598958316,
+            -3661.9649185202074
+          ],
+          "time": 2.9999999999999942,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            -1,
+            0,
+            0
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0.36813797337538157,
+          "frame": 180
+        }
+      ]
+    },
+    {
+      "name": "Crown cargo causeway",
+      "metal": true,
+      "done": true,
+      "grindFrames": 133,
+      "crateCatch": true,
+      "seconds": 3.2,
+      "broken": 0,
+      "end": {
+        "at": [
+          -65.10998649913967,
+          24,
+          -3663.9068762283105
+        ],
+        "time": 3.1999999999999935,
+        "state": "ride",
+        "grounded": true,
+        "side": [
+          -1,
+          0,
+          0
+        ],
+        "balance": 0,
+        "balanceVel": 0,
+        "crateRail": false,
+        "bail": false,
+        "deaths": 0,
+        "vy": 0
+      },
+      "samples": [
+        {
+          "at": [
+            -65.58998649913967,
+            24.12,
+            -3638.337998471728
+          ],
+          "time": 0,
+          "state": "ride",
+          "grounded": true,
+          "side": [
+            0.9849083153263487,
+            0,
+            0.17307689158583173
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 0
+        },
+        {
+          "at": [
+            -65.5640249654018,
+            24.215833333333332,
+            -3638.485734719027
+          ],
+          "time": 0.3333333333333333,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9849083153263487,
+            0,
+            0.17307689158583173
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 12.95,
+          "frame": 20
+        },
+        {
+          "at": [
+            -65.38345628718372,
+            26.607499999999995,
+            -3641.365780354956
+          ],
+          "time": 0.6666666666666671,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            0.9852619192353523,
+            0,
+            0.17105247880305668
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 1.9499999999999955,
+          "frame": 40
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.11,
+            -3644.2040402091234
+          ],
+          "time": 1.0000000000000013,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9852880378037828,
+            0,
+            0.17090196769133864
+          ],
+          "balance": -0.014365983777596524,
+          "balanceVel": -0.797986943554486,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 60
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.11,
+            -3647.1916821608784
+          ],
+          "time": 1.3333333333333335,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9852880378037828,
+            0,
+            0.17090196769133864
+          ],
+          "balance": -0.020484998177224205,
+          "balanceVel": -0.632818866729633,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 80
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.11,
+            -3650.179324112634
+          ],
+          "time": 1.6666666666666656,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9852880378037828,
+            0,
+            0.17090196769133864
+          ],
+          "balance": -0.021584442341355765,
+          "balanceVel": -0.636648933099419,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 100
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.11,
+            -3653.166966064389
+          ],
+          "time": 1.9999999999999978,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9852880378037828,
+            0,
+            0.17090196769133864
+          ],
+          "balance": -0.02310871562149524,
+          "balanceVel": -0.07062585392758167,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 120
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.11,
+            -3656.154608016144
+          ],
+          "time": 2.33333333333333,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9852880378037828,
+            0,
+            0.17090196769133864
+          ],
+          "balance": -0.02569616683988786,
+          "balanceVel": 0.8194229264818231,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 140
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.11,
+            -3659.1422499678993
+          ],
+          "time": 2.666666666666662,
+          "state": "grind",
+          "grounded": false,
+          "side": [
+            0.9852880378037828,
+            0,
+            0.17090196769133864
+          ],
+          "balance": -0.027584098912324433,
+          "balanceVel": 0.04134657268830161,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": 0,
+          "frame": 160
+        },
+        {
+          "at": [
+            -65.10998649913967,
+            25.20855082039914,
+            -3662.1142910572553
+          ],
+          "time": 2.9999999999999942,
+          "state": "air",
+          "grounded": false,
+          "side": [
+            -1,
+            0,
+            0
+          ],
+          "balance": 0,
+          "balanceVel": 0,
+          "crateRail": false,
+          "bail": false,
+          "deaths": 0,
+          "vy": -0.0051101510412319695,
+          "frame": 180
+        }
+      ]
+    }
+  ],
+  "piles": [
+    {
+      "name": "Shore starter parcel",
+      "count": 7,
+      "rails": 3
+    },
+    {
+      "name": "Scissor hub stair",
+      "count": 12,
+      "rails": 4
+    },
+    {
+      "name": "Winch transfer bundle",
+      "count": 8,
+      "rails": 4
+    },
+    {
+      "name": "Counterweight cargo steps",
+      "count": 18,
+      "rails": 4
+    },
+    {
+      "name": "Rigging launch parcels",
+      "count": 10,
+      "rails": 4
+    },
+    {
+      "name": "Home harbour cargo fan",
+      "count": 14,
+      "rails": 6
+    }
+  ],
+  "spinStack": {
+    "broken": 5,
+    "end": {
+      "at": [
+        5.420069102336038,
+        221.27211374988292,
+        -2.518816515709437
+      ],
+      "time": 1.6666666666666656,
+      "state": "ride",
+      "grounded": true,
+      "side": [
+        0.8665986641819642,
+        0,
+        0.49900576673825664
+      ],
+      "balance": 0,
+      "balanceVel": 0,
+      "crateRail": false,
+      "bail": false,
+      "deaths": 0,
+      "vy": 0
+    }
+  }
+}

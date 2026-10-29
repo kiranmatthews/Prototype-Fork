@@ -24,7 +24,7 @@ await withSkateRuntime(async({level,player:p,CONST,TUNING,THREE,server})=>{
   console.log(JSON.stringify({...row,samples:undefined}));
  }
  assert.equal(JSON.stringify(TUNING),tuning);
- await mkdir('docs/carlisle-relay/grinds',{recursive:true});await writeFile('docs/carlisle-relay/grinds/traversal.json',JSON.stringify({rows},null,2)+'\n');
+ const out=process.env.CARLISLE_OUT??'docs/carlisle-relay/grinds';await mkdir(out,{recursive:true});await writeFile(`${out}/traversal.json`,JSON.stringify({rows},null,2)+'\n');
  assert.ok(rows.every(r=>r.completed&&!r.end.bail&&!r.end.deaths),'a required rail/bounce route is not traversable');
  for(const row of rows){const beat=beats.find(b=>b.name===row.name);assert.deepEqual(row.catches,beat.rails.map(r=>r.name));assert.deepEqual(row.launches,beat.launches);assert.deepEqual(row.pops,beat.rails.filter(r=>r.popTo).map(r=>r.name));}
  console.log('PASS continuous spring-to-grind routes, charged rail exits, moving rebound and descending finish at all phases.');
