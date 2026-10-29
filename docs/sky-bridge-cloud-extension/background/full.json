@@ -1,0 +1,268 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "lite": false,
+  "views": [
+    {
+      "name": "sky-native",
+      "level": "sky",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 0,
+      "skystreamSun": false,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 62,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        0,
+        0.7366666187594333,
+        5
+      ],
+      "grounded": true
+    },
+    {
+      "name": "sky-high-span-native",
+      "level": "sky",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 0,
+      "skystreamSun": false,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 131,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        0,
+        3.5762786898541066e-9,
+        -150
+      ],
+      "grounded": true
+    },
+    {
+      "name": "sky-normal",
+      "level": "sky",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 0,
+      "skystreamSun": false,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 207,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1152,
+        720
+      ],
+      "position": [
+        0,
+        3.5762786898541066e-9,
+        -150
+      ],
+      "grounded": true
+    },
+    {
+      "name": "sky-bonus-native",
+      "level": "bonus:sky",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 0,
+      "skystreamSun": false,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 6,
+        "frames": 306,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        25,
+        3.5762786898541066e-9,
+        0
+      ],
+      "grounded": true
+    },
+    {
+      "name": "sky-return",
+      "level": "sky",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 0,
+      "skystreamSun": false,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 402,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        1.9,
+        -4.768371586472142e-8,
+        -134
+      ],
+      "grounded": true
+    },
+    {
+      "name": "skystream-native",
+      "level": "skystream",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 1,
+      "skystreamSun": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 464,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        0,
+        150.73666666644314,
+        18
+      ],
+      "grounded": true
+    },
+    {
+      "name": "skystream-bonus-native",
+      "level": "bonus:skystream",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 1,
+      "skystreamSun": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 556,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        -12,
+        180.00000000357628,
+        0
+      ],
+      "grounded": true
+    },
+    {
+      "name": "skystream-standalone-bonus",
+      "level": "bonus-skystream",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 1,
+      "skystreamSun": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 616,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        -12,
+        180.00000000357628,
+        0
+      ],
+      "grounded": true
+    },
+    {
+      "name": "sky-after-skystream",
+      "level": "sky",
+      "stamp": "Codex/sol fork · build 10-29 03:34 UTC",
+      "skyPreset": "clouds",
+      "skyArtwork": "painted",
+      "skystreamTint": 0,
+      "skystreamSun": false,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 677,
+        "targetBytes": 4147200
+      },
+      "canvas": [
+        1600,
+        1000
+      ],
+      "position": [
+        0,
+        0.7366666187594333,
+        5
+      ],
+      "grounded": true
+    }
+  ],
+  "errors": []
+}

@@ -6060,3 +6060,22 @@ section traversal, campaign/menu checks, required level checks, production
 build and release size. Browser review covers lite and full rendering, native
 resolution, supported spawn, checkpoint/sea respawn, giant-bounce framing,
 moving transforms and the finish. See [the course and evidence](carlisle-relay/README.md).
+
+
+## 29 October 2026 NZDT — Restore Sky Bridge's original sky
+
+Brief: fix the background weirdness without changing the original skybox.
+The cloud platforms had inadvertently enabled Skystream's lower-sky blue tint
+and extra sun because the shared theme checked for any cloud collider. That
+made the pale distance fog and scenery silhouettes stand out against the
+recoloured background. The special treatment is now limited to Skystream and
+its active/standalone bonus IDs. Sky Bridge and Cloudtop Lockers retain the
+original cloud-sea artwork, projection and fog; the cloud platforms and
+extended course remain intact.
+
+Prompt at approximately 03:25 UTC; corrected native preview and main/bonus
+transition checks passed by 03:34 UTC, about nine minutes. Packaged lite/full
+checks, native and 720p visual review, GPU uniform/flare checks and return from
+Skystream all pass with no console errors. Build/type checking and release size
+pass. Level data, movement, sky asset and cloud-renderer hashes are unchanged.
+See [background restoration evidence](sky-bridge-cloud-extension/background/README.md).
