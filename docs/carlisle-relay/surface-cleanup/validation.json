@@ -1,0 +1,258 @@
+{
+  "validatedAt": "2026-10-29T08:10:09.632998+00:00",
+  "delivery": "LOCAL ONLY / HOLD",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "parentCommit": "1ae8589c6bc7c3e3031bedf1333651a9e765d87b",
+  "sourceSha256": {
+    "src/levels/carlisle-tidal-relay.ts": "63aabd0280cc1fc633b999d068180ef9b1baf3451bee8b65ccc3fd78cd97d3ee",
+    "src/levels/carlisle-slippery-crossings.ts": "e8744a40e3d36881f9997868cd07fc86a42f2a43d7dfd9d36434c26155355e4b",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "tools/test-carlisle-slippery.mjs": "e94a5050e3ccf9a94e27edf4b338f8b6e3cd1e6c7a139b65058196dbd47190f1",
+    "tools/test-carlisle-joins.mjs": "49082b5590823b21b6b1b4d3f1000c8d2ac8335a3dcb2c345248111ac5cc2db6",
+    "tools/carlisle-surface-audit.mjs": "39a7d54bb49dbb71be652d1975c8f1b013f1594911e4f8a8c0bbea830f150ef4",
+    "tools/carlisle-surface-browser.mjs": "6a4e24299483b832b391b77975a73f234cb1a56c1b3d818922e6a8726accd582",
+    "src/player.ts": "5ac27e6eb8f76408165d02d0899cb7e038381b391800e10190f9aa8bbacbe9ac",
+    "src/characterAnimationRuntime.ts": "8a535702154f3954476ca5f11b1d8797d91a100c54c126e21be97997c5aaba9c",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/editor.ts": "66dfe7d01aaa3dfeae9cc384c046a291cc04568da5f94869be2f9412a27a3629",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "unchangedFromParent": [
+    "src/player.ts",
+    "src/characterAnimationRuntime.ts",
+    "src/main.ts",
+    "src/level.ts",
+    "src/tuning.ts",
+    "src/editor.ts",
+    "public/levels.json"
+  ],
+  "geometry": {
+    "oldSlipperySpans": 57,
+    "removedShortSpans": 39,
+    "minimumAllowedLengthMetres": 18,
+    "remainingSlopes": 18,
+    "actualLengthRangeMetres": [
+      20.5,
+      73.5
+    ],
+    "dryConnectors": 5,
+    "spikeClusters": 26,
+    "components": 1012,
+    "lengthMetres": 4000,
+    "acts": 3,
+    "checkpoints": 17,
+    "primarySprings": 55,
+    "movingPlatforms": 28,
+    "requiredGrinds": 4,
+    "springLipMetres": 0.02,
+    "depthBiasPatchesRemoved": true,
+    "deckTopsCutAroundSpringAndLiftBerths": true
+  },
+  "overlapAudit": {
+    "oldDistinctPairs": 46,
+    "phasesSeconds": [
+      0,
+      0.8230336921349761,
+      5.4601516150446106,
+      7,
+      7.106218999314562,
+      11.743336922224197,
+      19,
+      53
+    ],
+    "remainingConflicts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "planeToleranceMetres": 0.08,
+    "overlapAreaThresholdSquareMetres": 0.01,
+    "scope": "native upward-facing ground triangles; designed route markings are not ground"
+  },
+  "native": {
+    "continuousConnectors": 23,
+    "supportProbes": 1793,
+    "intentionalMovingBerthGapProbes": 4,
+    "lethalContacts": 26,
+    "springTransferCases": 110,
+    "terraceClimbs": 3,
+    "grindRoutes": 6,
+    "joins": [
+      {
+        "name": "Scissor",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Winches",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Tide dial",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Pinwheels",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Counterweights",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Harbour scissors",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Pendulum boarding",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Moving spring berth",
+        "phase": 0,
+        "complete": true
+      },
+      {
+        "name": "Pendulum exit",
+        "phase": 0,
+        "complete": true
+      }
+    ]
+  },
+  "checks": {
+    "check:levels": "PASS before final clipping simplification and decal removal; final normalize/data checks also pass",
+    "validate-levels": "PASS on final source",
+    "build": "PASS",
+    "check:release": "PASS",
+    "git diff --check": "PASS"
+  },
+  "keyboardBrowser": [
+    {
+      "mode": "lite",
+      "source": {
+        "components": 1013,
+        "slippery": 18,
+        "build": "Codex/sol fork \u00b7 build 10-29 07:59 UTC",
+        "canvas": [
+          720,
+          450
+        ]
+      },
+      "crossings": 3,
+      "errors": [],
+      "hazardDeath": true
+    },
+    {
+      "mode": "full",
+      "source": {
+        "components": 1013,
+        "slippery": 18,
+        "build": "Codex/sol fork \u00b7 build 10-29 07:59 UTC",
+        "canvas": [
+          1440,
+          900
+        ]
+      },
+      "crossings": 3,
+      "errors": [],
+      "hazardDeath": true
+    }
+  ],
+  "finalVisualBrowser": {
+    "base": "http://127.0.0.1:5484",
+    "errors": [],
+    "views": [
+      {
+        "name": "checkpoint-join",
+        "s": 195
+      },
+      {
+        "name": "scissor-join",
+        "s": 222
+      },
+      {
+        "name": "scissor-hub",
+        "s": 260
+      },
+      {
+        "name": "winch-join",
+        "s": 870
+      },
+      {
+        "name": "dial-join",
+        "s": 1346
+      },
+      {
+        "name": "pinwheel-join",
+        "s": 1542
+      },
+      {
+        "name": "spring-berth",
+        "s": 1778
+      },
+      {
+        "name": "terrace-berth",
+        "s": 1818
+      },
+      {
+        "name": "dry-connector",
+        "s": 2008
+      },
+      {
+        "name": "moving-spring-berth",
+        "s": 2017
+      },
+      {
+        "name": "counterweight-gaps",
+        "s": 2259
+      },
+      {
+        "name": "harbour-scissors",
+        "s": 2600
+      },
+      {
+        "name": "dry-harbour",
+        "s": 3967
+      }
+    ],
+    "source": {
+      "differences": [],
+      "build": "Codex/sol fork \u00b7 build 10-29 08:04 UTC",
+      "canvas": [
+        1440,
+        900
+      ]
+    }
+  },
+  "visualReview": [
+    "Native 1440x900 checkpoint joins, scissors, winches, spring/terrace berths, moving spring and counterweight gaps",
+    "Normal 480p CRT checkpoint join, spring berth and harbour scissors",
+    "Final clean middle-terrace amber pad without stray floor arrow"
+  ],
+  "renderOnlyValidationReuse": {
+    "beforeComponents": 1013,
+    "afterComponents": 1012,
+    "removedArrowDecals": 1,
+    "remainingGeometryIdentical": true,
+    "nonArrowDataSha256": "8f36771a06c8e801ac768f4d8d1a43764a797c92557168fc9c539d9ef9300954"
+  },
+  "release": {
+    "build": "Codex/sol fork \u00b7 build 10-29 08:04 UTC",
+    "files": 1849,
+    "bytes": 997256305
+  },
+  "scope": "Per-section input-only checks. The translating pier boarding and charged exit are separate starts, not a single continuous pier traverse. Initial walk-only pilot attempts are retained in joins-initial-attempt.json. No uninterrupted 4km clear or check:all claimed. Final removal of one non-solid arrow preserves every other component exactly, retaining traversal evidence."
+}

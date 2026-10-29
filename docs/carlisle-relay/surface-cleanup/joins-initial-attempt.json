@@ -1,0 +1,2485 @@
+{
+  "rows": [
+    {
+      "name": "Scissor",
+      "phase": 0,
+      "done": true,
+      "seconds": 10.333333333333334,
+      "at": [
+        95.96385652102765,
+        193.7179023512624,
+        -281.7884944163972
+      ],
+      "state": "ride",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Foam catch · downhill slick · safe 3",
+        "Scissor · long blade",
+        "Scissor · cross blade",
+        "platform",
+        "Scissor abutment · downhill slick · safe 1",
+        "Scissor abutment · downhill slick · ice 2"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            89.0217001604022,
+            195.44099822476102,
+            -202.24051066756468
+          ],
+          "state": "ride",
+          "surface": "Foam catch · downhill slick · safe 3",
+          "target": "Scissor axle"
+        },
+        {
+          "frame": 60,
+          "at": [
+            89.84219830534842,
+            198.00072044698325,
+            -206.29951500909382
+          ],
+          "state": "air",
+          "surface": "Foam catch · downhill slick · safe 3",
+          "target": "Scissor axle"
+        },
+        {
+          "frame": 120,
+          "at": [
+            92.38260275107332,
+            195.79099788744594,
+            -211.8815968003893
+          ],
+          "state": "ride",
+          "surface": "Scissor · long blade",
+          "target": "Scissor axle"
+        },
+        {
+          "frame": 180,
+          "at": [
+            93.7504165904154,
+            195.79099788744594,
+            -221.0049962083146
+          ],
+          "state": "ride",
+          "surface": "Scissor · long blade",
+          "target": "Scissor axle"
+        },
+        {
+          "frame": 240,
+          "at": [
+            94.66670511794163,
+            198.46794233189038,
+            -229.0793569248335
+          ],
+          "state": "air",
+          "surface": "Scissor · long blade",
+          "target": "Scissor axle"
+        },
+        {
+          "frame": 300,
+          "at": [
+            95.74523044983877,
+            198.81794233189038,
+            -235.66748376079147
+          ],
+          "state": "air",
+          "surface": "Scissor · cross blade",
+          "target": "Scissor axle"
+        },
+        {
+          "frame": 360,
+          "at": [
+            96.381180124364,
+            196.49099789936687,
+            -241.47937612591392
+          ],
+          "state": "ride",
+          "surface": "platform",
+          "target": "Scissor far dock"
+        },
+        {
+          "frame": 420,
+          "at": [
+            96.59997828148325,
+            196.14099788744593,
+            -250.7567133256761
+          ],
+          "state": "ride",
+          "surface": "Scissor · cross blade",
+          "target": "Scissor far dock"
+        },
+        {
+          "frame": 480,
+          "at": [
+            94.81247349142288,
+            196.14099788744593,
+            -259.88468801710735
+          ],
+          "state": "ride",
+          "surface": "Scissor · cross blade",
+          "target": "Scissor far dock"
+        },
+        {
+          "frame": 540,
+          "at": [
+            95.33842087074419,
+            196.14099788744593,
+            -268.7179810333486
+          ],
+          "state": "ride",
+          "surface": "Scissor · cross blade",
+          "target": "Scissor far dock"
+        },
+        {
+          "frame": 600,
+          "at": [
+            95.8840965546236,
+            195.03044549416458,
+            -277.7623033785839
+          ],
+          "state": "ride",
+          "surface": "Scissor abutment · downhill slick · ice 2",
+          "target": "Groyne rebound · 1"
+        }
+      ]
+    },
+    {
+      "name": "Winches",
+      "phase": 0,
+      "done": true,
+      "seconds": 10.733333333333333,
+      "at": [
+        54.76209829695841,
+        164.09094684236956,
+        -924.7820652511898
+      ],
+      "state": "ride",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Socket catch · downhill slick · safe 3",
+        "Port winch",
+        "platform",
+        "Starboard winch",
+        "Winch exit · downhill slick · safe 1",
+        "Winch exit · downhill slick · ice 2"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            70.7757203830225,
+            164.76721050712817,
+            -842.5215716806621
+          ],
+          "state": "ride",
+          "surface": "Socket catch · downhill slick · safe 3",
+          "target": "Port winch"
+        },
+        {
+          "frame": 60,
+          "at": [
+            70.29220984124913,
+            165.58109939601707,
+            -846.7358570964763
+          ],
+          "state": "air",
+          "surface": "Socket catch · downhill slick · safe 3",
+          "target": "Port winch"
+        },
+        {
+          "frame": 120,
+          "at": [
+            69.6045468343755,
+            165.11721013469588,
+            -853.3037072810781
+          ],
+          "state": "ride",
+          "surface": "Port winch",
+          "target": "Port winch"
+        },
+        {
+          "frame": 180,
+          "at": [
+            71.7604630278581,
+            165.11721013469588,
+            -862.4878252725715
+          ],
+          "state": "ride",
+          "surface": "Port winch",
+          "target": "Port winch"
+        },
+        {
+          "frame": 240,
+          "at": [
+            66.67519248072297,
+            165.11721013469588,
+            -870.3788089011214
+          ],
+          "state": "ride",
+          "surface": "Port winch",
+          "target": "Winch transfer"
+        },
+        {
+          "frame": 300,
+          "at": [
+            64.44537635174017,
+            166.28526569025146,
+            -877.8498428557201
+          ],
+          "state": "air",
+          "surface": "Port winch",
+          "target": "Winch transfer"
+        },
+        {
+          "frame": 360,
+          "at": [
+            66.37750950174564,
+            165.7172101466168,
+            -886.3595419267128
+          ],
+          "state": "ride",
+          "surface": "platform",
+          "target": "Starboard winch"
+        },
+        {
+          "frame": 420,
+          "at": [
+            65.73907979736121,
+            165.46721013469588,
+            -895.1655131364143
+          ],
+          "state": "ride",
+          "surface": "Starboard winch",
+          "target": "Winch throw · 1"
+        },
+        {
+          "frame": 480,
+          "at": [
+            63.78830089496402,
+            165.46721013469588,
+            -902.9001389944247
+          ],
+          "state": "ride",
+          "surface": "Starboard winch",
+          "target": "Winch throw · 1"
+        },
+        {
+          "frame": 540,
+          "at": [
+            60.73090041373951,
+            165.46721013469588,
+            -910.4121344160367
+          ],
+          "state": "ride",
+          "surface": "Starboard winch",
+          "target": "Winch throw · 1"
+        },
+        {
+          "frame": 600,
+          "at": [
+            57.41010291397153,
+            164.7672101466168,
+            -918.5933037441029
+          ],
+          "state": "ride",
+          "surface": "Winch exit · downhill slick · safe 1",
+          "target": "Winch throw · 1"
+        }
+      ]
+    },
+    {
+      "name": "Tide dial",
+      "phase": 0,
+      "done": true,
+      "seconds": 13.533333333333333,
+      "at": [
+        -100.01124011125277,
+        146.28334570358666,
+        -1395.3044442260148
+      ],
+      "state": "ride",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Tide dial · orbit 1",
+        "Dial receiving quay · downhill slick · safe 1",
+        "Dial receiving quay · downhill slick · ice 2"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            -105.19172948896254,
+            148.7482329172279,
+            -1284.4051318454015
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial entry"
+        },
+        {
+          "frame": 60,
+          "at": [
+            -106.97658291392966,
+            148.7482329172279,
+            -1290.2571760047529
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial entry"
+        },
+        {
+          "frame": 120,
+          "at": [
+            -107.32569637997989,
+            148.7482329172279,
+            -1299.2221773969727
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 180,
+          "at": [
+            -108.10202134458056,
+            148.7482329172279,
+            -1312.3114268133606
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 240,
+          "at": [
+            -111.2688908880405,
+            148.7482329172279,
+            -1318.8529357356795
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 300,
+          "at": [
+            -113.69170498649765,
+            148.7482329172279,
+            -1325.8111944755585
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 360,
+          "at": [
+            -115.25691351585546,
+            148.7482329172279,
+            -1333.606328065842
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 420,
+          "at": [
+            -115.88906544034013,
+            148.7482329172279,
+            -1341.8625713018594
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 480,
+          "at": [
+            -115.55412941273198,
+            148.7482329172279,
+            -1350.1850230690104
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 540,
+          "at": [
+            -114.26148685506382,
+            148.7482329172279,
+            -1358.1781506217897
+          ],
+          "state": "ride",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 600,
+          "at": [
+            -111.2760305879872,
+            150.6335106950057,
+            -1365.2258142841627
+          ],
+          "state": "air",
+          "surface": "Tide dial · orbit 1",
+          "target": "Dial exit"
+        },
+        {
+          "frame": 660,
+          "at": [
+            -104.78498691323495,
+            148.39823292914883,
+            -1371.846846985463
+          ],
+          "state": "ride",
+          "surface": "Dial receiving quay · downhill slick · safe 1",
+          "target": "Dial exit spring"
+        },
+        {
+          "frame": 720,
+          "at": [
+            -101.94463698602462,
+            148.39823292914883,
+            -1380.3473081062923
+          ],
+          "state": "ride",
+          "surface": "Dial receiving quay · downhill slick · safe 1",
+          "target": "Dial exit spring"
+        },
+        {
+          "frame": 780,
+          "at": [
+            -100.81236740190806,
+            148.39823292914883,
+            -1389.2757598066655
+          ],
+          "state": "ride",
+          "surface": "Dial receiving quay · downhill slick · safe 1",
+          "target": "Dial exit spring"
+        }
+      ]
+    },
+    {
+      "name": "Pinwheels",
+      "phase": 0,
+      "done": true,
+      "seconds": 45.38333333333333,
+      "at": [
+        -75.01849426803368,
+        139.44588790392947,
+        -1619.4534726788356
+      ],
+      "state": "ride",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Pinwheel 1",
+        "Pinwheel 2",
+        "Pinwheel 3",
+        "Pinwheel dock"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            -86.47388206970192,
+            139.79588789200858,
+            -1479.0509633253248
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 60,
+          "at": [
+            -84.08773250316652,
+            139.79588789200858,
+            -1484.5506555776217
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 120,
+          "at": [
+            -83.26206500066112,
+            139.79588789200858,
+            -1490.92617036528
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 180,
+          "at": [
+            -81.97664444746978,
+            139.79588789200858,
+            -1500.1227346204923
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 240,
+          "at": [
+            -81.16150348044998,
+            139.79588789200858,
+            -1509.356021381499
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 300,
+          "at": [
+            -82.51567433767177,
+            139.79588789200858,
+            -1511.8435164312034
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 360,
+          "at": [
+            -84.25012337889498,
+            139.79588789200858,
+            -1511.7785111613332
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 420,
+          "at": [
+            -85.94030211582631,
+            139.79588789200858,
+            -1511.383751742273
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 480,
+          "at": [
+            -87.52410386071733,
+            139.79588789200858,
+            -1510.673743858803
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 540,
+          "at": [
+            -88.9433308157403,
+            139.79588789200858,
+            -1509.6745772001077
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 600,
+          "at": [
+            -90.14583258791366,
+            139.79588789200858,
+            -1508.4229667776403
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 660,
+          "at": [
+            -91.08742248830988,
+            139.79588789200858,
+            -1506.9649038087714
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 720,
+          "at": [
+            -90.14290286859075,
+            139.79588789200858,
+            -1506.6473922316568
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 780,
+          "at": [
+            -83.88383960139214,
+            139.79588789200858,
+            -1511.6076354528454
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 840,
+          "at": [
+            -82.95820576758535,
+            139.79588789200858,
+            -1513.643486724489
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 1",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 900,
+          "at": [
+            -82.18967513335681,
+            142.7056101142308,
+            -1520.9751581315084
+          ],
+          "state": "air",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 960,
+          "at": [
+            -81.40564844383555,
+            140.14588789200857,
+            -1528.3145736190352
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1020,
+          "at": [
+            -80.39073113259188,
+            140.14588789200857,
+            -1537.5853869670484
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1080,
+          "at": [
+            -79.20237706486255,
+            140.14588789200857,
+            -1546.849003122811
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1140,
+          "at": [
+            -76.56948680627585,
+            140.14588789200857,
+            -1552.8497052085627
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1200,
+          "at": [
+            -74.07332603609301,
+            140.14588789200857,
+            -1552.1284474276024
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1260,
+          "at": [
+            -71.80338940301704,
+            140.14588789200857,
+            -1550.8641614397748
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1320,
+          "at": [
+            -69.87603356474247,
+            140.14588789200857,
+            -1549.1216543810046
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1380,
+          "at": [
+            -68.3900545318109,
+            140.14588789200857,
+            -1546.990246937347
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1440,
+          "at": [
+            -67.42162339690987,
+            140.14588789200857,
+            -1544.5791947781984
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1500,
+          "at": [
+            -67.75540214157604,
+            140.14588789200857,
+            -1542.95102223876
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1560,
+          "at": [
+            -69.56012795248338,
+            140.14588789200857,
+            -1543.3433251309314
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1620,
+          "at": [
+            -70.77284683363042,
+            140.14588789200857,
+            -1543.3565411486688
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1680,
+          "at": [
+            -76.04399645698203,
+            140.77005455867524,
+            -1549.7778189062992
+          ],
+          "state": "air",
+          "surface": "Pinwheel 2",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1740,
+          "at": [
+            -75.62064080655989,
+            140.49588789200857,
+            -1557.220396992428
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1800,
+          "at": [
+            -75.06580980126701,
+            140.49588789200857,
+            -1566.341212802112
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1860,
+          "at": [
+            -74.35091807456959,
+            140.49588789200857,
+            -1575.6068791658713
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel centre"
+        },
+        {
+          "frame": 1920,
+          "at": [
+            -74.1354245608941,
+            140.49588789200857,
+            -1584.8767292083805
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 1980,
+          "at": [
+            -75.42438589993543,
+            140.49588789200857,
+            -1589.3941608581456
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2040,
+          "at": [
+            -77.138930602478,
+            140.49588789200857,
+            -1589.2543881914214
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2100,
+          "at": [
+            -78.79530440761162,
+            140.49588789200857,
+            -1588.790032990039
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2160,
+          "at": [
+            -80.33264281120822,
+            140.49588789200857,
+            -1588.0181582798614
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2220,
+          "at": [
+            -81.69445534033099,
+            140.49588789200857,
+            -1586.9671270857907
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2280,
+          "at": [
+            -82.83070133142702,
+            140.49588789200857,
+            -1585.6755602144672
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2340,
+          "at": [
+            -83.66481316472255,
+            140.49588789200857,
+            -1584.2226988205225
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2400,
+          "at": [
+            -82.83391483068283,
+            140.49588789200857,
+            -1584.188038051009
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2460,
+          "at": [
+            -82.07490547642762,
+            140.49588789200857,
+            -1584.2257154186084
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2520,
+          "at": [
+            -76.30555815234658,
+            140.49588789200857,
+            -1589.7439847383905
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2580,
+          "at": [
+            -76.27355403938314,
+            140.49588789200857,
+            -1598.4996118481747
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2640,
+          "at": [
+            -75.96249608159131,
+            140.49588789200857,
+            -1607.2385134804304
+          ],
+          "state": "ride",
+          "surface": "Pinwheel 3",
+          "target": "Pinwheel release · 1"
+        },
+        {
+          "frame": 2700,
+          "at": [
+            -75.05875615364825,
+            139.44588790392947,
+            -1616.1537198595595
+          ],
+          "state": "ride",
+          "surface": "Pinwheel dock",
+          "target": "Pinwheel release · 1"
+        }
+      ]
+    },
+    {
+      "name": "Counterweights",
+      "phase": 0,
+      "done": false,
+      "seconds": 75,
+      "at": [
+        70.49339084648962,
+        97.75066305882946,
+        -2163.2991199653616
+      ],
+      "state": "ride",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Crane gantry · downhill slick · safe 3"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 60,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 120,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 180,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 240,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 300,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 360,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 420,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 480,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 540,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 600,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 660,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 720,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 780,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 840,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 900,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 960,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1020,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1080,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1140,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1200,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1260,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1320,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1380,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1440,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1500,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1560,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1620,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1680,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1740,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1800,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1860,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1920,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 1980,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2040,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2100,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2160,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2220,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2280,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2340,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2400,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2460,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2520,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2580,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2640,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2700,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2760,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2820,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2880,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 2940,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3000,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3060,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3120,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3180,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3240,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3300,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3360,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3420,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3480,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3540,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3600,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3660,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3720,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3780,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3840,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3900,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 3960,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4020,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4080,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4140,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4200,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4260,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4320,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4380,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        },
+        {
+          "frame": 4440,
+          "at": [
+            70.49339084648962,
+            97.75066305882946,
+            -2163.2991199653616
+          ],
+          "state": "ride",
+          "surface": "Crane gantry · downhill slick · safe 3",
+          "target": "Counterweight 1"
+        }
+      ]
+    },
+    {
+      "name": "Harbour scissors",
+      "phase": 0,
+      "done": true,
+      "seconds": 12.716666666666667,
+      "at": [
+        77.57719759649804,
+        87.33778924186711,
+        -2562.281614952499
+      ],
+      "state": "ride",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Harbour scissors · outer arm",
+        "Harbour scissors · inner arm",
+        "Harbour departure · downhill slick · safe 1",
+        "Harbour departure · downhill slick · ice 2"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            91.71908020302416,
+            89.41409825882842,
+            -2495.551274236905
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · outer arm",
+          "target": "Harbour scissors axle"
+        },
+        {
+          "frame": 60,
+          "at": [
+            89.04022862794113,
+            89.41409825882842,
+            -2500.9009435372473
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · outer arm",
+          "target": "Harbour scissors axle"
+        },
+        {
+          "frame": 120,
+          "at": [
+            87.72371121740575,
+            89.41409825882842,
+            -2507.15714708485
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · outer arm",
+          "target": "Harbour scissors axle"
+        },
+        {
+          "frame": 180,
+          "at": [
+            86.27710376240502,
+            91.8879871477173,
+            -2514.85519140815
+          ],
+          "state": "air",
+          "surface": "Harbour scissors · outer arm",
+          "target": "Harbour scissors axle"
+        },
+        {
+          "frame": 240,
+          "at": [
+            85.15964650391847,
+            89.76409825882841,
+            -2522.0822148833936
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 300,
+          "at": [
+            83.33571697144124,
+            89.41409825882842,
+            -2529.01899310324
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · outer arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 360,
+          "at": [
+            82.29265176269838,
+            89.76409825882841,
+            -2528.542369608683
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 420,
+          "at": [
+            81.05078742382213,
+            89.76409825882841,
+            -2527.697131616887
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 480,
+          "at": [
+            79.97456383167636,
+            89.76409825882841,
+            -2526.6490872100658
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 540,
+          "at": [
+            81.33039165690784,
+            89.76409825882841,
+            -2529.051546120612
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 600,
+          "at": [
+            81.69712707652931,
+            89.76409825882841,
+            -2537.975834996913
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 660,
+          "at": [
+            80.14210861592011,
+            89.76409825882841,
+            -2546.54530924525
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        },
+        {
+          "frame": 720,
+          "at": [
+            78.6729643230428,
+            89.76409825882841,
+            -2555.0906611383484
+          ],
+          "state": "ride",
+          "surface": "Harbour scissors · inner arm",
+          "target": "Storm fingers"
+        }
+      ]
+    },
+    {
+      "name": "Pendulum",
+      "phase": 0,
+      "done": false,
+      "seconds": 37.333333333333336,
+      "at": [
+        -52.35895476943806,
+        10.625010265908948,
+        -3108.6443753046283
+      ],
+      "state": "dead",
+      "bail": true,
+      "deaths": 1,
+      "supports": [
+        "Turbine catch · downhill slick · safe 3",
+        "Pendulum pier · translating and turning"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            -7.56058178446181,
+            57.41084368665109,
+            -3062.9110497639163
+          ],
+          "state": "ride",
+          "surface": "Turbine catch · downhill slick · safe 3",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 60,
+          "at": [
+            -9.488809140776617,
+            58.73889924220664,
+            -3066.57333499118
+          ],
+          "state": "air",
+          "surface": "Turbine catch · downhill slick · safe 3",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 120,
+          "at": [
+            -11.534465639617782,
+            57.76084359924231,
+            -3070.8236144893717
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 180,
+          "at": [
+            -14.091453376626001,
+            57.76084359924231,
+            -3076.088562109889
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 240,
+          "at": [
+            -17.24300669330288,
+            57.76084359924231,
+            -3082.0061076017582
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 300,
+          "at": [
+            -20.882032688228932,
+            57.76084359924231,
+            -3088.5268920218546
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 360,
+          "at": [
+            -24.996567534762328,
+            57.76084359924231,
+            -3095.744270227311
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 420,
+          "at": [
+            -29.56629428139424,
+            57.76084359924231,
+            -3103.7084876851104
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum centre"
+        },
+        {
+          "frame": 480,
+          "at": [
+            -34.57408810772013,
+            57.76084359924231,
+            -3112.4166635686206
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 540,
+          "at": [
+            -37.08869924332628,
+            57.76084359924231,
+            -3116.741692023394
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 600,
+          "at": [
+            -38.110756074406225,
+            57.76084359924231,
+            -3119.1168558826494
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 660,
+          "at": [
+            -39.12491857479245,
+            57.76084359924231,
+            -3122.1874598075156
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 720,
+          "at": [
+            -40.12840699557053,
+            57.76084359924231,
+            -3125.78292691889
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 780,
+          "at": [
+            -41.11847084472478,
+            57.76084359924231,
+            -3129.702399450509
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 840,
+          "at": [
+            -42.09239642606761,
+            57.76084359924231,
+            -3133.7253488728725
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 900,
+          "at": [
+            -43.086092829095506,
+            57.76084359924231,
+            -3137.63342001979
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 960,
+          "at": [
+            -44.62463746932234,
+            57.76084359924231,
+            -3141.349696033514
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1020,
+          "at": [
+            -45.54278600366878,
+            57.76084359924231,
+            -3144.306016989604
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1080,
+          "at": [
+            -46.5385791448574,
+            57.76084359924231,
+            -3146.5498512594077
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1140,
+          "at": [
+            -47.39905560794362,
+            57.76084359924231,
+            -3147.8756528767917
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1200,
+          "at": [
+            -48.22617915693835,
+            57.76084359924231,
+            -3148.2159649472114
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1260,
+          "at": [
+            -49.017682703686326,
+            57.76084359924231,
+            -3147.5199655669667
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1320,
+          "at": [
+            -49.77139679198257,
+            57.76084359924231,
+            -3145.789296327698
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1380,
+          "at": [
+            -50.485255543901594,
+            57.76084359924231,
+            -3143.0780718313517
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1440,
+          "at": [
+            -51.15730232222344,
+            57.76084359924231,
+            -3139.4901311351855
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1500,
+          "at": [
+            -51.78569509344193,
+            57.76084359924231,
+            -3135.173675607392
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1560,
+          "at": [
+            -52.368711476649935,
+            57.76084359924231,
+            -3130.313575309788
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1620,
+          "at": [
+            -52.904753464469444,
+            57.76084359924231,
+            -3125.121748802757
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1680,
+          "at": [
+            -53.39235180306768,
+            57.76084359924231,
+            -3119.826122722135
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1740,
+          "at": [
+            -53.83017001929216,
+            57.76084359924231,
+            -3114.658752265516
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1800,
+          "at": [
+            -54.21700808384815,
+            57.76084359924231,
+            -3109.8437279067994
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1860,
+          "at": [
+            -54.55180570048248,
+            57.76084359924231,
+            -3105.5855049066677
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1920,
+          "at": [
+            -54.833645212203834,
+            57.76084359924231,
+            -3102.0582699100564
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 1980,
+          "at": [
+            -54.857933089155985,
+            57.76084359924231,
+            -3100.1129391632185
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 2040,
+          "at": [
+            -55.01476526180592,
+            57.76084359924231,
+            -3098.645726658275
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 2100,
+          "at": [
+            -55.18400659537081,
+            57.76084359924231,
+            -3097.941382825308
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 2160,
+          "at": [
+            -55.179185941453724,
+            57.76084359924231,
+            -3098.6746620667413
+          ],
+          "state": "ride",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        },
+        {
+          "frame": 2220,
+          "at": [
+            -53.19619690619144,
+            27.95834359924229,
+            -3105.7635723616595
+          ],
+          "state": "air",
+          "surface": "Pendulum pier · translating and turning",
+          "target": "Pendulum disembark"
+        }
+      ]
+    },
+    {
+      "name": "Moving spring berth",
+      "phase": 0,
+      "done": true,
+      "seconds": 1.75,
+      "at": [
+        -37.34675985449682,
+        127.46658971316829,
+        -1955.764088684419
+      ],
+      "state": "air",
+      "bail": false,
+      "deaths": 0,
+      "supports": [
+        "Discharge catch · dry connector · safe 1"
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "at": [
+            -42.28583171430723,
+            127.44658972508923,
+            -1945.9718106306766
+          ],
+          "state": "ride",
+          "surface": "Discharge catch · dry connector · safe 1",
+          "target": "Cross-thread · 1"
+        },
+        {
+          "frame": 60,
+          "at": [
+            -40.27749514543852,
+            127.44658972508923,
+            -1950.9209448539145
+          ],
+          "state": "ride",
+          "surface": "Discharge catch · dry connector · safe 1",
+          "target": "Cross-thread · 1"
+        }
+      ]
+    }
+  ]
+}

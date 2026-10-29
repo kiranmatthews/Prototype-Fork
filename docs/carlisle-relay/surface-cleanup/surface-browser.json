@@ -1,0 +1,66 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "errors": [],
+  "views": [
+    {
+      "name": "checkpoint-join",
+      "s": 195
+    },
+    {
+      "name": "scissor-join",
+      "s": 222
+    },
+    {
+      "name": "scissor-hub",
+      "s": 260
+    },
+    {
+      "name": "winch-join",
+      "s": 870
+    },
+    {
+      "name": "dial-join",
+      "s": 1346
+    },
+    {
+      "name": "pinwheel-join",
+      "s": 1542
+    },
+    {
+      "name": "spring-berth",
+      "s": 1778
+    },
+    {
+      "name": "terrace-berth",
+      "s": 1818
+    },
+    {
+      "name": "dry-connector",
+      "s": 2008
+    },
+    {
+      "name": "moving-spring-berth",
+      "s": 2017
+    },
+    {
+      "name": "counterweight-gaps",
+      "s": 2259
+    },
+    {
+      "name": "harbour-scissors",
+      "s": 2600
+    },
+    {
+      "name": "dry-harbour",
+      "s": 3967
+    }
+  ],
+  "source": {
+    "differences": [],
+    "build": "Codex/sol fork · build 10-29 08:04 UTC",
+    "canvas": [
+      1440,
+      900
+    ]
+  }
+}

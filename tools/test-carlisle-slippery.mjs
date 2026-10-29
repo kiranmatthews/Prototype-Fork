@@ -8,6 +8,7 @@ const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFi
 const data=api.CARLISLE_TIDAL_RELAY_LEVEL,runs=api.CARLISLE_RELAY_CROSSINGS,point=api.carlislePoint,rows=[];
 const grades=runs.map(run=>{
  for(const slope of run.slopes){
+  assert.ok(slope.to-slope.from>=18,'ultra-short slippery fragment returned');
   const drop=point(slope.from,run.y)[1]-point(slope.to,run.y)[1];
   assert.ok(Math.abs(drop-(slope.to-slope.from)*slope.grade)<.001,'slippery pitch is not forward downhill');
  }
@@ -21,7 +22,15 @@ const grades=runs.map(run=>{
 await withSkateRuntime(async({THREE,level,player:p,CONST,TUNING,server})=>{
  const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');assert.ok(normalizeCustomLevelData(data));
  const tuning=JSON.stringify(TUNING);p.competitionMode=false;p.endlessDeaths=true;
- const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);let contacts=0;
+ const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);let contacts=0,berthGaps=0;
+ const inMovingSpringBerth=at=>data.components.some(c=>{
+  if(c.t!=='mover'||c.bounce===undefined||Math.abs(c.p[1]-at[1])>.08||c.spin||c.orbit)return false;
+  const yaw=(c.yaw??0)*Math.PI/180,amp=Math.abs(c.amp??0);
+  for(let shift=-amp;shift<=amp+.001;shift+=.1){
+   const dx=at[0]-c.p[0]-(c.axis==='x'?shift:0),dz=at[2]-c.p[2]-(c.axis==='z'?shift:0);
+   if(Math.abs(dx*Math.cos(yaw)-dz*Math.sin(yaw))<=c.s[0]/2&&Math.abs(dx*Math.sin(yaw)+dz*Math.cos(yaw))<=c.s[2]/2)return true;
+  }return false;
+ });
  for(const run of runs)for(let s=run.a+.5;s<run.b;s+=2.5){
   // The existing finish gate owns its raised arrival pad beyond this point.
   if(s>3980)continue;
@@ -29,8 +38,12 @@ await withSkateRuntime(async({THREE,level,player:p,CONST,TUNING,server})=>{
   for(const u of [(l+r)/2,l+2,r-2]){
    const at=point(s,run.height(s,u),u);ray.set(new THREE.Vector3(at[0],at[1]+5,at[2]),down);ray.far=8;
    const hit=ray.intersectObjects(level.groundMeshes,false).find(h=>h.face?.normal.y>.2);
+   if(!hit&&inMovingSpringBerth(at)){berthGaps++;continue;}
    assert.ok(hit,`hole ${run.name} ${s}/${u}`);
-   assert.ok(Math.abs(hit.point.y-at[1])<.2,`overlap/height ${run.name} ${s}/${u}: ${hit.point.y} vs ${at[1]}`);contacts++;
+   const onMovingDeck=hit.object.userData.moverId!==undefined;
+   const dryJoin=!run.slopes.some(span=>s>span.from&&s<span.to);
+   assert.ok(Math.abs(hit.point.y-at[1])<.2||onMovingDeck&&dryJoin&&Math.abs(hit.point.y-at[1])<3,
+    `overlap/height ${run.name} ${s}/${u}: ${hit.point.y} vs ${at[1]}`);contacts++;
   }
  }
  for(const run of runs){
@@ -74,7 +87,8 @@ await withSkateRuntime(async({THREE,level,player:p,CONST,TUNING,server})=>{
   drift.push({name:run.name,neutralForwardSpeed:speeds[0],uphillInputForwardSpeed:speeds[1]});
  }
  const out=process.env.CARLISLE_OUT??'docs/carlisle-relay/slippery';await mkdir(out,{recursive:true});
- await writeFile(`${out}/crossings.json`,JSON.stringify({contacts,lethal,grades,drift,rows},null,2)+'\n');
- assert.ok(rows.every(r=>r.finished&&!r.failed&&r.wetFrames>0),'a slick crossing has no continuous input-only route');
+ await writeFile(`${out}/crossings.json`,JSON.stringify({contacts,berthGaps,lethal,grades,drift,rows},null,2)+'\n');
+ assert.ok(rows.every((r,i)=>r.finished&&!r.failed&&(runs[i].slopes.length?r.wetFrames>0:r.wetFrames===0)),
+  'a crossing has no continuous route or a dry connector still has slippery fragments');
  console.log(`PASS ${rows.length} continuous crossings, ${contacts} support probes and ${lethal} lethal obstacle contacts.`);
 },{levelEntry:{id:'carlisle-coast',name:data.name,data}});

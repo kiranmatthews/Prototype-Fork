@@ -1,6 +1,7 @@
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { CONST, TUNING } from '../tuning';
 import { buildCarlisleCrossings, type CarlisleRoad } from './carlisle-slippery-crossings';
+import { fitCarlisleDeckBerths } from './carlisle-deck-surfaces';
 type P=[number,number,number];
 type Station=[number,number,number?];
 const C:CustomComponent[]=[],groups:CustomGroup[]=[];
@@ -33,7 +34,6 @@ export const CARLISLE_RELAY_SECTIONS=[
 for(const [i,[nm]] of CARLISLE_RELAY_SECTIONS.entries())groups.push({id:i+1,nm:`${String(i+1).padStart(2,'0')} · ${nm}`,editorOnly:true});
 groups.push({id:90,nm:'Coastline massing and camera',editorOnly:true});
 const group=(s:number)=>{const i=CARLISLE_RELAY_SECTIONS.findIndex(q=>s<q[2]);return i<0?18:i+1;};
-let deckLayer=0;
 export const CARLISLE_RELAY_JUMPS:{name:string;from:Station;to:Station;up:number;moving:boolean;rail?:string}[]=[];
 export type CarlisleGrindBeat={name:string;start:Station;launches:string[];rails:{name:string;knots:Station[];popTo?:Station}[];finish:Station;gate?:boolean};
 export const CARLISLE_RELAY_GRINDS:CarlisleGrindBeat[]=[];
@@ -50,9 +50,7 @@ function strip(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0,t
  for(let i=0;i<count;i++){const k=i*4;indices.push(k,k+1,k+5,k,k+5,k+4);}const topTriangles=indices.length/3;
  for(let i=0;i<count;i++){const k=i*4;indices.push(k+2,k+6,k+7,k+2,k+7,k+3,k,k+4,k+6,k,k+6,k+2,k+1,k+3,k+7,k+1,k+7,k+5);}
  indices.push(0,2,3,0,3,1,count*4,count*4+1,count*4+3,count*4,count*4+3,count*4+2);
- // Adjacent quay/rest meshes deliberately overlap. Render-only layering
- // removes coplanar shimmer without changing their shared collision height.
- return add({t:'mesh',nm,p:origin,vertices,indices,grindTopTriangles:topTriangles,solid,...(solid?{solidSides:true,depthBias:-(++deckLayer%7)*.6}:{}),tex:'solid',color,grp:solid?group(a):90});}
+ return add({t:'mesh',nm,p:origin,vertices,indices,grindTopTriangles:topTriangles,solid,...(solid?{solidSides:true}:{}),tex:'solid',color,grp:solid?group(a):90});}
 function arrow(s:number,y:number,u=0){const p=carlislePoint(s,y+.025,u),l=carlislePoint(s-1.8,y+.025,u-1),r=carlislePoint(s-1.8,y+.025,u+1),tip=carlislePoint(s+1.4,y+.025,u);
  add({t:'mesh',nm:'Route chevron',p,vertices:[...l.map((v,i)=>v-p[i]),...r.map((v,i)=>v-p[i]),...tip.map((v,i)=>v-p[i])],indices:[0,1,2],tex:'solid',color:PALE,solid:false,doubleSided:true,grp:90});}
 function road(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0){const first=C.length;strip(nm,a,b,top,w,offset);strip(`${nm} · cliff`,a,b,s=>val(top,s)-3,s=>val(w,s)+5,offset,24,DARK,false);for(let s=a+10;s<b-4;s+=24)arrow(s,val(top,s),val(offset,s));roads.push({name:nm,a,b,y:top,width:w,offset,components:C.slice(first)});}
@@ -95,13 +93,13 @@ function grindLine(nm:string,knots:Station[],popTo?:Station){
 function springToRail(name:string,from:Station,to:Station,railName:string){spring(name,from,to);CARLISLE_RELAY_JUMPS[CARLISLE_RELAY_JUMPS.length-1].rail=railName;}
 
 function authorCourse(){
-C.length=0;roads.length=0;deckLayer=0;
+C.length=0;roads.length=0;
 CARLISLE_RELAY_JUMPS.length=0;CARLISLE_RELAY_GRINDS.length=0;CARLISLE_RELAY_STOPS.length=0;CARLISLE_RELAY_WALK.length=0;
 // I — surf-side springs, a scissor pier, changing tides and a lighthouse climb.
 rest('Foam steps · start',0,0);road('Shore approach',12,61,0,16);
 chain('Foam steps',[[65,0],[82,4],[103,10],[126,4],[151,0]]);road('Foam catch',143,180,0,20);
 rest('Scissor groyne',195,0);road('Scissor approach',180,232,0,12);
-moving('Scissor · long blade',260,0,22,66,{spin:9});moving('Scissor · cross blade',260,0,22,66,{spin:9,yaw:frame(260).yaw+90});box('Scissor waiting hub',260,.03,14,14);walk('Scissor axle',260,0);walk('Scissor far dock',294,0);
+moving('Scissor · long blade',260,.35,22,66,{spin:9});moving('Scissor · cross blade',260,.7,22,66,{spin:9,yaw:frame(260).yaw+90});box('Scissor waiting hub',260,1.05,14,14);walk('Scissor axle',260,1.05);walk('Scissor far dock',294,0);
 road('Scissor abutment',288,333,0,14);chain('Groyne rebound',[[337,0],[360,8],[382,0]]);road('Groyne catch',375,408,0,17);
 rest('Lift and skip',415,0);road('Lift approach',408,440,0,14);
 for(const [i,s] of [451,466,481,496].entries()){moving(`Tide steps · ${i+1}`,s,i,17,21,{axis:'y',amp:1,speed:.55,phase:i*.7});walk(`Tide step ${i+1}`,s,i);}
@@ -110,18 +108,18 @@ road('Lift exit',505,519,3,16);chain('Lift and skip',[[522,3],[548,17,-4],[577,1
 rest('Surf sockets',635,4);road('Socket approach',620,651,4,13);
 chain('Surf sockets',[[655,4],[682,16,-6],[710,5,7],[742,21,-6],[775,10,5],[809,4]]);road('Socket catch',802,839,4,18);
 rest('Twin winches',845,4);road('Port pier',830,874,4,12,-5);
-moving('Port winch',891,4,24,36,{axis:'x',amp:7,speed:.45},-5);moving('Starboard winch',920,4,24,36,{axis:'x',amp:7,speed:.45,phase:Math.PI},5);
-box('Winch transfer bollard',905,4,12,12);walk('Port winch',890,4,-5);walk('Winch transfer',905,4);walk('Starboard winch',920,4,5);road('Winch exit',932,976,4,20,5);
+moving('Port winch',891,4.35,24,36,{axis:'x',amp:7,speed:.45},-5);moving('Starboard winch',920,4.7,24,36,{axis:'x',amp:7,speed:.45,phase:Math.PI},5);
+box('Winch transfer bollard',905,4.95,12,12);walk('Port winch',890,4,-5);walk('Winch transfer',905,4.95);walk('Starboard winch',920,4,5);road('Winch exit',932,976,4,20,5);
 chain('Winch throw',[[980,4,5],[1012,17],[1035,4]]);road('Winch catch',1028,1068,4,18);
 rest('Beacon chimney',1068,4);chain('Beacon chimney',[[1090,4],[1113,20,-4],[1140,39,4],[1170,63,-3],[1204,78,3],[1244,22],[1272,12]]);road('Beacon catch',1264,1302,12,23);
 for(const u of [-15,15])strip('Beacon tower buttress',1128,1195,45,7,u,66,DARK,false);
 
 // II — genuinely different ways to board, ride and leave harbour machinery.
 rest('Tide dial',1308,12);road('Dial boarding quay',1290,1355,12,18);
-for(let i=0;i<2;i++)moving(`Tide dial · orbit ${i+1}`,1390,12,26,34,{axis:'y',orbit:[20,38],speed:.22,phase:Math.PI/2+i*Math.PI});
+for(let i=0;i<2;i++)moving(`Tide dial · orbit ${i+1}`,1390,12.35,26,34,{axis:'y',orbit:[20,38],speed:.22,phase:Math.PI/2+i*Math.PI});
 walk('Dial entry',1360,12);walk('Dial exit',1435,12);road('Dial receiving quay',1426,1490,12,20);
 spring('Dial exit spring',[1492,12],[1516,16]);road('Dial catch',1508,1544,16,18);rest('Pinwheel handoffs',1530,16);
-for(const [i,s] of [1566,1605,1644].entries()){moving(`Pinwheel ${i+1}`,s,16,16,58,{spin:i===1?-13:11,yaw:frame(s).yaw+i*25});walk('Pinwheel centre',s,16);}
+for(const [i,s] of [1566,1605,1644].entries()){moving(`Pinwheel ${i+1}`,s,16+.35*(i+1),16,58,{spin:i===1?-13:11,yaw:frame(s).yaw+i*25});walk('Pinwheel centre',s,16);}
 road('Pinwheel dock',1672,1693,16,17);chain('Pinwheel release',[[1696,16],[1721,27],[1740,16]]);road('Pinwheel catch',1733,1776,16,20);
 // Open, separated catches replace the wheel whose rising baskets crossed
 // underneath the upper floor. No moving deck or stacked floor crosses this
@@ -130,18 +128,15 @@ rest('Dredger terraces',1770,16,26);road('Dredger launch quay',1760,1796,16,24);
 road('Dredger middle terrace',1817,1839,32,26,-6);
 road('Dredger upper terrace',1853,1904,48,28,s=>6*(1-Math.max(0,Math.min(1,(s-1864)/28))));
 chain('Dredger terraces',[[1792,16],[1828,32,-6],[1864,48,6]]);
-// Keep the amber faces above the quay's render-only depth layers at normal
-// resolution, preserving the same 2 cm lip and native collision geometry.
-for(const c of C)if(c.t==='trampoline'&&c.nm?.startsWith('Dredger terraces ·'))c.depthBias=-4.2;
 walk('Dredger upper terrace exit',1895,48);
 chain('Dredger discharge',[[1908,48],[1935,58,3],[1964,35],[1983,24]]);road('Discharge catch',1976,2022,24,20);rest('Cross-thread springs',2008,24);
 chain('Cross-thread',[[2031,24],[2060,34,-3],[2092,24,3],[2124,40,-3],[2157,24]],{0:{axis:'x',amp:3,speed:.55},1:{axis:'z',amp:3,speed:.5},2:{axis:'x',amp:3,speed:.7,phase:Math.PI},3:{spin:18}});
 road('Crane gantry',2150,2236,24,14);rail('Crane outrigger shortcut',2160,2230,25.1,6);
 rest('Counterweight stacks',2240,24);road('Counterweight boarding',2220,2262,24,18);
-for(const [i,s] of [2273,2290,2307,2324].entries()){moving(`Counterweight ${i+1}`,s,24+i*2,19,26,{axis:'y',amp:2.5,speed:.5,phase:i*Math.PI});walk(`Counterweight ${i+1}`,s,24+i*2);}
+for(const [i,s] of [2273,2290,2307,2324].entries()){moving(`Counterweight ${i+1}`,s,24+i*2,19,15,{axis:'y',amp:2.5,speed:.5,phase:i*Math.PI});walk(`Counterweight ${i+1}`,s,24+i*2);}
 road('Counterweight exit',2334,2350,30,18);chain('Stack leap',[[2354,30],[2382,50,-4],[2415,29,4],[2447,24]]);road('Stack catch',2440,2495,24,22);rest('Harbour scissors',2478,24);
 chain('Scissor approach springs',[[2500,24],[2532,41,5],[2566,24,-5],[2595,24]]);box('Scissor inner dock',2595,24,22,23);
-moving('Harbour scissors · outer arm',2626,24,16,70,{spin:-10});moving('Harbour scissors · inner arm',2626,24,16,70,{spin:10,yaw:frame(2626).yaw+70});walk('Harbour scissors axle',2626,24);
+moving('Harbour scissors · outer arm',2626,24.35,16,70,{spin:-10});moving('Harbour scissors · inner arm',2626,24.7,16,70,{spin:10,yaw:frame(2626).yaw+70});walk('Harbour scissors axle',2626,24);
 road('Harbour departure',2657,2715,24,16);
 
 // III — exposed fingers, rising orbits, stacked spirals and a homeward dive.
@@ -149,7 +144,7 @@ rest('Storm fingers',2720,24);road('Headland throat',2700,2743,24,13);
 chain('Storm fingers',[[2747,24],[2780,43,-7],[2814,27,8],[2848,55,-6],[2884,28,5],[2910,24]]);road('Headland catch',2903,2943,24,18);rest('Helical turbine',2930,24);
 chain('Helical turbine',[[2950,24],[2981,38,-4],[3014,53,4],[3048,66,-4],[3084,35],[3115,24]],{1:{axis:'z',orbit:[3,3],speed:.35,spin:-16},2:{axis:'x',orbit:[3,3],speed:.35,spin:16},3:{axis:'y',orbit:[3,3],speed:.35,spin:-16}});
 road('Turbine catch',3108,3163,24,19);rest('Pendulum pier',3145,24);road('Pendulum boarding quay',3150,3190,24,18);
-moving('Pendulum pier · translating and turning',3240,24,32,100,{axis:'z',amp:19,speed:.23,spin:3});walk('Pendulum centre',3240,24);walk('Pendulum disembark',3290,24);
+moving('Pendulum pier · translating and turning',3240,24.35,32,100,{axis:'z',amp:19,speed:.23,spin:3});walk('Pendulum centre',3240,24);walk('Pendulum disembark',3290,24);
 road('Pendulum receiving quay',3288,3360,24,18);rest('Rigging slingshot',3360,24);
 const rigging=grindLine('Rigging · sweeping cable',[[3390,38,-6],[3408,38,-6],[3434,36,-27],[3462,34,-27],[3478,34,-12],[3490,34,-12]],[3506,35.2,-12]);
 springToRail('Rigging · rail catch',[3380,24],[3398,38,-6],rigging.name);
@@ -184,6 +179,7 @@ return buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLIS
 const downhill=authorCourse().flatMap(r=>r.slopes);
 elevation=s=>downhill.reduce((sum,r)=>sum+Math.max(0,Math.min(r.to-r.from,r.to-s))*r.grade,0);
 export const CARLISLE_RELAY_CROSSINGS=authorCourse();
+fitCarlisleDeckBerths(C);
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
  sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,

@@ -1,0 +1,540 @@
+[
+  {
+    "index": 0,
+    "name": "Foam steps · start · downhill slick",
+    "range": [
+      -13,
+      61
+    ],
+    "slopes": [
+      {
+        "from": 12,
+        "to": 57,
+        "length": 45
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 1,
+    "name": "Foam catch · downhill slick",
+    "range": [
+      143,
+      232
+    ],
+    "slopes": [
+      {
+        "from": 158,
+        "to": 192.5,
+        "length": 34.5
+      },
+      {
+        "from": 197.5,
+        "to": 198.5,
+        "length": 1
+      },
+      {
+        "from": 205.5,
+        "to": 223.21494573814783,
+        "length": 17.714945738147833
+      }
+    ],
+    "hazards": 3
+  },
+  {
+    "index": 2,
+    "name": "Scissor abutment · downhill slick",
+    "range": [
+      288,
+      333
+    ],
+    "slopes": [
+      {
+        "from": 296.78505426185217,
+        "to": 329,
+        "length": 32.21494573814783
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 3,
+    "name": "Groyne catch · downhill slick",
+    "range": [
+      375,
+      440
+    ],
+    "slopes": [
+      {
+        "from": 389,
+        "to": 412.5,
+        "length": 23.5
+      },
+      {
+        "from": 417.5,
+        "to": 418.5,
+        "length": 1
+      },
+      {
+        "from": 425.5,
+        "to": 437,
+        "length": 11.5
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 4,
+    "name": "Lift catch · downhill slick",
+    "range": [
+      594,
+      654
+    ],
+    "slopes": [
+      {
+        "from": 608,
+        "to": 632.5,
+        "length": 24.5
+      },
+      {
+        "from": 637.5,
+        "to": 638.5,
+        "length": 1
+      },
+      {
+        "from": 645.5,
+        "to": 647,
+        "length": 1.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 5,
+    "name": "Socket catch · downhill slick",
+    "range": [
+      802,
+      874
+    ],
+    "slopes": [
+      {
+        "from": 816,
+        "to": 842.5,
+        "length": 26.5
+      },
+      {
+        "from": 847.5,
+        "to": 848.5,
+        "length": 1
+      },
+      {
+        "from": 855.5,
+        "to": 863,
+        "length": 7.5
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 6,
+    "name": "Winch exit · downhill slick",
+    "range": [
+      932,
+      976
+    ],
+    "slopes": [
+      {
+        "from": 947,
+        "to": 972,
+        "length": 25
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 7,
+    "name": "Winch catch · downhill slick",
+    "range": [
+      1028,
+      1087
+    ],
+    "slopes": [
+      {
+        "from": 1042,
+        "to": 1065.5,
+        "length": 23.5
+      },
+      {
+        "from": 1070.5,
+        "to": 1071.5,
+        "length": 1
+      },
+      {
+        "from": 1078.5,
+        "to": 1082,
+        "length": 3.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 8,
+    "name": "Beacon catch · downhill slick",
+    "range": [
+      1264,
+      1355
+    ],
+    "slopes": [
+      {
+        "from": 1279,
+        "to": 1305.5,
+        "length": 26.5
+      },
+      {
+        "from": 1310.5,
+        "to": 1311.5,
+        "length": 1
+      },
+      {
+        "from": 1318.5,
+        "to": 1328.0581788928323,
+        "length": 9.558178892832302
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 9,
+    "name": "Dial receiving quay · downhill slick",
+    "range": [
+      1426,
+      1490
+    ],
+    "slopes": [
+      {
+        "from": 1451.9418211071677,
+        "to": 1484,
+        "length": 32.0581788928323
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 10,
+    "name": "Dial catch · downhill slick",
+    "range": [
+      1508,
+      1549
+    ],
+    "slopes": [
+      {
+        "from": 1523,
+        "to": 1527.5,
+        "length": 4.5
+      },
+      {
+        "from": 1532.5,
+        "to": 1533.5,
+        "length": 1
+      }
+    ],
+    "hazards": 0
+  },
+  {
+    "index": 11,
+    "name": "Pinwheel catch · downhill slick",
+    "range": [
+      1733,
+      1796
+    ],
+    "slopes": [
+      {
+        "from": 1747,
+        "to": 1767.5,
+        "length": 20.5
+      },
+      {
+        "from": 1772.5,
+        "to": 1773.5,
+        "length": 1
+      },
+      {
+        "from": 1780.5,
+        "to": 1784,
+        "length": 3.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 12,
+    "name": "Dredger upper terrace · downhill slick",
+    "range": [
+      1853,
+      1904
+    ],
+    "slopes": [
+      {
+        "from": 1856,
+        "to": 1857,
+        "length": 1
+      },
+      {
+        "from": 1871,
+        "to": 1900,
+        "length": 29
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 13,
+    "name": "Discharge catch · downhill slick",
+    "range": [
+      1976,
+      2027
+    ],
+    "slopes": [
+      {
+        "from": 1990,
+        "to": 2005.5,
+        "length": 15.5
+      },
+      {
+        "from": 2010.5,
+        "to": 2011.5,
+        "length": 1
+      },
+      {
+        "from": 2018.5,
+        "to": 2019,
+        "length": 0.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 14,
+    "name": "Crane gantry · downhill slick",
+    "range": [
+      2150,
+      2262
+    ],
+    "slopes": [
+      {
+        "from": 2164,
+        "to": 2237.5,
+        "length": 73.5
+      },
+      {
+        "from": 2242.5,
+        "to": 2243.5,
+        "length": 1
+      },
+      {
+        "from": 2250.5,
+        "to": 2257,
+        "length": 6.5
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 15,
+    "name": "Stack catch · downhill slick",
+    "range": [
+      2440,
+      2497
+    ],
+    "slopes": [
+      {
+        "from": 2454,
+        "to": 2475.5,
+        "length": 21.5
+      },
+      {
+        "from": 2480.5,
+        "to": 2481.5,
+        "length": 1
+      },
+      {
+        "from": 2488.5,
+        "to": 2492,
+        "length": 3.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 16,
+    "name": "Harbour departure · downhill slick",
+    "range": [
+      2657,
+      2743
+    ],
+    "slopes": [
+      {
+        "from": 2663.9026461420326,
+        "to": 2717.5,
+        "length": 53.59735385796739
+      },
+      {
+        "from": 2722.5,
+        "to": 2723.5,
+        "length": 1
+      },
+      {
+        "from": 2730.5,
+        "to": 2739,
+        "length": 8.5
+      }
+    ],
+    "hazards": 3
+  },
+  {
+    "index": 17,
+    "name": "Headland catch · downhill slick",
+    "range": [
+      2903,
+      2949
+    ],
+    "slopes": [
+      {
+        "from": 2917,
+        "to": 2927.5,
+        "length": 10.5
+      },
+      {
+        "from": 2932.5,
+        "to": 2933.5,
+        "length": 1
+      },
+      {
+        "from": 2940.5,
+        "to": 2942,
+        "length": 1.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 18,
+    "name": "Turbine catch · downhill slick",
+    "range": [
+      3108,
+      3190
+    ],
+    "slopes": [
+      {
+        "from": 3122,
+        "to": 3142.5,
+        "length": 20.5
+      },
+      {
+        "from": 3147.5,
+        "to": 3148.5,
+        "length": 1
+      },
+      {
+        "from": 3155.5,
+        "to": 3166.502381006373,
+        "length": 11.00238100637307
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 19,
+    "name": "Pendulum receiving quay · downhill slick",
+    "range": [
+      3288,
+      3379
+    ],
+    "slopes": [
+      {
+        "from": 3313.497618993627,
+        "to": 3357.5,
+        "length": 44.00238100637307
+      },
+      {
+        "from": 3362.5,
+        "to": 3363.5,
+        "length": 1
+      },
+      {
+        "from": 3370.5,
+        "to": 3372,
+        "length": 1.5
+      }
+    ],
+    "hazards": 2
+  },
+  {
+    "index": 20,
+    "name": "Rigging catch · downhill slick",
+    "range": [
+      3544,
+      3604
+    ],
+    "slopes": [
+      {
+        "from": 3558,
+        "to": 3582.5,
+        "length": 24.5
+      },
+      {
+        "from": 3587.5,
+        "to": 3588.5,
+        "length": 1
+      },
+      {
+        "from": 3595.5,
+        "to": 3600,
+        "length": 4.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 21,
+    "name": "Eye catch · downhill slick",
+    "range": [
+      3781,
+      3829
+    ],
+    "slopes": [
+      {
+        "from": 3795,
+        "to": 3807.5,
+        "length": 12.5
+      },
+      {
+        "from": 3812.5,
+        "to": 3813.5,
+        "length": 1
+      },
+      {
+        "from": 3820.5,
+        "to": 3826,
+        "length": 5.5
+      }
+    ],
+    "hazards": 1
+  },
+  {
+    "index": 22,
+    "name": "Home harbour · downhill slick",
+    "range": [
+      3950,
+      4020
+    ],
+    "slopes": [
+      {
+        "from": 3965,
+        "to": 3982,
+        "length": 17
+      }
+    ],
+    "hazards": 1
+  }
+]

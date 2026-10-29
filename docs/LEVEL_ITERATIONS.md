@@ -6278,3 +6278,53 @@ with no console errors. MAX/native 1440×900 and normal 480p/CRT reviewed.
 Final production stamp: `Codex/sol fork · build 10-29 07:24 UTC`; release output
 997,253,341 bytes. Source hashes, focused check results and the bounded
 per-slope test scope are in [the validation record](carlisle-relay/slope-motion/validation.json).
+
+## 29 October 2026 NZDT — clear deck joins and sustained slopes
+
+Removed the miniature slippery leftovers between checkpoints, launch pads and
+landing islands. A slippery span now needs at least 18 m; the 18 retained
+slopes are 20.5–73.5 m. Thirty-nine shorter fragments merge into dry islands,
+and five short connectors are entirely dry. The elevation profile follows
+only the retained descents, so there are no miniature height drops left behind.
+The 4 km course, three acts, 17 checkpoints, 55 primary springs, 28 movers and
+four required grinds remain. The retained slopes carry 26 red spike clusters.
+
+Cut actual dock-top triangles around stationary springs and moving spring/lift
+berths, preserving the native 2 cm spring lip. Removed the terrace/quay depth
+bias workaround and the one road arrow that poked through an amber spring.
+Rotating scissors, winches, pinwheels, orbiting docks and the translating pier
+now sit at distinct heights where their footprints overlap. Counterweight
+lifts have separated footprints, allowing opposite vertical motion without
+passing through each other. Shared player, animation, camera and tuning code
+are unchanged from the preceding footwork checkpoint.
+
+First current-layout real-keyboard crossing pass: approximately **33 minutes**
+(07:28:37–08:01 UTC). The native overlap audit found 46 distinct conflicting
+surface pairs before correction. After correction it finds none at eight
+machinery phases, including all opposed-lift crossover times. All 23 connector
+routes, 1,793 support probes, 26 lethal contacts, 110 native spring transfers,
+the terrace climb at three phases and six grind-finale routes pass. Four
+sampled points lie in the intentional swept berth beside the moving spring;
+they are recorded separately from continuous floor support.
+
+The join checks exercise both scissors, winches, the dial, all three pinwheels,
+all four counterweights and the moving spring entry with ordinary input.
+The long translating pier is checked at its boarding and departure separately:
+its retreating exit needs a charged hop. The initial generic walk-only pilot
+missed that departure window; this evidence does not claim a single continuous
+crossing of the entire pier or an uninterrupted 4 km clear.
+
+Required check:levels, final source-data validation, build/type checking and
+release-size validation pass. Production Chrome lite/full keyboard checks
+clear representative slopes, spike death and checkpoint/fall recovery with no
+console errors. Full native and normal 480p/CRT views cover the corrected joins;
+the final surface browser compares the complete loaded level with current
+source. The final removal of one non-solid arrow preserves every other level
+component exactly, so existing traversal checks remain applicable. The user’s
+local-only publication hold remains in force. Evidence and final source hashes
+are recorded in [the cleanup validation record](carlisle-relay/surface-cleanup/validation.json).
+
+Final production stamp: `Codex/sol fork · build 10-29 08:04 UTC`; release output
+997,256,305 bytes / 1,849 files. All nine bounded join checks pass, including
+the charged pier departure. No remaining implementation or validation work
+for this increment; saved locally under the publication hold.

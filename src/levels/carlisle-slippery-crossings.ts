@@ -12,6 +12,7 @@ export type CarlisleCrossing = {
   height: (s: number, u: number) => number;
 };
 const value = (v: Value, s: number) => typeof v === 'number' ? v : v(s);
+export const CARLISLE_MIN_SLIDE_LENGTH = 18;
 
 /** Replace overlapping flat quays with one supported ribbon. Its dry restart
  * islands and icy banks share exact seams; no flat collider remains underneath. */
@@ -83,7 +84,18 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
       if (previous?.wet === wet) { previous.to = to; previous.knots.push(to); }
       else spans.push({ from, to, wet, knots: [from, to] });
     }
-    for (const [part, span] of spans.entries()) {
+    // Checkpoint and launch clearances can leave metre-long scraps. Those
+    // belong to the dry island, not to a new downhill/slippery challenge.
+    const continuous: typeof spans = [];
+    for (const span of spans) {
+      if (span.to - span.from < CARLISLE_MIN_SLIDE_LENGTH) span.wet = false;
+      const previous = continuous[continuous.length - 1];
+      if (previous?.wet === span.wet) {
+        previous.to = span.to; previous.knots.push(...span.knots.slice(1));
+      } else continuous.push(span);
+    }
+    if (continuous.every(span => !span.wet)) crossing.name = `${run[0].name} · dry connector`;
+    for (const [part, span] of continuous.entries()) {
       if (span.wet) crossing.slopes.push({from: span.from, to: span.to, grade});
       // One origin makes shared Float32 seam vertices identical across the
       // separate dry and slippery materials, including at checkpoint toes.

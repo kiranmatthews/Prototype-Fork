@@ -126,8 +126,8 @@ explicit starting-inventory limitation.
 
 ## Slippery crossings between sections
 
-The long flat quays are now 23 forward downhill crossings with 36 red spike
-obstacles. The blue-grey faces have 2% of dry steering/braking grip and an
+The route has 18 sustained downhill slopes and five short dry connectors,
+with 26 red spike clusters on the slopes. The blue-grey faces have 2% of dry steering/braking grip and an
 explicit gravity-driven slide. Both feet and boards gain velocity down the
 actual slope; releasing the stick preserves momentum. Correct early or jump to
 change the line. Ordinary surfaces, existing ice, jumps and the bounce camera
@@ -153,6 +153,18 @@ crossing replaces all of its old overlapping floors with one continuous
 ribbon, split only for dry/slippery materials. Shared seam vertices use the
 same origin; no older flat collider is left underneath a lowered slope. All
 ordinary exposed edges retain their normal grinding behavior.
+
+Every slippery span must be at least 18 m long; the current authored descents
+are 20.5–73.5 m. Short leftovers between checkpoint, landing and launch
+clearances merge into their dry islands. The course elevation profile uses
+only those retained slopes, so the deleted fragments leave no miniature drops.
+
+Dock tops are cut around stationary spring footprints and moving spring/lift
+berths. The former second floor under each amber pad is gone; its native
+2 cm boarding lip remains. Rotating and translating decks that overlap now
+have distinct heights, and counterweight lifts have separated footprints.
+Quay and terrace depth-bias patches are removed. The surface-cleanup audit
+checks actual native top triangles, including opposed-lift crossover phases.
 
 The new optional `slipGravity` field is bounded to 0–2 and requires `slip`.
 It uses the existing ground-gravity value; Carlisle opts in with 1. Capturing
