@@ -1,0 +1,217 @@
+{
+  "retries": [
+    {
+      "from": -237,
+      "frames": 730,
+      "evidence": {
+        "jumps": 0,
+        "ice": [],
+        "falling": [],
+        "grindFrames": [
+          110,
+          90
+        ],
+        "gaps": [
+          {
+            "index": 0,
+            "from": [
+              0,
+              1.318838318032578,
+              -346.0142033489139
+            ],
+            "speed": 22.870716305916847,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-08,
+              -368.5037410497328
+            ]
+          },
+          {
+            "index": 1,
+            "from": [
+              0,
+              1.5813601845896041,
+              -456.90680092294804
+            ],
+            "speed": 22.852914662378044,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-08,
+              -480.52147940740554
+            ]
+          }
+        ],
+        "checkpoints": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "bails": 0
+      }
+    },
+    {
+      "from": -309,
+      "frames": 531,
+      "evidence": {
+        "jumps": 0,
+        "ice": [],
+        "falling": [],
+        "grindFrames": [
+          0,
+          89
+        ],
+        "gaps": [
+          {
+            "index": 0,
+            "from": [
+              0,
+              1.3702120651564438,
+              -345.8297832294654
+            ],
+            "speed": 22.870717416439362,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-08,
+              -368.319322022296
+            ]
+          },
+          {
+            "index": 1,
+            "from": [
+              0,
+              1.5813601845896041,
+              -456.90680092294804
+            ],
+            "speed": 22.852914662378044,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-08,
+              -480.52147940740554
+            ]
+          }
+        ],
+        "checkpoints": [
+          4,
+          5,
+          6
+        ],
+        "bails": 0
+      }
+    },
+    {
+      "from": -377,
+      "frames": 401,
+      "evidence": {
+        "jumps": 0,
+        "ice": [],
+        "falling": [],
+        "grindFrames": [
+          0,
+          123
+        ],
+        "gaps": [
+          {
+            "index": 1,
+            "from": [
+              0,
+              1.5719823961790715,
+              -456.8599119808954
+            ],
+            "speed": 21.7672864494958,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-08,
+              -478.9899865378836
+            ]
+          }
+        ],
+        "checkpoints": [
+          5,
+          6
+        ],
+        "bails": 0
+      }
+    },
+    {
+      "from": -433,
+      "frames": 224,
+      "evidence": {
+        "jumps": 0,
+        "ice": [],
+        "falling": [],
+        "grindFrames": [
+          0,
+          0
+        ],
+        "gaps": [
+          {
+            "index": 1,
+            "from": [
+              0,
+              1.5759332821985081,
+              -456.8796664109925
+            ],
+            "speed": 18.03033500768171,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-08,
+              -474.60949583521267
+            ]
+          }
+        ],
+        "checkpoints": [
+          6
+        ],
+        "bails": 0
+      }
+    }
+  ],
+  "recovery": {
+    "frame": 4562,
+    "time": 76.03333333333333,
+    "position": [
+      0,
+      0.09999995231628414,
+      -433
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 1,
+    "mover": null,
+    "ground": null,
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

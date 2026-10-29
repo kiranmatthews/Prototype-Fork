@@ -1,0 +1,1696 @@
+{
+  "seconds": 219.75,
+  "startS": 2240,
+  "endS": 3585,
+  "target": "Storm eye · 1",
+  "position": [
+    -113.24166820236323,
+    24,
+    -3437.489652470393
+  ],
+  "state": "ride",
+  "deaths": 0,
+  "events": [
+    {
+      "frame": 401,
+      "arrived": "Counterweight 1"
+    },
+    {
+      "frame": 889,
+      "arrived": "Counterweight 2"
+    },
+    {
+      "frame": 1267,
+      "arrived": "Counterweight 3"
+    },
+    {
+      "frame": 1644,
+      "arrived": "Counterweight 4"
+    },
+    {
+      "frame": 1937,
+      "launch": "Stack leap · 1"
+    },
+    {
+      "frame": 2175,
+      "launch": "Stack leap · 2"
+    },
+    {
+      "frame": 2452,
+      "launch": "Stack leap · 3"
+    },
+    {
+      "frame": 2718,
+      "arrived": "Stack leap · 3 catch"
+    },
+    {
+      "frame": 2909,
+      "arrived": "Harbour scissors"
+    },
+    {
+      "frame": 3037,
+      "launch": "Scissor approach springs · 1"
+    },
+    {
+      "frame": 3304,
+      "launch": "Scissor approach springs · 2"
+    },
+    {
+      "frame": 3591,
+      "launch": "Scissor approach springs · 3"
+    },
+    {
+      "frame": 3837,
+      "arrived": "Scissor approach springs · 3 catch"
+    },
+    {
+      "frame": 4027,
+      "arrived": "Harbour scissors axle"
+    },
+    {
+      "frame": 4708,
+      "arrived": "Storm fingers"
+    },
+    {
+      "frame": 4868,
+      "launch": "Storm fingers · 1"
+    },
+    {
+      "frame": 5143,
+      "launch": "Storm fingers · 2"
+    },
+    {
+      "frame": 5441,
+      "launch": "Storm fingers · 3"
+    },
+    {
+      "frame": 5736,
+      "launch": "Storm fingers · 4"
+    },
+    {
+      "frame": 6038,
+      "launch": "Storm fingers · 5"
+    },
+    {
+      "frame": 6265,
+      "arrived": "Storm fingers · 5 catch"
+    },
+    {
+      "frame": 6381,
+      "arrived": "Helical turbine"
+    },
+    {
+      "frame": 6496,
+      "launch": "Helical turbine · 1"
+    },
+    {
+      "frame": 6750,
+      "launch": "Helical turbine · 2"
+    },
+    {
+      "frame": 7033,
+      "launch": "Helical turbine · 3"
+    },
+    {
+      "frame": 7313,
+      "launch": "Helical turbine · 4"
+    },
+    {
+      "frame": 7604,
+      "launch": "Helical turbine · 5"
+    },
+    {
+      "frame": 7861,
+      "arrived": "Helical turbine · 5 catch"
+    },
+    {
+      "frame": 8044,
+      "arrived": "Pendulum pier"
+    },
+    {
+      "frame": 10726,
+      "arrived": "Pendulum centre"
+    },
+    {
+      "frame": 10988,
+      "arrived": "Pendulum disembark"
+    },
+    {
+      "frame": 11453,
+      "arrived": "Double helix"
+    },
+    {
+      "frame": 11566,
+      "launch": "Double helix · 1"
+    },
+    {
+      "frame": 11817,
+      "launch": "Double helix · 2"
+    },
+    {
+      "frame": 12087,
+      "launch": "Double helix · 3"
+    },
+    {
+      "frame": 12380,
+      "launch": "Double helix · 4"
+    },
+    {
+      "frame": 12685,
+      "launch": "Double helix · 5"
+    },
+    {
+      "frame": 12976,
+      "arrived": "Double helix · 5 catch"
+    },
+    {
+      "frame": 13186,
+      "arrived": "The storm eye"
+    }
+  ],
+  "checkpoints": 6,
+  "tail": [
+    {
+      "frame": 12390,
+      "target": "Double helix · 5",
+      "position": [
+        -119.70916516256308,
+        60.635207255381616,
+        -3334.4238835616266
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12400,
+      "target": "Double helix · 5",
+      "position": [
+        -118.75165917886011,
+        74.30187392204827,
+        -3335.5785180991747
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12410,
+      "target": "Double helix · 5",
+      "position": [
+        -117.79078447228308,
+        87.05187392204829,
+        -3336.73035057267
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12420,
+      "target": "Double helix · 5",
+      "position": [
+        -116.82630030981574,
+        98.88520725538163,
+        -3337.8791623131606
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12430,
+      "target": "Double helix · 5",
+      "position": [
+        -115.85813734019492,
+        109.80187392204832,
+        -3339.0248754270315
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12440,
+      "target": "Double helix · 5",
+      "position": [
+        -115.76011683159527,
+        119.80187392204834,
+        -3340.4497923139816
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12450,
+      "target": "Double helix · 5",
+      "position": [
+        -115.87489584580224,
+        128.88520725538172,
+        -3341.9453934053086
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12460,
+      "target": "Double helix · 5",
+      "position": [
+        -115.98335020630698,
+        137.05187392204843,
+        -3343.441466332965
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12470,
+      "target": "Double helix · 5",
+      "position": [
+        -116.08530086518726,
+        144.30187392204846,
+        -3344.937996489789
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12480,
+      "target": "Double helix · 5",
+      "position": [
+        -116.18068364695891,
+        150.63520725538183,
+        -3346.434959593653
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12490,
+      "target": "Double helix · 5",
+      "position": [
+        -116.26947477761686,
+        156.05187392204854,
+        -3347.9323281291786
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12500,
+      "target": "Double helix · 5",
+      "position": [
+        -116.35161760237983,
+        160.5518739220486,
+        -3349.4300760062333
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12510,
+      "target": "Double helix · 5",
+      "position": [
+        -116.4267199428468,
+        164.13520725538197,
+        -3350.928193361504
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12520,
+      "target": "Double helix · 5",
+      "position": [
+        -116.49498064814145,
+        166.80187392204869,
+        -3352.4266381295815
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12530,
+      "target": "Double helix · 5",
+      "position": [
+        -116.55655092132207,
+        168.5518739220487,
+        -3353.9253727431337
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12540,
+      "target": "Double helix · 5",
+      "position": [
+        -116.61148281387564,
+        169.3852072553821,
+        -3355.4243653582284
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12550,
+      "target": "Double helix · 5",
+      "position": [
+        -116.65979413537933,
+        168.94354058871548,
+        -3356.923585956046
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12560,
+      "target": "Double helix · 5",
+      "position": [
+        -116.70149574386991,
+        165.4352072553822,
+        -3358.423004973099
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12570,
+      "target": "Double helix · 5",
+      "position": [
+        -116.7366964516305,
+        158.62131836649337,
+        -3359.9225907531277
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12580,
+      "target": "Double helix · 5",
+      "position": [
+        -116.76552365696928,
+        149.95812392204886,
+        -3361.42231261859
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12590,
+      "target": "Double helix · 5",
+      "position": [
+        -116.78802437974323,
+        141.2914572553821,
+        -3362.9221427510197
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12600,
+      "target": "Double helix · 5",
+      "position": [
+        -116.80421441193147,
+        132.62479058871537,
+        -3364.422054281973
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12610,
+      "target": "Double helix · 5",
+      "position": [
+        -116.81409894546076,
+        123.9581239220487,
+        -3365.9220206205796
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12620,
+      "target": "Double helix · 5",
+      "position": [
+        -116.81758123959484,
+        115.2914572553821,
+        -3367.4220153536457
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12630,
+      "target": "Double helix · 5",
+      "position": [
+        -116.81436932801392,
+        106.6247905887155,
+        -3368.922010727585
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12640,
+      "target": "Double helix · 5",
+      "position": [
+        -116.80713393075035,
+        97.9581239220489,
+        -3370.1219883401523
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12650,
+      "target": "Double helix · 5",
+      "position": [
+        -116.80713393075035,
+        89.2914572553823,
+        -3370.1219883401523
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12660,
+      "target": "Double helix · 5",
+      "position": [
+        -116.80713393075035,
+        80.6247905887157,
+        -3370.1219883401523
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12670,
+      "target": "Double helix · 5",
+      "position": [
+        -116.80713393075035,
+        71.9581239220491,
+        -3370.1219883401523
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12680,
+      "target": "Double helix · 5",
+      "position": [
+        -116.80713393075035,
+        63.29145725538249,
+        -3370.1219883401523
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "mover": 34,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 12690,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.79449259432627,
+        69.50791665474574,
+        -3371.1719122043705
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "mover": 34,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12700,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.77351558146664,
+        80.88291665474574,
+        -3372.6717649627017
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12710,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.74737807441711,
+        91.34124998807908,
+        -3374.1715363379203
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12720,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.82235399481169,
+        100.88291665474577,
+        -3375.629599565913
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12730,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.8914907544186,
+        109.50791665474578,
+        -3377.0878650298005
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12740,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.95497717301078,
+        117.21624998807914,
+        -3378.546345732507
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12750,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.01290154736307,
+        124.00791665474584,
+        -3380.005058218001
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12760,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.06528412168637,
+        129.88291665474588,
+        -3381.463980304606
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12770,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.11213029517869,
+        134.84124998807926,
+        -3382.9230906683024
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12780,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.15344785584261,
+        138.88291665474594,
+        -3384.382409381992
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12790,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.18907379043883,
+        142.00791665474597,
+        -3385.8419654751983
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12800,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.21898472266106,
+        144.21624998807934,
+        -3387.3017738441495
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        -1,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12810,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.13483565423356,
+        145.50791665474605,
+        -3388.799410718772
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12820,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.15342737198054,
+        145.88291665474608,
+        -3390.2591542982223
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12830,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.16651719845218,
+        144.02736109919056,
+        -3391.719208230755
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        -1,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12840,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.065165972702,
+        138.86624998807946,
+        -3393.215779387127
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12850,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -117.06707911944135,
+        130.71624998807945,
+        -3394.675845067742
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12860,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.95454802858798,
+        122.04958332141281,
+        -3396.171617231586
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12870,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.83666162072221,
+        113.38291665474621,
+        -3397.6669768606616
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12880,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.82276108863579,
+        104.71624998807961,
+        -3399.1268159767606
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12890,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.69428970460794,
+        96.04958332141301,
+        -3400.6213034417415
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12900,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.56051510640702,
+        87.38291665474641,
+        -3402.115325531729
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12910,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.42132857335385,
+        78.71624998807981,
+        -3403.608853086065
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12920,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.27667147728128,
+        70.04958332141321,
+        -3405.101860750874
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12930,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.18729181578648,
+        61.38291665474658,
+        -3405.9974114032875
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12940,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.18729181578648,
+        52.71624998807991,
+        -3405.9974114032875
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12950,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.18729181578648,
+        44.04958332141324,
+        -3405.9974114032875
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12960,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.18729181578648,
+        35.382916654746566,
+        -3405.9974114032875
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12970,
+      "target": "Double helix · 5 catch",
+      "position": [
+        -116.18729181578648,
+        26.716249988079895,
+        -3405.9974114032875
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12980,
+      "target": "The storm eye",
+      "position": [
+        -116.92221215145977,
+        24,
+        -3406.9794069451887
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.992577439442881,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 12990,
+      "target": "The storm eye",
+      "position": [
+        -117.3180161881646,
+        24,
+        -3408.5292355519446
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.99828586362298,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13000,
+      "target": "The storm eye",
+      "position": [
+        -117.15149818381849,
+        24,
+        -3410.019963356361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13010,
+      "target": "The storm eye",
+      "position": [
+        -116.97965784914254,
+        24,
+        -3411.5100870198703
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13020,
+      "target": "The storm eye",
+      "position": [
+        -116.80286955859108,
+        24,
+        -3412.9996319755537
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13030,
+      "target": "The storm eye",
+      "position": [
+        -116.62154069740473,
+        24,
+        -3414.4886310079532
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13040,
+      "target": "The storm eye",
+      "position": [
+        -116.43567262978425,
+        24,
+        -3415.9770702360133
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13050,
+      "target": "The storm eye",
+      "position": [
+        -116.2452668890023,
+        24,
+        -3417.464935797133
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13060,
+      "target": "The storm eye",
+      "position": [
+        -116.05032517723994,
+        24,
+        -3418.952213848844
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13070,
+      "target": "The storm eye",
+      "position": [
+        -115.85084936538875,
+        24,
+        -3420.438890570484
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13080,
+      "target": "The storm eye",
+      "position": [
+        -115.64677565891311,
+        24,
+        -3421.9249431256
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13090,
+      "target": "The storm eye",
+      "position": [
+        -115.43817171026032,
+        24,
+        -3423.4103665220587
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13100,
+      "target": "The storm eye",
+      "position": [
+        -115.22503939271168,
+        24,
+        -3424.895146939951
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13110,
+      "target": "The storm eye",
+      "position": [
+        -115.00738074796897,
+        24,
+        -3426.379270583252
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13120,
+      "target": "The storm eye",
+      "position": [
+        -114.7851979859011,
+        24,
+        -3427.8627236814878
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13130,
+      "target": "The storm eye",
+      "position": [
+        -114.55849348425653,
+        24,
+        -3429.345492491399
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13140,
+      "target": "The storm eye",
+      "position": [
+        -114.32762213124147,
+        24,
+        -3430.8276183957214
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13150,
+      "target": "The storm eye",
+      "position": [
+        -114.09294848999586,
+        24,
+        -3432.3091470184168
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13160,
+      "target": "The storm eye",
+      "position": [
+        -113.85447391614828,
+        24,
+        -3433.790068574507
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13170,
+      "target": "The storm eye",
+      "position": [
+        -113.61219986561849,
+        24,
+        -3435.2703732938326
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000004,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 13180,
+      "target": "The storm eye",
+      "position": [
+        -113.36612789450182,
+        24,
+        -3436.7500514218877
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    }
+  ]
+}

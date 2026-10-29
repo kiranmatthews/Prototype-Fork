@@ -4287,7 +4287,7 @@ export class Player {
     // told they've been stepped on.
     if (this.grounded && this.groundHit) {
       if (this.groundHit.moverId !== undefined) {
-        const delta = level.moverDelta(this.groundHit.moverId);
+        const delta = level.moverDelta(this.groundHit.moverId, this.pos);
         this.pos.add(delta);
         if (this.state === 'dead' && this.deathSupport) this.deathSupport.y += delta.y;
       }
@@ -16312,7 +16312,7 @@ export class Player {
   private stepHang(dt: number, input: Input, level: Level): void {
     this.runTime += dt;
     if (this.ledgeMoverId !== undefined) {
-      const delta = level.moverDelta(this.ledgeMoverId);
+      const delta = level.moverDelta(this.ledgeMoverId, this.pos);
       if (delta.lengthSq() > 0) {
         this.pos.add(delta);
         this.ledgeAnchor.add(delta);

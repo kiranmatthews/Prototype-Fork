@@ -1,0 +1,16 @@
+{
+  "riderSeconds": 4,
+  "maxDrift": 4.050960254169386e-14,
+  "rotatingGrind": true,
+  "roundTrip": true,
+  "invalidMotionRejected": true,
+  "nativeHeldJumpEntry": {
+    "passed": true,
+    "phases": [
+      0,
+      7,
+      53
+    ],
+    "staysOnFoot": true
+  }
+}

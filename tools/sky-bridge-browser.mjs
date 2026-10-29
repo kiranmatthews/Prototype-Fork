@@ -33,17 +33,18 @@ try{
       decks:skins.length,rotten:skins.filter(s=>s.rotten).length,frozen:skins.filter(s=>s.frozen).length,
       enemies:l.enemies.length,tnt:l.crates.filter(c=>c.tnt).length,nitro:l.crates.filter(c=>c.nitro).length};
   });
-  assert.deepEqual({...report.construction,components:undefined},{postSockets:32,components:undefined,bearers:16,decks:14,rotten:7,frozen:3,enemies:4,tnt:4,nitro:4},'new construction release must be loaded');
+  assert.deepEqual({...report.construction,components:undefined},{postSockets:32,components:undefined,bearers:24,decks:16,rotten:7,frozen:3,enemies:4,tnt:4,nitro:4},'new construction release must be loaded');
 
-  // Only normal device samples throughout this uninterrupted spawn-to-gate run.
+  // Preserve the original bridge chapter regression; sky-bridge-clouds-browser
+  // now owns the complete doubled course and finish-gate run.
   await page.evaluate(()=>{
-    const g=window.__game,p=g.player,l=g.getLevel(),surfaces=l.captureData().components.filter(c=>c.t==='platform'||c.t==='crumble');
+    const g=window.__game,p=g.player,l=g.getLevel(),surfaces=l.captureData().components.filter(c=>(c.t==='platform'||c.t==='crumble')&&c.solid!==false).map(c=>{const yaw=(c.yaw??0)*Math.PI/180,a=Math.abs(Math.cos(yaw)),b=Math.abs(Math.sin(yaw));return {...c,s:[c.s[0]*a+c.s[2]*b,c.s[1],c.s[0]*b+c.s[2]*a]};});
     const e=window.__skyRoute={frames:0,jumps:0,ice:[],falling:[],states:[],finish:false,dead:false,trace:[]};
     const poll=g.input.pollGamepad;window.__restoreSkyInput=()=>{g.input.pollGamepad=poll;};
     let hold=0,rest=0,spin=0;
     g.input.pollGamepad=()=>{
       e.frames++;
-      if(p.state==='finished')e.finish=true;
+      if(p.pos.z<-235)e.finish=true;
       if(['dead','gameover'].includes(p.state))e.dead=true;
       const ground=surfaces.find(c=>Math.abs(p.pos.x-c.p[0])<c.s[0]/2&&Math.abs(p.pos.z-c.p[2])<=c.s[2]/2+.1);
       const distance=ground?p.pos.z-(ground.p[2]-ground.s[2]/2):null;
@@ -69,14 +70,14 @@ try{
   await page.waitForFunction(()=>window.__skyRoute?.finish||window.__skyRoute?.dead);
   report.route=await page.evaluate(()=>{
     window.__restoreSkyInput();const g=window.__game;
-    return {...window.__skyRoute,position:g.player.pos.toArray(),checkpoints:g.getLevel().checkpoints.map(c=>c.active)};
+    return {...window.__skyRoute,position:g.player.pos.toArray(),checkpoints:g.getLevel().checkpoints.slice(0,3).map(c=>c.active)};
   });
   assert.equal(report.route.dead,false);assert.equal(report.route.finish,true);
   assert.equal(report.route.ice.length,3,'traverse all three ice slabs');
   assert.equal(report.route.falling.length,7,'traverse every falling deck');
   assert.deepEqual(report.route.checkpoints,[true,true,true]);
-  console.log('PASS continuous route, 22 jumps, all ice and falling decks, three checkpoints, finish');
-  await page.screenshot({path:output+'/finish.png'});
+  console.log('PASS original bridge chapter, 22 jumps, all ice and falling decks, three original checkpoints');
+  await page.screenshot({path:output+'/original-chapter.png'});
 
   // Independent fixture: stay on one falling deck and observe its actual
   // loss of support and ordinary pit death/respawn, without calling touchCrumble.

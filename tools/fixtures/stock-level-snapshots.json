@@ -46,6 +46,10 @@
     "bonus-jungle-gate": {
       "snapshotSha256": "931874b0e57b339f93d2c9be28a1e1ef0393308141501d1e1732d32a821550e1",
       "authoringRuntime": "v24.19.0"
+    },
+    "carlisle-coast": {
+      "snapshotSha256": "041a9b21033a030d8d08619e80dadbf0d6db3ccfe6a068dd34e1c864539bd1f1",
+      "authoringRuntime": "v24.19.0"
     }
   }
 }

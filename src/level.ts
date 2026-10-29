@@ -46,6 +46,8 @@ import { MALL_TEXTURE_KINDS, mallArt } from './mallArt';
 import { BreakableScenery, type BreakableKind } from './breakableScenery';
 import {SourceBouncyProps,validSourceBox,type SourceBoxData} from './sourceBouncyProps';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
+import { kineticPose } from './kineticPlatforms';
+import { CARLISLE_TIDAL_RELAY_LEVEL } from './levels/codex-lab';
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { custardWaterfallMaterial } from './custardWaterfall';
 import {createWaterfallClimbCurtain} from './waterfallClimbMaterials';
@@ -445,6 +447,10 @@ interface Mover {
   speed: number;
   phase: number;
   lastDelta: THREE.Vector3;
+  orbit?: [number, number];
+  spin?: number;
+  restYaw?: number;
+  carry?: THREE.Matrix4;
   torch?: Torch; // a brazier riding the deck — the mover IS a moving light in a dark level
 }
 
@@ -838,6 +844,9 @@ export interface CustomComponent {
   axis?: "z" | "x" | "y"; // mover: which way it slides ("y" = a lift)
   travelSign?: 1 | -1; // mover/rail/ropeswing: signed axis direction; absent preserves positive-axis motion
   travelPhase?: number; // ropeswing: independent anchor cycle phase; absent follows phase for legacy files
+  orbit?: [number, number]; // mover: ellipse radii in the plane normal to axis; p is its centre
+  spin?: number; // mover: continuous yaw in degrees per second, independent of translation
+  bounce?: number; // mover: optional native trampoline launch velocity
   vkind?: "quarter" | "half"; // vertramp: one wall, or two facing each other with a flat between
   arc?: number; // vertramp: degrees round the transition (90 = vertical lip, ~60 = a crestable bowl wall)
   arcSteps?: number; // vertramp: bounded authored profile resolution; absent preserves the course default
@@ -2568,6 +2577,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'coconut-cart-rally', name: COCONUT_CART_RALLY_LEVEL.name, data: COCONUT_CART_RALLY_LEVEL },
   { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
+  {id:'carlisle-coast',name:CARLISLE_TIDAL_RELAY_LEVEL.name,data:CARLISLE_TIDAL_RELAY_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
   {id:'tribal-run',name:TRIBAL_RUN_LEVEL.name,data:TRIBAL_RUN_LEVEL},
   {id:"rumblewater-run",name:RIPCORD_RIVER_LEVEL.name,data:RIPCORD_RIVER_LEVEL},
@@ -2699,6 +2709,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
+  "orbit", "spin", "bounce",
   "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "groundSpeedLimit", "containment",
   "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
@@ -2916,6 +2927,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   )
     return null;
   const numericKeys: (keyof CustomComponent)[] = [
+    "spin", "bounce",
     "minefieldTrap", "loopRadius", "loopOffset",
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "hold", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
@@ -3144,6 +3156,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.t === 'spinbridge' && (component.s?.some(value => value <= 0) ||
       component.outline || component.solid === false ||
       (component.cycle !== undefined && component.cycle <= 0))) return null;
+    if (component.orbit !== undefined && (component.t !== 'mover' || !finiteTuple(component.orbit, 2) || component.orbit.some(r => r < 0 || r > 120))) return null;
+    if (component.spin !== undefined && (component.t !== 'mover' || Math.abs(component.spin) > 180)) return null;
+    if (component.bounce !== undefined && (component.t !== 'mover' || component.bounce < .1 || component.bounce > 160)) return null;
     aggregateNodes +=
       (component.pts?.length ?? 0) + (component.widths?.length ?? 0) + (component.wallHeights?.length ?? 0);
     if (aggregateNodes > MAX_AGGREGATE_NODES) return null;
@@ -3880,7 +3895,7 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
 export function isOriginalSkyBridge(entry: LevelEntry): boolean {
   if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || ![48,211,304].includes(entry.data?.components.length ?? 0)) return false;
   const json = JSON.stringify(entry.data);
-  if (![3560,3602,295314,212031].includes(json.length)) return false;
+  if (![3560,3602,295314,212031,211525].includes(json.length)) return false;
   let a = 2166136261, b = 2246822519;
   for (let i=0; i<json.length; i++) {
     a = Math.imul(a ^ json.charCodeAt(i), 16777619);
@@ -3889,7 +3904,8 @@ export function isOriginalSkyBridge(entry: LevelEntry): boolean {
   return (json.length === 3560 && (a >>> 0) === 2625946987 && (b >>> 0) === 4006427273) ||
     (json.length === 3602 && (a >>> 0) === 3548812583 && (b >>> 0) === 3344214389) ||
     (json.length === 295314 && (a >>> 0) === 2571905729 && (b >>> 0) === 1013289071) ||
-    (json.length === 212031 && (a >>> 0) === 3376620613 && (b >>> 0) === 487422001);
+    (json.length === 212031 && (a >>> 0) === 3376620613 && (b >>> 0) === 487422001) ||
+    (json.length === 211525 && (a >>> 0) === 1134995033 && (b >>> 0) === 2498548093);
 }
 
 const SLIPSTREAM_2_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
@@ -7182,13 +7198,16 @@ export class Level {
             : Math.abs(mv.axisV.y) > 0.5
               ? "y"
               : "z",
+        ...(mv.orbit ? { orbit: mv.orbit } : {}),
+        ...(mv.spin !== undefined ? { spin: mv.spin } : {}),
+        ...(mv.mesh.userData.trampolineBounce !== undefined ? { bounce: mv.mesh.userData.trampolineBounce } : {}),
         amp: r2(mv.amp),
         speed: mv.speed,
         phase: mv.phase,
         ...(mv.axisV.x + mv.axisV.y + mv.axisV.z < 0 ? { travelSign: -1 as const } : {}),
         lit: mv.torch ? true : undefined,
         dkind: mv.mesh.userData.ghostSkin as CustomComponent['dkind'],
-        yaw: mv.mesh.userData.ghostSkin ? THREE.MathUtils.radToDeg(mv.mesh.rotation.y) : undefined,
+        yaw: mv.restYaw !== undefined ? THREE.MathUtils.radToDeg(mv.restYaw) : mv.mesh.userData.ghostSkin ? THREE.MathUtils.radToDeg(mv.mesh.rotation.y) : undefined,
       });
     }
     // Torches carried BY a phase pad or riding a mover are that component's
@@ -8549,7 +8568,16 @@ export class Level {
               s[1],
               c.travelSign ?? 1,
             );
-            this.applyAuthoredMovingSurface(this.movers[this.movers.length-1].mesh,c);
+            const moving = this.movers[this.movers.length-1];
+            moving.orbit = c.orbit; moving.spin = c.spin;
+            moving.restYaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+            moving.mesh.rotation.y = moving.restYaw;
+            if (c.orbit || c.spin) moving.carry = new THREE.Matrix4();
+            if (c.bounce !== undefined) {
+              moving.mesh.userData.trampolineBounce = c.bounce;
+              moving.mesh.userData.trampolineHeldMult = 1.25;
+            }
+            this.applyAuthoredMovingSurface(moving.mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
             if(!c.slip&&['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
@@ -10152,17 +10180,20 @@ export class Level {
     // Moving platforms: sine slide along one axis; the player reads lastDelta
     // at the top of their step so they ride along.
     for (const m of this.movers) {
-      const s = Math.sin(this.time * m.speed + m.phase) * m.amp;
-      m.lastDelta.copy(m.base).addScaledVector(m.axisV, s).sub(m.mesh.position);
-      m.mesh.position.add(m.lastDelta);
+      m.carry?.copy(m.mesh.matrixWorld).invert();
+      kineticPose(m.base, m.axisV, m.amp, m.speed, m.phase, this.time, m.orbit, MR_DELTA);
+      m.lastDelta.copy(MR_DELTA).sub(m.mesh.position);
+      m.mesh.position.copy(MR_DELTA);
+      if (m.spin) m.mesh.rotation.y = (m.restYaw ?? 0) + THREE.MathUtils.degToRad(m.spin) * this.time;
       // Player.step can run several fixed ticks before the renderer gets a
       // chance to update matrices. Keep collision on the transform authored
       // by this tick; a local-space BVH itself needs no refit for rigid motion.
       m.mesh.updateWorldMatrix(true, false);
+      m.carry?.premultiply(m.mesh.matrixWorld);
       if (m.torch) {
         // the brazier rides the deck: flame AND its pooled light follow
-        m.torch.group.position.add(m.lastDelta);
-        m.torch.lightAt.add(m.lastDelta);
+        if (m.carry) { m.torch.group.position.applyMatrix4(m.carry); m.torch.lightAt.applyMatrix4(m.carry); }
+        else { m.torch.group.position.add(m.lastDelta); m.torch.lightAt.add(m.lastDelta); }
       }
     }
     this.ghostTrainAssets?.update(dt,this.playerPos);
@@ -13898,7 +13929,7 @@ export class Level {
     );
     mesh.position.set(c.p[0], c.p[1] - Math.max(0.08, size[1]) / 2, c.p[2]);
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
-    mesh.name = c.t;
+    mesh.name = c.nm ?? c.t;
     mesh.userData.undersideThickness = Math.max(0.08, size[1]);
     if (c.edgeGrinding !== undefined) mesh.userData.edgeGrinding = c.edgeGrinding;
     this.root.add(mesh);
@@ -14825,8 +14856,10 @@ export class Level {
 
   // ---------------------------------------------------------- motion kit --
 
-  moverDelta(id: number): THREE.Vector3 {
-    return this.movers[id]?.lastDelta ?? new THREE.Vector3();
+  moverDelta(id: number, at?: THREE.Vector3): THREE.Vector3 {
+    const mover = this.movers[id];
+    if (mover?.carry && at) return MR_DELTA.copy(at).applyMatrix4(mover.carry).sub(at);
+    return mover?.lastDelta ?? MR_DELTA.set(0, 0, 0);
   }
 
   touchCrumble(id: number): void {

@@ -1,0 +1,1602 @@
+{
+  "seconds": 81.48333333333333,
+  "startS": 1770,
+  "endS": 2240,
+  "target": "Counterweight 1",
+  "position": [
+    59.469785611763555,
+    24,
+    -2143.480567431351
+  ],
+  "state": "ride",
+  "deaths": 0,
+  "events": [
+    {
+      "frame": 188,
+      "arrived": "Dredger approach"
+    },
+    {
+      "frame": 402,
+      "arrived": "Dredger curve"
+    },
+    {
+      "frame": 532,
+      "arrived": "Dredger side pier"
+    },
+    {
+      "frame": 921,
+      "arrived": "Dredger boarding"
+    },
+    {
+      "frame": 1883,
+      "arrived": "Dredger upper quay"
+    },
+    {
+      "frame": 2227,
+      "launch": "Dredger discharge · 1"
+    },
+    {
+      "frame": 2458,
+      "launch": "Dredger discharge · 2"
+    },
+    {
+      "frame": 2702,
+      "launch": "Dredger discharge · 3"
+    },
+    {
+      "frame": 2879,
+      "arrived": "Dredger discharge · 3 catch"
+    },
+    {
+      "frame": 3040,
+      "arrived": "Cross-thread springs"
+    },
+    {
+      "frame": 3192,
+      "launch": "Cross-thread · 1"
+    },
+    {
+      "frame": 3477,
+      "launch": "Cross-thread · 2"
+    },
+    {
+      "frame": 3784,
+      "launch": "Cross-thread · 3"
+    },
+    {
+      "frame": 4071,
+      "launch": "Cross-thread · 4"
+    },
+    {
+      "frame": 4343,
+      "arrived": "Cross-thread · 4 catch"
+    },
+    {
+      "frame": 4890,
+      "arrived": "Counterweight stacks"
+    }
+  ],
+  "checkpoints": 2,
+  "tail": [
+    {
+      "frame": 4090,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        6.171726431063272,
+        64.76999998807908,
+        -2046.6549160410407
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4100,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        6.899933059869751,
+        75.04916665474576,
+        -2047.966295099864
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4110,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        7.628965403173057,
+        84.41166665474577,
+        -2049.2772152979924
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4120,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        8.358846970751042,
+        92.85749998807913,
+        -2050.587662862122
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4130,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        9.089585750619728,
+        100.38666665474581,
+        -2051.897632615884
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4140,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        9.8211839869922,
+        106.99916665474584,
+        -2053.207122570313
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4150,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        10.55354513191705,
+        112.6949999880792,
+        -2054.5161860179774
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4160,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        11.286451644785972,
+        117.4741666547459,
+        -2055.8249442150723
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4170,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        12.019807399964044,
+        121.33666665474594,
+        -2057.13345073651
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4180,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        12.753578844285316,
+        124.28249998807931,
+        -2058.441724197784
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4190,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        13.487754236614398,
+        126.31166665474602,
+        -2059.7497710149282
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4200,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        14.222329429335018,
+        127.42416665474605,
+        -2061.057593353392
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4210,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        14.957302471796698,
+        127.54833332141276,
+        -2062.3651921487835
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4220,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        15.692672922996186,
+        125.0358333214128,
+        -2063.6725674898203
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4230,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        16.428440771914058,
+        119.21777776585726,
+        -2064.9797192236842
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4240,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        17.16460597040412,
+        110.76499998807954,
+        -2066.2866472184014
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4250,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        17.90116845728143,
+        102.09833332141294,
+        -2067.593351349324
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4260,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        18.638127842282618,
+        93.43166665474634,
+        -2068.8998316774787
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4270,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        19.375386209979304,
+        84.76499998807974,
+        -2070.2061433156923
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4280,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.112723115620742,
+        76.09833332141314,
+        -2071.512410626602
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4290,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.776311276386203,
+        67.43166665474654,
+        -2072.688059703823
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4300,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.776311276386203,
+        58.764999988079886,
+        -2072.688059703823
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4310,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.776311276386203,
+        50.098333321413214,
+        -2072.688059703823
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4320,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.776311276386203,
+        41.43166665474654,
+        -2072.688059703823
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4330,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.776311276386203,
+        32.76499998807987,
+        -2072.688059703823
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4340,
+      "target": "Cross-thread · 4 catch",
+      "position": [
+        20.776311276386203,
+        24.0983333214132,
+        -2072.688059703823
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4350,
+      "target": "Counterweight stacks",
+      "position": [
+        21.061376408100507,
+        24,
+        -2073.193171444598
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 4.666666666666668,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4360,
+      "target": "Counterweight stacks",
+      "position": [
+        21.53373147358775,
+        24,
+        -2074.0301990785024
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 6.666666666666671,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4370,
+      "target": "Counterweight stacks",
+      "position": [
+        22.169863543347585,
+        24,
+        -2075.157551024116
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.666666666666673,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4380,
+      "target": "Counterweight stacks",
+      "position": [
+        22.905854451675264,
+        24,
+        -2076.4620262649373
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4390,
+      "target": "Counterweight stacks",
+      "position": [
+        23.642866090734163,
+        24,
+        -2077.768477122543
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4400,
+      "target": "Counterweight stacks",
+      "position": [
+        24.379806452371536,
+        24,
+        -2079.074968187509
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4410,
+      "target": "Counterweight stacks",
+      "position": [
+        25.11667553773075,
+        24,
+        -2080.3814994540658
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4420,
+      "target": "Counterweight stacks",
+      "position": [
+        25.853473344618973,
+        24,
+        -2081.6880709183233
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4430,
+      "target": "Counterweight stacks",
+      "position": [
+        26.590199870844224,
+        24,
+        -2082.9946825763927
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4440,
+      "target": "Counterweight stacks",
+      "position": [
+        27.326855114215373,
+        24,
+        -2084.3013344243855
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4450,
+      "target": "Counterweight stacks",
+      "position": [
+        28.06324875683534,
+        24,
+        -2085.6081337102223
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4460,
+      "target": "Counterweight stacks",
+      "position": [
+        28.79911186433205,
+        24,
+        -2086.9152318152687
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000004,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4470,
+      "target": "Counterweight stacks",
+      "position": [
+        29.534442406117826,
+        24,
+        -2088.222629598466
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4480,
+      "target": "Counterweight stacks",
+      "position": [
+        30.269240259723055,
+        24,
+        -2089.530326843064
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4490,
+      "target": "Counterweight stacks",
+      "position": [
+        31.00350530303159,
+        24,
+        -2090.8383233321138
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4500,
+      "target": "Counterweight stacks",
+      "position": [
+        31.737237414280973,
+        24,
+        -2092.1466188484683
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4510,
+      "target": "Counterweight stacks",
+      "position": [
+        32.47043477930023,
+        24,
+        -2093.455214123181
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4520,
+      "target": "Counterweight stacks",
+      "position": [
+        33.20309877946039,
+        24,
+        -2094.7641080959916
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4530,
+      "target": "Counterweight stacks",
+      "position": [
+        33.93522948100137,
+        24,
+        -2096.07330044437
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4540,
+      "target": "Counterweight stacks",
+      "position": [
+        34.66682676251555,
+        24,
+        -2097.382790950969
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4550,
+      "target": "Counterweight stacks",
+      "position": [
+        35.39789050294958,
+        24,
+        -2098.692579398244
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4560,
+      "target": "Counterweight stacks",
+      "position": [
+        36.12842058160469,
+        24,
+        -2100.002665568453
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4570,
+      "target": "Counterweight stacks",
+      "position": [
+        36.85821256708127,
+        24,
+        -2101.3131630108633
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4580,
+      "target": "Counterweight stacks",
+      "position": [
+        37.58698109914179,
+        24,
+        -2102.624229871516
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4590,
+      "target": "Counterweight stacks",
+      "position": [
+        38.31472386824038,
+        24,
+        -2103.9358663868843
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4600,
+      "target": "Counterweight stacks",
+      "position": [
+        39.04144042607364,
+        24,
+        -2105.248071756098
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4610,
+      "target": "Counterweight stacks",
+      "position": [
+        39.76713032684713,
+        24,
+        -2106.5608451768894
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4620,
+      "target": "Counterweight stacks",
+      "position": [
+        40.49179312727885,
+        24,
+        -2107.8741858456015
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4630,
+      "target": "Counterweight stacks",
+      "position": [
+        41.21542206472076,
+        24,
+        -2109.1880964386273
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4640,
+      "target": "Counterweight stacks",
+      "position": [
+        41.93802230744369,
+        24,
+        -2110.5025730552466
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4650,
+      "target": "Counterweight stacks",
+      "position": [
+        42.659594114181516,
+        24,
+        -2111.817614504837
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4660,
+      "target": "Counterweight stacks",
+      "position": [
+        43.380137044183144,
+        24,
+        -2113.133219982344
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4670,
+      "target": "Counterweight stacks",
+      "position": [
+        44.099650659217836,
+        24,
+        -2114.4493886813348
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4680,
+      "target": "Counterweight stacks",
+      "position": [
+        44.81813452357866,
+        24,
+        -2115.7661197940056
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4690,
+      "target": "Counterweight stacks",
+      "position": [
+        45.53537741683167,
+        24,
+        -2117.083527242176
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4700,
+      "target": "Counterweight stacks",
+      "position": [
+        46.25109151228635,
+        24,
+        -2118.401765871272
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4710,
+      "target": "Counterweight stacks",
+      "position": [
+        46.96527428055483,
+        24,
+        -2119.7208347561973
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4720,
+      "target": "Counterweight stacks",
+      "position": [
+        47.67792474860247,
+        24,
+        -2121.040732123442
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4730,
+      "target": "Counterweight stacks",
+      "position": [
+        48.38904195164754,
+        24,
+        -2122.3614561950026
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4740,
+      "target": "Counterweight stacks",
+      "position": [
+        49.09862493317826,
+        24,
+        -2123.6830051884153
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4750,
+      "target": "Counterweight stacks",
+      "position": [
+        49.8066585997177,
+        24,
+        -2125.005384889518
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4760,
+      "target": "Counterweight stacks",
+      "position": [
+        50.51315454510599,
+        24,
+        -2126.328586774648
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4770,
+      "target": "Counterweight stacks",
+      "position": [
+        51.218113383331676,
+        24,
+        -2127.652608219365
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4780,
+      "target": "Counterweight stacks",
+      "position": [
+        51.92153416624723,
+        24,
+        -2128.977447436715
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4790,
+      "target": "Counterweight stacks",
+      "position": [
+        52.62341595401257,
+        24,
+        -2130.3031026353524
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4800,
+      "target": "Counterweight stacks",
+      "position": [
+        53.32375781511142,
+        24,
+        -2131.62957201957
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4810,
+      "target": "Counterweight stacks",
+      "position": [
+        54.02234996858762,
+        24,
+        -2132.9569636622864
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4820,
+      "target": "Counterweight stacks",
+      "position": [
+        54.71891664775342,
+        24,
+        -2134.285419317993
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4830,
+      "target": "Counterweight stacks",
+      "position": [
+        55.413455188483596,
+        24,
+        -2135.614936442038
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4840,
+      "target": "Counterweight stacks",
+      "position": [
+        56.105963950734875,
+        24,
+        -2136.945511949811
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4850,
+      "target": "Counterweight stacks",
+      "position": [
+        56.796441313336246,
+        24,
+        -2138.2771427467724
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4860,
+      "target": "Counterweight stacks",
+      "position": [
+        57.4848856740383,
+        24,
+        -2139.609825728545
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4870,
+      "target": "Counterweight stacks",
+      "position": [
+        58.17127061662886,
+        24,
+        -2140.9435705586347
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 4880,
+      "target": "Counterweight stacks",
+      "position": [
+        58.855616565303635,
+        24,
+        -2142.278362748531
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    }
+  ]
+}

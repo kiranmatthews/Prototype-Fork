@@ -855,9 +855,11 @@ function applyTheme(): void {
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
     atmosphere: { ...level.atmosphere, ...heat.lighting, fogColor: heat.fogColor } } : level);
   activeSky = skyPreset;
-  const cloudRoadSkyActive=level.groundMeshes.some(mesh=>mesh.userData.cloudRoad);
-  skyProjection.setCloudRoadSky(cloudRoadSkyActive);
-  skystreamSun.visible=cloudRoadSkyActive&&!LITE;
+  // Cloud platforms are reusable scenery; only Skystream owns this sky tint
+  // and sun. Inheriting them from a collider also recoloured Sky Bridge.
+  const skystreamSkyActive=current.id==='skystream'||current.id==='bonus:skystream'||current.id==='bonus-skystream';
+  skyProjection.setCloudRoadSky(skystreamSkyActive);
+  skystreamSun.visible=skystreamSkyActive&&!LITE;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.

@@ -1,6 +1,7 @@
 export { SPAGHETTI_RAILS_LEVEL } from './spaghetti-rails';
 export { SPAGHETTI_RAILS_PLATFORMING_LEVEL } from './spaghetti-rails-platforming';
 export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';
+export { CARLISLE_TIDAL_RELAY_LEVEL } from './carlisle-tidal-relay';
 export { WATERFALL_CLIMB_LEVEL } from './waterfall-climb';
 export { TRIBAL_RUN_LEVEL } from './tribal-run';
 import {dressKookRooftops} from './rooftop-kook-art';

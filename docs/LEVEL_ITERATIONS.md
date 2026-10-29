@@ -5967,6 +5967,38 @@ type checking and release-size validation pass with no browser errors.
 
 See [contact measurements and browser evidence](skystream-clouds/wall-contact/README.md).
 
+## 29 October 2026 NZDT — Sky Bridge clouds and doubled skate course
+
+Brief: reuse the optimized clouds on Sky Bridge and its bonus, replace one or
+two bridge platforms, add cloud scenery and double the main course with grind
+and skate-jump sections. Prompt at 01:22:27 UTC; full native route, all new
+checkpoint retries and fall recovery passed by 01:56 UTC, approximately
+34 minutes from prompt to verified playable geometry.
+
+Spawn-to-gate distance increases from 244 to 488 m. Two original bridge decks
+and two bonus landings become volumetric clouds over smooth hidden contacts;
+ten main and four bonus scenery banks remain nonsolid. All use the existing
+360p cloud pass while other geometry follows the selected render resolution.
+The new half has two grind crossings, two 16 m skate jumps and four additional
+checkpoints. The original ice, falling boards, enemies and bonus puzzle remain.
+
+The complete native route reaches all seven checkpoints, both new grinds and
+both board jumps without deaths or bails. Every new checkpoint can restart
+from rest; intentional falling recovers at the earned checkpoint. The bonus
+retains its relay and finite-bounce decisions and completes all seven crates.
+Focused construction/surface regressions, exact cache migration, level-data
+checks, build/type checking and release-size validation pass. Only the `sky`
+entry changes in the published level pack; movement and cloud rendering code
+are unchanged.
+
+See [course details and evidence](sky-bridge-cloud-extension/README.md).
+
+Packaged Chrome lite completes the entire course; full rendering completes
+both new grinds and jumps from the extension entrance. Native 1600×1000 and
+720p/CRT views keep clouds at 576×360, including the bonus. Main and bonus
+visuals were reviewed with no console errors. Local browser validation
+completed at 02:08 UTC, about 46 minutes from prompt.
+
 ## 29 October 2026 — Mayfield Mall in Maynard Quay course 4
 
 Combined Mall, School Miami, Warehouse and Kona elements into an original
@@ -5993,3 +6025,57 @@ needlessly duplicating geometry beyond its 64 MiB archive inspection bound.
 The production full-render walking run also finishes in 89.52 s with no deaths
 or console errors; the build and hosting-size check pass.
 See [design, validation and release evidence](mayfield-mall/README.md).
+
+## 29 October 2026 NZDT — Carlisle Coast: native trampoline relay
+
+Brief: replace Carlisle Coast's Coming Soon slot with a unique 4 km greybox,
+huge linked trampoline bounces, unusual moving/spinning platforms, minimal
+repetition and three acts. The user rejected the initial assisted-launch pass;
+it was rebuilt around the existing trampoline physics. The rebuilt course's
+browser smoke test passed approximately 46 minutes after the original prompt;
+native-resolution landing-framing review followed at approximately 70 minutes.
+Boarding, landing-margin and traversal refinements continued
+after that review; these are wall-clock timings, including the rejected pass
+and shared-host validation capacity waits.
+
+The 4,000 m surveyed coastline contains 18 sections across The Breakwater
+(0–1,280 m), The Tidal Engine (1,280–2,700 m) and The Storm Crown (2,700–4,000 m).
+It has 61 primary spring transfers, an optional recovery spring, 41 moving
+decks and 17 checkpoints. Distinct machinery includes crossing groynes,
+elliptical ferries, opposing pinwheels, a vertical dredger wheel with a side
+boarding quay, counterweight stairs and a translating/rotating pier.
+
+All springs use the native vertical launch and 1.25× held-Jump behavior.
+There are no auto-aim targets, added planar impulses, custom gravity or tuning
+changes. Air-steering margins include pad-edge entry and moving-target travel.
+The spring lips sit 0.2 m above adjoining decks to prevent equal-height support
+ties from delaying a bounce and accidentally engaging hold-to-skate.
+The only player changes carry grounded and hanging contacts through a mover's
+rigid transform. Moving rims remain grindable. The elevated camera keeps the
+next landing visible at the apex; silhouettes remain complete at all distances.
+
+Validation includes 61 native transfers at two machinery phases, neutral/held
+bounce parity with zero planar drift, rotating rider/grind contact, checkpoint
+section traversal, campaign/menu checks, required level checks, production
+build and release size. Browser review covers lite and full rendering, native
+resolution, supported spawn, checkpoint/sea respawn, giant-bounce framing,
+moving transforms and the finish. See [the course and evidence](carlisle-relay/README.md).
+
+
+## 29 October 2026 NZDT — Restore Sky Bridge's original sky
+
+Brief: fix the background weirdness without changing the original skybox.
+The cloud platforms had inadvertently enabled Skystream's lower-sky blue tint
+and extra sun because the shared theme checked for any cloud collider. That
+made the pale distance fog and scenery silhouettes stand out against the
+recoloured background. The special treatment is now limited to Skystream and
+its active/standalone bonus IDs. Sky Bridge and Cloudtop Lockers retain the
+original cloud-sea artwork, projection and fog; the cloud platforms and
+extended course remain intact.
+
+Prompt at approximately 03:25 UTC; corrected native preview and main/bonus
+transition checks passed by 03:34 UTC, about nine minutes. Packaged lite/full
+checks, native and 720p visual review, GPU uniform/flare checks and return from
+Skystream all pass with no console errors. Build/type checking and release size
+pass. Level data, movement, sky asset and cloud-renderer hashes are unchanged.
+See [background restoration evidence](sky-bridge-cloud-extension/background/README.md).
