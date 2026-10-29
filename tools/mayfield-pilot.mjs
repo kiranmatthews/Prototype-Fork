@@ -1,5 +1,5 @@
 /** Real controller samples; no pose, velocity, checkpoint, collision or tuning edits. */
-export function createMayfieldPilot(m,{mode='foot',start=0}={}){
+export function createMayfieldPilot(m,{mode='foot',start=0,autoJump=true}={}){
  let frame=0,progress=start,stallAt=start,stallFrame=0,jumpPhase=0,lastJump=-1000;
  const points=m.MAYFIELD_ROUTE,dist=[0];for(let i=1;i<points.length;i++)dist.push(dist.at(-1)+Math.hypot(points[i][0]-points[i-1][0],points[i][2]-points[i-1][2]));
  const evidence={mode,jumps:[],checkpoints:[],ground:[],crystal:false,peakSpeed:0,sourceGround:{mall:0,school:0,warehouse:0,kona:0}};
@@ -16,7 +16,7 @@ export function createMayfieldPilot(m,{mode='foot',start=0}={}){
    const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1,f=p.courseInputDirection(l)??p.camDir;
    const steer={moveX:(dx*-f.z+dz*f.x)/n,moveY:(dx*f.x+dz*f.z)/n};
    let jump=mode==='skate';
-   if(mode==='foot'&&frame-stallFrame>40&&frame-lastJump>180&&p.grounded){jumpPhase=1;lastJump=frame;evidence.jumps.push({progress,p:p.pos.toArray()});}
+   if(autoJump&&mode==='foot'&&frame-stallFrame>40&&frame-lastJump>180&&p.grounded){jumpPhase=1;lastJump=frame;evidence.jumps.push({progress,p:p.pos.toArray()});}
    if(jumpPhase){jump=jumpPhase<=8;jumpPhase++;if(jumpPhase>60)jumpPhase=0;}
    if(p.state==='air'&&p.airFromSkate){steer.moveX=0;steer.moveY=0;}
    const far=at(progress+22),fx=far[0]-q[0],fz=far[2]-q[2],fn=Math.hypot(fx,fz)||1,turn=Math.acos(Math.max(-1,Math.min(1,(dx*fx+dz*fz)/(n*fn))));

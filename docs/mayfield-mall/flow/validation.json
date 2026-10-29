@@ -1,0 +1,57 @@
+{
+  "status": "All local gameplay, level, build, release-size and packaged browser checks passed; immutable publication evidence is recorded in the owner release handoff.",
+  "base": "e192a9458c9584acdbbbaa0d75f46c9e40f81d37",
+  "sourceSha256": {
+    "src/levels/mayfield-mall.ts": "574db05ea1919a6d522c1901700448b2793bcddf82d36a543212eb498d76cca0",
+    "src/levels/mayfield-access.ts": "6343c33d7e254e05a4cb0f03d6297aa9749ef76a58d5a4d5127e88f620c6e7f9",
+    "src/levels/mayfield-source.ts": "495b8bbf35ef286e9a673c81690a20ef696f5e00f99dbcd3b66967732a50a9c5",
+    "src/levels/mayfield-bonus.ts": "a48cfa5e728cbb2ade8e9b5c9d553ffb82795f5d17fc64c6a9a1ae4c2ee80be2",
+    "src/level.ts": "5492dca2a756183399a5a7c1fdc6e2d816ccc865be714bccb3931be6aac91337",
+    "src/player.ts": "14710cfaa3b7acebb95defd053cd5826788df5a6e14b25aca7515f241d03c14f",
+    "src/cameraRig.ts": "81e755bedf6797e66301a24453d2dfebaff005813d6a28f82face6063de45c1c",
+    "src/main.ts": "cdecdbe14f39ee22fdd2829894cd6d678aae4796166e2f82774da192ab06784f",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6"
+  },
+  "routeMetres": 2228.8213085338193,
+  "sourceTriangles": 71045,
+  "accessRoutes": 18,
+  "accessDirections": 36,
+  "joinLanesAndDirections": 90,
+  "maxAccessFrameStep": 0.8011987745959953,
+  "maxJoinFrameStep": 0.805994717109841,
+  "browserFootSeconds": 247.3333333334223,
+  "browserNativeSkateSeconds": 153.30000000001414,
+  "browserErrors": [],
+  "note": "Local fixture results are combined only where geometry is unchanged: latest spinal endpoints replace their earlier six access cases; final courtyard replaces its earlier ten seam cases. Complete native foot/skate runs exercise the final level data. Full browser runs precede only the isolated spinal stair endpoint trim; the final vert/access checks cover that trim.",
+  "requiredChecks": {
+    "check:levels": "passed",
+    "typecheck/build": "passed",
+    "check:release": "passed",
+    "fullSuiteRun": false
+  },
+  "releaseBytes": 997279127,
+  "releaseBudgetBytes": 1000000000,
+  "nativeViewCount": 52,
+  "finalChangedViewRecheck": [
+    "14",
+    "44",
+    "46",
+    "49"
+  ],
+  "packagedBuild": {
+    "stamp": "Codex/sol fork \u00b7 build 10-29 10:29 UTC",
+    "offlineVersion": "ba4540834dbb6d490463",
+    "sourceMatches": true,
+    "nativeBuffer": [
+      1920,
+      1080
+    ],
+    "menuSelection": true,
+    "garageSeconds": 29.94999999999958,
+    "noJump": true,
+    "deaths": 0,
+    "keyboardWarps": true,
+    "intentionalPitRecovery": true,
+    "errors": []
+  }
+}

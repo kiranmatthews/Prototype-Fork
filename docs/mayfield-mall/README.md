@@ -1,6 +1,6 @@
 # Mayfield Mall — actual source-geometry revision
 
-A roughly 2.16 km conventional course in Maynard Quay’s fourth slot, with ten
+A roughly 2.23 km conventional course in Maynard Quay’s fourth slot, with ten
 checkpoints, a crystal, a time-trial clock and one finish. The save key remains
 `maynard-course-4`; the level and preview ID are `mayfield-mall`. It starts on
 foot and uses the ordinary walking, jumping, boarding, braking and grinding
@@ -26,7 +26,8 @@ at new door planes and reordered; the arcade now precedes the angled atrium.
 The final atrium is rotated 15°. Source dimensions are mostly 90–115% of their
 playable originals, preserving their architectural scale. The upper galleria
 is 96% wide and 92% long, the arcade is 108% wide and 95% long, and the final
-atrium is uniformly 95%. Warehouse’s roll-in is 115%; its halfpipe is 105% and
+atrium is uniformly 95%. Warehouse’s roll-in is 205% wide and 115% in height and
+length; its halfpipe is 105% and
 turned 90°. Kona’s snake run is 95% and turned 90°.
 
 The directory signs, school table clusters, warehouse kicker/rail/taxi/box
@@ -56,6 +57,20 @@ batching retain the geometry at every viewing distance.
   trim are decorative; foundation and portal walls have fitted solid contact.
 
 ## Validation and ownership
+
+### Complete circulation repair
+
+The [circulation pass](flow/README.md) adds access to the retained upper decks,
+terraces, pavilion, canopy, office and roof. It replaces narrow or incomplete
+joins with fitted landings, opens full-width gym entrances, separates the Kona
+snake from the mini-pipe approaches, and joins the angled exit to a complete
+finish court. Its 2,228.82 m main route still starts in the three-storey garage.
+
+Browser runs finish with all ten checkpoints and the crystal: **247.33 s on
+foot without jumping**, and **153.30 s skating at MAX/native resolution**, both
+with zero deaths and no console errors. Eighteen side routes are exercised
+forward and backward, and nine joins are sampled in five lanes each way.
+Current geometry, vert, bonus, recovery and release evidence is in `flow/`.
 
 ### After Hours bonus
 
@@ -101,7 +116,8 @@ controller crest launch also recognizes explicitly authored vert meshes with
 the skate camera flag, fixing the vertical-lip sticking found on these quarters.
 The change leaves park controls and movement tuning intact.
 
-Current evidence is in [parking/](parking/README.md). Complete input-driven
+Evidence for the parking addition, before the later circulation repair, is in
+[parking/](parking/README.md). Complete input-driven
 runs finish in **244.18 s walking / 140.68 s skating**, collecting all ten
 checkpoints and the crystal with zero deaths. Both garage quarters and all six
 Warehouse/Kona approaches climb, launch and return without bailing. Both

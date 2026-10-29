@@ -39,15 +39,15 @@ try{
   const recovery=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),lives:window.__game.player.lives,deaths:window.__game.player.totalDeaths,grounded:window.__game.player.grounded}));
   await writeFile(`${out}/${tag}.json`,JSON.stringify({base,initial,checkpoints,recovery,errors},null,2));console.log(JSON.stringify({tag,initial,checkpoints:checkpoints.length,recovery,errors}));
  }else{
-  await page.evaluate(async({mode,parking})=>{
-   const {source:m,createMayfieldPilot}=await import('./mayfield-fixture.js'),g=window.__game,p=g.player,l=g.getLevel(),pilot=createMayfieldPilot(m,{mode});
+  await page.evaluate(async({mode,parking,autoJump})=>{
+   const {source:m,createMayfieldPilot}=await import('./mayfield-fixture.js'),g=window.__game,p=g.player,l=g.getLevel(),pilot=createMayfieldPilot(m,{mode,autoJump});
    const parkingEnd=m.MAYFIELD_PARKING_ROUTE.reduce((n,q,i,a)=>i?n+Math.hypot(q[0]-a[i-1][0],q[2]-a[i-1][2]):0,0);
    const report=window.mayfieldReview={done:false,error:null,steps:0,seconds:0,evidence:pilot.evidence,state:p.state,progress:0,target:parking?parkingEnd+30:null,startY:p.pos.y,minY:p.pos.y,maxStep:0,tuningBefore:JSON.stringify(g.TUNING)};
    const step=p.step.bind(p),update=g.input.update.bind(g.input),commit=p.commitRenderStep.bind(p),poll=g.input.pollGamepad.bind(g.input);let sample={},advanced=false;window.mayfieldRestoreInput=()=>{p.step=step;p.commitRenderStep=commit;g.input.pollGamepad=poll;};
    g.input.pollGamepad=()=>{const x=sample.moveX||0,y=sample.moveY||0,n=Math.hypot(x,y),a=n?.22+.78*Math.min(1,n):0,held={0:!!sample.jumpHeld,1:!!sample.grabHeld,2:!!sample.spinHeld,3:!!sample.grindHeld};return{id:'Mayfield review controller',index:0,connected:true,mapping:'standard',axes:n?[x/n*a,-y/n*a,0,0]:[0,0,0,0],buttons:Array.from({length:18},(_,i)=>({pressed:!!held[i],touched:!!held[i],value:held[i]?1:0}))};};
    p.step=(dt,input,level)=>{if(report.done)return;try{sample=pilot.sample(p,l);update();const before=p.pos.clone();step(dt,input,level);report.maxStep=Math.max(report.maxStep,p.pos.distanceTo(before));report.minY=Math.min(report.minY,p.pos.y);pilot.observe(p,l);report.steps++;report.seconds+=dt;advanced=true;}catch(e){report.error=String(e);report.done=true;}};
    p.commitRenderStep=(...args)=>{commit(...args);if(!advanced||report.done)return;advanced=false;report.state=p.state;report.position=p.pos.toArray();report.deaths=p.totalDeaths;report.progress=pilot.progress;if(p.state==='finished'||parking&&pilot.progress>=report.target){report.done=true;report.tuningUnchanged=report.tuningBefore===JSON.stringify(g.TUNING);delete report.tuningBefore;}};
-  },{mode,parking});
+  },{mode,parking,autoJump:!process.argv.includes('--no-jump')});
   const seen=new Set();for(let i=0;i<3600;i++){await page.waitForTimeout(250);const r=await page.evaluate(()=>window.mayfieldReview);for(const s of parking?[30,45,65,110,140,165,210,250]:[45,175,310,440,620,800,950,1120,1350,1570,1800])if(r.progress>=s&&!seen.has(s)){seen.add(s);await page.screenshot({path:`${out}/${tag}-${s}.png`});console.log(`Mayfield ${tag}: ${Math.round(r.progress)} m`);}if(r.done)break;}
   const report=await page.evaluate(()=>window.mayfieldReview);await page.screenshot({path:`${out}/${tag}-finish.png`});await writeFile(`${out}/${tag}.json`,JSON.stringify({base,initial,report,errors},null,2));console.log(JSON.stringify({tag,report,errors}));
   assert.equal(report.error,null);assert.equal(report.deaths,0);assert.equal(report.tuningUnchanged,true);

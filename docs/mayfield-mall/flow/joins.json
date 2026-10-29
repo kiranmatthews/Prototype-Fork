@@ -1,0 +1,722 @@
+[
+  {
+    "name": "Food court entrance landing",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.150867491528134
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15069588580983306
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15086749152819107
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431683215
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431682665
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1548180354392013
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15483985369272307
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15482947296378857
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431680154
+  },
+  {
+    "name": "Food court entrance landing",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431682443
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15019487341451396
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431684525
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15047923444785363
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15018738295880085
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15047923444782005
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1501199520384019
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15036705091213487
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15011995203839187
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15036705091212765
+  },
+  {
+    "name": "Gym exit / downhill landing",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1500674848193337
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Arcade to loading roll-in",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1510011315047166
+  },
+  {
+    "name": "Loading to Kona",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Loading to Kona",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15926094161602017
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15926094161602017
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15926094161602017
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15926094161602017
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15926094161602017
+  },
+  {
+    "name": "Kona court / snake approach",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.14999999999997726
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.159260941616144
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1592609416161392
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.159260941616144
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1592609416161392
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.159260941616144
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1592609416161392
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.159260941616144
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1592609416161392
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.159260941616144
+  },
+  {
+    "name": "Kona / raised snake entrance",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1592609416161392
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.16038532931590999
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.16034073097844168
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.21755633213965897
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.7156313560257354
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.2520482049829379
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.7527941088586964
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.2249135636441999
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.8035254404427473
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.8019406634973913
+  },
+  {
+    "name": "Snake to grand atrium",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.805994717109841
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15047923444794478
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15060627476979851
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.150367050912065
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15060627476983648
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.7302384375007844
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.7288982233810554
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1502697574365219
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431697087
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15018738295891546
+  },
+  {
+    "name": "Atrium to finish court",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15074813431675887
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": -0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15085546532988142
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": -0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.41638306643762435
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": -0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15079068677194843
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": -0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.1508953990729543
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": 0,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15089526558504104
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": 0,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.16214539304859552
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": 0.2,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15097185168101265
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": 0.2,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.15089465831711615
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": 0.4,
+    "reverse": false,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.16215592811619645
+  },
+  {
+    "name": "Courtyard to arcade",
+    "side": 0.4,
+    "reverse": true,
+    "error": null,
+    "unsupported": [],
+    "maxStep": 0.16299900435437728
+  }
+]

@@ -6,6 +6,49 @@ const lerp=(a:number[],b:number[],t:number)=>a.map((v,i)=>v+(b[i]-v)*t);
 export function transformPoint(p:P,t:SourceTransform):P {const s=t.scale??[1,1,1],a=(t.yaw??0)*Math.PI/180,x=(p[0]-t.pivot[0])*s[0],y=(p[1]-t.pivot[1])*s[1],z=(p[2]-t.pivot[2])*s[2];return[t.target[0]+x*Math.cos(a)+z*Math.sin(a),t.target[1]+y,t.target[2]-x*Math.sin(a)+z*Math.cos(a)];}
 function worldPoint(c:CustomComponent,p:P):P {const a=(c.yaw??0)*Math.PI/180,s=c.t==='mesh'?(c.s??[1,1,1]):[1,1,1],x=p[0]*s[0],z=p[2]*s[2];return[c.p[0]+x*Math.cos(a)+z*Math.sin(a),c.p[1]+p[1]*s[1],c.p[2]-x*Math.sin(a)+z*Math.cos(a)];}
 function clip(poly:Vertex[],z:number,sign:number,axis=2):Vertex[]{const out:Vertex[]=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],da=(a.p[axis]-z)*sign,db=(b.p[axis]-z)*sign;if(da>=-1e-8)out.push(a);if((da<0)!==(db<0)){const t=da/(da-db);out.push({p:lerp(a.p,b.p,t) as P,...(a.uv&&b.uv?{uv:lerp(a.uv,b.uv,t)}:{}),...(a.color&&b.color?{color:lerp(a.color,b.color,t)}:{}),...(a.normal&&b.normal?{normal:lerp(a.normal,b.normal,t)}:{})});}}return out;}
+/** Open a floor-level doorway in measured, source-space architecture. Retain
+ * the facade above and beside the opening, including its UVs, and split the
+ * matching invisible wall contacts into jambs and a real overhead lintel. */
+export function sourceDoorway(level:CustomLevelData,min:P,max:P):CustomLevelData {
+ const planes:[number,number,number][]=[[0,min[0],1],[0,max[0],-1],[1,min[1],1],[1,max[1],-1],[2,min[2],1],[2,max[2],-1]];
+ return {...level,components:level.components.flatMap(original=>{
+  if(original.t==='mesh'&&original.vertices&&original.indices){
+   const c=original,v=c.vertices!,ids=c.indices!,points:Vertex[]=Array.from({length:v.length/3},(_,i)=>({p:worldPoint(c,v.slice(i*3,i*3+3) as P),...(c.uvs?{uv:c.uvs.slice(i*2,i*2+2)}:{}),...(c.colors?{color:c.colors.slice(i*3,i*3+3)}:{})}));
+   const kept:Vertex[][]=[];let changed=false;
+   for(let i=0;i<ids.length;i+=3){
+    const tri=ids.slice(i,i+3).map(j=>points[j]),[a,b,d]=tri.map(v=>v.p);
+    const nx=(b[1]-a[1])*(d[2]-a[2])-(b[2]-a[2])*(d[1]-a[1]),ny=(b[2]-a[2])*(d[0]-a[0])-(b[0]-a[0])*(d[2]-a[2]),nz=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0]);
+    // The doorway removes vertical facade only; its supporting floor stays.
+    if(Math.abs(ny)>.2*Math.hypot(nx,ny,nz)||[0,1,2].some(k=>Math.max(...tri.map(v=>v.p[k]))<min[k]||Math.min(...tri.map(v=>v.p[k]))>max[k])){kept.push(tri);continue;}
+    let inside=tri;const outside:Vertex[][]=[];
+    for(const [axis,value,sign]of planes){if(!inside.length)break;outside.push(clip(inside,value,-sign,axis));inside=clip(inside,value,sign,axis);}
+    if(inside.length<3){kept.push(tri);continue;}
+    changed=true;kept.push(...outside.filter(p=>p.length>=3));
+   }
+   if(!changed)return[c];
+   const vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[];
+   for(const poly of kept)for(let i=1;i<poly.length-1;i++)for(const p of[poly[0],poly[i],poly[i+1]]){indices.push(vertices.length/3);vertices.push(...p.p);if(p.uv)uvs.push(...p.uv);if(p.color)colors.push(...p.color);}
+   const result={...c,p:[0,0,0] as P,vertices,indices};delete result.s;delete result.yaw;delete result.normals;
+   if(c.uvs)result.uvs=uvs;if(c.colors)result.colors=colors;return[result];
+  }
+  if(original.t!=='wallpath'||!original.pts)return[original];
+  const c=original,points=c.pts!.map(p=>worldPoint(c,[p[0],p[3]??0,p[1]]));
+  if(points.length!==2||points.some(p=>p[1]<min[1]||p[1]>=max[1]))return[c];
+  const [a,b]=points;let lo=0,hi=1;
+  for(const axis of[0,2])for(const [value,sign]of[[min[axis],1],[max[axis],-1]]){
+   const da=(a[axis]-value)*sign,db=(b[axis]-value)*sign;
+   if(da<0&&db<0)return[c];if(da<0)lo=Math.max(lo,da/(da-db));if(db<0)hi=Math.min(hi,da/(da-db));
+  }
+  if(hi<=lo)return[c];
+  return [[0,lo,false],[lo,hi,true],[hi,1,false]].flatMap(([u,v,header])=>{
+   if((v as number)-(u as number)<1e-6)return[];
+   const pa=lerp(a,b,u as number) as P,pb=lerp(a,b,v as number) as P;
+   const heights=[u,v].map(t=>(c.wallHeights?c.wallHeights[0]+(c.wallHeights[1]-c.wallHeights[0])*(t as number):c.rise??1));
+   if(header){heights[0]-=max[1]-pa[1];heights[1]-=max[1]-pb[1];pa[1]=pb[1]=max[1];}
+   const part:CustomComponent={...c,p:pa,pts:[[0,0,0,0],[pb[0]-pa[0],pb[2]-pa[2],0,pb[1]-pa[1]]],rise:Math.max(...heights),wallHeights:heights as [number,number]};delete part.yaw;return[part];
+  });
+ })};
+}
 /** Re-author source assemblies at selected room planes; sliceX opens a rear-only backdrop. */
 export function sourceAssembly(level:CustomLevelData,pick:(c:CustomComponent)=>boolean,t:SourceTransform,label:string,grp:number,strip?:[number,number],sliceX?:[number,number]):CustomComponent[]{
  const out:CustomComponent[]=[],s=t.scale??[1,1,1];

@@ -6235,3 +6235,46 @@ approximately 07:35 UTC (~22 minutes). Full native touchdown framing reviewed
 by approximately 07:47 UTC (~34 minutes prompt-to-final-playable). Shared
 validation capacity was intermittently occupied; source review, harnesses and
 documentation continued between available slots.
+
+## 29 October 2026 — Mayfield Mall complete circulation repair
+
+Repaired the complete course after the garage-opening revision, keeping the
+actual Mall, School Miami, Warehouse and Kona assemblies. The three-storey
+parking corridors and both quarters remain the start. The course is now
+2,228.82 m with 71,045 imported mesh triangles, ten checkpoints and the existing
+crystal, time trial and After Hours bonus.
+
+Fitted source-cut landings, widened gym doors, a complete food-court plaza,
+roof/skylight work and continuous courtyard/finish floors close the bad joins.
+New stairs and approaches connect the galleria balconies, pavilion/glass terrace,
+gym roof/blue canopy, both arcade terraces, warehouse office/roof, Kona coping
+decks and final atrium gallery. A framed opening gives that gallery an actual
+doorway. The intact snake moves 60 m down-course and gains a ramp to its raised
+head, clearing the neighbouring pipe courts. Its garden has a return bank.
+Warehouse wall bays now meet the floor with proper openings. The main atrium
+line follows the open side of its original angled wall.
+
+Verification found and corrected reversed landing faces, guard conflicts,
+facade intersections, floor overlaps and a mini-pipe stair in the vert return
+zone. All 18 access routes pass forward and backward without jumping. All nine
+main joins pass five lanes in both directions (90 traversal fixtures). Maximum
+single-frame displacement is 0.802 m on the access fixtures and 0.806 m on joins.
+All six Warehouse/Kona and both garage vert approaches climb, launch and return;
+both garage side-wall seam probes remain contained.
+
+Complete browser runs: 247.33 s on foot without jumping and 153.30 s skating at
+MAX/native 1920×1080, all ten checkpoints and the crystal, zero route deaths,
+unchanged tuning and zero console errors. Bonus entry/failure/retry, all eight
+crates, reward banking and supported return pass. K/L checkpoint controls and
+intentional pit recovery pass. Final native input-only foot/skate runs also
+validate editor serialization and the campaign/save slot.
+
+Prompt-to-playable with focused controller validation: approximately 2 h 48 m,
+from 07:36 UTC to the final native skate check at 10:23 UTC. Build, packaged smoke
+and release verification follow that measurement. The work uses an isolated
+checkout and preserves the 40-view polish atlas, original source-level files,
+movement tuning and published level-pack snapshot. Published `e192a945` camera
+changes were fast-forwarded before final verification. No new shared-runtime
+change belongs to this repair.
+
+See [circulation evidence and source hashes](mayfield-mall/flow/README.md).
