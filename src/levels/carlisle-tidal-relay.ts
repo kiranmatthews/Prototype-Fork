@@ -1,8 +1,10 @@
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { CONST, TUNING } from '../tuning';
+import { buildCarlisleCrossings, type CarlisleRoad } from './carlisle-slippery-crossings';
 type P=[number,number,number];
 type Station=[number,number,number?];
 const C:CustomComponent[]=[],groups:CustomGroup[]=[];
+const roads:CarlisleRoad[]=[];
 const GREY='#aeb5b9',PALE='#d2d4d1',DARK='#56626a',SPRING='#cbaa72',MACHINE='#829da5';
 // One 4,000m surveyed coastline, shared by decks, cliffs, cameras and controls.
 const raw=Array.from({length:801},(_,i)=>{const z=i*5;return [110*Math.sin(z/330)+28*Math.sin(z/115),-z] as [number,number];});
@@ -50,7 +52,7 @@ function strip(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0,t
  return add({t:'mesh',nm,p:origin,vertices,indices,grindTopTriangles:topTriangles,solid,...(solid?{solidSides:true,depthBias:-(++deckLayer%7)*.6}:{}),tex:'solid',color,grp:solid?group(a):90});}
 function arrow(s:number,y:number,u=0){const p=carlislePoint(s,y+.025,u),l=carlislePoint(s-1.8,y+.025,u-1),r=carlislePoint(s-1.8,y+.025,u+1),tip=carlislePoint(s+1.4,y+.025,u);
  add({t:'mesh',nm:'Route chevron',p,vertices:[...l.map((v,i)=>v-p[i]),...r.map((v,i)=>v-p[i]),...tip.map((v,i)=>v-p[i])],indices:[0,1,2],tex:'solid',color:PALE,solid:false,doubleSided:true,grp:90});}
-function road(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0){strip(nm,a,b,top,w,offset);strip(`${nm} · cliff`,a,b,s=>val(top,s)-3,s=>val(w,s)+5,offset,24,DARK,false);for(let s=a+10;s<b-4;s+=24)arrow(s,val(top,s),val(offset,s));}
+function road(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0){const first=C.length;strip(nm,a,b,top,w,offset);strip(`${nm} · cliff`,a,b,s=>val(top,s)-3,s=>val(w,s)+5,offset,24,DARK,false);for(let s=a+10;s<b-4;s+=24)arrow(s,val(top,s),val(offset,s));roads.push({name:nm,a,b,y:top,width:w,offset,components:C.slice(first)});}
 function rest(name:string,s:number,y:number,width=22){road(name,s-13,s+19,y,width);CARLISLE_RELAY_STOPS.push({name,s,y,p:carlislePoint(s,y+.12)});if(s>0)add({t:'checkpoint',nm:name,p:carlislePoint(s+7,y),grp:group(s)});}
 function walk(name:string,s:number,y:number,u=0){CARLISLE_RELAY_WALK.push({name,s,y,u,p:carlislePoint(s,y,u)});}
 function moving(nm:string,s:number,y:number,w:number,d:number,o:Partial<CustomComponent>={},u=0){const a=w/2,b=d/2,h=1.4;
@@ -149,6 +151,7 @@ for(const [i,[,a,b]] of CARLISLE_RELAY_SECTIONS.entries()){const y=i<6?-8:i<12?4
 add({t:'mesh',nm:'Grey sea',p:[0,-25,-2000],vertices:[-1400,0,-2200,1400,0,-2200,1400,0,2200,-1400,0,2200],indices:[0,2,1,0,3,2],tex:'solid',color:'#677d89',solid:false,grp:90});
 add({t:'pit',nm:'Sea reset',p:[0,-23,-2000],s:[2800,1,4400],invisible:true,grp:90});
 for(const [i,stop] of CARLISLE_RELAY_STOPS.entries())for(const u of [-7,7])add({t:'crate',kind:i===0&&u<0?'mask':'wood',p:carlislePoint(stop.s+12,stop.y,u),grp:group(stop.s)});
+export const CARLISLE_RELAY_CROSSINGS=buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS);
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
  sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,

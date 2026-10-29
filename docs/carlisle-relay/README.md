@@ -17,8 +17,8 @@ targets are 500/620/780 seconds and remain provisional greybox targets.
 ## Physics and readability
 
 Springs call the existing player trampoline implementation. They set vertical
-launch speed and use the existing 1.25× held-jump multiplier. Gravity, terminal
-fall speed, walking and neutral skateboard momentum are unchanged. An on-foot
+launch speed and use the existing 1.25× held-jump multiplier. Air gravity,
+terminal fall speed and neutral trampoline momentum are unchanged. An on-foot
 neutral bounce has zero horizontal displacement. Hold Jump through a landing
 for the higher bounce, and use the normal movement controls to steer.
 
@@ -30,7 +30,7 @@ jump. Small springs and ordinary jump/ollie controls retain their normal feel.
 
 Authoring measures flight duration against the native movement model and allows
 for a takeoff near the back edge of a pad and both platforms' motion ranges. No target vectors, homing, horizontal
-launch impulses, gravity overrides or global tuning changes are shipped.
+launch impulses or bounce-gravity overrides are shipped. Global tuning is unchanged.
 Spring surfaces sit 0.02 m above their approach height. This wins overlapping
 support contacts while allowing a skateboard to roll onto the spring without
 tripping on a raised lip. Static and moving springs use the same top offset.
@@ -51,9 +51,17 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
 
 ## Reproducible checks
 
+- `node tools/test-slippery-gravity.mjs`: opt-in downhill vector acceleration,
+  retained foot momentum, countersteering, board side-slip, unchanged legacy
+  ice and portable capture.
+- `node tools/test-carlisle-slippery.mjs`: 23 continuous input-only crossings,
+  1,797 ground probes and lethal contact with all 36 visible spike obstacles.
+- `node tools/carlisle-slippery-browser.mjs [--lite]`: real keyboard traversal
+  of three representative crossings, neutral downhill drift, visible banks,
+  spike death and dry-checkpoint recovery; full mode includes MAX and CRT views.
 - `node tools/test-carlisle-dredger-terraces.mjs`: continuous input-only climb
-  through the replacement section at three machinery phases; no ascending
-  floor catches, grounded upward teleports, bails or deaths.
+  and its slippery upper exit at three machinery phases; no ascending floor
+  catches, unexpected grounding jumps, bails or deaths.
 - `node tools/carlisle-replay-audit.mjs <replay.json> [git-ref]`: replay diagnosis
   against historical player/course source without changing the checkout.
   `CARLISLE_REPLAY_LIVES` explicitly supplies missing starting life inventory.
@@ -75,13 +83,14 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
   traversal with real keyboard input, checkpoint/sea
   recovery, moving transforms, finish and console checks. Full mode verifies
   the native canvas, then captures the normal presentation.
-- `node tools/sync-carlisle-relay.mjs`: updates only this level's published
-  snapshot and stock certificate, preserving other authored levels.
+- `node tools/sync-carlisle-relay.mjs`: keeps Carlisle source-owned by removing
+  only its duplicate snapshot and certificate, preserving other authored levels.
 
-See `native-physics.json`, `correction/kinetic-contact.json` and `terraces/full-browser.json`
+See `native-physics.json`, `correction/kinetic-contact.json` and `slippery/full-browser.json`
 for measured results. The correction directory records the latest controls and
 camera revision. The terraces directory records the subsequent replay-driven
-redesign; the original browser evidence remains in this directory.
+redesign. The slippery directory contains the current crossing evidence and
+a fresh controls regression; the original browser evidence remains in this directory.
 Traversal reports are checkpoint-section reviews, not a claim
 of an uninterrupted zero-death speedrun. The timing pilot can miss a rotating
 handoff; the course deliberately retains waiting and jumping decisions.
@@ -102,3 +111,26 @@ See `terraces/replay-diagnosis.json` for the recorded contact sequence and its
 explicit starting-inventory limitation.
 
 ![Open spring terraces replacing the wheel](terraces/full-terraces-apex.png)
+
+## Slippery crossings between sections
+
+The long flat quays are now 23 twisting, banked crossings with 36 red spike
+obstacles. The blue-grey faces have 2% of dry steering/braking grip and an
+explicit gravity-driven slide. Both feet and boards gain velocity down the
+actual bank; releasing the stick preserves momentum. Correct early or jump to
+change the line. Ordinary surfaces, existing ice, jumps and the bounce camera
+retain their previous behavior.
+
+Bank height, direction, spacing and width vary along the course. Dry checkpoint
+islands, spring mouths and moving-deck boarding overlaps remain level. Each
+crossing replaces all of its old overlapping floors with one continuous
+ribbon, split only for dry/slippery materials. Shared seam vertices use the
+same origin; no older flat collider is left underneath a lowered bank. All
+ordinary exposed edges retain their normal grinding behavior.
+
+The new optional `slipGravity` field is bounded to 0–2 and requires `slip`.
+It uses the existing ground-gravity value; Carlisle opts in with 1. Capturing
+and rebuilding preserves the field, and disabling slip in the editor clears
+it. There are no global tuning changes.
+
+![Slippery bank and visible spike line](slippery/full-crossing-1-slide.png)

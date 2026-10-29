@@ -810,6 +810,7 @@ export interface CustomComponent {
   slip?: boolean; // supported ground primitive: shared ice visuals and vector inertia
   // Slip only, 0.02..1: fraction of dry steering/braking/drive. Omitted = ICE_SURFACE.grip.
   iceGrip?: number;
+  slipGravity?: number; // slippery surface only, 0..2: gravity-driven vector slide; omitted retains legacy ice
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
   ridgeGrinding?: boolean; // mesh: convex creases in the designated top are safe surface grinds
   flatShading?: boolean; // mesh: preserve crisp faces when untextured render vertices are shared
@@ -2710,7 +2711,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "orbit", "spin", "bounce",
-  "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "groundSpeedLimit", "containment",
+  "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "slipGravity", "groundSpeedLimit", "containment",
   "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
@@ -2932,7 +2933,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "hold", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
-    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip", "groundSpeedLimit",
+    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip", "slipGravity", "groundSpeedLimit",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.edgeGrindingRevision !== undefined && source.edgeGrindingRevision !== 1) return null;
@@ -3186,6 +3187,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.t === "crumble" && ((component.shake ?? 0) < 0 || (component.speed ?? 30) <= 0)) ||
       (component.iceGrip !== undefined &&
         (component.iceGrip < 0.02 || component.iceGrip > 1 || component.slip !== true ||
+          !SLIPPERY_COMPONENT_TYPES.includes(component.t))) ||
+      (component.slipGravity !== undefined &&
+        (component.slipGravity < 0 || component.slipGravity > 2 || component.slip !== true ||
           !SLIPPERY_COMPONENT_TYPES.includes(component.t))) ||
       (component.groundSpeedLimit !== undefined &&
         (component.groundSpeedLimit < .25 || component.groundSpeedLimit > 12 ||
@@ -6274,6 +6278,7 @@ export class Level {
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
+        ...(m.userData.slipGravity !== undefined ? { slipGravity: m.userData.slipGravity as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
         ...(m.userData.swimDepth !== undefined ? { swimDepth: m.userData.swimDepth as number } : {}),
@@ -6807,6 +6812,7 @@ export class Level {
             // into ordinary wood and the level lost its whole point
             slip: m.userData.slippy === true ? true : undefined,
             iceGrip: m.userData.iceGrip as number | undefined,
+            slipGravity: m.userData.slipGravity as number | undefined,
             groundSpeedLimit: m.userData.groundSpeedLimit as number | undefined,
             ...edgeInfo(m),
           });
@@ -7645,6 +7651,7 @@ export class Level {
         if (surface.slip) {
           mesh.userData.slippy = true;
           mesh.userData.iceGrip = surface.iceGrip ?? ICE_SURFACE.grip;
+          mesh.userData.slipGravity = surface.slipGravity;
           // Wet roofs and other explicitly painted slicks share traction,
           // but only ice owns the scrabbling on-foot animation.
           mesh.userData.iceWalk = surface.tex === undefined || surface.tex === 'ice' || surface.tex === 'bridge-ice';

@@ -8014,7 +8014,7 @@ export class Editor {
     if (SLIPPERY_COMPONENT_TYPES.includes(c.t) && c.solid !== false && !c.materialStyle) {
       boolRow("slippery surface", () => c.slip === true, value => {
         if (value) { c.slip = true; delete c.groundSpeedLimit; }
-        else { delete c.slip; delete c.iceGrip; }
+        else { delete c.slip; delete c.iceGrip; delete c.slipGravity; }
         this.renderProps();
       });
       if (c.slip) {

@@ -6118,3 +6118,40 @@ The final production preview completes the continuous keyboard climb with
 no deaths or console errors, preserves abandon-ship and the overhead bounce
 camera, and passes checkpoint/respawn/finish checks. The new section was
 reviewed at MAX/native resolution and in the normal 480p/CRT presentation.
+
+## 29 October 2026 NZDT — Carlisle slippery inter-section crossings
+
+Replaced the long flat quays with 23 twisting, banked crossings and 36 visible
+red spike obstacles. The slippery faces use 2% dry traction; the new optional
+`slipGravity` surface property accelerates the existing foot or board velocity
+down the actual bank. The player must anticipate drift or jump to change line.
+The opt-in force leaves ordinary surfaces, existing ice, trampoline controls,
+camera behavior and global tuning unchanged.
+
+The replacement ribbons remove the old overlapping floors. Dry checkpoint
+islands, spring mouths and the swept footprint of boarding machinery remain
+level. Adjacent traction sections share exact mesh seams. Exposed deck edges
+keep their ordinary grind behavior. Crates follow the new surface, and the
+spikes use slightly inset lethal volumes matched to their visible geometry.
+
+Prompt-to-playable keyboard traversal: approximately **28 minutes**
+(04:55:36–05:23 UTC). All 23 crossings complete with ordinary inputs;
+1,797 support probes and all 36 lethal contacts pass. The browser clears three
+representative crossings without deaths and confirms neutral downhill drift
+and a dry checkpoint restart. Existing ice and trampoline-control regressions
+pass, as do all 126 native spring transfers. Evidence is in
+[the slippery-crossing record](carlisle-relay/slippery/).
+This remains a local-only playtest round under the user's publication hold.
+
+Carlisle now uses its built-in source without a duplicate in the published
+editor snapshot archive. Removing only the `carlisle-coast` snapshot and its
+certificate keeps the source archive under its existing 64 MiB bound; all
+other level entries and certificates are unchanged. The focused synchronization
+check passes. The continuous terrace climb also reaches its outgoing spring
+at all three machinery phases, with no deaths or ascending floor catches.
+
+Required level checks, build/type checking and release-size validation pass.
+The final production preview passes all three keyboard crossing routes,
+downhill drift, spike death and dry checkpoint recovery with no console errors.
+Reviewed the final banks at MAX/native resolution and normal 480p/CRT.
+Production preview stamp: `Codex/sol fork · build 10-29 05:37 UTC`.

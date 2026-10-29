@@ -1,0 +1,183 @@
+{
+  "validatedAt": "2026-10-29T05:40:03.033721+00:00",
+  "delivery": "local playtest only; user hold on release",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "productionPreview": "http://127.0.0.1:5484/?playtest&level=carlisle-coast",
+  "build": "Codex/sol fork \u00b7 build 10-29 05:37 UTC",
+  "sourceSha256": {
+    "src/levels/carlisle-tidal-relay.ts": "e2d6ecbdb77f45deb5843bde1a127dc56dd3a9a2adaae5664e671829941a9e0f",
+    "src/levels/carlisle-slippery-crossings.ts": "738d213cea947f2e8bcfbf7a9596007e07b0ee4b1f5535e1869f10b10fdc8f74",
+    "src/player.ts": "549c47626e29f8da0de8b0f840deec43d5922389d2ef5de6b1cb551527bc2e85",
+    "src/main.ts": "9af0b1ae9722ae152e13c96ed215f45d0dcc2b7d3ed5112b44a7fb71b486c0b7",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/editor.ts": "66dfe7d01aaa3dfeae9cc384c046a291cc04568da5f94869be2f9412a27a3629",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "tools/fixtures/stock-level-snapshots.json": "f646584eb848dd517ad550f772b0aeff33b996e0b9ae86d2f14c5357e1ccf653",
+    "tools/sync-carlisle-relay.mjs": "65ccdf574e3a9d47db345d2e299974d98d76e29a3715129d21d703f1de701a1f",
+    "tools/carlisle-crossing-pilot.mjs": "84f0eb4a40f2dc5e1bdffe70bbfd7ff1268c239118ba9e31af469b28d769a7f1",
+    "tools/carlisle-slippery-browser.mjs": "1a8a8ab3db0a5a86e617e80247e0c10074b690a68d7ff9a78ad016227e0022cd",
+    "tools/carlisle-relay-browser.mjs": "670aa2e1264de0de0bb1b9e56732273e2d5a1a997a2fc7f3fdc37d4ffc7da502",
+    "tools/test-carlisle-slippery.mjs": "2e75abdb51a763612f47aa0f18867f245e51b0581247c2f251ff678b8df1549f",
+    "tools/test-slippery-gravity.mjs": "f0afd6b1e99f4d4ffc27c981a0e11b7469904bc5a631f8304b53f83303c029d6",
+    "tools/test-carlisle-dredger-terraces.mjs": "44066f6c48643180ea8a2c92161d338825382048d65e8e1836b3c009d9f2d5e6"
+  },
+  "scope": {
+    "crossings": 23,
+    "slipperySections": 56,
+    "spikeClusters": 36,
+    "tractionFraction": 0.02,
+    "gravity": "opt-in slipGravity=1; legacy ice and global tuning unchanged",
+    "preserved": [
+      "native trampoline arcs",
+      "air steering",
+      "abandon-ship",
+      "temporary overhead big-bounce camera",
+      "4 km / three acts",
+      "ordinary deck-edge grinding"
+    ]
+  },
+  "checks": {
+    "check:levels": "passed on final geometry/runtime; predates only removal of duplicate Carlisle editor snapshot",
+    "check:level-sync": "passed after snapshot removal",
+    "build": "passed",
+    "check:release": "passed",
+    "authoredIce": "passed",
+    "trampolineControls": "passed",
+    "nativeTransfers": "126 passed at phases 0 and 7",
+    "supportProbes": 1797,
+    "continuousCrossings": 23,
+    "lethalContacts": 36,
+    "continuousTerraces": [
+      {
+        "phase": 0,
+        "seconds": 16.6,
+        "maxGroundRise": 0.04507209316926719,
+        "outgoingSpring": true
+      },
+      {
+        "phase": 7,
+        "seconds": 16.6,
+        "maxGroundRise": 0.04507209316926719,
+        "outgoingSpring": true
+      },
+      {
+        "phase": 53,
+        "seconds": 16.6,
+        "maxGroundRise": 0.04507209316926719,
+        "outgoingSpring": true
+      }
+    ]
+  },
+  "snapshotPack": {
+    "removedIds": [
+      "carlisle-coast"
+    ],
+    "otherEntriesAndCertificates": "deep-equal to parent commit",
+    "sourceBytes": 66558199,
+    "delivery": "Carlisle remains registered as a built-in source-owned level"
+  },
+  "releaseFiles": 1849,
+  "releaseBytes": 997250559,
+  "releaseBudgetBytes": 1000000000,
+  "browser": {
+    "lite": {
+      "errors": [],
+      "crossings": [
+        {
+          "name": "Foam steps \u00b7 start \u00b7 tilted slick",
+          "completed": true,
+          "deaths": 0
+        },
+        {
+          "name": "Crane gantry \u00b7 tilted slick",
+          "completed": true,
+          "deaths": 0
+        },
+        {
+          "name": "Turbine catch \u00b7 tilted slick",
+          "completed": true,
+          "deaths": 0
+        }
+      ],
+      "neutralDriftMetres": 2.1732383020308803,
+      "hazardDeath": true,
+      "restartOnDryGround": true,
+      "canvas": [
+        720,
+        450
+      ]
+    },
+    "full": {
+      "errors": [],
+      "crossings": [
+        {
+          "name": "Foam steps \u00b7 start \u00b7 tilted slick",
+          "completed": true,
+          "deaths": 0
+        },
+        {
+          "name": "Crane gantry \u00b7 tilted slick",
+          "completed": true,
+          "deaths": 0
+        },
+        {
+          "name": "Turbine catch \u00b7 tilted slick",
+          "completed": true,
+          "deaths": 0
+        }
+      ],
+      "neutralDriftMetres": 2.2677445433822023,
+      "hazardDeath": true,
+      "restartOnDryGround": true,
+      "canvas": [
+        1440,
+        900
+      ]
+    }
+  },
+  "visualReview": [
+    "full-crossing-1-slide.png at 1440x900",
+    "full-bank-20.png at 1440x900",
+    "full-normal.png at 480p/CRT"
+  ],
+  "controlsBrowser": {
+    "errors": [],
+    "sourceMatches": true,
+    "groundCamera": {
+      "fov": 49,
+      "pitch": 25.35000000000001,
+      "spring": 0
+    },
+    "airCamera": {
+      "fov": 71.99908349389621,
+      "pitch": 79.99999999311146,
+      "spring": 1
+    },
+    "returnCamera": {
+      "fov": 49,
+      "pitch": 25.350000000000083,
+      "spring": 0
+    },
+    "abandon": {
+      "sideways": 4.400471571475747,
+      "move": "Emergency Eject",
+      "board": false,
+      "looseBoard": true,
+      "double": false,
+      "speed": 6.831301766451432,
+      "screenFeet": [
+        0.13030092046897493,
+        -0.3362963729559599,
+        0.9898863422437775
+      ],
+      "screenHead": [
+        0.14488382894377796,
+        -0.2773686906689141,
+        0.9887215287764013
+      ]
+    },
+    "finish": "finished"
+  },
+  "testScope": "Input-only routes after initial placement at each crossing; linked native terrace traversal; not a single uninterrupted 4 km campaign clear."
+}

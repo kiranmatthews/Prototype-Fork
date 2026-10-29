@@ -4,10 +4,11 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {homedir} from 'node:os';
 import {pathToFileURL} from 'node:url';
+import {crossingPilot} from './carlisle-crossing-pilot.mjs';
 const require=createRequire(import.meta.url);let pw;try{pw=require.resolve('playwright');}catch{pw=homedir()+'/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';}
 const {chromium}=await import(pathToFileURL(pw).href);
 const compiled=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});
-const {carlislePoint:point,CARLISLE_RELAY_STOPS:stops,CARLISLE_TIDAL_RELAY_LEVEL:data}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const {carlislePoint:point,CARLISLE_RELAY_STOPS:stops,CARLISLE_RELAY_CROSSINGS:crossings,CARLISLE_TIDAL_RELAY_LEVEL:data}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 const base=(process.env.CARLISLE_BASE??'http://127.0.0.1:5483').replace(/\/$/,''),lite=process.argv.includes('--lite'),mode=lite?'lite':'full',out=process.env.CARLISLE_OUT??'docs/carlisle-relay';
 await mkdir(out,{recursive:true});const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1,serviceWorkers:'block'}),report={base,mode,errors:[],captures:[]};
@@ -42,7 +43,7 @@ try{
  if(!lite){assert.equal(report.apex.preset,'max');assert.deepEqual(report.apex.canvas,[1440,900]);}
  // Mount through ordinary input, ride onto the spring, sidestep, then use the
  // existing fresh press/release to abandon the board during the bounce.
- await place(point(45,.2),point(65,0).map((v,i)=>i===1?0:v-point(45,0)[i]));
+ await place(point(57,.2),point(65,0).map((v,i)=>i===1?0:v-point(57,0)[i]));
  await page.keyboard.down('ArrowUp');await page.keyboard.down('Space');
  report.boardApproach=await page.evaluate(async()=>{const rows=[];for(let i=0;i<600;i++){await new Promise(requestAnimationFrame);const p=window.__game.player;
   if(i%12===0||p.trampolineAir&&p.bounceJump)rows.push({position:p.pos.toArray(),state:p.state,board:p.boardRolling,spring:p.trampolineAir,bounce:p.bounceJump,speed:p.speed,charge:p.skateChargeT,charging:p.charging,held:p.rawInput.jumpHeld,blocked:p.boardMountBlocked});
@@ -63,13 +64,20 @@ try{
  // broken wheel. Only device keys change after this initial checkpoint start.
  await place(point(1770,16.2),point(1775,0).map((v,i)=>i===1?0:v-point(1770,0)[i]));
  const terraceTargets=[point(1792,16),point(1828,32,-6),point(1864,48,6),point(1895,48)];
+ const terraceExitPilot=crossingPilot(crossings.find(r=>r.name.startsWith('Dredger upper terrace')),point);let terraceExitTime=null;
  let terraceNext=0,terraceDone=false,terraceApex=false;const terraceKeys=new Set(),terraceSamples=[];
  const applyTerraceKeys=async wanted=>{for(const key of [...terraceKeys])if(!wanted.has(key)){await page.keyboard.up(key);terraceKeys.delete(key);}for(const key of wanted)if(!terraceKeys.has(key)){await page.keyboard.down(key);terraceKeys.add(key);}};
  for(let poll=0;poll<700;poll++){
-  const s=await page.evaluate(()=>{const p=window.__game.player;return{at:p.pos.toArray(),state:p.state,grounded:p.grounded,vy:p.vVel,surface:p.surfaceName,bail:p.isBailing,dir:p.camDir.toArray(),time:p.runTime};});
+  const s=await page.evaluate(()=>{const p=window.__game.player;return{at:p.pos.toArray(),state:p.state,grounded:p.grounded,vy:p.vVel,surface:p.surfaceName,bail:p.isBailing,dir:p.camDir.toArray(),side:p.axisL.toArray(),velocity:p.walkVelocity.toArray(),spring:p.trampolineAir,time:p.runTime};});
   assert.ok(!s.bail&&!['dead','gameover'].includes(s.state),JSON.stringify(s));
   if(s.state==='air'&&s.vy>10){if(s.surface==='Dredger terraces · 1')terraceNext=Math.max(terraceNext,1);if(s.surface==='Dredger terraces · 2')terraceNext=Math.max(terraceNext,2);}
   if(terraceNext===2&&s.grounded&&Math.abs(s.at[1]-48)<.1)terraceNext=3;
+  if(terraceNext===3){
+   const control=terraceExitPilot(s,terraceExitTime===null?1/60:Math.max(1/120,Math.min(.15,s.time-terraceExitTime)));terraceExitTime=s.time;
+   if(control.done){terraceDone=true;break;}
+   const wanted=new Set(['ArrowUp']);if(control.input.moveX)wanted.add(control.input.moveX>0?'ArrowRight':'ArrowLeft');if(control.input.jumpHeld)wanted.add('Space');
+   await applyTerraceKeys(wanted);if(poll%5===0)terraceSamples.push({...s,next:terraceNext});await page.waitForTimeout(32);continue;
+  }
   const target=terraceTargets[terraceNext],dx=target[0]-s.at[0],dz=target[2]-s.at[2],distance=Math.hypot(dx,dz);
   if(poll%5===0)terraceSamples.push({...s,next:terraceNext});
   if(terraceNext===3&&distance<2&&s.grounded){terraceDone=true;break;}

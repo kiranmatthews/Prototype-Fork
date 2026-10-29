@@ -503,6 +503,7 @@ interface GroundHit {
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
   iceGrip?: number; // authored multiplier; absence uses the shared surface default
+  slipGravity?: number; // opt-in gravity-driven slippery crossings
   iceWalk?: boolean; // presentation only; non-ice slicks keep ordinary locomotion
   vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
   finishPad?: boolean; // the warp pad's masonry: standing on it ends the run
@@ -7016,6 +7017,15 @@ export class Player {
           this.walkIntent.set(0, 0, 0);
         }
       }
+      // Authored tilted slicks accelerate the existing physical walk vector.
+      // Keep the earned slide on foot; deliberate hold-to-mount still works.
+      if (slickWalk && !planted && this.groundHit?.slipGravity) {
+        const n = this.groundHit.normal;
+        const force = TUNING.groundGravity * this.groundHit.slipGravity * n.y * dt;
+        this.walkVelocity.x += n.x * force;
+        this.walkVelocity.z += n.z * force;
+        if (this.walkVelocity.length() > TUNING.walkSpeed + .5) this.iceSlideCarry = true;
+      }
       this.speed = this.walkVelocity.dot(this.axisF);
       this.lastTy = 0;
     } else {
@@ -7282,7 +7292,20 @@ export class Player {
       // halfpipe was already fixed this way (a clean energy-conserving pendulum);
       // this just generalises it past the `name.startsWith('halfpipe')` check.
       // The braking guard stays: it's what lets the brake beat gravity on a hill.
-      if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
+      if (this.groundHit?.slippy && this.groundHit.slipGravity) {
+        // These surfaces can also pull a board sideways across its heading.
+        // Resolve one gravity vector, without adding the legacy along-slope
+        // term again or allowing a low-grip brake to cancel gravity outright.
+        const n = this.groundHit.normal;
+        const force = TUNING.groundGravity * this.groundHit.slipGravity * n.y * dt;
+        const vx = this.axisF.x * this.speed + n.x * force;
+        const vz = this.axisF.z * this.speed + n.z * force;
+        this.speed = Math.hypot(vx, vz);
+        if (this.speed > .001) {
+          this.axisF.set(vx / this.speed, 0, vz / this.speed);
+          this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        }
+      } else if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
         this.speed += -TUNING.groundGravity * ty * dt;
       }
       // HALFPIPE CARVE: just HOLDING a direction on the transition works the wall
@@ -17404,6 +17427,7 @@ export class Player {
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,
       iceGrip: hit.object.userData.iceGrip as number | undefined,
+      slipGravity: hit.object.userData.slipGravity as number | undefined,
       iceWalk: hit.object.userData.iceWalk as boolean | undefined,
       vert: hit.object.userData.vert as boolean | undefined,
       finishPad: hit.object.userData.finishPad as boolean | undefined,
