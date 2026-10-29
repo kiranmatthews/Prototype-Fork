@@ -1,0 +1,557 @@
+{
+  "errors": [],
+  "captures": [
+    {
+      "id": "01-foam-steps",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1119,
+        "calls": 999,
+        "triangles": 7269949,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "02-scissor-groyne",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1134,
+        "calls": 1173,
+        "triangles": 8915947,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "03-lift-and-skip",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1147,
+        "calls": 1193,
+        "triangles": 9872356,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "04-surf-sockets",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1161,
+        "calls": 1356,
+        "triangles": 9037851,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "05-twin-winches",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1174,
+        "calls": 939,
+        "triangles": 8409680,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "06-beacon-chimney",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1188,
+        "calls": 918,
+        "triangles": 7665146,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "07-tide-dial",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1201,
+        "calls": 1215,
+        "triangles": 6632647,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "08-pinwheel-handoffs",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1214,
+        "calls": 1382,
+        "triangles": 6255768,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "09-dredger-terraces",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1227,
+        "calls": 1279,
+        "triangles": 4942925,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "10-cross-thread-springs",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1240,
+        "calls": 1322,
+        "triangles": 5338392,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "11-counterweight-stacks",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1254,
+        "calls": 1094,
+        "triangles": 4541925,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "12-harbour-scissors",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1267,
+        "calls": 982,
+        "triangles": 4465855,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "13-storm-fingers",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1280,
+        "calls": 862,
+        "triangles": 3837932,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "14-helical-turbine",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1293,
+        "calls": 910,
+        "triangles": 4260894,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "15-pendulum-pier",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1306,
+        "calls": 669,
+        "triangles": 3111541,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "16-rigging-slingshot",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1320,
+        "calls": 737,
+        "triangles": 2879514,
+        "points": 20,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "17-broken-crown",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1333,
+        "calls": 580,
+        "triangles": 2647012,
+        "points": 20,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "18-homecoming-cable",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1346,
+        "calls": 520,
+        "triangles": 1858685,
+        "points": 20,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "19-springtide-skippers",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1370,
+        "calls": 395,
+        "triangles": 1076563,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 1,
+        "models": 12,
+        "props": 70,
+        "nets": 5,
+        "mountedMovers": 4,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "20-spring-skiff-close",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1407,
+        "calls": 403,
+        "triangles": 1121407,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 1,
+        "models": 12,
+        "props": 70,
+        "nets": 5,
+        "mountedMovers": 4,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    }
+  ],
+  "quick": false,
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1838,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "errors": []
+    },
+    "cones": {
+      "status": "ready",
+      "actors": 78,
+      "sites": 26,
+      "clips": [
+        "idle",
+        "walk",
+        "slash"
+      ],
+      "error": ""
+    },
+    "grounds": 334
+  },
+  "spawn": {
+    "at": [
+      0,
+      221.27211374988292,
+      0
+    ],
+    "fov": 49,
+    "grounded": true
+  },
+  "walk": {
+    "at": [
+      2.309009249061226,
+      221.27211374988292,
+      -5.064787748441257
+    ],
+    "deaths": 0
+  },
+  "sideways": 4.169002531127776,
+  "abandon": {
+    "move": "Emergency Eject",
+    "board": false,
+    "looseBoard": true
+  },
+  "frameTimes": {
+    "medianMs": 16.69999998807907,
+    "p95Ms": 17.900000005960464
+  },
+  "bonus": {
+    "status": "ready",
+    "sections": 1,
+    "models": 12,
+    "props": 70,
+    "nets": 5,
+    "mountedMovers": 4,
+    "decorativeColliders": 0,
+    "errors": []
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 12,
+    "props": 1838,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "errors": []
+  }
+}

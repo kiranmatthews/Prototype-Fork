@@ -6561,3 +6561,16 @@ job IDs and the free restore script reproduce them without new generations.
 Source, references, receipts, preparation and review evidence are in
 [the cone workshop](../art/carlisle-cone/README.md). The user's local-only hold
 continues; nothing has been pushed or published.
+
+
+## Carlisle Coast — playable orange/navy shipyard (30 October 2026 NZDT)
+
+Brief: build the whole level to follow the approved early-night Outer Banks concept art. First playable harbour pass in about 16 minutes; final local validation in about 52 minutes from the goal prompt.
+
+Integrated all twelve full Tripo prop meshes across eighteen main areas and Springtide Skippers. Fitted 56 main net beds and 28 movers; five bonus nets and four moving hulls. Main scenery uses 1,838 full-detail prop instances, with dense receiving wharves in Act I, varied industrial landmarks in Act II and exposed cable approaches in Act III. Weathered timber, riveted navy steel, orange fittings, emitted window light, bounded dock lights and animated dark water replace the greybox presentation. Existing 78 animated cone characters remain. No new generation credits or API purchases.
+
+The complete main/bonus source geometry and gameplay components match the pre-art checkpoint byte for byte: 1,184 and 88 components. No player, tuning, camera, collision, traction or edge-grinding changes. `src/level.ts` has narrow visual construction/readiness/update/disposal hooks; both source-level atmosphere definitions changed. Full original GLBs and texture maps are retained; instancing and spatial culling have no reduced-geometry substitutes.
+
+Validation: source/asset hashes; npm run check:levels; production build/type-check (1,764 files, 987.1 MiB); 55 native spring transfers and rigid carry; all three mandatory grind routes at phase zero; full bonus with 21 crates and no deaths; twenty native 1920x1080 area captures plus 480p/CRT; real arrow-key steering and Emergency Eject while bouncing; clean level-switch asset disposal and zero browser console errors. Native start-area frame sample 16.7 ms median / 17.9 ms p95, not a whole-course worst-case guarantee. Evidence: `art/carlisle-shipyard/integration/`.
+
+The local art gallery now compares concept, in-game result and original greybox. Play at http://127.0.0.1:5483/?playtest&level=carlisle-coast . Local checkpoint only; user hold remains active. No push or publication.

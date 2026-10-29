@@ -183,7 +183,7 @@ fitCarlisleDeckBerths(C);
 export const CARLISLE_RELAY_CARGO = buildCarlisleCargo(C,carlislePoint,group);
 C.push({t:'bonusplatform',nm:'Springtide Skippers · harbour bonus',p:carlislePoint(2010,24,-5),to:carlislePoint(2013,24.12),grp:group(2010)});
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
- sky:'day',hugeDropBail:false,keepPlayFog:true,
- atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,
- sunColor:'#fff1d6',sunIntensity:1.6,fillColor:'#bbd0dc',fillIntensity:.4,shadowStrength:.65,backdrop:'fog',fallbackTop:'#9bafbd',fallbackBottom:'#c4cdd0'},
+ sky:'night',hugeDropBail:false,keepPlayFog:true,
+ atmosphere:{fogEnabled:true,fogNear:180,fogFar:700,fogColor:'#152c50',drawDistance:850,ambientSky:'#8ba9d8',ambientGround:'#253b58',ambientIntensity:1.8,
+ sunColor:'#b1cbef',sunIntensity:1.35,fillColor:'#f07942',fillIntensity:.6,shadowStrength:.7,backdrop:'fog',fallbackTop:'#07152d',fallbackBottom:'#24385b'},
  medalTimes:{gold:500,silver:620,bronze:780},groups,components:C};

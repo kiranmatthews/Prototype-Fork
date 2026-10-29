@@ -53,6 +53,7 @@ import { custardWaterfallMaterial } from './custardWaterfall';
 import {createWaterfallClimbCurtain} from './waterfallClimbMaterials';
 import { HazardVisuals } from './hazardVisuals';
 import { createCarlisleCones, isCarlisleConeRow } from './carlisleCone';
+import { createCarlisleShipyard, isCarlisleShipyard, isCarlisleMassing } from './carlisleShipyard';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
@@ -4589,6 +4590,7 @@ export class Level {
   private hollowwakeTunnels: HollowwakeTunnels | null = null;
   private hazardVisuals:HazardVisuals|null=null;
   private carlisleCones:ReturnType<typeof createCarlisleCones>=null;
+  private carlisleShipyard:ReturnType<typeof createCarlisleShipyard>=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
   nightworksRocks: NightworksRocks | null = null;
@@ -7614,7 +7616,10 @@ export class Level {
     this.batchDecor = !EDITOR_BUILD;
 
     this.buildCustomComponents(data);
-    if (!EDITOR_BUILD) this.carlisleCones=createCarlisleCones(this.root,data);
+    if (!EDITOR_BUILD) {
+      this.carlisleCones=createCarlisleCones(this.root,data);
+      this.carlisleShipyard=createCarlisleShipyard(this.root,data,this.groundMeshes);
+    }
   }
 
   /** Shared component builder, also used by source-owned native extensions. */
@@ -7758,6 +7763,7 @@ export class Level {
           phase === 0 ? geometry && !wood : phase === 1 ? wood : !geometry;
         if (!belongs) return;
         buildTagged(i, () => {
+          if (!EDITOR_BUILD && isCarlisleShipyard(data) && isCarlisleMassing(c)) return;
           const tinted = (
             fallback: THREE.MeshLambertMaterial,
           ): THREE.MeshLambertMaterial =>
@@ -8866,6 +8872,7 @@ export class Level {
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.carlisleCones?.dispose();this.carlisleCones=null;
+    this.carlisleShipyard?.dispose();this.carlisleShipyard=null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;this.swimmingPools.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
@@ -9925,6 +9932,7 @@ export class Level {
     this.caveCollapse?.update(dt,this.playerPos);
     this.minefields?.update(dt);
     this.carlisleCones?.update(dt,this.playerPos);
+    this.carlisleShipyard?.update(dt,this.playerPos);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
@@ -16217,6 +16225,7 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
+  get carlisleShipyardDiagnostics() { return this.carlisleShipyard?.diagnostics ?? null; }
   get carlisleConeDiagnostics() { return this.carlisleCones?.diagnostics ?? null; }
   get hazardAssetDiagnostics() { return this.hazardVisuals?.diagnostics ?? null; }
   get carlisleBonusBridgeDiagnostics(){return this.carlisleBridgeVisuals.map(bridge=>bridge.diagnostics);}
@@ -16290,7 +16299,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}

@@ -1,0 +1,106 @@
+{
+  "completedAt": "2026-10-29T18:34:15.403002+00:00",
+  "localOnly": true,
+  "generationCreditsSpent": 0,
+  "areas": 18,
+  "bonus": true,
+  "nativeViews": 20,
+  "models": 12,
+  "main": {
+    "status": "ready",
+    "sections": 18,
+    "models": 12,
+    "props": 1838,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "errors": []
+  },
+  "bonusArt": {
+    "status": "ready",
+    "sections": 1,
+    "models": 12,
+    "props": 70,
+    "nets": 5,
+    "mountedMovers": 4,
+    "decorativeColliders": 0,
+    "errors": []
+  },
+  "preservedCourse": {
+    "main": {
+      "components": 1184,
+      "sha256": "326e69f1bb2f7beae44baccfd273223ea1ee31221a725e5aefb4bb3e303fb421",
+      "exactGameplayDataPreserved": true
+    },
+    "bonus": {
+      "components": 88,
+      "sha256": "6fc5332d165182fc1a3e8dea81944f26f25eccfb7277d699a614ab21e394ff81",
+      "exactGameplayDataPreserved": true
+    }
+  },
+  "checks": {
+    "sourceAndAssetFidelity": "pass",
+    "checkLevels": "pass",
+    "nativeSpringTransfers": 55,
+    "mandatoryGrindRoutes": 3,
+    "bonusCrates": 21,
+    "browserErrors": [],
+    "arrowKeySteeringMetres": 4.169002531127776,
+    "abandonJump": {
+      "move": "Emergency Eject",
+      "board": false,
+      "looseBoard": true
+    },
+    "nativeFrameTimes": {
+      "medianMs": 16.69999998807907,
+      "p95Ms": 17.900000005960464
+    },
+    "gallery": {
+      "concepts": 20,
+      "inGameComparison": true
+    },
+    "build": "pass",
+    "production": {
+      "errors": [],
+      "main": {
+        "art": {
+          "status": "ready",
+          "sections": 18,
+          "models": 12,
+          "props": 1838,
+          "nets": 56,
+          "mountedMovers": 28,
+          "decorativeColliders": 0,
+          "errors": []
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-29 18:31 UTC"
+      },
+      "bonus": {
+        "art": {
+          "status": "ready",
+          "sections": 1,
+          "models": 12,
+          "props": 70,
+          "nets": 5,
+          "mountedMovers": 4,
+          "decorativeColliders": 0,
+          "errors": []
+        },
+        "oldArtRoots": 0
+      }
+    }
+  },
+  "build": {
+    "files": 1764,
+    "mib": 987.1,
+    "offlineVersion": "279440ab81c2f14c2eb6"
+  },
+  "hashes": {
+    "src/carlisleShipyard.ts": "c080d1b43d32e3940c5dce3bffea085f4606f51f0b70d208fd05dcc54d4da349",
+    "src/carlisleShipyardMaterials.ts": "8cc130d75f052a32b5916ce6aa0256b4958ec5bf7e4dccf31f8d885a50e7a170",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/levels/carlisle-tidal-relay.ts": "fda8bce5c329cf83b5fd9c6197920deecb91cf6de26853d3211d41bbce5bf175",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82"
+  },
+  "delivery": "HOLD: no publication or integration authorization"
+}

@@ -12,7 +12,7 @@ The approved direction is an Outer Banks working harbour at early night: dark na
 - `../../../art/carlisle-shipyard/`: textured Tripo GLBs, generation records, actual credit ledger, procedural net source, fitted net assembly, and the local 3D workshop. The model manifest records actual triangles, embedded texture dimensions and model bounds.
 - `gallery-qa.json` and `build-qa.json`: browser and production-build evidence. Native front/back mesh captures and viewer checks live in the art library's `review/` folder.
 
-These are authoring assets for the next polish pass. They are not added to the game's shipped asset pack or collision geometry. The greybox remains the exact authority for gaps, route, height, grinding, bounce physics and camera behaviour. Paintovers may suggest scenery beyond the route, but do not authorize filling a required gap or moving a landing.
+The kit is now integrated into the local playable level and its asset pack. `art/carlisle-shipyard/integration/` records native comparisons and gameplay verification. No collision geometry was added. The greybox remains the exact authority for gaps, route, height, grinding, bounce physics and camera behaviour. Paintovers may suggest scenery beyond the route, but do not authorize filling a required gap or moving a landing.
 
 ## Three-act visual structure
 

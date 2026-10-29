@@ -1,0 +1,89 @@
+{
+  "sourceCommit": "2fa773bd70a7f8677667c6acf60afbca22a64200",
+  "courses": {
+    "main": {
+      "components": 1184,
+      "sha256": "326e69f1bb2f7beae44baccfd273223ea1ee31221a725e5aefb4bb3e303fb421",
+      "exactGameplayDataPreserved": true
+    },
+    "bonus": {
+      "components": 88,
+      "sha256": "6fc5332d165182fc1a3e8dea81944f26f25eccfb7277d699a614ab21e394ff81",
+      "exactGameplayDataPreserved": true
+    }
+  },
+  "assets": [
+    {
+      "id": "01-net-housing",
+      "sha256": "f52ece313be72cdad6915b1558cc32885c69d297d827a2f2fd939ea00e4d1667",
+      "triangles": 2056,
+      "bytes": 2347144
+    },
+    {
+      "id": "02-dock-winch",
+      "sha256": "13fc51229e26d242e961fc57bada6ab4c00f4084ab754376dfb70e85baed34dc",
+      "triangles": 4128,
+      "bytes": 3226412
+    },
+    {
+      "id": "03-rotary-hub",
+      "sha256": "294dc1ca0e7a9891c0f0d631d9f22aac0e78919e5cd9c6f69182eb2e456c5cb7",
+      "triangles": 2734,
+      "bytes": 2936584
+    },
+    {
+      "id": "04-work-skiff",
+      "sha256": "4c62baddeb60e7fc9d2355fdd5c58ae967a8be3fac75cd94ece629c44fc241db",
+      "triangles": 4421,
+      "bytes": 3455832
+    },
+    {
+      "id": "05-cargo-crane",
+      "sha256": "58fdcfe52e6f07ea351fc65c2127e928206d7f7b8c8f54a13223b3973ba5410b",
+      "triangles": 5592,
+      "bytes": 3219228
+    },
+    {
+      "id": "06-counterweight-hoist",
+      "sha256": "263a54f506b3828add11e94d5434113c87358d66f78cb09630719652a8727092",
+      "triangles": 3668,
+      "bytes": 2973520
+    },
+    {
+      "id": "07-piling-fender",
+      "sha256": "d6581a4e9160f40ff40678873db38682a233a1e913954aa4b6f0765a2e5c2588",
+      "triangles": 2414,
+      "bytes": 2705896
+    },
+    {
+      "id": "08-boathouse",
+      "sha256": "979d39e57851845e964eb5f4f90dbaecc351478aa074aaeb970adbb199a55413",
+      "triangles": 5807,
+      "bytes": 3436620
+    },
+    {
+      "id": "09-cable-spool",
+      "sha256": "5e7739ed09068c2bb00562f5d8a0f08e8db14f31bfd53bc5179e670e1bcd93bd",
+      "triangles": 1644,
+      "bytes": 2952460
+    },
+    {
+      "id": "10-dredger-pump",
+      "sha256": "05b6c35c0648815ae934d93b390b3c2c5c3c37d38c3298eb0a9043c0fe5046c7",
+      "triangles": 4202,
+      "bytes": 3142516
+    },
+    {
+      "id": "11-harbour-beacon",
+      "sha256": "3ca2e6f0b71e5c51b0df935a949caaba13bc321d8d333fa01c1d4dbbb46d8a3a",
+      "triangles": 5180,
+      "bytes": 3637872
+    },
+    {
+      "id": "12-dock-lantern",
+      "sha256": "cc1af0b7cae471c1abe45f593e30dff370a6548c67c10e02e4f37325e5f6e208",
+      "triangles": 1800,
+      "bytes": 2555968
+    }
+  ]
+}

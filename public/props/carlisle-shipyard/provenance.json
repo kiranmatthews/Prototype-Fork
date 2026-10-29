@@ -1,0 +1,89 @@
+{
+  "source": "Approved P1 library, full original meshes and embedded textures",
+  "assets": [
+    {
+      "id": "01-net-housing",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404/model.glb",
+      "file": "public/props/carlisle-shipyard/01-net-housing.glb",
+      "sha256": "f52ece313be72cdad6915b1558cc32885c69d297d827a2f2fd939ea00e4d1667",
+      "triangles": 2056
+    },
+    {
+      "id": "02-dock-winch",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed/model.glb",
+      "file": "public/props/carlisle-shipyard/02-dock-winch.glb",
+      "sha256": "13fc51229e26d242e961fc57bada6ab4c00f4084ab754376dfb70e85baed34dc",
+      "triangles": 4128
+    },
+    {
+      "id": "03-rotary-hub",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02/model.glb",
+      "file": "public/props/carlisle-shipyard/03-rotary-hub.glb",
+      "sha256": "294dc1ca0e7a9891c0f0d631d9f22aac0e78919e5cd9c6f69182eb2e456c5cb7",
+      "triangles": 2734
+    },
+    {
+      "id": "04-work-skiff",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731/model.glb",
+      "file": "public/props/carlisle-shipyard/04-work-skiff.glb",
+      "sha256": "4c62baddeb60e7fc9d2355fdd5c58ae967a8be3fac75cd94ece629c44fc241db",
+      "triangles": 4421
+    },
+    {
+      "id": "05-cargo-crane",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c/model.glb",
+      "file": "public/props/carlisle-shipyard/05-cargo-crane.glb",
+      "sha256": "58fdcfe52e6f07ea351fc65c2127e928206d7f7b8c8f54a13223b3973ba5410b",
+      "triangles": 5592
+    },
+    {
+      "id": "06-counterweight-hoist",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe/model.glb",
+      "file": "public/props/carlisle-shipyard/06-counterweight-hoist.glb",
+      "sha256": "263a54f506b3828add11e94d5434113c87358d66f78cb09630719652a8727092",
+      "triangles": 3668
+    },
+    {
+      "id": "07-piling-fender",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee/model.glb",
+      "file": "public/props/carlisle-shipyard/07-piling-fender.glb",
+      "sha256": "d6581a4e9160f40ff40678873db38682a233a1e913954aa4b6f0765a2e5c2588",
+      "triangles": 2414
+    },
+    {
+      "id": "08-boathouse",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1/model.glb",
+      "file": "public/props/carlisle-shipyard/08-boathouse.glb",
+      "sha256": "979d39e57851845e964eb5f4f90dbaecc351478aa074aaeb970adbb199a55413",
+      "triangles": 5807
+    },
+    {
+      "id": "09-cable-spool",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49/model.glb",
+      "file": "public/props/carlisle-shipyard/09-cable-spool.glb",
+      "sha256": "5e7739ed09068c2bb00562f5d8a0f08e8db14f31bfd53bc5179e670e1bcd93bd",
+      "triangles": 1644
+    },
+    {
+      "id": "10-dredger-pump",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa/model.glb",
+      "file": "public/props/carlisle-shipyard/10-dredger-pump.glb",
+      "sha256": "05b6c35c0648815ae934d93b390b3c2c5c3c37d38c3298eb0a9043c0fe5046c7",
+      "triangles": 4202
+    },
+    {
+      "id": "11-harbour-beacon",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3/model.glb",
+      "file": "public/props/carlisle-shipyard/11-harbour-beacon.glb",
+      "sha256": "3ca2e6f0b71e5c51b0df935a949caaba13bc321d8d333fa01c1d4dbbb46d8a3a",
+      "triangles": 5180
+    },
+    {
+      "id": "12-dock-lantern",
+      "source": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff/model.glb",
+      "file": "public/props/carlisle-shipyard/12-dock-lantern.glb",
+      "sha256": "cc1af0b7cae471c1abe45f593e30dff370a6548c67c10e02e4f37325e5f6e208",
+      "triangles": 1800
+    }
+  ]
+}

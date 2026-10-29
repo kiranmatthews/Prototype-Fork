@@ -1,0 +1,222 @@
+{
+  "errors": [],
+  "captures": [
+    {
+      "id": "01-foam-steps",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 880,
+        "calls": 999,
+        "triangles": 7269949,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "02-scissor-groyne",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 896,
+        "calls": 1172,
+        "triangles": 8915923,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "06-beacon-chimney",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 909,
+        "calls": 918,
+        "triangles": 7665146,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "07-tide-dial",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 923,
+        "calls": 1216,
+        "triangles": 6634887,
+        "points": 0,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "16-rigging-slingshot",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 933,
+        "calls": 737,
+        "triangles": 2879514,
+        "points": 20,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 18,
+        "models": 12,
+        "props": 1838,
+        "nets": 56,
+        "mountedMovers": 28,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "19-springtide-skippers",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 953,
+        "calls": 395,
+        "triangles": 1076563,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 1,
+        "models": 12,
+        "props": 70,
+        "nets": 5,
+        "mountedMovers": 4,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    },
+    {
+      "id": "20-spring-skiff-close",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 990,
+        "calls": 403,
+        "triangles": 1121399,
+        "points": 10,
+        "lines": 0
+      },
+      "art": {
+        "status": "ready",
+        "sections": 1,
+        "models": 12,
+        "props": 70,
+        "nets": 5,
+        "mountedMovers": 4,
+        "decorativeColliders": 0,
+        "errors": []
+      }
+    }
+  ],
+  "quick": true,
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1838,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "errors": []
+    },
+    "cones": {
+      "status": "ready",
+      "actors": 78,
+      "sites": 26,
+      "clips": [
+        "idle",
+        "walk",
+        "slash"
+      ],
+      "error": ""
+    },
+    "grounds": 334
+  },
+  "bonus": {
+    "status": "ready",
+    "sections": 1,
+    "models": 12,
+    "props": 70,
+    "nets": 5,
+    "mountedMovers": 4,
+    "decorativeColliders": 0,
+    "errors": []
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 12,
+    "props": 1838,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "errors": []
+  },
+  "gallery": {
+    "concepts": 20,
+    "inGameComparison": true
+  }
+}

@@ -5,7 +5,7 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 import {harbourPilot,harbourObservation} from './carlisle-harbour-pilot.mjs';
 const b=await build({entryPoints:['src/levels/carlisle-harbour-bonus.ts'],bundle:true,format:'esm',write:false});
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
-const data=api.CARLISLE_HARBOUR_BONUS,out='docs/carlisle-relay/harbour-bonus',rows=[];
+const data=api.CARLISLE_HARBOUR_BONUS,out=process.env.CARLISLE_OUT??'docs/carlisle-relay/harbour-bonus',rows=[];
 await mkdir(out,{recursive:true});
 try{await withSkateRuntime(async({THREE,level:l,player:p,CONST,server})=>{
  const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');assert.ok(normalizeCustomLevelData(data));

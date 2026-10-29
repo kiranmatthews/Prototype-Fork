@@ -1,0 +1,29 @@
+{
+  "errors": [],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1838,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "errors": []
+    },
+    "stamp": "Codex/sol fork · build 10-29 18:31 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 70,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "errors": []
+    },
+    "oldArtRoots": 0
+  }
+}
