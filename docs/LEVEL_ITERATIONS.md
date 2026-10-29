@@ -6278,3 +6278,28 @@ changes were fast-forwarded before final verification. No new shared-runtime
 change belongs to this repair.
 
 See [circulation evidence and source hashes](mayfield-mall/flow/README.md).
+
+
+## 30 October 2026 — Clear Skystream architecture
+
+User brief: remove the columns and other props. Removed 82 decorative meshes
+(columns, capitals, pendants, gold arches and wall ornaments) and the central
+sanctuary wall with its collider. Removed the empty architecture editor group
+and retired the regression that required that wall to block a shortcut.
+Updated the course thumbnail with the cleared three-loop cloud finale.
+
+An exact data comparison against published `d866f61d` confirms all 1,389
+remaining components and all level settings are unchanged. Cloud roads,
+collectibles, checkpoints, finish, camera lanes, sky and atmosphere are preserved.
+No shared runtime, tuning, bonus or editor-pack changes.
+
+The existing Skystream structure check, required `npm run check:levels`, production
+typecheck/build and release-size check pass (997,270,186 bytes). Chrome lite
+visual review and packaged full native/normal 720p CRT review cover the four
+former column sites and loop finale. Packaged checkpoint controls, unsupported
+fall/respawn and finish all pass with zero console errors. Evidence:
+[prop-removal](skystream-clouds/prop-removal/README.md). No full suite.
+
+Timing: inspection started about 11:18 UTC; source cleanup was playable by
+11:20 UTC (approximately two minutes). Native visual review completed by
+11:25 UTC; packaged gameplay and release validation by 11:29 UTC.

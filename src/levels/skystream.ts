@@ -7,7 +7,7 @@ import { createLoopMeshData, sampleLoop, type LoopShape } from '../loopRide';
 type P = [number, number, number];
 const C: CustomComponent[] = [];
 const lane: P[] = [];
-const IVORY = '#fff9e9', GOLD = '#dec28b', BLUE = '#557a96';
+const IVORY = '#fff9e9';
 const add = (c: CustomComponent) => C.push(c);
 const round = (n: number) => Math.round(n * 1e5) / 1e5;
 const tuple = (v: THREE.Vector3): P => v.toArray().map(round) as P;
@@ -56,21 +56,6 @@ export const SKYSTREAM_GAPS: { name: string; takeoff: P; landing: P; }[] = [
   { name: 'Mirrored original leap', takeoff: [-6, 7.5, -738], landing: [-7, .8, -756] },
 ];
 
-function visual(geometry: THREE.BufferGeometry, p: P, color: string, name: string, tex = 'solid', group = 9) {
-  const pos = geometry.getAttribute('position'), normal = geometry.getAttribute('normal'), uv = geometry.getAttribute('uv');
-  if (tex === 'skystream-marble' && uv && normal) for (let i = 0; i < pos.count; i++) {
-    if (Math.abs(normal.getY(i)) > .5) uv.setXY(i, pos.getX(i) / 6, pos.getZ(i) / 6);
-    else if (Math.abs(normal.getX(i)) > .5) uv.setXY(i, pos.getZ(i) / 6, pos.getY(i) / 6);
-    else uv.setXY(i, pos.getX(i) / 6, pos.getY(i) / 6);
-  }
-  add({ t: 'mesh', p, vertices: Array.from(pos.array).map(round),
-    indices: geometry.index ? Array.from(geometry.index.array) : undefined,
-    normals: normal ? Array.from(normal.array).map(round) : undefined,
-    uvs: uv ? Array.from(uv.array).map(round) : undefined,
-    tex, color, solid: false, edgeGrinding: false, grp: group, nm: name });
-  geometry.dispose();
-}
-
 function route(name: string, points: P[], group: number, width = 6.2, roll = 0) {
   const origin = points[0];
   add({ t: 'vertramp', p: [...origin], pts: points.map((p,i) => [p[0] - origin[0], p[2] - origin[2], 0, p[1] - origin[1], roll * Math.min(1, i / 2, (points.length - 1 - i) / 2)]),
@@ -115,7 +100,6 @@ route('Loop summit landing', [[80, -225, -1634], [80, -225, -1645]], 6, 8);
 
 export const SKYSTREAM_LOOP = { entry: [80, -330, -1760] as P, radius: 34, width: 12, offset: 48,
   exit: [128, -330, -1760] as P };
-export const SKYSTREAM_WALL = { p: [104, -346, -1760] as P, s: [4.5, 60, 88] as P };
 
 // Cosine descent has horizontal tangents at both ends. It supplies all loop
 // energy through the existing gravity-track physics; there is no speed pad.
@@ -141,17 +125,6 @@ add({ t: 'mesh', p: SKYSTREAM_LOOP.entry, ...createLoopMeshData(34, 12, 48, 192)
 for (let i = 1; i <= 96; i++) {
   const q = sampleLoop(SKYSTREAM_LOOP, i / 96 * Math.PI * 2).point;
   lane.push(q.map((v, k) => v + SKYSTREAM_LOOP.entry[k]) as P);
-}
-// A visible, solid barrier separates entry and exit. No completion counter
-// or invisible gate validation is used to make this obstacle compulsory.
-add({ t: 'wall', p: SKYSTREAM_WALL.p, s: SKYSTREAM_WALL.s, tex: 'skystream-marble', color: IVORY, grp: 6, nm: 'Aureole central sanctuary wall' });
-for (const x of [101.65, 106.35]) {
-  visual(new THREE.BoxGeometry(.22, 3, 90), [x, -288, -1760], GOLD, 'Sanctuary wall gilt cornice', 'metal');
-  for (const z of [-1796, -1778, -1760, -1742, -1724]) {
-    visual(new THREE.CylinderGeometry(.7, .9, 58, 12), [x, -316, z], '#d5deeb', 'Sanctuary wall fluted pilaster', 'skystream-marble');
-    const medallion = new THREE.TorusGeometry(3.8, .24, 6, 40); medallion.rotateY(Math.PI / 2);
-    visual(medallion, [x, -296, z], GOLD, 'Sanctuary wall sun seal', 'metal');
-  }
 }
 // Two further rings extend the finale: upright / wall ride / upright.
 export const SKYSTREAM_LOOPS: (LoopShape & { entry: P; exit: P; name: string })[] = [
@@ -235,24 +208,6 @@ for (const [road, name, start, spacing] of [
 // The flat Constellation launch, Sanctuary Leap, Heavenfall, the loop and its
 // short exit need carried speed. Leave them open; crate hits spend momentum.
 
-// Large carved columns, stepped capitals and open gilt crowns supply a
-// consistent architectural scale. They remain below/beside playable edges.
-for (const p of [[-14,150,9],[14,150,9],[-16,.2,-854],[16,.2,-854],[64,-225,-1640],[96,-225,-1640],[114,-432,-2154],[150,-432,-2154]] as P[]) {
-  const [x,y,z] = p;
-  visual(new THREE.CylinderGeometry(1.8, 2.2, 25, 12), [x,y-12.5,z], '#e9e5db', 'Cloud pier fluted shaft', 'skystream-marble');
-  for (const [offset,r,h] of [[-.45,3.5,.9],[-1.25,2.9,.65],[-2,2.5,.45]] as const)
-    visual(new THREE.CylinderGeometry(r,r+.12,h,12), [x,y+offset,z], IVORY, 'Cloud pier stepped capital', 'skystream-marble');
-  visual(new THREE.TorusGeometry(2.05,.2,6,32).rotateX(Math.PI/2), [x,y-2.8,z], GOLD, 'Cloud pier gold collar', 'metal');
-  visual(new THREE.ConeGeometry(2.2,9,12), [x,y-29.5,z], BLUE, 'Floating pier lapis pendant');
-}
-for (const [x,y,z] of [[0,150,-2],[0,.2,-849],[80,-225,-1639],[132,-432,-2154]] as P[]) {
-  const arch = new THREE.TorusGeometry(12.8,.55,8,48,Math.PI);
-  visual(arch,[x,y+1.6,z],GOLD,'Open sanctuary crown arch','metal');
-  for(const side of [-1,1]) {
-    visual(new THREE.CylinderGeometry(.6,.8,7,12),[x+side*12.8,y-1.9,z],IVORY,'Crown arch marble uprights','skystream-marble');
-  }
-}
-
 for (const part of SKYSTREAM_PARTS) {
   // Fruit follows the main route. Every halo also has a shorter airborne
   // trail, making the optional edge cut legible through the cloud fog.
@@ -288,7 +243,6 @@ export const SKYSTREAM_LEVEL: CustomLevelData = {
   atmosphere:{...SKY_BRIDGE_LEVEL.atmosphere!,fogNear:90,fogFar:440,fogColor:'#eef4f6',drawDistance:680,sunDirection:[-.34,.38,-.86],ambientIntensity:.85,sunIntensity:2.1},relicTime:180,medalTimes:{gold:180,silver:210,bronze:250},
   groups:[{id:1,nm:'I · mirrored Saved Slipstream'},{id:2,nm:'II · pearl halo'},{id:3,nm:'III · cloud eye'},
     {id:4,nm:'IV · broken constellation and seraph coil'},{id:5,nm:'V · falling feathers'},
-    {id:6,nm:'VI · three cloud rings'},{id:7,nm:'VII · last flight'},{id:8,nm:'Sanctuaries and shortcuts'},
-    {id:9,nm:'Cloud sanctuary architecture',editorOnly:true}],
+    {id:6,nm:'VI · three cloud rings'},{id:7,nm:'VII · last flight'},{id:8,nm:'Sanctuaries and shortcuts'}],
   components:C,
 };

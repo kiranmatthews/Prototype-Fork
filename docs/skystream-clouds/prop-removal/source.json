@@ -1,0 +1,21 @@
+{
+  "base": "d866f61d",
+  "before": 1472,
+  "after": 1389,
+  "removed": 83,
+  "removedNames": [
+    "Aureole central sanctuary wall",
+    "Sanctuary wall gilt cornice",
+    "Sanctuary wall fluted pilaster",
+    "Sanctuary wall sun seal",
+    "Cloud pier fluted shaft",
+    "Cloud pier stepped capital",
+    "Cloud pier gold collar",
+    "Floating pier lapis pendant",
+    "Open sanctuary crown arch",
+    "Crown arch marble uprights"
+  ],
+  "remainingComponentSHA256": "89497886a813d9a4493fcdabaca35e3b0af3d6d8fc8991b0eb6770ac9d81dee9",
+  "environmentUnchanged": true,
+  "loops": 3
+}
