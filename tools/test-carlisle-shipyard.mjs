@@ -11,9 +11,15 @@ for(const [name,file,key,expected] of [
  ['bonus','carlisle-harbour-bonus','CARLISLE_HARBOUR_BONUS','6fc5332d165182fc1a3e8dea81944f26f25eccfb7277d699a614ab21e394ff81']]){
  const compiled=await build({entryPoints:[`src/levels/${file}.ts`],bundle:true,format:'esm',write:false});
  const api=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
- const data=api[key],actual=hash(JSON.stringify({components:data.components,spawn:data.spawn,killY:data.killY}));
+ const data=api[key];
+ // The subsequent, explicitly requested airborne cargo layer is independently
+ // exercised by test-carlisle-air-cargo. The original course stays protected.
+ const airCargo=data.components.filter(c=>c.nm?.startsWith('Air cargo · '));
+ assert.ok(airCargo.every(c=>c.t==='crate'));
+ const components=data.components.filter(c=>!airCargo.includes(c));
+ const actual=hash(JSON.stringify({components,spawn:data.spawn,killY:data.killY}));
  assert.equal(actual,expected,`${name}: the art pass changed course data`);
- report.courses[name]={components:data.components.length,sha256:actual,exactGameplayDataPreserved:true};
+ report.courses[name]={components:data.components.length,airCargoCrates:airCargo.length,sha256:actual,originalGameplayDataPreserved:true};
 }
 const provenance=JSON.parse(await readFile('public/props/carlisle-shipyard/provenance.json','utf8'));
 for(const asset of provenance.assets){
@@ -26,4 +32,4 @@ for(const asset of provenance.assets){
 }
 assert.equal(report.assets.length,12);
 await writeFile('art/carlisle-shipyard/integration/source-validation.json',JSON.stringify(report,null,2)+'\n');
-console.log('PASS exact main/bonus course data and all 12 complete authored runtime models.');
+console.log('PASS original main/bonus course data, authorized air-cargo additions and all 12 complete authored runtime models.');

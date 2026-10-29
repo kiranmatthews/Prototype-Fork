@@ -1,0 +1,518 @@
+{
+  "flights": [
+    {
+      "name": "Lift parcel cloud",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.4517794881417347,
+      "broken": 7,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.166666666666667,
+      "at": [
+        81.07199140417298,
+        187.35811466641596,
+        -554.4139415266139
+      ]
+    },
+    {
+      "name": "Lift parcel cloud",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.926007490969542,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.166666666666667,
+      "at": [
+        80.16318674591872,
+        187.35811466641596,
+        -554.425311353409
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.8833449748850117,
+      "broken": 4,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.3,
+      "at": [
+        82.46603440211545,
+        190.39758210870974,
+        -719.3537451561937
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9184177044335997,
+      "broken": 1,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.366666666666666,
+      "at": [
+        82.46452319686723,
+        190.39758210870974,
+        -719.3050406740111
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9330408727159616,
+      "broken": 8,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.4,
+      "at": [
+        -67.74262475686925,
+        223.02860489124177,
+        -1147.0077128609817
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9997487673480243,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.683333333333334,
+      "at": [
+        -65.26851650774242,
+        223.02860489124177,
+        -1148.1291453896413
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9431813911205866,
+      "broken": 4,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.066666666666666,
+      "at": [
+        -57.639624793343785,
+        138.46658973701014,
+        -1897.0355937343274
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 2.08910024686042,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.066666666666666,
+      "at": [
+        -57.5885575262947,
+        138.46658973701014,
+        -1896.8969821594646
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 2.034089484405371,
+      "broken": 6,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.616666666666666,
+      "at": [
+        115.3915511118709,
+        102.77066213812614,
+        -2310.8045334573294
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.7623451745531786,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.616666666666666,
+      "at": [
+        117.7562745695176,
+        102.77066213812614,
+        -2310.5926701424623
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9873262502684848,
+      "broken": 4,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.916666666666667,
+      "at": [
+        61.27979795151197,
+        98.42936168868432,
+        -2740.18083075211
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9866756722699312,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.916666666666667,
+      "at": [
+        61.23902102748284,
+        98.42936168868432,
+        -2740.14134905255
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 0,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.671625639239466,
+      "broken": 6,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 5.766666666666667,
+      "at": [
+        -118.99158637944026,
+        35.94944841986361,
+        -3406.193633927078
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 0,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.6697184471934892,
+      "broken": 1,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 5.833333333333333,
+      "at": [
+        -118.99155271017959,
+        35.94944841986361,
+        -3406.195937610037
+      ]
+    },
+    {
+      "name": "Lift parcel cloud",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.4517794881417347,
+      "broken": 7,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.166666666666667,
+      "at": [
+        81.07199140417298,
+        187.35811466641596,
+        -554.4139415266139
+      ]
+    },
+    {
+      "name": "Lift parcel cloud",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.926007490969542,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.166666666666667,
+      "at": [
+        80.16318674591872,
+        187.35811466641596,
+        -554.425311353409
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.8833449748850117,
+      "broken": 4,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.3,
+      "at": [
+        82.46603440211545,
+        190.39758210870974,
+        -719.3537451561937
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9184177044335997,
+      "broken": 1,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.366666666666666,
+      "at": [
+        82.46452319686723,
+        190.39758210870974,
+        -719.3050406740111
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9330408727159616,
+      "broken": 8,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.4,
+      "at": [
+        -67.74262475686925,
+        223.02860489124177,
+        -1147.0077128609817
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9997487673480243,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.683333333333334,
+      "at": [
+        -65.26851650774242,
+        223.02860489124177,
+        -1148.1291453896413
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9431813911205866,
+      "broken": 4,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.066666666666666,
+      "at": [
+        -57.639624793343785,
+        138.46658973701014,
+        -1897.0355937343274
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 2.08910024686042,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.066666666666666,
+      "at": [
+        -57.5885575262947,
+        138.46658973701014,
+        -1896.8969821594646
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 2.034089484405371,
+      "broken": 6,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.616666666666666,
+      "at": [
+        115.3915511118709,
+        102.77066213812614,
+        -2310.8045334573294
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.7623451745531786,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.616666666666666,
+      "at": [
+        117.7562745695176,
+        102.77066213812614,
+        -2310.5926701424623
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9873262502684848,
+      "broken": 4,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.916666666666667,
+      "at": [
+        61.27979795151197,
+        98.42936168868432,
+        -2740.18083075211
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.9866756722699312,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.916666666666667,
+      "at": [
+        61.23902102748284,
+        98.42936168868432,
+        -2740.14134905255
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 2.3,
+      "avoid": false,
+      "launched": true,
+      "landed": true,
+      "distance": 1.671625639239466,
+      "broken": 6,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 5.733333333333333,
+      "at": [
+        -118.99158637944026,
+        35.94944841986361,
+        -3406.193633927078
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 2.3,
+      "avoid": true,
+      "launched": true,
+      "landed": true,
+      "distance": 1.7137649572374163,
+      "broken": 0,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 6.166666666666667,
+      "at": [
+        -119.07395853525593,
+        35.94944841986361,
+        -3406.2016320697658
+      ]
+    }
+  ],
+  "errors": [],
+  "directNitro": {
+    "state": "dead",
+    "deaths": 1
+  },
+  "clearSwitch": {
+    "nitros": 22,
+    "remaining": 0
+  },
+  "passed": true
+}

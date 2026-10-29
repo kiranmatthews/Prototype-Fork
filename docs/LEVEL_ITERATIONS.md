@@ -6648,3 +6648,40 @@ joined variants are tracked. Only Carlisle-specific presentation code changed.
 No level-data audit or full suite was needed. Local checkpoint only; no push,
 integration, coordinator message or publication. The broader polish goal remains
 active pending the user's continuing playtest rounds.
+
+
+## Carlisle airborne cargo and nitro rows — 30 October 2026
+
+Prompt-to-playable approximately 10 minutes; final local validation approximately
+30 minutes. Added seven occasional formations across 55 native trampoline
+transfers: parcel clouds, hanging stairs and pallets, offset nitro rows, a split
+row with a central opening, and a late port-side reward beside the moving
+Rigging rebound. Forty wooden crates and 22 native nitros, plus a green clear
+switch near the home harbour. Total level count is 270 crates / 1,247 components.
+The first new cluster is on Lift and skip's second bounce; the opening remains
+clear. The Storm reward sits beyond its bar so returning toward the catch after
+a spin does not clip an explosive end crate.
+
+Source-only additions in `src/levels/carlisle-air-cargo.ts`, called by the main
+level. The exact earlier component/spawn/killY fingerprint is preserved when
+these 63 components are removed. Player, camera, shared Level/tuning, slippery
+slopes, dry deck art, native spring values, all ground meshes, existing cargo
+bridges, rail routes and bonus source are unchanged. Native boxes retain their
+usual break, stack, settling, grind and detonation behavior. No new assets or
+paid services. The public editor snapshot is unchanged.
+
+Validated 28 collect/bypass flights across two machinery phases, all 55 native
+transfers, zero neutral horizontal drift, real lethal contact with the Storm
+nitro row, and the finish switch clearing every nitro. Actual keyboard tests
+passed in lite, compiled native 1920x1080 and normal 480p/CRT; all seven formations
+were reviewed under harbour lighting, with no console errors. The external
+keyboard test needed a wider steering stop band to avoid delayed-input chatter;
+this changed only the test driver. A tight initial Storm spin clearance was
+corrected in level data before the final passing checks.
+
+`npm run check:levels`, `npm run build`, original-course/asset verification and
+diff checks passed. Build: 1,773 files / 1,023.9MiB; offline version
+38993932d425800a9a29; `Codex/sol fork · build 10-29 21:39 UTC`.
+Evidence: `docs/carlisle-relay/air-cargo/`. No full-suite run or claim of one
+continuous four-kilometre browser clear. Local checkpoint only; publication
+remains held, with no coordinator message or push.
