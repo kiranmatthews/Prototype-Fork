@@ -1,0 +1,287 @@
+{
+  "sourceTriangles": 23974,
+  "originalTriangles": 29553,
+  "slipperySurfacesExcluded": 18,
+  "decks": 45,
+  "sections": 414,
+  "triangles": 6364575,
+  "samples": 335169,
+  "outside": 0,
+  "roundingDistance": 0,
+  "outsideDetails": [],
+  "maxAbove": 0.04130569086049718,
+  "minBelow": -1.6542701219532603,
+  "fitMilliseconds": 26358.24545900001,
+  "perDeck": [
+    {
+      "name": "Lift exit",
+      "sections": 5,
+      "faces": 47913,
+      "maxAbove": 0.039982879684657746
+    },
+    {
+      "name": "Pinwheel dock",
+      "sections": 6,
+      "faces": 96443,
+      "maxAbove": 0.03999262992468289
+    },
+    {
+      "name": "Dredger middle terrace",
+      "sections": 8,
+      "faces": 122115,
+      "maxAbove": 0.039988348738120294
+    },
+    {
+      "name": "Counterweight exit",
+      "sections": 6,
+      "faces": 79540,
+      "maxAbove": 0.039987287857286447
+    },
+    {
+      "name": "Foam steps · start · downhill slick · safe 1",
+      "sections": 12,
+      "faces": 182376,
+      "maxAbove": 0.03998952160148406
+    },
+    {
+      "name": "Foam steps · start · downhill slick · safe 3",
+      "sections": 3,
+      "faces": 18381,
+      "maxAbove": 0.012633176301022786
+    },
+    {
+      "name": "Foam catch · downhill slick · safe 1",
+      "sections": 8,
+      "faces": 99439,
+      "maxAbove": 0.039992185090085286
+    },
+    {
+      "name": "Foam catch · downhill slick · safe 3",
+      "sections": 15,
+      "faces": 230993,
+      "maxAbove": 0.039989649461290355
+    },
+    {
+      "name": "Scissor abutment · downhill slick · safe 1",
+      "sections": 3,
+      "faces": 47459,
+      "maxAbove": 0.039989649461290355
+    },
+    {
+      "name": "Scissor abutment · downhill slick · safe 3",
+      "sections": 3,
+      "faces": 15519,
+      "maxAbove": 0.012631126609790044
+    },
+    {
+      "name": "Groyne catch · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 81996,
+      "maxAbove": 0.039990135398852544
+    },
+    {
+      "name": "Groyne catch · downhill slick · safe 3",
+      "sections": 11,
+      "faces": 182119,
+      "maxAbove": 0.03998287968468617
+    },
+    {
+      "name": "Lift catch · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 85514,
+      "maxAbove": 0.039982879684657746
+    },
+    {
+      "name": "Lift catch · downhill slick · safe 3",
+      "sections": 8,
+      "faces": 130532,
+      "maxAbove": 0.03998992469558971
+    },
+    {
+      "name": "Socket catch · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 85766,
+      "maxAbove": 0.039989924695561285
+    },
+    {
+      "name": "Socket catch · downhill slick · safe 3",
+      "sections": 11,
+      "faces": 191919,
+      "maxAbove": 0.03998996731550619
+    },
+    {
+      "name": "Winch exit · downhill slick · safe 1",
+      "sections": 8,
+      "faces": 99817,
+      "maxAbove": 0.03998996731547777
+    },
+    {
+      "name": "Winch exit · downhill slick · safe 3",
+      "sections": 4,
+      "faces": 25201,
+      "maxAbove": 0.0399863607683244
+    },
+    {
+      "name": "Winch catch · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 86485,
+      "maxAbove": 0.039986360768352824
+    },
+    {
+      "name": "Winch catch · downhill slick · safe 3",
+      "sections": 8,
+      "faces": 145872,
+      "maxAbove": 0.039994363843220526
+    },
+    {
+      "name": "Beacon catch · downhill slick · safe 1",
+      "sections": 8,
+      "faces": 111164,
+      "maxAbove": 0.039994363843220526
+    },
+    {
+      "name": "Beacon catch · downhill slick · safe 3",
+      "sections": 21,
+      "faces": 325776,
+      "maxAbove": 0.03998423393710482
+    },
+    {
+      "name": "Dial receiving quay · downhill slick · safe 1",
+      "sections": 11,
+      "faces": 171949,
+      "maxAbove": 0.03998423393713324
+    },
+    {
+      "name": "Dial receiving quay · downhill slick · safe 3",
+      "sections": 4,
+      "faces": 27928,
+      "maxAbove": 0.039982457398650695
+    },
+    {
+      "name": "Dial catch · dry connector · safe 1",
+      "sections": 16,
+      "faces": 236722,
+      "maxAbove": 0.03999262992471131
+    },
+    {
+      "name": "Pinwheel catch · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 96350,
+      "maxAbove": 0.03999262992468289
+    },
+    {
+      "name": "Pinwheel catch · downhill slick · safe 3",
+      "sections": 11,
+      "faces": 196222,
+      "maxAbove": 0.039988348738120294
+    },
+    {
+      "name": "Dredger upper terrace · downhill slick · safe 1",
+      "sections": 10,
+      "faces": 171679,
+      "maxAbove": 0.04130569086049718
+    },
+    {
+      "name": "Dredger upper terrace · downhill slick · safe 3",
+      "sections": 5,
+      "faces": 39904,
+      "maxAbove": 0.03998254053578876
+    },
+    {
+      "name": "Discharge catch · dry connector · safe 1",
+      "sections": 18,
+      "faces": 261905,
+      "maxAbove": 0.03999016993032001
+    },
+    {
+      "name": "Crane gantry · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 73913,
+      "maxAbove": 0.03999016993032001
+    },
+    {
+      "name": "Crane gantry · downhill slick · safe 3",
+      "sections": 12,
+      "faces": 173449,
+      "maxAbove": 0.03998728785730066
+    },
+    {
+      "name": "Stack catch · downhill slick · safe 1",
+      "sections": 8,
+      "faces": 107798,
+      "maxAbove": 0.039987287857286447
+    },
+    {
+      "name": "Stack catch · downhill slick · safe 3",
+      "sections": 8,
+      "faces": 145443,
+      "maxAbove": 0.03998955884051725
+    },
+    {
+      "name": "Harbour departure · downhill slick · safe 1",
+      "sections": 3,
+      "faces": 38726,
+      "maxAbove": 0.03998955884050304
+    },
+    {
+      "name": "Harbour departure · downhill slick · safe 3",
+      "sections": 9,
+      "faces": 154883,
+      "maxAbove": 0.039986772943649385
+    },
+    {
+      "name": "Headland catch · dry connector · safe 1",
+      "sections": 15,
+      "faces": 280557,
+      "maxAbove": 0.039986772943649385
+    },
+    {
+      "name": "Turbine catch · downhill slick · safe 1",
+      "sections": 6,
+      "faces": 88397,
+      "maxAbove": 0.039986772943649385
+    },
+    {
+      "name": "Turbine catch · downhill slick · safe 3",
+      "sections": 19,
+      "faces": 305067,
+      "maxAbove": 0.03998875578012928
+    },
+    {
+      "name": "Pendulum receiving quay · downhill slick · safe 1",
+      "sections": 9,
+      "faces": 145009,
+      "maxAbove": 0.03998875578012928
+    },
+    {
+      "name": "Pendulum receiving quay · downhill slick · safe 3",
+      "sections": 8,
+      "faces": 133711,
+      "maxAbove": 0.03998868340787709
+    },
+    {
+      "name": "Rigging catch · downhill slick · safe 1",
+      "sections": 7,
+      "faces": 97475,
+      "maxAbove": 0.03998868340787709
+    },
+    {
+      "name": "Rigging catch · downhill slick · safe 3",
+      "sections": 8,
+      "faces": 140760,
+      "maxAbove": 0.03998883565266809
+    },
+    {
+      "name": "Eye catch · dry connector · safe 1",
+      "sections": 17,
+      "faces": 273058,
+      "maxAbove": 0.03998883565267164
+    },
+    {
+      "name": "Home harbour · dry connector · safe 1",
+      "sections": 26,
+      "faces": 511331,
+      "maxAbove": 0.03998915354410926
+    }
+  ]
+}

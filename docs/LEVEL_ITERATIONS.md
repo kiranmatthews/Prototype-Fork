@@ -6682,3 +6682,335 @@ landing, saved migration and catalog checks pass. Full MAX/native frame stepping
 shows pedalling while inverted, and normal 720p gameplay returns through gather
 and landing to idle. Production build passes. No physics or camera changes.
 Evidence: `docs/carlisle-launch-review/bicycle-somersault-native.jpg`. Local only.
+
+## Carlisle solid timber decks; slippery surfaces preserved — 30 October 2026
+
+Recorded deck correction cycle: approximately 85 minutes from the first new
+reference through generation, fitting revisions and a locally validated playable
+result. Earlier individual-board and flattened fits were rejected and are not
+part of the final increment. The additional Crash 4 video informed broad joined
+surfaces and substantial outer construction; the actual Merchant Wreck opening
+remains the timber style reference.
+
+Generated complete P2 deck assemblies with thick beveled planks, carved grain,
+nails and modeled under-beams. Dry playable surfaces use one uniform physical
+scale and adjacent modules, trimmed to the original support footprints. Fixed
+joining cuts remove wide channels caused by protruding under-beams. No flattened
+Y scale or oversized stretched planks. Broad decorative quays use the wider P2
+assembly. All original GLBs and textures are retained; instancing/culling uses
+the same geometry at every view and reflection distance.
+
+All 18 slippery descents retain the original navy wet surface, grip and slide
+gravity. Complete main/bonus source data, shared player/level/tuning code, nets,
+cones and public pack remain byte-identical to the prior checkpoint. Dry art
+reaches about 1.65m below the support and at most 4.2cm above it; no new colliders.
+The bonus timber orientation follows its +X travel and exposes a solid front.
+
+Validation: exact gameplay and twelve original prop fingerprints; 45 dry deck
+footprints and 335,169 geometry samples with zero unsupported overhangs; embedded
+texture-byte parity; type-check/build; compiled native 1920x1080 and normal
+480p/CRT browser review; all 18 real wet materials; keyboard walking; main/bonus
+loading and return; zero console errors. Normal arrival frame sample: 16.8ms
+median, 20.5ms p95, not a whole-course performance guarantee. Build produced
+1,772 files / 1,023.9MiB, offline version 601a1058b6190db0367e. Evidence and exact
+asset/task hashes: `art/carlisle-shipyard/deck-replacement/` and
+`public/props/carlisle-decks/provenance.json`.
+
+Three Studio models and two texture steps used 325 existing plan credits,
+24,810 → 24,485; cumulative known props/cone/deck spend 1,105 / 3,000 authorized.
+No API purchase. H3.1 is local comparison evidence; the two P2 originals and
+joined variants are tracked. Only Carlisle-specific presentation code changed.
+No level-data audit or full suite was needed. Local checkpoint only; no push,
+integration, coordinator message or publication. The broader polish goal remains
+active pending the user's continuing playtest rounds.
+
+
+## Carlisle airborne cargo and nitro rows — 30 October 2026
+
+Prompt-to-playable approximately 10 minutes; final local validation approximately
+30 minutes. Added seven occasional formations across 55 native trampoline
+transfers: parcel clouds, hanging stairs and pallets, offset nitro rows, a split
+row with a central opening, and a late port-side reward beside the moving
+Rigging rebound. Forty wooden crates and 22 native nitros, plus a green clear
+switch near the home harbour. Total level count is 270 crates / 1,247 components.
+The first new cluster is on Lift and skip's second bounce; the opening remains
+clear. The Storm reward sits beyond its bar so returning toward the catch after
+a spin does not clip an explosive end crate.
+
+Source-only additions in `src/levels/carlisle-air-cargo.ts`, called by the main
+level. The exact earlier component/spawn/killY fingerprint is preserved when
+these 63 components are removed. Player, camera, shared Level/tuning, slippery
+slopes, dry deck art, native spring values, all ground meshes, existing cargo
+bridges, rail routes and bonus source are unchanged. Native boxes retain their
+usual break, stack, settling, grind and detonation behavior. No new assets or
+paid services. The public editor snapshot is unchanged.
+
+Validated 28 collect/bypass flights across two machinery phases, all 55 native
+transfers, zero neutral horizontal drift, real lethal contact with the Storm
+nitro row, and the finish switch clearing every nitro. Actual keyboard tests
+passed in lite, compiled native 1920x1080 and normal 480p/CRT; all seven formations
+were reviewed under harbour lighting, with no console errors. The external
+keyboard test needed a wider steering stop band to avoid delayed-input chatter;
+this changed only the test driver. A tight initial Storm spin clearance was
+corrected in level data before the final passing checks.
+
+`npm run check:levels`, `npm run build`, original-course/asset verification and
+diff checks passed. Build: 1,773 files / 1,023.9MiB; offline version
+38993932d425800a9a29; `Codex/sol fork · build 10-29 21:39 UTC`.
+Evidence: `docs/carlisle-relay/air-cargo/`. No full-suite run or claim of one
+continuous four-kilometre browser clear. Local checkpoint only; publication
+remains held, with no coordinator message or push.
+
+
+## Carlisle tidal water and hull wash — 30 October 2026
+
+Approximately 10 minutes to the first playable visual pass and 22 minutes to
+final validation. Replaced the dense diagonal sea pattern with irregular
+ripples at four scales over a restrained broad swell. The high bounce view
+exposed crosshatching in the first revision; analytic noise gradients removed
+it before handoff. Navy water now carries view-dependent orange lamp glints
+and a procedural sky reflection. Subpixel filtering avoids distant shimmer.
+
+Solid torus foam around piles became broken, translucent expanding wash with
+no depth write or shadow. There are 1,388 static patches along the main harbour;
+the bonus has 54 static patches plus four washes parented to the existing
+boats, preserving their native render interpolation and constant waterline.
+Only Carlisle presentation changed. The authored water geometry, collision,
+14 protected player/level/camera/traction/net/timber/cone source files, all
+18 wet slopes and seven airborne cargo encounters remain byte-identical to
+the preceding checkpoint. All authored prop geometry remains complete at all
+viewing distances. No asset generation or credit spend.
+
+Validated original course and twelve prop fingerprints; production build;
+lite shader review; final compiled native 1920x1080 and normal 480p/CRT;
+arrival/low-water/aerial/Storm/bonus views; four moving waterline washes;
+main-to-bonus-to-main reload; keyboard walking and the Storm nitro transfer
+with four crates collected, zero deaths/bails and zero console errors. Final
+normal arrival sample: 16.7 ms median / 18.2 ms p95 over 119 frames, not a
+whole-course performance guarantee. No level data changed, so no repeated
+level audit or full suite was run.
+
+Build: 1,773 files / 1,023.9MiB; offline version f3a257aedee344b4349f;
+`Codex/sol fork · build 10-29 22:12 UTC`. Comparison captures and exact source
+hashes are in `art/carlisle-shipyard/water-review/`. Local checkpoint only;
+publication remains held. The broader polish goal remains active.
+
+
+## Carlisle modeled dune and marsh banks — 30 October 2026
+
+Approximately 47 minutes to the first playable visual pass and 58 minutes to
+final validation, including Imagegen/Tripo generation and export. Replaced the
+distant flattened-sphere shore and bare poles with two full modeled barrier
+islands: eroded dune crests with sea oats, and undercut marsh banks with exposed
+roots and grassy hummocks. Thirty-two unequal placements form sheltered reaches
+and open inlets, with wider gaps in the final act. Cool taupe/green forms retain
+the navy/orange early-night presentation.
+
+Uniform asset scales preserve their proportions. An additive fit follows the
+actual rendered water profile while retaining all modeled relief, indices and
+UVs. Foam follows the triangle–waterline intersection. The source models have
+100,707 triangles; their placements retain 1,657,437 triangles, at every viewing
+distance and in reflections. No LOD or decimation. All 2,203,710 placed vertices
+passed relief/normal/clearance checks. Minimum X separation from the course at
+matching Z is 253.4m. The banks add no collision or traversable surfaces.
+
+Imagegen references, exact prompts, full downloaded GLBs, Studio screenshots,
+hashes and provenance are retained. Existing Tripo Studio plan spend: dune
+100 mesh + 30 texture; marsh 100 mesh + 30 texture; 260 total. Observed balance
+24,485 to 24,225. Known cumulative spend 1,365; no API usage purchase or top-up.
+Studio asset IDs and the distinction from unexposed internal texture task IDs
+are recorded in the credit ledger.
+
+Sixteen protected gameplay/prior-art source files remain byte-identical,
+including player, shared Level, main/camera, tuning, native course and bonus,
+air/ground cargo, wet slopes, timber, reactive nets and cones. All 18 slopes
+remain wet. Source/asset fingerprints, focused geometry check, build, lite
+load/shader check, six compiled native 1920x1080 views, normal 480p/CRT,
+main/bonus/main disposal/reload, and walking pass with zero console errors.
+A real-keyboard Storm crosswind bounce collects all four crates, avoids nitro
+and reaches the next spring with zero deaths/bails. The first lite harness run
+expected native resolution; its assertion was corrected to the documented
+960x540 lite output before the passing run. No game rendering change was needed.
+
+Normal arrival sample: 16.7ms median / 17.3ms p95 over 119 frames; not a whole-
+course performance claim. No level data changed, so no repeated level audit or
+full suite was run. Build: 1,776 files / 1,055.6MiB, offline version
+bc4336fd6a484fcf672d, `Codex/sol fork · build 10-29 23:12 UTC`. Both generated
+GLBs remain byte-identical in the compiled output. Evidence:
+`art/carlisle-shipyard/coastal-banks/`. Local checkpoint only; publication held.
+
+
+## Carlisle visible blue-hour sky — 30 October 2026
+
+Approximately 11 minutes to the first playable sky repair and 28 minutes to
+final validation. The existing 4.5km sky sphere was entirely outside the main
+850m and bonus 450m far planes, leaving a flat fog background. The compiled
+baseline exposed 100% clear colour at 300m/850m and only rendered the sky at
+6km. Replaced that backdrop renderer with angular rays derived from each
+render pass's camera; the authored gameplay lens and draw distance are intact.
+
+Two unequal cloud layers now drift over dark navy with restrained copper
+afterglow, a small cool moon and sparse filtered stars. Water uses the same sky
+radiance and cloud clock, retaining existing warm lantern paths. The horizon
+matches distant scenery fog. A thin horizon artifact found in the first lite
+pass was fixed by evaluating star derivatives over a finite coordinate field
+on both sides of the horizon. No generated assets or generation-credit spend.
+
+All nine compiled native sky probes have complete coverage, zero black pixels
+and the correct pass camera matrix. Far planes of 300m/850m/6km and a large
+camera translation produce identical sky pixels; rotation, off-centre
+projection and later cloud phase change them as intended. Reviewed four main
+1920x1080 harbour/bounce views, the moving-boat bonus, the reflected-camera sky
+and normal 480p/CRT after main-to-bonus-to-main reload. Zero console errors.
+
+Sixteen protected source files remain byte-identical, including player,
+camera/main, tuning, native course/bonus, air cargo, wet slopes, solid timber,
+reactive nets, cones and modeled coastal banks. Original course and twelve prop
+fingerprints, typecheck and production build pass. All 18 slopes remain wet;
+334 ground meshes, 270 crates, 56 nets and 28 main/four bonus movers remain.
+No new traversal run or level-data/full-suite audit was needed for this
+presentation change. All authored prop geometry remains complete.
+
+Normal arrival sample: 16.7ms median / 17.9ms p95 across 119 frames, not a
+whole-course performance claim. Build: 1,776 files / 1,055.6MiB, offline version
+28139ea12fc2fbafa078, `Codex/sol fork · build 10-29 23:39 UTC`. Before/after
+images, focused browser tool and exact protected hashes are recorded in
+`art/carlisle-shipyard/atmosphere/`. Local checkpoint only; publication held.
+
+
+## Carlisle complete fishing vessels — 30 October 2026
+
+Approximately 22 minutes to the first playable fleet and 53 minutes to final
+validation, including Imagegen/Tripo generation, export and placement repairs.
+Replaced the six main-course and two bonus scenic skiff/box-cabin assemblies
+with a complete navy/orange fishing vessel: curved planked hull, framed cabin,
+booms, rigging, net drum, fenders and deck cargo. Unequal gentle heave and rotation
+phases, masked warm windows and water-plane hull wash give the fleet movement.
+The existing light/reflection pool follows each cabin.
+
+The original full GLB is uniformly scaled to 36m length with a 3.6m draft.
+All 51,177 triangles, 70,464 vertices and the 8K texture are retained, including
+in reflections; no LOD, decimation or axis stretching. The first native review
+prompted a deeper draft and a tighter emissive mask to remove deck-detail glow.
+Two inherited berths overlapped quay supports. Moving them 34m outboard, and
+the crane vessel another 28m west, clears the complete hull bounds. Final main
+minimum support clearance is 7.41m; the repaired berths clear by over 10m.
+
+Existing Tripo Studio plan spend: 100 mesh + 30 texture = 130 credits. Observed
+balance 24,225 to 24,095; known cumulative spend 1,495. No API purchase/top-up.
+The asset ID, exact Imagegen prompts, reference, Studio screenshot and original
+download hash are retained in `art/carlisle-shipyard/fishing-fleet/` and the
+adjacent public asset provenance. The export observation timed out, but the
+completed file was verified without repeating generation or export.
+
+Seventeen protected sources remain byte-identical, including movement, camera,
+course/bonus, airborne cargo/nitro, eighteen wet slopes, timber, nets, cones,
+coastal banks and sky/water materials. The four rideable bonus boats are intact.
+The scenic fleet adds no colliders. Original course/prop fingerprints, build,
+lite fitting/shader/clearance check, six compiled native 1920x1080 views and
+normal 480p/CRT pass. Main-to-bonus-to-main reload and keyboard walking pass
+with zero console errors and zero walking deaths. No new full-course traversal
+or repeated level/full-suite audit for this presentation change.
+
+Normal arrival sample: 16.7ms median / 18.9ms p95 over 119 frames; not a whole-
+course performance claim. Build: 1,778 files / 1,071.4MiB, offline version
+cd0acbc9d37dc75ceae1, `Codex/sol fork · build 10-30 00:42 UTC`. The full GLB
+is byte-identical in compiled output. Final views, motion samples, clearance
+results and hashes are recorded in the fleet validation report. Local
+checkpoint only; publication held. The broader polish goal remains active.
+
+
+## Carlisle solid pier structure — 30 October 2026
+
+Approximately 18 minutes to the first playable support pass and 42 minutes to
+final validation, including the Imagegen surface and a controlled timing check.
+The old columns reused horizontal deck-plank texture, producing striped shafts
+under the new vessels and decks. Replaced those shafts with three subtly varied
+solid log profiles and continuous vertical grain. Chunky beveled ledgers, crossed
+upper braces, alternating lower braces, iron joint plates and hexagonal bolts
+now support the tall scenery quays. Wet shading follows authored water heights.
+
+All original generated fenders, caps and ropes remain intact. The new structure
+uses fixed-scale texture mapping and full instanced geometry, with no LOD or
+decimation. The main course contains 4,146 pile shafts, 1,218 ledgers, 1,604
+braces, 2,432 plates and 4,864 bolts (2,177,728 triangles including replacement
+shafts). Frames connect posts of the same scenery quay, below its deck; no
+playable gaps are connected and no colliders are added. Native close review
+caught partly buried joint plates; their centres were moved from 0.48m to
+0.84m outside the posts before final validation.
+
+Built-in Imagegen produced a 1254x1254 continuous weathered timber texture,
+copied unchanged into the project and compiled output. Exact prompt and hash
+are retained. No Tripo credits or API top-ups were used in this increment.
+Eighteen protected sources remain byte-identical, including player, camera,
+course/bonus, cargo/nitro, wet slopes, decks, nets, cones, coast, water/sky and
+the fishing fleet. All eighteen slopes remain wet and all native movers remain.
+
+Original course/twelve-prop fingerprints, typecheck/build, lite shader/fitting,
+finite geometry, conservative full-member boat clearance, five compiled native
+1920x1080 views, normal 480p/CRT, main-to-bonus-to-main disposal/reload and
+keyboard walking pass. Zero console errors and walking deaths. The closest
+main fishing boat retains approximately 7m clearance from the complete new
+structure. No new full-course traversal, repeated level audit or full suite.
+
+The final short arrival sample was 33.4ms median / 39.8ms p95 after earlier
+samples near 16.7ms. A same-process new/prior/new/prior comparison then returned
+33.3ms median in every 240-frame window (p95 34.7/34.3/34.8/34.6ms). It does not
+implicate this support change in the broader cadence shift, nor identify the
+cause or establish whole-course performance. Other active rendering processes
+were observed and left running. The comparison and all review evidence are in
+`art/carlisle-shipyard/pier-structure/`.
+
+Build: 1,779 files / 1,074.9MiB, offline version 0bcba19a053eb72040e6,
+`Codex/sol fork · build 10-30 01:17 UTC`. Local checkpoint only; publication
+held. The broader polish goal remains active.
+
+
+## Carlisle full-geometry deck batching — 30 October 2026
+
+Approximately 12 minutes to the initial playable partition and 32 minutes to
+final browser validation. The normal arrival previously submitted over 22 million
+triangles. Intact timber modules shared one instance batch per parent/kind,
+letting a visible corner retain several distant quays. Split these into 48m
+parent-local cells so camera and shadow frustums can reject off-screen modules.
+
+All 131 decks, 966 sections, 567 intact modules and 27,724,901 placed/fitted
+triangles remain. The intact subset retains 21,843,906 triangles; its batches
+change from 34 to 177. Exact geometry/material/matrix fingerprints match across
+coarse, reconstructed spatial and actual runtime groupings. No geometry swaps,
+LOD, decimation, draw-distance changes or added per-frame update logic. The
+existing deck fitting function is byte-identical.
+
+The compiled native 1920x1080 comparison reduces submitted triangles by 16.8%
+at arrival, 41.7% in the first big-bounce view, 35.7% in the near-vertical view
+and 29.9% at the lift yard. The crane and homecoming views retain their triangle
+counts with modest additional draw calls. These are submitted-work measurements,
+not a sustained FPS or whole-course performance claim.
+
+All seven views are pixel-identical with runtime frustum culling on versus off;
+the repeated coarse control also matches exactly. Regrouping changes at most
+782 plank-edge pixels (0.0378%) versus the old coarse grouping, reviewed in
+paired native crops. Geometry, materials and transforms are exact, and the
+uncull control excludes missing visible geometry. The mirrored camera test
+omits water to inspect full undersides; it does not add planar reflections.
+
+Nineteen protected source files match the prior pier commit, including gameplay,
+camera, course/bonus, air cargo/nitro, eighteen wet slopes, nets, cones, coast,
+water/sky, fleet and pier structure. The original course/twelve-prop check and
+production build pass. Both deck GLBs retain their source bytes; the existing
+build externalizes shared textures, with exact vertex/index/material/image data
+verified after resolving those references. Main/bonus/main reload, native bonus,
+normal 480p/CRT and keyboard walking pass. Four playable bonus boats remain.
+
+A normal-render Storm keyboard check initially missed the reward because an
+awaited screenshot stalled its external control loop for 1.2 seconds across the
+apex. The player safely avoided nitro and caught the next spring. Added a
+--no-flight-capture option to the test tool, then collected all four reward
+crates, avoided nitro and caught the spring with zero deaths or console errors.
+Both reports are retained; no gameplay/input/camera changes were made. No
+repeated full suite or unchanged level audit.
+
+Build: 1,779 files / 1,074.9MiB; offline version e79b8cb5487ec0742aab;
+Codex/sol fork · build 10-30 01:54 UTC. Evidence and exact protected hashes are
+in art/carlisle-shipyard/deck-batching/. No paid services or new assets. Local
+checkpoint only; publication held. The broader polish goal remains active.

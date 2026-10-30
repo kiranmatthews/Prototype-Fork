@@ -1,0 +1,52 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "mode": "lite",
+  "errors": [],
+  "flights": [
+    {
+      "name": "Socket starboard gap",
+      "launched": true,
+      "landed": true,
+      "distance": 1.8061150749454598,
+      "end": {
+        "at": [
+          82.48910780710136,
+          190.39758210870974,
+          -719.4843175614211
+        ],
+        "forward": [
+          0.023638516511751445,
+          0,
+          -0.9997205712283426
+        ],
+        "side": [
+          0.9997205712283426,
+          0,
+          0.023638516511751445
+        ],
+        "spring": true,
+        "vy": 79.875,
+        "grounded": false,
+        "state": "air",
+        "deaths": 0,
+        "bail": false,
+        "mounted": false,
+        "broken": 4,
+        "time": 4.716666666666655
+      }
+    }
+  ],
+  "views": [
+    "lift-parcel-cloud",
+    "socket-starboard-gap"
+  ],
+  "source": {
+    "components": 1247,
+    "crates": 270,
+    "nitro": 22,
+    "grounds": 334,
+    "art": "ready",
+    "build": "Codex/sol fork \u00b7 build 10-29 01:17 UTC"
+  },
+  "passed": true
+}

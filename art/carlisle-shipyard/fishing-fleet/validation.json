@@ -1,0 +1,626 @@
+{
+  "baseCommit": "71942e2d03f6dc32936ba67816680f8df8027213",
+  "status": "Validated local-only increment; publication HOLD",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleBoardwalk.ts": "b6230e89513698e9f20e1c50d8a007813cbfb6d0c82d967faf52ce0d121a6668",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae",
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "src/carlisleCoastalBanks.ts": "20a55dc8e0ecd8acc6189771a8e495aa1e4b4bedc62359773cee34a141cb66bd",
+    "src/carlisleShipyardMaterials.ts": "c325a90f54f6a7707f644dffd0c78d2780537524bc75edac2a120775243cabea"
+  },
+  "changedRuntime": {
+    "src/carlisleShipyard.ts": "b564eb0f457a5d1ead890c22386bc920508c6290083d259b4406b1bc5913e3e8",
+    "src/carlisleFishingFleet.ts": "38319e1a62a5fb6b44aca9496e3721bc1454676c4a303332606d0ecbbb5dc749"
+  },
+  "asset": {
+    "source": "Tripo Studio existing plan credits",
+    "assetId": "5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+    "url": "https://studio.tripo3d.ai/workspace/generate/5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+    "model": "Smart Mesh P2.0",
+    "reference": "art/carlisle-shipyard/fishing-fleet/references/shrimp-boat.png",
+    "generationTriangleTarget": 50000,
+    "sourceTriangles": 51177,
+    "vertices": 70464,
+    "bounds": {
+      "min": [
+        -0.499755859375,
+        0.0,
+        -0.209716796875
+      ],
+      "max": [
+        0.499755859375,
+        0.59326171875,
+        0.209716796875
+      ]
+    },
+    "texture": {
+      "width": 8192,
+      "height": 8192,
+      "format": "JPEG"
+    },
+    "bytes": 16523776,
+    "sha256": "dfec9a3222b46bb94a86c88d0fe288acd095892580633cc869e8b4408f8d51e7",
+    "processing": "Original full textured GLB; no retopology, remeshing, texture resizing or decimation.",
+    "exportFilename": "carlisle-shrimp-boat.glb",
+    "byteIdenticalInDist": true
+  },
+  "checks": {
+    "sourceAndAssets": "Original main/bonus course and twelve original prop fingerprints passed (node tools/test-carlisle-shipyard.mjs); protected sources remain unchanged after placement repairs",
+    "build": "npm run build passed, including tsc --noEmit",
+    "lite": "Final hull fitting, shader, mooring motion and main-course pier clearance check passed",
+    "native": "Six compiled 1920x1080 views inspected: bow and stern, crane yard, homecoming, bonus vessel and bonus harbour",
+    "normal": "480p/CRT after main-to-bonus-to-main disposal/reload; keyboard walking advanced with zero deaths",
+    "consoleErrors": [],
+    "geometry": "Each placed boat retains all 51,177 source triangles; no LOD/decimation or axis stretching",
+    "scope": "Scenery only; no new full-course traversal, repeated level-data audit or full suite"
+  },
+  "fitRepairs": {
+    "finding": "Two inherited scenic berths overlapped pier-support bounds. Moving both 34m outboard clears the lift yard. The crane vessel also needs 28m west along world X to clear its long quay while retaining its level-water reach. Gameplay geometry is unchanged.",
+    "oldBerthClearance": [
+      {
+        "at": [
+          202.53791826710398,
+          169.33811465449503,
+          -486.5678004441982
+        ],
+        "minimumPoleToHullBounds": -0.8400000000000001
+      },
+      {
+        "at": [
+          152.40763112858775,
+          213.27211374988292,
+          -0.6199750150018275
+        ],
+        "minimumPoleToHullBounds": 13.094685582521496
+      },
+      {
+        "at": [
+          -35.69587433166052,
+          161.3775820967888,
+          -700.7241621162807
+        ],
+        "minimumPoleToHullBounds": 7.422305357029485
+      },
+      {
+        "at": [
+          -112.75439370372216,
+          95.44658972508923,
+          -2060.3059097606533
+        ],
+        "minimumPoleToHullBounds": -0.8400000000000001
+      },
+      {
+        "at": [
+          188.34332340948782,
+          35.409361676763396,
+          -2702.384409507546
+        ],
+        "minimumPoleToHullBounds": 15.899607612921145
+      },
+      {
+        "at": [
+          -178.11491721774098,
+          -8,
+          -3752.988011769422
+        ],
+        "minimumPoleToHullBounds": 21.605484381844065
+      }
+    ],
+    "hullDraftCorrection": "Initial 2.196m draft increased to 3.6m after native review.",
+    "windowCorrection": "Restrict the painted-window emissive mask to the measured cabin upper walls; remove glow from ropes and deck details."
+  },
+  "finalMainPoleClearance": [
+    {
+      "at": [
+        236.44181965044612,
+        169.33811465449503,
+        -489.1223005887686
+      ],
+      "minimumPoleToHullBounds": 15.498109647857065,
+      "nearestPole": [
+        207.05197143554688,
+        169.33811950683594,
+        -476.8761291503906
+      ],
+      "suggestion": null
+    },
+    {
+      "at": [
+        152.40763112858775,
+        213.27211374988292,
+        -0.6199750150018275
+      ],
+      "minimumPoleToHullBounds": 13.080607275149255,
+      "nearestPole": [
+        121.36869812011719,
+        219.27210998535156,
+        -10.174943923950195
+      ],
+      "suggestion": null
+    },
+    {
+      "at": [
+        -35.69587433166052,
+        161.3775820967888,
+        -700.7241621162807
+      ],
+      "minimumPoleToHullBounds": 7.411885144577571,
+      "nearestPole": [
+        -19.645111083984375,
+        163.87757873535156,
+        -678.0588989257812
+      ],
+      "suggestion": null
+    },
+    {
+      "at": [
+        -170.70357102456381,
+        95.44658972508923,
+        -2060.40083995015
+      ],
+      "minimumPoleToHullBounds": 10.995516580569777,
+      "nearestPole": [
+        -142.41201782226562,
+        107.44658660888672,
+        -2048.63427734375
+      ],
+      "suggestion": null
+    },
+    {
+      "at": [
+        188.34332340948782,
+        35.409361676763396,
+        -2702.384409507546
+      ],
+      "minimumPoleToHullBounds": 15.789848263340193,
+      "nearestPole": [
+        156.9629364013672,
+        47.90936279296875,
+        -2684.348876953125
+      ],
+      "suggestion": null
+    },
+    {
+      "at": [
+        -178.11491721774098,
+        -8,
+        -3752.988011769422
+      ],
+      "minimumPoleToHullBounds": 21.58478244172722,
+      "nearestPole": [
+        -155.17803955078125,
+        4.5,
+        -3733.670166015625
+      ],
+      "suggestion": null
+    }
+  ],
+  "motion": {
+    "before": [
+      {
+        "spec": {
+          "at": [
+            236.44181965044612,
+            169.33811465449503,
+            -489.1223005887686
+          ],
+          "yaw": 1.2,
+          "phase": 2.9299999999999997,
+          "length": 36
+        },
+        "position": [
+          236.44181965044612,
+          169.1676245742724,
+          -489.1223005887686
+        ],
+        "rotation": [
+          -0.005422735747993025,
+          0.5636379595170217,
+          0.0015687914737397659,
+          0.8260026533987695
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            152.40763112858775,
+            213.27211374988292,
+            -0.6199750150018275
+          ],
+          "yaw": 0,
+          "phase": 0,
+          "length": 36
+        },
+        "position": [
+          152.40763112858775,
+          213.4652004917199,
+          -0.6199750150018275
+        ],
+        "rotation": [
+          0.004685227111145748,
+          0.002066745441058837,
+          0.0029583200698696244,
+          0.9999825126233773
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            -35.69587433166052,
+            161.3775820967888,
+            -700.7241621162807
+          ],
+          "yaw": 1.7999999999999998,
+          "phase": 5.26,
+          "length": 36
+        },
+        "position": [
+          -35.69587433166052,
+          161.3837377098093,
+          -700.7241621162807
+        ],
+        "rotation": [
+          0.002097647343419236,
+          0.7818732465096889,
+          -0.00554431043090266,
+          0.6234092451110005
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            -170.70357102456381,
+            95.44658972508923,
+            -2060.40083995015
+          ],
+          "yaw": 5.3999999999999995,
+          "phase": 10.59,
+          "length": 36
+        },
+        "position": [
+          -170.70357102456381,
+          95.34189459276183,
+          -2060.40083995015
+        ],
+        "rotation": [
+          -0.0020364725045675792,
+          0.4314294911024532,
+          0.000538218259025973,
+          -0.9021441998416451
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            188.34332340948782,
+            35.409361676763396,
+            -2702.384409507546
+          ],
+          "yaw": 7.199999999999999,
+          "phase": 14.12,
+          "length": 36
+        },
+        "position": [
+          188.34332340948782,
+          35.43409312362344,
+          -2702.384409507546
+        ],
+        "rotation": [
+          0.003083031479574291,
+          -0.4461249564556658,
+          -0.0020525456643253493,
+          -0.8949630189011288
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            -178.11491721774098,
+            -8,
+            -3752.988011769422
+          ],
+          "yaw": 10.2,
+          "phase": 18.85,
+          "length": 36
+        },
+        "position": [
+          -178.11491721774098,
+          -7.824458406108873,
+          -3752.988011769422
+        ],
+        "rotation": [
+          0.003761602007410586,
+          -0.9250094995100152,
+          0.00351163517165456,
+          0.3799091267461083
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      }
+    ],
+    "after": [
+      {
+        "spec": {
+          "at": [
+            236.44181965044612,
+            169.33811465449503,
+            -489.1223005887686
+          ],
+          "yaw": 1.2,
+          "phase": 2.9299999999999997,
+          "length": 36
+        },
+        "position": [
+          236.44181965044612,
+          169.17673970515426,
+          -489.1223005887686
+        ],
+        "rotation": [
+          -0.0024961045292830842,
+          0.5622601755758645,
+          -0.001751787035760328,
+          0.8269547724427001
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            152.40763112858775,
+            213.27211374988292,
+            -0.6199750150018275
+          ],
+          "yaw": 0,
+          "phase": 0,
+          "length": 36
+        },
+        "position": [
+          152.40763112858775,
+          213.36634590713248,
+          -0.6199750150018275
+        ],
+        "rotation": [
+          -0.00017971895336754812,
+          0.0035400735447700736,
+          0.001326910263571119,
+          0.9999928374191226
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            -35.69587433166052,
+            161.3775820967888,
+            -700.7241621162807
+          ],
+          "yaw": 1.7999999999999998,
+          "phase": 5.26,
+          "length": 36
+        },
+        "position": [
+          -35.69587433166052,
+          161.5710451709877,
+          -700.7241621162807
+        ],
+        "rotation": [
+          0.004467869075287076,
+          0.7829815088593761,
+          -0.002867232547548262,
+          0.6220223258917151
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            -170.70357102456381,
+            95.44658972508923,
+            -2060.40083995015
+          ],
+          "yaw": 5.3999999999999995,
+          "phase": 10.59,
+          "length": 36
+        },
+        "position": [
+          -170.70357102456381,
+          95.45681186736657,
+          -2060.40083995015
+        ],
+        "rotation": [
+          -0.006314582228766234,
+          0.4309237692293643,
+          0.00026633548426693637,
+          -0.9023662007355128
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            188.34332340948782,
+            35.409361676763396,
+            -2702.384409507546
+          ],
+          "yaw": 7.199999999999999,
+          "phase": 14.12,
+          "length": 36
+        },
+        "position": [
+          188.34332340948782,
+          35.33862406641553,
+          -2702.384409507546
+        ],
+        "rotation": [
+          0.0040537998488848585,
+          -0.44507029453336466,
+          -0.0053233042186181115,
+          -0.895470637186371
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      },
+      {
+        "spec": {
+          "at": [
+            -178.11491721774098,
+            -8,
+            -3752.988011769422
+          ],
+          "yaw": 10.2,
+          "phase": 18.85,
+          "length": 36
+        },
+        "position": [
+          -178.11491721774098,
+          -7.92466899237827,
+          -3752.988011769422
+        ],
+        "rotation": [
+          0.0023823607010181047,
+          -0.9244673507576143,
+          -0.0011848529269230634,
+          0.3812519348989977
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "triangles": 51177
+      }
+    ],
+    "heaveBoundMetres": 0.205,
+    "horizontalMooringsFixed": true
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 00:42 UTC",
+    "files": 1778,
+    "sizeMiB": 1071.4,
+    "offlineVersion": "cd0acbc9d37dc75ceae1"
+  },
+  "counts": {
+    "mainScenicVessels": 6,
+    "bonusScenicVessels": 2,
+    "mainSourceTrianglesPlaced": 307062,
+    "bonusSourceTrianglesPlaced": 102354,
+    "ground": 334,
+    "crates": 270,
+    "wetSlopes": 18,
+    "nets": 56,
+    "mainMovers": 28,
+    "bonusMovers": 4,
+    "addedColliders": 0
+  },
+  "normalArrivalFrameSample": {
+    "far": 850,
+    "art": "ready",
+    "median": 16.69999998807907,
+    "p95": 18.900000005960464,
+    "samples": 119
+  },
+  "timingLimitation": "119-frame arrival sample, not a whole-course performance guarantee",
+  "credits": {
+    "channel": "Tripo Studio existing plan credits",
+    "startingBalance": 24225,
+    "remainingBalanceObserved": 24095,
+    "totalDeducted": 130,
+    "purchasedApiCredits": 0,
+    "previousKnownSpend": 1365,
+    "knownCombinedSpend": 1495,
+    "billingEvidence": "Displayed prices and balance deductions; asset ID exposed, separate internal texture task ID not exposed.",
+    "tasks": [
+      {
+        "step": "image-to-model",
+        "assetId": "5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+        "model": "Smart Mesh P2.0",
+        "triangleTarget": 50000,
+        "creditsDeducted": 100,
+        "status": "success"
+      },
+      {
+        "step": "texture",
+        "assetId": "5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+        "resolution": 8192,
+        "creditsDeducted": 30,
+        "status": "success"
+      }
+    ]
+  },
+  "elapsed": {
+    "startedUTC": "2026-10-29T23:53:00+00:00",
+    "firstPlayableMinutesApprox": 22,
+    "validatedUTC": "2026-10-30T00:46:10.151801+00:00",
+    "finalValidatedMinutesApprox": 53
+  }
+}

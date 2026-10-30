@@ -1,0 +1,245 @@
+{
+  "baseCommit": "6f0c1a2efb976aeafc4ba5784ff09cfd2872ce74",
+  "status": "Local-only validation",
+  "encounters": 7,
+  "woodCrates": 40,
+  "nitroCrates": 22,
+  "finishClearSwitches": 1,
+  "totalLevelCrates": 270,
+  "totalLevelComponents": 1247,
+  "groundMeshesUnchanged": 334,
+  "sourceCourseWithoutAirCargoSHA256": "326e69f1bb2f7beae44baccfd273223ea1ee31221a725e5aefb4bb3e303fb421",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleBoardwalk.ts": "b6230e89513698e9f20e1c50d8a007813cbfb6d0c82d967faf52ce0d121a6668",
+    "src/carlisleShipyard.ts": "7eca6ea01f4e33eb8bf16e4b82e2bce4780dea6dc33db4368111aa28e64c2c06",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "native": {
+    "safeFlights": 28,
+    "machinePhases": [
+      0,
+      2.3
+    ],
+    "allTransfers": 55,
+    "directNitro": {
+      "state": "dead",
+      "deaths": 1
+    },
+    "clearSwitch": {
+      "nitros": 22,
+      "remaining": 0
+    },
+    "neutral": [
+      {
+        "held": false,
+        "up": 43.95,
+        "drift": 0
+      },
+      {
+        "held": true,
+        "up": 55.075,
+        "drift": 0
+      }
+    ]
+  },
+  "checks": {
+    "levels": "npm run check:levels passed",
+    "build": "npm run build passed",
+    "sourceAndAssets": "Original main/bonus gameplay fingerprint and twelve environment assets preserved"
+  },
+  "build": {
+    "files": 1773,
+    "sizeMiB": 1023.9,
+    "offlineVersion": "38993932d425800a9a29",
+    "stamp": "Codex/sol fork \u00b7 build 10-29 21:39 UTC"
+  },
+  "browser": {
+    "lite": {
+      "flights": [
+        {
+          "name": "Socket starboard gap",
+          "launched": true,
+          "landed": true,
+          "distance": 1.8061150749454598,
+          "end": {
+            "at": [
+              82.48910780710136,
+              190.39758210870974,
+              -719.4843175614211
+            ],
+            "forward": [
+              0.023638516511751445,
+              0,
+              -0.9997205712283426
+            ],
+            "side": [
+              0.9997205712283426,
+              0,
+              0.023638516511751445
+            ],
+            "spring": true,
+            "vy": 79.875,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "mounted": false,
+            "broken": 4,
+            "time": 4.716666666666655
+          }
+        }
+      ],
+      "errors": []
+    },
+    "full": {
+      "flights": [
+        {
+          "name": "Socket starboard gap",
+          "launched": true,
+          "landed": true,
+          "distance": 1.976542042522269,
+          "end": {
+            "at": [
+              82.48578516066281,
+              190.39758210870974,
+              -719.2463265308061
+            ],
+            "forward": [
+              0.023932406523635166,
+              0,
+              -0.999713578940482
+            ],
+            "side": [
+              0.999713578940482,
+              0,
+              0.023932406523635166
+            ],
+            "spring": true,
+            "vy": 79.875,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "mounted": false,
+            "broken": 4,
+            "time": 4.716666666666655
+          }
+        },
+        {
+          "name": "Storm crosswind row",
+          "launched": true,
+          "landed": true,
+          "distance": 2.423606918899009,
+          "end": {
+            "at": [
+              61.30781878954351,
+              99.75561168868433,
+              -2740.1693344700416
+            ],
+            "forward": [
+              -0.0072366691838416045,
+              0,
+              -0.9999738149667339
+            ],
+            "side": [
+              0.9999738149667339,
+              0,
+              -0.0072366691838416045
+            ],
+            "spring": true,
+            "vy": 79.575,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "mounted": false,
+            "broken": 4,
+            "time": 4.949999999999988
+          }
+        },
+        {
+          "name": "Rigging port gap",
+          "launched": true,
+          "landed": true,
+          "distance": 1.6134047259953317,
+          "end": {
+            "at": [
+              -119.02103414205511,
+              35.94944841986361,
+              -3406.287529609485
+            ],
+            "forward": [
+              0.10345348083544215,
+              0,
+              -0.994634293247036
+            ],
+            "side": [
+              0.994634293247036,
+              0,
+              0.10345348083544215
+            ],
+            "spring": true,
+            "vy": 0,
+            "grounded": true,
+            "state": "ride",
+            "deaths": 0,
+            "bail": false,
+            "mounted": false,
+            "broken": 6,
+            "time": 6.183333333333317
+          }
+        }
+      ],
+      "errors": []
+    },
+    "normal": {
+      "flights": [
+        {
+          "name": "Storm crosswind row",
+          "launched": true,
+          "landed": true,
+          "distance": 2.01572424736498,
+          "end": {
+            "at": [
+              61.30789113128118,
+              98.42936168868432,
+              -2740.168959094482
+            ],
+            "forward": [
+              -0.0072367062342132684,
+              0,
+              -0.9999738146986049
+            ],
+            "side": [
+              0.9999738146986049,
+              0,
+              -0.0072367062342132684
+            ],
+            "spring": true,
+            "vy": 80.125,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "mounted": false,
+            "broken": 4,
+            "time": 4.933333333333321
+          }
+        }
+      ],
+      "errors": []
+    }
+  },
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour",
+  "limits": [
+    "Bounded keyboard flights plus all native transfers; not a continuous full-course browser clear"
+  ]
+}

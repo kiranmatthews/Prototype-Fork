@@ -1,0 +1,1490 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "dune-waterline",
+      "s": 110,
+      "camera": [
+        -142.74111680355438,
+        254.65072741940213,
+        -164.7075972387933
+      ],
+      "center": [
+        -268.8464218260417,
+        210.65072741940213,
+        -247.78658987007782
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 986,
+        "calls": 747,
+        "triangles": 30228725,
+        "points": 0,
+        "lines": 0
+      },
+      "banks": [
+        {
+          "name": "Carlisle dune-bank 545",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1465",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1615",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1760",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1680",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2235",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2050",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2080",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank -180",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank -35",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 110",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 260",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 80",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 395",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 380",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 865",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1130",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1255",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1920",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2815",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2960",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3230",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3370",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3710",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3850",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3900",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2390",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2540",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2400",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 4150",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        }
+      ]
+    },
+    {
+      "id": "marsh-waterline",
+      "s": 1130,
+      "camera": [
+        -211.53812732220004,
+        210.00860487932084,
+        -923.5372503306036
+      ],
+      "center": [
+        -369.3645100463329,
+        151.00860487932084,
+        -897.8985878094444
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1004,
+        "calls": 863,
+        "triangles": 28770072,
+        "points": 0,
+        "lines": 0
+      },
+      "banks": [
+        {
+          "name": "Carlisle dune-bank 545",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1465",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1615",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1760",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1680",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2235",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2050",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2080",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank -180",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank -35",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 110",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 260",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 80",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 395",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 380",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 865",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1130",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1255",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1920",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2815",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2960",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3230",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3370",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3710",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3850",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3900",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2390",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2540",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2400",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 4150",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        }
+      ]
+    },
+    {
+      "id": "act-one",
+      "s": 260,
+      "camera": [
+        219.50882187860003,
+        325.44099789936683,
+        -192.76177591377476
+      ],
+      "center": [
+        0.4304888457249234,
+        195.44099789936686,
+        -250.1760981300054
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1026,
+        "calls": 1020,
+        "triangles": 47117845,
+        "points": 0,
+        "lines": 0
+      },
+      "banks": [
+        {
+          "name": "Carlisle dune-bank 545",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1465",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1615",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1760",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1680",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2235",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2050",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2080",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank -180",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank -35",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 110",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 260",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 80",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 395",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 380",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 865",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1130",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1255",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1920",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2815",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2960",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3230",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3370",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3710",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3850",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3900",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2390",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2540",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2400",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 4150",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        }
+      ]
+    },
+    {
+      "id": "tidal-engine",
+      "s": 1950,
+      "camera": [
+        26.31124625896595,
+        277.48685198344083,
+        -1814.7056733170782
+      ],
+      "center": [
+        -158.5853398332986,
+        103.44658972508923,
+        -1947.8369129615505
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1045,
+        "calls": 1104,
+        "triangles": 20846400,
+        "points": 0,
+        "lines": 0
+      },
+      "banks": [
+        {
+          "name": "Carlisle dune-bank 545",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1465",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1615",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1760",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1680",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2235",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2050",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2080",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank -180",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank -35",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 110",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 260",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 80",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 395",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 380",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 865",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1130",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1255",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1920",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2815",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2960",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3230",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3370",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3710",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3850",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3900",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2390",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2540",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2400",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 4150",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        }
+      ]
+    },
+    {
+      "id": "storm-inlet",
+      "s": 2830,
+      "camera": [
+        167.0745169296402,
+        173.4093616767634,
+        -2677.85540932833
+      ],
+      "center": [
+        -64.08210005342956,
+        43.409361676763396,
+        -2732.6244332510255
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1066,
+        "calls": 800,
+        "triangles": 13794386,
+        "points": 0,
+        "lines": 0
+      },
+      "banks": [
+        {
+          "name": "Carlisle dune-bank 545",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1465",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1615",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1760",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1680",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2235",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2050",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2080",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank -180",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank -35",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 110",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 260",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 80",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 395",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 380",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 865",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1130",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1255",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1920",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2815",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2960",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3230",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3370",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3710",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3850",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3900",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2390",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2540",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2400",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 4150",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        }
+      ]
+    },
+    {
+      "id": "homecoming",
+      "s": 3900,
+      "camera": [
+        75.71108713927376,
+        140,
+        -3698.3859076820954
+      ],
+      "center": [
+        -170.00285147894908,
+        0,
+        -3775.0919190850386
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1088,
+        "calls": 571,
+        "triangles": 6571893,
+        "points": 10,
+        "lines": 0
+      },
+      "banks": [
+        {
+          "name": "Carlisle dune-bank 545",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1465",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1615",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1760",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1680",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2235",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2050",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2080",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank -180",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank -35",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 110",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 260",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 80",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 395",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 380",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 865",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 1130",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1255",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 1920",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2815",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2960",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3230",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3370",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3710",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3850",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 3900",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 3995",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 2390",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2540",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle marsh-bank 2400",
+          "triangles": 45741,
+          "sourceTriangles": 45741,
+          "visualOnly": true
+        },
+        {
+          "name": "Carlisle dune-bank 4150",
+          "triangles": 54966,
+          "sourceTriangles": 54966,
+          "visualOnly": true
+        }
+      ]
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1836,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1388,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "ground": 334,
+    "crates": 270,
+    "nitro": 22,
+    "slopes": [
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      }
+    ],
+    "build": "Codex/sol fork · build 10-29 23:12 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 86,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 54,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "banks": 0,
+    "movers": 4
+  },
+  "reload": {
+    "status": "ready",
+    "banks": 32,
+    "sourceTriangles": 100707,
+    "placedTriangles": 1657437,
+    "shoreSegments": 35080,
+    "colliders": 0,
+    "errors": []
+  },
+  "frameTiming": {
+    "median": 16.69999998807907,
+    "p95": 17.30000001192093,
+    "samples": 119
+  },
+  "walk": {
+    "z": -2.3609999161935296,
+    "deaths": 0
+  },
+  "passed": true
+}

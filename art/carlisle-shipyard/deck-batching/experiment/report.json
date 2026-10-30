@@ -1,0 +1,474 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "errors": [],
+  "views": [
+    {
+      "name": "arrival",
+      "station": 30,
+      "results": [
+        {
+          "size": 0,
+          "render": {
+            "frame": 1540,
+            "calls": 614,
+            "triangles": 22214055,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6.700000017881393,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 32,
+          "render": {
+            "frame": 1542,
+            "calls": 712,
+            "triangles": 18159254,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.699999988079071,
+          "pixelChannelsChanged": 2,
+          "maxDifference": 3,
+          "meanAbsoluteDifference": 4.822530864197531e-7,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 48,
+          "render": {
+            "frame": 1544,
+            "calls": 676,
+            "triangles": 18474190,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.0999999940395355,
+          "pixelChannelsChanged": 2,
+          "maxDifference": 3,
+          "meanAbsoluteDifference": 4.822530864197531e-7,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 64,
+          "render": {
+            "frame": 1546,
+            "calls": 659,
+            "triangles": 18985961,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6.0999999940395355,
+          "pixelChannelsChanged": 2,
+          "maxDifference": 3,
+          "meanAbsoluteDifference": 4.822530864197531e-7,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 96,
+          "render": {
+            "frame": 1548,
+            "calls": 647,
+            "triangles": 19222163,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.300000011920929,
+          "pixelChannelsChanged": 2,
+          "maxDifference": 3,
+          "meanAbsoluteDifference": 4.822530864197531e-7,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "first-bounce",
+      "station": 170,
+      "results": [
+        {
+          "size": 0,
+          "render": {
+            "frame": 1565,
+            "calls": 425,
+            "triangles": 22839307,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.5999999940395355,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 32,
+          "render": {
+            "frame": 1567,
+            "calls": 472,
+            "triangles": 12761355,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.4000000059604645,
+          "pixelChannelsChanged": 5411,
+          "maxDifference": 52,
+          "meanAbsoluteDifference": 0.0024640721450617286,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 48,
+          "render": {
+            "frame": 1569,
+            "calls": 462,
+            "triangles": 13312493,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4,
+          "pixelChannelsChanged": 10,
+          "maxDifference": 7,
+          "meanAbsoluteDifference": 0.000004219714506172839,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 64,
+          "render": {
+            "frame": 1571,
+            "calls": 455,
+            "triangles": 14414769,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.699999988079071,
+          "pixelChannelsChanged": 5411,
+          "maxDifference": 52,
+          "meanAbsoluteDifference": 0.0024640721450617286,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 96,
+          "render": {
+            "frame": 1573,
+            "calls": 444,
+            "triangles": 14650971,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.7999999821186066,
+          "pixelChannelsChanged": 4,
+          "maxDifference": 5,
+          "meanAbsoluteDifference": 0.0000014467592592592592,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "lift-yard",
+      "station": 500,
+      "results": [
+        {
+          "size": 0,
+          "render": {
+            "frame": 1588,
+            "calls": 701,
+            "triangles": 29878445,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.9000000059604645,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 32,
+          "render": {
+            "frame": 1590,
+            "calls": 808,
+            "triangles": 20981503,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6.200000017881393,
+          "pixelChannelsChanged": 586,
+          "maxDifference": 26,
+          "meanAbsoluteDifference": 0.00025776427469135805,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 48,
+          "render": {
+            "frame": 1592,
+            "calls": 763,
+            "triangles": 20942136,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.5,
+          "pixelChannelsChanged": 6,
+          "maxDifference": 12,
+          "meanAbsoluteDifference": 0.000004701967592592593,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 64,
+          "render": {
+            "frame": 1594,
+            "calls": 746,
+            "triangles": 21532641,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.200000017881393,
+          "pixelChannelsChanged": 6,
+          "maxDifference": 21,
+          "meanAbsoluteDifference": 0.000005304783950617284,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 96,
+          "render": {
+            "frame": 1596,
+            "calls": 728,
+            "triangles": 22398715,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.600000023841858,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "crane-yard",
+      "station": 2100,
+      "results": [
+        {
+          "size": 0,
+          "render": {
+            "frame": 1609,
+            "calls": 597,
+            "triangles": 10595272,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.199999988079071,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 32,
+          "render": {
+            "frame": 1611,
+            "calls": 649,
+            "triangles": 10595272,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6,
+          "pixelChannelsChanged": 324,
+          "maxDifference": 27,
+          "meanAbsoluteDifference": 0.00013671875,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 48,
+          "render": {
+            "frame": 1613,
+            "calls": 625,
+            "triangles": 10595272,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.0999999940395355,
+          "pixelChannelsChanged": 198,
+          "maxDifference": 27,
+          "meanAbsoluteDifference": 0.00008439429012345679,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 64,
+          "render": {
+            "frame": 1615,
+            "calls": 625,
+            "triangles": 10595272,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.100000023841858,
+          "pixelChannelsChanged": 132,
+          "maxDifference": 18,
+          "meanAbsoluteDifference": 0.00005304783950617284,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 96,
+          "render": {
+            "frame": 1617,
+            "calls": 615,
+            "triangles": 10595272,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.800000011920929,
+          "pixelChannelsChanged": 192,
+          "maxDifference": 27,
+          "meanAbsoluteDifference": 0.00008367091049382716,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "homecoming",
+      "station": 3760,
+      "results": [
+        {
+          "size": 0,
+          "render": {
+            "frame": 1631,
+            "calls": 379,
+            "triangles": 4133243,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 6.200000017881393,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 32,
+          "render": {
+            "frame": 1633,
+            "calls": 399,
+            "triangles": 4093876,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 3.399999976158142,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 48,
+          "render": {
+            "frame": 1635,
+            "calls": 391,
+            "triangles": 4133243,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 2.7999999821186066,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 64,
+          "render": {
+            "frame": 1637,
+            "calls": 389,
+            "triangles": 4133243,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 4.4000000059604645,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "size": 96,
+          "render": {
+            "frame": 1639,
+            "calls": 383,
+            "triangles": 4133243,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 3.5,
+          "pixelChannelsChanged": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    }
+  ],
+  "inventory": {
+    "originalBatches": 34,
+    "modules": 567,
+    "triangles": 21843906,
+    "variants": [
+      {
+        "size": 0,
+        "batches": 34,
+        "modules": 567,
+        "triangles": 21843906
+      },
+      {
+        "size": 32,
+        "batches": 263,
+        "modules": 567,
+        "triangles": 21843906
+      },
+      {
+        "size": 48,
+        "batches": 177,
+        "modules": 567,
+        "triangles": 21843906
+      },
+      {
+        "size": 64,
+        "batches": 141,
+        "modules": 567,
+        "triangles": 21843906
+      },
+      {
+        "size": 96,
+        "batches": 103,
+        "modules": 567,
+        "triangles": 21843906
+      }
+    ]
+  },
+  "passed": true
+}

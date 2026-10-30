@@ -1,0 +1,131 @@
+{
+  "baseCommit": "af10916be66dfa27674b85d25b830513ccddd519",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae",
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "src/carlisleCoastalBanks.ts": "20a55dc8e0ecd8acc6189771a8e495aa1e4b4bedc62359773cee34a141cb66bd",
+    "src/carlisleShipyardMaterials.ts": "c325a90f54f6a7707f644dffd0c78d2780537524bc75edac2a120775243cabea",
+    "src/carlisleFishingFleet.ts": "38319e1a62a5fb6b44aca9496e3721bc1454676c4a303332606d0ecbbb5dc749",
+    "src/carlisleShipyard.ts": "5f8ed5b43fdb53be5c0c4cdb1b09dcc39709a0e341df0b863067e847a202069e",
+    "src/carlislePierTimber.ts": "0ddfff7fa7ebe253c66735e9ecb0aa9b93b70e87c48c47e62c87910abe3edb78"
+  },
+  "unchangedDeckFittingPrefixSHA256": "13f7d6e31530f2b89b37ef744c66fb5a2bfbb879d5131c81f8f826b64102ba4a",
+  "deckAssets": {
+    "public/props/carlisle-decks/solid-timber-joined.glb": {
+      "sourceBytes": 14527344,
+      "sourceSHA256": "94e27eb1de553b674ae3da6df3e78468bba189e7cc5ae8efde3fa72a122358a9",
+      "compiledBytes": 2748396,
+      "compiledSHA256": "7ecf68df609a40642d39cb4202b64471a1c54948881e568fb727d81f29307df3",
+      "compiledPacking": "Exact source image externalized by existing build deduplication",
+      "exactAccessorHashes": [
+        {
+          "type": "VEC3",
+          "count": 35560,
+          "sha256": "b740b4ac7b7f51d5ccec7d93d60eaa2570e3cbc5e2ad8ac10c434f65a9ae960b"
+        },
+        {
+          "type": "VEC3",
+          "count": 35560,
+          "sha256": "a9ca10543e4a53499ba684a54bd6d49d9ff5ee7b1e9c3d931c95c893a0e4197a"
+        },
+        {
+          "type": "VEC2",
+          "count": 35560,
+          "sha256": "0cca9113116613c9049c127744c190c742bdae2d3f14cd26eb0c2b380ebbf1da"
+        },
+        {
+          "type": "SCALAR",
+          "count": 88659,
+          "sha256": "74e5ab4c2d8c872dcec6abc769948cb887fc075f5a667c269d9abf04fb01b774"
+        },
+        {
+          "type": "VEC3",
+          "count": 30172,
+          "sha256": "d902743dfdfc8f6b88122ad1d9a664caeb886e4cd30b161a46f7b58d2882e63d"
+        },
+        {
+          "type": "VEC3",
+          "count": 30172,
+          "sha256": "d17fff1ab7dd10ab8c93d16a508faed1e25f1329ef231bce233e4ef20bd36352"
+        },
+        {
+          "type": "VEC2",
+          "count": 30172,
+          "sha256": "dceab8812c0f033314e111ff2f608d62988ec5808462a401bd1854ecca80dfe5"
+        },
+        {
+          "type": "SCALAR",
+          "count": 71922,
+          "sha256": "4b43544e7eb29c84d5f507680b18534780ec1c1a3247378247a9b1e20172ff1f"
+        }
+      ],
+      "exactImageHashes": [
+        "8aace40a68e045e2e855ea0f317bd00d8b8b9eb4bf407f34429e32f6ee82362c"
+      ]
+    },
+    "public/props/carlisle-decks/broad-deck-joined.glb": {
+      "sourceBytes": 16883020,
+      "sourceSHA256": "d118708f699fa7e7ccdaff6399c1139fa23ac790c5929433ea90e4839a24fa2a",
+      "compiledBytes": 4183380,
+      "compiledSHA256": "835a475eb8498beaf759346dc02aecb3bbe394c3e95b0455202a46fa4aa302e1",
+      "compiledPacking": "Exact source image externalized by existing build deduplication",
+      "exactAccessorHashes": [
+        {
+          "type": "VEC3",
+          "count": 51567,
+          "sha256": "a7b8bbc99cae31d9dacdf77513d7bd121bd8df8c4ead83ca327b4aa00594f977"
+        },
+        {
+          "type": "VEC3",
+          "count": 51567,
+          "sha256": "eb0b12d71eebaec6c88178917c93f2d84eb322244faf609a766e7ddc037d7c10"
+        },
+        {
+          "type": "VEC2",
+          "count": 51567,
+          "sha256": "0273e4ab06c428194b90f8f2d3a44122a882a0808b84fabc55f1311378174629"
+        },
+        {
+          "type": "SCALAR",
+          "count": 129123,
+          "sha256": "edd4b3553f04a91377c6911a79b3c00876fca3028a7f5e1f3a985b8d500597cb"
+        },
+        {
+          "type": "VEC3",
+          "count": 48179,
+          "sha256": "9939d35fe9a21c11826538a22a60d68a7c0f550d5595697a8545ca80427f7641"
+        },
+        {
+          "type": "VEC3",
+          "count": 48179,
+          "sha256": "d33bb531d1f5e15bf1fde878dbe9824ef2d3179f7a7a9c8c52f86d9c995990d4"
+        },
+        {
+          "type": "VEC2",
+          "count": 48179,
+          "sha256": "0938e9cc5caf85ef7146081c8d136f58db49fabd00a7c1a19f8c1e6930b7941f"
+        },
+        {
+          "type": "SCALAR",
+          "count": 118101,
+          "sha256": "3bfc58d1a16aae8e3bccf2be4706aa4ebca0f9e03ed1ef0b366f67fccededebc"
+        }
+      ],
+      "exactImageHashes": [
+        "9402c7fbe5eb5a2a8aba36bf8ddec43e1b4bf4edce0ba53b4d5c7182e1a6e10f"
+      ]
+    }
+  }
+}

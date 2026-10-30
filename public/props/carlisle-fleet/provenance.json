@@ -1,0 +1,31 @@
+{
+  "source": "Tripo Studio existing plan credits",
+  "assetId": "5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+  "url": "https://studio.tripo3d.ai/workspace/generate/5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+  "model": "Smart Mesh P2.0",
+  "reference": "art/carlisle-shipyard/fishing-fleet/references/shrimp-boat.png",
+  "generationTriangleTarget": 50000,
+  "sourceTriangles": 51177,
+  "vertices": 70464,
+  "bounds": {
+    "min": [
+      -0.499755859375,
+      0.0,
+      -0.209716796875
+    ],
+    "max": [
+      0.499755859375,
+      0.59326171875,
+      0.209716796875
+    ]
+  },
+  "texture": {
+    "width": 8192,
+    "height": 8192,
+    "format": "JPEG"
+  },
+  "bytes": 16523776,
+  "sha256": "dfec9a3222b46bb94a86c88d0fe288acd095892580633cc869e8b4408f8d51e7",
+  "processing": "Original full textured GLB; no retopology, remeshing, texture resizing or decimation.",
+  "exportFilename": "carlisle-shrimp-boat.glb"
+}

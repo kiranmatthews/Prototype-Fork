@@ -1,0 +1,237 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": true,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "arrival-underpier",
+      "camera": [
+        161,
+        216,
+        54
+      ],
+      "center": [
+        117,
+        221,
+        -5
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1132,
+        "calls": 1194,
+        "triangles": 42922806,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "arrival-post-detail",
+      "camera": [
+        130,
+        216,
+        10
+      ],
+      "center": [
+        120.9,
+        218,
+        -5.15
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1151,
+        "calls": 1177,
+        "triangles": 42703215,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "crane-underpier",
+      "camera": [
+        -187,
+        103,
+        -2010
+      ],
+      "center": [
+        -130,
+        110,
+        -2058
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1164,
+        "calls": 1118,
+        "triangles": 19115851,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "homecoming-underpier",
+      "camera": [
+        -191,
+        -2,
+        -3709
+      ],
+      "center": [
+        -140,
+        0,
+        -3748
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1175,
+        "calls": 492,
+        "triangles": 5941513,
+        "points": 20,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bonus-pier",
+      "camera": [
+        32,
+        10,
+        26
+      ],
+      "center": [
+        63,
+        2,
+        -13
+      ],
+      "far": 450,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1234,
+        "calls": 438,
+        "triangles": 4875865,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1824,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "ground": 334,
+    "crates": 270,
+    "wetSlopes": 18,
+    "build": "Codex/sol fork · build 10-30 00:42 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4,
+    "crates": 21
+  },
+  "normal": {
+    "far": 850,
+    "art": "ready",
+    "median": 16.69999998807907,
+    "p95": 18.69999998807907,
+    "samples": 119
+  },
+  "walk": {
+    "z": -2.3609999161935296,
+    "deaths": 0
+  },
+  "passed": true
+}

@@ -1,0 +1,340 @@
+{
+  "baseCommit": "4670a18fbf47e8486a575425ea6137646e8f6655",
+  "status": "Validated local presentation increment; publication HOLD",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleBoardwalk.ts": "b6230e89513698e9f20e1c50d8a007813cbfb6d0c82d967faf52ce0d121a6668",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae",
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "src/carlisleCoastalBanks.ts": "20a55dc8e0ecd8acc6189771a8e495aa1e4b4bedc62359773cee34a141cb66bd",
+    "src/carlisleShipyardMaterials.ts": "c325a90f54f6a7707f644dffd0c78d2780537524bc75edac2a120775243cabea",
+    "src/carlisleFishingFleet.ts": "38319e1a62a5fb6b44aca9496e3721bc1454676c4a303332606d0ecbbb5dc749"
+  },
+  "changedRuntime": {
+    "src/carlisleShipyard.ts": "5f8ed5b43fdb53be5c0c4cdb1b09dcc39709a0e341df0b863067e847a202069e",
+    "src/carlislePierTimber.ts": "0ddfff7fa7ebe253c66735e9ecb0aa9b93b70e87c48c47e62c87910abe3edb78"
+  },
+  "generatedTexture": {
+    "file": "public/textures/carlisle-piers/weathered-timber.png",
+    "sha256": "5bba739d173d0dbdec13ab2e2f9da2d4f916ac8f7ecb91501dcc13d8e89d98ea",
+    "bytes": 3621542,
+    "width": 1254,
+    "height": 1254,
+    "byteIdenticalInDist": true,
+    "mode": "Built-in image_gen",
+    "promptRecord": "imagegen.json"
+  },
+  "checks": {
+    "sourceAndAssets": "Original main/bonus course and all twelve original complete prop fingerprints passed",
+    "build": "npm run build passed including tsc --noEmit",
+    "lite": "Two shader/fitting views, finite geometry and conservative complete-member boat clearance passed",
+    "native": "Five compiled 1920x1080 views inspected: arrival pier, close material/fittings, crane yard, homecoming and bonus",
+    "normal": "480p/CRT, main-to-bonus-to-main disposal/reload and keyboard walking pass; zero deaths",
+    "errors": [],
+    "scope": "No authored course changes, new full-course traversal, repeated level audit or full suite"
+  },
+  "fitCorrection": {
+    "baseline": "Deck-plank material made long pier shafts look horizontally striped; tall scenery quays lacked bracing.",
+    "firstNativeReview": "Timber grain and frame geometry read clearly, but the iron joint plates were partly buried in the thick main posts.",
+    "correction": "Move each plate centre from 0.48m to 0.84m outside the post centreline, seating its back against the timber/brace face; bolts follow the plate.",
+    "scope": "Only scenery structure. No authored level, player, collision, support or camera changes."
+  },
+  "mainStructure": {
+    "status": "ready",
+    "piles": 4146,
+    "ledgers": 1218,
+    "braces": 1604,
+    "plates": 2432,
+    "bolts": 4864,
+    "placedTriangles": 2177728,
+    "colliders": 0,
+    "errors": []
+  },
+  "bonusStructure": {
+    "status": "ready",
+    "piles": 156,
+    "ledgers": 32,
+    "braces": 0,
+    "plates": 0,
+    "bolts": 0,
+    "placedTriangles": 66944,
+    "colliders": 0,
+    "errors": []
+  },
+  "vesselClearance": [
+    {
+      "at": [
+        236.44181965044612,
+        169.33811465449503,
+        -489.1223005887686
+      ],
+      "closest": 12.713509800252412,
+      "nearest": {
+        "a": [
+          206.50196633637216,
+          171.73811465449504,
+          -477.29613986430405
+        ],
+        "b": [
+          206.50196633637216,
+          171.73811465449504,
+          -468.09613986430406
+        ],
+        "width": 1.05,
+        "role": "ledger",
+        "sea": [
+          169.33811465449503,
+          169.33811465449503
+        ]
+      }
+    },
+    {
+      "at": [
+        152.40763112858775,
+        213.27211374988292,
+        -0.6199750150018275
+      ],
+      "closest": 13.093661403546161,
+      "nearest": {
+        "a": [
+          120.91869860420297,
+          208.77211374988292,
+          -5.154943890460592
+        ],
+        "b": [
+          120.91869860420297,
+          215.77211374988292,
+          -5.154943890460592
+        ],
+        "width": 0.7,
+        "role": "pile",
+        "sea": [
+          213.27211374988292,
+          213.27211374988292
+        ]
+      }
+    },
+    {
+      "at": [
+        -35.69587433166052,
+        161.3775820967888,
+        -700.7241621162807
+      ],
+      "closest": 7.0140249776410935,
+      "nearest": {
+        "a": [
+          -19.645110263980282,
+          158.3775820967888,
+          -678.0588761464131
+        ],
+        "b": [
+          -19.645110263980282,
+          169.3775820967888,
+          -678.0588761464131
+        ],
+        "width": 1.5,
+        "role": "pile",
+        "sea": [
+          161.3775820967888,
+          161.3775820967888
+        ]
+      }
+    },
+    {
+      "at": [
+        -170.70357102456381,
+        95.44658972508923,
+        -2060.40083995015
+      ],
+      "closest": 7.152701975804793,
+      "nearest": {
+        "a": [
+          -142.24202235055827,
+          121.64658972508923,
+          -2058.254369494907
+        ],
+        "b": [
+          -142.24202235055827,
+          113.34658972508923,
+          -2049.0543694949074
+        ],
+        "width": 0.72,
+        "role": "brace",
+        "sea": [
+          95.44658972508923,
+          95.44658972508923
+        ]
+      }
+    },
+    {
+      "at": [
+        188.34332340948782,
+        35.409361676763396,
+        -2702.384409507546
+      ],
+      "closest": 14.664427736799842,
+      "nearest": {
+        "a": [
+          157.34294111704077,
+          61.60936167676339,
+          -2684.3489938335683
+        ],
+        "b": [
+          157.34294111704077,
+          53.309361676763395,
+          -2675.1489938335685
+        ],
+        "width": 0.72,
+        "role": "brace",
+        "sea": [
+          35.409361676763396,
+          35.409361676763396
+        ]
+      }
+    },
+    {
+      "at": [
+        -178.11491721774098,
+        -8,
+        -3752.988011769422
+      ],
+      "closest": 21.170800733171212,
+      "nearest": {
+        "a": [
+          -155.17804373134658,
+          -11,
+          -3733.670208321682
+        ],
+        "b": [
+          -155.17804373134658,
+          20,
+          -3733.670208321682
+        ],
+        "width": 1.5,
+        "role": "pile",
+        "sea": [
+          -8,
+          -8
+        ]
+      }
+    }
+  ],
+  "minimumConservativeVesselClearance": 7.0140249776410935,
+  "counts": {
+    "ground": 334,
+    "crates": 270,
+    "wetSlopes": 18,
+    "nets": 56,
+    "mainMovers": 28,
+    "bonusMovers": 4,
+    "mainScenicBoats": 6,
+    "bonusScenicBoats": 2,
+    "newColliders": 0
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 01:17 UTC",
+    "files": 1779,
+    "sizeMiB": 1074.9,
+    "offlineVersion": "0bcba19a053eb72040e6"
+  },
+  "finalShortArrivalSample": {
+    "far": 850,
+    "art": "ready",
+    "median": 33.400000005960464,
+    "p95": 39.80000001192093,
+    "samples": 119
+  },
+  "controlledTiming": {
+    "method": "Same browser, camera, resolution, assets and fixed gameplay; alternate new full structure with reconstructed prior cylindrical shafts, 90 settling and 240 sampled frames per window.",
+    "results": [
+      {
+        "state": "new",
+        "median": 33.30000001192093,
+        "p95": 34.69999998807907,
+        "samples": 240,
+        "render": {
+          "frame": 4494,
+          "calls": 635,
+          "triangles": 22230073,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      },
+      {
+        "state": "prior",
+        "median": 33.30000001192093,
+        "p95": 34.29999998211861,
+        "samples": 240,
+        "render": {
+          "frame": 8124,
+          "calls": 590,
+          "triangles": 21238161,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      },
+      {
+        "state": "new",
+        "median": 33.30000001192093,
+        "p95": 34.79999998211861,
+        "samples": 240,
+        "render": {
+          "frame": 11754,
+          "calls": 635,
+          "triangles": 22230073,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      },
+      {
+        "state": "prior",
+        "median": 33.30000001192093,
+        "p95": 34.599999994039536,
+        "samples": 240,
+        "render": {
+          "frame": 15384,
+          "calls": 590,
+          "triangles": 21238161,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      }
+    ]
+  },
+  "timingInterpretation": "A short final review sample was slower than earlier samples. A subsequent in-process new/prior/new/prior comparison returned the same 33.3ms median in all four windows, with p95 34.7/34.3/34.8/34.6ms. This does not isolate the cause of the broader cadence change or establish whole-course performance. Other active rendering processes were observed; none were interrupted.",
+  "tripoCreditsSpent": 0,
+  "apiCreditsPurchased": 0,
+  "elapsed": {
+    "startedUTC": "2026-10-30T00:50:00+00:00",
+    "firstPlayableMinutesApprox": 18,
+    "validatedUTC": "2026-10-30T01:32:17.994854+00:00",
+    "finalValidatedMinutesApprox": 42
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "status": "Validated local increment; user publication hold remains active",
+  "baseCommit": "a9e3d4e454f9993fad94dc626e2d16fa82f3e68a",
+  "visualReview": [
+    "Dry arrival deck: joined chunky planks with modeled bevels and visible thickness",
+    "Wet descent: original navy surface, no timber overlay",
+    "Net berth: footprint cut clear of native spring opening",
+    "Elevated and tail landings: same physical plank scale",
+    "Bonus: plank orientation follows +X travel; front shows continuous under-beam",
+    "Full native 1920x1080 and normal 480p CRT reviewed"
+  ],
+  "preservedFiles": {
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/levels/carlisle-tidal-relay.ts": "fda8bce5c329cf83b5fd9c6197920deecb91cf6de26853d3211d41bbce5bf175",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae"
+  },
+  "checks": {
+    "source": "tools/test-carlisle-shipyard.mjs: exact source gameplay hashes and twelve prop hashes",
+    "footprints": "tools/test-carlisle-boardwalk.mjs: 45 dry decks, 335169 samples, zero unsupported overhangs, depth preserved",
+    "textures": "Both original/joined pairs retain every embedded image byte",
+    "build": "npm run build: type-check and Vite production build passed",
+    "fullBrowser": "tools/carlisle-boardwalk-review.mjs against compiled localhost:5484; main/bonus/reload, 18 wet materials, walking, zero console errors",
+    "liteBrowser": "tools/carlisle-boardwalk-review.mjs --lite against localhost:5483: all 18 wet surfaces, native ground count, keyboard walking, zero console errors"
+  },
+  "build": {
+    "files": 1772,
+    "sizeMiB": 1023.9,
+    "offlineVersion": "601a1058b6190db0367e",
+    "newProvenanceAddedAfterBuild": true
+  },
+  "limits": [
+    "Bounded visual/geometry checks, not a new full-course completion run",
+    "Frame timing in browser.json is the normal-resolution arrival view only"
+  ],
+  "credits": {
+    "studioPlan": 325,
+    "apiPurchase": 0
+  },
+  "localUrl": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour"
+}

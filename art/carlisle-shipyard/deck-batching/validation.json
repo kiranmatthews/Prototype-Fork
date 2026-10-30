@@ -1,0 +1,175 @@
+{
+  "baseCommit": "af10916be66dfa27674b85d25b830513ccddd519",
+  "status": "Validated locally; publication held",
+  "change": "Partition intact full timber modules by 48m parent-local cells",
+  "mainTimber": {
+    "decks": 131,
+    "sections": 966,
+    "intactModules": 567,
+    "instanceBatches": 177,
+    "sourceTriangles": 23974,
+    "sceneryTriangles": 39367,
+    "fittedTriangles": 27724901,
+    "slipperyOverlays": 0,
+    "errors": []
+  },
+  "inventory": {
+    "originals": {
+      "batches": 177,
+      "modules": 567,
+      "triangles": 21843906,
+      "moduleFingerprint": "1d6400f5ab7878a5efd36a099b879a1d1acc4ba52f5c3cc4fd220c6eb82147de"
+    },
+    "variants": [
+      {
+        "size": 0,
+        "batches": 34,
+        "modules": 567,
+        "triangles": 21843906,
+        "moduleFingerprint": "1d6400f5ab7878a5efd36a099b879a1d1acc4ba52f5c3cc4fd220c6eb82147de"
+      },
+      {
+        "size": 48,
+        "batches": 177,
+        "modules": 567,
+        "triangles": 21843906,
+        "moduleFingerprint": "1d6400f5ab7878a5efd36a099b879a1d1acc4ba52f5c3cc4fd220c6eb82147de"
+      }
+    ]
+  },
+  "cameraResults": [
+    {
+      "view": "arrival",
+      "coarseTriangles": 22214055,
+      "runtimeTriangles": 18474190,
+      "reductionPercent": 16.84,
+      "coarseCalls": 614,
+      "runtimeCalls": 676,
+      "runtimeVersusCoarseChangedPixels": 2,
+      "runtimeVersusUnculledChangedPixels": 0
+    },
+    {
+      "view": "first-bounce",
+      "coarseTriangles": 22839295,
+      "runtimeTriangles": 13312481,
+      "reductionPercent": 41.71,
+      "coarseCalls": 425,
+      "runtimeCalls": 462,
+      "runtimeVersusCoarseChangedPixels": 117,
+      "runtimeVersusUnculledChangedPixels": 0
+    },
+    {
+      "view": "birdseye-bounce",
+      "coarseTriangles": 17647236,
+      "runtimeTriangles": 11348516,
+      "reductionPercent": 35.69,
+      "coarseCalls": 370,
+      "runtimeCalls": 407,
+      "runtimeVersusCoarseChangedPixels": 497,
+      "runtimeVersusUnculledChangedPixels": 0
+    },
+    {
+      "view": "lift-yard",
+      "coarseTriangles": 29878191,
+      "runtimeTriangles": 20941882,
+      "reductionPercent": 29.91,
+      "coarseCalls": 701,
+      "runtimeCalls": 763,
+      "runtimeVersusCoarseChangedPixels": 6,
+      "runtimeVersusUnculledChangedPixels": 0
+    },
+    {
+      "view": "crane-yard",
+      "coarseTriangles": 10595138,
+      "runtimeTriangles": 10595138,
+      "reductionPercent": 0.0,
+      "coarseCalls": 597,
+      "runtimeCalls": 625,
+      "runtimeVersusCoarseChangedPixels": 782,
+      "runtimeVersusUnculledChangedPixels": 0
+    },
+    {
+      "view": "homecoming",
+      "coarseTriangles": 4133231,
+      "runtimeTriangles": 4133231,
+      "reductionPercent": 0.0,
+      "coarseCalls": 376,
+      "runtimeCalls": 388,
+      "runtimeVersusCoarseChangedPixels": 0,
+      "runtimeVersusUnculledChangedPixels": 0
+    },
+    {
+      "view": "mirrored-arrival",
+      "coarseTriangles": 22260666,
+      "runtimeTriangles": 18599535,
+      "reductionPercent": 16.45,
+      "coarseCalls": 613,
+      "runtimeCalls": 676,
+      "runtimeVersusCoarseChangedPixels": 11,
+      "runtimeVersusUnculledChangedPixels": 0
+    }
+  ],
+  "checks": {
+    "source": "Original main/bonus gameplay and twelve prop fingerprints pass; nineteen source files and exact deck fitting prefix match base",
+    "assets": "Both source GLBs unchanged; compiled geometry/index/material/image data identical after existing texture externalization",
+    "build": "npm run build passed (typecheck and production build)",
+    "browser": "Seven native 1920x1080 paired views; repeated stable control; exact cull-on/cull-off comparison; native bonus and main/bonus/main reload; normal 480p/CRT and keyboard walking",
+    "cargo": [
+      {
+        "name": "Storm crosswind row",
+        "launched": true,
+        "landed": true,
+        "distance": 2.015095275741433,
+        "end": {
+          "at": [
+            61.30785537128948,
+            98.42936168868432,
+            -2740.1698257056128
+          ],
+          "forward": [
+            -0.00723662078329397,
+            0,
+            -0.9999738153170007
+          ],
+          "side": [
+            0.9999738153170007,
+            0,
+            -0.00723662078329397
+          ],
+          "spring": true,
+          "vy": 80.125,
+          "grounded": false,
+          "state": "air",
+          "deaths": 0,
+          "bail": false,
+          "mounted": false,
+          "broken": 4,
+          "time": 4.933333333333321
+        }
+      }
+    ],
+    "consoleErrors": []
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 01:54 UTC",
+    "files": 1779,
+    "sizeMiB": 1074.9,
+    "offlineVersion": "e79b8cb5487ec0742aab"
+  },
+  "testDriverRepair": {
+    "initialRun": "air-cargo/normal-browser.json",
+    "result": "Screenshot disabled in feedback loop; four crates collected, nitro avoided, next trampoline caught, zero deaths/errors",
+    "feedbackGapSeconds": 1.2,
+    "cause": "Awaited screenshot across apex held the previous input while the external keyboard driver waited",
+    "finalRun": "air-cargo-final/normal-browser.json"
+  },
+  "limits": [
+    "Submitted triangle savings, not proof of sustained FPS or whole-course performance",
+    "Spatial regrouping slightly changes plank-edge rasterization versus the coarse control; all seven cull-on/off images match exactly",
+    "Mirrored camera stress test omits reflecting water; not a planar water reflection feature",
+    "No new full-course traversal or repeated unchanged level-data audit",
+    "Broader polish goal remains active"
+  ],
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour",
+  "paidServices": false
+}

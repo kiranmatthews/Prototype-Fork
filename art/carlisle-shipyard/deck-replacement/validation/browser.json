@@ -1,0 +1,372 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "arrival-close",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1192,
+        "calls": 1485,
+        "triangles": 44591822,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "downhill-wet",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1204,
+        "calls": 829,
+        "triangles": 39584210,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "net-berth",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1225,
+        "calls": 913,
+        "triangles": 40525299,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "dredger-landing",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1233,
+        "calls": 882,
+        "triangles": 20518263,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "tail-gap",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1256,
+        "calls": 545,
+        "triangles": 9554087,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1836,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "errors": []
+    },
+    "grounds": 334
+  },
+  "slopes": [
+    {
+      "name": "Foam steps · start · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Foam catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Scissor abutment · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Groyne catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Lift catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Socket catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Winch exit · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Winch catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Beacon catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Dial receiving quay · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Pinwheel catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Dredger upper terrace · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Crane gantry · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Stack catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Harbour departure · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Turbine catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Pendulum receiving quay · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    },
+    {
+      "name": "Rigging catch · downhill slick · ice 2",
+      "visible": true,
+      "materials": [
+        {
+          "name": "Harbour wet",
+          "visible": true
+        }
+      ],
+      "iceGrip": 0.02,
+      "slipGravity": 1
+    }
+  ],
+  "walk": {
+    "at": [
+      2.0209733552899394,
+      221.27211374988292,
+      -3.5097245899369565
+    ],
+    "deaths": 0,
+    "grounded": true
+  },
+  "bonus": {
+    "status": "ready",
+    "sections": 1,
+    "models": 12,
+    "props": 86,
+    "nets": 5,
+    "mountedMovers": 4,
+    "decorativeColliders": 0,
+    "timber": {
+      "decks": 12,
+      "sections": 34,
+      "intactModules": 8,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 638212,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "errors": []
+  },
+  "normalFrameTiming": {
+    "median": 16.799999982118607,
+    "p95": 20.5,
+    "samples": 109
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 12,
+    "props": 1836,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "errors": []
+  }
+}

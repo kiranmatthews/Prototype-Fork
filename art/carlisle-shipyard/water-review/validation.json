@@ -1,0 +1,92 @@
+{
+  "baseCommit": "5d1eac85e7a2a90ea8f194d7011c595196e61717",
+  "status": "Local-only visual validation",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleBoardwalk.ts": "b6230e89513698e9f20e1c50d8a007813cbfb6d0c82d967faf52ce0d121a6668",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae",
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "changedRuntime": {
+    "src/carlisleShipyard.ts": "921189bd1e997431344a71e694bf0a7f3c507775607fbda13db0e5ad8faa59d8",
+    "src/carlisleShipyardMaterials.ts": "624bc658ce9b930fad4a71db9469aaefe2e4566d2f22e01eb1aa5fed08452508"
+  },
+  "checks": {
+    "sourceAndAssets": "Original course fingerprint and twelve original prop fingerprints passed",
+    "build": "npm run build passed",
+    "nativeBrowser": "Five native views, 480p/CRT, four waterline-parented boat washes, main/bonus/reload, walking, zero console errors",
+    "keyboardBounce": "Compiled 480p/CRT Storm crosswind: four crates collected, next spring reached, zero deaths/bails/errors"
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-29 22:12 UTC",
+    "files": 1773,
+    "sizeMiB": 1023.9,
+    "offlineVersion": "f3a257aedee344b4349f"
+  },
+  "water": {
+    "main": {
+      "staticWash": 1388,
+      "movingWash": 0
+    },
+    "bonus": {
+      "staticWash": 54,
+      "movingWash": 4
+    }
+  },
+  "preservedCounts": {
+    "groundMeshes": 334,
+    "wetSlopes": 18,
+    "crates": 270,
+    "nitros": 22,
+    "nativeMovers": 28,
+    "nativeNets": 56
+  },
+  "normalArrivalFrameSample": {
+    "median": 16.69999998807907,
+    "p95": 18.200000017881393,
+    "samples": 119
+  },
+  "creditsSpent": 0,
+  "keyboardFlight": {
+    "name": "Storm crosswind row",
+    "launched": true,
+    "landed": true,
+    "distance": 2.015095275741433,
+    "end": {
+      "at": [
+        61.30785537128948,
+        98.42936168868432,
+        -2740.1698257056128
+      ],
+      "forward": [
+        -0.00723662078329397,
+        0,
+        -0.9999738153170007
+      ],
+      "side": [
+        0.9999738153170007,
+        0,
+        -0.00723662078329397
+      ],
+      "spring": true,
+      "vy": 80.125,
+      "grounded": false,
+      "state": "air",
+      "deaths": 0,
+      "bail": false,
+      "mounted": false,
+      "broken": 4,
+      "time": 4.933333333333321
+    }
+  }
+}

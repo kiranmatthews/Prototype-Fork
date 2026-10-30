@@ -1,0 +1,283 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": true,
+  "lite": false,
+  "errors": [],
+  "sky": [
+    {
+      "id": "play-distance",
+      "far": 850,
+      "p": [
+        0,
+        0,
+        0
+      ],
+      "aim": [
+        0,
+        0.22,
+        -1
+      ],
+      "time": 42,
+      "uncoveredFraction": 1,
+      "luminanceRange": [
+        72.624,
+        72.624
+      ],
+      "pixelHash": 41474501,
+      "sourceTriangles": 1520
+    },
+    {
+      "id": "short-distance",
+      "far": 300,
+      "p": [
+        0,
+        0,
+        0
+      ],
+      "aim": [
+        0,
+        0.22,
+        -1
+      ],
+      "time": 42,
+      "uncoveredFraction": 1,
+      "luminanceRange": [
+        72.624,
+        72.624
+      ],
+      "pixelHash": 41474501,
+      "sourceTriangles": 1520
+    },
+    {
+      "id": "long-distance",
+      "far": 6000,
+      "p": [
+        0,
+        0,
+        0
+      ],
+      "aim": [
+        0,
+        0.22,
+        -1
+      ],
+      "time": 42,
+      "uncoveredFraction": 0,
+      "luminanceRange": [
+        52.334,
+        100.57379999999999
+      ],
+      "pixelHash": 3673817700,
+      "sourceTriangles": 1520
+    },
+    {
+      "id": "translated",
+      "far": 850,
+      "p": [
+        412,
+        238,
+        -2048
+      ],
+      "aim": [
+        0,
+        0.22,
+        -1
+      ],
+      "time": 42,
+      "uncoveredFraction": 1,
+      "luminanceRange": [
+        72.624,
+        72.624
+      ],
+      "pixelHash": 41474501,
+      "sourceTriangles": 1520
+    },
+    {
+      "id": "zenith",
+      "far": 850,
+      "p": [
+        0,
+        0,
+        0
+      ],
+      "aim": [
+        0.05,
+        1,
+        -0.1
+      ],
+      "time": 42,
+      "uncoveredFraction": 1,
+      "luminanceRange": [
+        72.624,
+        72.624
+      ],
+      "pixelHash": 41474501,
+      "sourceTriangles": 1520
+    },
+    {
+      "id": "later-clouds",
+      "far": 850,
+      "p": [
+        0,
+        0,
+        0
+      ],
+      "aim": [
+        0,
+        0.22,
+        -1
+      ],
+      "time": 162,
+      "uncoveredFraction": 1,
+      "luminanceRange": [
+        72.624,
+        72.624
+      ],
+      "pixelHash": 41474501,
+      "sourceTriangles": 1520
+    }
+  ],
+  "views": [
+    {
+      "id": "arrival",
+      "s": 5,
+      "camera": [
+        -4.995918500809096,
+        231.27211374988292,
+        8.662609210467329
+      ],
+      "center": [
+        41.29221634057532,
+        223.65072741940213,
+        -74.28649268247325
+      ],
+      "far": 850,
+      "render": {
+        "frame": 1094,
+        "calls": 1172,
+        "triangles": 41938658,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "harbour-horizon",
+      "s": 260,
+      "camera": [
+        86.07732658385753,
+        226.25329713994913,
+        -169.7914957298832
+      ],
+      "center": [
+        -83.54345828089991,
+        210.44099789936686,
+        -265.1553595568827
+      ],
+      "far": 850,
+      "render": {
+        "frame": 1117,
+        "calls": 876,
+        "triangles": 47038887,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon",
+      "s": 1100,
+      "camera": [
+        20.229265019517555,
+        184.0448601709309,
+        -1021.8419467163217
+      ],
+      "center": [
+        -64.16885521130537,
+        199.00860487932084,
+        -1101.1219234575976
+      ],
+      "far": 850,
+      "render": {
+        "frame": 1123,
+        "calls": 1266,
+        "triangles": 41670534,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "storm-bounce",
+      "s": 2830,
+      "camera": [
+        127.11028947741147,
+        213.4093616767634,
+        -2676.1641009157315
+      ],
+      "center": [
+        25.915309016024892,
+        58.409361676763396,
+        -2733.3073393831405
+      ],
+      "far": 850,
+      "render": {
+        "frame": 1139,
+        "calls": 854,
+        "triangles": 14620472,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1836,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1388,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "ground": 334,
+    "crates": 270,
+    "wetSlopes": 18,
+    "far": 850,
+    "build": "Codex/sol fork · build 10-29 23:12 UTC"
+  },
+  "bonus": {
+    "far": 450,
+    "movers": 4,
+    "sky": true
+  },
+  "normal": {
+    "far": 850,
+    "art": "ready",
+    "median": 16.69999998807907,
+    "p95": 17.900000005960464,
+    "samples": 119
+  },
+  "passed": true
+}

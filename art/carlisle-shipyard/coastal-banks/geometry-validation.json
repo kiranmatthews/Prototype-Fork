@@ -1,0 +1,268 @@
+{
+  "banks": 32,
+  "sourceTriangles": 100707,
+  "placedTriangles": 1657437,
+  "shoreSegments": 35080,
+  "verticesChecked": 2203710,
+  "maxReliefError": 0.000009447478878099602,
+  "minCenterlineClearance": 253.4025348203475,
+  "perBank": [
+    {
+      "kind": "dune-bank",
+      "station": -180,
+      "triangles": 54966,
+      "relief": 31.360542222361346,
+      "minCenterlineClearance": 281.4079610974474,
+      "shoreSegments": 800
+    },
+    {
+      "kind": "dune-bank",
+      "station": 110,
+      "triangles": 54966,
+      "relief": 34.75086437679255,
+      "minCenterlineClearance": 256.00678235780947,
+      "shoreSegments": 802
+    },
+    {
+      "kind": "dune-bank",
+      "station": 260,
+      "triangles": 54966,
+      "relief": 30.512962485172892,
+      "minCenterlineClearance": 274.3992061737806,
+      "shoreSegments": 806
+    },
+    {
+      "kind": "dune-bank",
+      "station": 545,
+      "triangles": 54966,
+      "relief": 30.512954711914062,
+      "minCenterlineClearance": 272.625960313373,
+      "shoreSegments": 856
+    },
+    {
+      "kind": "dune-bank",
+      "station": 80,
+      "triangles": 54966,
+      "relief": 39.8363513867009,
+      "minCenterlineClearance": 382.28240928550747,
+      "shoreSegments": 780
+    },
+    {
+      "kind": "dune-bank",
+      "station": 865,
+      "triangles": 54966,
+      "relief": 30.512954711914062,
+      "minCenterlineClearance": 259.7609032424474,
+      "shoreSegments": 856
+    },
+    {
+      "kind": "dune-bank",
+      "station": 995,
+      "triangles": 54966,
+      "relief": 32.20811718696402,
+      "minCenterlineClearance": 253.4025348203475,
+      "shoreSegments": 803
+    },
+    {
+      "kind": "dune-bank",
+      "station": 1255,
+      "triangles": 54966,
+      "relief": 27.122624133077352,
+      "minCenterlineClearance": 334.7911358389578,
+      "shoreSegments": 931
+    },
+    {
+      "kind": "dune-bank",
+      "station": 1465,
+      "triangles": 54966,
+      "relief": 33.903287071121625,
+      "minCenterlineClearance": 301.29744333254564,
+      "shoreSegments": 779
+    },
+    {
+      "kind": "dune-bank",
+      "station": 1760,
+      "triangles": 54966,
+      "relief": 34.75086212158203,
+      "minCenterlineClearance": 329.5607710870861,
+      "shoreSegments": 802
+    },
+    {
+      "kind": "dune-bank",
+      "station": 1920,
+      "triangles": 54966,
+      "relief": 31.360532643264563,
+      "minCenterlineClearance": 271.65869774801484,
+      "shoreSegments": 800
+    },
+    {
+      "kind": "dune-bank",
+      "station": 2235,
+      "triangles": 54966,
+      "relief": 33.90327835083008,
+      "minCenterlineClearance": 264.08487341002433,
+      "shoreSegments": 841
+    },
+    {
+      "kind": "dune-bank",
+      "station": 2390,
+      "triangles": 54966,
+      "relief": 31.36052885540942,
+      "minCenterlineClearance": 325.75848791197745,
+      "shoreSegments": 800
+    },
+    {
+      "kind": "dune-bank",
+      "station": 1680,
+      "triangles": 54966,
+      "relief": 42.37909698486328,
+      "minCenterlineClearance": 354.9265237127446,
+      "shoreSegments": 800
+    },
+    {
+      "kind": "dune-bank",
+      "station": 2050,
+      "triangles": 54966,
+      "relief": 38.14118194580078,
+      "minCenterlineClearance": 497.25568051625925,
+      "shoreSegments": 776
+    },
+    {
+      "kind": "dune-bank",
+      "station": 2815,
+      "triangles": 54966,
+      "relief": 33.05569839477539,
+      "minCenterlineClearance": 286.763159420297,
+      "shoreSegments": 840
+    },
+    {
+      "kind": "dune-bank",
+      "station": 2960,
+      "triangles": 54966,
+      "relief": 31.360538482666016,
+      "minCenterlineClearance": 282.2382476741995,
+      "shoreSegments": 800
+    },
+    {
+      "kind": "dune-bank",
+      "station": 3370,
+      "triangles": 54966,
+      "relief": 27.122625011210623,
+      "minCenterlineClearance": 391.40480605168125,
+      "shoreSegments": 931
+    },
+    {
+      "kind": "dune-bank",
+      "station": 3710,
+      "triangles": 54966,
+      "relief": 32.208115577697754,
+      "minCenterlineClearance": 275.2041015421286,
+      "shoreSegments": 803
+    },
+    {
+      "kind": "dune-bank",
+      "station": 3995,
+      "triangles": 54966,
+      "relief": 34.75086307525635,
+      "minCenterlineClearance": 266.96180344425096,
+      "shoreSegments": 802
+    },
+    {
+      "kind": "dune-bank",
+      "station": 4150,
+      "triangles": 54966,
+      "relief": 33.90327739715576,
+      "minCenterlineClearance": 271.24699959567386,
+      "shoreSegments": 779
+    },
+    {
+      "kind": "marsh-bank",
+      "station": -35,
+      "triangles": 45741,
+      "relief": 33.507568359375,
+      "minCenterlineClearance": 263.26653937078305,
+      "shoreSegments": 1643
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 395,
+      "triangles": 45741,
+      "relief": 35.27113918163113,
+      "minCenterlineClearance": 269.55645713706997,
+      "shoreSegments": 1582
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 380,
+      "triangles": 45741,
+      "relief": 43.20714282124348,
+      "minCenterlineClearance": 386.5847953001501,
+      "shoreSegments": 1702
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 1130,
+      "triangles": 45741,
+      "relief": 32.62580639675059,
+      "minCenterlineClearance": 325.0405763114813,
+      "shoreSegments": 1609
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 1615,
+      "triangles": 45741,
+      "relief": 33.50757598876953,
+      "minCenterlineClearance": 265.17410636910415,
+      "shoreSegments": 1643
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 2080,
+      "triangles": 45741,
+      "relief": 33.50757598876953,
+      "minCenterlineClearance": 338.79619894290914,
+      "shoreSegments": 1643
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 2540,
+      "triangles": 45741,
+      "relief": 29.098686172581615,
+      "minCenterlineClearance": 334.7805928297215,
+      "shoreSegments": 1643
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 2400,
+      "triangles": 45741,
+      "relief": 40.56180320183098,
+      "minCenterlineClearance": 394.91861262058035,
+      "shoreSegments": 1656
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 3230,
+      "triangles": 45741,
+      "relief": 35.27113342285156,
+      "minCenterlineClearance": 318.7605403721478,
+      "shoreSegments": 1582
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 3850,
+      "triangles": 45741,
+      "relief": 34.38935470581055,
+      "minCenterlineClearance": 273.80331536394687,
+      "shoreSegments": 1500
+    },
+    {
+      "kind": "marsh-bank",
+      "station": 3900,
+      "triangles": 45741,
+      "relief": 44.08891296386719,
+      "minCenterlineClearance": 383.1363945087041,
+      "shoreSegments": 1690
+    }
+  ],
+  "passed": true
+}

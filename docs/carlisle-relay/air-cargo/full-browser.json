@@ -1,0 +1,121 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "mode": "full",
+  "errors": [],
+  "flights": [
+    {
+      "name": "Socket starboard gap",
+      "launched": true,
+      "landed": true,
+      "distance": 1.976542042522269,
+      "end": {
+        "at": [
+          82.48578516066281,
+          190.39758210870974,
+          -719.2463265308061
+        ],
+        "forward": [
+          0.023932406523635166,
+          0,
+          -0.999713578940482
+        ],
+        "side": [
+          0.999713578940482,
+          0,
+          0.023932406523635166
+        ],
+        "spring": true,
+        "vy": 79.875,
+        "grounded": false,
+        "state": "air",
+        "deaths": 0,
+        "bail": false,
+        "mounted": false,
+        "broken": 4,
+        "time": 4.716666666666655
+      }
+    },
+    {
+      "name": "Storm crosswind row",
+      "launched": true,
+      "landed": true,
+      "distance": 2.423606918899009,
+      "end": {
+        "at": [
+          61.30781878954351,
+          99.75561168868433,
+          -2740.1693344700416
+        ],
+        "forward": [
+          -0.0072366691838416045,
+          0,
+          -0.9999738149667339
+        ],
+        "side": [
+          0.9999738149667339,
+          0,
+          -0.0072366691838416045
+        ],
+        "spring": true,
+        "vy": 79.575,
+        "grounded": false,
+        "state": "air",
+        "deaths": 0,
+        "bail": false,
+        "mounted": false,
+        "broken": 4,
+        "time": 4.949999999999988
+      }
+    },
+    {
+      "name": "Rigging port gap",
+      "launched": true,
+      "landed": true,
+      "distance": 1.6134047259953317,
+      "end": {
+        "at": [
+          -119.02103414205511,
+          35.94944841986361,
+          -3406.287529609485
+        ],
+        "forward": [
+          0.10345348083544215,
+          0,
+          -0.994634293247036
+        ],
+        "side": [
+          0.994634293247036,
+          0,
+          0.10345348083544215
+        ],
+        "spring": true,
+        "vy": 0,
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "bail": false,
+        "mounted": false,
+        "broken": 6,
+        "time": 6.183333333333317
+      }
+    }
+  ],
+  "views": [
+    "lift-parcel-cloud",
+    "socket-starboard-gap",
+    "beacon-hanging-steps",
+    "dredger-split-row",
+    "counterweight-hanging-pallet",
+    "storm-crosswind-row",
+    "rigging-port-gap"
+  ],
+  "source": {
+    "components": 1247,
+    "crates": 270,
+    "nitro": 22,
+    "grounds": 334,
+    "art": "ready",
+    "build": "Codex/sol fork \u00b7 build 10-29 21:39 UTC"
+  },
+  "passed": true
+}

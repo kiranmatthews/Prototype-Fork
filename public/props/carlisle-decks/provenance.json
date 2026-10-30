@@ -1,0 +1,48 @@
+{
+  "generator": "Tripo Studio P2.0",
+  "creditsRecord": "art/carlisle-shipyard/deck-replacement/credits.json",
+  "joinPreparation": "tools/prepare-carlisle-deck-tile.py",
+  "fitting": "Uniform XYZ scale; adjacent modules; trim only joining edges and original gameplay footprints. No distance variants or mesh simplification.",
+  "assets": [
+    {
+      "file": "public/props/carlisle-decks/broad-deck-joined.glb",
+      "sha256": "d118708f699fa7e7ccdaff6399c1139fa23ac790c5929433ea90e4839a24fa2a",
+      "bytes": 16883020,
+      "triangles": 39367,
+      "vertices": 48179,
+      "derivedJoinCrop": true,
+      "taskId": "bb267b30-db50-471c-8949-67d75fcb5b94",
+      "textureBytesUnmodified": true
+    },
+    {
+      "file": "public/props/carlisle-decks/broad-deck.glb",
+      "sha256": "64a9cfb4dcabaa757f5dbb99011da2584226ea24684dcb6085fa2324dc4bc9c4",
+      "bytes": 14868068,
+      "triangles": 43041,
+      "vertices": 51567,
+      "derivedJoinCrop": false,
+      "taskId": "bb267b30-db50-471c-8949-67d75fcb5b94",
+      "textureBytesUnmodified": true
+    },
+    {
+      "file": "public/props/carlisle-decks/solid-timber-joined.glb",
+      "sha256": "94e27eb1de553b674ae3da6df3e78468bba189e7cc5ae8efde3fa72a122358a9",
+      "bytes": 14527344,
+      "triangles": 23974,
+      "vertices": 30172,
+      "derivedJoinCrop": true,
+      "taskId": "3f323d96-474a-4bc2-9120-2139b6201d95",
+      "textureBytesUnmodified": true
+    },
+    {
+      "file": "public/props/carlisle-decks/solid-timber.glb",
+      "sha256": "99bef642a42cf6e841cda1e44fd90d0fd889218395ca1f5c40a572b2db9f32a3",
+      "bytes": 13273304,
+      "triangles": 29553,
+      "vertices": 35560,
+      "derivedJoinCrop": false,
+      "taskId": "3f323d96-474a-4bc2-9120-2139b6201d95",
+      "textureBytesUnmodified": true
+    }
+  ]
+}

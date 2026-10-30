@@ -1,0 +1,272 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "lite": false,
+  "baseline": true,
+  "errors": [],
+  "views": [
+    {
+      "id": "arrival",
+      "camera": [
+        -5.995102200970915,
+        230.27211374988292,
+        10.395131052560792
+      ],
+      "center": [
+        3.995882004104276,
+        221.27211374988292,
+        -6.93057896620326
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1052,
+        "calls": 1708,
+        "triangles": 45535782,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "low-water",
+      "camera": [
+        43.99890825563699,
+        204.92516529303248,
+        -32.801938648233055
+      ],
+      "center": [
+        36.66642499948192,
+        199.65072741940213,
+        -65.42079859708117
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1075,
+        "calls": 1645,
+        "triangles": 44748977,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "socket-air",
+      "camera": [
+        96.42329181803699,
+        319.37758209678884,
+        -664.8576627006903
+      ],
+      "center": [
+        86.4897976294047,
+        179.3775820967888,
+        -700.6037196640626
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1094,
+        "calls": 882,
+        "triangles": 39917790,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "storm-water",
+      "camera": [
+        94.94432006469613,
+        58.409361676763396,
+        -2679.683814077617
+      ],
+      "center": [
+        66.11140238705823,
+        35.409361676763396,
+        -2713.6118614724037
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1115,
+        "calls": 928,
+        "triangles": 13829987,
+        "points": 10,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bonus-water",
+      "camera": [
+        32,
+        8,
+        22
+      ],
+      "center": [
+        42,
+        -0.05,
+        -9
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1183,
+        "calls": 377,
+        "triangles": 4411806,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1836,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "errors": []
+    },
+    "ground": 334,
+    "crates": 270,
+    "nitro": 22,
+    "slopes": [
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      },
+      {
+        "visible": true,
+        "material": "Harbour wet"
+      }
+    ],
+    "build": "Codex/sol fork · build 10-29 21:39 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 86,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "errors": []
+    },
+    "movers": 4,
+    "water": {
+      "0": -1200,
+      "1": -0.05000000074505806,
+      "2": -1200,
+      "3": 1400,
+      "4": -0.05000000074505806,
+      "5": -1200
+    },
+    "wash": []
+  },
+  "bonusMotion": [],
+  "frameTiming": {
+    "median": 16.69999998807907,
+    "p95": 17.5,
+    "samples": 119
+  },
+  "walk": {
+    "z": -2.253156526873107,
+    "deaths": 0,
+    "art": "ready"
+  },
+  "passed": true
+}

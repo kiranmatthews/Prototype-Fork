@@ -1,0 +1,77 @@
+{
+  "errors": [],
+  "comparison": {
+    "method": "Same browser, camera, resolution, assets and fixed gameplay; alternate new full structure with reconstructed prior cylindrical shafts, 90 settling and 240 sampled frames per window.",
+    "results": [
+      {
+        "state": "new",
+        "median": 33.30000001192093,
+        "p95": 34.69999998807907,
+        "samples": 240,
+        "render": {
+          "frame": 4494,
+          "calls": 635,
+          "triangles": 22230073,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      },
+      {
+        "state": "prior",
+        "median": 33.30000001192093,
+        "p95": 34.29999998211861,
+        "samples": 240,
+        "render": {
+          "frame": 8124,
+          "calls": 590,
+          "triangles": 21238161,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      },
+      {
+        "state": "new",
+        "median": 33.30000001192093,
+        "p95": 34.79999998211861,
+        "samples": 240,
+        "render": {
+          "frame": 11754,
+          "calls": 635,
+          "triangles": 22230073,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      },
+      {
+        "state": "prior",
+        "median": 33.30000001192093,
+        "p95": 34.599999994039536,
+        "samples": 240,
+        "render": {
+          "frame": 15384,
+          "calls": 590,
+          "triangles": 21238161,
+          "points": 0,
+          "lines": 0
+        },
+        "canvas": [
+          853,
+          480
+        ]
+      }
+    ]
+  },
+  "passed": true
+}

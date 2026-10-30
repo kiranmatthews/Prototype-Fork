@@ -1,0 +1,96 @@
+{
+  "created": "2026-10-29",
+  "assets": [
+    {
+      "id": "dune-bank",
+      "taskId": "2f361c59-4182-46f9-b778-a9f0b9f4075b",
+      "studio": "https://studio.tripo3d.ai/workspace/generate/2f361c59-4182-46f9-b778-a9f0b9f4075b",
+      "source": "/Users/kiki/Downloads/carlisle-dune-bank.glb",
+      "file": "public/props/carlisle-coast/dune-bank.glb",
+      "sha256": "e63b2ca6b8dd7c550e7d713d628d67e4e7bf193ce452b953ad93388ea2d71b25",
+      "bytes": 17844376,
+      "model": "Tripo Studio Smart Mesh P2.0",
+      "requestedTriangles": 50000,
+      "export": "Full authored GLB, 8k Current textures",
+      "meshes": [
+        {
+          "vertices": 71651,
+          "triangles": 54966,
+          "bounds": [
+            [
+              -0.499755859375,
+              0.0,
+              -0.495849609375
+            ],
+            [
+              0.499755859375,
+              0.1694336235523224,
+              0.495849609375
+            ]
+          ],
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "TEXCOORD_0"
+          ]
+        }
+      ],
+      "images": [
+        {
+          "mime": "image/jpeg",
+          "size": [
+            8192,
+            8192
+          ],
+          "bytes": 14890197
+        }
+      ]
+    },
+    {
+      "id": "marsh-bank",
+      "taskId": "dc6610e8-a1ed-47b2-9312-de47ead19b24",
+      "studio": "https://studio.tripo3d.ai/workspace/generate/dc6610e8-a1ed-47b2-9312-de47ead19b24",
+      "source": "/Users/kiki/Downloads/carlisle-marsh-bank.glb",
+      "file": "public/props/carlisle-coast/marsh-bank.glb",
+      "sha256": "adf45459cc0ad08dcc36cdfb851a41f06ca87b1ec34cdd008af1a04f19e018b6",
+      "bytes": 15456968,
+      "model": "Tripo Studio Smart Mesh P2.0",
+      "requestedTriangles": 50000,
+      "export": "Full authored GLB, 8k Current textures",
+      "meshes": [
+        {
+          "vertices": 63549,
+          "triangles": 45741,
+          "bounds": [
+            [
+              -0.352783203125,
+              0.0,
+              -0.499755859375
+            ],
+            [
+              0.352783203125,
+              0.1762695461511612,
+              0.499755859375
+            ]
+          ],
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "TEXCOORD_0"
+          ]
+        }
+      ],
+      "images": [
+        {
+          "mime": "image/jpeg",
+          "size": [
+            8192,
+            8192
+          ],
+          "bytes": 12872768
+        }
+      ]
+    }
+  ],
+  "runtime": "Uniform asset scale and additive sea-profile displacement; all source indices, UVs and local relief retained. No LOD or decimation."
+}

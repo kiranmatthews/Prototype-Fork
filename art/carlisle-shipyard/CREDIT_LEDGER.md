@@ -20,3 +20,13 @@ Actual billed costs from the official CLI result for each single-step image-to-m
 **Total billed: 600 credits.** 12 of 12 planned assets generated.
 
 Remaining API balance after the batch: **180 credits**, frozen: **0**. Existing API credits used only; no additional API usage purchased and no Max plan credits used.
+
+
+## Timber deck correction — 30 October 2026 NZDT
+
+After the cone work consumed the remaining 180 API credits, this round used
+325 Studio plan credits (24,810 → 24,485), with no API purchase. H3.1 comparison:
+65; broad P2: 100 geometry + 30 texture; chunky P2: 100 geometry + 30 texture.
+All three completed successfully. The P2 models supply the runtime timber.
+Task IDs, exact counts and observed balances: `deck-replacement/credits.json`.
+Known cumulative spend across props, cone and decks is 1,105 / 3,000 authorized.

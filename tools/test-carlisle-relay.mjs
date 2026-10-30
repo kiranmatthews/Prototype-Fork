@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
+import {airCargoPilot,airCargoObservation} from './carlisle-air-cargo-pilot.mjs';
 const compiled=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});
-const {CARLISLE_TIDAL_RELAY_LEVEL:data,CARLISLE_RELAY_JUMPS:jumps,CARLISLE_RELAY_ACTS:acts,CARLISLE_RELAY_SECTIONS:sections,carlislePoint:point}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const {CARLISLE_TIDAL_RELAY_LEVEL:data,CARLISLE_RELAY_JUMPS:jumps,CARLISLE_RELAY_AIR_CARGO:airCargo,CARLISLE_RELAY_ACTS:acts,CARLISLE_RELAY_SECTIONS:sections,carlislePoint:point}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 let surveyed=0;for(let s=1;s<=4000;s++){const a=point(s-1,0),b=point(s,0);surveyed+=Math.hypot(b[0]-a[0],b[2]-a[2]);}
 assert.ok(Math.abs(surveyed-4000)<.5);assert.equal(acts.length,3);assert.equal(sections.length,18);
 assert.deepEqual(acts.map(a=>[a.from,a.to]),[[0,1280],[1280,2700],[2700,4000]]);
@@ -24,10 +25,11 @@ await withSkateRuntime(async({server,level,player:p,CONST,THREE})=>{
   p.respawn(level,true,false,{position:start,heading:new THREE.Vector3(0,0,-1)});p.totalDeaths=0;p.freeSkate=false;p.speed=0;
   let launched=false,landed=false,peak=p.pos.y,frames=0,launchAt=null,departure=null;
   const targetJump=jumps.find(q=>q.from[0]===j.to[0]),targetMover=targetJump?.moving?level.movers.find(m=>m.mesh.name===targetJump.name):null;
+  const encounter=airCargo.find(e=>e.jump===j.name),cargoPilot=encounter?airCargoPilot(encounter,point(...j.to),{avoid:true}):null;
   for(;frames<1000;frames++){
    const target=targetMover?targetMover.mesh.position.clone():new THREE.Vector3(...point(...j.to));
    const dx=target.x-p.pos.x,dz=target.z-p.pos.z,forward=dx*p.axisF.x+dz*p.axisF.z,side=dx*p.axisL.x+dz*p.axisL.z;
-   const input=makeInput({moveY:launched?(Math.abs(forward)>1.5?Math.sign(forward):0):0,moveX:launched&&Math.abs(side)>2?Math.sign(side):0,jumpHeld:true,grindHeld:!!j.rail&&p.vVel<5});
+   const input=makeInput(cargoPilot?cargoPilot(airCargoObservation(p)):{moveY:launched?(Math.abs(forward)>1.5?Math.sign(forward):0):0,moveX:launched&&Math.abs(side)>2?Math.sign(side):0,jumpHeld:true,grindHeld:!!j.rail&&p.vVel<5});
    const before=p.vVel;tick(input);peak=Math.max(peak,p.pos.y);
    if(!launched&&p.vVel>15&&!p.grounded){launched=true;launchAt=frames;departure=p.pos.toArray();}
    if(launched&&frames>launchAt+8&&((before<0&&p.vVel>15)||p.grounded||p.state==='finished'||p.state==='grind'&&p.grindRail?.object.userData.sourceName===j.rail)){landed=true;break;}

@@ -1,0 +1,6 @@
+{
+  "baseline": "Deck-plank material made long pier shafts look horizontally striped; tall scenery quays lacked bracing.",
+  "firstNativeReview": "Timber grain and frame geometry read clearly, but the iron joint plates were partly buried in the thick main posts.",
+  "correction": "Move each plate centre from 0.48m to 0.84m outside the post centreline, seating its back against the timber/brace face; bolts follow the plate.",
+  "scope": "Only scenery structure. No authored level, player, collision, support or camera changes."
+}
