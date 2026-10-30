@@ -1,0 +1,503 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": true,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "tide-step",
+      "name": "Tide steps · 2",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9951415373694763,
+        0,
+        -0.09845466267229444,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.09845466267229444,
+        0,
+        0.9951415373694763,
+        0,
+        83.61138316188944,
+        178.41097308472962,
+        -445.02094269550366,
+        1
+      ],
+      "render": {
+        "frame": 1213,
+        "calls": 1168,
+        "triangles": 34599175,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "tide-step-edge",
+      "name": "Tide steps · 2",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9951415373694763,
+        0,
+        -0.09845466267229444,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.09845466267229444,
+        0,
+        0.9951415373694763,
+        0,
+        83.61138316188944,
+        178.5308290476805,
+        -445.02094269550366,
+        1
+      ],
+      "render": {
+        "frame": 1232,
+        "calls": 1324,
+        "triangles": 35808695,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "scissor",
+      "name": "Scissor · long blade",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9980137486491855,
+        0,
+        -0.06299648805449695,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.06299648805449695,
+        0,
+        0.9980137486491855,
+        0,
+        94.85892903473719,
+        195.09099789936687,
+        -239.7708262224514,
+        1
+      ],
+      "render": {
+        "frame": 1250,
+        "calls": 1190,
+        "triangles": 31600443,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "winch",
+      "name": "Port winch",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9565969602135838,
+        0,
+        -0.29141423388388443,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.29141423388388443,
+        0,
+        0.9565969602135838,
+        0,
+        68.65546267121593,
+        164.4172101466168,
+        -866.3618549585684,
+        1
+      ],
+      "render": {
+        "frame": 1267,
+        "calls": 1234,
+        "triangles": 30337519,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "pinwheel",
+      "name": "Pinwheel 2",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9961878311167666,
+        0,
+        0.08723419704950955,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.08723419704950955,
+        0,
+        0.9961878311167666,
+        0,
+        -78.4866055705629,
+        139.4458879039295,
+        -1541.53481536582,
+        1
+      ],
+      "render": {
+        "frame": 1283,
+        "calls": 1264,
+        "triangles": 19706712,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "counterweight",
+      "name": "Counterweight 3",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9359661114700613,
+        0,
+        0.3520900995194453,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.3520900995194453,
+        0,
+        0.9359661114700613,
+        0,
+        89.34506516299524,
+        103.32398268781252,
+        -2207.425907277962,
+        1
+      ],
+      "render": {
+        "frame": 1301,
+        "calls": 1164,
+        "triangles": 18306349,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "harbour-scissors",
+      "name": "Harbour scissors · outer arm",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.9652501671818484,
+        0,
+        0.2613276004470511,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.2613276004470511,
+        0,
+        0.9652501671818484,
+        0,
+        86.50227682053293,
+        88.71409827074935,
+        -2521.022463439637,
+        1
+      ],
+      "render": {
+        "frame": 1319,
+        "calls": 889,
+        "triangles": 14715561,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "pendulum",
+      "name": "Pendulum pier · translating and turning",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "matrix": [
+        0.78858238934394,
+        0,
+        -0.6149291139770524,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.6149291139770524,
+        0,
+        0.78858238934394,
+        0,
+        -35.230591576150665,
+        57.060843611163236,
+        -3101.674133201337,
+        1
+      ],
+      "render": {
+        "frame": 1333,
+        "calls": 849,
+        "triangles": 11203473,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "build": "Codex/sol fork · build 10-30 03:07 UTC"
+  },
+  "carry": [
+    {
+      "name": "Tide steps · 2",
+      "start": [
+        -2.842170943040401e-14,
+        0.7070384438443682,
+        4.800000000000011
+      ],
+      "end": [
+        -2.842170943040401e-14,
+        0.7084358280099536,
+        4.800000000000011
+      ],
+      "grounded": true,
+      "surface": "Tide steps · 2",
+      "deaths": 0,
+      "translation": [
+        0,
+        -0.2500763895542093,
+        0
+      ],
+      "rotation": 0
+    },
+    {
+      "name": "Scissor · long blade",
+      "start": [
+        0,
+        0.8499999999999943,
+        11.999999999999972
+      ],
+      "end": [
+        -0.03141589064910022,
+        0.6999999880790426,
+        11.999958876671599
+      ],
+      "grounded": true,
+      "surface": "Scissor · long blade",
+      "deaths": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": 0.0837758040957276
+    }
+  ],
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 14,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 1,
+        "repairs": 1,
+        "openYards": 0
+      },
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "instanceBatches": 4,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 14,
+    "props": 1890,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "buildings": {
+      "markets": 5,
+      "repairs": 16,
+      "openYards": 8
+    },
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "instanceBatches": 177,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "coast": {
+      "status": "ready",
+      "banks": 32,
+      "sourceTriangles": 100707,
+      "placedTriangles": 1657437,
+      "shoreSegments": 35080,
+      "colliders": 0,
+      "errors": []
+    },
+    "fleet": {
+      "status": "ready",
+      "vessels": 6,
+      "sourceTriangles": 51177,
+      "placedTriangles": 307062,
+      "colliders": 0,
+      "errors": []
+    },
+    "piers": {
+      "status": "ready",
+      "piles": 4146,
+      "ledgers": 1218,
+      "braces": 1604,
+      "plates": 2432,
+      "bolts": 4864,
+      "placedTriangles": 2177728,
+      "colliders": 0,
+      "errors": []
+    },
+    "water": {
+      "staticWash": 1382,
+      "movingWash": 0
+    },
+    "errors": []
+  },
+  "passed": true
+}

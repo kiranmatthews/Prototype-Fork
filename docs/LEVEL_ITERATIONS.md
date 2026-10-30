@@ -6980,3 +6980,38 @@ performance claim. Final build: Codex/sol fork · build 10-30 03:07 UTC;
 1,782 files / 1,109.2MiB, offline version 244bcb4585f8b994ec99. Evidence is in
 art/carlisle-shipyard/harbour-buildings/. Local checkpoint only; publication
 held. The broader polish goal remains active.
+
+
+## Carlisle solid plated moving decks — 30 October 2026
+
+Approximately 23 minutes to the first playable integration and 40 minutes to
+final native review. Twenty moving steel decks now have bevelled plates with
+recessed seams, continuous backing, I-section edge frames, underside members,
+orange caps and recessed hex fasteners. Replaced old corner plates that shared
+the floor's top plane and flickered. All new art fits inside the original moving
+boxes, with plate tops on the existing contact plane. Native collision, grinding,
+translation and rotation remain unchanged.
+
+Eight size templates share 32 geometries and four materials: 893 plates, 183
+girders, 538 fasteners and 126,960 placed triangles. No new colliders, LOD,
+decimation or per-frame animation. Built-in Imagegen supplied a complete
+1254×1254 navy marine-paint texture, used at a fixed metre scale without image
+edits. Its exact prompt, source path, hash and byte-identical compiled copy are
+recorded. No Tripo credits, API top-ups or purchases in this increment.
+
+Nineteen protected source files match the preceding harbour commit. All seven
+airborne crate/nitro formations, eighteen slippery surfaces, bounce controls,
+cameras, 131 timber decks, complete piers, eight bouncing movers and four bonus
+boats remain. Geometry checks cover all 20 original boxes and 4,320 surface probes
+without holes or raised art. Original course/prop checks and typecheck/build pass.
+Compiled lite, eight full native 1920×1080 views, normal 480p/CRT, translating and
+spinning platform carry, and main/bonus/main reload pass with zero console errors
+or carry deaths. Review evidence is in art/carlisle-shipyard/steel-decks/.
+
+The initial geometry test assumed movers had no explicit vertices; it now checks
+their actual rectangular corner contract. The first build found an unused
+material field, removed before the final passing build. No gameplay fix was
+needed. No repeated unchanged level audit, full suite, whole-course clear or FPS
+claim. Build: Codex/sol fork · build 10-30 03:48 UTC; 1,783 files / 1,112.5MiB;
+offline version 70cd0e51f4bb34232847. Local checkpoint only; publication held.
+The broader polish goal remains active.

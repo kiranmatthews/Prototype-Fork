@@ -10,6 +10,7 @@ import { CarlisleBoardwalk, carlisleDeckBoundary, type DeckTriangle } from './ca
 import { CarlisleCoastalBanks } from './carlisleCoastalBanks';
 import { CarlisleFishingFleet } from './carlisleFishingFleet';
 import { CarlislePierTimber } from './carlislePierTimber';
+import { CarlisleSteelDecks } from './carlisleSteelDecks';
 
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -70,7 +71,8 @@ export class CarlisleShipyard {
   private readonly coast=new CarlisleCoastalBanks();
   private readonly fleet=new CarlisleFishingFleet();
   private readonly piers=new CarlislePierTimber();
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,water:{staticWash:0,movingWash:0},errors:[] as string[]};
+  private readonly steelDecks=new CarlisleSteelDecks();
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -86,11 +88,9 @@ export class CarlisleShipyard {
   private readonly wood=this.own(harbourSurface('wood'));
   private readonly frameWood=this.own(harbourSurface('wood'));
   private readonly boatDeck=this.own(harbourSurface('wood',true));
-  private readonly steel=this.own(harbourSurface('steel',true));
   private readonly wet=this.own(harbourSurface('wet'));
   private readonly navy=this.own(new THREE.MeshStandardMaterial({color:0x183047,roughness:.66,metalness:.35}));
   private readonly orange=this.own(new THREE.MeshStandardMaterial({color:0xd94f15,roughness:.68,metalness:.18}));
-  private readonly iron=this.own(new THREE.MeshStandardMaterial({color:0x111f2a,roughness:.85}));
   private readonly glow=this.own(new THREE.MeshBasicMaterial({color:0xff782b,toneMapped:false}));
   private readonly foam=this.own(harbourContactFoam());
   private readonly hidden=this.own(new THREE.MeshBasicMaterial({visible:false}));
@@ -120,7 +120,7 @@ export class CarlisleShipyard {
     if(this.bonus)this.bonusYard();else this.mainYard();
     this.flushPrimitives();
     for(let i=0;i<6;i++){const light=new THREE.PointLight(0xff692c,0,27,1.6);this.group.add(light);this.lights.push(light);}
-    this.ready=Promise.all([Promise.all(names.map(name=>this.assets.load(name as Kit))),this.boardwalk.load(),this.fleet.load(),this.piers.load(),
+    this.ready=Promise.all([Promise.all(names.map(name=>this.assets.load(name as Kit))),this.boardwalk.load(),this.fleet.load(),this.piers.load(),this.steelDecks.load(),
       this.bonus?Promise.resolve():this.coast.load(this.ocean.mesh.geometry,z=>this.chunk(z))]).then(([assets])=>{
       if(this.disposed)return;
       assets.forEach((gltf,i)=>this.install(names[i] as Kit,gltf));
@@ -181,7 +181,7 @@ export class CarlisleShipyard {
     const spring=c.t==='trampoline'||c.t==='mover'&&c.bounce!==undefined;
     const mover=c.t==='mover';
     if(spring){this.replace(mesh,this.hidden);this.net(c,mesh);}
-    else this.replace(mesh,c.slip?this.wet:mover?(this.bonus?this.boatDeck:this.steel):/foot|piling|buoy/i.test(c.nm??'')?this.navy:this.wood);
+    else this.replace(mesh,c.slip?this.wet:mover?(this.bonus?this.boatDeck:this.hidden):/foot|piling|buoy/i.test(c.nm??'')?this.navy:this.wood);
     if(mover){this.diagnostics.mountedMovers++;this.movingDress(c,mesh,spring);return;}
     if(c.t==='mesh'&&c.solid&&c.grindTopTriangles){
       if(!c.slip){
@@ -232,20 +232,7 @@ export class CarlisleShipyard {
       wash.renderOrder=2;wash.userData.visualOnly=true;mesh.add(wash);this.attached.push(wash);this.diagnostics.water.movingWash++;
       return;
     }
-    if(!spring){
-      for(const x of [-w/2+.3,w/2-.3])this.beam([x,top-.16,-d/2],[x,top-.16,d/2],.36,this.navy,group);
-      for(let z=-d/2+2;z<d/2-1;z+=6){
-        this.beam([-w/2,-h/2-.35,z],[w/2,-h/2-.35,z],.6,this.navy,group);
-        for(const x of [-w/2+.38,w/2-.38]){
-          this.part('box',[x,top-.08,z],[.76,.16,1.1],this.orange,0,group);
-          this.part('bolt',[x,top+.025,z],[.28,.08,.28],this.iron,0,group);
-        }
-      }
-      for(const z of [-d/2+.45,d/2-.45]){
-        this.part('box',[0,top-.12,z],[w,.24,.75],this.orange,0,group);
-        for(const x of [-w/2+.45,w/2-.45])this.part('bolt',[x,top+.035,z],[.23,.08,.23],this.iron,0,group);
-      }
-    }
+    if(!spring)this.steelDecks.add(c.s!,group);
     // The hub and cross bracing remain below the contact plane throughout motion.
     const springClearance=spring?Math.min(3,Math.min(w,d)*.2):0;
     this.prop(c.spin?'rotary-hub':/winch/i.test(c.nm??'')?'dock-winch':'counterweight-hoist',
@@ -501,6 +488,7 @@ export class CarlisleShipyard {
     this.coast.dispose();
     this.fleet.dispose();
     this.piers.dispose();
+    this.steelDecks.dispose();
     for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});
     this.attached.forEach(n=>n.removeFromParent());this.group.removeFromParent();

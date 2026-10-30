@@ -1,0 +1,6 @@
+{
+  "mode": "built-in image_gen",
+  "prompt": "Use case: stylized-concept. Asset type: seamless square base-color texture for navy painted marine steel deck plates in a high-end stylized platformer. Orthographic flat scan of one continuous material, evenly lit and edge-to-edge with no border or vignette. Deep desaturated navy-blue paint over steel, broad subtle variation from salt weathering, small irregular scuffed patches exposing cool grey metal, fine directional rubbing scratches and a few restrained reddish-brown oxidation flecks. Hand-authored console-game material quality, rich tactile detail that reads at close range but calm coherent color from far away. The texture should tile seamlessly in both directions. No plank pattern, wood grain, checkerplate, embossed tread, panel outlines, rivets, bolts, letters, symbols, arrows, objects, perspective, shadows, highlights, lighting gradients or bright yellow. Keep 90 percent navy paint, avoid bright noisy damage or zebra-like directional stripes. Neutral diffuse albedo only, not a lit photo or normal map. Square 2048 by 2048 if possible.",
+  "original": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-b2fb7f3d-8240-4ba2-bb53-bcc36bf29438.png",
+  "saved": "public/textures/carlisle-steel/weathered-navy.png"
+}

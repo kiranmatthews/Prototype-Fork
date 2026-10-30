@@ -1,0 +1,459 @@
+{
+  "decks": [
+    {
+      "name": "Scissor · long blade",
+      "size": [
+        22,
+        1.4,
+        66
+      ],
+      "bounds": {
+        "min": [
+          -11,
+          -0.699999988079071,
+          -33
+        ],
+        "max": [
+          11,
+          0.699999988079071,
+          33
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Scissor · cross blade",
+      "size": [
+        22,
+        1.4,
+        66
+      ],
+      "bounds": {
+        "min": [
+          -11,
+          -0.699999988079071,
+          -33
+        ],
+        "max": [
+          11,
+          0.699999988079071,
+          33
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Tide steps · 1",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "bounds": {
+        "min": [
+          -8.5,
+          -0.699999988079071,
+          -10.5
+        ],
+        "max": [
+          8.5,
+          0.699999988079071,
+          10.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Tide steps · 2",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "bounds": {
+        "min": [
+          -8.5,
+          -0.699999988079071,
+          -10.5
+        ],
+        "max": [
+          8.5,
+          0.699999988079071,
+          10.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Tide steps · 3",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "bounds": {
+        "min": [
+          -8.5,
+          -0.699999988079071,
+          -10.5
+        ],
+        "max": [
+          8.5,
+          0.699999988079071,
+          10.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Tide steps · 4",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "bounds": {
+        "min": [
+          -8.5,
+          -0.699999988079071,
+          -10.5
+        ],
+        "max": [
+          8.5,
+          0.699999988079071,
+          10.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Port winch",
+      "size": [
+        24,
+        1.4,
+        36
+      ],
+      "bounds": {
+        "min": [
+          -12,
+          -0.699999988079071,
+          -18
+        ],
+        "max": [
+          12,
+          0.699999988079071,
+          18
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Starboard winch",
+      "size": [
+        24,
+        1.4,
+        36
+      ],
+      "bounds": {
+        "min": [
+          -12,
+          -0.699999988079071,
+          -18
+        ],
+        "max": [
+          12,
+          0.699999988079071,
+          18
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Tide dial · orbit 1",
+      "size": [
+        26,
+        1.4,
+        34
+      ],
+      "bounds": {
+        "min": [
+          -13,
+          -0.699999988079071,
+          -17
+        ],
+        "max": [
+          13,
+          0.699999988079071,
+          17
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Tide dial · orbit 2",
+      "size": [
+        26,
+        1.4,
+        34
+      ],
+      "bounds": {
+        "min": [
+          -13,
+          -0.699999988079071,
+          -17
+        ],
+        "max": [
+          13,
+          0.699999988079071,
+          17
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Pinwheel 1",
+      "size": [
+        16,
+        1.4,
+        58
+      ],
+      "bounds": {
+        "min": [
+          -8,
+          -0.699999988079071,
+          -29
+        ],
+        "max": [
+          8,
+          0.699999988079071,
+          29
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Pinwheel 2",
+      "size": [
+        16,
+        1.4,
+        58
+      ],
+      "bounds": {
+        "min": [
+          -8,
+          -0.699999988079071,
+          -29
+        ],
+        "max": [
+          8,
+          0.699999988079071,
+          29
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Pinwheel 3",
+      "size": [
+        16,
+        1.4,
+        58
+      ],
+      "bounds": {
+        "min": [
+          -8,
+          -0.699999988079071,
+          -29
+        ],
+        "max": [
+          8,
+          0.699999988079071,
+          29
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Counterweight 1",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "bounds": {
+        "min": [
+          -9.5,
+          -0.699999988079071,
+          -7.5
+        ],
+        "max": [
+          9.5,
+          0.699999988079071,
+          7.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Counterweight 2",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "bounds": {
+        "min": [
+          -9.5,
+          -0.699999988079071,
+          -7.5
+        ],
+        "max": [
+          9.5,
+          0.699999988079071,
+          7.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Counterweight 3",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "bounds": {
+        "min": [
+          -9.5,
+          -0.699999988079071,
+          -7.5
+        ],
+        "max": [
+          9.5,
+          0.699999988079071,
+          7.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Counterweight 4",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "bounds": {
+        "min": [
+          -9.5,
+          -0.699999988079071,
+          -7.5
+        ],
+        "max": [
+          9.5,
+          0.699999988079071,
+          7.5
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Harbour scissors · outer arm",
+      "size": [
+        16,
+        1.4,
+        70
+      ],
+      "bounds": {
+        "min": [
+          -8,
+          -0.699999988079071,
+          -35
+        ],
+        "max": [
+          8,
+          0.699999988079071,
+          35
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Harbour scissors · inner arm",
+      "size": [
+        16,
+        1.4,
+        70
+      ],
+      "bounds": {
+        "min": [
+          -8,
+          -0.699999988079071,
+          -35
+        ],
+        "max": [
+          8,
+          0.699999988079071,
+          35
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    },
+    {
+      "name": "Pendulum pier · translating and turning",
+      "size": [
+        32,
+        1.4,
+        100
+      ],
+      "bounds": {
+        "min": [
+          -16,
+          -0.699999988079071,
+          -50
+        ],
+        "max": [
+          16,
+          0.699999988079071,
+          50
+        ]
+      },
+      "raySamples": 216,
+      "maxContactDepth": 1.1920928910669204e-8
+    }
+  ],
+  "errors": [],
+  "diagnostics": {
+    "status": "idle",
+    "decks": 20,
+    "templates": 8,
+    "panels": 893,
+    "girders": 183,
+    "fasteners": 538,
+    "placedTriangles": 126960,
+    "colliders": 0,
+    "errors": []
+  },
+  "sharedGeometryCount": 32,
+  "disposal": true,
+  "passed": true
+}

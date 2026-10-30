@@ -1,0 +1,16 @@
+{
+  "mode": "built-in image_gen",
+  "original": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-b2fb7f3d-8240-4ba2-bb53-bcc36bf29438.png",
+  "runtime": "public/textures/carlisle-steel/weathered-navy.png",
+  "prompt": "art/carlisle-shipyard/steel-decks/prompt.json",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "bytes": 3408466,
+  "sha256": "331f75157ca7976d9d54a9338cfdb07e9de4a76d01ec7fe9fe58bf6b275a6ae1",
+  "compiledByteIdentical": true,
+  "processing": "Complete original image, no resize, crop or retouch. Shared as albedo and a subtle bump map at a fixed metre scale.",
+  "tripoCreditsUsed": 0,
+  "apiTopups": 0
+}

@@ -1,0 +1,154 @@
+{
+  "baseCommit": "233fa1bd070e514d402b47e869cdcae3a2095477",
+  "status": "Validated locally; publication held",
+  "startedUTC": "2026-10-30T03:20:50Z",
+  "finalReviewUTC": "2026-10-30T04:00:51Z",
+  "elapsedMinutes": 40,
+  "firstPlayableMinutes": 23,
+  "change": "Solid plated visual shells inside the 20 original moving steel boxes",
+  "diagnostics": {
+    "status": "ready",
+    "decks": 20,
+    "templates": 8,
+    "panels": 893,
+    "girders": 183,
+    "fasteners": 538,
+    "placedTriangles": 126960,
+    "colliders": 0,
+    "errors": []
+  },
+  "geometry": {
+    "decks": 20,
+    "raySamples": 4320,
+    "sharedGeometries": 32,
+    "disposal": true,
+    "passed": true
+  },
+  "protectedSourceFiles": 19,
+  "unchanged": {
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wetSlopes": 18,
+    "nets": 56,
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "instanceBatches": 177,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "piers": {
+      "status": "ready",
+      "piles": 4146,
+      "ledgers": 1218,
+      "braces": 1604,
+      "plates": 2432,
+      "bolts": 4864,
+      "placedTriangles": 2177728,
+      "colliders": 0,
+      "errors": []
+    }
+  },
+  "checks": {
+    "originalCourseAndAssets": "tools/test-carlisle-shipyard.mjs passed",
+    "geometry": "tools/test-carlisle-steel.mjs passed",
+    "productionBuild": "npm run build passed",
+    "diff": "git diff --check passed"
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 03:48 UTC",
+    "files": 1783,
+    "sizeMiB": 1112.5,
+    "offlineVersion": "70cd0e51f4bb34232847"
+  },
+  "browser": {
+    "litePassed": true,
+    "nativePassed": true,
+    "nativeViews": 8,
+    "nativeResolution": [
+      1920,
+      1080
+    ],
+    "normalPresentation": "480p/CRT",
+    "carry": [
+      {
+        "name": "Tide steps \u00b7 2",
+        "start": [
+          -2.842170943040401e-14,
+          0.8499999999999943,
+          4.800000000000011
+        ],
+        "end": [
+          -2.842170943040401e-14,
+          0.7083686594684764,
+          4.800000000000011
+        ],
+        "grounded": true,
+        "surface": "Tide steps \u00b7 2",
+        "deaths": 0,
+        "translation": [
+          0,
+          -0.24726072542514999,
+          0
+        ],
+        "rotation": 0
+      },
+      {
+        "name": "Scissor \u00b7 long blade",
+        "start": [
+          0,
+          0.8499999999999943,
+          12
+        ],
+        "end": [
+          -0.03141589064910022,
+          0.6999999880790142,
+          11.999958876671627
+        ],
+        "grounded": true,
+        "surface": "Scissor \u00b7 long blade",
+        "deaths": 0,
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "rotation": 0.08377580409572749
+      }
+    ],
+    "bonusBoats": 4,
+    "bonusSteelDecks": 0,
+    "returnStatus": "ready",
+    "errors": []
+  },
+  "texture": {
+    "mode": "built-in image_gen",
+    "original": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-b2fb7f3d-8240-4ba2-bb53-bcc36bf29438.png",
+    "runtime": "public/textures/carlisle-steel/weathered-navy.png",
+    "prompt": "art/carlisle-shipyard/steel-decks/prompt.json",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "bytes": 3408466,
+    "sha256": "331f75157ca7976d9d54a9338cfdb07e9de4a76d01ec7fe9fe58bf6b275a6ae1",
+    "compiledByteIdentical": true,
+    "processing": "Complete original image, no resize, crop or retouch. Shared as albedo and a subtle bump map at a fixed metre scale.",
+    "tripoCreditsUsed": 0,
+    "apiTopups": 0
+  },
+  "tripoCreditsUsed": 0,
+  "apiTopups": 0,
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour",
+  "localHTTP": 200,
+  "limits": [
+    "Bounded moving-deck presentation/contact review, not a new continuous course clear",
+    "No sustained FPS claim",
+    "No unchanged level audit or full suite rerun"
+  ]
+}

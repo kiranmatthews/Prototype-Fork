@@ -1,0 +1,1613 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": false,
+  "lite": true,
+  "errors": [],
+  "views": [
+    {
+      "id": "tide-step",
+      "name": "Tide steps · 2",
+      "canvas": [
+        960,
+        540
+      ],
+      "matrix": [
+        0.9951415373694763,
+        0,
+        -0.09845466267229444,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.09845466267229444,
+        0,
+        0.9951415373694763,
+        0,
+        83.61138316188944,
+        178.38108679213093,
+        -445.02094269550366,
+        1
+      ],
+      "render": {
+        "frame": 522,
+        "calls": 771,
+        "triangles": 23334324,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "scissor",
+      "name": "Scissor · long blade",
+      "canvas": [
+        960,
+        540
+      ],
+      "matrix": [
+        0.9997849842196533,
+        0,
+        0.020736087598860673,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.020736087598860673,
+        0,
+        0.9997849842196533,
+        0,
+        94.85892903473719,
+        195.09099789936687,
+        -239.7708262224514,
+        1
+      ],
+      "render": {
+        "frame": 541,
+        "calls": 836,
+        "triangles": 22520274,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "build": "Codex/sol fork · build 10-30 03:48 UTC"
+  },
+  "shells": [
+    {
+      "name": "Scissor · long blade",
+      "size": [
+        22,
+        1.4,
+        66
+      ],
+      "panels": 78,
+      "girders": 14,
+      "fasteners": 38,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -11,
+            -0.699999988079071,
+            -33
+          ],
+          "max": [
+            11,
+            0.699999988079071,
+            33
+          ],
+          "finite": true,
+          "triangles": 3008
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -10.337499618530273,
+            0.5199999809265137,
+            -32.337501525878906
+          ],
+          "max": [
+            10.337499618530273,
+            0.699999988079071,
+            32.337501525878906
+          ],
+          "finite": true,
+          "triangles": 4992
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -11,
+            0.6299999952316284,
+            -33
+          ],
+          "max": [
+            11,
+            0.675000011920929,
+            33
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -10.780932426452637,
+            0.6399999856948853,
+            -32.79499816894531
+          ],
+          "max": [
+            10.780932426452637,
+            0.6949999928474426,
+            32.79499816894531
+          ],
+          "finite": true,
+          "triangles": 912
+        }
+      ]
+    },
+    {
+      "name": "Scissor · cross blade",
+      "size": [
+        22,
+        1.4,
+        66
+      ],
+      "panels": 78,
+      "girders": 14,
+      "fasteners": 38,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -11,
+            -0.699999988079071,
+            -33
+          ],
+          "max": [
+            11,
+            0.699999988079071,
+            33
+          ],
+          "finite": true,
+          "triangles": 3008
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -10.337499618530273,
+            0.5199999809265137,
+            -32.337501525878906
+          ],
+          "max": [
+            10.337499618530273,
+            0.699999988079071,
+            32.337501525878906
+          ],
+          "finite": true,
+          "triangles": 4992
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -11,
+            0.6299999952316284,
+            -33
+          ],
+          "max": [
+            11,
+            0.675000011920929,
+            33
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -10.780932426452637,
+            0.6399999856948853,
+            -32.79499816894531
+          ],
+          "max": [
+            10.780932426452637,
+            0.6949999928474426,
+            32.79499816894531
+          ],
+          "finite": true,
+          "triangles": 912
+        }
+      ]
+    },
+    {
+      "name": "Tide steps · 1",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "panels": 20,
+      "girders": 5,
+      "fasteners": 18,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8.5,
+            -0.699999988079071,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.699999988079071,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.837500095367432,
+            0.5199999809265137,
+            -9.837499618530273
+          ],
+          "max": [
+            7.837500095367432,
+            0.699999988079071,
+            9.837499618530273
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8.5,
+            0.6299999952316284,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.675000011920929,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -8.280932426452637,
+            0.6399999856948853,
+            -10.295000076293945
+          ],
+          "max": [
+            8.280932426452637,
+            0.6949999928474426,
+            10.295000076293945
+          ],
+          "finite": true,
+          "triangles": 432
+        }
+      ]
+    },
+    {
+      "name": "Tide steps · 2",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "panels": 20,
+      "girders": 5,
+      "fasteners": 18,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8.5,
+            -0.699999988079071,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.699999988079071,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.837500095367432,
+            0.5199999809265137,
+            -9.837499618530273
+          ],
+          "max": [
+            7.837500095367432,
+            0.699999988079071,
+            9.837499618530273
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8.5,
+            0.6299999952316284,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.675000011920929,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -8.280932426452637,
+            0.6399999856948853,
+            -10.295000076293945
+          ],
+          "max": [
+            8.280932426452637,
+            0.6949999928474426,
+            10.295000076293945
+          ],
+          "finite": true,
+          "triangles": 432
+        }
+      ]
+    },
+    {
+      "name": "Tide steps · 3",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "panels": 20,
+      "girders": 5,
+      "fasteners": 18,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8.5,
+            -0.699999988079071,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.699999988079071,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.837500095367432,
+            0.5199999809265137,
+            -9.837499618530273
+          ],
+          "max": [
+            7.837500095367432,
+            0.699999988079071,
+            9.837499618530273
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8.5,
+            0.6299999952316284,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.675000011920929,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -8.280932426452637,
+            0.6399999856948853,
+            -10.295000076293945
+          ],
+          "max": [
+            8.280932426452637,
+            0.6949999928474426,
+            10.295000076293945
+          ],
+          "finite": true,
+          "triangles": 432
+        }
+      ]
+    },
+    {
+      "name": "Tide steps · 4",
+      "size": [
+        17,
+        1.4,
+        21
+      ],
+      "panels": 20,
+      "girders": 5,
+      "fasteners": 18,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8.5,
+            -0.699999988079071,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.699999988079071,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.837500095367432,
+            0.5199999809265137,
+            -9.837499618530273
+          ],
+          "max": [
+            7.837500095367432,
+            0.699999988079071,
+            9.837499618530273
+          ],
+          "finite": true,
+          "triangles": 1280
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8.5,
+            0.6299999952316284,
+            -10.5
+          ],
+          "max": [
+            8.5,
+            0.675000011920929,
+            10.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -8.280932426452637,
+            0.6399999856948853,
+            -10.295000076293945
+          ],
+          "max": [
+            8.280932426452637,
+            0.6949999928474426,
+            10.295000076293945
+          ],
+          "finite": true,
+          "triangles": 432
+        }
+      ]
+    },
+    {
+      "name": "Port winch",
+      "size": [
+        24,
+        1.4,
+        36
+      ],
+      "panels": 42,
+      "girders": 8,
+      "fasteners": 26,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -12,
+            -0.699999988079071,
+            -18
+          ],
+          "max": [
+            12,
+            0.699999988079071,
+            18
+          ],
+          "finite": true,
+          "triangles": 1856
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -11.337499618530273,
+            0.5199999809265137,
+            -17.337499618530273
+          ],
+          "max": [
+            11.337499618530273,
+            0.699999988079071,
+            17.337499618530273
+          ],
+          "finite": true,
+          "triangles": 2688
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -12,
+            0.6299999952316284,
+            -18
+          ],
+          "max": [
+            12,
+            0.675000011920929,
+            18
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -11.780932426452637,
+            0.6399999856948853,
+            -17.795000076293945
+          ],
+          "max": [
+            11.780932426452637,
+            0.6949999928474426,
+            17.795000076293945
+          ],
+          "finite": true,
+          "triangles": 624
+        }
+      ]
+    },
+    {
+      "name": "Starboard winch",
+      "size": [
+        24,
+        1.4,
+        36
+      ],
+      "panels": 42,
+      "girders": 8,
+      "fasteners": 26,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -12,
+            -0.699999988079071,
+            -18
+          ],
+          "max": [
+            12,
+            0.699999988079071,
+            18
+          ],
+          "finite": true,
+          "triangles": 1856
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -11.337499618530273,
+            0.5199999809265137,
+            -17.337499618530273
+          ],
+          "max": [
+            11.337499618530273,
+            0.699999988079071,
+            17.337499618530273
+          ],
+          "finite": true,
+          "triangles": 2688
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -12,
+            0.6299999952316284,
+            -18
+          ],
+          "max": [
+            12,
+            0.675000011920929,
+            18
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -11.780932426452637,
+            0.6399999856948853,
+            -17.795000076293945
+          ],
+          "max": [
+            11.780932426452637,
+            0.6949999928474426,
+            17.795000076293945
+          ],
+          "finite": true,
+          "triangles": 624
+        }
+      ]
+    },
+    {
+      "name": "Tide dial · orbit 1",
+      "size": [
+        26,
+        1.4,
+        34
+      ],
+      "panels": 49,
+      "girders": 8,
+      "fasteners": 28,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -13,
+            -0.699999988079071,
+            -17
+          ],
+          "max": [
+            13,
+            0.699999988079071,
+            17
+          ],
+          "finite": true,
+          "triangles": 1856
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -12.337499618530273,
+            0.5199999809265137,
+            -16.337499618530273
+          ],
+          "max": [
+            12.337499618530273,
+            0.699999988079071,
+            16.337499618530273
+          ],
+          "finite": true,
+          "triangles": 3136
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -13,
+            0.6299999952316284,
+            -17
+          ],
+          "max": [
+            13,
+            0.675000011920929,
+            17
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -12.780932426452637,
+            0.6399999856948853,
+            -16.795000076293945
+          ],
+          "max": [
+            12.780932426452637,
+            0.6949999928474426,
+            16.795000076293945
+          ],
+          "finite": true,
+          "triangles": 672
+        }
+      ]
+    },
+    {
+      "name": "Tide dial · orbit 2",
+      "size": [
+        26,
+        1.4,
+        34
+      ],
+      "panels": 49,
+      "girders": 8,
+      "fasteners": 28,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -13,
+            -0.699999988079071,
+            -17
+          ],
+          "max": [
+            13,
+            0.699999988079071,
+            17
+          ],
+          "finite": true,
+          "triangles": 1856
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -12.337499618530273,
+            0.5199999809265137,
+            -16.337499618530273
+          ],
+          "max": [
+            12.337499618530273,
+            0.699999988079071,
+            16.337499618530273
+          ],
+          "finite": true,
+          "triangles": 3136
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -13,
+            0.6299999952316284,
+            -17
+          ],
+          "max": [
+            13,
+            0.675000011920929,
+            17
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -12.780932426452637,
+            0.6399999856948853,
+            -16.795000076293945
+          ],
+          "max": [
+            12.780932426452637,
+            0.6949999928474426,
+            16.795000076293945
+          ],
+          "finite": true,
+          "triangles": 672
+        }
+      ]
+    },
+    {
+      "name": "Pinwheel 1",
+      "size": [
+        16,
+        1.4,
+        58
+      ],
+      "panels": 44,
+      "girders": 12,
+      "fasteners": 32,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8,
+            -0.699999988079071,
+            -29
+          ],
+          "max": [
+            8,
+            0.699999988079071,
+            29
+          ],
+          "finite": true,
+          "triangles": 2624
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.337500095367432,
+            0.5199999809265137,
+            -28.337499618530273
+          ],
+          "max": [
+            7.337500095367432,
+            0.699999988079071,
+            28.337499618530273
+          ],
+          "finite": true,
+          "triangles": 2816
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8,
+            0.6299999952316284,
+            -29
+          ],
+          "max": [
+            8,
+            0.675000011920929,
+            29
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -7.780932903289795,
+            0.6399999856948853,
+            -28.795000076293945
+          ],
+          "max": [
+            7.780932903289795,
+            0.6949999928474426,
+            28.795000076293945
+          ],
+          "finite": true,
+          "triangles": 768
+        }
+      ]
+    },
+    {
+      "name": "Pinwheel 2",
+      "size": [
+        16,
+        1.4,
+        58
+      ],
+      "panels": 44,
+      "girders": 12,
+      "fasteners": 32,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8,
+            -0.699999988079071,
+            -29
+          ],
+          "max": [
+            8,
+            0.699999988079071,
+            29
+          ],
+          "finite": true,
+          "triangles": 2624
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.337500095367432,
+            0.5199999809265137,
+            -28.337499618530273
+          ],
+          "max": [
+            7.337500095367432,
+            0.699999988079071,
+            28.337499618530273
+          ],
+          "finite": true,
+          "triangles": 2816
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8,
+            0.6299999952316284,
+            -29
+          ],
+          "max": [
+            8,
+            0.675000011920929,
+            29
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -7.780932903289795,
+            0.6399999856948853,
+            -28.795000076293945
+          ],
+          "max": [
+            7.780932903289795,
+            0.6949999928474426,
+            28.795000076293945
+          ],
+          "finite": true,
+          "triangles": 768
+        }
+      ]
+    },
+    {
+      "name": "Pinwheel 3",
+      "size": [
+        16,
+        1.4,
+        58
+      ],
+      "panels": 44,
+      "girders": 12,
+      "fasteners": 32,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8,
+            -0.699999988079071,
+            -29
+          ],
+          "max": [
+            8,
+            0.699999988079071,
+            29
+          ],
+          "finite": true,
+          "triangles": 2624
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.337500095367432,
+            0.5199999809265137,
+            -28.337499618530273
+          ],
+          "max": [
+            7.337500095367432,
+            0.699999988079071,
+            28.337499618530273
+          ],
+          "finite": true,
+          "triangles": 2816
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8,
+            0.6299999952316284,
+            -29
+          ],
+          "max": [
+            8,
+            0.675000011920929,
+            29
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -7.780932903289795,
+            0.6399999856948853,
+            -28.795000076293945
+          ],
+          "max": [
+            7.780932903289795,
+            0.6949999928474426,
+            28.795000076293945
+          ],
+          "finite": true,
+          "triangles": 768
+        }
+      ]
+    },
+    {
+      "name": "Counterweight 1",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "panels": 15,
+      "girders": 4,
+      "fasteners": 14,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -9.5,
+            -0.699999988079071,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.699999988079071,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 1088
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -8.837499618530273,
+            0.5199999809265137,
+            -6.837500095367432
+          ],
+          "max": [
+            8.837499618530273,
+            0.699999988079071,
+            6.837500095367432
+          ],
+          "finite": true,
+          "triangles": 960
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -9.5,
+            0.6299999952316284,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.675000011920929,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -9.280932426452637,
+            0.6399999856948853,
+            -7.295000076293945
+          ],
+          "max": [
+            9.280932426452637,
+            0.6949999928474426,
+            7.295000076293945
+          ],
+          "finite": true,
+          "triangles": 336
+        }
+      ]
+    },
+    {
+      "name": "Counterweight 2",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "panels": 15,
+      "girders": 4,
+      "fasteners": 14,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -9.5,
+            -0.699999988079071,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.699999988079071,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 1088
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -8.837499618530273,
+            0.5199999809265137,
+            -6.837500095367432
+          ],
+          "max": [
+            8.837499618530273,
+            0.699999988079071,
+            6.837500095367432
+          ],
+          "finite": true,
+          "triangles": 960
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -9.5,
+            0.6299999952316284,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.675000011920929,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -9.280932426452637,
+            0.6399999856948853,
+            -7.295000076293945
+          ],
+          "max": [
+            9.280932426452637,
+            0.6949999928474426,
+            7.295000076293945
+          ],
+          "finite": true,
+          "triangles": 336
+        }
+      ]
+    },
+    {
+      "name": "Counterweight 3",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "panels": 15,
+      "girders": 4,
+      "fasteners": 14,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -9.5,
+            -0.699999988079071,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.699999988079071,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 1088
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -8.837499618530273,
+            0.5199999809265137,
+            -6.837500095367432
+          ],
+          "max": [
+            8.837499618530273,
+            0.699999988079071,
+            6.837500095367432
+          ],
+          "finite": true,
+          "triangles": 960
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -9.5,
+            0.6299999952316284,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.675000011920929,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -9.280932426452637,
+            0.6399999856948853,
+            -7.295000076293945
+          ],
+          "max": [
+            9.280932426452637,
+            0.6949999928474426,
+            7.295000076293945
+          ],
+          "finite": true,
+          "triangles": 336
+        }
+      ]
+    },
+    {
+      "name": "Counterweight 4",
+      "size": [
+        19,
+        1.4,
+        15
+      ],
+      "panels": 15,
+      "girders": 4,
+      "fasteners": 14,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -9.5,
+            -0.699999988079071,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.699999988079071,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 1088
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -8.837499618530273,
+            0.5199999809265137,
+            -6.837500095367432
+          ],
+          "max": [
+            8.837499618530273,
+            0.699999988079071,
+            6.837500095367432
+          ],
+          "finite": true,
+          "triangles": 960
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -9.5,
+            0.6299999952316284,
+            -7.5
+          ],
+          "max": [
+            9.5,
+            0.675000011920929,
+            7.5
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -9.280932426452637,
+            0.6399999856948853,
+            -7.295000076293945
+          ],
+          "max": [
+            9.280932426452637,
+            0.6949999928474426,
+            7.295000076293945
+          ],
+          "finite": true,
+          "triangles": 336
+        }
+      ]
+    },
+    {
+      "name": "Harbour scissors · outer arm",
+      "size": [
+        16,
+        1.4,
+        70
+      ],
+      "panels": 56,
+      "girders": 15,
+      "fasteners": 36,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8,
+            -0.699999988079071,
+            -35
+          ],
+          "max": [
+            8,
+            0.699999988079071,
+            35
+          ],
+          "finite": true,
+          "triangles": 3200
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.337500095367432,
+            0.5199999809265137,
+            -34.337501525878906
+          ],
+          "max": [
+            7.337500095367432,
+            0.699999988079071,
+            34.337501525878906
+          ],
+          "finite": true,
+          "triangles": 3584
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8,
+            0.6299999952316284,
+            -35
+          ],
+          "max": [
+            8,
+            0.675000011920929,
+            35
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -7.780932903289795,
+            0.6399999856948853,
+            -34.79499816894531
+          ],
+          "max": [
+            7.780932903289795,
+            0.6949999928474426,
+            34.79499816894531
+          ],
+          "finite": true,
+          "triangles": 864
+        }
+      ]
+    },
+    {
+      "name": "Harbour scissors · inner arm",
+      "size": [
+        16,
+        1.4,
+        70
+      ],
+      "panels": 56,
+      "girders": 15,
+      "fasteners": 36,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -8,
+            -0.699999988079071,
+            -35
+          ],
+          "max": [
+            8,
+            0.699999988079071,
+            35
+          ],
+          "finite": true,
+          "triangles": 3200
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -7.337500095367432,
+            0.5199999809265137,
+            -34.337501525878906
+          ],
+          "max": [
+            7.337500095367432,
+            0.699999988079071,
+            34.337501525878906
+          ],
+          "finite": true,
+          "triangles": 3584
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -8,
+            0.6299999952316284,
+            -35
+          ],
+          "max": [
+            8,
+            0.675000011920929,
+            35
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -7.780932903289795,
+            0.6399999856948853,
+            -34.79499816894531
+          ],
+          "max": [
+            7.780932903289795,
+            0.6949999928474426,
+            34.79499816894531
+          ],
+          "finite": true,
+          "triangles": 864
+        }
+      ]
+    },
+    {
+      "name": "Pendulum pier · translating and turning",
+      "size": [
+        32,
+        1.4,
+        100
+      ],
+      "panels": 171,
+      "girders": 21,
+      "fasteners": 58,
+      "parts": [
+        {
+          "name": "Marine steel frame",
+          "min": [
+            -16,
+            -0.699999988079071,
+            -50
+          ],
+          "max": [
+            16,
+            0.699999988079071,
+            50
+          ],
+          "finite": true,
+          "triangles": 4352
+        },
+        {
+          "name": "Weathered navy deck plates",
+          "min": [
+            -15.337499618530273,
+            0.5199999809265137,
+            -49.337501525878906
+          ],
+          "max": [
+            15.337499618530273,
+            0.699999988079071,
+            49.337501525878906
+          ],
+          "finite": true,
+          "triangles": 10944
+        },
+        {
+          "name": "Burnt-orange edge caps",
+          "min": [
+            -16,
+            0.6299999952316284,
+            -50
+          ],
+          "max": [
+            16,
+            0.675000011920929,
+            50
+          ],
+          "finite": true,
+          "triangles": 768
+        },
+        {
+          "name": "Recessed hex fasteners",
+          "min": [
+            -15.780932426452637,
+            0.6399999856948853,
+            -49.79499816894531
+          ],
+          "max": [
+            15.780932426452637,
+            0.6949999928474426,
+            49.79499816894531
+          ],
+          "finite": true,
+          "triangles": 1392
+        }
+      ]
+    }
+  ],
+  "passed": true
+}
