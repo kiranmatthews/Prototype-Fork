@@ -1,0 +1,27 @@
+{
+  "channel": "Tripo Studio existing plan credits",
+  "startingBalance": 24225,
+  "remainingBalanceObserved": 24095,
+  "totalDeducted": 130,
+  "purchasedApiCredits": 0,
+  "previousKnownSpend": 1365,
+  "knownCombinedSpend": 1495,
+  "billingEvidence": "Displayed prices and balance deductions; asset ID exposed, separate internal texture task ID not exposed.",
+  "tasks": [
+    {
+      "step": "image-to-model",
+      "assetId": "5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+      "model": "Smart Mesh P2.0",
+      "triangleTarget": 50000,
+      "creditsDeducted": 100,
+      "status": "success"
+    },
+    {
+      "step": "texture",
+      "assetId": "5570a940-f388-4ff9-b0cf-2f8a322a3dee",
+      "resolution": 8192,
+      "creditsDeducted": 30,
+      "status": "success"
+    }
+  ]
+}

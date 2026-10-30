@@ -1,0 +1,55 @@
+{
+  "finding": "Two inherited scenic berths overlapped pier-support bounds. Moving both 34m outboard clears the lift yard. The crane vessel also needs 28m west along world X to clear its long quay while retaining its level-water reach. Gameplay geometry is unchanged.",
+  "oldBerthClearance": [
+    {
+      "at": [
+        202.53791826710398,
+        169.33811465449503,
+        -486.5678004441982
+      ],
+      "minimumPoleToHullBounds": -0.8400000000000001
+    },
+    {
+      "at": [
+        152.40763112858775,
+        213.27211374988292,
+        -0.6199750150018275
+      ],
+      "minimumPoleToHullBounds": 13.094685582521496
+    },
+    {
+      "at": [
+        -35.69587433166052,
+        161.3775820967888,
+        -700.7241621162807
+      ],
+      "minimumPoleToHullBounds": 7.422305357029485
+    },
+    {
+      "at": [
+        -112.75439370372216,
+        95.44658972508923,
+        -2060.3059097606533
+      ],
+      "minimumPoleToHullBounds": -0.8400000000000001
+    },
+    {
+      "at": [
+        188.34332340948782,
+        35.409361676763396,
+        -2702.384409507546
+      ],
+      "minimumPoleToHullBounds": 15.899607612921145
+    },
+    {
+      "at": [
+        -178.11491721774098,
+        -8,
+        -3752.988011769422
+      ],
+      "minimumPoleToHullBounds": 21.605484381844065
+    }
+  ],
+  "hullDraftCorrection": "Initial 2.196m draft increased to 3.6m after native review.",
+  "windowCorrection": "Restrict the painted-window emissive mask to the measured cabin upper walls; remove glow from ropes and deck details."
+}

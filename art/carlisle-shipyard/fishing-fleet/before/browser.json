@@ -1,0 +1,246 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": true,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "arrival-vessel",
+      "camera": [
+        197.40763112858775,
+        231.27211374988292,
+        39.38002498499817
+      ],
+      "center": [
+        152.40763112858775,
+        222.27211374988292,
+        -0.6199750150018275
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1234,
+        "calls": 1220,
+        "triangles": 42728329,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "arrival-stern",
+      "camera": [
+        109.40763112858775,
+        233.27211374988292,
+        -36.61997501500183
+      ],
+      "center": [
+        152.40763112858775,
+        222.27211374988292,
+        -0.6199750150018275
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1253,
+        "calls": 760,
+        "triangles": 29629942,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "crane-mooring",
+      "camera": [
+        -67.75439370372216,
+        118.44658972508923,
+        -2017.3059097606533
+      ],
+      "center": [
+        -112.75439370372216,
+        104.44658972508923,
+        -2060.3059097606533
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1284,
+        "calls": 748,
+        "triangles": 13350027,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "homecoming-vessel",
+      "camera": [
+        -135.11491721774098,
+        12,
+        -3707.988011769422
+      ],
+      "center": [
+        -178.11491721774098,
+        1,
+        -3752.988011769422
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1288,
+        "calls": 401,
+        "triangles": 5110859,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bonus-fleet",
+      "camera": [
+        83,
+        18,
+        -18
+      ],
+      "center": [
+        42,
+        8,
+        -62
+      ],
+      "far": 450,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1345,
+        "calls": 339,
+        "triangles": 4046500,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bonus-harbour",
+      "camera": [
+        32,
+        15,
+        26
+      ],
+      "center": [
+        63,
+        4,
+        -13
+      ],
+      "far": 450,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1358,
+        "calls": 446,
+        "triangles": 4671074,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1836,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1388,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "ground": 334,
+    "crates": 270,
+    "wetSlopes": 18,
+    "build": "Codex/sol fork · build 10-29 23:39 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 86,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 54,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4,
+    "crates": 21
+  },
+  "normal": {
+    "far": 850,
+    "art": "ready",
+    "median": 16.900000005960464,
+    "p95": 24.099999994039536,
+    "samples": 119
+  },
+  "walk": {
+    "z": -2.3687030154307025,
+    "deaths": 0
+  },
+  "passed": true
+}

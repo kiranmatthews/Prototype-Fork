@@ -6801,3 +6801,45 @@ whole-course performance claim. Build: 1,776 files / 1,055.6MiB, offline version
 28139ea12fc2fbafa078, `Codex/sol fork · build 10-29 23:39 UTC`. Before/after
 images, focused browser tool and exact protected hashes are recorded in
 `art/carlisle-shipyard/atmosphere/`. Local checkpoint only; publication held.
+
+
+## Carlisle complete fishing vessels — 30 October 2026
+
+Approximately 22 minutes to the first playable fleet and 53 minutes to final
+validation, including Imagegen/Tripo generation, export and placement repairs.
+Replaced the six main-course and two bonus scenic skiff/box-cabin assemblies
+with a complete navy/orange fishing vessel: curved planked hull, framed cabin,
+booms, rigging, net drum, fenders and deck cargo. Unequal gentle heave and rotation
+phases, masked warm windows and water-plane hull wash give the fleet movement.
+The existing light/reflection pool follows each cabin.
+
+The original full GLB is uniformly scaled to 36m length with a 3.6m draft.
+All 51,177 triangles, 70,464 vertices and the 8K texture are retained, including
+in reflections; no LOD, decimation or axis stretching. The first native review
+prompted a deeper draft and a tighter emissive mask to remove deck-detail glow.
+Two inherited berths overlapped quay supports. Moving them 34m outboard, and
+the crane vessel another 28m west, clears the complete hull bounds. Final main
+minimum support clearance is 7.41m; the repaired berths clear by over 10m.
+
+Existing Tripo Studio plan spend: 100 mesh + 30 texture = 130 credits. Observed
+balance 24,225 to 24,095; known cumulative spend 1,495. No API purchase/top-up.
+The asset ID, exact Imagegen prompts, reference, Studio screenshot and original
+download hash are retained in `art/carlisle-shipyard/fishing-fleet/` and the
+adjacent public asset provenance. The export observation timed out, but the
+completed file was verified without repeating generation or export.
+
+Seventeen protected sources remain byte-identical, including movement, camera,
+course/bonus, airborne cargo/nitro, eighteen wet slopes, timber, nets, cones,
+coastal banks and sky/water materials. The four rideable bonus boats are intact.
+The scenic fleet adds no colliders. Original course/prop fingerprints, build,
+lite fitting/shader/clearance check, six compiled native 1920x1080 views and
+normal 480p/CRT pass. Main-to-bonus-to-main reload and keyboard walking pass
+with zero console errors and zero walking deaths. No new full-course traversal
+or repeated level/full-suite audit for this presentation change.
+
+Normal arrival sample: 16.7ms median / 18.9ms p95 over 119 frames; not a whole-
+course performance claim. Build: 1,778 files / 1,071.4MiB, offline version
+cd0acbc9d37dc75ceae1, `Codex/sol fork · build 10-30 00:42 UTC`. The full GLB
+is byte-identical in compiled output. Final views, motion samples, clearance
+results and hashes are recorded in the fleet validation report. Local
+checkpoint only; publication held. The broader polish goal remains active.
