@@ -1,0 +1,1873 @@
+{
+  "startedAt": "2026-10-30T08:39:11.646301+00:00",
+  "groups": [
+    "check:campaign",
+    "check:competition",
+    "check:unity-ports",
+    "check:ground",
+    "check:crouch-jump",
+    "check:pipe",
+    "check:ledge",
+    "check:rope",
+    "check:rail-air",
+    "check:landing-x",
+    "check:run-facing",
+    "check:carve-grip",
+    "check:skate-speed",
+    "check:surface-friction",
+    "check:camera-speed",
+    "check:bail-recovery",
+    "check:air-rescue",
+    "check:crate-types",
+    "check:crate-jump",
+    "check:nst-port",
+    "check:editor-roundtrip",
+    "check:editor-security",
+    "check:interpolation",
+    "check:animation",
+    "check:character-lab",
+    "check:ocean",
+    "check:crt",
+    "check:render-quality",
+    "check:look",
+    "check:skateboard",
+    "check:special",
+    "check:combo-hud",
+    "check:spin-effects",
+    "check:rally-presentation"
+  ],
+  "results": [
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-six-island-campaign.mjs",
+      "args": [
+        "node",
+        "tools/test-six-island-campaign.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/final-validation/001-test-six-island-campaign.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-secret-course-roster.mjs",
+      "args": [
+        "node",
+        "tools/test-secret-course-roster.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 27.75,
+      "log": "docs/carlisle-relay/final-validation/002-test-secret-course-roster.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-archipelago.mjs",
+      "args": [
+        "node",
+        "tools/test-map-archipelago.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/final-validation/003-test-map-archipelago.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-playtest-level-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-playtest-level-flow.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/004-test-playtest-level-flow.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-flow.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "docs/carlisle-relay/final-validation/005-test-campaign-flow.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-secret-combo-gems.mjs",
+      "args": [
+        "node",
+        "tools/test-secret-combo-gems.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.78,
+      "log": "docs/carlisle-relay/final-validation/006-test-secret-combo-gems.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-save-slot-previews.mjs",
+      "args": [
+        "node",
+        "tools/test-save-slot-previews.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "docs/carlisle-relay/final-validation/007-test-save-slot-previews.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-time-medals.mjs",
+      "args": [
+        "node",
+        "tools/test-time-medals.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/008-test-time-medals.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-level-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-map-level-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/009-test-map-level-presentation.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-collectible-specular.mjs",
+      "args": [
+        "node",
+        "tools/test-collectible-specular.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/010-test-collectible-specular.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-death-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-death-flow.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.44,
+      "log": "docs/carlisle-relay/final-validation/011-test-campaign-death-flow.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-collectible-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-collectible-visibility.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.52,
+      "log": "docs/carlisle-relay/final-validation/012-test-campaign-collectible-visibility.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-performance.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-performance.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/013-test-campaign-performance.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-warp-room-return.mjs",
+      "args": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.44,
+      "log": "docs/carlisle-relay/final-validation/014-test-warp-room-return.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-gouraud-context-presets.mjs",
+      "args": [
+        "node",
+        "tools/test-gouraud-context-presets.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/015-test-gouraud-context-presets.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-surface.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-surface.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/016-test-game-flow-surface.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-results.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-results.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.16,
+      "log": "docs/carlisle-relay/final-validation/017-test-game-flow-results.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-results-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-results-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 54.77,
+      "log": "docs/carlisle-relay/final-validation/018-test-results-presentation.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-interaction.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-interaction.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.12,
+      "log": "docs/carlisle-relay/final-validation/019-test-game-flow-interaction.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-vortex.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-vortex.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "docs/carlisle-relay/final-validation/020-test-game-flow-vortex.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-presentation-loading.mjs",
+      "args": [
+        "node",
+        "tools/test-presentation-loading.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "docs/carlisle-relay/final-validation/021-test-presentation-loading.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-bonus-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-bonus-polish.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.92,
+      "log": "docs/carlisle-relay/final-validation/022-test-bonus-polish.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-park-tuning.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.65,
+      "log": "docs/carlisle-relay/final-validation/023-test-park-tuning.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-camera-framing.mjs",
+      "args": [
+        "node",
+        "tools/test-park-camera-framing.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.0,
+      "log": "docs/carlisle-relay/final-validation/024-test-park-camera-framing.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.66,
+      "log": "docs/carlisle-relay/final-validation/025-test-jungle-cup.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-competition-judging.mjs",
+      "args": [
+        "node",
+        "tools/test-competition-judging.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.07,
+      "log": "docs/carlisle-relay/final-validation/026-test-competition-judging.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-runtime.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-runtime.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.83,
+      "log": "docs/carlisle-relay/final-validation/027-test-jungle-cup-runtime.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-skating.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-skating.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 44.27,
+      "log": "docs/carlisle-relay/final-validation/028-test-jungle-cup-skating.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-overtime.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-overtime.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.83,
+      "log": "docs/carlisle-relay/final-validation/029-test-jungle-cup-overtime.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-grind-camera.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.93,
+      "log": "docs/carlisle-relay/final-validation/030-test-jungle-cup-grind-camera.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-head-stability.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-head-stability.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 36.92,
+      "log": "docs/carlisle-relay/final-validation/031-test-grind-head-stability.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-catch-buffer.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-catch-buffer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.63,
+      "log": "docs/carlisle-relay/final-validation/032-test-grind-catch-buffer.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-trick-speed.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-trick-speed.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 20.84,
+      "log": "docs/carlisle-relay/final-validation/033-test-grind-trick-speed.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-drop-in.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-drop-in.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.31,
+      "log": "docs/carlisle-relay/final-validation/034-test-grind-drop-in.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-lip-recovery.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-lip-recovery.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.75,
+      "log": "docs/carlisle-relay/final-validation/035-test-jungle-cup-lip-recovery.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-layout.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-layout.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.94,
+      "log": "docs/carlisle-relay/final-validation/036-test-jungle-cup-layout.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-ui.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-ui.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.97,
+      "log": "docs/carlisle-relay/final-validation/037-test-jungle-cup-ui.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-tricks.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-tricks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.06,
+      "log": "docs/carlisle-relay/final-validation/038-test-skate-tricks.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-input-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-input-polish.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.01,
+      "log": "docs/carlisle-relay/final-validation/039-test-skate-input-polish.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-surface-layers.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-surface-layers.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.85,
+      "log": "docs/carlisle-relay/final-validation/040-test-jungle-cup-surface-layers.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-dynamics.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-dynamics.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.6,
+      "log": "docs/carlisle-relay/final-validation/041-test-balance-dynamics.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-sliders.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-sliders.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.86,
+      "log": "docs/carlisle-relay/final-validation/042-test-balance-sliders.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-reentry.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-reentry.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.66,
+      "log": "docs/carlisle-relay/final-validation/043-test-balance-reentry.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-run-finish.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-run-finish.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.03,
+      "log": "docs/carlisle-relay/final-validation/044-test-skate-run-finish.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-level-ports.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/045-test-unity-level-ports.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-beachside-merge.mjs",
+      "args": [
+        "node",
+        "tools/test-beachside-merge.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/046-test-beachside-merge.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-beachfront-cliff.mjs",
+      "args": [
+        "node",
+        "tools/test-beachfront-cliff.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/047-test-beachfront-cliff.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-wood-path-kit.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-path-kit.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.24,
+      "log": "docs/carlisle-relay/final-validation/048-test-wood-path-kit.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-island-shelf.mjs",
+      "args": [
+        "node",
+        "tools/test-island-shelf.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/049-test-island-shelf.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-island-shore-foam.mjs",
+      "args": [
+        "node",
+        "tools/test-island-shore-foam.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/050-test-island-shore-foam.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-crate-rest-surface.mjs",
+      "args": [
+        "node",
+        "tools/test-crate-rest-surface.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.22,
+      "log": "docs/carlisle-relay/final-validation/051-test-crate-rest-surface.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-coastal-street-kit.mjs",
+      "args": [
+        "node",
+        "tools/test-coastal-street-kit.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.23,
+      "log": "docs/carlisle-relay/final-validation/052-test-coastal-street-kit.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-sand-material.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-sand-material.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/053-test-unity-sand-material.log"
+    },
+    {
+      "group": "check:ground",
+      "command": "node tools/validate-ground-acceleration.mjs",
+      "args": [
+        "node",
+        "tools/validate-ground-acceleration.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 66.0,
+      "log": "docs/carlisle-relay/final-validation/054-validate-ground-acceleration.log"
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-crouch-jump-slam.mjs",
+      "args": [
+        "node",
+        "tools/test-crouch-jump-slam.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.62,
+      "log": "docs/carlisle-relay/final-validation/055-test-crouch-jump-slam.log"
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-crouch-stance.mjs",
+      "args": [
+        "node",
+        "tools/test-crouch-stance.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.42,
+      "log": "docs/carlisle-relay/final-validation/056-test-crouch-stance.log"
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-quaternius-crouch.mjs",
+      "args": [
+        "node",
+        "tools/test-quaternius-crouch.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.75,
+      "log": "docs/carlisle-relay/final-validation/057-test-quaternius-crouch.log"
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-slide-jump.mjs",
+      "args": [
+        "node",
+        "tools/test-slide-jump.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.01,
+      "log": "docs/carlisle-relay/final-validation/058-test-slide-jump.log"
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-halfpipe-contact.mjs",
+      "args": [
+        "node",
+        "tools/test-halfpipe-contact.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/059-test-halfpipe-contact.log"
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/validate-halfpipe-safety.mjs",
+      "args": [
+        "node",
+        "tools/validate-halfpipe-safety.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.73,
+      "log": "docs/carlisle-relay/final-validation/060-validate-halfpipe-safety.log"
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+      "args": [
+        "node",
+        "tools/test-vert-ollie-sequence.mjs",
+        "tools/fixtures/vert-ollie-release-edge-replay.json"
+      ],
+      "exitCode": 1,
+      "seconds": 18.48,
+      "log": "docs/carlisle-relay/final-validation/061-test-vert-ollie-sequence.log"
+    },
+    {
+      "group": "check:ledge",
+      "command": "node tools/validate-ledge-traversal.mjs",
+      "args": [
+        "node",
+        "tools/validate-ledge-traversal.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.24,
+      "log": "docs/carlisle-relay/final-validation/062-validate-ledge-traversal.log"
+    },
+    {
+      "group": "check:rope",
+      "command": "node tools/test-rope-board-transfer.mjs",
+      "args": [
+        "node",
+        "tools/test-rope-board-transfer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.15,
+      "log": "docs/carlisle-relay/final-validation/063-test-rope-board-transfer.log"
+    },
+    {
+      "group": "check:rope",
+      "command": "node tools/test-rope-limb-mapping.mjs",
+      "args": [
+        "node",
+        "tools/test-rope-limb-mapping.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.51,
+      "log": "docs/carlisle-relay/final-validation/064-test-rope-limb-mapping.log"
+    },
+    {
+      "group": "check:rail-air",
+      "command": "node tools/test-rail-air-transfer.mjs",
+      "args": [
+        "node",
+        "tools/test-rail-air-transfer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 17.75,
+      "log": "docs/carlisle-relay/final-validation/065-test-rail-air-transfer.log"
+    },
+    {
+      "group": "check:landing-x",
+      "command": "node tools/validate-landing-indicator.mjs",
+      "args": [
+        "node",
+        "tools/validate-landing-indicator.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 34.08,
+      "log": "docs/carlisle-relay/final-validation/066-validate-landing-indicator.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-facing.mjs",
+      "args": [
+        "node",
+        "tools/test-run-facing.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/067-test-run-facing.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-replays.mjs",
+      "args": [
+        "node",
+        "tools/test-locomotion-replays.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 24.09,
+      "log": "docs/carlisle-relay/final-validation/068-test-locomotion-replays.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-idle.mjs",
+      "args": [
+        "node",
+        "tools/test-locomotion-idle.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.93,
+      "log": "docs/carlisle-relay/final-validation/069-test-locomotion-idle.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-inertia-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-run-inertia-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.73,
+      "log": "docs/carlisle-relay/final-validation/070-test-run-inertia-presentation.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-idle-recovery-charge.mjs",
+      "args": [
+        "node",
+        "tools/test-idle-recovery-charge.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.91,
+      "log": "docs/carlisle-relay/final-validation/071-test-idle-recovery-charge.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-world-map-locomotion.mjs",
+      "args": [
+        "node",
+        "tools/test-world-map-locomotion.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.35,
+      "log": "docs/carlisle-relay/final-validation/072-test-world-map-locomotion.log"
+    },
+    {
+      "group": "check:carve-grip",
+      "command": "node tools/test-carve-grip.mjs",
+      "args": [
+        "node",
+        "tools/test-carve-grip.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "docs/carlisle-relay/final-validation/073-test-carve-grip.log"
+    },
+    {
+      "group": "check:carve-grip",
+      "command": "node tools/test-halfpipe-steering.mjs",
+      "args": [
+        "node",
+        "tools/test-halfpipe-steering.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.8,
+      "log": "docs/carlisle-relay/final-validation/074-test-halfpipe-steering.log"
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-skate-overdrive.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-overdrive.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.28,
+      "log": "docs/carlisle-relay/final-validation/075-test-skate-overdrive.log"
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-speed-pad-air-carry.mjs",
+      "args": [
+        "node",
+        "tools/test-speed-pad-air-carry.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 32.7,
+      "log": "docs/carlisle-relay/final-validation/076-test-speed-pad-air-carry.log"
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-trick-landing-speed.mjs",
+      "args": [
+        "node",
+        "tools/test-trick-landing-speed.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.76,
+      "log": "docs/carlisle-relay/final-validation/077-test-trick-landing-speed.log"
+    },
+    {
+      "group": "check:surface-friction",
+      "command": "node tools/test-surface-friction.mjs",
+      "args": [
+        "node",
+        "tools/test-surface-friction.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.38,
+      "log": "docs/carlisle-relay/final-validation/078-test-surface-friction.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-speed-effect.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-speed-effect.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.44,
+      "log": "docs/carlisle-relay/final-validation/079-test-camera-speed-effect.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-look.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-look.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/080-test-camera-look.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-rig.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-rig.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.39,
+      "log": "docs/carlisle-relay/final-validation/081-test-camera-rig.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-level-switch.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-level-switch.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.73,
+      "log": "docs/carlisle-relay/final-validation/082-test-camera-level-switch.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-portrait.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-portrait.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.44,
+      "log": "docs/carlisle-relay/final-validation/083-test-camera-portrait.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-landing-forecast.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-landing-forecast.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.36,
+      "log": "docs/carlisle-relay/final-validation/084-test-camera-landing-forecast.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-fall-replay.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-fall-replay.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 20.89,
+      "log": "docs/carlisle-relay/final-validation/085-test-camera-fall-replay.log"
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-ragdoll-recovery.mjs",
+      "args": [
+        "node",
+        "tools/test-ragdoll-recovery.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.65,
+      "log": "docs/carlisle-relay/final-validation/086-test-ragdoll-recovery.log"
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-break-apart.mjs",
+      "args": [
+        "node",
+        "tools/test-break-apart.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.48,
+      "log": "docs/carlisle-relay/final-validation/087-test-break-apart.log"
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-wipeout-policy.mjs",
+      "args": [
+        "node",
+        "tools/test-wipeout-policy.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.75,
+      "log": "docs/carlisle-relay/final-validation/088-test-wipeout-policy.log"
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-board-abandon-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-board-abandon-tuning.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.51,
+      "log": "docs/carlisle-relay/final-validation/089-test-board-abandon-tuning.log"
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-board-abandon-steering.mjs",
+      "args": [
+        "node",
+        "tools/test-board-abandon-steering.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.76,
+      "log": "docs/carlisle-relay/final-validation/090-test-board-abandon-steering.log"
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-air-rescue.mjs",
+      "args": [
+        "node",
+        "tools/test-air-rescue.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 12.64,
+      "log": "docs/carlisle-relay/final-validation/091-test-air-rescue.log"
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-life-multihit-crates.mjs",
+      "args": [
+        "node",
+        "tools/test-life-multihit-crates.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.04,
+      "log": "docs/carlisle-relay/final-validation/092-test-life-multihit-crates.log"
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-nitro-clear-switch.mjs",
+      "args": [
+        "node",
+        "tools/test-nitro-clear-switch.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 51.5,
+      "log": "docs/carlisle-relay/final-validation/093-test-nitro-clear-switch.log"
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-explosive-bundles.mjs",
+      "args": [
+        "node",
+        "tools/test-explosive-bundles.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.8,
+      "log": "docs/carlisle-relay/final-validation/094-test-explosive-bundles.log"
+    },
+    {
+      "group": "check:crate-jump",
+      "command": "node tools/test-crate-jump-parity.mjs",
+      "args": [
+        "node",
+        "tools/test-crate-jump-parity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.52,
+      "log": "docs/carlisle-relay/final-validation/095-test-crate-jump-parity.log"
+    },
+    {
+      "group": "check:nst-port",
+      "command": "python3 -B tools/test_iga_igz_layout.py",
+      "args": [
+        "python3",
+        "-B",
+        "tools/test_iga_igz_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.15,
+      "log": "docs/carlisle-relay/final-validation/096-test_iga_igz_layout.log"
+    },
+    {
+      "group": "check:editor-roundtrip",
+      "command": "node tools/validate-editor-roundtrip.mjs",
+      "args": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.65,
+      "log": "docs/carlisle-relay/final-validation/097-validate-editor-roundtrip.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-security.mjs",
+      "args": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.44,
+      "log": "docs/carlisle-relay/final-validation/098-test-level-security.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-ux.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-ux.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.71,
+      "log": "docs/carlisle-relay/final-validation/099-test-editor-ux.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-environment.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-environment.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/100-test-editor-environment.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-transactions.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-transactions.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.3,
+      "log": "docs/carlisle-relay/final-validation/101-test-editor-transactions.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-pointers.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-pointers.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.66,
+      "log": "docs/carlisle-relay/final-validation/102-test-editor-pointers.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-terrain-support-budget.mjs",
+      "args": [
+        "node",
+        "tools/test-terrain-support-budget.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.27,
+      "log": "docs/carlisle-relay/final-validation/103-test-terrain-support-budget.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-legacy-scenery-capture.mjs",
+      "args": [
+        "node",
+        "tools/test-legacy-scenery-capture.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.94,
+      "log": "docs/carlisle-relay/final-validation/104-test-legacy-scenery-capture.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-switch-transactions.mjs",
+      "args": [
+        "node",
+        "tools/test-level-switch-transactions.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.57,
+      "log": "docs/carlisle-relay/final-validation/105-test-level-switch-transactions.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-motion-transforms.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-motion-transforms.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.98,
+      "log": "docs/carlisle-relay/final-validation/106-test-editor-motion-transforms.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-material-fidelity.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.61,
+      "log": "docs/carlisle-relay/final-validation/107-test-editor-material-fidelity.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-atmosphere.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.88,
+      "log": "docs/carlisle-relay/final-validation/108-test-editor-atmosphere.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-thorns.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-thorns.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.72,
+      "log": "docs/carlisle-relay/final-validation/109-test-editor-thorns.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-current-components.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-current-components.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.59,
+      "log": "docs/carlisle-relay/final-validation/110-test-editor-current-components.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-runtime-integration.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-runtime-integration.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.68,
+      "log": "docs/carlisle-relay/final-validation/111-test-editor-runtime-integration.log"
+    },
+    {
+      "group": "check:interpolation",
+      "command": "node tools/validate-render-interpolation.mjs",
+      "args": [
+        "node",
+        "tools/validate-render-interpolation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/112-validate-render-interpolation.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-suite.mjs",
+      "args": [
+        "node",
+        "tools/test-animation-suite.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 2.88,
+      "log": "docs/carlisle-relay/final-validation/113-test-animation-suite.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-ik.mjs",
+      "args": [
+        "node",
+        "tools/test-animation-ik.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/114-test-animation-ik.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-character-animation-runtime.mjs",
+      "args": [
+        "node",
+        "tools/test-character-animation-runtime.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.63,
+      "log": "docs/carlisle-relay/final-validation/115-test-character-animation-runtime.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-procedural-leg-rig.mjs",
+      "args": [
+        "node",
+        "tools/test-procedural-leg-rig.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.24,
+      "log": "docs/carlisle-relay/final-validation/116-test-procedural-leg-rig.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-jump-arms.mjs",
+      "args": [
+        "node",
+        "tools/test-jump-arms.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.39,
+      "log": "docs/carlisle-relay/final-validation/117-test-jump-arms.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-skate-charge-ollie.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-charge-ollie.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.61,
+      "log": "docs/carlisle-relay/final-validation/118-test-skate-charge-ollie.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-character-elasticity.mjs",
+      "args": [
+        "node",
+        "tools/test-character-elasticity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.94,
+      "log": "docs/carlisle-relay/final-validation/119-test-character-elasticity.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-head-profile-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-character-head-profile-settings.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/120-test-character-head-profile-settings.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-lab.mjs",
+      "args": [
+        "node",
+        "tools/test-character-lab.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.4,
+      "log": "docs/carlisle-relay/final-validation/121-test-character-lab.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-cartoon-glove.mjs",
+      "args": [
+        "node",
+        "tools/test-cartoon-glove.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.2,
+      "log": "docs/carlisle-relay/final-validation/122-test-cartoon-glove.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-rigged-cartoon-hand.mjs",
+      "args": [
+        "node",
+        "tools/test-rigged-cartoon-hand.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.42,
+      "log": "docs/carlisle-relay/final-validation/123-test-rigged-cartoon-hand.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-stretchable-bone.mjs",
+      "args": [
+        "node",
+        "tools/test-stretchable-bone.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.43,
+      "log": "docs/carlisle-relay/final-validation/124-test-stretchable-bone.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-torso.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-torso.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.47,
+      "log": "docs/carlisle-relay/final-validation/125-test-meshy-torso.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-head.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-head.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.48,
+      "log": "docs/carlisle-relay/final-validation/126-test-meshy-head.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-roo-painted-blink.mjs",
+      "args": [
+        "node",
+        "tools/test-roo-painted-blink.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/127-test-roo-painted-blink.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-shorts.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-shorts.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.47,
+      "log": "docs/carlisle-relay/final-validation/128-test-meshy-shorts.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-procedural-footwear.mjs",
+      "args": [
+        "node",
+        "tools/test-procedural-footwear.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.79,
+      "log": "docs/carlisle-relay/final-validation/129-test-procedural-footwear.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-interactions.mjs",
+      "args": [
+        "node",
+        "tools/test-character-interactions.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.07,
+      "log": "docs/carlisle-relay/final-validation/130-test-character-interactions.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-shore-field.mjs",
+      "args": [
+        "node",
+        "tools/test-shore-field.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.36,
+      "log": "docs/carlisle-relay/final-validation/131-test-shore-field.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-shore-field-crown-regression.mjs",
+      "args": [
+        "node",
+        "tools/test-shore-field-crown-regression.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.44,
+      "log": "docs/carlisle-relay/final-validation/132-test-shore-field-crown-regression.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/validate-ocean-port.mjs",
+      "args": [
+        "node",
+        "tools/validate-ocean-port.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/133-validate-ocean-port.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-formulas.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-formulas.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/final-validation/134-test-ocean-formulas.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-tuning.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.34,
+      "log": "docs/carlisle-relay/final-validation/135-test-ocean-tuning.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-unity-post.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-post.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/136-test-unity-post.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-unity-smaa.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-smaa.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/137-test-unity-smaa.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-resources.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-resources.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/138-test-ocean-resources.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-waterslide-shore-field.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-shore-field.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.07,
+      "log": "docs/carlisle-relay/final-validation/139-test-waterslide-shore-field.log"
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-optimizer.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-optimizer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/140-test-crt-optimizer.log"
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/audit-crt-guest-parameters.mjs",
+      "args": [
+        "node",
+        "tools/audit-crt-guest-parameters.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "docs/carlisle-relay/final-validation/141-audit-crt-guest-parameters.log"
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-settings.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/142-test-crt-guest-settings.log"
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-panel-semantics.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-panel-semantics.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/143-test-crt-guest-panel-semantics.log"
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-web.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-web.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/144-test-crt-guest-web.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-render-quality-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-render-quality-settings.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/145-test-render-quality-settings.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-fixed-render-pipeline.mjs",
+      "args": [
+        "node",
+        "tools/test-fixed-render-pipeline.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "docs/carlisle-relay/final-validation/146-test-fixed-render-pipeline.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-hud-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-hud-visibility.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.37,
+      "log": "docs/carlisle-relay/final-validation/147-test-hud-visibility.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-crate-assets.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "docs/carlisle-relay/final-validation/148-test-wood-crate-assets.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-mobile-ui-layout.mjs",
+      "args": [
+        "node",
+        "tools/test-mobile-ui-layout.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/149-test-mobile-ui-layout.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-input-prompts.mjs",
+      "args": [
+        "node",
+        "tools/test-input-prompts.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "docs/carlisle-relay/final-validation/150-test-input-prompts.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-debug-shortcuts.mjs",
+      "args": [
+        "node",
+        "tools/test-debug-shortcuts.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/151-test-debug-shortcuts.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-touch-release.mjs",
+      "args": [
+        "node",
+        "tools/test-touch-release.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/152-test-touch-release.log"
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-balance-meter-pointer.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-meter-pointer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/153-test-balance-meter-pointer.log"
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-visual-treatment.mjs",
+      "args": [
+        "node",
+        "tools/test-visual-treatment.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/154-test-visual-treatment.log"
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-factory-defaults.mjs",
+      "args": [
+        "node",
+        "tools/test-factory-defaults.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/155-test-factory-defaults.log"
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-skateboard-port.mjs",
+      "args": [
+        "node",
+        "tools/test-skateboard-port.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.34,
+      "log": "docs/carlisle-relay/final-validation/156-test-skateboard-port.log"
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-discarded-boards.mjs",
+      "args": [
+        "node",
+        "tools/test-discarded-boards.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.74,
+      "log": "docs/carlisle-relay/final-validation/157-test-discarded-boards.log"
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-map-skateboard-profile.mjs",
+      "args": [
+        "node",
+        "tools/test-map-skateboard-profile.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.11,
+      "log": "docs/carlisle-relay/final-validation/158-test-map-skateboard-profile.log"
+    },
+    {
+      "group": "check:special",
+      "command": "node tools/test-special-system.mjs",
+      "args": [
+        "node",
+        "tools/test-special-system.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.23,
+      "log": "docs/carlisle-relay/final-validation/159-test-special-system.log"
+    },
+    {
+      "group": "check:combo-hud",
+      "command": "node tools/test-modern-life-hud.mjs",
+      "args": [
+        "node",
+        "tools/test-modern-life-hud.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/160-test-modern-life-hud.log"
+    },
+    {
+      "group": "check:combo-hud",
+      "command": "node tools/test-combo-hud-parity.mjs",
+      "args": [
+        "node",
+        "tools/test-combo-hud-parity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.37,
+      "log": "docs/carlisle-relay/final-validation/161-test-combo-hud-parity.log"
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-effects-port.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-effects-port.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/162-test-spin-effects-port.log"
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-smear.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-smear.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/163-test-spin-smear.log"
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-arm-pose.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-arm-pose.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.69,
+      "log": "docs/carlisle-relay/final-validation/164-test-spin-arm-pose.log"
+    },
+    {
+      "group": "check:rally-presentation",
+      "command": "node tools/test-rally-festival-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-rally-festival-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 1.29,
+      "log": "docs/carlisle-relay/final-validation/165-test-rally-festival-presentation.log"
+    },
+    {
+      "group": "check:rally-presentation",
+      "command": "node tools/test-stadium-lighting.mjs",
+      "args": [
+        "node",
+        "tools/test-stadium-lighting.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 1.12,
+      "log": "docs/carlisle-relay/final-validation/166-test-stadium-lighting.log"
+    }
+  ],
+  "status": "finished",
+  "finishedAt": "2026-10-30T08:59:51.513749+00:00",
+  "failed": 40,
+  "passed": 126
+}

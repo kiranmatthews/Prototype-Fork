@@ -1,0 +1,1382 @@
+{
+  "completedGroups": [
+    "check:level-select",
+    "check:swimming",
+    "check:fruit-hud",
+    "check:bare-spins",
+    "check:milk",
+    "check:levels",
+    "check:nightworks",
+    "check:local-data-reset",
+    "check:audio"
+  ],
+  "failedGroup": "check:chimeworks",
+  "remainingGroups": [
+    "check:campaign",
+    "check:competition",
+    "check:unity-ports",
+    "check:ground",
+    "check:crouch-jump",
+    "check:pipe",
+    "check:ledge",
+    "check:rope",
+    "check:rail-air",
+    "check:landing-x",
+    "check:run-facing",
+    "check:carve-grip",
+    "check:skate-speed",
+    "check:surface-friction",
+    "check:camera-speed",
+    "check:bail-recovery",
+    "check:air-rescue",
+    "check:crate-types",
+    "check:crate-jump",
+    "check:nst-port",
+    "check:editor-roundtrip",
+    "check:editor-security",
+    "check:interpolation",
+    "check:animation",
+    "check:character-lab",
+    "check:ocean",
+    "check:crt",
+    "check:render-quality",
+    "check:look",
+    "check:skateboard",
+    "check:special",
+    "check:combo-hud",
+    "check:spin-effects",
+    "check:rally-presentation"
+  ],
+  "commands": [
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-six-island-campaign.mjs",
+      "args": [
+        "node",
+        "tools/test-six-island-campaign.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-secret-course-roster.mjs",
+      "args": [
+        "node",
+        "tools/test-secret-course-roster.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-archipelago.mjs",
+      "args": [
+        "node",
+        "tools/test-map-archipelago.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-playtest-level-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-playtest-level-flow.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-flow.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-secret-combo-gems.mjs",
+      "args": [
+        "node",
+        "tools/test-secret-combo-gems.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-save-slot-previews.mjs",
+      "args": [
+        "node",
+        "tools/test-save-slot-previews.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-time-medals.mjs",
+      "args": [
+        "node",
+        "tools/test-time-medals.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-level-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-map-level-presentation.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-collectible-specular.mjs",
+      "args": [
+        "node",
+        "tools/test-collectible-specular.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-death-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-death-flow.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-collectible-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-collectible-visibility.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-performance.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-performance.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-warp-room-return.mjs",
+      "args": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-gouraud-context-presets.mjs",
+      "args": [
+        "node",
+        "tools/test-gouraud-context-presets.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-surface.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-surface.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-results.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-results.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-results-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-results-presentation.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-interaction.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-interaction.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-vortex.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-vortex.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-presentation-loading.mjs",
+      "args": [
+        "node",
+        "tools/test-presentation-loading.mjs"
+      ]
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-bonus-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-bonus-polish.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-park-tuning.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-camera-framing.mjs",
+      "args": [
+        "node",
+        "tools/test-park-camera-framing.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-competition-judging.mjs",
+      "args": [
+        "node",
+        "tools/test-competition-judging.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-runtime.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-runtime.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-skating.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-skating.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-overtime.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-overtime.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-grind-camera.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-head-stability.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-head-stability.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-catch-buffer.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-catch-buffer.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-trick-speed.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-trick-speed.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-drop-in.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-drop-in.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-lip-recovery.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-lip-recovery.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-layout.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-layout.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-ui.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-ui.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-tricks.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-tricks.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-input-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-input-polish.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-surface-layers.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-surface-layers.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-dynamics.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-dynamics.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-sliders.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-sliders.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-reentry.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-reentry.mjs"
+      ]
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-run-finish.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-run-finish.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-level-ports.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-beachside-merge.mjs",
+      "args": [
+        "node",
+        "tools/test-beachside-merge.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-beachfront-cliff.mjs",
+      "args": [
+        "node",
+        "tools/test-beachfront-cliff.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-wood-path-kit.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-path-kit.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-island-shelf.mjs",
+      "args": [
+        "node",
+        "tools/test-island-shelf.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-island-shore-foam.mjs",
+      "args": [
+        "node",
+        "tools/test-island-shore-foam.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-crate-rest-surface.mjs",
+      "args": [
+        "node",
+        "tools/test-crate-rest-surface.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-coastal-street-kit.mjs",
+      "args": [
+        "node",
+        "tools/test-coastal-street-kit.mjs"
+      ]
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-sand-material.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-sand-material.mjs"
+      ]
+    },
+    {
+      "group": "check:ground",
+      "command": "node tools/validate-ground-acceleration.mjs",
+      "args": [
+        "node",
+        "tools/validate-ground-acceleration.mjs"
+      ]
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-crouch-jump-slam.mjs",
+      "args": [
+        "node",
+        "tools/test-crouch-jump-slam.mjs"
+      ]
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-crouch-stance.mjs",
+      "args": [
+        "node",
+        "tools/test-crouch-stance.mjs"
+      ]
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-quaternius-crouch.mjs",
+      "args": [
+        "node",
+        "tools/test-quaternius-crouch.mjs"
+      ]
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-slide-jump.mjs",
+      "args": [
+        "node",
+        "tools/test-slide-jump.mjs"
+      ]
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-halfpipe-contact.mjs",
+      "args": [
+        "node",
+        "tools/test-halfpipe-contact.mjs"
+      ]
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/validate-halfpipe-safety.mjs",
+      "args": [
+        "node",
+        "tools/validate-halfpipe-safety.mjs"
+      ]
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+      "args": [
+        "node",
+        "tools/test-vert-ollie-sequence.mjs",
+        "tools/fixtures/vert-ollie-release-edge-replay.json"
+      ]
+    },
+    {
+      "group": "check:ledge",
+      "command": "node tools/validate-ledge-traversal.mjs",
+      "args": [
+        "node",
+        "tools/validate-ledge-traversal.mjs"
+      ]
+    },
+    {
+      "group": "check:rope",
+      "command": "node tools/test-rope-board-transfer.mjs",
+      "args": [
+        "node",
+        "tools/test-rope-board-transfer.mjs"
+      ]
+    },
+    {
+      "group": "check:rope",
+      "command": "node tools/test-rope-limb-mapping.mjs",
+      "args": [
+        "node",
+        "tools/test-rope-limb-mapping.mjs"
+      ]
+    },
+    {
+      "group": "check:rail-air",
+      "command": "node tools/test-rail-air-transfer.mjs",
+      "args": [
+        "node",
+        "tools/test-rail-air-transfer.mjs"
+      ]
+    },
+    {
+      "group": "check:landing-x",
+      "command": "node tools/validate-landing-indicator.mjs",
+      "args": [
+        "node",
+        "tools/validate-landing-indicator.mjs"
+      ]
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-facing.mjs",
+      "args": [
+        "node",
+        "tools/test-run-facing.mjs"
+      ]
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-replays.mjs",
+      "args": [
+        "node",
+        "tools/test-locomotion-replays.mjs"
+      ]
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-idle.mjs",
+      "args": [
+        "node",
+        "tools/test-locomotion-idle.mjs"
+      ]
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-inertia-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-run-inertia-presentation.mjs"
+      ]
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-idle-recovery-charge.mjs",
+      "args": [
+        "node",
+        "tools/test-idle-recovery-charge.mjs"
+      ]
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-world-map-locomotion.mjs",
+      "args": [
+        "node",
+        "tools/test-world-map-locomotion.mjs"
+      ]
+    },
+    {
+      "group": "check:carve-grip",
+      "command": "node tools/test-carve-grip.mjs",
+      "args": [
+        "node",
+        "tools/test-carve-grip.mjs"
+      ]
+    },
+    {
+      "group": "check:carve-grip",
+      "command": "node tools/test-halfpipe-steering.mjs",
+      "args": [
+        "node",
+        "tools/test-halfpipe-steering.mjs"
+      ]
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-skate-overdrive.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-overdrive.mjs"
+      ]
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-speed-pad-air-carry.mjs",
+      "args": [
+        "node",
+        "tools/test-speed-pad-air-carry.mjs"
+      ]
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-trick-landing-speed.mjs",
+      "args": [
+        "node",
+        "tools/test-trick-landing-speed.mjs"
+      ]
+    },
+    {
+      "group": "check:surface-friction",
+      "command": "node tools/test-surface-friction.mjs",
+      "args": [
+        "node",
+        "tools/test-surface-friction.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-speed-effect.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-speed-effect.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-look.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-look.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-rig.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-rig.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-level-switch.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-level-switch.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-portrait.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-portrait.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-landing-forecast.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-landing-forecast.mjs"
+      ]
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-fall-replay.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-fall-replay.mjs"
+      ]
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-ragdoll-recovery.mjs",
+      "args": [
+        "node",
+        "tools/test-ragdoll-recovery.mjs"
+      ]
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-break-apart.mjs",
+      "args": [
+        "node",
+        "tools/test-break-apart.mjs"
+      ]
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-wipeout-policy.mjs",
+      "args": [
+        "node",
+        "tools/test-wipeout-policy.mjs"
+      ]
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-board-abandon-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-board-abandon-tuning.mjs"
+      ]
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-board-abandon-steering.mjs",
+      "args": [
+        "node",
+        "tools/test-board-abandon-steering.mjs"
+      ]
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-air-rescue.mjs",
+      "args": [
+        "node",
+        "tools/test-air-rescue.mjs"
+      ]
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-life-multihit-crates.mjs",
+      "args": [
+        "node",
+        "tools/test-life-multihit-crates.mjs"
+      ]
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-nitro-clear-switch.mjs",
+      "args": [
+        "node",
+        "tools/test-nitro-clear-switch.mjs"
+      ]
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-explosive-bundles.mjs",
+      "args": [
+        "node",
+        "tools/test-explosive-bundles.mjs"
+      ]
+    },
+    {
+      "group": "check:crate-jump",
+      "command": "node tools/test-crate-jump-parity.mjs",
+      "args": [
+        "node",
+        "tools/test-crate-jump-parity.mjs"
+      ]
+    },
+    {
+      "group": "check:nst-port",
+      "command": "python3 -B tools/test_iga_igz_layout.py",
+      "args": [
+        "python3",
+        "-B",
+        "tools/test_iga_igz_layout.py"
+      ]
+    },
+    {
+      "group": "check:editor-roundtrip",
+      "command": "node tools/validate-editor-roundtrip.mjs",
+      "args": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-security.mjs",
+      "args": [
+        "node",
+        "tools/test-level-security.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-ux.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-ux.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-environment.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-environment.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-transactions.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-transactions.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-pointers.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-pointers.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-terrain-support-budget.mjs",
+      "args": [
+        "node",
+        "tools/test-terrain-support-budget.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-legacy-scenery-capture.mjs",
+      "args": [
+        "node",
+        "tools/test-legacy-scenery-capture.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-switch-transactions.mjs",
+      "args": [
+        "node",
+        "tools/test-level-switch-transactions.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-motion-transforms.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-motion-transforms.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-material-fidelity.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-atmosphere.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-thorns.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-thorns.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-current-components.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-current-components.mjs"
+      ]
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-runtime-integration.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-runtime-integration.mjs"
+      ]
+    },
+    {
+      "group": "check:interpolation",
+      "command": "node tools/validate-render-interpolation.mjs",
+      "args": [
+        "node",
+        "tools/validate-render-interpolation.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-suite.mjs",
+      "args": [
+        "node",
+        "tools/test-animation-suite.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-ik.mjs",
+      "args": [
+        "node",
+        "tools/test-animation-ik.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-character-animation-runtime.mjs",
+      "args": [
+        "node",
+        "tools/test-character-animation-runtime.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-procedural-leg-rig.mjs",
+      "args": [
+        "node",
+        "tools/test-procedural-leg-rig.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-jump-arms.mjs",
+      "args": [
+        "node",
+        "tools/test-jump-arms.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-skate-charge-ollie.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-charge-ollie.mjs"
+      ]
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-character-elasticity.mjs",
+      "args": [
+        "node",
+        "tools/test-character-elasticity.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-head-profile-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-character-head-profile-settings.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-lab.mjs",
+      "args": [
+        "node",
+        "tools/test-character-lab.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-cartoon-glove.mjs",
+      "args": [
+        "node",
+        "tools/test-cartoon-glove.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-rigged-cartoon-hand.mjs",
+      "args": [
+        "node",
+        "tools/test-rigged-cartoon-hand.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-stretchable-bone.mjs",
+      "args": [
+        "node",
+        "tools/test-stretchable-bone.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-torso.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-torso.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-head.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-head.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-roo-painted-blink.mjs",
+      "args": [
+        "node",
+        "tools/test-roo-painted-blink.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-shorts.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-shorts.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-procedural-footwear.mjs",
+      "args": [
+        "node",
+        "tools/test-procedural-footwear.mjs"
+      ]
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-interactions.mjs",
+      "args": [
+        "node",
+        "tools/test-character-interactions.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-shore-field.mjs",
+      "args": [
+        "node",
+        "tools/test-shore-field.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-shore-field-crown-regression.mjs",
+      "args": [
+        "node",
+        "tools/test-shore-field-crown-regression.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/validate-ocean-port.mjs",
+      "args": [
+        "node",
+        "tools/validate-ocean-port.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-formulas.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-formulas.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-tuning.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-unity-post.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-post.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-unity-smaa.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-smaa.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-resources.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-resources.mjs"
+      ]
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-waterslide-shore-field.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-shore-field.mjs"
+      ]
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-optimizer.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-optimizer.mjs"
+      ]
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/audit-crt-guest-parameters.mjs",
+      "args": [
+        "node",
+        "tools/audit-crt-guest-parameters.mjs"
+      ]
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-settings.mjs"
+      ]
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-panel-semantics.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-panel-semantics.mjs"
+      ]
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-web.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-web.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-render-quality-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-render-quality-settings.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-fixed-render-pipeline.mjs",
+      "args": [
+        "node",
+        "tools/test-fixed-render-pipeline.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-hud-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-hud-visibility.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-crate-assets.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-mobile-ui-layout.mjs",
+      "args": [
+        "node",
+        "tools/test-mobile-ui-layout.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-input-prompts.mjs",
+      "args": [
+        "node",
+        "tools/test-input-prompts.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-debug-shortcuts.mjs",
+      "args": [
+        "node",
+        "tools/test-debug-shortcuts.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-touch-release.mjs",
+      "args": [
+        "node",
+        "tools/test-touch-release.mjs"
+      ]
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-balance-meter-pointer.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-meter-pointer.mjs"
+      ]
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-visual-treatment.mjs",
+      "args": [
+        "node",
+        "tools/test-visual-treatment.mjs"
+      ]
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-factory-defaults.mjs",
+      "args": [
+        "node",
+        "tools/test-factory-defaults.mjs"
+      ]
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-skateboard-port.mjs",
+      "args": [
+        "node",
+        "tools/test-skateboard-port.mjs"
+      ]
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-discarded-boards.mjs",
+      "args": [
+        "node",
+        "tools/test-discarded-boards.mjs"
+      ]
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-map-skateboard-profile.mjs",
+      "args": [
+        "node",
+        "tools/test-map-skateboard-profile.mjs"
+      ]
+    },
+    {
+      "group": "check:special",
+      "command": "node tools/test-special-system.mjs",
+      "args": [
+        "node",
+        "tools/test-special-system.mjs"
+      ]
+    },
+    {
+      "group": "check:combo-hud",
+      "command": "node tools/test-modern-life-hud.mjs",
+      "args": [
+        "node",
+        "tools/test-modern-life-hud.mjs"
+      ]
+    },
+    {
+      "group": "check:combo-hud",
+      "command": "node tools/test-combo-hud-parity.mjs",
+      "args": [
+        "node",
+        "tools/test-combo-hud-parity.mjs"
+      ]
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-effects-port.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-effects-port.mjs"
+      ]
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-smear.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-smear.mjs"
+      ]
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-arm-pose.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-arm-pose.mjs"
+      ]
+    },
+    {
+      "group": "check:rally-presentation",
+      "command": "node tools/test-rally-festival-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-rally-festival-presentation.mjs"
+      ]
+    },
+    {
+      "group": "check:rally-presentation",
+      "command": "node tools/test-stadium-lighting.mjs",
+      "args": [
+        "node",
+        "tools/test-stadium-lighting.mjs"
+      ]
+    }
+  ]
+}

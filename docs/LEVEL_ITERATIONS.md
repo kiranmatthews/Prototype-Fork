@@ -7380,3 +7380,35 @@ art/carlisle-shipyard/machinery/. No full suite or new whole-course-clear claim.
 
 No new textures, paid generation, downloads, API purchases, geometry reduction,
 push or publication. Local testing hold and the broader polish goal remain.
+
+## Carlisle local wrap-up and full suite — 30 October 2026
+
+The user requested an immediate wrap-up and the full test suite. New polish
+work stopped. The existing playable build remains at runtime commit
+402a46f2043abcf1a590e9435f908582c5d4a0ac, including the requested trampoline
+animation/camera integration, harbour beacons and moving-deck mechanisms.
+The production build and focused compiled/native Carlisle checks passed before
+this run; no production source changed during final validation.
+
+The complete check:all coverage took approximately 30 minutes, from 08:29:56
+to 08:59:51 UTC. Its normal fail-fast chain passed 36 command invocations and
+stopped on Chimeworks. All 166 remaining commands then ran sequentially under
+the shared heavy-work lease, continuing after each failure. All 203 scheduled
+invocations across 44 groups executed. Initial results were 162 passes and
+41 failures. The startup test fixture could not execute the newly imported
+Vite import.meta.env.DEV constant inside a classic Function. It now binds
+that constant explicitly, verifies development and production review modes,
+and passes its corrective rerun. Final results: 163 pass, 40 fail.
+
+The remaining failures cover level/asset expectations, movement and camera,
+editor validation, character, rendering and test fixtures. Chimeworks still
+expects a retired Slipstream ID. No blanket pre-existing/regression claim is
+made: a prior-commit baseline was not run. Gameplay was not retuned to satisfy
+assertions. The suite is not green and is not a release approval.
+
+Full command inventory, failure table, original exit codes, recheck and 169 raw
+logs are preserved in docs/carlisle-relay/final-validation/. The test-only
+change does not invalidate the passing production build. Local playtest stays
+on port 5483; compiled preview on 5484. No push, publication, paid generation
+or coordinator message. Broader polish stops at the user's wrap-up request;
+the local integration/publication hold remains.

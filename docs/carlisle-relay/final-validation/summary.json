@@ -1,0 +1,2882 @@
+{
+  "status": "failed",
+  "runtimeCommit": "402a46f2043abcf1a590e9435f908582c5d4a0ac",
+  "requestedCommand": "npm run check:all",
+  "initialCommandExitCode": 1,
+  "startedAt": "2026-10-30T08:29:56.838666+00:00",
+  "finishedAt": "2026-10-30T08:59:51.513749+00:00",
+  "elapsedSeconds": 1794.68,
+  "nodeVersion": "v24.19.0",
+  "suiteGroups": 44,
+  "suiteCommandInvocations": 203,
+  "completedCommandInvocations": 203,
+  "initialPasses": 162,
+  "initialFailures": 41,
+  "correctiveRechecks": 1,
+  "finalPassed": 163,
+  "finalFailed": 40,
+  "method": "Run check:all until fail-fast exit; run all 166 unvisited leaf commands in original order, continuing after failures. One test-only correction rechecked separately.",
+  "productionCodeChangedDuringSuite": false,
+  "baselineAttribution": "Remaining failures were not all reproduced on a prior commit; no blanket pre-existing or regression attribution is made.",
+  "logArchive": {
+    "path": "docs/carlisle-relay/final-validation/logs.tar.gz",
+    "files": 169,
+    "sha256": "c5cd660c6b828ebad5030141243c345f694901823e03895d9c19f8b4922d067d"
+  },
+  "packageSha256": "6e0e416d5bfeb261edb4fe8258018e91edd7f2db11add54876a5085e8a53fb4f",
+  "checks": [
+    {
+      "group": "check:level-select",
+      "command": "node tools/test-level-select.mjs",
+      "args": [
+        "node",
+        "tools/test-level-select.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 1,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:swimming",
+      "command": "node tools/test-swim-controls.mjs",
+      "args": [
+        "node",
+        "tools/test-swim-controls.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 2,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:swimming",
+      "command": "node tools/test-swimming.mjs",
+      "args": [
+        "node",
+        "tools/test-swimming.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 3,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:swimming",
+      "command": "node tools/test-swim-death-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-swim-death-polish.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 4,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:swimming",
+      "command": "node tools/test-death-performance.mjs",
+      "args": [
+        "node",
+        "tools/test-death-performance.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 5,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:fruit-hud",
+      "command": "node tools/test-hud-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-hud-visibility.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 6,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:fruit-hud",
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-crate-assets.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 7,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:bare-spins",
+      "command": "node tools/test-bare-spins.mjs",
+      "args": [
+        "node",
+        "tools/test-bare-spins.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 8,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:milk",
+      "command": "node tools/test-milk.mjs",
+      "args": [
+        "node",
+        "tools/test-milk.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 9,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:milk",
+      "command": "node tools/test-milk-depth-isolation.mjs",
+      "args": [
+        "node",
+        "tools/test-milk-depth-isolation.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 10,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:milk",
+      "command": "node tools/test-pickup-visual-batch.mjs",
+      "args": [
+        "node",
+        "tools/test-pickup-visual-batch.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 11,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/validate-levels.mjs",
+      "args": [
+        "node",
+        "tools/validate-levels.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 12,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-lazy-source.mjs",
+      "args": [
+        "node",
+        "tools/test-lazy-source.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 13,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-tropical-plants.mjs",
+      "args": [
+        "node",
+        "tools/test-tropical-plants.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 14,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-jungle-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-assets.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 15,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-crown-quartz.mjs",
+      "args": [
+        "node",
+        "tools/test-crown-quartz.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 16,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-jungle-stream.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-stream.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 17,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-custard-pool.mjs",
+      "args": [
+        "node",
+        "tools/test-custard-pool.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 18,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-jungle-enclosure.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-enclosure.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 19,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-map-landscape-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-map-landscape-assets.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 20,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-world-map-save.mjs",
+      "args": [
+        "node",
+        "tools/test-world-map-save.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 21,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-map-clay-geometry.mjs",
+      "args": [
+        "node",
+        "tools/test-map-clay-geometry.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 22,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-hollowwake-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-hollowwake-assets.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 23,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-scenery-normals.mjs",
+      "args": [
+        "node",
+        "tools/test-scenery-normals.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 24,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-waterslide-scenery-lod.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-scenery-lod.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 25,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-waterslide-ocean-look.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-ocean-look.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 26,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-waterslide-shallows.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-shallows.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 27,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-waterpark-decks.mjs",
+      "args": [
+        "node",
+        "tools/test-waterpark-decks.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 28,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-waterpark-portals.mjs",
+      "args": [
+        "node",
+        "tools/test-waterpark-portals.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 29,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-waterslide-forest.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-forest.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 30,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:levels",
+      "command": "node tools/test-hollowwake-tunnel-build.mjs",
+      "args": [
+        "node",
+        "tools/test-hollowwake-tunnel-build.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 31,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:nightworks",
+      "command": "node tools/test-nightworks.mjs",
+      "args": [
+        "node",
+        "tools/test-nightworks.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 32,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:local-data-reset",
+      "command": "node tools/test-local-game-data-reset.mjs",
+      "args": [
+        "node",
+        "tools/test-local-game-data-reset.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 33,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:audio",
+      "command": "node tools/test-audio-loops.mjs",
+      "args": [
+        "node",
+        "tools/test-audio-loops.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 34,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:audio",
+      "command": "node tools/test-skate-audio-replay.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-audio-replay.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 35,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:audio",
+      "command": "node tools/test-footstep-audio.mjs",
+      "args": [
+        "node",
+        "tools/test-footstep-audio.mjs"
+      ],
+      "exitCode": 0,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 36,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:chimeworks",
+      "command": "node tools/test-chimeworks.mjs",
+      "args": [
+        "node",
+        "tools/test-chimeworks.mjs"
+      ],
+      "exitCode": 1,
+      "log": "docs/carlisle-relay/final-validation/check-all.log",
+      "execution": "npm run check:all",
+      "index": 37,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Chimeworks must be included in the continuous Slipstream"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-six-island-campaign.mjs",
+      "args": [
+        "node",
+        "tools/test-six-island-campaign.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/final-validation/001-test-six-island-campaign.log",
+      "execution": "sequential continuation",
+      "index": 38,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-secret-course-roster.mjs",
+      "args": [
+        "node",
+        "tools/test-secret-course-roster.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 27.75,
+      "log": "docs/carlisle-relay/final-validation/002-test-secret-course-roster.log",
+      "execution": "sequential continuation",
+      "index": 39,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-archipelago.mjs",
+      "args": [
+        "node",
+        "tools/test-map-archipelago.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/final-validation/003-test-map-archipelago.log",
+      "execution": "sequential continuation",
+      "index": 40,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Tribal Run missing a Meshy scene"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-playtest-level-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-playtest-level-flow.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/004-test-playtest-level-flow.log",
+      "execution": "sequential continuation",
+      "recheck": {
+        "exitCode": 0,
+        "log": "docs/carlisle-relay/final-validation/playtest-flow-recheck.log",
+        "change": "Bind import.meta.env.DEV explicitly in the classic Function fixture; cover development and production launchReview behavior."
+      },
+      "index": 41,
+      "finalExitCode": 0,
+      "failure": "SyntaxError: Cannot use 'import.meta' outside a module"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-flow.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "docs/carlisle-relay/final-validation/005-test-campaign-flow.log",
+      "execution": "sequential continuation",
+      "index": 42,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-secret-combo-gems.mjs",
+      "args": [
+        "node",
+        "tools/test-secret-combo-gems.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.78,
+      "log": "docs/carlisle-relay/final-validation/006-test-secret-combo-gems.log",
+      "execution": "sequential continuation",
+      "index": 43,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-save-slot-previews.mjs",
+      "args": [
+        "node",
+        "tools/test-save-slot-previews.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "docs/carlisle-relay/final-validation/007-test-save-slot-previews.log",
+      "execution": "sequential continuation",
+      "index": 44,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-time-medals.mjs",
+      "args": [
+        "node",
+        "tools/test-time-medals.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/008-test-time-medals.log",
+      "execution": "sequential continuation",
+      "index": 45,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-level-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-map-level-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/009-test-map-level-presentation.log",
+      "execution": "sequential continuation",
+      "index": 46,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-collectible-specular.mjs",
+      "args": [
+        "node",
+        "tools/test-collectible-specular.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/010-test-collectible-specular.log",
+      "execution": "sequential continuation",
+      "index": 47,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-death-flow.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-death-flow.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.44,
+      "log": "docs/carlisle-relay/final-validation/011-test-campaign-death-flow.log",
+      "execution": "sequential continuation",
+      "index": 48,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-collectible-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-collectible-visibility.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.52,
+      "log": "docs/carlisle-relay/final-validation/012-test-campaign-collectible-visibility.log",
+      "execution": "sequential continuation",
+      "index": 49,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-campaign-performance.mjs",
+      "args": [
+        "node",
+        "tools/test-campaign-performance.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/013-test-campaign-performance.log",
+      "execution": "sequential continuation",
+      "index": 50,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-warp-room-return.mjs",
+      "args": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.44,
+      "log": "docs/carlisle-relay/final-validation/014-test-warp-room-return.log",
+      "execution": "sequential continuation",
+      "index": 51,
+      "finalExitCode": 1,
+      "failure": "Camera value 0.18 differs from expected 0.32 (line 471)."
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-gouraud-context-presets.mjs",
+      "args": [
+        "node",
+        "tools/test-gouraud-context-presets.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/015-test-gouraud-context-presets.log",
+      "execution": "sequential continuation",
+      "index": 52,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-surface.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-surface.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/016-test-game-flow-surface.log",
+      "execution": "sequential continuation",
+      "index": 53,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-results.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-results.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.16,
+      "log": "docs/carlisle-relay/final-validation/017-test-game-flow-results.log",
+      "execution": "sequential continuation",
+      "index": 54,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-results-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-results-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 54.77,
+      "log": "docs/carlisle-relay/final-validation/018-test-results-presentation.log",
+      "execution": "sequential continuation",
+      "index": 55,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-interaction.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-interaction.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.12,
+      "log": "docs/carlisle-relay/final-validation/019-test-game-flow-interaction.log",
+      "execution": "sequential continuation",
+      "index": 56,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-game-flow-vortex.mjs",
+      "args": [
+        "node",
+        "tools/test-game-flow-vortex.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "docs/carlisle-relay/final-validation/020-test-game-flow-vortex.log",
+      "execution": "sequential continuation",
+      "index": 57,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-presentation-loading.mjs",
+      "args": [
+        "node",
+        "tools/test-presentation-loading.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "docs/carlisle-relay/final-validation/021-test-presentation-loading.log",
+      "execution": "sequential continuation",
+      "index": 58,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-bonus-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-bonus-polish.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.92,
+      "log": "docs/carlisle-relay/final-validation/022-test-bonus-polish.log",
+      "execution": "sequential continuation",
+      "index": 59,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-park-tuning.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.65,
+      "log": "docs/carlisle-relay/final-validation/023-test-park-tuning.log",
+      "execution": "sequential continuation",
+      "index": 60,
+      "finalExitCode": 1,
+      "failure": "Final charge value differs from expected 23 (line 14)."
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-camera-framing.mjs",
+      "args": [
+        "node",
+        "tools/test-park-camera-framing.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.0,
+      "log": "docs/carlisle-relay/final-validation/024-test-park-camera-framing.log",
+      "execution": "sequential continuation",
+      "index": 61,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: real vert route did not return"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.66,
+      "log": "docs/carlisle-relay/final-validation/025-test-jungle-cup.log",
+      "execution": "sequential continuation",
+      "index": 62,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-competition-judging.mjs",
+      "args": [
+        "node",
+        "tools/test-competition-judging.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.07,
+      "log": "docs/carlisle-relay/final-validation/026-test-competition-judging.log",
+      "execution": "sequential continuation",
+      "index": 63,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-runtime.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-runtime.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.83,
+      "log": "docs/carlisle-relay/final-validation/027-test-jungle-cup-runtime.log",
+      "execution": "sequential continuation",
+      "index": 64,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: perimeter transition: 1.5943807580684677 != 1.0544155877284287"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-skating.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-skating.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 44.27,
+      "log": "docs/carlisle-relay/final-validation/028-test-jungle-cup-skating.log",
+      "execution": "sequential continuation",
+      "index": 65,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-overtime.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-overtime.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.83,
+      "log": "docs/carlisle-relay/final-validation/029-test-jungle-cup-overtime.log",
+      "execution": "sequential continuation",
+      "index": 66,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-grind-camera.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.93,
+      "log": "docs/carlisle-relay/final-validation/030-test-jungle-cup-grind-camera.log",
+      "execution": "sequential continuation",
+      "index": 67,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: test did not traverse a meaningful coping bend"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-head-stability.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-head-stability.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 36.92,
+      "log": "docs/carlisle-relay/final-validation/031-test-grind-head-stability.log",
+      "execution": "sequential continuation",
+      "index": 68,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-catch-buffer.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-catch-buffer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.63,
+      "log": "docs/carlisle-relay/final-validation/032-test-grind-catch-buffer.log",
+      "execution": "sequential continuation",
+      "index": 69,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-trick-speed.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-trick-speed.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 20.84,
+      "log": "docs/carlisle-relay/final-validation/033-test-grind-trick-speed.log",
+      "execution": "sequential continuation",
+      "index": 70,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-grind-drop-in.mjs",
+      "args": [
+        "node",
+        "tools/test-grind-drop-in.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.31,
+      "log": "docs/carlisle-relay/final-validation/034-test-grind-drop-in.log",
+      "execution": "sequential continuation",
+      "index": 71,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-lip-recovery.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-lip-recovery.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.75,
+      "log": "docs/carlisle-relay/final-validation/035-test-jungle-cup-lip-recovery.log",
+      "execution": "sequential continuation",
+      "index": 72,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-layout.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-layout.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.94,
+      "log": "docs/carlisle-relay/final-validation/036-test-jungle-cup-layout.log",
+      "execution": "sequential continuation",
+      "index": 73,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-ui.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-ui.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.97,
+      "log": "docs/carlisle-relay/final-validation/037-test-jungle-cup-ui.log",
+      "execution": "sequential continuation",
+      "index": 74,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-tricks.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-tricks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.06,
+      "log": "docs/carlisle-relay/final-validation/038-test-skate-tricks.log",
+      "execution": "sequential continuation",
+      "index": 75,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: real ramp did not launch"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-input-polish.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-input-polish.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.01,
+      "log": "docs/carlisle-relay/final-validation/039-test-skate-input-polish.log",
+      "execution": "sequential continuation",
+      "index": 76,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-surface-layers.mjs",
+      "args": [
+        "node",
+        "tools/test-jungle-cup-surface-layers.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.85,
+      "log": "docs/carlisle-relay/final-validation/040-test-jungle-cup-surface-layers.log",
+      "execution": "sequential continuation",
+      "index": 77,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-dynamics.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-dynamics.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.6,
+      "log": "docs/carlisle-relay/final-validation/041-test-balance-dynamics.log",
+      "execution": "sequential continuation",
+      "index": 78,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-sliders.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-sliders.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.86,
+      "log": "docs/carlisle-relay/final-validation/042-test-balance-sliders.log",
+      "execution": "sequential continuation",
+      "index": 79,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-balance-reentry.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-reentry.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.66,
+      "log": "docs/carlisle-relay/final-validation/043-test-balance-reentry.log",
+      "execution": "sequential continuation",
+      "index": 80,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-run-finish.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-run-finish.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.03,
+      "log": "docs/carlisle-relay/final-validation/044-test-skate-run-finish.log",
+      "execution": "sequential continuation",
+      "index": 81,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-level-ports.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/045-test-unity-level-ports.log",
+      "execution": "sequential continuation",
+      "index": 82,
+      "finalExitCode": 1,
+      "failure": "TypeError [ERR_UNSUPPORTED_RESOLVE_REQUEST]: Failed to resolve module specifier \"./coastal-town-art\" from \"[embedded data URL omitted]\": Invalid relative URL or base scheme is not hierarchical."
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-beachside-merge.mjs",
+      "args": [
+        "node",
+        "tools/test-beachside-merge.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/046-test-beachside-merge.log",
+      "execution": "sequential continuation",
+      "index": 83,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-beachfront-cliff.mjs",
+      "args": [
+        "node",
+        "tools/test-beachfront-cliff.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/047-test-beachfront-cliff.log",
+      "execution": "sequential continuation",
+      "index": 84,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-wood-path-kit.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-path-kit.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.24,
+      "log": "docs/carlisle-relay/final-validation/048-test-wood-path-kit.log",
+      "execution": "sequential continuation",
+      "index": 85,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-island-shelf.mjs",
+      "args": [
+        "node",
+        "tools/test-island-shelf.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/049-test-island-shelf.log",
+      "execution": "sequential continuation",
+      "index": 86,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-island-shore-foam.mjs",
+      "args": [
+        "node",
+        "tools/test-island-shore-foam.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/050-test-island-shore-foam.log",
+      "execution": "sequential continuation",
+      "index": 87,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-crate-rest-surface.mjs",
+      "args": [
+        "node",
+        "tools/test-crate-rest-surface.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.22,
+      "log": "docs/carlisle-relay/final-validation/051-test-crate-rest-surface.log",
+      "execution": "sequential continuation",
+      "index": 88,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-coastal-street-kit.mjs",
+      "args": [
+        "node",
+        "tools/test-coastal-street-kit.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.23,
+      "log": "docs/carlisle-relay/final-validation/052-test-coastal-street-kit.log",
+      "execution": "sequential continuation",
+      "index": 89,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-sand-material.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-sand-material.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/053-test-unity-sand-material.log",
+      "execution": "sequential continuation",
+      "index": 90,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ground",
+      "command": "node tools/validate-ground-acceleration.mjs",
+      "args": [
+        "node",
+        "tools/validate-ground-acceleration.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 66.0,
+      "log": "docs/carlisle-relay/final-validation/054-validate-ground-acceleration.log",
+      "execution": "sequential continuation",
+      "index": 91,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-crouch-jump-slam.mjs",
+      "args": [
+        "node",
+        "tools/test-crouch-jump-slam.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.62,
+      "log": "docs/carlisle-relay/final-validation/055-test-crouch-jump-slam.log",
+      "execution": "sequential continuation",
+      "index": 92,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-crouch-stance.mjs",
+      "args": [
+        "node",
+        "tools/test-crouch-stance.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.42,
+      "log": "docs/carlisle-relay/final-validation/056-test-crouch-stance.log",
+      "execution": "sequential continuation",
+      "index": 93,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-quaternius-crouch.mjs",
+      "args": [
+        "node",
+        "tools/test-quaternius-crouch.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.75,
+      "log": "docs/carlisle-relay/final-validation/057-test-quaternius-crouch.log",
+      "execution": "sequential continuation",
+      "index": 94,
+      "finalExitCode": 1,
+      "failure": "Boolean actual true differs from expected false (line 51)."
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-slide-jump.mjs",
+      "args": [
+        "node",
+        "tools/test-slide-jump.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.01,
+      "log": "docs/carlisle-relay/final-validation/058-test-slide-jump.log",
+      "execution": "sequential continuation",
+      "index": 95,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-halfpipe-contact.mjs",
+      "args": [
+        "node",
+        "tools/test-halfpipe-contact.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/059-test-halfpipe-contact.log",
+      "execution": "sequential continuation",
+      "index": 96,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/validate-halfpipe-safety.mjs",
+      "args": [
+        "node",
+        "tools/validate-halfpipe-safety.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.73,
+      "log": "docs/carlisle-relay/final-validation/060-validate-halfpipe-safety.log",
+      "execution": "sequential continuation",
+      "index": 97,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+      "args": [
+        "node",
+        "tools/test-vert-ollie-sequence.mjs",
+        "tools/fixtures/vert-ollie-release-edge-replay.json"
+      ],
+      "exitCode": 1,
+      "seconds": 18.48,
+      "log": "docs/carlisle-relay/final-validation/061-test-vert-ollie-sequence.log",
+      "execution": "sequential continuation",
+      "index": 98,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: supplied edge case must still land"
+    },
+    {
+      "group": "check:ledge",
+      "command": "node tools/validate-ledge-traversal.mjs",
+      "args": [
+        "node",
+        "tools/validate-ledge-traversal.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.24,
+      "log": "docs/carlisle-relay/final-validation/062-validate-ledge-traversal.log",
+      "execution": "sequential continuation",
+      "index": 99,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: missing receiving platform face at x=20.5"
+    },
+    {
+      "group": "check:rope",
+      "command": "node tools/test-rope-board-transfer.mjs",
+      "args": [
+        "node",
+        "tools/test-rope-board-transfer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.15,
+      "log": "docs/carlisle-relay/final-validation/063-test-rope-board-transfer.log",
+      "execution": "sequential continuation",
+      "index": 100,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:rope",
+      "command": "node tools/test-rope-limb-mapping.mjs",
+      "args": [
+        "node",
+        "tools/test-rope-limb-mapping.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.51,
+      "log": "docs/carlisle-relay/final-validation/064-test-rope-limb-mapping.log",
+      "execution": "sequential continuation",
+      "index": 101,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:rail-air",
+      "command": "node tools/test-rail-air-transfer.mjs",
+      "args": [
+        "node",
+        "tools/test-rail-air-transfer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 17.75,
+      "log": "docs/carlisle-relay/final-validation/065-test-rail-air-transfer.log",
+      "execution": "sequential continuation",
+      "index": 102,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:landing-x",
+      "command": "node tools/validate-landing-indicator.mjs",
+      "args": [
+        "node",
+        "tools/validate-landing-indicator.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 34.08,
+      "log": "docs/carlisle-relay/final-validation/066-validate-landing-indicator.log",
+      "execution": "sequential continuation",
+      "index": 103,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: fixed simulation loop was not inspected"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-facing.mjs",
+      "args": [
+        "node",
+        "tools/test-run-facing.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/067-test-run-facing.log",
+      "execution": "sequential continuation",
+      "index": 104,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: legacy gait still reads world/platform displacement"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-replays.mjs",
+      "args": [
+        "node",
+        "tools/test-locomotion-replays.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 24.09,
+      "log": "docs/carlisle-relay/final-validation/068-test-locomotion-replays.log",
+      "execution": "sequential continuation",
+      "index": 105,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: test-course: replay missed the reported grounded recovery"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-idle.mjs",
+      "args": [
+        "node",
+        "tools/test-locomotion-idle.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.93,
+      "log": "docs/carlisle-relay/final-validation/069-test-locomotion-idle.log",
+      "execution": "sequential continuation",
+      "index": 106,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-inertia-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-run-inertia-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.73,
+      "log": "docs/carlisle-relay/final-validation/070-test-run-inertia-presentation.log",
+      "execution": "sequential continuation",
+      "index": 107,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-idle-recovery-charge.mjs",
+      "args": [
+        "node",
+        "tools/test-idle-recovery-charge.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.91,
+      "log": "docs/carlisle-relay/final-validation/071-test-idle-recovery-charge.log",
+      "execution": "sequential continuation",
+      "index": 108,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-world-map-locomotion.mjs",
+      "args": [
+        "node",
+        "tools/test-world-map-locomotion.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.35,
+      "log": "docs/carlisle-relay/final-validation/072-test-world-map-locomotion.log",
+      "execution": "sequential continuation",
+      "index": 109,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:carve-grip",
+      "command": "node tools/test-carve-grip.mjs",
+      "args": [
+        "node",
+        "tools/test-carve-grip.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "docs/carlisle-relay/final-validation/073-test-carve-grip.log",
+      "execution": "sequential continuation",
+      "index": 110,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:carve-grip",
+      "command": "node tools/test-halfpipe-steering.mjs",
+      "args": [
+        "node",
+        "tools/test-halfpipe-steering.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.8,
+      "log": "docs/carlisle-relay/final-validation/074-test-halfpipe-steering.log",
+      "execution": "sequential continuation",
+      "index": 111,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-skate-overdrive.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-overdrive.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.28,
+      "log": "docs/carlisle-relay/final-validation/075-test-skate-overdrive.log",
+      "execution": "sequential continuation",
+      "index": 112,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-speed-pad-air-carry.mjs",
+      "args": [
+        "node",
+        "tools/test-speed-pad-air-carry.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 32.7,
+      "log": "docs/carlisle-relay/final-validation/076-test-speed-pad-air-carry.log",
+      "execution": "sequential continuation",
+      "index": 113,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:skate-speed",
+      "command": "node tools/test-trick-landing-speed.mjs",
+      "args": [
+        "node",
+        "tools/test-trick-landing-speed.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.76,
+      "log": "docs/carlisle-relay/final-validation/077-test-trick-landing-speed.log",
+      "execution": "sequential continuation",
+      "index": 114,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:surface-friction",
+      "command": "node tools/test-surface-friction.mjs",
+      "args": [
+        "node",
+        "tools/test-surface-friction.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.38,
+      "log": "docs/carlisle-relay/final-validation/078-test-surface-friction.log",
+      "execution": "sequential continuation",
+      "index": 115,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The Descent beach sand did not opt into full surface drag"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-speed-effect.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-speed-effect.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.44,
+      "log": "docs/carlisle-relay/final-validation/079-test-camera-speed-effect.log",
+      "execution": "sequential continuation",
+      "index": 116,
+      "finalExitCode": 1,
+      "failure": "ReferenceError: THREE is not defined"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-look.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-look.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/080-test-camera-look.log",
+      "execution": "sequential continuation",
+      "index": 117,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: touch look does not clear when the app backgrounds"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-rig.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-rig.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.39,
+      "log": "docs/carlisle-relay/final-validation/081-test-camera-rig.log",
+      "execution": "sequential continuation",
+      "index": 118,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-level-switch.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-level-switch.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.73,
+      "log": "docs/carlisle-relay/final-validation/082-test-camera-level-switch.log",
+      "execution": "sequential continuation",
+      "index": 119,
+      "finalExitCode": 1,
+      "failure": "ReferenceError: launchCamera2 is not defined"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-portrait.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-portrait.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.44,
+      "log": "docs/carlisle-relay/final-validation/083-test-camera-portrait.log",
+      "execution": "sequential continuation",
+      "index": 120,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-landing-forecast.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-landing-forecast.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.36,
+      "log": "docs/carlisle-relay/final-validation/084-test-camera-landing-forecast.log",
+      "execution": "sequential continuation",
+      "index": 121,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-fall-replay.mjs",
+      "args": [
+        "node",
+        "tools/test-camera-fall-replay.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 20.89,
+      "log": "docs/carlisle-relay/final-validation/085-test-camera-fall-replay.log",
+      "execution": "sequential continuation",
+      "index": 122,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: real fatal falls lost their hold"
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-ragdoll-recovery.mjs",
+      "args": [
+        "node",
+        "tools/test-ragdoll-recovery.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.65,
+      "log": "docs/carlisle-relay/final-validation/086-test-ragdoll-recovery.log",
+      "execution": "sequential continuation",
+      "index": 123,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-break-apart.mjs",
+      "args": [
+        "node",
+        "tools/test-break-apart.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.48,
+      "log": "docs/carlisle-relay/final-validation/087-test-break-apart.log",
+      "execution": "sequential continuation",
+      "index": 124,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:bail-recovery",
+      "command": "node tools/test-wipeout-policy.mjs",
+      "args": [
+        "node",
+        "tools/test-wipeout-policy.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.75,
+      "log": "docs/carlisle-relay/final-validation/088-test-wipeout-policy.log",
+      "execution": "sequential continuation",
+      "index": 125,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-board-abandon-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-board-abandon-tuning.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.51,
+      "log": "docs/carlisle-relay/final-validation/089-test-board-abandon-tuning.log",
+      "execution": "sequential continuation",
+      "index": 126,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-board-abandon-steering.mjs",
+      "args": [
+        "node",
+        "tools/test-board-abandon-steering.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.76,
+      "log": "docs/carlisle-relay/final-validation/090-test-board-abandon-steering.log",
+      "execution": "sequential continuation",
+      "index": 127,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-air-rescue.mjs",
+      "args": [
+        "node",
+        "tools/test-air-rescue.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 12.64,
+      "log": "docs/carlisle-relay/final-validation/091-test-air-rescue.log",
+      "execution": "sequential continuation",
+      "index": 128,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: side contact was misclassified as a rescue stomp"
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-life-multihit-crates.mjs",
+      "args": [
+        "node",
+        "tools/test-life-multihit-crates.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.04,
+      "log": "docs/carlisle-relay/final-validation/092-test-life-multihit-crates.log",
+      "execution": "sequential continuation",
+      "index": 129,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-nitro-clear-switch.mjs",
+      "args": [
+        "node",
+        "tools/test-nitro-clear-switch.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 51.5,
+      "log": "docs/carlisle-relay/final-validation/093-test-nitro-clear-switch.log",
+      "execution": "sequential continuation",
+      "index": 130,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Beachside Run did not preserve its authored-or-derived Nitro switch ownership"
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-explosive-bundles.mjs",
+      "args": [
+        "node",
+        "tools/test-explosive-bundles.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.8,
+      "log": "docs/carlisle-relay/final-validation/094-test-explosive-bundles.log",
+      "execution": "sequential continuation",
+      "index": 131,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crate-jump",
+      "command": "node tools/test-crate-jump-parity.mjs",
+      "args": [
+        "node",
+        "tools/test-crate-jump-parity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.52,
+      "log": "docs/carlisle-relay/final-validation/095-test-crate-jump-parity.log",
+      "execution": "sequential continuation",
+      "index": 132,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:nst-port",
+      "command": "python3 -B tools/test_iga_igz_layout.py",
+      "args": [
+        "python3",
+        "-B",
+        "tools/test_iga_igz_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.15,
+      "log": "docs/carlisle-relay/final-validation/096-test_iga_igz_layout.log",
+      "execution": "sequential continuation",
+      "index": 133,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-roundtrip",
+      "command": "node tools/validate-editor-roundtrip.mjs",
+      "args": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.65,
+      "log": "docs/carlisle-relay/final-validation/097-validate-editor-roundtrip.log",
+      "execution": "sequential continuation",
+      "index": 134,
+      "finalExitCode": 1,
+      "failure": "TypeError: Cannot read properties of null (reading 'position')"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-security.mjs",
+      "args": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.44,
+      "log": "docs/carlisle-relay/final-validation/098-test-level-security.log",
+      "execution": "sequential continuation",
+      "index": 135,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: world-map coordinate exceeded its allocation bound"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-ux.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-ux.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.71,
+      "log": "docs/carlisle-relay/final-validation/099-test-editor-ux.log",
+      "execution": "sequential continuation",
+      "index": 136,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-environment.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-environment.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/100-test-editor-environment.log",
+      "execution": "sequential continuation",
+      "index": 137,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-transactions.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-transactions.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.3,
+      "log": "docs/carlisle-relay/final-validation/101-test-editor-transactions.log",
+      "execution": "sequential continuation",
+      "index": 138,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-pointers.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-pointers.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.66,
+      "log": "docs/carlisle-relay/final-validation/102-test-editor-pointers.log",
+      "execution": "sequential continuation",
+      "index": 139,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-terrain-support-budget.mjs",
+      "args": [
+        "node",
+        "tools/test-terrain-support-budget.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.27,
+      "log": "docs/carlisle-relay/final-validation/103-test-terrain-support-budget.log",
+      "execution": "sequential continuation",
+      "index": 140,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: country-club source rejected"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-legacy-scenery-capture.mjs",
+      "args": [
+        "node",
+        "tools/test-legacy-scenery-capture.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.94,
+      "log": "docs/carlisle-relay/final-validation/104-test-legacy-scenery-capture.log",
+      "execution": "sequential continuation",
+      "index": 141,
+      "finalExitCode": 1,
+      "failure": "TypeError: Cannot read properties of undefined (reading 'id')"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-switch-transactions.mjs",
+      "args": [
+        "node",
+        "tools/test-level-switch-transactions.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.57,
+      "log": "docs/carlisle-relay/final-validation/105-test-level-switch-transactions.log",
+      "execution": "sequential continuation",
+      "index": 142,
+      "finalExitCode": 1,
+      "failure": "ReferenceError: cloudPathPass is not defined"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-motion-transforms.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-motion-transforms.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.98,
+      "log": "docs/carlisle-relay/final-validation/106-test-editor-motion-transforms.log",
+      "execution": "sequential continuation",
+      "index": 143,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-material-fidelity.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.61,
+      "log": "docs/carlisle-relay/final-validation/107-test-editor-material-fidelity.log",
+      "execution": "sequential continuation",
+      "index": 144,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: fog changed"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-atmosphere.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.88,
+      "log": "docs/carlisle-relay/final-validation/108-test-editor-atmosphere.log",
+      "execution": "sequential continuation",
+      "index": 145,
+      "finalExitCode": 1,
+      "failure": "TypeError: skyProjection.setCloudRoadSky is not a function"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-thorns.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-thorns.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.72,
+      "log": "docs/carlisle-relay/final-validation/109-test-editor-thorns.log",
+      "execution": "sequential continuation",
+      "index": 146,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-current-components.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-current-components.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.59,
+      "log": "docs/carlisle-relay/final-validation/110-test-editor-current-components.log",
+      "execution": "sequential continuation",
+      "index": 147,
+      "finalExitCode": 1,
+      "failure": "Mesh ride-flag editing could not find the walkable collision inspector control (line 53)."
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-runtime-integration.mjs",
+      "args": [
+        "node",
+        "tools/test-editor-runtime-integration.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.68,
+      "log": "docs/carlisle-relay/final-validation/111-test-editor-runtime-integration.log",
+      "execution": "sequential continuation",
+      "index": 148,
+      "finalExitCode": 1,
+      "failure": "TypeError: this.jungleAssets?.setWeatherWind is not a function"
+    },
+    {
+      "group": "check:interpolation",
+      "command": "node tools/validate-render-interpolation.mjs",
+      "args": [
+        "node",
+        "tools/validate-render-interpolation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/112-validate-render-interpolation.log",
+      "execution": "sequential continuation",
+      "index": 149,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-suite.mjs",
+      "args": [
+        "node",
+        "tools/test-animation-suite.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 2.88,
+      "log": "docs/carlisle-relay/final-validation/113-test-animation-suite.log",
+      "execution": "sequential continuation",
+      "index": 150,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-ik.mjs",
+      "args": [
+        "node",
+        "tools/test-animation-ik.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/114-test-animation-ik.log",
+      "execution": "sequential continuation",
+      "index": 151,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-character-animation-runtime.mjs",
+      "args": [
+        "node",
+        "tools/test-character-animation-runtime.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.63,
+      "log": "docs/carlisle-relay/final-validation/115-test-character-animation-runtime.log",
+      "execution": "sequential continuation",
+      "index": 152,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-procedural-leg-rig.mjs",
+      "args": [
+        "node",
+        "tools/test-procedural-leg-rig.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.24,
+      "log": "docs/carlisle-relay/final-validation/116-test-procedural-leg-rig.log",
+      "execution": "sequential continuation",
+      "index": 153,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-jump-arms.mjs",
+      "args": [
+        "node",
+        "tools/test-jump-arms.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.39,
+      "log": "docs/carlisle-relay/final-validation/117-test-jump-arms.log",
+      "execution": "sequential continuation",
+      "index": 154,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-skate-charge-ollie.mjs",
+      "args": [
+        "node",
+        "tools/test-skate-charge-ollie.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.61,
+      "log": "docs/carlisle-relay/final-validation/118-test-skate-charge-ollie.log",
+      "execution": "sequential continuation",
+      "index": 155,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-character-elasticity.mjs",
+      "args": [
+        "node",
+        "tools/test-character-elasticity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.94,
+      "log": "docs/carlisle-relay/final-validation/119-test-character-elasticity.log",
+      "execution": "sequential continuation",
+      "index": 156,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-head-profile-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-character-head-profile-settings.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/120-test-character-head-profile-settings.log",
+      "execution": "sequential continuation",
+      "index": 157,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-lab.mjs",
+      "args": [
+        "node",
+        "tools/test-character-lab.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.4,
+      "log": "docs/carlisle-relay/final-validation/121-test-character-lab.log",
+      "execution": "sequential continuation",
+      "index": 158,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /label: \"CHARACTER\"/. Input:"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-cartoon-glove.mjs",
+      "args": [
+        "node",
+        "tools/test-cartoon-glove.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.2,
+      "log": "docs/carlisle-relay/final-validation/122-test-cartoon-glove.log",
+      "execution": "sequential continuation",
+      "index": 159,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: 9.085 is not within 1e-8 of 2.765"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-rigged-cartoon-hand.mjs",
+      "args": [
+        "node",
+        "tools/test-rigged-cartoon-hand.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.42,
+      "log": "docs/carlisle-relay/final-validation/123-test-rigged-cartoon-hand.log",
+      "execution": "sequential continuation",
+      "index": 160,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-stretchable-bone.mjs",
+      "args": [
+        "node",
+        "tools/test-stretchable-bone.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.43,
+      "log": "docs/carlisle-relay/final-validation/124-test-stretchable-bone.log",
+      "execution": "sequential continuation",
+      "index": 161,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /upperLegBone\\.root\\.visible = false/. Input:"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-torso.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-torso.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.47,
+      "log": "docs/carlisle-relay/final-validation/125-test-meshy-torso.log",
+      "execution": "sequential continuation",
+      "index": 162,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-head.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-head.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.48,
+      "log": "docs/carlisle-relay/final-validation/126-test-meshy-head.log",
+      "execution": "sequential continuation",
+      "index": 163,
+      "finalExitCode": 1,
+      "failure": "Final appearance update does not follow the final overlay at the expected source positions (line 257)."
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-roo-painted-blink.mjs",
+      "args": [
+        "node",
+        "tools/test-roo-painted-blink.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/127-test-roo-painted-blink.log",
+      "execution": "sequential continuation",
+      "index": 164,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-shorts.mjs",
+      "args": [
+        "node",
+        "tools/test-meshy-shorts.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.47,
+      "log": "docs/carlisle-relay/final-validation/128-test-meshy-shorts.log",
+      "execution": "sequential continuation",
+      "index": 165,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-procedural-footwear.mjs",
+      "args": [
+        "node",
+        "tools/test-procedural-footwear.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.79,
+      "log": "docs/carlisle-relay/final-validation/129-test-procedural-footwear.log",
+      "execution": "sequential continuation",
+      "index": 166,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: 1.7907269101630572e-8 is not within 1e-8 of 0"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-interactions.mjs",
+      "args": [
+        "node",
+        "tools/test-character-interactions.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.07,
+      "log": "docs/carlisle-relay/final-validation/130-test-character-interactions.log",
+      "execution": "sequential continuation",
+      "index": 167,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-shore-field.mjs",
+      "args": [
+        "node",
+        "tools/test-shore-field.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.36,
+      "log": "docs/carlisle-relay/final-validation/131-test-shore-field.log",
+      "execution": "sequential continuation",
+      "index": 168,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-shore-field-crown-regression.mjs",
+      "args": [
+        "node",
+        "tools/test-shore-field-crown-regression.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.44,
+      "log": "docs/carlisle-relay/final-validation/132-test-shore-field-crown-regression.log",
+      "execution": "sequential continuation",
+      "index": 169,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/validate-ocean-port.mjs",
+      "args": [
+        "node",
+        "tools/validate-ocean-port.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/133-validate-ocean-port.log",
+      "execution": "sequential continuation",
+      "index": 170,
+      "finalExitCode": 1,
+      "failure": "Error: Continuous Unity coast collision missing: coastReviewQuery.has(\"coastphysics\")"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-formulas.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-formulas.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/final-validation/134-test-ocean-formulas.log",
+      "execution": "sequential continuation",
+      "index": 171,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-tuning.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-tuning.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.34,
+      "log": "docs/carlisle-relay/final-validation/135-test-ocean-tuning.log",
+      "execution": "sequential continuation",
+      "index": 172,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-unity-post.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-post.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/136-test-unity-post.log",
+      "execution": "sequential continuation",
+      "index": 173,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-unity-smaa.mjs",
+      "args": [
+        "node",
+        "tools/test-unity-smaa.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/137-test-unity-smaa.log",
+      "execution": "sequential continuation",
+      "index": 174,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-ocean-resources.mjs",
+      "args": [
+        "node",
+        "tools/test-ocean-resources.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/138-test-ocean-resources.log",
+      "execution": "sequential continuation",
+      "index": 175,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/test-waterslide-shore-field.mjs",
+      "args": [
+        "node",
+        "tools/test-waterslide-shore-field.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.07,
+      "log": "docs/carlisle-relay/final-validation/139-test-waterslide-shore-field.log",
+      "execution": "sequential continuation",
+      "index": 176,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-optimizer.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-optimizer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "docs/carlisle-relay/final-validation/140-test-crt-optimizer.log",
+      "execution": "sequential continuation",
+      "index": 177,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/audit-crt-guest-parameters.mjs",
+      "args": [
+        "node",
+        "tools/audit-crt-guest-parameters.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "docs/carlisle-relay/final-validation/141-audit-crt-guest-parameters.log",
+      "execution": "sequential continuation",
+      "index": 178,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-settings.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/142-test-crt-guest-settings.log",
+      "execution": "sequential continuation",
+      "index": 179,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-panel-semantics.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-panel-semantics.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/143-test-crt-guest-panel-semantics.log",
+      "execution": "sequential continuation",
+      "index": 180,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:crt",
+      "command": "node tools/test-crt-guest-web.mjs",
+      "args": [
+        "node",
+        "tools/test-crt-guest-web.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "docs/carlisle-relay/final-validation/144-test-crt-guest-web.log",
+      "execution": "sequential continuation",
+      "index": 181,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-render-quality-settings.mjs",
+      "args": [
+        "node",
+        "tools/test-render-quality-settings.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/145-test-render-quality-settings.log",
+      "execution": "sequential continuation",
+      "index": 182,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-fixed-render-pipeline.mjs",
+      "args": [
+        "node",
+        "tools/test-fixed-render-pipeline.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "docs/carlisle-relay/final-validation/146-test-fixed-render-pipeline.log",
+      "execution": "sequential continuation",
+      "index": 183,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-hud-visibility.mjs",
+      "args": [
+        "node",
+        "tools/test-hud-visibility.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.37,
+      "log": "docs/carlisle-relay/final-validation/147-test-hud-visibility.log",
+      "execution": "sequential continuation",
+      "index": 184,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "args": [
+        "node",
+        "tools/test-wood-crate-assets.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "docs/carlisle-relay/final-validation/148-test-wood-crate-assets.log",
+      "execution": "sequential continuation",
+      "index": 185,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-mobile-ui-layout.mjs",
+      "args": [
+        "node",
+        "tools/test-mobile-ui-layout.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/final-validation/149-test-mobile-ui-layout.log",
+      "execution": "sequential continuation",
+      "index": 186,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-input-prompts.mjs",
+      "args": [
+        "node",
+        "tools/test-input-prompts.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "docs/carlisle-relay/final-validation/150-test-input-prompts.log",
+      "execution": "sequential continuation",
+      "index": 187,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-debug-shortcuts.mjs",
+      "args": [
+        "node",
+        "tools/test-debug-shortcuts.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/151-test-debug-shortcuts.log",
+      "execution": "sequential continuation",
+      "index": 188,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-touch-release.mjs",
+      "args": [
+        "node",
+        "tools/test-touch-release.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/152-test-touch-release.log",
+      "execution": "sequential continuation",
+      "index": 189,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:render-quality",
+      "command": "node tools/test-balance-meter-pointer.mjs",
+      "args": [
+        "node",
+        "tools/test-balance-meter-pointer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "docs/carlisle-relay/final-validation/153-test-balance-meter-pointer.log",
+      "execution": "sequential continuation",
+      "index": 190,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-visual-treatment.mjs",
+      "args": [
+        "node",
+        "tools/test-visual-treatment.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/final-validation/154-test-visual-treatment.log",
+      "execution": "sequential continuation",
+      "index": 191,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Sky Bridge still exposes the painted distance dome"
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-factory-defaults.mjs",
+      "args": [
+        "node",
+        "tools/test-factory-defaults.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/final-validation/155-test-factory-defaults.log",
+      "execution": "sequential continuation",
+      "index": 192,
+      "finalExitCode": 1,
+      "failure": "Reset tuning contains extra grind, launch, pipe, teeter and trampoline settings absent from the expected factory object (line 34)."
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-skateboard-port.mjs",
+      "args": [
+        "node",
+        "tools/test-skateboard-port.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.34,
+      "log": "docs/carlisle-relay/final-validation/156-test-skateboard-port.log",
+      "execution": "sequential continuation",
+      "index": 193,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-discarded-boards.mjs",
+      "args": [
+        "node",
+        "tools/test-discarded-boards.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.74,
+      "log": "docs/carlisle-relay/final-validation/157-test-discarded-boards.log",
+      "execution": "sequential continuation",
+      "index": 194,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:skateboard",
+      "command": "node tools/test-map-skateboard-profile.mjs",
+      "args": [
+        "node",
+        "tools/test-map-skateboard-profile.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.11,
+      "log": "docs/carlisle-relay/final-validation/158-test-map-skateboard-profile.log",
+      "execution": "sequential continuation",
+      "index": 195,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:special",
+      "command": "node tools/test-special-system.mjs",
+      "args": [
+        "node",
+        "tools/test-special-system.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.23,
+      "log": "docs/carlisle-relay/final-validation/159-test-special-system.log",
+      "execution": "sequential continuation",
+      "index": 196,
+      "finalExitCode": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: death must revoke the triple-mask SPECIAL override immediately"
+    },
+    {
+      "group": "check:combo-hud",
+      "command": "node tools/test-modern-life-hud.mjs",
+      "args": [
+        "node",
+        "tools/test-modern-life-hud.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/160-test-modern-life-hud.log",
+      "execution": "sequential continuation",
+      "index": 197,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:combo-hud",
+      "command": "node tools/test-combo-hud-parity.mjs",
+      "args": [
+        "node",
+        "tools/test-combo-hud-parity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.37,
+      "log": "docs/carlisle-relay/final-validation/161-test-combo-hud-parity.log",
+      "execution": "sequential continuation",
+      "index": 198,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-effects-port.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-effects-port.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.32,
+      "log": "docs/carlisle-relay/final-validation/162-test-spin-effects-port.log",
+      "execution": "sequential continuation",
+      "index": 199,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-smear.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-smear.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "docs/carlisle-relay/final-validation/163-test-spin-smear.log",
+      "execution": "sequential continuation",
+      "index": 200,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:spin-effects",
+      "command": "node tools/test-spin-arm-pose.mjs",
+      "args": [
+        "node",
+        "tools/test-spin-arm-pose.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 9.69,
+      "log": "docs/carlisle-relay/final-validation/164-test-spin-arm-pose.log",
+      "execution": "sequential continuation",
+      "index": 201,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:rally-presentation",
+      "command": "node tools/test-rally-festival-presentation.mjs",
+      "args": [
+        "node",
+        "tools/test-rally-festival-presentation.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 1.29,
+      "log": "docs/carlisle-relay/final-validation/165-test-rally-festival-presentation.log",
+      "execution": "sequential continuation",
+      "index": 202,
+      "finalExitCode": 0
+    },
+    {
+      "group": "check:rally-presentation",
+      "command": "node tools/test-stadium-lighting.mjs",
+      "args": [
+        "node",
+        "tools/test-stadium-lighting.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 1.12,
+      "log": "docs/carlisle-relay/final-validation/166-test-stadium-lighting.log",
+      "execution": "sequential continuation",
+      "index": 203,
+      "finalExitCode": 0
+    }
+  ]
+}

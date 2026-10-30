@@ -25,7 +25,10 @@ assert.ok(startupStart >= 0 && startupEnd > startupStart);
 const startup = new Function(
   "window", "location", "localStorage", "LITE_RENDER", "oceanReview",
   "oceanOverview", "coastPhysicsReview", "ui", "findLevel", "DEFAULT_LEVEL_ID", "requestedTool",
-  `${compile(source.slice(startupStart, startupEnd))}\nreturn { current, shellBypass, playtestUnlockAll };`,
+  "development",
+  // Vite supplies this module-only constant. Bind it explicitly when executing
+  // the same startup code in a classic Function, and exercise both build modes.
+  `${compile(source.slice(startupStart, startupEnd).replaceAll('import.meta.env.DEV', 'development'))}\nreturn { current, shellBypass, playtestUnlockAll, launchReview };`,
 );
 const registry = new Map([
   ["jungle", { id: "jungle", name: "Jungle Ruins" }],
@@ -34,14 +37,14 @@ const registry = new Map([
   ["beachfront", { id: "beachfront", name: "Beachside Run" }],
   ["astra-chimeworks", { id: "astra-chimeworks", name: "The Chimeworks — Astra" }],
 ]);
-function select(search, { saved = "slip", lite = false, ocean = false, coast = false, editor = false, hostname = "127.0.0.1" } = {}) {
+function select(search, { saved = "slip", lite = false, ocean = false, coast = false, editor = false, hostname = "127.0.0.1", development = false } = {}) {
   const storage = new Map([
     ["solProtoLevelId", saved], ["solProtoEditorOpen", editor ? "1" : "0"],
   ]);
   return startup(
     { location: { search } }, { search, hash: "", hostname }, { getItem: (key) => storage.get(key) ?? null },
     lite, ocean, false, coast, { setLifeCheatEnabled() {} },
-    (id) => registry.get(id) ?? null, "jungle", requestedTool,
+    (id) => registry.get(id) ?? null, "jungle", requestedTool, development,
   );
 }
 assert.equal(select("?playtest&level=astra-chimeworks").current.id, "astra-chimeworks");
@@ -68,6 +71,9 @@ assert.equal(select('?playtest&unlockAll',{hostname:'example.com'}).playtestUnlo
 assert.equal(select('?playtest&level=warproom').playtestUnlockAll,true);
 assert.equal(select('?playtest').playtestUnlockAll,true);
 assert.equal(select('?playtest',{hostname:'example.com'}).playtestUnlockAll,false);
+assert.equal(select('?playtest&launchReview').launchReview, null, 'production build must not enable the development review loop');
+assert.equal(select('?playtest&launchReview', {development:true}).launchReview.rate, 1);
+assert.equal(select('?playtest', {development:true}).launchReview, null);
 
 const clear = new Function(
   "player", "level", "current", "campaignLevelById", "campaign", "runStartRewards",
