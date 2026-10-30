@@ -1,0 +1,8 @@
+{
+  "mode": "Built-in image_gen",
+  "prompt": "Use case: stylized-concept. Asset type: seamless base-colour texture for large solid timber pier piles and braces in a high-quality stylized 3D coastal platformer. Create a square, edge-to-edge orthographic material scan of one continuous broad field of salt-weathered hardwood, grain running vertically from bottom to top. Colour: cool silver-grey, muted warm taupe within the grain, dark grey-brown longitudinal fissures; softly bleached ridges. Chunky confident hand-painted material detail with fine weathered fibres, a few small elongated knots and irregular branching cracks, matching carved substantial coastal wharf timber. Physically flat diffuse albedo lighting, no cast shadows or directional shine, no perspective. The whole image is wood, seamlessly tileable on all four edges. Crucial: NO individual planks, NO horizontal board seams, NO grid, NO bolts, NO metal bands, NO separate objects, NO black border, NO text, NO gradient spotlight. Natural variation without an obvious repeated motif or high-contrast rectangular patches. This will wrap around real modeled timber posts; it is not a picture of a post.",
+  "source": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-c6d3c235-1928-4d61-9568-bf248cbb2a14.png",
+  "runtime": "public/textures/carlisle-piers/weathered-timber.png",
+  "purpose": "Continuous grain for solid parametric pier timbers; original generated fenders and decking preserved",
+  "tripoCreditsSpent": 0
+}

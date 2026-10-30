@@ -6843,3 +6843,49 @@ cd0acbc9d37dc75ceae1, `Codex/sol fork · build 10-30 00:42 UTC`. The full GLB
 is byte-identical in compiled output. Final views, motion samples, clearance
 results and hashes are recorded in the fleet validation report. Local
 checkpoint only; publication held. The broader polish goal remains active.
+
+
+## Carlisle solid pier structure — 30 October 2026
+
+Approximately 18 minutes to the first playable support pass and 42 minutes to
+final validation, including the Imagegen surface and a controlled timing check.
+The old columns reused horizontal deck-plank texture, producing striped shafts
+under the new vessels and decks. Replaced those shafts with three subtly varied
+solid log profiles and continuous vertical grain. Chunky beveled ledgers, crossed
+upper braces, alternating lower braces, iron joint plates and hexagonal bolts
+now support the tall scenery quays. Wet shading follows authored water heights.
+
+All original generated fenders, caps and ropes remain intact. The new structure
+uses fixed-scale texture mapping and full instanced geometry, with no LOD or
+decimation. The main course contains 4,146 pile shafts, 1,218 ledgers, 1,604
+braces, 2,432 plates and 4,864 bolts (2,177,728 triangles including replacement
+shafts). Frames connect posts of the same scenery quay, below its deck; no
+playable gaps are connected and no colliders are added. Native close review
+caught partly buried joint plates; their centres were moved from 0.48m to
+0.84m outside the posts before final validation.
+
+Built-in Imagegen produced a 1254x1254 continuous weathered timber texture,
+copied unchanged into the project and compiled output. Exact prompt and hash
+are retained. No Tripo credits or API top-ups were used in this increment.
+Eighteen protected sources remain byte-identical, including player, camera,
+course/bonus, cargo/nitro, wet slopes, decks, nets, cones, coast, water/sky and
+the fishing fleet. All eighteen slopes remain wet and all native movers remain.
+
+Original course/twelve-prop fingerprints, typecheck/build, lite shader/fitting,
+finite geometry, conservative full-member boat clearance, five compiled native
+1920x1080 views, normal 480p/CRT, main-to-bonus-to-main disposal/reload and
+keyboard walking pass. Zero console errors and walking deaths. The closest
+main fishing boat retains approximately 7m clearance from the complete new
+structure. No new full-course traversal, repeated level audit or full suite.
+
+The final short arrival sample was 33.4ms median / 39.8ms p95 after earlier
+samples near 16.7ms. A same-process new/prior/new/prior comparison then returned
+33.3ms median in every 240-frame window (p95 34.7/34.3/34.8/34.6ms). It does not
+implicate this support change in the broader cadence shift, nor identify the
+cause or establish whole-course performance. Other active rendering processes
+were observed and left running. The comparison and all review evidence are in
+`art/carlisle-shipyard/pier-structure/`.
+
+Build: 1,779 files / 1,074.9MiB, offline version 0bcba19a053eb72040e6,
+`Codex/sol fork · build 10-30 01:17 UTC`. Local checkpoint only; publication
+held. The broader polish goal remains active.

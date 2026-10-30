@@ -1,0 +1,1374 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": false,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "arrival-underpier",
+      "camera": [
+        161,
+        216,
+        54
+      ],
+      "center": [
+        117,
+        221,
+        -5
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 841,
+        "calls": 1289,
+        "triangles": 44920907,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "arrival-post-detail",
+      "camera": [
+        130,
+        216,
+        10
+      ],
+      "center": [
+        120.9,
+        218,
+        -5.15
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 852,
+        "calls": 1269,
+        "triangles": 44690079,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "crane-underpier",
+      "camera": [
+        -187,
+        103,
+        -2010
+      ],
+      "center": [
+        -130,
+        110,
+        -2058
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 856,
+        "calls": 1197,
+        "triangles": 20366645,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "homecoming-underpier",
+      "camera": [
+        -191,
+        -2,
+        -3709
+      ],
+      "center": [
+        -140,
+        0,
+        -3748
+      ],
+      "far": 850,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 864,
+        "calls": 540,
+        "triangles": 6296809,
+        "points": 20,
+        "lines": 0
+      }
+    },
+    {
+      "id": "bonus-pier",
+      "camera": [
+        32,
+        10,
+        26
+      ],
+      "center": [
+        63,
+        2,
+        -13
+      ],
+      "far": 450,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 897,
+        "calls": 450,
+        "triangles": 5118681,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1824,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "ground": 334,
+    "crates": 270,
+    "wetSlopes": 18,
+    "build": "Codex/sol fork · build 10-30 01:17 UTC"
+  },
+  "structure": {
+    "geometry": [
+      {
+        "role": "pile",
+        "instances": 112,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 79,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 103,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 68,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 4,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 8,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 16,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 40,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 59,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 30,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 52,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 78,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 104,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 208,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 60,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 53,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 79,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 72,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 108,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 144,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 288,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 50,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 53,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 35,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 68,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 102,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 136,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 272,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 3,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 8,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 7,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 2,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 128,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 127,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 78,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 80,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 82,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 136,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 272,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 107,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 107,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 137,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 94,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 36,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 48,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 96,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 83,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 72,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 76,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 52,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 68,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 136,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 272,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 88,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 128,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 114,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 78,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 120,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 240,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 480,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 82,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 101,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 105,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 56,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 80,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 160,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 320,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 82,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 91,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 121,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 68,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 134,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 264,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 528,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 77,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 70,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 57,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 76,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 114,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 152,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 304,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 52,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 48,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 47,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 40,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 60,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 80,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 160,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 65,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 70,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 93,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 88,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 132,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 176,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 352,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 60,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 27,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 36,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 44,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 66,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 88,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 176,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 60,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 57,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 45,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 60,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 90,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 120,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 240,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 25,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 48,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 20,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 40,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 60,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 80,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 160,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 32,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 39,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 25,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 20,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 30,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 40,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 80,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 84,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 40,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 38,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 44,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 66,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 88,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 176,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 34,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 19,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 28,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 36,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 54,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 72,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 144,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 12,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 12,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 54,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 28,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 42,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 56,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 112,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 26,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 42,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 34,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 36,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 54,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 72,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 144,
+        "triangles": 24,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 20,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 33,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "pile",
+        "instances": 19,
+        "triangles": 416,
+        "finite": true
+      },
+      {
+        "role": "ledger",
+        "instances": 16,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "brace",
+        "instances": 24,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "plate",
+        "instances": 32,
+        "triangles": 64,
+        "finite": true
+      },
+      {
+        "role": "bolt",
+        "instances": 64,
+        "triangles": 24,
+        "finite": true
+      }
+    ],
+    "clearance": [
+      {
+        "at": [
+          236.44181965044612,
+          169.33811465449503,
+          -489.1223005887686
+        ],
+        "closest": 12.713509800252412,
+        "nearest": {
+          "a": [
+            206.50196633637216,
+            171.73811465449504,
+            -477.29613986430405
+          ],
+          "b": [
+            206.50196633637216,
+            171.73811465449504,
+            -468.09613986430406
+          ],
+          "width": 1.05,
+          "role": "ledger",
+          "sea": [
+            169.33811465449503,
+            169.33811465449503
+          ]
+        }
+      },
+      {
+        "at": [
+          152.40763112858775,
+          213.27211374988292,
+          -0.6199750150018275
+        ],
+        "closest": 13.093661403546161,
+        "nearest": {
+          "a": [
+            120.91869860420297,
+            208.77211374988292,
+            -5.154943890460592
+          ],
+          "b": [
+            120.91869860420297,
+            215.77211374988292,
+            -5.154943890460592
+          ],
+          "width": 0.7,
+          "role": "pile",
+          "sea": [
+            213.27211374988292,
+            213.27211374988292
+          ]
+        }
+      },
+      {
+        "at": [
+          -35.69587433166052,
+          161.3775820967888,
+          -700.7241621162807
+        ],
+        "closest": 7.0140249776410935,
+        "nearest": {
+          "a": [
+            -19.645110263980282,
+            158.3775820967888,
+            -678.0588761464131
+          ],
+          "b": [
+            -19.645110263980282,
+            169.3775820967888,
+            -678.0588761464131
+          ],
+          "width": 1.5,
+          "role": "pile",
+          "sea": [
+            161.3775820967888,
+            161.3775820967888
+          ]
+        }
+      },
+      {
+        "at": [
+          -170.70357102456381,
+          95.44658972508923,
+          -2060.40083995015
+        ],
+        "closest": 7.152701975804793,
+        "nearest": {
+          "a": [
+            -142.24202235055827,
+            121.64658972508923,
+            -2058.254369494907
+          ],
+          "b": [
+            -142.24202235055827,
+            113.34658972508923,
+            -2049.0543694949074
+          ],
+          "width": 0.72,
+          "role": "brace",
+          "sea": [
+            95.44658972508923,
+            95.44658972508923
+          ]
+        }
+      },
+      {
+        "at": [
+          188.34332340948782,
+          35.409361676763396,
+          -2702.384409507546
+        ],
+        "closest": 14.664427736799842,
+        "nearest": {
+          "a": [
+            157.34294111704077,
+            61.60936167676339,
+            -2684.3489938335683
+          ],
+          "b": [
+            157.34294111704077,
+            53.309361676763395,
+            -2675.1489938335685
+          ],
+          "width": 0.72,
+          "role": "brace",
+          "sea": [
+            35.409361676763396,
+            35.409361676763396
+          ]
+        }
+      },
+      {
+        "at": [
+          -178.11491721774098,
+          -8,
+          -3752.988011769422
+        ],
+        "closest": 21.170800733171212,
+        "nearest": {
+          "a": [
+            -155.17804373134658,
+            -11,
+            -3733.670208321682
+          ],
+          "b": [
+            -155.17804373134658,
+            20,
+            -3733.670208321682
+          ],
+          "width": 1.5,
+          "role": "pile",
+          "sea": [
+            -8,
+            -8
+          ]
+        }
+      }
+    ],
+    "texture": {
+      "width": 1254,
+      "height": 1254,
+      "bump": true
+    }
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4,
+    "crates": 21
+  },
+  "normal": {
+    "far": 850,
+    "art": "ready",
+    "median": 33.400000005960464,
+    "p95": 39.80000001192093,
+    "samples": 119
+  },
+  "walk": {
+    "z": -2.3687030154307025,
+    "deaths": 0
+  },
+  "passed": true
+}
