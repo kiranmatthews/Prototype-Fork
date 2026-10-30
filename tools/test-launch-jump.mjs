@@ -10,6 +10,18 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const rig=a.RigBinding.fromSculptRuntime(p.animationRig.root).definition;
   const suite=a.createPlayerStarterAnimationSuite(rig),motion=a.createProceduralMotionContext();
+  const float=suite.clips.find(c=>c.id===LAUNCH_CLIPS.float);
+  const old=structuredClone(suite);old.metadata.playerStarterCatalogVersion=35;
+  const oldFloat=old.clips.find(c=>c.id===LAUNCH_CLIPS.float);delete oldFloat.metadata.launchPedalRevision;
+  oldFloat.playbackSpeed=1.1;
+  oldFloat.tracks.find(t=>t.target==='hipLeft').keys[0].value=[0,0,0,1];
+  const migrated=a.reconcilePlayerStarterAnimationSuite(old,rig);
+  const updated=migrated.clips.find(c=>c.id===LAUNCH_CLIPS.float),backup=migrated.clips.find(c=>c.id===`${LAUNCH_CLIPS.float}.pre-bicycle`);
+  assert.deepEqual(backup.tracks,oldFloat.tracks,'previous authored pose was not backed up');
+  assert.equal(updated.playbackSpeed,oldFloat.playbackSpeed);
+  for(const track of oldFloat.tracks.filter(t=>! /^(hip|knee|ankle|toe)(Left|Right)$/.test(t.target)))
+    assert.deepEqual(updated.tracks.find(t=>t.id===track.id),track,'bicycle update changed another channel');
+  assert.deepEqual(a.reconcilePlayerStarterAnimationSuite(migrated,rig),migrated,'bicycle migration repeated');
   for(const id of Object.values(LAUNCH_CLIPS)){
     const clip=suite.clips.find(c=>c.id===id);assert.ok(clip,id);
     const poses=Array.from({length:65},(_,i)=>a.sampleComposedClip(clip,clip.duration*i/64,motion));
@@ -35,6 +47,16 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
       }
     }
   }
+  const pedal=[];
+  for(let i=0;i<=64;i++){
+    const pose=a.sampleComposedClip(float,float.duration*i/64,motion);
+    const x=id=>new THREE.Euler().setFromQuaternion(new THREE.Quaternion(...pose.joints[id].quaternion),'XYZ').x;
+    assert.ok(Math.abs(x('hipLeft')+x('hipRight')+.76)<1e-6,'legs do not alternate');
+    const hip=x('hipLeft'),knee=x('kneeLeft');
+    pedal.push([-Math.cos(hip)-Math.cos(hip+knee),-Math.sin(hip)-Math.sin(hip+knee)]);
+  }
+  const area=Math.abs(pedal.slice(1).reduce((a,p,i)=>a+pedal[i][0]*p[1]-p[0]*pedal[i][1],0))/2;
+  assert.ok(area>.15,'shoe motion collapsed to a straight kick instead of an oval');
   for(const apex of [.8,2,4]){
     let last=-1;
     for(let t=0;t<=apex+.2;t+=1/120){const phase=launchRiseProgress(t,50*(1-t/apex),50);assert.ok(phase>=last&&phase<=1);last=phase;}
@@ -74,7 +96,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     const mover=jump.moving?level.movers.find(m=>m.mesh.name===jump.name):null;
     const start=mover?mover.mesh.position.clone().add(new THREE.Vector3(0,c.s[1]/2+.15,0)):new THREE.Vector3(...c.p).add(new THREE.Vector3(0,.15,0));
     p.respawn(level,true,false,{position:start,heading:new THREE.Vector3(0,0,-1)});p.freeSkate=board;p.airFromSkate=board;p.airGrav=board?'board':'foot';p.speed=board?8:0;
-    const seen=new Set();let launched=false,landed=false,frames=0;
+    const seen=new Set();let launched=false,landed=false,frames=0,turningFrames=0;
     for(;frames<800;frames++){
       const target=new THREE.Vector3(...carlislePoint(...jump.to)),dx=target.x-p.pos.x,dz=target.z-p.pos.z;
       const f=dx*p.axisF.x+dz*p.axisF.z,s=dx*p.axisL.x+dz*p.axisL.z;
@@ -85,6 +107,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
       assert.ok(p.pos.distanceTo(pos)<1e-10&&p.vVel===vel,'presentation changed ballistic movement');
       assert.deepEqual(p.riderG.scale.toArray(),[1,1,1],'whole skeleton scaled');
       seen.add(p.animationClipHint);
+      const turn=p.launchSomersaultProgress;
+      if(turn!==null&&turn>0&&turn<1)turningFrames++;
       if(p.launchPresentation){
         if(!launched){
           p.state='dead';assert.equal(p.launchPresentation,null,'death kept active launch');p.state='air';
@@ -99,6 +123,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     assert.ok(seen.has(board?LAUNCH_CLIPS.boardRise:LAUNCH_CLIPS.rise),`${jump.name} board=${board}: ${[...seen]}`);
     assert.ok(seen.has(board?LAUNCH_CLIPS.boardFloat:LAUNCH_CLIPS.float),`${jump.name} board=${board}: ${[...seen]}`);
     assert.ok(seen.has(board?LAUNCH_CLIPS.boardGather:LAUNCH_CLIPS.gather),'missing landing preparation');
+    assert.ok(turningFrames>45,`${jump.name}: directional launch did not perform a slow somersault`);
     if(index===39){
       assert.equal(runtime.activeClipId,'player.land','ground contact did not start recovery');
       for(let i=0;i<120;i++){p.step(CONST.fixedStep,makeInput(),level);level.update(CONST.fixedStep);p.commitRenderStep(level);}
@@ -106,6 +131,25 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     }
     reports.push({pad:jump.name,board,frames,clips:[...seen]});
   }
+  const pad=data.components.find(c=>c.nm===jumps[0].name&&c.t==='trampoline');
+  p.respawn(level,true,false,{position:new THREE.Vector3(...pad.p).add(new THREE.Vector3(0,.15,0)),heading:new THREE.Vector3(0,0,-1)});
+  let verticalLaunched=false;
+  for(let i=0;i<95;i++){
+    p.step(CONST.fixedStep,makeInput({jumpHeld:!verticalLaunched}),level);level.update(CONST.fixedStep);p.commitRenderStep(level);
+    if(p.launchPresentation)verticalLaunched=true;
+    assert.equal(p.launchSomersaultProgress,null,'neutral vertical launch invented a somersault');
+  }
+  assert.ok(verticalLaunched);
+  p.freeSkate=true;p.airFromSkate=true;p.airGrav='board';p.boardOllieAir=false;p.airJumpUsed=false;
+  p.step(CONST.fixedStep,makeInput({jumpPressed:true,jumpHeld:true}),level);
+  p.step(CONST.fixedStep,makeInput({jumpReleased:true}),level);
+  assert.ok(p.emergencyEjectLandingPending,'native spring board-abandon gesture failed');
+  assert.equal(p.launchPresentation,null,'spring pose masked Abandon Ship');
+  assert.equal(p.launchSomersaultProgress,null,'spring somersault survived Abandon Ship');
+  for(let i=0;i<15;i++)p.step(CONST.fixedStep,makeInput(),level);
+  p.commitRenderStep(level);
+  assert.ok(p.animationIntent.motion.inputs.forwardRollTuck>.5,'Abandon Ship lost its existing flip');
+  assert.ok(Math.abs(p.bodyGroup.rotation.x)>.3,'Abandon Ship flip did not reach the visual root');
   p.respawn(level,true);assert.equal(p.launchPresentation,null,'respawn kept launch');
   runtime.dispose();console.log(JSON.stringify({camera:'30/60/120 Hz; fixed FOV; reversible; bounded descent lag',flights:reports},null,2));
 },{levelEntry:{id:'carlisle-coast',name:data.name,data}});

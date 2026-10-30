@@ -28,6 +28,10 @@ g.launchReview.afterCamera=()=>{
 };
 const selects=panel.querySelectorAll('select'),buttons=panel.querySelectorAll('button'),output=panel.querySelector('output')!;
 let jump=CARLISLE_RELAY_JUMPS[0],running=false,launched=false,flightId=-1,previousVelocity=0,history:string[]=[];
+let ejectFrame=0;
+const ejectButton=document.createElement('button');ejectButton.textContent='Abandon Ship';
+panel.insertBefore(ejectButton,output);
+ejectButton.onclick=()=>{if(g.player.launchPresentation?.board){ejectFrame=1;setPause(false);}};
 const setPause=(paused:boolean)=>{g.launchReview.rate=paused?0:Number(selects[2].value);buttons[1].textContent=paused?'Resume':'Pause';};
 function replay(){
   const level=g.getLevel();
@@ -40,7 +44,7 @@ function replay(){
   const board=selects[1].value==='board';
   g.player.freeSkate=board;g.player.airFromSkate=board;g.player.airGrav=board?'board':'foot';
   g.player.speed=board?8:0;g.player.endlessDeaths=true;
-  history=[];running=true;launched=false;flightId=-1;previousVelocity=0;setPause(false);
+  history=[];running=true;launched=false;flightId=-1;ejectFrame=0;previousVelocity=0;setPause(false);
 }
 g.launchReview.beforeStep=()=>{
   if(!running)return;
@@ -65,6 +69,10 @@ g.launchReview.beforeStep=()=>{
     input.moveX=launched&&Math.abs(side)>2?Math.sign(side):0;
   }
   input.jumpHeld=!launched;input.grindHeld=!!jump.rail&&p.vVel<5;
+  if(ejectFrame){
+    input.jumpPressed=ejectFrame===1;input.jumpHeld=ejectFrame<7;input.jumpReleased=ejectFrame===7;
+    ejectFrame=ejectFrame===7?0:ejectFrame+1;
+  }
   if(p.launchPresentation)launched=true;
   if(launched&&previousVelocity>0&&p.vVel<=0&&(panel.querySelector('[aria-label="Pause at apex"]') as HTMLInputElement).checked)setPause(true);
   previousVelocity=p.vVel;
@@ -78,6 +86,6 @@ function diagnostics(){
   const p=g.player,launch=p.launchPresentation,cam=g.getLaunchCameraDiagnostics(),clip=g.characterAnimationRuntime.activeClipId??p.animationClipHint;
   if(clip!==lastClip){history.push(clip.replace('player.',''));history=history.slice(-9);lastClip=clip;}
   const loading=g.getLoadingDiagnostics();
-  output.textContent=`${loading.phase?`Loading ${loading.phase} · `:''}${clip} · y ${p.pos.y.toFixed(1)}m · vy ${p.vVel.toFixed(1)}m/s · rise ${(launch?.rise??0).toFixed(2)} · gather ${(launch?.gather??0).toFixed(2)} · camera ${cam.weight.toFixed(2)} · FOV ${g.camera.fov.toFixed(1)}° | ${history.join(' → ')}`;
+  output.textContent=`${loading.phase?`Loading ${loading.phase} · `:''}${clip} · y ${p.pos.y.toFixed(1)}m · vy ${p.vVel.toFixed(1)}m/s · rise ${(launch?.rise??0).toFixed(2)} · gather ${(launch?.gather??0).toFixed(2)} · turn ${(p.launchSomersaultProgress??0).toFixed(2)} · camera ${cam.weight.toFixed(2)} · FOV ${g.camera.fov.toFixed(1)}° | ${history.join(' → ')}`;
   requestAnimationFrame(diagnostics);
 }diagnostics();

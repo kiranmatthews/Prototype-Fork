@@ -10,6 +10,12 @@ export const LAUNCH_JUMP = {
   loopSeconds: 1.36,
   minimumStrength: .12,
   waistPivot: .78,
+  pedalHipSwing: .48,
+  pedalKneeSwing: .62,
+  pedalKneeLag: .13,
+  somersaultSpeedRatio: .8,
+  somersaultStart: .22,
+  somersaultLatestStart: .55,
 } as const;
 export const LAUNCH_CLIPS = {
   rise: 'player.launch-rise', float: 'player.launch-float', gather: 'player.launch-gather',
@@ -110,11 +116,14 @@ function build(rigId: string, phase: 'rise' | 'float' | 'gather', board: boolean
         rotation(`finger${finger}${segment}${side}`,p=>[
           scale*beat(p,[.18,.45,.08,.18,.32,.24],.24,.10,lag+.23+delay,.20),0,0]);
     if(!board){
-      rotation(`hip${side}`,p=>[beat(p,[-.18,-1.05,.04,.20,-.35,-.27],-.27,.16,lag+.15,-.43),
+      // Half a cycle between legs; the delayed knee fold makes each shoe
+      // sweep an oval through push, recovery and lift instead of kicking.
+      const pedalLag=side==='Left'?0:.5;
+      rotation(`hip${side}`,p=>[beat(p,[-.18,-1.05,.04,.20,-.35,-.27],-.38,LAUNCH_JUMP.pedalHipSwing,pedalLag,-.43),
         sign*.06,sign*beat(p,[.05,.08,.03,.12,.18,.18],.18,.055,lag,.08)]);
-      rotation(`knee${side}`,p=>[beat(p,[.35,1.75,.10,.48,1.30,1.12],1.12,.27,lag+.23,.85),0,0]);
-      rotation(`ankle${side}`,p=>[beat(p,[-.17,-.48,.28,.18,-.12,-.20],-.20,.14,lag+.33,-.37),0,sign*.04]);
-      rotation(`toe${side}`,p=>[beat(p,[0,.10,-.15,-.08,0,.02],.02,.07,lag+.4,0),0,0]);
+      rotation(`knee${side}`,p=>[beat(p,[.35,1.75,.10,.48,1.30,1.12],1.06,LAUNCH_JUMP.pedalKneeSwing,pedalLag+LAUNCH_JUMP.pedalKneeLag,.85),0,0]);
+      rotation(`ankle${side}`,p=>[beat(p,[-.17,-.48,.28,.18,-.12,-.20],-.20,.20,pedalLag+.24,-.37),0,sign*.04]);
+      rotation(`toe${side}`,p=>[beat(p,[0,.10,-.15,-.08,0,.02],.02,.09,pedalLag+.30,0),0,0]);
     }
   }
   clip.tags=['player','launch','trampoline','squash-stretch',phase];
@@ -122,6 +131,7 @@ function build(rigId: string, phase: 'rise' | 'float' | 'gather', board: boolean
     rootMotion:'presentation waist pivot only; world translation belongs to gameplay',
     motionDesign:'footage reconstruction: load, extend, backward opening, asymmetric float, landing gather',
     ...(board?{launchUpperBodyOnly:true}:{}),
+    ...(!board&&phase==='float'?{launchPedalRevision:1}:{}),
   };
   if(phase==='rise')clip.markers=[['compression',.065],['push',.22],['open',.46],['float',1]].map(([name,p])=>({id:`${id}:${name}`,name:String(name),time:Number(p)}));
   return clip;

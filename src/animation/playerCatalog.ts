@@ -150,7 +150,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 35;
+export const PLAYER_STARTER_CATALOG_VERSION = 36;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -1852,6 +1852,22 @@ export function reconcilePlayerStarterAnimationSuite(
   if (previousVersion < 31) {
     const playerIds=new Set<string>(PLAYER_STARTER_CLIP_IDS);
     clips=clips.map(clip=>playerIds.has(clip.id)?withCharacterElasticity(clip,rig):clip);
+  }
+
+  if (previousVersion < 36) {
+    const old=clips.find(clip=>clip.id===LAUNCH_CLIPS.float);
+    const replacement=starters.find(clip=>clip.id===LAUNCH_CLIPS.float)!;
+    if(old&&old.metadata?.launchPedalRevision!==1){
+      const backupId=`${old.id}.pre-bicycle`;
+      if(!clips.some(clip=>clip.id===backupId))clips.push({...old,id:backupId,
+        name:`${old.name} — Before Bicycle Legs`,metadata:{...old.metadata,replacedBy:old.id}});
+      const canonical=(id:string)=>rig.joints.find(j=>j.id===id||j.aliases?.includes(id))?.id??id;
+      const legTracks=replacement.tracks.filter(track=>track.kind==='quaternion'&&/^(hip|knee|ankle|toe)(Left|Right)$/.test(track.target));
+      const legTargets=new Set(legTracks.map(track=>canonical(track.target)));
+      clips=clips.map(clip=>clip===old?{...old,
+        tracks:[...old.tracks.filter(track=>track.kind!=='quaternion'||!legTargets.has(canonical(track.target))),...legTracks],
+        metadata:{...old.metadata,launchPedalRevision:1}}:clip);
+    }
   }
 
   const existingIds = new Set(clips.map((clip) => clip.id));

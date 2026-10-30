@@ -6638,3 +6638,31 @@ instructions: [CARLISLE_LAUNCH_STUDY.md](CARLISLE_LAUNCH_STUDY.md). The local re
 is `/launch-review.html?playtest&level=carlisle-coast&launchReview` on port 5491.
 This isolated checkpoint starts at `a9e3d4e` and preserves other chats' later
 uncommitted Carlisle artwork. Local only; no integration, push or publication.
+
+## Carlisle Coast — bicycle float, directional somersault and board eject (30 October 2026 NZDT)
+
+Follow-up brief: bicycle the legs in midair, retain Abandon Ship's existing flip
+and landing behavior, and add a slow somersault to fast directional trampoline
+launches on foot or board. Prompt-to-playable approximately 14 minutes; final
+local validation approximately 21 minutes (00:01:44–00:22:36 UTC).
+
+The float alternates hip motion by half a cycle, with delayed knee/ankle/toe
+folds making oval shoe paths. Fast native spring travel commits one eased turn
+over the remaining ascent and finishes upright before the apex. Rider and deck
+rotate together after the existing foot-contact solve. Abandon Ship releases
+spring pose ownership immediately, restoring its native flip and supported
+landing roll. Neutral vertical bounces and ordinary running jumps/ollies retain
+their previous behavior. No movement, gravity, camera or level tuning changes.
+
+Catalog revision 36 preserves the previous saved float as a recoverable backup
+and replaces only its leg rotations. Other authored channels and playback speed
+remain intact. Focused launch tests cover bicycle arcs, migration, four native
+transfers, slow-turn timing, neutral exclusion and eject interruption; the
+catalog suite and 14-case native board-roll suite pass. Required build passes.
+Real-browser lite, full 720p and MAX/native checks show both slow somersaults,
+the opposing bicycle phases, the restored ejection flip, and supported landing
+back to idle with zero deaths and no console errors or warnings. No full suite.
+
+Updated tuning/review notes and three native captures are in
+[CARLISLE_LAUNCH_STUDY.md](CARLISLE_LAUNCH_STUDY.md). Local checkpoint only, based
+on `d58a7262`; no integration, push or publication.

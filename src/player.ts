@@ -1119,18 +1119,19 @@ export class Player {
   private trampolineLaunchSpeed = 0;
   private trampolineElapsed = 0;
   private trampolineLaunchId = 0;
+  private trampolineSomersaultStart = -1;
 
   private get trampolineAirStrength(): number {
     const rise = this.trampolineLaunchSpeed ** 2 / (2 * Math.max(1, TUNING.riseGravity));
     return THREE.MathUtils.smoothstep(rise, 12, 55);
   }
 
-  /** Actual trajectory drives both presentation owners, including a board eject.
+  /** Actual spring trajectory drives both presentation owners.
    * No animation state feeds back into the ballistic controller. */
   get launchPresentation(): LaunchPresentation | null {
     if (!this.trampolineAir || this.state !== 'air' || this.isBailing || this.vertAir ||
         this.slamActive || this.doubleJumpAir || this.swimming ||
-        (!this.bounceJump && !this.emergencyEjectLandingPending) ||
+        !this.bounceJump || this.emergencyEjectLandingPending ||
         this.trampolineAirStrength < LAUNCH_JUMP.minimumStrength) return null;
     const floor = this.groundBelowIsFatal ? null : this.groundBelowY;
     const contactTime = floor !== null && this.vVel < 0
@@ -1139,6 +1140,14 @@ export class Player {
       rise:launchRiseProgress(this.trampolineElapsed,this.vVel,this.trampolineLaunchSpeed),
       gather:THREE.MathUtils.clamp(1-contactTime/LAUNCH_JUMP.gatherSeconds,0,1),
       verticalSpeed:this.vVel,board:this.airFromSkate};
+  }
+  /** A single slow turn follows the measured rising arc, then finishes upright
+   * before the float. Mounted rider and deck share the same visual pivot. */
+  get launchSomersaultProgress(): number | null {
+    const launch=this.launchPresentation;
+    if(!launch||!Number.isFinite(this.trampolineSomersaultStart)||this.trampolineSomersaultStart<0||
+      !isLaunchClip(this.animationClipHint))return null;
+    return THREE.MathUtils.clamp((launch.rise-this.trampolineSomersaultStart)/(1-this.trampolineSomersaultStart),0,1);
   }
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
@@ -3462,6 +3471,7 @@ export class Player {
     this.trampolineLaunchSpeed = this.vVel;
     this.trampolineElapsed = 0;
     this.trampolineLaunchId++;
+    this.trampolineSomersaultStart = -1;
     // Presentation-only impact stamp: the native launch has already been resolved.
     // Save the contact in deck space now so moving/spinning nets keep the dent attached.
     if (hit.mesh) {
@@ -8843,6 +8853,15 @@ export class Player {
     const incomingPlanarX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-6);
     const incomingPlanarZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-6);
     this.airPeakY = Math.max(this.airPeakY, this.pos.y);
+
+    // Commit once from actual travel, not camera-relative facing or a raw key.
+    // A deliberate early sidestep counts; neutral vertical bounces stay loose.
+    const launch=this.launchPresentation;
+    if(launch&&isLaunchClip(this.animationClipHint)){
+      if(this.trampolineSomersaultStart<0&&launch.rise<LAUNCH_JUMP.somersaultLatestStart&&
+        Math.hypot(incomingPlanarX,incomingPlanarZ)>=TUNING.walkSpeed*LAUNCH_JUMP.somersaultSpeedRatio)
+        this.trampolineSomersaultStart=Math.max(LAUNCH_JUMP.somersaultStart,launch.rise);
+    }else if(this.trampolineAir)this.trampolineSomersaultStart=Infinity;
 
     let hit = this.queryGround(level);
     // ANALYTIC PIPE CATCH: crossed a halfpipe's cross-section curve this step
@@ -17733,8 +17752,12 @@ export class Player {
   private applyBackflipPose(progress:number):void {
     const pose=sampleBackflip(progress);
     const side=-this.stance*Math.PI/2*this.sidePose;
+    this.rotateAttachedBodyAtHips(pose.rotation,side);
+  }
+
+  private rotateAttachedBodyAtHips(rotation:number,side:number):void {
     _trickFrameQ.setFromAxisAngle(VERT_UP,side);
-    _trickRotationQ.setFromAxisAngle(_trickRight,pose.rotation);
+    _trickRotationQ.setFromAxisAngle(_trickRight,rotation);
     _trickRotationQ.premultiply(_trickFrameQ).multiply(_trickFrameQ.invert());
     // Rotate the attached board and rider around their posed hips.
     if (this.legs) {
@@ -19996,6 +20019,11 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
+    const launchTurn=this.launchSomersaultProgress;
+    if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
+      const turn=launchTurn*launchTurn*(3-2*launchTurn)*Math.PI*2;
+      this.rotateAttachedBodyAtHips(turn,-this.stance*Math.PI/2*this.sidePose);
+    }
     if(this.kiteDock && this.riderG)this.kiteDock.pose(this.bodyGroup,this.riderG,this.boardG);
     if (this.kiteTowing) {
       this.kiteVisual ??= new KiteTowVisual();
