@@ -1,0 +1,38 @@
+[
+  {
+    "test": "test-board-roll-landing",
+    "exitCode": 0,
+    "seconds": 12.28
+  },
+  {
+    "test": "test-trampoline-air-jump",
+    "exitCode": 0,
+    "seconds": 11.19
+  },
+  {
+    "test": "test-launch-jump",
+    "exitCode": 0,
+    "seconds": 14.84
+  },
+  {
+    "test": "test-skate-entry",
+    "exitCode": 0,
+    "seconds": 17.49
+  },
+  {
+    "test": "test-character-animation-runtime",
+    "exitCode": 0,
+    "seconds": 0.58
+  },
+  {
+    "test": "test-trampoline-roll-landing",
+    "exitCode": 0,
+    "surfaces": [
+      "dry",
+      "ice",
+      "downhill"
+    ],
+    "pairedPhysics": "identical per-frame states, velocities, positions, input gates and board ownership",
+    "lowestSupportClearance": 0.006
+  }
+]

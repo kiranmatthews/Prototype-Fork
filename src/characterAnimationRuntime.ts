@@ -778,8 +778,10 @@ export class CharacterAnimationRuntime {
     // being performed. Releasing the stick can settle into Idle; the roll
     // must never manufacture a final running stride on a stationary player.
     if (this.manualClipId === null && clip.id === ROLL_LANDING_CLIP_ID) {
-      const run = this.findPlayableClip('player.run');
-      const idle = this.findPlayableClip('player.idle');
+      // Downhill momentum is a shoe glide, including the roll's recovery.
+      const slope = motion.inputs?.slopeSlide ? this.findPlayableClip(SLOPE_SLIDE_CLIP_ID) : null;
+      const run = slope ? null : this.findPlayableClip('player.run');
+      const idle = slope ? null : this.findPlayableClip('player.idle');
       const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
       const seconds = Math.max(0, motion.actionProgress - ROLL_RUN_BLEND_START) * clip.duration;
       const runTime = run ? clipTimeAt(run, seconds, { offset:
@@ -788,10 +790,11 @@ export class CharacterAnimationRuntime {
       const runPose = run ? canonical(this.samplePoseAt(run, runTime, motion, true)) : null;
       const idlePose = idle ? canonical(this.samplePoseAt(idle, idleTime, motion, true)) : null;
       const moving = runPose ? idlePose ? smoothstep01(motion.normalizedSpeed / .2) : 1 : 0;
-      const locomotion = runPose && idlePose ? blendPoses(idlePose, runPose, moving) : runPose ?? idlePose;
+      const locomotion = slope ? canonical(this.samplePoseAt(slope, clipTimeAt(slope, seconds), motion, true)) :
+        runPose && idlePose ? blendPoses(idlePose, runPose, moving) : runPose ?? idlePose;
       const weight = smoothstep01((motion.actionProgress - ROLL_RUN_BLEND_START) / (.96 - ROLL_RUN_BLEND_START));
       if (locomotion) pose = blendPoses(canonical(pose), locomotion, weight);
-      this.recoveryIdleWeight = (1 - moving) * weight;
+      this.recoveryIdleWeight = slope ? 0 : (1 - moving) * weight;
       this.pendingRunHandoffOffset = run ? runTime - run.range.start : null;
       this.pendingIdleHandoffOffset = idle ? idleTime - idle.range.start : null;
     }

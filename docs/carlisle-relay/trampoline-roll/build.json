@@ -1,0 +1,8 @@
+{
+  "build": "PASS",
+  "releaseSizeCheck": "PASS",
+  "files": 1857,
+  "bytes": 998290520,
+  "budget": 1000000000,
+  "tuningSha256": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41"
+}

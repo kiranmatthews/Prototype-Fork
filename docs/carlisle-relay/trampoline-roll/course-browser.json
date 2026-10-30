@@ -1,0 +1,289 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "errors": [],
+  "flights": [],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1880,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "deckMachinery": {
+        "hydraulicLifts": 4,
+        "counterweightLifts": 4,
+        "winches": 2,
+        "triangles": 82512,
+        "colliders": 0
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "beacons": {
+        "beacons": 4,
+        "shafts": 4,
+        "decorativeColliders": 0
+      },
+      "ambience": {
+        "waterGain": 0.004772990662606608,
+        "windGain": 0.0015067537586008412,
+        "height": 8.120000000000005,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "crates": 270,
+    "nitro": 22,
+    "grounds": 334,
+    "movers": 28,
+    "camera": {
+      "weight": 0,
+      "launchId": -1,
+      "height": 0,
+      "yaw": 0,
+      "position": [
+        0,
+        0,
+        0
+      ]
+    },
+    "tuning": {
+      "launchBackLean": 0.15,
+      "trampolineAirJumpMin": 10.5,
+      "trampolineAirJumpMax": 15,
+      "launchSomersault": 1,
+      "launchSomersaultMinSpeed": 7.2,
+      "launchSomersaultStart": 22,
+      "launchSomersaultDeadline": 55,
+      "launchSomersaultEnd": 100,
+      "launchSomersaultEase": 1,
+      "hangLaunch": 2.5,
+      "vertLaunchConserve": 0.55
+    }
+  },
+  "landing": {
+    "position": [
+      91.15147239396426,
+      89.06409827074934,
+      -2488.8669404644097
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "camera": {
+      "weight": 0.6283864094892102,
+      "launchId": 1,
+      "height": 100.42340461275775,
+      "yaw": 0.11532704498496268,
+      "position": [
+        91.68080160231885,
+        100.42340461275775,
+        -2484.297497326654
+      ]
+    },
+    "clip": "player.roll-land",
+    "launch": null,
+    "cameraLaunch": null,
+    "flip": 0,
+    "secondJump": false,
+    "canvas": [
+      1920,
+      1080
+    ],
+    "fov": 49
+  },
+  "roll": [
+    {
+      "position": [
+        91.15147239396426,
+        89.06409827074934,
+        -2488.8669404644097
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": {
+        "weight": 0.13561526537051713,
+        "launchId": 1,
+        "height": 100.42340461275775,
+        "yaw": 0.11532704498496268,
+        "position": [
+          91.68080160231885,
+          100.42340461275775,
+          -2484.297497326654
+        ]
+      },
+      "clip": "player.roll-land",
+      "launch": null,
+      "cameraLaunch": null,
+      "flip": 0,
+      "secondJump": false,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "fov": 49
+    },
+    {
+      "position": [
+        91.15147239396426,
+        89.06409827074934,
+        -2488.8669404644097
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": {
+        "weight": 0.02926781980607359,
+        "launchId": 1,
+        "height": 100.42340461275775,
+        "yaw": 0.11532704498496268,
+        "position": [
+          91.68080160231885,
+          100.42340461275775,
+          -2484.297497326654
+        ]
+      },
+      "clip": "player.roll-land",
+      "launch": null,
+      "cameraLaunch": null,
+      "flip": 0,
+      "secondJump": false,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "fov": 49
+    },
+    {
+      "position": [
+        91.15147239396426,
+        89.06409827074934,
+        -2488.8669404644097
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": {
+        "weight": 0.0063164369723455955,
+        "launchId": 1,
+        "height": 100.42340461275775,
+        "yaw": 0.11532704498496268,
+        "position": [
+          91.68080160231885,
+          100.42340461275775,
+          -2484.297497326654
+        ]
+      },
+      "clip": "player.roll-land",
+      "launch": null,
+      "cameraLaunch": null,
+      "flip": 0,
+      "secondJump": false,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "fov": 49
+    }
+  ],
+  "settled": {
+    "position": [
+      91.15147239396426,
+      89.06409827074934,
+      -2488.8669404644097
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "camera": {
+      "weight": 0,
+      "launchId": 1,
+      "height": 100.42340461275775,
+      "yaw": 0.11532704498496268,
+      "position": [
+        91.68080160231885,
+        100.42340461275775,
+        -2484.297497326654
+      ]
+    },
+    "clip": "player.idle",
+    "launch": null,
+    "cameraLaunch": null,
+    "flip": 0,
+    "secondJump": false,
+    "canvas": [
+      853,
+      480
+    ],
+    "fov": 49
+  },
+  "passed": true
+}

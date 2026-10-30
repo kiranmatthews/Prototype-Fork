@@ -1,0 +1,498 @@
+{
+  "base": "http://127.0.0.1:5483/",
+  "results": [
+    {
+      "lite": true,
+      "slope": false,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "canvas": [
+        960,
+        540
+      ],
+      "launch": {
+        "position": [
+          0,
+          0.45750000149011605,
+          0
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.jump",
+        "phase": -1.3157894736842106,
+        "trampoline": true
+      },
+      "contact": {
+        "position": [
+          5.499299267977883,
+          0,
+          -9.985875402848642
+        ],
+        "speed": 9,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.roll-land",
+        "phase": 0,
+        "trampoline": true
+      },
+      "poses": [
+        {
+          "position": [
+            5.499299267977883,
+            0,
+            -9.985875402848642
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0,
+          "trampoline": true
+        },
+        {
+          "position": [
+            5.9816939406075225,
+            0,
+            -10.861829385554664
+          ],
+          "speed": 6.333333333333336,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.14814814814814814,
+          "trampoline": false
+        },
+        {
+          "position": [
+            6.383689501132222,
+            0,
+            -11.591791037809685
+          ],
+          "speed": 2.333333333333339,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.37037037037037035,
+          "trampoline": false
+        },
+        {
+          "position": [
+            6.43996887960568,
+            0,
+            -11.693985669125386
+          ],
+          "speed": 0,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.6296296296296298,
+          "trampoline": false
+        }
+      ],
+      "settled": {
+        "position": [
+          6.43996887960568,
+          0,
+          -11.693985669125386
+        ],
+        "speed": 0,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.idle",
+        "phase": -1.1111111111111112,
+        "trampoline": false
+      }
+    },
+    {
+      "lite": true,
+      "slope": true,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "canvas": [
+        960,
+        540
+      ],
+      "launch": {
+        "position": [
+          0,
+          40.45750000149012,
+          0
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.jump",
+        "phase": -1.3157894736842106,
+        "trampoline": true
+      },
+      "contact": {
+        "position": [
+          5.71637687066122,
+          37.92398906098674,
+          -10.38005469506635
+        ],
+        "speed": 9,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.roll-land",
+        "phase": 0,
+        "trampoline": true
+      },
+      "poses": [
+        {
+          "position": [
+            5.71637687066122,
+            37.92398906098674,
+            -10.38005469506635
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0,
+          "trampoline": true
+        },
+        {
+          "position": [
+            6.289957335389609,
+            37.682953974922015,
+            -11.585230125389959
+          ],
+          "speed": 10.760740127447148,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.14814814814814814,
+          "trampoline": false
+        },
+        {
+          "position": [
+            7.132934378627525,
+            37.220170144711744,
+            -13.899149276441289
+          ],
+          "speed": 13.348456407583356,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.37037037037037035,
+          "trampoline": false
+        },
+        {
+          "position": [
+            8.090630624830267,
+            36.530233504374635,
+            -17.34883247812687
+          ],
+          "speed": 16.288330260144164,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.6296296296296298,
+          "trampoline": false
+        }
+      ],
+      "settled": {
+        "position": [
+          11.898371521764686,
+          31.84673123933345,
+          -40.766343803332745
+        ],
+        "speed": 27.97708642329011,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.slope-slide",
+        "phase": -1.1111111111111112,
+        "trampoline": false
+      }
+    },
+    {
+      "lite": false,
+      "slope": false,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "launch": {
+        "position": [
+          0,
+          0.45750000149011605,
+          0
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.jump",
+        "phase": -1.3157894736842106,
+        "trampoline": true
+      },
+      "contact": {
+        "position": [
+          5.499299267977883,
+          0,
+          -9.985875402848642
+        ],
+        "speed": 9,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.roll-land",
+        "phase": 0,
+        "trampoline": true
+      },
+      "poses": [
+        {
+          "position": [
+            5.499299267977883,
+            0,
+            -9.985875402848642
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0,
+          "trampoline": true
+        },
+        {
+          "position": [
+            5.9816939406075225,
+            0,
+            -10.861829385554664
+          ],
+          "speed": 6.333333333333336,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.14814814814814814,
+          "trampoline": false
+        },
+        {
+          "position": [
+            6.383689501132222,
+            0,
+            -11.591791037809685
+          ],
+          "speed": 2.333333333333339,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.37037037037037035,
+          "trampoline": false
+        },
+        {
+          "position": [
+            6.43996887960568,
+            0,
+            -11.693985669125386
+          ],
+          "speed": 0,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.6296296296296298,
+          "trampoline": false
+        }
+      ],
+      "settled": {
+        "position": [
+          6.43996887960568,
+          0,
+          -11.693985669125386
+        ],
+        "speed": 0,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.idle",
+        "phase": -1.1111111111111112,
+        "trampoline": false
+      }
+    },
+    {
+      "lite": false,
+      "slope": true,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "launch": {
+        "position": [
+          0,
+          40.45750000149012,
+          0
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.jump",
+        "phase": -1.3157894736842106,
+        "trampoline": true
+      },
+      "contact": {
+        "position": [
+          5.71637687066122,
+          37.92398906098674,
+          -10.38005469506635
+        ],
+        "speed": 9,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.roll-land",
+        "phase": 0,
+        "trampoline": true
+      },
+      "poses": [
+        {
+          "position": [
+            5.71637687066122,
+            37.92398906098674,
+            -10.38005469506635
+          ],
+          "speed": 9,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0,
+          "trampoline": true
+        },
+        {
+          "position": [
+            6.289957335389609,
+            37.682953974922015,
+            -11.585230125389959
+          ],
+          "speed": 10.760740127447148,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.14814814814814814,
+          "trampoline": false
+        },
+        {
+          "position": [
+            7.132934378627525,
+            37.220170144711744,
+            -13.899149276441289
+          ],
+          "speed": 13.348456407583356,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.37037037037037035,
+          "trampoline": false
+        },
+        {
+          "position": [
+            8.090630624830267,
+            36.530233504374635,
+            -17.34883247812687
+          ],
+          "speed": 16.288330260144164,
+          "state": "ride",
+          "grounded": true,
+          "board": false,
+          "bail": false,
+          "abandoned": false,
+          "clip": "player.roll-land",
+          "phase": 0.6296296296296298,
+          "trampoline": false
+        }
+      ],
+      "settled": {
+        "position": [
+          11.898371521764686,
+          31.84673123933345,
+          -40.766343803332745
+        ],
+        "speed": 27.97708642329011,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "abandoned": false,
+        "clip": "player.slope-slide",
+        "phase": -1.1111111111111112,
+        "trampoline": false
+      }
+    }
+  ],
+  "errors": []
+}

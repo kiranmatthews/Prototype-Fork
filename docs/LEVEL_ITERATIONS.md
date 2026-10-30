@@ -7721,3 +7721,14 @@ Both bug-specific regressions fail before and pass after; the full replay now
 has zero board mounts. Ten focused checks, lite/full native keyboard smoke,
 production build and release-size check pass. Prompt-to-validated playable fix:
 approximately 21 minutes. Evidence: [skate entry](carlisle-relay/skate-entry-fix/README.md).
+
+
+### Ordinary trampoline landing roll — 30 October 2026
+
+Clean on-foot trampoline landings now use the existing forward shoulder roll,
+without Abandon Ship's movement handoff. Ordinary velocity, board ownership,
+mounting inputs and immediate jump response remain identical. Slippery downhill
+recovery blends into the shoe glide. Six focused checks, exact paired movement
+traces, actual Carlisle route review, lite/full native browser poses, production
+build and release-size check pass. Prompt-to-validated playable change:
+approximately 24 minutes. Evidence: [trampoline roll](carlisle-relay/trampoline-roll/README.md).

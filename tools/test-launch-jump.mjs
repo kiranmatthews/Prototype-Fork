@@ -140,7 +140,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     if(!board)assert.ok(Math.min(...turnPedal)<-.2&&Math.max(...turnPedal)>.2,
       `${jump.name}: legs did not exchange their lead during the somersault`);
     if(index===39){
-      assert.equal(runtime.activeClipId,'player.land','ground contact did not start recovery');
+      assert.equal(runtime.activeClipId,'player.roll-land','ordinary trampoline contact did not start the forward roll');
       for(let i=0;i<120;i++){p.step(CONST.fixedStep,makeInput(),level);level.update(CONST.fixedStep);p.commitRenderStep(level);}
       assert.equal(runtime.activeClipId,'player.idle','landing did not settle');
     }

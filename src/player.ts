@@ -2368,7 +2368,8 @@ export class Player {
           launchId: this.trampolineLaunchId,
           iceEffort,
           iceSideSlip,
-          slopeSlide: clipId === SLOPE_SLIDE_CLIP_ID ? 1 : 0,
+          slopeSlide: clipId === SLOPE_SLIDE_CLIP_ID ||
+            clipId === ROLL_LANDING_CLIP_ID && slopeMotion === 'slide' ? 1 : 0,
           [RUN_MOVE_INTENT_INPUT]: this.worldMapBaseScale === null
             ? Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)) : 0,
           swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,
@@ -9423,6 +9424,11 @@ export class Player {
 
       if (rollLanding && !this.isBailing && !this.slamActive) {
         this.beginRollLanding(incomingPlanarX, incomingPlanarZ);
+      } else if (this.trampolineAir && !this.freeSkate && !this.isBailing && !this.slamActive) {
+        // A clean foot landing uses the same shoulder roll as Abandon Ship.
+        // Only the pose is shared: ordinary foot/ice momentum and input keep
+        // their existing authority, without the dismount's control handoff.
+        this.beginRollLandingPresentation();
       }
 
       // A pipe drop-in doesn't announce itself — the wheels just meet the
@@ -9462,9 +9468,7 @@ export class Player {
     this.slideFromWalk = this.slideLandClamp = false;
     this.boardRunCarry = true;
     this.boardRunCarryT = ROLL_LANDING_CONTROL_SECONDS;
-    this.rollLandingT = 0;
-    this.rollPalmPlanted = this.rollFootPlanted = false;
-    this.rollLandingDuration = THREE.MathUtils.clamp(ROLL_LANDING_DURATION * 18 / Math.max(12, this.speed), .60, .90);
+    this.beginRollLandingPresentation();
     this.flipTimer = this.starTimer = 0;
     this.pipeEndFly = false;
     this.rollOffT = 0;
@@ -9472,6 +9476,12 @@ export class Player {
     this.lastJumpType = 'Roll Landing';
     sfx.play('footstep2', .65, .85);
     this.emitDust(3);
+  }
+
+  private beginRollLandingPresentation(): void {
+    this.rollLandingT = 0;
+    this.rollPalmPlanted = this.rollFootPlanted = false;
+    this.rollLandingDuration = THREE.MathUtils.clamp(ROLL_LANDING_DURATION * 18 / Math.max(12, this.speed), .60, .90);
   }
 
   private ragdollWorldSpin(out: THREE.Vector3): THREE.Vector3 {
