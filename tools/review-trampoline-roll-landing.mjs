@@ -22,7 +22,7 @@ try {
       await p.preparePresentationAssets();
       g.campaign.startEphemeral(); g.renderQualitySettings.setRegularResolution(null); g.crtGuestSettings.setEnabled(false);
       // Isolated clear supports: only the spawn is positioned by the fixture.
-      // Native trampoline contact and keyboard air steering perform the jump.
+      // A descending spawn supplies the incoming contact; keyboard steers the flight.
       l.cameraViews.length = 0;
       l.buildCustom({ v: 1, name: 'Trampoline roll review', spawn: [0, y + .15, 0], killY: -80, components: [
         slope ? { t: 'ramp', p: [0, -20, -100], len: 400, rise: 80, w: 200, yaw: 180, slip: true, iceGrip: .035, slipGravity: 1.9 } :
@@ -30,7 +30,8 @@ try {
         { t: 'trampoline', p: [0, y, 0], s: [6, .2, 6], speed: 28, amp: 1 }, { t: 'gate', p: [80, 0, -250] },
       ] });
       p.respawn(l, true, true, { position: new V(0, y + .15, 0), heading: new V(0, 0, -1) });
-      p.camDir.set(0, 0, -1);
+      p.camDir.set(0, 0, -1); p.state = 'air'; p.grounded = false; p.vVel = -1;
+      p.trampolineAir = false; p.bounceJump = false; p.airJumpUsed = true;
       const q = window.__springRollReview = { budget: 0, stop: '', samples: [], angle: Math.PI / 2 };
       const step = p.step.bind(p), consume = g.input.consumeEdges.bind(g.input);
       g.input.consumeEdges = () => {};

@@ -1,0 +1,13 @@
+{
+  "build": "PASS",
+  "releaseSizeCheck": "PASS",
+  "bytes": 998291223,
+  "files": 1857,
+  "tuningSha256": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41",
+  "runtimeSources": {
+    "src/player.ts": "e17955eed0f3fb9acb8018a3e5eb2517d510d6b09b1cb7af4f88e009cb06e013",
+    "src/level.ts": "f78e3ad38d8a8ad1f68118d844c313f7d3a0e7923c63760828e87b1182f54329",
+    "src/carlisleMarineNet.ts": "8ae90989c825e3ef06e647d82a9efa6d24cac146175ab4a66bd25230f43ae835",
+    "src/trampolineSurface.ts": "50a5bc3c004292e671b935ca41aa4dbbaf2456e67764c17e3b951218090e491f"
+  }
+}

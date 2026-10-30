@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { marineNetBounds } from './trampolineSurface';
 
 type P = [number, number, number];
 /** Measured centres of the eight holes in the complete P1 housing, in bbox units.
@@ -52,7 +53,7 @@ export class CarlisleMarineNet {
   constructor(readonly width:number,readonly length:number,readonly frameHeight=marineFrameHeight(width,length)) {
     this.group.name='Laced elastic marine net';this.group.userData.visualOnly=true;
     const w=width,d=length,h=frameHeight;
-    const x0=-w*.307,x1=w*.357,z0=-d*.365,z1=d*.363;
+    const [x0,x1,z0,z1]=marineNetBounds(w,d);
     const cx=(x0+x1)/2,cz=(z0+z1)/2,hx=(x1-x0)/2,hz=(z1-z0)/2;
     this.uniforms.netBounds.value.set(cx,cz,hx,hz);
     this.maxDepth=Math.min(2.25,Math.min(w,d)*.175);

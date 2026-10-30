@@ -7732,3 +7732,16 @@ recovery blends into the shoe glide. Six focused checks, exact paired movement
 traces, actual Carlisle route review, lite/full native browser poses, production
 build and release-size check pass. Prompt-to-validated playable change:
 approximately 24 minutes. Evidence: [trampoline roll](carlisle-relay/trampoline-roll/README.md).
+
+
+### Landing-only trampoline nets and solid metal rims — 31 October 2026
+
+Walking uses the net as support; grounded skateboard wheels trip. Only incoming
+airborne contact launches the spring, preserving linked bounces and ordinary
+jump input. Carlisle's visible rope opening now shares its local bounds with
+contact classification: metal rims support walking/skating but punish a fast
+landing from a big spring flight with the existing impact ragdoll. No tuning,
+camera or level-geometry change. Nine focused checks, native keyboard lite/full
+MAX and normal presentation, production build and release-size check pass.
+Prompt-to-validated playable work: approximately 25 minutes (elapsed estimate).
+Evidence: [net contacts](carlisle-relay/net-contact/README.md).

@@ -55,6 +55,7 @@ import {createWaterfallClimbCurtain} from './waterfallClimbMaterials';
 import { HazardVisuals } from './hazardVisuals';
 import { createCarlisleCones, isCarlisleConeRow } from './carlisleCone';
 import { createCarlisleShipyard, isCarlisleShipyard, isCarlisleMassing } from './carlisleShipyard';
+import { marineNetBounds } from './trampolineSurface';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
@@ -8624,6 +8625,7 @@ export class Level {
             if (c.bounce !== undefined) {
               moving.mesh.userData.trampolineBounce = c.bounce;
               moving.mesh.userData.trampolineHeldMult = 1.25;
+              if (isCarlisleShipyard(data)) moving.mesh.userData.trampolineNetBounds = marineNetBounds(s[0], s[2]);
             }
             this.applyAuthoredMovingSurface(moving.mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
@@ -8760,6 +8762,7 @@ export class Level {
             const pad = this.buildMechanicPad(c, 0xff8a2b, 0x4a1600);
             pad.userData.trampolineBounce = Math.max(0.1, c.speed ?? 16);
             pad.userData.trampolineHeldMult = Math.max(1, c.amp ?? 1.25);
+            if (isCarlisleShipyard(data)) pad.userData.trampolineNetBounds = marineNetBounds(c.s?.[0] ?? 5, c.s?.[2] ?? 5);
           } else if (c.t === "speedpad") {
             const pad = this.buildMechanicPad(c, 0x2bdfff, 0x00334a);
             pad.userData.speedPadSpeed = Math.max(0.1, c.speed ?? 48);

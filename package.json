@@ -45,6 +45,7 @@
     "check:camera-speed": "node tools/test-camera-speed-effect.mjs && node tools/test-camera-look.mjs && node tools/test-camera-rig.mjs && node tools/test-camera-level-switch.mjs && node tools/test-camera-portrait.mjs && node tools/test-camera-landing-forecast.mjs && node tools/test-camera-fall-replay.mjs",
     "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs && node tools/test-break-apart.mjs && node tools/test-wipeout-policy.mjs",
     "check:air-rescue": "node tools/test-board-abandon-tuning.mjs && node tools/test-board-abandon-steering.mjs && node tools/test-air-rescue.mjs",
+    "check:trampoline": "node tools/test-trampoline-contact.mjs && node tools/test-trampoline-controls.mjs && node tools/test-trampoline-air-jump.mjs",
     "check:roll-landing": "node tools/test-board-roll-landing.mjs && node tools/test-trampoline-roll-landing.mjs",
     "check:crate-types": "node tools/test-life-multihit-crates.mjs && node tools/test-nitro-clear-switch.mjs && node tools/test-explosive-bundles.mjs",
     "check:crate-jump": "node tools/test-crate-jump-parity.mjs",

@@ -106,7 +106,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     const jump=jumps[index],c=data.components.find(c=>c.nm===jump.name&&(c.t==='trampoline'||c.t==='mover'));
     const mover=jump.moving?level.movers.find(m=>m.mesh.name===jump.name):null;
     const start=mover?mover.mesh.position.clone().add(new THREE.Vector3(0,c.s[1]/2+.15,0)):new THREE.Vector3(...c.p).add(new THREE.Vector3(0,.15,0));
-    p.respawn(level,true,false,{position:start,heading:new THREE.Vector3(0,0,-1)});p.freeSkate=board;p.airFromSkate=board;p.airGrav=board?'board':'foot';p.speed=board?8:0;
+    p.respawn(level,true,false,{position:start,heading:new THREE.Vector3(0,0,-1)});p.freeSkate=board;p.airFromSkate=board;p.airGrav=board?'board':'foot';p.speed=board?8:0;p.state='air';p.grounded=false;p.vVel=-1;p.trampolineAir=false;p.bounceJump=false;p.airJumpUsed=true;
     const seen=new Set(),turnPedal=[];let launched=false,landed=false,frames=0,turningFrames=0;
     for(;frames<800;frames++){
       const target=new THREE.Vector3(...carlislePoint(...jump.to)),dx=target.x-p.pos.x,dz=target.z-p.pos.z;
@@ -148,6 +148,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
   }
   const pad=data.components.find(c=>c.nm===jumps[0].name&&c.t==='trampoline');
   p.respawn(level,true,false,{position:new THREE.Vector3(...pad.p).add(new THREE.Vector3(0,.15,0)),heading:new THREE.Vector3(0,0,-1)});
+  p.state='air';p.grounded=false;p.vVel=-1;p.trampolineAir=false;p.bounceJump=false;p.airJumpUsed=true;
   let verticalLaunched=false;
   for(let i=0;i<95;i++){
     p.step(CONST.fixedStep,makeInput({jumpHeld:!verticalLaunched}),level);level.update(CONST.fixedStep);p.commitRenderStep(level);

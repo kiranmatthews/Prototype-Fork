@@ -46,6 +46,9 @@ function replay(){
   const board=selects[1].value==='board';
   g.player.freeSkate=board;g.player.airFromSkate=board;g.player.airGrav=board?'board':'foot';
   g.player.speed=board?8:0;g.player.endlessDeaths=true;
+  // Replay begins on an incoming contact, like the preceding spring flight.
+  g.player.state='air';g.player.grounded=false;g.player.vVel=-1;
+  g.player.trampolineAir=false;g.player.bounceJump=false;g.player.airJumpUsed=true;
   history=[];running=true;launched=false;flightId=-1;ejectFrame=0;previousVelocity=0;setPause(false);
 }
 g.launchReview.beforeStep=()=>{

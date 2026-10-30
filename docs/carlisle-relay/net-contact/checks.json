@@ -1,0 +1,57 @@
+[
+  {
+    "test": "test-trampoline-contact",
+    "exitCode": 0,
+    "cases": [
+      "walk net",
+      "walk/skate rim",
+      "gentle rim hop",
+      "board trip",
+      "foot jump landing",
+      "board ollie landing",
+      "linked bounces",
+      "big spring rim impact",
+      "rotated moving boundaries"
+    ]
+  },
+  {
+    "test": "test-trampoline-controls",
+    "exitCode": 0,
+    "seconds": 11.47
+  },
+  {
+    "test": "test-trampoline-air-jump",
+    "exitCode": 0,
+    "seconds": 15.81
+  },
+  {
+    "test": "test-trampoline-roll-landing",
+    "exitCode": 0,
+    "seconds": 44.4
+  },
+  {
+    "test": "test-launch-jump",
+    "exitCode": 0,
+    "seconds": 18.51
+  },
+  {
+    "test": "test-skate-entry",
+    "exitCode": 0,
+    "seconds": 28.6
+  },
+  {
+    "test": "test-kinetic-platforms",
+    "exitCode": 0,
+    "seconds": 21.5
+  },
+  {
+    "test": "test-crouch-jump-slam",
+    "exitCode": 0,
+    "seconds": 14.49
+  },
+  {
+    "test": "test-mall-landing-policy",
+    "exitCode": 0,
+    "seconds": 15.17
+  }
+]

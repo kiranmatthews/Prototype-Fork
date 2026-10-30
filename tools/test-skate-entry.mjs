@@ -79,13 +79,15 @@ await withSkateRuntime(async ({ player: p, level, CONST, TUNING }) => {
 
 const springData = { ...data, components: [
   ...data.components,
-  { t: 'trampoline', p: [0, 50.07, -46], s: [30, .6, 6], speed: 18, amp: 1 },
+  { t: 'trampoline', p: [0, 57.27, -24], s: [30, .6, 30], speed: 18, amp: 1 },
 ] };
 await withSkateRuntime(async ({ player: p, level, CONST, TUNING }) => {
   p.competitionMode = false;
-  let launched = false, landed = false, launchSpeed = 0, afterLanding = 0;
+  let launched = false, landed = false, launchSpeed = 0, afterLanding = 0, jumped = false, release = false;
   for (let f = 0; f < 600; f++) {
-    const input = makeInput();
+    const press = !jumped && p.pos.z < -14;
+    const input = makeInput({ jumpHeld: press, jumpPressed: press, jumpReleased: release });
+    jumped ||= press; release = press;
     p.step(CONST.fixedStep, input, level);
     level.update(CONST.fixedStep);
     assert.equal(p.freeSkate, false, 'slippery momentum mounted a board after a trampoline');
@@ -93,8 +95,8 @@ await withSkateRuntime(async ({ player: p, level, CONST, TUNING }) => {
     if (launched && p.grounded) landed = true;
     if (landed && ++afterLanding === 12) break;
   }
-  assert.ok(launched && landed && afterLanding === 12, 'fixture missed the spring and its landing');
+  assert.ok(launched && landed && afterLanding === 12, `fixture missed the spring and its landing: ${JSON.stringify({launched,landed,jumped,afterLanding,pos:p.pos.toArray(),speed:p.speed})}`);
   assert.ok(launchSpeed > TUNING.walkSpeed + .5, 'spring test did not carry downhill speed');
   assert.ok(p.speed > TUNING.walkSpeed + .5, 'spring landing lost the downhill momentum');
-  console.log('PASS passive downhill slide → native trampoline → slope landing stays on foot at carried speed.');
+  console.log('PASS downhill foot jump → native trampoline → slope landing stays on foot at carried speed.');
 }, { levelEntry: { id: '__skate_entry_spring', name: springData.name, data: springData } });

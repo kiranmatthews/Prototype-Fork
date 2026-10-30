@@ -16,6 +16,8 @@ await withSkateRuntime(async({player:p,level,CONST,TUNING,THREE})=>{
  const launch=(x,{board=false,held=true}={})=>{
   p.respawn(level,true,false,{position:new THREE.Vector3(x,1,0),heading:new THREE.Vector3(0,0,-1)});
   p.freeSkate=board;p.speed=board?12:0;p.walkVelocity.set(0,0,0);
+  // Fixture enters through a falling contact, not supported auto-launch.
+  p.state='air';p.grounded=false;p.vVel=-1;p.trampolineAir=false;p.bounceJump=false;p.airJumpUsed=true;
   for(let i=0;i<30;i++){tick({jumpHeld:held});if(p.trampolineAir&&p.bounceJump)break;}
   assert.ok(p.trampolineAir&&p.bounceJump,'fixture did not hit the native spring');
   assert.equal(p.freeSkate,board);assert.equal(p.airGrav,'foot','bounce gravity changed');
@@ -33,7 +35,7 @@ await withSkateRuntime(async({player:p,level,CONST,TUNING,THREE})=>{
   for(let i=0;i<30;i++)tick({moveX:1});
   const side=p.pos.x-sideStart.x;
   assert.ok(side>7,'big bounce needs more than the old 4.5 m half-second sidestep');
-  assert.ok(Math.abs(p.pos.y-neutral.y)<1e-8&&Math.abs(p.vVel-neutral.vy)<1e-8,'steering changed the vertical arc');
+  assert.ok(Math.abs(p.pos.y-neutral.y)<1e-8&&Math.abs(p.vVel-neutral.vy)<1e-8,`steering changed the vertical arc: ${JSON.stringify({x,board,start,sideStart,neutral,actual:{y:p.pos.y,vy:p.vVel}})}`);
   assert.ok(Math.abs((p.pos.z-sideStart.z)-neutral.z)<1e-8,'side input changed forward carry');
   for(let i=0;i<30;i++)tick({moveX:-1});
   assert.ok(Math.abs(p.pos.x-sideStart.x)<.01,'countersteering cannot undo the sidestep');

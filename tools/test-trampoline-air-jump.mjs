@@ -30,6 +30,7 @@ await withBlockworksRuntime(async({p,l,server,THREE,TUNING})=>{
   const setup=(board)=>{
     const lastLaunch=p.trampolineLaunchId;
     p.respawn(l,true,true);previous={};p.freeSkate=board;p.airFromSkate=board;p.speed=board?8:0;
+    p.state='air';p.grounded=false;p.vVel=-1;p.trampolineAir=false;p.bounceJump=false;p.airJumpUsed=true;
     shot.restore(camera);shot.apply(camera,p.pos,null,1/60,true);
     for(let i=0;i<20&&p.trampolineLaunchId===lastLaunch;i++)tick({jumpHeld:true});
     assert.ok(p.trampolineAir&&!p.grounded&&p.trampolineLaunchId>lastLaunch,'did not contact a fresh native trampoline');
@@ -48,7 +49,7 @@ await withBlockworksRuntime(async({p,l,server,THREE,TUNING})=>{
       if(descending)for(let i=0;i<180&&p.vVel>=0;i++)tick({moveY:1});
       const carry=Math.hypot(p.lastVelX,p.lastVelZ),loose=p.looseBoard;
       const original=p.launchCameraPresentation,weight=shot.diagnostics.weight;
-      assert.ok(original,'missing spring camera before second jump');
+      assert.ok(original,`missing spring camera before second jump: ${JSON.stringify({board,descending,trampoline:p.trampolineAir,double:p.doubleJumpAir,state:p.state,bail:p.isBailing,vy:p.vVel,pos:p.pos.toArray()})}`);
       tick({moveY:1,jumpHeld:true});tick({moveY:1});
       assert.ok(p.emergencyEjectLandingPending,'spring second jump did not use shared move');
       assert.equal(p.doubleJumpAir,false,'standard double-jump pose still owns spring air');

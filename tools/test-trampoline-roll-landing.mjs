@@ -49,6 +49,8 @@ for (const surface of ['dry', 'ice', 'slope']) {
       p.beginRollLandingPresentation = pose ? beginPose : () => {};
       p.respawn(level, true); previous = {}; rollFrames = 0;
       p.freeSkate = board; p.speed = board ? 8 : 0;
+      p.state = 'air'; p.grounded = false; p.vVel = -1;
+      p.trampolineAir = false; p.bounceJump = false; p.airJumpUsed = true;
       const trace = [];
       let launched = false, landed = false, after = 0;
       for (let f = 0; f < 240; f++) {

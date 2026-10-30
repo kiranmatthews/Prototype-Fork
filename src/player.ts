@@ -517,6 +517,7 @@ interface GroundHit {
   pipeCross?: number; // analytic pipe hit: exact cross-axis coordinate of the surface point
   trampolineBounce?: number;
   trampolineHeldMult?: number;
+  trampolineRim?: boolean; // metal housing outside the rope opening
   speedPadSpeed?: number;
   speedPadHold?: number;
   speedPadId?: number;
@@ -3454,6 +3455,7 @@ export class Player {
     sfx.play('skateTransition', 0.75, 1.35);
   }
 
+  /** Called only by airborne landing arbitration, never by grounded support. */
   private launchFromTrampoline(hit: GroundHit, input: Input): boolean {
     if (
       hit.trampolineBounce === undefined ||
@@ -5231,9 +5233,6 @@ export class Player {
     }
 
     this.applySpeedPad();
-    if (this.state === 'ride' && this.grounded && this.groundHit)
-      this.launchFromTrampoline(this.groundHit, input);
-
     switch (this.state) {
       case 'dead':
         this.advanceDeath(dt, level);
@@ -5266,6 +5265,13 @@ export class Player {
           // snapped straight onto the rail this tick
         } else {
           this.stepRide(dt, input, level);
+        }
+        // Resolve the normal jump/grind input first. Walking can use the net
+        // as ordinary support; wheels that remain on it catch in the ropes.
+        // Airborne landings own the spring launch in stepAir instead.
+        if (this.state === 'ride' && this.grounded && this.freeSkate &&
+            !this.isBailing && this.groundHit?.trampolineBounce !== undefined) {
+          this.bail(false, this.speed, 'trip');
         }
         break;
       }
@@ -9021,7 +9027,10 @@ export class Player {
         // Huge-drop damage is a contact outcome, not a clean landing effect.
         // If it starts a bail, feed this same surface into the deterministic
         // ragdoll response before considering any authored bounce pad.
-        if (level.hugeDropBail && this.beginHugeDropLandingBail(hit, incomingPlanarX, incomingPlanarZ)) {
+        const metalSpringImpact = hit.trampolineRim === true && this.trampolineAir &&
+          this.trampolineLaunchSpeed ** 2 / (2 * Math.max(1, TUNING.riseGravity)) >= TUNING.hugeDropDistance;
+        if ((level.hugeDropBail || metalSpringImpact) &&
+            this.beginHugeDropLandingBail(hit, incomingPlanarX, incomingPlanarZ, metalSpringImpact)) {
           if (this.resolveRagdollGroundBounce(hit)) return;
         }
       }
@@ -9414,7 +9423,7 @@ export class Player {
           this.speed = THREE.MathUtils.clamp(this.speed, -pumpCap, pumpCap);
         }
       }
-      // A trampoline is a clean grounded-ride effect, deliberately last in
+      // A trampoline is a clean airborne landing effect, deliberately last in
       // contact arbitration. Existing/new bails,
       // huge drops, slams, and failed trick landings have all returned above.
       if (this.launchFromTrampoline(hit, input)) {
@@ -9669,10 +9678,11 @@ export class Player {
     hit: GroundHit,
     incomingPlanarX: number,
     incomingPlanarZ: number,
+    metalSpringImpact = false,
   ): boolean {
-    if (this.slamActive || this.isBailing || this.uberTimer > 0) return false;
+    if ((this.slamActive && !metalSpringImpact) || this.isBailing || this.uberTimer > 0) return false;
     const descent = Math.max(0, this.airPeakY - hit.y);
-    if (descent + 1e-4 < TUNING.hugeDropDistance) return false;
+    if (!metalSpringImpact && descent + 1e-4 < TUNING.hugeDropDistance) return false;
     const nl = Math.hypot(hit.normal.x, hit.normal.y, hit.normal.z) || 1;
     const nx = hit.normal.x / nl;
     const ny = hit.normal.y / nl;
@@ -9687,6 +9697,11 @@ export class Player {
     // contact into resolveRagdollGroundBounce, so the rider is never left
     // buried beneath the surface for one frame.
     this.pos.y = hit.y;
+    if (metalSpringImpact) {
+      this.slamActive = false;
+      this.slamHangT = this.slamFlatT = this.slamSquash = 0;
+      sfx.play('crunch', .9, .55);
+    }
     this.bail(this.masks > 0, this.speed, 'landing', normalImpact);
     return true;
   }
@@ -17569,6 +17584,13 @@ export class Player {
     const structuralName =
       (hit.object.userData.surfaceName as string | undefined) ??
       hit.object.name;
+    // Use the hit point in the moving/rotating deck's own space. The metal
+    // housing is ordinary support, never a wider invisible trampoline.
+    const netBounds = hit.object.userData.trampolineNetBounds as [number, number, number, number] | undefined;
+    const localContact = netBounds ? hit.object.worldToLocal(hit.point.clone()) : null;
+    const trampolineRim = !!(netBounds && localContact &&
+      (localContact.x < netBounds[0] || localContact.x > netBounds[1] ||
+       localContact.z < netBounds[2] || localContact.z > netBounds[3]));
     return {
       y: hit.point.y,
       normal,
@@ -17588,8 +17610,9 @@ export class Player {
       iceWalk: hit.object.userData.iceWalk as boolean | undefined,
       vert: hit.object.userData.vert as boolean | undefined,
       finishPad: hit.object.userData.finishPad as boolean | undefined,
-      trampolineBounce: hit.object.userData.trampolineBounce as number | undefined,
+      trampolineBounce: trampolineRim ? undefined : hit.object.userData.trampolineBounce as number | undefined,
       trampolineHeldMult: hit.object.userData.trampolineHeldMult as number | undefined,
+      trampolineRim,
       speedPadSpeed: hit.object.userData.speedPadSpeed as number | undefined,
       speedPadHold: hit.object.userData.speedPadHold as number | undefined,
       speedPadId: hit.object.userData.speedPadId as number | undefined,

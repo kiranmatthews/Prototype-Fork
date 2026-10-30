@@ -1,0 +1,296 @@
+{
+  "base": "http://127.0.0.1:5483/",
+  "results": [
+    {
+      "lite": true,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "canvas": [
+        960,
+        540
+      ],
+      "walk": {
+        "position": [
+          0.48239467262963887,
+          0.020000011920928984,
+          -0.8759539827060226
+        ],
+        "speed": 4.799999999999998,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 0,
+        "vy": 0,
+        "clip": "player.run",
+        "impacts": 0
+      },
+      "standing": {
+        "position": [
+          0.7412798136075447,
+          0.020000011920928984,
+          -1.3460492867582543
+        ],
+        "speed": 0,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 0,
+        "vy": 0,
+        "clip": "player.idle",
+        "impacts": 0
+      },
+      "hop": {
+        "position": [
+          0.7412798136075447,
+          0.020000011920928984,
+          -1.3460492867582543
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 0,
+        "vy": 12.5,
+        "clip": "player.jump",
+        "impacts": 0
+      },
+      "bounce": {
+        "position": [
+          0.7412798136075447,
+          0.020000011920928984,
+          -1.3460492867582543
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 1,
+        "vy": 48,
+        "clip": "player.launch-rise",
+        "impacts": 1
+      },
+      "impact": {
+        "position": [
+          10.174032341970582,
+          0.020000011920929206,
+          3.8486409113034545
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": true,
+        "rim": true,
+        "net": false,
+        "launchId": 1,
+        "vy": 21.84,
+        "clip": "player.bail",
+        "impacts": 1
+      },
+      "rimCause": [
+        false,
+        0,
+        "landing",
+        52
+      ],
+      "rimRide": {
+        "position": [
+          11.911749375140102,
+          0.020000011920928984,
+          -3.4714406565916036
+        ],
+        "speed": 11.789197196857799,
+        "state": "ride",
+        "grounded": true,
+        "board": true,
+        "bail": false,
+        "rim": true,
+        "net": false,
+        "launchId": 1,
+        "vy": 0,
+        "clip": "player.skate",
+        "impacts": 1
+      },
+      "netTrip": {
+        "position": [
+          0.09639371146709655,
+          0.020000011920928984,
+          -0.1750360446709265
+        ],
+        "speed": 5.9947,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": true,
+        "rim": false,
+        "net": true,
+        "launchId": 1,
+        "vy": 0,
+        "clip": "player.bail",
+        "impacts": 1
+      },
+      "netCause": [
+        false,
+        11.9894,
+        "trip"
+      ]
+    },
+    {
+      "lite": false,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "walk": {
+        "position": [
+          0.48239467262963887,
+          0.020000011920928984,
+          -0.8759539827060226
+        ],
+        "speed": 4.799999999999998,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 0,
+        "vy": 0,
+        "clip": "player.run",
+        "impacts": 0
+      },
+      "standing": {
+        "position": [
+          0.7412798136075447,
+          0.020000011920928984,
+          -1.3460492867582543
+        ],
+        "speed": 0,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 0,
+        "vy": 0,
+        "clip": "player.idle",
+        "impacts": 0
+      },
+      "hop": {
+        "position": [
+          0.7412798136075447,
+          0.020000011920928984,
+          -1.3460492867582543
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 0,
+        "vy": 12.5,
+        "clip": "player.jump",
+        "impacts": 0
+      },
+      "bounce": {
+        "position": [
+          0.7412798136075447,
+          0.020000011920928984,
+          -1.3460492867582543
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": false,
+        "rim": false,
+        "net": true,
+        "launchId": 1,
+        "vy": 48,
+        "clip": "player.launch-rise",
+        "impacts": 1
+      },
+      "impact": {
+        "position": [
+          10.174032341970582,
+          0.020000011920929206,
+          3.8486409113034545
+        ],
+        "speed": 0,
+        "state": "air",
+        "grounded": false,
+        "board": false,
+        "bail": true,
+        "rim": true,
+        "net": false,
+        "launchId": 1,
+        "vy": 21.84,
+        "clip": "player.bail",
+        "impacts": 1
+      },
+      "rimCause": [
+        false,
+        0,
+        "landing",
+        52
+      ],
+      "rimRide": {
+        "position": [
+          11.911749375140102,
+          0.020000011920928984,
+          -3.4714406565916036
+        ],
+        "speed": 11.789197196857799,
+        "state": "ride",
+        "grounded": true,
+        "board": true,
+        "bail": false,
+        "rim": true,
+        "net": false,
+        "launchId": 1,
+        "vy": 0,
+        "clip": "player.skate",
+        "impacts": 1
+      },
+      "netTrip": {
+        "position": [
+          0.09639371146709655,
+          0.020000011920928984,
+          -0.1750360446709265
+        ],
+        "speed": 5.9947,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bail": true,
+        "rim": false,
+        "net": true,
+        "launchId": 1,
+        "vy": 0,
+        "clip": "player.bail",
+        "impacts": 1
+      },
+      "netCause": [
+        false,
+        11.9894,
+        "trip"
+      ]
+    }
+  ],
+  "errors": []
+}
