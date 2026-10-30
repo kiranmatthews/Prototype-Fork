@@ -1,0 +1,61 @@
+{
+  "startedAt": "2026-10-30T11:20:05.474660+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.11,
+      "log": "docs/carlisle-relay/regression-repair/pass-06/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.28,
+      "log": "docs/carlisle-relay/regression-repair/pass-06/test-jungle-cup-grind-camera.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.48,
+      "log": "docs/carlisle-relay/regression-repair/pass-06/test-unity-level-ports.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 51.71,
+      "log": "docs/carlisle-relay/regression-repair/pass-06/validate-editor-roundtrip.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 23.66,
+      "log": "docs/carlisle-relay/regression-repair/pass-06/test-level-security.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-terrain-support-budget.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 87.49,
+      "log": "docs/carlisle-relay/regression-repair/pass-06/test-terrain-support-budget.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:23:10.196095+00:00"
+}

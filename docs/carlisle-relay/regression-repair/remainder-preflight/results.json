@@ -1,0 +1,327 @@
+[
+  {
+    "command": "node tools/test-editor-pointers.mjs",
+    "exitCode": 0,
+    "seconds": 7.84
+  },
+  {
+    "command": "node tools/test-terrain-support-budget.mjs",
+    "exitCode": 0,
+    "seconds": 84.95
+  },
+  {
+    "command": "node tools/test-legacy-scenery-capture.mjs",
+    "exitCode": 0,
+    "seconds": 8.52
+  },
+  {
+    "command": "node tools/test-level-switch-transactions.mjs",
+    "exitCode": 0,
+    "seconds": 10.85
+  },
+  {
+    "command": "node tools/test-editor-motion-transforms.mjs",
+    "exitCode": 0,
+    "seconds": 14.09
+  },
+  {
+    "command": "node tools/test-editor-material-fidelity.mjs",
+    "exitCode": 0,
+    "seconds": 12.21
+  },
+  {
+    "command": "node tools/test-editor-atmosphere.mjs",
+    "exitCode": 0,
+    "seconds": 30.33
+  },
+  {
+    "command": "node tools/test-editor-thorns.mjs",
+    "exitCode": 0,
+    "seconds": 8.96
+  },
+  {
+    "command": "node tools/test-editor-current-components.mjs",
+    "exitCode": 0,
+    "seconds": 8.58
+  },
+  {
+    "command": "node tools/test-editor-runtime-integration.mjs",
+    "exitCode": 0,
+    "seconds": 8.79
+  },
+  {
+    "command": "node tools/validate-render-interpolation.mjs",
+    "exitCode": 0,
+    "seconds": 0.26
+  },
+  {
+    "command": "node tools/test-animation-suite.mjs",
+    "exitCode": 0,
+    "seconds": 2.74
+  },
+  {
+    "command": "node tools/test-animation-ik.mjs",
+    "exitCode": 0,
+    "seconds": 0.28
+  },
+  {
+    "command": "node tools/test-character-animation-runtime.mjs",
+    "exitCode": 0,
+    "seconds": 0.6
+  },
+  {
+    "command": "node tools/test-procedural-leg-rig.mjs",
+    "exitCode": 0,
+    "seconds": 0.24
+  },
+  {
+    "command": "node tools/test-jump-arms.mjs",
+    "exitCode": 0,
+    "seconds": 10.79
+  },
+  {
+    "command": "node tools/test-skate-charge-ollie.mjs",
+    "exitCode": 0,
+    "seconds": 14.91
+  },
+  {
+    "command": "node tools/test-character-elasticity.mjs",
+    "exitCode": 0,
+    "seconds": 10.44
+  },
+  {
+    "command": "node tools/test-character-head-profile-settings.mjs",
+    "exitCode": 0,
+    "seconds": 0.27
+  },
+  {
+    "command": "node tools/test-character-lab.mjs",
+    "exitCode": 0,
+    "seconds": 0.38
+  },
+  {
+    "command": "node tools/test-cartoon-glove.mjs",
+    "exitCode": 0,
+    "seconds": 9.36
+  },
+  {
+    "command": "node tools/test-rigged-cartoon-hand.mjs",
+    "exitCode": 0,
+    "seconds": 0.42
+  },
+  {
+    "command": "node tools/test-stretchable-bone.mjs",
+    "exitCode": 0,
+    "seconds": 0.42
+  },
+  {
+    "command": "node tools/test-meshy-torso.mjs",
+    "exitCode": 0,
+    "seconds": 0.45
+  },
+  {
+    "command": "node tools/test-meshy-head.mjs",
+    "exitCode": 0,
+    "seconds": 0.45
+  },
+  {
+    "command": "node tools/test-roo-painted-blink.mjs",
+    "exitCode": 0,
+    "seconds": 0.26
+  },
+  {
+    "command": "node tools/test-meshy-shorts.mjs",
+    "exitCode": 0,
+    "seconds": 0.58
+  },
+  {
+    "command": "node tools/test-procedural-footwear.mjs",
+    "exitCode": 0,
+    "seconds": 16.39
+  },
+  {
+    "command": "node tools/test-character-interactions.mjs",
+    "exitCode": 0,
+    "seconds": 10.18
+  },
+  {
+    "command": "node tools/test-shore-field.mjs",
+    "exitCode": 0,
+    "seconds": 0.32
+  },
+  {
+    "command": "node tools/test-shore-field-crown-regression.mjs",
+    "exitCode": 0,
+    "seconds": 0.43
+  },
+  {
+    "command": "node tools/validate-ocean-port.mjs",
+    "exitCode": 0,
+    "seconds": 0.05
+  },
+  {
+    "command": "node tools/test-ocean-formulas.mjs",
+    "exitCode": 0,
+    "seconds": 0.33
+  },
+  {
+    "command": "node tools/test-ocean-tuning.mjs",
+    "exitCode": 0,
+    "seconds": 0.36
+  },
+  {
+    "command": "node tools/test-unity-post.mjs",
+    "exitCode": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": "node tools/test-unity-smaa.mjs",
+    "exitCode": 0,
+    "seconds": 0.04
+  },
+  {
+    "command": "node tools/test-ocean-resources.mjs",
+    "exitCode": 0,
+    "seconds": 0.34
+  },
+  {
+    "command": "node tools/test-waterslide-shore-field.mjs",
+    "exitCode": 0,
+    "seconds": 10.18
+  },
+  {
+    "command": "node tools/test-crt-optimizer.mjs",
+    "exitCode": 0,
+    "seconds": 0.29
+  },
+  {
+    "command": "node tools/audit-crt-guest-parameters.mjs",
+    "exitCode": 0,
+    "seconds": 0.07
+  },
+  {
+    "command": "node tools/test-crt-guest-settings.mjs",
+    "exitCode": 0,
+    "seconds": 0.27
+  },
+  {
+    "command": "node tools/test-crt-guest-panel-semantics.mjs",
+    "exitCode": 0,
+    "seconds": 0.25
+  },
+  {
+    "command": "node tools/test-crt-guest-web.mjs",
+    "exitCode": 0,
+    "seconds": 0.04
+  },
+  {
+    "command": "node tools/test-render-quality-settings.mjs",
+    "exitCode": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": "node tools/test-fixed-render-pipeline.mjs",
+    "exitCode": 0,
+    "seconds": 0.04
+  },
+  {
+    "command": "node tools/test-hud-visibility.mjs",
+    "exitCode": 0,
+    "seconds": 0.36
+  },
+  {
+    "command": "node tools/test-wood-crate-assets.mjs",
+    "exitCode": 0,
+    "seconds": 0.04
+  },
+  {
+    "command": "node tools/test-mobile-ui-layout.mjs",
+    "exitCode": 0,
+    "seconds": 0.25
+  },
+  {
+    "command": "node tools/test-input-prompts.mjs",
+    "exitCode": 0,
+    "seconds": 0.28
+  },
+  {
+    "command": "node tools/test-debug-shortcuts.mjs",
+    "exitCode": 0,
+    "seconds": 0.33
+  },
+  {
+    "command": "node tools/test-touch-release.mjs",
+    "exitCode": 0,
+    "seconds": 0.36
+  },
+  {
+    "command": "node tools/test-balance-meter-pointer.mjs",
+    "exitCode": 0,
+    "seconds": 0.24
+  },
+  {
+    "command": "node tools/test-visual-treatment.mjs",
+    "exitCode": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": "node tools/test-factory-defaults.mjs",
+    "exitCode": 0,
+    "seconds": 0.84
+  },
+  {
+    "command": "node tools/test-skateboard-port.mjs",
+    "exitCode": 0,
+    "seconds": 0.32
+  },
+  {
+    "command": "node tools/test-discarded-boards.mjs",
+    "exitCode": 0,
+    "seconds": 0.83
+  },
+  {
+    "command": "node tools/test-map-skateboard-profile.mjs",
+    "exitCode": 0,
+    "seconds": 8.85
+  },
+  {
+    "command": "node tools/test-special-system.mjs",
+    "exitCode": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": "node tools/test-modern-life-hud.mjs",
+    "exitCode": 0,
+    "seconds": 0.31
+  },
+  {
+    "command": "node tools/test-combo-hud-parity.mjs",
+    "exitCode": 0,
+    "seconds": 0.35
+  },
+  {
+    "command": "node tools/test-spin-effects-port.mjs",
+    "exitCode": 0,
+    "seconds": 0.29
+  },
+  {
+    "command": "node tools/test-spin-smear.mjs",
+    "exitCode": 0,
+    "seconds": 0.26
+  },
+  {
+    "command": "node tools/test-spin-arm-pose.mjs",
+    "exitCode": 0,
+    "seconds": 9.43
+  },
+  {
+    "command": "node tools/test-rally-festival-presentation.mjs",
+    "exitCode": 0,
+    "seconds": 1.23
+  },
+  {
+    "command": "node tools/test-stadium-lighting.mjs",
+    "exitCode": 0,
+    "seconds": 1.12
+  }
+]

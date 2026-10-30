@@ -1,0 +1,13 @@
+{
+  "runtimeCandidate": "088eb253a60fd54c2ed16db9810ae48facd915bd",
+  "originalRepair": "f0308e11",
+  "publishedIntegration": "8482abea",
+  "originalFailingChecks": 40,
+  "fullSuiteInvocations": 203,
+  "fullSuiteGroups": 44,
+  "movementTuningChangedByRepair": false,
+  "geometryBufferIdentity": true,
+  "standaloneImagePixelIdentity": true,
+  "observedChromeCompositeMaxDifference": 1,
+  "localPlayable": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour"
+}

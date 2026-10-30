@@ -1,0 +1,25 @@
+{
+  "startedAt": "2026-10-30T11:28:41.030490+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.93,
+      "log": "docs/carlisle-relay/regression-repair/pass-10/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": -6,
+      "seconds": 490.93,
+      "log": "docs/carlisle-relay/regression-repair/pass-10/validate-editor-roundtrip.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:37:01.901450+00:00"
+}

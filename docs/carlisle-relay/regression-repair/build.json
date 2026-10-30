@@ -1,0 +1,28 @@
+{
+  "commit": "088eb253a60fd54c2ed16db9810ae48facd915bd",
+  "startedAt": "2026-10-30T13:25:44.994436+00:00",
+  "checks": [
+    {
+      "name": "build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "seconds": 65.31
+    },
+    {
+      "name": "release-size",
+      "command": [
+        "npm",
+        "run",
+        "check:release"
+      ],
+      "exitCode": 0,
+      "seconds": 0.21
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-30T13:26:50.512335+00:00"
+}

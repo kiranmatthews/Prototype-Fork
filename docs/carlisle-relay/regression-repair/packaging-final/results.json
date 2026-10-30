@@ -1,0 +1,106 @@
+{
+  "startedAt": "2026-10-30T12:51:14.902703+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-release-assets.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.39,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-release-assets.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-release-images.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 1.04,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-release-images.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-release-native-geometry.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 2.18,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-release-native-geometry.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-skate-review.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.25,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-skate-review.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-balance-meter-pointer.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.24,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-balance-meter-pointer.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-roo-atlas-readiness.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.22,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-roo-atlas-readiness.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-launch-jump.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 17.6,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-launch-jump.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-trampoline-air-jump.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.07,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-trampoline-air-jump.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-trampoline-controls.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.44,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-trampoline-controls.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-vert-launch-continuity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 28.96,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-vert-launch-continuity.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-skystream-drop-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 20.07,
+      "log": "docs/carlisle-relay/regression-repair/packaging-final/test-skystream-drop-camera.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T12:53:03.380086+00:00"
+}

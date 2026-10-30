@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-30T11:32:54.372559+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 28.12,
+      "log": "docs/carlisle-relay/regression-repair/security-final/test-level-security.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:33:22.491190+00:00"
+}

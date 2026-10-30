@@ -1,0 +1,43 @@
+{
+  "startedAt": "2026-10-30T11:17:25.574318+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-validator-probe.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 20.66,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-06/.carlisle-validator-probe.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-ledge-probe.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 22.79,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-06/.carlisle-ledge-probe.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-fall-probe.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 25.99,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-06/.carlisle-fall-probe.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.59,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-06/test-unity-level-ports.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:18:35.611977+00:00"
+}

@@ -1,0 +1,61 @@
+{
+  "startedAt": "2026-10-30T11:15:12.929438+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.28,
+      "log": "docs/carlisle-relay/regression-repair/pass-05/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.95,
+      "log": "docs/carlisle-relay/regression-repair/pass-05/test-jungle-cup-grind-camera.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.21,
+      "log": "docs/carlisle-relay/regression-repair/pass-05/test-editor-material-fidelity.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 28.86,
+      "log": "docs/carlisle-relay/regression-repair/pass-05/validate-editor-roundtrip.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-locomotion-replays.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 22.42,
+      "log": "docs/carlisle-relay/regression-repair/pass-05/test-locomotion-replays.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-probe-test-skate-tricks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.51,
+      "log": "docs/carlisle-relay/regression-repair/pass-05/.carlisle-probe-test-skate-tricks.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:16:57.191727+00:00"
+}

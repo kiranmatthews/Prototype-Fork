@@ -1,0 +1,52 @@
+{
+  "startedAt": "2026-10-30T11:01:15.016996+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-charge-probe.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 19.57,
+      "log": "docs/carlisle-relay/regression-repair/replay-probes/.carlisle-charge-probe.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-fall-probe.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 27.22,
+      "log": "docs/carlisle-relay/regression-repair/replay-probes/.carlisle-fall-probe.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-locomotion-replays.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 17.59,
+      "log": "docs/carlisle-relay/regression-repair/replay-probes/test-locomotion-replays.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.4,
+      "log": "docs/carlisle-relay/regression-repair/replay-probes/test-editor-material-fidelity.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-legacy-scenery-capture.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.11,
+      "log": "docs/carlisle-relay/regression-repair/replay-probes/test-legacy-scenery-capture.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:02:43.917647+00:00"
+}

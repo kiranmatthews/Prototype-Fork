@@ -1,0 +1,115 @@
+{
+  "startedAt": "2026-10-30T11:05:55.499345+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.85,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-park-tuning.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 18.97,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-park-tuning.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.98,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-jungle-cup-grind-camera.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-skate-tricks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.59,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-skate-tricks.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-ledge-traversal.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.19,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/validate-ledge-traversal.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.82,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-editor-material-fidelity.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-legacy-scenery-capture.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.33,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-legacy-scenery-capture.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 35.19,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-editor-atmosphere.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.04,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/validate-editor-roundtrip.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.91,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-level-security.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-terrain-support-budget.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 64.78,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/test-terrain-support-budget.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-locomotion-probe.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 22.53,
+      "log": "docs/carlisle-relay/regression-repair/pass-04/.carlisle-locomotion-probe.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:09:53.679897+00:00"
+}

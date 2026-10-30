@@ -1,0 +1,206 @@
+{
+  "baseline": "402a46f2043abcf1a590e9435f908582c5d4a0ac",
+  "failed": 40,
+  "checks": [
+    {
+      "group": "check:chimeworks",
+      "command": "node tools/test-chimeworks.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-map-archipelago.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-warp-room-return.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-tuning.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-camera-framing.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-runtime.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-grind-camera.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-skate-tricks.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-level-ports.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-quaternius-crouch.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:ledge",
+      "command": "node tools/validate-ledge-traversal.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:landing-x",
+      "command": "node tools/validate-landing-indicator.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-facing.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-replays.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:surface-friction",
+      "command": "node tools/test-surface-friction.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-speed-effect.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-look.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-level-switch.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-fall-replay.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-air-rescue.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:crate-types",
+      "command": "node tools/test-nitro-clear-switch.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-roundtrip",
+      "command": "node tools/validate-editor-roundtrip.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-security.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-terrain-support-budget.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-legacy-scenery-capture.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-switch-transactions.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-material-fidelity.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-atmosphere.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-current-components.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-runtime-integration.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-lab.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-cartoon-glove.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-stretchable-bone.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-head.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-procedural-footwear.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/validate-ocean-port.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-visual-treatment.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-factory-defaults.mjs",
+      "originalExitCode": 1
+    },
+    {
+      "group": "check:special",
+      "command": "node tools/test-special-system.mjs",
+      "originalExitCode": 1
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "name": "trampoline-controls",
+    "command": [
+      "node",
+      "tools/test-trampoline-controls.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 10.74
+  },
+  {
+    "name": "browser-launch",
+    "command": [
+      "node",
+      "tools/carlisle-launch-integration-review.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 73.92
+  },
+  {
+    "name": "browser-lite",
+    "command": [
+      "node",
+      "tools/carlisle-machinery-review.mjs",
+      "--lite"
+    ],
+    "exitCode": 0,
+    "seconds": 43.97
+  },
+  {
+    "name": "browser-full",
+    "command": [
+      "node",
+      "tools/carlisle-machinery-review.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 84.95
+  }
+]

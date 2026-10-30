@@ -1,0 +1,187 @@
+{
+  "startedAt": "2026-10-30T10:47:41.387422+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-chimeworks.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.67,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-chimeworks.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-map-archipelago.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-map-archipelago.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.4,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-camera-speed-effect.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.5,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-camera-speed-effect.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-camera-look.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.24,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-camera-look.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.55,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-level-security.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-switch-transactions.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.11,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-level-switch-transactions.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.74,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-editor-material-fidelity.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 30.27,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-editor-atmosphere.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-current-components.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 7.82,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-editor-current-components.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-character-lab.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.41,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-character-lab.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-cartoon-glove.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.9,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-cartoon-glove.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-stretchable-bone.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.45,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-stretchable-bone.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-meshy-head.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.47,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-meshy-head.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-procedural-footwear.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.01,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-procedural-footwear.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-ocean-port.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/validate-ocean-port.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-visual-treatment.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.23,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-visual-treatment.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-factory-defaults.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.74,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-factory-defaults.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-special-system.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.22,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-special-system.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.48,
+      "log": "docs/carlisle-relay/regression-repair/pass-02/test-unity-level-ports.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T10:49:44.028722+00:00"
+}

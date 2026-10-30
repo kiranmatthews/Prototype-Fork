@@ -1,0 +1,914 @@
+{
+  "models": [
+    {
+      "file": "props/carlisle-buildings/fish-market.glb",
+      "resized": false,
+      "sourceBytes": 18206052,
+      "bytes": 9592188,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.2261550564236111,
+                "max": 19,
+                "p99": 3,
+                "psnr": 50.77798104103258
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 42816,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 1.6484328884548611,
+                "max": 37,
+                "p99": 9,
+                "psnr": 39.81483821496742
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 42816,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-buildings/repair-shed.glb",
+      "resized": false,
+      "sourceBytes": 17813980,
+      "bytes": 9205872,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.1315085177951389,
+                "max": 16,
+                "p99": 2,
+                "psnr": 54.655910004707316
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 47523,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 1.7112570529513889,
+                "max": 38,
+                "p99": 9,
+                "psnr": 39.871535667089695
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 47523,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-coast/dune-bank.glb",
+      "resized": false,
+      "sourceBytes": 17844376,
+      "bytes": 8177032,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.05202094184027778,
+                "max": 7,
+                "p99": 1,
+                "psnr": 59.471624769160805
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 54966,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 0.6703458658854167,
+                "max": 22,
+                "p99": 5,
+                "psnr": 45.288932099504606
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 54966,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-coast/marsh-bank.glb",
+      "resized": false,
+      "sourceBytes": 15456968,
+      "bytes": 6570644,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.07094048394097222,
+                "max": 8,
+                "p99": 1,
+                "psnr": 58.2791941183667
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 45741,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 0.6765660264756944,
+                "max": 22,
+                "p99": 5,
+                "psnr": 45.46533601856618
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 45741,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-cone/cone-body.glb",
+      "resized": true,
+      "sourceBytes": 3483528,
+      "bytes": 1404772,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.053858778211805555,
+                "max": 196,
+                "p99": 1,
+                "psnr": 53.820758473384856
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 4986,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 0.5865413411458333,
+                "max": 249,
+                "p99": 7,
+                "psnr": 39.27559942551065
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 4986,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-cone/cone.glb",
+      "resized": true,
+      "sourceBytes": 3924176,
+      "bytes": 1689292,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.09977566189236112,
+                "max": 208,
+                "p99": 2,
+                "psnr": 46.612964860337556
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 4992,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-decks/broad-deck-joined.glb",
+      "resized": false,
+      "sourceBytes": 16883020,
+      "bytes": 6791372,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.09127902560763888,
+                "max": 12,
+                "p99": 1,
+                "psnr": 57.60801466728683
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 39367,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 0.6711751302083333,
+                "max": 33,
+                "p99": 4,
+                "psnr": 46.36348688269253
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 39367,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-decks/broad-deck.glb",
+      "resized": false,
+      "sourceBytes": 14868068,
+      "bytes": 4776440,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.08817979600694445,
+                "max": 14,
+                "p99": 1,
+                "psnr": 57.73271354589855
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 43041,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-decks/solid-timber-joined.glb",
+      "resized": true,
+      "sourceBytes": 14527344,
+      "bytes": 5156936,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.1522170681423611,
+                "max": 39,
+                "p99": 2,
+                "psnr": 53.40951017656639
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 23974,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 1.1774367947048612,
+                "max": 86,
+                "p99": 10,
+                "psnr": 40.137168297383894
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 23974,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-decks/solid-timber.glb",
+      "resized": true,
+      "sourceBytes": 13273304,
+      "bytes": 3902912,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.14697428385416667,
+                "max": 40,
+                "p99": 2,
+                "psnr": 53.30543130781109
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 29553,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-fleet/shrimp-boat.glb",
+      "resized": false,
+      "sourceBytes": 16523776,
+      "bytes": 6995144,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.10329562717013889,
+                "max": 21,
+                "p99": 2,
+                "psnr": 55.27414533795096
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 51177,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 0.8341582573784723,
+                "max": 44,
+                "p99": 6,
+                "psnr": 44.25892934704589
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 51177,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/01-net-housing.glb",
+      "resized": true,
+      "sourceBytes": 2347144,
+      "bytes": 936628,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.2862825520833333,
+                "max": 243,
+                "p99": 5,
+                "psnr": 38.402206702706444
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 2056,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            },
+            {
+              "view": "detail",
+              "difference": {
+                "meanAbs": 0.24545464409722223,
+                "max": 239,
+                "p99": 4,
+                "psnr": 40.70380581804528
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 2056,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/02-dock-winch.glb",
+      "resized": true,
+      "sourceBytes": 3226412,
+      "bytes": 1205264,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.33120930989583336,
+                "max": 205,
+                "p99": 5,
+                "psnr": 40.35963888681643
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 4128,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/03-rotary-hub.glb",
+      "resized": true,
+      "sourceBytes": 2936584,
+      "bytes": 823208,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.33842529296875,
+                "max": 170,
+                "p99": 5,
+                "psnr": 42.2546532867929
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 2734,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/04-work-skiff.glb",
+      "resized": true,
+      "sourceBytes": 3455832,
+      "bytes": 1040188,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.17797092013888888,
+                "max": 84,
+                "p99": 3,
+                "psnr": 48.5947763760693
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 4421,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/05-cargo-crane.glb",
+      "resized": true,
+      "sourceBytes": 3219228,
+      "bytes": 1286028,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.17320014105902778,
+                "max": 189,
+                "p99": 3,
+                "psnr": 43.601133110817045
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 5592,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/06-counterweight-hoist.glb",
+      "resized": true,
+      "sourceBytes": 2973520,
+      "bytes": 1355708,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.08908610026041666,
+                "max": 94,
+                "p99": 2,
+                "psnr": 52.501446979194235
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 3668,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/07-piling-fender.glb",
+      "resized": true,
+      "sourceBytes": 2705896,
+      "bytes": 833332,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.42776041666666664,
+                "max": 96,
+                "p99": 9,
+                "psnr": 41.67673551013985
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 2414,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/08-boathouse.glb",
+      "resized": true,
+      "sourceBytes": 3436620,
+      "bytes": 1496372,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.5092569986979166,
+                "max": 140,
+                "p99": 7,
+                "psnr": 42.321904822159254
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 5807,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/09-cable-spool.glb",
+      "resized": true,
+      "sourceBytes": 2952460,
+      "bytes": 868844,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.3676874457465278,
+                "max": 158,
+                "p99": 5,
+                "psnr": 44.110269802175466
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 1644,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/10-dredger-pump.glb",
+      "resized": true,
+      "sourceBytes": 3142516,
+      "bytes": 1103300,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.2186569552951389,
+                "max": 223,
+                "p99": 3,
+                "psnr": 42.41099261895328
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 4202,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/11-harbour-beacon.glb",
+      "resized": true,
+      "sourceBytes": 3637872,
+      "bytes": 1582764,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.1668608940972222,
+                "max": 103,
+                "p99": 3,
+                "psnr": 45.97440015320749
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 5180,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-shipyard/12-dock-lantern.glb",
+      "resized": true,
+      "sourceBytes": 2555968,
+      "bytes": 799000,
+      "modes": [
+        {
+          "decoder": "webp",
+          "views": [
+            {
+              "view": "overview",
+              "difference": {
+                "meanAbs": 0.14520914713541666,
+                "max": 209,
+                "p99": 3,
+                "psnr": 43.639632422056195
+              },
+              "render": {
+                "calls": 1,
+                "triangles": 1800,
+                "points": 0,
+                "lines": 0
+              },
+              "memory": {
+                "geometries": 1,
+                "textures": 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "built": false,
+  "errors": [],
+  "pass": true
+}

@@ -1,0 +1,9 @@
+{
+  "command": "npm run check:all",
+  "commit": "8482abea77000592b36e7a53dbe2e927cc69361a",
+  "startedAt": "2026-10-30T12:38:59.407302+00:00",
+  "status": "failed",
+  "exitCode": 1,
+  "seconds": 1957.39,
+  "finishedAt": "2026-10-30T13:11:36.757393+00:00"
+}

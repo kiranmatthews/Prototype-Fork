@@ -1,0 +1,175 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "lite": true,
+  "errors": [],
+  "views": [
+    {
+      "id": "tide-side",
+      "name": "Tide steps · 2",
+      "time": 0,
+      "canvas": [
+        960,
+        540
+      ],
+      "deck": [
+        83.61138316188944,
+        178.28233234173274,
+        -445.02094269550366
+      ],
+      "render": {
+        "frame": 480,
+        "calls": 1195,
+        "triangles": 26519276,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "ballast-side",
+      "name": "Counterweight 3",
+      "time": 0,
+      "canvas": [
+        960,
+        540
+      ],
+      "deck": [
+        89.34506516299524,
+        101.05066212620521,
+        -2207.425907277962
+      ],
+      "render": {
+        "frame": 491,
+        "calls": 1105,
+        "triangles": 13826178,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "winch-side",
+      "name": "Port winch",
+      "time": 0,
+      "canvas": [
+        960,
+        540
+      ],
+      "deck": [
+        64.32229121088591,
+        164.4172101466168,
+        -866.3618549585684
+      ],
+      "render": {
+        "frame": 504,
+        "calls": 1178,
+        "triangles": 21407533,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "carry": [],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1880,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "deckMachinery": {
+        "hydraulicLifts": 4,
+        "counterweightLifts": 4,
+        "winches": 2,
+        "triangles": 82512,
+        "colliders": 0
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "beacons": {
+        "beacons": 4,
+        "shafts": 4,
+        "decorativeColliders": 0
+      },
+      "ambience": {
+        "waterGain": 0,
+        "windGain": 0,
+        "height": 0,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "build": "Codex/sol fork · build 10-30 12:56 UTC"
+  },
+  "passed": true
+}

@@ -1,0 +1,81 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "errors": [],
+  "spawn": {
+    "level": "carlisle-coast",
+    "position": [
+      0,
+      221.27211374988292,
+      0
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "grounded": true,
+    "build": "Codex/sol fork · build 10-30 13:25 UTC"
+  },
+  "checkpoint": {
+    "active": 1,
+    "spawn": [
+      84.47885359761563,
+      195.540998224761,
+      -182.76199487345087
+    ],
+    "position": [
+      84.47885359761563,
+      195.44099822476102,
+      -182.76199487345087
+    ]
+  },
+  "respawn": {
+    "before": {
+      "deaths": 0,
+      "lives": 4,
+      "endless": false
+    },
+    "deaths": 0,
+    "lives": 3,
+    "position": [
+      84.47885359761563,
+      195.44099822476102,
+      -182.76199487345087
+    ],
+    "spawn": [
+      84.47885359761563,
+      195.540998224761,
+      -182.76199487345087
+    ],
+    "grounded": true
+  },
+  "finish": {
+    "state": "finished",
+    "position": [
+      -51.608327582438484,
+      15,
+      -3850.252615574483
+    ],
+    "resultsVisible": true
+  },
+  "catalogue": "Hosted catalogue decompresses to every original byte",
+  "release": {
+    "entry": "assets/index-jX0dtrRd.js"
+  },
+  "passed": true,
+  "last": {
+    "state": "ride",
+    "grounded": true,
+    "position": [
+      -51.70338792724306,
+      12,
+      -3848.4551274574583
+    ],
+    "spawn": [
+      0,
+      221.39211374988292,
+      0
+    ],
+    "killY": -45,
+    "deaths": 0,
+    "lives": 4,
+    "blocked": true
+  }
+}

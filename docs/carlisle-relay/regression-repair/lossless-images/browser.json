@@ -1,0 +1,1332 @@
+{
+  "images": [
+    {
+      "file": "blockworks-art/entrance-cobweb.png",
+      "source": [
+        1254,
+        1254
+      ],
+      "packed": [
+        1254,
+        1254
+      ],
+      "changed": 707945,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6290064
+    },
+    {
+      "file": "blockworks-art/ghost-train-interior.png",
+      "source": [
+        1254,
+        1254
+      ],
+      "packed": [
+        1254,
+        1254
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6290064
+    },
+    {
+      "file": "blockworks-art/island-castle.png",
+      "source": [
+        1536,
+        1024
+      ],
+      "packed": [
+        1536,
+        1024
+      ],
+      "changed": 922222,
+      "max": 255,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6291456
+    },
+    {
+      "file": "blockworks-art/island-jungle.png",
+      "source": [
+        1536,
+        1024
+      ],
+      "packed": [
+        1536,
+        1024
+      ],
+      "changed": 1288634,
+      "max": 255,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6291456
+    },
+    {
+      "file": "blockworks-art/island-rides.png",
+      "source": [
+        1672,
+        941
+      ],
+      "packed": [
+        1672,
+        941
+      ],
+      "changed": 1372366,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6293408
+    },
+    {
+      "file": "blockworks-art/sky-v2.png",
+      "source": [
+        1774,
+        887
+      ],
+      "packed": [
+        1774,
+        887
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6294152
+    },
+    {
+      "file": "bonus-parallax/BonusParallax_BackgroundHouses.png",
+      "source": [
+        1672,
+        941
+      ],
+      "packed": [
+        1672,
+        941
+      ],
+      "changed": 1516156,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6293408
+    },
+    {
+      "file": "bonus-parallax/BonusParallax_ForegroundHouses.png",
+      "source": [
+        1672,
+        941
+      ],
+      "packed": [
+        1672,
+        941
+      ],
+      "changed": 1347618,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6293408
+    },
+    {
+      "file": "bonus-parallax/BonusParallax_Mountains.png",
+      "source": [
+        1672,
+        941
+      ],
+      "packed": [
+        1672,
+        941
+      ],
+      "changed": 1404142,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6293408
+    },
+    {
+      "file": "bonus-parallax/BonusParallax_Sky.png",
+      "source": [
+        1672,
+        941
+      ],
+      "packed": [
+        1672,
+        941
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6293408
+    },
+    {
+      "file": "boss/chief-portrait.png",
+      "source": [
+        384,
+        384
+      ],
+      "packed": [
+        384,
+        384
+      ],
+      "changed": 868,
+      "max": 4,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 589824
+    },
+    {
+      "file": "boulder-camera/cracks-a.png",
+      "source": [
+        3840,
+        2160
+      ],
+      "packed": [
+        3840,
+        2160
+      ],
+      "changed": 745528,
+      "max": 85,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 33177600
+    },
+    {
+      "file": "boulder-camera/cracks-b.png",
+      "source": [
+        3840,
+        2160
+      ],
+      "packed": [
+        3840,
+        2160
+      ],
+      "changed": 478280,
+      "max": 85,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 33177600
+    },
+    {
+      "file": "boulder-camera/cracks-c.png",
+      "source": [
+        3840,
+        2160
+      ],
+      "packed": [
+        3840,
+        2160
+      ],
+      "changed": 519854,
+      "max": 85,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 33177600
+    },
+    {
+      "file": "carlisle-kit/textures/T_Street_Decals.png",
+      "source": [
+        1024,
+        1024
+      ],
+      "packed": [
+        1024,
+        1024
+      ],
+      "changed": 931090,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 4194304
+    },
+    {
+      "file": "fonts/roo-bonus-v10-cap128.png",
+      "source": [
+        512,
+        1012
+      ],
+      "packed": [
+        512,
+        1012
+      ],
+      "changed": 97119,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 2072576
+    },
+    {
+      "file": "fonts/roo-bonus-v10-cap256.png",
+      "source": [
+        1024,
+        2023
+      ],
+      "packed": [
+        1024,
+        2023
+      ],
+      "changed": 201727,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 8286208
+    },
+    {
+      "file": "fonts/roo-bonus-v10-light1-cap128.png",
+      "source": [
+        512,
+        1012
+      ],
+      "packed": [
+        512,
+        1012
+      ],
+      "changed": 96564,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 2072576
+    },
+    {
+      "file": "fonts/roo-bonus-v10-light1-cap256.png",
+      "source": [
+        1024,
+        2023
+      ],
+      "packed": [
+        1024,
+        2023
+      ],
+      "changed": 199977,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 8286208
+    },
+    {
+      "file": "fonts/roo-bonus-v10-light2-cap128.png",
+      "source": [
+        512,
+        1012
+      ],
+      "packed": [
+        512,
+        1012
+      ],
+      "changed": 97339,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 2072576
+    },
+    {
+      "file": "fonts/roo-bonus-v10-light2-cap256.png",
+      "source": [
+        1024,
+        2023
+      ],
+      "packed": [
+        1024,
+        2023
+      ],
+      "changed": 202673,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 8286208
+    },
+    {
+      "file": "fonts/roo-counter-v10-cap128.png",
+      "source": [
+        512,
+        1012
+      ],
+      "packed": [
+        512,
+        1012
+      ],
+      "changed": 92454,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 2072576
+    },
+    {
+      "file": "fonts/roo-counter-v10-cap256.png",
+      "source": [
+        1024,
+        2023
+      ],
+      "packed": [
+        1024,
+        2023
+      ],
+      "changed": 201217,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 8286208
+    },
+    {
+      "file": "fonts/roo-counter-v10-light1-cap128.png",
+      "source": [
+        512,
+        1012
+      ],
+      "packed": [
+        512,
+        1012
+      ],
+      "changed": 90611,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 2072576
+    },
+    {
+      "file": "fonts/roo-counter-v10-light1-cap256.png",
+      "source": [
+        1024,
+        2023
+      ],
+      "packed": [
+        1024,
+        2023
+      ],
+      "changed": 199413,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 8286208
+    },
+    {
+      "file": "fonts/roo-counter-v10-light2-cap128.png",
+      "source": [
+        512,
+        1012
+      ],
+      "packed": [
+        512,
+        1012
+      ],
+      "changed": 90638,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 2072576
+    },
+    {
+      "file": "fonts/roo-counter-v10-light2-cap256.png",
+      "source": [
+        1024,
+        2023
+      ],
+      "packed": [
+        1024,
+        2023
+      ],
+      "changed": 198169,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 8286208
+    },
+    {
+      "file": "ghost-train/meshy-bath-tiles-v3.png",
+      "source": [
+        512,
+        512
+      ],
+      "packed": [
+        512,
+        512
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 1048576
+    },
+    {
+      "file": "ghost-train/meshy-castle-floor-v2.png",
+      "source": [
+        1024,
+        1024
+      ],
+      "packed": [
+        1024,
+        1024
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 4194304
+    },
+    {
+      "file": "ghost-train/meshy-castle-timber-uv-v2.png",
+      "source": [
+        1024,
+        1024
+      ],
+      "packed": [
+        1024,
+        1024
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 4194304
+    },
+    {
+      "file": "ghost-train/meshy-castle-window-uv-v2.png",
+      "source": [
+        1536,
+        1536
+      ],
+      "packed": [
+        1536,
+        1536
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 9437184
+    },
+    {
+      "file": "hud/balance-v1/meter-0.png",
+      "source": [
+        384,
+        1152
+      ],
+      "packed": [
+        384,
+        1152
+      ],
+      "changed": 101888,
+      "max": 63,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 1769472
+    },
+    {
+      "file": "hud/balance-v1/meter-1.png",
+      "source": [
+        384,
+        1152
+      ],
+      "packed": [
+        384,
+        1152
+      ],
+      "changed": 12398,
+      "max": 63,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 1769472
+    },
+    {
+      "file": "hud/balance-v1/meter-2.png",
+      "source": [
+        384,
+        1152
+      ],
+      "packed": [
+        384,
+        1152
+      ],
+      "changed": 11563,
+      "max": 42,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 1769472
+    },
+    {
+      "file": "hud/balance-v1/meter-3.png",
+      "source": [
+        384,
+        1152
+      ],
+      "packed": [
+        384,
+        1152
+      ],
+      "changed": 11717,
+      "max": 63,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 1769472
+    },
+    {
+      "file": "mall-reference/cabadfb6.png",
+      "source": [
+        512,
+        256
+      ],
+      "packed": [
+        512,
+        256
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 524288
+    },
+    {
+      "file": "map-landmarks/cloud-bank.png",
+      "source": [
+        1983,
+        793
+      ],
+      "packed": [
+        1983,
+        793
+      ],
+      "changed": 1410874,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6290076
+    },
+    {
+      "file": "sky-coast.png",
+      "source": [
+        1672,
+        941
+      ],
+      "packed": [
+        1672,
+        941
+      ],
+      "changed": 323479,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6293408
+    },
+    {
+      "file": "sky-sea/day.png",
+      "source": [
+        1774,
+        887
+      ],
+      "packed": [
+        1774,
+        887
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6294152
+    },
+    {
+      "file": "sky-sea/night.png",
+      "source": [
+        1774,
+        887
+      ],
+      "packed": [
+        1774,
+        887
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6294152
+    },
+    {
+      "file": "sky-sea/sunset.png",
+      "source": [
+        1774,
+        887
+      ],
+      "packed": [
+        1774,
+        887
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6294152
+    },
+    {
+      "file": "textures/carlisle-piers/weathered-timber.png",
+      "source": [
+        1254,
+        1254
+      ],
+      "packed": [
+        1254,
+        1254
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6290064
+    },
+    {
+      "file": "textures/carlisle-steel/weathered-navy.png",
+      "source": [
+        1254,
+        1254
+      ],
+      "packed": [
+        1254,
+        1254
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6290064
+    },
+    {
+      "file": "treehouse-trail/matte-far.png",
+      "source": [
+        1942,
+        809
+      ],
+      "packed": [
+        1942,
+        809
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 6284312
+    },
+    {
+      "file": "treehouse-trail/matte-mid.png",
+      "source": [
+        1942,
+        809
+      ],
+      "packed": [
+        1942,
+        809
+      ],
+      "changed": 1990757,
+      "max": 128,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 6284312
+    },
+    {
+      "file": "water/matrixrex/noise-1.png",
+      "source": [
+        1024,
+        1024
+      ],
+      "packed": [
+        1024,
+        1024
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 4194304
+    },
+    {
+      "file": "water/matrixrex/noise-3.png",
+      "source": [
+        1024,
+        1024
+      ],
+      "packed": [
+        1024,
+        1024
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 4194304
+    },
+    {
+      "file": "water/matrixrex/noise-4.png",
+      "source": [
+        1024,
+        1024
+      ],
+      "packed": [
+        1024,
+        1024
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 4194304
+    },
+    {
+      "file": "water/matrixrex/sand-color.png",
+      "source": [
+        2048,
+        2048
+      ],
+      "packed": [
+        2048,
+        2048
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 16777216
+    },
+    {
+      "file": "water/matrixrex/sand-mask.png",
+      "source": [
+        2048,
+        2048
+      ],
+      "packed": [
+        2048,
+        2048
+      ],
+      "changed": 4306532,
+      "max": 24,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 1
+        },
+        {
+          "background": "white",
+          "max": 1
+        }
+      ],
+      "channels": 16777216
+    },
+    {
+      "file": "water/matrixrex/sand-normal.png",
+      "source": [
+        2048,
+        2048
+      ],
+      "packed": [
+        2048,
+        2048
+      ],
+      "changed": 0,
+      "max": 0,
+      "opaqueChanged": 0,
+      "alphaChanged": 0,
+      "composites": [
+        {
+          "background": "black",
+          "max": 0
+        },
+        {
+          "background": "white",
+          "max": 0
+        }
+      ],
+      "channels": 16777216
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

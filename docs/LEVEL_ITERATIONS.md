@@ -7654,3 +7654,33 @@ fall/respawn and finish all pass with zero console errors. Evidence:
 Timing: inspection started about 11:18 UTC; source cleanup was playable by
 11:20 UTC (approximately two minutes). Native visual review completed by
 11:25 UTC; packaged gameplay and release validation by 11:29 UTC.
+
+
+## 30 October 2026 — Carlisle full-suite regression repair
+
+The user requested repairs for the 40 failed checks, a full rerun and publication,
+with fundamental gameplay preserved. Fixed editor atmosphere/material capture,
+bounded import and terrain/wall work accounting, unsupported Nightworks metadata,
+a self-crossing Rooftop Relay pit and missing existing map landmarks. Updated
+stale course/API fixtures and isolated recorded replay geometry with provenance.
+All 40 original commands remain in the suite. Movement tuning is byte-identical
+to the pre-repair state; the imported launch animations and camera are retained.
+
+Integrated published Mayfield/Skystream work. Restored the combined package to
+the unchanged 1 GB hosting limit using complete losslessly packed model buffers,
+reviewed texture encodes, lossless standalone images/catalogue compression and
+removal of unused comparison files from deployment output only. Original source
+assets, full mesh geometry and export files remain available.
+
+The uninterrupted full suite passes 203 invocations / 44 groups in
+36.04 minutes, against `088eb253`. Type-check/build,
+offline and release checks pass; final package 998,290,153 bytes.
+Chrome verifies on-foot and mounted trampoline jumps/camera, moving-platform
+carry, bonus return, checkpoint warps, pit recovery and visible finish results
+with no console errors. MAX/native and normal presentation were reviewed.
+Legacy hand-built conversion differences remain explicitly reported diagnostics.
+
+This was a repair of an already playable course, not a new geometry brief.
+Logged repair/validation elapsed time from the first focused run at 10:31 UTC
+to the final full-suite completion at 13:57 UTC is 205.9 minutes.
+Evidence: [regression repair](carlisle-relay/regression-repair/README.md).

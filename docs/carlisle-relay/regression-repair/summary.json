@@ -1,0 +1,184 @@
+{
+  "status": "passed",
+  "runtimeCommit": "088eb253a60fd54c2ed16db9810ae48facd915bd",
+  "originalFailed": 40,
+  "fullSuite": {
+    "command": "npm run check:all",
+    "commit": "088eb253a60fd54c2ed16db9810ae48facd915bd",
+    "startedAt": "2026-10-30T13:21:09.433377+00:00",
+    "status": "passed",
+    "exitCode": 0,
+    "seconds": 2162.16,
+    "finishedAt": "2026-10-30T13:57:11.616206+00:00"
+  },
+  "suiteGroups": 44,
+  "suiteInvocations": 203,
+  "uniqueCommands": 201,
+  "build": {
+    "commit": "088eb253a60fd54c2ed16db9810ae48facd915bd",
+    "startedAt": "2026-10-30T13:25:44.994436+00:00",
+    "checks": [
+      {
+        "name": "build",
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exitCode": 0,
+        "seconds": 65.31
+      },
+      {
+        "name": "release-size",
+        "command": [
+          "npm",
+          "run",
+          "check:release"
+        ],
+        "exitCode": 0,
+        "seconds": 0.21
+      }
+    ],
+    "status": "passed",
+    "finishedAt": "2026-10-30T13:26:50.512335+00:00"
+  },
+  "offline": "passed",
+  "browser": [
+    {
+      "name": "trampoline-controls",
+      "command": [
+        "node",
+        "tools/test-trampoline-controls.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.74
+    },
+    {
+      "name": "browser-launch",
+      "command": [
+        "node",
+        "tools/carlisle-launch-integration-review.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 73.92
+    },
+    {
+      "name": "browser-lite",
+      "command": [
+        "node",
+        "tools/carlisle-machinery-review.mjs",
+        "--lite"
+      ],
+      "exitCode": 0,
+      "seconds": 43.97
+    },
+    {
+      "name": "browser-full",
+      "command": [
+        "node",
+        "tools/carlisle-machinery-review.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 84.95
+    }
+  ],
+  "releaseSmoke": {
+    "base": "http://127.0.0.1:5484",
+    "errors": [],
+    "spawn": {
+      "level": "carlisle-coast",
+      "position": [
+        0,
+        221.27211374988292,
+        0
+      ],
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "build": "Codex/sol fork \u00b7 build 10-30 13:25 UTC"
+    },
+    "checkpoint": {
+      "active": 1,
+      "spawn": [
+        84.47885359761563,
+        195.540998224761,
+        -182.76199487345087
+      ],
+      "position": [
+        84.47885359761563,
+        195.44099822476102,
+        -182.76199487345087
+      ]
+    },
+    "respawn": {
+      "before": {
+        "deaths": 0,
+        "lives": 4,
+        "endless": false
+      },
+      "deaths": 0,
+      "lives": 3,
+      "position": [
+        84.47885359761563,
+        195.44099822476102,
+        -182.76199487345087
+      ],
+      "spawn": [
+        84.47885359761563,
+        195.540998224761,
+        -182.76199487345087
+      ],
+      "grounded": true
+    },
+    "finish": {
+      "state": "finished",
+      "position": [
+        -51.608327582438484,
+        15,
+        -3850.252615574483
+      ],
+      "resultsVisible": true
+    },
+    "catalogue": "Hosted catalogue decompresses to every original byte",
+    "release": {
+      "entry": "assets/index-jX0dtrRd.js"
+    },
+    "passed": true,
+    "last": {
+      "state": "ride",
+      "grounded": true,
+      "position": [
+        -51.70338792724306,
+        12,
+        -3848.4551274574583
+      ],
+      "spawn": [
+        0,
+        221.39211374988292,
+        0
+      ],
+      "killY": -45,
+      "deaths": 0,
+      "lives": 4,
+      "blocked": true
+    }
+  },
+  "release": {
+    "files": 1857,
+    "bytes": 998290153,
+    "budget": 1000000000
+  },
+  "movementTuningUnchanged": true,
+  "tuningSha256": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41",
+  "publication": "pending final commit and verified Pages deployment",
+  "limitations": [
+    "Legacy hand-built capture differences remain explicit non-fatal diagnostics.",
+    "Release smoke uses checkpoint warps and a finish placement, not a complete continuous course clear."
+  ],
+  "logsArchive": {
+    "file": "logs.tar.gz",
+    "entries": 200,
+    "bytes": 191303,
+    "sha256": "50e36432209822bee3f26e4de73b289ead533e2a8b14ce5457d8b0913b4cf3e4"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-30T11:47:33.825472+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 529.63,
+      "log": "docs/carlisle-relay/regression-repair/pass-12/validate-editor-roundtrip.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:56:23.457416+00:00"
+}

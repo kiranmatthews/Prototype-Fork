@@ -1,0 +1,22 @@
+[
+  {
+    "path": "props/carlisle-decks/broad-deck-joined.glb",
+    "bytes": 4560000,
+    "sha256": "ab05cbee64978512bf34fa3fbac47c4aa2cb4616057788d99fecb8c51705acd6"
+  },
+  {
+    "path": "props/carlisle-buildings/fish-market.glb",
+    "bytes": 8301596,
+    "sha256": "8bbfd3532dc828aba4b9d0fa73ad7f2ff028e1e540d5f25ed2611adf5f3bb338"
+  },
+  {
+    "path": "props/carlisle-fleet/shrimp-boat.glb",
+    "bytes": 5606680,
+    "sha256": "1ab559110ed6fc06afb636f90c7154561c11c30b165e372e7804b202588cb9b1"
+  },
+  {
+    "path": "textures/carlisle-steel/weathered-navy.webp",
+    "bytes": 2358406,
+    "sha256": "51ca20a13199905f7a03b68481bc885e5b97ef77b35e35925e4e8098edfaa7e4"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "startedAt": "2026-10-30T11:12:50.507573+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-probe-test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 12.2,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-05/.carlisle-probe-test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-probe-test-skate-tricks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.49,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-05/.carlisle-probe-test-skate-tricks.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/.carlisle-probe-test-editor-material-fidelity.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 12.9,
+      "log": "docs/carlisle-relay/regression-repair/diagnostics-05/.carlisle-probe-test-editor-material-fidelity.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:13:26.099438+00:00"
+}

@@ -1,0 +1,187 @@
+{
+  "startedAt": "2026-10-30T10:54:46.088638+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 15.3,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-park-tuning.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.48,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-park-tuning.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-park-camera-framing.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 12.91,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-park-camera-framing.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-jungle-cup-runtime.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 13.41,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-jungle-cup-runtime.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-jungle-cup-grind-camera.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 13.67,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-jungle-cup-grind-camera.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-skate-tricks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.63,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-skate-tricks.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-camera-look.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-camera-look.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-ledge-traversal.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.49,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/validate-ledge-traversal.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-switch-transactions.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.58,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-level-switch-transactions.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-character-lab.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.45,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-character-lab.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-cartoon-glove.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 11.32,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-cartoon-glove.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-procedural-footwear.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 19.07,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-procedural-footwear.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-visual-treatment.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.31,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-visual-treatment.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 39.32,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-editor-atmosphere.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-air-rescue.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 17.54,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-air-rescue.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-editor-roundtrip.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 12.05,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/validate-editor-roundtrip.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-nitro-clear-switch.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 87.05,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-nitro-clear-switch.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-security.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 14.26,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-level-security.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-terrain-support-budget.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 74.12,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-terrain-support-budget.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.66,
+      "log": "docs/carlisle-relay/regression-repair/pass-03/test-unity-level-ports.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:01:16.050026+00:00"
+}

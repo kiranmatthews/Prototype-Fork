@@ -32,10 +32,17 @@ try{
  const beforeFall=await page.evaluate(()=>{const g=window.__game,p=g.player,l=g.getLevel(),before={deaths:p.totalDeaths,lives:p.lives,endless:p.endlessDeaths};p.pos.set(l.currentSpawn.x+2000,l.killY-5,l.currentSpawn.z);p.vVel=-10;p.grounded=false;p.state='air';p.collapseRenderInterpolation();return before;});
  await page.waitForFunction(before=>{const g=window.__game,p=g.player,penalty=before.endless?p.totalDeaths===before.deaths+1:p.lives===before.lives-1;return penalty&&p.grounded&&!g.gameFlow.blocksGameplay&&p.pos.distanceTo(g.getLevel().currentSpawn)<3;},beforeFall,{timeout:30000});
  report.respawn=await page.evaluate(before=>{const g=window.__game;return{before,deaths:g.player.totalDeaths,lives:g.player.lives,position:g.player.pos.toArray(),spawn:g.getLevel().currentSpawn.toArray(),grounded:g.player.grounded};},beforeFall);
+ // Respawn starts a 280 ms hold followed by the authored death-curtain fade.
+ // A grounded player is not proof that the checkpoint is visible yet.
+ await page.waitForFunction(()=>Number(getComputedStyle(document.querySelector('.hud-fade')).opacity)<.001);
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
  await page.screenshot({path:out+'/checkpoint-normal.png'});
  await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),gate=g.getCurrentLevel().data.components.find(c=>c.t==='gate');g.player.respawn(l,true,false,{position:g.player.pos.clone().set(gate.p[0],gate.p[1]+3,gate.p[2])});});
  await page.waitForFunction(()=>window.__game.player.state==='finished',null,{timeout:20000});
  report.finish=await page.evaluate(()=>({state:window.__game.player.state,position:window.__game.player.pos.toArray()}));
+ await page.waitForFunction(()=>window.__game.gameFlow.currentScreen==='results'&&window.__game.gameFlow.loadingPhase===null&&document.querySelector('.game-transition-curtain').hidden,null,{timeout:60000});
+ report.finish.resultsVisible=true;
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
  await page.screenshot({path:out+'/finish-normal.png'});
  const catalogue=await page.request.get(base+'/animations/skate-review/catalog.bin');assert.ok(catalogue.ok());
  assert.deepEqual(gunzipSync(await catalogue.body()),await readFile('public/animations/skate-review/catalog.json'));

@@ -1,0 +1,124 @@
+{
+  "startedAt": "2026-10-30T10:31:18.632531+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-chimeworks.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 9.49,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-chimeworks.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 11.28,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-warp-room-return.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-quaternius-crouch.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.56,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-quaternius-crouch.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-camera-speed-effect.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.5,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-camera-speed-effect.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-camera-level-switch.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.75,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-camera-level-switch.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-camera-look.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.27,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-camera-look.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-run-facing.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.25,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-run-facing.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-surface-friction.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.37,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-surface-friction.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/validate-landing-indicator.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 34.09,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/validate-landing-indicator.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-atmosphere.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 8.84,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-editor-atmosphere.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-level-switch-transactions.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 10.56,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-level-switch-transactions.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-editor-runtime-integration.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 8.48,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-editor-runtime-integration.log"
+    },
+    {
+      "command": [
+        "node",
+        "tools/test-unity-level-ports.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.42,
+      "log": "docs/carlisle-relay/regression-repair/pass-01/test-unity-level-ports.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T10:32:54.488071+00:00"
+}

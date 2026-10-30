@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-30T11:31:07.254827+00:00",
+  "status": "finished",
+  "results": [
+    {
+      "command": [
+        "node",
+        "tools/test-warp-room-return.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 10.85,
+      "log": "docs/carlisle-relay/regression-repair/pass-11/test-warp-room-return.log"
+    }
+  ],
+  "finishedAt": "2026-10-30T11:31:18.104793+00:00"
+}
