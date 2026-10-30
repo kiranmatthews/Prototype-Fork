@@ -7684,3 +7684,14 @@ This was a repair of an already playable course, not a new geometry brief.
 Logged repair/validation elapsed time from the first focused run at 10:31 UTC
 to the final full-suite completion at 13:57 UTC is 205.9 minutes.
 Evidence: [regression repair](carlisle-relay/regression-repair/README.md).
+
+
+### Carlisle release follow-up — tracked cone asset
+
+The first Pages build stopped because the approved literal-cone GLB was still
+covered by an experiment ignore rule. Added an exception and the exact existing
+asset, verified against its recorded SHA-256. No gameplay, tuning, animation,
+geometry or texture bytes changed. An isolated tracked-files-only build and
+release-size check pass; all five checked packaged assets match the prior local
+release. The 203-check full-suite result remains valid for unchanged game/test
+sources. Evidence: [clean checkout](carlisle-relay/regression-repair/clean-checkout/README.md).

@@ -18,5 +18,10 @@
     "path": "textures/carlisle-steel/weathered-navy.webp",
     "bytes": 2358406,
     "sha256": "51ca20a13199905f7a03b68481bc885e5b97ef77b35e35925e4e8098edfaa7e4"
+  },
+  {
+    "path": "props/carlisle-cone/cone-body.glb",
+    "bytes": 1294816,
+    "sha256": "bd89d7feb2cee25d09e4e961b39688e2c35f5f8bdea229f1b7edfb6d254ae7d9"
   }
 ]

@@ -1,0 +1,28 @@
+{
+  "startedAt": "2026-10-30T14:35:13.748377+00:00",
+  "source": "/Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype Fork",
+  "cleanRoot": "/private/tmp/carlisle-tracked-release-20261030",
+  "trackedFiles": 12325,
+  "checks": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "seconds": 57.92
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check:release"
+      ],
+      "exitCode": 0,
+      "seconds": 0.24
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-30T14:36:11.912788+00:00"
+}

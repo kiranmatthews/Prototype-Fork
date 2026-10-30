@@ -30,3 +30,5 @@ desktop/test-results/
 
 # Local Tripo character experiments; provenance and preparation scripts are tracked.
 /public/props/carlisle-cone/*.glb
+# The approved cone-only model is a required production asset.
+!/public/props/carlisle-cone/cone-body.glb

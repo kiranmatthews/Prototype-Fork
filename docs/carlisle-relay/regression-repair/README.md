@@ -91,3 +91,7 @@ All 40 originally failing commands remain included. Production build, offline,
 release-size and local browser checks pass. The package is 998,290,153
 bytes against the unchanged 1,000,000,000-byte limit. Publication is the remaining
 release step; the browser smoke script is also used against the deployed site.
+
+The first Pages attempt exposed an ignored cone-model file. Its exact approved
+bytes are now tracked; the [isolated tracked-file build](clean-checkout/README.md)
+and release gate pass. Gameplay code and the full-suite inputs are unchanged.
