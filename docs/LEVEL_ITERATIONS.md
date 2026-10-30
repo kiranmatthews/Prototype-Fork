@@ -7059,3 +7059,45 @@ FPS claim is made. Build: Codex/sol fork · build 10-30 04:40 UTC; 1,785 files /
 1,121.3MiB; offline version fe9dce8d26a12b28e74c. Evidence:
 art/carlisle-shipyard/harbour-sound/. Local-only checkpoint; publication held.
 The broader polish goal remains active.
+
+
+## Carlisle braided grind rigging — 30 October 2026
+
+Continuing local polish. Approximately 37 minutes to the first final clean
+compiled keyboard run; 46 minutes to completed native/normal review.
+Previous goal turn was progress: coastal audio was committed and verified.
+
+The four required late grind paths now use full seven-strand steel cable, 39
+orange collars and eight weathered, bevelled roller fairleads. About 402.687m
+of cable uses 397,600 placed triangles, nine geometries and four materials;
+shared fittings keep draw calls bounded. No LOD, decimation, new texture/model
+download, paid service, Tripo credits or API purchase.
+
+The exact native rounded paths drive the visual rope. Slope-aware fitting
+keeps sleeves and strands below the original rail crown. Geometry checks cover
+191,464 vertices and 528 surface probes, finite buffers and shared disposal.
+The initial descending collar exceeded the crown by 6.7mm and was corrected.
+Native full review also caught Level's later rail-styling pass overwriting the
+new materials and restoring chrome over the braid. Installation now happens
+after that pass; compiled checks prove hidden old batches and retained colors.
+Shared level/player/rail code did not change.
+
+Compiled lite and full checks pass. Ordinary arrow/Space/E events, paced on the
+browser's frame loop, complete all four catches, both charged exits, five
+trampoline launches and the finish gate without bails or deaths. The harness
+was corrected for screenshot/CDP feedback delay and DOM key-event targets;
+no gameplay state or physics was changed to make these runs pass. Four native
+close views, four native player grind views and normal 480p/CRT reviewed. A
+separate normal-resolution cable ride also completes the catch, charged exit
+and rebound with no deaths or console errors. Bonus
+has four rideable boats and no cable dressing; returning restores four cables.
+Console errors: zero. Initial failures and corrected evidence are retained.
+
+Twenty-four protected source files match 50171244, covering movement, cameras,
+course/bonus/cargo/nitro, wet slopes, all previous art and the new audio beds.
+Native rail point arrays and lengths match the compiled baseline. Original
+course/prop checks, typecheck/build and diff checks pass. Build: Codex/sol fork
+· build 10-30 05:26 UTC; 1,785 files / 1,121.3MiB; offline version
+ec8eb01e4a2c8d9a555f. No new whole-course clear, sustained FPS claim or full
+suite. Evidence: art/carlisle-shipyard/rigging/validation.json.
+Local-only checkpoint; publication held. Broader polish goal remains active.

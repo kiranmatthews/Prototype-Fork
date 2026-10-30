@@ -1,0 +1,143 @@
+{
+  "status": "Validated locally; publication held",
+  "baseCommit": "501712449295ab8f6632b3dbab4101c4c8464c3c",
+  "startedUTC": "2026-10-30T04:57:49+00:00",
+  "completedReviewUTC": "2026-10-30T05:43:55.748039+00:00",
+  "elapsedMinutes": 46,
+  "cleanCompiledPlayableMinutes": 37,
+  "change": "Four late grind routes dressed as full braided steel cables with orange collars and winch fairleads",
+  "diagnostics": {
+    "cables": 4,
+    "metres": 402.68682126176265,
+    "strands": 28,
+    "collars": 39,
+    "fairleads": 8,
+    "triangles": 397600
+  },
+  "checks": {
+    "strandVertices": 191464,
+    "contactProbes": 528,
+    "geometryEnvelopeAndDisposal": true,
+    "protectedSourceFiles": 24,
+    "nativeRailPathsAndLengthsExact": true,
+    "nativeChromeHidden": true,
+    "materialOwnership": "Standard materials and orange collar color checked in compiled browser",
+    "originalCourseAndProps": "tools/test-carlisle-shipyard.mjs passed",
+    "typecheckAndProductionBuild": "passed",
+    "diff": "passed"
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 05:26 UTC",
+    "files": 1785,
+    "sizeMiB": 1121.3,
+    "offlineVersion": "ec8eb01e4a2c8d9a555f"
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "routes": 1,
+      "errors": []
+    },
+    "full": {
+      "passed": true,
+      "nativeResolution": [
+        1920,
+        1080
+      ],
+      "closeViews": 4,
+      "playerGrindViews": 4,
+      "normalPresentation": "480p/CRT approach plus separate continuous cable-ride review",
+      "routes": [
+        {
+          "name": "Rigging slingshot",
+          "completed": true,
+          "catches": [
+            "Rigging \u00b7 sweeping cable"
+          ],
+          "launches": [
+            "Rigging \u00b7 rail catch",
+            "Rigging \u00b7 moving rebound"
+          ],
+          "chargedExitRails": [
+            "Rigging \u00b7 sweeping cable"
+          ],
+          "endState": "ride",
+          "deaths": 0,
+          "bailed": false
+        },
+        {
+          "name": "Broken crown",
+          "completed": true,
+          "catches": [
+            "Crown \u00b7 outer cable",
+            "Crown \u00b7 return cable"
+          ],
+          "launches": [
+            "Crown \u00b7 first catch",
+            "Crown \u00b7 crosswind rebound"
+          ],
+          "chargedExitRails": [
+            "Crown \u00b7 outer cable"
+          ],
+          "endState": "ride",
+          "deaths": 0,
+          "bailed": false
+        },
+        {
+          "name": "Homecoming cable",
+          "completed": true,
+          "catches": [
+            "Homecoming \u00b7 diving cable"
+          ],
+          "launches": [
+            "Homecoming \u00b7 final catch"
+          ],
+          "chargedExitRails": [],
+          "endState": "finished",
+          "deaths": 0,
+          "bailed": false
+        }
+      ],
+      "bonusCables": 0,
+      "bonusRideableBoats": 4,
+      "returnedCables": 4,
+      "errors": []
+    },
+    "normal": {
+      "passed": true,
+      "resolution": "480p with CRT enabled",
+      "routes": 1,
+      "catches": [
+        "Rigging \u00b7 sweeping cable"
+      ],
+      "chargedExitRails": [
+        "Rigging \u00b7 sweeping cable"
+      ],
+      "reboundLaunches": [
+        "Rigging \u00b7 rail catch",
+        "Rigging \u00b7 moving rebound"
+      ],
+      "deaths": 0,
+      "errors": [],
+      "image": "normal/player-1-1.png"
+    }
+  },
+  "cost": {
+    "tripoCredits": 0,
+    "paidServices": false,
+    "newTextureOrModelDownloads": 0,
+    "apiTopups": 0
+  },
+  "sourceSHA256": {
+    "src/carlisleRigging.ts": "18698cb505093f06d6efafa3612fe66f9024a591bd2c9ff24a51514f3a24b9e7",
+    "src/carlisleShipyard.ts": "93f74af3782f4e767b074cc9746b5bdd13f80092521eca37c2eda1938193086c",
+    "tools/carlisle-rigging-review.mjs": "b2b7ee90dc2bbf40bfb0b1293fd272df115fa5bc811d9c54394642a5487f7a24",
+    "tools/test-carlisle-rigging.mjs": "fcfd2277613bf787445955a1ecefaa7fc66eb9e1ac35ffbe50cb350eaf20a152"
+  },
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour",
+  "limitations": [
+    "Three continuous late-course beats begun from their entries, not a new uninterrupted 4 km clear",
+    "No sustained FPS measurement or check:all",
+    "The broader polish goal remains active"
+  ]
+}

@@ -1,0 +1,7129 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": false,
+  "lite": false,
+  "normal": true,
+  "errors": [],
+  "views": [],
+  "routes": [
+    {
+      "name": "Rigging slingshot",
+      "catches": [
+        "Rigging · sweeping cable"
+      ],
+      "launches": [
+        "Rigging · rail catch",
+        "Rigging · moving rebound"
+      ],
+      "pops": [
+        "Rigging · sweeping cable"
+      ],
+      "samples": [
+        {
+          "at": [
+            -93.01447406626606,
+            35.94944834749136,
+            -3230.3367345085967
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            -0.3666777442461008,
+            0,
+            -0.9303480165371403
+          ],
+          "side": [
+            0.9303480165371403,
+            0,
+            -0.3666777442461008
+          ],
+          "speed": 0,
+          "vy": 0,
+          "surface": "Pendulum receiving quay · downhill slick · safe 3",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.24999999999999997,
+          "screenFeet": [
+            -0.000052224796359108696,
+            -0.7898526069281563,
+            0.9706850708026585
+          ],
+          "screenHead": [
+            -0.0000606668198100867,
+            -0.16884073370707633,
+            0.9659083377311091
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": true,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -93.01569632541354,
+            35.94944834749136,
+            -3230.3398356686516
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            -0.3666719268755038,
+            0,
+            -0.9303503093144029
+          ],
+          "side": [
+            0.9303503093144029,
+            0,
+            -0.3666719268755038
+          ],
+          "speed": 0,
+          "vy": 0,
+          "surface": "Pendulum receiving quay · downhill slick · safe 3",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.41666666666666663,
+          "screenFeet": [
+            -0.0000622274590377087,
+            -0.7942102452692563,
+            0.9706146834089443
+          ],
+          "screenHead": [
+            -0.00007231423463044491,
+            -0.17218572665142964,
+            0.9658133185933091
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -93.01569632541354,
+            35.94944834749136,
+            -3230.3398356686516
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            -0.3666719268755038,
+            0,
+            -0.9303503093144029
+          ],
+          "side": [
+            0.9303503093144029,
+            0,
+            -0.3666719268755038
+          ],
+          "speed": 0,
+          "vy": 0,
+          "surface": "Pendulum receiving quay · downhill slick · safe 3",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.5833333333333335,
+          "screenFeet": [
+            -0.00005390784727185676,
+            -0.7953827021132168,
+            0.9705957451274646
+          ],
+          "screenHead": [
+            -0.00006265254645311218,
+            -0.1730861632778639,
+            0.9657877404491026
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -93.01569632541354,
+            35.94944834749136,
+            -3230.3398356686516
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            -0.3666719268755038,
+            0,
+            -0.9303503093144029
+          ],
+          "side": [
+            0.9303503093144029,
+            0,
+            -0.3666719268755038
+          ],
+          "speed": 0,
+          "vy": 0,
+          "surface": "Pendulum receiving quay · downhill slick · safe 3",
+          "spring": false,
+          "mounted": false,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.7500000000000007,
+          "screenFeet": [
+            -0.00004114785781010929,
+            -0.7956465713906838,
+            0.970591482940186
+          ],
+          "screenHead": [
+            -0.0000478238019404696,
+            -0.17328883831275257,
+            0.9657819831852311
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -93.41138535912542,
+            35.94944834749136,
+            -3231.3465295537853
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            -0.3647834514426769,
+            0,
+            -0.9310923872278026
+          ],
+          "side": [
+            0.9310923872278026,
+            0,
+            -0.3647834514426769
+          ],
+          "speed": 6.650000000000004,
+          "vy": 0,
+          "surface": "Pendulum receiving quay · downhill slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 0.9833333333333347,
+          "screenFeet": [
+            -0.000309027909042562,
+            -0.6704751445094199,
+            0.9726133328083578
+          ],
+          "screenHead": [
+            -0.00035523453762039314,
+            -0.07819609566003169,
+            0.9684832236865292
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -93.8646249696165,
+            35.94944834749136,
+            -3232.5069923341553
+          ],
+          "state": "ride",
+          "grounded": true,
+          "forward": [
+            -0.3626065575864215,
+            0,
+            -0.9319423181695986
+          ],
+          "side": [
+            0.9319423181695986,
+            0,
+            -0.3626065575864215
+          ],
+          "speed": 8.150000000000007,
+          "vy": 0,
+          "surface": "Pendulum receiving quay · downhill slick · safe 3",
+          "spring": false,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.1500000000000008,
+          "screenFeet": [
+            -0.0007160475504591898,
+            -0.6119393836722479,
+            0.9735588402878299
+          ],
+          "screenHead": [
+            -0.0008189213802810958,
+            -0.03443714331526875,
+            0.9697262570776307
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -95.10405207771552,
+            41.009031765117875,
+            -3233.6310994979326
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.35999458071681917,
+            0,
+            -0.9329543943058105
+          ],
+          "side": [
+            0.9329543943058105,
+            0,
+            -0.35999458071681917
+          ],
+          "speed": 9.524625322587104,
+          "vy": 59.375000000000014,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.3166666666666669,
+          "screenFeet": [
+            -0.11426635182179398,
+            -0.4074834736733945,
+            0.9736223227023898
+          ],
+          "screenHead": [
+            -0.13154932628350352,
+            0.18325696341708006,
+            0.9695970626283202
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -97.915666423178,
+            50.40069843178455,
+            -3234.2432461284634
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.3570772511866441,
+            0,
+            -0.9340748560393808
+          ],
+          "side": [
+            0.9340748560393808,
+            0,
+            -0.3570772511866441
+          ],
+          "speed": 9.524625322587104,
+          "vy": 53.87500000000004,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.483333333333333,
+          "screenFeet": [
+            -0.15548743482449173,
+            -0.49097763823006446,
+            0.9866069580957496
+          ],
+          "screenHead": [
+            -0.17596326002260998,
+            -0.3695388288162555,
+            0.9848122664969582
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -99.76994408105617,
+            58.87569843178456,
+            -3235.239429032691
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.35379087406918647,
+            0,
+            -0.9353245519205412
+          ],
+          "side": [
+            0.9353245519205412,
+            0,
+            -0.35379087406918647
+          ],
+          "speed": 9.666977089345773,
+          "vy": 48.37500000000007,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.649999999999999,
+          "screenFeet": [
+            -0.08428148289255488,
+            -0.08146801384556485,
+            0.9915060227210697
+          ],
+          "screenHead": [
+            -0.0927557128632435,
+            -0.042101389466516585,
+            0.9906283199877918
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -100.57751614342558,
+            66.43403176511791,
+            -3236.657885872898
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.35045961220330063,
+            0,
+            -0.9365778452506295
+          ],
+          "side": [
+            0.9365778452506295,
+            0,
+            -0.35045961220330063
+          ],
+          "speed": 9.866963696775482,
+          "vy": 42.8750000000001,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.816666666666665,
+          "screenFeet": [
+            -0.048770586719646944,
+            0.02550726339911318,
+            0.9922889030547322
+          ],
+          "screenHead": [
+            -0.05332825639111941,
+            0.05586985957792455,
+            0.9915463007167284
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -101.17218630071883,
+            73.0756984317846,
+            -3238.191094193332
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.34705970443439305,
+            0,
+            -0.9378430367379778
+          ],
+          "side": [
+            0.9378430367379778,
+            0,
+            -0.34705970443439305
+          ],
+          "speed": 9.866963696775482,
+          "vy": 37.37500000000013,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 1.9833333333333312,
+          "screenFeet": [
+            -0.02837239576918519,
+            0.05276669652302808,
+            0.992481915779575
+          ],
+          "screenHead": [
+            -0.030968682943277856,
+            0.08115189840551168,
+            0.9917724209319497
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -101.70859461298254,
+            78.26944843178462,
+            -3239.5740889130534
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.343988804682383,
+            0,
+            -0.9389737495016489
+          ],
+          "side": [
+            0.9389737495016489,
+            0,
+            -0.343988804682383
+          ],
+          "speed": 10.066929600516353,
+          "vy": 32.42500000000015,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.1333333333333306,
+          "screenFeet": [
+            -0.016994164531802268,
+            0.04511138980095561,
+            0.9926899940341845
+          ],
+          "screenHead": [
+            -0.018505936656924935,
+            0.07105936397946498,
+            0.992018774441494
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -102.37598866370266,
+            83.60903176511798,
+            -3241.2947976101705
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.3401627548771819,
+            0,
+            -0.9403665775613073
+          ],
+          "side": [
+            0.9403665775613073,
+            0,
+            -0.3401627548771819
+          ],
+          "speed": 10.066929600516353,
+          "vy": 26.375000000000146,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.3166666666666633,
+          "screenFeet": [
+            -0.01117905990821191,
+            0.060833675359503875,
+            0.9925883828393445
+          ],
+          "screenHead": [
+            -0.012188497983583707,
+            0.08833531602012679,
+            0.9918978854797366
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -102.99114580956233,
+            87.50069843178467,
+            -3242.8808265084404
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.33703589276402574,
+            0,
+            -0.9414917986837466
+          ],
+          "side": [
+            0.9414917986837466,
+            0,
+            -0.33703589276402574
+          ],
+          "speed": 10.266873855301474,
+          "vy": 20.87500000000014,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.4833333333333294,
+          "screenFeet": [
+            -0.007734264249304143,
+            0.06154822533099248,
+            0.9926159204269097
+          ],
+          "screenHead": [
+            -0.008429971439674302,
+            0.08894097086901791,
+            0.9919305453023349
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -103.61473762377925,
+            90.47569843178469,
+            -3244.4886020902245
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.3334549365335085,
+            0,
+            -0.9427660395354903
+          ],
+          "side": [
+            0.9427660395354903,
+            0,
+            -0.3334549365335085
+          ],
+          "speed": 10.466792673570382,
+          "vy": 15.375000000000131,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.6499999999999955,
+          "screenFeet": [
+            -0.0058612097947127245,
+            0.060948409073800586,
+            0.9926468704192476
+          ],
+          "screenHead": [
+            -0.006386113054653678,
+            0.08814833311796827,
+            0.9919672832677008
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -104.25037774344433,
+            92.53403176511804,
+            -3246.127441215274
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.32980001663668407,
+            0,
+            -0.9440508190910291
+          ],
+          "side": [
+            0.9440508190910291,
+            0,
+            -0.32980001663668407
+          ],
+          "speed": 10.666688106433634,
+          "vy": 9.875000000000124,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.8166666666666615,
+          "screenFeet": [
+            -0.004964469425030374,
+            0.06144868473496174,
+            0.9926717420710615
+          ],
+          "screenHead": [
+            -0.0054074803666890525,
+            0.08859202268853437,
+            0.9919967961116265
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -104.89926934429897,
+            93.67569843178474,
+            -3247.800445971418
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.326064097579247,
+            0,
+            -0.9453476631746816
+          ],
+          "side": [
+            0.9453476631746816,
+            0,
+            -0.326064097579247
+          ],
+          "speed": 10.86655949394437,
+          "vy": 4.3750000000001235,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 2.9833333333333276,
+          "screenFeet": [
+            -0.0046216339836518145,
+            0.061641496214743866,
+            0.9926982933082011
+          ],
+          "screenHead": [
+            -0.005032475813418482,
+            0.08869713099119823,
+            0.992028286425661
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -105.56381975533424,
+            93.82903176511809,
+            -3249.5138230545795
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.3222331781134675,
+            0,
+            -0.9466603292220999
+          ],
+          "side": [
+            0.9466603292220999,
+            0,
+            -0.3222331781134675
+          ],
+          "speed": 11.066410065930377,
+          "vy": -3.991666666666543,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.1499999999999937,
+          "screenFeet": [
+            -0.004517928638734221,
+            0.05589114868206874,
+            0.9927203034387174
+          ],
+          "screenHead": [
+            -0.0049182749563597755,
+            0.0823509245705137,
+            0.9920543766015689
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -106.12721208268603,
+            91.34569843178478,
+            -3250.9663893106285
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.31882307672687654,
+            0,
+            -0.9478142464356655
+          ],
+          "side": [
+            0.9478142464356655,
+            0,
+            -0.31882307672687654
+          ],
+          "speed": 8.269041506375492,
+          "vy": -23.824999999999882,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.3166666666666598,
+          "screenFeet": [
+            -0.004469459934355357,
+            0.04880329738201594,
+            0.99281313105797
+          ],
+          "screenHead": [
+            -0.004860191525229352,
+            0.07428795691096851,
+            0.992164264206046
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -106.5533323813497,
+            85.5568095428959,
+            -3252.0650339616227
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.31614169693257427,
+            0,
+            -0.9487119834072891
+          ],
+          "side": [
+            0.9487119834072891,
+            0,
+            -0.31614169693257427
+          ],
+          "speed": 6.271223115210301,
+          "vy": -43.658333333333225,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.483333333333326,
+          "screenFeet": [
+            -0.004100214561807732,
+            0.03353563436842378,
+            0.9928921093683362
+          ],
+          "screenHead": [
+            -0.004454521976698627,
+            0.05740635543970012,
+            0.9922575682789987
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -106.88470574834098,
+            77.11569843178484,
+            -3252.8861679337347
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.3141263683754481,
+            0,
+            -0.9493811798699467
+          ],
+          "side": [
+            0.9493811798699467,
+            0,
+            -0.3141263683754481
+          ],
+          "speed": 4.673162462858258,
+          "vy": -52,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.649999999999992,
+          "screenFeet": [
+            -0.0039365704527027185,
+            0.0218027812030975,
+            0.9929120502045452
+          ],
+          "screenHead": [
+            -0.004275733743779415,
+            0.044592222223281235,
+            0.9922810987389294
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -107.16222262328371,
+            68.44903176511824,
+            -3253.4996629549023
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.3125977329205848,
+            0,
+            -0.9498856022558245
+          ],
+          "side": [
+            0.9498856022558245,
+            0,
+            -0.3125977329205848
+          ],
+          "speed": 3.474738642704015,
+          "vy": -52,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.816666666666658,
+          "screenFeet": [
+            -0.004127720333276734,
+            0.013762839104715,
+            0.9929040129357626
+          ],
+          "screenHead": [
+            -0.004483776507568682,
+            0.03588592410102612,
+            0.9922716159764476
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -107.3687126463984,
+            59.7823650984516,
+            -3253.962183946394
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.31144669980316797,
+            0,
+            -0.9502636229919122
+          ],
+          "side": [
+            0.9502636229919122,
+            0,
+            -0.31144669980316797
+          ],
+          "speed": 2.675847464999337,
+          "vy": -52,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "railT": 0,
+          "railTime": 0,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 3.983333333333324,
+          "screenFeet": [
+            -0.0037588630381826782,
+            0.007575389904314119,
+            0.9928991399302624
+          ],
+          "screenHead": [
+            -0.004083335790227679,
+            0.029180335484367777,
+            0.9922658656934975
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": true,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -107.52108315975131,
+            51.982365098451595,
+            -3254.2836141688394
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.310640000472697,
+            0,
+            -0.9505276377393364
+          ],
+          "side": [
+            0.9505276377393364,
+            0,
+            -0.310640000472697
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "Rigging · rail catch",
+          "spring": true,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 7.461971482452121,
+          "railTime": 0,
+          "railLength": 115.20352988226074,
+          "balance": -0.1,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.149999999999991,
+          "screenFeet": [
+            -0.004220598979652706,
+            -0.14094945104708623,
+            0.9917788828352461
+          ],
+          "screenHead": [
+            -0.004599445893154876,
+            -0.11100717548682548,
+            0.9909538195405966
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -108.07586616110781,
+            50.099448419863606,
+            -3254.656155330948
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.30942761084376963,
+            0,
+            -0.9509230009036045
+          ],
+          "side": [
+            0.9509230009036045,
+            0,
+            -0.30942761084376963
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 7.986971482452123,
+          "railTime": 0.15,
+          "railLength": 115.20352988226074,
+          "balance": -0.02929432076918192,
+          "balanceVel": 0.051831637072339815,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.29999999999999,
+          "screenFeet": [
+            -0.040898444520889976,
+            -0.9042015990863583,
+            0.9804402040425305
+          ],
+          "screenHead": [
+            -0.046265448748457685,
+            -0.6571277879296992,
+            0.9773825750937911
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -108.27305075107229,
+            50.099448419863606,
+            -3255.2667733364074
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.307961455373407,
+            0,
+            -0.951398834350922
+          ],
+          "side": [
+            0.951398834350922,
+            0,
+            -0.307961455373407
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 8.628638149118792,
+          "railTime": 0.3333333333333333,
+          "railLength": 115.20352988226074,
+          "balance": -0.026705572629308005,
+          "balanceVel": 0.8264240368351936,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.483333333333323,
+          "screenFeet": [
+            -0.03380270598308811,
+            -0.8289072049983806,
+            0.97404479430057
+          ],
+          "screenHead": [
+            -0.03785107208179066,
+            -0.3338678449267917,
+            0.969898369691883
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -108.45230946922182,
+            50.099448419863606,
+            -3255.821880614098
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.3066279195919352,
+            0,
+            -0.9518294589508783
+          ],
+          "side": [
+            0.9518294589508783,
+            0,
+            -0.3066279195919352
+          ],
+          "speed": 3.5,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 9.211971482452128,
+          "railTime": 0.49999999999999994,
+          "railLength": 115.20352988226074,
+          "balance": -0.031139093525670396,
+          "balanceVel": -0.9030174636792718,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.649999999999989,
+          "screenFeet": [
+            -0.02321273821301225,
+            -0.7401969362525472,
+            0.9727298159626355
+          ],
+          "screenHead": [
+            -0.025435860934159296,
+            -0.17277692294572305,
+            0.9684861813330666
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -108.65521267025126,
+            50.096948165341495,
+            -3256.371066409937
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.30528923634037924,
+            0,
+            -0.9522596716099596
+          ],
+          "side": [
+            0.9522596716099596,
+            0,
+            -0.30528923634037924
+          ],
+          "speed": 3.529618887847814,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 9.79752623237405,
+          "railTime": 0.6666666666666671,
+          "railLength": 115.20352988226074,
+          "balance": -0.04341519297306177,
+          "balanceVel": 0.5771700426006896,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.816666666666655,
+          "screenFeet": [
+            -0.019237809343062184,
+            -0.7103436040036454,
+            0.9723018835278339
+          ],
+          "screenHead": [
+            -0.020330893600532085,
+            -0.11945685146914438,
+            0.9680299814200513
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -108.86385476200908,
+            50.09402742881468,
+            -3256.924714146589
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.3039360422690552,
+            0,
+            -0.9526924384132706
+          ],
+          "side": [
+            0.9526924384132706,
+            0,
+            -0.3039360422690552
+          ],
+          "speed": 3.5666424976575817,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 10.38918987791458,
+          "railTime": 0.8333333333333343,
+          "railLength": 115.20352988226074,
+          "balance": -0.0430830906951352,
+          "balanceVel": 0.8605141196022293,
+          "bail": false,
+          "deaths": 0,
+          "time": 4.983333333333321,
+          "screenFeet": [
+            -0.017330121389654837,
+            -0.7008655989942641,
+            0.9722088309645199
+          ],
+          "screenHead": [
+            -0.017813408880718702,
+            -0.10408263604833778,
+            0.9679366480361915
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -109.07467283203128,
+            50.09107623122823,
+            -3257.4841360078713
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.3025680970754911,
+            0,
+            -0.9531277703603627
+          ],
+          "side": [
+            0.9531277703603627,
+            0,
+            -0.3025680970754911
+          ],
+          "speed": 3.6036661074673493,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 10.987024125090072,
+          "railTime": 1.0000000000000013,
+          "railLength": 115.20352988226074,
+          "balance": -0.05022914363995922,
+          "balanceVel": 0.14432184152456662,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.149999999999987,
+          "screenFeet": [
+            -0.01618794016160795,
+            -0.6970400694094607,
+            0.9722056809906217
+          ],
+          "screenHead": [
+            -0.01648962638129067,
+            -0.09902817415130878,
+            0.9679404731288418
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -109.28766688031789,
+            50.08809457258216,
+            -3258.049331993785
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.301185389462118,
+            0,
+            -0.9535656040223727
+          ],
+          "side": [
+            0.9535656040223727,
+            0,
+            -0.301185389462118
+          ],
+          "speed": 3.640689717277117,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 11.591028973900526,
+          "railTime": 1.1666666666666674,
+          "railLength": 115.20352988226074,
+          "balance": -0.017699434932203252,
+          "balanceVel": 0.6094325521856574,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.316666666666653,
+          "screenFeet": [
+            -0.014569968527097335,
+            -0.7000776203578178,
+            0.9721350612665876
+          ],
+          "screenHead": [
+            -0.015591652194219941,
+            -0.10049712671578598,
+            0.9678495942700124
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -109.50283690686885,
+            50.08508245287645,
+            -3258.6203021043293
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.30021245381701284,
+            0,
+            -0.9538723617828373
+          ],
+          "side": [
+            0.9538723617828373,
+            0,
+            -0.30021245381701284
+          ],
+          "speed": 3.6777133270868845,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 12.201204424345942,
+          "railTime": 1.3333333333333335,
+          "railLength": 115.20352988226074,
+          "balance": -0.02346752168557039,
+          "balanceVel": 0.21110589925044376,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.483333333333319,
+          "screenFeet": [
+            -0.014130615255000816,
+            -0.7041450465000605,
+            0.9720688920246929
+          ],
+          "screenHead": [
+            -0.01518749828941931,
+            -0.10355826380785582,
+            0.967761672024563
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -109.77667703954614,
+            50.0759318021519,
+            -3259.178651045822
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.29898352229275427,
+            0,
+            -0.9542582739475818
+          ],
+          "side": [
+            0.9542582739475818,
+            0,
+            -0.29898352229275427
+          ],
+          "speed": 3.783455767146278,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 12.823277045613786,
+          "railTime": 1.4999999999999996,
+          "railLength": 115.20352988226074,
+          "balance": -0.029479717555838898,
+          "balanceVel": 0.5435636163147523,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.649999999999985,
+          "screenFeet": [
+            -0.02268995927912163,
+            -0.6939892452613092,
+            0.9722365499054632
+          ],
+          "screenHead": [
+            -0.02492630125565538,
+            -0.09597853376029734,
+            0.9679843244550683
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -110.06117349120237,
+            50.06624224355496,
+            -3259.752941088836
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2975366083428573,
+            0,
+            -0.9547104098604086
+          ],
+          "side": [
+            0.9547104098604086,
+            0,
+            -0.2975366083428573
+          ],
+          "speed": 3.8968336327889634,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 13.464245977822078,
+          "railTime": 1.6666666666666656,
+          "railLength": 115.20352988226074,
+          "balance": -0.10088713768848497,
+          "balanceVel": 0.9789575511329196,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.816666666666651,
+          "screenFeet": [
+            -0.030357560015671223,
+            -0.6912283084855613,
+            0.9722763529235221
+          ],
+          "screenHead": [
+            -0.03165880371784631,
+            -0.09379925421648241,
+            0.9680371240491169
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -110.35405714096105,
+            50.056267028504294,
+            -3260.344161692253
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2960463368288902,
+            0,
+            -0.9551735792253653
+          ],
+          "side": [
+            0.9551735792253653,
+            0,
+            -0.2960463368288902
+          ],
+          "speed": 4.010211498431649,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 14.124111220970818,
+          "railTime": 1.8333333333333317,
+          "railLength": 115.20352988226074,
+          "balance": -0.07465736311253923,
+          "balanceVel": -0.7153832180282764,
+          "bail": false,
+          "deaths": 0,
+          "time": 5.983333333333317,
+          "screenFeet": [
+            -0.03474495598305634,
+            -0.6879781021998489,
+            0.9723268480792413
+          ],
+          "screenHead": [
+            -0.03617539603098024,
+            -0.09130805107281197,
+            0.9681040742109355
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -110.65532798882218,
+            50.0460061569999,
+            -3260.952312856072
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.29451265801227217,
+            0,
+            -0.9556475784882974
+          ],
+          "side": [
+            0.9556475784882974,
+            0,
+            -0.29451265801227217
+          ],
+          "speed": 4.12358936407433,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 14.802872775060006,
+          "railTime": 1.9999999999999978,
+          "railLength": 115.20352988226074,
+          "balance": -0.08021916368411958,
+          "balanceVel": -1.82358854487918,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.1499999999999835,
+          "screenFeet": [
+            -0.037180250567336356,
+            -0.6854623801220651,
+            0.9723677050706668
+          ],
+          "screenHead": [
+            -0.039331400321648634,
+            -0.08941192394017344,
+            0.968158218567723
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -111.00171729537556,
+            50.031282141584235,
+            -3261.5589089846126
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2929527087118665,
+            0,
+            -0.9561269321896442
+          ],
+          "side": [
+            0.9561269321896442,
+            0,
+            -0.2929527087118665
+          ],
+          "speed": 4.275752300299656,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 15.502469893618773,
+          "railTime": 2.166666666666664,
+          "railLength": 115.20352988226074,
+          "balance": -0.04425521517951948,
+          "balanceVel": 0.2995480832050411,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.3166666666666496,
+          "screenFeet": [
+            -0.04514385672933006,
+            -0.683869193604123,
+            0.9723966726214465
+          ],
+          "screenHead": [
+            -0.04891358101680205,
+            -0.08828525227703467,
+            0.9681965923155491
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -111.39108784489137,
+            50.01269325253837,
+            -3262.176268938761
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.29134065422116046,
+            0,
+            -0.9566193721632373
+          ],
+          "side": [
+            0.9566193721632373,
+            0,
+            -0.29134065422116046
+          ],
+          "speed": 4.466700307107628,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 16.232598844292774,
+          "railTime": 2.33333333333333,
+          "railLength": 115.20352988226074,
+          "balance": -0.04189012489816971,
+          "balanceVel": -0.35978859121822393,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.483333333333316,
+          "screenFeet": [
+            -0.05397406075337789,
+            -0.6799486872522326,
+            0.972461951992934
+          ],
+          "screenHead": [
+            -0.05990359263757467,
+            -0.08537161325616063,
+            0.9682830247211169
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -111.79743017504748,
+            49.993294115907965,
+            -3262.820538215484
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2896575053323964,
+            0,
+            -0.9571303618654111
+          ],
+          "side": [
+            0.9571303618654111,
+            0,
+            -0.2896575053323964
+          ],
+          "speed": 4.657648313915599,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 16.99455246276811,
+          "railTime": 2.499999999999996,
+          "railLength": 115.20352988226074,
+          "balance": -0.05214007122000198,
+          "balanceVel": 0.14249768594304424,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.649999999999982,
+          "screenFeet": [
+            -0.06079418288078576,
+            -0.6760786941670958,
+            0.9725231601819476
+          ],
+          "screenHead": [
+            -0.06768388412599759,
+            -0.0824283015535725,
+            0.9683640112076203
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -112.22074428584388,
+            49.973084731693035,
+            -3263.4917168147813
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2879031727225991,
+            0,
+            -0.9576595235971191
+          ],
+          "side": [
+            0.9576595235971191,
+            0,
+            -0.2879031727225991
+          ],
+          "speed": 4.848596320723571,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 17.78833074904478,
+          "railTime": 2.666666666666662,
+          "railLength": 115.20352988226074,
+          "balance": -0.04155609870123907,
+          "balanceVel": 0.24009140960707775,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.816666666666648,
+          "screenFeet": [
+            -0.06601494916067993,
+            -0.6709546796366145,
+            0.9726065333273662
+          ],
+          "screenHead": [
+            -0.07381067313537162,
+            -0.07858959830519371,
+            0.9684742385080282
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -112.72028397627906,
+            49.94511560947748,
+            -3264.1533216597427
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.28612007153771074,
+            0,
+            -0.958193771981041
+          ],
+          "side": [
+            0.958193771981041,
+            0,
+            -0.28612007153771074
+          ],
+          "speed": 5.10058118085176,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 18.618511467121788,
+          "railTime": 2.833333333333328,
+          "railLength": 115.20352988226074,
+          "balance": -0.0454984159702027,
+          "balanceVel": -0.9723059882885161,
+          "bail": false,
+          "deaths": 0,
+          "time": 6.983333333333314,
+          "screenFeet": [
+            -0.07999668788202757,
+            -0.6687741194213291,
+            0.9726450600429757
+          ],
+          "screenHead": [
+            -0.08992905950501584,
+            -0.07703221641363803,
+            0.9685251409187587
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -113.26067124329631,
+            49.91395159261271,
+            -3264.8402899886155
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.28425370069673367,
+            0,
+            -0.9587490983777829
+          ],
+          "side": [
+            0.9587490983777829,
+            0,
+            -0.28425370069673367
+          ],
+          "speed": 5.367825254310004,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 19.493105703997422,
+          "railTime": 2.9999999999999942,
+          "railLength": 115.20352988226074,
+          "balance": -0.04515680630441785,
+          "balanceVel": -0.8280524491732091,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.14999999999998,
+          "screenFeet": [
+            -0.09233253249625595,
+            -0.6632505814773533,
+            0.9727327437891287
+          ],
+          "screenHead": [
+            -0.10393480483764349,
+            -0.07284850472812232,
+            0.9686409116671922
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -113.82857894748578,
+            49.88120047808576,
+            -3265.5622437249694
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2822912504019107,
+            0,
+            -0.9593287496716262
+          ],
+          "side": [
+            0.9593287496716262,
+            0,
+            -0.2822912504019107
+          ],
+          "speed": 5.635069327768248,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 20.41224061978276,
+          "railTime": 3.1666666666666603,
+          "railLength": 115.20352988226074,
+          "balance": -0.027387937815900633,
+          "balanceVel": 0.7638964477276825,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.316666666666646,
+          "screenFeet": [
+            -0.10126136255804578,
+            -0.6581351957213172,
+            0.9728163781526513
+          ],
+          "screenHead": [
+            -0.11445894031060623,
+            -0.06903345565793628,
+            0.9687512336359136
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -114.47015671969436,
+            49.84114038403677,
+            -3266.280978025285
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2802874214706502,
+            0,
+            -0.9599161220467828
+          ],
+          "side": [
+            0.9599161220467828,
+            0,
+            -0.2802874214706502
+          ],
+          "speed": 5.938602917622456,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 21.377730690297607,
+          "railTime": 3.3333333333333264,
+          "railLength": 115.20352988226074,
+          "balance": -0.028350967022916028,
+          "balanceVel": 0.22050966641069047,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.483333333333312,
+          "screenFeet": [
+            -0.11707389568645718,
+            -0.6559262846404236,
+            0.9728589606633673
+          ],
+          "screenHead": [
+            -0.1329656070053387,
+            -0.06754510365203789,
+            0.9688073658379807
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -115.17958967297628,
+            49.79488286516565,
+            -3267.013670240068
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2780409444094305,
+            0,
+            -0.9605692235502407
+          ],
+          "side": [
+            0.9605692235502407,
+            0,
+            -0.2780409444094305
+          ],
+          "speed": 6.278426023872628,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 22.398648294640946,
+          "railTime": 3.4999999999999925,
+          "railLength": 115.20352988226074,
+          "balance": -0.03298099491366232,
+          "balanceVel": -0.036608261015652954,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.649999999999978,
+          "screenFeet": [
+            -0.13405460250316042,
+            -0.650929322264362,
+            0.9729382661800564
+          ],
+          "screenHead": [
+            -0.15233368788917398,
+            -0.06376737838752843,
+            0.9689118373969948
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -115.92837965644928,
+            49.746059129771375,
+            -3267.7870098331337
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2755652985979517,
+            0,
+            -0.9612823550906475
+          ],
+          "side": [
+            0.9612823550906475,
+            0,
+            -0.2755652985979517
+          ],
+          "speed": 6.6182491301228,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 23.47620308335932,
+          "railTime": 3.6666666666666585,
+          "railLength": 115.20352988226074,
+          "balance": -0.09440860875612292,
+          "balanceVel": -0.49380493656828084,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.816666666666644,
+          "screenFeet": [
+            -0.14851830240689634,
+            -0.6434101658292842,
+            0.9730484113967258
+          ],
+          "screenHead": [
+            -0.1678369851871074,
+            -0.057870565773625704,
+            0.969056786574626
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -116.7830388059853,
+            49.6860802472607,
+            -3268.535097044714
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.27307364030120884,
+            0,
+            -0.9619931324976526
+          ],
+          "side": [
+            0.9619931324976526,
+            0,
+            -0.27307364030120884
+          ],
+          "speed": 7.011546186349763,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 24.614405602700977,
+          "railTime": 3.8333333333333246,
+          "railLength": 115.20352988226074,
+          "balance": -0.03658342805048739,
+          "balanceVel": -0.3195895880296997,
+          "bail": false,
+          "deaths": 0,
+          "time": 7.98333333333331,
+          "screenFeet": [
+            -0.1726466848372462,
+            -0.6409191405023372,
+            0.9730870529049793
+          ],
+          "screenHead": [
+            -0.19506417217667085,
+            -0.05597371950804524,
+            0.969107597271798
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -117.70245489406375,
+            49.62069554686858,
+            -3269.3126047513024
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.27045911554164087,
+            0,
+            -0.962731461426515
+          ],
+          "side": [
+            0.962731461426515,
+            0,
+            -0.27045911554164087
+          ],
+          "speed": 7.418211730070924,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 25.82027430860038,
+          "railTime": 3.9999999999999907,
+          "railLength": 115.20352988226074,
+          "balance": -0.03702547755483556,
+          "balanceVel": 0.25985018114453895,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.149999999999984,
+          "screenFeet": [
+            -0.1920928401147404,
+            -0.6358892715831044,
+            0.9731765673804734
+          ],
+          "screenHead": [
+            -0.2180598323825304,
+            -0.05241048847723732,
+            0.9692252207139349
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.58479200179812,
+            49.55724712180733,
+            -3270.036579853131
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2680034967391177,
+            0,
+            -0.9634179392847145
+          ],
+          "side": [
+            0.9634179392847145,
+            0,
+            -0.2680034967391177
+          ],
+          "speed": 7.790374935961436,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 26.963660089303637,
+          "railTime": 4.149999999999991,
+          "railLength": 115.20352988226074,
+          "balance": -0.006634241264712102,
+          "balanceVel": 0.6875639398580158,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.299999999999992,
+          "screenFeet": [
+            -0.20106727933335194,
+            -0.6508368242044452,
+            0.9729156170566479
+          ],
+          "screenHead": [
+            -0.22973527737580363,
+            -0.06309933454106742,
+            0.9688820101563573
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.75458260697216,
+            49.47112881655928,
+            -3270.933133966979
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2649036018912116,
+            0,
+            -0.9642748994477988
+          ],
+          "side": [
+            0.9642748994477988,
+            0,
+            -0.2649036018912116
+          ],
+          "speed": 8.271610225032784,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 28.440019023137026,
+          "railTime": 4.333333333333323,
+          "railLength": 115.20352988226074,
+          "balance": -0.02541812488164539,
+          "balanceVel": -0.6346475593118747,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.483333333333334,
+          "screenFeet": [
+            -0.23265128122312684,
+            -0.6256071899128931,
+            0.9733543371472884
+          ],
+          "screenHead": [
+            -0.2649467663306654,
+            -0.04502180233267861,
+            0.9694584763863052
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -120.76368028397059,
+            49.39684049402662,
+            -3271.706529367477
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2622271843966962,
+            0,
+            -0.9650061677333368
+          ],
+          "side": [
+            0.9650061677333368,
+            0,
+            -0.2622271843966962
+          ],
+          "speed": 8.665348188818433,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 29.71357205387408,
+          "railTime": 4.483333333333323,
+          "railLength": 115.20352988226074,
+          "balance": -0.028749153357111125,
+          "balanceVel": -0.1302997414076208,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.633333333333342,
+          "screenFeet": [
+            -0.2399468208419824,
+            -0.6391363817430216,
+            0.9730938450828452
+          ],
+          "screenHead": [
+            -0.27367116132248587,
+            -0.054082890403922466,
+            0.969116526287531
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -122.06057288923712,
+            49.301365121972616,
+            -3272.7004973437347
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.25878435655193377,
+            0,
+            -0.9659351203905993
+          ],
+          "side": [
+            0.9659351203905993,
+            0,
+            -0.25878435655193377
+          ],
+          "speed": 9.14658347788978,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 31.350342750731272,
+          "railTime": 4.666666666666655,
+          "railLength": 115.20352988226074,
+          "balance": -0.01311802618186857,
+          "balanceVel": -0.7001793357330492,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.816666666666684,
+          "screenFeet": [
+            -0.2661716952745013,
+            -0.6114218873234692,
+            0.9735939018857024
+          ],
+          "screenHead": [
+            -0.3034787199151193,
+            -0.034715147129706185,
+            0.9697721082450762
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -123.30022848497813,
+            49.210103456402486,
+            -3273.650597574665
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2560479030247042,
+            0,
+            -0.966664094376455
+          ],
+          "side": [
+            0.966664094376455,
+            0,
+            -0.2560479030247042
+          ],
+          "speed": 9.584070104318279,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 32.91487627113553,
+          "railTime": 4.8333333333333215,
+          "railLength": 115.20352988226074,
+          "balance": -0.06110116868333472,
+          "balanceVel": -0.5493055131929592,
+          "bail": false,
+          "deaths": 0,
+          "time": 8.98333333333336,
+          "screenFeet": [
+            -0.2816454131422367,
+            -0.6033335501021955,
+            0.9737205507591271
+          ],
+          "screenHead": [
+            -0.32072409471246033,
+            -0.028606636534465744,
+            0.9699375868909194
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -124.5976577171248,
+            49.114588578647826,
+            -3274.644976833964
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.25409483750302325,
+            0,
+            -0.9671793078609117
+          ],
+          "side": [
+            0.9671793078609117,
+            0,
+            -0.25409483750302325
+          ],
+          "speed": 10.021556730746777,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 34.552324229277886,
+          "railTime": 4.999999999999988,
+          "railLength": 115.20352988226074,
+          "balance": -0.03511275893789832,
+          "balanceVel": -0.6402797703912585,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.150000000000034,
+          "screenFeet": [
+            -0.29619771802478384,
+            -0.5947824431358256,
+            0.9738428810625209
+          ],
+          "screenHead": [
+            -0.3364348582026944,
+            -0.021874741567067285,
+            0.9700972089221588
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -125.81474048518365,
+            49.024988692250865,
+            -3275.5777767365876
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2509764384801181,
+            0,
+            -0.9679931959098863
+          ],
+          "side": [
+            0.9679931959098863,
+            0,
+            -0.2509764384801181
+          ],
+          "speed": 10.415294694532426,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 36.08836923587204,
+          "railTime": 5.149999999999987,
+          "railLength": 115.20352988226074,
+          "balance": -0.04723255210417793,
+          "balanceVel": 0.2258608344839348,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.300000000000042,
+          "screenFeet": [
+            -0.2986937862465823,
+            -0.610550214090566,
+            0.973537871767298
+          ],
+          "screenHead": [
+            -0.33972528961975873,
+            -0.03233775233364465,
+            0.9696988276005157
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -127.36583709063513,
+            48.91079918658493,
+            -3276.766572437666
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2469986197725416,
+            0,
+            -0.969015831568535
+          ],
+          "side": [
+            0.969015831568535,
+            0,
+            -0.2469986197725416
+          ],
+          "speed": 10.896529983603774,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 38.045963458776754,
+          "railTime": 5.33333333333332,
+          "railLength": 115.20352988226074,
+          "balance": -0.031996296577626884,
+          "balanceVel": -0.6917234776092758,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.483333333333384,
+          "screenFeet": [
+            -0.32450415175012226,
+            -0.5793030297074875,
+            0.9740967541457671
+          ],
+          "screenHead": [
+            -0.36837897104320777,
+            -0.01050609453524898,
+            0.9704278046030558
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -128.83658723199878,
+            48.8025246722767,
+            -3277.8937887820694
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.24322328215690178,
+            0,
+            -0.9699703268743968
+          ],
+          "side": [
+            0.9699703268743968,
+            0,
+            -0.24322328215690178
+          ],
+          "speed": 11.334016610032272,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 39.90215473013331,
+          "railTime": 5.499999999999986,
+          "railLength": 115.20352988226074,
+          "balance": -0.030567732879543327,
+          "balanceVel": 0.3001838860732864,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.650000000000059,
+          "screenFeet": [
+            -0.33848082113080524,
+            -0.5723520648404004,
+            0.974216017110495
+          ],
+          "screenHead": [
+            -0.3843313988934456,
+            -0.00554028216566906,
+            0.9705827988516067
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -130.36511100976813,
+            48.689996945783925,
+            -3279.0652841548413
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2392961498629091,
+            0,
+            -0.9709466270917202
+          ],
+          "side": [
+            0.9709466270917202,
+            0,
+            -0.2392961498629091
+          ],
+          "speed": 11.77150323646077,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 41.83126043922796,
+          "railTime": 5.666666666666652,
+          "railLength": 115.20352988226074,
+          "balance": -0.06420130689603448,
+          "balanceVel": 0.18004139027092958,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.816666666666734,
+          "screenFeet": [
+            -0.35324753749850774,
+            -0.5641226904017501,
+            0.9743300961137207
+          ],
+          "screenHead": [
+            -0.400240956859923,
+            0.0009962278762427436,
+            0.9707308704771853
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -131.91937984556216,
+            48.57157099045541,
+            -3280.3206719985965
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.23513524593564122,
+            0,
+            -0.9719626618953967
+          ],
+          "side": [
+            0.9719626618953967,
+            0,
+            -0.23513524593564122
+          ],
+          "speed": 12.2144678218516,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 43.8335088343508,
+          "railTime": 5.833333333333318,
+          "railLength": 115.20352988226074,
+          "balance": -0.048005872635725776,
+          "balanceVel": 0.1642740995207972,
+          "bail": false,
+          "deaths": 0,
+          "time": 9.983333333333409,
+          "screenFeet": [
+            -0.36032824180564965,
+            -0.5533522527754188,
+            0.9745051075909207
+          ],
+          "screenHead": [
+            -0.4079315334289392,
+            0.00890731620746824,
+            0.9709576790150534
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -133.4881780255953,
+            48.446536585875485,
+            -3281.675974651219
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.23063152569301326,
+            0,
+            -0.9730411601553722
+          ],
+          "side": [
+            0.9730411601553722,
+            0,
+            -0.23063152569301326
+          ],
+          "speed": 12.665649345685924,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 45.91061177767755,
+          "railTime": 5.999999999999984,
+          "railLength": 115.20352988226074,
+          "balance": -0.05983803362977891,
+          "balanceVel": 0.34726736974785133,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.150000000000084,
+          "screenFeet": [
+            -0.36389477501286543,
+            -0.5418066055597754,
+            0.9746934688684856
+          ],
+          "screenHead": [
+            -0.4117039244428211,
+            0.01706542664383339,
+            0.9712013135945582
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -134.93688307325672,
+            48.310029182792405,
+            -3283.264840261823
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2254561775047291,
+            0,
+            -0.9742533099892225
+          ],
+          "side": [
+            0.9742533099892225,
+            0,
+            -0.2254561775047291
+          ],
+          "speed": 13.140843150655254,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 48.065112767414064,
+          "railTime": 6.16666666666665,
+          "railLength": 115.20352988226074,
+          "balance": -0.05980328038752179,
+          "balanceVel": 0.2330504755608811,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.316666666666759,
+          "screenFeet": [
+            -0.3421448409528467,
+            -0.5193173960557177,
+            0.9750378620149748
+          ],
+          "screenHead": [
+            -0.385880515878673,
+            0.03297649661659422,
+            0.9716454985101102
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -136.28608378550678,
+            48.16476856001237,
+            -3285.0351597317
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.21985083246011194,
+            0,
+            -0.9755335009453012
+          ],
+          "side": [
+            0.9755335009453012,
+            0,
+            -0.21985083246011194
+          ],
+          "speed": 13.62671329958264,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 50.29943551137635,
+          "railTime": 6.333333333333316,
+          "railLength": 115.20352988226074,
+          "balance": -0.027705674992163122,
+          "balanceVel": 0.23705314735317617,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.483333333333434,
+          "screenFeet": [
+            -0.3094226352619288,
+            -0.4992101160655816,
+            0.9753706572824349
+          ],
+          "screenHead": [
+            -0.3489612923336366,
+            0.04577950952021478,
+            0.9720731746401873
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -137.49976035831492,
+            48.0110753764378,
+            -3286.9966902684732
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.2138110728334205,
+            0,
+            -0.9768750304587696
+          ],
+          "side": [
+            0.9768750304587696,
+            0,
+            -0.2138110728334205
+          ],
+          "speed": 14.123727828752354,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 52.615912718933835,
+          "railTime": 6.499999999999982,
+          "railLength": 115.20352988226074,
+          "balance": -0.022265783641230677,
+          "balanceVel": 0.6335705865839302,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.650000000000109,
+          "screenFeet": [
+            -0.26901900918763305,
+            -0.47920267314410153,
+            0.9756797200159706
+          ],
+          "screenHead": [
+            -0.3030670758049595,
+            0.05828285502386937,
+            0.972468994569356
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -138.5404519578972,
+            47.849930814425456,
+            -3289.1491978281097
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.20762416969346614,
+            0,
+            -0.9782086710713103
+          ],
+          "side": [
+            0.9782086710713103,
+            0,
+            -0.20762416969346614
+          ],
+          "speed": 14.62715485816518,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 55.015990016499565,
+          "railTime": 6.666666666666648,
+          "railLength": 115.20352988226074,
+          "balance": -0.08320151082747111,
+          "balanceVel": 1.051923551361206,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.816666666666784,
+          "screenFeet": [
+            -0.2229182525220432,
+            -0.4579185111331089,
+            0.9759710555963091
+          ],
+          "screenHead": [
+            -0.24927319452254096,
+            0.07203388203647593,
+            0.9728409201420378
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -139.31835886350422,
+            47.69969213841873,
+            -3291.2355812275378
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.20499367060736964,
+            0,
+            -0.9787632987658034
+          ],
+          "side": [
+            0.9787632987658034,
+            0,
+            -0.20499367060736964
+          ],
+          "speed": 15.08157937045236,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 57.2479319545816,
+          "railTime": 6.816666666666648,
+          "railLength": 115.20352988226074,
+          "balance": -0.051696180627069946,
+          "balanceVel": 0.8526441274607724,
+          "bail": false,
+          "deaths": 0,
+          "time": 10.966666666666791,
+          "screenFeet": [
+            -0.1730281499485778,
+            -0.47754792921439043,
+            0.9755327198098093
+          ],
+          "screenHead": [
+            -0.1932928656455906,
+            0.05686964737876328,
+            0.9722808924321715
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -139.98136886128268,
+            47.511990093997156,
+            -3293.9699662135636
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.19721788829460912,
+            0,
+            -0.9803596812071654
+          ],
+          "side": [
+            0.9803596812071654,
+            0,
+            -0.19721788829460912
+          ],
+          "speed": 15.630732705364057,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 60.06780350598904,
+          "railTime": 6.9999999999999805,
+          "railLength": 115.20352988226074,
+          "balance": -0.11194137116403027,
+          "balanceVel": 1.2019189181430954,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.150000000000134,
+          "screenFeet": [
+            -0.11114898219931818,
+            -0.425582282022244,
+            0.9764200822238492
+          ],
+          "screenHead": [
+            -0.12148235244279408,
+            0.08974205532289445,
+            0.9734119066796747
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -140.41417642478777,
+            47.35504131961017,
+            -3296.3066272517385
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.19063201782394743,
+            0,
+            -0.9816615678432002
+          ],
+          "side": [
+            0.9816615678432002,
+            0,
+            -0.19063201782394743
+          ],
+          "speed": 16.075861042108425,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 62.44954226433297,
+          "railTime": 7.14999999999998,
+          "railLength": 115.20352988226074,
+          "balance": -0.07306706390793762,
+          "balanceVel": -0.6963597667002398,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.300000000000141,
+          "screenFeet": [
+            -0.06604987071791334,
+            -0.45144978437126343,
+            0.975867880922262
+          ],
+          "screenHead": [
+            -0.07105925299143653,
+            0.06949432581884131,
+            0.9727093368615563
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -140.95261480597873,
+            47.157334469220814,
+            -3299.252894404842
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.1823067919143398,
+            0,
+            -0.9832416964418776
+          ],
+          "side": [
+            0.9832416964418776,
+            0,
+            -0.1823067919143398
+          ],
+          "speed": 16.619268338267954,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 65.45112418500213,
+          "railTime": 7.333333333333313,
+          "railLength": 115.20352988226074,
+          "balance": -0.08616018419466492,
+          "balanceVel": -0.705552588552057,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.483333333333483,
+          "screenFeet": [
+            -0.03720984670771933,
+            -0.4026745603488486,
+            0.976717768483174
+          ],
+          "screenHead": [
+            -0.03845679902644377,
+            0.09924551095857195,
+            0.973788950526888
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -141.4576122736165,
+            46.97190664262268,
+            -3302.0161770817026
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.17418603073212852,
+            0,
+            -0.98471276354975
+          ],
+          "side": [
+            0.98471276354975,
+            0,
+            -0.17418603073212852
+          ],
+          "speed": 17.113274971140253,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 68.26628618272674,
+          "railTime": 7.499999999999979,
+          "railLength": 115.20352988226074,
+          "balance": -0.07896853963329917,
+          "balanceVel": 0.3852850910351746,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.650000000000158,
+          "screenFeet": [
+            -0.02419009252054656,
+            -0.39030939184560004,
+            0.976878686929053
+          ],
+          "screenHead": [
+            -0.024482614374187976,
+            0.10462805244311187,
+            0.9739922722639947
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -141.92473796193204,
+            46.80038479017124,
+            -3304.5722301416845
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.1666615487638571,
+            0,
+            -0.9860141622530746
+          ],
+          "side": [
+            0.9860141622530746,
+            0,
+            -0.1666615487638571
+          ],
+          "speed": 17.557880940725322,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 70.87032792586321,
+          "railTime": 7.649999999999978,
+          "railLength": 115.20352988226074,
+          "balance": -0.0994386392947271,
+          "balanceVel": 0.34828202569723365,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.800000000000166,
+          "screenFeet": [
+            -0.020371425651055625,
+            -0.4164900462726581,
+            0.9762882796059228
+          ],
+          "screenHead": [
+            -0.02006930328703395,
+            0.08437707988858971,
+            0.9732445874044705
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -142.4130486075015,
+            46.59152566248926,
+            -3307.7998445331145
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.1571985933102749,
+            0,
+            -0.9875670115294813
+          ],
+          "side": [
+            0.9875670115294813,
+            0,
+            -0.1571985933102749
+          ],
+          "speed": 18.086079090945972,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 74.14285303731519,
+          "railTime": 7.833333333333311,
+          "railLength": 115.20352988226074,
+          "balance": -0.05953427399703686,
+          "balanceVel": 1.1730102738397628,
+          "bail": false,
+          "deaths": 0,
+          "time": 11.983333333333508,
+          "screenFeet": [
+            -0.007874340909751618,
+            -0.3670225645082367,
+            0.977167640890233
+          ],
+          "screenHead": [
+            -0.00604627400193057,
+            0.11456786377863716,
+            0.974356500191505
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -142.55109871276525,
+            46.419254428314474,
+            -3310.840720739607
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.15248699905258012,
+            0,
+            -0.9883054766214434
+          ],
+          "side": [
+            0.9883054766214434,
+            0,
+            -0.15248699905258012
+          ],
+          "speed": 18.514539221095223,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 77.19793873985513,
+          "railTime": 7.999999999999977,
+          "railLength": 115.20352988226074,
+          "balance": -0.07158798021024336,
+          "balanceVel": -0.5449684040804641,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.150000000000183,
+          "screenFeet": [
+            0.031051266985877457,
+            -0.3590218304764802,
+            0.9772536326776539
+          ],
+          "screenHead": [
+            0.03755407610736975,
+            0.11714241761984061,
+            0.9744646786651059
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -142.24442307248316,
+            46.27799641724978,
+            -3313.9347820540115
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.14368646012216546,
+            0,
+            -0.9896232622455685
+          ],
+          "side": [
+            0.9896232622455685,
+            0,
+            -0.14368646012216546
+          ],
+          "speed": 18.859025568124313,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 80.31690137759118,
+          "railTime": 8.166666666666652,
+          "railLength": 115.20352988226074,
+          "balance": -0.08586295874815475,
+          "balanceVel": -1.972537800908945,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.316666666666858,
+          "screenFeet": [
+            0.09736190491281878,
+            -0.3579096717029692,
+            0.9772298617181281
+          ],
+          "screenHead": [
+            0.11167002627501858,
+            0.11519090807695391,
+            0.9744347844019758
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -141.45477317685405,
+            46.175287580556116,
+            -3316.9950814389877
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.13515746935941186,
+            0,
+            -0.9908241309517848
+          ],
+          "side": [
+            0.9908241309517848,
+            0,
+            -0.13515746935941186
+          ],
+          "speed": 19.108629781158974,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 83.48451065228535,
+          "railTime": 8.333333333333327,
+          "railLength": 115.20352988226074,
+          "balance": -0.07186166574748934,
+          "balanceVel": 0.7464846366909164,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.483333333333533,
+          "screenFeet": [
+            0.1816125454248444,
+            -0.3649516992477677,
+            0.9770825854913653
+          ],
+          "screenHead": [
+            0.20663823539451961,
+            0.10774241199777454,
+            0.9742494029711521
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -140.18670092076283,
+            46.11572356097496,
+            -3319.9287186162896
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.12706967964485427,
+            0,
+            -0.9918937929611991
+          ],
+          "side": [
+            0.9918937929611991,
+            0,
+            -0.12706967964485427
+          ],
+          "speed": 19.258226008088613,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 86.68421693815017,
+          "railTime": 8.500000000000002,
+          "railLength": 115.20352988226074,
+          "balance": -0.07904114434120973,
+          "balanceVel": -0.4411463606324588,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.650000000000208,
+          "screenFeet": [
+            0.2773598127535775,
+            -0.37912122833581524,
+            0.9768075018994065
+          ],
+          "screenHead": [
+            0.31430718490468545,
+            0.09604845511339763,
+            0.9739023721316321
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -138.49226730697896,
+            46.099448419863606,
+            -3322.6585132611444
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.1196045752441805,
+            0,
+            -0.992821608135449
+          ],
+          "side": [
+            0.992821608135449,
+            0,
+            -0.1196045752441805
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 89.89772147489273,
+          "railTime": 8.666666666666677,
+          "railLength": 115.20352988226074,
+          "balance": -0.05356774603057295,
+          "balanceVel": -0.7510788320734996,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.816666666666883,
+          "screenFeet": [
+            0.37667667546155553,
+            -0.400747569717747,
+            0.976402131829512
+          ],
+          "screenHead": [
+            0.4266590355240381,
+            0.0797376390712072,
+            0.973389132980718
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -136.649643760992,
+            46.099448419863606,
+            -3325.2943506832903
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.11246929001379315,
+            0,
+            -0.9936552011657732
+          ],
+          "side": [
+            0.9936552011657732,
+            0,
+            -0.11246929001379315
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 93.11375947967602,
+          "railTime": 8.833333333333352,
+          "railLength": 115.20352988226074,
+          "balance": -0.0867007606700849,
+          "balanceVel": 0.41505809535126165,
+          "bail": false,
+          "deaths": 0,
+          "time": 12.983333333333558,
+          "screenFeet": [
+            0.44804409443483706,
+            -0.4134039256919429,
+            0.9762093878968043
+          ],
+          "screenHead": [
+            0.5080434737057709,
+            0.06932491100408386,
+            0.9731443248196522
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -134.80702021500508,
+            46.099448419863606,
+            -3327.930188105436
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.10532726485451926,
+            0,
+            -0.9944376135677221
+          ],
+          "side": [
+            0.9944376135677221,
+            0,
+            -0.10532726485451926
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 96.3297974844593,
+          "railTime": 9.000000000000027,
+          "railLength": 115.20352988226074,
+          "balance": -0.03827927922078283,
+          "balanceVel": 1.003155797435313,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.150000000000233,
+          "screenFeet": [
+            0.486823129731021,
+            -0.41474116867881133,
+            0.9761702511714656
+          ],
+          "screenHead": [
+            0.5514005021366638,
+            0.06857451225949923,
+            0.9730945552181198
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -133.12692240858624,
+            46.099448419863606,
+            -3330.6676298889993
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.10019078974628119,
+            0,
+            -0.9949682435384641
+          ],
+          "side": [
+            0.9949682435384641,
+            0,
+            -0.10019078974628119
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 99.54583548924259,
+          "railTime": 9.166666666666702,
+          "railLength": 115.20352988226074,
+          "balance": -0.04332613565820662,
+          "balanceVel": -0.08325484147065332,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.316666666666908,
+          "screenFeet": [
+            0.486111165111932,
+            -0.39881482649509714,
+            0.9764217407837185
+          ],
+          "screenHead": [
+            0.5492473711070028,
+            0.08070771092600913,
+            0.9734140106788448
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -131.9354898671835,
+            46.099448419863606,
+            -3333.648990487134
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.09150573014516948,
+            0,
+            -0.9958045497740002
+          ],
+          "side": [
+            0.9958045497740002,
+            0,
+            -0.09150573014516948
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 102.76187349402588,
+          "railTime": 9.333333333333377,
+          "railLength": 115.20352988226074,
+          "balance": -0.07024856855186608,
+          "balanceVel": -1.9548560120454774,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.483333333333583,
+          "screenFeet": [
+            0.42805547071583977,
+            -0.3716693818727684,
+            0.97690101796473
+          ],
+          "screenHead": [
+            0.482725124761265,
+            0.1003604537213199,
+            0.9740204603515805
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -131.37888143768825,
+            46.099448419863606,
+            -3336.8095472086225
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.08213053523512676,
+            0,
+            -0.9966215807326226
+          ],
+          "side": [
+            0.9966215807326226,
+            0,
+            -0.08213053523512676
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 105.97791149880916,
+          "railTime": 9.500000000000052,
+          "railLength": 115.20352988226074,
+          "balance": -0.10208194124637952,
+          "balanceVel": 0.9612602134606423,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.650000000000258,
+          "screenFeet": [
+            0.32533263850334465,
+            -0.35024093709947773,
+            0.9773123078977514
+          ],
+          "screenHead": [
+            0.36785848900305657,
+            0.11503408608310926,
+            0.9745384362708982
+          ],
+          "input": {
+            "moveX": -1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -131.34563135461477,
+            46.099448419863606,
+            -3339.699897004296
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.0735251230919802,
+            0,
+            -0.9972933652011876
+          ],
+          "side": [
+            0.9972933652011876,
+            0,
+            -0.0735251230919802
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 108.87234570311412,
+          "railTime": 9.650000000000059,
+          "railLength": 115.20352988226074,
+          "balance": -0.17523915207827598,
+          "balanceVel": -1.1242385051645767,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.800000000000265,
+          "screenFeet": [
+            0.21637988639873434,
+            -0.37940722748157146,
+            0.9767789564089626
+          ],
+          "screenHead": [
+            0.24753931603984775,
+            0.0943919641415907,
+            0.9738663027749362
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -131.58122479519676,
+            46.099448419863606,
+            -3342.907294107706
+          ],
+          "state": "grind",
+          "grounded": false,
+          "forward": [
+            -0.06409299475191245,
+            0,
+            -0.9979439303005613
+          ],
+          "side": [
+            0.9979439303005613,
+            0,
+            -0.06409299475191245
+          ],
+          "speed": 19.296228028699964,
+          "vy": 0,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "rail": "Rigging · sweeping cable",
+          "railT": 112.0883837078974,
+          "railTime": 9.816666666666734,
+          "railLength": 115.20352988226074,
+          "balance": -0.3851753177821752,
+          "balanceVel": -1.3947277216786025,
+          "bail": false,
+          "deaths": 0,
+          "time": 13.96666666666694,
+          "screenFeet": [
+            0.11857908061963043,
+            -0.37720765890306557,
+            0.9768366640205244
+          ],
+          "screenHead": [
+            0.1423134891691691,
+            0.09536038734760087,
+            0.9739392093936832
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -131.84037757983685,
+            47.30111508653027,
+            -3346.4354309214577
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.053708195944674644,
+            0,
+            -0.9985566732481279
+          ],
+          "side": [
+            0.9985566732481279,
+            0,
+            -0.053708195944674644
+          ],
+          "speed": 19.296228028699964,
+          "vy": 8.649999999999995,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.150000000000283,
+          "screenFeet": [
+            0.06784250543366127,
+            -0.09088230490815752,
+            0.9761870609559988
+          ],
+          "screenHead": [
+            0.08077764069811975,
+            0.43324974798437854,
+            0.973115934509948
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -132.0759710204187,
+            48.23953431363932,
+            -3349.6428280248683
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.04613897405282187,
+            0,
+            -0.9989350304566124
+          ],
+          "side": [
+            0.9989350304566124,
+            0,
+            -0.04613897405282187
+          ],
+          "speed": 19.296228028699964,
+          "vy": 3.194459182098761,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.316666666666958,
+          "screenFeet": [
+            0.032291809872847056,
+            0.1173070308330013,
+            0.974914152053094
+          ],
+          "screenHead": [
+            0.038065363853175764,
+            0.7011746343683631,
+            0.9714861304625771
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -132.28800511694237,
+            48.38019984803597,
+            -3352.529485417938
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.03764532720702288,
+            0,
+            -0.9992911634451073
+          ],
+          "side": [
+            0.9992911634451073,
+            0,
+            -0.03764532720702288
+          ],
+          "speed": 19.296228028699964,
+          "vy": -0.9927264504428361,
+          "surface": "rail (Nosegrind)",
+          "spring": false,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.466666666666965,
+          "screenFeet": [
+            0.006962807191593014,
+            0.12327059244596213,
+            0.973835588584039
+          ],
+          "screenHead": [
+            0.008414115135384865,
+            0.736390742387283,
+            0.9700876992578321
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -132.20452081902448,
+            50.82149143787775,
+            -3355.8190661891495
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.027987453634150086,
+            0,
+            -0.9996082744951025
+          ],
+          "side": [
+            0.9996082744951025,
+            0,
+            -0.027987453634150086
+          ],
+          "speed": 20.906341514099225,
+          "vy": 96.4,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.63333333333364,
+          "screenFeet": [
+            0.02695413667030001,
+            -0.37229730661358496,
+            0.977147991897601
+          ],
+          "screenHead": [
+            0.0304160848396412,
+            0.08673532661538483,
+            0.9742870737855831
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -130.69545393961576,
+            67.88982477121108,
+            -3359.4463064638244
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.01771928822704354,
+            0,
+            -0.9998430010880343
+          ],
+          "side": [
+            0.9998430010880343,
+            0,
+            -0.01771928822704354
+          ],
+          "speed": 17.642883034048083,
+          "vy": 90.35000000000004,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.816666666666983,
+          "screenFeet": [
+            0.06763652468608437,
+            -0.22809491637569262,
+            0.9884884200819527
+          ],
+          "screenHead": [
+            0.07584157822872034,
+            -0.13520663659702492,
+            0.9870649596226604
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -128.98323188428301,
+            82.44399143787776,
+            -3362.291852381035
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.00986424466466468,
+            0,
+            -0.9999513471550482
+          ],
+          "side": [
+            0.9999513471550482,
+            0,
+            -0.00986424466466468
+          ],
+          "speed": 15.752502375774165,
+          "vy": 84.85000000000007,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 14.983333333333658,
+          "screenFeet": [
+            0.07264250411597531,
+            0.016797852817671065,
+            0.9916260472459166
+          ],
+          "screenHead": [
+            0.07991111923214497,
+            0.057737881446056835,
+            0.9907646025043945
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -127.00545885473055,
+            94.75899143787775,
+            -3364.786679398511
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            -0.0030069044451313245,
+            0,
+            -0.9999954792526103
+          ],
+          "side": [
+            0.9999954792526103,
+            0,
+            -0.0030069044451313245
+          ],
+          "speed": 15.513232150424702,
+          "vy": 79.90000000000009,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 15.133333333333665,
+          "screenFeet": [
+            0.08110240514771619,
+            0.0535548357328707,
+            0.9925681353973729
+          ],
+          "screenHead": [
+            0.08840457627335915,
+            0.08300575461291977,
+            0.9918778092956878
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -124.80583653161735,
+            107.57149143787777,
+            -3367.5141176464303
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.003859304295881828,
+            0,
+            -0.999992552857446
+          ],
+          "side": [
+            0.999992552857446,
+            0,
+            0.003859304295881828
+          ],
+          "speed": 15.219435579835501,
+          "vy": 74.40000000000012,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 15.30000000000034,
+          "screenFeet": [
+            0.0935082720832599,
+            0.07262981116494031,
+            0.9926860798906677
+          ],
+          "screenHead": [
+            0.10182318928209688,
+            0.10087073510380595,
+            0.9920147882496938
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -122.60375473116308,
+            119.46732477121112,
+            -3370.1900796275872
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.011519580873823035,
+            0,
+            -0.9999336474269136
+          ],
+          "side": [
+            0.9999336474269136,
+            0,
+            0.011519580873823035
+          ],
+          "speed": 14.897223729961615,
+          "vy": 68.90000000000015,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 15.466666666667015,
+          "screenFeet": [
+            0.10129168634873853,
+            0.07743663697896366,
+            0.9927133852885598
+          ],
+          "screenHead": [
+            0.11027300047780782,
+            0.1054547611041432,
+            0.9920464314927804
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -120.17844479389785,
+            131.4939914378778,
+            -3373.0682515110707
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.01976093236180581,
+            0,
+            -0.9998047337116343
+          ],
+          "side": [
+            0.9998047337116343,
+            0,
+            0.01976093236180581
+          ],
+          "speed": 14.507874655265216,
+          "vy": 62.85000000000018,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 15.650000000000357,
+          "screenFeet": [
+            0.1157623409469833,
+            0.10247017764299626,
+            0.9924490967102426
+          ],
+          "screenHead": [
+            0.126423601463361,
+            0.13380709338703026,
+            0.991732015719401
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.87808866669567,
+            141.46482477121117,
+            -3375.502957320371
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.026597347457583534,
+            0,
+            -0.9996462279767881
+          ],
+          "side": [
+            0.9996462279767881,
+            0,
+            0.026597347457583534
+          ],
+          "speed": 14.433220840764967,
+          "vy": 57.35000000000021,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 15.816666666667032,
+          "screenFeet": [
+            0.07101720628971164,
+            0.09560330049817485,
+            0.9924756671397005
+          ],
+          "screenHead": [
+            0.07753372558706148,
+            0.1262384282084809,
+            0.9917636433641517
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.81584514513696,
+            150.51899143787787,
+            -3377.914790729336
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.03289873824209666,
+            0,
+            -0.9994586900027825
+          ],
+          "side": [
+            0.9994586900027825,
+            0,
+            0.03289873824209666
+          ],
+          "speed": 14.392564423222032,
+          "vy": 51.850000000000236,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 15.983333333333707,
+          "screenFeet": [
+            0.04062047675150365,
+            0.09309560772947029,
+            0.9924981673419445
+          ],
+          "screenHead": [
+            0.044336075576354717,
+            0.12344734537530641,
+            0.9917904414775377
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.99156828471752,
+            158.6564914378779,
+            -3380.3071064385526
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.03910592981347879,
+            0,
+            -0.9992350705681939
+          ],
+          "side": [
+            0.9992350705681939,
+            0,
+            0.03910592981347879
+          ],
+          "speed": 14.392564423222032,
+          "vy": 46.350000000000264,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 16.150000000000365,
+          "screenFeet": [
+            0.017346871744868226,
+            0.09095653966918904,
+            0.9925240468743625
+          ],
+          "screenHead": [
+            0.01892782577049491,
+            0.12103169615101297,
+            0.9918212589988448
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -120.16729142429807,
+            165.87732477121128,
+            -3382.6994221477694
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.04531248257999138,
+            0,
+            -0.9989728619549371
+          ],
+          "side": [
+            0.9989728619549371,
+            0,
+            0.04531248257999138
+          ],
+          "speed": 14.392564423222032,
+          "vy": 40.85000000000029,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 16.31666666666702,
+          "screenFeet": [
+            0.003400654106786367,
+            0.08973842477412776,
+            0.9925480575280111
+          ],
+          "screenHead": [
+            0.003709529644376519,
+            0.1196166433018169,
+            0.9918498365943788
+          ],
+          "input": {
+            "moveX": 1,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -120.10476411689379,
+            172.18149143787798,
+            -3385.1013254248064
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.05152795285772371,
+            0,
+            -0.9986715526509664
+          ],
+          "side": [
+            0.9986715526509664,
+            0,
+            0.05152795285772371
+          ],
+          "speed": 14.345215905772276,
+          "vy": 35.35000000000032,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 16.48333333333368,
+          "screenFeet": [
+            -0.0007850409212318884,
+            0.08839008993286586,
+            0.9925755143624162
+          ],
+          "screenHead": [
+            -0.0008560671367449363,
+            0.11804465742440216,
+            0.9918824968147719
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.80473207072083,
+            177.56899143787803,
+            -3387.514660828102
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.05784051013931676,
+            0,
+            -0.9983258362813333
+          ],
+          "side": [
+            0.9983258362813333,
+            0,
+            0.05784051013931676
+          ],
+          "speed": 14.242367033470972,
+          "vy": 29.850000000000335,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 16.650000000000336,
+          "screenFeet": [
+            0.004229123682800631,
+            0.08853578138544503,
+            0.9926038280064244
+          ],
+          "screenHead": [
+            0.004610209945006237,
+            0.1180967635967194,
+            0.9919161542319155
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.97862140528173,
+            182.0398247712114,
+            -3389.88201089781
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.06394028277300803,
+            0,
+            -0.9979537265018393
+          ],
+          "side": [
+            0.9979537265018393,
+            0,
+            0.06394028277300803
+          ],
+          "speed": 14.242367033470972,
+          "vy": 24.35000000000033,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 16.816666666666993,
+          "screenFeet": [
+            -0.005171535511192075,
+            0.08562522050522424,
+            0.9926270003905645
+          ],
+          "screenHead": [
+            -0.005636000424839913,
+            0.11483958791915512,
+            0.9919436833486566
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.91552252804331,
+            185.59399143787815,
+            -3392.265817145628
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.07012461606065991,
+            0,
+            -0.9975382389775066
+          ],
+          "side": [
+            0.9975382389775066,
+            0,
+            0.07012461606065991
+          ],
+          "speed": 14.18543915786238,
+          "vy": 18.85000000000032,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 16.98333333333365,
+          "screenFeet": [
+            -0.004151662332202132,
+            0.08563488263392573,
+            0.9926531565853336
+          ],
+          "screenHead": [
+            -0.004523134045452103,
+            0.11474837727888447,
+            0.9919747392001952
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.85193501520435,
+            188.2314914378782,
+            -3394.6401059380946
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.07606565740718806,
+            0,
+            -0.9971028110296413
+          ],
+          "side": [
+            0.9971028110296413,
+            0,
+            0.07606565740718806
+          ],
+          "speed": 14.126129292505581,
+          "vy": 13.350000000000314,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 17.150000000000308,
+          "screenFeet": [
+            -0.003867576009458721,
+            0.08480449486642837,
+            0.9926777264073084
+          ],
+          "screenHead": [
+            -0.0042124076237387625,
+            0.11375064795825118,
+            0.9920038940601619
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.77036833059633,
+            189.82149143787825,
+            -3396.767673071721
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.08111589587080933,
+            0,
+            -0.996704676138863
+          ],
+          "side": [
+            0.996704676138863,
+            0,
+            0.08111589587080933
+          ],
+          "speed": 14.065251815797897,
+          "vy": 8.400000000000308,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 17.3000000000003,
+          "screenFeet": [
+            -0.003983781042046481,
+            0.07022081136445087,
+            0.9927263755484701
+          ],
+          "screenHead": [
+            -0.004336484609865818,
+            0.09768468760843747,
+            0.9920615719093065
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.72240838769173,
+            190.75649143787828,
+            -3399.3504898833103
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.08723596427567142,
+            0,
+            -0.9961876763626889
+          ],
+          "side": [
+            0.9961876763626889,
+            0,
+            0.08723596427567142
+          ],
+          "speed": 14.002595968307856,
+          "vy": 2.3500000000003096,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 17.483333333333622,
+          "screenFeet": [
+            -0.006432102616711574,
+            0.0806467160311353,
+            0.9927269882017733
+          ],
+          "screenHead": [
+            -0.007001517460323637,
+            0.10904465802703703,
+            0.992062297841894
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.48857793273206,
+            190.285658104545,
+            -3401.603646461482
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09260628979289914,
+            0,
+            -0.9957028046012494
+          ],
+          "side": [
+            0.9957028046012494,
+            0,
+            0.09260628979289914
+          ],
+          "speed": 12.103230804337306,
+          "vy": -10.316666666666357,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 17.65000000000028,
+          "screenFeet": [
+            -0.002785910356151187,
+            0.0752288304092404,
+            0.9927812176020592
+          ],
+          "screenHead": [
+            -0.003030600942132503,
+            0.10297613369782978,
+            0.9921265127151053
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.29656889262984,
+            186.74815810454507,
+            -3403.298409428519
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 8.432132259896287,
+          "vy": -30.1499999999997,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 17.816666666666936,
+          "screenFeet": [
+            -0.0003554597812500843,
+            0.055094618133824796,
+            0.9928547821293436
+          ],
+          "screenHead": [
+            -0.000386345446856793,
+            0.08087159726419936,
+            0.9922134919120861
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.09189154122437,
+            179.90510254898956,
+            -3404.548302561027
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 6.2702811223941595,
+          "vy": -49.98333333333304,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 17.983333333333594,
+          "screenFeet": [
+            0.002935166635944564,
+            0.03702146177190477,
+            0.9929250225370113
+          ],
+          "screenHead": [
+            0.0031875654530419445,
+            0.06102056009143033,
+            0.992296400344098
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.14091720056432,
+            171.23899143787838,
+            -3405.4619032919063
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 4.761003399349373,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 18.15000000000025,
+          "screenFeet": [
+            -0.0004794961799976708,
+            0.023790700803836252,
+            0.9929224621170699
+          ],
+          "screenHead": [
+            -0.0005207443674530844,
+            0.04668277011355363,
+            0.9922933805524493
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.02987113115577,
+            163.43899143787831,
+            -3406.08055732049
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 3.9052339741591564,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 18.300000000000242,
+          "screenFeet": [
+            0.0007351784133890064,
+            0.01975826401764453,
+            0.9926817050059924
+          ],
+          "screenHead": [
+            0.0008006890608317646,
+            0.04312638651925267,
+            0.99200861352525
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": -1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.87441717064813,
+            153.9056581045449,
+            -3406.6551185731532
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 2.463999882491072,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 18.483333333333565,
+          "screenFeet": [
+            0.004512799233116232,
+            0.009526559430213723,
+            0.9929095013258384
+          ],
+          "screenHead": [
+            0.004901755685842194,
+            0.0312540491340849,
+            0.992278091640022
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.94020522770515,
+            146.10565810454483,
+            -3407.001112303153
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 2.0696695438856993,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 18.633333333333557,
+          "screenFeet": [
+            0.0004047882140812501,
+            0.009081564183816084,
+            0.9926688124186647
+          ],
+          "screenHead": [
+            0.00044092534653771703,
+            0.03155168407742387,
+            0.991993318562057
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -119.00322425921135,
+            137.4389914378781,
+            -3407.3094081901686
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 1.6753392052803269,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 18.800000000000214,
+          "screenFeet": [
+            -0.0018099362443622828,
+            0.005589000144923459,
+            0.9926724791270887
+          ],
+          "screenHead": [
+            -0.0019714315150190626,
+            0.02773765564494823,
+            0.9919976689902039
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.82417564600438,
+            128.77232477121134,
+            -3407.5519202030328
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 1.213900118695483,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 18.96666666666687,
+          "screenFeet": [
+            0.0028212736202328924,
+            0.003931437384397137,
+            0.9926733892385571
+          ],
+          "screenHead": [
+            0.0030729745445872386,
+            0.025931446197282812,
+            0.991998748749022
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.87626488195515,
+            120.10565810454474,
+            -3407.7114165542107
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 0.8195697800901105,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 19.13333333333353,
+          "screenFeet": [
+            0.00021737832210962956,
+            0.0009294952294739235,
+            0.9926669523042942
+          ],
+          "screenHead": [
+            0.00023678978848666967,
+            0.022681835705650265,
+            0.9919911114540249
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.88727189277627,
+            110.57232477121148,
+            -3407.8612673078565
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 0.8195697800901105,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 19.31666666666685,
+          "screenFeet": [
+            -0.0004349710807579596,
+            -0.006710495597919813,
+            0.9928961338536012
+          ],
+          "screenHead": [
+            -0.000472535389082112,
+            0.013668403364027816,
+            0.9922623181100733
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.93258309440482,
+            102.77232477121154,
+            -3407.9284866941143
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 0.42523944148473797,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 19.466666666666843,
+          "screenFeet": [
+            -0.0012879069527884535,
+            -0.0016801618984728876,
+            0.9926618994545078
+          ],
+          "screenHead": [
+            -0.0014029982121074528,
+            0.019856789250171824,
+            0.99198511553506
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.93777497039947,
+            94.10565810454494,
+            -3407.9991695110275
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 0.42523944148473797,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 19.6333333333335,
+          "screenFeet": [
+            -0.0010202406666807884,
+            -0.002333516446290799,
+            0.9926683239660538
+          ],
+          "screenHead": [
+            -0.0011113282116025497,
+            0.019125202053755962,
+            0.9919927390007939
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.9434860339936,
+            84.57232477121168,
+            -3408.076920609632
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": 0.42523944148473797,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 19.816666666666823,
+          "screenFeet": [
+            -0.0008679261876927131,
+            -0.009171271633525935,
+            0.9928909787652158
+          ],
+          "screenHead": [
+            -0.0009429379025949389,
+            0.011010502760706347,
+            0.9922562338135439
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.75070086182865,
+            75.90565810454508,
+            -3408.132421476076
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09510363567142967,
+            0,
+            -0.9954673769049772
+          ],
+          "side": [
+            0.9954673769049772,
+            0,
+            0.09510363567142967
+          ],
+          "speed": -0.036199645100105926,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 19.98333333333348,
+          "screenFeet": [
+            0.004359268474297781,
+            -0.009191431353856668,
+            0.9928933294267045
+          ],
+          "screenHead": [
+            0.004735893245623748,
+            0.010981583776645498,
+            0.9922590082749012
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.75030308672811,
+            68.10565810454514,
+            -3408.127006118577
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09567435152247235,
+            0,
+            -0.995412687512448
+          ],
+          "side": [
+            0.995412687512448,
+            0,
+            0.09567435152247235
+          ],
+          "speed": -0.036199645100105926,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 20.13333333333347,
+          "screenFeet": [
+            0.0026560570880806733,
+            -0.003918130030745977,
+            0.9926561937149252
+          ],
+          "screenHead": [
+            0.0028936051926598608,
+            0.01743634226195748,
+            0.991978344010692
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.74981691716079,
+            58.57232477121183,
+            -3408.1203873483
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.09923836281458243,
+            0,
+            -0.9950636900952026
+          ],
+          "side": [
+            0.9950636900952026,
+            0,
+            0.09923836281458243
+          ],
+          "speed": -0.036199645100105926,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 20.316666666666794,
+          "screenFeet": [
+            0.0016769557870447498,
+            -0.16690793772030624,
+            0.9920309968759959
+          ],
+          "screenHead": [
+            0.0018351859130971942,
+            -0.14025452954613188,
+            0.9912568730873216
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.74941914206025,
+            50.77232477121183,
+            -3408.1149719908008
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10215335281047525,
+            0,
+            -0.9947686628103934
+          ],
+          "side": [
+            0.9947686628103934,
+            0,
+            0.10215335281047525
+          ],
+          "speed": -0.036199645100105926,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 20.466666666666786,
+          "screenFeet": [
+            0.001884373959179749,
+            -0.8297551133170192,
+            0.9841164290308174
+          ],
+          "screenHead": [
+            0.0021565701617679723,
+            -0.6895531039262879,
+            0.9817880687915862
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        },
+        {
+          "at": [
+            -118.74893297249292,
+            41.23899143787849,
+            -3408.108353220524
+          ],
+          "state": "air",
+          "grounded": false,
+          "forward": [
+            0.10571475571397172,
+            0,
+            -0.9943964955812824
+          ],
+          "side": [
+            0.9943964955812824,
+            0,
+            0.10571475571397172
+          ],
+          "speed": -0.036199645100105926,
+          "vy": -52,
+          "surface": "Rigging · moving rebound",
+          "spring": true,
+          "mounted": true,
+          "railT": 113.37479890981072,
+          "railTime": 9.883333333333404,
+          "balance": 0,
+          "balanceVel": 0,
+          "bail": false,
+          "deaths": 0,
+          "time": 20.65000000000011,
+          "screenFeet": [
+            0.00035215633147930636,
+            -0.9569640000502679,
+            0.9796160937380717
+          ],
+          "screenHead": [
+            0.0004080451612639212,
+            -0.6975056120308369,
+            0.9763437273922906
+          ],
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false
+          }
+        }
+      ],
+      "running": false,
+      "latest": {
+        "at": [
+          -118.74862359185917,
+          35.94944841986361,
+          -3408.1041412758022
+        ],
+        "state": "ride",
+        "grounded": true,
+        "forward": [
+          0.10768887160981282,
+          0,
+          -0.9941846442846546
+        ],
+        "side": [
+          0.9941846442846546,
+          0,
+          0.10768887160981282
+        ],
+        "speed": 0,
+        "vy": 0,
+        "surface": "Rigging catch · downhill slick · safe 1",
+        "spring": false,
+        "mounted": true,
+        "railT": 113.37479890981072,
+        "railTime": 9.883333333333404,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": false,
+        "deaths": 0,
+        "time": 20.783333333333434,
+        "screenFeet": [
+          -0.0007935992868635545,
+          -0.9505986182715404,
+          0.9745096923614712
+        ],
+        "screenHead": [
+          -0.0009253995426041965,
+          -0.511441465742075,
+          0.9702372029634203
+        ]
+      },
+      "completed": true,
+      "end": {
+        "at": [
+          -118.74862359185917,
+          35.94944841986361,
+          -3408.1041412758022
+        ],
+        "state": "ride",
+        "grounded": true,
+        "forward": [
+          0.10768887160981282,
+          0,
+          -0.9941846442846546
+        ],
+        "side": [
+          0.9941846442846546,
+          0,
+          0.10768887160981282
+        ],
+        "speed": 0,
+        "vy": 0,
+        "surface": "Rigging catch · downhill slick · safe 1",
+        "spring": false,
+        "mounted": true,
+        "railT": 113.37479890981072,
+        "railTime": 9.883333333333404,
+        "balance": 0,
+        "balanceVel": 0,
+        "bail": false,
+        "deaths": 0,
+        "time": 20.783333333333434,
+        "screenFeet": [
+          -0.0007935992868635545,
+          -0.9505986182715404,
+          0.9745096923614712
+        ],
+        "screenHead": [
+          -0.0009253995426041965,
+          -0.511441465742075,
+          0.9702372029634203
+        ]
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "ambience": {
+        "waterGain": 0.004772990662606608,
+        "windGain": 0.0015067537586008412,
+        "height": 8.120000000000005,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "build": "Codex/sol fork · build 10-30 05:26 UTC",
+    "rails": [
+      {
+        "name": "Rigging · sweeping cable",
+        "points": [
+          [
+            -105.62146455566574,
+            49.94944841986361,
+            -3247.0556536224613
+          ],
+          [
+            -108.47660760655202,
+            49.94944841986361,
+            -3255.89712422292
+          ],
+          [
+            -109.51160907495066,
+            49.93495965315028,
+            -3258.643579722777
+          ],
+          [
+            -110.78782904232392,
+            49.891493353010304,
+            -3261.2197820468896
+          ],
+          [
+            -112.30526750867185,
+            49.81904951944367,
+            -3263.6257311952586
+          ],
+          [
+            -114.06392447399442,
+            49.717628152450395,
+            -3265.861427167884
+          ],
+          [
+            -116.06379993829165,
+            49.58722925203046,
+            -3267.926869964765
+          ],
+          [
+            -118.30489390156353,
+            49.42785281818387,
+            -3269.8220595859025
+          ],
+          [
+            -131.24354624635686,
+            48.47532780456277,
+            -3279.7385368905266
+          ],
+          [
+            -133.4711646170837,
+            48.298139711520186,
+            -3281.657315214816
+          ],
+          [
+            -135.39182070623485,
+            48.11716168885853,
+            -3283.7637925925096
+          ],
+          [
+            -137.00551451381025,
+            47.93239373657782,
+            -3286.057969023607
+          ],
+          [
+            -138.31224603980993,
+            47.743835854678046,
+            -3288.539844508108
+          ],
+          [
+            -139.3120152842339,
+            47.5514880431592,
+            -3291.2094190460134
+          ],
+          [
+            -140.0048222470821,
+            47.3553503020213,
+            -3294.0666926373224
+          ],
+          [
+            -142.21570317428262,
+            46.543546537705915,
+            -3306.1643552163277
+          ],
+          [
+            -142.56684809985205,
+            46.362016557254094,
+            -3309.0744492835956
+          ],
+          [
+            -142.54163123243967,
+            46.21349202779352,
+            -3311.9024852493776
+          ],
+          [
+            -142.14005257204542,
+            46.09797294932419,
+            -3314.6484631136727
+          ],
+          [
+            -141.36211211866933,
+            46.01545932184609,
+            -3317.312382876482
+          ],
+          [
+            -140.2078098723114,
+            45.96595114535923,
+            -3319.894244537805
+          ],
+          [
+            -138.67714583297163,
+            45.94944841986361,
+            -3322.394048097642
+          ],
+          [
+            -134.4067246863281,
+            45.94944841986361,
+            -3328.502803133993
+          ],
+          [
+            -133.34539326835704,
+            45.94944841986361,
+            -3330.208794549175
+          ],
+          [
+            -132.5042632922348,
+            45.94944841986361,
+            -3331.975346659766
+          ],
+          [
+            -131.88333475796136,
+            45.94944841986361,
+            -3333.8024594657654
+          ],
+          [
+            -131.48260766553676,
+            45.94944841986361,
+            -3335.6901329671737
+          ],
+          [
+            -131.30208201496092,
+            45.94944841986361,
+            -3337.6383671639915
+          ],
+          [
+            -131.34175780623391,
+            45.94944841986361,
+            -3339.6471620562174
+          ],
+          [
+            -131.80942732391145,
+            45.94944841986361,
+            -3346.0140704584496
+          ]
+        ],
+        "length": 115.20352988226074,
+        "grindable": true
+      },
+      {
+        "name": "Crown · outer cable",
+        "points": [
+          [
+            -103.83244966845385,
+            34,
+            -3467.8284692000775
+          ],
+          [
+            -101.92471800149153,
+            34,
+            -3476.245482896464
+          ],
+          [
+            -101.19461969215871,
+            33.98394723583852,
+            -3478.871863021507
+          ],
+          [
+            -100.22627053777013,
+            33.93578894335407,
+            -3481.3597135780346
+          ],
+          [
+            -99.01967053832578,
+            33.85552512254666,
+            -3483.7090345660463
+          ],
+          [
+            -97.57481969382567,
+            33.74315577341628,
+            -3485.919825985543
+          ],
+          [
+            -95.8917180042698,
+            33.598680895962936,
+            -3487.9920878365247
+          ],
+          [
+            -93.97036546965816,
+            33.42210049018663,
+            -3489.9258201189905
+          ],
+          [
+            -85.55074679227118,
+            32.62723876192461,
+            -3497.6191673155968
+          ],
+          [
+            -83.51339496914017,
+            32.40837512004045,
+            -3499.7240754008435
+          ],
+          [
+            -81.83071466216587,
+            32.1699433690044,
+            -3501.9914998566483
+          ],
+          [
+            -80.50270587134827,
+            31.911943508816453,
+            -3504.4214406830115
+          ],
+          [
+            -79.52936859668738,
+            31.6343755394766,
+            -3507.0138978799337
+          ],
+          [
+            -78.91070283818318,
+            31.33723946098485,
+            -3509.768871447414
+          ],
+          [
+            -78.64670859583569,
+            31.0205352733412,
+            -3512.686361385453
+          ],
+          [
+            -78.54570439572186,
+            30.63999914892033,
+            -3516.1815316286566
+          ],
+          [
+            -78.45333959121737,
+            30.444443853416896,
+            -3518.13594380558
+          ],
+          [
+            -78.28949347479815,
+            30.284444066186815,
+            -3520.080312827366
+          ],
+          [
+            -78.05416604646419,
+            30.159999787230085,
+            -3522.0146386940137
+          ],
+          [
+            -77.74735730621549,
+            30.071111016546702,
+            -3523.9389214055236
+          ],
+          [
+            -77.36906725405204,
+            30.017777754136674,
+            -3525.853160961896
+          ],
+          [
+            -76.91929588997385,
+            30,
+            -3527.7573573631303
+          ],
+          [
+            -75.40330937843423,
+            30,
+            -3533.6874338533507
+          ]
+        ],
+        "length": 74.64550617088679,
+        "grindable": true
+      },
+      {
+        "name": "Crown · return cable",
+        "points": [
+          [
+            -88.22946598619217,
+            49,
+            -3573.0026250701135
+          ],
+          [
+            -86.35356765897342,
+            49,
+            -3580.911556067053
+          ],
+          [
+            -85.93124164593988,
+            48.913384602304355,
+            -3583.40826679664
+          ],
+          [
+            -85.8658193981297,
+            48.653538409217404,
+            -3585.832547758603
+          ],
+          [
+            -86.1573009155429,
+            48.22046142073916,
+            -3588.184398952942
+          ],
+          [
+            -86.80568619817946,
+            47.614153636869624,
+            -3590.463820379657
+          ],
+          [
+            -87.81097524603939,
+            46.834615057608794,
+            -3592.6708120387484
+          ],
+          [
+            -89.17316805912269,
+            45.88184568295666,
+            -3594.8053739302154
+          ],
+          [
+            -92.56518104144578,
+            43.5934487207731,
+            -3599.4252712441603
+          ],
+          [
+            -94.01553773948261,
+            42.358152457816026,
+            -3601.8183329700287
+          ],
+          [
+            -94.81564328982384,
+            41.04789614946022,
+            -3604.1611299488955
+          ],
+          [
+            -94.96549769246946,
+            39.662679795705685,
+            -3606.4536621807606
+          ],
+          [
+            -94.46510094741946,
+            38.2025033965524,
+            -3608.6959296656237
+          ],
+          [
+            -93.31445305467386,
+            36.667366952000386,
+            -3610.8879324034856
+          ],
+          [
+            -91.51355401423265,
+            35.05727046204963,
+            -3613.029670394346
+          ],
+          [
+            -89.81310398388209,
+            33.739495723172624,
+            -3614.7225868648743
+          ],
+          [
+            -87.7508241282827,
+            32.23687202998099,
+            -3616.724459014422
+          ],
+          [
+            -85.64119918122715,
+            30.8886647658545,
+            -3618.67092426165
+          ],
+          [
+            -83.48422914271546,
+            29.694873930793158,
+            -3620.561982606559
+          ],
+          [
+            -81.27991401274762,
+            28.65549952479696,
+            -3622.3976340491486
+          ],
+          [
+            -79.02825379132364,
+            27.770541547865907,
+            -3624.1778785894194
+          ],
+          [
+            -76.7292484784435,
+            27.04,
+            -3625.9027162273705
+          ],
+          [
+            -69.47680536891171,
+            25,
+            -3631.2019311371487
+          ]
+        ],
+        "length": 77.27693515255604,
+        "grindable": true
+      },
+      {
+        "name": "Homecoming · diving cable",
+        "points": [
+          [
+            -56.62409817064722,
+            54,
+            -3691.1155234300804
+          ],
+          [
+            -55.64261205346744,
+            54,
+            -3701.1329496082412
+          ],
+          [
+            -55.5015601382779,
+            53.94184396280663,
+            -3704.0851227127155
+          ],
+          [
+            -55.66347012526724,
+            53.767375851226504,
+            -3706.9702353167786
+          ],
+          [
+            -56.12834201443545,
+            53.47659566525964,
+            -3709.788287420431
+          ],
+          [
+            -56.89617580578253,
+            53.069503404906015,
+            -3712.539279023672
+          ],
+          [
+            -57.96697149930849,
+            52.54609907016565,
+            -3715.2232101265017
+          ],
+          [
+            -59.34072909501332,
+            51.906382661038535,
+            -3717.8400807289204
+          ],
+          [
+            -69.85929194214944,
+            47.093617338961465,
+            -3735.655672858695
+          ],
+          [
+            -71.30434189160184,
+            46.29654244473493,
+            -3738.2692934337174
+          ],
+          [
+            -72.58901464637052,
+            45.301062654696324,
+            -3740.9434744543582
+          ],
+          [
+            -73.71331020645547,
+            44.10717796884564,
+            -3743.6782159206173
+          ],
+          [
+            -74.6772285718567,
+            42.714888387182874,
+            -3746.473517832495
+          ],
+          [
+            -75.48076974257421,
+            41.124193909708026,
+            -3749.329380189991
+          ],
+          [
+            -76.12393371860797,
+            39.335094536421096,
+            -3752.2458029931054
+          ],
+          [
+            -77.51629665144947,
+            34.664905463578904,
+            -3759.5336529110195
+          ],
+          [
+            -77.84485243282178,
+            32.835995609848545,
+            -3762.4001511586766
+          ],
+          [
+            -77.70456901955492,
+            31.125869691043402,
+            -3765.1062398498
+          ],
+          [
+            -77.09544641164888,
+            29.534527707163484,
+            -3767.6519189843902
+          ],
+          [
+            -76.01748460910365,
+            28.061969658208774,
+            -3770.037188562447
+          ],
+          [
+            -74.47068361191924,
+            26.70819554417929,
+            -3772.2620485839707
+          ],
+          [
+            -72.45504342009563,
+            25.473205365075025,
+            -3774.3264990489606
+          ],
+          [
+            -59.46874839896866,
+            18.688201128142573,
+            -3785.778639123871
+          ],
+          [
+            -57.88951423808585,
+            17.82597300565456,
+            -3787.3554617645036
+          ],
+          [
+            -56.58190275289163,
+            17.031422723618917,
+            -3789.0610575031797
+          ],
+          [
+            -55.54591394338598,
+            16.304550282035642,
+            -3790.8954263398978
+          ],
+          [
+            -54.78154780956892,
+            15.645355680904729,
+            -3792.8585682746593
+          ],
+          [
+            -54.28880435144044,
+            15.053838920226184,
+            -3794.9504833074634
+          ],
+          [
+            -54.067683569000536,
+            14.530000000000001,
+            -3797.1711714383105
+          ],
+          [
+            -53.80130918077342,
+            13,
+            -3804.306200540757
+          ]
+        ],
+        "length": 135.5608500560591,
+        "grindable": true
+      }
+    ]
+  },
+  "materials": [
+    {
+      "name": "Rigging · sweeping cable",
+      "nativeChromeHidden": true,
+      "parts": [
+        {
+          "name": "Seven steel rope strands",
+          "type": "MeshStandardMaterial",
+          "color": 9215405,
+          "shader": "onBeforeCompile(){}"
+        },
+        {
+          "name": "Steel cable sleeves",
+          "type": "MeshStandardMaterial",
+          "color": 9083303,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        },
+        {
+          "name": "Orange cable collars",
+          "type": "MeshStandardMaterial",
+          "color": 13916966,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        }
+      ]
+    },
+    {
+      "name": "Crown · outer cable",
+      "nativeChromeHidden": true,
+      "parts": [
+        {
+          "name": "Seven steel rope strands",
+          "type": "MeshStandardMaterial",
+          "color": 9215405,
+          "shader": "onBeforeCompile(){}"
+        },
+        {
+          "name": "Steel cable sleeves",
+          "type": "MeshStandardMaterial",
+          "color": 9083303,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        },
+        {
+          "name": "Orange cable collars",
+          "type": "MeshStandardMaterial",
+          "color": 13916966,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        }
+      ]
+    },
+    {
+      "name": "Crown · return cable",
+      "nativeChromeHidden": true,
+      "parts": [
+        {
+          "name": "Seven steel rope strands",
+          "type": "MeshStandardMaterial",
+          "color": 9215405,
+          "shader": "onBeforeCompile(){}"
+        },
+        {
+          "name": "Steel cable sleeves",
+          "type": "MeshStandardMaterial",
+          "color": 9083303,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        },
+        {
+          "name": "Orange cable collars",
+          "type": "MeshStandardMaterial",
+          "color": 13916966,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        }
+      ]
+    },
+    {
+      "name": "Homecoming · diving cable",
+      "nativeChromeHidden": true,
+      "parts": [
+        {
+          "name": "Seven steel rope strands",
+          "type": "MeshStandardMaterial",
+          "color": 9215405,
+          "shader": "onBeforeCompile(){}"
+        },
+        {
+          "name": "Steel cable sleeves",
+          "type": "MeshStandardMaterial",
+          "color": 9083303,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        },
+        {
+          "name": "Orange cable collars",
+          "type": "MeshStandardMaterial",
+          "color": 13916966,
+          "shader": "carlisle-rigging-salt-wear-v1"
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,53 @@
+{
+  "rows": [
+    {
+      "name": "Rigging · sweeping cable",
+      "length": 115.20352988226074,
+      "vertices": 54670,
+      "raySamples": 151,
+      "maxCrown": 0.07500004768371582,
+      "minCrown": -0.315000057220459,
+      "maxLateral": 0.19516372449464342
+    },
+    {
+      "name": "Crown · outer cable",
+      "length": 74.64550617088679,
+      "vertices": 35686,
+      "raySamples": 97,
+      "maxCrown": 0.07499802112579346,
+      "minCrown": -0.3149980306625366,
+      "maxLateral": 0.1954381971795849
+    },
+    {
+      "name": "Crown · return cable",
+      "length": 77.27693515255604,
+      "vertices": 36806,
+      "raySamples": 101,
+      "maxCrown": 0.07499981671571732,
+      "minCrown": -0.3149998188018799,
+      "maxLateral": 0.21275815722071603
+    },
+    {
+      "name": "Homecoming · diving cable",
+      "length": 135.5608500560591,
+      "vertices": 64302,
+      "raySamples": 179,
+      "maxCrown": 0.07499899715185165,
+      "minCrown": -0.314998984336853,
+      "maxLateral": 0.2113880093779717
+    }
+  ],
+  "diagnostics": {
+    "cables": 4,
+    "metres": 402.68682126176265,
+    "strands": 28,
+    "collars": 39,
+    "fairleads": 8,
+    "triangles": 397600
+  },
+  "disposal": {
+    "geometries": 9,
+    "materials": 4
+  },
+  "passed": true
+}

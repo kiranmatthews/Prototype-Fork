@@ -12,6 +12,7 @@ import { CarlisleFishingFleet } from './carlisleFishingFleet';
 import { CarlislePierTimber } from './carlislePierTimber';
 import { CarlisleSteelDecks } from './carlisleSteelDecks';
 import { CarlisleHarbourSound } from './carlisleHarbourSound';
+import { CarlisleRigging } from './carlisleRigging';
 import { sfx } from './audio';
 
 type P = [number, number, number];
@@ -74,8 +75,9 @@ export class CarlisleShipyard {
   private readonly fleet=new CarlisleFishingFleet();
   private readonly piers=new CarlislePierTimber();
   private readonly steelDecks=new CarlisleSteelDecks();
+  private readonly rigging=new CarlisleRigging();
   private readonly sound:CarlisleHarbourSound;
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,rigging:this.rigging.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -128,6 +130,14 @@ export class CarlisleShipyard {
       this.bonus?Promise.resolve():this.coast.load(this.ocean.mesh.geometry,z=>this.chunk(z)),sfx.prepare(['carlisleWater','carlisleWind'])]).then(([assets])=>{
       if(this.disposed)return;
       assets.forEach((gltf,i)=>this.install(names[i] as Kit,gltf));
+      // Level dresses and batches its native rails after this constructor.
+      // Install once that synchronous pass has finished, preserving our own
+      // materials and hiding the final chrome batches rather than stale pieces.
+      data.components.forEach((c,index)=>{
+        if(c.t!=='rail'||!c.pts||c.pts.length<2||c.invisible||c.closed||c.amp||!/cable/.test(c.nm??''))return;
+        const rail=root.children.find(n=>n.userData.editorIdx===index&&n.userData.sourceName===c.nm);
+        if(rail){rail.traverse(n=>{const m=n as THREE.Mesh;if(m.isMesh)this.replace(m,this.hidden);});this.rigging.add(c,rail);}
+      });
       this.diagnostics.models=assets.length;this.diagnostics.props=this.placements.length;this.diagnostics.status='ready';
     }).catch(error=>{if(!this.disposed){this.diagnostics.status='error';this.diagnostics.errors.push(String(error));}});
   }
@@ -494,6 +504,7 @@ export class CarlisleShipyard {
     this.fleet.dispose();
     this.piers.dispose();
     this.steelDecks.dispose();
+    this.rigging.dispose();
     this.sound.dispose();
     for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});
