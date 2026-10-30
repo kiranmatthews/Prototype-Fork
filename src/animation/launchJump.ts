@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createAnimationClip } from './document';
-import type { AnimationClip, QuaternionTuple, Vec3Tuple } from './types';
+import type { AnimationClip, PoseBuffer, RigDefinition, QuaternionTuple, Vec3Tuple } from './types';
 
 /** Presentation tuning only. Launch impulse, gravity and steering stay in Player. */
 export const LAUNCH_JUMP = {
@@ -45,6 +45,32 @@ export function launchClip(p: LaunchPresentation): LaunchClipId {
   return p.board ? LAUNCH_CLIPS.boardFloat : LAUNCH_CLIPS.float;
 }
 export const isLaunchClip = (id: string | null): boolean => !!id?.startsWith('player.launch-');
+
+/** Live pose adjustment leaves saved animation curves intact. */
+export function tuneLaunchBackLean(pose:PoseBuffer,amount:number,rig:RigDefinition):PoseBuffer {
+  const joints={...pose.joints},scale=THREE.MathUtils.clamp(amount,0,1);
+  for(const semantic of ['root','spine','chest','neck','head']){
+    const canonical=rig.joints.find(j=>j.id===semantic||j.aliases?.includes(semantic))?.id??semantic;
+    const id=joints[canonical]?canonical:semantic,source=joints[id];
+    if(!source?.quaternion)continue;
+    const e=new THREE.Euler().setFromQuaternion(new THREE.Quaternion(...source.quaternion),'XYZ');
+    if(e.x>=0)continue;
+    const previous=e.x;e.x*=scale;
+    const joint={...source,quaternion:new THREE.Quaternion().setFromEuler(e).toArray() as QuaternionTuple};
+    if(semantic==='root'&&source.position)joint.position=[source.position[0],
+      source.position[1]+LAUNCH_JUMP.waistPivot*(Math.cos(previous)-Math.cos(e.x)),
+      source.position[2]+LAUNCH_JUMP.waistPivot*(Math.sin(previous)-Math.sin(e.x))];
+    joints[id]=joint;
+  }
+  return {...pose,joints};
+}
+
+/** A finite catch, small rebound and soft settle. No gameplay displacement. */
+export function sampleLaunchLanding(age:number,duration:number) {
+  const p=age/Math.max(.1,duration);
+  const pulse=(start:number,end:number)=>p<=start||p>=end?0:Math.sin(Math.PI*(p-start)/(end-start))**2;
+  return {compression:pulse(0,.28)+.18*pulse(.76,1),lift:pulse(.22,.84),rebound:pulse(.28,.76)};
+}
 
 const smooth = (x: number) => { const t = Math.max(0, Math.min(1, x)); return t*t*(3-2*t); };
 const PHASE = [0, .065, .22, .46, .72, 1];

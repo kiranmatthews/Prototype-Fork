@@ -2,7 +2,8 @@ import type { Player, PlayerAnimationClipHint } from './player';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
-import { LAUNCH_CLIPS, isLaunchClip } from './animation/launchJump';
+import { LAUNCH_CLIPS, isLaunchClip, tuneLaunchBackLean } from './animation/launchJump';
+import { TUNING } from './tuning';
 import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
@@ -915,6 +916,8 @@ export class CharacterAnimationRuntime {
 
   private samplePoseAt(clip: AnimationClip, time: number, motion: ProceduralMotionContext, includeVariant: boolean): PoseBuffer {
     const pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    if(includeVariant&&(clip.id===LAUNCH_CLIPS.rise||clip.id===LAUNCH_CLIPS.boardRise))
+      return tuneLaunchBackLean(pose,TUNING.launchBackLean,this.binding.definition);
     const variant = includeVariant ? clipVariantBlend(clip) ?? (clip.id === 'player.run'
       ? { clipId: PLAYER_WALK_CLIP_ID, source: LOCOMOTION_WALK_BLEND_INPUT } : null) : null;
     if (!variant) return pose;

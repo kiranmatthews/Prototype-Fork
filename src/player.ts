@@ -6,10 +6,10 @@ import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, launchLandingElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
-import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
+import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, sampleLaunchLanding, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
 import { kookSquawkHits } from './enemies/kookSquawk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -1120,6 +1120,14 @@ export class Player {
   private trampolineElapsed = 0;
   private trampolineLaunchId = 0;
   private trampolineSomersaultStart = -1;
+  private launchLandingAge = -1;
+  private launchLandingStrength = 0;
+
+  get launchLandingPresentation() {
+    if(this.launchLandingAge<0||this.launchLandingAge>=TUNING.launchLandDuration||!this.grounded||
+      this.state!=='ride'||this.isBailing||this.rollLandingT>=0||this.slamActive||this.swimming)return null;
+    return {...sampleLaunchLanding(this.launchLandingAge,TUNING.launchLandDuration),strength:this.launchLandingStrength};
+  }
 
   private get trampolineAirStrength(): number {
     const rise = this.trampolineLaunchSpeed ** 2 / (2 * Math.max(1, TUNING.riseGravity));
@@ -3472,6 +3480,7 @@ export class Player {
     this.trampolineElapsed = 0;
     this.trampolineLaunchId++;
     this.trampolineSomersaultStart = -1;
+    this.launchLandingAge = -1;
     // Presentation-only impact stamp: the native launch has already been resolved.
     // Save the contact in deck space now so moving/spinning nets keep the dent attached.
     if (hit.mesh) {
@@ -3807,6 +3816,7 @@ export class Player {
     this.skateOverdrive.reset();
     this.softSkateImpactT = 0;
     this.softSkateImpactNormal.set(0, 0, 0);
+    this.launchLandingAge = -1;
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -5032,6 +5042,10 @@ export class Player {
     }
     this.sketchyT = Math.max(0, this.sketchyT - dt);
     this.softSkateImpactT = Math.max(0, this.softSkateImpactT - dt);
+    if(this.launchLandingAge>=0){
+      if(!this.launchLandingPresentation)this.launchLandingAge=-1;
+      else this.launchLandingAge+=dt;
+    }
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     if (this.grindBoostT > 0 && Math.random() < 0.7) this.emitSparks(1, 0xff4fd8, 1.6);
     // Actual planar speed from last step's displacement (any direction) —
@@ -8317,15 +8331,12 @@ export class Player {
   }
 
   private tickEmergencyBoardEject(dt: number, input: Input): boolean {
-    // A mounted spring bounce uses foot gravity, but still owns a board that
-    // the player can abandon with the ordinary fresh press/release gesture.
+    // Both spring modes share the fresh press/release air jump. Ordinary
+    // board ollies retain their existing Emergency Eject gesture.
     const springAir = this.trampolineAir && this.bounceJump && !this.airJumpUsed;
     const eligible =
       this.state === 'air' &&
-      (this.boardOllieAir || springAir) &&
-      this.freeSkate &&
-      this.airFromSkate &&
-      (this.airGrav === 'board' || springAir) &&
+      (springAir || (this.boardOllieAir && this.freeSkate && this.airFromSkate && this.airGrav === 'board')) &&
       !this.emergencyEjectUsed &&
       !this.vertAir &&
       !this.pipeHang &&
@@ -8347,16 +8358,27 @@ export class Player {
     if (!input.jumpReleased || !this.emergencyEjectCharging) return false;
 
     const charge = THREE.MathUtils.clamp(this.emergencyEjectChargeT / 0.4, 0, 1);
-    this.performBoardAbandon(charge, 'Emergency Eject', false);
+    this.performBoardAbandon(charge, this.freeSkate?'Emergency Eject':'Trampoline Jump', false);
     return true;
   }
 
   private performBoardAbandon(
     charge: number,
-    label: 'Emergency Eject' | 'Board Abandon',
+    label: 'Emergency Eject' | 'Board Abandon' | 'Trampoline Jump',
     fromVert: boolean,
   ): void {
     charge = THREE.MathUtils.clamp(charge, 0, 1);
+    const springAir=this.trampolineAir&&this.bounceJump;
+    const mounted=fromVert||this.freeSkate;
+    if(!mounted){
+      // Foot steering is direct-drive, so capture its measured travel before
+      // handing it to the shared momentum-carrying air and landing roll.
+      this.speed=Math.hypot(this.lastVelX,this.lastVelZ);
+      if(this.speed>1e-4){
+        this.axisF.set(this.lastVelX/this.speed,0,this.lastVelZ/this.speed);
+        this.axisL.set(this.axisF.z,0,-this.axisF.x);
+      }
+    }
     if (fromVert) {
       // Vert stores planar flight along the coping rather than in speed. Put it
       // back into the ordinary velocity frame before cloning the deck so both
@@ -8376,15 +8398,18 @@ export class Player {
       }
     }
     // Both rider and discarded deck retain the complete departure momentum.
-    this.throwBoard(true);
+    if(mounted)this.throwBoard(true);
     // The trailing foot flicks the loose deck sideways out of the palm/roll
     // path. Its forward carry is intact; the rider receives no counter-impulse.
-    if (this.looseBoard) this.flyBoardVel.addScaledVector(this.axisL, 1.8 * this.stance);
-    this.vVel = THREE.MathUtils.lerp(10.5, 15, charge);
+    if (mounted&&this.looseBoard) this.flyBoardVel.addScaledVector(this.axisL, 1.8 * this.stance);
+    this.vVel = springAir?THREE.MathUtils.lerp(TUNING.trampolineAirJumpMin,
+      Math.max(TUNING.trampolineAirJumpMin,TUNING.trampolineAirJumpMax),charge):THREE.MathUtils.lerp(10.5,15,charge);
     this.launchVy = this.vVel;
     this.airborneT = 0;
     this.airPeakY = this.pos.y;
     this.airJumpUsed = true;
+    this.airTapT = 0;
+    this.starTimer = 0;
     this.bounceJump = false;
     this.doubleJumpAir = false;
     this.airFromSkate = false;
@@ -8949,6 +8974,8 @@ export class Player {
       }
     }
     let rollLanding = false;
+    const springLanding=this.trampolineAir;
+    const springImpactSpeed=Math.max(0,-this.vVel);
     if (landNow && hit) {
       if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
       if(hit.lethal){this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;}
@@ -9368,6 +9395,10 @@ export class Player {
 
       if (rollLanding && !this.isBailing && !this.slamActive) {
         this.beginRollLanding(incomingPlanarX, incomingPlanarZ);
+      } else if(springLanding&&!this.isBailing&&!this.slamActive&&!hit.beachSand&&!hit.crate&&
+        !['sand','dirt','grass','snow'].includes(hit.surface??'generic')&&hit.normal.y>.7){
+        this.launchLandingAge=0;
+        this.launchLandingStrength=THREE.MathUtils.clamp(springImpactSpeed/28,.3,1);
       }
 
       // A pipe drop-in doesn't announce itself — the wheels just meet the
@@ -19927,6 +19958,15 @@ export class Player {
       if (this.armR) this.armR.rotation.z -= 0.19 * hit.brace;
     }
     this.applyResultsPose();
+    const launchLanding=this.launchLandingPresentation;
+    if(launchLanding){
+      const compression=launchLanding.compression*launchLanding.strength*TUNING.launchLandCompression;
+      const rebound=launchLanding.rebound*launchLanding.strength*TUNING.launchLandCompression;
+      if(this.kneeL)this.kneeL.rotation.x+=.5*compression;
+      if(this.kneeR)this.kneeR.rotation.x+=.5*compression;
+      if(this.spineG)this.spineG.rotation.x+=.12*compression;
+      this.playerAnimationBridge.modulateDeformations(launchLandingElasticity(compression,rebound,this.freeSkate));
+    }
     this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined,
       // The finite rise still ends with a complete pose/support measurement.
       // Its exact gameplay skin bounds need that pass, not a second one here.
@@ -20019,6 +20059,7 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
+    if(launchLanding)this.bodyGroup.position.y+=TUNING.launchLandHeight*launchLanding.strength*launchLanding.lift;
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
       const turn=launchTurn*launchTurn*(3-2*launchTurn)*Math.PI*2;

@@ -52,6 +52,12 @@ export const TUNING = {
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
   doubleJumpHorizontalScale: 1, // the second pop preserves directional travel
+  launchLandHeight: .12, // visual rebound only; ground movement remains responsive
+  launchLandDuration: .5,
+  launchLandCompression: .45,
+  launchBackLean: .15, // fraction of the authored backward opening
+  trampolineAirJumpMin: 10.5,
+  trampolineAirJumpMax: 15,
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
@@ -231,7 +237,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 28; // v28: independent, gentler board-abandon steering
+export const TUNING_VERSION = 29; // v29: trampoline presentation and shared air-jump controls
 // v27: halfpipe high-speed steering endpoint
 // v26: preserve double-jump traversal speed
 // v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
@@ -324,6 +330,12 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   doubleJumpWindow: { min: 0.1, max: 1.5, step: 0.05 },
   doubleJumpVelocity: { min: 4, max: 24, step: 0.5 },
   doubleJumpHorizontalScale: { min: 0, max: 1, step: 0.05 },
+  launchLandHeight: { min: 0, max: .4, step: .01 },
+  launchLandDuration: { min: .2, max: 1, step: .05 },
+  launchLandCompression: { min: 0, max: 1, step: .05 },
+  launchBackLean: { min: 0, max: 1, step: .05 },
+  trampolineAirJumpMin: { min: 4, max: 24, step: .5 },
+  trampolineAirJumpMax: { min: 4, max: 30, step: .5 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
@@ -445,6 +457,12 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  launchLandHeight: 'Landing Rebound Height (m)',
+  launchLandDuration: 'Landing Rebound Time (s)',
+  launchLandCompression: 'Landing Compression',
+  launchBackLean: 'Launch Back Lean',
+  trampolineAirJumpMin: 'Air Jump Tap Pop (m/s)',
+  trampolineAirJumpMax: 'Air Jump Charged Pop (m/s)',
   boardAbandonSteering: 'Board Abandon Steering (%)',
   teeterEdgeDistance: 'Teeter Edge Distance (m)',
   parkCruiseSpeed: 'Park Cruise Speed (m/s)',
@@ -500,6 +518,12 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
 
 // Hover text for the tuning panel: what each slider actually does in play.
 export const TUNING_INFO: Record<TuningKey, string> = {
+  launchLandHeight: 'Small visible hop after a clean trampoline-to-hard-surface landing, on foot or board. Zero removes the hop. Ground movement and steering remain live.',
+  launchLandDuration: 'Time for landing compression, rebound and the final settle. Interrupts immediately on a new jump, fall or wipeout.',
+  launchLandCompression: 'Knee bend and independent segment compression on a hard landing after a trampoline flight. Zero removes this extra compression.',
+  launchBackLean: 'Fraction of the launch pose\'s backward opening, applied live. Zero keeps the opening upright; one restores the original large arch. Does not remove the full somersault.',
+  trampolineAirJumpMin: 'A fresh jump tap during a trampoline flight uses the Abandon Ship flip and momentum-preserving landing roll, with or without a board. This is the tap\'s upward speed.',
+  trampolineAirJumpMax: 'Upward speed after holding the trampoline air jump for 0.4 seconds. The mounted version discards the board; the on-foot version uses the same move.',
   parkCruiseSpeed: 'Skate parks only. Standing speed target while steering without holding X. Default 12 m/s matches platforming. Release all movement input to coast to a stop; the board stays mounted.',
   parkChargeSpeed: 'Skate parks only. Speed target while holding X. Default 23 m/s matches platforming. Preserves park steering, slope momentum, braking and jump rules.',
   parkCruiseAcceleration: 'Skate parks only. Standing pickup acceleration, in m/s², while steering below cruise speed. Default 10 matches platforming. Does not change steering or braking.',
@@ -838,6 +862,10 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   {
     title: 'JUMPS & AIR',
     keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'boardAbandonSteering', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+  },
+  {
+    title: 'TRAMPOLINE · LAUNCH & LANDING',
+    keys: ['launchLandHeight', 'launchLandDuration', 'launchLandCompression', 'launchBackLean', 'trampolineAirJumpMin', 'trampolineAirJumpMax'],
   },
   {
     title: 'SKATING',

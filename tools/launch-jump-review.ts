@@ -29,9 +29,11 @@ g.launchReview.afterCamera=()=>{
 const selects=panel.querySelectorAll('select'),buttons=panel.querySelectorAll('button'),output=panel.querySelector('output')!;
 let jump=CARLISLE_RELAY_JUMPS[0],running=false,launched=false,flightId=-1,previousVelocity=0,history:string[]=[];
 let ejectFrame=0;
-const ejectButton=document.createElement('button');ejectButton.textContent='Abandon Ship';
+const ejectButton=document.createElement('button');ejectButton.textContent='Air jump / Abandon Ship';
 panel.insertBefore(ejectButton,output);
-ejectButton.onclick=()=>{if(g.player.launchPresentation?.board){ejectFrame=1;setPause(false);}};
+ejectButton.onclick=()=>{if(g.player.launchPresentation){ejectFrame=1;setPause(false);}};
+const landingPause=document.createElement('label');landingPause.innerHTML='<input type="checkbox" aria-label="Pause on landing"> Pause on landing';
+panel.insertBefore(landingPause,output);
 const setPause=(paused:boolean)=>{g.launchReview.rate=paused?0:Number(selects[2].value);buttons[1].textContent=paused?'Resume':'Pause';};
 function replay(){
   const level=g.getLevel();
@@ -76,7 +78,10 @@ g.launchReview.beforeStep=()=>{
   if(p.launchPresentation)launched=true;
   if(launched&&previousVelocity>0&&p.vVel<=0&&(panel.querySelector('[aria-label="Pause at apex"]') as HTMLInputElement).checked)setPause(true);
   previousVelocity=p.vVel;
-  if(launched&&(p.grounded||p.state==='grind'||p.state==='dead'||p.state==='finished')){running=false;input.moveX=input.moveY=0;input.jumpHeld=input.grindHeld=false;}
+  if(launched&&(p.grounded||p.state==='grind'||p.state==='dead'||p.state==='finished')){
+    if(p.grounded&&landingPause.querySelector('input')!.checked)setPause(true);
+    running=false;input.moveX=input.moveY=0;input.jumpHeld=input.grindHeld=false;
+  }
 };
 buttons[0].onclick=replay;buttons[1].onclick=()=>setPause(g.launchReview.rate!==0);
 buttons[2].onclick=()=>{setPause(true);g.launchReview.advance=1/60;};
@@ -86,6 +91,7 @@ function diagnostics(){
   const p=g.player,launch=p.launchPresentation,cam=g.getLaunchCameraDiagnostics(),clip=g.characterAnimationRuntime.activeClipId??p.animationClipHint;
   if(clip!==lastClip){history.push(clip.replace('player.',''));history=history.slice(-9);lastClip=clip;}
   const loading=g.getLoadingDiagnostics();
-  output.textContent=`${loading.phase?`Loading ${loading.phase} · `:''}${clip} · y ${p.pos.y.toFixed(1)}m · vy ${p.vVel.toFixed(1)}m/s · rise ${(launch?.rise??0).toFixed(2)} · gather ${(launch?.gather??0).toFixed(2)} · turn ${(p.launchSomersaultProgress??0).toFixed(2)} · camera ${cam.weight.toFixed(2)} · FOV ${g.camera.fov.toFixed(1)}° | ${history.join(' → ')}`;
+  const landing=p.launchLandingPresentation;
+  output.textContent=`${loading.phase?`Loading ${loading.phase} · `:''}${clip} · y ${p.pos.y.toFixed(1)}m · vy ${p.vVel.toFixed(1)}m/s · rise ${(launch?.rise??0).toFixed(2)} · gather ${(launch?.gather??0).toFixed(2)} · turn ${(p.launchSomersaultProgress??0).toFixed(2)} · rebound ${(landing?landing.lift*landing.strength*g.TUNING.launchLandHeight:0).toFixed(2)}m · camera ${cam.weight.toFixed(2)} · FOV ${g.camera.fov.toFixed(1)}° | ${history.join(' → ')}`;
   requestAnimationFrame(diagnostics);
 }diagnostics();
