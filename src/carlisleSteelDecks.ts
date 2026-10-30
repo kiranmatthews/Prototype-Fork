@@ -36,6 +36,7 @@ export class CarlisleSteelDecks{
   private readonly frame=new THREE.MeshStandardMaterial({color:0x8497a8,roughness:.8,metalness:.42,vertexColors:true,bumpScale:.014});
   private readonly orange=new THREE.MeshStandardMaterial({color:0xbe5426,roughness:.7,metalness:.3,vertexColors:true,bumpScale:.008});
   private readonly metal=new THREE.MeshStandardMaterial({color:0x687785,roughness:.58,metalness:.68,vertexColors:true});
+  readonly machineryMaterials={navy:this.paint,frame:this.frame,orange:this.orange,metal:this.metal};
   private readonly templates=new Map<string,Template>();
   private readonly groups:THREE.Group[]=[];
   private disposed=false;

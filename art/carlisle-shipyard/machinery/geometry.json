@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "diagnostics": {
+    "hydraulicLifts": 4,
+    "counterweightLifts": 4,
+    "winches": 2,
+    "triangles": 82512,
+    "colliders": 0
+  },
+  "rows": [
+    {
+      "name": "Tide steps · 1",
+      "kind": "hydraulic",
+      "samples": 209,
+      "minContactClearance": -1.1920928910669204e-8,
+      "maxCableLengthError": 0
+    },
+    {
+      "name": "Tide steps · 2",
+      "kind": "hydraulic",
+      "samples": 209,
+      "minContactClearance": -1.1920928910669204e-8,
+      "maxCableLengthError": 0
+    },
+    {
+      "name": "Tide steps · 3",
+      "kind": "hydraulic",
+      "samples": 209,
+      "minContactClearance": -1.1920957332378634e-8,
+      "maxCableLengthError": 0
+    },
+    {
+      "name": "Tide steps · 4",
+      "kind": "hydraulic",
+      "samples": 209,
+      "minContactClearance": -1.1920957332378634e-8,
+      "maxCableLengthError": 0
+    },
+    {
+      "name": "Port winch",
+      "kind": "winch",
+      "samples": 209,
+      "minContactClearance": -1.1920928910669204e-8,
+      "maxCableLengthError": 0
+    },
+    {
+      "name": "Starboard winch",
+      "kind": "winch",
+      "samples": 209,
+      "minContactClearance": -1.1920928910669204e-8,
+      "maxCableLengthError": 0
+    },
+    {
+      "name": "Counterweight 1",
+      "kind": "counterweight",
+      "samples": 209,
+      "minContactClearance": -1.1920928910669204e-8,
+      "maxCableLengthError": 0,
+      "cableSum": 21.41
+    },
+    {
+      "name": "Counterweight 2",
+      "kind": "counterweight",
+      "samples": 209,
+      "minContactClearance": -1.192094312152392e-8,
+      "maxCableLengthError": 0,
+      "cableSum": 21.41
+    },
+    {
+      "name": "Counterweight 3",
+      "kind": "counterweight",
+      "samples": 209,
+      "minContactClearance": -1.192094312152392e-8,
+      "maxCableLengthError": 0,
+      "cableSum": 21.41
+    },
+    {
+      "name": "Counterweight 4",
+      "kind": "counterweight",
+      "samples": 209,
+      "minContactClearance": -1.1920914699814489e-8,
+      "maxCableLengthError": 0,
+      "cableSum": 21.41
+    }
+  ],
+  "disposal": {
+    "geometries": 212,
+    "callbacks": 140,
+    "groupsDetached": true
+  }
+}

@@ -7341,3 +7341,42 @@ four rideable boats. The final combined production build passes, stamp
 10-30 07:27 UTC, offline f10f5571fa66aae6fc13. No performance claim or full suite.
 Evidence: art/carlisle-shipyard/beacons/. Local-only checkpoint; broader
 polish goal and publication hold remain active.
+
+## Carlisle working lift and winch mechanisms — 30 October 2026
+
+Approximately 25 minutes to the first inspected playable candidate; about
+35 minutes to final compiled validation. The preceding goal turn was progress:
+the requested trampoline animation/camera merge and beacon lighting were
+committed and verified locally. This turn improves the ten unsupported moving
+decks in Lift and skip, Twin winches and Counterweight stacks.
+
+Four tide steps now have sixteen hydraulic rams. Four stacked platforms use
+paired outboard lattice towers, turning sheaves, cables and counter-travelling
+ballast. Both winch platforms have world-aligned tracks, rolling flanged
+bogies, turning drums and closed tow loops with clamps and return pulleys.
+The first winch close-up exposed floating cable ends, corrected before final
+review. These assemblies replace ten generic decorative riding mechanisms;
+original GLBs remain intact. The new geometry totals 82,512 triangles, shares
+the existing four steel materials and keeps complete geometry in reflections.
+
+Native movers still own every platform transform. Fittings follow the rendered
+transform directly, including shadow passes; no extra simulation clock, new
+contacts, movement tuning or camera changes. Within each floor footprint and
+a one-metre edge border, all machinery remains beneath the original underside.
+The counterweight towers are outboard of that clear envelope. Twenty-three
+protected files are byte-identical to the previous commit, including all eight
+incoming bounce-animation/camera files, courses, wet slopes, crates/nitro,
+nets, timber, rigging, boats and bonus. The original course/asset check passes.
+
+Focused geometry checks cover 209 motion samples per deck, constant hoist
+cable length, inverse ballast travel, finite meshes and clean disposal.
+Final compiled full/native 1920×1080 review includes nine mechanism views,
+motion extremes, three supported rider-carry cases, normal 480p/CRT and
+main/bonus/main reload. All carry cases remain grounded with zero deaths;
+bonus boats remain four and console errors are empty. Typecheck/build and
+diff checks pass. Build: Codex/sol fork · build 10-30 08:18 UTC; 1,785 files /
+1,121.3 MiB; offline a784ad23740db297329d. Evidence:
+art/carlisle-shipyard/machinery/. No full suite or new whole-course-clear claim.
+
+No new textures, paid generation, downloads, API purchases, geometry reduction,
+push or publication. Local testing hold and the broader polish goal remain.

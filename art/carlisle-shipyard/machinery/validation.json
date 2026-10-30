@@ -1,0 +1,119 @@
+{
+  "base": "a5db0acbf6fedff3a2eb0e9a41a4e28b6f3251f9",
+  "status": "validated-local-only",
+  "build": "Codex/sol fork \u00b7 build 10-30 08:18 UTC",
+  "offline": "a784ad23740db297329d",
+  "files": [
+    {
+      "path": "src/carlisleDeckMachinery.ts",
+      "sha256": "ce57bf57cb8449b8070552b290157c7645042b3911c631bd32d50eaf39cebf0b"
+    },
+    {
+      "path": "src/carlisleShipyard.ts",
+      "sha256": "5bebb85cd701a399f05bff5f0318e7540276ac4396bf1ba2af572463245d3a42"
+    },
+    {
+      "path": "src/carlisleSteelDecks.ts",
+      "sha256": "c6c236b563ff0d6b87fa4df3886c07ec5afb2fc5b47a38ef10c55e851ecd5be4"
+    },
+    {
+      "path": "tools/test-carlisle-machinery.mjs",
+      "sha256": "47269731c9405a28cc93545973d5a8f894a062c5d902cc4ad2ec0c942df1a24a"
+    },
+    {
+      "path": "tools/carlisle-machinery-review.mjs",
+      "sha256": "4221ebd9ab6bb35a112dac5f8052d10f3ab082254962b6cc0ff478b46ba12233"
+    }
+  ],
+  "compiledBundle": {
+    "path": "dist/assets/level-nDqo1kTY.js",
+    "sha256": "a56554e7a2eac09534a35ffdc9dbcd29c51a3ce531eb53c48cf4af5a91d2752c"
+  },
+  "checks": {
+    "geometry": true,
+    "motionSamples": 2090,
+    "nativeBrowser": true,
+    "nativeViews": 9,
+    "nativeCarry": [
+      {
+        "name": "Tide steps \u00b7 2",
+        "start": [
+          0,
+          0.706041709535782,
+          1
+        ],
+        "end": [
+          0,
+          0.7091648516633882,
+          1
+        ],
+        "translation": [
+          0,
+          -0.7732655629067438,
+          0
+        ],
+        "surface": "Tide steps \u00b7 2",
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "name": "Counterweight 3",
+        "start": [
+          -1.1368683772161603e-13,
+          0.7178963786136876,
+          1.0000000000004547
+        ],
+        "end": [
+          -1.1368683772161603e-13,
+          0.7208113120864539,
+          1.0000000000004547
+        ],
+        "translation": [
+          0,
+          -1.395989763302822,
+          0
+        ],
+        "surface": "Counterweight 3",
+        "grounded": true,
+        "deaths": 0
+      },
+      {
+        "name": "Port winch",
+        "start": [
+          0.05019106457359612,
+          0.699999988079071,
+          1.0152900241573661
+        ],
+        "end": [
+          0.03858361380395081,
+          0.699999988079071,
+          1.0117539723884192
+        ],
+        "translation": [
+          -4.232205862840779,
+          0,
+          0
+        ],
+        "surface": "Port winch",
+        "grounded": true,
+        "deaths": 0
+      }
+    ],
+    "consoleErrors": [],
+    "bonusBoats": 4,
+    "protectedSourceFiles": 23,
+    "build": true,
+    "originalCourseAndProps": true,
+    "fullSuiteRun": false
+  },
+  "visualReview": [
+    "hydraulic underside at low/high travel",
+    "counterweight side and overhead",
+    "native counterweight approach open",
+    "winch closed tow loop and return pulley",
+    "winch travel extremes",
+    "native and normal player cameras"
+  ],
+  "newPaidCredits": 0,
+  "goalComplete": false
+}

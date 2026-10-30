@@ -14,6 +14,7 @@ import { CarlisleSteelDecks } from './carlisleSteelDecks';
 import { CarlisleHarbourSound } from './carlisleHarbourSound';
 import { CarlisleRigging } from './carlisleRigging';
 import { CarlisleBeaconLights } from './carlisleBeaconLights';
+import { CarlisleDeckMachinery } from './carlisleDeckMachinery';
 import { sfx } from './audio';
 
 type P = [number, number, number];
@@ -76,10 +77,11 @@ export class CarlisleShipyard {
   private readonly fleet=new CarlisleFishingFleet();
   private readonly piers=new CarlislePierTimber();
   private readonly steelDecks=new CarlisleSteelDecks();
+  private readonly deckMachinery=new CarlisleDeckMachinery(this.steelDecks.machineryMaterials);
   private readonly rigging=new CarlisleRigging();
   private readonly beacons=new CarlisleBeaconLights();
   private readonly sound:CarlisleHarbourSound;
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,rigging:this.rigging.diagnostics,beacons:this.beacons.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,deckMachinery:this.deckMachinery.diagnostics,rigging:this.rigging.diagnostics,beacons:this.beacons.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -250,6 +252,7 @@ export class CarlisleShipyard {
       return;
     }
     if(!spring)this.steelDecks.add(c.s!,group);
+    if(!spring&&this.deckMachinery.add(c,mesh,this.chunk(c.p[2]),this.seaY(c.p[2])))return;
     // The hub and cross bracing remain below the contact plane throughout motion.
     const springClearance=spring?Math.min(3,Math.min(w,d)*.2):0;
     this.prop(c.spin?'rotary-hub':/winch/i.test(c.nm??'')?'dock-winch':'counterweight-hoist',
@@ -509,6 +512,7 @@ export class CarlisleShipyard {
     this.fleet.dispose();
     this.piers.dispose();
     this.steelDecks.dispose();
+    this.deckMachinery.dispose();
     this.rigging.dispose();
     this.beacons.dispose();
     this.sound.dispose();

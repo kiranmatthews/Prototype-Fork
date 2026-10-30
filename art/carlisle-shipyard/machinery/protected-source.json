@@ -1,0 +1,120 @@
+{
+  "base": "a5db0acbf6fedff3a2eb0e9a41a4e28b6f3251f9",
+  "files": [
+    {
+      "file": "src/player.ts",
+      "sha256": "316d8b4ad45a5751616d43dd1f7d63b4340cf4472da458b21bf201baf46c8ebf",
+      "unchanged": true
+    },
+    {
+      "file": "src/main.ts",
+      "sha256": "ee5e56f054a0a0ebe151f7df4c023addc9bbc103ec3cfcfcd25ca77307c2e97b",
+      "unchanged": true
+    },
+    {
+      "file": "src/tuning.ts",
+      "sha256": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41",
+      "unchanged": true
+    },
+    {
+      "file": "src/launchCamera.ts",
+      "sha256": "092774e692d0192e020558b131b13989516bd1e8311d7edb6319e72e5501035e",
+      "unchanged": true
+    },
+    {
+      "file": "src/characterAnimationRuntime.ts",
+      "sha256": "799a09261c5e3f9b78fae64b9e7814c861198bc2ab252f51c530d5f6504e178d",
+      "unchanged": true
+    },
+    {
+      "file": "src/animation/launchJump.ts",
+      "sha256": "e42ba81fed73fda6c07d962e21b3d04c9218e53477446eacf7b75b7a8704b58b",
+      "unchanged": true
+    },
+    {
+      "file": "src/animation/playerCatalog.ts",
+      "sha256": "45729212c87f3a6047a0f4fcf6af8f942436077ce8d4ce0290194e3b7453c043",
+      "unchanged": true
+    },
+    {
+      "file": "src/animation/elasticity.ts",
+      "sha256": "c71e701ee73683486a8b8027861985acd94a36213b3d59bedbb06a30b06be483",
+      "unchanged": true
+    },
+    {
+      "file": "src/level.ts",
+      "sha256": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleMarineNet.ts",
+      "sha256": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleBoardwalk.ts",
+      "sha256": "b1a29d940ee364981736fffba98268bcadc8ff0aa26e62a4ffaf134b69046d7f",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleShipyardMaterials.ts",
+      "sha256": "c325a90f54f6a7707f644dffd0c78d2780537524bc75edac2a120775243cabea",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleBeaconLights.ts",
+      "sha256": "9d69818c4a1f9dd53c044c4d4add036923b743768c36936ac0372d3db6942273",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleRigging.ts",
+      "sha256": "18698cb505093f06d6efafa3612fe66f9024a591bd2c9ff24a51514f3a24b9e7",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleFishingFleet.ts",
+      "sha256": "38319e1a62a5fb6b44aca9496e3721bc1454676c4a303332606d0ecbbb5dc749",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlislePierTimber.ts",
+      "sha256": "0ddfff7fa7ebe253c66735e9ecb0aa9b93b70e87c48c47e62c87910abe3edb78",
+      "unchanged": true
+    },
+    {
+      "file": "src/carlisleCoastalBanks.ts",
+      "sha256": "20a55dc8e0ecd8acc6189771a8e495aa1e4b4bedc62359773cee34a141cb66bd",
+      "unchanged": true
+    },
+    {
+      "file": "src/levels/carlisle-tidal-relay.ts",
+      "sha256": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+      "unchanged": true
+    },
+    {
+      "file": "src/levels/carlisle-harbour-bonus.ts",
+      "sha256": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+      "unchanged": true
+    },
+    {
+      "file": "src/levels/carlisle-air-cargo.ts",
+      "sha256": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+      "unchanged": true
+    },
+    {
+      "file": "src/levels/carlisle-cargo.ts",
+      "sha256": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+      "unchanged": true
+    },
+    {
+      "file": "src/levels/carlisle-slippery-crossings.ts",
+      "sha256": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+      "unchanged": true
+    },
+    {
+      "file": "public/levels.json",
+      "sha256": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+      "unchanged": true
+    }
+  ]
+}
