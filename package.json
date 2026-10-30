@@ -41,7 +41,7 @@
     "check:carve-grip": "node tools/test-carve-grip.mjs && node tools/test-halfpipe-steering.mjs",
     "check:sky-bridge": "node tools/test-sky-bridge-construction.mjs && node tools/sync-sky-bridge.mjs",
     "check:surfaces": "node tools/test-surface-behavior.mjs && node tools/test-authored-ice.mjs && node tools/test-surface-friction.mjs",
-    "check:surface-friction": "node tools/test-surface-friction.mjs",
+    "check:surface-friction": "node tools/test-surface-friction.mjs && node tools/test-skate-entry.mjs",
     "check:camera-speed": "node tools/test-camera-speed-effect.mjs && node tools/test-camera-look.mjs && node tools/test-camera-rig.mjs && node tools/test-camera-level-switch.mjs && node tools/test-camera-portrait.mjs && node tools/test-camera-landing-forecast.mjs && node tools/test-camera-fall-replay.mjs",
     "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs && node tools/test-break-apart.mjs && node tools/test-wipeout-policy.mjs",
     "check:air-rescue": "node tools/test-board-abandon-tuning.mjs && node tools/test-board-abandon-steering.mjs && node tools/test-air-rescue.mjs",

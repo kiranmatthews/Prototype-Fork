@@ -3409,13 +3409,13 @@ export class Player {
     );
   }
 
-  private cancelSlideTraversal(): void {
+  private cancelSlideTraversal(keepIceCarry = false): void {
     this.slideTimer = 0;
     this.slideDistanceLeft = 0;
     this.slideContactLatch = false;
     this.slideSpd = 0;
     this.slideBaseDeceleration = 0;
-    this.iceSlideCarry = false;
+    if (!keepIceCarry) this.iceSlideCarry = false;
     this.slideVec.set(0, 0, 0);
     this.slideGraceT = 0;
     this.slideGraceHold = false;
@@ -3466,7 +3466,9 @@ export class Player {
     this.pos.y = hit.y;
     const heldMultiplier = input.jumpHeld ? (hit.trampolineHeldMult ?? 1) : 1;
     if (this.manualing !== 0) this.endManual();
-    this.cancelSlideTraversal();
+    // The spring ends a slide attack, but its inherited foot momentum still
+    // belongs to the feet when this bounce lands.
+    this.cancelSlideTraversal(true);
     this.slamActive = false;
     this.slamHangT = 0;
     this.slamFlatT = 0;
@@ -4397,7 +4399,10 @@ export class Player {
     if(this.state!=='dead'&&this.state!=='gameover'&&this.state!=='finished'&&level.caveCollapse?.hitsPlayer(this.pos,this.prevPos)){
       this.die('crush');return;
     }
-    if (this.iceSlideCarry && (this.state !== 'ride' || this.freeSkate || this.isBailing)) this.iceSlideCarry = false;
+    // A foot jump keeps the slippery descent's on-foot ownership. Clearing
+    // this in the air lets the landing's carried speed mount a board without
+    // the hold-X + direction gesture. Other traversal and bails still retire it.
+    if (this.iceSlideCarry && ((this.state !== 'ride' && this.state !== 'air') || this.freeSkate || this.isBailing)) this.iceSlideCarry = false;
     if(this.state!=='dead'&&this.state!=='gameover'&&this.state!=='finished'&&level.boulder?.course?.consumeLightning()){
       level.strikeChaseLightning(this.pos);this.die('lightning');
     }

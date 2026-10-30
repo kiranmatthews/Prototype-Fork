@@ -1,0 +1,10 @@
+{
+  "build": "npm run build",
+  "buildExit": 0,
+  "releaseCheck": "npm run check:release",
+  "releaseExit": 0,
+  "files": 1857,
+  "bytes": 998290184,
+  "budget": 1000000000,
+  "entry": "assets/index-CT_IqlYo.js"
+}

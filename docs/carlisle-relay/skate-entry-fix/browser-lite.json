@@ -1,0 +1,54 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "lite": true,
+  "errors": [],
+  "footJump": {
+    "mounts": [],
+    "landings": [
+      {
+        "speed": 14.824410003323708,
+        "board": false,
+        "surface": "Foam steps · start · downhill slick · ice 2"
+      }
+    ],
+    "afterLanding": 12,
+    "startedAir": true,
+    "watchJump": true,
+    "board": false,
+    "speed": 17.042111780172863,
+    "bailing": false,
+    "clip": "player.slope-slide",
+    "position": [
+      17.628574938076365,
+      214.0837318133889,
+      -29.232105450721
+    ],
+    "canvas": [
+      960,
+      540
+    ]
+  },
+  "deliberateMount": {
+    "mounts": [
+      {
+        "jumpHeld": true,
+        "moveX": 0,
+        "moveY": 1,
+        "charge": 0.55
+      }
+    ],
+    "requiredHold": 0.55
+  },
+  "passed": true,
+  "last": {
+    "state": "air",
+    "grounded": false,
+    "board": true,
+    "speed": 7.010776040845795,
+    "position": [
+      8.369043280876907,
+      222.25974614327248,
+      -13.067019592310093
+    ]
+  }
+}

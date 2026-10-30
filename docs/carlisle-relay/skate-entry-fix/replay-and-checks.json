@@ -1,0 +1,229 @@
+{
+  "replay": "replay-CarlisleCoast-2026-10-30T11-01-51.json",
+  "sha256": "bf991e83a0575dcdb513d0b71ad9a7c6fd1c014c0850a5f040a027b7cd6bf7d1",
+  "frames": 6240,
+  "livesOverride": null,
+  "before": {
+    "sourceCommit": "8ea9b5442e08166b0365034c1ceab64ce121bc9f",
+    "mounts": [
+      {
+        "f": 4285,
+        "seconds": 71.41666666666667,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false,
+          "raceSeed": 0,
+          "jumpCancelled": false,
+          "itemPressed": false,
+          "raceStartPressed": false,
+          "raceTrialStartPressed": false,
+          "moveAnalog": false
+        },
+        "fields": {
+          "state": "ride",
+          "grounded": true,
+          "speed": 16.663322043218844,
+          "lastPlanar": 16.66332204321882,
+          "skateCharge": 0,
+          "charging": false,
+          "chargePlanted": false,
+          "freeSkate": false,
+          "airFromSkate": false,
+          "airMomentum": false,
+          "slideTimer": 0,
+          "slideFromWalk": false,
+          "iceSlideCarry": false,
+          "boardRunCarry": false,
+          "skateBlockT": 0,
+          "bailDownT": 0,
+          "bailRecoverT": -1,
+          "alwaysSkate": false,
+          "boardMountBlocked": false
+        },
+        "ground": {
+          "name": "Foam steps \u00b7 start \u00b7 downhill slick \u00b7 ice 2",
+          "normal": [
+            0.15276306396596548,
+            0.9510566856245225,
+            -0.2686161332024361
+          ],
+          "slippy": true
+        }
+      },
+      {
+        "f": 5178,
+        "seconds": 86.3,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false,
+          "raceSeed": 0,
+          "jumpCancelled": false,
+          "itemPressed": false,
+          "raceStartPressed": false,
+          "raceTrialStartPressed": false,
+          "moveAnalog": false
+        },
+        "fields": {
+          "state": "ride",
+          "grounded": true,
+          "speed": 24.493619852614007,
+          "lastPlanar": 24.493619852614007,
+          "skateCharge": 0,
+          "charging": false,
+          "chargePlanted": false,
+          "freeSkate": false,
+          "airFromSkate": false,
+          "airMomentum": false,
+          "slideTimer": 0,
+          "slideFromWalk": false,
+          "iceSlideCarry": false,
+          "boardRunCarry": false,
+          "skateBlockT": 0,
+          "bailDownT": 0,
+          "bailRecoverT": -1,
+          "alwaysSkate": false,
+          "boardMountBlocked": false
+        },
+        "ground": {
+          "name": "Foam steps \u00b7 start \u00b7 downhill slick \u00b7 ice 2",
+          "normal": [
+            0.14951569525966593,
+            0.9510566817760419,
+            -0.27043713672527203
+          ],
+          "slippy": true
+        }
+      }
+    ]
+  },
+  "after": {
+    "mounts": [],
+    "last": {
+      "f": 6239,
+      "fields": {
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "lastPlanar": 2.2879450606716993,
+        "skateCharge": 0,
+        "charging": false,
+        "chargePlanted": false,
+        "freeSkate": false,
+        "airFromSkate": false,
+        "airMomentum": false,
+        "slideTimer": 0,
+        "slideFromWalk": false,
+        "iceSlideCarry": false,
+        "boardRunCarry": false,
+        "skateBlockT": 0,
+        "bailDownT": 0,
+        "bailRecoverT": -1,
+        "alwaysSkate": false,
+        "boardMountBlocked": false
+      },
+      "seconds": 103.98,
+      "s": 255,
+      "position": [
+        107.01780150858832,
+        195.79099788744594,
+        -231.75109795653705
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 2,
+      "speed": 0,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Scissor \u00b7 long blade",
+        "y": 195.79099788744594,
+        "mover": 0
+      },
+      "checkpoint": -1,
+      "input": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "tuningSha256": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41",
+  "checks": [
+    {
+      "test": "test-skate-entry",
+      "exitCode": 0,
+      "seconds": 19.15
+    },
+    {
+      "test": "test-authored-ice",
+      "exitCode": 0,
+      "seconds": 11.24
+    },
+    {
+      "test": "test-surface-friction",
+      "exitCode": 0,
+      "seconds": 0.35
+    },
+    {
+      "test": "test-slide-jump",
+      "exitCode": 0,
+      "seconds": 9.99
+    },
+    {
+      "test": "test-carlisle-slippery",
+      "exitCode": 0,
+      "seconds": 26.67
+    },
+    {
+      "test": "test-trampoline-controls",
+      "exitCode": 0,
+      "seconds": 9.38
+    },
+    {
+      "test": "test-trampoline-air-jump",
+      "exitCode": 0,
+      "seconds": 11.21
+    },
+    {
+      "test": "test-board-abandon-steering",
+      "exitCode": 0,
+      "seconds": 8.97
+    },
+    {
+      "test": "test-kinetic-platforms",
+      "exitCode": 0,
+      "seconds": 17.77
+    },
+    {
+      "test": "test-jungle-cup-skating",
+      "exitCode": 0,
+      "seconds": 40.84
+    }
+  ]
+}

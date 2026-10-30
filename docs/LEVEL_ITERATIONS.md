@@ -7709,3 +7709,15 @@ snapshots and genuine overrides remain protected. No tolerance, runtime, art or
 level-data changes. Build/release pass at 998,290,153 bytes; the original 203-check
 suite still applies to unchanged game sources. Evidence:
 [portable stock](carlisle-relay/regression-repair/portable-stock/README.md).
+
+
+### Carlisle slippery foot jumps must not mount a board — 30 October 2026
+
+Traced the attached 104-second replay: quick foot jumps lost their slippery
+momentum flag, and landing speed spawned the board without input. Preserved
+that flag through foot air and trampoline cleanup, with its normal reset/bail
+boundaries and deliberate mounting intact. No movement tuning or level changes.
+Both bug-specific regressions fail before and pass after; the full replay now
+has zero board mounts. Ten focused checks, lite/full native keyboard smoke,
+production build and release-size check pass. Prompt-to-validated playable fix:
+approximately 21 minutes. Evidence: [skate entry](carlisle-relay/skate-entry-fix/README.md).
