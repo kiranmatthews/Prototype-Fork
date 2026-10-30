@@ -1,0 +1,1061 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "experiment": false,
+  "method": "Frozen native scene, shared full geometry/materials/transforms; coarse, spatial, runtime and repeated coarse control. Main and shadow passes. Short timings do not establish whole-course frame rate.",
+  "errors": [],
+  "views": [
+    {
+      "name": "arrival",
+      "station": 30,
+      "mirrored": false,
+      "camera": [
+        26.937264409319848,
+        236.42355921769058,
+        -4.016823964605354
+      ],
+      "center": [
+        14.937264409319848,
+        218.42355921769058,
+        -71.01682396460535
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1199,
+            "calls": 614,
+            "triangles": 22214055,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.0999999940395355,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080,
+          "image": "arrival-coarse.png"
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1201,
+            "calls": 676,
+            "triangles": 18474190,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.4000000059604645,
+          "pixelChannelsChanged": 4,
+          "changedPixels": 2,
+          "maxDifference": 3,
+          "meanAbsoluteDifference": 7.233796296296296e-7,
+          "changedBounds": [
+            1554,
+            422,
+            1809,
+            473
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1203,
+            "calls": 676,
+            "triangles": 18474190,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.5999999940395355,
+          "pixelChannelsChanged": 4,
+          "changedPixels": 2,
+          "maxDifference": 3,
+          "meanAbsoluteDifference": 7.233796296296296e-7,
+          "changedBounds": [
+            1554,
+            422,
+            1809,
+            473
+          ],
+          "width": 1920,
+          "height": 1080,
+          "image": "arrival-runtime.png"
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1205,
+            "calls": 751,
+            "triangles": 27845305,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.4000000059604645,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1207,
+            "calls": 614,
+            "triangles": 22214055,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.799999982118607,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "first-bounce",
+      "station": 170,
+      "mirrored": false,
+      "camera": [
+        110.22232436314958,
+        335.75169106460726,
+        -97.13825375929642
+      ],
+      "center": [
+        75.22232436314958,
+        209.75169106460726,
+        -172.13825375929642
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1228,
+            "calls": 425,
+            "triangles": 22839295,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080,
+          "image": "first-bounce-coarse.png"
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1230,
+            "calls": 462,
+            "triangles": 13312481,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.4000000059604645,
+          "pixelChannelsChanged": 319,
+          "changedPixels": 117,
+          "maxDifference": 23,
+          "meanAbsoluteDifference": 0.00014781057098765433,
+          "changedBounds": [
+            356,
+            182,
+            827,
+            530
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1232,
+            "calls": 462,
+            "triangles": 13312481,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.7000000178813934,
+          "pixelChannelsChanged": 319,
+          "changedPixels": 117,
+          "maxDifference": 23,
+          "meanAbsoluteDifference": 0.00014781057098765433,
+          "changedBounds": [
+            356,
+            182,
+            827,
+            530
+          ],
+          "width": 1920,
+          "height": 1080,
+          "image": "first-bounce-runtime.png"
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1234,
+            "calls": 581,
+            "triangles": 28857403,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.699999988079071,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1236,
+            "calls": 425,
+            "triangles": 22839295,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.0999999940395355,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "birdseye-bounce",
+      "station": 170,
+      "mirrored": false,
+      "camera": [
+        75.22232436314958,
+        425.75169106460726,
+        -140.13825375929642
+      ],
+      "center": [
+        75.22232436314958,
+        205.75169106460726,
+        -152.13825375929642
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1258,
+            "calls": 370,
+            "triangles": 17647236,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.5999999940395355,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080,
+          "image": "birdseye-bounce-coarse.png"
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1260,
+            "calls": 407,
+            "triangles": 11348516,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.199999988079071,
+          "pixelChannelsChanged": 1285,
+          "changedPixels": 497,
+          "maxDifference": 39,
+          "meanAbsoluteDifference": 0.000546875,
+          "changedBounds": [
+            59,
+            62,
+            1742,
+            904
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1262,
+            "calls": 407,
+            "triangles": 11348516,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.9000000059604645,
+          "pixelChannelsChanged": 1285,
+          "changedPixels": 497,
+          "maxDifference": 39,
+          "meanAbsoluteDifference": 0.000546875,
+          "changedBounds": [
+            59,
+            62,
+            1742,
+            904
+          ],
+          "width": 1920,
+          "height": 1080,
+          "image": "birdseye-bounce-runtime.png"
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1264,
+            "calls": 528,
+            "triangles": 27287108,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.5,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1266,
+            "calls": 370,
+            "triangles": 17647236,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 3.5999999940395355,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "lift-yard",
+      "station": 500,
+      "mirrored": false,
+      "camera": [
+        30.70620064922238,
+        250.33811465449503,
+        -393.89541094525225
+      ],
+      "center": [
+        95.70620064922238,
+        184.33811465449503,
+        -528.8954109452523
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1287,
+            "calls": 701,
+            "triangles": 29878191,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.200000017881393,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1289,
+            "calls": 763,
+            "triangles": 20941882,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.9000000059604645,
+          "pixelChannelsChanged": 13,
+          "changedPixels": 6,
+          "maxDifference": 9,
+          "meanAbsoluteDifference": 0.000004099151234567901,
+          "changedBounds": [
+            243,
+            307,
+            249,
+            308
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1291,
+            "calls": 763,
+            "triangles": 20941882,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6,
+          "pixelChannelsChanged": 13,
+          "changedPixels": 6,
+          "maxDifference": 9,
+          "meanAbsoluteDifference": 0.000004099151234567901,
+          "changedBounds": [
+            243,
+            307,
+            249,
+            308
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1293,
+            "calls": 896,
+            "triangles": 38402163,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.800000011920929,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1295,
+            "calls": 701,
+            "triangles": 29878191,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.4000000059604645,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "crane-yard",
+      "station": 2100,
+      "mirrored": false,
+      "camera": [
+        -95.2896986112903,
+        161.4465897250892,
+        -1948.5535131983402
+      ],
+      "center": [
+        -5.2896986112903,
+        106.44658972508923,
+        -2078.55351319834
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1305,
+            "calls": 597,
+            "triangles": 10595138,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.5,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080,
+          "image": "crane-yard-coarse.png"
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1307,
+            "calls": 625,
+            "triangles": 10595138,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6,
+          "pixelChannelsChanged": 2034,
+          "changedPixels": 782,
+          "maxDifference": 29,
+          "meanAbsoluteDifference": 0.0007854697145061729,
+          "changedBounds": [
+            0,
+            293,
+            700,
+            957
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1309,
+            "calls": 625,
+            "triangles": 10595138,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.899999976158142,
+          "pixelChannelsChanged": 2034,
+          "changedPixels": 782,
+          "maxDifference": 29,
+          "meanAbsoluteDifference": 0.0007854697145061729,
+          "changedBounds": [
+            0,
+            293,
+            700,
+            957
+          ],
+          "width": 1920,
+          "height": 1080,
+          "image": "crane-yard-runtime.png"
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1311,
+            "calls": 697,
+            "triangles": 18968454,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.200000017881393,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1313,
+            "calls": 597,
+            "triangles": 10595138,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 5.399999976158142,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "homecoming",
+      "station": 3760,
+      "mirrored": false,
+      "camera": [
+        -38.33443297590057,
+        48,
+        -3521.5779388710075
+      ],
+      "center": [
+        -73.33443297590057,
+        7,
+        -3666.5779388710075
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1326,
+            "calls": 376,
+            "triangles": 4133231,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 7.0999999940395355,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1328,
+            "calls": 388,
+            "triangles": 4133231,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 3.7999999821186066,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1330,
+            "calls": 388,
+            "triangles": 4133231,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 3.5999999940395355,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1332,
+            "calls": 425,
+            "triangles": 7005517,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 3.4000000059604645,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1334,
+            "calls": 376,
+            "triangles": 4133231,
+            "points": 10,
+            "lines": 0
+          },
+          "elapsedMs": 4.299999982118607,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "name": "mirrored-arrival",
+      "station": 30,
+      "mirrored": true,
+      "camera": [
+        26.937264409319848,
+        178.42355921769058,
+        -4.016823964605354
+      ],
+      "center": [
+        14.937264409319848,
+        196.42355921769058,
+        -71.01682396460535
+      ],
+      "results": [
+        {
+          "id": 0,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1353,
+            "calls": 613,
+            "triangles": 22260666,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080,
+          "image": "mirrored-arrival-coarse.png"
+        },
+        {
+          "id": 48,
+          "comparison": "coarse",
+          "render": {
+            "frame": 1355,
+            "calls": 676,
+            "triangles": 18599535,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4,
+          "pixelChannelsChanged": 28,
+          "changedPixels": 11,
+          "maxDifference": 6,
+          "meanAbsoluteDifference": 0.000007836612654320988,
+          "changedBounds": [
+            314,
+            233,
+            961,
+            311
+          ],
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "runtime",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1357,
+            "calls": 676,
+            "triangles": 18599535,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.5999999940395355,
+          "pixelChannelsChanged": 28,
+          "changedPixels": 11,
+          "maxDifference": 6,
+          "meanAbsoluteDifference": 0.000007836612654320988,
+          "changedBounds": [
+            314,
+            233,
+            961,
+            311
+          ],
+          "width": 1920,
+          "height": 1080,
+          "image": "mirrored-arrival-runtime.png"
+        },
+        {
+          "id": "unculled",
+          "comparison": "runtime",
+          "render": {
+            "frame": 1359,
+            "calls": 750,
+            "triangles": 27891916,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 4.799999982118607,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "id": "coarse-repeat",
+          "comparison": "coarse",
+          "render": {
+            "frame": 1361,
+            "calls": 613,
+            "triangles": 22260666,
+            "points": 0,
+            "lines": 0
+          },
+          "elapsedMs": 6,
+          "pixelChannelsChanged": 0,
+          "changedPixels": 0,
+          "maxDifference": 0,
+          "meanAbsoluteDifference": 0,
+          "changedBounds": null,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1824,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wetSlopes": 18,
+    "build": "Codex/sol fork · build 10-30 01:54 UTC"
+  },
+  "inventory": {
+    "originals": {
+      "batches": 177,
+      "modules": 567,
+      "triangles": 21843906,
+      "moduleFingerprint": "1d6400f5ab7878a5efd36a099b879a1d1acc4ba52f5c3cc4fd220c6eb82147de"
+    },
+    "variants": [
+      {
+        "size": 0,
+        "batches": 34,
+        "modules": 567,
+        "triangles": 21843906,
+        "moduleFingerprint": "1d6400f5ab7878a5efd36a099b879a1d1acc4ba52f5c3cc4fd220c6eb82147de"
+      },
+      {
+        "size": 48,
+        "batches": 177,
+        "modules": 567,
+        "triangles": 21843906,
+        "moduleFingerprint": "1d6400f5ab7878a5efd36a099b879a1d1acc4ba52f5c3cc4fd220c6eb82147de"
+      }
+    ]
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "instanceBatches": 4,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4,
+    "crates": 21
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 12,
+    "props": 1824,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "instanceBatches": 177,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "coast": {
+      "status": "ready",
+      "banks": 32,
+      "sourceTriangles": 100707,
+      "placedTriangles": 1657437,
+      "shoreSegments": 35080,
+      "colliders": 0,
+      "errors": []
+    },
+    "fleet": {
+      "status": "ready",
+      "vessels": 6,
+      "sourceTriangles": 51177,
+      "placedTriangles": 307062,
+      "colliders": 0,
+      "errors": []
+    },
+    "piers": {
+      "status": "ready",
+      "piles": 4146,
+      "ledgers": 1218,
+      "braces": 1604,
+      "plates": 2432,
+      "bolts": 4864,
+      "placedTriangles": 2177728,
+      "colliders": 0,
+      "errors": []
+    },
+    "water": {
+      "staticWash": 1382,
+      "movingWash": 0
+    },
+    "errors": []
+  },
+  "walk": {
+    "z": -2.4871381662022376,
+    "deaths": 0
+  },
+  "passed": true
+}

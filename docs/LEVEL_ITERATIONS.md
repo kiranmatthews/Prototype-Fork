@@ -6889,3 +6889,53 @@ were observed and left running. The comparison and all review evidence are in
 Build: 1,779 files / 1,074.9MiB, offline version 0bcba19a053eb72040e6,
 `Codex/sol fork · build 10-30 01:17 UTC`. Local checkpoint only; publication
 held. The broader polish goal remains active.
+
+
+## Carlisle full-geometry deck batching — 30 October 2026
+
+Approximately 12 minutes to the initial playable partition and 32 minutes to
+final browser validation. The normal arrival previously submitted over 22 million
+triangles. Intact timber modules shared one instance batch per parent/kind,
+letting a visible corner retain several distant quays. Split these into 48m
+parent-local cells so camera and shadow frustums can reject off-screen modules.
+
+All 131 decks, 966 sections, 567 intact modules and 27,724,901 placed/fitted
+triangles remain. The intact subset retains 21,843,906 triangles; its batches
+change from 34 to 177. Exact geometry/material/matrix fingerprints match across
+coarse, reconstructed spatial and actual runtime groupings. No geometry swaps,
+LOD, decimation, draw-distance changes or added per-frame update logic. The
+existing deck fitting function is byte-identical.
+
+The compiled native 1920x1080 comparison reduces submitted triangles by 16.8%
+at arrival, 41.7% in the first big-bounce view, 35.7% in the near-vertical view
+and 29.9% at the lift yard. The crane and homecoming views retain their triangle
+counts with modest additional draw calls. These are submitted-work measurements,
+not a sustained FPS or whole-course performance claim.
+
+All seven views are pixel-identical with runtime frustum culling on versus off;
+the repeated coarse control also matches exactly. Regrouping changes at most
+782 plank-edge pixels (0.0378%) versus the old coarse grouping, reviewed in
+paired native crops. Geometry, materials and transforms are exact, and the
+uncull control excludes missing visible geometry. The mirrored camera test
+omits water to inspect full undersides; it does not add planar reflections.
+
+Nineteen protected source files match the prior pier commit, including gameplay,
+camera, course/bonus, air cargo/nitro, eighteen wet slopes, nets, cones, coast,
+water/sky, fleet and pier structure. The original course/twelve-prop check and
+production build pass. Both deck GLBs retain their source bytes; the existing
+build externalizes shared textures, with exact vertex/index/material/image data
+verified after resolving those references. Main/bonus/main reload, native bonus,
+normal 480p/CRT and keyboard walking pass. Four playable bonus boats remain.
+
+A normal-render Storm keyboard check initially missed the reward because an
+awaited screenshot stalled its external control loop for 1.2 seconds across the
+apex. The player safely avoided nitro and caught the next spring. Added a
+--no-flight-capture option to the test tool, then collected all four reward
+crates, avoided nitro and caught the spring with zero deaths or console errors.
+Both reports are retained; no gameplay/input/camera changes were made. No
+repeated full suite or unchanged level audit.
+
+Build: 1,779 files / 1,074.9MiB; offline version e79b8cb5487ec0742aab;
+Codex/sol fork · build 10-30 01:54 UTC. Evidence and exact protected hashes are
+in art/carlisle-shipyard/deck-batching/. No paid services or new assets. Local
+checkpoint only; publication held. The broader polish goal remains active.

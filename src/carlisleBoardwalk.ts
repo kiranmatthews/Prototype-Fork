@@ -188,7 +188,7 @@ export function fitCarlisleDeck(source: THREE.BufferGeometry, triangles: DeckTri
 }
 
 export class CarlisleBoardwalk {
-  readonly diagnostics = { decks: 0, sections: 0, intactModules:0, sourceTriangles: 0, sceneryTriangles:0, fittedTriangles: 0, slipperyOverlays:0,errors: [] as string[] };
+  readonly diagnostics = { decks: 0, sections: 0, intactModules:0, instanceBatches:0, sourceTriangles: 0, sceneryTriangles:0, fittedTriangles: 0, slipperyOverlays:0,errors: [] as string[] };
   private readonly assets = cache.scope();
   private readonly requests: Request[] = [];
   private readonly nodes: THREE.Mesh[] = [];
@@ -213,7 +213,11 @@ export class CarlisleBoardwalk {
       if (this.disposed) return;const r = this.requests[i];
       const {source,material}=sources.get(r.kind)!;
       const intact=(matrix:THREE.Matrix4)=>{
-        const key=r.parent.uuid+':'+r.kind,entry=batches.get(key)??{parent:r.parent,source,material,matrices:[]};
+        // A whole 180m scenery section can span several distant quays. Small
+        // local cells let each camera/shadow frustum reject unseen modules;
+        // source geometry, transforms, materials and draw distance stay intact.
+        const e=matrix.elements,cell=[e[12],e[13],e[14]].map(n=>Math.floor(n/48)).join(':');
+        const key=r.parent.uuid+':'+r.kind+':'+cell,entry=batches.get(key)??{parent:r.parent,source,material,matrices:[]};
         entry.matrices.push(matrix);batches.set(key,entry);this.diagnostics.intactModules++;this.diagnostics.sections++;
         this.diagnostics.fittedTriangles+=source.geometry.index!.count/3;
       };
@@ -228,6 +232,7 @@ export class CarlisleBoardwalk {
       const mesh=new THREE.InstancedMesh(batch.source.geometry,batch.material,batch.matrices.length);
       batch.matrices.forEach((m,i)=>mesh.setMatrixAt(i,m));mesh.name='Solid timber modules';mesh.userData.visualOnly=true;
       mesh.castShadow=true;mesh.receiveShadow=true;mesh.computeBoundingSphere();batch.parent.add(mesh);this.nodes.push(mesh);
+      this.diagnostics.instanceBatches++;
     }
   }
   dispose() {

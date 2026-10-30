@@ -6,8 +6,9 @@ import {airCargoPilot} from './carlisle-air-cargo-pilot.mjs';
 const built=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
 const lite=process.argv.includes('--lite'),normal=process.argv.includes('--normal'),mode=lite?'lite':normal?'normal':'full',base=process.env.CARLISLE_BASE??'http://127.0.0.1:5483';
+const flightCapture=!process.argv.includes('--no-flight-capture');
 const out=process.env.AIR_CARGO_OUT??'docs/carlisle-relay/air-cargo';await mkdir(out,{recursive:true});
-const report={base,mode,errors:[],flights:[],views:[]};
+const report={base,mode,flightCapture,errors:[],flights:[],views:[]};
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1,serviceWorkers:'block'});
 page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
@@ -42,7 +43,9 @@ try{
    if(p.deaths||p.state==='dead'||p.bail)break;
    if(launched&&samples.length>8&&(p.grounded||previous<0&&p.vy>15)){landed=true;break;}
    previous=p.vy;await press(pilot(p));
-   if(launched&&!shot&&p.vy>10&&p.vy<20){shot=true;await page.screenshot({path:`${out}/${mode}-${encounter.name.toLowerCase().replaceAll(' ','-')}-approach.png`});}
+   // Native screenshot encoding can pause this external driver across the
+   // apex. Disable in-flight captures when validating timely keyboard input.
+   if(flightCapture&&launched&&!shot&&p.vy>10&&p.vy<20){shot=true;await page.screenshot({path:`${out}/${mode}-${encounter.name.toLowerCase().replaceAll(' ','-')}-approach.png`});}
    await page.waitForTimeout(16);
   }
   await press({});const end=await observe(),distance=Math.hypot(...end.at.map((v,i)=>v-target[i]));

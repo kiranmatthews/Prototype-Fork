@@ -1,0 +1,54 @@
+[
+  {
+    "view": "first-bounce",
+    "changedPixels": 117,
+    "changedPercent": 0.005642361111111111,
+    "maximumChannelDifference": 23,
+    "denseCrop": [
+      800,
+      180,
+      1080,
+      460
+    ],
+    "cropChangedPixels": 116
+  },
+  {
+    "view": "birdseye-bounce",
+    "changedPixels": 497,
+    "changedPercent": 0.023967978395061727,
+    "maximumChannelDifference": 39,
+    "denseCrop": [
+      620,
+      100,
+      900,
+      380
+    ],
+    "cropChangedPixels": 489
+  },
+  {
+    "view": "crane-yard",
+    "changedPixels": 782,
+    "changedPercent": 0.03771219135802469,
+    "maximumChannelDifference": 29,
+    "denseCrop": [
+      0,
+      780,
+      280,
+      1060
+    ],
+    "cropChangedPixels": 777
+  },
+  {
+    "view": "mirrored-arrival",
+    "changedPixels": 11,
+    "changedPercent": 0.0005304783950617284,
+    "maximumChannelDifference": 6,
+    "denseCrop": [
+      800,
+      220,
+      1080,
+      500
+    ],
+    "cropChangedPixels": 10
+  }
+]
