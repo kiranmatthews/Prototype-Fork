@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {Reflector} from 'three/examples/jsm/objects/Reflector.js';
@@ -39,7 +40,7 @@ function releaseTemplate(kind:Kind,entry:Template):void {
 function acquire(kind:Kind):Lease {
  let entry=templates.get(kind);
  if(!entry){entry={refs:0,promise:Promise.resolve([])};templates.set(kind,entry);const current=entry;
- const gltfLoader=new GLTFLoader(),ktx=warehouseTextureLoader();if(ktx)gltfLoader.setKTX2Loader(ktx);
+ const gltfLoader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),ktx=warehouseTextureLoader();if(ktx)gltfLoader.setKTX2Loader(ktx);
  const promise=new Promise<Part[]>((resolve,reject)=>gltfLoader.load(import.meta.env.BASE_URL+FILES[kind],gltf=>{
   gltf.scene.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(gltf.scene),centre=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
   if(box.isEmpty()){reject(new Error('Empty warehouse model '+kind));return;}

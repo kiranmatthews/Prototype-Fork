@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -57,7 +58,7 @@ function install(target: THREE.Group): void {
 function load(): void {
   if (started) return;
   started = true;
-  new GLTFLoader().load(
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(
     import.meta.env.BASE_URL + MESHY_COURTYARD_PATH,
     (gltf) => {
       template = gltf.scene;

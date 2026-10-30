@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 // The wumpa fruit, as one shared model.
 //
 // Three places draw this apple — the floating pickups in a level, the burst
@@ -60,7 +61,7 @@ function build(): THREE.Mesh {
 function load(): void {
   if (started) return;
   started = true;
-  new GLTFLoader().load(
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(
     import.meta.env.BASE_URL + "models/wumpa.glb",
     (gltf) => {
       let found: THREE.Mesh | null = null;

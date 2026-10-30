@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 // Shared title/loading/game-over background. The host deliberately owns no
 // THREE resources while gameplay is active: one short-lived presentation
 // stage is created on demand, draws through the game's existing WebGL context,
@@ -403,7 +404,7 @@ class GameFlowVortexStage {
   }
 
   private loadMaskPart(path: string, skull: boolean): void {
-    new GLTFLoader().load(
+    new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(
       import.meta.env.BASE_URL + path,
       (gltf) => {
         const model = gltf.scene;

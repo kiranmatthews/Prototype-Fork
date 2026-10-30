@@ -397,10 +397,13 @@ try {
     assert.equal(editor.resizeIdx, 1);
   });
   check("total pack capacity refuses edits before history or live data diverge from play", () => {
-    const filler = base(Array.from({ length: 5000 }, () => ({ t: "platform", p: [0, 0, 0], nm: "x".repeat(120) })));
+    // Fill bytes with fewer, individually valid levels so the independent
+    // 128-level count guard cannot intercept this byte-capacity regression.
+    const filler = base(Array.from({ length: 7000 }, () => ({ t: "platform", p: [0, 0, 0], nm: "x".repeat(120) })));
     const bytes = new TextEncoder().encode(JSON.stringify({ id: "large_99", name: "Filler", data: filler })).length;
     const entries = Array.from({ length: Math.floor((MAX_LEVEL_PACK_BYTES - 4096) / bytes) }, (_, i) =>
       ({ id: `large_${i}`, name: "Filler", data: filler }));
+    assert.ok(entries.length+2<MAX_USER_LEVELS,'byte fixture must stay below the count limit');
     assert.equal(setUserLevels(entries), true);
     const editor = editorFor();
     const retainedBefore = getUserLevels();

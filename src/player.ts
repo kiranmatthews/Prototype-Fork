@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import type { AnimationClip } from './animation/types';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
@@ -20292,7 +20293,7 @@ export class Player {
     const src =
       (window as { __SKULL_GLB?: string }).__SKULL_GLB ||
       import.meta.env.BASE_URL + 'models/skull.glb';
-    new GLTFLoader().load(
+    new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(
       src,
       (gltf) => {
         if (!this.maskMesh) return;
@@ -20360,7 +20361,7 @@ export class Player {
     const src =
       (window as { __BONES_GLB?: string }).__BONES_GLB ||
       import.meta.env.BASE_URL + 'models/crossbones.glb';
-    new GLTFLoader().load(
+    new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(
       src,
       (gltf) => {
         if (!this.maskMesh) return;

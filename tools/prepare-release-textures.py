@@ -14,6 +14,7 @@ import struct,io,json,hashlib,time,os,argparse,shutil
 from PIL import features
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--resize-drowned',action='store_true',help='Review 2K colour, 512 normal and 256 packed data maps for Drowned Crown')
+parser.add_argument('--resize-carlisle',action='store_true',help='Review Carlisle harbour textures with the published role budgets')
 parser.add_argument('--resize-map',action='store_true',help='Review map-diorama textures at their displayed scale')
 parser.add_argument('--only-prefix',help='Prepare only this public asset directory, for an incremental review batch')
 parser.add_argument('--out',type=Path,required=True,help='New candidate directory outside public/')
@@ -28,7 +29,7 @@ POLICY=json.loads((ROOT/'tools/release-texture-policy.json').read_text())
 sha=lambda b:hashlib.sha256(b).hexdigest()
 unique={};models={}
 for path in sorted((ROOT/'public').rglob('*.glb')):
- if args.only_prefix and not path.relative_to(ROOT/'public').as_posix().startswith(args.only_prefix):continue
+ if args.only_prefix and not any(path.relative_to(ROOT/'public').as_posix().startswith(prefix) for prefix in args.only_prefix.split(',')):continue
  raw=path.read_bytes();n=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+n]);binary=raw[28+n:];rel=str(path.relative_to(ROOT/'public'))
  if len(doc.get('buffers',[]))!=1 or any('EXT_meshopt_compression' in v.get('extensions',{}) for v in doc.get('bufferViews',[])):continue
  roles={}
@@ -65,6 +66,7 @@ def encode(item,allow_resize=True):
  profile=None
  if args.resize_drowned and all(u['file'].startswith('drowned-crown/') for u in entry['uses']):profile=POLICY['drowned']
  if args.resize_map and all(u['file'].startswith('map-landmarks/') for u in entry['uses']):profile=POLICY['map']
+ if args.resize_carlisle and all(u['file'].startswith('props/carlisle') for u in entry['uses']):profile=POLICY['carlisle']
  if profile and allow_resize and len(use_roles)==1:
   role=next(iter(use_roles));limit=max((profile['overrides'].get(u['file'],{}).get(role,profile['limits'].get(role,0)) for u in entry['uses']))
   if role=='baseColorTexture' and rgba.getextrema()[3]!=(255,255):limit=0
@@ -75,7 +77,7 @@ def encode(item,allow_resize=True):
  ref=np.asarray(rgba).astype(np.int16);candidates=[100] if mode=='lossless' else [85,90,95]
  # A noisy miniature may fail a lossy encoder's worst-pixel gate. Keep the
  # reviewed resized pixels exactly instead of restoring a huge source atlas.
- if mode!='lossless' and strategy and args.resize_map:candidates.append(None)
+ if mode!='lossless' and strategy and (args.resize_map or args.resize_carlisle):candidates.append(None)
  for candidate in candidates:
   lossless=mode=='lossless' or candidate is None;quality=100 if candidate is None else candidate
   key=f'{digest}{strategy}-{"lossless" if lossless else mode}-{quality}';cached=OUT/(key+'.json');target=CACHE/(key+'.webp');data=None
@@ -103,13 +105,13 @@ with ThreadPoolExecutor(max_workers=2) as pool:
  for future in as_completed(futures):
   try:r=future.result()
   except Exception as e:r={'sourceSha256':futures[future],'error':str(e)}
-  rows.append(r);report={'encoder':{'pillow':Image.__version__,'libwebp':features.version('webp'),'format':'WebP','dimensions':'Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged' if args.resize_drowned or args.resize_map else 'unchanged','lossyQualityCandidates':[85,90,95],'minPSNR':40,'maxP99':8,'maxError':64,'losslessPNG':True},'models':models,'images':sorted(rows,key=lambda r:r['sourceSha256'])}
+  rows.append(r);report={'encoder':{'pillow':Image.__version__,'libwebp':features.version('webp'),'format':'WebP','dimensions':'Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged' if args.resize_drowned or args.resize_map or args.resize_carlisle else 'unchanged','lossyQualityCandidates':[85,90,95],'minPSNR':40,'maxP99':8,'maxError':64,'losslessPNG':True},'models':models,'images':sorted(rows,key=lambda r:r['sourceSha256'])}
   (OUT/'report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'done':len(rows),'total':len(unique),'sha':r['sourceSha256'][:12],'uses':len(r.get('uses',[])),'sourceBytes':r.get('sourceBytes'),'encodedBytes':r.get('encodedBytes'),'quality':r.get('quality'),'skip':r.get('skip'),'error':r.get('error')}),flush=True)
 print(json.dumps({'uniqueEncoded':sum('encodedFile'in r for r in rows),'usedEncoded':sum(len(r.get('uses',[]))for r in rows if 'encodedFile'in r),'savedBytes':sum(r.get('savedBytes',0)*len(r.get('uses',[]))for r in rows),'errors':sum('error'in r for r in rows)}),flush=True)
 
 if any('error' in r for r in rows):raise RuntimeError('Resolve encoding errors before review')
 accepted=[r for r in sorted(rows,key=lambda r:r['sourceSha256']) if 'encodedFile' in r]
-manifest={'v':1,'encoder':report['encoder'],'policy':POLICY if args.resize_drowned or args.resize_map else None,'textures':[],'models':[]};selected={}
+manifest={'v':1,'encoder':report['encoder'],'policy':POLICY if args.resize_drowned or args.resize_map or args.resize_carlisle else None,'textures':[],'models':[]};selected={}
 (DEST/'encoded').mkdir(parents=True)
 for row in accepted:
  image={k:row[k] for k in ['width','height','lossless','quality','psnr','p99','max','meanAbs']}

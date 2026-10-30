@@ -176,7 +176,7 @@ function loadLibrary(wanted:()=>boolean):Promise<Map<CityKind,Template>> {
 }
 function loadExtra(kind:CityKind,wanted:()=>boolean):Promise<Template>{
  const spec=CITY_ASSETS[kind];
- return sceneryLoads.run(()=>new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'carlisle-kit/'+spec.file),wanted).then(gltf=>{
+ return sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(import.meta.env.BASE_URL+'carlisle-kit/'+spec.file),wanted).then(gltf=>{
   gltf.scene.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
   const matrix=new THREE.Matrix4().makeScale(spec.size[0]/size.x,spec.size[1]/size.y,spec.size[2]/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
   const parts:Part[]=[];gltf.scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;const source=(Array.isArray(mesh.material)?mesh.material[0]:mesh.material) as THREE.MeshStandardMaterial;const geometry=floatGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld).applyMatrix4(matrix);geometry.userData.shared=true;geometry.computeBoundingSphere();const material=stylize(source);material.emissive.set(0);material.color.set('#ffffff');material.normalScale.setScalar(.25);parts.push({geometry,material});});

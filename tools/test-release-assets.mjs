@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,readFile,writeFile,symlink,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {retiredFontAsset,pruneRetiredFontAssets,prepareFontArchives,LOCAL_REVIEW_DIRECTORIES,LOCAL_REVIEW_FILES,localReviewAsset,pruneLocalReviewAssets} from './release-assets.mjs';
+import {retiredFontAsset,pruneRetiredFontAssets,prepareFontArchives,prepareReviewCatalog,LOCAL_REVIEW_DIRECTORIES,LOCAL_REVIEW_FILES,localReviewAsset,pruneLocalReviewAssets} from './release-assets.mjs';
+import {gunzipSync} from 'node:zlib';
 import {zipSync,unzipSync} from 'three/examples/jsm/libs/fflate.module.js';
 import {createServer} from 'vite';
 import {measureRelease,releaseWithinBudget,RELEASE_BYTE_LIMIT} from './check-release-size.mjs';
@@ -17,6 +18,29 @@ assert.throws(()=>retiredFontAsset('fonts/roo-bonus-v9.png',{bonus:undefined,cou
 const root=await mkdtemp(path.join(tmpdir(),'release-assets-'));
 try{
  const source=path.join(root,'public'),outDir=path.join(root,'dist');
+ const catalogPath='animations/skate-review/catalog';
+ const catalogBytes=Buffer.from(JSON.stringify({revision:31,clips:[{id:'study',tracks:[{keys:[{time:0,value:[0,.123456789123456,1]}]}]}]}));
+ for(const base of [source,outDir]){
+  await mkdir(path.join(base,'animations/skate-review'),{recursive:true});
+  await writeFile(path.join(base,catalogPath+'.json'),catalogBytes);
+ }
+ const catalogResult=await prepareReviewCatalog({root,outDir});
+ const packedCatalog=await readFile(path.join(outDir,catalogPath+'.bin'));
+ assert.deepEqual(gunzipSync(packedCatalog),catalogBytes,'every catalogue byte and numeric keyframe is preserved');
+ assert.deepEqual(await readFile(path.join(source,catalogPath+'.json')),catalogBytes,'source catalogue stays editable');
+ await assert.rejects(readFile(path.join(outDir,catalogPath+'.json')),/ENOENT/);
+ assert.deepEqual(await prepareReviewCatalog({root,outDir}),catalogResult,'catalogue packing is idempotent');
+ await assert.rejects(prepareReviewCatalog({root,outDir:source}),/overlaps source/);
+ await rm(path.join(outDir,catalogPath+'.bin'));
+ await symlink(path.join(source,catalogPath+'.json'),path.join(outDir,catalogPath+'.bin'));
+ await assert.rejects(prepareReviewCatalog({root,outDir}),/regular file/);
+ assert.deepEqual(await readFile(path.join(source,catalogPath+'.json')),catalogBytes);
+ await rm(path.join(outDir,catalogPath+'.bin'));
+ await prepareReviewCatalog({root,outDir});
+ const catalogLink=path.join(root,'catalog-link');
+ await mkdir(path.join(catalogLink,'animations'),{recursive:true});
+ await symlink(path.join(source,'animations/skate-review'),path.join(catalogLink,'animations/skate-review'),'dir');
+ await assert.rejects(prepareReviewCatalog({root,outDir:catalogLink}),/symlinks/);
  await mkdir(path.join(source,'fonts'),{recursive:true});await mkdir(path.join(outDir,'fonts'),{recursive:true});
  for(const name of ['roo-bonus-v9.png','roo-bonus-v10.png','roo-image-font-v10.zip','SECONDARY-FONT-NOTICE.md'])for(const directory of [source,outDir])await writeFile(path.join(directory,'fonts',name),'original '+name);
  const result=await pruneRetiredFontAssets({root,outDir,fontVersions:versions});
@@ -88,6 +112,10 @@ try{
  await assert.rejects(pruneLocalReviewAssets({root,outDir:reviewLink}),/real directory/);
  const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
  try{
+  const {decodeSkateReviewCatalog}=await server.ssrLoadModule('/src/animation/skateCatalog.ts');
+  assert.deepEqual(decodeSkateReviewCatalog(packedCatalog),JSON.parse(catalogBytes));
+  assert.deepEqual(decodeSkateReviewCatalog(catalogBytes),JSON.parse(catalogBytes),'already decompressed responses remain supported');
+  assert.throws(()=>decodeSkateReviewCatalog(new Uint8Array([0x1f,0x8b,0])));
   const {buildRooFontArchive}=await server.ssrLoadModule('/src/roo-type/archive.ts');
   let requests=[],active=0,peak=0,broken=false;
   const fetcher=async url=>{

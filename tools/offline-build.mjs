@@ -1,11 +1,12 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets} from './release-assets.mjs';
+import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets,prepareReviewCatalog} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
 import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
 import {preparePublishedLevels} from './release-levels.mjs';
 import {prepareNativeGeometry} from './release-native-geometry.mjs';
+import {prepareReleaseImages} from './release-images.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 async function filesIn(directory, prefix = '') {
@@ -27,7 +28,7 @@ export function runtimeAsset(file, fontVersions) {
   if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
   if (file.startsWith('fonts/')) {
     if (/\.(?:otf|ttf|woff2?)$/.test(file)) return true;
-    const atlas = file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.(?:png|json)$/);
+    const atlas = file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.(?:png|webp|json)$/);
     if(atlas)return Object.values(fontVersions).includes(Number(atlas[2]));
     const exportFile=file.match(/^fonts\/roo-(?:image-font-v(\d+)\.manifest|font-v(\d+)-provenance)\.json$/);
     return !!exportFile&&Object.values(fontVersions).includes(Number(exportFile[1]??exportFile[2]));
@@ -58,6 +59,10 @@ export function offlineBuild() {
       console.log(`Shared textures: ${shared.images} exact images reused across ${shared.models} models, ${(shared.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const native=await prepareNativeGeometry({root,outDir});
       console.log(`Native geometry: ${native.files} complete models packed losslessly, ${(native.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
+      const catalogue=await prepareReviewCatalog({root,outDir});
+      const images=await prepareReleaseImages({root,outDir});
+      console.log(`Lossless images: ${images.images} pixel-identical WebPs, ${(images.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
+      console.log(`Animation catalogue: exact keyframes packed losslessly, ${(catalogue.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const entries = [];
       for (const file of await filesIn(outDir)) {
         if (!runtimeAsset(file, fontVersions)) continue;

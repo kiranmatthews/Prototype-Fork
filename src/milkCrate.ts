@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -38,7 +39,7 @@ function normalized(geometry: THREE.BufferGeometry, width: number, height: numbe
 function loadTemplate(name: 'blue-crate' | 'milk-bottle'): Promise<Template> {
   let promise = templates.get(name);
   if (!promise) {
-    promise = new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/milk-crate/${name}.glb`).then(gltf => {
+    promise = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}props/milk-crate/${name}.glb`).then(gltf => {
       let source: THREE.Mesh | undefined;
       gltf.scene.updateMatrixWorld(true);
       gltf.scene.traverse(object => { if ((object as THREE.Mesh).isMesh) source = object as THREE.Mesh; });

@@ -1,3 +1,4 @@
+import { releaseImageUrl } from '../releaseImageUrls';
 import { trackPresentationImage } from '../presentationLoading';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
 import type { RooAtlasMetrics } from './bake';
@@ -119,7 +120,7 @@ export function layoutRooAtlas(metrics:RooAtlasMetrics,raw:string,tracking=0) {
   return {glyphs,min,max,width:max-min};
 }
 
-function atlasUrl(palette:Palette,frame:number,size:RooAtlasCap){return `${import.meta.env.BASE_URL}fonts/roo-${palette}-v${ROO_ATLAS_METRICS[palette].version}${frame?'-light'+frame:''}${size===512?'':'-cap'+size}.png`;}
+function atlasUrl(palette:Palette,frame:number,size:RooAtlasCap){return releaseImageUrl(`${import.meta.env.BASE_URL}fonts/roo-${palette}-v${ROO_ATLAS_METRICS[palette].version}${frame?'-light'+frame:''}${size===512?'':'-cap'+size}.png`);}
 export function rooAtlasUrl(palette:Palette,frame=0){return images[palette][frame]?.src ?? atlasUrl(palette,frame,cap);}
 
 export function rooAtlasGlyphRect(metrics:RooAtlasMetrics,entry:{char:string;x:number;y:number;sx:number;sy:number}){

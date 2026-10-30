@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
@@ -804,7 +805,7 @@ function getTruckTemplate(path: string): Promise<THREE.Group> {
   const cached = truckTemplatePromises.get(url);
   if (cached) return cached;
   const promise = new Promise<THREE.Group>((resolve, reject) => {
-    new GLTFLoader().load(
+    new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(
       url,
       (gltf) => {
         const template = gltf.scene;

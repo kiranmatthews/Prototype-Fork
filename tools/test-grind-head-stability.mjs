@@ -124,9 +124,12 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
   assert.ok(grindFrames>=50,'replay did not exercise its grinding sequence');assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
   // Authored head tracks remain the final authority; removing one returns to
   // the independent procedural state rather than feeding the edit into it.
+  // The replay may finish in a bail/death settle depending on balance noise.
+  // Test the independent authored-pose contract on a fresh live rider.
+  rider.respawn(level,true);
   const authored=new THREE.Quaternion().setFromEuler(new THREE.Euler(.3,1.8,-.2));
   const remove=rider.setAuthoredPoseOverlay(({rig})=>rig.jointsById.get('head').node.quaternion.copy(authored));
-  rider.step(1/60,makeInput(),level);assert.ok(rider.headM.quaternion.angleTo(authored)<1e-6);remove();
+  rider.step(1/60,makeInput(),level);assert.ok(rider.headM.quaternion.angleTo(authored)<1e-6, `authored head changed in ${rider.state}: ${rider.headM.quaternion.angleTo(authored)}`);remove();
   rider.respawn(level,true);assert.equal(rider.headPitchPose,0);assert.equal(rider.headYawPose,0);
   console.log(`PASS supplied replay: ${grindFrames} grind frames, maximum ${peak.toFixed(2)}° head turn including trick transitions; no repeated flips. Authored head override and reset remain valid.`);
 });

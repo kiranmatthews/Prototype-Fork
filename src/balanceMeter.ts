@@ -1,3 +1,4 @@
+import { releaseImageUrl } from './releaseImageUrls';
 import {trackPresentationImage} from './presentationLoading';
 import {BALANCE_METER_ASSETS} from './balanceMeterAssets';
 
@@ -13,7 +14,7 @@ export function loadBalanceMeterAssets():Promise<void>{
  if(typeof Image==='undefined')return Promise.resolve();
  return loading??=Promise.all([...BALANCE_METER_ASSETS.frames.map((f,i)=>({file:f.file,set:(image:HTMLImageElement)=>images[i]=image})),
   {file:BALANCE_METER_ASSETS.glove.file,set:(image:HTMLImageElement)=>glove.set('pointer',image)}].map(({file,set})=>new Promise<void>(resolve=>{
-   const image=new Image(),url=import.meta.env.BASE_URL+file;trackPresentationImage(image,url);
+   const image=new Image(),url=releaseImageUrl(import.meta.env.BASE_URL+file);trackPresentationImage(image,url);
    image.onload=()=>{set(image);resolve();};image.onerror=()=>resolve();image.src=url;
   }))).then(()=>undefined);
 }

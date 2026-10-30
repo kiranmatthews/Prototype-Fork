@@ -1,6 +1,25 @@
 import {lstat,readdir,readFile,realpath,rm,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
+import {gzipSync,gunzipSync} from 'node:zlib';
+
+/** The opt-in animation study catalogue is large numeric JSON. Preserve every
+ * byte and keyframe in a compact binary download; public/ remains editable. */
+export async function prepareReviewCatalog({root,outDir}){
+ const source=await realpath(path.join(root,'public')),output=await realpath(outDir);
+ if(source===output||source.startsWith(output+path.sep)||output.startsWith(source+path.sep))throw Error('Release output overlaps source assets');
+ const relative='animations/skate-review/catalog',directory=path.join(output,'animations/skate-review');
+ if(await realpath(directory)!==directory)throw Error('Review catalogue output cannot contain symlinks');
+ for(const suffix of ['.json','.bin']){
+  try{const info=await lstat(path.join(output,relative+suffix));if(!info.isFile()||info.isSymbolicLink())throw Error('Review catalogue output must be a regular file');}
+  catch(error){if(error.code!=='ENOENT')throw error;}
+ }
+ const original=await readFile(path.join(source,relative+'.json')),packed=gzipSync(original,{level:9});
+ if(!gunzipSync(packed).equals(original))throw Error('Review catalogue changed during packing');
+ await writeFile(path.join(output,relative+'.bin'),packed);
+ await rm(path.join(output,relative+'.json'),{force:true});
+ return{sourceBytes:original.length,bytes:packed.length,savedBytes:original.length-packed.length};
+}
 
 // Historical comparison galleries are authoring tools, not gameplay assets.
 // Keep them available in public/ on the development server and mark their
@@ -12,6 +31,37 @@ export const LOCAL_REVIEW_DIRECTORIES = [
 ];
 export const LOCAL_REVIEW_FILES = [
  'carlisle-bonus/storyboard.html',
+ // Unjoined deck sources and the rejected body-shaped cone are authoring
+ // comparisons; the runtime uses the joined decks and literal cone body.
+ 'props/carlisle-decks/broad-deck.glb', 'props/carlisle-decks/solid-timber.glb',
+ 'props/carlisle-cone/cone.glb',
+ // Complete Blockworks models are used at every distance. Retired standalone
+ // distance-reduction variants remain in the local source library only.
+ 'blockworks-art/aqueduct-coping-lod.glb',
+ 'blockworks-art/aqueduct-v3-lod.glb',
+ 'blockworks-art/buttress-lod.glb',
+ 'blockworks-art/cliff-lod.glb',
+ 'blockworks-art/coaster-v2-lod.glb',
+ 'blockworks-art/flagstone-deck-v4-lod.glb',
+ 'blockworks-art/foliage-lod.glb',
+ 'blockworks-art/grind-rail-lod.glb',
+ 'blockworks-art/hanging-vines-lod.glb',
+ 'blockworks-art/ice-deck-lod.glb',
+ 'blockworks-art/jungle-shelf-v2-lod.glb',
+ 'blockworks-art/lantern-lod.glb',
+ 'blockworks-art/metal-wedge-lod.glb',
+ 'blockworks-art/palm-lod.glb',
+ 'blockworks-art/parapet-v2-lod.glb',
+ 'blockworks-art/rivet-deck-v2-lod.glb',
+ 'blockworks-art/rubble-lod.glb',
+ 'blockworks-art/spire-v2-lod.glb',
+ 'blockworks-art/stone-wedge-lod.glb',
+ 'blockworks-art/turret-lod.glb',
+ 'blockworks-art/viaduct-v2-lod.glb',
+ 'blockworks-art/wall-bay-lod.glb',
+ 'blockworks-art/wheel-lod.glb',
+ 'blockworks-art/winch-lod.glb',
+
  // Superseded painting sources: the registries retain the alpha Treehouse
  // mattes, haunted sky-v2 and Custard pool-v4 / cliffs-v2 instead.
  'treehouse-trials/forest-depth.ktx2', 'treehouse-trials/forest-depth.webp',

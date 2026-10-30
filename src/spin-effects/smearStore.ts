@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { disposeSpinModel, normalizeSpinSmear, type SpinSmearSettings } from './smear';
@@ -47,7 +48,7 @@ async function writeModel(value: SavedModel): Promise<void> {
 }
 
 async function parseModel(glb: ArrayBuffer): Promise<THREE.Group> {
-  const { scene } = await new GLTFLoader().parseAsync(glb, '');
+  const { scene } = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(glb, '');
   // No rig, animation or external asset URL is required by a baked model.
   if (!scene.children.length) throw new Error('The baked spin model is empty.');
   return scene;

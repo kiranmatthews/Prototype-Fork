@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -38,7 +39,7 @@ function prepareGeometry(source:THREE.BufferGeometry):THREE.BufferGeometry {
 }
 function template(nitro:boolean):Promise<Template>{
   let pending=templates.get(nitro);
-  if(!pending){pending=new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/explosives/${nitro?'nitro':'tnt'}-bundle.glb`).then(gltf=>{
+  if(!pending){pending=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}props/explosives/${nitro?'nitro':'tnt'}-bundle.glb`).then(gltf=>{
     let mesh:THREE.Mesh|undefined;gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)mesh=o as THREE.Mesh;});
     if(!mesh)throw new Error('Bundle GLB has no mesh');
     const geometry=prepareGeometry(mesh.geometry.clone().applyMatrix4(mesh.matrixWorld));mesh.geometry.dispose();

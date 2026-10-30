@@ -7,7 +7,7 @@ import {execFileSync} from 'node:child_process';
 export async function createCourseCameraHarness(runtime, aspect=16/10) {
   const deps={THREE:runtime.THREE,level:runtime.l,player:runtime.p};
   for(const name of ['tuning','level','cameraRig','cameraViews','cameraLook','cameraSpeedEffect',
-    'skateChaseCamera','skateParkTuning','loopCamera','cameraHeroFraming','boss/camera',
+    'skateChaseCamera','skateParkTuning','loopCamera','cameraHeroFraming','launchCamera','boss/camera',
     'carlisleSceneryCollision','boulderChase','race/finishPresentation'])
     Object.assign(deps,await runtime.server.ssrLoadModule(`/src/${name}.ts`));
   const baseline=process.env.SKYSTREAM_DROP_BASELINE;

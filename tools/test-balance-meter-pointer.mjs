@@ -11,7 +11,7 @@ const {BALANCE_METER_ASSETS:assets}=moduleAt('../src/balanceMeterAssets.ts');
 globalThis.Image=class {
   set src(file){this.file=file;const bytes=readFileSync(new URL('../public/'+file,import.meta.url));this.width=bytes.readUInt32BE(16);this.height=bytes.readUInt32BE(20);queueMicrotask(()=>this.onload());}
 };
-const meter=moduleAt('../src/balanceMeter.ts',name=>name==='./balanceMeterAssets'?{BALANCE_METER_ASSETS:assets}:{trackPresentationImage(){}});
+const meter=moduleAt('../src/balanceMeter.ts',name=>name==='./balanceMeterAssets'?{BALANCE_METER_ASSETS:assets}:name==='./releaseImageUrls'?{releaseImageUrl:url=>url}:{trackPresentationImage(){}});
 await meter.loadBalanceMeterAssets();
 const apply=(m,x,y)=>[m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5]];
 function context(){

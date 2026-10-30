@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AssetCache, disposeTextures } from './assetLifetime';
@@ -6,7 +7,7 @@ import { TempleBreath, templeTikiPhase, type TikiPhase } from './templeBreath';
 export { templeTikiPhase, type TikiPhase } from './templeBreath';
 
 const assets=new AssetCache<string,THREE.Group>(async()=>{
-  const gltf=await new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}temple-night/tiki-head.glb`);
+  const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}temple-night/tiki-head.glb`);
   const root=gltf.scene,box=new THREE.Box3().setFromObject(root),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
   const wrapper=new THREE.Group();root.position.sub(new THREE.Vector3(center.x,box.min.y,center.z));wrapper.add(root);
   wrapper.scale.set(2.8/size.x,3/size.y,2.4/size.z);

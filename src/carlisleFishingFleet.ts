@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import {GLTFLoader,type GLTF} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {AssetCache,disposeTextures} from './assetLifetime';
@@ -5,7 +6,7 @@ import {sceneryLoads} from './assetLoadQueue';
 
 type P=[number,number,number];
 const cache=new AssetCache<'shrimp-boat',GLTF>(async(_key,_dependency,wanted)=>{
-  const gltf=await sceneryLoads.run(()=>new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/carlisle-fleet/shrimp-boat.glb`),wanted);
+  const gltf=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}props/carlisle-fleet/shrimp-boat.glb`),wanted);
   gltf.scene.updateMatrixWorld(true);
   gltf.scene.traverse(n=>{const mesh=n as THREE.Mesh;if(!mesh.isMesh)return;
     mesh.geometry.userData.shared=true;

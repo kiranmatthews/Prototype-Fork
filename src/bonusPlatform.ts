@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 
@@ -56,7 +57,7 @@ export class BonusJumpGate {
 type Template={geometry:THREE.BufferGeometry;material:THREE.MeshLambertMaterial};
 let pending:Promise<Template>|undefined;
 function template(){
-  return pending??=new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/bonus-platform/question-masonry.glb`).then(gltf=>{
+  return pending??=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}props/bonus-platform/question-masonry.glb`).then(gltf=>{
     let source:THREE.Mesh|undefined;gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)source=o as THREE.Mesh;});
     if(!source)throw new Error('Bonus platform GLB contains no mesh');
     // Meshy's source faces diagonally; put the question-mark dot toward +Z,

@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AssetCache, disposeTextures } from './assetLifetime';
@@ -27,7 +28,7 @@ const isBuilding=(name:Kit):name is Building=>name==='fish-market'||name==='repa
 const cache=new AssetCache<Kit,GLTF>(async (name,_dependency,wanted)=>{
   const path=isBuilding(name)?`carlisle-buildings/${name}`:`carlisle-shipyard/${String(names.indexOf(name)+1).padStart(2,'0')}-${name}`;
   const url=`${import.meta.env.BASE_URL}props/${path}.glb`;
-  const gltf=await sceneryLoads.run(()=>new GLTFLoader().loadAsync(url),wanted);
+  const gltf=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url),wanted);
   gltf.scene.updateMatrixWorld(true);
   gltf.scene.traverse(n=>{const m=n as THREE.Mesh;if(!m.isMesh)return;
     m.geometry.userData.shared=true;

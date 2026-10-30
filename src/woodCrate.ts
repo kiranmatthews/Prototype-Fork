@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -60,7 +61,7 @@ function fallbackTemplate(): Template {
   return fallback ??= { geometry: shared(new THREE.BoxGeometry(1, 1, 1)), materials: materials(woodCrateTexture()) };
 }
 function template(): Promise<Template> {
-  return loading ??= new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/wood-crate/classic-wood-crate.glb`).then(gltf => {
+  return loading ??= new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}props/wood-crate/classic-wood-crate.glb`).then(gltf => {
     gltf.scene.updateMatrixWorld(true);
     const pieces: THREE.BufferGeometry[] = [];
     let map: THREE.Texture | null = null;

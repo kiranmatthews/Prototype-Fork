@@ -1,3 +1,4 @@
+import { releaseImageUrl } from './releaseImageUrls';
 import { createSkystreamSun } from './skystreamSun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
 import { CountryClubCarts } from './golf-cart/course';
@@ -613,7 +614,7 @@ function loadSky(p: SkyPreset): Promise<void> {
       );
     settle();
   };
-  img.src = import.meta.env.BASE_URL + file;
+  img.src = releaseImageUrl(import.meta.env.BASE_URL + file);
   return promise;
 }
 

@@ -28,7 +28,7 @@ await withSkateRuntime(async({player:p,level,CONST,TUNING,THREE})=>{
   assert.ok(Math.abs(neutral.x)<.001);assert.equal(p.freeSkate,board);
   if(board)assert.ok(Math.abs(neutral.speed-start.speed)<1e-8,'neutral input taxed board carry');
   else assert.ok(Math.abs(neutral.z)<.001);
-  assert.ok(p.trampolineCameraTarget>.99,'big air did not request the wide camera');
+  assert.ok(p.launchCameraPresentation?.strength>.99,'big air did not request the wide camera');
   const sideStart=launch(x,{board});
   for(let i=0;i<30;i++)tick({moveX:1});
   const side=p.pos.x-sideStart.x;
@@ -51,22 +51,27 @@ await withSkateRuntime(async({player:p,level,CONST,TUNING,THREE})=>{
    const vy=p.vVel;tick({jumpPressed:true,jumpHeld:true});tick({jumpReleased:true});
    assert.ok(p.vVel<vy,'abandon-ship granted an extra airborne jump');
   }else{
-   launch(x);tick({jumpReleased:true});tick({jumpPressed:true,jumpHeld:true});tick({jumpReleased:true});
-   assert.equal(p.lastJumpType,'Double Jump');assert.equal(p.doubleJumpAir,true);
-   assert.equal(p.emergencyEjectLandingPending,false,'foot bounce tried to abandon a board');
+   launch(x);const loose=p.looseBoard;
+   tick({jumpReleased:true});tick({jumpPressed:true,jumpHeld:true});tick({jumpReleased:true});
+   // The integrated launch animation uses the shared air-pop/landing-roll
+   // state on foot too; only a mounted rider discards a board.
+   assert.equal(p.lastJumpType,'Trampoline Jump');assert.equal(p.doubleJumpAir,false);
+   assert.equal(p.emergencyEjectLandingPending,true);assert.equal(p.looseBoard,loose);
+   const vy=p.vVel;tick({jumpPressed:true,jumpHeld:true});tick({jumpReleased:true});
+   assert.ok(p.vVel<vy,'foot spring granted a third jump');
   }
   rows.push({kind:x===0?'static':'moving',board,sidewaysMetresInHalfSecond:side,neutral});
  }
  // Small native springs keep their existing walking air control and camera.
  launch(80,{held:false});tick({moveX:1});
- assert.equal(p.trampolineCameraTarget,0);assert.ok(Math.abs(p.pos.x-80-TUNING.walkSpeed*dt)<.001);
+ assert.equal(p.launchCameraPresentation,null);assert.ok(Math.abs(p.pos.x-80-TUNING.walkSpeed*dt)<.001);
  // An ordinary board ollie retains its input sequence and has no spring steering.
  p.respawn(level,true,false,{position:new THREE.Vector3(-70,.12,0),heading:new THREE.Vector3(0,0,-1)});
  p.freeSkate=true;p.speed=12;for(let i=0;i<12;i++)tick({jumpHeld:true});tick({jumpReleased:true});
- assert.equal(p.boardOllieAir,true);assert.equal(p.trampolineCameraTarget,0);
+ assert.equal(p.boardOllieAir,true);assert.equal(p.launchCameraPresentation,null);
  const x=p.pos.x;for(let i=0;i<4;i++)tick({moveX:1});assert.ok(Math.abs(p.pos.x-x)<.001);
  tick({jumpPressed:true,jumpHeld:true});tick({jumpReleased:true});assert.equal(p.lastJumpType,'Emergency Eject');
  assert.equal(JSON.stringify(TUNING),original);
- console.log(JSON.stringify({rows,ordinaryOllie:true,footDoubleJump:true,smallSpringUnchanged:true,tuningUnchanged:true},null,2));
+ console.log(JSON.stringify({rows,ordinaryOllie:true,footAirPop:true,smallSpringUnchanged:true,tuningUnchanged:true},null,2));
  console.log('PASS trampoline sidesteps, countersteering, braking, neutral carry, native arcs and fresh-release abandon-ship.');
 },{levelEntry:{id:'__trampoline-controls',name:data.name,data}});

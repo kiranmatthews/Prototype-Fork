@@ -1,3 +1,4 @@
+import { releaseImageUrl } from './releaseImageUrls';
 import * as THREE from 'three';
 import type {BoulderCameraRun} from './boulderCameraRun';
 import type {GameHudFrameState} from './gameHudSurface';
@@ -20,7 +21,7 @@ export class CrackedDisplay {
  private readonly images:HTMLImageElement[]=[];
  prepare():void {
   if(this.images.length)return;
-  for(const file of CRACK_VARIANTS){const image=new Image();image.src=import.meta.env.BASE_URL+'boulder-camera/'+file;this.images.push(image);void image.decode().catch(()=>{});}
+  for(const file of CRACK_VARIANTS){const image=new Image();image.src=releaseImageUrl(import.meta.env.BASE_URL+'boulder-camera/'+file);this.images.push(image);void image.decode().catch(()=>{});}
  }
  begin(run:BoulderCameraRun,camera:THREE.Camera):void {
   this.reset();this.prepare();this.run=run;this.rotation.copy(camera.quaternion);

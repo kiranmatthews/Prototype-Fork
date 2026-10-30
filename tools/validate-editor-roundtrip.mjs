@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { setImmediate as nextTurn } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { assertEditorRuntimeAuthoring } from "./editor-runtime-regressions.mjs";
 
@@ -1254,8 +1255,11 @@ function assertIslandHopper(data, level) {
 function assertCoastalStreet(data, level) {
   assert.equal(
     data.components.filter((component) => component.dkind === "coastalhouse").length,
-    64,
+    0, // The authored modular town replaced the old one-piece houses.
   );
+  for (const kind of ["baybody", "bayroof", "baywindow", "baydoor"])
+    assert.ok(data.components.some(component => component.dkind === kind), `missing modular town part ${kind}`);
+  assert.equal(data.kiteTow, true);
   assert.equal(
     data.components.filter((component) => component.dkind === "roadarrow").length,
     99,
@@ -1283,7 +1287,7 @@ function assertCoastalStreet(data, level) {
           component.grp === 1 &&
           (component.t === "platform" || component.t === "ramp"),
       )
-      .every((component) => component.tex === "solid"),
+      .every((component) => component.tex === "bay-paving" && component.edgeGrinding !== false),
   );
   assert.deepEqual(data.ocean, {
     geometryVersion: 2,
@@ -1298,19 +1302,19 @@ function assertCoastalStreet(data, level) {
     sourceCoordinates: "unity",
   });
   assert.deepEqual(data.unitySand, [
-    { p: [55, -0.78, -1500], s: [70, 0.8, 3300] },
+    { p: [55, -3.4, -1500], s: [70, 0.8, 3300] },
   ]);
   if (!level) return;
   assert.ok(level.water);
   assert.equal(level.water.stats.shoreSamples, 161);
   if (window.location.search.includes("lite")) {
     assert.equal(level.water.stats.quality, "lite");
-    assert.equal(level.water.stats.verts, 5_508);
-    assert.equal(level.water.stats.tris, 10_560);
+    assert.equal(level.water.stats.verts, 5_363);
+    assert.equal(level.water.stats.tris, 10_336);
   } else {
     assert.equal(level.water.stats.quality, "full");
-    assert.equal(level.water.stats.verts, 21_252);
-    assert.equal(level.water.stats.tris, 41_600);
+    assert.equal(level.water.stats.verts, 20_867);
+    assert.equal(level.water.stats.tris, 41_056);
   }
   const sandMeshes = [];
   const coastalBatches = [];
@@ -1331,9 +1335,6 @@ function assertCoastalStreet(data, level) {
   );
   for (const role of [
     "coastal:route-arrow",
-    "coastal:house-roof",
-    "coastal:house-window",
-    "coastal:house-door",
   ])
     assert.ok(
       coastalBatches.some((material) => material.name === role),
@@ -1448,10 +1449,12 @@ function assertTestEnemyReset(data, level) {
   sentry.group.position.y = sentry.baseY + 22;
   sentry.state = "track";
   sentry.stateT = 0;
+  // The current Test Course has solid side walls. Aim down its open corridor;
+  // the former sideways target correctly fails the line-of-sight test.
   level.playerPos.set(
-    sentry.group.position.x - 20,
+    sentry.group.position.x,
     sentry.baseY,
-    sentry.group.position.z,
+    sentry.group.position.z - 20,
   );
   for (let frame = 0; frame < 240; frame++) level.sentryStep(sentry, 1 / 60);
   assert.equal(
@@ -1464,9 +1467,9 @@ function assertTestEnemyReset(data, level) {
   sentry.state = "track";
   sentry.stateT = 0;
   level.playerPos.set(
-    sentry.group.position.x - 40,
+    sentry.group.position.x,
     sentry.baseY,
-    sentry.group.position.z,
+    sentry.group.position.z - 40,
   );
   for (let frame = 0; frame < 240; frame++) level.sentryStep(sentry, 1 / 60);
   assert.equal(
@@ -1477,9 +1480,9 @@ function assertTestEnemyReset(data, level) {
   sentry.state = "track";
   sentry.stateT = 0;
   level.playerPos.set(
-    sentry.group.position.x - 20,
+    sentry.group.position.x,
     sentry.baseY,
-    sentry.group.position.z,
+    sentry.group.position.z - 20,
   );
   for (let frame = 0; frame < 240; frame++) level.sentryStep(sentry, 1 / 60);
   assert.ok(
@@ -1725,6 +1728,7 @@ try {
       );
     } finally {
       campaignLevel.dispose();
+      await nextTurn();
     }
   }
   console.log("Validated ordinary campaign bonus platforms and boss/competition exclusions.");
@@ -1936,6 +1940,9 @@ try {
         afterLevel?.dispose();
         beforeLevel?.dispose();
         setEditorBuild(false);
+        // Let rejected headless asset jobs release their scene references. A
+        // synchronous matrix otherwise retains every disposed Level until EOF.
+        await nextTurn();
       }
     }
   }
@@ -1978,76 +1985,53 @@ try {
       assert.ok(validCapture,
         "captured source level cannot pass the same validation used for sharing/import");
       if (entry.id === "beachfront") {
-        const beachDecks = original.groundMeshes.filter(
-          (mesh) => mesh.userData.woodPathComp,
-        );
-        assert.equal(
-          beachDecks.length,
-          7,
-          "Beachside runtime must contain seven continuous collision decks",
-        );
-        assert.equal(original.rails.length, 14, "Beachside needs two rails per boardwalk");
-        assert.equal(original.crates.length, 16, "Beachside source crates drifted");
-        assert.equal(original.checkpoints.length, 4, "Beachside checkpoints drifted");
-        assert.equal(original.pickups.length, 84, "Beachside fruit rhythm drifted");
-        assert.ok(original.water, "Beachside lost the shared MatrixRex ocean");
+        const { SUNNY_BEACH_LEVEL } = await server.ssrLoadModule('/src/levels/sunny-beach.ts');
+        const sourcePaths = migrateCustomLevel(clone(SUNNY_BEACH_LEVEL)).components.filter(c => c.t === 'woodpath');
+        const capturedPaths = captured.components.filter(c => c.t === 'woodpath');
+        const beachDecks = original.groundMeshes.filter(mesh => mesh.userData.woodPathComp);
+        assert.equal(sourcePaths.length, 33, 'extended Banana Bay boardwalk fixture changed');
+        assert.equal(beachDecks.length, sourcePaths.length, 'a continuous collision deck was lost or duplicated');
+        const pathContract = c => [c.nm, c.p, c.pts, c.w, c.widths, c.curve];
+        assert.deepEqual(capturedPaths.map(pathContract), sourcePaths.map(pathContract),
+          'native capture changed the authored extended boardwalks');
+        assert.equal(original.rails.length, 68, 'Beachside source rails drifted');
+        assert.equal(original.crates.length, 111, 'Beachside source crates drifted');
+        assert.equal(original.checkpoints.length, 14, 'Beachside checkpoints drifted');
+        assert.equal(original.pickups.length, 226, 'Beachside fruit rhythm drifted');
+        assert.ok(original.water, 'Beachside lost the shared MatrixRex ocean');
         const visualCounts = { planks: 0, poles: 0 };
-        original.pickRoot.traverse((object) => {
-          if (object.name === "woodpath parts · planks") visualCounts.planks++;
-          if (object.name === "woodpath parts · poles") visualCounts.poles++;
+        original.pickRoot.traverse(object => {
+          if (object.name === 'woodpath parts · planks') visualCounts.planks++;
+          if (object.name === 'woodpath parts · poles') visualCounts.poles++;
         });
-        assert.deepStrictEqual(
-          visualCounts,
-          { planks: 7, poles: 7 },
-          "Beachside boardwalk visual batches split or duplicated",
-        );
-        const definitions = [
-          [50, -1.5],
-          [138, 1.4],
-          [228, -3],
-          [318, 0.5],
-          [414, -2],
-          [505, 2],
-          [604, -1],
-        ];
+        assert.deepEqual(visualCounts, { planks: 38, poles: 38 }, 'boardwalk and timber dressing visual batches split or duplicated');
+        // The old seven-pier route was replaced by named cargo/terrace paths.
+        // Probe their authored centreline knots, keeping real collision checks.
         const ray = new THREE.Raycaster();
-        for (let sequence = 0; sequence < definitions.length; sequence++) {
-          const [start, lateral] = definitions[sequence];
-          let cursor = start;
-          for (let island = 0; island < 3; island++) {
-            const length = 10 + ((sequence * 5 + island * 7) % 9);
-            const gapStart = cursor + length;
-            const gapEnd = gapStart + 3 + ((sequence + island) % 3);
-            const midpoint = (gapStart + gapEnd) * 0.5;
-            const point = beachfrontPointAtDistance(midpoint, lateral, 12);
-            ray.set(
-              new THREE.Vector3(point[0], point[1], point[2]),
-              new THREE.Vector3(0, -1, 0),
-            );
-            ray.far = 20;
-            const hit = ray.intersectObjects(beachDecks, false)[0];
-            assert.ok(
-              hit,
-              `Beachside sequence ${sequence + 1} former gap ${island + 1} has no joined collision`,
-            );
-            cursor = gapEnd;
+        for (const component of sourcePaths) {
+          const points = component.pts;
+          const probes = points.length > 2 ? points.slice(1, -1) : [[
+            (points[0][0] + points[1][0]) / 2, (points[0][1] + points[1][1]) / 2,
+            0, ((points[0][3] ?? 0) + (points[1][3] ?? 0)) / 2,
+          ]];
+          const mesh = beachDecks.find(m => m.userData.woodPathComp.nm === component.nm);
+          assert.ok(mesh, component.nm + ' collision owner missing');
+          for (const point of probes) {
+            ray.set(new THREE.Vector3(component.p[0] + point[0], component.p[1] + (point[3] ?? 0) + 20,
+              component.p[2] + point[1]), new THREE.Vector3(0, -1, 0));
+            ray.far = 40;
+            assert.ok(ray.intersectObject(mesh, false).length, component.nm + ' has an unsupported centreline knot');
           }
         }
-        assert.equal(
-          captured.components.filter((component) => component.t === "woodpath")
-            .length,
-          7,
-          "Beachside editor capture split or dropped a joined boardwalk",
-        );
       }
       if (entry.id === "jungle") {
         const wallPaths = captured.components.filter(
           (component) => component.t === "wallpath",
         );
-        assert.equal(wallPaths.length, 41, "Jungle wallpaths were dropped or duplicated");
+        assert.equal(wallPaths.length, 42, "Jungle wallpaths were dropped or duplicated");
         assert.equal(
           wallPaths.filter((component) => component.solid === false).length,
-          26,
+          27, // Includes the authored rooted bank behind the climbing terraces.
           "Jungle earth banks lost visual-only wallpath identity",
         );
         const piers = wallPaths.filter((component) => component.nm?.endsWith("pier collision"));
@@ -2110,6 +2094,7 @@ try {
     } finally {
       rebuilt?.dispose();
       original?.dispose();
+      await nextTurn();
     }
   }
 } finally {

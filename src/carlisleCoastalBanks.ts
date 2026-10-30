@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import {GLTFLoader,type GLTF} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {AssetCache,disposeTextures} from './assetLifetime';
@@ -22,7 +23,7 @@ export const CARLISLE_COASTAL_BANKS:CoastalBank[]=[
 ].map(([station,offset,width,turn],i)=>({kind:i%3===1?'marsh-bank':'dune-bank',station,offset,width,turn,submerge:1.7+(i%3)*.3}));
 
 const cache=new AssetCache<Kind,GLTF>(async(key,_dependency,wanted)=>{
-  const gltf=await sceneryLoads.run(()=>new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/carlisle-coast/${key}.glb`),wanted);
+  const gltf=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`${import.meta.env.BASE_URL}props/carlisle-coast/${key}.glb`),wanted);
   gltf.scene.updateMatrixWorld(true);
   gltf.scene.traverse(n=>{const m=n as THREE.Mesh;if(!m.isMesh)return;
     m.geometry.userData.shared=true;

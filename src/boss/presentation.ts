@@ -1,3 +1,4 @@
+import { releaseImageUrl } from '../releaseImageUrls';
 import * as THREE from 'three';
 import { campaignLevelById } from '../campaign';
 import { GameHudSurface } from '../gameHudSurface';
@@ -21,7 +22,7 @@ export class BossPresentation {
   constructor(){
     this.root.className='boss-hud';this.root.hidden=true;this.root.setAttribute('aria-label',`${CHIEF_NAME} health`);
     this.portrait.className='boss-portrait';this.portrait.alt=CHIEF_NAME;
-    this.portrait.src=import.meta.env.BASE_URL+'boss/chief-portrait.png';trackPresentationImage(this.portrait,this.portrait.src);
+    this.portrait.src=releaseImageUrl(import.meta.env.BASE_URL+'boss/chief-portrait.png');trackPresentationImage(this.portrait,this.portrait.src);
     this.bar.className='boss-health';this.bar.setAttribute('role','meter');this.bar.setAttribute('aria-label',`${CHIEF_NAME} health`);
     this.bar.setAttribute('aria-valuemin','0');this.bar.setAttribute('aria-valuemax','9');
     this.fill.className='boss-health-fill';this.name.className='boss-name';this.name.textContent=CHIEF_NAME.toUpperCase();

@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -12,7 +13,7 @@ export function configureBlockworksAssetRenderer(renderer:THREE.WebGLRenderer):v
 /** Load the original Meshy asset at every viewing distance. */
 export async function loadBlockworksModel(kind:string):Promise<THREE.Group>{
   const name=kind.replace(/^bw-/,''),base=import.meta.env.BASE_URL+'blockworks-art/'+name;
-  const loader=new GLTFLoader();if(compressedLoader)loader.setKTX2Loader(compressedLoader);
+  const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);if(compressedLoader)loader.setKTX2Loader(compressedLoader);
   const high=await loader.loadAsync(base+'.glb');
   const scene=high.scene;
   // Two fan faces in the generated liquid had inverted vertex normals.

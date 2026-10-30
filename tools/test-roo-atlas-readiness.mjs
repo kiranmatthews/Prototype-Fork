@@ -23,7 +23,7 @@ const source=(await readFile(new URL('../src/roo-type/atlas.ts',import.meta.url)
 const context=vm.createContext({Image,Map,Set,Promise,Event,queueMicrotask,setTimeout,clearTimeout,
   window:{addEventListener:(type,handler)=>listeners.set(type,handler),dispatchEvent(){}},
   displayAtlasCap:()=>128,ROO_ATLAS_METRICS:{bonus:{version:10,lightFrames:3},counter:{version:10,lightFrames:3}},
-  trackPresentationImage(){},getRooAppearance:()=>({tracking:0}),rooLightPosition:()=>0,rooLightWeights:()=>[1,0,0]});
+  trackPresentationImage(){},releaseImageUrl:url=>url,getRooAppearance:()=>({tracking:0}),rooLightPosition:()=>0,rooLightWeights:()=>[1,0,0]});
 vm.runInContext(ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.None}}).outputText,context);
 await vm.runInContext('loadRooAtlases()',context);
 let state=vm.runInContext('rooAtlasDiagnostics()',context);

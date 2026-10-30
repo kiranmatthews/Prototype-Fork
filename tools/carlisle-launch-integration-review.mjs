@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from '/Users/kiki/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 const base = process.env.CARLISLE_BASE ?? 'http://127.0.0.1:5483';
-const out = 'docs/carlisle-relay/launch-integration';
+const out = process.env.LAUNCH_REVIEW_OUT ?? 'docs/carlisle-relay/launch-integration';
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const report = { base, errors: [], flights: [] };

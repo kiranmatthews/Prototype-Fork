@@ -8,7 +8,7 @@ for(const file of NATIVE_GEOMETRY_FILES){
  const raw=await readFile('public/'+file),before=parseNativeGlb(raw),packed=await packNativeGlb(raw),after=parseNativeGlb(packed.bytes);
  assert.ok(packed.views>0);assert.ok(packed.bytes.length<raw.length);
  assert.deepEqual(await packNativeGlb(packed.bytes),{bytes:packed.bytes,views:0},'idempotent packing');
- for(const field of ['accessors','meshes','materials','images','textures','samplers','nodes','scenes','scene'])assert.equal(JSON.stringify(after.doc[field]),JSON.stringify(before.doc[field]),field+' changed');
+ for(const field of ['accessors','meshes','materials','images','textures','samplers','nodes','scenes','scene','skins','animations'])assert.equal(JSON.stringify(after.doc[field]),JSON.stringify(before.doc[field]),field+' changed');
  for(const [i,view] of before.doc.bufferViews.entries()){
   const original=before.binary.subarray(view.byteOffset??0,(view.byteOffset??0)+view.byteLength),next=after.doc.bufferViews[i],ext=next.extensions?.EXT_meshopt_compression;
   let decoded;

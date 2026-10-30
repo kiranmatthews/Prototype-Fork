@@ -50,5 +50,35 @@
       "emissiveTexture": 1024
     },
     "overrides": {}
+  },
+  "carlisle": {
+    "limits": {
+      "baseColorTexture": 2048,
+      "normalTexture": 512,
+      "metallicRoughnessTexture": 256
+    },
+    "overrides": {
+      "props/carlisle-decks/broad-deck-joined.glb": {
+        "baseColorTexture": 4096
+      },
+      "props/carlisle-decks/solid-timber-joined.glb": {
+        "baseColorTexture": 4096
+      },
+      "props/carlisle-coast/dune-bank.glb": {
+        "baseColorTexture": 1024
+      },
+      "props/carlisle-coast/marsh-bank.glb": {
+        "baseColorTexture": 1024
+      },
+      "props/carlisle-fleet/shrimp-boat.glb": {
+        "baseColorTexture": 8192
+      },
+      "props/carlisle-buildings/fish-market.glb": {
+        "baseColorTexture": 8192
+      },
+      "props/carlisle-buildings/repair-shed.glb": {
+        "baseColorTexture": 8192
+      }
+    }
   }
 }

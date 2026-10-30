@@ -1,3 +1,4 @@
+import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
 import { createCloudPlatform } from './cloudPlatform';

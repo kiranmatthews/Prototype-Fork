@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -56,7 +57,7 @@ const templates=new Map<AssetKind,AssetEntry>();
 function asset(kind:AssetKind):AssetEntry {
   const existing=templates.get(kind);if(existing)return existing;
   const entry:AssetEntry={status:'loading',promise:Promise.resolve(null)};
-  entry.promise=new Promise(resolve=>new GLTFLoader().load(import.meta.env.BASE_URL+GHOST_ASSETS[kind],gltf=>{
+  entry.promise=new Promise(resolve=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(import.meta.env.BASE_URL+GHOST_ASSETS[kind],gltf=>{
     gltf.scene.updateMatrixWorld(true);
     const bounds=new THREE.Box3().setFromObject(gltf.scene);
     if(bounds.isEmpty()){entry.status='error';entry.error='Empty Meshy asset';resolve(null);return;}

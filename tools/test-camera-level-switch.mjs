@@ -39,6 +39,7 @@ try {
    loopPresentationFrame:null,launchCameraPresentation:null,balanceMeter:null,camDir:new THREE.Vector3()});
   const context={...dependencies,
    launchCamera:new dependencies.LaunchCamera(),launchCamera2:new dependencies.LaunchCamera(),
+   cameraFallHold:new dependencies.CameraFallHold(),cameraFallHold2:new dependencies.CameraFallHold(),
    TUNING:{...dependencies.TUNING,chaseCam:0},
    camera:new THREE.PerspectiveCamera(49,16/9,.1,400),camera2:new THREE.PerspectiveCamera(49,16/9,.1,400),
    player:rider(),p2:rider(),input:{lookX:0,lookY:0},input2:{lookX:0,lookY:0},

@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -15,7 +16,7 @@ export const isCarlisleConeRow = (c: CustomComponent) => c.t === 'mesh' && c.sol
   / · red teeth \d+\.\d+$/.test(c.nm ?? '') && c.vertices?.length === 45;
 const assetUrl = () => `${import.meta.env.BASE_URL}props/carlisle-cone/cone-body.glb`;
 const cache = new AssetCache<string, GLTF>(async (url, _dependency, wanted) => {
-  const asset = rigLiteralCone(await sceneryLoads.run(() => new GLTFLoader().loadAsync(url), wanted));
+  const asset = rigLiteralCone(await sceneryLoads.run(() => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url), wanted));
   asset.scene.traverse(node => {
     const mesh = node as THREE.Mesh; if (!mesh.isMesh) return;
     mesh.geometry.userData.shared = true;

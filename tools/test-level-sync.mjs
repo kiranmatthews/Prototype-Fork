@@ -39,7 +39,8 @@ try{
  }
  assert.deepEqual(compact.sourceBacked,expectedStock,JSON.stringify(diagnostics));
  assert.deepEqual(compact.pack,{v:2,levels:pack.levels.filter(e=>overrides.has(e.id))});
- assert.equal(api.MAX_LEVEL_PACK_BYTES,16*1024*1024,'untrusted import allocation bound stays unchanged');
+ assert.equal(api.MAX_LEVEL_PACK_BYTES,96*1024*1024,'bounded import must fit the current authored pack');
+ assert.ok(original.length<=api.MAX_LEVEL_PACK_BYTES,'published source pack exceeds its import bound');
  assert.ok(api.normalizeUserLevelEntries(compact.pack.levels));
  const crown=pack.levels.find(e=>e.id==='drowned-crown');
  for(const edit of [e=>e.name+=' edited',e=>e.data.name+=' edited',e=>e.data.spawn[0]+=.000001,e=>e.data.spawn[0]+=1e-10,

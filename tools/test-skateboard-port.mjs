@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import * as THREE from "three";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const readText = (path) => readFile(`${root}${path}`, "utf8");
@@ -133,12 +134,14 @@ THREE.TextureLoader.prototype.load = function loadTextureStub() {
   return new THREE.Texture();
 };
 class LoaderStub {
+  setMeshoptDecoder(decoder) { assert.equal(decoder, MeshoptDecoder); return this; }
   load(_url, onLoad) {
     queueMicrotask(() => onLoad({ scene: new THREE.Group() }));
   }
 }
 const modelApi = compileCommonJs(modelSource, (specifier) => {
   if (specifier === "three") return THREE;
+  if (specifier.endsWith("meshopt_decoder.module.js")) return { MeshoptDecoder };
   if (specifier.endsWith("GLTFLoader.js")) return { GLTFLoader: LoaderStub };
   if (specifier === "./settings") return settingsApi;
   throw new Error(`unexpected skateboard test import: ${specifier}`);

@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AssetCache, disposeTextures } from './assetLifetime';
@@ -8,7 +9,7 @@ type Kit='solid-timber'|'broad-deck';
 type Request = { triangles: DeckTriangle[]; direction: THREE.Vector3; parent: THREE.Object3D;kind:Kit };
 const EPS = 1e-7;
 const cache = new AssetCache<Kit, GLTF>(async (key, _dependency, wanted) => {
-  const gltf = await sceneryLoads.run(() => new GLTFLoader().loadAsync(
+  const gltf = await sceneryLoads.run(() => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(
     `${import.meta.env.BASE_URL}props/carlisle-decks/${key}-joined.glb`), wanted);
   gltf.scene.traverse(n => {
     const mesh = n as THREE.Mesh; if (!mesh.isMesh) return;

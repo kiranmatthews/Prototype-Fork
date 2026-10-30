@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AssetCache, disposeTextures } from './assetLifetime';
@@ -25,7 +26,7 @@ function releaseModel(root: THREE.Object3D): void {
 }
 
 const models = new AssetCache<string, THREE.Group>(async (_key, _dependency, wanted) => {
-  const gltf = await sceneryLoads.run(() => new GLTFLoader().loadAsync(import.meta.env.BASE_URL + TRIAL_CLOCK_MODEL_PATH), wanted);
+  const gltf = await sceneryLoads.run(() => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(import.meta.env.BASE_URL + TRIAL_CLOCK_MODEL_PATH), wanted);
   const model = gltf.scene;
   model.updateMatrixWorld(true);
   const bounds = new THREE.Box3().setFromObject(model), size = bounds.getSize(new THREE.Vector3());

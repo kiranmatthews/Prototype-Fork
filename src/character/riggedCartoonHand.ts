@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeletonHierarchy } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -58,7 +59,7 @@ let sourceScenePromise: Promise<THREE.Object3D> | null = null;
 
 function sourceScene(): Promise<THREE.Object3D> {
   if (!sourceScenePromise) {
-    sourceScenePromise = new GLTFLoader()
+    sourceScenePromise = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder)
       .loadAsync(import.meta.env.BASE_URL + RIGGED_CARTOON_HAND_ASSET_PATH)
       .then(({ scene }) => scene)
       .catch((error) => {

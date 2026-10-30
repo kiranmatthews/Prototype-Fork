@@ -78,6 +78,8 @@ async function loadTransformAuthority() {
     resolve(root, "node_modules/three/examples/jsm/loaders/GLTFLoader.js"),
   ).href;
   const source = transpile(sourcePath)
+    .replace(/from ['"](three\/examples\/jsm\/libs\/meshopt_decoder\.module\.js)['"];/,
+      (_, name) => `from ${JSON.stringify(import.meta.resolve(name))};`)
     .replace('from "three";', `from "${threeUrl}";`)
     .replace(
       'from "three/examples/jsm/loaders/GLTFLoader.js";',

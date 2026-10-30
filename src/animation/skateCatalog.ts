@@ -1,6 +1,7 @@
 import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS, LIP_CONTACTS } from '../skateTricks';
 import { SPECIAL_TRICKS } from '../specialTricks';
 import type { AnimationClip, AnimationSuiteDocument, RigDefinition } from './types';
+import { gunzipSync } from 'three/examples/jsm/libs/fflate.module.js';
 
 export const SKATE_REVIEW_REVISION = 31;
 export interface SkateReviewEntry {
@@ -83,11 +84,17 @@ export function withSkatePresentationRig(rig: RigDefinition): RigDefinition {
     ] };
 }
 let pending: Promise<SkateReviewCatalog> | undefined;
+export function decodeSkateReviewCatalog(bytes: Uint8Array): SkateReviewCatalog {
+  // A host may already decompress a response. Accept either representation.
+  const json = bytes[0] === 0x1f && bytes[1] === 0x8b ? gunzipSync(bytes) : bytes;
+  return JSON.parse(new TextDecoder().decode(json)) as SkateReviewCatalog;
+}
 export function loadSkateReviewCatalog(): Promise<SkateReviewCatalog> {
-  return pending ??= fetch(`${import.meta.env.BASE_URL}animations/skate-review/catalog.json?revision=${SKATE_REVIEW_REVISION}`)
+  const file = import.meta.env.PROD ? 'catalog.bin' : 'catalog.json';
+  return pending ??= fetch(`${import.meta.env.BASE_URL}animations/skate-review/${file}?revision=${SKATE_REVIEW_REVISION}`)
     .then(async response => {
       if (!response.ok) throw new Error(`Skate catalogue could not load (${response.status}).`);
-      const data = await response.json() as SkateReviewCatalog;
+      const data = decodeSkateReviewCatalog(new Uint8Array(await response.arrayBuffer()));
       if (data.revision !== SKATE_REVIEW_REVISION || !Array.isArray(data.clips) ||
         SKATE_REVIEW_ENTRIES.some(entry => !data.clips.some(clip => clip.id === entry.clipId)))
         throw new Error('Skate catalogue is incomplete. Reload to get the latest build.');
