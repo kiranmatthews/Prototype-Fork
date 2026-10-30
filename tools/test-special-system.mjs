@@ -165,9 +165,11 @@ assert.ok(
   player.indexOf(uberTick) < player.indexOf('this.special.step(dt, input.moveX, input.moveY);'),
   'uber expiry must resolve before SPECIAL command decoding',
 );
+const deathStart = player.indexOf('private die(');
+const deathMethod = player.slice(deathStart, player.indexOf('\n  private ', deathStart + 1));
 assert.match(
-  player,
-  /private die\(\): void \{[\s\S]{0,420}this\.uberTimer = 0;[\s\S]{0,80}this\.state = 'dead';/,
+  deathMethod,
+  /this\.uberTimer = 0;[^;]*;?\s*this\.state = 'dead';/,
   'death must revoke the triple-mask SPECIAL override immediately',
 );
 

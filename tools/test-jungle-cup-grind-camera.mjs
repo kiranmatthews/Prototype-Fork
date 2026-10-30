@@ -83,7 +83,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST, TUNIN
   // catch heading. Follow a complete corner in both directions.
   const coping = level.grindRails[0];
   for (const dir of [-1, 1]) {
-    const startT = dir > 0 ? 1 : 25;
+    const startT = dir > 0 ? 205 : 241;
     const tangent = coping.tangentAt(startT).multiplyScalar(dir);
     place(coping.pointAt(startT).add(new THREE.Vector3(0, .25, 0)), tangent);
     player.state = 'air'; player.grounded = false; player.vVel = 0;
@@ -91,7 +91,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST, TUNIN
     step(makeInput({ grindHeld: true, grindPressed: true }));
     assert.equal(player.state, 'grind'); catches++;
     let changed = 0;
-    for (let frame = 0; frame < 90; frame++) {
+    for (let frame = 0; frame < 120; frame++) {
       step(makeInput({ grindHeld: true }));
       assert.equal(player.state, 'grind', 'continuous corner unexpectedly ejected rider');
       const travel = checkTangent(coping); grindFrames++;
@@ -111,10 +111,10 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST, TUNIN
   // signed expectation comes from incoming flight, not the resulting grind
   // state: that would miss a catch which reversed direction and slowed down.
   for (const [label, position, heading] of [
-    ['curved', [30, .1, 8], [.8, 0, 1]],
-    ['left', [0, .1, 10], [-.6, 0, 1]],
-    ['right', [0, .1, 10], [.6, 0, 1]],
-    ['zero', [0, .1, 10], [0, 0, 1]],
+    ['curved', [48, .1, 28], [.8, 0, 1]],
+    ['left', [30, .1, 35], [-.6, 0, 1]],
+    ['right', [0, .1, 25], [.6, 0, 1]],
+    ['zero', [0, .1, 25], [0, 0, 1]],
   ]) {
     place(new THREE.Vector3(...position), new THREE.Vector3(...heading).normalize(), 15.3);
     player.state = 'ride'; player.grounded = true;

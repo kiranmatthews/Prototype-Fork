@@ -47,8 +47,17 @@ try {
     assert.equal(clip.metadata.sourceAnimation.sourceClip, expected[clip.id]);
     assert.equal(clip.metadata.sourceAnimation.edition, 'Source');
     assert.equal(clip.metadata.contactAdaptation, undefined, 'Unity hand correction leaked into new source');
-    assert.equal(clip.proceduralDrivers.length, 0);
-    assert.equal(clip.tracks.some(track => track.kind === 'scalar'), false);
+    assert.ok(clip.metadata.elasticityRevision > 0, 'source clips must retain shared segment elasticity');
+    for (const driver of clip.proceduralDrivers) {
+      assert.ok(driver.id.includes(':elasticity:'));
+      assert.equal(driver.target.kind, 'scalar');
+      assert.match(driver.target.target, /^deform\.(torso|arm|leg)\./);
+    }
+    for (const track of clip.tracks.filter(track => track.kind === 'scalar')) {
+      assert.ok(track.id.includes(':elasticity:'));
+      assert.match(track.target, /^deform\.(torso|arm|leg)\./);
+      assert.ok(track.keys.every(key => Number.isFinite(key.value) && key.value > 0));
+    }
     const isLoop = clip.id === 'player.crouch' || clip.id === 'player.crawl';
     assert.equal(clip.loop.mode, isLoop ? 'loop' : 'once');
     if (!isLoop) assert.equal(clip.duration, 5 / 60, 'transition no longer matches prior five-frame timing');
@@ -56,8 +65,9 @@ try {
     let minKneeGap = Infinity, minAnkleY = Infinity, minWristY = Infinity;
     for (let frame = 0; frame <= 120; frame++) {
       player.resetAnimationPreview();
-      binding.applyPose(a.sampleComposedClip(clip, frame / 120 * clip.duration), { resetUnspecified: true, strict: false });
-      player.applyAnimationDeformations({});
+      const pose = a.sampleComposedClip(clip, frame / 120 * clip.duration);
+      binding.applyPose(pose, { resetUnspecified: true, strict: false });
+      player.applyAnimationDeformations(pose.scalars);
       player.syncCharacterAppearance({ crawlPalmWeight: clip.id === 'player.crawl' ? 1 : 0 });
       if (clip.id === 'player.crawl') assertPalmsDown();
       player.group.updateMatrixWorld(true);

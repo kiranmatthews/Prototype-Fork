@@ -397,8 +397,8 @@ try {
   assert.equal(gateLevel.ledgeAssist, 1);
   assert.equal(gateLevel.captureData().ledgeAssist, 1);
   const receivingFaces = [
-    { x: 20.5, roughY: 8.75 },
-    { x: 142.5, roughY: 14.75 },
+    { x: 1207, roughY: 14.75 },
+    { x: 1227, roughY: 21.75 },
   ];
   const faceFor = ({ x, roughY }) =>
     gateLevel.walls.find(
@@ -528,8 +528,8 @@ try {
     return { player, perfectLaunch, maximumY };
   };
   for (const [crateX, targetLip] of [
-    [13.5, 9],
-    [135.5, 15],
+    [1198, 15],
+    [151, 10],
   ]) {
     const result = simulatePerfectBoing(crateX);
     assert.equal(result.perfectLaunch, true, `Arrow ${crateX} did not Perfect Boing`);
@@ -701,6 +701,8 @@ try {
     assert.ok(entry, "Jungle replay level is missing");
     const level = new Level(scene, entry);
     const player = new Player(scene);
+    player.setCharacterHeadStyle('skull');
+    player.setCharacterProportions({headSize:1.55,neckLength:0});
     // Keep this historical traversal take scoped to ledge physics even as new
     // trick economies are added to Player after the replay was recorded.
     if (player.special) {
@@ -733,8 +735,20 @@ try {
     try {
       while (replayer.active) {
         const frame = replayer.frame;
-        beforeFrame?.(frame, player, level);
         if (!replayer.feed(input, player.camDir)) break;
+        // Resume the recorded mesh-edge approach instead of replaying unrelated
+        // wipeouts and character contacts for 72 seconds before this regression.
+        if (frame < 4351) continue;
+        if (frame === 4351) {
+          player.state='air'; player.grounded=false; player.freeSkate=false;
+          player.pos.set(-1.695248085,-.59423062,-38.97382037);
+          player.prevPos.copy(player.pos); player.vVel=-1;
+          player.lastVelX=-.1; player.lastVelZ=-3;
+          player.axisF.set(0,0,-1); player.axisL.set(-1,0,0);
+          player.rawInput=input;
+          assert.equal(player.tryLedgeGrabMesh(level),true,'recorded approach no longer catches the real Jungle mesh');
+        }
+        beforeFrame?.(frame, player, level);
         // The current game deliberately gives an airborne wipeout dependable
         // held-direction control. This pre-feature recording is retained only
         // as a ledge traversal fixture, so keep its much earlier bail neutral

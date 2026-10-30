@@ -13,8 +13,11 @@ await withSkateRuntime(async ({ THREE, server, level, player, step, Level }) => 
     near(ground(-14,-31-i*.5),2.4*i/16,'continuous funbox approach');
     near(ground(0,-76-i*.4375),1.8*i/16,'continuous transfer approach');
   }
+  const perimeter=level.groundMeshes.find(mesh=>mesh.userData.vertComp?.nm==='Jade perimeter bowl');
+  assert.ok(perimeter);
+  const perimeterGround=(x,z)=>{ray.set(new THREE.Vector3(x,40,z),new THREE.Vector3(0,-1,0));return ray.intersectObject(perimeter,false)[0]?.point.y;};
   for(const [x,z] of [[0,-164.5-3.6*Math.SQRT1_2],[0,44.5+3.6*Math.SQRT1_2],[-69.5-3.6*Math.SQRT1_2,-42],[69.5+3.6*Math.SQRT1_2,-42]])
-    near(ground(x,z),3.6*(1-Math.SQRT1_2),'perimeter transition');
+    near(perimeterGround(x,z),3.6*(1-Math.SQRT1_2),'perimeter transition');
   near(ground(0,51),4.4,'lip/deck height');
   const faceRay=new THREE.Raycaster(new THREE.Vector3(0,4.1,47),new THREE.Vector3(0,0,1),0,3);
   const lip=faceRay.intersectObjects(level.groundMeshes,false)[0];

@@ -28,7 +28,7 @@ const code=ts.transpileModule([
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 try {
  const dependencies={THREE};
- for(const module of ['tuning','cameraRig','cameraLook','cameraSpeedEffect','skateChaseCamera','skateParkTuning','cameraHeroFraming'])
+ for(const module of ['tuning','cameraRig','cameraLook','cameraSpeedEffect','skateChaseCamera','skateParkTuning','cameraHeroFraming','launchCamera'])
   Object.assign(dependencies,await server.ssrLoadModule(`/src/${module}.ts`));
  const makeRig=(yaw=0)=>{
   const rider=()=>({renderPosition:new THREE.Vector3(4,2,-6),renderSnapVersion:1,
@@ -36,8 +36,9 @@ try {
    vertAir:false,vertNormal:new THREE.Vector3(1,0,0),vVel:0,grounded:true,
    skateCameraSupported:true,skateCameraBailing:false,speed:0,groundBelowY:2,
    waterDeathSurface:null,swimming:false,waterJumping:false,state:'ride',alignPose:0,
-   loopPresentationFrame:null,balanceMeter:null,camDir:new THREE.Vector3()});
+   loopPresentationFrame:null,launchCameraPresentation:null,balanceMeter:null,camDir:new THREE.Vector3()});
   const context={...dependencies,
+   launchCamera:new dependencies.LaunchCamera(),launchCamera2:new dependencies.LaunchCamera(),
    TUNING:{...dependencies.TUNING,chaseCam:0},
    camera:new THREE.PerspectiveCamera(49,16/9,.1,400),camera2:new THREE.PerspectiveCamera(49,16/9,.1,400),
    player:rider(),p2:rider(),input:{lookX:0,lookY:0},input2:{lookX:0,lookY:0},

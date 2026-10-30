@@ -6,7 +6,8 @@ import * as THREE from 'three';
 import { createServer } from 'vite';
 
 // These recordings reproduce returning to foot movement after a board air.
-// Keep the real Player and published courses; stub only browser/asset services.
+// Keep the real Player and the courses recorded at ee9857a; evolving published
+// courses must not silently replace an input-only recording's collision fixture.
 const noop = () => {};
 const storage = new Map();
 globalThis.localStorage = {
@@ -57,16 +58,15 @@ console.error = (...args) => { if (!expectedAssetLog(args[0])) originalError(...
 
 const server = await createServer({ logLevel: 'silent', server: { middlewareMode: true } });
 try {
-  const { Level, findLevel, setUserLevels } = await server.ssrLoadModule('/src/level.ts');
+  const { Level } = await server.ssrLoadModule('/src/level.ts');
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
   const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
   const { swirls } = await server.ssrLoadModule('/src/swirls.ts');
-  const published = JSON.parse(await readFile(new URL('../public/levels.json', import.meta.url), 'utf8'));
-  setUserLevels(published.levels ?? published);
   for (const name of ['test-course', 'slipstream']) {
     const replay = JSON.parse(await readFile(new URL(`./fixtures/locomotion-${name}-replay.json`, import.meta.url), 'utf8'));
-    const entry = findLevel(replay.level);
+    const entry = JSON.parse(await readFile(new URL(`./fixtures/locomotion-${name}-course.json`, import.meta.url),'utf8'));
+    assert.equal(entry.id,replay.level);
     const level = new Level(new THREE.Scene(), entry);
     const player = new Player(level.scene);
     // Keep pre-change crate contacts so this recorded route reaches its recovery.
@@ -81,6 +81,7 @@ try {
     const replayer = new Replayer();
     replayer.begin(replay);
     let recoveredRunFrames = 0;
+    let sawBoardAir = false;
     let boardAirFrames = 0;
     let slowWalkFrames = 0;
     const movement = createHash('sha256');
@@ -97,6 +98,7 @@ try {
         movement.update(JSON.stringify([player.state, player.grounded, player.freeSkate,
           ...player.pos.toArray(), player.speed, player.vVel, ...player.walkVelocity.toArray(),
           player.cratesBroken, player.fruit, player.lives]));
+        sawBoardAir ||= player.state === 'air' && player.airFromSkate;
         const intent = player.animationIntent;
         const { normalizedSpeed, inputs } = intent.motion;
         if (intent.clipId === 'player.run' && player.grounded && !player.freeSkate) {
@@ -104,7 +106,7 @@ try {
           const expected = Math.min(1, player.walkTurnaround ? Math.max(physical, player.walkRamp) : physical);
           assert.ok(Math.abs(normalizedSpeed - expected) < 1e-10,
             `${name} frame ${frame}: on-foot animation uses the wrong speed range`);
-          if (player.airFromSkate && expected >= .99) {
+          if (sawBoardAir && expected >= .99) {
             recoveredRunFrames++;
             assert.ok(inputs.locomotionWalkBlend < .02,
               `${name} frame ${frame}: running after board air is stuck in Walk`);
@@ -125,11 +127,12 @@ try {
       assert.ok(recoveredRunFrames > 300, `${name}: replay missed the reported grounded recovery`);
       assert.ok(boardAirFrames > 60, `${name}: replay did not exercise board airs`);
       assert.ok(slowWalkFrames > 0, `${name}: replay did not exercise slow walking`);
-      // Baseline ee9857a: pose/facing changes may alter visual pickup overlap,
+      // Controller baseline b358c213 on frozen ee9857a courses (see fixture README).
+      // Pose/facing changes may alter visual pickup overlap,
       // but must not retune the controller or change the physical route.
       assert.equal(trajectory.digest('hex'), name === 'test-course'
-        ? '62e53e98c2b068f66aaf10b87fe4f833aea713c88f66054ffa11f118009f3b4c'
-        : 'ede4514080f972ba32efaa1dda21ae1ce5d9885508c08622d5e2fef2a20c78c9',
+        ? '61a75bb4ce82a62f0421c60f37e53434038ce4b8e3df19d7ab252d0564d60a8e'
+        : '695b44bdfd44a5111412ea812f80d9db360c3628a168ad3f73ac2e9b16f70b7a',
       `${name}: facing/animation changed the physical trajectory`);
       console.log(`${name}: ${recoveredRunFrames} recovered run frames, ${boardAirFrames} board air frames; movement ${movement.digest('hex')}`);
     } finally {

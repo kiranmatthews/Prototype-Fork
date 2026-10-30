@@ -70,7 +70,7 @@ try {
   const currentMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:api.worldMapComponentPoints()}]};
   assert.deepEqual(normalize(currentMap).components[0].pts,currentMap.components[0].pts,
     'current Hidden Shores hubs must survive editor import and reopen');
-  for(const [axis,limit] of [[0,512],[1,512],[3,128]]) {
+  for(const [axis,limit] of [[0,1536],[1,512],[3,256]]) {
     for(const sign of [-1,1]) {
       const boundaryMap=structuredClone(currentMap);
       boundaryMap.components[0].pts[0][axis]=sign*limit;
@@ -372,10 +372,16 @@ try {
   }));
   assert.equal((await fetchRemoteLevels()).levels[0].name, "Café");
 
-  const published = JSON.parse(await readFile(new URL("../public/levels.json", import.meta.url), "utf8"));
+  const publishedText = await readFile(new URL("../public/levels.json", import.meta.url), "utf8");
+  assert.ok(api.levelJsonTextWithinLimits(publishedText, api.MAX_LEVEL_PACK_BYTES, 14),
+    "published pack failed the pre-parse network boundary");
+  const published = JSON.parse(publishedText);
+  const meshVertices = Array.from({length:4096*3},(_,i)=>i%3===1?0:(i%17)/17);
+  reject({...base(), components:Array.from({length:98},()=>({t:'mesh',p:[0,0,0],vertices:meshVertices,indices:[0,1,2],solid:false}))},
+    "explicit geometry aggregate exceeds 400k vertices");
   assert.ok(normalizeUserLevelEntries(published.levels), "published pack was rejected");
   for (const entry of api.BUILTIN_LEVELS) if (entry.data) {
-    assert.ok(normalize(entry.data), `${entry.id} source level was rejected`);
+    assert.ok(normalize(JSON.parse(JSON.stringify(entry.data))), `${entry.id} source level was rejected`);
     checks++;
   }
   console.log(`Level security boundary: ${checks} adversarial and source compatibility checks passed.`);

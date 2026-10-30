@@ -4,6 +4,7 @@ export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';
 export { CARLISLE_TIDAL_RELAY_LEVEL } from './carlisle-tidal-relay';
 export { WATERFALL_CLIMB_LEVEL } from './waterfall-climb';
 export { TRIBAL_RUN_LEVEL } from './tribal-run';
+import {uncrossOutline} from './uncross-outline';
 import {dressKookRooftops} from './rooftop-kook-art';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {warehouseDressing} from './warehouse-dressing';
@@ -762,7 +763,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   for(const side of [-1,1])face(r.district,[[lip-.35,0],[lip-.35,side*w/2],[lip+.35,side*w/2],[lip+.35,0]].map(([s,u])=>rooftopWorld(s,rooftopSurfaceY(r,s,u)+.045,roofForkOffset(s,r.route)+u)),side<0?[0,2,1,0,3,2]:[0,1,2,0,2,3],r.route<0?d.accent:'#87f3e1');
   if(r.route<0){
    const p=rooftopWorld(mid,r.top-12),pts=outline(r,r.a-4,r.b+r.gap+4,180).map(q=>[q[0]-p[0],q[2]-p[2]] as [number,number]);
-   components.push({t:'pit',p,s:[1,1,1],pts,invisible:true,grp,nm:'Local street reset · short missed-roof recovery'});
+   components.push({t:'pit',p,s:[1,1,1],pts:uncrossOutline(pts),invisible:true,grp,nm:'Local street reset · short missed-roof recovery'});
   }
  }
  // Deliveries occupy the roof margins, with clear runouts and takeoff lanes.

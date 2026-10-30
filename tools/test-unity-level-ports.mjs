@@ -1,66 +1,15 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
-import ts from "typescript";
+import { createServer } from "vite";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+const server = await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 async function loadLevel(relativeFile, exportName) {
-  const file = path.join(root, relativeFile);
-  const source = readFileSync(file, "utf8");
-  let output = ts.transpileModule(source, {
-    compilerOptions: {
-      module: ts.ModuleKind.ESNext,
-      target: ts.ScriptTarget.ES2020,
-    },
-    fileName: file,
-  }).outputText;
-  if (output.includes('from "../coastalStreetKit"')) {
-    const dependencyFile = path.join(root, "src/coastalStreetKit.ts");
-    const dependencyOutput = ts.transpileModule(
-      readFileSync(dependencyFile, "utf8"),
-      {
-        compilerOptions: {
-          module: ts.ModuleKind.ESNext,
-          target: ts.ScriptTarget.ES2020,
-        },
-        fileName: dependencyFile,
-      },
-    ).outputText;
-    const dependencyUrl = `data:text/javascript;base64,${Buffer.from(
-      dependencyOutput,
-    ).toString("base64")}`;
-    output = output.replace(
-      'from "../coastalStreetKit"',
-      `from "${dependencyUrl}"`,
-    );
-  }
-  if (output.includes('from "../beachfrontCourse"')) {
-    const dependencyFile = path.join(root, "src/beachfrontCourse.ts");
-    const dependencyOutput = ts.transpileModule(
-      readFileSync(dependencyFile, "utf8"),
-      {
-        compilerOptions: {
-          module: ts.ModuleKind.ESNext,
-          target: ts.ScriptTarget.ES2020,
-        },
-        fileName: dependencyFile,
-      },
-    ).outputText;
-    const dependencyUrl = `data:text/javascript;base64,${Buffer.from(
-      dependencyOutput,
-    ).toString("base64")}`;
-    output = output.replace(
-      'from "../beachfrontCourse"',
-      `from "${dependencyUrl}"`,
-    );
-  }
-  const sourceUrl = pathToFileURL(file).href;
-  const encoded = Buffer.from(`${output}\n//# sourceURL=${sourceUrl}`).toString("base64");
-  const module = await import(`data:text/javascript;base64,${encoded}`);
-  return module[exportName];
+  return (await server.ssrLoadModule('/' + relativeFile))[exportName];
 }
 
 const specs = [
@@ -73,15 +22,19 @@ const specs = [
 ];
 
 const levels = new Map();
+let kiteBeats, gateDecks, gateCheckpoints;
+({BEACH_KITE_BEATS:kiteBeats}=await server.ssrLoadModule('/src/levels/beach-street-gameplay.ts'));
+({ANCIENT_GATES_DECKS:gateDecks,ANCIENT_GATES_CHECKPOINTS:gateCheckpoints}=await server.ssrLoadModule('/src/levels/ancient-gates-route.ts'));
+try {
 for (const [file, exportName] of specs) {
   const level = await loadLevel(file, exportName);
   assert.equal(level.v, 1, `${file} must use CustomLevelData v1`);
   assert.ok(level.name && level.name.length > 2, `${file} needs a menu name`);
   assert.ok(level.spawn.length === 3 && level.spawn.every(Number.isFinite));
   assert.ok(Number.isFinite(level.killY));
-  const componentBudget = file.endsWith("coastal-street-run.ts")
-    ? 1024
-    : 512;
+  // Full authored scenery now accompanies the port. Use the importer ceiling,
+  // while the checks below independently verify its traversal geometry.
+  const componentBudget = 10_000;
   assert.ok(
     level.components.length < componentBudget,
     `${file} exceeds the component budget`,
@@ -97,6 +50,7 @@ for (const [file, exportName] of specs) {
   );
   levels.set(exportName, level);
 }
+} finally { await server.close(); }
 
 const parallaxSource = readFileSync(path.join(root, "src/bonusParallax.ts"), "utf8");
 for (const literal of [
@@ -228,56 +182,29 @@ assert.ok(
     )
     .every(
       (component) =>
-        component.tex === "solid" &&
+        component.tex === "bay-paving" &&
         component.color !== "#59636b" &&
         component.edgeGrinding !== false,
     ),
-  "Coastal road/shoulders must not reuse the dark striped asphalt treatment",
+  "Coastal road/shoulders must retain the authored bay paving and grind edges",
 );
-assert.equal(count(coastal, "speedpad"), 11);
-assert.equal(count(coastal, "enemy"), 16);
-assert.equal(count(coastal, "checkpoint"), 6);
-assert.equal(count(coastal, "crate"), 52);
-assert.equal(count(coastal, "wumpa"), 160);
-assert.equal(
-  coastal.components.filter((component) => component.nm?.startsWith("climb ")).length,
-  36,
-);
-assert.equal(
-  coastal.components.filter((component) =>
-    component.nm?.startsWith("street stair approach "),
-  ).length,
-  10,
-);
-assert.equal(
-  coastal.components.filter((component) =>
-    component.nm?.startsWith("street stair terrace "),
-  ).length,
-  10,
-);
-assert.equal(
-  coastal.components.filter((component) =>
-    component.nm?.startsWith("street stair step "),
-  ).length,
-  70,
-);
-assert.equal(
-  coastal.components.filter((component) =>
-    component.nm?.startsWith("stair handrail "),
-  ).length,
-  10,
-);
-assert.equal(
-  coastal.components.filter((component) => component.t === "crate")[12].p[0],
-  3.5,
-  "Coastal crates must vacate the reserved stair/climb side",
-);
-assert.equal(
-  coastal.components.filter(
-    (component) => component.dkind === "coastalhouse",
-  ).length,
-  64,
-);
+// This port now owns the authored kite course. Assert each playable phrase,
+// rather than reinstating the retired regular scatter/stair layout.
+assert.equal(coastal.kiteTow, true);
+assert.equal(count(coastal, "speedpad"), 0);
+assert.equal(count(coastal, "enemy"), 2 * kiteBeats.filter(b => b.kind === 'patrol').length);
+assert.equal(count(coastal, "checkpoint"), kiteBeats.filter(b => b.kind === 'checkpoint').length);
+assert.equal(count(coastal, "crate"), 14);
+assert.equal(count(coastal, "wumpa"), 374);
+for (const beat of kiteBeats) {
+  const suffix = {weave:'planter',hop:'hurdle',freight:'load',checkpoint:'checkpoint',patrol:'outer'}[beat.kind];
+  if (suffix) assert.ok(coastal.components.some(c => c.nm === `Kite ${beat.name} ${suffix}`), `${beat.name} lost its obstacle`);
+}
+for (const [prefix, expected] of [['street stair approach ',4],['street stair terrace ',4],['street stair step ',28]])
+  assert.equal(coastal.components.filter(c => c.nm?.startsWith(prefix)).length, expected);
+assert.equal(coastal.components.filter(c => c.nm?.startsWith('climb ')).length, 0);
+assert.equal(coastal.components.filter(c => c.nm?.startsWith('stair handrail ')).length, 0);
+assert.ok(coastal.components.filter(c=>c.t==='crate').every(c=>c.nm?.startsWith('Kite exit reward ')));
 assert.equal(
   coastal.components.filter((component) => component.dkind === "roadarrow").length,
   99,
@@ -294,7 +221,7 @@ assert.deepEqual(coastal.ocean, {
   sourceCoordinates: "unity",
 });
 assert.deepEqual(coastal.unitySand, [
-  { p: [55, -0.78, -1500], s: [70, 0.8, 3300] },
+  { p: [55, -3.4, -1500], s: [70, 0.8, 3300] },
 ]);
 assert.equal(
   coastal.components.some(
@@ -310,7 +237,7 @@ assert.equal(
 );
 assert.ok(
   coastal.components
-    .filter((component) => component.nm?.includes("boundary"))
+    .filter((component) => component.t === "rail" && component.nm?.includes("boundary"))
     .every((component) => Math.abs(component.p[0]) === 7.2),
 );
 
@@ -403,52 +330,23 @@ assert.equal(
   1,
   "Jungle Gate must opt into the full level-local ledge recovery envelope",
 );
-assert.equal(count(jungle, "platform"), 14);
-assert.equal(count(jungle, "ramp"), 2);
-assert.equal(count(jungle, "pit"), 6);
-assert.equal(count(jungle, "rail"), 2);
-assert.equal(count(jungle, "checkpoint"), 3);
-assert.ok(
-  jungle.components
-    .filter((component) => component.t === "platform" || component.t === "ramp")
-    .every((component) => component.edgeGrinding !== false),
-);
-assert.equal(
-  jungle.components.filter((component) => component.kind === "metalbounce").length,
-  2,
-);
-assert.ok(jungle.components.some((component) => component.t === "zone" && component.dir === "E"));
-const junglePlatforms = new Map(
-  jungle.components
-    .filter((component) => component.t === "platform")
-    .map((component) => [component.nm, component]),
-);
-assert.deepEqual(
-  [
-    "Bounce landing 01",
-    "Rail landing 01",
-    "Bounce landing 02",
-    "Skate landing 01",
-    "Rail landing 02",
-    "Finish terrace",
-  ].map((name) => {
-    const platform = junglePlatforms.get(name);
-    return [name, platform.p[0] - platform.s[0] / 2, platform.p[1] + platform.s[1] / 2];
-  }),
-  [
-    ["Bounce landing 01", 20.5, 9],
-    ["Rail landing 01", 98, 6],
-    ["Bounce landing 02", 142.5, 15],
-    ["Skate landing 01", 242, 15.25],
-    ["Rail landing 02", 315, 15.5],
-    ["Finish terrace", 404, 13.25],
-  ],
-  "ledge assistance must not resize or move the six source receiving platforms",
-);
-const perfectBoingDeficit = 9 - 0.96 - (20 * 20) / (2 * 33);
-const ordinaryBoingDeficit = 9 - 0.96 - (16 * 16) / (2 * 33);
-assert.ok(perfectBoingDeficit < 3.2, "Perfect Boing must enter assisted reach");
-assert.ok(ordinaryBoingDeficit > 3.2, "ordinary Boing must not bypass the climb");
+assert.equal(count(jungle, "checkpoint"), 11);
+assert.deepEqual(jungle.components.filter(c=>c.t==='checkpoint').map(c=>c.p),gateCheckpoints.map(p=>[...p]));
+assert.equal(jungle.components.filter(c=>c.kind==='metalbounce').length,3);
+assert.equal(count(jungle,'rail'),1);
+assert.equal(count(jungle,'ramp'),1);
+assert.ok(jungle.components.some(c=>c.t==='zone'&&c.dir==='E'));
+for (const deck of gateDecks) {
+  const platform=jungle.components.find(c=>c.t==='platform'&&c.nm===deck.name);
+  assert.ok(platform, `Missing Ancient Gates receiver ${deck.name}`);
+  assert.deepEqual([platform.p[0]-platform.s[0]/2,platform.p[0]+platform.s[0]/2,platform.p[1]+platform.s[1]/2],
+    [deck.a,deck.b,deck.y], `Receiving geometry changed: ${deck.name}`);
+  assert.notEqual(platform.edgeGrinding,false);
+}
+assert.equal(jungle.components.find(c=>c.t==='gate').p[0],1376);
+// The seven-metre arrow ascents intentionally require the existing ledge assist.
+const perfectBoingDeficit = 7 - 0.96 - (20 * 20) / (2 * 33);
+assert.ok(perfectBoingDeficit > -.25 && perfectBoingDeficit < 3.2);
 
 const meshy = levels.get("MESHYLOOK_THORNS_LEVEL");
 assert.equal(count(meshy, "ramp"), 16);
@@ -509,7 +407,7 @@ for (const literal of [
 }
 const levelSource = readFileSync(path.join(root, "src/level.ts"), "utf8");
 for (const literal of [
-  '"meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh; visual only',
+  '"meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh',
   'case "meshycourtyard"',
   "createMeshyCourtyardVisual()",
   "m.userData.editorGhost = true",

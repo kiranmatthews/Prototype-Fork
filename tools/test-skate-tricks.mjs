@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
+import { withSkateRuntime, makeInput, PERIMETER_APPROACHES } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({player:p,level,THREE,step,CONST,server})=>{
   const tricks=await server.ssrLoadModule('/src/skateTricks.ts');
@@ -18,7 +18,7 @@ await withSkateRuntime(async ({player:p,level,THREE,step,CONST,server})=>{
     const catchPose=tricks.sampleDeckTrick(kind,1);
     assert.equal(catchPose.riderLift,0);assert.equal(catchPose.deckDrop,0);
   }
-  const walls=[[[0,.1,10],[0,0,1]],[[28,.1,-90],[0,0,-1]],[[28,.1,-42],[1,0,0]],[[-28,.1,-70],[-1,0,0]]];
+  const walls=PERIMETER_APPROACHES;
   function place(wall=walls[0]){
     p.respawn(level,true,true,{position:new THREE.Vector3(...wall[0]),heading:new THREE.Vector3(...wall[1])});
     p.axisF.set(...wall[1]);p.axisL.set(wall[1][2],0,-wall[1][0]);p.freeSkate=true;p.speed=15.3;
@@ -33,10 +33,11 @@ await withSkateRuntime(async ({player:p,level,THREE,step,CONST,server})=>{
     launch(wall);
     // An unrelated previous attack cooldown cannot eat a fresh deck command.
     p.spinCd=2;
-    const vy=p.vVel;
+    const vy=p.vVel,gravity=p.parkFlightGravity;
+    assert.ok(Number.isFinite(gravity)&&gravity>0);
     step(makeInput({spinHeld:true,spinPressed:true,moveX:x,moveY:y}));
     assert.equal(p.flipKind,kind);assert.equal(p.flipName,label);assert.ok(p.flipT>0);
-    assert.ok(Math.abs(p.vVel-(vy-31.1727272727*CONST.fixedStep))<1e-8,'Square injected a flight impulse');
+    assert.ok(Math.abs(p.vVel-(vy-gravity*CONST.fixedStep))<1e-5,'Square injected a flight impulse beyond Float32 surface precision');
     assert.equal(p.spinTimer,0,'park flip started a body attack');
     let previous=p.boardG.getWorldQuaternion(new THREE.Quaternion()),caught=false;
     for(let f=0;f<180&&!p.grounded;f++){

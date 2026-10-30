@@ -1,3 +1,4 @@
+import {isNightworksSurface} from '../nightworksRocks';
 import type { CustomComponent, CustomLevelData, DecorKind } from '../level';
 
 /** Source-owned image allowlist; editor data cannot request arbitrary URLs. */
@@ -33,7 +34,7 @@ export function rebuildNightworksBonus(data:CustomLevelData):void {
   const gate=gameplay.find(c=>c.t==='gate')!,end=gate.p[0]+7;
   const put=(c:CustomComponent)=>art.push({...c,solid:false,edgeGrinding:false,grp:90});
   const rock=(kind:DecorKind,p:P,s:P,nm:string,yaw=0,color='#bcc9df')=>
-    put({t:'decor',dkind:kind,p,s,nm,yaw,color,tex:'night-quarry-slate',emissive:'#111a2b'});
+    put({t:'decor',dkind:kind,p,s,nm,yaw,color,tex:'night-quarry-slate',...(isNightworksSurface(kind)?{emissive:'#111a2b'}:{})});
   const torch=(x:number,y:number,z:number,height=3.2)=>
     put({t:'torch',p:[x,y,z],rise:height,w:.85,nm:'Quarry shift brazier'});
   function matte(nm:string,tex:string,p:P,w:number,h:number):void {

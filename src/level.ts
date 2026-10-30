@@ -2700,8 +2700,8 @@ const finiteTuple = (
   value.every((number) => typeof number === "number" && Number.isFinite(number));
 
 /** Public interchange limits apply before parsing, migration or geometry work. */
-export const MAX_LEVEL_FILE_BYTES = 8 * 1024 * 1024;
-export const MAX_LEVEL_PACK_BYTES = 16 * 1024 * 1024;
+export const MAX_LEVEL_FILE_BYTES = 32 * 1024 * 1024;
+export const MAX_LEVEL_PACK_BYTES = 96 * 1024 * 1024;
 export const MAX_USER_LEVELS = 128;
 const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
@@ -2739,6 +2739,29 @@ function wallSlabWork(points: readonly (readonly number[])[]): number {
   const rows = Math.ceil((maxZ - minZ) / WALL_SLAB_MAX_DEPTH) + points.length +
     Math.ceil(horizontalTravel / WALL_SLAB_MAX_SHIFT);
   return rows * points.length;
+}
+
+/** Count emitted boxes separately from edge scans, after the scan-work guard. */
+function wallSlabAllocation(points: readonly (readonly number[])[]): number {
+  const zs = points.map(point => point[1]);
+  const minZ = Math.min(...zs), maxZ = Math.max(...zs);
+  const cuts = new Set(zs);
+  for (let z = minZ + WALL_SLAB_MAX_DEPTH; z < maxZ; z += WALL_SLAB_MAX_DEPTH) cuts.add(z);
+  const rows = [...cuts].sort((a, b) => a - b);
+  let slabs = 0;
+  for (let row = 1; row < rows.length; row++) {
+    const near = rows[row - 1], far = rows[row], z = (near + far) / 2;
+    let edges = 0, shift = 0;
+    for (let k = 0, j = points.length - 1; k < points.length; j = k++) {
+      const [xa, za] = points[k], [xb, zb] = points[j];
+      if (za > z !== zb > z) {
+        edges++;
+        shift = Math.max(shift, Math.abs((xb - xa) / (zb - za) * (far - near)));
+      }
+    }
+    slabs += Math.max(1, Math.ceil(shift / WALL_SLAB_MAX_SHIFT)) * Math.floor(edges / 2);
+  }
+  return slabs;
 }
 
 /** Polygon imports must describe one simple, nonzero-area boundary. */
@@ -2780,14 +2803,13 @@ function simpleLevelPolygon(points: readonly (readonly number[])[]): boolean {
  */
 function cloneBoundedLevelJson(value: unknown): unknown {
   const active = new WeakSet<object>();
-  // The existing 100k vertices / 100k triangles workload can legitimately
-  // carry 1.4m numeric entries (position, normal, colour, UV and index). Bound
-  // interchange to that workload plus component metadata, without dropping
-  // sculpted geometry; file, depth, key, array and generated-work caps remain.
+  // Authored rally exports retain 358k vertices and 375k faces, including all
+  // scenery. Bound their full attribute payload, without decimating geometry.
+  // Per-mesh, depth, key, string and procedural-generation limits stay separate.
   let nodes = 0;
   let bytes = 0;
   const copy = (input: unknown, depth: number): unknown => {
-    if (++nodes > 1_800_000 || depth > 12) throw new Error("Level JSON is too complex");
+    if (++nodes > 6_000_000 || depth > 12) throw new Error("Level JSON is too complex");
     if (input === null || typeof input === "boolean") return input;
     if (typeof input === "number") {
       if (!Number.isFinite(input)) throw new Error("Non-finite level number");
@@ -2822,7 +2844,7 @@ function cloneBoundedLevelJson(value: unknown): unknown {
         throw new Error("Expected JSON data property");
       if (property.value === undefined && !array) continue;
       bytes += key.length * 3 + 4;
-      if (bytes > 64 * 1024 * 1024) throw new Error("Level JSON allocation is too large");
+      if (bytes > 256 * 1024 * 1024) throw new Error("Level JSON allocation is too large");
       (out as Record<string, unknown>)[key] = copy(property.value, depth + 1);
       arrayItems++;
     }
@@ -2844,8 +2866,9 @@ export function levelJsonTextWithinLimits(
 ): boolean {
   if (typeof text !== "string" || text.length > maxBytes ||
       new TextEncoder().encode(text).byteLength > maxBytes) return false;
-  // Packs hold several independently bounded levels inside the retained 16 MiB cap.
-  const maxSeparators=maxBytes>MAX_LEVEL_FILE_BYTES?3_000_000:1_500_000;
+  // Packs contain several independently bounded full-geometry courses.
+  const pack = maxBytes > MAX_LEVEL_FILE_BYTES;
+  const maxSeparators = pack ? 18_000_000 : 6_000_000;
   let depth = 0, containers = 0, separators = 0, stringLength = 0;
   let quoted = false, escaped = false;
   for (let i = 0; i < text.length; i++) {
@@ -2859,7 +2882,7 @@ export function levelJsonTextWithinLimits(
     }
     if (char === '"') { quoted = true; stringLength = 0; }
     else if (char === "{" || char === "[") {
-      if (++depth > maxDepth || ++containers > 100_000) return false;
+      if (++depth > maxDepth || ++containers > (pack ? 600_000 : 100_000)) return false;
     } else if (char === "}" || char === "]") {
       if (--depth < 0) return false;
     } else if ((char === "," || char === ":") && ++separators > maxSeparators) return false;
@@ -3220,7 +3243,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         (component.materialStyle === "crown-quartz" && (component.tex === undefined || component.tex === "solid")) ||
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand" || component.tex === 'sunny-sand')) ||
         ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid" || component.tex === 'custard-water' || component.tex === 'custard-pool' || component.tex === 'waterslide-shallows')))) ||
-      (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
+      (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t) &&
+        !(component.t === 'decor' && isNightworksSurface(component.dkind) && component.tex)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
       (component.opacity !== undefined &&
@@ -3317,10 +3341,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           component.grindTopTriangles < 0 || component.grindTopTriangles > triangles)) return null;
       meshVertices += vertexCount;
       meshTriangles += triangles;
-      if (meshVertices > 100_000 || meshTriangles > 100_000) return null;
-      aggregateSamples += vertexCount + triangles;
-      // AO UV channels share the existing 100k mesh-vertex allocation bound
-      // (at most 1.6 MB for both extra Float32 buffers). Budget the three map
+      if (meshVertices > 400_000 || meshTriangles > 400_000) return null;
+      // Explicit buffers have their own vertex/face cap. Procedural expansion
+      // is still charged to MAX_GENERATED_SAMPLES below.
+      // AO UV channels share the bounded mesh-vertex allocation
+      // (at most 6.4 MB for both extra Float32 buffers). Budget the three map
       // bindings per styled owner; the actual maps are shared once per Level.
       if (component.materialStyle === "unity-sand") aggregateSamples += 3;
     }
@@ -3485,10 +3510,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       wallFootprint = rectCorners(size[0], size[2], component.yaw ?? 0);
     }
     if (wallFootprint) {
-      const scanWork = wallSlabWork(wallFootprint);
-      wallScanWork += scanWork;
-      aggregateSamples += scanWork * 4;
-      if (wallScanWork > 2_000_000 || aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+      wallScanWork += wallSlabWork(wallFootprint);
+      if (wallScanWork > 2_000_000) return null;
+      aggregateSamples += wallSlabAllocation(wallFootprint) * 4;
+      if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     }
     for (const key of booleanKeys)
       if (component[key] !== undefined && typeof component[key] !== "boolean")
@@ -6271,7 +6296,9 @@ export class Level {
         ...(grindTriangles ? { grindTopTriangles: 0 } : {}),
         ...(material.emissive && material.emissive.getHex() !== 0 ? { emissive: `#${material.emissive.getHexString()}` } : {}),
         ...(material.opacity !== 1 ? { opacity: material.opacity } : {}),
-        ...(material.fog === false ? { fog: false } : {}),
+        // Capture both states: a fog-enabled native surface must stay fogged
+        // when copied into a course whose default policy clears play-surface fog.
+        ...(typeof material.fog === "boolean" ? { fog: material.fog } : {}),
         ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
@@ -6557,8 +6584,9 @@ export class Level {
     const coneRow=this.builtFromData?.name==='Carlisle Coast'&&isCarlisleConeRow(c);
     if(!EDITOR_BUILD&&this.batchDecor&&!coneRow&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.breakable&&!c.sourceBox&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&!c.slip&&c.iceGrip===undefined&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
-      c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
-      const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided,!!c.flatShading]);
+      c.vert===undefined&&(c.opacity??1)===1){
+      const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided,!!c.flatShading,c.fog??null]);
+      if(c.fog!==undefined)material.userData.authoredFog=c.fog;
       let shared=this.staticSurfaceMaterials.get(key);
       if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
@@ -13025,6 +13053,13 @@ export class Level {
     // Preserve exact source components for editor copies (notably boost
     // stones). A legacy mesh capture alone cannot retain their mechanics.
     const original = this.captureData();
+    // The constructor applies the native jungle palette after this builder.
+    // Capture that final palette, so editor copies do not keep the earlier
+    // construction-time fog and lighting while the live course uses another.
+    original.atmosphere = resolveLevelAtmosphere({
+      theme: {...this.theme,...JUNGLE_THEME_OVERRIDES}, skyPreset:this.skyPreset,
+      jungleAtmosphere:true, isCampaignMap:false, skyBackdrop:this.skyBackdrop,
+    });
     this.sceneryCaptureGroups.push(...finale.groups);
     this.buildCustomComponents({ v: 1, name: this.name, spawn: this.spawnPos.toArray(), killY: this.killY,
       components: [
@@ -16624,6 +16659,7 @@ export class Level {
     for (const [key, b] of this.decorParts) {
       if (b.parts.length === 0) continue;
       const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);mesh.userData.solidSurface=b.solidSurface;
+      if(b.mat.userData.authoredFog!==undefined)mesh.userData.authoredFog=b.mat.userData.authoredFog;
       b.shadowOccluder?.bind(mesh);
       const label=key.replace(/ physical:(mesh|none)$/, "");
       mesh.name = b.captureGroup === undefined ? label : label.replace(/ \d+$/, "");

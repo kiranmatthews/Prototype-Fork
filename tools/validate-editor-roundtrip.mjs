@@ -1518,7 +1518,8 @@ try {
   } = levelModule;
   const environmentModule = await server.ssrLoadModule("/src/editorEnvironment.ts");
   const { UnityOcean } = await server.ssrLoadModule("/src/unityOcean.ts");
-  assertEditorRuntimeAuthoring(levelModule, THREE, { ...environmentModule, UnityOcean });
+  const campaignModule = await server.ssrLoadModule('/src/campaign.ts');
+  assertEditorRuntimeAuthoring(levelModule, THREE, { ...environmentModule, ...campaignModule, UnityOcean });
   const benchmarkData = { ...starterCustomLevel(), relicTime: 83.75 };
   assert.equal(normalizeCustomLevelData(benchmarkData)?.relicTime, 83.75);
   for (const relicTime of [0, -1, Infinity, NaN, '90', null, 86401])
@@ -1690,7 +1691,7 @@ try {
   // Ordinary campaign destinations keep their authored or default bonus pad;
   // bosses and competitions exclude the detour. Build against source entries
   // and the published pack for editor-owned destinations such as Test Course.
-  for (const definition of CAMPAIGN_LEVELS) {
+  for (const definition of CAMPAIGN_LEVELS.filter(level => !level.placeholder)) {
     const source =
       BUILTIN_LEVELS.find((entry) => entry.id === definition.levelId) ??
       cases.find((entry) => entry.id === definition.levelId);
@@ -1755,12 +1756,12 @@ try {
     warpLevel.root.traverse(({ name }) => names.push(name));
     assert.equal(
       names.filter((name) => name === "world map glowing route").length,
-      CAMPAIGN_MAP_EDGES.length,
+      CAMPAIGN_MAP_EDGES.filter(edge => CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.from).islandId === CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.to).islandId).length,
       "campaign graph routes did not survive the shared Level build pipeline",
     );
     assert.equal(
       names.filter((name) => name === "world map boardslide rail").length,
-      CAMPAIGN_MAP_EDGES.filter(edge => edge.travel === "boardslide").length,
+      CAMPAIGN_MAP_EDGES.filter(edge => edge.travel === "boardslide" && CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.from).islandId === CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.to).islandId).length,
       "authored map boardslide edges were not constructed",
     );
     assert.ok(warpLevel.water, "world map lost the shared Unity ocean owner");
@@ -1807,7 +1808,8 @@ try {
   const skyCopy = new Level(new THREE.Scene(), {
     id: "u-sky-copy",
     name: "Sky-shaped user copy",
-    data: clone(dataSky.data),
+    // Remove authored atmosphere overrides to test the identity-only fallback.
+    data: (()=>{const data=clone(dataSky.data);delete data.keepPlayFog;delete data.atmosphere;return data;})(),
   });
   try {
     assert.equal(skyCopy.keepPlayFog, false, "Sky fog leaked to a user-level id");

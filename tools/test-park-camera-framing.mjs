@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { withSkateRuntime,makeInput } from './jungle-cup-harness.mjs';
+import { withSkateRuntime,makeInput, PERIMETER_APPROACHES } from './jungle-cup-harness.mjs';
 await withSkateRuntime(async({THREE,server,player:p,level,step,CONST,TUNING})=>{
   const {SkateChaseCamera,SKATE_CAMERA}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const {setCameraRigAim}=await server.ssrLoadModule('/src/cameraRig.ts');
@@ -51,7 +51,7 @@ await withSkateRuntime(async({THREE,server,player:p,level,step,CONST,TUNING})=>{
   for(const view of end){assert.ok(view.p.distanceTo(end[0].p)<1e-7);assert.ok(view.q.angleTo(end[0].q)<1e-7);assert.ok(Math.abs(view.fov-end[0].fov)<1e-7);}
   // Real perimeter approaches include camera collision, launch and return.
   let airs=0,worstFraming=0;
-  for(const [pos,heading] of [[[0,.1,10],[0,0,1]],[[28,.1,-90],[0,0,-1]],[[28,.1,-42],[1,0,0]],[[-37,.1,-108],[-1,0,-1]]]){
+  for(const [pos,heading] of PERIMETER_APPROACHES){
     p.respawn(level,true,true,{position:new THREE.Vector3(...pos),heading:new THREE.Vector3(...heading)});
     p.axisF.set(...heading).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.freeSkate=true;p.speed=16;
     p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);

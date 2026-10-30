@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
 // Called by the real Vite/headless Level harness in validate-editor-roundtrip.
-export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapComponentPoints, normalizeCustomLevelData, migrateCustomLevel }, THREE, { editOceanShoreline, straightenOceanShoreline, UnityOcean }) {
+export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapComponentPoints, normalizeCustomLevelData, migrateCustomLevel }, THREE, { editOceanShoreline, straightenOceanShoreline, UnityOcean, CAMPAIGN_MAP_HUBS, CAMPAIGN_MAP_EDGES }) {
   const search = window.location.search;
   const clone = (value) => JSON.parse(JSON.stringify(value));
   const makeData = (components) => ({
@@ -101,17 +101,20 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
       component.p = [30, 5, -20];
       component.yaw = 90;
       component.pts = worldMapComponentPoints();
-      component.pts[0][0] += 4;
-      component.pts[0][3] += 2;
+      const {from:hubKey,to:neighborKey}=CAMPAIGN_MAP_EDGES[0];
+      const hubIndex=CAMPAIGN_MAP_HUBS.findIndex(hub=>hub.progressKey===hubKey);
+      assert.ok(hubIndex>=0,'active map hub is missing its editable point');
+      component.pts[hubIndex][0] += 4;
+      component.pts[hubIndex][3] += 2;
       const copy = create(translated);
       try {
         assert.equal(copy.isCampaignMap, true, "an editable map lost campaign navigation");
-        const sourcePosition = sourceMap.campaignMapPose("jungle").position.clone().add(new THREE.Vector3(4, 2, 0));
+        const sourcePosition = sourceMap.campaignMapPose(hubKey).position.clone().add(new THREE.Vector3(4, 2, 0));
         const expected = new THREE.Vector3(sourcePosition.z + 30, sourcePosition.y + 5, -sourcePosition.x - 20);
-        const pose = copy.campaignMapPose("jungle");
+        const pose = copy.campaignMapPose(hubKey);
         assert.ok(pose.position.distanceTo(expected) < 1e-8, "moved hub pose stayed at its source location");
         assert.ok(pose.heading.distanceTo(new THREE.Vector3(-1, 0, 0)) < 1e-8);
-        const edge = copy.campaignMapTravel("jungle", "test-course", 0);
+        const edge = copy.campaignMapTravel(hubKey, neighborKey, 0);
         assert.ok(edge.position.distanceTo(expected) < 1e-8, "map route did not follow its edited hub");
         assert.equal(copy.water.seaLevel, sourceMap.water.seaLevel + 5, "map ocean ignored the map elevation");
         copy.root.updateMatrixWorld(true);
@@ -225,7 +228,14 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
       } finally { coast.dispose(); }
     }
 
-    const oceanVertices = water => water.group.children.map(mesh => Array.from(mesh.geometry.attributes.position.array));
+    const oceanVertices = water => {
+      water.group.updateWorldMatrix(true,true);
+      // The horizon is a camera-centred sky disk, not translated course geometry.
+      return water.group.children.filter(mesh => mesh.name !== "Unity ocean horizon fill").map(mesh => {
+        const points=mesh.geometry.attributes.position;
+        return Array.from({length:points.count},(_,i)=>new THREE.Vector3().fromBufferAttribute(points,i).applyMatrix4(mesh.matrixWorld).toArray()).flat();
+      });
+    };
     const assertVertices = (actual, expected, label) => {
       assert.equal(actual.length, expected.length, label);
       actual.forEach((mesh, i) => {
@@ -279,6 +289,7 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
           movedData.ocean.p = movedData.ocean.p.map((value, axis) => value + [5, 2, -7][axis]);
           const moved = create(movedData);
           try {
+            assert.equal(moved.water.seaLevel, migrated.water.seaLevel + 2);
             const expected = oceanVertices(migrated.water).map(mesh => mesh.map((value, index) => value + [5, 2, -7][index % 3]));
             assertVertices(oceanVertices(moved.water), expected, "ocean ignored ordinary world translation");
           } finally { moved.dispose(); }

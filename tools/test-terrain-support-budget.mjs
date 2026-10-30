@@ -266,11 +266,11 @@ try {
 
   let sourceCaptures = 0;
   for (const entry of api.BUILTIN_LEVELS) {
-    if (entry.data) assert.ok(api.normalizeCustomLevelData(entry.data), `${entry.id} source rejected`);
+    if (entry.data) assert.ok(api.normalizeCustomLevelData(JSON.parse(JSON.stringify(entry.data))), `${entry.id} source rejected`);
     const level = new Level(new THREE.Scene(), entry);
-    if (entry.id === "beachfront") {
-      assert.ok(level.terrainSupportTriangleTests > budget.MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS,
-        "native compatibility test did not exercise spatial filtering");
+    // Some current courses have no terrain-supported timber. Validate every
+    // native builder that actually probes, instead of a retired Beachfront layout.
+    if (level.terrainSupportTriangleTests > 0) {
       assert.ok(level.terrainSupportRayWork < budget.MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS);
       const actual = level.supportMeasurements.reduce((n, row) => n + row.triangleTests, 0);
       assert.ok(level.terrainSupportRayWork >= actual, "native query work was undercounted");
@@ -281,7 +281,7 @@ try {
   }
   const published = JSON.parse(await readFile(new URL("../public/levels.json", import.meta.url), "utf8")).levels;
   for (const entry of published)
-    assert.ok(api.normalizeCustomLevelData(entry.data), `${entry.id} published data rejected`);
+    assert.ok(api.normalizeCustomLevelData(JSON.parse(JSON.stringify(entry.data))), `${entry.id} published data rejected`);
   console.log(`Terrain support: ${baseline.triangleTests} → ${accelerated.triangleTests} triangle visits; ` +
     `adversarial import/runtime rejection, ownership/disposal, ${fixtures.length} generator fixtures, ` +
     `${sourceCaptures} source/native captures and ${published.length} published entries passed.`);

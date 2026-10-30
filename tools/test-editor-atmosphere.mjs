@@ -7,7 +7,9 @@ import { atmosphereRenderer } from './atmosphere-runtime-harness.mjs';
 // Baseline fixture was measured by executing c902b81's actual renderer functions
 // before the shared resolver change. Only `dark` was intentionally refreshed
 // from 55edc03's pristine Level/renderer when Nightworks became a floating-rock
-// data-backed course. The other nineteen scenarios retain their old baseline.
+// data-backed course. Warproom, Beachfront and the four default-map sky cases
+// were refreshed for the intentional b358c213 island/shore art. All other
+// scenarios retain their existing baselines; no lighting was retuned here.
 // This prevents source/copy tests from sharing the same accidental drift.
 const baseline = JSON.parse(await readFile(new URL('./fixtures/native-atmosphere-baseline.json', import.meta.url),'utf8'));
 // The stored baseline crosses CPU/OS/Node versions. Math.pow in Three's sRGB
@@ -50,7 +52,9 @@ try{
   const {isCompetitionLevel,competitionCourse}=await server.ssrLoadModule('/src/competition/courses.ts');
   const {NIGHTWORKS_LEVEL}=await server.ssrLoadModule('/src/levels/nightworks.ts');
   const {DrownedCrownLighting}=await server.ssrLoadModule('/src/drownedCrownLighting.ts');
-  const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere,DrownedCrownLighting);
+  const {motuHeatLook}=await server.ssrLoadModule('/src/motuLighting.ts');
+  const {MapIslandLighting}=await server.ssrLoadModule('/src/mapIslandLighting.ts');
+  const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere,DrownedCrownLighting,MapIslandLighting,motuHeatLook);
   const renderLevel=(level,entry,painted=true,editor=false)=>render(level,entry,{painted,editor},THREE,atmosphere);
   const build=(data,id='atmosphere_copy')=>new api.Level(new THREE.Scene(),{id,name:data.name,data:clone(data)});
   {
@@ -95,9 +99,10 @@ try{
           assert.equal(competition.heatLook.sky,['day','sunset','night'][heat]);
           const settings={painted:false,competition,isCompetitionLevel};
           const played=render(level,entry,settings,THREE,atmosphere);
-          assert.deepEqual(played.background,new THREE.Color(competition.heatLook.fogColor).toArray());
-          assert.equal(played.sunIntensity,competition.heatLook.lighting.sunIntensity??data.atmosphere.sunIntensity);
-          assert.deepEqual(played.sunColor,new THREE.Color(competition.heatLook.lighting.sunColor??data.atmosphere.sunColor).toArray());
+          const look=id==='jungle-cup'?motuHeatLook(competition.runNumber):competition.heatLook;
+          assert.deepEqual(played.background,new THREE.Color(look.fogColor).toArray());
+          assert.equal(played.sunIntensity,look.lighting.sunIntensity??data.atmosphere.sunIntensity);
+          assert.deepEqual(played.sunColor,new THREE.Color(look.lighting.sunColor??data.atmosphere.sunColor).toArray());
           assert.notDeepEqual(played,authored,'actual Cup heat did not reach the renderer');
           const inspection=render(level,entry,{...settings,editor:true},THREE,atmosphere);
           assert.deepEqual(inspection,renderLevel(level,entry,false,true),'Cup heat overrode authored editor lighting');

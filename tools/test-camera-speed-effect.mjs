@@ -112,11 +112,11 @@ try {
   for (const declaration of ['authoredFov', 'p2AuthoredFov']) {
     const expression = mainSource.match(new RegExp(`const ${declaration} = ([^;]+);`))?.[1];
     assert.ok(expression, `missing ${declaration} camera path`);
-    const resolve = new Function('TUNING', 'level', 'current', `return ${expression}`);
+    const resolve = new Function('TUNING', 'level', 'current', 'THREE', 'cameraValues', 'sideF', 'p2Side', `return ${expression}`);
     for (const lens of [35, 49, 75]) for (const id of ['beachfront', 'shared-beach-copy', 'flats']) {
-      near(resolve({ camFov: lens }, { jungleAtmosphere: false }, { id }), lens,
+      near(resolve({ camFov: lens }, { jungleAtmosphere: false }, { id }, THREE, {camFov:lens}, 0, 0), lens,
         `${declaration}: Beachfront or its copy retained a level-only lens adjustment`);
-      near(resolve({ camFov: lens }, { jungleAtmosphere: true }, { id }), lens,
+      near(resolve({ camFov: lens }, { jungleAtmosphere: true }, { id }, THREE, {camFov:lens}, 0, 0), lens,
         `${declaration}: Jungle retained the enhancement lens offset`);
     }
   }
@@ -129,7 +129,7 @@ try {
   for (const mode of ['default', 'jungle', 'coast', 'map']) {
     const scene = new THREE.Scene();
     const { sun, updateSunShadow } = new Function('THREE', 'scene', 'document', 'level', 'activeSky',
-      'const competition = null;\n' + shadowSetup + '; return { sun, updateSunShadow };')(
+      'const competition = null, TOUCH_PRESENTATION = false;\n' + shadowSetup + '; return { sun, updateSunShadow };')(
         THREE, scene, { body: { classList: { contains: () => mode === 'map' } } },
         { jungleAtmosphere: mode === 'jungle' }, mode === 'coast' ? 'coast' : 'day');
     assert.equal(sun.shadow.mapSize.x, 4096);

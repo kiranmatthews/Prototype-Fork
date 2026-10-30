@@ -11,7 +11,8 @@ await withSkateRuntime(async({THREE,server,Player,Level,scene,TUNING,CONST})=>{
  function reset(park=true,speed=0){course.skatepark=park;p.competitionMode=false;p.rawInput=makeInput();p.respawn(course,true,true,{position:new THREE.Vector3(0,0,100),heading:new THREE.Vector3(0,0,-1)});p.freeSkate=true;p.speed=speed;p.pos.y=p.prevPos.y=0;p.grounded=true;p.groundHit=p.queryGround(course);p.rideNormal.copy(p.groundHit.normal);}
  function step(input){p.step(CONST.fixedStep,input,course);input.consumeEdges();}
  function run(input,frames=180,park=true,speed=0){reset(park,speed);const trace=[];for(let i=0;i<frames;i++){step(makeInput({...input,jumpPressed:!!input.jumpHeld&&i===0}));trace.push(p.speed);}return trace;}
- const cruise=run({moveY:1}),charge=run({jumpHeld:true});assert.ok(Math.abs(cruise.at(-1)-12)<.002);assert.ok(Math.abs(charge.at(-1)-23)<.002);
+ function assertCharge(trace,base){const first=trace.findIndex(speed=>Math.abs(speed-base)<.002);assert.ok(first>=0,'normal charge ceiling was never reached');const beats=Math.floor(((trace.length-first)*CONST.fixedStep+1e-9)/.25);assert.ok(Math.abs(trace.at(-1)-(base+10*(1-.99**beats)))<.002,'charge or earned overdrive rate changed');}
+ const cruise=run({moveY:1}),charge=run({jumpHeld:true});assert.ok(Math.abs(cruise.at(-1)-12)<.002);assertCharge(charge,23);
  assert.ok(Math.abs(cruise[0]/CONST.fixedStep-10)<.002);assert.ok(Math.abs(charge[0]/CONST.fixedStep-9)<.002);
  // Only no-input rollout borrows platform friction. Compare the whole curve
  // until the platform's dismount threshold, then hold zero on the park board.
@@ -27,7 +28,7 @@ await withSkateRuntime(async({THREE,server,Player,Level,scene,TUNING,CONST})=>{
  // Restored symmetric park ollie, with its original 0.2-second charge.
  reset(true,12);for(let i=0;i<15;i++)step(makeInput({jumpHeld:true,jumpPressed:i===0}));step(makeInput({jumpReleased:true}));const launch=p.vVel;assert.ok(Math.abs(launch-10.9728)<1e-10);
  let peak=p.pos.y;for(let i=0;i<100&&!p.grounded;i++){const vy=p.vVel;step(makeInput());peak=Math.max(peak,p.pos.y);if(!p.grounded)assert.ok(Math.abs(p.vVel-vy+34.29*CONST.fixedStep)<1e-9);}assert.ok(Math.abs(peak-1.75546)<.003);assert.equal(p.isBailing,false);
- const before=run({jumpHeld:true,moveY:1},100,false,12);TUNING.parkChargeSpeed=27;TUNING.parkChargeAcceleration=18;assert.ok(Math.abs(run({jumpHeld:true}).at(-1)-27)<.002);assert.deepEqual(run({jumpHeld:true,moveY:1},100,false,12),before);
+ const before=run({jumpHeld:true,moveY:1},100,false,12);TUNING.parkChargeSpeed=27;TUNING.parkChargeAcceleration=18;assertCharge(run({jumpHeld:true}),27);assert.deepEqual(run({jumpHeld:true,moveY:1},100,false,12),before);
  Object.assign(TUNING,defaults);const {Recorder,Replayer}=await server.ssrLoadModule('/src/replay.ts');const rec=new Recorder();rec.start('jungle-cup');rec.record(makeInput());const take=rec.export();take.tuning.parkCamAirLift=0;take.tuning.parkBoardFallGravity=70;take.tuningChanges=[[0,'parkCruiseSpeedScale',2]];const replay=new Replayer();replay.begin(take);replay.feed(makeInput());for(const retired of ['parkCamAirLift','parkBoardFallGravity','parkCruiseSpeedScale'])assert.ok(!(retired in TUNING));replay.end();
  Object.assign(TUNING,defaults);course.dispose();console.log('PASS nine controls; 12/23 m/s, 10/9 m/s²; platform no-input coast with mounted zero; restored park steering/brake/0.2 s ballistic ollie; profile isolation and retired-key filtering.');
 });

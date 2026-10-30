@@ -22,6 +22,12 @@ try {
     parkCamPitch: 25.35,
     parkCamFov: 49,
     parkCamSpeedFovBoost: 6,
+    // Additional authored controls introduced after the historical browser capture.
+    grindTransferSpeed:4.8,grindTrickBoost:3,pipeTurnRate:104,teeterEdgeDistance:.35,
+    launchBackLean:.15,launchSomersault:1,launchSomersaultDeadline:55,launchSomersaultEase:1,
+    launchSomersaultEnd:100,launchSomersaultMinSpeed:7.2,launchSomersaultStart:22,
+    trampolineAirJumpMax:15,trampolineAirJumpMin:10.5,
+    trickLandBoost:1.25,trickLandBoostHold:4,trickLandBoostMax:5,
     camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75,
     doubleJumpHorizontalScale: 1, // v26: the second jump retains directional travel
     boardAbandonSteering: 25, // v28: gentler steering after the deliberate board jump-off

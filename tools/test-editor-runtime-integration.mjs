@@ -138,7 +138,7 @@ try {
   assert.equal(proxyViews.length, 1, "gameplay updated an inactive editor proxy"); checks++;
 
   const assetViews = [], streamed = { keepPlayFog: true, theme: { fogFar: 180 },
-    jungleAssets: { setView: (...args) => assetViews.push(args) } };
+    jungleAssets: { setView: (...args) => assetViews.push(args), setWeatherWind() {} } };
   scenery.camera.far = 12000;
   api.Level.prototype.updateSceneryView.call(streamed, scenery.camera, scenery.camera2);
   assert.equal(assetViews.at(-1)[1], 180, "play no longer used its authored scenery distance");

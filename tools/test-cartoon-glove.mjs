@@ -410,6 +410,7 @@ try {
   const shinInsertionPositionBase = shinKnobs.distalKnob.position.clone();
   const defaultArmKnobSize = player.characterProportions.armKnobSize;
   const defaultLegKnobSize = player.characterProportions.legKnobSize;
+  const restingBoneScales = player.stretchableBoneDiagnostics;
   player.setCharacterProportions({ armKnobSize: 1.4, legKnobSize: 1.5 });
   for (const [knob, base, factor] of [
     [upperArmKnobs.proximalKnob, upperArmProximalBase, 1.4 / defaultArmKnobSize],
@@ -442,8 +443,8 @@ try {
   assert.deepEqual(upperArmKnobs.distalKnob.scale.toArray(), upperArmDistalBase.toArray());
   assert.deepEqual(upperArmKnobs.distalKnob.position.toArray(), upperArmDistalPositionBase.toArray());
   assert.deepEqual(shinKnobs.proximalKnob.scale.toArray(), shinProximalBase.toArray());
-  near(player.stretchableBoneDiagnostics.minScale, 0.319);
-  near(player.stretchableBoneDiagnostics.maxScale, 2.765);
+  near(player.stretchableBoneDiagnostics.minScale, restingBoneScales.minScale);
+  near(player.stretchableBoneDiagnostics.maxScale, restingBoneScales.maxScale);
   assert.deepEqual(player.meshyTorsoDiagnostics, {
     ready: true,
     triangles: 10889,
@@ -601,7 +602,7 @@ try {
     ready: true,
     triangles: 10732,
     sourceSha256: 'ca74185a56d5fd9552088486b59ea4c836e1ac8228919a3743760cb8468629e5',
-    skinBones: ['hips', 'hip-left', 'hip-right'],
+    skinBones: ['hips', 'shorts-leg-length-left', 'shorts-leg-length-right'],
     textureState: 'loading',
     texturesLoaded: 0,
     textureError: null,

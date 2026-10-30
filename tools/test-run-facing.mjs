@@ -95,7 +95,7 @@ try {
   );
   assert.match(
     player,
-    /const selfDrivenPlanar = this\.walkVelocity\.length\(\)[\s\S]{0,260}runningAnim = onFoot/,
+    /const selfDrivenPlanar = this\.isBailing && this\.bailRecoverT >= 0\s*\? Math\.abs\(this\.speed\) \* THREE\.MathUtils\.smoothstep\(this\.bailRecoveryPose, \.58, \.9\)\s*: this\.walkVelocity\.length\(\);/,
     "legacy gait still reads world/platform displacement",
   );
   assert.match(player, /if \(intentFacing\)[\s\S]{0,1200}stepFacingYaw\(/);

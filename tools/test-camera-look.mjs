@@ -180,7 +180,7 @@ try {
   assert.match(touchSource, /if \(id === this\.lookPointer\) this\.clearLook\(\)/,
     'the shared pointer release route does not clear look ownership');
   assert.match(touchSource,
-    /window\.addEventListener\('blur', \(\) => this\.releaseAll\(true\)\)/,
+    /window\.addEventListener\('blur', \(\) => \{[^}]*this\.releaseAll\(true\);/,
     'touch look does not clear when the app backgrounds');
   for (const blockedClass of [
     'game-shell-modal',
@@ -191,9 +191,11 @@ try {
     'side-panel-left-open',
     'side-panel-right-open',
   ]) {
-    assert.match(touchSource, new RegExp(`body\\.${blockedClass.replaceAll('-', '\\-')} \\.tc-look`),
+    assert.match(touchSource, new RegExp(`body\\.${blockedClass.replaceAll('-', '\\-')}(?:\\:not\\([^)]*\\))? \\.tc-look`),
       `touch look is not hidden by ${blockedClass}`);
-    assert.match(touchSource, new RegExp(`body\\.contains\\('${blockedClass}'\\)`),
+    assert.match(touchSource, blockedClass.startsWith('side-panel-')
+      ? /body\.contains\(`side-panel-\$\{side\}-open`\)/
+      : new RegExp(`body\\.contains\\('${blockedClass}'\\)`),
       `touch look is not cleared by ${blockedClass}`);
   }
 

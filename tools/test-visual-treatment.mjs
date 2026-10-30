@@ -525,12 +525,12 @@ assert.match(
 );
 assert.match(
   main,
-  /syncSkyBackdropVisibility\(\)[\s\S]*?sky\.visible = !LITE && !bonusBackdropActive && !fogBackdrop/,
+  /syncSkyBackdropVisibility\(\)[\s\S]*?sky\.visible = !LITE && !fogBackdrop/,
   "Sky Bridge still exposes the painted distance dome",
 );
 assert.match(
   main,
-  /skyMist\.visible =[\s\S]{0,180}!fogBackdrop/,
+  /skyMist\.visible =[^;]*!fogBackdrop/,
   "Sky Bridge still exposes the painted horizon mist",
 );
 assert.match(
@@ -540,7 +540,7 @@ assert.match(
 );
 assert.match(
   main,
-  /activeSky = level\.skyPreset;[\s\S]{0,260}syncSkyBackdropVisibility\(\)/,
+  /function applyTheme\([\s\S]*?syncSkyBackdropVisibility\(\)/,
   "level switches must resync the painted-sky policy",
 );
 

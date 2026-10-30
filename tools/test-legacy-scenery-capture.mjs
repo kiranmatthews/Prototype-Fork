@@ -1,3 +1,4 @@
+import {nativeSceneryFixture,NATIVE_SCENERY_PINE_COUNT} from './fixtures/native-scenery.mjs';
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { createServer } from "vite";
@@ -71,7 +72,7 @@ try {
     window.location.search = query;
     api.setEditorBuild(false);
     const quality = query ? "lite" : "full";
-    const source = new api.Level(new THREE.Scene(), { id: "descent", name: "The Descent" });
+    const source = nativeSceneryFixture(api, THREE);
     let rebuilt;
     try {
       const captured = source.captureData(), normalized = api.normalizeCustomLevelData(captured);
@@ -82,16 +83,16 @@ try {
         triangles: mesh.reduce((sum,c)=>sum+(c.indices?.length??c.vertices.length)/3,0),
         pineCount: captured.components.filter(c=>c.dkind==='pine').length,
         bytes: new TextEncoder().encode(JSON.stringify(captured)).byteLength };
-      console.log(`Descent export ${JSON.stringify(summary)}`);
+      console.log(`Native scenery export ${JSON.stringify(summary)}`);
       if (process.env.LEGACY_SCENERY_DIAGNOSTICS)
         await writeFile(`${process.env.LEGACY_SCENERY_DIAGNOSTICS}/descent-capture-${quality}.json`,JSON.stringify(captured));
       check(`${quality}: complete source export stays within existing interchange budgets`, () => {
-        assert.ok(normalized, "complete Descent capture was rejected although its individual components are valid");
+        assert.ok(normalized, "complete native scenery capture was rejected although its individual components are valid");
         assert.ok(summary.bytes <= api.MAX_LEVEL_FILE_BYTES);
         assert.ok(summary.vertices <= 100_000 && summary.triangles <= 100_000);
         assert.ok(api.parseCustomLevelJson(JSON.stringify(captured)), "export cannot be parsed for sharing");
         assert.deepEqual(api.normalizeCustomLevelData(normalized), normalized, "source export changes on reopening");
-        assert.equal(summary.pineCount, 214, "native roadside pine placements were lost");
+        assert.equal(summary.pineCount, NATIVE_SCENERY_PINE_COUNT, "native roadside pine placements were lost");
       });
       // Per-component identities and picking belong to the loose editor build;
       // play deliberately merges static scenery into material/cell batches.

@@ -746,7 +746,7 @@ try {
   assert.equal((playerSource.match(/surface: 'ivory-bone'/g) ?? []).length, 1);
   assert.equal((playerSource.match(/surface: 'ivory-rattle'/g) ?? []).length, 2);
   assert.equal((playerSource.match(/surface: 'ivory-bone-rattle-hybrid'/g) ?? []).length, 1);
-  assert.match(playerSource, /upperLegBone\.root\.visible = false/);
+  assert.match(playerSource, /upperLegBone\.root\.visible = !!this\.rivalColor/);
   assert.doesNotMatch(playerSource, /const upperArmGeo =/);
   assert.doesNotMatch(playerSource, /const foreArmGeo =/);
   assert.doesNotMatch(playerSource, /const shinGeo =/);

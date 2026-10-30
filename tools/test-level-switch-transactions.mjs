@@ -75,7 +75,7 @@ try {
       worldMapController: { active: true, deactivate() { this.active = false; mark("map.deactivate")(); },
         activate: mark("map.activate"), selectedKey: "flats" },
       worldMapUI: { visible: true, hide() { this.visible = false; mark("map.hide")(); }, show: mark("map.show") },
-      puffs, swirls, fieldSwirls,
+      puffs, swirls, fieldSwirls, cloudPathPass: {release: mark('cloud.release')},
       player: { lives: 5, fruit: 12, bonusMode: true, hubMode: false, bonusCrates: 3,
         pos: new THREE.Vector3(1, 2, 3), fruitCollectionRevision: 6,
         enterLevel: mark("player.enter"),
@@ -203,7 +203,7 @@ try {
   assert.equal(direct.level.root.parent, direct.scene); assert.equal(direct.current, next);
   direct.localStorage = storage; checks++;
 
-  // Course pads now intentionally keep quiet masonry/inset markers. Torches
+  // Course pads retain their luminous beacon and stationary collision. Torches
   // still emit global smoke on update, not construction. Clearing old global
   // transients after candidate construction must preserve both presentations.
   direct.split2p = false;
@@ -211,11 +211,12 @@ try {
   const night = direct.level;
   assert.ok(night.warpPads.length > 0 && night.torches.length > 0);
   const pad = night.warpPads[0], meshes = [];
+  await pad.ready;
   pad.group.traverse(object => { if (object.isMesh) meshes.push(object); });
-  const transforms = meshes.map(mesh => [...mesh.position, ...mesh.scale]);
+  const transforms = pad.solids.map(mesh => [...mesh.position, ...mesh.quaternion, ...mesh.scale]);
   pad.update(0.37);
-  assert.ok(pad.group.getObjectByName("warp pad inset"), "quiet course marker disappeared during the switch");
-  assert.deepEqual(meshes.map(mesh => [...mesh.position, ...mesh.scale]), transforms, "quiet course pad unexpectedly animated");
+  assert.ok(pad.group.getObjectByName("flat luminous jade deck"), "course beacon disappeared during the switch");
+  assert.deepEqual(pad.solids.map(mesh => [...mesh.position, ...mesh.quaternion, ...mesh.scale]), transforms, "course pad collision unexpectedly animated");
   assert.ok(meshes.every(mesh => mesh.parent && mesh.geometry.attributes.position.count > 0));
   const torch = night.torches[0]; torch.burn = 1; torch.smokeT = 0;
   night.playerPos.copy(torch.lightAt); night.smokeTorches(0.2);

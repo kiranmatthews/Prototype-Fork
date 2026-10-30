@@ -10,6 +10,8 @@ export function useLegacyCrateEnvelope(player, constants) {
     this.crateAttackBox.max.y = Math.min(this.crateAttackBox.max.y, this.crateAttackBox.min.y + .92);
     if (this.spinning) this.crateAttackBox.expandByVector(reach);
   };
+  const currentStomp = player.isStomping.bind(player);
+  player.isStomping = box => currentStomp(box, 0);
   const currentBonk = player.isBonking.bind(player);
   player.isBonking = box => currentBonk(box, false);
 }

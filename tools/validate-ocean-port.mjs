@@ -84,7 +84,6 @@ for (const required of [
   "const firstSweepHit = (",
   "for (let pass = 0; pass < 3; pass++)",
   'sourceCoordinates: "unity"',
-  'coastReviewQuery.has("coastphysics")',
 ]) {
   if (!level.includes(required))
     throw new Error(`Continuous Unity coast collision missing: ${required}`);

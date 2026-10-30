@@ -1,3 +1,4 @@
+import {nativeOilFixture} from './fixtures/native-scenery.mjs';
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createServer } from "vite";
@@ -129,7 +130,7 @@ try {
   assert.equal(moved.groundMeshes[0].material.type, "MeshStandardMaterial");
   unchanged.dispose(); moved.dispose(); sandSource.dispose();
 
-  const descent = new api.Level(new THREE.Scene(), { id: "descent", name: "The Descent" });
+  const descent = nativeOilFixture(api, THREE);
   const oilComponents = descent.captureData().components.filter(c => c.nm === "oil slick");
   const oils = descent.groundMeshes.filter(m => m.name === "oil slick");
   assert.ok(oilComponents.length > 0);
@@ -291,8 +292,8 @@ try {
   // A tiny accepted environment document must not allocate three 2K texture
   // wrappers per patch. Exercise the full 256-patch boundary with styled mesh
   // variants present too, using the genuine material factory/Level builder.
-  const maxPatches = { ...dataFor([{ ...sandComponents[0] },
-    { ...clone(sandComponents[1]), emissive: "#123456" }]),
+  const maxPatches = { ...dataFor([{ ...sandComponents[0], tex: "sand" },
+    { ...clone(sandComponents[1]), tex: "sand", emissive: "#123456" }]),
     unitySand: Array.from({ length: 256 }, (_, i) => ({ p: [i % 16 * 3, -2, Math.floor(i / 16) * 3], s: [2, 1, 2], yaw: i % 4 * 90 })) };
   assert.ok(api.normalizeCustomLevelData(maxPatches), "the full useful patch limit was reduced");
   const nativeLoad = THREE.TextureLoader.prototype.load;
@@ -306,7 +307,7 @@ try {
   try { pooled = build(maxPatches); }
   finally { THREE.TextureLoader.prototype.load = nativeLoad; }
   const patches = [...pooled.customUnitySand];
-  const styled = pooled.groundMeshes.filter(m => m.material.isMeshStandardMaterial);
+  const styled = pooled.groundMeshes.filter(m => m.material.userData.unitySandTileMetres);
   assert.equal(patches.length, 256);
   assert.equal(new Set(patches.map(p => p.owner.material)).size, 256, "patch material state must remain independent");
   const owners = [...patches.map(p => p.owner.material), ...styled.map(m => m.material)];

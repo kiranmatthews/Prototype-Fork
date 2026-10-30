@@ -164,7 +164,7 @@ try {
   ]);
   assert.match(beachfrontSource, /sand\.userData\.beachSandFriction = true/,
     'Beachside Run sand did not opt into full surface drag');
-  assert.match(levelSource,
+  assert.match(beachfrontSource,
     /sand\.name = "Showcase1ContinuousSandSeabed";[\s\S]{0,240}sand\.userData\.beachSandFriction = true/,
     'The Descent beach sand did not opt into full surface drag');
   assert.match(levelSource,

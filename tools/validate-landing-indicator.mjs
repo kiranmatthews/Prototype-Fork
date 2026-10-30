@@ -293,9 +293,14 @@ try {
   let fixedLoopChecked = false;
   const inspect = node => {
     if (ts.isWhileStatement(node) && ts.isBlock(node.statement)) {
-      const calls = node.statement.statements
-        .filter(n => ts.isExpressionStatement(n) && ts.isCallExpression(n.expression))
-        .map(n => n.expression.expression.getText(ast));
+      const calls = [];
+      // The race owns its level update; ordinary play calls it conditionally.
+      // Inspect the actual statement order through those conditionals.
+      const collect = n => {
+        if (ts.isCallExpression(n)) calls.push(n.expression.getText(ast));
+        if (!ts.isFunctionLike(n)) ts.forEachChild(n, collect);
+      };
+      node.statement.statements.forEach(collect);
       const update = calls.indexOf('level.update');
       if (update >= 0) {
         const commit = calls.indexOf('player.commitRenderStep');

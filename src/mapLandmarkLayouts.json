@@ -3531,5 +3531,410 @@
         ]
       }
     ]
+  },
+  "tribal-run": {
+    "theme": "Tribal stone gateway and jungle stepping pillars",
+    "pieces": [
+      {
+        "asset": "tiki",
+        "p": [
+          -10,
+          0,
+          -13
+        ],
+        "extent": 15,
+        "yaw": -15
+      },
+      {
+        "asset": "tiki",
+        "p": [
+          11,
+          0,
+          -16
+        ],
+        "extent": 12,
+        "yaw": 20
+      },
+      {
+        "asset": "shelf",
+        "p": [
+          0,
+          0,
+          -19
+        ],
+        "extent": 14,
+        "yaw": 0
+      },
+      {
+        "asset": "column",
+        "p": [
+          -14,
+          0,
+          -2
+        ],
+        "extent": 8,
+        "yaw": 0
+      },
+      {
+        "asset": "palm",
+        "p": [
+          15,
+          0,
+          -5
+        ],
+        "extent": 17,
+        "yaw": -20
+      },
+      {
+        "asset": "redfern",
+        "p": [
+          -11,
+          0,
+          7
+        ],
+        "extent": 6,
+        "yaw": 15
+      },
+      {
+        "asset": "fern",
+        "p": [
+          10,
+          0,
+          8
+        ],
+        "extent": 5,
+        "yaw": -10
+      }
+    ],
+    "footprint": [
+      44,
+      38
+    ]
+  },
+  "waterfall-climb": {
+    "theme": "Basalt waterfall gorge and timber sluice approach",
+    "pieces": [
+      {
+        "asset": "gorge",
+        "p": [
+          -12,
+          0,
+          -17
+        ],
+        "extent": 22,
+        "yaw": -15
+      },
+      {
+        "asset": "gorge",
+        "p": [
+          12,
+          0,
+          -19
+        ],
+        "extent": 19,
+        "yaw": 20
+      },
+      {
+        "asset": "watermill",
+        "p": [
+          0,
+          0,
+          -17
+        ],
+        "extent": 13,
+        "yaw": 0
+      },
+      {
+        "asset": "boardwalk",
+        "p": [
+          -10,
+          0,
+          -4
+        ],
+        "extent": 10,
+        "yaw": 20
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          14,
+          0,
+          1
+        ],
+        "extent": 9,
+        "yaw": -10
+      },
+      {
+        "asset": "willow",
+        "p": [
+          -14,
+          0,
+          5
+        ],
+        "extent": 16,
+        "yaw": -20
+      },
+      {
+        "asset": "fern",
+        "p": [
+          9,
+          0,
+          8
+        ],
+        "extent": 5,
+        "yaw": 10
+      }
+    ],
+    "footprint": [
+      46,
+      40
+    ]
+  },
+  "carlisle-coast": {
+    "theme": "Carlisle harbour cargo, timber piers and winches",
+    "pieces": [
+      {
+        "asset": "ship",
+        "p": [
+          0,
+          0,
+          -20
+        ],
+        "extent": 24,
+        "yaw": -12
+      },
+      {
+        "asset": "hoist",
+        "p": [
+          -13,
+          0,
+          -12
+        ],
+        "extent": 12,
+        "yaw": 10
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          12,
+          0,
+          -11
+        ],
+        "extent": 9,
+        "yaw": -15
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          15,
+          0,
+          1
+        ],
+        "extent": 6,
+        "yaw": 15
+      },
+      {
+        "asset": "boardwalk",
+        "p": [
+          -12,
+          0,
+          4
+        ],
+        "extent": 11,
+        "yaw": 0
+      },
+      {
+        "asset": "pipes",
+        "p": [
+          -14,
+          0,
+          -2
+        ],
+        "extent": 6,
+        "yaw": -20
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          9,
+          0,
+          8
+        ],
+        "extent": 5,
+        "yaw": -10
+      }
+    ],
+    "footprint": [
+      45,
+      39
+    ]
+  },
+  "maynard-course-4": {
+    "theme": "Mayfield shopfronts and stacked service-yard cargo",
+    "pieces": [
+      {
+        "asset": "baybody",
+        "p": [
+          -11,
+          0,
+          -15
+        ],
+        "extent": 15,
+        "yaw": 10
+      },
+      {
+        "asset": "bayroof",
+        "p": [
+          -11,
+          8,
+          -15
+        ],
+        "extent": 16,
+        "yaw": 10
+      },
+      {
+        "asset": "baybody",
+        "p": [
+          11,
+          0,
+          -18
+        ],
+        "extent": 16,
+        "yaw": -15
+      },
+      {
+        "asset": "bayroof",
+        "p": [
+          11,
+          9,
+          -18
+        ],
+        "extent": 17,
+        "yaw": -15
+      },
+      {
+        "asset": "bayawning",
+        "p": [
+          11,
+          2,
+          -8
+        ],
+        "extent": 8,
+        "yaw": -15
+      },
+      {
+        "asset": "cargo",
+        "p": [
+          -13,
+          0,
+          7
+        ],
+        "extent": 6,
+        "yaw": 15
+      },
+      {
+        "asset": "dumpster",
+        "p": [
+          12,
+          0,
+          6
+        ],
+        "extent": 6,
+        "yaw": -20
+      },
+      {
+        "asset": "hibiscus",
+        "p": [
+          -15,
+          0,
+          -1
+        ],
+        "extent": 5,
+        "yaw": 0
+      }
+    ],
+    "footprint": [
+      46,
+      38
+    ]
+  },
+  "quagmire-race": {
+    "theme": "Spaghetti Rails trestles through the volcanic railway",
+    "pieces": [
+      {
+        "asset": "trestle",
+        "p": [
+          -11,
+          0,
+          -14
+        ],
+        "extent": 18,
+        "yaw": -25
+      },
+      {
+        "asset": "trestle",
+        "p": [
+          12,
+          0,
+          -18
+        ],
+        "extent": 18,
+        "yaw": 30
+      },
+      {
+        "asset": "track",
+        "p": [
+          1,
+          0,
+          -20
+        ],
+        "extent": 18,
+        "yaw": 85
+      },
+      {
+        "asset": "basalt",
+        "p": [
+          -15,
+          0,
+          -1
+        ],
+        "extent": 11,
+        "yaw": -15
+      },
+      {
+        "asset": "fungus",
+        "p": [
+          15,
+          0,
+          -2
+        ],
+        "extent": 7,
+        "yaw": 0
+      },
+      {
+        "asset": "track",
+        "p": [
+          -10,
+          0,
+          7
+        ],
+        "extent": 10,
+        "yaw": 30
+      },
+      {
+        "asset": "fungus",
+        "p": [
+          11,
+          0,
+          9
+        ],
+        "extent": 6,
+        "yaw": 20
+      }
+    ],
+    "footprint": [
+      48,
+      42
+    ]
   }
 }

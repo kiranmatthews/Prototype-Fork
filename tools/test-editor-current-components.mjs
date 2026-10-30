@@ -99,7 +99,7 @@ try {
     const editor = editorFor(mesh); editor.renderProps();
     changeBoolean(editor, "return to safe ground", true);
     assert.equal(editor.data.components[0].lethal, undefined);
-    changeBoolean(editor, "walkable collision", false);
+    changeBoolean(editor, "solid collision", false);
     for (const key of ["gravityTrack", "skateCamera", "lethal", "outOfBounds"]) assert.equal(editor.data.components[0][key], undefined);
     const styled = editorFor(mesh); styled.renderProps();
     const row = elements(styled.propsEl).find(e => e.children[0]?.textContent === "material style");

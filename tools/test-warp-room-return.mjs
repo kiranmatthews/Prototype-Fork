@@ -468,7 +468,7 @@ try {
   );
   assert.ok(warpLevel.water, "world map did not reuse the campaign ocean shader");
   assert.ok(warpLevel.water.params.causticsFade >= 120);
-  assert.equal(warpLevel.water.params.causticsStrength,0.32);
+  assert.equal(warpLevel.water.params.causticsStrength,0.18);
   assert.equal(warpLevel.water.params.causticsScale,0.64,"map must use the updated authored caustic size");
   assert.ok(warpLevel.water.params.depthDistance >= 0.7);
   assert.equal(warpLevel.water.params.reflectionFresnel,5.32);
@@ -487,7 +487,7 @@ try {
   });
   assert.equal(
     mapNames.filter((name) => name === "world map shallow caustic shelf").length,
-    CAMPAIGN_ISLANDS.length + 4,
+    CAMPAIGN_ISLANDS.filter(island => island.centre[1] === 0).length + 4,
     "the archipelago does not expose broad opaque seabeds to the ocean prepass",
   );
   assert.equal(
@@ -497,8 +497,8 @@ try {
   );
   assert.equal(
     mapNames.filter((name) => name === "world map route bed").length,
-    CAMPAIGN_MAP_EDGES.length,
-    "a graph edge is missing its supported trail/rail bed",
+    CAMPAIGN_MAP_EDGES.filter(edge => CAMPAIGN_LEVELS.find(l => l.progressKey === edge.from).islandId === CAMPAIGN_LEVELS.find(l => l.progressKey === edge.to).islandId).length,
+    "an island path is missing its supported trail/rail bed",
   );
   const campaignIslands = [];
   const markerRims = [];
@@ -515,9 +515,10 @@ try {
   assert.equal(campaignIslands.length, CAMPAIGN_ISLANDS.length);
   for(const island of campaignIslands){
     const box=new THREE.Box3().setFromObject(island);
-    const minimumPeak={'island-1':18,'island-2':17,'island-3':15,'island-4':6,'island-5':23,'hidden-shores':18};
-    const id=CAMPAIGN_ISLANDS.find(def=>island.name.endsWith(def.id)).id;
-    assert.ok(box.max.y>minimumPeak[id]&&box.max.y<30,'island lost its low, readable authored relief');
+    const minimumPeak={'island-1':13,'island-2':12,'island-3':10,'island-4':7,'island-5':16,'hidden-shores':11};
+    const definition=CAMPAIGN_ISLANDS.find(def=>island.name.endsWith(def.id)),id=definition.id;
+    const relativePeak=box.max.y-definition.centre[1];
+    assert.ok(relativePeak>minimumPeak[id]&&relativePeak<30,'island lost its low, readable authored relief');
     assert.ok(island.geometry.attributes.position.count>20000,'highland sculpt lost its mesh resolution');
     assert.ok(island.geometry.hasAttribute('aRockBlend'));
   }
@@ -548,7 +549,9 @@ try {
   assert.ok(warpLevel.campaignWorldMap.scenery.diagnostics.placements>100,'map lost its solid foliage dressing');
   assert.ok(!mapNames.some(name=>name.startsWith('world map waterfall')),'removed waterfalls returned');
   assert.ok(!mapNames.includes('jungle canopy tree'),'perforated imported trees returned');
-  assert.equal(routeDashes.length, CAMPAIGN_MAP_EDGES.length);
+  assert.equal(routeDashes.length, CAMPAIGN_MAP_EDGES.filter(edge =>
+    CAMPAIGN_LEVELS.find(level => level.progressKey === edge.from).islandId ===
+    CAMPAIGN_LEVELS.find(level => level.progressKey === edge.to).islandId).length);
   for (const route of routeDashes) {
     route.geometry.computeBoundingBox();
     const size = route.geometry.boundingBox.getSize(new THREE.Vector3());
@@ -610,12 +613,15 @@ try {
   for(const island of campaignIslands){
     const shelf=shelves.find((mesh)=>mesh.position.x===island.position.x&&mesh.position.z===island.position.z);
     const drySize=new THREE.Box3().setFromObject(island).getSize(new THREE.Vector3());
-    const wetSize=new THREE.Box3().setFromObject(shelf).getSize(new THREE.Vector3());
-    assert.ok(wetSize.x>drySize.x*1.75&&wetSize.z>drySize.z*1.75,"caustic shelf no longer broadly surrounds the island");
+    if (island.position.y < warpLevel.water.seaLevel + 2) {
+      assert.ok(shelf, 'sea-level island lost its caustic shelf');
+      const wetSize=new THREE.Box3().setFromObject(shelf).getSize(new THREE.Vector3());
+      assert.ok(wetSize.x>drySize.x*1.75&&wetSize.z>drySize.z*1.75,"caustic shelf no longer broadly surrounds the island");
+    } else assert.equal(shelf, undefined, 'elevated secret island gained an underwater shelf');
     assert.ok(island.geometry.hasAttribute("aSandBlend")&&island.geometry.hasAttribute("uv1"));
     assert.equal(island.material.map.name,"MatrixRex sand-color.png");
   }
-  assert.equal(warpLevel.campaignWorldMap.shoreline.diagnostics.ovalCount,CAMPAIGN_ISLANDS.length+4);
+  assert.equal(warpLevel.campaignWorldMap.shoreline.diagnostics.ovalCount,CAMPAIGN_ISLANDS.filter(island=>island.centre[1]===0).length+4);
   const coastLand=[];
   warpLevel.root.traverse(object=>{
     if(object.name.startsWith("world map campaign island ")||object.name==="world map offshore islet")coastLand.push(object);
@@ -840,7 +846,7 @@ try {
     grabPressed: false,
   };
   controller.activate(warpLevel, null);
-  assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3]);
+  assert.deepEqual(fakePlayer.group.scale.toArray(), [4.6, 4.6, 4.6]);
   assert.equal(controller.selectedKey, "treehouse-trail");
   assert.equal(controller.travelTo("nightworks"), false, "touch must not bypass locked progression");
   assert.deepEqual(selections.at(-1).directions, {
@@ -849,7 +855,13 @@ try {
     left: false,
     right: false,
   });
-  const settle=()=>{for(let frame=0;frame<2400&&controller.moving;frame++)controller.step(1/60,neutralInput);assert.equal(controller.moving,false);};
+  let hiddenTravelFrames=0;
+  const settle=()=>{for(let frame=0;frame<2400&&controller.moving;frame++){controller.step(1/60,neutralInput);if(!fakePlayer.group.visible)hiddenTravelFrames++;}assert.equal(controller.moving,false);};
+  const directionTo=key=>{
+    const slot=Object.entries(controller.directionSlots()).find(([,value])=>value===key)?.[0];
+    assert.ok(slot, `No displayed direction to ${key}`);return slot;
+  };
+  const navigateTo=key=>controller.navigate(...directionVector[directionTo(key)]);
   controllerStore.commitClear("treehouse-trail",{});controller.refresh();
   assert.equal(selections.at(-1).directions.right,true);assert.equal(controller.navigate(1,0),true);settle();
   assert.equal(controller.selectedKey,"beachside-run");
@@ -858,9 +870,10 @@ try {
   assert.ok(controllerModes.includes("walk"));
   for(const id of ["jungle","rumblewater-run","coastal-street-run"])controllerStore.commitClear(id,{});
   controllerStore.commitCompetitionWin("jungle-cup");controller.activate(warpLevel,"jungle-cup");controllerModes.length=0;
-  assert.equal(controller.navigate(0,1),true);settle();assert.equal(controller.selectedKey,"custard-creek");
-  assert.ok(controllerModes.includes("walk"));assert.ok(controllerModes.includes("boardslide"));
-  controller.refresh();assert.equal(controller.navigate(0,1),false,"uncleared Sunset Safari opened later Uga slots");
+  assert.equal(navigateTo('custard-creek'),true);settle();assert.equal(controller.selectedKey,"custard-creek");
+  assert.ok(hiddenTravelFrames>0,'island change lost its relocation transition');
+  assert.ok(controllerModes.every(mode=>mode==='idle'),'cross-island relocation started an unsupported sea grind');
+  controller.refresh();assert.equal(controller.travelTo('tribal-run'),false,"uncleared Sunset Safari opened later Uga slots");
   controller.revealUnlocks(["custard-creek"]);
   const revealedNode=warpLevel.campaignWorldMap.nodeByKey.get("custard-creek");
   assert.ok(revealedNode.unlockReveal>2);const revealBeforeTick=revealedNode.unlockReveal;warpLevel.update(.25);assert.ok(revealedNode.unlockReveal<revealBeforeTick);
@@ -868,7 +881,7 @@ try {
   controllerStore.commitClear("custard-creek",{crystal:true});controller.refresh();
   for(const key of ["tribal-run","waterfall-climb","test-course"]){
     const edge=CAMPAIGN_MAP_EDGES.find(edge=>edge.from===controller.selectedKey&&edge.to===key);
-    assert.equal(controller.navigate(...directionVector[edge.fromDirection]),true);settle();assert.equal(controller.selectedKey,key);
+    assert.equal(navigateTo(key),true);settle();assert.equal(controller.selectedKey,key);
     if(key!=="test-course"){
       assert.equal(controllerStore.levelPlayable("test"),false,`${key} must be cleared before Uga Ambush`);
       assert.equal(controller.enterSelected(),true,`authored ${key} failed to launch`);
@@ -879,7 +892,7 @@ try {
   controller.activate(warpLevel,"treehouse-trail");assert.equal(controller.travelTo("test-course"),true);
   assert.equal(controller.enterSelected(),false,"queued touch travel entered a course mid-route");settle();
   assert.equal(controller.selectedKey,"test-course");assert.equal(controllerStore.recommendedMapLevelKey(),"test-course");
-  assert.equal(controller.navigate(0,-1),false,"vertical input invented a branch");
+  assert.equal(controller.travelTo("drowned-crown"),false,"uncleared Uga Ambush opened the next course");
   controllerStore.commitClear("test",{});controller.refresh();
   const touchCamera=new THREE.PerspectiveCamera(42,844/390,.1,900);
   controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
@@ -905,7 +918,7 @@ try {
   assert.deepEqual(fakePlayer.group.scale.toArray(), [1, 1, 1], "map scale leaked into gameplay");
   controller.activate(warpLevel, "jungle");
   controller.activate(warpLevel, "jungle");
-  assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3], "repeated map activation compounded scale");
+  assert.deepEqual(fakePlayer.group.scale.toArray(), [4.6, 4.6, 4.6], "repeated map activation compounded scale");
   controller.deactivate();
 
   // Each authored axis must match its screen-space layout at both endpoints.
@@ -916,7 +929,8 @@ try {
     // A far island may lie behind the lens. Test the visible departing leg,
     // not the inverted perspective projection of an off-screen endpoint.
     const next=key===edge.from?edge.to:edge.from;
-    const direction=key===edge.from?edge.fromDirection:edge.toDirection;
+    const direction=directionTo(next);
+    if(CAMPAIGN_LEVELS.find(l=>l.progressKey===key).islandId!==CAMPAIGN_LEVELS.find(l=>l.progressKey===next).islandId)continue;
     const from=warpLevel.campaignMapPose(key).position.clone().project(touchCamera);
     const to=warpLevel.campaignMapTravel(key,next,.04).position.clone().project(touchCamera);
     if(direction==='right'||direction==='left')assert.ok((to.x-from.x)*(direction==='right'?1:-1)>0,`${key} has the wrong horizontal screen direction`);

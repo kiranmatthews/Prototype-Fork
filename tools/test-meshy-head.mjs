@@ -241,7 +241,7 @@ try {
   assert.match(playerSource, /setCharacterHeadStyle/);
   assert.match(playerSource, /socket-head-visual-center/);
   assert.match(playerSource, /headLookSocket\.getWorldDirection/);
-  const finalOverlayIndex = playerSource.indexOf('this.playerAnimationBridge.applyOverlay(dt);');
+  const finalOverlayIndex = playerSource.indexOf('this.playerAnimationBridge.applyOverlay(dt, batchBailDeformations);');
   const finalAppearanceIndex = playerSource.indexOf(
     'this.syncCharacterAppearance(',
     finalOverlayIndex,

@@ -427,7 +427,9 @@ try {
       1,
       `${entry.name} does not have exactly one Nitro clear switch`,
     );
-    const authored = entry.data?.components.some(component =>
+    // Native builders supply authored data through capture; generated switches
+    // are deliberately excluded by that separate export path.
+    const authored = (entry.data ?? level.captureData()).components.some(component =>
       component.t === 'crate' && component.kind === 'nitrobang');
     assert.equal(diagnostics.generated, authored ? 0 : 1,
       `${entry.name} did not preserve its authored-or-derived Nitro switch ownership`);

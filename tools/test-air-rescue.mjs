@@ -422,7 +422,7 @@ try {
   {
     const f = create({ t: "crate", p: [0, 0, 0], kind: "wood" });
     const crate = f.level.crates[0];
-    prepareTopContact(f.player, crate.box, { x: crate.box.max.x + 0.2 });
+    prepareTopContact(f.player, crate.box, { x: crate.box.max.x + 0.4 });
     f.player.collide(f.level);
     assert.equal(crate.alive, true, "side contact was misclassified as a rescue stomp");
     assert.ok(f.player.bailDownT > 0, "side contact incorrectly cleared the bail");

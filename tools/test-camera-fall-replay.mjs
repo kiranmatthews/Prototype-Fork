@@ -9,7 +9,10 @@ await withBlockworksRuntime(async r => {
   const { CameraFallHold } = await r.server.ssrLoadModule('/src/cameraRig.ts');
   const replayer = new Replayer(), oldHold = new CameraFallHold(), fixedHold = new CameraFallHold(), input = {};
   const windows = [[2590, 2609], [3018, 3035], [3436, 3453]], recovered = windows.map(() => ({ old: 0, fixed: 0, landed: false }));
-  const fatalStarts = [3782, 4769, 6291, 6786], fatal = fatalStarts.map(() => ({ frames: 0, missed: 0 }));
+  // Death/recovery timing evolves independently of camera holding. Check the
+  // actual final 40 airborne frames before each death, not old wall-clock offsets.
+  const fatal = [], recent = [];
+  let deaths = 0;
   const trajectory = createHash('sha256');
   replayer.begin(replay);
   try {
@@ -23,9 +26,14 @@ await withBlockworksRuntime(async r => {
       for (let i = 0; i < windows.length; i++) if (f >= windows[i][0] && f <= windows[i][1]) {
         recovered[i].old += +old; recovered[i].fixed += +fixed; recovered[i].landed ||= r.p.grounded;
       }
-      for (let i = 0; i < fatalStarts.length; i++) if (f >= fatalStarts[i] && f < fatalStarts[i] + 40) {
-        fatal[i].frames++; fatal[i].missed += +!fixed;
+      if (r.p.totalDeaths > deaths) {
+        const fall = recent.slice(-40);
+        fatal.push({ frame: f, frames: fall.length, missed: fall.filter(row => !row.held).length });
+        assert.ok(fall.every(row => row.state === 'air'), 'fatal window did not exercise a real fall');
+        deaths = r.p.totalDeaths;
       }
+      recent.push({ held: fixed, state: r.p.state });
+      if (recent.length > 40) recent.shift();
     }
   } finally { replayer.end(); }
   assert.deepEqual(recovered.map(x => x.old), [6, 8, 8], 'original false freezes no longer reproduce');

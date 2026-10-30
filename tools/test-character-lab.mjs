@@ -631,7 +631,7 @@ try {
   }
   assert.equal(studioSource.includes('presentationSurface'), false,
     'Animation Studio still exposes removed comparison surfaces');
-  assert.match(mainSource, /label: "CHARACTER"/);
+  assert.match(mainSource, /label: [\'"]CHARACTER[\'"]/);
   assert.match(mainSource, /openCharacterLabTool/);
   assert.match(mainSource,
     /syncPresentation:[\s\S]{0,180}setCharacterUpperArmRestAngleWeight\([\s\S]{0,180}clip\?\.id === 'player\.idle'[\s\S]{0,120}\? 1 : 0/,
@@ -645,7 +645,7 @@ try {
   assert.match(labSource, /stature drives gameplay hitbox height/);
   assert.match(playerSource, /characterCollisionHeight\(/,
     'Player does not derive hitbox height from Character Lab settings');
-  assert.match(playerSource, /spinBox\.min\.y \+ BASE_CHARACTER_HITBOX_HEIGHT/,
+  assert.match(playerSource, /spinBox\.min\.y \+ \(this\.spinning && this\.spinCrouched \? CROUCH_SPIN_HEIGHT : BASE_CHARACTER_HITBOX_HEIGHT\)/,
     'tall character hitboxes can expand a spin through multiple crate rows');
   assert.match(labSource, /Show animal tail/);
   assert.match(labSource, /toFixed\(inputs\.decimals\)/,

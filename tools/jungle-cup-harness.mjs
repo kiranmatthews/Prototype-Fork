@@ -3,6 +3,13 @@ import * as THREE from 'three';
 import ts from 'typescript';
 import { createServer } from 'vite';
 
+// Clear approach lanes on the current Motu course, outside the added street
+// features. These still traverse the actual continuous perimeter and collision.
+export const PERIMETER_APPROACHES = [
+  [[0,.1,25],[0,0,1]], [[0,.1,-145],[0,0,-1]],
+  [[58,.1,-42],[1,0,0]], [[-58,.1,-70],[-1,0,0]],
+];
+
 export const makeInput = (overrides = {}) => ({
   moveX: 0, moveY: 0, jumpHeld: false, jumpPressed: false, jumpReleased: false,
   grindHeld: false, grindPressed: false, spinHeld: false, spinPressed: false,
