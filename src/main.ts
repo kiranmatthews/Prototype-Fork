@@ -2110,7 +2110,7 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
-  launchCamera2.apply(camera2,subject,p2.launchPresentation,dt,framingSnap,input2.lookX);
+  launchCamera2.apply(camera2,subject,p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
   carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
@@ -2183,7 +2183,7 @@ function updateBaseCamera2(dt: number): void {
   const ty = subject.y + framing.height;
   const k = snapped ? 1 : Math.min(1, 9 * dt);
   camera2.position.x += (tx - camera2.position.x) * k;
-  if (p2.launchPresentation || launchCamera2.diagnostics.weight > 0) camera2.position.y = ty;
+  if (p2.launchCameraPresentation || launchCamera2.diagnostics.weight > 0) camera2.position.y = ty;
   else camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
   if (laneTarget) {
@@ -4575,7 +4575,7 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
-  launchCamera.apply(camera,subject,player.launchPresentation,dt,framingSnap,input.lookX);
+  launchCamera.apply(camera,subject,player.launchCameraPresentation,dt,framingSnap,input.lookX);
   carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
@@ -4786,7 +4786,7 @@ function updateBaseCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
-  const springFollow = player.launchPresentation !== null || launchCamera.diagnostics.weight > 0;
+  const springFollow = player.launchCameraPresentation !== null || launchCamera.diagnostics.weight > 0;
   const airLift = swimmingView||waterDeath!==null||springFollow ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.

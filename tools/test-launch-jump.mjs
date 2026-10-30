@@ -160,6 +160,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
   p.step(CONST.fixedStep,makeInput({jumpReleased:true}),level);
   assert.ok(p.emergencyEjectLandingPending,'native spring board-abandon gesture failed');
   assert.equal(p.launchPresentation,null,'spring pose masked Abandon Ship');
+  assert.ok(p.launchCameraPresentation,'Abandon Ship cut the spring camera');
   assert.equal(p.launchSomersaultProgress,null,'spring somersault survived Abandon Ship');
   for(let i=0;i<15;i++)p.step(CONST.fixedStep,makeInput(),level);
   p.commitRenderStep(level);

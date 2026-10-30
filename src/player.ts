@@ -6,10 +6,10 @@ import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, launchLandingElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
-import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, sampleLaunchLanding, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
+import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, launchSomersaultWindow, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
 import { kookSquawkHits } from './enemies/kookSquawk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -1120,42 +1120,42 @@ export class Player {
   private trampolineElapsed = 0;
   private trampolineLaunchId = 0;
   private trampolineSomersaultStart = -1;
-  private launchLandingAge = -1;
-  private launchLandingStrength = 0;
-
-  get launchLandingPresentation() {
-    if(this.launchLandingAge<0||this.launchLandingAge>=TUNING.launchLandDuration||!this.grounded||
-      this.state!=='ride'||this.isBailing||this.rollLandingT>=0||this.slamActive||this.swimming)return null;
-    return {...sampleLaunchLanding(this.launchLandingAge,TUNING.launchLandDuration),strength:this.launchLandingStrength};
-  }
+  private trampolineSomersaultEnd = 1;
 
   private get trampolineAirStrength(): number {
     const rise = this.trampolineLaunchSpeed ** 2 / (2 * Math.max(1, TUNING.riseGravity));
     return THREE.MathUtils.smoothstep(rise, 12, 55);
   }
 
-  /** Actual spring trajectory drives both presentation owners.
-   * No animation state feeds back into the ballistic controller. */
-  get launchPresentation(): LaunchPresentation | null {
+  /** Camera owns the whole spring flight, including its optional second pop.
+   * A temporary flip must not release the shot or restart its launch identity. */
+  get launchCameraPresentation(): LaunchPresentation | null {
     if (!this.trampolineAir || this.state !== 'air' || this.isBailing || this.vertAir ||
         this.slamActive || this.doubleJumpAir || this.swimming ||
-        !this.bounceJump || this.emergencyEjectLandingPending ||
+        (!this.bounceJump && !this.emergencyEjectLandingPending) ||
         this.trampolineAirStrength < LAUNCH_JUMP.minimumStrength) return null;
     const floor = this.groundBelowIsFatal ? null : this.groundBelowY;
     const contactTime = floor !== null && this.vVel < 0
       ? Math.max(0, this.pos.y - floor) / Math.max(1, -this.vVel) : Infinity;
     return {id:this.trampolineLaunchId,strength:this.trampolineAirStrength,elapsed:this.trampolineElapsed,
-      rise:launchRiseProgress(this.trampolineElapsed,this.vVel,this.trampolineLaunchSpeed),
+      rise:this.emergencyEjectLandingPending?1:launchRiseProgress(this.trampolineElapsed,this.vVel,this.trampolineLaunchSpeed),
       gather:THREE.MathUtils.clamp(1-contactTime/LAUNCH_JUMP.gatherSeconds,0,1),
       verticalSpeed:this.vVel,board:this.airFromSkate};
+  }
+  /** Let Abandon Ship finish its flip, then resume the spring float/gather.
+   * Physics still owns the second pop, momentum and supported landing roll. */
+  get launchPresentation(): LaunchPresentation | null {
+    return this.emergencyEjectLandingPending&&this.flipTimer>0?null:this.launchCameraPresentation;
   }
   /** A single slow turn follows the measured rising arc, then finishes upright
    * before the float. Mounted rider and deck share the same visual pivot. */
   get launchSomersaultProgress(): number | null {
     const launch=this.launchPresentation;
-    if(!launch||!Number.isFinite(this.trampolineSomersaultStart)||this.trampolineSomersaultStart<0||
+    if(!launch||TUNING.launchSomersault<.5||this.emergencyEjectLandingPending||
+      !Number.isFinite(this.trampolineSomersaultStart)||this.trampolineSomersaultStart<0||
       !isLaunchClip(this.animationClipHint))return null;
-    return THREE.MathUtils.clamp((launch.rise-this.trampolineSomersaultStart)/(1-this.trampolineSomersaultStart),0,1);
+    return THREE.MathUtils.clamp((launch.rise-this.trampolineSomersaultStart)/
+      Math.max(.05,this.trampolineSomersaultEnd-this.trampolineSomersaultStart),0,1);
   }
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
@@ -3480,7 +3480,7 @@ export class Player {
     this.trampolineElapsed = 0;
     this.trampolineLaunchId++;
     this.trampolineSomersaultStart = -1;
-    this.launchLandingAge = -1;
+    this.trampolineSomersaultEnd = 1;
     // Presentation-only impact stamp: the native launch has already been resolved.
     // Save the contact in deck space now so moving/spinning nets keep the dent attached.
     if (hit.mesh) {
@@ -3816,7 +3816,6 @@ export class Player {
     this.skateOverdrive.reset();
     this.softSkateImpactT = 0;
     this.softSkateImpactNormal.set(0, 0, 0);
-    this.launchLandingAge = -1;
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -5042,10 +5041,6 @@ export class Player {
     }
     this.sketchyT = Math.max(0, this.sketchyT - dt);
     this.softSkateImpactT = Math.max(0, this.softSkateImpactT - dt);
-    if(this.launchLandingAge>=0){
-      if(!this.launchLandingPresentation)this.launchLandingAge=-1;
-      else this.launchLandingAge+=dt;
-    }
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     if (this.grindBoostT > 0 && Math.random() < 0.7) this.emitSparks(1, 0xff4fd8, 1.6);
     // Actual planar speed from last step's displacement (any direction) —
@@ -8882,10 +8877,13 @@ export class Player {
     // Commit once from actual travel, not camera-relative facing or a raw key.
     // A deliberate early sidestep counts; neutral vertical bounces stay loose.
     const launch=this.launchPresentation;
-    if(launch&&isLaunchClip(this.animationClipHint)){
-      if(this.trampolineSomersaultStart<0&&launch.rise<LAUNCH_JUMP.somersaultLatestStart&&
-        Math.hypot(incomingPlanarX,incomingPlanarZ)>=TUNING.walkSpeed*LAUNCH_JUMP.somersaultSpeedRatio)
-        this.trampolineSomersaultStart=Math.max(LAUNCH_JUMP.somersaultStart,launch.rise);
+    if(launch&&!this.emergencyEjectLandingPending&&isLaunchClip(this.animationClipHint)){
+      const window=launchSomersaultWindow(TUNING.launchSomersaultStart,TUNING.launchSomersaultDeadline,TUNING.launchSomersaultEnd);
+      if(TUNING.launchSomersault>=.5&&this.trampolineSomersaultStart<0&&launch.rise<window.deadline&&
+        Math.hypot(incomingPlanarX,incomingPlanarZ)>=TUNING.launchSomersaultMinSpeed){
+        this.trampolineSomersaultStart=Math.max(window.start,launch.rise);
+        this.trampolineSomersaultEnd=window.end;
+      }
     }else if(this.trampolineAir)this.trampolineSomersaultStart=Infinity;
 
     let hit = this.queryGround(level);
@@ -8974,8 +8972,6 @@ export class Player {
       }
     }
     let rollLanding = false;
-    const springLanding=this.trampolineAir;
-    const springImpactSpeed=Math.max(0,-this.vVel);
     if (landNow && hit) {
       if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
       if(hit.lethal){this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;}
@@ -9395,10 +9391,6 @@ export class Player {
 
       if (rollLanding && !this.isBailing && !this.slamActive) {
         this.beginRollLanding(incomingPlanarX, incomingPlanarZ);
-      } else if(springLanding&&!this.isBailing&&!this.slamActive&&!hit.beachSand&&!hit.crate&&
-        !['sand','dirt','grass','snow'].includes(hit.surface??'generic')&&hit.normal.y>.7){
-        this.launchLandingAge=0;
-        this.launchLandingStrength=THREE.MathUtils.clamp(springImpactSpeed/28,.3,1);
       }
 
       // A pipe drop-in doesn't announce itself — the wheels just meet the
@@ -19958,15 +19950,6 @@ export class Player {
       if (this.armR) this.armR.rotation.z -= 0.19 * hit.brace;
     }
     this.applyResultsPose();
-    const launchLanding=this.launchLandingPresentation;
-    if(launchLanding){
-      const compression=launchLanding.compression*launchLanding.strength*TUNING.launchLandCompression;
-      const rebound=launchLanding.rebound*launchLanding.strength*TUNING.launchLandCompression;
-      if(this.kneeL)this.kneeL.rotation.x+=.5*compression;
-      if(this.kneeR)this.kneeR.rotation.x+=.5*compression;
-      if(this.spineG)this.spineG.rotation.x+=.12*compression;
-      this.playerAnimationBridge.modulateDeformations(launchLandingElasticity(compression,rebound,this.freeSkate));
-    }
     this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined,
       // The finite rise still ends with a complete pose/support measurement.
       // Its exact gameplay skin bounds need that pass, not a second one here.
@@ -20059,10 +20042,10 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
-    if(launchLanding)this.bodyGroup.position.y+=TUNING.launchLandHeight*launchLanding.strength*launchLanding.lift;
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
-      const turn=launchTurn*launchTurn*(3-2*launchTurn)*Math.PI*2;
+      const turn=THREE.MathUtils.lerp(launchTurn,launchTurn*launchTurn*(3-2*launchTurn),
+        THREE.MathUtils.clamp(TUNING.launchSomersaultEase,0,1))*Math.PI*2;
       this.rotateAttachedBodyAtHips(turn,-this.stance*Math.PI/2*this.sidePose);
     }
     if(this.kiteDock && this.riderG)this.kiteDock.pose(this.bodyGroup,this.riderG,this.boardG);

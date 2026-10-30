@@ -7049,3 +7049,37 @@ docs/CARLISLE_LAUNCH_STUDY.md and docs/carlisle-launch-review/.
 
 Combined build: 1,777 files / 1,067.8MiB, offline version c9761604c6e8fb9468d9.
 Local merged playtest is ready on port 5491. Publication remains held.
+
+## Carlisle second-jump camera and somersault controls — 30 October 2026
+
+Approximately 8 minutes prompt-to-playable. The previous second jump retired
+both the spring pose and the spring camera, abruptly releasing the shot while
+the rider was still high above the course. Camera ownership now spans the whole
+trampoline flight, keeping its original identity, strength and orbit through
+the Abandon Ship pop. The flip temporarily owns the pose, then hands back to
+the trampoline float and landing gather. The existing supported roll landing
+and genuine excessive-drop bails retain their contact behavior on foot and
+after ejecting the skateboard. Both player camera paths use the same lifetime.
+
+Removed the experimental hard-landing hop, added impact deformation and all
+three associated sliders. Ordinary land recovery remains. Added a dedicated
+TRAMPOLINE · SOMERSAULT tuner section: enable, actual horizontal trigger speed,
+trigger deadline, turn start, turn finish and easing. Defaults preserve the
+slow directional turn at 7.2m/s, from 22% to 100% rise progress, with a 55%
+trigger deadline. Timing commits per turn; crossed bounds remain finite.
+Reduced launch lean and the manual second-jump pop sliders remain beside it.
+
+The focused native air-jump check covers foot/board pops on ascent/descent,
+camera continuity, flip-to-float/gather, supported rolls, huge drops, trigger
+speed/windows/timing, disabled turns and ordinary-jump exclusion. All four
+authored launch-transfer checks and the production build pass. No level data
+changed and no check:all. Build: 1,777 files / 1,067.8MiB, offline version
+bc9a3f933097480ccfe5. The current Carlisle artwork merge remains intact;
+publication remains held.
+
+Browser verification completed in about 25 minutes total: lite on-foot and
+full MAX/native board-eject second jumps retain the camera at full strength and
+return visibly to the trampoline falling loop. A full-render ordinary spring
+landing was stepped through the former hop window, remaining planted, then
+returned to idle with zero deaths. Console errors/warnings are empty. Native
+camera and tuning captures are in docs/carlisle-launch-review/.

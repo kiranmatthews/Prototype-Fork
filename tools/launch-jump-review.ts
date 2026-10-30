@@ -53,7 +53,7 @@ g.launchReview.beforeStep=()=>{
   const p=g.player,level=g.getLevel(),input=g.input;
   // A second pad can relaunch without a grounded frame. End this one-flight
   // pilot at that contact instead of steering back to the previous target.
-  const launch=p.launchPresentation;
+  const launch=p.launchCameraPresentation;
   if(launch&&flightId<0)flightId=launch.id;
   if(launch&&launch.id!==flightId){
     running=false;input.moveX=input.moveY=0;input.jumpHeld=input.grindHeld=false;return;
@@ -91,7 +91,6 @@ function diagnostics(){
   const p=g.player,launch=p.launchPresentation,cam=g.getLaunchCameraDiagnostics(),clip=g.characterAnimationRuntime.activeClipId??p.animationClipHint;
   if(clip!==lastClip){history.push(clip.replace('player.',''));history=history.slice(-9);lastClip=clip;}
   const loading=g.getLoadingDiagnostics();
-  const landing=p.launchLandingPresentation;
-  output.textContent=`${loading.phase?`Loading ${loading.phase} · `:''}${clip} · y ${p.pos.y.toFixed(1)}m · vy ${p.vVel.toFixed(1)}m/s · rise ${(launch?.rise??0).toFixed(2)} · gather ${(launch?.gather??0).toFixed(2)} · turn ${(p.launchSomersaultProgress??0).toFixed(2)} · rebound ${(landing?landing.lift*landing.strength*g.TUNING.launchLandHeight:0).toFixed(2)}m · camera ${cam.weight.toFixed(2)} · FOV ${g.camera.fov.toFixed(1)}° | ${history.join(' → ')}`;
+  output.textContent=`${loading.phase?`Loading ${loading.phase} · `:''}${clip} · y ${p.pos.y.toFixed(1)}m · vy ${p.vVel.toFixed(1)}m/s · rise ${(launch?.rise??0).toFixed(2)} · gather ${(launch?.gather??0).toFixed(2)} · turn ${(p.launchSomersaultProgress??0).toFixed(2)} · camera ${cam.weight.toFixed(2)} · FOV ${g.camera.fov.toFixed(1)}° | ${history.join(' → ')}`;
   requestAnimationFrame(diagnostics);
 }diagnostics();

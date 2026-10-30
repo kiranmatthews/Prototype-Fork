@@ -15,9 +15,7 @@ export const LAUNCH_JUMP = {
   pedalKneeLag: .13,
   pedalRiseCycles: 1,
   pedalRiseBlend: .18,
-  somersaultSpeedRatio: .8,
-  somersaultStart: .22,
-  somersaultLatestStart: .55,
+  pedalRiseStart: .22,
 } as const;
 export const LAUNCH_CLIPS = {
   rise: 'player.launch-rise', float: 'player.launch-float', gather: 'player.launch-gather',
@@ -65,11 +63,11 @@ export function tuneLaunchBackLean(pose:PoseBuffer,amount:number,rig:RigDefiniti
   return {...pose,joints};
 }
 
-/** A finite catch, small rebound and soft settle. No gameplay displacement. */
-export function sampleLaunchLanding(age:number,duration:number) {
-  const p=age/Math.max(.1,duration);
-  const pulse=(start:number,end:number)=>p<=start||p>=end?0:Math.sin(Math.PI*(p-start)/(end-start))**2;
-  return {compression:pulse(0,.28)+.18*pulse(.76,1),lift:pulse(.22,.84),rebound:pulse(.28,.76)};
+/** Keep even crossed live sliders inside a finite, upright-ending rise. */
+export function launchSomersaultWindow(startPercent:number,deadlinePercent:number,endPercent:number) {
+  const end=THREE.MathUtils.clamp(endPercent/100,.05,1);
+  return {start:THREE.MathUtils.clamp(startPercent/100,0,end-.05),
+    deadline:THREE.MathUtils.clamp(deadlinePercent/100,0,end-.05),end};
 }
 
 const smooth = (x: number) => { const t = Math.max(0, Math.min(1, x)); return t*t*(3-2*t); };
@@ -116,7 +114,7 @@ function build(rigId: string, phase: 'rise' | 'float' | 'gather', board: boolean
     if(phase!=='rise')return beat(p,keys,idle,amp,lag,catchValue);
     // Keep the initial load/extension, then pedal during the same rising arc
     // as the slow turn. One whole cycle meets the float's opening leg pose.
-    const cycle=Math.max(0,(p-LAUNCH_JUMP.somersaultStart)/(1-LAUNCH_JUMP.somersaultStart));
+    const cycle=Math.max(0,(p-LAUNCH_JUMP.pedalRiseStart)/(1-LAUNCH_JUMP.pedalRiseStart));
     return THREE.MathUtils.lerp(curve(keys,p),idle+amp*wave(cycle*LAUNCH_JUMP.pedalRiseCycles,lag),
       smooth(cycle/LAUNCH_JUMP.pedalRiseBlend));
   };

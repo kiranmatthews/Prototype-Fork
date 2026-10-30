@@ -23,7 +23,6 @@ const PROFILES:Record<string,Amplitudes> = {
   'roll-land':[.18,.08,.12,.12,.15],
   'launch-rise':[.14,.10,.15,.08,.10], 'launch-float':[.045,.05,.075,.045,.065],
   'launch-gather':[.05,.035,.05,.025,.035],
-  'launch-land':[.10,.04,.06,.05,.06],
   'launch-board-rise':[.12,.10,.15,0,0], 'launch-board-float':[.04,.05,.075,0,0],
   'launch-board-gather':[.04,.035,.05,0,0],
   crouch:[.028,.008,.014,.010,.015], crawl:[.028,0,0,.022,.028],
@@ -110,11 +109,6 @@ export function skateVertElasticity(pump:number,transfer:SpineTransferMotion|nul
     values[target]=1-load-air;
   }
   return values;
-}
-
-export function launchLandingElasticity(compression:number,rebound:number,board:boolean):Record<string,number>{
-  return Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([target,part])=>[target,
-    1+(board&&target.startsWith('deform.leg.')?0:PROFILES['launch-land'][part])*(.35*rebound-compression)]));
 }
 
 /** Long independent arm shafts carry the under-rail body. The contact solve
