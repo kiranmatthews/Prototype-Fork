@@ -7695,3 +7695,17 @@ geometry or texture bytes changed. An isolated tracked-files-only build and
 release-size check pass; all five checked packaged assets match the prior local
 release. The 203-check full-suite result remains valid for unchanged game/test
 sources. Evidence: [clean checkout](carlisle-relay/regression-repair/clean-checkout/README.md).
+
+
+### Carlisle release follow-up — portable stock certificates
+
+Linux retained the full 9.62 MB Rooftop Relay snapshot because its stock
+certificate predated the repaired pit. Exact equality locally masked that stale
+record. Verified the complete current Sky/Rooftop entries with the existing
+certifier and refreshed only their stale records; all other certificates remain.
+Added a regression requiring current exact hashes and testing bounded runtime
+roundoff for every stock entry. It fails before and passes after the fix; edited
+snapshots and genuine overrides remain protected. No tolerance, runtime, art or
+level-data changes. Build/release pass at 998,290,153 bytes; the original 203-check
+suite still applies to unchanged game sources. Evidence:
+[portable stock](carlisle-relay/regression-repair/portable-stock/README.md).

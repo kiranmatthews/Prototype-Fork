@@ -21,6 +21,16 @@ try{
  // survive compaction, even when the built-in registry has the same ID.
  const overrides=new Set(['flats','bonus-jungle-terraces']);
  const expectedStock=pack.levels.filter(e=>!overrides.has(e.id)).map(e=>e.id),diagnostics=[];
+ // Exact equality on the authoring OS can hide a stale certificate. Linux may
+ // need that certificate for the same course's bounded trig roundoff.
+ for(const entry of pack.levels.filter(e=>expectedStock.includes(e.id)))
+  assert.equal(levelSnapshotHash(entry),certificates[entry.id]?.snapshotSha256,
+   `${entry.id}: refresh the reviewed stock certificate after changing its snapshot`);
+ const otherPlatformSources=api.BUILTIN_LEVELS.filter(e=>expectedStock.includes(e.id)).map(entry=>{
+  const source=JSON.parse(JSON.stringify(entry));source.data.spawn[0]+=1e-10;return source;
+ });
+ assert.deepEqual(compactPublishedLevels(pack,otherPlatformSources,certificates).sourceBacked,expectedStock,
+  'every unchanged stock course must compact across bounded runtime-only roundoff');
  for(const id of expectedStock.filter(id=>!compact.sourceBacked.includes(id))){
   const snapshot=pack.levels.find(e=>e.id===id),source=JSON.parse(JSON.stringify(api.BUILTIN_LEVELS.find(e=>e.id===id)));
   const detail={id,maxNumericDelta:0,differences:[],snapshotHashMatches:levelSnapshotHash(snapshot)===certificates[id]?.snapshotSha256};

@@ -95,3 +95,7 @@ release step; the browser smoke script is also used against the deployed site.
 The first Pages attempt exposed an ignored cone-model file. Its exact approved
 bytes are now tracked; the [isolated tracked-file build](clean-checkout/README.md)
 and release gate pass. Gameplay code and the full-suite inputs are unchanged.
+
+The Linux size difference was a stale stock-level certificate, not additional
+art. [Portable stock verification](portable-stock/README.md) records exact-data
+recertification, a new failing-then-passing regression, and the successful rebuild.
