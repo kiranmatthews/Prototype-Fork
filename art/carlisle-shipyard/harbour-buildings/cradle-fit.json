@@ -1,0 +1,25 @@
+{
+  "source": "public/props/carlisle-shipyard/04-work-skiff.glb",
+  "sha256": "4c62baddeb60e7fc9d2355fdd5c58ae967a8be3fac75cd94ece629c44fc241db",
+  "placedEnvelope": [
+    15,
+    4.17,
+    6.89
+  ],
+  "keelLift": 1.3,
+  "beamTop": 2.1,
+  "beamWidth": 1.1,
+  "stations": [
+    {
+      "x": -4,
+      "lowestHullVertexY": 2.0199998766183853,
+      "beamOverlap": 0.08000012338161477
+    },
+    {
+      "x": 4,
+      "lowestHullVertexY": 1.8399998453259465,
+      "beamOverlap": 0.2600001546740536
+    }
+  ],
+  "note": "Sampled authored hull vertices inside each beam width; both quay headings use the same pair of cradles. Native close views confirm contact."
+}

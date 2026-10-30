@@ -1,0 +1,407 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": true,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "market-front",
+      "station": 54,
+      "camera": [
+        133.19259797527212,
+        228.62548650810083,
+        31.825056109539453
+      ],
+      "center": [
+        93.19259797527212,
+        212.62548650810083,
+        -10.174943890460547
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1403,
+        "calls": 1378,
+        "triangles": 34078750,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "market-back",
+      "station": 54,
+      "camera": [
+        58.19259797527212,
+        230.62548650810083,
+        -45.17494389046055
+      ],
+      "center": [
+        93.19259797527212,
+        212.62548650810083,
+        -10.174943890460547
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1415,
+        "calls": 890,
+        "triangles": 22744068,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "receiving-market",
+      "station": 18,
+      "camera": [
+        -69.25825424097584,
+        235.32259557248545,
+        -53.263452990455036
+      ],
+      "center": [
+        -112.25825424097584,
+        222.32259557248545,
+        -87.26345299045504
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1427,
+        "calls": 903,
+        "triangles": 24356432,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "repair-front",
+      "station": 110,
+      "camera": [
+        -32.86459915922447,
+        225.65072741940213,
+        -118.7213433501347
+      ],
+      "center": [
+        -73.86459915922447,
+        210.65072741940213,
+        -158.7213433501347
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1438,
+        "calls": 971,
+        "triangles": 29680057,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "repair-back",
+      "station": 110,
+      "camera": [
+        -106.86459915922447,
+        228.65072741940213,
+        -188.7213433501347
+      ],
+      "center": [
+        -73.86459915922447,
+        210.65072741940213,
+        -158.7213433501347
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1458,
+        "calls": 1003,
+        "triangles": 27300244,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "first-bounce",
+      "station": 170,
+      "camera": [
+        110.22232436314958,
+        335.75169106460726,
+        -97.13825375929642
+      ],
+      "center": [
+        75.22232436314958,
+        209.75169106460726,
+        -172.13825375929642
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1462,
+        "calls": 1196,
+        "triangles": 32957211,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "lift-yard",
+      "station": 500,
+      "camera": [
+        30.70620064922238,
+        250.33811465449503,
+        -393.89541094525225
+      ],
+      "center": [
+        95.70620064922238,
+        184.33811465449503,
+        -528.8954109452523
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1467,
+        "calls": 1451,
+        "triangles": 40094640,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "industrial-yard",
+      "station": 1900,
+      "camera": [
+        -161.77023032824144,
+        161.4465897250892,
+        -1761.1550121822875
+      ],
+      "center": [
+        -71.77023032824145,
+        106.44658972508923,
+        -1891.1550121822875
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1478,
+        "calls": 1527,
+        "triangles": 22873897,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "homecoming-market",
+      "station": 3930,
+      "camera": [
+        69.89628069467054,
+        45,
+        -3752.6765058310025
+      ],
+      "center": [
+        29.896280694670544,
+        29,
+        -3794.6765058310025
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1482,
+        "calls": 422,
+        "triangles": 5255821,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1824,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "build": "Codex/sol fork · build 10-30 01:54 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "instanceBatches": 4,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 12,
+    "props": 1824,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "instanceBatches": 177,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "coast": {
+      "status": "ready",
+      "banks": 32,
+      "sourceTriangles": 100707,
+      "placedTriangles": 1657437,
+      "shoreSegments": 35080,
+      "colliders": 0,
+      "errors": []
+    },
+    "fleet": {
+      "status": "ready",
+      "vessels": 6,
+      "sourceTriangles": 51177,
+      "placedTriangles": 307062,
+      "colliders": 0,
+      "errors": []
+    },
+    "piers": {
+      "status": "ready",
+      "piles": 4146,
+      "ledgers": 1218,
+      "braces": 1604,
+      "plates": 2432,
+      "bolts": 4864,
+      "placedTriangles": 2177728,
+      "colliders": 0,
+      "errors": []
+    },
+    "water": {
+      "staticWash": 1382,
+      "movingWash": 0
+    },
+    "errors": []
+  },
+  "walk": {
+    "z": -3.634899952541018,
+    "deaths": 0
+  },
+  "passed": true
+}

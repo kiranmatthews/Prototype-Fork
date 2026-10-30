@@ -6939,3 +6939,44 @@ Build: 1,779 files / 1,074.9MiB; offline version e79b8cb5487ec0742aab;
 Codex/sol fork · build 10-30 01:54 UTC. Evidence and exact protected hashes are
 in art/carlisle-shipyard/deck-batching/. No paid services or new assets. Local
 checkpoint only; publication held. The broader polish goal remains active.
+
+
+## Carlisle working harbour frontages — 30 October 2026
+
+Approximately 44 minutes to the first playable integration and 58 minutes to
+final native review, including two generated architectural references, both
+Tripo meshes/textures and a measured cradle correction. Replaced selected
+repeating closed boathouses with a low asymmetric fish market and open
+barrel-roof boat-repair shed. The main harbour now has five markets, sixteen
+repair sheds and eight uncovered repair yards; the bonus gains one of each
+new building. Existing winches, cable spools and skiffs dress the open yards.
+Markets mark arrival/homecoming; the final airborne grind route stays sparse.
+
+Each new building uses uniform scale within the previous world-space building
+envelope, with feet on the original quay height. All 42,816 fish-market and
+47,523 repair-shed triangles and their original 8K textures remain, including
+at distance. No LOD, decimation or new colliders. All 131 decks, 966 sections,
+567 intact modules, 27,724,901 deck triangles and complete pier diagnostics
+match the preceding build. Nineteen protected source files and seven untouched
+surface/net/mover/quay/fleet/update methods are exact. Course/bonus layouts,
+air cargo/nitro, eighteen wet slopes, bounce controls and cameras are unchanged.
+
+Native close review caught the open-yard skiffs above their first cradles.
+Measured hull undersides at the two support stations were 1.84–2.02m above the
+quay; crossbeam tops now reach 2.1m. A rebuilt release and two focused native
+views confirm contact. Initial and corrected evidence are retained separately.
+
+Built-in Imagegen references and exact prompts are saved in the project. Tripo
+Studio P2.0 used 100 mesh + 30 texture credits per building: 260 existing plan
+credits total, balance 24,095 → 23,835, known cumulative spend 1,755. API balance
+was zero; no top-up or purchase. Both original GLBs and their compiled copies
+are byte-identical. Per-step credits, IDs, hashes and screenshots are recorded.
+
+Original main/bonus/twelve-prop fingerprints, typecheck/build, lite fitting,
+ten full native 1920×1080 views, normal 480p/CRT, main/bonus/main reload and
+keyboard walking pass. Zero console errors or walking deaths; all four playable
+bonus boats remain. No full suite, new full-course traversal or sustained
+performance claim. Final build: Codex/sol fork · build 10-30 03:07 UTC;
+1,782 files / 1,109.2MiB, offline version 244bcb4585f8b994ec99. Evidence is in
+art/carlisle-shipyard/harbour-buildings/. Local checkpoint only; publication
+held. The broader polish goal remains active.

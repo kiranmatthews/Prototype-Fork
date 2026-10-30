@@ -1,0 +1,169 @@
+{
+  "status": "passed",
+  "baseCommit": "ee1eaf331607f1297beef01ad26d0cb16683d1fa",
+  "build": "Codex/sol fork \u00b7 build 10-30 03:07 UTC",
+  "offlineVersion": "244bcb4585f8b994ec99",
+  "packageFiles": 1782,
+  "packageMiB": 1109.2,
+  "protectedSourceFiles": 19,
+  "checks": {
+    "originalMainBonusAnd12Models": "passed tools/test-carlisle-shipyard.mjs",
+    "typecheckAndProductionBuild": "passed",
+    "lite": "lite/browser.json",
+    "native1920x1080TenViews": "review/browser.json",
+    "normal480pCRT": "review/normal-arrival.png",
+    "bonusAndMainReload": "review/browser.json",
+    "keyboardWalking": "review/browser.json",
+    "finalCradleContactTwoNativeViews": "workyard-final/browser.json",
+    "geometryTextureAndCompiledBytes": "exact complete original GLBs"
+  },
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "build": "Codex/sol fork \u00b7 build 10-30 03:07 UTC"
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 14,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 1,
+        "repairs": 1,
+        "openYards": 0
+      },
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "instanceBatches": 4,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4
+  },
+  "sourceAssets": [
+    {
+      "id": "fish-market",
+      "sourceTriangles": 42816,
+      "vertices": 65292,
+      "bytes": 18206052,
+      "sha256": "17592da007149db1e1951f74e2f4d8bf8f42d085ea791bde36a73344431da98b"
+    },
+    {
+      "id": "repair-shed",
+      "sourceTriangles": 47523,
+      "vertices": 69827,
+      "bytes": 17813980,
+      "sha256": "23bd7698a45cec25583cea3b596e9ccbd19d8c36d434ef5c7cb4409056ea4824"
+    }
+  ],
+  "newBuildingPlacements": 21,
+  "repairedCradles": "Original first-pass native images retained; beam tops raised from 1.3m to 2.1m after measuring the hull underside at both support stations. Final native closeups confirm contact.",
+  "noNewColliders": true,
+  "unchangedDeckAndPierDiagnostics": true,
+  "consoleErrors": [],
+  "publication": "HOLD; local only",
+  "limitations": "Presentation-focused checks, not a new full-course traversal, sustained performance measurement or completed AAA-quality certification."
+}

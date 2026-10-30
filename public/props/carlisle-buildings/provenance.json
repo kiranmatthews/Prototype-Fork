@@ -1,0 +1,76 @@
+{
+  "assets": [
+    {
+      "id": "fish-market",
+      "assetId": "ff4dd1af-f1b1-47b0-89b6-3c30905d4644",
+      "url": "https://studio.tripo3d.ai/workspace/generate/ff4dd1af-f1b1-47b0-89b6-3c30905d4644",
+      "source": "Tripo Studio existing plan credits",
+      "model": "Smart Mesh P2.0",
+      "reference": "art/carlisle-shipyard/harbour-buildings/references/fish-market.png",
+      "generationTriangleTarget": 50000,
+      "sourceTriangles": 42816,
+      "vertices": 65292,
+      "bounds": {
+        "min": [
+          -0.499755859375,
+          0.0,
+          -0.287353515625
+        ],
+        "max": [
+          0.499755859375,
+          0.39404296875,
+          0.287353515625
+        ]
+      },
+      "textures": [
+        {
+          "width": 8192,
+          "height": 8192,
+          "format": "JPEG",
+          "sha256": "f50f4ffaf4ccd109416e8802dfa945fadbe657494f9bae889d57127a59d70546"
+        }
+      ],
+      "file": "public/props/carlisle-buildings/fish-market.glb",
+      "bytes": 18206052,
+      "sha256": "17592da007149db1e1951f74e2f4d8bf8f42d085ea791bde36a73344431da98b",
+      "exportFilename": "carlisle-fish-market.glb",
+      "processing": "Original full textured GLB; no retopology, remeshing, texture resizing or decimation."
+    },
+    {
+      "id": "repair-shed",
+      "assetId": "a03d32eb-6bac-4a49-9bce-5cfc5767e0e3",
+      "url": "https://studio.tripo3d.ai/workspace/generate/a03d32eb-6bac-4a49-9bce-5cfc5767e0e3",
+      "source": "Tripo Studio existing plan credits",
+      "model": "Smart Mesh P2.0",
+      "reference": "art/carlisle-shipyard/harbour-buildings/references/repair-shed.png",
+      "generationTriangleTarget": 50000,
+      "sourceTriangles": 47523,
+      "vertices": 69827,
+      "bounds": {
+        "min": [
+          -0.420166015625,
+          0.0,
+          -0.4997558891773224
+        ],
+        "max": [
+          0.420166015625,
+          0.6342772841453552,
+          0.4997558891773224
+        ]
+      },
+      "textures": [
+        {
+          "width": 8192,
+          "height": 8192,
+          "format": "JPEG",
+          "sha256": "e7433e9bd008029d2a923046b994d3be6bcc0c3b166dd58b23ebabfef3adf5fc"
+        }
+      ],
+      "file": "public/props/carlisle-buildings/repair-shed.glb",
+      "bytes": 17813980,
+      "sha256": "23bd7698a45cec25583cea3b596e9ccbd19d8c36d434ef5c7cb4409056ea4824",
+      "exportFilename": "carlisle-repair-shed.glb",
+      "processing": "Original full textured GLB; no retopology, remeshing, texture resizing or decimation."
+    }
+  ]
+}

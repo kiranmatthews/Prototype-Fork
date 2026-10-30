@@ -14,11 +14,13 @@ import { CarlislePierTimber } from './carlislePierTimber';
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
 const names = ['net-housing','dock-winch','rotary-hub','work-skiff','cargo-crane','counterweight-hoist',
-  'piling-fender','boathouse','cable-spool','dredger-pump','harbour-beacon','dock-lantern'];
-type Kit = 'net-housing'|'dock-winch'|'rotary-hub'|'work-skiff'|'cargo-crane'|'counterweight-hoist'|
-  'piling-fender'|'boathouse'|'cable-spool'|'dredger-pump'|'harbour-beacon'|'dock-lantern';
+  'piling-fender','boathouse','cable-spool','dredger-pump','harbour-beacon','dock-lantern','fish-market','repair-shed'] as const;
+type Kit = typeof names[number];
+type Building = 'fish-market'|'repair-shed';
+const isBuilding=(name:Kit):name is Building=>name==='fish-market'||name==='repair-shed';
 const cache=new AssetCache<Kit,GLTF>(async (name,_dependency,wanted)=>{
-  const url=`${import.meta.env.BASE_URL}props/carlisle-shipyard/${String(names.indexOf(name)+1).padStart(2,'0')}-${name}.glb`;
+  const path=isBuilding(name)?`carlisle-buildings/${name}`:`carlisle-shipyard/${String(names.indexOf(name)+1).padStart(2,'0')}-${name}`;
+  const url=`${import.meta.env.BASE_URL}props/${path}.glb`;
   const gltf=await sceneryLoads.run(()=>new GLTFLoader().loadAsync(url),wanted);
   gltf.scene.updateMatrixWorld(true);
   gltf.scene.traverse(n=>{const m=n as THREE.Mesh;if(!m.isMesh)return;
@@ -68,7 +70,7 @@ export class CarlisleShipyard {
   private readonly coast=new CarlisleCoastalBanks();
   private readonly fleet=new CarlisleFishingFleet();
   private readonly piers=new CarlislePierTimber();
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,water:{staticWash:0,movingWash:0},errors:[] as string[]};
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -146,6 +148,12 @@ export class CarlisleShipyard {
   }
   private prop(kind:Kit,p:P,size:P,yaw=0,parent?:THREE.Object3D) {
     this.placements.push({kind,p,size,yaw,parent});
+    if(isBuilding(kind))this.diagnostics.buildings[kind==='fish-market'?'markets':'repairs']++;
+  }
+  private building(kind:Building,p:P,footprint:P,side:number) {
+    // Fronts face the course. Swap the fitting envelope for the quarter turn,
+    // retaining the previous building's world-space footprint and uniform scale.
+    this.prop(kind,p,[footprint[2],footprint[1],footprint[0]],side>0?-Math.PI/2:Math.PI/2);
   }
   private lamp(p:P,height=4,parent?:THREE.Object3D) {
     this.prop('dock-lantern',p,[height*.44,height,height*.83],0,parent);
@@ -328,7 +336,8 @@ export class CarlisleShipyard {
     const sizes:Record<Kit,P>={'net-housing':[13,2,14],'dock-winch':[15,15,28],'rotary-hub':[29,12,29],
       'work-skiff':[27,7.5,12.4],'cargo-crane':[18,38,45],'counterweight-hoist':[14,42,26],
       'piling-fender':[5,9,4.4],'boathouse':[35,22,31],'cable-spool':[13,13,12],
-      'dredger-pump':[21,33,37],'harbour-beacon':[26,64,26],'dock-lantern':[2,4,3]};
+      'dredger-pump':[21,33,37],'harbour-beacon':[26,64,26],'dock-lantern':[2,4,3],
+      'fish-market':[35,22,31],'repair-shed':[24,15,22]};
     CARLISLE_RELAY_SECTIONS.forEach(([name,a,b],i)=>{
       const y=CARLISLE_RELAY_STOPS[i].y,side=i%2?-1:1,mid=(a+b)/2;
       const title=this.chunk(carlislePoint(mid,0)[2]);title.userData.sections??=[];title.userData.sections.push(name);
@@ -336,12 +345,15 @@ export class CarlisleShipyard {
         const kind=motifs[i][j],s=a+(b-a)*(j?.75:.3),u=side*(j?-84:76),p=carlislePoint(s,y-3,u),size=sizes[kind];
         p[1]=Math.max(p[1],this.seaY(p[2])+4);
         this.quay(p,Math.max(24,size[0]+8),Math.max(26,size[2]+8));
-        this.prop(kind,p,size,kind==='boathouse'?(u>0?Math.PI:0):j?Math.PI:0);
+        if(kind==='boathouse'&&(i===0||i===17))this.building('fish-market',p,size,u);
+        else this.prop(kind,p,size,kind==='boathouse'?(u>0?Math.PI:0):j?Math.PI:0);
         this.lamp([p[0]-size[0]/2-2,p[1],p[2]+size[2]/2],6);
         this.lamp([p[0]+size[0]/2+2,p[1],p[2]+size[2]/2],6);
         if(kind!=='boathouse'&&i<12){
           const shed:P=[p[0]+side*26,p[1],p[2]-22];this.quay(shed,30,28);
-          this.prop('boathouse',shed,[24,15,22],shed[0]>carlislePoint(s,0)[0]?Math.PI:0);
+          const outward=shed[0]>carlislePoint(s,0)[0]?1:-1;
+          if(i===2||i===4||i>=6&&j===i%2)this.building('repair-shed',shed,[24,15,22],outward);
+          else this.prop('boathouse',shed,[24,15,22],outward>0?Math.PI:0);
         }
         this.prop('cable-spool',[p[0]+size[0]/2+4,p[1],p[2]+3],[5,5,4.7]);
       }
@@ -360,7 +372,7 @@ export class CarlisleShipyard {
         if(i===9)mooring[0]-=28;
         this.fishingBoat(mooring,i*.6);
       }
-      if(i<6)this.receivingWharf(a+18,b-20,y,-side);
+      if(i<6)this.receivingWharf(a+18,b-20,y,-side,i);
       this.diagnostics.sections++;
     });
     // Signature assemblies tie the machinery silhouette to the unique native challenge.
@@ -392,22 +404,40 @@ export class CarlisleShipyard {
     }
     this.lamps.push(this.fleet.add([p[0],this.seaY(p[2]),p[2]],yaw,this.chunk(p[2]),this.foam));
   }
-  private receivingWharf(a:number,b:number,y:number,side:number) {
-    for(let s=a;s<b;s+=46) {
+  private receivingWharf(a:number,b:number,y:number,side:number,section:number) {
+    const frontage:('boathouse'|Building|'open')[][]=[
+      ['fish-market','boathouse','repair-shed','open'],
+      ['open','repair-shed','boathouse','open'],
+      ['repair-shed','open','repair-shed','boathouse'],
+      ['boathouse','fish-market','open','boathouse'],
+      ['open','repair-shed','open','boathouse'],
+      ['fish-market','boathouse','open','repair-shed','boathouse'],
+    ];
+    for(let s=a,index=0;s<b;s+=46,index++) {
       const p=carlislePoint(s,y-4,side*134);p[1]=Math.max(p[1],this.seaY(p[2])+4);
       this.quay(p,46,40);
-      this.prop('boathouse',[p[0]+side*5,p[1],p[2]-5],[30+(s%3)*4,19,29],side>0?Math.PI:0);
+      const kind=frontage[section][index],house:P=[p[0]+side*5,p[1],p[2]-5],footprint:P=[30+(s%3)*4,19,29];
+      if(kind==='open'){
+        this.diagnostics.buildings.openYards++;
+        this.prop('dock-winch',[p[0]+side*3,p[1],p[2]-9],[8,7,14]);
+        this.prop('cable-spool',[p[0]-side*8,p[1],p[2]-9],[7,7,6.5]);
+        this.prop('work-skiff',[p[0]+side*4,p[1]+1.3,p[2]+4],[15,4.17,6.89],side>0?Math.PI:0);
+        // The curved hull rises above its global low point at these two stations.
+        // Its measured undersides are 1.84–2.02m above the quay, including lift.
+        for(const x of [-4,4])this.part('box',[p[0]+side*4+x,p[1]+1.05,p[2]+4],[1.1,2.1,7.1],this.frameWood);
+      }else if(isBuilding(kind))this.building(kind,house,footprint,side);
+      else this.prop(kind,house,footprint,side>0?Math.PI:0);
       this.lamp([p[0]-side*20,p[1],p[2]+12],5.5);
       this.prop('cable-spool',[p[0]-side*16,p[1],p[2]-12],[4,4,3.8]);
-      // Bunched fishing traps and timber cross braces give the quay a working scale.
-      for(let j=0;j<3;j++)this.part('box',[p[0]-side*16,p[1]+1.2+j%2*2.2,p[2]+j*2.5],[2.4,2.4,2.4],j%2?this.navy:this.orange);
+      for(const z of [4,9])this.prop('cable-spool',[p[0]-side*16,p[1],p[2]+z],[3.2,3.2,3],Math.PI/2);
     }
   }
   private bonusYard() {
     this.diagnostics.sections=1;
     for(const [i,x] of [-12,37,82,136].entries()){
       const p:P=[x,1.1,-22-i%2*5];this.quay(p,25,14);
-      this.prop(i===2?'cargo-crane':'boathouse',p,i===2?[7,15,18]:[20,13,18],-Math.PI/2);
+      if(i===0||i===3)this.prop(i===0?'fish-market':'repair-shed',p,[18,13,20]);
+      else this.prop(i===2?'cargo-crane':'boathouse',p,i===2?[7,15,18]:[20,13,18],-Math.PI/2);
       this.lamp([x-10,1.2,-13],4);this.lamp([x+9,1.2,-13],4);
       this.prop('cable-spool',[x+9,1.2,-19],[3,3,2.8]);
     }
@@ -415,22 +445,27 @@ export class CarlisleShipyard {
     this.fishingBoat([42,-1.8,-62],.2);this.fishingBoat([114,-1.8,-73],-.4);
   }
   private install(kind:Kit,gltf:GLTF) {
-    const bounds=new THREE.Box3().setFromObject(gltf.scene,true),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
-    const normalization=new THREE.Matrix4().makeScale(1/size.x,1/size.y,1/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z));
-    const staticBatches=new Map<string,{original:THREE.Mesh;matrices:THREE.Matrix4[];chunk:number}>();
+    const bounds=new THREE.Box3().setFromObject(gltf.scene,true),sourceSize=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+    const normalization=new THREE.Matrix4().makeScale(1/sourceSize.x,1/sourceSize.y,1/sourceSize.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z));
+    const staticBatches=new Map<string,{original:THREE.Mesh;matrices:THREE.Matrix4[];placements:Placement[];chunk:number}>();
     for(const placement of this.placements.filter(p=>p.kind===kind)){
       const {p,size,yaw,parent}=placement;
-      const transform=new THREE.Matrix4().compose(v([p[0],p[1]+size[1]/2,p[2]]),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw),v(size)).multiply(normalization);
+      const rotation=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw);
+      const scale=Math.min(size[0]/sourceSize.x,size[1]/sourceSize.y,size[2]/sourceSize.z);
+      const transform=isBuilding(kind)
+        ?new THREE.Matrix4().compose(v(p),rotation,new THREE.Vector3(scale,scale,scale)).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z))
+        :new THREE.Matrix4().compose(v([p[0],p[1]+size[1]/2,p[2]]),rotation,v(size)).multiply(normalization);
       gltf.scene.traverse(n=>{
         const original=n as THREE.Mesh;if(!original.isMesh)return;
         const matrix=transform.clone().multiply(original.matrixWorld);
         if(parent){const mesh=new THREE.Mesh(original.geometry,original.material);mesh.name=kind;mesh.applyMatrix4(matrix);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);}
         else {const chunk=Math.floor(-p[2]/180),key=`${original.uuid}:${chunk}`;let batch=staticBatches.get(key);
-          if(!batch){batch={original,matrices:[],chunk};staticBatches.set(key,batch);}batch.matrices.push(matrix);}
+          if(!batch){batch={original,matrices:[],placements:[],chunk};staticBatches.set(key,batch);}batch.matrices.push(matrix);batch.placements.push(placement);}
       });
     }
-    for(const {original,matrices,chunk} of staticBatches.values()){
+    for(const {original,matrices,placements,chunk} of staticBatches.values()){
       const mesh=new THREE.InstancedMesh(original.geometry,original.material,matrices.length);mesh.name=kind;
+      if(isBuilding(kind))mesh.userData.harbourBuildings=placements.map(p=>({at:p.p,envelope:p.size,yaw:p.yaw}));
       matrices.forEach((m,i)=>mesh.setMatrixAt(i,m));mesh.castShadow=true;mesh.receiveShadow=true;mesh.computeBoundingSphere();this.chunk(-chunk*180).add(mesh);
     }
   }

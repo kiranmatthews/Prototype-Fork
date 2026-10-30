@@ -1,0 +1,40 @@
+{
+  "channel": "Tripo Studio existing plan credits",
+  "startingBalance": 24095,
+  "remainingBalanceObserved": 23835,
+  "totalDeducted": 260,
+  "purchasedApiCredits": 0,
+  "previousKnownSpend": 1495,
+  "knownCombinedSpend": 1755,
+  "billingEvidence": "Displayed prices and balance deductions; asset IDs exposed, separate internal texture task IDs not exposed.",
+  "tasks": [
+    {
+      "asset": "fish-market",
+      "assetId": "ff4dd1af-f1b1-47b0-89b6-3c30905d4644",
+      "step": "image-to-model Smart Mesh P2.0",
+      "creditsDeducted": 100,
+      "status": "success"
+    },
+    {
+      "asset": "fish-market",
+      "assetId": "ff4dd1af-f1b1-47b0-89b6-3c30905d4644",
+      "step": "texture 8K",
+      "creditsDeducted": 30,
+      "status": "success"
+    },
+    {
+      "asset": "repair-shed",
+      "assetId": "a03d32eb-6bac-4a49-9bce-5cfc5767e0e3",
+      "step": "image-to-model Smart Mesh P2.0",
+      "creditsDeducted": 100,
+      "status": "success"
+    },
+    {
+      "asset": "repair-shed",
+      "assetId": "a03d32eb-6bac-4a49-9bce-5cfc5767e0e3",
+      "step": "texture 8K",
+      "creditsDeducted": 30,
+      "status": "success"
+    }
+  ]
+}

@@ -18,7 +18,7 @@ try{
  await page.goto(base+'/?playtest&level=carlisle-coast'+(process.argv.includes('--lite')?'&lite':''),{waitUntil:'domcontentloaded',timeout:180000});
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  report.main=await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();await g.getLevel().prepareJungleAssets();g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);return{art:g.getLevel().carlisleShipyardDiagnostics,cones:g.getLevel().carlisleConeDiagnostics,grounds:g.getLevel().groundMeshes.length}});
- assert.equal(report.main.art.status,'ready');assert.equal(report.main.art.sections,18);assert.equal(report.main.art.models,12);
+ assert.equal(report.main.art.status,'ready');assert.equal(report.main.art.sections,18);assert.equal(report.main.art.models,14);
  await page.waitForFunction(()=>window.__game.player.grounded);
  await page.screenshot({path:out+'/review/player-native.png'});
  if(process.argv.includes('--play')){
