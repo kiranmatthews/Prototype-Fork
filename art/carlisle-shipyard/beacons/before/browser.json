@@ -1,0 +1,366 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": true,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "lens",
+      "tower": 3,
+      "phase": 0,
+      "offset": [
+        31,
+        72,
+        36
+      ],
+      "targetOffset": [
+        0,
+        66,
+        0
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1180,
+        "calls": 1512,
+        "triangles": 28276079,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "lens-turn",
+      "tower": 3,
+      "phase": 7,
+      "offset": [
+        31,
+        72,
+        36
+      ],
+      "targetOffset": [
+        0,
+        66,
+        0
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1202,
+        "calls": 1510,
+        "triangles": 28276031,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon-apex",
+      "tower": 3,
+      "phase": 0,
+      "offset": [
+        75,
+        175,
+        150
+      ],
+      "targetOffset": [
+        -45,
+        26,
+        -60
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1218,
+        "calls": 1457,
+        "triangles": 29202820,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon-sweep",
+      "tower": 3,
+      "phase": 4,
+      "offset": [
+        75,
+        175,
+        150
+      ],
+      "targetOffset": [
+        -45,
+        26,
+        -60
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1234,
+        "calls": 1457,
+        "triangles": 29202820,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon-landward",
+      "tower": 3,
+      "phase": 16,
+      "offset": [
+        75,
+        175,
+        150
+      ],
+      "targetOffset": [
+        -45,
+        26,
+        -60
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1250,
+        "calls": 1457,
+        "triangles": 29202820,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "harbour-beacon",
+      "tower": 0,
+      "phase": 0,
+      "offset": [
+        80,
+        85,
+        140
+      ],
+      "targetOffset": [
+        -35,
+        25,
+        -45
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1267,
+        "calls": 1457,
+        "triangles": 30230508,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "crown-beacon",
+      "tower": 1,
+      "phase": 0,
+      "offset": [
+        100,
+        90,
+        145
+      ],
+      "targetOffset": [
+        0,
+        30,
+        -45
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1271,
+        "calls": 721,
+        "triangles": 8367773,
+        "points": 20,
+        "lines": 0
+      }
+    },
+    {
+      "id": "homecoming-beacon",
+      "tower": 2,
+      "phase": 0,
+      "offset": [
+        -95,
+        90,
+        145
+      ],
+      "targetOffset": [
+        0,
+        30,
+        -45
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "render": {
+        "frame": 1286,
+        "calls": 691,
+        "triangles": 7884512,
+        "points": 20,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "ambience": {
+        "waterGain": 0.004772990662606608,
+        "windGain": 0.0015067537586008412,
+        "height": 8.120000000000005,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "towers": [
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -94.10558523534844,
+          146.00860487932084,
+          -1028.4762035025012
+        ],
+        "size": [
+          26,
+          64,
+          26
+        ],
+        "yaw": 0
+      },
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -160.55657687040627,
+          21,
+          -3606.037108164023
+        ],
+        "size": [
+          26,
+          64,
+          26
+        ],
+        "yaw": 3.141592653589793
+      },
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -135.04596825964845,
+          21,
+          -3710.670208321682
+        ],
+        "size": [
+          26,
+          64,
+          26
+        ],
+        "yaw": 0
+      },
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -9.03508883193382,
+          153.00860487932084,
+          -1129.4815391959125
+        ],
+        "size": [
+          34,
+          84,
+          34
+        ],
+        "yaw": 0
+      }
+    ],
+    "build": "Codex/sol fork · build 10-30 06:26 UTC"
+  },
+  "passed": true
+}

@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "beacons": 4,
+  "completeOriginalTowerTriangles": 20720,
+  "scatteringVolumeTriangles": 512,
+  "geometryUnchanged": true,
+  "nativeViews": 8,
+  "normalPresentation": true,
+  "lifecycle": "main/bonus/main; no beacons in bonus; four boats preserved",
+  "errors": [],
+  "build": "Codex/sol fork \u00b7 build 10-30 07:27 UTC",
+  "hashes": {
+    "src/carlisleBeaconLights.ts": "9d69818c4a1f9dd53c044c4d4add036923b743768c36936ac0372d3db6942273",
+    "src/carlisleShipyard.ts": "e25457b9a4a8049edd8404cc4599b5633f87ce3bb7ccbcb9902722214fcebcf7",
+    "public/props/carlisle-shipyard/11-harbour-beacon.glb": "3ca2e6f0b71e5c51b0df935a949caaba13bc321d8d333fa01c1d4dbbb46d8a3a"
+  },
+  "noPaidServices": true,
+  "localOnly": true
+}

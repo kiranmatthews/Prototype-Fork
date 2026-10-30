@@ -7318,3 +7318,26 @@ with all four bonus boats. Build: Codex/sol fork · build 10-30 07:27 UTC;
 Evidence: docs/carlisle-relay/launch-integration/. The build includes the
 concurrent local beacon lighting increment, recorded separately. No full
 suite, publication, push or coordinator message. Local testing hold remains.
+
+
+## Carlisle rotating harbour beacons — 30 October 2026
+
+Approximately 34 minutes to the reviewed local lighting candidate; final
+compiled validation completed alongside the requested launch-camera merge.
+Animate the glass in the four existing complete lighthouse models and add
+soft copper scattering over their open-water sectors. Each lens rotates at
+a different period; the landward sector fades out. Original asset geometry,
+textures, fitting transforms and every gameplay surface remain intact.
+The four bounded light volumes add 512 triangles, no lights/shadow passes,
+colliders, camera behavior, distance mesh swaps or paid assets.
+
+Native close-ups and overviews of all four towers and three beam phases
+reviewed. The first haze was too faint; isolated shader inspection confirmed
+rendering before opacity tuning. Final full compiled/native and normal
+presentation checks pass with zero console errors; 1,056 samples per tower
+confirm normalized finite rotation and seaward gating. Main/bonus/main reload
+restores all four towers, leaves the bonus without beacons and retains its
+four rideable boats. The final combined production build passes, stamp
+10-30 07:27 UTC, offline f10f5571fa66aae6fc13. No performance claim or full suite.
+Evidence: art/carlisle-shipyard/beacons/. Local-only checkpoint; broader
+polish goal and publication hold remain active.

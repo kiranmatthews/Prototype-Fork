@@ -13,6 +13,7 @@ import { CarlislePierTimber } from './carlislePierTimber';
 import { CarlisleSteelDecks } from './carlisleSteelDecks';
 import { CarlisleHarbourSound } from './carlisleHarbourSound';
 import { CarlisleRigging } from './carlisleRigging';
+import { CarlisleBeaconLights } from './carlisleBeaconLights';
 import { sfx } from './audio';
 
 type P = [number, number, number];
@@ -76,8 +77,9 @@ export class CarlisleShipyard {
   private readonly piers=new CarlislePierTimber();
   private readonly steelDecks=new CarlisleSteelDecks();
   private readonly rigging=new CarlisleRigging();
+  private readonly beacons=new CarlisleBeaconLights();
   private readonly sound:CarlisleHarbourSound;
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,rigging:this.rigging.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,rigging:this.rigging.diagnostics,beacons:this.beacons.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -162,6 +164,7 @@ export class CarlisleShipyard {
   }
   private prop(kind:Kit,p:P,size:P,yaw=0,parent?:THREE.Object3D) {
     this.placements.push({kind,p,size,yaw,parent});
+    if(kind==='harbour-beacon')this.beacons.add(p,size,parent??this.chunk(p[2]));
     if(isBuilding(kind))this.diagnostics.buildings[kind==='fish-market'?'markets':'repairs']++;
   }
   private building(kind:Building,p:P,footprint:P,side:number) {
@@ -465,7 +468,8 @@ export class CarlisleShipyard {
       });
     }
     for(const {original,matrices,placements,chunk} of staticBatches.values()){
-      const mesh=new THREE.InstancedMesh(original.geometry,original.material,matrices.length);mesh.name=kind;
+      const material=kind==='harbour-beacon'?this.beacons.material(original.material):original.material;
+      const mesh=new THREE.InstancedMesh(original.geometry,material,matrices.length);mesh.name=kind;
       if(isBuilding(kind))mesh.userData.harbourBuildings=placements.map(p=>({at:p.p,envelope:p.size,yaw:p.yaw}));
       matrices.forEach((m,i)=>mesh.setMatrixAt(i,m));mesh.castShadow=true;mesh.receiveShadow=true;mesh.computeBoundingSphere();this.chunk(-chunk*180).add(mesh);
     }
@@ -483,6 +487,7 @@ export class CarlisleShipyard {
     this.sound.update(dt,player,this.seaY(player.z));
     this.coast.update(this.time);
     this.fleet.update(this.time);
+    this.beacons.update(this.time);
     for(const [id,group] of this.chunks)group.visible=Math.abs(player.z+id*180)<800;
     this.lightingCooldown-=dt;
     if(this.lightingCooldown<=0||this.lightingPosition.distanceToSquared(player)>400){
@@ -505,6 +510,7 @@ export class CarlisleShipyard {
     this.piers.dispose();
     this.steelDecks.dispose();
     this.rigging.dispose();
+    this.beacons.dispose();
     this.sound.dispose();
     for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});

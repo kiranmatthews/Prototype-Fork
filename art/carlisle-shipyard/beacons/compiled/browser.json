@@ -1,0 +1,734 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": false,
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "id": "lens",
+      "tower": 3,
+      "phase": 0,
+      "offset": [
+        31,
+        72,
+        36
+      ],
+      "targetOffset": [
+        0,
+        66,
+        0
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -9.03508883193382,
+          218.94860487932084,
+          -1129.4815391959125
+        ],
+        "direction": [
+          0.8891102722423886,
+          0.017997084708396737,
+          -0.4573390741398165
+        ],
+        "outward": [
+          0.8892542964414767,
+          0,
+          -0.4574131570695954
+        ],
+        "power": 0.65,
+        "visible": true
+      },
+      "render": {
+        "frame": 1231,
+        "calls": 1516,
+        "triangles": 28276591,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "lens-turn",
+      "tower": 3,
+      "phase": 7,
+      "offset": [
+        31,
+        72,
+        36
+      ],
+      "targetOffset": [
+        0,
+        66,
+        0
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -9.03508883193382,
+          218.94860487932084,
+          -1129.4815391959125
+        ],
+        "direction": [
+          0.6540630942298146,
+          0.017997084708396737,
+          0.7562258747943763
+        ],
+        "outward": [
+          0.8892542964414767,
+          0,
+          -0.4574131570695954
+        ],
+        "power": 0,
+        "visible": false
+      },
+      "render": {
+        "frame": 1237,
+        "calls": 1514,
+        "triangles": 28276543,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon-apex",
+      "tower": 3,
+      "phase": 0,
+      "offset": [
+        75,
+        175,
+        150
+      ],
+      "targetOffset": [
+        -45,
+        26,
+        -60
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -9.03508883193382,
+          218.94860487932084,
+          -1129.4815391959125
+        ],
+        "direction": [
+          0.8891102722423886,
+          0.017997084708396737,
+          -0.4573390741398165
+        ],
+        "outward": [
+          0.8892542964414767,
+          0,
+          -0.4574131570695954
+        ],
+        "power": 0.65,
+        "visible": true
+      },
+      "render": {
+        "frame": 1256,
+        "calls": 1461,
+        "triangles": 29203332,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon-sweep",
+      "tower": 3,
+      "phase": 4,
+      "offset": [
+        75,
+        175,
+        150
+      ],
+      "targetOffset": [
+        -45,
+        26,
+        -60
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -9.03508883193382,
+          218.94860487932084,
+          -1129.4815391959125
+        ],
+        "direction": [
+          0.9590794638452311,
+          0.017997084708396737,
+          0.2825644828571754
+        ],
+        "outward": [
+          0.8892542964414767,
+          0,
+          -0.4574131570695954
+        ],
+        "power": 0.545045404101414,
+        "visible": true
+      },
+      "render": {
+        "frame": 1273,
+        "calls": 1463,
+        "triangles": 29203588,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "beacon-landward",
+      "tower": 3,
+      "phase": 16,
+      "offset": [
+        75,
+        175,
+        150
+      ],
+      "targetOffset": [
+        -45,
+        26,
+        -60
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -9.03508883193382,
+          218.94860487932084,
+          -1129.4815391959125
+        ],
+        "direction": [
+          -0.8416114692524802,
+          0.017997084708396737,
+          0.5397835119422235
+        ],
+        "outward": [
+          0.8892542964414767,
+          0,
+          -0.4574131570695954
+        ],
+        "power": 0,
+        "visible": false
+      },
+      "render": {
+        "frame": 1286,
+        "calls": 1459,
+        "triangles": 29203076,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "harbour-beacon",
+      "tower": 0,
+      "phase": 0,
+      "offset": [
+        80,
+        85,
+        140
+      ],
+      "targetOffset": [
+        -35,
+        25,
+        -45
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -94.10558523534844,
+          196.24860487932085,
+          -1028.4762035025012
+        ],
+        "direction": [
+          -0.8834875152605839,
+          0.017997084708396737,
+          0.46810887122621236
+        ],
+        "outward": [
+          -0.8836306286468106,
+          0,
+          0.46818469872182117
+        ],
+        "power": 0.65,
+        "visible": true
+      },
+      "render": {
+        "frame": 1298,
+        "calls": 1461,
+        "triangles": 30231020,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "id": "crown-beacon",
+      "tower": 1,
+      "phase": 0,
+      "offset": [
+        100,
+        90,
+        145
+      ],
+      "targetOffset": [
+        0,
+        30,
+        -45
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -160.55657687040627,
+          71.24000000000001,
+          -3606.037108164023
+        ],
+        "direction": [
+          -0.9591965238840345,
+          0.017997084708396737,
+          -0.28216685402574093
+        ],
+        "outward": [
+          -0.9593519011363655,
+          0,
+          -0.2822125613540991
+        ],
+        "power": 0.65,
+        "visible": true
+      },
+      "render": {
+        "frame": 1302,
+        "calls": 727,
+        "triangles": 8368289,
+        "points": 20,
+        "lines": 0
+      }
+    },
+    {
+      "id": "homecoming-beacon",
+      "tower": 2,
+      "phase": 0,
+      "offset": [
+        -95,
+        90,
+        145
+      ],
+      "targetOffset": [
+        0,
+        30,
+        -45
+      ],
+      "canvas": [
+        1920,
+        1080
+      ],
+      "beacon": {
+        "origin": [
+          -135.04596825964845,
+          71.24000000000001,
+          -3710.670208321682
+        ],
+        "direction": [
+          -0.9908415981910782,
+          0.017997084708396737,
+          -0.13382463239683873
+        ],
+        "outward": [
+          -0.9910021015302672,
+          0,
+          -0.13384631023152596
+        ],
+        "power": 0.65,
+        "visible": true
+      },
+      "render": {
+        "frame": 1313,
+        "calls": 699,
+        "triangles": 7885284,
+        "points": 20,
+        "lines": 0
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "beacons": {
+        "beacons": 4,
+        "shafts": 4,
+        "decorativeColliders": 0
+      },
+      "ambience": {
+        "waterGain": 0.00947661201863018,
+        "windGain": 0.002972229210127905,
+        "height": 8,
+        "verticalSpeed": 7.200000000000273,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "grounds": 334,
+    "crates": 270,
+    "movers": 28,
+    "wet": 18,
+    "towers": [
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -94.10558523534844,
+          146.00860487932084,
+          -1028.4762035025012
+        ],
+        "size": [
+          26,
+          64,
+          26
+        ],
+        "yaw": 0
+      },
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -160.55657687040627,
+          21,
+          -3606.037108164023
+        ],
+        "size": [
+          26,
+          64,
+          26
+        ],
+        "yaw": 3.141592653589793
+      },
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -135.04596825964845,
+          21,
+          -3710.670208321682
+        ],
+        "size": [
+          26,
+          64,
+          26
+        ],
+        "yaw": 0
+      },
+      {
+        "kind": "harbour-beacon",
+        "p": [
+          -9.03508883193382,
+          153.00860487932084,
+          -1129.4815391959125
+        ],
+        "size": [
+          34,
+          84,
+          34
+        ],
+        "yaw": 0
+      }
+    ],
+    "build": "Codex/sol fork · build 10-30 07:27 UTC"
+  },
+  "cycle": [
+    {
+      "active": 366,
+      "inward": 0,
+      "minPower": 0,
+      "maxPower": 0.65,
+      "maxLengthError": 2.220446049250313e-16
+    },
+    {
+      "active": 360,
+      "inward": 0,
+      "minPower": 0,
+      "maxPower": 0.65,
+      "maxLengthError": 2.220446049250313e-16
+    },
+    {
+      "active": 349,
+      "inward": 0,
+      "minPower": 0,
+      "maxPower": 0.65,
+      "maxLengthError": 2.220446049250313e-16
+    },
+    {
+      "active": 348,
+      "inward": 0,
+      "minPower": 0,
+      "maxPower": 0.65,
+      "maxLengthError": 2.220446049250313e-16
+    }
+  ],
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 14,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 1,
+        "repairs": 1,
+        "openYards": 0
+      },
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "instanceBatches": 4,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "idle",
+        "decks": 0,
+        "templates": 0,
+        "panels": 0,
+        "girders": 0,
+        "fasteners": 0,
+        "placedTriangles": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 0,
+        "metres": 0,
+        "strands": 0,
+        "collars": 0,
+        "fairleads": 0,
+        "triangles": 0
+      },
+      "beacons": {
+        "beacons": 0,
+        "shafts": 0,
+        "decorativeColliders": 0
+      },
+      "ambience": {
+        "waterGain": 0.12371946322153295,
+        "windGain": 0.022160604784877413,
+        "height": 1.250000023841858,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 14,
+    "props": 1890,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "buildings": {
+      "markets": 5,
+      "repairs": 16,
+      "openYards": 8
+    },
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "instanceBatches": 177,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "coast": {
+      "status": "ready",
+      "banks": 32,
+      "sourceTriangles": 100707,
+      "placedTriangles": 1657437,
+      "shoreSegments": 35080,
+      "colliders": 0,
+      "errors": []
+    },
+    "fleet": {
+      "status": "ready",
+      "vessels": 6,
+      "sourceTriangles": 51177,
+      "placedTriangles": 307062,
+      "colliders": 0,
+      "errors": []
+    },
+    "piers": {
+      "status": "ready",
+      "piles": 4146,
+      "ledgers": 1218,
+      "braces": 1604,
+      "plates": 2432,
+      "bolts": 4864,
+      "placedTriangles": 2177728,
+      "colliders": 0,
+      "errors": []
+    },
+    "steelDecks": {
+      "status": "ready",
+      "decks": 20,
+      "templates": 8,
+      "panels": 893,
+      "girders": 183,
+      "fasteners": 538,
+      "placedTriangles": 126960,
+      "colliders": 0,
+      "errors": []
+    },
+    "rigging": {
+      "cables": 4,
+      "metres": 402.68682126176265,
+      "strands": 28,
+      "collars": 39,
+      "fairleads": 8,
+      "triangles": 397600
+    },
+    "beacons": {
+      "beacons": 4,
+      "shafts": 4,
+      "decorativeColliders": 0
+    },
+    "ambience": {
+      "waterGain": 0.2647049281243524,
+      "windGain": 0.054686304805109574,
+      "height": 8,
+      "verticalSpeed": 0,
+      "teleports": 0
+    },
+    "water": {
+      "staticWash": 1382,
+      "movingWash": 0
+    },
+    "errors": []
+  },
+  "passed": true
+}
