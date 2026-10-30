@@ -52,6 +52,15 @@ export const TUNING = {
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
   doubleJumpHorizontalScale: 1, // the second pop preserves directional travel
+  launchBackLean: .15, // fraction of the authored backward opening
+  trampolineAirJumpMin: 10.5,
+  trampolineAirJumpMax: 15,
+  launchSomersault: 1,
+  launchSomersaultMinSpeed: 7.2, // actual horizontal travel, independent of walk-speed tuning
+  launchSomersaultStart: 22, // percent of launch-rise animation progress
+  launchSomersaultDeadline: 55,
+  launchSomersaultEnd: 100,
+  launchSomersaultEase: 1,
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
@@ -231,7 +240,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 28; // v28: independent, gentler board-abandon steering
+export const TUNING_VERSION = 30; // v30: spring somersault controls; remove bespoke landing rebound
 // v27: halfpipe high-speed steering endpoint
 // v26: preserve double-jump traversal speed
 // v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
@@ -324,6 +333,15 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   doubleJumpWindow: { min: 0.1, max: 1.5, step: 0.05 },
   doubleJumpVelocity: { min: 4, max: 24, step: 0.5 },
   doubleJumpHorizontalScale: { min: 0, max: 1, step: 0.05 },
+  launchBackLean: { min: 0, max: 1, step: .05 },
+  trampolineAirJumpMin: { min: 4, max: 24, step: .5 },
+  trampolineAirJumpMax: { min: 4, max: 30, step: .5 },
+  launchSomersault: { min: 0, max: 1, step: 1 },
+  launchSomersaultMinSpeed: { min: .1, max: 30, step: .1 },
+  launchSomersaultStart: { min: 0, max: 95, step: 1 },
+  launchSomersaultDeadline: { min: 0, max: 95, step: 1 },
+  launchSomersaultEnd: { min: 5, max: 100, step: 1 },
+  launchSomersaultEase: { min: 0, max: 1, step: .05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
@@ -445,6 +463,15 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  launchBackLean: 'Launch Back Lean',
+  trampolineAirJumpMin: 'Air Jump Tap Pop (m/s)',
+  trampolineAirJumpMax: 'Air Jump Charged Pop (m/s)',
+  launchSomersault: 'Auto Somersault',
+  launchSomersaultMinSpeed: 'Trigger Speed (m/s)',
+  launchSomersaultStart: 'Turn Start (% rise)',
+  launchSomersaultDeadline: 'Trigger Deadline (% rise)',
+  launchSomersaultEnd: 'Turn Finish (% rise)',
+  launchSomersaultEase: 'Turn Easing',
   boardAbandonSteering: 'Board Abandon Steering (%)',
   teeterEdgeDistance: 'Teeter Edge Distance (m)',
   parkCruiseSpeed: 'Park Cruise Speed (m/s)',
@@ -500,6 +527,15 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
 
 // Hover text for the tuning panel: what each slider actually does in play.
 export const TUNING_INFO: Record<TuningKey, string> = {
+  launchBackLean: 'Fraction of the launch pose\'s backward opening, applied live. Zero keeps the opening upright; one restores the original large arch. Does not remove the full somersault.',
+  trampolineAirJumpMin: 'A fresh jump tap during a trampoline flight uses the Abandon Ship flip and momentum-preserving landing roll, with or without a board. This is the tap\'s upward speed.',
+  trampolineAirJumpMax: 'Upward speed after holding the trampoline air jump for 0.4 seconds. The mounted version discards the board; the on-foot version uses the same move.',
+  launchSomersault: 'Enable the automatic slow turn on strong trampoline launches, on foot or board. Ordinary running jumps and ollies do not trigger it. The manual second-jump flip is independent.',
+  launchSomersaultMinSpeed: 'Minimum actual horizontal speed to commit the turn during the trigger window. Moving in any direction counts; neutral vertical launches do not turn. Independent of walk speed.',
+  launchSomersaultStart: 'Earliest start of the full turn. Rise progress runs from 0 at spring takeoff to 100 at the float pose just before the apex. A later speed trigger starts the turn immediately. Timing is held for each committed turn.',
+  launchSomersaultDeadline: 'Latest rise progress at which reaching Trigger Speed can start a turn. Zero disables new triggers. The deadline stays before Turn Finish so late steering cannot cause an instant flip.',
+  launchSomersaultEnd: 'Rise progress at which the complete turn ends upright. A wider Start-to-Finish window gives a slower turn. Finish also bounds the start and trigger deadline; the turn always keeps at least 5% of the rising arc.',
+  launchSomersaultEase: 'Zero rotates at a steady rate through the turn window; one eases gently into and out of the turn. Intermediate values blend both. Applies live.',
   parkCruiseSpeed: 'Skate parks only. Standing speed target while steering without holding X. Default 12 m/s matches platforming. Release all movement input to coast to a stop; the board stays mounted.',
   parkChargeSpeed: 'Skate parks only. Speed target while holding X. Default 23 m/s matches platforming. Preserves park steering, slope momentum, braking and jump rules.',
   parkCruiseAcceleration: 'Skate parks only. Standing pickup acceleration, in m/s², while steering below cruise speed. Default 10 matches platforming. Does not change steering or braking.',
@@ -838,6 +874,14 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   {
     title: 'JUMPS & AIR',
     keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'boardAbandonSteering', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+  },
+  {
+    title: 'TRAMPOLINE · LAUNCH & AIR JUMP',
+    keys: ['launchBackLean', 'trampolineAirJumpMin', 'trampolineAirJumpMax'],
+  },
+  {
+    title: 'TRAMPOLINE · SOMERSAULT',
+    keys: ['launchSomersault', 'launchSomersaultMinSpeed', 'launchSomersaultStart', 'launchSomersaultDeadline', 'launchSomersaultEnd', 'launchSomersaultEase'],
   },
   {
     title: 'SKATING',

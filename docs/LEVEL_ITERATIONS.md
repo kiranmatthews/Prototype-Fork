@@ -6607,6 +6607,81 @@ tuning changes. `src/player.ts` owns only the optional visual impact stamp.
 Local test: http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour .
 The user's local-only hold remains in force; no integration, push or publication.
 
+## Carlisle Coast — Jak-inspired launch animation and camera (30 October 2026 NZDT)
+
+Brief: study the final-boss blue eco launches in Jak and Daxter, verify the
+OpenGOAL state/camera logic, then adapt the full move to the existing rider and
+Carlisle springs. Prompt-to-first-playable approximately 22 minutes; focused
+implementation/build validation approximately 50 minutes (20:42:47–21:32:42 UTC).
+Reference review and rig/pose notes were recorded before implementation.
+
+Added six editable launch clips: trajectory-driven load/extension/opening,
+asymmetric floating loop and contact-driven gathering, with board variants that
+retain deck foot ownership. Shared per-segment elasticity supplies compression,
+stretch and rebound. Ground contact uses the existing finite landing recovery.
+The new reversible camera layer eases in, follows ascent, lingers on descent,
+allows stick orbit and returns smoothly after contact. It removes the previous
+launch-specific FOV zoom. Native impulse, gravity, steering, level geometry and
+ordinary edge grinding remain unchanged.
+
+Validation: four actual spring transfers spanning short/tall arcs and foot/board;
+supported landing and finite recovery; interruption/respawn; camera orbit,
+bounded lag, unchanged lens and 30/60/120 Hz behavior; catalog/alias compatibility;
+runtime routing; all 39 clips' elasticity and saved-edit preservation; required
+production build. Real-browser lite, full 720p and MAX/native reviews include
+front, side, three-quarter and gameplay views, normal/slow playback and frame
+stepping. The long launch completes with zero deaths and no browser errors or
+warnings. No full-suite run or level-data changes.
+
+Study, source links, approximation boundaries, tuning points and local review
+instructions: [CARLISLE_LAUNCH_STUDY.md](CARLISLE_LAUNCH_STUDY.md). The local review
+is `/launch-review.html?playtest&level=carlisle-coast&launchReview` on port 5491.
+This isolated checkpoint starts at `a9e3d4e` and preserves other chats' later
+uncommitted Carlisle artwork. Local only; no integration, push or publication.
+
+## Carlisle Coast — bicycle float, directional somersault and board eject (30 October 2026 NZDT)
+
+Follow-up brief: bicycle the legs in midair, retain Abandon Ship's existing flip
+and landing behavior, and add a slow somersault to fast directional trampoline
+launches on foot or board. Prompt-to-playable approximately 14 minutes; final
+local validation approximately 21 minutes (00:01:44–00:22:36 UTC).
+
+The float alternates hip motion by half a cycle, with delayed knee/ankle/toe
+folds making oval shoe paths. Fast native spring travel commits one eased turn
+over the remaining ascent and finishes upright before the apex. Rider and deck
+rotate together after the existing foot-contact solve. Abandon Ship releases
+spring pose ownership immediately, restoring its native flip and supported
+landing roll. Neutral vertical bounces and ordinary running jumps/ollies retain
+their previous behavior. No movement, gravity, camera or level tuning changes.
+
+Catalog revision 36 preserves the previous saved float as a recoverable backup
+and replaces only its leg rotations. Other authored channels and playback speed
+remain intact. Focused launch tests cover bicycle arcs, migration, four native
+transfers, slow-turn timing, neutral exclusion and eject interruption; the
+catalog suite and 14-case native board-roll suite pass. Required build passes.
+Real-browser lite, full 720p and MAX/native checks show both slow somersaults,
+the opposing bicycle phases, the restored ejection flip, and supported landing
+back to idle with zero deaths and no console errors or warnings. No full suite.
+
+Updated tuning/review notes and three native captures are in
+[CARLISLE_LAUNCH_STUDY.md](CARLISLE_LAUNCH_STUDY.md). Local checkpoint only, based
+on `d58a7262`; no integration, push or publication.
+
+## Carlisle Coast — pedal during the somersault (30 October 2026 NZDT)
+
+Follow-up: overlap the bicycle kick and slow turn. Prompt-to-playable
+approximately five minutes. The on-foot rise now blends into one opposed pedal
+cycle after push-off, during the somersault, meeting the float's opening leg
+pose. Mounted feet retain deck contact. Catalog revision 37 backs up the saved
+rise before updating only its leg rotations and preserves the previous float
+migration and other authored edits.
+
+Native launch checks now verify that the legs exchange their lead during each
+of three on-foot turns; the board flight, neutral exclusion, eject interruption,
+landing, saved migration and catalog checks pass. Full MAX/native frame stepping
+shows pedalling while inverted, and normal 720p gameplay returns through gather
+and landing to idle. Production build passes. No physics or camera changes.
+Evidence: `docs/carlisle-launch-review/bicycle-somersault-native.jpg`. Local only.
 
 ## Carlisle solid timber decks; slippery surfaces preserved — 30 October 2026
 
@@ -7143,3 +7218,103 @@ and syntax/diff checks pass. Final build: Codex/sol fork · build 10-30 06:26 UT
 No paid services, new asset downloads, Tripo credits, API purchases, LODs,
 mesh reduction, course edits, full-suite run or publication. Local testing
 hold and the broader polish goal remain active.
+## Carlisle spring impact and shared air jump — 30 October 2026
+
+Approximately 12 minutes prompt-to-playable, with final combined validation
+completed in about 28 minutes. Hard landings after trampoline flights now have
+a small compression, visual rebound and finite settle, both on foot and mounted.
+The default hop is 12cm over half a second, scaled by impact speed. Rider and
+board lift together; independent shared segment elasticity supplies the impact
+without altering grounded movement or whole-rig scale. Soft ground, spring
+recontacts, crates, bails and Abandon Ship rolls retain their contact ownership.
+
+Added six live sliders under TUNER → TRAMPOLINE · LAUNCH & LANDING: rebound
+height/time, compression, launch backward lean, tap air-jump pop and charged
+air-jump pop. The default backward opening is reduced to 15% while preserving
+the full slow somersault and simultaneous bicycle legs. Saved authored clips
+remain intact. A fresh trampoline air jump now uses the Abandon Ship flip,
+momentum and supported landing roll for either rider mode; only the mounted
+version discards a board. Ordinary double jumps keep their existing behavior.
+
+Committed the runtime change as eb0ab0ed, then merged the completed Carlisle
+level iteration ee1eaf33 as 5b1d9e8b at the user's request. This brings the piers,
+boats, shoreline, deck art and full-geometry deck culling into the same playtest.
+Both appended iteration histories were retained; the level author's checkout
+was untouched. No new level geometry was authored in this movement increment.
+
+The new native impact checks, launch suite, all 14 board-roll cases and character
+runtime checks pass. Merged launch transfers, check:levels and production build
+pass; no check:all. Browser review covers lite and full MAX/native, both rider
+landings, individual rebound frame steps, supported recovery to idle and live
+slider changes (.12m → .20m → .12m). Zero deaths on the reviewed transfers and
+no console warnings/errors. Evidence and tuning details are retained in
+docs/CARLISLE_LAUNCH_STUDY.md and docs/carlisle-launch-review/.
+
+Combined build: 1,777 files / 1,067.8MiB, offline version c9761604c6e8fb9468d9.
+Local merged playtest is ready on port 5491. Publication remains held.
+
+## Carlisle second-jump camera and somersault controls — 30 October 2026
+
+Approximately 8 minutes prompt-to-playable. The previous second jump retired
+both the spring pose and the spring camera, abruptly releasing the shot while
+the rider was still high above the course. Camera ownership now spans the whole
+trampoline flight, keeping its original identity, strength and orbit through
+the Abandon Ship pop. The flip temporarily owns the pose, then hands back to
+the trampoline float and landing gather. The existing supported roll landing
+and genuine excessive-drop bails retain their contact behavior on foot and
+after ejecting the skateboard. Both player camera paths use the same lifetime.
+
+Removed the experimental hard-landing hop, added impact deformation and all
+three associated sliders. Ordinary land recovery remains. Added a dedicated
+TRAMPOLINE · SOMERSAULT tuner section: enable, actual horizontal trigger speed,
+trigger deadline, turn start, turn finish and easing. Defaults preserve the
+slow directional turn at 7.2m/s, from 22% to 100% rise progress, with a 55%
+trigger deadline. Timing commits per turn; crossed bounds remain finite.
+Reduced launch lean and the manual second-jump pop sliders remain beside it.
+
+The focused native air-jump check covers foot/board pops on ascent/descent,
+camera continuity, flip-to-float/gather, supported rolls, huge drops, trigger
+speed/windows/timing, disabled turns and ordinary-jump exclusion. All four
+authored launch-transfer checks and the production build pass. No level data
+changed and no check:all. Build: 1,777 files / 1,067.8MiB, offline version
+bc9a3f933097480ccfe5. The current Carlisle artwork merge remains intact;
+publication remains held.
+
+Browser verification completed in about 25 minutes total: lite on-foot and
+full MAX/native board-eject second jumps retain the camera at full strength and
+return visibly to the trampoline falling loop. A full-render ordinary spring
+landing was stepped through the former hop window, remaining planted, then
+returned to idle with zero deaths. Console errors/warnings are empty. Native
+camera and tuning captures are in docs/carlisle-launch-review/.
+
+
+## Carlisle launch animation/camera integration — 30 October 2026
+
+Approximately 20 minutes from the request to the verified combined local
+playtest. Merged the completed “Read Codex goal objective” branch through
+65973453a3b80c650f543c0894647215622ac88f into this Carlisle worktree.
+All eight incoming runtime files match that final commit exactly. The sole
+conflict was the append-only iteration log; both complete histories are
+preserved in order. Current level geometry, bonus, seven airborne cargo
+formations, nitro rows, slippery surfaces, nets, timber, steel, rigging and
+harbour assets remain intact.
+
+Includes the bicycle float and overlapping somersault, adjustable turn trigger
+and timing, shared on-foot/board spring air jump, continuous camera through
+the second jump, and resumed trampoline float/gather after its flip. The
+retired experimental landing hop stays removed. Uses the existing settings
+migration and preserves authored pose backups. No replacement of newer art
+files or published level-pack data.
+
+Focused test-trampoline-air-jump and test-launch-jump checks pass. In the
+combined full-render browser, foot and board second jumps retain camera
+weight 1.00 and the same launch identity, then resume player.launch-float.
+A separate normal-speed spring flight lands, stays supported and returns to
+idle with zero deaths. Native 1920×1080 and normal 480p/CRT inspected; console
+errors zero. The merged compiled harbour also passes main/bonus/main reload
+with all four bonus boats. Build: Codex/sol fork · build 10-30 07:27 UTC;
+1,785 files / 1,121.3MiB; offline f10f5571fa66aae6fc13.
+
+Evidence: docs/carlisle-relay/launch-integration/. The build includes the
+concurrent local beacon lighting increment, recorded separately. No full
+suite, publication, push or coordinator message. Local testing hold remains.

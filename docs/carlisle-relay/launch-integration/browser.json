@@ -1,0 +1,460 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "errors": [],
+  "flights": [
+    {
+      "mode": "foot",
+      "before": {
+        "position": [
+          92.79480471890025,
+          173.08687606044833,
+          -2480.9353921642114
+        ],
+        "state": "air",
+        "grounded": false,
+        "deaths": 0,
+        "camera": {
+          "weight": 0.999999974382753,
+          "launchId": 1,
+          "height": 183.62137828267174,
+          "yaw": 0.11605804092311628,
+          "position": [
+            93.34906181520849,
+            183.62137828267174,
+            -2476.2620480790024
+          ]
+        },
+        "clip": "player.launch-float",
+        "launch": {
+          "id": 1,
+          "strength": 1,
+          "elapsed": 2.2666666666666635,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -2.033333333333144,
+          "board": false
+        },
+        "cameraLaunch": {
+          "id": 1,
+          "strength": 1,
+          "elapsed": 2.2666666666666635,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -2.033333333333144,
+          "board": false
+        },
+        "flip": 0,
+        "secondJump": false,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "fov": 49
+      },
+      "flip": {
+        "position": [
+          92.55150669420163,
+          172.10870036600392,
+          -2482.110469212976
+        ],
+        "state": "air",
+        "grounded": false,
+        "deaths": 0,
+        "camera": {
+          "weight": 0.9999999907965891,
+          "launchId": 1,
+          "height": 183.62137828267174,
+          "yaw": 0.11605804092311628,
+          "position": [
+            93.10542182824119,
+            183.62137828267174,
+            -2477.4388159114887
+          ]
+        },
+        "clip": "player.jump",
+        "launch": null,
+        "cameraLaunch": {
+          "id": 1,
+          "strength": 1,
+          "elapsed": 2.3999999999999964,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": 11.076125,
+          "board": false
+        },
+        "flip": 0.75,
+        "secondJump": true,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "fov": 49
+      },
+      "falling": {
+        "position": [
+          91.15171135174187,
+          162.9273406437817,
+          -2488.8669899787487
+        ],
+        "state": "air",
+        "grounded": false,
+        "deaths": 0,
+        "camera": {
+          "weight": 0.9999999999742034,
+          "launchId": 1,
+          "height": 183.01467855668298,
+          "yaw": 0.11605804092311628,
+          "position": [
+            91.70581321787051,
+            183.01467855668298,
+            -2484.19453284436
+          ]
+        },
+        "clip": "player.launch-float",
+        "launch": {
+          "id": 1,
+          "strength": 1,
+          "elapsed": 3.1666666666666603,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -50.05720833333336,
+          "board": false
+        },
+        "cameraLaunch": {
+          "id": 1,
+          "strength": 1,
+          "elapsed": 3.1666666666666603,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -50.05720833333336,
+          "board": false
+        },
+        "flip": 0,
+        "secondJump": true,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "fov": 49
+      }
+    },
+    {
+      "mode": "board",
+      "before": {
+        "position": [
+          90.60548589577382,
+          173.08687606044833,
+          -2491.2210991618713
+        ],
+        "state": "air",
+        "grounded": false,
+        "deaths": 0,
+        "camera": {
+          "weight": 0.9999999740665794,
+          "launchId": 2,
+          "height": 183.62157828267175,
+          "yaw": 0.12219208740979784,
+          "position": [
+            91.1808921374626,
+            183.62157828267175,
+            -2486.5822385271686
+          ]
+        },
+        "clip": "player.launch-board-float",
+        "launch": {
+          "id": 2,
+          "strength": 1,
+          "elapsed": 2.2666666666666635,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -2.033333333333144,
+          "board": true
+        },
+        "cameraLaunch": {
+          "id": 2,
+          "strength": 1,
+          "elapsed": 2.2666666666666635,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -2.033333333333144,
+          "board": true
+        },
+        "flip": 0,
+        "secondJump": false,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "fov": 49.366743016901445
+      },
+      "flip": {
+        "position": [
+          90.49969295545598,
+          172.3739781437817,
+          -2491.746882612041
+        ],
+        "state": "air",
+        "grounded": false,
+        "deaths": 0,
+        "camera": {
+          "weight": 0.9999999898164449,
+          "launchId": 2,
+          "height": 183.62157828267175,
+          "yaw": 0.12219208740979784,
+          "position": [
+            91.07033095819457,
+            183.62157828267175,
+            -2487.1317197885433
+          ]
+        },
+        "clip": "player.jump",
+        "launch": null,
+        "cameraLaunch": {
+          "id": 2,
+          "strength": 1,
+          "elapsed": 2.3833333333333298,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": 11.076125,
+          "board": false
+        },
+        "flip": 0.75,
+        "secondJump": true,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "fov": 49.23934927250321
+      },
+      "falling": {
+        "position": [
+          89.93665918250758,
+          163.19261842155947,
+          -2490.868110798234
+        ],
+        "state": "air",
+        "grounded": false,
+        "deaths": 0,
+        "camera": {
+          "weight": 0.9999999999702833,
+          "launchId": 2,
+          "height": 183.41281185446746,
+          "yaw": 0.12219208740979784,
+          "position": [
+            90.42246832408745,
+            183.41281185446746,
+            -2486.2979682991468
+          ]
+        },
+        "clip": "player.launch-float",
+        "launch": {
+          "id": 2,
+          "strength": 1,
+          "elapsed": 3.1499999999999937,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -50.05720833333336,
+          "board": false
+        },
+        "cameraLaunch": {
+          "id": 2,
+          "strength": 1,
+          "elapsed": 3.1499999999999937,
+          "rise": 1,
+          "gather": 0,
+          "verticalSpeed": -50.05720833333336,
+          "board": false
+        },
+        "flip": 0,
+        "secondJump": true,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "fov": 49.01956195045934
+      }
+    }
+  ],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "beacons": {
+        "beacons": 4,
+        "shafts": 4,
+        "decorativeColliders": 0
+      },
+      "ambience": {
+        "waterGain": 0.10080406929682909,
+        "windGain": 0.028288051811375853,
+        "height": 8,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    },
+    "crates": 270,
+    "nitro": 22,
+    "grounds": 334,
+    "movers": 28,
+    "camera": {
+      "weight": 0,
+      "launchId": -1,
+      "height": 0,
+      "yaw": 0,
+      "position": [
+        0,
+        0,
+        0
+      ]
+    },
+    "tuning": {
+      "launchBackLean": 0.15,
+      "trampolineAirJumpMin": 10.5,
+      "trampolineAirJumpMax": 15,
+      "launchSomersault": 1,
+      "launchSomersaultMinSpeed": 7.2,
+      "launchSomersaultStart": 22,
+      "launchSomersaultDeadline": 55,
+      "launchSomersaultEnd": 100,
+      "launchSomersaultEase": 1,
+      "hangLaunch": 2.5,
+      "vertLaunchConserve": 0.55
+    }
+  },
+  "landing": {
+    "position": [
+      91.15147239396426,
+      89.06409827074934,
+      -2488.8669404644097
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "camera": {
+      "weight": 0.7340926734587141,
+      "launchId": 3,
+      "height": 100.14520461771684,
+      "yaw": 0.19855884581472816,
+      "position": [
+        92.05885320440925,
+        100.14520461771684,
+        -2484.35732184807
+      ]
+    },
+    "clip": "player.idle",
+    "launch": null,
+    "cameraLaunch": null,
+    "flip": 0,
+    "secondJump": false,
+    "canvas": [
+      1920,
+      1080
+    ],
+    "fov": 49
+  },
+  "settled": {
+    "position": [
+      91.15147239396426,
+      89.06409827074934,
+      -2488.8669404644097
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "camera": {
+      "weight": 0,
+      "launchId": 3,
+      "height": 100.14520461771684,
+      "yaw": 0.19855884581472816,
+      "position": [
+        92.05885320440925,
+        100.14520461771684,
+        -2484.35732184807
+      ]
+    },
+    "clip": "player.idle",
+    "launch": null,
+    "cameraLaunch": null,
+    "flip": 0,
+    "secondJump": false,
+    "canvas": [
+      853,
+      480
+    ],
+    "fov": 49
+  },
+  "passed": true
+}

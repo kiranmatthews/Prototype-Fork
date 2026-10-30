@@ -1,0 +1,100 @@
+# Carlisle launch jump — observation and adaptation
+
+## Evidence recorded before implementation
+
+Primary: [Kouteshi, final boss](https://www.youtube.com/watch?v=0uwxoIOpFcg&t=327s), inspected at normal speed, quarter speed and individual 60 fps steps. Repetitions at 327, 375 and 422 seconds. Times below are approximate video times, not extracted animation key times.
+
+| Beat | Second launch | Pose and camera evidence | Roo adaptation |
+| --- | --- | --- | --- |
+| Load | 378.5–378.8 | Brief crouch on the pad; pelvis lowers, knees fold, torso inclines. | Short compression at the existing contact impulse; no delayed physics. |
+| Extension | 379.0–379.3 | Long upright silhouette, feet trail together; camera climbs very rapidly. | Straightening legs, extended torso, arms trailing with wrists delayed. |
+| Opening | 379.5–380.3 | Face opens upward, arms spread and bend unevenly, one reaches higher. Camera elevation changes substantially. | A bounded backward arch followed by forward pitch; do not invent a repeated somersault from the changing viewpoint. |
+| Float / apex | 380.7–381.3 | Broad bent arms, loose hands, uneven knee bends; head/chest lead the small corrections. Similar silhouette at 425.5–426.5 in the third jump. | Asymmetric airborne loop, alternating shoulder/elbow/hand arcs and staggered knees. Slow torso and head counter-motion. |
+| Descent | 381.5 onward; 427 onward | Character rapidly shrinks while arena framing changes less. Belly-down silhouette continues; this is largely camera lag, not a body scale change. | Retain the loop through actual descent, then bring feet underneath before supported contact. Camera lingers above the apex with a bounded separation. |
+| Contact | End of flight | Source returns to the ordinary landing path; impact effects can obscure precise foot timing in the boss footage. | Existing ground contact owns timing; a finite compression/rebound returns to locomotion. |
+
+The first clear frontal view near 332 seconds is particularly useful for the arm spread and head attitude. The overhead views do not justify copying screen-space rotation into root yaw. These are reconstructed poses, not original animation curves or motion capture.
+
+## Source confirmation
+
+Pinned OpenGOAL revision: `94684e32f60008d3d9617621e7c3a478c9e2af56`.
+
+- [generic-obs.gc](https://github.com/open-goal/jak-project/blob/94684e32f60008d3d9617621e7c3a478c9e2af56/goal_src/jak1/engine/common-obs/generic-obs.gc): `launcher-active` passes height, camera, destination and seek time. Entity mode low byte 1 selects longfall, 2 omits the dedicated camera, default selects shortfall. Default height is 40 m, **not established as the boss pad height**. GOAL uses 4096 distance units/m, 65536 angle units/revolution and 300 internal time ticks/s. Entity `alt-vector.xyz` supplies destination and `.w` seek seconds.
+- `cam-launcher-longfall` starts about 7 m above and 1 m horizontally from the target, rises promptly, damps descent velocity by .975 per frame and has a 5 m vertical deadband. Horizontal stick rotates its horizontal viewing vector. It retains FOV and returns to the base mode over .5 s after supported contact and a minimum one-second state duration. Shortfall instead follows height directly.
+- [robotboss.gc](https://github.com/open-goal/jak-project/blob/94684e32f60008d3d9617621e7c3a478c9e2af56/goal_src/jak1/levels/finalboss/robotboss.gc): boss handling explicitly recognizes `cam-launcher-longfall`. The exact boss launcher height/destination/seek values reside in entity data not established by these source files. Do not claim the generic defaults are those values.
+- [target2.gc](https://github.com/open-goal/jak-project/blob/94684e32f60008d3d9617621e7c3a478c9e2af56/goal_src/jak1/engine/target/target2.gc): `target-launch` prepares duck stance, blends the camera over .6 s, then enters the high jump. Destination guidance is conditional on a nonzero seek time. Carlisle keeps its authored air steering and ballistic launch.
+- [target.gc](https://github.com/open-goal/jak-project/blob/94684e32f60008d3d9617621e7c3a478c9e2af56/goal_src/jak1/engine/target/target.gc): selects `eichar-launch-jump-ja`, starts at frame 16, advances toward frame 110 in relation to vertical velocity/time to apex, then plays `eichar-launch-jump-loop-ja`. The landing path recognizes these launch clips. The referenced asset curves are separate from the code.
+- [cam-master.gc](https://github.com/open-goal/jak-project/blob/94684e32f60008d3d9617621e7c3a478c9e2af56/goal_src/jak1/engine/camera/cam-master.gc): ordinary jump tracking excludes `launch-jump`; a dedicated presentation owner avoids competing vertical tracking.
+
+## Existing rig and implementation plan
+
+Roo uses a Bone/transform hierarchy with stable semantic bindings: outer gameplay body → animation `root` → `hips` → legs and torsoRoot/spine/chest/neck/head; clavicles, shoulders, elbows, wrists and finger chains; separate simulated tail and secondary ears/hair. Local +X is left, +Z is forward, Y is up. Limbs descend local Y in the bind stance. Positive knee X folds the feet back; negative elbow X folds the forearm forward; opposite shoulder Z signs spread the arms. The stylized broad head, long shoes and short legs require smaller torso rotations than Jak. Static character proportions remain unchanged.
+
+The authored clip runtime samples editable quaternion/position/scalar tracks over the procedural pose, crossfades state changes and applies independent segment deformation controls. Physics owns world translation once; pose root offsets are small waist-pivot offsets only. Board contact and tricks must retain foot/deck ownership. Tail simulation supplies secondary lag. New segment elasticity uses the shared profiles, with no whole-skeleton scaling.
+
+Plan: trajectory-driven launch one-shot into a real-time asymmetric air loop, late-descent gathering and contact recovery; distinct upper-body-only board variants. A dedicated camera overlay follows the actual launch, lingers vertically through descent, allows horizontal stick orbit and releases smoothly. A local review trigger will replay authored pads without changing production level data.
+
+## Supplemental footage
+
+- [Sentinel Beach, 35 s](https://www.youtube.com/watch?v=U56bHFV7jpg&t=35s): launch around 36 s, backward opening around 37.2 s, pronounced reduction in screen size on descent around 38.5 s, then another pad around 39.7 s. This corroborates the open pose and vertical lag, but its camera framing is not substituted for the boss shot.
+- [Spider Cave, 65 s](https://www.youtube.com/watch?v=VTgS0epJmZA&t=65s): approach at 66–69 s, launch at 70–71 s, elevated view toward the poles around 72 s. The shorter route has less of the boss arena's extended high view.
+- [Original clip](https://www.youtube.com/watch?v=03pQ4QwDb5M): launch around 7.6 s and overhead open pose around 10.1 s agree with the primary silhouette. The final boss remains the main timing and camera reference.
+
+## Implemented adaptation
+
+Six editable catalog clips cover load/extension/opening, sustained float and landing gather, with separate board variants. The first .19 s contains a brief load and extension; the remaining rise progress follows the measured vertical speed relative to launch speed. The float begins shortly before the actual apex and continues into descent. Its 1.36 s loop staggers shoulders, elbows, wrists and fingers; head and chest counter the torso. The on-foot legs bicycle half a cycle apart, with delayed knee, ankle and toe motion making each shoe sweep an oval. The loop is seamless. Independent shared torso and limb elasticity supplies compression, stretch and rebound. Physics still applies the native launch impulse, gravity and steering once.
+
+The requested follow-up adds one slow somersault to fast directional trampoline launches, on foot or board. By default, actual planar travel must reach 7.2 m/s before rise progress .55. The turn starts no earlier than .22, follows the measured rising arc with smooth acceleration/deceleration, and ends upright before the apex. Enable, trigger speed, trigger deadline, start, finish and easing are live tuner controls. Start/end are captured when a turn commits so changing the timing during a flight cannot reverse it; crossed slider bounds retain a finite upright finish. The mounted rider and board rotate together around the posed hips after deck contact solving. Neutral vertical bounces, ordinary running jumps and ollies do not acquire this turn. This is a user-directed addition, not a claim about the reference footage.
+
+Pedalling and the on-foot somersault overlap: after the initial push, the legs blend into one opposed bicycle cycle over the rising arc. That cycle ends at the float's opening leg pose, then the 1.36 s loop continues. The mounted variant keeps its planted feet. The rise cycle count and its initial blend fraction are separately tunable.
+
+Ground distance and downward velocity drive the last .38 s of preparation. Actual supported contact starts the existing finite `player.land` recovery; a second spring restarts the launch instead. Board variants animate the torso, head and arms while the existing deck/contact solve keeps both feet attached. The ordinary run/charge root offset and forward-roll presentation yield to the on-foot launch keys. Death, slam, a double jump and other higher-priority controller states can interrupt the move. New starters omit unavailable optional joints on simpler rigs and preserve aliases; saved edited clips retain their established migration protections.
+
+The experimental hard-surface landing hop, extra impact compression, shared `launch-land` profile and their three sliders were removed after playtest feedback. Ordinary supported land recovery and native board/Abandon Ship contact behavior remain. Launch opening uses only 15% of its authored backward lean by default; this live adjustment preserves saved clip curves and the requested full somersault.
+
+Abandon Ship / Emergency Eject temporarily interrupts the spring pose for its existing airborne flip, then returns to the on-foot trampoline float and landing gather. Its supported roll landing retains ownership. The launch camera keeps the same flight identity, strength, tracking and orbit throughout the second jump; its lifetime is independent of the temporary pose interruption. It releases on supported contact or an actual interruption such as a bail. The native momentum carry, return to run/idle and genuine excessive-drop behavior are unchanged. Catalog revision 37 updates only the saved rise/float leg rotation channels and retains exact previous clips under `player.launch-rise.pre-bicycle` and `player.launch-float.pre-bicycle`; other authored channels and playback speed remain intact. A float already migrated by revision 36 is preserved.
+
+A fresh jump press/release during either kind of trampoline flight now uses that same Abandon Ship move. Holding for up to .4 s charges its upward pop from 10.5 to 15 m/s. On-foot launches preserve their actual planar travel without creating or discarding a board; mounted launches eject it normally. Both retain the flip, momentum, one-air-jump limit and supported landing roll. Ordinary non-trampoline double jumps retain their existing behavior.
+
+The camera is a reversible overlay in the existing camera stack, for both players, with Carlisle scenery collision applied afterward. It inherits the current viewing direction, enters over approximately .6 s, follows the rise immediately, lingers above the falling character, and releases over approximately .5 s. Horizontal right-stick input orbits the shot. A 9 m maximum separation and reduced lag near supported landing keep the receiving platform legible. The overlay does not change FOV: the old launch-specific 72° zoom is removed. Ordinary speed-dependent lens behavior remains part of the base camera.
+
+The source confirms the boss's **longfall mode**, launch-to-loop sequencing, trajectory-dependent animation advance, joystick orbit and camera handoff. Its generic 7 m/1 m framing and 5 m deadband are reference values, not an exact fit for this rig and course. Exact boss entity height/seek parameters and original animation curves were not established. The pose curves, joint amplitudes and modified camera distances here are authored reconstructions from the footage. No original game animation assets were copied.
+
+## Main tuning points
+
+| File | Controls |
+| --- | --- |
+| `src/tuning.ts` | **M → TUNER → TRAMPOLINE · SOMERSAULT**: Auto Somersault (on), Trigger Speed (7.2 m/s), Turn Start (22% rise), Trigger Deadline (55%), Turn Finish (100%), Turn Easing (1). The adjacent **LAUNCH & AIR JUMP** section retains Back Lean (.15), Tap Pop (10.5 m/s) and Charged Pop (15 m/s). Settings use existing persistence, version 30. |
+| `src/animation/launchJump.ts` | `LAUNCH_JUMP`: .19 s push, .88 rise-to-loop threshold, 1.36 s float cycle, .38 s gather, .78 m visual waist pivot. Bicycle hip/knee swings .48/.62 radians, knee delay .13 cycles; one rise cycle from .22, blended over its first .18. `PHASE` and per-joint `beat` curves control pose angles and overlap. |
+| `src/animation/elasticity.ts` | Six launch clip profiles: torso, upper/lower arms, upper/lower legs; board leg amplitudes stay zero. One-shot beat keys set compression/extension/rebound. |
+| `src/launchCamera.ts` | `LAUNCH_CAMERA`: .6/.5 s entry/exit, 10.5 m elevation, 4.6 m distance, 1.25 m aim height, 1.4 m look-ahead, 3.2 m descent deadband, 2.4/s catch rate, 9 m maximum extra height, 1.05 rad/s orbit, .16 stick deadzone. |
+| `src/player.ts` | `launchCameraPresentation` follows the entire spring flight, preserving the 12–55 m strength ramp. `launchPresentation` yields during the second-jump flip and resumes float/gather afterward. Native contact owns the land/roll/bail transition. |
+| `src/characterAnimationRuntime.ts` | Launch entry .045 s, float/gather .14 s, interruption .12 s, existing contact crossfade .06 s. All six clips are available through the normal animation catalog. |
+
+## Local review and validation
+
+Start the usual Vite server, then open `/launch-review.html?playtest&level=carlisle-coast&launchReview`. Add `&lite` for a quick check. This development-only entry is excluded from production HTML entries. The panel provides all 55 native pad setups, foot/board selection, replay, pause, individual 1/60 s steps, quarter/tenth speed, apex/landing pause, gameplay/front/side/three-quarter views and 720p/MAX rendering. Air jump / Abandon Ship sends the native airborne jump press/release for either rider mode; the diagnostic line reports somersault progress and camera strength. Its optional input pilot steers one transfer toward the authored landing; it ends on contact or a chained launch. Gameplay itself has no added destination guidance.
+
+Focused validation:
+
+- `node tools/test-launch-jump.mjs`: finite poses, independent deformation bounds, seamless moving air loops, board foot ownership, monotonic trajectory progress, four actual transfers (Foam steps 1 foot/board, Beacon chimney 1, Scissor approach springs 3), unchanged physics during pose application, gather, supported `land` recovery and finite return to idle, death interruption and respawn. Camera checks cover reversible composition, unchanged FOV, bounded lag, orbit/deadzone and equivalent 30/60/120 Hz arcs.
+- Follow-up launch checks: opposed leg cycles and nonzero oval shoe paths; exact saved-pose backups and idempotent v35/v36 migrations; sustained slow turns on all four transfers, with the legs exchanging their lead during each on-foot turn; neutral vertical exclusion; native Abandon Ship input releases the spring pose and restores the visual flip.
+- `node tools/test-board-roll-landing.mjs`: 14 native dismount cases covering momentum carry, supported roll clearance, stop/idle, run speed, screen-direction stability, jump/reset and genuine excessive drops.
+- `node tools/test-trampoline-air-jump.mjs`: native foot/board second jumps during ascent and descent, continuous camera identity/strength/framing, flip-to-float/gather transition, shared momentum/roll, genuine huge-drop bails, no phantom board, one-air-jump limit, ordinary double-jump exclusion, live lean and somersault trigger/window/timing bounds.
+- `node tools/test-animation-suite.mjs`: catalog validation, alias/missing-joint compatibility, schema round trips, authored editing and saved-suite migration.
+- `node tools/test-character-animation-runtime.mjs` and `node tools/test-character-elasticity.mjs`: gameplay routing/crossfades, all 39 starter clips, independent segment behavior, finite settles and migration preservation.
+- `npm run build`: type-check, bundle and release asset preparation. No unrelated full-suite run.
+
+Browser review uses the real Carlisle level and existing character skin, with normal and slow playback, multiple rig angles, lite, full 720p and MAX/native rendering. The long on-foot launch reaches its receiving deck with zero deaths and returns to the normal camera. The launch camera and floating pose are reviewed at native resolution; board feet retain their deck placement. All complete authored scenery geometry and reflections remain in use.
+
+Native review captures: [gameplay camera](carlisle-launch-review/gameplay-native.jpg) and [side silhouette](carlisle-launch-review/float-side-native.jpg). Final browser errors and warnings were empty.
+
+Follow-up native captures: [bicycle float](carlisle-launch-review/bicycle-native.jpg), [mounted somersault](carlisle-launch-review/board-somersault-native.jpg), and [restored Abandon Ship flip](carlisle-launch-review/abandon-ship-flip-native.jpg). Reviewed on foot and board, in slow motion and individual steps, at lite/720p and full MAX/native. The normal-speed full-render flight finished with `launch-gather → land → idle`, zero deaths and no console errors or warnings. The follow-up launch, catalog and board-roll suites plus the production build pass.
+
+The subsequent [combined bicycle/somersault capture](carlisle-launch-review/bicycle-somersault-native.jpg) shows the pedal cycle continuing while inverted. The updated native flight checks and catalog suite pass; full native frame stepping and normal 720p gameplay confirm the overlap and supported recovery.
+
+The earlier landing-hop trial and its captures remain in history; that behavior is retired. The current follow-up keeps the spring camera continuously engaged during the second jump, then resumes `launch-float → launch-gather` after the flip. The existing supported roll and excessive-drop bail still arbitrate contact. Browser review includes actual gameplay framing and frame steps after the second jump, with new somersault settings visible in the tuner.
+
+Current validation: `tools/test-trampoline-air-jump.mjs`, `tools/test-launch-jump.mjs`, type-check and the production build pass. The camera keeps weight 1.00 through the visible second-jump flip and restored falling loop in lite on foot and full MAX/native after board eject. [Native second-jump camera](carlisle-launch-review/second-jump-camera-native.jpg) and [somersault controls](carlisle-launch-review/somersault-tuning-native.jpg) record the result. Console error/warning logs are empty. The current production package contains 1,777 files / 1,067.8 MiB, offline version `bc9a3f933097480ccfe5`.
+
+At the user's request, this branch now includes the completed Carlisle harbour iteration through `ee1eaf331607f1297beef01ad26d0cb16683d1fa`, merged as `5b1d9e8b122d55959512c42c80c0409a5309db9b`. Both iteration-log additions were retained. The other checkout was untouched. The merged launch check, `npm run check:levels` and production build pass (1,777 files / 1,067.8 MiB; offline version `c9761604c6e8fb9468d9`). The combined local playtest includes the piers, boats, shoreline, decks and their full-geometry culling. Publication remains held.

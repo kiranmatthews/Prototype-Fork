@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "mergedFrom": "65973453a3b80c650f543c0894647215622ac88f",
+  "previousLocalHead": "df7c5c9fdbd286f0e29a7a3b7cb29e895b0455e4",
+  "exactIncomingRuntime": {
+    "src/animation/elasticity.ts": "c71e701ee73683486a8b8027861985acd94a36213b3d59bedbb06a30b06be483",
+    "src/animation/launchJump.ts": "e42ba81fed73fda6c07d962e21b3d04c9218e53477446eacf7b75b7a8704b58b",
+    "src/animation/playerCatalog.ts": "45729212c87f3a6047a0f4fcf6af8f942436077ce8d4ce0290194e3b7453c043",
+    "src/characterAnimationRuntime.ts": "799a09261c5e3f9b78fae64b9e7814c861198bc2ab252f51c530d5f6504e178d",
+    "src/launchCamera.ts": "092774e692d0192e020558b131b13989516bd1e8311d7edb6319e72e5501035e",
+    "src/main.ts": "ee5e56f054a0a0ebe151f7df4c023addc9bbc103ec3cfcfcd25ca77307c2e97b",
+    "src/player.ts": "316d8b4ad45a5751616d43dd1f7d63b4340cf4472da458b21bf201baf46c8ebf",
+    "src/tuning.ts": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41"
+  },
+  "preservedCourseAndArt": {
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleBoardwalk.ts": "b1a29d940ee364981736fffba98268bcadc8ff0aa26e62a4ffaf134b69046d7f",
+    "src/carlisleSteelDecks.ts": "180400914cfe8bbd993bfa05c54d4ecf68510e3a02b0562ad3a89555200a9d6a",
+    "src/carlisleRigging.ts": "18698cb505093f06d6efafa3612fe66f9024a591bd2c9ff24a51514f3a24b9e7",
+    "src/carlisleShipyardMaterials.ts": "c325a90f54f6a7707f644dffd0c78d2780537524bc75edac2a120775243cabea",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/levels/carlisle-bonus.ts": "dd89ac3cee99928d7714f38f88dd4aee8a285825d39944409664bcc27e564fda",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151"
+  },
+  "checks": [
+    "test-trampoline-air-jump",
+    "test-launch-jump",
+    "build",
+    "full native foot and board second jump browser review",
+    "normal planted landing",
+    "compiled harbour main/bonus/main browser review"
+  ],
+  "browserErrors": [],
+  "build": "Codex/sol fork \u00b7 build 10-30 07:27 UTC",
+  "offlineVersion": "f10f5571fa66aae6fc13",
+  "localOnly": true
+}

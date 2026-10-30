@@ -5,6 +5,7 @@ import { SkateRace } from './race/runtime';
 import {BoulderChaseCamera} from './boulderChase';
 import {CrackedDisplay} from './crackedDisplay';
 import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
+import {LaunchCamera} from './launchCamera';
 import { requestedTool } from "./toolRoutes";
 import { debugLevelMenu } from './debugLevelMenu';
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
@@ -1642,6 +1643,10 @@ const coastPhysicsReview = new URLSearchParams(window.location.search).has(
 );
 const linkedTool = requestedTool(location.search, location.hash);
 const playtestParams = new URLSearchParams(window.location.search);
+// Local review page only: time controls and deterministic native-input replay.
+const launchReview = import.meta.env.DEV && playtestParams.has('launchReview')
+  ? {rate:1,advance:0,beforeStep:null as (()=>void)|null,
+    restoreCamera:null as (()=>void)|null,afterCamera:null as (()=>void)|null} : null;
 const playtestRequested = playtestParams.has("playtest");
 // Local playtests are an inspection sandbox; durable campaigns keep their unlocks.
 const playtestUnlockAll = playtestRequested && !playtestParams.has("lockedProgression")
@@ -2062,7 +2067,7 @@ const cam2ViewForward = new THREE.Vector3();
 const cam2LaneOrigin = new THREE.Vector3();
 const cam2LaneHeading = new CourseCameraHeading();
 const cameraViewFraming2 = new CameraViewFraming();
-let trampolineCameraBlend2 = 0;
+const launchCamera2 = new LaunchCamera();
 const cameraFallHold2 = new CameraFallHold();
 const carlisleSceneryCamera2 = new CarlisleSceneryCamera();
 const chiefCamera2 = new ChiefCamera();
@@ -2075,6 +2080,7 @@ function updateCamera2(dt: number): void {
   if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level))) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
   carlisleSceneryCamera2.restore(camera2);
+  launchCamera2.restore(camera2);
   chiefCamera2.restore(camera2);
   authoredSkateCamera2.restore(camera2);
   loopCameraFraming2.restore(camera2);
@@ -2104,6 +2110,7 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
+  launchCamera2.apply(camera2,subject,p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
   carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
@@ -2111,16 +2118,7 @@ function updateBaseCamera2(dt: number): void {
   if (!p2) return;
   const subject = p2.renderPosition;
   const snapped = cam2RenderSnapVersion !== p2.renderSnapVersion;
-  trampolineCameraBlend2 = snapped ? 0 : THREE.MathUtils.lerp(trampolineCameraBlend2,
-    p2.trampolineCameraTarget, 1 - Math.exp(-8 * Math.max(0, dt)));
-  if (trampolineCameraBlend2 < .0001) trampolineCameraBlend2 = 0;
-  const baseCamera = level.cameraRig ?? TUNING;
-  const cameraValues = trampolineCameraBlend2 === 0 ? baseCamera : {
-    camDist: THREE.MathUtils.lerp(baseCamera.camDist, 4.5, trampolineCameraBlend2),
-    camHeight: THREE.MathUtils.lerp(baseCamera.camHeight, 26, trampolineCameraBlend2),
-    camPitch: THREE.MathUtils.lerp(baseCamera.camPitch, 80, trampolineCameraBlend2),
-    camFov: THREE.MathUtils.lerp(baseCamera.camFov, 72, trampolineCameraBlend2),
-  };
+  const cameraValues = level.cameraRig ?? TUNING;
   if (snapped) {
     cam2RenderSnapVersion = p2.renderSnapVersion;
     cam2LaneCursor.s = -1;
@@ -2185,7 +2183,7 @@ function updateBaseCamera2(dt: number): void {
   const ty = subject.y + framing.height;
   const k = snapped ? 1 : Math.min(1, 9 * dt);
   camera2.position.x += (tx - camera2.position.x) * k;
-  if (trampolineCameraBlend2 > 0) camera2.position.y = ty;
+  if (p2.launchCameraPresentation || launchCamera2.diagnostics.weight > 0) camera2.position.y = ty;
   else camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
   if (laneTarget) {
@@ -4525,7 +4523,7 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
-let trampolineCameraBlend = 0;
+const launchCamera = new LaunchCamera();
 const cameraFallHold = new CameraFallHold();
 const carlisleSceneryCamera = new CarlisleSceneryCamera();
 const chiefCamera = new ChiefCamera();
@@ -4541,6 +4539,7 @@ function updateCamera(dt: number): void {
   if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   carlisleSceneryCamera.restore(camera);
+  launchCamera.restore(camera);
   chiefCamera.restore(camera);
   authoredSkateCamera.restore(camera);
   loopCameraFraming.restore(camera);
@@ -4576,24 +4575,13 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
+  launchCamera.apply(camera,subject,player.launchCameraPresentation,dt,framingSnap,input.lookX);
   carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
 }
 
 function updateBaseCamera(dt: number): void {
   const subject = player.renderPosition;
-  // The ground rig remains the authored/default rig. Only a large trampoline
-  // air eases out to the wide landing view; touchdown eases back in.
-  trampolineCameraBlend = cameraRenderSnapVersion !== player.renderSnapVersion ? 0 :
-    THREE.MathUtils.lerp(trampolineCameraBlend, player.trampolineCameraTarget,
-      1 - Math.exp(-8 * Math.max(0, dt)));
-  if (trampolineCameraBlend < .0001) trampolineCameraBlend = 0;
-  const baseCamera = level.cameraRig ?? TUNING;
-  const cameraValues = trampolineCameraBlend === 0 ? baseCamera : {
-    camDist: THREE.MathUtils.lerp(baseCamera.camDist, 4.5, trampolineCameraBlend),
-    camHeight: THREE.MathUtils.lerp(baseCamera.camHeight, 26, trampolineCameraBlend),
-    camPitch: THREE.MathUtils.lerp(baseCamera.camPitch, 80, trampolineCameraBlend),
-    camFov: THREE.MathUtils.lerp(baseCamera.camFov, 72, trampolineCameraBlend),
-  };
+  const cameraValues = level.cameraRig ?? TUNING;
   if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active) {
     worldMapController.frameCamera(camera, dt);
     if(!editorViewActive)mapIslandLighting?.update(worldMapController.destinationKey,dt);
@@ -4798,7 +4786,7 @@ function updateBaseCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
-  const springFollow = trampolineCameraBlend > 0;
+  const springFollow = player.launchCameraPresentation !== null || launchCamera.diagnostics.weight > 0;
   const airLift = swimmingView||waterDeath!==null||springFollow ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.
@@ -5129,7 +5117,8 @@ function advanceFrame(nowMs: number): void {
   if (!allowRenderFrame(nowMs)) return;
   renderer.info.reset();
   const rawDt = clock.getDelta();
-  const dt = Math.min(rawDt, 0.1);
+  const dt = launchReview ? (launchReview.rate === 0 ? launchReview.advance : Math.min(rawDt, .1)*launchReview.rate) : Math.min(rawDt, 0.1);
+  if(launchReview)launchReview.advance=0;
   // Animation Studio owns only presentation. Its chosen clip speed advances
   // this preview clock without advancing movement, collisions, replay, or AI.
   if (animationStudio) {
@@ -5320,6 +5309,7 @@ function advanceFrame(nowMs: number): void {
   // by binary floating-point error (the visible symptom is another repeated
   // pose followed by a catch-up step).
   while (acc + 1e-10 >= CONST.fixedStep) {
+    launchReview?.beforeStep?.();
     if(skateRace.active&&input.restartPressed){input.restartPressed=false;skateRace.reset(skateRace.mode);recorder.start(current.id,endlessDeathsOn);break;}
     const gameplayStep = competition?.phase !== 'finishing';
     // Playback: overwrite the live input with the recorded frame; when the
@@ -5431,7 +5421,9 @@ function advanceFrame(nowMs: number): void {
 
     // Ordinary deaths hold the last shot. Authored water deaths frame the
     // visible splash surface; the respawn teleport restores the course rig.
+    launchReview?.restoreCamera?.();
     if (!level.boulder?.course?.cameraRun && (player.waterDeathSurface!==null||(player.state !== "dead" && player.state !== "gameover"))) updateCamera(dt);
+    launchReview?.afterCamera?.();
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
     raceFinishPresentation.frame(camera,skateRace,dt,window.innerWidth,window.innerHeight,
       ui.raceHud.sceneViewport(window.innerWidth,window.innerHeight),raceFinishReducedMotion.matches);
@@ -5607,6 +5599,8 @@ requestAnimationFrame(frame);
   bossUI,
   player,
   level,
+  launchReview,
+  getLaunchCameraDiagnostics: () => launchCamera.diagnostics,
   getSkateRace: () => skateRace,
   getGolfCarts: () => countryClubCarts.fleet,
   getCompetition: () => competition,
