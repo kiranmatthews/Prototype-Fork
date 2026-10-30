@@ -6666,3 +6666,19 @@ back to idle with zero deaths and no console errors or warnings. No full suite.
 Updated tuning/review notes and three native captures are in
 [CARLISLE_LAUNCH_STUDY.md](CARLISLE_LAUNCH_STUDY.md). Local checkpoint only, based
 on `d58a7262`; no integration, push or publication.
+
+## Carlisle Coast — pedal during the somersault (30 October 2026 NZDT)
+
+Follow-up: overlap the bicycle kick and slow turn. Prompt-to-playable
+approximately five minutes. The on-foot rise now blends into one opposed pedal
+cycle after push-off, during the somersault, meeting the float's opening leg
+pose. Mounted feet retain deck contact. Catalog revision 37 backs up the saved
+rise before updating only its leg rotations and preserves the previous float
+migration and other authored edits.
+
+Native launch checks now verify that the legs exchange their lead during each
+of three on-foot turns; the board flight, neutral exclusion, eject interruption,
+landing, saved migration and catalog checks pass. Full MAX/native frame stepping
+shows pedalling while inverted, and normal 720p gameplay returns through gather
+and landing to idle. Production build passes. No physics or camera changes.
+Evidence: `docs/carlisle-launch-review/bicycle-somersault-native.jpg`. Local only.

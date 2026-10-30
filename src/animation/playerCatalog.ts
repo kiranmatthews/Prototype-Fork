@@ -150,7 +150,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 36;
+export const PLAYER_STARTER_CATALOG_VERSION = 37;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -1854,9 +1854,9 @@ export function reconcilePlayerStarterAnimationSuite(
     clips=clips.map(clip=>playerIds.has(clip.id)?withCharacterElasticity(clip,rig):clip);
   }
 
-  if (previousVersion < 36) {
-    const old=clips.find(clip=>clip.id===LAUNCH_CLIPS.float);
-    const replacement=starters.find(clip=>clip.id===LAUNCH_CLIPS.float)!;
+  if (previousVersion < 37) for(const id of [LAUNCH_CLIPS.rise,LAUNCH_CLIPS.float]) {
+    const old=clips.find(clip=>clip.id===id);
+    const replacement=starters.find(clip=>clip.id===id)!;
     if(old&&old.metadata?.launchPedalRevision!==1){
       const backupId=`${old.id}.pre-bicycle`;
       if(!clips.some(clip=>clip.id===backupId))clips.push({...old,id:backupId,

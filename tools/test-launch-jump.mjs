@@ -22,6 +22,17 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
   for(const track of oldFloat.tracks.filter(t=>! /^(hip|knee|ankle|toe)(Left|Right)$/.test(t.target)))
     assert.deepEqual(updated.tracks.find(t=>t.id===track.id),track,'bicycle update changed another channel');
   assert.deepEqual(a.reconcilePlayerStarterAnimationSuite(migrated,rig),migrated,'bicycle migration repeated');
+  const beforeOverlap=structuredClone(suite);beforeOverlap.metadata.playerStarterCatalogVersion=36;
+  const oldRise=beforeOverlap.clips.find(c=>c.id===LAUNCH_CLIPS.rise);delete oldRise.metadata.launchPedalRevision;
+  oldRise.playbackSpeed=.9;
+  oldRise.tracks.find(t=>t.target==='hipLeft').keys[32].value=[0,0,0,1];
+  const overlap=a.reconcilePlayerStarterAnimationSuite(beforeOverlap,rig);
+  const newRise=overlap.clips.find(c=>c.id===LAUNCH_CLIPS.rise);
+  assert.deepEqual(overlap.clips.find(c=>c.id===`${LAUNCH_CLIPS.rise}.pre-bicycle`).tracks,oldRise.tracks);
+  assert.equal(newRise.playbackSpeed,.9);
+  assert.notDeepEqual(newRise.tracks.find(t=>t.target==='hipLeft').keys,oldRise.tracks.find(t=>t.target==='hipLeft').keys);
+  assert.deepEqual(overlap.clips.find(c=>c.id===LAUNCH_CLIPS.float),float,'overlap migration rewrote the float');
+  assert.deepEqual(a.reconcilePlayerStarterAnimationSuite(overlap,rig),overlap);
   for(const id of Object.values(LAUNCH_CLIPS)){
     const clip=suite.clips.find(c=>c.id===id);assert.ok(clip,id);
     const poses=Array.from({length:65},(_,i)=>a.sampleComposedClip(clip,clip.duration*i/64,motion));
@@ -96,7 +107,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     const mover=jump.moving?level.movers.find(m=>m.mesh.name===jump.name):null;
     const start=mover?mover.mesh.position.clone().add(new THREE.Vector3(0,c.s[1]/2+.15,0)):new THREE.Vector3(...c.p).add(new THREE.Vector3(0,.15,0));
     p.respawn(level,true,false,{position:start,heading:new THREE.Vector3(0,0,-1)});p.freeSkate=board;p.airFromSkate=board;p.airGrav=board?'board':'foot';p.speed=board?8:0;
-    const seen=new Set();let launched=false,landed=false,frames=0,turningFrames=0;
+    const seen=new Set(),turnPedal=[];let launched=false,landed=false,frames=0,turningFrames=0;
     for(;frames<800;frames++){
       const target=new THREE.Vector3(...carlislePoint(...jump.to)),dx=target.x-p.pos.x,dz=target.z-p.pos.z;
       const f=dx*p.axisF.x+dz*p.axisF.z,s=dx*p.axisL.x+dz*p.axisL.z;
@@ -109,6 +120,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
       seen.add(p.animationClipHint);
       const turn=p.launchSomersaultProgress;
       if(turn!==null&&turn>0&&turn<1)turningFrames++;
+      if(!board&&turn!==null&&turn>.25&&turn<.75)
+        turnPedal.push(p.legL.rotation.x-p.legR.rotation.x);
       if(p.launchPresentation){
         if(!launched){
           p.state='dead';assert.equal(p.launchPresentation,null,'death kept active launch');p.state='air';
@@ -124,6 +137,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
     assert.ok(seen.has(board?LAUNCH_CLIPS.boardFloat:LAUNCH_CLIPS.float),`${jump.name} board=${board}: ${[...seen]}`);
     assert.ok(seen.has(board?LAUNCH_CLIPS.boardGather:LAUNCH_CLIPS.gather),'missing landing preparation');
     assert.ok(turningFrames>45,`${jump.name}: directional launch did not perform a slow somersault`);
+    if(!board)assert.ok(Math.min(...turnPedal)<-.2&&Math.max(...turnPedal)>.2,
+      `${jump.name}: legs did not exchange their lead during the somersault`);
     if(index===39){
       assert.equal(runtime.activeClipId,'player.land','ground contact did not start recovery');
       for(let i=0;i<120;i++){p.step(CONST.fixedStep,makeInput(),level);level.update(CONST.fixedStep);p.commitRenderStep(level);}

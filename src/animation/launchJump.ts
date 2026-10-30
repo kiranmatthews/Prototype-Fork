@@ -13,6 +13,8 @@ export const LAUNCH_JUMP = {
   pedalHipSwing: .48,
   pedalKneeSwing: .62,
   pedalKneeLag: .13,
+  pedalRiseCycles: 1,
+  pedalRiseBlend: .18,
   somersaultSpeedRatio: .8,
   somersaultStart: .22,
   somersaultLatestStart: .55,
@@ -84,6 +86,14 @@ function build(rigId: string, phase: 'rise' | 'float' | 'gather', board: boolean
   const wave=(p:number,lag=0)=>Math.sin(2*Math.PI*(p-lag));
   const beat=(p:number,keys:number[],idle:number,amp=0,lag=0,catchValue=idle)=>phase==='rise'
     ?curve(keys,p):phase==='float'?idle+amp*wave(p,lag):THREE.MathUtils.lerp(idle,catchValue,smooth(p));
+  const pedal=(p:number,keys:number[],idle:number,amp:number,lag:number,catchValue:number)=>{
+    if(phase!=='rise')return beat(p,keys,idle,amp,lag,catchValue);
+    // Keep the initial load/extension, then pedal during the same rising arc
+    // as the slow turn. One whole cycle meets the float's opening leg pose.
+    const cycle=Math.max(0,(p-LAUNCH_JUMP.somersaultStart)/(1-LAUNCH_JUMP.somersaultStart));
+    return THREE.MathUtils.lerp(curve(keys,p),idle+amp*wave(cycle*LAUNCH_JUMP.pedalRiseCycles,lag),
+      smooth(cycle/LAUNCH_JUMP.pedalRiseBlend));
+  };
   const pitch=(p:number)=>beat(p,[.04,.15,-.18,-.64,.08,.64],.64,.065,0,.02);
   if(!board){
     rotation('root',p=>[pitch(p),0,phase==='float'?.055*wave(p,.18):0]);
@@ -119,11 +129,11 @@ function build(rigId: string, phase: 'rise' | 'float' | 'gather', board: boolean
       // Half a cycle between legs; the delayed knee fold makes each shoe
       // sweep an oval through push, recovery and lift instead of kicking.
       const pedalLag=side==='Left'?0:.5;
-      rotation(`hip${side}`,p=>[beat(p,[-.18,-1.05,.04,.20,-.35,-.27],-.38,LAUNCH_JUMP.pedalHipSwing,pedalLag,-.43),
+      rotation(`hip${side}`,p=>[pedal(p,[-.18,-1.05,.04,.20,-.35,-.27],-.38,LAUNCH_JUMP.pedalHipSwing,pedalLag,-.43),
         sign*.06,sign*beat(p,[.05,.08,.03,.12,.18,.18],.18,.055,lag,.08)]);
-      rotation(`knee${side}`,p=>[beat(p,[.35,1.75,.10,.48,1.30,1.12],1.06,LAUNCH_JUMP.pedalKneeSwing,pedalLag+LAUNCH_JUMP.pedalKneeLag,.85),0,0]);
-      rotation(`ankle${side}`,p=>[beat(p,[-.17,-.48,.28,.18,-.12,-.20],-.20,.20,pedalLag+.24,-.37),0,sign*.04]);
-      rotation(`toe${side}`,p=>[beat(p,[0,.10,-.15,-.08,0,.02],.02,.09,pedalLag+.30,0),0,0]);
+      rotation(`knee${side}`,p=>[pedal(p,[.35,1.75,.10,.48,1.30,1.12],1.06,LAUNCH_JUMP.pedalKneeSwing,pedalLag+LAUNCH_JUMP.pedalKneeLag,.85),0,0]);
+      rotation(`ankle${side}`,p=>[pedal(p,[-.17,-.48,.28,.18,-.12,-.20],-.20,.20,pedalLag+.24,-.37),0,sign*.04]);
+      rotation(`toe${side}`,p=>[pedal(p,[0,.10,-.15,-.08,0,.02],.02,.09,pedalLag+.30,0),0,0]);
     }
   }
   clip.tags=['player','launch','trampoline','squash-stretch',phase];
@@ -131,7 +141,7 @@ function build(rigId: string, phase: 'rise' | 'float' | 'gather', board: boolean
     rootMotion:'presentation waist pivot only; world translation belongs to gameplay',
     motionDesign:'footage reconstruction: load, extend, backward opening, asymmetric float, landing gather',
     ...(board?{launchUpperBodyOnly:true}:{}),
-    ...(!board&&phase==='float'?{launchPedalRevision:1}:{}),
+    ...(!board&&phase!=='gather'?{launchPedalRevision:1}:{}),
   };
   if(phase==='rise')clip.markers=[['compression',.065],['push',.22],['open',.46],['float',1]].map(([name,p])=>({id:`${id}:${name}`,name:String(name),time:Number(p)}));
   return clip;
