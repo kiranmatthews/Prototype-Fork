@@ -856,9 +856,11 @@ function applyTheme(): void {
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
     atmosphere: { ...level.atmosphere, ...heat.lighting, fogColor: heat.fogColor } } : level);
   activeSky = skyPreset;
-  const cloudRoadSkyActive=level.groundMeshes.some(mesh=>mesh.userData.cloudRoad);
-  skyProjection.setCloudRoadSky(cloudRoadSkyActive);
-  skystreamSun.visible=cloudRoadSkyActive&&!LITE;
+  // Cloud platforms are reusable scenery; only Skystream owns this sky tint
+  // and sun. Inheriting them from a collider also recoloured Sky Bridge.
+  const skystreamSkyActive=current.id==='skystream'||current.id==='bonus:skystream'||current.id==='bonus-skystream';
+  skyProjection.setCloudRoadSky(skystreamSkyActive);
+  skystreamSun.visible=skystreamSkyActive&&!LITE;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.
@@ -2077,7 +2079,7 @@ const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 const boulderChaseCamera2=new BoulderChaseCamera();
 function updateCamera2(dt: number): void {
   if (!p2) return;
-  if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level))) return;
+  if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level), () => p2!.cameraCanRecoverFall(level))) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
   carlisleSceneryCamera2.restore(camera2);
   launchCamera2.restore(camera2);
@@ -2160,6 +2162,7 @@ function updateBaseCamera2(dt: number): void {
     camera2.aspect = camera.aspect;
     camera2.updateProjectionMatrix();
   }
+  if (cameraFallHold2.landedFromDrop) cam2LaneCursor.s = -1;
   const lf = level.cameraDirAt(
     subject.x,
     subject.y,
@@ -2183,7 +2186,7 @@ function updateBaseCamera2(dt: number): void {
   const ty = subject.y + framing.height;
   const k = snapped ? 1 : Math.min(1, 9 * dt);
   camera2.position.x += (tx - camera2.position.x) * k;
-  if (p2.launchCameraPresentation || launchCamera2.diagnostics.weight > 0) camera2.position.y = ty;
+  if (p2.launchCameraPresentation || launchCamera2.diagnostics.weight > 0 || cameraFallHold2.followingDrop) camera2.position.y = ty;
   else camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
   if (laneTarget) {
@@ -4536,7 +4539,7 @@ const raceFinishPresentation=new RaceFinishPresentation();
 const raceFinishReducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
 function updateCamera(dt: number): void {
   raceFinishPresentation.restore(camera);
-  if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
+  if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level), () => player.cameraCanRecoverFall(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   carlisleSceneryCamera.restore(camera);
   launchCamera.restore(camera);
@@ -4727,6 +4730,9 @@ function updateBaseCamera(dt: number): void {
   }
 
   // Course cameras retain their authored lane; the skate rig returned above.
+  // Actual lower-road contact releases the old branch preference. Yaw keeps
+  // its normal easing; airborne crossings retain their original lane.
+  if (cameraFallHold.landedFromDrop) cameraLaneCursor.s = -1;
   const lf = level.cameraDirAt(subject.x, subject.y, subject.z, cameraLaneCursor);
   const turnK = snapped ? 1 : Math.min(1, 3.5 * dt);
   camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
@@ -4773,13 +4779,13 @@ function updateBaseCamera(dt: number): void {
   // apex anchor here loses the rider once the spring camera eases back down.
   const floorY = waterDeath??(railFollow ? subject.y : player.groundBelowY);
   const anchorGoal =
-    waterDeath??(swimmingView ? subject.y :
+    waterDeath??(swimmingView || cameraFallHold.followingDrop ? subject.y :
     floorY !== null
       ? Math.max(floorY, subject.y - maxRise)
       : Math.max(camAnchorY, subject.y - maxRise));
   camAnchorY +=
     (anchorGoal - camAnchorY) *
-    (snapped || railFollow ? 1 : Math.min(1, 4.5 * dt));
+    (snapped || railFollow || cameraFallHold.followingDrop ? 1 : Math.min(1, 4.5 * dt));
   // camAirLift: how much the rig rides UP with airborne height. 1 = classic
   // full-follow (the camera rises with the jump, so airs read small and snappy
   // on screen); 0 = pure ground anchor (the skater does all the on-screen
@@ -4834,9 +4840,8 @@ function updateBaseCamera(dt: number): void {
     // without a second Y delay, on ramps as well as in the air. The shared
     // side-scrolls use this too so the close shot cannot lag behind a jump.
     // Other default and partial-follow courses retain their existing damping.
-    // A fast descending rail is already interpolated support; a second
-    // vertical spring can leave the rider below the frame on its slope.
-    if (level.cameraAirLift === 1 || inTurn || springFollow || railFollow) camera.position.y = camTarget.y;
+    // Follow interpolated launch/rail support and recoverable deep drops without a second vertical spring.
+    if (level.cameraAirLift === 1 || inTurn || springFollow || railFollow || cameraFallHold.followingDrop) camera.position.y = camTarget.y;
     else camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 
@@ -4863,8 +4868,11 @@ function updateBaseCamera(dt: number): void {
   // its visible centre is followed. Fit only the presentation pitch when that
   // pose would clip; retain the canonical heading published above. Loop contact
   // and its release already own a complete surface-relative camera frame.
-  if (level.cameraAirLift === 1 && !loopCameraFraming.active && !player.loopPresentationFrame &&
-      (player.state === 'air' || player.alignPose > .05)) {
+  // Deep-drop courses also fit through touchdown while the view eases onto
+  // the new branch. Framing only the air can crop the feet during that turn.
+  const dropCourse = level.fallRecoveryDrop !== undefined;
+  if ((level.cameraAirLift === 1 || cameraFallHold.followingDrop || dropCourse) && !loopCameraFraming.active && !player.loopPresentationFrame &&
+      (player.state === 'air' || player.alignPose > .05 || dropCourse)) {
     cameraHeroFraming.apply(camera, player.cameraPoseBounds, dt, snapped);
     camera.getWorldDirection(aimSmooth).add(camera.position);
   } else cameraHeroFraming.reset();

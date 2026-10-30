@@ -23,6 +23,7 @@ import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
 import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 import { SKYSTREAM_BONUS_LEVEL } from './skystream-bonus';
 import { CARLISLE_HARBOUR_BONUS } from './carlisle-harbour-bonus';
+import { MAYFIELD_BONUS_LEVEL } from './mayfield-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -110,6 +111,9 @@ const BONUS_BY_KEY=new Map(THEMED_BONUS_COURSES.map(course=>[course.progressKey,
 BONUS_BY_PARENT_ID.set('carlisle-coast',CARLISLE_HARBOUR_BONUS);
 BONUS_BY_KEY.set('carlisle-coast',CARLISLE_HARBOUR_BONUS);
 BONUS_LEVEL_ENTRIES.push({id:'bonus-carlisle-coast',name:CARLISLE_HARBOUR_BONUS.name,data:CARLISLE_HARBOUR_BONUS});
+BONUS_BY_PARENT_ID.set('mayfield-mall',MAYFIELD_BONUS_LEVEL);
+BONUS_BY_KEY.set('maynard-course-4',MAYFIELD_BONUS_LEVEL);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-mayfield-mall',name:MAYFIELD_BONUS_LEVEL.name,data:MAYFIELD_BONUS_LEVEL});
 BONUS_BY_PARENT_ID.set('skystream',SKYSTREAM_BONUS_LEVEL);
 BONUS_LEVEL_ENTRIES.push({id:'bonus-skystream',name:SKYSTREAM_BONUS_LEVEL.name,data:SKYSTREAM_BONUS_LEVEL});
 BONUS_BY_PARENT_ID.set('tribal-run',TRIBAL_RUN_BONUS_LEVEL);

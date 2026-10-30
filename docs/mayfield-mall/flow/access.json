@@ -1,0 +1,3242 @@
+[
+  {
+    "name": "Galleria sculpture mezzanine",
+    "reverse": false,
+    "reached": 7,
+    "start": [
+      12.48,
+      99.99962615966797,
+      -202.4
+    ],
+    "maxStep": 0.15874426118292942,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -41.56178288530408,
+          99.99962615966797,
+          -202.40145420668551
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 2,
+        "position": [
+          -49.60010497950214,
+          99.99962615966797,
+          -202.4019109234145
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 3,
+        "position": [
+          -50.02234630992112,
+          99.99962615966797,
+          -209.64628385875503
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 4,
+        "position": [
+          -49.99755999000092,
+          119.69318829985757,
+          -269.63997518917853
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -49.99977714937709,
+          119.81199645996094,
+          -279.63617105895906
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 6,
+        "position": [
+          -30.395726806532462,
+          119.81199645996094,
+          -280.0077393837372
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 7,
+        "position": [
+          -18.404952571278784,
+          116.80404890874301,
+          -280.0019123936751
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      }
+    ],
+    "end": [
+      -18.404952571278784,
+      116.80404890874301,
+      -280.0019123936751
+    ]
+  },
+  {
+    "name": "Galleria sculpture mezzanine",
+    "reverse": true,
+    "reached": 7,
+    "start": [
+      -18,
+      116.6989974975586,
+      -280
+    ],
+    "maxStep": 0.15886995554562078,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -29.566839346837675,
+          119.69962740464028,
+          -279.9994597638417
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 2,
+        "position": [
+          -49.56283594528001,
+          119.81199645996094,
+          -279.99944457046365
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 3,
+        "position": [
+          -50.02179316898896,
+          119.81199645996094,
+          -270.38314522806536
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 4,
+        "position": [
+          -50.002751287975684,
+          100.13902305482287,
+          -210.3849152927028
+        ],
+        "ground": "Galleria / sculpture mezzanine stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -49.998861099393956,
+          99.99962615966797,
+          -202.79486565519892
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 6,
+        "position": [
+          -42.415514557064405,
+          99.99962615966797,
+          -202.3732544307795
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 7,
+        "position": [
+          12.053734414853315,
+          99.99962615966797,
+          -202.40044935303456
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      }
+    ],
+    "end": [
+      12.053734414853315,
+      99.99962615966797,
+      -202.40044935303456
+    ]
+  },
+  {
+    "name": "Galleria upper balcony",
+    "reverse": false,
+    "reached": 5,
+    "start": [
+      0.96,
+      99.99962615966797,
+      -248.4
+    ],
+    "maxStep": 0.15595356933673957,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -2.661409902781381,
+          99.99962615966797,
+          -245.29089354409305
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 2,
+        "position": [
+          -3.0004418847151175,
+          123.20791123391052,
+          -155.41477264063064
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 3,
+        "position": [
+          -9.566745956868704,
+          123.31199645996094,
+          -154.9644844991518
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 4,
+        "position": [
+          -10.005215137369328,
+          123.31199645996094,
+          -94.4223855351218
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 5,
+        "position": [
+          -19.731423813490814,
+          120.67146375522807,
+          -85.24191489804956
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      }
+    ],
+    "end": [
+      -19.731423813490814,
+      120.67146375522807,
+      -85.24191489804956
+    ]
+  },
+  {
+    "name": "Galleria upper balcony",
+    "reverse": true,
+    "reached": 5,
+    "start": [
+      -20,
+      120.60479736328125,
+      -85
+    ],
+    "maxStep": 0.15593815174227954,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -10.316691760682895,
+          123.21812116809348,
+          -93.71699201675159
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 2,
+        "position": [
+          -9.995766482811854,
+          123.31199645996094,
+          -154.59364877480027
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 3,
+        "position": [
+          -3.441608112560966,
+          123.31199645996094,
+          -155.03543859828184
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 4,
+        "position": [
+          -2.9999928251650623,
+          100.12406091110773,
+          -244.58037657147477
+        ],
+        "ground": "Galleria / upper balcony promenade"
+      },
+      {
+        "i": 5,
+        "position": [
+          0.6771735121382538,
+          99.99962615966797,
+          -248.1669710779913
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      }
+    ],
+    "end": [
+      0.6771735121382538,
+      99.99962615966797,
+      -248.1669710779913
+    ]
+  },
+  {
+    "name": "Galleria lower exit to food court",
+    "reverse": false,
+    "reached": 4,
+    "start": [
+      -52.8,
+      73.6690673828125,
+      -349.6
+    ],
+    "maxStep": 0.15915274286977005,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -52.989135865777556,
+          73.6690673828125,
+          -356.6077545522439
+        ],
+        "ground": "Galleria lower lane / food court return"
+      },
+      {
+        "i": 2,
+        "position": [
+          -53.00030974367209,
+          79.50252128135088,
+          -377.572943132362
+        ],
+        "ground": "Galleria lower lane / food court return"
+      },
+      {
+        "i": 3,
+        "position": [
+          -39.44468975101188,
+          79.60588073730469,
+          -378.02004131849213
+        ],
+        "ground": "Galleria lower lane / food court return"
+      },
+      {
+        "i": 4,
+        "position": [
+          -0.4225126223659994,
+          79.60588073730469,
+          -377.99877302281243
+        ],
+        "ground": "Food court entrance landing"
+      }
+    ],
+    "end": [
+      -0.4225126223659994,
+      79.60588073730469,
+      -377.99877302281243
+    ]
+  },
+  {
+    "name": "Galleria lower exit to food court",
+    "reverse": true,
+    "reached": 4,
+    "start": [
+      0,
+      79.60588073730469,
+      -378
+    ],
+    "maxStep": 0.15915255142667029,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -38.61999494102977,
+          79.59388019559832,
+          -378.0028105422832
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 2,
+        "position": [
+          -52.55530539696191,
+          79.60588073730469,
+          -378.00190652716594
+        ],
+        "ground": "Galleria lower lane / food court return"
+      },
+      {
+        "i": 3,
+        "position": [
+          -53.01148501417369,
+          73.80544611934583,
+          -357.4007630389713
+        ],
+        "ground": "Galleria lower lane / food court return"
+      },
+      {
+        "i": 4,
+        "position": [
+          -52.810326871582674,
+          73.6690673828125,
+          -349.9600326723858
+        ],
+        "ground": "Galleria lower lane / food court return"
+      }
+    ],
+    "end": [
+      -52.810326871582674,
+      73.6690673828125,
+      -349.9600326723858
+    ]
+  },
+  {
+    "name": "Galleria high lane to gym roof",
+    "reverse": false,
+    "reached": 4,
+    "start": [
+      0.96,
+      99.99962615966797,
+      -248.4
+    ],
+    "maxStep": 0.15557705193733548,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          0.004528236157725055,
+          99.99962615966797,
+          -299.61951412985024
+        ],
+        "ground": "Mall upper galleria / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 2,
+        "position": [
+          -0.013935371107610388,
+          99.99962615966797,
+          -339.98840096019075
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      },
+      {
+        "i": 3,
+        "position": [
+          0.0003765786936470103,
+          100.01199422743171,
+          -360.6247342836784
+        ],
+        "ground": "Galleria high lane / gym roof skywalk"
+      },
+      {
+        "i": 4,
+        "position": [
+          0.001114024559867817,
+          92.29988746459819,
+          -391.62667046284446
+        ],
+        "ground": "Galleria high lane / gym roof skywalk"
+      }
+    ],
+    "end": [
+      0.001114024559867817,
+      92.29988746459819,
+      -391.62667046284446
+    ]
+  },
+  {
+    "name": "Galleria high lane to gym roof",
+    "reverse": true,
+    "reached": 4,
+    "start": [
+      0,
+      92.20587921142578,
+      -392
+    ],
+    "maxStep": 0.15545400238806054,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -0.002633177850976151,
+          99.90241687203577,
+          -361.4351852569132
+        ],
+        "ground": "Galleria high lane / gym roof skywalk"
+      },
+      {
+        "i": 2,
+        "position": [
+          -0.004091599200774699,
+          100.01163422824598,
+          -340.7874273162521
+        ],
+        "ground": "Galleria high lane / gym roof skywalk"
+      },
+      {
+        "i": 3,
+        "position": [
+          -0.010245156786280855,
+          99.99962615966797,
+          -300.4293810864886
+        ],
+        "ground": "Mall upper galleria / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 4,
+        "position": [
+          0.9516763674085302,
+          99.99962615966797,
+          -248.76844063351183
+        ],
+        "ground": "Mall upper galleria / Entrance / first concourse / surface"
+      }
+    ],
+    "end": [
+      0.9516763674085302,
+      99.99962615966797,
+      -248.76844063351183
+    ]
+  },
+  {
+    "name": "Food court roof and canopy",
+    "reverse": false,
+    "reached": 19,
+    "start": [
+      0,
+      79.60588073730469,
+      -376
+    ],
+    "maxStep": 0.7867045293366633,
+    "airFrames": 23,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          52.60531885467586,
+          79.59388019559832,
+          -365.08030620989257
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 2,
+        "position": [
+          53.02743818424199,
+          79.59388019559832,
+          -372.63089564276254
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          53.00033444945722,
+          92.06835197561117,
+          -414.58011228913415
+        ],
+        "ground": "Food court / roof access ramp"
+      },
+      {
+        "i": 4,
+        "position": [
+          37.427003910165205,
+          92.20587921142578,
+          -415.01505105381744
+        ],
+        "ground": "Food court / roof access ramp"
+      },
+      {
+        "i": 5,
+        "position": [
+          32.385707731479876,
+          92.19388017294855,
+          -415.00067952450627
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 6,
+        "position": [
+          31.987678012766736,
+          92.19388017294855,
+          -429.55978777495835
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 7,
+        "position": [
+          36.71800688927933,
+          92.19388017294855,
+          -433.78144656914964
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 8,
+        "position": [
+          37.01165690235854,
+          92.19388017294855,
+          -438.5629127841375
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 9,
+        "position": [
+          40.88191339252725,
+          92.20587921142578,
+          -452.578753075105
+        ],
+        "ground": "Gym roof / canopy access"
+      },
+      {
+        "i": 10,
+        "position": [
+          21.959422368397014,
+          86.84853029925662,
+          -453.0130657428379
+        ],
+        "ground": "Gym roof / canopy access"
+      },
+      {
+        "i": 11,
+        "position": [
+          21.59218285728967,
+          86.74588012695312,
+          -472.47553913615417
+        ],
+        "ground": "Gym roof / canopy access"
+      },
+      {
+        "i": 12,
+        "position": [
+          17.49303546258244,
+          85.50157590867876,
+          -488.0887021607285
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 13,
+        "position": [
+          11.213569732139257,
+          81.35031776808736,
+          -508.35048820180356
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 14,
+        "position": [
+          4.911218714733797,
+          76.32165871611045,
+          -530.1802471735739
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 15,
+        "position": [
+          39.61538184411198,
+          69.087329619702,
+          -530.5660679174204
+        ],
+        "ground": "Canopy / arcade return"
+      },
+      {
+        "i": 16,
+        "position": [
+          40.01505276613327,
+          68.51772512204505,
+          -539.6425559645342
+        ],
+        "ground": "Canopy / arcade return"
+      },
+      {
+        "i": 17,
+        "position": [
+          22.35884409577533,
+          68.42867279052734,
+          -540.0091677983653
+        ],
+        "ground": "Arcade / fitted entry landing"
+      },
+      {
+        "i": 18,
+        "position": [
+          -16.889298465267114,
+          68.42867279052734,
+          -539.9996596985816
+        ],
+        "ground": "Arcade / fitted entry landing"
+      },
+      {
+        "i": 19,
+        "position": [
+          -17.304811988004552,
+          68.42867279052734,
+          -547.6113809865537
+        ],
+        "ground": "Arcade / fitted entry landing"
+      }
+    ],
+    "end": [
+      -17.304811988004552,
+      68.42867279052734,
+      -547.6113809865537
+    ]
+  },
+  {
+    "name": "Food court roof and canopy",
+    "reverse": true,
+    "reached": 19,
+    "start": [
+      -17.28,
+      68.42867279052734,
+      -548
+    ],
+    "maxStep": 0.8011987745959953,
+    "airFrames": 15,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -17.280262982450004,
+          68.42867279052734,
+          -540.400817542067
+        ],
+        "ground": "Arcade / fitted entry landing"
+      },
+      {
+        "i": 2,
+        "position": [
+          21.562597393386856,
+          68.42867279052734,
+          -539.9939432580802
+        ],
+        "ground": "Arcade / fitted entry landing"
+      },
+      {
+        "i": 3,
+        "position": [
+          39.63523502258846,
+          68.42867279052734,
+          -539.9999013133764
+        ],
+        "ground": "Arcade / fitted entry landing"
+      },
+      {
+        "i": 4,
+        "position": [
+          40.0214619297307,
+          68.99580169407443,
+          -530.9950834617661
+        ],
+        "ground": "Canopy / arcade return"
+      },
+      {
+        "i": 5,
+        "position": [
+          5.238362598103648,
+          76.25069164603609,
+          -530.5536499076499
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 6,
+        "position": [
+          10.98626503044741,
+          81.1906521613786,
+          -509.07942415747715
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 7,
+        "position": [
+          17.2839901109869,
+          85.39591735795888,
+          -488.8163335139095
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 8,
+        "position": [
+          21.50037747169245,
+          86.70259134480948,
+          -473.2182841443265
+        ],
+        "ground": "School Miami / accessible blue canopy / Long blue canopy \u00b7 secret-tape line"
+      },
+      {
+        "i": 9,
+        "position": [
+          21.598792248847346,
+          86.74588012695312,
+          -453.3555376618327
+        ],
+        "ground": "Gym roof / canopy access"
+      },
+      {
+        "i": 10,
+        "position": [
+          40.63938654512223,
+          92.11163536393326,
+          -452.9932963062488
+        ],
+        "ground": "Gym roof / canopy access"
+      },
+      {
+        "i": 11,
+        "position": [
+          37.13622199290718,
+          92.20587921142578,
+          -439.42090104137924
+        ],
+        "ground": "Gym roof / canopy access"
+      },
+      {
+        "i": 12,
+        "position": [
+          37.01031486208892,
+          92.19388017294855,
+          -434.37547951098526
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 13,
+        "position": [
+          32.289489166545046,
+          92.19388017294855,
+          -430.22168406586525
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 14,
+        "position": [
+          31.998371457116896,
+          92.19388017294855,
+          -415.40960641164713
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 15,
+        "position": [
+          36.5911126538322,
+          92.19388017294855,
+          -414.951613459433
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 16,
+        "position": [
+          52.59831799107525,
+          92.20587921142578,
+          -414.99731402114344
+        ],
+        "ground": "Food court / roof access ramp"
+      },
+      {
+        "i": 17,
+        "position": [
+          53.00470753003098,
+          79.71323910332696,
+          -373.3876830353627
+        ],
+        "ground": "Food court / roof access ramp"
+      },
+      {
+        "i": 18,
+        "position": [
+          53.00012055984719,
+          79.59388019559832,
+          -365.44494400690195
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 19,
+        "position": [
+          0.35056248623870334,
+          79.60588073730469,
+          -375.92235651070524
+        ],
+        "ground": "Food court entrance landing"
+      }
+    ],
+    "end": [
+      0.35056248623870334,
+      79.60588073730469,
+      -375.92235651070524
+    ]
+  },
+  {
+    "name": "Pavilion and glazed passage terrace",
+    "reverse": false,
+    "reached": 8,
+    "start": [
+      0,
+      79.60588073730469,
+      -376
+    ],
+    "maxStep": 0.1578112879553999,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          12.581037436186627,
+          79.60588073730469,
+          -380.83701600879346
+        ],
+        "ground": "Food court entrance landing"
+      },
+      {
+        "i": 2,
+        "position": [
+          32.64330502002979,
+          79.59388019559832,
+          -382.96127749709984
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          33.189589455115545,
+          79.59388019559832,
+          -381.38175025406764
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          33.00578385849211,
+          86.30912588162636,
+          -359.4398432557414
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 5,
+        "position": [
+          32.99929188944148,
+          86.44587707519531,
+          -350.3609382783078
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 6,
+        "position": [
+          32.998772281144106,
+          86.44587707519531,
+          -346.37558281836226
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 7,
+        "position": [
+          43.63319067265291,
+          86.44587707519531,
+          -345.9875768351627
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 8,
+        "position": [
+          64.57025753962752,
+          86.44587707519531,
+          -345.9963666140571
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      }
+    ],
+    "end": [
+      64.57025753962752,
+      86.44587707519531,
+      -345.9963666140571
+    ]
+  },
+  {
+    "name": "Pavilion and glazed passage terrace",
+    "reverse": true,
+    "reached": 8,
+    "start": [
+      65,
+      86.44587707519531,
+      -346
+    ],
+    "maxStep": 0.15826958765638668,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          44.362353773763886,
+          86.44587707519531,
+          -346.00024809181997
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 2,
+        "position": [
+          33.444870033690684,
+          86.44587707519531,
+          -346.0030588846752
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 3,
+        "position": [
+          32.92097910769204,
+          86.44587707519531,
+          -349.58065055359066
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 4,
+        "position": [
+          32.99874262287329,
+          86.44587707519531,
+          -358.55873482173934
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 5,
+        "position": [
+          33.000774938272045,
+          79.73846002296162,
+          -380.57357516870366
+        ],
+        "ground": "Food court / pavilion and glazed terrace ramp"
+      },
+      {
+        "i": 6,
+        "position": [
+          33.000787083607186,
+          79.59388019559832,
+          -382.61029692855544
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 7,
+        "position": [
+          13.397343796838898,
+          79.60588073730469,
+          -381.04968888671294
+        ],
+        "ground": "Food court entrance landing"
+      },
+      {
+        "i": 8,
+        "position": [
+          0.388352822203715,
+          79.60588073730469,
+          -376.1448577280553
+        ],
+        "ground": "Food court entrance landing"
+      }
+    ],
+    "end": [
+      0.388352822203715,
+      79.60588073730469,
+      -376.1448577280553
+    ]
+  },
+  {
+    "name": "Arcade west terraces",
+    "reverse": false,
+    "reached": 11,
+    "start": [
+      0,
+      67.06864166259766,
+      -733
+    ],
+    "maxStep": 0.17910539127795283,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          0,
+          67.08064270019531,
+          -742.5684999999991
+        ],
+        "ground": "Arcade / fitted loading landing"
+      },
+      {
+        "i": 2,
+        "position": [
+          -11.61219689231962,
+          67.08064270019531,
+          -743.0174289494241
+        ],
+        "ground": "Arcade / fitted loading landing"
+      },
+      {
+        "i": 3,
+        "position": [
+          -32.57469689231947,
+          75.41161595155586,
+          -743.0024289494245
+        ],
+        "ground": "Arcade / west terrace stair"
+      },
+      {
+        "i": 4,
+        "position": [
+          -33.01327554236288,
+          75.6144027709961,
+          -728.3788081707817
+        ],
+        "ground": "Arcade / west terrace stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -33.002775542362876,
+          75.60240173339844,
+          -724.3873081707823
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 6,
+        "position": [
+          -43.615749135973495,
+          75.60240173339844,
+          -723.9819274663284
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 7,
+        "position": [
+          -44.025147088167884,
+          75.60240173339844,
+          -730.6080330641173
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 8,
+        "position": [
+          -44.00264708816788,
+          75.6144027709961,
+          -750.6345330641144
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 9,
+        "position": [
+          -61.57379696271032,
+          83.56388812372498,
+          -751.0113909585485
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 10,
+        "position": [
+          -62.00706913173283,
+          83.8407974243164,
+          -722.3870382890802
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 11,
+        "position": [
+          -45.37659495379148,
+          83.8407974243164,
+          -721.9908947894803
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      }
+    ],
+    "end": [
+      -45.37659495379148,
+      83.8407974243164,
+      -721.9908947894803
+    ]
+  },
+  {
+    "name": "Arcade west terraces",
+    "reverse": true,
+    "reached": 11,
+    "start": [
+      -45,
+      83.8407974243164,
+      -722
+    ],
+    "maxStep": 0.17652763754904263,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -61.598999999999876,
+          83.8407974243164,
+          -722
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 2,
+        "position": [
+          -62.00707572505631,
+          83.8407974243164,
+          -750.6086284180826
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 3,
+        "position": [
+          -44.43984904758305,
+          75.77539020717927,
+          -751.0102522651127
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 4,
+        "position": [
+          -43.9902191456196,
+          75.6144027709961,
+          -731.4004823734205
+        ],
+        "ground": "Arcade / west upper terrace stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -43.9977191456196,
+          75.60240173339844,
+          -724.4014823734215
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 6,
+        "position": [
+          -33.393527000067756,
+          75.60240173339844,
+          -723.98167071889
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 7,
+        "position": [
+          -32.93959337202381,
+          75.60240173339844,
+          -727.5809478347497
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 8,
+        "position": [
+          -32.99659337202381,
+          75.6144027709961,
+          -742.5524478347475
+        ],
+        "ground": "Arcade / west terrace stair"
+      },
+      {
+        "i": 9,
+        "position": [
+          -12.390515580398098,
+          67.2194996279881,
+          -743.0093756641995
+        ],
+        "ground": "Arcade / west terrace stair"
+      },
+      {
+        "i": 10,
+        "position": [
+          -0.4265155803980804,
+          67.08064270019531,
+          -743.0033756641997
+        ],
+        "ground": "Arcade / fitted loading landing"
+      },
+      {
+        "i": 11,
+        "position": [
+          0.024103025691296,
+          67.06864166259766,
+          -733.4489362826243
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      }
+    ],
+    "end": [
+      0.024103025691296,
+      67.06864166259766,
+      -733.4489362826243
+    ]
+  },
+  {
+    "name": "Arcade east terraces",
+    "reverse": false,
+    "reached": 11,
+    "start": [
+      0,
+      67.06864166259766,
+      -733
+    ],
+    "maxStep": 0.17652763754904263,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          0,
+          67.08064270019531,
+          -742.5684999999991
+        ],
+        "ground": "Arcade / fitted loading landing"
+      },
+      {
+        "i": 2,
+        "position": [
+          11.61219689231962,
+          67.08064270019531,
+          -743.0174289494241
+        ],
+        "ground": "Arcade / fitted loading landing"
+      },
+      {
+        "i": 3,
+        "position": [
+          32.57469689231947,
+          75.46231265641592,
+          -743.0024289494245
+        ],
+        "ground": "Arcade / east terrace stair"
+      },
+      {
+        "i": 4,
+        "position": [
+          33.01327554236288,
+          75.6144027709961,
+          -728.3788081707817
+        ],
+        "ground": "Arcade / east terrace stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          33.002775542362876,
+          75.60240173339844,
+          -724.3873081707823
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 6,
+        "position": [
+          43.615749135973495,
+          75.60240173339844,
+          -723.9819274663284
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 7,
+        "position": [
+          44.025147088167884,
+          75.60240173339844,
+          -730.6080330641173
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 8,
+        "position": [
+          44.00264708816788,
+          75.6144027709961,
+          -750.6345330641144
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 9,
+        "position": [
+          61.57379696271032,
+          83.6842834718082,
+          -751.0113909585485
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 10,
+        "position": [
+          62.00706913173283,
+          83.8407974243164,
+          -722.3870382890802
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 11,
+        "position": [
+          45.37659495379148,
+          83.8407974243164,
+          -721.9908947894803
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      }
+    ],
+    "end": [
+      45.37659495379148,
+      83.8407974243164,
+      -721.9908947894803
+    ]
+  },
+  {
+    "name": "Arcade east terraces",
+    "reverse": true,
+    "reached": 11,
+    "start": [
+      45,
+      83.8407974243164,
+      -722
+    ],
+    "maxStep": 0.1791053912779451,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          61.598999999999876,
+          83.8407974243164,
+          -722
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 2,
+        "position": [
+          62.00707572505631,
+          83.8407974243164,
+          -750.6086284180826
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 3,
+        "position": [
+          44.43984904758305,
+          75.89922669655095,
+          -751.0102522651127
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 4,
+        "position": [
+          43.9902191456196,
+          75.6144027709961,
+          -731.4004823734205
+        ],
+        "ground": "Arcade / east upper terrace stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          43.9977191456196,
+          75.60240173339844,
+          -724.4014823734215
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 6,
+        "position": [
+          33.393527000067756,
+          75.60240173339844,
+          -723.98167071889
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 7,
+        "position": [
+          32.93959337202381,
+          75.60240173339844,
+          -727.5809478347497
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      },
+      {
+        "i": 8,
+        "position": [
+          32.99659337202381,
+          75.6144027709961,
+          -742.5524478347475
+        ],
+        "ground": "Arcade / east terrace stair"
+      },
+      {
+        "i": 9,
+        "position": [
+          12.390515580398098,
+          67.2657852705857,
+          -743.0093756641995
+        ],
+        "ground": "Arcade / east terrace stair"
+      },
+      {
+        "i": 10,
+        "position": [
+          0.4265155803980804,
+          67.08064270019531,
+          -743.0033756641997
+        ],
+        "ground": "Arcade / fitted loading landing"
+      },
+      {
+        "i": 11,
+        "position": [
+          -0.024103025691296,
+          67.06864166259766,
+          -733.4489362826243
+        ],
+        "ground": "Mall crossrail arcade / Courtyard / exit / surface"
+      }
+    ],
+    "end": [
+      -0.024103025691296,
+      67.06864166259766,
+      -733.4489362826243
+    ]
+  },
+  {
+    "name": "Warehouse suspended office and west return",
+    "reverse": false,
+    "reached": 11,
+    "start": [
+      0,
+      58.22638017771692,
+      -812
+    ],
+    "maxStep": 0.16072176371653704,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          15.643500000000014,
+          58.22638017771692,
+          -808.0910000000026
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 2,
+        "position": [
+          16.007959218966135,
+          58.22638017771692,
+          -795.3599479404442
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          34.583962641458655,
+          58.22638017771692,
+          -794.9885050319962
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          35.00877565760752,
+          58.22638017771692,
+          -819.5844699343589
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 5,
+        "position": [
+          28.422830479347436,
+          58.22638017771692,
+          -820.0353525126834
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 6,
+        "position": [
+          27.942833852116507,
+          58.22638017771692,
+          -824.5793379360896
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 7,
+        "position": [
+          27.99683385211651,
+          68.09262785251553,
+          -850.6178379360857
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 8,
+        "position": [
+          27.99683385211651,
+          68.23963165283203,
+          -867.0788379360832
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 9,
+        "position": [
+          -27.596605667169708,
+          68.23963165283203,
+          -867.5024823595874
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 10,
+        "position": [
+          -28.0061436945957,
+          58.31521828338284,
+          -910.6427486916925
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 11,
+        "position": [
+          -0.40315423919118837,
+          58.22638017771692,
+          -915.9331542889179
+        ],
+        "ground": "platform"
+      }
+    ],
+    "end": [
+      -0.40315423919118837,
+      58.22638017771692,
+      -915.9331542889179
+    ]
+  },
+  {
+    "name": "Warehouse suspended office and west return",
+    "reverse": true,
+    "reached": 11,
+    "start": [
+      0,
+      58.22638017771692,
+      -916
+    ],
+    "maxStep": 0.16072176371653704,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -27.651717846972858,
+          58.22638017771692,
+          -911.1032237442959
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 2,
+        "position": [
+          -28.002495856910983,
+          68.15011437543797,
+          -867.8600037598325
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 3,
+        "position": [
+          27.634685182446475,
+          68.23963165283203,
+          -867.4968472451184
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 4,
+        "position": [
+          28.010260129351202,
+          68.23963165283203,
+          -851.4296969599355
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 5,
+        "position": [
+          28.002760129351202,
+          58.38770563672383,
+          -825.3881969599395
+        ],
+        "ground": "Loading / suspended office access"
+      },
+      {
+        "i": 6,
+        "position": [
+          28.002760129351202,
+          58.22638017771692,
+          -820.3631969599402
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 7,
+        "position": [
+          34.59983223006331,
+          58.22638017771692,
+          -819.9740500320329
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 8,
+        "position": [
+          35.009879136531524,
+          58.22638017771692,
+          -795.3768146206407
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 9,
+        "position": [
+          16.389259022806108,
+          58.22638017771692,
+          -794.9897930989738
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 10,
+        "position": [
+          15.985531455502114,
+          58.22638017771692,
+          -807.6006634672818
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 11,
+        "position": [
+          0.4147345190564606,
+          58.22638017771692,
+          -811.9039560737764
+        ],
+        "ground": "platform"
+      }
+    ],
+    "end": [
+      0.4147345190564606,
+      58.22638017771692,
+      -811.9039560737764
+    ]
+  },
+  {
+    "name": "Warehouse office roof",
+    "reverse": false,
+    "reached": 7,
+    "start": [
+      0,
+      58.22638017771692,
+      -916
+    ],
+    "maxStep": 0.15746834738505142,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -34.56899999999984,
+          58.22638017771692,
+          -919.9494999999953
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 2,
+        "position": [
+          -38.5799999999998,
+          58.22638017771692,
+          -919.9929999999945
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -42.58649999999976,
+          58.238380432128906,
+          -919.9974999999944
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 4,
+        "position": [
+          -43.00344626528583,
+          75.5001132240169,
+          -861.3959511988625
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 5,
+        "position": [
+          -14.388677226346323,
+          75.62638092041016,
+          -860.9929759817996
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 6,
+        "position": [
+          -13.97150882120456,
+          75.62638092041016,
+          -867.1170574782716
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 7,
+        "position": [
+          -0.42719430583602724,
+          75.62638092041016,
+          -867.5141375451598
+        ],
+        "ground": "Loading / office roof service stairs"
+      }
+    ],
+    "end": [
+      -0.42719430583602724,
+      75.62638092041016,
+      -867.5141375451598
+    ]
+  },
+  {
+    "name": "Warehouse office roof",
+    "reverse": true,
+    "reached": 7,
+    "start": [
+      0,
+      75.62638092041016,
+      -867.5
+    ],
+    "maxStep": 0.15731760539101472,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -13.599000000000022,
+          75.62638092041016,
+          -867.5
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 2,
+        "position": [
+          -14.034140500097072,
+          75.62638092041016,
+          -861.3988404798966
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 3,
+        "position": [
+          -42.645981435919225,
+          75.62638092041016,
+          -860.9950322563857
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 4,
+        "position": [
+          -43.0020459114293,
+          58.36101796982291,
+          -919.5577070192186
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 5,
+        "position": [
+          -39.401464358016646,
+          58.238380432128906,
+          -920.0750627836701
+        ],
+        "ground": "Loading / office roof service stairs"
+      },
+      {
+        "i": 6,
+        "position": [
+          -35.40246435801669,
+          58.22638017771692,
+          -920.0060627836696
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 7,
+        "position": [
+          -0.40446435801685604,
+          58.22638017771692,
+          -916.0460627836775
+        ],
+        "ground": "platform"
+      }
+    ],
+    "end": [
+      -0.40446435801685604,
+      58.22638017771692,
+      -916.0460627836775
+    ]
+  },
+  {
+    "name": "Kona timber floor",
+    "reverse": false,
+    "reached": 5,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.15048672923813003,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          -74.60816666666663,
+          58.22638019559831,
+          -1004.9965999999905
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -75.0187696913363,
+          58.22638019559831,
+          -996.3545574939061
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -75.00226969133638,
+          58.238380432128906,
+          -977.373557493909
+        ],
+        "ground": "Kona / timber pipe entrance"
+      },
+      {
+        "i": 5,
+        "position": [
+          -75.00226969133638,
+          58.226497650146484,
+          -965.4155574939107
+        ],
+        "ground": "Kona / complete timber vert and roll-in / Over the roll-in / timber vert"
+      }
+    ],
+    "end": [
+      -75.00226969133638,
+      58.226497650146484,
+      -965.4155574939107
+    ]
+  },
+  {
+    "name": "Kona timber floor",
+    "reverse": true,
+    "reached": 5,
+    "start": [
+      -75,
+      58.226497650146484,
+      -965
+    ],
+    "maxStep": 0.1504792533101835,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -75,
+          58.226497650146484,
+          -976.6294999999988
+        ],
+        "ground": "Kona / complete timber vert and roll-in / Over the roll-in / timber vert"
+      },
+      {
+        "i": 2,
+        "position": [
+          -75,
+          58.238380432128906,
+          -995.617999999996
+        ],
+        "ground": "Kona / timber pipe entrance"
+      },
+      {
+        "i": 3,
+        "position": [
+          -75,
+          58.22638019559831,
+          -1004.5789999999946
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -0.37419489983169196,
+          58.238380432128906,
+          -1005.0031097754717
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 5,
+        "position": [
+          0.3569580884745196,
+          58.238380432128906,
+          -1004.2437073986882
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      0.3569580884745196,
+      58.238380432128906,
+      -1004.2437073986882
+    ]
+  },
+  {
+    "name": "Kona west timber deck",
+    "reverse": false,
+    "reached": 5,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.156294424736678,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          -100.57916666666762,
+          58.22638019559831,
+          -1004.9969333333231
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -101.05646060599938,
+          58.22638019559831,
+          -1000.442786260983
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -101.00246060599963,
+          66.51390353254453,
+          -969.4272862609877
+        ],
+        "ground": "Kona / west timber deck stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -91.9178853202343,
+          66.63838195800781,
+          -968.9729397969203
+        ],
+        "ground": "Kona / west timber deck stair"
+      }
+    ],
+    "end": [
+      -91.9178853202343,
+      66.63838195800781,
+      -968.9729397969203
+    ]
+  },
+  {
+    "name": "Kona west timber deck",
+    "reverse": true,
+    "reached": 5,
+    "start": [
+      -91.5,
+      66.63838195800781,
+      -969
+    ],
+    "maxStep": 0.1560526740216946,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -100.59900000000019,
+          66.63838195800781,
+          -969
+        ],
+        "ground": "Kona / west timber deck stair"
+      },
+      {
+        "i": 2,
+        "position": [
+          -101.00654639941904,
+          58.34557839101073,
+          -999.5788652380357
+        ],
+        "ground": "Kona / west timber deck stair"
+      },
+      {
+        "i": 3,
+        "position": [
+          -101.00204639941906,
+          58.22638019559831,
+          -1004.6173652380351
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -0.37859594174491135,
+          58.238380432128906,
+          -1005.003299917674
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 5,
+        "position": [
+          0.3668280295027836,
+          58.238380432128906,
+          -1004.24754893497
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      0.3668280295027836,
+      58.238380432128906,
+      -1004.24754893497
+    ]
+  },
+  {
+    "name": "Kona timber roll-in deck",
+    "reverse": false,
+    "reached": 5,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.17615283071335774,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          -56.60816666666631,
+          58.22638019559831,
+          -1004.9965999999905
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -57.04413335140504,
+          58.22638019559831,
+          -1000.4127237184798
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -57.002133351405035,
+          65.98966870689986,
+          -987.4092237184817
+        ],
+        "ground": "Kona / roll-in deck stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -57.002133351405035,
+          66.2416000366211,
+          -977.4072237184832
+        ],
+        "ground": "Kona / roll-in deck stair"
+      }
+    ],
+    "end": [
+      -57.002133351405035,
+      66.2416000366211,
+      -977.4072237184832
+    ]
+  },
+  {
+    "name": "Kona timber roll-in deck",
+    "reverse": true,
+    "reached": 5,
+    "start": [
+      -57,
+      66.2416000366211,
+      -977
+    ],
+    "maxStep": 0.17614644409788371,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -57,
+          66.2416000366211,
+          -986.5684999999991
+        ],
+        "ground": "Kona / roll-in deck stair"
+      },
+      {
+        "i": 2,
+        "position": [
+          -57,
+          58.49725380472215,
+          -999.5794999999971
+        ],
+        "ground": "Kona / roll-in deck stair"
+      },
+      {
+        "i": 3,
+        "position": [
+          -57,
+          58.22638019559831,
+          -1004.6179999999964
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -0.4424833186285489,
+          58.238380432128906,
+          -1005.0027402408354
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 5,
+        "position": [
+          0.43075749611311365,
+          58.238380432128906,
+          -1003.9947081256494
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      0.43075749611311365,
+      58.238380432128906,
+      -1003.9947081256494
+    ]
+  },
+  {
+    "name": "Kona lower garden recovery",
+    "reverse": false,
+    "reached": 7,
+    "start": [
+      -101,
+      57.626380546083304,
+      -1090
+    ],
+    "maxStep": 0.15171682178501053,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -100.99829511309679,
+          57.626380546083304,
+          -1038.4462872119532
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 2,
+        "position": [
+          -100.99925835995431,
+          58.19036786181303,
+          -1033.400105770154
+        ],
+        "ground": "Kona / garden return bank"
+      },
+      {
+        "i": 3,
+        "position": [
+          -100.99728928418253,
+          58.238380432128906,
+          -1028.3745418356618
+        ],
+        "ground": "Kona / garden return bank"
+      },
+      {
+        "i": 4,
+        "position": [
+          -100.9984659836698,
+          58.22638019559831,
+          -1005.3647344351735
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 5,
+        "position": [
+          -42.35673063365622,
+          58.22638019559831,
+          -1004.9970154828621
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 6,
+        "position": [
+          -0.4047306336564417,
+          58.238380432128906,
+          -1004.9970154828621
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 7,
+        "position": [
+          0.4094526173312065,
+          58.238380432128906,
+          -1004.1786320885855
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      0.4094526173312065,
+      58.238380432128906,
+      -1004.1786320885855
+    ]
+  },
+  {
+    "name": "Kona lower garden recovery",
+    "reverse": true,
+    "reached": 7,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.15193433986104998,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          -41.60816666666645,
+          58.22638019559831,
+          -1004.9935999999908
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -100.63466666666761,
+          58.22638019559831,
+          -1004.9965999999907
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -101.00495765941754,
+          58.22638019559831,
+          -1027.6314306409406
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 5,
+        "position": [
+          -101.00114157644143,
+          58.238380432128906,
+          -1032.5581346808667
+        ],
+        "ground": "Kona / garden return bank"
+      },
+      {
+        "i": 6,
+        "position": [
+          -101.00208185238742,
+          57.68650264571153,
+          -1037.5989932493228
+        ],
+        "ground": "Kona / garden return bank"
+      },
+      {
+        "i": 7,
+        "position": [
+          -100.999702546899,
+          57.626380546083304,
+          -1089.5861974500592
+        ],
+        "ground": "platform"
+      }
+    ],
+    "end": [
+      -100.999702546899,
+      57.626380546083304,
+      -1089.5861974500592
+    ]
+  },
+  {
+    "name": "Grand atrium upper gallery",
+    "reverse": false,
+    "reached": 8,
+    "start": [
+      -2.4,
+      67.44948718573501,
+      -1260
+    ],
+    "maxStep": 0.16654337306012798,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -30.65271963758793,
+          66.76376719879829,
+          -1247.5763366063002
+        ],
+        "ground": "Atrium / fitted entry landing"
+      },
+      {
+        "i": 2,
+        "position": [
+          -39.84284387946332,
+          66.76975153799967,
+          -1245.0531148551913
+        ],
+        "ground": "Atrium / fitted entry landing"
+      },
+      {
+        "i": 3,
+        "position": [
+          -99.47571726869661,
+          94.01965148550676,
+          -1229.0689839158522
+        ],
+        "ground": "Grand atrium / upper gallery stair"
+      },
+      {
+        "i": 4,
+        "position": [
+          -105.1826280271638,
+          94.18810272216797,
+          -1248.7987474321064
+        ],
+        "ground": "Grand atrium / upper gallery stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -109.5925469159656,
+          93.53871567881815,
+          -1265.2851206745772
+        ],
+        "ground": "Grand atrium / upper gallery stair"
+      },
+      {
+        "i": 6,
+        "position": [
+          -107.91751132567809,
+          93.51499938964844,
+          -1295.303679057366
+        ],
+        "ground": "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 7,
+        "position": [
+          -85.54624922140543,
+          93.51499938964844,
+          -1321.0926714391444
+        ],
+        "ground": "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 8,
+        "position": [
+          -58.17572119257885,
+          93.51499938964844,
+          -1328.65801124801
+        ],
+        "ground": "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface"
+      }
+    ],
+    "end": [
+      -58.17572119257885,
+      93.51499938964844,
+      -1328.65801124801
+    ]
+  },
+  {
+    "name": "Grand atrium upper gallery",
+    "reverse": true,
+    "reached": 8,
+    "start": [
+      -57.75662693032533,
+      93.51499938964844,
+      -1328.7657880864226
+    ],
+    "maxStep": 0.16654323241686836,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -84.91719159697476,
+          93.51499938964844,
+          -1321.4922381443844
+        ],
+        "ground": "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 2,
+        "position": [
+          -107.6559554349552,
+          93.51499938964844,
+          -1295.9351133908294
+        ],
+        "ground": "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 3,
+        "position": [
+          -109.6773499457166,
+          93.51500701904297,
+          -1266.0405171312339
+        ],
+        "ground": "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface"
+      },
+      {
+        "i": 4,
+        "position": [
+          -105.3679643410724,
+          94.17295922086201,
+          -1249.5326724727613
+        ],
+        "ground": "Grand atrium / upper gallery stair"
+      },
+      {
+        "i": 5,
+        "position": [
+          -99.95721340838261,
+          94.18810272216797,
+          -1229.3281083058553
+        ],
+        "ground": "Grand atrium / upper gallery stair"
+      },
+      {
+        "i": 6,
+        "position": [
+          -40.5834152083686,
+          66.95988825815436,
+          -1244.8496281367127
+        ],
+        "ground": "Grand atrium / upper gallery stair"
+      },
+      {
+        "i": 7,
+        "position": [
+          -31.471802488255502,
+          66.77013170211244,
+          -1247.2923072094939
+        ],
+        "ground": "Atrium / fitted entry landing"
+      },
+      {
+        "i": 8,
+        "position": [
+          -2.7843060809716444,
+          67.45423924663784,
+          -1259.8317304082252
+        ],
+        "ground": "Atrium / fitted entry landing"
+      }
+    ],
+    "end": [
+      -2.7843060809716444,
+      67.45423924663784,
+      -1259.8317304082252
+    ]
+  },
+  {
+    "name": "Kona spinal deck -35",
+    "reverse": false,
+    "reached": 7,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.17740882209253414,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          -34.57916666666652,
+          58.22638019559831,
+          -1004.9935999999961
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -35.04454275407897,
+          58.22638019559831,
+          -999.4212928601258
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -35.002542754078966,
+          61.74405188745365,
+          -993.4482928601267
+        ],
+        "ground": "Kona / spinal deck access -35"
+      },
+      {
+        "i": 5,
+        "position": [
+          -35.002542754078966,
+          62.027130126953125,
+          -979.3992928601288
+        ],
+        "ground": "Kona / spinal deck access -35"
+      },
+      {
+        "i": 6,
+        "position": [
+          -35.002542754078966,
+          61.1712277469962,
+          -976.4322928601292
+        ],
+        "ground": "Kona / spinal deck access -35"
+      },
+      {
+        "i": 7,
+        "position": [
+          -35.002542754078966,
+          61.01512908935547,
+          -970.3602928601301
+        ],
+        "ground": "Kona / complete spinal grooves / Spinal grooves"
+      }
+    ],
+    "end": [
+      -35.002542754078966,
+      61.01512908935547,
+      -970.3602928601301
+    ]
+  },
+  {
+    "name": "Kona spinal deck -35",
+    "reverse": true,
+    "reached": 7,
+    "start": [
+      -35,
+      61.01512908935547,
+      -970
+    ],
+    "maxStep": 0.17740248069364878,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -35,
+          61.01512908935547,
+          -975.6294999999997
+        ],
+        "ground": "Kona / complete spinal grooves / Spinal grooves"
+      },
+      {
+        "i": 2,
+        "position": [
+          -35,
+          61.889130126952864,
+          -978.5859999999992
+        ],
+        "ground": "Kona / spinal deck access -35"
+      },
+      {
+        "i": 3,
+        "position": [
+          -35,
+          62.027130126953125,
+          -992.6214999999971
+        ],
+        "ground": "Kona / spinal deck access -35"
+      },
+      {
+        "i": 4,
+        "position": [
+          -35,
+          58.50296145248649,
+          -998.5809999999963
+        ],
+        "ground": "Kona / spinal deck access -35"
+      },
+      {
+        "i": 5,
+        "position": [
+          -35,
+          58.22638019559831,
+          -1004.5524999999953
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 6,
+        "position": [
+          -0.42054570435900046,
+          58.238380432128906,
+          -1005.0061364094626
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 7,
+        "position": [
+          0.42494983512267387,
+          58.238380432128906,
+          -1004.1061583196237
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      0.42494983512267387,
+      58.238380432128906,
+      -1004.1061583196237
+    ]
+  },
+  {
+    "name": "Kona spinal deck -10",
+    "reverse": false,
+    "reached": 7,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.17740882209253414,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          -9.640166666666678,
+          58.22638019559831,
+          -1004.9835999999997
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          -10.032022105895587,
+          58.22638019559831,
+          -999.3706451352592
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          -10.002022105895586,
+          61.76561475114817,
+          -993.4141451352601
+        ],
+        "ground": "Kona / spinal deck access -10"
+      },
+      {
+        "i": 5,
+        "position": [
+          -10.002022105895586,
+          62.027130126953125,
+          -979.3786451352622
+        ],
+        "ground": "Kona / spinal deck access -10"
+      },
+      {
+        "i": 6,
+        "position": [
+          -10.002022105895586,
+          61.16684517204067,
+          -976.4191451352626
+        ],
+        "ground": "Kona / spinal deck access -10"
+      },
+      {
+        "i": 7,
+        "position": [
+          -10.002022105895586,
+          61.01512908935547,
+          -970.4476451352635
+        ],
+        "ground": "Kona / complete spinal grooves / Spinal grooves"
+      }
+    ],
+    "end": [
+      -10.002022105895586,
+      61.01512908935547,
+      -970.4476451352635
+    ]
+  },
+  {
+    "name": "Kona spinal deck -10",
+    "reverse": true,
+    "reached": 7,
+    "start": [
+      -10,
+      61.01512908935547,
+      -970
+    ],
+    "maxStep": 0.17740248069364878,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -10,
+          61.01512908935547,
+          -975.6294999999997
+        ],
+        "ground": "Kona / complete spinal grooves / Spinal grooves"
+      },
+      {
+        "i": 2,
+        "position": [
+          -10,
+          61.889130126952864,
+          -978.5859999999992
+        ],
+        "ground": "Kona / spinal deck access -10"
+      },
+      {
+        "i": 3,
+        "position": [
+          -10,
+          62.027130126953125,
+          -992.6214999999971
+        ],
+        "ground": "Kona / spinal deck access -10"
+      },
+      {
+        "i": 4,
+        "position": [
+          -10,
+          58.50296145248649,
+          -998.5809999999963
+        ],
+        "ground": "Kona / spinal deck access -10"
+      },
+      {
+        "i": 5,
+        "position": [
+          -10,
+          58.22638019559831,
+          -1004.5524999999953
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 6,
+        "position": [
+          -0.36551094666589534,
+          58.238380432128906,
+          -1005.0244834923499
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 7,
+        "position": [
+          0.33611450793711023,
+          58.238380432128906,
+          -1004.2903562646476
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      0.33611450793711023,
+      58.238380432128906,
+      -1004.2903562646476
+    ]
+  },
+  {
+    "name": "Kona spinal deck 11",
+    "reverse": false,
+    "reached": 7,
+    "start": [
+      0,
+      58.238380432128906,
+      -1004
+    ],
+    "maxStep": 0.7387731732121547,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          -7.988811458407216e-17,
+          58.238380432128906,
+          -1004.5739333333331
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 2,
+        "position": [
+          10.579166666666682,
+          58.22638019559831,
+          -1004.9850999999986
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 3,
+        "position": [
+          10.869781857837447,
+          58.22638019559831,
+          -999.4214914117138
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 4,
+        "position": [
+          10.989781857837452,
+          61.74392651040896,
+          -993.4484914117146
+        ],
+        "ground": "Kona / spinal deck access 11"
+      },
+      {
+        "i": 5,
+        "position": [
+          10.997281857837452,
+          62.027130126953125,
+          -979.3994914117167
+        ],
+        "ground": "Kona / spinal deck access 11"
+      },
+      {
+        "i": 6,
+        "position": [
+          10.997281857837452,
+          61.17129393085884,
+          -976.4324914117171
+        ],
+        "ground": "Kona / spinal deck access 11"
+      },
+      {
+        "i": 7,
+        "position": [
+          10.997281857837452,
+          61.01512908935547,
+          -970.360491411718
+        ],
+        "ground": "Kona / complete spinal grooves / Spinal grooves"
+      }
+    ],
+    "end": [
+      10.997281857837452,
+      61.01512908935547,
+      -970.360491411718
+    ]
+  },
+  {
+    "name": "Kona spinal deck 11",
+    "reverse": true,
+    "reached": 7,
+    "start": [
+      11,
+      61.01512908935547,
+      -970
+    ],
+    "maxStep": 0.250648148322316,
+    "airFrames": 0,
+    "deathsBefore": 0,
+    "error": null,
+    "waypoints": [
+      {
+        "i": 1,
+        "position": [
+          11,
+          61.01512908935547,
+          -975.6294999999997
+        ],
+        "ground": "Kona / complete spinal grooves / Spinal grooves"
+      },
+      {
+        "i": 2,
+        "position": [
+          11,
+          61.889130126952864,
+          -978.5859999999992
+        ],
+        "ground": "Kona / spinal deck access 11"
+      },
+      {
+        "i": 3,
+        "position": [
+          11,
+          62.027130126953125,
+          -992.6214999999971
+        ],
+        "ground": "Kona / spinal deck access 11"
+      },
+      {
+        "i": 4,
+        "position": [
+          11,
+          58.50296145248649,
+          -998.5809999999963
+        ],
+        "ground": "Kona / spinal deck access 11"
+      },
+      {
+        "i": 5,
+        "position": [
+          10.712190403480326,
+          58.22638019559831,
+          -1004.7801137904335
+        ],
+        "ground": "platform"
+      },
+      {
+        "i": 6,
+        "position": [
+          0.38801749316189976,
+          58.238380432128906,
+          -1005.0233812987708
+        ],
+        "ground": "Kona court / snake approach"
+      },
+      {
+        "i": 7,
+        "position": [
+          -0.3686071874733794,
+          58.238380432128906,
+          -1004.216910104327
+        ],
+        "ground": "Kona court / snake approach"
+      }
+    ],
+    "end": [
+      -0.3686071874733794,
+      58.238380432128906,
+      -1004.216910104327
+    ]
+  }
+]

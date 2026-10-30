@@ -1,0 +1,47 @@
+{
+  "quarters": [
+    {
+      "name": "Upper parking quarter",
+      "vert": 128,
+      "air": 39,
+      "returned": true,
+      "maxStep": 0.5565515449512186,
+      "peak": 146.40589829577556,
+      "bail": false,
+      "height": 10.155857036009934
+    },
+    {
+      "name": "Lower parking quarter",
+      "vert": 128,
+      "air": 55,
+      "returned": true,
+      "maxStep": 0.5653845517945004,
+      "peak": 129.81478223772748,
+      "bail": false,
+      "height": 11.73516089983687
+    }
+  ],
+  "walls": [
+    {
+      "side": -1,
+      "escape": -0.5039990366601543,
+      "position": [
+        -34.964833923339846,
+        138.63857795018734,
+        30.404582560328173
+      ],
+      "state": "ride"
+    },
+    {
+      "side": 1,
+      "escape": -0.5039997408166501,
+      "position": [
+        -7.83752518081665,
+        138.6622946451061,
+        30.400181275554893
+      ],
+      "state": "ride"
+    }
+  ],
+  "tuningUnchanged": true
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/levels/skystream.ts",
+    "sha256": "4daad32a87255fd2f05cbab4c9490db651ef00773bdb7b8171ef68d298b5b666"
+  },
+  {
+    "path": "src/levels/skystream-bonus.ts",
+    "sha256": "384d6d6f69ddfabaf6a57390ac5592c96d342f8c6915bd172ffa248d6d38d525"
+  },
+  {
+    "path": "src/tuning.ts",
+    "sha256": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6"
+  },
+  {
+    "path": "src/cloudPathPass.ts",
+    "sha256": "d3df08aa05c15f5acd64b7e0ecefbe6199dd0009432b364a1ba4c15a49bec74f"
+  },
+  {
+    "path": "src/cloudRoadVolume.ts",
+    "sha256": "3850165d242f1ae038b5bf8f39375d82a1d1c0f1d088207cec62fe3afaf8b1f1"
+  },
+  {
+    "path": "public/sky-bridge/cloud-sea.webp",
+    "sha256": "a14effb01ea7c98e1a533adf645964379e72493fc7727780768e528b54817a9e"
+  }
+]

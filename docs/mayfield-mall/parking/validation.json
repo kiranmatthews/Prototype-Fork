@@ -1,0 +1,24 @@
+{
+  "baseCommit": "3fa158aa6d55dc30dc8b7b8dadd71db3eef968fb",
+  "checkedAt": "2026-10-29T07:26:00Z",
+  "checkLevels": "passed",
+  "typecheckAndBuild": "passed",
+  "releaseBytes": 997264351,
+  "releaseBudget": 1000000000,
+  "buildStamp": "Codex/sol fork \u00b7 build 10-29 07:23 UTC",
+  "footSeconds": 244.18333333333334,
+  "skateSeconds": 140.68333333333334,
+  "browserChecks": [
+    "lite skating opening + K/L + intentional pit recovery",
+    "MAX/native 1920x1080 walking opening + K/L + intentional pit recovery"
+  ],
+  "browserErrors": [],
+  "sha256": {
+    "src/levels/mayfield-mall.ts": "759bd48810afa23c8261d989e94db3cb53d2d52a8879565fd031ab383444634f",
+    "src/player.ts": "cab9a526577646499c5c90f38317396c98a151579ef7cbd40180a24e4996aa2b",
+    "tools/mayfield-pilot.mjs": "723c9e728ba3fb41bd383d3d7d359fea3936da775bfd173077a3dfb143ad3651",
+    "tools/mayfield-browser.mjs": "43c6b0efd5cd67b219433dc3432ccde665c7137374c27dda18baf286b1fc6c71",
+    "tools/test-mayfield-parking.mjs": "cbcdc67fbe33d3f5fe4fb5abaf9de0c8edb69ad2d6b947bb7ffec41affe427d8",
+    "public/level-previews/mayfield-mall.jpg": "96078460d3b974c6e6da2f5bb73b9ed74b59171a9e169712de057875530e9305"
+  }
+}

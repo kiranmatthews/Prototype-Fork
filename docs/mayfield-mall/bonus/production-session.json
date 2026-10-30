@@ -1,0 +1,632 @@
+{
+  "base": "http://127.0.0.1:5278/",
+  "errors": [],
+  "liteSpawn": {
+    "id": "bonus-mayfield-mall",
+    "name": "Bonus: After Hours",
+    "grounded": true,
+    "position": [
+      -6,
+      0.12,
+      0
+    ],
+    "state": "ride",
+    "lives": 4,
+    "fruit": 0,
+    "deaths": 0,
+    "bonusCrates": 0,
+    "completed": false,
+    "sameParent": false,
+    "platform": null,
+    "resolution": 720,
+    "canvas": [
+      800,
+      500
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  },
+  "liteRecovery": {
+    "id": "bonus-mayfield-mall",
+    "name": "Bonus: After Hours",
+    "grounded": true,
+    "position": [
+      -6,
+      0,
+      0
+    ],
+    "state": "ride",
+    "lives": 3,
+    "fruit": 0,
+    "deaths": 0,
+    "bonusCrates": 0,
+    "completed": false,
+    "sameParent": false,
+    "platform": null,
+    "resolution": 720,
+    "canvas": [
+      800,
+      500
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  },
+  "parent": {
+    "id": "mayfield-mall",
+    "name": "Mayfield Mall",
+    "grounded": true,
+    "position": [
+      -17.28,
+      67.06867980957031,
+      -605
+    ],
+    "state": "ride",
+    "lives": 4,
+    "fruit": 0,
+    "deaths": 0,
+    "bonusCrates": 0,
+    "completed": false,
+    "sameParent": true,
+    "platform": {
+      "x": -24.840000000000003,
+      "y": 67.06867802331895,
+      "z": -619.25,
+      "laneFraction": 0.5,
+      "topY": 68.11867802331895,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  },
+  "entrance": {
+    "frame": 208,
+    "stage": "Land on bonus stone",
+    "done": true,
+    "error": null,
+    "actions": [],
+    "evidence": [],
+    "sourceMatches": true,
+    "result": {
+      "position": [
+        -23.898131127021593,
+        68.11867802197784,
+        -618.5514506445743
+      ],
+      "ground": "bonus platform deck",
+      "deaths": 0
+    },
+    "end": {
+      "state": "ride",
+      "position": [
+        -23.898131127021593,
+        68.11867802197784,
+        -618.5514506445743
+      ],
+      "crates": 0,
+      "deaths": 0,
+      "fruit": 0,
+      "lives": 4
+    }
+  },
+  "failedReturn": {
+    "id": "mayfield-mall",
+    "name": "Mayfield Mall",
+    "grounded": true,
+    "position": [
+      -17.28,
+      67.06867980957031,
+      -623.05
+    ],
+    "state": "ride",
+    "lives": 4,
+    "fruit": 0,
+    "deaths": 0,
+    "bonusCrates": 0,
+    "completed": false,
+    "sameParent": true,
+    "platform": {
+      "x": -24.840000000000003,
+      "y": 67.06867802331895,
+      "z": -619.25,
+      "laneFraction": 0.5,
+      "topY": 68.11867802331895,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  },
+  "retryEntrance": {
+    "frame": 166,
+    "stage": "Land on bonus stone",
+    "done": true,
+    "error": null,
+    "actions": [],
+    "evidence": [],
+    "sourceMatches": true,
+    "result": {
+      "position": [
+        -23.896554395371165,
+        68.11867802197784,
+        -618.5473641730413
+      ],
+      "ground": "bonus platform deck",
+      "deaths": 0
+    },
+    "end": {
+      "state": "ride",
+      "position": [
+        -23.896554395371165,
+        68.11867802197784,
+        -618.5473641730413
+      ],
+      "crates": 0,
+      "deaths": 0,
+      "fruit": 0,
+      "lives": 4
+    }
+  },
+  "bonus": {
+    "id": "bonus:mayfield-mall",
+    "name": "Bonus: After Hours",
+    "grounded": true,
+    "position": [
+      -6,
+      0,
+      0
+    ],
+    "state": "ride",
+    "lives": 0,
+    "fruit": 0,
+    "deaths": 0,
+    "bonusCrates": 0,
+    "completed": false,
+    "sameParent": false,
+    "platform": null,
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  },
+  "journey": {
+    "frame": 2610,
+    "stage": "cross real bonus gate to bank parent rewards",
+    "done": true,
+    "error": null,
+    "actions": [
+      {
+        "name": "bonus-mayfield-mall room 1 upper observation",
+        "firstFrame": 20,
+        "lastFrame": 134
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent takeoff",
+        "firstFrame": 152,
+        "lastFrame": 246
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent arrow contact",
+        "firstFrame": 291,
+        "lastFrame": 328
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent apex outside the shelf",
+        "firstFrame": 331,
+        "lastFrame": 364
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent rise above the shelf",
+        "firstFrame": 366,
+        "lastFrame": 372
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent",
+        "firstFrame": 372,
+        "lastFrame": 393
+      },
+      {
+        "name": "approach bonus-mayfield-mall room 1 upper high target before support",
+        "firstFrame": 393,
+        "lastFrame": 473
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper high target before support",
+        "firstFrame": 493,
+        "lastFrame": 493
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper return-gallery edge",
+        "firstFrame": 515,
+        "lastFrame": 600
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper descend before clearing arrow",
+        "firstFrame": 645,
+        "lastFrame": 696
+      },
+      {
+        "name": "approach bonus-mayfield-mall room 1 upper destroy arrow last",
+        "firstFrame": 696,
+        "lastFrame": 749
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper destroy arrow last",
+        "firstFrame": 769,
+        "lastFrame": 769
+      },
+      {
+        "name": "bonus-mayfield-mall room 1 upper supported room exit",
+        "firstFrame": 791,
+        "lastFrame": 1016
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge observation",
+        "firstFrame": 1034,
+        "lastFrame": 1108
+      },
+      {
+        "name": "approach bonus-mayfield-mall room 2 bridge create visible bridge",
+        "firstFrame": 1126,
+        "lastFrame": 1209
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge create visible bridge",
+        "firstFrame": 1229,
+        "lastFrame": 1229
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge pass used switch",
+        "firstFrame": 1278,
+        "lastFrame": 1317
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge cross actual materialized bridge",
+        "firstFrame": 1317,
+        "lastFrame": 1507
+      },
+      {
+        "name": "approach bonus-mayfield-mall room 2 bridge receiver reward",
+        "firstFrame": 1525,
+        "lastFrame": 1598
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge receiver reward",
+        "firstFrame": 1618,
+        "lastFrame": 1618
+      },
+      {
+        "name": "approach bonus-mayfield-mall room 2 bridge receiver mystery",
+        "firstFrame": 1640,
+        "lastFrame": 1723
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge receiver mystery",
+        "firstFrame": 1743,
+        "lastFrame": 1743
+      },
+      {
+        "name": "bonus-mayfield-mall room 2 bridge supported room exit",
+        "firstFrame": 1765,
+        "lastFrame": 1857
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite observation",
+        "firstFrame": 1875,
+        "lastFrame": 1949
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite finite-stack approach",
+        "firstFrame": 1967,
+        "lastFrame": 2068
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite upper support contact",
+        "firstFrame": 2113,
+        "lastFrame": 2146
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite rebound apex",
+        "firstFrame": 2146,
+        "lastFrame": 2171
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite cap before spending support",
+        "firstFrame": 2173,
+        "lastFrame": 2180
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite clear landing",
+        "firstFrame": 2180,
+        "lastFrame": 2203
+      },
+      {
+        "name": "approach bonus-mayfield-mall room 3 finite spent upper finite support",
+        "firstFrame": 2223,
+        "lastFrame": 2276
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite spent upper finite support",
+        "firstFrame": 2296,
+        "lastFrame": 2296
+      },
+      {
+        "name": "bonus-mayfield-mall room 3 finite supported room exit",
+        "firstFrame": 2318,
+        "lastFrame": 2504
+      },
+      {
+        "name": "cross real bonus gate to bank parent rewards",
+        "firstFrame": 2524,
+        "lastFrame": 2610
+      }
+    ],
+    "evidence": [
+      {
+        "action": "bonus-mayfield-mall room 1 upper conserved-arrow ascent",
+        "contact": {
+          "frame": 328,
+          "position": [
+            6.972188888538827,
+            0.98,
+            -0.00009529902085584199
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Supported bonus court"
+        },
+        "landing": [
+          11.262188888423056,
+          7.8,
+          -0.00012681512064234294
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "bonus-mayfield-mall room 1 upper high target before support",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "bonus-mayfield-mall room 1 upper descend before clearing arrow",
+        "launch": [
+          10.583422221774704,
+          7.8,
+          -0.00012182862227441348
+        ],
+        "landing": [
+          5.027422221924641,
+          0,
+          -0.00008101196716630177
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "bonus-mayfield-mall room 1 upper destroy arrow last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "room complete",
+        "pattern": "upper",
+        "index": 0,
+        "position": [
+          26.920244443555998,
+          0,
+          -0.00024184561979186957
+        ]
+      },
+      {
+        "action": "bonus-mayfield-mall room 2 bridge create visible bridge",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "bonus-mayfield-mall room 2 bridge pass used switch",
+        "launch": [
+          31.832566665645682,
+          0,
+          -0.0002779335539035253
+        ],
+        "landing": [
+          35.367999999908896,
+          0,
+          -0.00030715757370555313
+        ],
+        "ground": "Supported bonus court"
+      },
+      {
+        "action": "bonus-mayfield-mall room 2 bridge receiver reward",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "bonus-mayfield-mall room 2 bridge receiver mystery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "room complete",
+        "pattern": "bridge",
+        "index": 1,
+        "position": [
+          60.92887777699658,
+          0,
+          -0.000494938267102987
+        ]
+      },
+      {
+        "action": "bonus-mayfield-mall room 3 finite spent upper finite support",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "room complete",
+        "pattern": "finite",
+        "index": 2,
+        "position": [
+          84.92792222179213,
+          0,
+          -0.0006766008700803294
+        ]
+      },
+      {
+        "action": "all actual authored bonus crates",
+        "totalCrates": 8,
+        "activeStageCrates": 8,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 8,
+        "remaining": 0
+      }
+    ],
+    "sourceMatches": true,
+    "result": {
+      "id": "bonus-mayfield-mall",
+      "state": "finished",
+      "gemEarned": false,
+      "totalCrates": 8,
+      "cratesBroken": 8,
+      "deaths": 0
+    },
+    "end": {
+      "state": "finished",
+      "position": [
+        94.52792222153322,
+        0.7266666691501935,
+        -0.0007471264080641071
+      ],
+      "crates": 8,
+      "deaths": 0,
+      "fruit": 31,
+      "lives": 2
+    }
+  },
+  "returned": {
+    "id": "mayfield-mall",
+    "name": "Mayfield Mall",
+    "grounded": true,
+    "position": [
+      -17.28,
+      67.06867980957031,
+      -623.05
+    ],
+    "state": "ride",
+    "lives": 6,
+    "fruit": 31,
+    "deaths": 0,
+    "bonusCrates": 8,
+    "completed": true,
+    "sameParent": true,
+    "platform": {
+      "x": -24.840000000000003,
+      "y": 67.06867802331895,
+      "z": -619.25,
+      "laneFraction": 0.5,
+      "topY": 68.11867802331895,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  },
+  "normal": {
+    "id": "mayfield-mall",
+    "name": "Mayfield Mall",
+    "grounded": true,
+    "position": [
+      -17.28,
+      67.06867980957031,
+      -623.05
+    ],
+    "state": "ride",
+    "lives": 6,
+    "fruit": 31,
+    "deaths": 0,
+    "bonusCrates": 8,
+    "completed": true,
+    "sameParent": true,
+    "platform": {
+      "x": -24.840000000000003,
+      "y": 67.06867802331895,
+      "z": -619.25,
+      "laneFraction": 0.5,
+      "topY": 68.11867802331895,
+      "radius": 1.6,
+      "modelReady": true,
+      "tilt": 0
+    },
+    "resolution": 720,
+    "canvas": [
+      1152,
+      720
+    ],
+    "stamp": "Codex/sol fork · build 10-29 04:57 UTC"
+  }
+}

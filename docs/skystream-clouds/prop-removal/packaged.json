@@ -1,0 +1,108 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "lite": false,
+  "errors": [],
+  "views": [
+    {
+      "name": "start",
+      "position": [
+        0,
+        150.73666666644314,
+        18
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "name": "middle",
+      "position": [
+        -1,
+        0.2,
+        -854
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "name": "summit",
+      "position": [
+        79,
+        -225,
+        -1640
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    {
+      "name": "finish",
+      "position": [
+        132,
+        -432,
+        -2146
+      ],
+      "grounded": true,
+      "state": "ride"
+    }
+  ],
+  "stamp": "Codex/sol fork · build 10-29 11:26 UTC",
+  "source": {
+    "sky": "clouds",
+    "atmosphere": {
+      "fogEnabled": true,
+      "fogNear": 90,
+      "fogFar": 440,
+      "fogColor": "#eef4f6",
+      "backdrop": "sky",
+      "ambientSky": "#e3f4ff",
+      "ambientGround": "#99a7b2",
+      "ambientIntensity": 0.85,
+      "sunColor": "#fff3dc",
+      "sunIntensity": 2.1,
+      "fillColor": "#c5e5f4",
+      "fillIntensity": 0.42,
+      "shadowStrength": 0.55,
+      "drawDistance": 680,
+      "fallbackTop": "#d4e7f1",
+      "fallbackBottom": "#f4f6f5",
+      "fallbackFog": "#eef4f6",
+      "fallbackRidges": false,
+      "fallbackSunColor": null,
+      "sunDirection": [
+        -0.34,
+        0.38,
+        -0.86
+      ]
+    },
+    "components": 1389,
+    "architecture": [],
+    "loops": 3,
+    "clouds": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 71,
+      "targetBytes": 4147200
+    },
+    "grounded": true
+  },
+  "checkpoint": {
+    "p": [
+      -4.63,
+      71.6424410664104,
+      -295.61
+    ],
+    "grounded": true
+  },
+  "recovery": {
+    "p": [
+      0,
+      150.85333333333332,
+      18
+    ],
+    "deaths": 0
+  },
+  "finished": true
+}

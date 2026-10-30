@@ -1,0 +1,23 @@
+{
+  "baseline": "3fa158aa",
+  "identicalHoldDecisions": 8347,
+  "recoveredWindows": {
+    "beforeForecast": [
+      6,
+      8,
+      8
+    ],
+    "withForecast": [
+      0,
+      0,
+      0
+    ]
+  },
+  "legacyFatalWindowMissedHoldFrames": [
+    0,
+    0,
+    16,
+    40
+  ],
+  "status": "pre-existing fixture assertion; baseline and fixed policy identical"
+}

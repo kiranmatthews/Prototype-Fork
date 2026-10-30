@@ -1,0 +1,72 @@
+{
+  "base": "http://127.0.0.1:5297",
+  "initial": {
+    "checkpointCount": 10,
+    "length": 2228.8213085338193,
+    "stamp": "Codex/sol fork \u00b7 build 10-29 10:29 UTC",
+    "sourceMatches": true,
+    "skatepark": false,
+    "freeSkate": false,
+    "display": {
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "crt": false
+    }
+  },
+  "report": {
+    "done": true,
+    "error": null,
+    "steps": 1797,
+    "seconds": 29.94999999999958,
+    "evidence": {
+      "mode": "foot",
+      "jumps": [],
+      "checkpoints": [
+        0
+      ],
+      "ground": [
+        "Mall parking garage / Entrance / first concourse / surface",
+        "Mall upper galleria / Entrance / first concourse / surface"
+      ],
+      "crystal": false,
+      "peakSpeed": 9.000000000000005,
+      "sourceGround": {
+        "mall": 1797,
+        "school": 0,
+        "warehouse": 0,
+        "kona": 0
+      }
+    },
+    "state": "ride",
+    "progress": 268.0304725272697,
+    "target": 267.88514013358224,
+    "startY": 136.2500457763672,
+    "minY": 99.94538879394531,
+    "maxStep": 0.16058708453135936,
+    "position": [
+      -0.46751582031250116,
+      99.99961853027344,
+      -19.915434976829154
+    ],
+    "deaths": 0,
+    "tuningUnchanged": true
+  },
+  "recovery": {
+    "keyboardWarps": true,
+    "intentionalPitRecovery": true,
+    "recovery": {
+      "grounded": true,
+      "position": [
+        -14.399999999999999,
+        100.0453887939453,
+        33.120000000000005
+      ],
+      "lives": 3
+    },
+    "errors": []
+  },
+  "errors": []
+}

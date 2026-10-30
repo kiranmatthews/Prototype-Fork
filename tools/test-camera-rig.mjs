@@ -87,6 +87,21 @@ try {
   assert.equal(projected.shouldHold(rider, -30), false, 'lower touchdown did not establish new support');
   rider.grounded = false; rider.state = 'air'; rider.groundBelowY = null; rider.renderPosition.y = -.3;
   assert.equal(projected.shouldHold(rider, -30, () => null), true, 'next fall reused the previous upper ledge');
+  // Deliberate deep drops can be steered onto a lower road beyond the short
+  // ballistic horizon. Follow that playable descent, then reacquire at contact.
+  assert.equal(projected.shouldHold(rider, -30, () => null, () => true), false);
+  assert.equal(projected.followingDrop, true);
+  assert.equal(projected.landedFromDrop, false);
+  rider.renderPosition.y = -12;
+  assert.equal(projected.shouldHold(rider, -30, () => null, () => true), false);
+  rider.grounded = true; rider.groundBelowY = -12;
+  assert.equal(projected.shouldHold(rider, -30), false);
+  assert.equal(projected.followingDrop, false);
+  assert.equal(projected.landedFromDrop, true);
+  projected.shouldHold(rider, -30);
+  assert.equal(projected.landedFromDrop, false, 'touchdown reacquisition must happen once');
+  rider.grounded = false; rider.groundBelowY = null; rider.renderPosition.y = -13;
+  assert.equal(projected.shouldHold(rider, -30, () => null, () => false), true, 'unreachable miss must still hold');
   const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 400);
   const aim = new THREE.Vector3();
   const forward = new THREE.Vector3(0.6, 0, -0.8);

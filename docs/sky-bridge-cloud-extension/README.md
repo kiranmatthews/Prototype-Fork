@@ -26,8 +26,10 @@ All new clouds use the existing full-volume cloud-platform implementation and
 fixed 360p cloud compositor, including its soft edge/intersection treatment.
 The main course has 12 cloud volumes and the bonus has six. Two in each level
 have smooth, hidden collision surfaces. The 14 scenery clouds are nonsolid.
-The rest of the scene follows the selected render resolution. No renderer,
-player, global tuning, sky or geometry-detail policy changes are needed.
+The rest of the scene follows the selected render resolution. Cloud rendering,
+player tuning and geometry detail are unchanged. The subsequent
+[background correction](background/README.md) restores Sky Bridge's original
+sky after reusable cloud platforms unintentionally enabled Skystream's tint.
 
 The only shared runtime edit recognizes the exact previous published Sky
 Bridge snapshot so it upgrades to the new source. Modified editor copies

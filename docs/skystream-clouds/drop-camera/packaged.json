@@ -1,0 +1,44 @@
+{
+  "stamp": "Codex/sol fork \u00b7 build 10-29 07:52 UTC",
+  "errors": [],
+  "releaseBytes": 997265231,
+  "replayFrames": 211,
+  "shortcuts": [
+    {
+      "name": "Pearl halo \u00b7 round right-hand descent",
+      "frame": 314,
+      "landing": [
+        25.025037241550486,
+        -49.753627600296866,
+        -1001.4200033761321
+      ]
+    },
+    {
+      "name": "Cloud eye \u00b7 wide left oval",
+      "frame": 336,
+      "landing": [
+        41.44996153664931,
+        -107.36987125669476,
+        -1189.6241862027282
+      ]
+    },
+    {
+      "name": "Seraph coil \u00b7 tall oval quarter-turn exit",
+      "frame": 404,
+      "landing": [
+        -111.87446648592025,
+        -167.72758718621992,
+        -1432.3604691269156
+      ]
+    },
+    {
+      "name": "Last halo \u00b7 oblique return",
+      "frame": 302,
+      "landing": [
+        85.61970369560063,
+        -225,
+        -1635.3256823016563
+      ]
+    }
+  ]
+}

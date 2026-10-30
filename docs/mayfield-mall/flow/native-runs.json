@@ -1,0 +1,226 @@
+{
+  "foot": {
+    "mode": "foot",
+    "state": "finished",
+    "position": [
+      99.19139409677793,
+      15.155773274843023,
+      -1635.9502888226273
+    ],
+    "deaths": 0,
+    "support": [
+      {
+        "nm": "spawn",
+        "y": 136.2500457763672
+      },
+      {
+        "nm": "checkpoint 1",
+        "y": 99.94538879394531
+      },
+      {
+        "nm": "checkpoint 2",
+        "y": 99.99962615966797
+      },
+      {
+        "nm": "checkpoint 3",
+        "y": 99.99962615966797
+      },
+      {
+        "nm": "checkpoint 4",
+        "y": 79.59388017771691
+      },
+      {
+        "nm": "checkpoint 5",
+        "y": 67.06867980957031
+      },
+      {
+        "nm": "checkpoint 6",
+        "y": 58.22638017771692
+      },
+      {
+        "nm": "checkpoint 7",
+        "y": 58.22637939453125
+      },
+      {
+        "nm": "checkpoint 8",
+        "y": 61.70623866344998
+      },
+      {
+        "nm": "checkpoint 9",
+        "y": 66.23951721191406
+      },
+      {
+        "nm": "checkpoint 10",
+        "y": 51.92022692523579
+      }
+    ],
+    "evidence": {
+      "mode": "foot",
+      "jumps": [],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "ground": [
+        "Mall parking garage / Entrance / first concourse / surface",
+        "Mall upper galleria / Entrance / first concourse / surface",
+        "Mall upper galleria / Atrium / crossrail arcade / surface",
+        "Food court entrance landing",
+        "Food court / complete table and pavilion plaza",
+        "Gym supported maple subfloor",
+        "Gym exit / downhill landing",
+        "School Miami / downhill ramp / Handicap slope \u00b7 eased top and bottom",
+        "Courtyard / broad turning landing",
+        "Arcade / fitted entry landing",
+        "Mall crossrail arcade / Atrium / crossrail arcade / surface",
+        "Mall crossrail arcade / Courtyard / exit / surface",
+        "Arcade / fitted loading landing",
+        "Arcade to loading roll-in",
+        "Warehouse / original eased roll-in / Left smooth roll-in",
+        "Concourse \u00b7 continuous supported floor",
+        "Loading to Kona",
+        "Kona / groove entrance landing",
+        "Kona / complete spinal grooves / Spinal grooves",
+        "Kona return court",
+        "Kona court / snake approach",
+        "Kona / raised snake entrance",
+        "Kona / snake head landing",
+        "Kona / original snake run / Snake run",
+        "Snake to grand atrium",
+        "Atrium / fitted entry landing",
+        "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface",
+        "Mall / angled atrium and suspended crossing / Mall detail 25 / surface",
+        "Atrium / fitted exit landing",
+        "Mayfield / complete finish court",
+        "Mayfield Mall exit"
+      ],
+      "crystal": true,
+      "peakSpeed": 9.000000000000005,
+      "sourceGround": {
+        "mall": 8841,
+        "school": 400,
+        "warehouse": 202,
+        "kona": 2286
+      }
+    }
+  },
+  "skate": {
+    "mode": "skate",
+    "state": "finished",
+    "position": [
+      99.06610866258296,
+      15.16577327213598,
+      -1636.1347362609642
+    ],
+    "deaths": 0,
+    "support": [
+      {
+        "nm": "spawn",
+        "y": 136.2500457763672
+      },
+      {
+        "nm": "checkpoint 1",
+        "y": 99.94538879394531
+      },
+      {
+        "nm": "checkpoint 2",
+        "y": 99.99962615966797
+      },
+      {
+        "nm": "checkpoint 3",
+        "y": 99.99962615966797
+      },
+      {
+        "nm": "checkpoint 4",
+        "y": 79.59388017771691
+      },
+      {
+        "nm": "checkpoint 5",
+        "y": 67.06867980957031
+      },
+      {
+        "nm": "checkpoint 6",
+        "y": 58.22638017771692
+      },
+      {
+        "nm": "checkpoint 7",
+        "y": 58.22637939453125
+      },
+      {
+        "nm": "checkpoint 8",
+        "y": 61.70623866344998
+      },
+      {
+        "nm": "checkpoint 9",
+        "y": 66.23951721191406
+      },
+      {
+        "nm": "checkpoint 10",
+        "y": 51.92022692523579
+      }
+    ],
+    "evidence": {
+      "mode": "skate",
+      "jumps": [],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "ground": [
+        "Mall parking garage / Entrance / first concourse / surface",
+        "Mall upper galleria / Entrance / first concourse / surface",
+        "Mall upper galleria / Atrium / crossrail arcade / surface",
+        "Food court entrance landing",
+        "Food court / complete table and pavilion plaza",
+        "Gym supported maple subfloor",
+        "Gym exit / downhill landing",
+        "School Miami / downhill ramp / Handicap slope \u00b7 eased top and bottom",
+        "Courtyard / broad turning landing",
+        "Arcade / fitted entry landing",
+        "Mall crossrail arcade / Atrium / crossrail arcade / surface",
+        "Mall crossrail arcade / Courtyard / exit / surface",
+        "Arcade / fitted loading landing",
+        "Arcade to loading roll-in",
+        "Warehouse / original eased roll-in / Left smooth roll-in",
+        "Concourse \u00b7 continuous supported floor",
+        "Loading to Kona",
+        "Kona / groove entrance landing",
+        "Kona / complete spinal grooves / Spinal grooves",
+        "Kona court / snake approach",
+        "Kona / raised snake entrance",
+        "Kona / snake head landing",
+        "Kona / original snake run / Snake run",
+        "Snake to grand atrium",
+        "Atrium / fitted entry landing",
+        "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface",
+        "Atrium / fitted exit landing",
+        "Mayfield / complete finish court",
+        "Mayfield Mall exit"
+      ],
+      "crystal": true,
+      "peakSpeed": 31.75,
+      "sourceGround": {
+        "mall": 5648,
+        "school": 183,
+        "warehouse": 38,
+        "kona": 1638
+      }
+    }
+  }
+}

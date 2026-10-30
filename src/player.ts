@@ -619,6 +619,7 @@ export class Player {
   // this rider's place on the camera lane — private, so split-screen players
   // don't drag each other's frame around (see Level.laneDirAt)
   readonly laneCursor: LaneCursor = newLaneCursor();
+  private readonly laneSupportPoint = new THREE.Vector3();
   private viewInput = new CameraInputFrame();
   private readonly chiefInput = new ChiefInputFrame();
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
@@ -2007,6 +2008,13 @@ export class Player {
   private fallCameraProbeValid = false;
   private fallCameraProbeSnap = -1;
   private fallCameraLandingY: number | null = null;
+  /** Deep shortcut courses already decide when a fall is unrecoverable in
+   * step(): allow the rescue window, then check live lower-road collision.
+   * Until that decision ends the air, the camera must keep steering readable.
+   * Reuse the result instead of running another, shorter landing forecast. */
+  cameraCanRecoverFall(level: Level): boolean {
+    return level.fallRecoveryDrop !== undefined && this.state === 'air' && !this.grounded;
+  }
 
   /** Presentation-only forecast for a descending gap jump. Sweep a short arc
    * through actual live collision, so thin/lower catches count before the
@@ -6297,6 +6305,13 @@ export class Player {
     }
     if(!level.cameraViews.length) {
       this.viewInput.reset();this.chiefInput.reset();
+      // A real lower-road touchdown must also release the steering frame's
+      // old branch. Keep continuity through air and ordinary banked bends;
+      // eight metres exceeds Skystream's road banking, below its stacked legs.
+      if (this.grounded && level.fallRecoveryDrop !== undefined && this.laneCursor.s >= 0) {
+        const oldRoad = level.cameraLanePointAhead(this.laneCursor, 0, this.laneSupportPoint);
+        if (oldRoad && oldRoad.y - this.pos.y > 8) this.laneCursor.s = -1;
+      }
       return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
     }
     const camera=this.viewInput.needsSeed
@@ -7782,7 +7797,13 @@ export class Player {
     // path for a real drop past its rim.
     const leavingMeshRim = previousGroundHit?.mesh?.userData.solidSides &&
       hit?.mesh !== previousGroundHit.mesh;
-    const downWindow = leavingMeshRim ? .25 : steepHit ? TUNING.wallStick : 1.4;
+    // A down-ray can jump metres down an authored near-vertical lip after
+    // moving only centimetres off its deck. Let the normal airborne/swept
+    // contact path catch the transition instead of snapping down the face.
+    const leavingAuthoredVertDeck = !this.parkControls && previousGroundHit?.vert === true &&
+      previousGroundHit.skateCamera === true && previousRideNormal.y > .9 &&
+      hit?.vert === true && hit.normal.y < .5;
+    const downWindow = leavingMeshRim || leavingAuthoredVertDeck ? .25 : steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
       this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
@@ -7806,8 +7827,13 @@ export class Player {
     // the pipe (reusing the mature glue) instead of freezing on the face or
     // flinging off to your death. This is what the old dedicated launch lacked.
     const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
-    const meshCrest = !this.parkControls && this.freeSkate && this.groundHit?.mesh?.userData.vertRampMesh &&
-      this.groundHit.vert === true && this.rideNormal.y < (this.groundHit.mesh.userData.hangLock?.28:.18) && this.lastTy > 0.3;
+    // Imported quarters opt into the same authored vert camera/contact model.
+    // Their vertical lip must launch like a swept vertramp, rather than remain
+    // glued to the final near-vertical triangle indefinitely.
+    const crestHit = this.groundHit, crestMesh = crestHit?.mesh;
+    const meshCrest = !this.parkControls && this.freeSkate && crestHit?.vert === true && crestMesh &&
+      (crestMesh.userData.vertRampMesh || (crestMesh.userData.authoredVertMesh && crestHit.skateCamera === true)) &&
+      this.rideNormal.y < (crestMesh.userData.hangLock?.28:.18) && this.lastTy > 0.3;
     const parkLipExit = this.parkControls && this.freeSkate && !this.isBailing &&
       previousGroundHit?.vert === true && previousRideNormal.y < 0.2 &&
       this.parkVelocity.y > 0.1 &&

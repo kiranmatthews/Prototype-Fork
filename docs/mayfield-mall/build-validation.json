@@ -1,26 +1,65 @@
 {
-  "baseCommit": "f7bac39359480ef58b9914123481d09edfb9d2f1",
-  "sourceSha256": "04f0f7a19ce05dd5598ca46f21acf9b443854ac224503793f527bb0e8b142c18",
+  "sourceCommit": "e8e1d67e",
+  "validatedCheckout": "abcc0b309c5b1f2c5e4b1022917e850a77839f31",
+  "integratedPublishedBase": "826c46951e9be6880496854876fafe6346f170c3",
+  "sha256": {
+    "src/levels/mayfield-mall.ts": "a993983aa961c512ae455c30a1617fa86bba8cf7e5deeaf2e68b396898b8828c",
+    "src/levels/mayfield-source.ts": "d4cacd51c26ea97be84a4aa3df78d0755c28b5345261cc2b0ccc78a72d9525ce",
+    "src/player.ts": "3bf1da2f3ef00c5ff32dd277dd30d806424e801f5f237daf3ef159e514d46f35",
+    "src/campaign.ts": "6e2a0ce7507e5741555e3c8ff17a2de93ad9a9067ffecd0744817688bcceaa2f",
+    "public/level-previews/mayfield-mall.jpg": "fc0c6600b96a96ffdd3e56ad81483a4fb23461c2e392d0edbabebc81ece95c35"
+  },
   "build": "passed",
-  "releaseSizeBytes": 997207888,
-  "hostingLimitBytes": 1000000000,
-  "previewSha256": "88b127c94d71e4cb0c442e524ff4f99498a3cf3f049ad2196738ac7a14f5874f",
-  "publicSnapshotPackChanged": false,
-  "movementTuningChanged": false,
   "requiredLevelChecks": "passed",
-  "campaignChecks": "passed",
+  "releaseSizeBytes": 997270749,
+  "hostingLimitBytes": 1000000000,
+  "publicSnapshotPackChangedByThisRevision": false,
+  "movementTuningChanged": false,
+  "routeMetres": 1915.6058291293175,
+  "checkpoints": 9,
+  "importedMeshTriangles": 58988,
+  "nativeFootSeconds": 217.01666666666665,
+  "nativeSkateSeconds": 119.88333333333333,
   "browserFullFoot": {
-    "stamp": "Codex/sol fork \u00b7 build 10-29 01:42 UTC",
-    "sourceMatches": true,
-    "skatepark": false,
-    "freeSkate": false,
-    "display": {
-      "buffer": [
-        1152,
-        720
-      ],
-      "resolution": 720,
-      "crt": false
+    "seconds": 216.8500000000647,
+    "deaths": 0,
+    "checkpoints": 9,
+    "crystal": true,
+    "consoleErrors": [],
+    "initial": {
+      "checkpointCount": 9,
+      "length": 1915.6058291293175,
+      "stamp": "Codex/sol fork \u00b7 build 10-29 04:28 UTC",
+      "sourceMatches": true,
+      "skatepark": false,
+      "freeSkate": false,
+      "display": {
+        "buffer": [
+          1152,
+          720
+        ],
+        "resolution": 720,
+        "crt": false
+      }
     }
-  }
+  },
+  "nativeDisplay": {
+    "buffer": [
+      1920,
+      1080
+    ],
+    "resolution": "max",
+    "crt": false
+  },
+  "recovery": {
+    "position": [
+      -17.32046924048266,
+      66.23951721191406,
+      -1226.7967138820036
+    ],
+    "lives": 3,
+    "deaths": 0,
+    "grounded": true
+  },
+  "publicVerification": "Run against the matching deployed commit after publication; recorded in the shared release handoff."
 }

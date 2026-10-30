@@ -1,0 +1,357 @@
+{
+  "stage": "collect earned gem and cross real bonus gate",
+  "evidence": [
+    {
+      "action": "bonus-mayfield-mall room 1 upper conserved-arrow ascent",
+      "contact": {
+        "frame": 328,
+        "position": [
+          6.972188888888893,
+          0.98,
+          0
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "Supported bonus court"
+      },
+      "landing": [
+        11.262188888888899,
+        7.8,
+        0
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "bonus-mayfield-mall room 1 upper high target before support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-mayfield-mall room 1 upper descend before clearing arrow",
+      "launch": [
+        10.583422222222232,
+        7.8,
+        0
+      ],
+      "landing": [
+        5.027422222222221,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "bonus-mayfield-mall room 1 upper destroy arrow last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "upper",
+      "index": 0,
+      "position": [
+        26.92024444444452,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-mayfield-mall room 2 bridge create visible bridge",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "bonus-mayfield-mall room 2 bridge pass used switch",
+      "launch": [
+        31.832566666666818,
+        0,
+        0
+      ],
+      "landing": [
+        35.36799999999998,
+        0,
+        0
+      ],
+      "ground": "Supported bonus court"
+    },
+    {
+      "action": "bonus-mayfield-mall room 2 bridge receiver reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "bonus-mayfield-mall room 2 bridge receiver mystery",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "bridge",
+      "index": 1,
+      "position": [
+        60.92887777777777,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "bonus-mayfield-mall room 3 finite spent upper finite support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "finite",
+      "index": 2,
+      "position": [
+        84.92792222222178,
+        0,
+        0
+      ]
+    },
+    {
+      "action": "all actual authored bonus crates",
+      "totalCrates": 8,
+      "activeStageCrates": 8,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 8,
+      "remaining": 0
+    }
+  ],
+  "actions": [
+    {
+      "name": "bonus-mayfield-mall room 1 upper observation",
+      "firstFrame": 20,
+      "lastFrame": 134
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent takeoff",
+      "firstFrame": 152,
+      "lastFrame": 246
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent arrow contact",
+      "firstFrame": 291,
+      "lastFrame": 328
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent apex outside the shelf",
+      "firstFrame": 331,
+      "lastFrame": 364
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent rise above the shelf",
+      "firstFrame": 366,
+      "lastFrame": 372
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper conserved-arrow ascent",
+      "firstFrame": 372,
+      "lastFrame": 393
+    },
+    {
+      "name": "approach bonus-mayfield-mall room 1 upper high target before support",
+      "firstFrame": 393,
+      "lastFrame": 473
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper high target before support",
+      "firstFrame": 493,
+      "lastFrame": 493
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper return-gallery edge",
+      "firstFrame": 515,
+      "lastFrame": 600
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper descend before clearing arrow",
+      "firstFrame": 645,
+      "lastFrame": 696
+    },
+    {
+      "name": "approach bonus-mayfield-mall room 1 upper destroy arrow last",
+      "firstFrame": 696,
+      "lastFrame": 749
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper destroy arrow last",
+      "firstFrame": 769,
+      "lastFrame": 769
+    },
+    {
+      "name": "bonus-mayfield-mall room 1 upper supported room exit",
+      "firstFrame": 791,
+      "lastFrame": 1016
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge observation",
+      "firstFrame": 1034,
+      "lastFrame": 1108
+    },
+    {
+      "name": "approach bonus-mayfield-mall room 2 bridge create visible bridge",
+      "firstFrame": 1126,
+      "lastFrame": 1209
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge create visible bridge",
+      "firstFrame": 1229,
+      "lastFrame": 1229
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge pass used switch",
+      "firstFrame": 1278,
+      "lastFrame": 1317
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge cross actual materialized bridge",
+      "firstFrame": 1317,
+      "lastFrame": 1507
+    },
+    {
+      "name": "approach bonus-mayfield-mall room 2 bridge receiver reward",
+      "firstFrame": 1525,
+      "lastFrame": 1598
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge receiver reward",
+      "firstFrame": 1618,
+      "lastFrame": 1618
+    },
+    {
+      "name": "approach bonus-mayfield-mall room 2 bridge receiver mystery",
+      "firstFrame": 1640,
+      "lastFrame": 1723
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge receiver mystery",
+      "firstFrame": 1743,
+      "lastFrame": 1743
+    },
+    {
+      "name": "bonus-mayfield-mall room 2 bridge supported room exit",
+      "firstFrame": 1765,
+      "lastFrame": 1857
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite observation",
+      "firstFrame": 1875,
+      "lastFrame": 1949
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite finite-stack approach",
+      "firstFrame": 1967,
+      "lastFrame": 2068
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite upper support contact",
+      "firstFrame": 2113,
+      "lastFrame": 2146
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite rebound apex",
+      "firstFrame": 2146,
+      "lastFrame": 2171
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite cap before spending support",
+      "firstFrame": 2173,
+      "lastFrame": 2181
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite clear landing",
+      "firstFrame": 2181,
+      "lastFrame": 2204
+    },
+    {
+      "name": "approach bonus-mayfield-mall room 3 finite spent upper finite support",
+      "firstFrame": 2224,
+      "lastFrame": 2277
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite spent upper finite support",
+      "firstFrame": 2297,
+      "lastFrame": 2297
+    },
+    {
+      "name": "bonus-mayfield-mall room 3 finite supported room exit",
+      "firstFrame": 2319,
+      "lastFrame": 2505
+    },
+    {
+      "name": "collect earned gem and cross real bonus gate",
+      "firstFrame": 2525,
+      "lastFrame": 2611
+    }
+  ],
+  "result": {
+    "id": "bonus-mayfield-mall",
+    "state": "finished",
+    "gemEarned": true,
+    "totalCrates": 8,
+    "cratesBroken": 8,
+    "deaths": 0
+  },
+  "id": "bonus-mayfield-mall",
+  "state": "finished",
+  "gemEarned": true,
+  "totalCrates": 8,
+  "cratesBroken": 8,
+  "deaths": 0,
+  "frames": 2611,
+  "seconds": 43.516666666666666,
+  "sourceTriangles": 1083
+}

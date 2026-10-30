@@ -1,0 +1,576 @@
+{
+  "checkedAt": "2026-10-29T06:13:08.769Z",
+  "sourceCommit": "8aae8ceabc5708476e226f6b7b878a75d619cf94",
+  "concepts": 40,
+  "screenshots": 40,
+  "checks": [
+    "40 complete cards and all eight area filters",
+    "All 80 PNGs fully decoded in Chrome",
+    "Area filter, full-size viewer, source toggle and keyboard navigation",
+    "Card comparison and desktop/mobile layouts without horizontal overflow",
+    "Standalone file opens offline with local images"
+  ],
+  "browserErrors": [],
+  "files": [
+    {
+      "path": "screenshots/01-arrival-galleria.png",
+      "bytes": 2672921,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "44902240105dd783ad3f99bef2ba1f60e511012b363e7910821b4c1f421b19ea"
+    },
+    {
+      "path": "concepts/01-arrival-galleria.png",
+      "bytes": 2437006,
+      "width": 1672,
+      "height": 941,
+      "sha256": "cfb3b77a6883c32488d5c00bd85d992af8c151c5d681a1ea426b0f9339388b4b"
+    },
+    {
+      "path": "screenshots/02-angular-support-court.png",
+      "bytes": 2838266,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "e16a2e9d707ef544820b126a1891e5b1ccdde34b8263c3164f386319ec0dad04"
+    },
+    {
+      "path": "concepts/02-angular-support-court.png",
+      "bytes": 2461591,
+      "width": 1672,
+      "height": 941,
+      "sha256": "086cb13a1d50390ef57d7cb3417dbfe10542ff7ef78497cb6455fd39d9769c9e"
+    },
+    {
+      "path": "screenshots/03-fountain-court-wide.png",
+      "bytes": 2854348,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "239a74f0b65c2627cffe2fb6472eb90b446cbd0b556764fda1d8ca95c89d70a9"
+    },
+    {
+      "path": "concepts/03-fountain-court-wide.png",
+      "bytes": 2625238,
+      "width": 1672,
+      "height": 941,
+      "sha256": "bbe2f8bc024a127b4a0a8c56a90bd7583829b8a01c8380cb7d0ebd76f5cf4a8e"
+    },
+    {
+      "path": "screenshots/04-geometric-fountain.png",
+      "bytes": 2972920,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "7c671e81b0cdb4e3e1c9caf144ac1ea6754dcbe8c815371b481445af059282fc"
+    },
+    {
+      "path": "concepts/04-geometric-fountain.png",
+      "bytes": 2676500,
+      "width": 1672,
+      "height": 941,
+      "sha256": "39ab9515af3140b2ccf76f6879378f0c30eb5fa1ce7a6d2e54a093141343a3fa"
+    },
+    {
+      "path": "screenshots/05-sculpture-mezzanine.png",
+      "bytes": 2945605,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "7b7e2742340ab58543f9ee4ebb80a56d4b4d9256352ee03bb081aa6e6e4edb49"
+    },
+    {
+      "path": "concepts/05-sculpture-mezzanine.png",
+      "bytes": 2588755,
+      "width": 1672,
+      "height": 941,
+      "sha256": "5d73b5b40a2a455f4d892bc9db031c0d44e528100e4bfbf03140403444be3666"
+    },
+    {
+      "path": "screenshots/06-escalator-approach.png",
+      "bytes": 2590517,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "924cd023d074e80cea7b2060b80ae4161f2fefc1ddc6210fb599ec821f81b96e"
+    },
+    {
+      "path": "concepts/06-escalator-approach.png",
+      "bytes": 2483604,
+      "width": 1672,
+      "height": 941,
+      "sha256": "b5de7e481b72a82d2042e9b3d860ecfcfe6b4a6e5993dcc0290b4ebb129f3bd7"
+    },
+    {
+      "path": "screenshots/07-escalator-red-car.png",
+      "bytes": 2717705,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "30e375dfd3a850ef53c8304ddeedbabfc33dee5cc453ae96f847e193fcc1a213"
+    },
+    {
+      "path": "concepts/07-escalator-red-car.png",
+      "bytes": 2508290,
+      "width": 1672,
+      "height": 941,
+      "sha256": "f7b1c945d3cd50624737539e7c6af8ac92f887d60c6e34e0b347a274bc1b663f"
+    },
+    {
+      "path": "screenshots/08-galleria-last-balcony.png",
+      "bytes": 2179733,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "657d206470a192f90b50243ffe958c031de48db80341ec7d8ee4d79c95452486"
+    },
+    {
+      "path": "concepts/08-galleria-last-balcony.png",
+      "bytes": 2542818,
+      "width": 1672,
+      "height": 941,
+      "sha256": "aea67a0a477172baec977f449deeac2e2cfc38cbf84c00de71ce5f3d70bbc5a4"
+    },
+    {
+      "path": "screenshots/09-food-court-threshold.png",
+      "bytes": 1247638,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "a37546e9b28ed8f26ac92c33d1490bd3b1cd1dc093db81adbd5d63028d43d08a"
+    },
+    {
+      "path": "concepts/09-food-court-threshold.png",
+      "bytes": 2436160,
+      "width": 1672,
+      "height": 941,
+      "sha256": "cc81f9abbec464a41f3991c1eaa392989e14d40ba00ced55c78b43bd3cd3b13e"
+    },
+    {
+      "path": "screenshots/10-gym-entry.png",
+      "bytes": 2056092,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "b8a69736c88ba25d4ceae9c97e676877ccb9ce09ecf95cbe5063e031f7d340c9"
+    },
+    {
+      "path": "concepts/10-gym-entry.png",
+      "bytes": 2191392,
+      "width": 1672,
+      "height": 941,
+      "sha256": "a881a098456bfcf2dc4833b67e13bc129dda75a50636506f4f1793a8e4d3e970"
+    },
+    {
+      "path": "screenshots/11-basketball-and-banks.png",
+      "bytes": 1532084,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "031442bd97f5347911d0fae8fccdcb5d63bf1222d8b962327172542252658380"
+    },
+    {
+      "path": "concepts/11-basketball-and-banks.png",
+      "bytes": 2514603,
+      "width": 1672,
+      "height": 941,
+      "sha256": "e4d83ff66f3a6a1a48ca65daad4cf369de1034d3586853997cb5f49808561974"
+    },
+    {
+      "path": "screenshots/12-gym-courtyard.png",
+      "bytes": 1089996,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "3b910519684ec5e6fc589482b642a74b7bccfd405f9f739f40fc1bc19070c1af"
+    },
+    {
+      "path": "concepts/12-gym-courtyard.png",
+      "bytes": 2200370,
+      "width": 1672,
+      "height": 941,
+      "sha256": "510957e0303077d17bc27b3b90d1c959bceeb6b8df3c6e6822da757b9ac8576c"
+    },
+    {
+      "path": "screenshots/13-blue-canopy-descent.png",
+      "bytes": 927640,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "c692026eb27c2a961b5883de2c9b88b2ad4f833300a8bca048bcdd38ee6b1226"
+    },
+    {
+      "path": "concepts/13-blue-canopy-descent.png",
+      "bytes": 2504553,
+      "width": 1672,
+      "height": 941,
+      "sha256": "d1a703c3ce158be530d773a802076c4d8585ea8ff7a94f761103394f0c479e71"
+    },
+    {
+      "path": "screenshots/14-canopy-retail-junction.png",
+      "bytes": 1174031,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "1234b2c9bb1bb41c355cbc67781723ffd42f2d5a7564576e158e0f2e61484a69"
+    },
+    {
+      "path": "concepts/14-canopy-retail-junction.png",
+      "bytes": 2501391,
+      "width": 1672,
+      "height": 941,
+      "sha256": "ca34f3835c063e8286e37dd3ada6e22e5dd326b0a56460c259cfdbe476b18bc6"
+    },
+    {
+      "path": "screenshots/15-arcade-portal.png",
+      "bytes": 2025821,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "fa331c950bd5356e93c9d242018b8a8910501675df184780767bdf1b51e6fe14"
+    },
+    {
+      "path": "concepts/15-arcade-portal.png",
+      "bytes": 2419837,
+      "width": 1672,
+      "height": 940,
+      "sha256": "9ce07319b9e9064df1a4e366c0d92658d4d2df0ea6369d2068a0c87bb5284b6b"
+    },
+    {
+      "path": "screenshots/16-crossrail-promenade.png",
+      "bytes": 2608613,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "cebc0458dab73f9629b07f2e33510b70080fd88399ce9083abed8d6f36d05d31"
+    },
+    {
+      "path": "concepts/16-crossrail-promenade.png",
+      "bytes": 2505760,
+      "width": 1672,
+      "height": 941,
+      "sha256": "86746909c809bd1d7838f807fa80ee83428162b734bb63e40ed63d8f5b210677"
+    },
+    {
+      "path": "screenshots/17-after-hours-entrance.png",
+      "bytes": 2233140,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "842c65f994b68d4f836b1f9ad6cdbc41df93336cfd4aabe054144788e543eafe"
+    },
+    {
+      "path": "concepts/17-after-hours-entrance.png",
+      "bytes": 2411989,
+      "width": 1672,
+      "height": 940,
+      "sha256": "f7990d659ea278906a5769cf1b3ea235b920fc53532e7cb4e115b9364d9f6fde"
+    },
+    {
+      "path": "screenshots/18-after-hours-interior.png",
+      "bytes": 683226,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "bbdd230187006de93857eb793ad2fc2194c82cd8f79715bdd8d4b2c25c293a53"
+    },
+    {
+      "path": "concepts/18-after-hours-interior.png",
+      "bytes": 2413962,
+      "width": 1672,
+      "height": 941,
+      "sha256": "f954c113eb660c718baecaa03b1ca32b9e578e638dceab753006edb0f8ae3de9"
+    },
+    {
+      "path": "screenshots/19-loading-portal.png",
+      "bytes": 667618,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "facbefd11fb82f671290eebe99380a0cf01f0cb1827e5d85e29c3f0ecf16b195"
+    },
+    {
+      "path": "concepts/19-loading-portal.png",
+      "bytes": 2351131,
+      "width": 1672,
+      "height": 941,
+      "sha256": "10510222946050866de1517b70a85a1844028395f9b7b75d5672814120dd9a78"
+    },
+    {
+      "path": "screenshots/20-warehouse-roll-in.png",
+      "bytes": 537708,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "05618e78ca9e373bc00983f64f2ee2445242b0f55f3be8485a180056342fdf66"
+    },
+    {
+      "path": "concepts/20-warehouse-roll-in.png",
+      "bytes": 2395042,
+      "width": 1672,
+      "height": 941,
+      "sha256": "585e3a5e283be151a3767d7451c58bfd4dcb2165e3b3713e3fee1f85d93b4d2d"
+    },
+    {
+      "path": "screenshots/21-warehouse-halfpipe.png",
+      "bytes": 1192421,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "66f59d40e92c099d361d76856275723cfe5fb1e420c45dac5c37f1556b31c812"
+    },
+    {
+      "path": "concepts/21-warehouse-halfpipe.png",
+      "bytes": 2593454,
+      "width": 1672,
+      "height": 941,
+      "sha256": "b496ff179688219adf9a57286e2d7c40b8625108bbeb48424bfa979dfbd1c56e"
+    },
+    {
+      "path": "screenshots/22-big-rail-island.png",
+      "bytes": 906484,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "efa57a1d2829c9982f4c866be7c3155fe0f176378906c2cea9069e26534a2e6f"
+    },
+    {
+      "path": "concepts/22-big-rail-island.png",
+      "bytes": 2338741,
+      "width": 1672,
+      "height": 941,
+      "sha256": "f66658a91e2803993c2bca214b5d6a84bb8d68007b6e460ee3db374a029915b4"
+    },
+    {
+      "path": "screenshots/23-suspended-room.png",
+      "bytes": 1398203,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "c3dfaa966ebc977a9104697a15d6d19aecd5373a8936e74d522713d17886d271"
+    },
+    {
+      "path": "concepts/23-suspended-room.png",
+      "bytes": 2524420,
+      "width": 1672,
+      "height": 941,
+      "sha256": "fccc6d5dd1cec343ef3548152cc51d03977f3a5751cb3abf36d16968da3a2d9b"
+    },
+    {
+      "path": "screenshots/24-taxi-loading-bay.png",
+      "bytes": 433606,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "2449e376cf2455ab7b2b58edb08360c715279ce7c3dd6c474bd309edf34d3021"
+    },
+    {
+      "path": "concepts/24-taxi-loading-bay.png",
+      "bytes": 2320629,
+      "width": 1672,
+      "height": 940,
+      "sha256": "c15325c6ec49d0e5b7e1f609b693f1310fa5bbe688d8e5e78d82860cdc8f1abb"
+    },
+    {
+      "path": "screenshots/25-loading-islands.png",
+      "bytes": 731530,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "c32f43d0b7d68a52a33aba45f1d3167d844e37856a414a01f456297f510f4c79"
+    },
+    {
+      "path": "concepts/25-loading-islands.png",
+      "bytes": 2468634,
+      "width": 1672,
+      "height": 941,
+      "sha256": "612685b944a0d17139aafdb06156d2f24561303a9680c6da0c45a9480d1b9226"
+    },
+    {
+      "path": "screenshots/26-spinal-grooves-entry.png",
+      "bytes": 582392,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "40f96986985f1ad662165a8fe644494aa47fb2db453937a6d187b06c78807a6d"
+    },
+    {
+      "path": "concepts/26-spinal-grooves-entry.png",
+      "bytes": 2631510,
+      "width": 1672,
+      "height": 941,
+      "sha256": "72ad081ac1e11f3f473bab5aacafe4ad70d661ccf1c90b72bbbdc2d5d966e488"
+    },
+    {
+      "path": "screenshots/27-spinal-grooves-profile.png",
+      "bytes": 863835,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "e12cfc6a7a776420c70772831b68f75b1a997e1742af7251f642896544388024"
+    },
+    {
+      "path": "concepts/27-spinal-grooves-profile.png",
+      "bytes": 2769068,
+      "width": 1672,
+      "height": 941,
+      "sha256": "1cd4beb29c0bd3d269b2ae7ccba7a2e9eee473df1fd17099a58f74e11b31763b"
+    },
+    {
+      "path": "screenshots/28-timber-roll-in.png",
+      "bytes": 583129,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "ec754735977338d5e501ce85b4ed246bee5c3c4ef269ad6d1a4b1b03a128afa1"
+    },
+    {
+      "path": "concepts/28-timber-roll-in.png",
+      "bytes": 2561775,
+      "width": 1672,
+      "height": 941,
+      "sha256": "2f9399a27dc191634ec6254e9f9f08a5ff95283be084e2f4805907ed62c951b1"
+    },
+    {
+      "path": "screenshots/29-timber-vert-reverse.png",
+      "bytes": 327298,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "51dfcfd55bc92ea06aed89601d91f58fce21c472994858366493ca3b6dc65de1"
+    },
+    {
+      "path": "concepts/29-timber-vert-reverse.png",
+      "bytes": 2528899,
+      "width": 1672,
+      "height": 941,
+      "sha256": "723c3be05de6cab024ff289dd7eb635c53cbc101628fb062fa20a2b9ce52c71e"
+    },
+    {
+      "path": "screenshots/30-snake-kiosk.png",
+      "bytes": 643197,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "914776fad053d5f351243b46d05b73a9a90171eb40e5bcc81726a814a5de3bcc"
+    },
+    {
+      "path": "concepts/30-snake-kiosk.png",
+      "bytes": 2531401,
+      "width": 1672,
+      "height": 941,
+      "sha256": "ac828b17695e677f935ca4ec35ffc3985a59d1cb35debfed77ce637e6e43bb29"
+    },
+    {
+      "path": "screenshots/31-snake-run-entry.png",
+      "bytes": 860257,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "19a0b25f221a56b60feec1b232363bf796d72dd07d60c3ae619419b245bd7549"
+    },
+    {
+      "path": "concepts/31-snake-run-entry.png",
+      "bytes": 2656843,
+      "width": 1672,
+      "height": 941,
+      "sha256": "0d31007298f206c062b7a748c2399dc9aca0b27c6b62f30f07a6821581f77c4f"
+    },
+    {
+      "path": "screenshots/32-snake-run-overview.png",
+      "bytes": 802767,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "41650d270e3b1b5c1cdf73547b4faae7b6b09e3448675d183e7116e6cb718494"
+    },
+    {
+      "path": "concepts/32-snake-run-overview.png",
+      "bytes": 2661599,
+      "width": 1672,
+      "height": 941,
+      "sha256": "3e85f0f4395bae65f3438cc4be8e4dcc871095d0947f0a0b290f2667b9017977"
+    },
+    {
+      "path": "screenshots/33-snake-run-banked-bend.png",
+      "bytes": 928909,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "979cc6f49e6b5c4cf5ccc781ca0bd5d17c59cc89e14ef79681b22f996835ac9c"
+    },
+    {
+      "path": "concepts/33-snake-run-banked-bend.png",
+      "bytes": 2644390,
+      "width": 1672,
+      "height": 941,
+      "sha256": "08d29adb6d11da4cf47a76d61c66977696d98b6cf7136b8c2ea0d88d04e63c97"
+    },
+    {
+      "path": "screenshots/34-kona-atrium-connection.png",
+      "bytes": 2170074,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "662bff7aa4c57901da73eb42fcce4472b61061f13344cc01516d1ab7b8cc5bc0"
+    },
+    {
+      "path": "concepts/34-kona-atrium-connection.png",
+      "bytes": 2557651,
+      "width": 1672,
+      "height": 941,
+      "sha256": "b68604093716a46ca8a2aebd14b8afbf0b8ef6f662ba01fc45d8109d6cdbe050"
+    },
+    {
+      "path": "screenshots/35-angled-atrium-entry.png",
+      "bytes": 3224273,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "ad5d443e812fdb0963ed8180ebfd0a18b0547f7e27264b58617ae4160abca4e6"
+    },
+    {
+      "path": "concepts/35-angled-atrium-entry.png",
+      "bytes": 2626082,
+      "width": 1672,
+      "height": 941,
+      "sha256": "0dba7286113763b86932d61adde456a0b4f83c3c791816eb6471beca66f42a6a"
+    },
+    {
+      "path": "screenshots/36-angled-atrium-descent.png",
+      "bytes": 2967865,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "e6156612b955e45c44bb026decd87c1e0fd1120e0957eb432118369ed192d18c"
+    },
+    {
+      "path": "concepts/36-angled-atrium-descent.png",
+      "bytes": 2608983,
+      "width": 1672,
+      "height": 941,
+      "sha256": "0ab276cf0210fcb13a0a12b121dc8163d694a3970c493d0fa2b28ac2724bb118"
+    },
+    {
+      "path": "screenshots/37-grand-atrium-turn.png",
+      "bytes": 3131978,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "b82c9a8588368c6bf73cb0190601834e4451dfd3b9f80a491d9f45512a7402a0"
+    },
+    {
+      "path": "concepts/37-grand-atrium-turn.png",
+      "bytes": 2579879,
+      "width": 1672,
+      "height": 941,
+      "sha256": "70cbb53a06599d8e386dd3820199ad9eb396211a89f98a5c6c022920ce172a88"
+    },
+    {
+      "path": "screenshots/38-suspended-crossing.png",
+      "bytes": 2676982,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "7bf405d55e8dffe7a91c164226adbff4289d977a72a72934c6635f98cb7d8520"
+    },
+    {
+      "path": "concepts/38-suspended-crossing.png",
+      "bytes": 2469655,
+      "width": 1672,
+      "height": 941,
+      "sha256": "2fb5469a745c3e9be4aec9ea2cfac944b0e9d3442c90ddd47677b1660d8b5230"
+    },
+    {
+      "path": "screenshots/39-lower-atrium-promenade.png",
+      "bytes": 2676997,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "04430f6a41f121e612453d678741fa803cffb844a4bb2321a2336d1eca73e1d2"
+    },
+    {
+      "path": "concepts/39-lower-atrium-promenade.png",
+      "bytes": 2395204,
+      "width": 1672,
+      "height": 941,
+      "sha256": "16d70deabc72abb8e2a9f33420e47af27455656d65eac309f089b2cdf46a15cd"
+    },
+    {
+      "path": "screenshots/40-mall-exit-court.png",
+      "bytes": 604810,
+      "width": 1920,
+      "height": 1080,
+      "sha256": "fa3aa6577fe6b1c516b416e4ee4f6c149542614db9d7202814a837046885296b"
+    },
+    {
+      "path": "concepts/40-mall-exit-court.png",
+      "bytes": 2556132,
+      "width": 1672,
+      "height": 941,
+      "sha256": "c24934a8df176a2a9c7ff742e2f4a40f855ee371de621d4953fd3decac2e4cb4"
+    }
+  ]
+}

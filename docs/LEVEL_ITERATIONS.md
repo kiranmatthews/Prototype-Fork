@@ -7412,3 +7412,245 @@ change does not invalidate the passing production build. Local playtest stays
 on port 5483; compiled preview on 5484. No push, publication, paid generation
 or coordinator message. Broader polish stops at the user's wrap-up request;
 the local integration/publication hold remains.
+
+## 29 October 2026 NZDT — Restore Sky Bridge's original sky
+
+Brief: fix the background weirdness without changing the original skybox.
+The cloud platforms had inadvertently enabled Skystream's lower-sky blue tint
+and extra sun because the shared theme checked for any cloud collider. That
+made the pale distance fog and scenery silhouettes stand out against the
+recoloured background. The special treatment is now limited to Skystream and
+its active/standalone bonus IDs. Sky Bridge and Cloudtop Lockers retain the
+original cloud-sea artwork, projection and fog; the cloud platforms and
+extended course remain intact.
+
+Prompt at approximately 03:25 UTC; corrected native preview and main/bonus
+transition checks passed by 03:34 UTC, about nine minutes. Packaged lite/full
+checks, native and 720p visual review, GPU uniform/flare checks and return from
+Skystream all pass with no console errors. Build/type checking and release size
+pass. Level data, movement, sky asset and cloud-renderer hashes are unchanged.
+See [background restoration evidence](sky-bridge-cloud-extension/background/README.md).
+
+## 29 October 2026 — Mayfield Mall source-geometry correction
+
+The user clarified that the course must use the actual four source levels,
+especially the Mall’s scale, elevation changes, angles and architecture.
+Replaced the earlier interpretation with a 1.92 km route through transformed
+source assemblies: the Mall’s galleria/escalators, crossrail arcade and angled
+atrium; School Miami’s gym and canopy descent; Warehouse’s roll-in, halfpipe,
+industrial shell and props; Kona’s spinal grooves, timber vert and snake run.
+The rooms are reordered and reconnected, with near-original dimensions and
+substantial prop relocation. Nine checkpoints, ordinary controls and the
+existing Maynard course-4 save key remain.
+
+First complete native source-geometry walking run: 03:51:19 UTC, **2 h 32 min
+34 sec after the original prompt**. MAX/native browser tour and recovery
+passed by 03:53 UTC. These wall-clock totals include the superseded first pass
+and the interval before the user’s source-geometry corrections; they do not
+reuse the original 8-minute milestone as timing for this revision.
+
+Separated the overlapping Kona ramps, retained native vert contact flags,
+opened the gym and foundation portals, and joined the Mall’s actual lower
+lanes. A narrow conventional-control fix sends a deck-to-vert drop through
+normal airborne contact instead of snapping down the face. The six source
+transition approaches have no bails and a maximum frame displacement below
+0.55 m. Original source levels and global movement tuning are unchanged.
+
+Final native walking and skating runs complete in 217.02 / 119.88 s, activate
+all nine checkpoints, collect the crystal and finish with zero deaths. Tests
+require real ground contact with all four source levels. Final browser, build
+and publication evidence is recorded in [Mayfield Mall](mayfield-mall/README.md).
+
+Packaged Chrome completes the whole walking route in 216.85 s with no deaths
+or console errors. MAX/native review, real checkpoint keys and pit recovery
+pass. Required level checks, production build/type checking and release size
+pass: 997,270,749 bytes. The revised composition retains 58,988 imported mesh
+triangles plus the native source primitives, paths and connecting geometry.
+
+## 29 October 2026 — Mayfield Mall: After Hours bonus
+
+Added an arcade-side question-mark stone and an authored 100 m bonus with eight
+counted crates. The three connected challenges use a retained bounce arrow for
+a high prize shelf, a local switch to create a service bridge, and a finite
+bounce stack with a high life crate. A full-scale rear slice of the original
+Mall galleria supplies the escalator and mezzanine backdrop, with cream, teal,
+coral and mauve arcade trim. The main course keeps ordinary controls and its
+four-source architecture.
+
+First complete native clear at approximately 04:52 UTC, about seven minutes
+after the bonus request. Native jump-entry and supported return passed by
+04:53; Chrome's full-render entrance, failure/retry and eight-crate clear passed
+by 04:56. The native clear takes 43.52 s without deaths. Browser reward banking
+returns eight crates, 31 fruit and two lives to the same parent instance; a
+failed bonus preserves the parent resources. MAX/native review exposed a sign
+partly hidden by the source pillar; it was shifted into the visible arcade lane.
+
+Focused evidence and final validation are in [Mayfield Mall](mayfield-mall/README.md).
+No movement tuning, shared runtime changes or published editor-pack overwrite.
+
+
+## 29 October 2026 — Mayfield Mall: 40-view polish concepts
+
+Generated forty screenshot-based environment concepts with built-in ImageGen,
+covering the full Mall, School Miami, Warehouse and Kona composition, the
+crossrail arcade, grand atrium, exit and After Hours bonus interior. Each uses
+an actual MAX/native screenshot from the completed level as its geometry
+reference. The direction combines The Weekenders’ sunny retro mall atmosphere
+with Crash 4-style sculpted forms and material detail.
+
+The image brief began at approximately 05:13 UTC; all forty concepts were
+complete by approximately 06:07 UTC, about 54 minutes. Gallery and image
+validation finished by 06:13 UTC, about 60 minutes after the prompt. This is
+an art-direction milestone; no new playable geometry or runtime polish was
+implemented in this iteration.
+
+The [polish atlas](../art/mayfield-mall/polish-v1/index.html) contains area
+filters, source/concept comparisons and a full-size viewer. All forty exact
+prompts, source cameras, original screenshots and selected PNG outputs are
+saved with [implementation notes](../art/mayfield-mall/polish-v1/README.md).
+Chrome decoded all eighty distinct images; filtering, comparison, keyboard
+navigation, desktop/mobile layout and direct offline file loading passed with
+no browser errors. These authoring assets remain outside the published game
+package. Source capture commit: `8aae8ceabc5708476e226f6b7b878a75d619cf94`.
+
+Production build/type checking and release-size validation pass. The concept
+pack is excluded from `dist`; runtime and level sources remain unchanged.
+
+## 29 October 2026 — Mayfield Mall: parking-garage start
+
+Restored the source Mall's actual three-storey entrance as the beginning of
+Mayfield Mall: both quarter pipes, overlapping corridors, sloping return lanes,
+overhead decks and original wall/rail architecture. The 171-component assembly
+adds 12,047 source mesh triangles and about 248 m of course, descending 36.25 m
+into the existing galleria. The complete route is now 2,163.87 m with ten
+checkpoints. The clock, preview and initial camera route start in the garage.
+
+The brief began at approximately 06:40 UTC. The first full walking route passed
+by about 06:46; the quarter-lip and wall-seam fixes were playable and checked by
+07:12, about 32 minutes prompt-to-playable. Final packaged lite/MAX-native
+validation completed by 07:26, about 46 minutes after the prompt.
+
+Continuous quarter normals and exact fitted side contacts fix the entrance
+seams. A narrow extension to the normal controller's existing crest launch
+lets explicitly authored vert meshes launch and return instead of sticking at
+their vertical lip. Normal controls, global tuning and original park controls
+remain intact. No source-room silhouettes or distance detail were reduced.
+
+Complete input-driven walking/skating runs pass in 244.18 s / 140.68 s, with
+all ten checkpoints, crystal, finish, real ground contact from all four source
+levels and zero deaths. Both garage quarters, both upper side-wall seams and
+all six Warehouse/Kona transition approaches pass. Packaged Chrome lite
+skating and MAX/native 1920×1080 walking pass the full opening, actual K/L
+checkpoint controls and intentional pit recovery without console errors.
+Required level checks, production type checking/build and release-size check
+pass: 997,264,351 bytes. Evidence and source hashes are in
+[the parking validation folder](mayfield-mall/parking/README.md).
+
+The bonus, previous forty-image concept atlas, campaign save key, four source
+levels and published editor pack are unchanged. Shared ownership is limited
+to the authored-mesh crest predicate in `src/player.ts`; all other edits are
+Mayfield data, preview, focused tools and documentation.
+
+## 29 October 2026 — Skystream lower-road shortcut camera
+
+User brief: jumping off the cloud road and landing on a lower section is a valid
+strategy; fix the camera shown in the supplied 8,168-frame replay.
+
+The short ballistic fall forecast incorrectly froze a playable rescue jump.
+Large shortcuts additionally left the camera anchored at the departure height
+and biased to a route section 224–271 metres behind the real landing. Reuse
+Skystream's existing gameplay recovery decision to follow viable drops, follow
+the descending height, reacquire the camera branch on contact, and retain full
+rider framing while yaw eases onto the lower road. Grounded steering reacquires
+that lower road too, while airborne crossings keep their continuity preference.
+No new collision searches or cloud-rendering work is introduced.
+
+All four native input-only shortcuts now have zero frozen or off-screen centre
+frames, correct landing lanes, and matching supported steering. The reported
+replay window has zero frozen frames (40 before). Chrome lite and full native
+1600×1000 playback validates the replay catch and all four shortcuts; full-body
+bounds remain in frame through touchdown, including normal 720p/CRT review.
+Camera-rig, landing-forecast, loop-camera and Skystream void-recovery checks pass.
+The older Slipstream fall replay's late fatal-window assertion also fails on
+the published baseline; all 8,347 old/new hold decisions were identical.
+
+The course, bonus, sky art, cloud rendering and movement tuning retain exact
+source hashes. Evidence and repeatable tools are documented in
+[drop-camera/README.md](skystream-clouds/drop-camera/README.md). No level-data
+changes, unrelated audits or full-suite run. The integrated production build/typecheck, release-size check (997,265,231
+bytes) and packaged browser replay/shortcut smoke pass. Public verification
+is recorded in this chat's shared release handoff.
+
+Timing: first inspection 07:12:58 UTC; repaired native shortcuts and replay by
+approximately 07:35 UTC (~22 minutes). Full native touchdown framing reviewed
+by approximately 07:47 UTC (~34 minutes prompt-to-final-playable). Shared
+validation capacity was intermittently occupied; source review, harnesses and
+documentation continued between available slots.
+
+## 29 October 2026 — Mayfield Mall complete circulation repair
+
+Repaired the complete course after the garage-opening revision, keeping the
+actual Mall, School Miami, Warehouse and Kona assemblies. The three-storey
+parking corridors and both quarters remain the start. The course is now
+2,228.82 m with 71,045 imported mesh triangles, ten checkpoints and the existing
+crystal, time trial and After Hours bonus.
+
+Fitted source-cut landings, widened gym doors, a complete food-court plaza,
+roof/skylight work and continuous courtyard/finish floors close the bad joins.
+New stairs and approaches connect the galleria balconies, pavilion/glass terrace,
+gym roof/blue canopy, both arcade terraces, warehouse office/roof, Kona coping
+decks and final atrium gallery. A framed opening gives that gallery an actual
+doorway. The intact snake moves 60 m down-course and gains a ramp to its raised
+head, clearing the neighbouring pipe courts. Its garden has a return bank.
+Warehouse wall bays now meet the floor with proper openings. The main atrium
+line follows the open side of its original angled wall.
+
+Verification found and corrected reversed landing faces, guard conflicts,
+facade intersections, floor overlaps and a mini-pipe stair in the vert return
+zone. All 18 access routes pass forward and backward without jumping. All nine
+main joins pass five lanes in both directions (90 traversal fixtures). Maximum
+single-frame displacement is 0.802 m on the access fixtures and 0.806 m on joins.
+All six Warehouse/Kona and both garage vert approaches climb, launch and return;
+both garage side-wall seam probes remain contained.
+
+Complete browser runs: 247.33 s on foot without jumping and 153.30 s skating at
+MAX/native 1920×1080, all ten checkpoints and the crystal, zero route deaths,
+unchanged tuning and zero console errors. Bonus entry/failure/retry, all eight
+crates, reward banking and supported return pass. K/L checkpoint controls and
+intentional pit recovery pass. Final native input-only foot/skate runs also
+validate editor serialization and the campaign/save slot.
+
+Prompt-to-playable with focused controller validation: approximately 2 h 48 m,
+from 07:36 UTC to the final native skate check at 10:23 UTC. Build, packaged smoke
+and release verification follow that measurement. The work uses an isolated
+checkout and preserves the 40-view polish atlas, original source-level files,
+movement tuning and published level-pack snapshot. Published `e192a945` camera
+changes were fast-forwarded before final verification. No new shared-runtime
+change belongs to this repair.
+
+See [circulation evidence and source hashes](mayfield-mall/flow/README.md).
+
+
+## 30 October 2026 — Clear Skystream architecture
+
+User brief: remove the columns and other props. Removed 82 decorative meshes
+(columns, capitals, pendants, gold arches and wall ornaments) and the central
+sanctuary wall with its collider. Removed the empty architecture editor group
+and retired the regression that required that wall to block a shortcut.
+Updated the course thumbnail with the cleared three-loop cloud finale.
+
+An exact data comparison against published `d866f61d` confirms all 1,389
+remaining components and all level settings are unchanged. Cloud roads,
+collectibles, checkpoints, finish, camera lanes, sky and atmosphere are preserved.
+No shared runtime, tuning, bonus or editor-pack changes.
+
+The existing Skystream structure check, required `npm run check:levels`, production
+typecheck/build and release-size check pass (997,270,186 bytes). Chrome lite
+visual review and packaged full native/normal 720p CRT review cover the four
+former column sites and loop finale. Packaged checkpoint controls, unsupported
+fall/respawn and finish all pass with zero console errors. Evidence:
+[prop-removal](skystream-clouds/prop-removal/README.md). No full suite.
+
+Timing: inspection started about 11:18 UTC; source cleanup was playable by
+11:20 UTC (approximately two minutes). Native visual review completed by
+11:25 UTC; packaged gameplay and release validation by 11:29 UTC.
