@@ -7101,3 +7101,45 @@ course/prop checks, typecheck/build and diff checks pass. Build: Codex/sol fork
 ec8eb01e4a2c8d9a555f. No new whole-course clear, sustained FPS claim or full
 suite. Evidence: art/carlisle-shipyard/rigging/validation.json.
 Local-only checkpoint; publication held. Broader polish goal remains active.
+
+
+## Carlisle rendering cost audit — 30 October 2026
+
+Approximately 44 minutes to completed audit and verified restoration. Previous
+goal turn was progress: the braided rigging increment was committed locally.
+This turn establishes current evidence and rejects unproven optimizations;
+there is no production gameplay or visual change and no new playable geometry.
+
+Profiled the compiled harbour at arrival in native 1920×1080 and normal
+480p/CRT, plus Dredger and Rigging entries. Four 180-frame windows measured
+16.6–16.7ms medians. These stationary samples do not prove full-course or
+hardware-wide 60fps. Actual draw callbacks identify large timber, net and
+fender submissions. The arrival frame submits approximately 18.83M triangles.
+
+Tried smaller static instance cells and an exact-rest net shader branch.
+Blanket batching raised near-view draw calls from 584 to 1,267 despite fewer
+triangles, so simple timber and primitives were restored. A revised candidate
+kept all 30,098 instances and their complete geometry/transform fingerprint,
+with 1,542 batches versus 658 originally. Batch-only pixels match exactly in
+24 native view/impact-phase pairs; the net shader recompile changes 2–102
+pixels per 2,073,600-pixel frame. Fixed/moving impacts, finite settling and
+main/bonus/main reload pass with four bonus boats and zero console errors.
+
+Normal-frame draws still rose from 723 to 1,031 for only a reduction from
+18.83M to 17.94M submitted triangles. Alternating 240-frame windows stayed
+near the 60fps cap; additional synchronous renderer/GPU-fence comparisons
+showed no consistent timing win. Both candidates were therefore rejected,
+rather than claiming a performance improvement from triangle count alone.
+The experiment patch, raw measurements, comparisons and method are retained
+in art/carlisle-shipyard/render-cost/.
+
+All tracked src/ and public/ files are exactly restored to 94f981d1. Twenty-six
+explicit source hashes and the final compiled 30,098-instance / 658-batch
+inventory agree. The restored compiled lite browser has no errors; the prior
+full/native baseline remains applicable to the exact restored source. Build
+and syntax/diff checks pass. Final build: Codex/sol fork · build 10-30 06:26 UTC;
+1,785 files / 1,121.3MiB; offline version 2a2ad2527becc698523e.
+
+No paid services, new asset downloads, Tripo credits, API purchases, LODs,
+mesh reduction, course edits, full-suite run or publication. Local testing
+hold and the broader polish goal remain active.

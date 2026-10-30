@@ -1,0 +1,38 @@
+{
+  "errors": [],
+  "pairs": [
+    {
+      "id": "arrival",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 208,
+      "maxChannelDifference": 25,
+      "totalDifference": 2788,
+      "prior": {
+        "render": {
+          "frame": 1522,
+          "calls": 584,
+          "triangles": 15232127,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1523,
+          "calls": 1267,
+          "triangles": 13194867,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    }
+  ],
+  "timings": [],
+  "setup": {
+    "sourceBatches": 3520,
+    "priorBatches": 458,
+    "netMaterials": 168
+  }
+}

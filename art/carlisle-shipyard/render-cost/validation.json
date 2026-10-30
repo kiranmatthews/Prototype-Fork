@@ -1,0 +1,128 @@
+{
+  "status": "Audit complete; both runtime candidates rejected and original game restored",
+  "baseCommit": "94f981d135389cef392fef540c158902226921fc",
+  "startedUTC": "2026-10-30T05:50:29+00:00",
+  "completedReviewUTC": "2026-10-30T06:34:21.877729+00:00",
+  "elapsedMinutes": 44,
+  "previousGoalTurn": "progress: braided rigging increment committed and local HOLD recorded",
+  "goalState": "active; broad polish completion remains unproven",
+  "productionRuntimeChanged": false,
+  "publicAssetsChanged": false,
+  "baseline": [
+    {
+      "id": "0-normal",
+      "timing": {
+        "samples": 180,
+        "median": 16.69999998807907,
+        "p95": 18,
+        "min": 12.800000011920929,
+        "max": 20.700000017881393
+      },
+      "canvas": [
+        853,
+        480
+      ]
+    },
+    {
+      "id": "0-native",
+      "timing": {
+        "samples": 180,
+        "median": 16.69999998807907,
+        "p95": 18.200000017881393,
+        "min": 13.100000023841858,
+        "max": 21.299999982118607
+      },
+      "canvas": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "8-normal",
+      "timing": {
+        "samples": 180,
+        "median": 16.599999994039536,
+        "p95": 18,
+        "min": 13.5,
+        "max": 20.19999998807907
+      },
+      "canvas": [
+        853,
+        480
+      ]
+    },
+    {
+      "id": "15-normal",
+      "timing": {
+        "samples": 180,
+        "median": 16.600000023841858,
+        "p95": 17.80000001192093,
+        "min": 14.599999994039536,
+        "max": 18.30000001192093
+      },
+      "canvas": [
+        853,
+        480
+      ]
+    }
+  ],
+  "inventory": {
+    "instances": 30098,
+    "hash": "013fa031954ba62a54c0ec82a7476076202c19913cf125d13befac1dbe7e717a",
+    "batches": 658
+  },
+  "candidateChecks": {
+    "completeInstanceFingerprintMatches": true,
+    "batchOnlyPixelIdenticalPairs": 24,
+    "nativeResolution": [
+      1920,
+      1080
+    ],
+    "netShaderChangedPixelsRange": [
+      2,
+      102
+    ],
+    "maxNetShaderChannelDifference": 30,
+    "fixedAndMovingNativeImpacts": true,
+    "finiteSettles": true,
+    "bonusRideableBoats": 4,
+    "mainReturnNets": 56,
+    "consoleErrors": []
+  },
+  "decision": "Fewer triangles did not establish a consistent fenced render-time improvement, and cells added draw calls; revert both batching and settled-net shader experiments.",
+  "restorationChecks": {
+    "allTrackedSourceAndPublicAssetsExactAgainstBase": true,
+    "protectedSourceHashes": 26,
+    "compiledInventoryMatchesBaseline": true,
+    "consoleErrors": [],
+    "typecheckAndProductionBuild": "passed",
+    "syntaxAndDiff": "passed"
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 06:26 UTC",
+    "files": 1785,
+    "sizeMiB": 1121.3,
+    "offlineVersion": "2a2ad2527becc698523e"
+  },
+  "toolSHA256": {
+    "tools/carlisle-render-profile.mjs": "5ad0783b73fea4b74b1b79b65d805a4081260e695b3ea19e622fa9743f5c83b4",
+    "tools/carlisle-render-equivalence.mjs": "cc651ead16acb946e062879bc8dba4b2b09eea734e4eefc0fe0a0927f0e8f817",
+    "tools/carlisle-render-comparison.mjs": "86f6d7cc9c1a72a787e762c7f95fce70c57d37fc1a1ba5003916fb36d3492aae",
+    "tools/carlisle-render-comparison-scene.mjs": "57d700c89309f3c7fbd768b18ee1988e71ad8da34c16e9a8abdd94a7b390dc32",
+    "tools/carlisle-render-work.mjs": "52552fdb601062a26c899318ab2c2feee21d987118f2805f6272f3a45657c7b8"
+  },
+  "cost": {
+    "tripoCredits": 0,
+    "paidServices": false,
+    "newAssetDownloads": 0,
+    "apiTopups": 0
+  },
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour",
+  "limitations": [
+    "Short stationary timings on one Mac, not full-course sustained FPS or hardware coverage",
+    "No new uninterrupted 4 km clear or check:all",
+    "Candidate combined images were not pixel-identical; differences isolated to net shader",
+    "No visual polish gain claimed for this audit; production runtime restored exactly",
+    "Local publication hold remains in force"
+  ]
+}

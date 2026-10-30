@@ -1,0 +1,1264 @@
+{
+  "errors": [],
+  "pairs": [
+    {
+      "id": "arrival",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 102,
+      "maxChannelDifference": 25,
+      "totalDifference": 1654,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 102,
+          "max": 25
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1268,
+          "calls": 584,
+          "triangles": 15232127,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1269,
+          "calls": 778,
+          "triangles": 13758347,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival",
+      "age": 0.1,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 87,
+      "maxChannelDifference": 29,
+      "totalDifference": 1223,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 87,
+          "max": 29
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1275,
+          "calls": 584,
+          "triangles": 15232127,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1276,
+          "calls": 778,
+          "triangles": 13758347,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival",
+      "age": 0.5,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 102,
+      "maxChannelDifference": 25,
+      "totalDifference": 1372,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 102,
+          "max": 25
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1282,
+          "calls": 584,
+          "triangles": 15232127,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1283,
+          "calls": 778,
+          "triangles": 13758347,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival",
+      "age": 1.9,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 82,
+      "maxChannelDifference": 25,
+      "totalDifference": 1262,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 82,
+          "max": 25
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1289,
+          "calls": 584,
+          "triangles": 15232127,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1290,
+          "calls": 778,
+          "triangles": 13758347,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival-wide",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 37,
+      "maxChannelDifference": 19,
+      "totalDifference": 348,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 37,
+          "max": 19
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1317,
+          "calls": 683,
+          "triangles": 19592160,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1318,
+          "calls": 1028,
+          "triangles": 18886303,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival-wide",
+      "age": 0.1,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 29,
+      "maxChannelDifference": 18,
+      "totalDifference": 338,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 29,
+          "max": 18
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1324,
+          "calls": 683,
+          "triangles": 19592160,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1325,
+          "calls": 1028,
+          "triangles": 18886303,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival-wide",
+      "age": 0.5,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 39,
+      "maxChannelDifference": 18,
+      "totalDifference": 465,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 39,
+          "max": 18
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1331,
+          "calls": 683,
+          "triangles": 19592160,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1332,
+          "calls": 1028,
+          "triangles": 18886303,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "arrival-wide",
+      "age": 1.9,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 41,
+      "maxChannelDifference": 25,
+      "totalDifference": 490,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 41,
+          "max": 25
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1338,
+          "calls": 683,
+          "triangles": 19592160,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1339,
+          "calls": 1028,
+          "triangles": 18886303,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "beacon-apex",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 29,
+      "maxChannelDifference": 24,
+      "totalDifference": 461,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 29,
+          "max": 24
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1367,
+          "calls": 524,
+          "triangles": 11746915,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1368,
+          "calls": 657,
+          "triangles": 9985498,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "beacon-apex",
+      "age": 0.1,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 23,
+      "maxChannelDifference": 24,
+      "totalDifference": 424,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 23,
+          "max": 24
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1374,
+          "calls": 524,
+          "triangles": 11746915,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1375,
+          "calls": 657,
+          "triangles": 9985498,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "beacon-apex",
+      "age": 0.5,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 29,
+      "maxChannelDifference": 30,
+      "totalDifference": 523,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 29,
+          "max": 30
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1381,
+          "calls": 524,
+          "triangles": 11746915,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1382,
+          "calls": 657,
+          "triangles": 9985498,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "beacon-apex",
+      "age": 1.9,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 26,
+      "maxChannelDifference": 24,
+      "totalDifference": 451,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 26,
+          "max": 24
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1388,
+          "calls": 524,
+          "triangles": 11746915,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1389,
+          "calls": 657,
+          "triangles": 9985498,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "dredger",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 21,
+      "maxChannelDifference": 26,
+      "totalDifference": 408,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 21,
+          "max": 26
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1416,
+          "calls": 689,
+          "triangles": 11620058,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1417,
+          "calls": 861,
+          "triangles": 11121847,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "dredger",
+      "age": 0.1,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 30,
+      "maxChannelDifference": 26,
+      "totalDifference": 591,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 30,
+          "max": 26
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1423,
+          "calls": 689,
+          "triangles": 11620058,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1424,
+          "calls": 861,
+          "triangles": 11121847,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "dredger",
+      "age": 0.5,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 28,
+      "maxChannelDifference": 26,
+      "totalDifference": 415,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 28,
+          "max": 26
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1430,
+          "calls": 689,
+          "triangles": 11620058,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1431,
+          "calls": 861,
+          "triangles": 11121847,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "dredger",
+      "age": 1.9,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 25,
+      "maxChannelDifference": 26,
+      "totalDifference": 455,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 25,
+          "max": 26
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1437,
+          "calls": 689,
+          "triangles": 11620058,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1438,
+          "calls": 861,
+          "triangles": 11121847,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "rigging",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 8,
+      "maxChannelDifference": 27,
+      "totalDifference": 179,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 8,
+          "max": 27
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1469,
+          "calls": 285,
+          "triangles": 4086576,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1470,
+          "calls": 338,
+          "triangles": 3415398,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "rigging",
+      "age": 0.1,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 12,
+      "maxChannelDifference": 27,
+      "totalDifference": 260,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 12,
+          "max": 27
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1476,
+          "calls": 285,
+          "triangles": 4086576,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1477,
+          "calls": 338,
+          "triangles": 3415398,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "rigging",
+      "age": 0.5,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 11,
+      "maxChannelDifference": 27,
+      "totalDifference": 218,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 11,
+          "max": 27
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1483,
+          "calls": 285,
+          "triangles": 4086576,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1484,
+          "calls": 338,
+          "triangles": 3415398,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "rigging",
+      "age": 1.9,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 11,
+      "maxChannelDifference": 27,
+      "totalDifference": 218,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 11,
+          "max": 27
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1490,
+          "calls": 285,
+          "triangles": 4086576,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1491,
+          "calls": 338,
+          "triangles": 3415398,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "homecoming",
+      "age": 2,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 4,
+      "maxChannelDifference": 9,
+      "totalDifference": 31,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 4,
+          "max": 9
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1512,
+          "calls": 288,
+          "triangles": 3568370,
+          "points": 10,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1513,
+          "calls": 340,
+          "triangles": 3311058,
+          "points": 10,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "homecoming",
+      "age": 0.1,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 14,
+      "maxChannelDifference": 9,
+      "totalDifference": 48,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 14,
+          "max": 9
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1519,
+          "calls": 288,
+          "triangles": 3568370,
+          "points": 10,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1520,
+          "calls": 340,
+          "triangles": 3311058,
+          "points": 10,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "homecoming",
+      "age": 0.5,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 2,
+      "maxChannelDifference": 9,
+      "totalDifference": 28,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 2,
+          "max": 9
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1526,
+          "calls": 288,
+          "triangles": 3568370,
+          "points": 10,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1527,
+          "calls": 340,
+          "triangles": 3311058,
+          "points": 10,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "id": "homecoming",
+      "age": 1.9,
+      "width": 1920,
+      "height": 1080,
+      "changedPixels": 6,
+      "maxChannelDifference": 14,
+      "totalDifference": 81,
+      "isolate": {
+        "current": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorBatches": {
+          "changed": 0,
+          "max": 0
+        },
+        "priorNets": {
+          "changed": 6,
+          "max": 14
+        }
+      },
+      "prior": {
+        "render": {
+          "frame": 1533,
+          "calls": 288,
+          "triangles": 3568370,
+          "points": 10,
+          "lines": 0
+        }
+      },
+      "current": {
+        "render": {
+          "frame": 1534,
+          "calls": 340,
+          "triangles": 3311058,
+          "points": 10,
+          "lines": 0
+        }
+      }
+    }
+  ],
+  "timings": [
+    {
+      "state": "prior",
+      "samples": 240,
+      "median": 16.69999998807907,
+      "p95": 18.099999994039536,
+      "render": {
+        "frame": 5217,
+        "calls": 723,
+        "triangles": 18834619,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "state": "current",
+      "samples": 240,
+      "median": 16.69999998807907,
+      "p95": 18.900000005960464,
+      "render": {
+        "frame": 8847,
+        "calls": 1031,
+        "triangles": 17942756,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "state": "prior",
+      "samples": 240,
+      "median": 16.69999998807907,
+      "p95": 18,
+      "render": {
+        "frame": 12477,
+        "calls": 723,
+        "triangles": 18834619,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "state": "current",
+      "samples": 240,
+      "median": 16.600000023841858,
+      "p95": 18.299999982118607,
+      "render": {
+        "frame": 16107,
+        "calls": 1031,
+        "triangles": 17942756,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "setup": {
+    "sourceBatches": 1184,
+    "priorBatches": 300,
+    "netMaterials": 168
+  },
+  "shaderChecks": 79,
+  "impacts": [
+    {
+      "moving": false,
+      "before": {
+        "index": 0,
+        "impacts": 24
+      },
+      "hit": {
+        "impacts": 25,
+        "age": 0.05,
+        "depth": 2.4068509615384617,
+        "hit": [
+          1.8000000000000005,
+          -1.0999999999999943
+        ],
+        "anchors": 8,
+        "up": 53.97500000000001,
+        "state": "air"
+      },
+      "settled": true
+    },
+    {
+      "moving": true,
+      "before": {
+        "index": 281,
+        "impacts": 24
+      },
+      "hit": {
+        "impacts": 25,
+        "age": 0.15,
+        "depth": 2.8125,
+        "hit": [
+          1.7999999999998408,
+          -1.1000000000001364
+        ],
+        "anchors": 8,
+        "up": 80.80000000000003,
+        "state": "air"
+      },
+      "settled": true
+    }
+  ],
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 14,
+      "props": 82,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 1,
+        "repairs": 1,
+        "openYards": 0
+      },
+      "timber": {
+        "decks": 12,
+        "sections": 34,
+        "intactModules": 8,
+        "instanceBatches": 4,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 638212,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "idle",
+        "banks": 0,
+        "sourceTriangles": 0,
+        "placedTriangles": 0,
+        "shoreSegments": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 2,
+        "sourceTriangles": 51177,
+        "placedTriangles": 102354,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 156,
+        "ledgers": 32,
+        "braces": 0,
+        "plates": 0,
+        "bolts": 0,
+        "placedTriangles": 66944,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "idle",
+        "decks": 0,
+        "templates": 0,
+        "panels": 0,
+        "girders": 0,
+        "fasteners": 0,
+        "placedTriangles": 0,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 0,
+        "metres": 0,
+        "strands": 0,
+        "collars": 0,
+        "fairleads": 0,
+        "triangles": 0
+      },
+      "ambience": {
+        "waterGain": 0.10499588998373684,
+        "windGain": 0.019204605791102707,
+        "height": 1.250000023841858,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 52,
+        "movingWash": 4
+      },
+      "errors": []
+    },
+    "movers": 4,
+    "oldNets": 0
+  },
+  "returned": {
+    "status": "ready",
+    "sections": 18,
+    "models": 14,
+    "props": 1890,
+    "nets": 56,
+    "mountedMovers": 28,
+    "decorativeColliders": 0,
+    "buildings": {
+      "markets": 5,
+      "repairs": 16,
+      "openYards": 8
+    },
+    "timber": {
+      "decks": 131,
+      "sections": 966,
+      "intactModules": 567,
+      "instanceBatches": 177,
+      "sourceTriangles": 23974,
+      "sceneryTriangles": 39367,
+      "fittedTriangles": 27724901,
+      "slipperyOverlays": 0,
+      "errors": []
+    },
+    "coast": {
+      "status": "ready",
+      "banks": 32,
+      "sourceTriangles": 100707,
+      "placedTriangles": 1657437,
+      "shoreSegments": 35080,
+      "colliders": 0,
+      "errors": []
+    },
+    "fleet": {
+      "status": "ready",
+      "vessels": 6,
+      "sourceTriangles": 51177,
+      "placedTriangles": 307062,
+      "colliders": 0,
+      "errors": []
+    },
+    "piers": {
+      "status": "ready",
+      "piles": 4146,
+      "ledgers": 1218,
+      "braces": 1604,
+      "plates": 2432,
+      "bolts": 4864,
+      "placedTriangles": 2177728,
+      "colliders": 0,
+      "errors": []
+    },
+    "steelDecks": {
+      "status": "ready",
+      "decks": 20,
+      "templates": 8,
+      "panels": 893,
+      "girders": 183,
+      "fasteners": 538,
+      "placedTriangles": 126960,
+      "colliders": 0,
+      "errors": []
+    },
+    "rigging": {
+      "cables": 4,
+      "metres": 402.68682126176265,
+      "strands": 28,
+      "collars": 39,
+      "fairleads": 8,
+      "triangles": 397600
+    },
+    "ambience": {
+      "waterGain": 0.25709321027853405,
+      "windGain": 0.05425786370768947,
+      "height": 8,
+      "verticalSpeed": 0,
+      "teleports": 0
+    },
+    "water": {
+      "staticWash": 1382,
+      "movingWash": 0
+    },
+    "errors": []
+  },
+  "passed": true
+}

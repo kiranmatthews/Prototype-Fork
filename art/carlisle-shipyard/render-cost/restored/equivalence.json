@@ -1,0 +1,100 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "baseline": false,
+  "lite": true,
+  "candidate": false,
+  "errors": [],
+  "source": {
+    "build": "Codex/sol fork · build 10-30 06:26 UTC",
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 14,
+      "props": 1890,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "buildings": {
+        "markets": 5,
+        "repairs": 16,
+        "openYards": 8
+      },
+      "timber": {
+        "decks": 131,
+        "sections": 966,
+        "intactModules": 567,
+        "instanceBatches": 177,
+        "sourceTriangles": 23974,
+        "sceneryTriangles": 39367,
+        "fittedTriangles": 27724901,
+        "slipperyOverlays": 0,
+        "errors": []
+      },
+      "coast": {
+        "status": "ready",
+        "banks": 32,
+        "sourceTriangles": 100707,
+        "placedTriangles": 1657437,
+        "shoreSegments": 35080,
+        "colliders": 0,
+        "errors": []
+      },
+      "fleet": {
+        "status": "ready",
+        "vessels": 6,
+        "sourceTriangles": 51177,
+        "placedTriangles": 307062,
+        "colliders": 0,
+        "errors": []
+      },
+      "piers": {
+        "status": "ready",
+        "piles": 4146,
+        "ledgers": 1218,
+        "braces": 1604,
+        "plates": 2432,
+        "bolts": 4864,
+        "placedTriangles": 2177728,
+        "colliders": 0,
+        "errors": []
+      },
+      "steelDecks": {
+        "status": "ready",
+        "decks": 20,
+        "templates": 8,
+        "panels": 893,
+        "girders": 183,
+        "fasteners": 538,
+        "placedTriangles": 126960,
+        "colliders": 0,
+        "errors": []
+      },
+      "rigging": {
+        "cables": 4,
+        "metres": 402.68682126176265,
+        "strands": 28,
+        "collars": 39,
+        "fairleads": 8,
+        "triangles": 397600
+      },
+      "ambience": {
+        "waterGain": 0.004772990662606608,
+        "windGain": 0.0015067537586008412,
+        "height": 8.120000000000005,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "water": {
+        "staticWash": 1382,
+        "movingWash": 0
+      },
+      "errors": []
+    }
+  },
+  "inventory": {
+    "instances": 30098,
+    "hash": "013fa031954ba62a54c0ec82a7476076202c19913cf125d13befac1dbe7e717a",
+    "batches": 658
+  },
+  "passed": true
+}

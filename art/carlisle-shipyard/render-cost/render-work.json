@@ -1,0 +1,171 @@
+{
+  "method": "Isolated synchronous scene render plus gl.finish GPU fence, after compilation; all four combinations alternate in one process. These times are not gameplay FPS.",
+  "errors": [],
+  "views": [
+    {
+      "id": "arrival",
+      "rows": [
+        {
+          "state": "prior",
+          "samples": 30,
+          "median": 4.4000000059604645,
+          "p95": 8.299999982118607
+        },
+        {
+          "state": "current",
+          "samples": 30,
+          "median": 5.300000011920929,
+          "p95": 7.5
+        },
+        {
+          "state": "priorBatches",
+          "samples": 30,
+          "median": 4.699999988079071,
+          "p95": 12.699999988079071
+        },
+        {
+          "state": "priorNets",
+          "samples": 30,
+          "median": 12.200000017881393,
+          "p95": 15.799999982118607
+        },
+        {
+          "state": "priorNets",
+          "samples": 30,
+          "median": 13.400000005960464,
+          "p95": 20.30000001192093
+        },
+        {
+          "state": "priorBatches",
+          "samples": 30,
+          "median": 11,
+          "p95": 15.700000017881393
+        },
+        {
+          "state": "current",
+          "samples": 30,
+          "median": 12.099999994039536,
+          "p95": 15.699999988079071
+        },
+        {
+          "state": "prior",
+          "samples": 30,
+          "median": 10.799999982118607,
+          "p95": 11.900000005960464
+        }
+      ]
+    },
+    {
+      "id": "arrival-wide",
+      "rows": [
+        {
+          "state": "prior",
+          "samples": 30,
+          "median": 4.600000023841858,
+          "p95": 12.599999994039536
+        },
+        {
+          "state": "current",
+          "samples": 30,
+          "median": 5.199999988079071,
+          "p95": 6
+        },
+        {
+          "state": "priorBatches",
+          "samples": 30,
+          "median": 4.199999988079071,
+          "p95": 13.799999982118607
+        },
+        {
+          "state": "priorNets",
+          "samples": 30,
+          "median": 15.600000023841858,
+          "p95": 19.100000023841858
+        },
+        {
+          "state": "priorNets",
+          "samples": 30,
+          "median": 13.299999982118607,
+          "p95": 18.900000005960464
+        },
+        {
+          "state": "priorBatches",
+          "samples": 30,
+          "median": 14.5,
+          "p95": 18.900000005960464
+        },
+        {
+          "state": "current",
+          "samples": 30,
+          "median": 13,
+          "p95": 18.5
+        },
+        {
+          "state": "prior",
+          "samples": 30,
+          "median": 15.099999994039536,
+          "p95": 19
+        }
+      ]
+    },
+    {
+      "id": "beacon-apex",
+      "rows": [
+        {
+          "state": "prior",
+          "samples": 30,
+          "median": 4.300000011920929,
+          "p95": 20.5
+        },
+        {
+          "state": "current",
+          "samples": 30,
+          "median": 4.4000000059604645,
+          "p95": 5
+        },
+        {
+          "state": "priorBatches",
+          "samples": 30,
+          "median": 4,
+          "p95": 4.9000000059604645
+        },
+        {
+          "state": "priorNets",
+          "samples": 30,
+          "median": 8.899999976158142,
+          "p95": 12.099999994039536
+        },
+        {
+          "state": "priorNets",
+          "samples": 30,
+          "median": 8.599999994039536,
+          "p95": 9.400000005960464
+        },
+        {
+          "state": "priorBatches",
+          "samples": 30,
+          "median": 8.899999976158142,
+          "p95": 12.200000017881393
+        },
+        {
+          "state": "current",
+          "samples": 30,
+          "median": 9.099999994039536,
+          "p95": 12.800000011920929
+        },
+        {
+          "state": "prior",
+          "samples": 30,
+          "median": 8.599999994039536,
+          "p95": 9.400000005960464
+        }
+      ]
+    }
+  ],
+  "setup": {
+    "sourceBatches": 1184,
+    "priorBatches": 300,
+    "netMaterials": 168
+  },
+  "passed": true
+}
