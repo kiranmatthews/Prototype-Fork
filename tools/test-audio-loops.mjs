@@ -25,10 +25,18 @@ globalThis.AudioContext=class {
   createBufferSource(){const node=new BufferSource();sources.push(node);return node}
   async decodeAudioData(){peakDecoding=Math.max(peakDecoding,++decoding);await Promise.resolve();decoding--;return{length:57932,sampleRate:44100,duration:57932/44100}}
 };
-globalThis.fetch=async()=>({arrayBuffer:async()=>new ArrayBuffer(0)});
+const fetched=[];
+globalThis.fetch=async url=>{fetched.push(url);return{arrayBuffer:async()=>new ArrayBuffer(0)};};
 const {sfx}=await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 await sfx.prepare();
 assert.ok(peakDecoding<=2,'startup audio decoder concurrency is bounded');
+assert.equal(sfx.buffers.has('carlisleWater'),false,'long water bed loaded before its level requested it');
+assert.equal(sfx.buffers.has('carlisleWind'),false,'long wind bed loaded before its level requested it');
+const initialRequests=fetched.length;
+await Promise.all([sfx.prepare(['carlisleWater','carlisleWind']),sfx.prepare(['carlisleWater'])]);
+assert.equal(fetched.length,initialRequests+2,'repeated level preparation duplicated its downloads');
+assert.ok(sfx.buffers.has('carlisleWater')&&sfx.buffers.has('carlisleWind'));
+assert.ok(peakDecoding<=2,'deferred ambience exceeded the decoder limit');
 sfx.countdownBeep();
 assert.equal(tones[0].type,'sine');assert.equal(tones[0].frequency.value,880);
 assert.ok(Math.abs(tones[0].stopped-tones[0].started-.15)<1e-9);
@@ -100,10 +108,12 @@ sfx.ctx.currentTime+=.1;sfx.play('railLand',.7,1,0);assert.equal(sources.at(-1).
 let requests=0;
 globalThis.fetch=async(_url,{signal})=>{requests++;return new Promise((resolve,reject)=>{signal.addEventListener('abort',()=>reject(Error('aborted')),{once:true});});};
 const interrupted=new sfx.constructor();await Promise.resolve();assert.equal(requests,2);
+interrupted.prepare(['carlisleWater','carlisleWind']);
 for(const listener of listeners.get('pagehide'))listener({persisted:false});await interrupted.prepare();
 assert.equal(requests,2,'leaving the game cancels queued fetches before a detached document can start them');assert.equal(interrupted.buffers.size,0);
 globalThis.fetch=async()=>({arrayBuffer:async()=>new ArrayBuffer(0)});
 for(const listener of listeners.get('pageshow'))listener({persisted:true});await interrupted.prepare();assert.ok(interrupted.buffers.size>30,'back-forward restoration resumes missing sounds');
+assert.ok(interrupted.buffers.has('carlisleWater')&&interrupted.buffers.has('carlisleWind'),'back-forward restoration lost queued ambience requests');
 interrupted.ctx.suspend=()=>new Promise(()=>{});
 assert.equal(await Promise.race([interrupted.prepareToLeave().then(()=>true),new Promise(resolve=>setTimeout(()=>resolve(false),100))]),true,'gesture-blocked Safari audio suspension must not block navigation');
 const resumeRejections=[];

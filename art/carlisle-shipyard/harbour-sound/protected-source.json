@@ -1,0 +1,25 @@
+{
+  "baseCommit": "f87812fa6aa706521fd1c14b9116fd45a1a30e6f",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae",
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "src/carlisleCoastalBanks.ts": "20a55dc8e0ecd8acc6189771a8e495aa1e4b4bedc62359773cee34a141cb66bd",
+    "src/carlisleShipyardMaterials.ts": "c325a90f54f6a7707f644dffd0c78d2780537524bc75edac2a120775243cabea",
+    "src/carlisleFishingFleet.ts": "38319e1a62a5fb6b44aca9496e3721bc1454676c4a303332606d0ecbbb5dc749",
+    "src/carlislePierTimber.ts": "0ddfff7fa7ebe253c66735e9ecb0aa9b93b70e87c48c47e62c87910abe3edb78",
+    "src/carlisleBoardwalk.ts": "b1a29d940ee364981736fffba98268bcadc8ff0aa26e62a4ffaf134b69046d7f",
+    "src/carlisleSteelDecks.ts": "180400914cfe8bbd993bfa05c54d4ecf68510e3a02b0562ad3a89555200a9d6a"
+  }
+}

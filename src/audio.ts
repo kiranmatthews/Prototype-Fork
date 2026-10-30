@@ -54,6 +54,8 @@ const FILES: Record<string, string> = {
   kookShot: 'enemies/kook-shot.wav',
   rooftopRain: 'weather/rooftop-rain.wav',
   rooftopThunder: 'weather/rooftop-thunder.wav',
+  carlisleWater: 'carlisle/harbour-water.wav',
+  carlisleWind: 'carlisle/coastal-wind.wav',
   enemyCrabStep: 'enemies/crab-step.wav',
   enemyCrabClack: 'enemies/crab-clack.wav',
   enemySpikerStep: 'enemies/spiker-step.wav',
@@ -82,6 +84,10 @@ const FILES: Record<string, string> = {
   uberMusic: 'uber-music.mp3', // triple-mask invincibility theme
   specialTrick: 'special-trick.mp3', // supplied SPECIAL-trick sting
 };
+
+// Long environment beds are requested by their owning scenery, rather than
+// adding several megabytes to every level's initial sound bank.
+const DEFERRED = new Set(['carlisleWater', 'carlisleWind']);
 
 interface LoopChannel {
   src: AudioBufferSourceNode;
@@ -125,12 +131,13 @@ class SfxEngine {
   private emitterGain = 1;
   private emitterChannel = "";
   private loading = false;
+  private requested = new Set<string>();
   private loadController: AbortController | null = null;
   private preparation: Promise<void>;
 
   constructor() {
     // Warm up at PAGE LOAD: create the (suspended) context and start decoding
-    // every buffer right away, so sound is ready the instant something resumes
+    // ordinary effects right away, so sound is ready the instant something resumes
     // the context — instead of only starting the async load on the first gesture
     // (which left the opening seconds silent). unlock() then just resumes.
     this.preparation = this.init();
@@ -176,7 +183,18 @@ class SfxEngine {
   }
 
   /** Includes fetch and decode, without waiting for user-gesture playback. */
-  prepare(): Promise<void> { return this.preparation; }
+  prepare(names: readonly string[] = []): Promise<void> {
+    let added=false;
+    for(const name of names)if(DEFERRED.has(name)&&!this.requested.has(name)){
+      this.requested.add(name);added=true;
+    }
+    // Serialize behind the existing two-worker decoder queue. Page hide may
+    // cancel that queue before this request starts; pageshow can resume it.
+    if(added)this.preparation=this.preparation.then(()=>{
+      if(!this.loadController?.signal.aborted)return this.init();
+    });
+    return this.preparation;
+  }
 
   /** Settle in-flight requests while the document is still active (WebKit). */
   async prepareToLeave(): Promise<void> {
@@ -213,7 +231,7 @@ class SfxEngine {
       const embedded = (window as unknown as Record<string, unknown>).__SFX_DATA as
         | Record<string, string>
         | undefined;
-      const pending = Object.entries(FILES).filter(([name])=>!this.buffers.has(name));
+      const pending = Object.entries(FILES).filter(([name])=>!this.buffers.has(name)&&(!DEFERRED.has(name)||this.requested.has(name)));
       await Promise.all(Array.from({length:2},async()=>{
         while(pending.length&&!controller.signal.aborted){
           const [name,file]=pending.shift()!;

@@ -7015,3 +7015,47 @@ needed. No repeated unchanged level audit, full suite, whole-course clear or FPS
 claim. Build: Codex/sol fork · build 10-30 03:48 UTC; 1,783 files / 1,112.5MiB;
 offline version 70cd0e51f4bb34232847. Local checkpoint only; publication held.
 The broader polish goal remains active.
+
+
+## Carlisle coastal water and bounce wind — 30 October 2026
+
+Approximately 21 minutes to the first compiled playable integration and 46
+minutes to final local review, including a correction to avoid global downloads.
+Added a 44-second stereo water bed and 55.9-second wind bed. Water recedes with
+height above the authored sea; wind opens up during high bounces. Gains ease
+smoothly, source phases continue through movement, and respawn teleports do not
+become speed bursts. The smaller boat bonus has quieter base wind.
+
+Both layers use the existing SFX volume/mute bus and pause/navigation policy.
+Disposal removes the two Carlisle channels. Long beds are requested only when
+Carlisle loads, through the existing two-worker decoder queue; repeated requests
+reuse buffers, queued loads cancel on navigation and resume on back-forward
+restoration. Cold Codex Geometry Lab loads neither asset. Main/bonus/main trips
+fetch each once. Shared runtime ownership is limited to audio.ts preparation
+and Carlisle presentation integration; no movement, camera or collision edits.
+
+CC0 originals from RandomMind (Sea and river wave sounds) and Luke.RUSTLTD
+(wind1) are retained with hashes, source URLs and shipped credits. Chrome's
+native decoder and a reproducible mastering script produce 32kHz/16-bit PCM
+with long equal-power overlaps, rumble/high-frequency cleanup and repaired
+joins. Source peaks are below 0.68; both joins have zero PCM boundary step.
+No Tripo credits, paid services or API purchases. Compiled WAVs are exact.
+
+Controller checks pass at 30/60/144 FPS. Shared audio tests pass deferred-load
+isolation, deduplication, concurrency, cancellation/restoration and existing
+loop/volume behavior. Original main/bonus/prop fingerprints and typecheck/build
+pass. Compiled lite and full native browser runs each collect four airborne
+crates, avoid nitro and catch the next trampoline with zero deaths. Wind gain
+rises to about 0.238 at the 125m apex while water drops to about 0.096; sources
+are not restarted. Measured output is nonzero after gesture and zero under SFX
+mute. Pause/resume, unrelated level, bonus and main return pass with no console
+errors. Full review includes native 1920x1080, normal 480p/CRT and a live bounce
+audio recording. Initial evidence before the loading correction is retained.
+
+Twenty protected source files match f87812fa, including gameplay, cameras,
+course/bonus, cargo/nitro, wet slopes and all previous art systems. No new level
+audit or full suite was needed, and no continuous full-course clear or sustained
+FPS claim is made. Build: Codex/sol fork · build 10-30 04:40 UTC; 1,785 files /
+1,121.3MiB; offline version fe9dce8d26a12b28e74c. Evidence:
+art/carlisle-shipyard/harbour-sound/. Local-only checkpoint; publication held.
+The broader polish goal remains active.

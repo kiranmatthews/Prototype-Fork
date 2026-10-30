@@ -1,0 +1,22 @@
+[
+  {
+    "file": "art/carlisle-shipyard/harbour-sound/source/vistula-short.mp3",
+    "download": "https://opengameart.org/sites/default/files/VistulaShort_0.mp3",
+    "page": "https://opengameart.org/content/sea-and-river-wave-sounds",
+    "author": "RandomMind",
+    "license": "CC0 1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 12004407,
+    "sha256": "8c24607e41edd6f018ec3582a07e5a8dbc57347276339cb68440951a0fb4cfb1"
+  },
+  {
+    "file": "art/carlisle-shipyard/harbour-sound/source/wind1.wav",
+    "download": "https://opengameart.org/sites/default/files/wind1.wav",
+    "page": "https://opengameart.org/content/wind1",
+    "author": "Luke.RUSTLTD",
+    "license": "CC0 1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 5291948,
+    "sha256": "a2856f794fbf77e05f8241dc4adeade7f62fa21c3c9dc49f7725b6c6218060c3"
+  }
+]

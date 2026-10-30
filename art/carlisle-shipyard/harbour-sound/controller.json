@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "reports": [
+    {
+      "fps": 30,
+      "dock": {
+        "waterGain": 0.2674449217273464,
+        "windGain": 0.05498677967879693,
+        "height": 9,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "apex": {
+        "waterGain": 0.11446650328444906,
+        "windGain": 0.23052537555752062,
+        "height": 99,
+        "verticalSpeed": 0.592154617917231,
+        "teleports": 0
+      },
+      "biggestGainStep": 0.00514974598790674,
+      "disposed": true
+    },
+    {
+      "fps": 60,
+      "dock": {
+        "waterGain": 0.26744492172734635,
+        "windGain": 0.05498677967879693,
+        "height": 9,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "apex": {
+        "waterGain": 0.11470719241965512,
+        "windGain": 0.23033830674133995,
+        "height": 99,
+        "verticalSpeed": 0.2960854262346402,
+        "teleports": 0
+      },
+      "biggestGainStep": 0.002579094333581222,
+      "disposed": true
+    },
+    {
+      "fps": 144,
+      "dock": {
+        "waterGain": 0.2674449217273466,
+        "windGain": 0.05498677967879694,
+        "height": 9,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "apex": {
+        "waterGain": 0.11484946312188855,
+        "windGain": 0.23022793077234868,
+        "height": 99,
+        "verticalSpeed": 0.12336985928072863,
+        "teleports": 0
+      },
+      "biggestGainStep": 0.0010757391214229195,
+      "disposed": true
+    }
+  ]
+}

@@ -11,6 +11,8 @@ import { CarlisleCoastalBanks } from './carlisleCoastalBanks';
 import { CarlisleFishingFleet } from './carlisleFishingFleet';
 import { CarlislePierTimber } from './carlislePierTimber';
 import { CarlisleSteelDecks } from './carlisleSteelDecks';
+import { CarlisleHarbourSound } from './carlisleHarbourSound';
+import { sfx } from './audio';
 
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -72,7 +74,8 @@ export class CarlisleShipyard {
   private readonly fleet=new CarlisleFishingFleet();
   private readonly piers=new CarlislePierTimber();
   private readonly steelDecks=new CarlisleSteelDecks();
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,water:{staticWash:0,movingWash:0},errors:[] as string[]};
+  private readonly sound:CarlisleHarbourSound;
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,buildings:{markets:0,repairs:0,openYards:0},timber:this.boardwalk.diagnostics,coast:this.coast.diagnostics,fleet:this.fleet.diagnostics,piers:this.piers.diagnostics,steelDecks:this.steelDecks.diagnostics,ambience:null as CarlisleHarbourSound['diagnostics']|null,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -105,6 +108,7 @@ export class CarlisleShipyard {
   private lightingPosition=new THREE.Vector3(Infinity,Infinity,Infinity);
   constructor(root:THREE.Group,private data:CustomLevelData,ground:THREE.Mesh[]) {
     this.bonus=data.name==='Bonus: Springtide Skippers';
+    this.sound=new CarlisleHarbourSound(sfx,this.bonus);this.diagnostics.ambience=this.sound.diagnostics;
     this.frameWood.color.set(0xffb36c);
     this.group.name='Carlisle shipyard art';this.group.userData.visualOnly=true;root.add(this.group);
     this.group.add(this.sky);this.geometries.add(this.sky.geometry);this.materials.add(this.sky.material);
@@ -121,7 +125,7 @@ export class CarlisleShipyard {
     this.flushPrimitives();
     for(let i=0;i<6;i++){const light=new THREE.PointLight(0xff692c,0,27,1.6);this.group.add(light);this.lights.push(light);}
     this.ready=Promise.all([Promise.all(names.map(name=>this.assets.load(name as Kit))),this.boardwalk.load(),this.fleet.load(),this.piers.load(),this.steelDecks.load(),
-      this.bonus?Promise.resolve():this.coast.load(this.ocean.mesh.geometry,z=>this.chunk(z))]).then(([assets])=>{
+      this.bonus?Promise.resolve():this.coast.load(this.ocean.mesh.geometry,z=>this.chunk(z)),sfx.prepare(['carlisleWater','carlisleWind'])]).then(([assets])=>{
       if(this.disposed)return;
       assets.forEach((gltf,i)=>this.install(names[i] as Kit,gltf));
       this.diagnostics.models=assets.length;this.diagnostics.props=this.placements.length;this.diagnostics.status='ready';
@@ -466,6 +470,7 @@ export class CarlisleShipyard {
   }
   update(dt:number,player:THREE.Vector3) {
     this.time+=dt;this.ocean.uniforms.time.value=this.time;this.foam.uniforms.time.value=this.time;this.sky.material.uniforms.time.value=this.time;
+    this.sound.update(dt,player,this.seaY(player.z));
     this.coast.update(this.time);
     this.fleet.update(this.time);
     for(const [id,group] of this.chunks)group.visible=Math.abs(player.z+id*180)<800;
@@ -489,6 +494,7 @@ export class CarlisleShipyard {
     this.fleet.dispose();
     this.piers.dispose();
     this.steelDecks.dispose();
+    this.sound.dispose();
     for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});
     this.attached.forEach(n=>n.removeFromParent());this.group.removeFromParent();

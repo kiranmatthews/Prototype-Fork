@@ -1,0 +1,53 @@
+[
+  {
+    "file": "vistula-short.mp3",
+    "rate": 32000,
+    "originalDuration": 300.0424375,
+    "offset": 38,
+    "duration": 44.0,
+    "channels": 2,
+    "frames": 1408000,
+    "inputDuration": 49,
+    "inputFrames": 1568000,
+    "output": "public/sfx/carlisle/harbour-water.wav",
+    "crossfadeSeconds": 5,
+    "highpassHz": 85,
+    "lowpassHz": 6800,
+    "rms": 0.08856369262951241,
+    "peak": 0.67999267578125,
+    "dc": [
+      4.1829455982555043e-07,
+      7.2479248046875e-07
+    ],
+    "naturalStepP999": 0.117218017578125,
+    "loopBoundaryStep": 0.0,
+    "bytes": 5632044,
+    "sha256": "832e69197064eb17a3e3d8b8e7907f52edb0332b8dfa78f3248443f4f2791dd1",
+    "compiledByteIdentical": true
+  },
+  {
+    "file": "wind1.wav",
+    "rate": 32000,
+    "originalDuration": 59.99890625,
+    "offset": 0,
+    "duration": 55.9,
+    "channels": 1,
+    "frames": 1788800,
+    "inputDuration": 59.9,
+    "inputFrames": 1916800,
+    "output": "public/sfx/carlisle/coastal-wind.wav",
+    "crossfadeSeconds": 4,
+    "highpassHz": 110,
+    "lowpassHz": 4200,
+    "rms": 0.09931042778737892,
+    "peak": 0.67999267578125,
+    "dc": [
+      -9.216008331353422e-08
+    ],
+    "naturalStepP999": 0.069427490234375,
+    "loopBoundaryStep": 0.0,
+    "bytes": 3577644,
+    "sha256": "e40fab9780218b583f04956945caed7b09bb86e6f74dfcf9fbd11cbe6489d220",
+    "compiledByteIdentical": true
+  }
+]

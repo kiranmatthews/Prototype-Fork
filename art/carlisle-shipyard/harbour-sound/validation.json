@@ -1,0 +1,186 @@
+{
+  "status": "Validated locally; publication held",
+  "baseCommit": "f87812fa6aa706521fd1c14b9116fd45a1a30e6f",
+  "startedUTC": "2026-10-30T04:06:48Z",
+  "finalReviewUTC": "2026-10-30T04:52:43.828023+00:00",
+  "elapsedMinutes": 46,
+  "compiledPlayableMinutes": 21,
+  "change": "Carlisle-only water and height-responsive wind ambience",
+  "assets": [
+    {
+      "file": "vistula-short.mp3",
+      "rate": 32000,
+      "originalDuration": 300.0424375,
+      "offset": 38,
+      "duration": 44.0,
+      "channels": 2,
+      "frames": 1408000,
+      "inputDuration": 49,
+      "inputFrames": 1568000,
+      "output": "public/sfx/carlisle/harbour-water.wav",
+      "crossfadeSeconds": 5,
+      "highpassHz": 85,
+      "lowpassHz": 6800,
+      "rms": 0.08856369262951241,
+      "peak": 0.67999267578125,
+      "dc": [
+        4.1829455982555043e-07,
+        7.2479248046875e-07
+      ],
+      "naturalStepP999": 0.117218017578125,
+      "loopBoundaryStep": 0.0,
+      "bytes": 5632044,
+      "sha256": "832e69197064eb17a3e3d8b8e7907f52edb0332b8dfa78f3248443f4f2791dd1",
+      "compiledByteIdentical": true
+    },
+    {
+      "file": "wind1.wav",
+      "rate": 32000,
+      "originalDuration": 59.99890625,
+      "offset": 0,
+      "duration": 55.9,
+      "channels": 1,
+      "frames": 1788800,
+      "inputDuration": 59.9,
+      "inputFrames": 1916800,
+      "output": "public/sfx/carlisle/coastal-wind.wav",
+      "crossfadeSeconds": 4,
+      "highpassHz": 110,
+      "lowpassHz": 4200,
+      "rms": 0.09931042778737892,
+      "peak": 0.67999267578125,
+      "dc": [
+        -9.216008331353422e-08
+      ],
+      "naturalStepP999": 0.069427490234375,
+      "loopBoundaryStep": 0.0,
+      "bytes": 3577644,
+      "sha256": "e40fab9780218b583f04956945caed7b09bb86e6f74dfcf9fbd11cbe6489d220",
+      "compiledByteIdentical": true
+    }
+  ],
+  "sourceCredits": "public/sfx/carlisle/CREDITS.md",
+  "paidServices": false,
+  "tripoCreditsUsed": 0,
+  "apiTopups": 0,
+  "protectedFiles": 20,
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-30 04:40 UTC",
+    "files": 1785,
+    "sizeMiB": 1121.3,
+    "offlineVersion": "fe9dce8d26a12b28e74c"
+  },
+  "checks": {
+    "controller": "30/60/144 FPS bounce envelope, bounded gains, stable pitch, teleport rejection, position immutability and cleanup passed",
+    "audioEngine": "ordinary and deferred loading, deduplication, two-worker decoder limit, queued navigation cancellation, back-forward restoration, volume and loop lifecycle passed",
+    "originalCourseAndProps": "tools/test-carlisle-shipyard.mjs passed",
+    "typecheckBuild": "npm run build passed",
+    "diff": "git diff --check passed"
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "coldOther": {
+        "water": false,
+        "wind": false
+      },
+      "assetRequests": [
+        "http://127.0.0.1:5484/sfx/carlisle/harbour-water.wav",
+        "http://127.0.0.1:5484/sfx/carlisle/coastal-wind.wav"
+      ],
+      "dock": {
+        "waterGain": 0.27502375867842793,
+        "windGain": 0.05499934179896443,
+        "height": 8,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "apex": {
+        "waterGain": 0.09567243410525346,
+        "windGain": 0.23806489120557645,
+        "height": 125.00027778969914,
+        "verticalSpeed": 2.133333333333667,
+        "teleports": 1
+      },
+      "flight": {
+        "launched": true,
+        "landed": true,
+        "broken": 4,
+        "deaths": 0,
+        "distance": 1.9130513212156903,
+        "apex": {
+          "waterGain": 0.09567243410525346,
+          "windGain": 0.23806489120557645,
+          "height": 125.00027778969914,
+          "verticalSpeed": 2.133333333333667,
+          "teleports": 1
+        }
+      },
+      "continuousSources": true,
+      "dockRms": 0.008102220594105891,
+      "mutedRms": 0,
+      "restoredRms": 0.010836971742096926,
+      "pauseLoops": 0,
+      "resumeLoops": 2,
+      "otherLevelLoops": 0,
+      "bonusLoops": 2,
+      "returnLoops": 2,
+      "errors": []
+    },
+    "full": {
+      "passed": true,
+      "coldOther": null,
+      "assetRequests": [
+        "http://127.0.0.1:5484/sfx/carlisle/harbour-water.wav",
+        "http://127.0.0.1:5484/sfx/carlisle/coastal-wind.wav"
+      ],
+      "dock": {
+        "waterGain": 0.21218338691332658,
+        "windGain": 0.04966654176745773,
+        "height": 8,
+        "verticalSpeed": 0,
+        "teleports": 0
+      },
+      "apex": {
+        "waterGain": 0.09569855634415837,
+        "windGain": 0.23823469924704685,
+        "height": 125.10500001192136,
+        "verticalSpeed": 0.3999999999996362,
+        "teleports": 1
+      },
+      "flight": {
+        "launched": true,
+        "landed": true,
+        "broken": 4,
+        "deaths": 0,
+        "distance": 1.6195865315176414,
+        "apex": {
+          "waterGain": 0.09569855634415837,
+          "windGain": 0.23823469924704685,
+          "height": 125.10500001192136,
+          "verticalSpeed": 0.3999999999996362,
+          "teleports": 1
+        }
+      },
+      "continuousSources": true,
+      "dockRms": 0.005949485460542707,
+      "mutedRms": 0,
+      "restoredRms": 0.016588442216267606,
+      "pauseLoops": 0,
+      "resumeLoops": 2,
+      "otherLevelLoops": 0,
+      "bonusLoops": 2,
+      "returnLoops": 2,
+      "errors": []
+    }
+  },
+  "appearance": "Native 1920x1080 and normal 480p/CRT reviewed; no visual assets or geometry changed",
+  "maximumAmbientPeakBoundAtDefaultMaster": 0.22610000000000002,
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour",
+  "limitations": [
+    "Bounded keyboard cargo flights, not a new continuous full-course clear",
+    "Audio output and lifecycle measured; live recording retained for listening",
+    "No sustained FPS measurement or full-suite run",
+    "Broader polish goal remains active"
+  ]
+}
