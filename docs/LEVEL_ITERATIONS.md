@@ -7014,3 +7014,38 @@ Build: 1,779 files / 1,074.9MiB; offline version e79b8cb5487ec0742aab;
 Codex/sol fork · build 10-30 01:54 UTC. Evidence and exact protected hashes are
 in art/carlisle-shipyard/deck-batching/. No paid services or new assets. Local
 checkpoint only; publication held. The broader polish goal remains active.
+
+## Carlisle spring impact and shared air jump — 30 October 2026
+
+Approximately 12 minutes prompt-to-playable, with final combined validation
+completed in about 28 minutes. Hard landings after trampoline flights now have
+a small compression, visual rebound and finite settle, both on foot and mounted.
+The default hop is 12cm over half a second, scaled by impact speed. Rider and
+board lift together; independent shared segment elasticity supplies the impact
+without altering grounded movement or whole-rig scale. Soft ground, spring
+recontacts, crates, bails and Abandon Ship rolls retain their contact ownership.
+
+Added six live sliders under TUNER → TRAMPOLINE · LAUNCH & LANDING: rebound
+height/time, compression, launch backward lean, tap air-jump pop and charged
+air-jump pop. The default backward opening is reduced to 15% while preserving
+the full slow somersault and simultaneous bicycle legs. Saved authored clips
+remain intact. A fresh trampoline air jump now uses the Abandon Ship flip,
+momentum and supported landing roll for either rider mode; only the mounted
+version discards a board. Ordinary double jumps keep their existing behavior.
+
+Committed the runtime change as eb0ab0ed, then merged the completed Carlisle
+level iteration ee1eaf33 as 5b1d9e8b at the user's request. This brings the piers,
+boats, shoreline, deck art and full-geometry deck culling into the same playtest.
+Both appended iteration histories were retained; the level author's checkout
+was untouched. No new level geometry was authored in this movement increment.
+
+The new native impact checks, launch suite, all 14 board-roll cases and character
+runtime checks pass. Merged launch transfers, check:levels and production build
+pass; no check:all. Browser review covers lite and full MAX/native, both rider
+landings, individual rebound frame steps, supported recovery to idle and live
+slider changes (.12m → .20m → .12m). Zero deaths on the reviewed transfers and
+no console warnings/errors. Evidence and tuning details are retained in
+docs/CARLISLE_LAUNCH_STUDY.md and docs/carlisle-launch-review/.
+
+Combined build: 1,777 files / 1,067.8MiB, offline version c9761604c6e8fb9468d9.
+Local merged playtest is ready on port 5491. Publication remains held.
