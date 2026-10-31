@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import { WorldSolids, solidContact } from './worldSolids';
 
-/** Opted-in authored mesh walls only. Floors, ceilings and scenery retain
+/** Authored mesh walls and native moving-deck sides. Floors, ceilings and scenery retain
  * their existing native player contact paths. */
 export class MeshSideCollisions {
   private readonly solids = new WorldSolids();
   private readonly geometries: THREE.BufferGeometry[] = [];
   private readonly contact = solidContact();
 
-  add(mesh: THREE.Mesh, active: () => boolean): void {
+  add(mesh: THREE.Mesh, active: () => boolean, dynamic = false): void {
     const positions = mesh.geometry.getAttribute('position'), index = mesh.geometry.index;
     const count = index?.count ?? positions.count, vertices: number[] = [];
     const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
@@ -24,8 +24,12 @@ export class MeshSideCollisions {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     this.geometries.push(geometry);
-    this.solids.add(mesh, { geometry, active });
+    this.solids.add(mesh, { geometry, active, dynamic });
   }
+
+  /** Snapshot before movers advance, so both players sweep the same motion. */
+  beginStep(): void { this.solids.beginStep(); }
+  resetMotion(): void { this.solids.resetMotion(); }
 
   resolve(previous: THREE.Vector3, position: THREE.Vector3,
     half: { x: number; y: number; z: number }, normal: THREE.Vector3): boolean {

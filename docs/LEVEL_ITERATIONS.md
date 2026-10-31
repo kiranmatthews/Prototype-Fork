@@ -7757,3 +7757,17 @@ Six focused checks, exact paired movement/jump traces, native keyboard lite/full
 contact checks, actual-course MAX/normal visuals, production build and release
 size pass. Prompt-to-validated playable work: approximately 17 minutes.
 Evidence: [walking net](carlisle-relay/walking-net/README.md).
+
+
+### Moving lift side collision — 31 October 2026
+
+Native moving decks now participate in the existing vertical-face collision
+path, with translation/rotation history and reset handling. This closes the
+missing side contact that let rising foot jumps enter their slabs. Native top
+support, ledge grabs, grind edges, trampoline contact and movement tuning are
+preserved. Six focused regressions, 128 side sweeps, actual-course keyboard
+approaches and riding in lite/full Chrome, native/normal visuals, build and
+release-size checks pass. Prompt-to-validated playable fix: approximately
+23 minutes. The supplied input-only replay did not reproduce the exact ending;
+both authored vertical-lift sections were directly validated. Evidence:
+[moving platform collision](carlisle-relay/moving-platform-collision/README.md).

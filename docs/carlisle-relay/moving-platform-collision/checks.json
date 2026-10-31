@@ -1,0 +1,75 @@
+[
+  {
+    "command": [
+      "node",
+      "tools/test-moving-platform-collision.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 9.11,
+    "output": "PASS 128 moving/rotating/authored lift side contacts, unobstructed tops/undersides, native rising-jump edge block, stationary-body sweep, activation/reset, unchanged tuning."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-kinetic-platforms.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 18.24,
+    "output": "{\"riderSeconds\":4,\"maxDrift\":4.050960254169386e-14,\"rotatingGrind\":true,\"roundTrip\":true,\"invalidMotionRejected\":true}\nPASS walking and grounded board-trip entries at three mover phases."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-dynamic-platform-edges.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 9.42,
+    "output": "PASS moving XYZ rims/catches/opt-outs, 140 warmed moving-rail/grindosaurus queries and reset, fallaway grind-trigger/drop/return, phase visibility, switch ghosts and spin-deployed edges."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-blockworks-ramp-collision.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 11.32,
+    "output": "PASS 95 swept wedge side/end contacts, top clearance, ghost/checkpoint lifecycle, capture and recorded approach recovery (0 frames)."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-solid-player.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 11.68,
+    "output": "PASS 6 floor/step cases across three level IDs and 12 rotated native wall contacts."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-trampoline-contact.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 10.19,
+    "output": "PASS walkable nets; safe walk/skate metal rims; grounded board trip; actual foot jump and board ollie landings; linked bounces; high-energy rim ragdoll; rotated/moving opening; unchanged tuning."
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "seconds": 63.52
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "check:release"
+    ],
+    "exitCode": 0,
+    "seconds": 0.26,
+    "output": "> board-platformer-proto@0.1.0 check:release\n> node tools/check-release-size.mjs\n\nRelease output: 1857 files, 998,293,556 bytes / 1,000,000,000 byte budget.\nPASS release fits the hosting budget."
+  }
+]

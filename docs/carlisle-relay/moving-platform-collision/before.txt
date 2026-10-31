@@ -1,0 +1,20 @@
+{"childPid": 9665, "command": "node", "owner": "01a18531-75e0-7203-b8a1-2129b7839f79", "pid": 9664, "slot": 0, "startedAt": "2026-10-31T00:45:03.588896+00:00", "status": "running"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: moving platform: x/-1 edge has no collision
+    at checkFaces (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-moving-platform-collision.mjs:21:14)
+    at withSkateRuntime.levelEntry.id (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-moving-platform-collision.mjs:33:51)
+    at withSkateRuntime (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/jungle-cup-harness.mjs:50:11)
+    at async file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-moving-platform-collision.mjs:10:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+{"exitCode": 1, "owner": "01a18531-75e0-7203-b8a1-2129b7839f79", "slot": 0, "status": "released"}

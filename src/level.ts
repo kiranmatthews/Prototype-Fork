@@ -5636,8 +5636,9 @@ export class Level {
     // ground-membership switch/checkpoint lifecycle, including hard resets.
     this.root.traverse(object=>{
       const mesh=object as THREE.Mesh;
-      if(mesh.isMesh && mesh.userData.solidSides && !mesh.userData.carlisleScenery)
-        this.meshSideCollisions.add(mesh,()=>this.groundMeshes.includes(mesh));
+      const moving=mesh.userData.moverId!==undefined;
+      if(mesh.isMesh && (mesh.userData.solidSides || moving) && !mesh.userData.carlisleScenery)
+        this.meshSideCollisions.add(mesh,()=>this.groundMeshes.includes(mesh),moving);
     });
     if(!this.isCampaignMap){
       this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
@@ -9967,6 +9968,7 @@ export class Level {
     this.carlisleShipyard?.update(dt,this.playerPos);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
+    this.meshSideCollisions.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     this.nightworksPlume?.advance(dt);
     this.breakableScenery.update(dt);
@@ -11519,6 +11521,7 @@ export class Level {
     // subsequent ground ray sees the reset world rather than stale matrices.
     this.root.updateMatrixWorld(true);
     this.syncSurfaceEdgeRails();
+    this.meshSideCollisions.resetMotion();
   }
 
   // ---------------------------------------------------------------- build --
