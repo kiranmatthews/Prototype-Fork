@@ -1,0 +1,15 @@
+{
+  "entry": "./assets/index-Dqz3cV3-.js",
+  "bytes": 998293354,
+  "checks": [
+    "npm run build",
+    "npm run check:release"
+  ],
+  "sourceSha256": {
+    "src/carlisleMarineNet.ts": "dfb9964f352af5c32f1f2047a5cd28746f2d5e4edf7c3a99d7405f5828ca819e",
+    "src/carlisleShipyard.ts": "d5ce0b267bfec2fe48c2e37c028945c485b1958c8b9e2e1c1e9bc578d4e8250c",
+    "src/trampolineSurface.ts": "9eef358a323750802767e4a002d86beb4510db0db9bda183a56cb788aaf9ea6e",
+    "src/player.ts": "a0842d16094610b2f937dd087d0bb96f13ece1f3124fc039ebbb81392a0a5064",
+    "src/tuning.ts": "74fc4258f953316c9cd9674faff8df9934adefdda572f1465822dec367088a41"
+  }
+}

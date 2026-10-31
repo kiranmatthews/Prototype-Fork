@@ -15,6 +15,7 @@ const deform = /* glsl */`
   attribute float netMobility;
   uniform vec4 netImpact;
   uniform vec4 netBounds;
+  uniform vec4 netLoad;
   uniform float netAge;
   uniform float netPreview;
   float netOffset(vec2 p) {
@@ -28,7 +29,11 @@ const deform = /* glsl */`
     float settle=1.-smoothstep(1.4,2.,t);
     float rebound=sin(t*15.)*exp(-t*2.8)*1.3;
     float wave=sin(radius*11.-t*17.)*exp(-pow((radius-t*1.4)/.32,2.))*exp(-t*2.5)*.15;
-    return -envelope*(netPreview+(netImpact.z*(rebound*(.30+.70*local)+wave)*settle));
+    vec2 edge=netBounds.zw-abs(p-netBounds.xy);
+    float pinned=smoothstep(0.,min(1.5,min(netBounds.z,netBounds.w)*.4),min(edge.x,edge.y));
+    vec2 load=(p-netLoad.xy)/netLoad.w;
+    float weight=netLoad.z*exp(-dot(load,load))*pinned;
+    return -weight-envelope*(netPreview+(netImpact.z*(rebound*(.30+.70*local)+wave)*settle));
   }
 `;
 type SharedRopes={geometry:THREE.BufferGeometry;normal:THREE.DataTexture;roughness:THREE.DataTexture;refs:number};
@@ -39,9 +44,11 @@ export class CarlisleMarineNet {
   readonly group = new THREE.Group();
   readonly mesh: THREE.Mesh;
   readonly eyes:THREE.Vector3[];
-  readonly diagnostics={impacts:0,age:2,depth:0,hit:[0,0] as [number,number],anchors:8};
+  readonly diagnostics={impacts:0,age:2,depth:0,hit:[0,0] as [number,number],anchors:8,
+    weightDepth:0,weightAt:[0,0] as [number,number]};
   private readonly uniforms={
     netImpact:{value:new THREE.Vector4(0,0,0,0)},netBounds:{value:new THREE.Vector4()},
+    netLoad:{value:new THREE.Vector4(0,0,0,1)},
     netAge:{value:2},netPreview:{value:0},
   };
   private readonly material:THREE.MeshStandardMaterial;
@@ -50,6 +57,8 @@ export class CarlisleMarineNet {
   private readonly shared:SharedRopes;
   private readonly resourceKey:string;
   private readonly maxDepth:number;
+  private readonly weightDepth:number;
+  private pressed=false;
   constructor(readonly width:number,readonly length:number,readonly frameHeight=marineFrameHeight(width,length)) {
     this.group.name='Laced elastic marine net';this.group.userData.visualOnly=true;
     const w=width,d=length,h=frameHeight;
@@ -57,6 +66,8 @@ export class CarlisleMarineNet {
     const cx=(x0+x1)/2,cz=(z0+z1)/2,hx=(x1-x0)/2,hz=(z1-z0)/2;
     this.uniforms.netBounds.value.set(cx,cz,hx,hz);
     this.maxDepth=Math.min(2.25,Math.min(w,d)*.175);
+    this.weightDepth=Math.min(.65,Math.min(w,d)*.085);
+    this.uniforms.netLoad.value.w=THREE.MathUtils.clamp(Math.min(w,d)*.18,1.2,3.4);
     this.eyes=MARINE_NET_EYES.map(([x,y,z])=>new THREE.Vector3(x*w,(y-.87)*h,z*d));
     this.resourceKey=[w,d,h].join(':');
     let shared=ropeResources.get(this.resourceKey);
@@ -154,7 +165,7 @@ export class CarlisleMarineNet {
           objectNormal=normalize(vec3(objectNormal.x-dx*objectNormal.y,objectNormal.y,objectNormal.z-dz*objectNormal.y));
         `);
       };
-      material.customProgramCacheKey=()=>`marine-rope-v2-${material.type}`;
+      material.customProgramCacheKey=()=>`marine-rope-v3-${material.type}`;
     }
     this.mesh=new THREE.Mesh(shared.geometry,this.material);this.mesh.name='Woven ropes, knots and eight threaded lashings';
     this.mesh.castShadow=true;this.mesh.receiveShadow=true;this.mesh.customDepthMaterial=this.depth;this.mesh.customDistanceMaterial=this.distance;
@@ -167,7 +178,30 @@ export class CarlisleMarineNet {
     this.uniforms.netImpact.value.set(THREE.MathUtils.clamp(x,b.x-b.z*.94,b.x+b.z*.94),THREE.MathUtils.clamp(z,b.y-b.w*.94,b.y+b.w*.94),depth,0);this.uniforms.netAge.value=0;
     this.diagnostics.impacts++;this.diagnostics.hit=[x,z];this.diagnostics.depth=depth;this.diagnostics.age=0;
   }
-  update(dt:number) {this.uniforms.netAge.value=Math.min(2,this.uniforms.netAge.value+dt);this.diagnostics.age=this.uniforms.netAge.value;}
+  /** A one-step lease: supported walkers renew it after each simulation step.
+   * Releasing, jumping, respawning or leaving this net cannot leave a dent stuck. */
+  press(x:number,z:number) {
+    const b=this.uniforms.netBounds.value;
+    if(Math.abs(x-b.x)>=b.z||Math.abs(z-b.y)>=b.w)return;
+    const load=this.uniforms.netLoad.value;
+    load.x=x;load.y=z;this.pressed=true;
+    this.diagnostics.weightAt[0]=x;this.diagnostics.weightAt[1]=z;
+  }
+  /** Same local weight field as the vertex/depth/distance shaders. Only the
+   * rendered rider follows it, so walking cannot change collision or jump arcs. */
+  weightOffset(x:number,z:number) {
+    const b=this.uniforms.netBounds.value,load=this.uniforms.netLoad.value;
+    const edge=Math.min(b.z-Math.abs(x-b.x),b.w-Math.abs(z-b.y));
+    const pinned=THREE.MathUtils.smoothstep(edge,0,Math.min(1.5,Math.min(b.z,b.w)*.4));
+    return -load.z*Math.exp(-((x-load.x)**2+(z-load.y)**2)/load.w**2)*pinned;
+  }
+  update(dt:number) {
+    this.uniforms.netAge.value=Math.min(2,this.uniforms.netAge.value+dt);this.diagnostics.age=this.uniforms.netAge.value;
+    const load=this.uniforms.netLoad.value,target=this.pressed?this.weightDepth:0;
+    load.z+=(target-load.z)*(1-Math.exp(-(this.pressed?14:8)*Math.max(0,dt)));
+    if(!this.pressed&&load.z<.001)load.z=0;
+    this.pressed=false;this.diagnostics.weightDepth=load.z;
+  }
   get compression(){return this.uniforms.netPreview.value/this.maxDepth;}
   setCompression(value:number) {this.uniforms.netPreview.value=THREE.MathUtils.clamp(value,0,1)*this.maxDepth;}
   /** Portable workshop export: retain the same ropes and bake a compression morph.

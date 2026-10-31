@@ -3,6 +3,7 @@ import type { AnimationClip } from './animation/types';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
+import { trampolineSurfacePresentations } from './trampolineSurface';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
@@ -617,6 +618,8 @@ export class Player {
   readonly renderPosition = new THREE.Vector3();
   private readonly renderInterpolator = new RenderInterpolator();
   private readonly renderObjects: THREE.Object3D[] = [];
+  private readonly netRenderOffset = new THREE.Vector3();
+  private readonly previousNetRenderOffset = new THREE.Vector3();
   private _renderSnapVersion = 0;
   // this rider's place on the camera lane — private, so split-screen players
   // don't drag each other's frame around (see Level.laneDirAt)
@@ -3144,6 +3147,7 @@ export class Player {
    * Used for pause boundaries and an asynchronously replaced model hierarchy.
    */
   resetRenderInterpolation(): void {
+    this.netRenderOffset.set(0,0,0);this.previousNetRenderOffset.set(0,0,0);
     this.footstepAudio.contacts.reset();
     this.renderInterpolator.snap();
     this.group.position.copy(this.pos);
@@ -3152,6 +3156,7 @@ export class Player {
 
   /** Freeze both endpoints at current without introducing resume latency. */
   collapseRenderInterpolation(): void {
+    this.previousNetRenderOffset.copy(this.netRenderOffset);
     this.renderInterpolator.collapse();
     this.group.position.copy(this.pos);
     this.renderPosition.copy(this.pos);
@@ -3273,6 +3278,22 @@ export class Player {
     // only now, at the final PVP-corrected player position against the final
     // world transforms, so the landing X cannot flash on stale/old ground.
     this.refreshGroundPresentation(level);
+    this.previousNetRenderOffset.copy(this.netRenderOffset);
+    const support=this.groundHit?.mesh;
+    const net=support&&this.grounded&&this.state==='ride'&&!this.freeSkate&&!this.isBailing&&
+      !this.groundHit?.trampolineRim?trampolineSurfacePresentations.get(support):undefined;
+    if(net&&support){
+      support.updateWorldMatrix(true,false);
+      support.worldToLocal(_renderDelta.copy(this.pos));
+      net.press(_renderDelta.x,_renderDelta.z);
+      this.netRenderOffset.setFromMatrixColumn(support.matrixWorld,1)
+        .multiplyScalar(net.weightOffset(_renderDelta.x,_renderDelta.z));
+    }else{
+      // Release the visual seating through takeoff, without popping the model
+      // up or adding any velocity/height to the actual jump.
+      this.netRenderOffset.multiplyScalar(Math.exp(-24*CONST.fixedStep));
+      if(this.netRenderOffset.lengthSq()<1e-8)this.netRenderOffset.set(0,0,0);
+    }
 
     const objects = this.renderObjects;
     objects.length = 0;
@@ -3293,12 +3314,14 @@ export class Player {
   applyRenderInterpolation(alpha: number): void {
     if (this.renderInterpolator.hasPose) this.renderInterpolator.apply(alpha);
     else this.group.position.copy(this.pos);
+    this.group.position.add(_renderDelta.lerpVectors(this.previousNetRenderOffset,this.netRenderOffset,alpha));
     this.renderPosition.copy(this.group.position);
   }
 
   /** Put authoritative fixed-step transforms back immediately after drawing. */
   restoreRenderPose(): void {
     this.renderInterpolator.restore();
+    this.group.position.copy(this.pos);
     this.renderPosition.copy(this.pos);
   }
 

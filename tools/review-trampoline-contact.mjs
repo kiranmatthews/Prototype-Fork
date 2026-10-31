@@ -21,14 +21,14 @@ try {
       g.campaign.startEphemeral(); g.renderQualitySettings.setRegularResolution(null); g.crtGuestSettings.setEnabled(false);
       l.buildCustom({ v: 1, name: 'Bonus: Springtide Skippers', spawn: [0, .1, 0], killY: -50, hugeDropBail: false, components: [
         { t: 'platform', p: [0, -.5, 0], s: [80, 1, 100] },
-        { t: 'trampoline', nm: 'Review net', p: [0, .02, 0], s: [24, .6, 24], speed: 48, amp: 1.25 },
+        { t: 'trampoline', nm: 'Review net', p: [0, 3.02, 0], s: [24, .6, 24], speed: 48, amp: 1.25 },
         { t: 'gate', p: [30, 0, -45] },
       ] });
       await Promise.all([l.prepareJungleAssets(), p.preparePresentationAssets()]);
       const net = l.groundMeshes.find(m => m.name === 'Review net');
       const q = window.__netReview = { budget: 0, stop: '', samples: [], bails: [], cameraDistance: 12 };
       q.reset = (x = 0, z = 0, board = false) => {
-        p.respawn(l, true, true, { position: new V(x, .1, z), heading: new V(0, 0, -1) });
+        p.respawn(l, true, true, { position: new V(x, 3.1, z), heading: new V(0, 0, -1) });
         p.freeSkate = board; p.speed = board ? 12 : 0; p.camDir.set(0, 0, -1);
         q.bails = []; q.samples = [];
       };
@@ -40,7 +40,8 @@ try {
         q.samples.push({ position: p.pos.toArray(), speed: p.speed, state: p.state, grounded: p.grounded,
           board: p.freeSkate, bail: p.isBailing, rim: p.groundHit?.trampolineRim, net: p.groundHit?.trampolineBounce !== undefined,
           launchId: p.trampolineLaunchId, vy: p.vVel, clip: p.animationClipHint,
-          impacts: net.userData.trampolineVisualImpact?.id ?? 0 });
+          impacts: net.userData.trampolineVisualImpact?.id ?? 0,
+          weight: structuredClone(net.userData.marineNet), renderOffset:p.netRenderOffset.toArray() });
         if (q.stop === 'launch' && p.trampolineAir || q.stop === 'side' && p.pos.x >= 10 || q.stop === 'bail' && p.isBailing) q.budget = 0;
       };
       const render = g.renderer.render.bind(g.renderer);
@@ -59,11 +60,23 @@ try {
       return page.evaluate(() => window.__netReview.samples.at(-1));
     };
     const capture = async name => { if (!lite) await page.screenshot({ path: `${out}/${name}-native.png` }); };
-    const initial = await advance(2);
+    await page.evaluate(() => window.__netReview.reset(10,0));
+    await advance(75);await capture('unloaded-net');
+    await page.evaluate(() => window.__netReview.reset());
+    const initial = await advance(60);
+    assert.ok(initial.weight.weightDepth>.6&&initial.renderOffset[1]<-.6,'standing weight did not seat the rider in the net');
+    await capture('standing-net');
     await page.keyboard.down('ArrowUp'); const walk = await advance(24); await page.keyboard.up('ArrowUp');
     const standing = await advance(24);
     for (const row of [walk, standing]) { assert.ok(row.grounded && row.net && !row.bail && !row.board); assert.equal(row.launchId, initial.launchId); assert.equal(row.impacts, 0); }
+    assert.ok(standing.weight.weightDepth>.6&&standing.renderOffset[1]<-.6,'walking dent disappeared');
+    assert.ok(Math.abs(standing.weight.weightAt[0]-standing.position[0])<.15&&Math.abs(standing.weight.weightAt[1]-standing.position[2])<.15,'dent did not follow the walker');
     await capture('walk-net');
+    if(!lite){
+      await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});
+      await page.waitForTimeout(100);await page.screenshot({path:`${out}/walk-net-normal.png`});
+      await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
+    }
     await page.keyboard.down('Space'); await advance(6); await page.keyboard.up('Space');
     const hop = await advance(1); assert.equal(hop.state, 'air'); assert.equal(hop.launchId, initial.launchId);
     const bounce = await advance(180, 'launch'); assert.equal(bounce.launchId, initial.launchId + 1); assert.ok(bounce.vy > 40);

@@ -1,0 +1,27 @@
+[
+  {
+    "test": "test-marine-net-weight",
+    "exitCode": 0,
+    "evidence": "Native runtime local contact, finite return, moving deck, exact paired movement/jump traces, shader/depth/distance uniform parity."
+  },
+  {
+    "test": "test-trampoline-contact",
+    "exitCode": 0
+  },
+  {
+    "test": "test-trampoline-controls",
+    "exitCode": 0
+  },
+  {
+    "test": "test-trampoline-air-jump",
+    "exitCode": 0
+  },
+  {
+    "test": "test-trampoline-roll-landing",
+    "exitCode": 0
+  },
+  {
+    "test": "validate-render-interpolation",
+    "exitCode": 0
+  }
+]

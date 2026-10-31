@@ -7745,3 +7745,15 @@ camera or level-geometry change. Nine focused checks, native keyboard lite/full
 MAX and normal presentation, production build and release-size check pass.
 Prompt-to-validated playable work: approximately 25 minutes (elapsed estimate).
 Evidence: [net contacts](carlisle-relay/net-contact/README.md).
+
+
+### Local walking weight on trampoline nets — 31 October 2026
+
+Marine nets now sag at the supported walking/standing position and ease back
+out on departure. The local dent follows moving/spinning decks, keeps housing
+ties fixed and shares deformation with both shadow passes. Rendered feet follow
+the dent without changing support, motion, jump/bounce physics or metal contact.
+Six focused checks, exact paired movement/jump traces, native keyboard lite/full
+contact checks, actual-course MAX/normal visuals, production build and release
+size pass. Prompt-to-validated playable work: approximately 17 minutes.
+Evidence: [walking net](carlisle-relay/walking-net/README.md).

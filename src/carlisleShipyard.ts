@@ -1,5 +1,6 @@
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
+import { trampolineSurfacePresentations } from './trampolineSurface';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AssetCache, disposeTextures } from './assetLifetime';
 import { sceneryLoads } from './assetLoadQueue';
@@ -234,6 +235,7 @@ export class CarlisleShipyard {
     this.prop('net-housing',[0,top+lip-frameH*.87,0],[w,frameH,d],0,mount);
     const net=new CarlisleMarineNet(w,d,frameH);net.group.position.y=top+lip;mount.add(net.group);
     mesh.userData.marineNet=net.diagnostics;
+    trampolineSurfacePresentations.set(mesh,net);
     this.nets.push({mesh,net,impact:mesh.userData.trampolineVisualImpact?.id??0});this.diagnostics.nets++;
     // Under-deck mooring legs, never posts in the landing area.
     if(c.t==='trampoline'&&!this.bonus)for(const x of [-w*.37,w*.37])for(const z of [-d*.37,d*.37])
@@ -517,7 +519,7 @@ export class CarlisleShipyard {
     this.rigging.dispose();
     this.beacons.dispose();
     this.sound.dispose();
-    for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
+    for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;trampolineSurfacePresentations.delete(mesh);net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});
     this.attached.forEach(n=>n.removeFromParent());this.group.removeFromParent();
     this.restored.forEach(({mesh,material})=>mesh.material=material);
