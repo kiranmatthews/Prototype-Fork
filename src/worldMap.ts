@@ -22,7 +22,7 @@ import { MAP_OUTLINE_BASE_WIDTH_METRES } from "./mapIslandOutline";
 import { oceanTuning } from "./oceanTuning";
 import { JungleAssetKit } from "./jungleAssets";
 import { sceneryTerrainSupports, sceneryWorldPoint, MAP_SCENERY_LAYOUTS, MapScenery } from './mapDioramas';
-import { MapSkySanctuary } from './mapSkySanctuary';
+import { MapSkySanctuary, shapeCloudIslandCore } from './mapSkySanctuary';
 import { MAP_LANDSCAPES, mapReliefHeight } from "./mapTopography";
 import { accelerateGroundMeshes, disposeGroundAcceleration, type GroundAcceleration } from "./groundAcceleration";
 
@@ -838,6 +838,7 @@ export function createCampaignWorldMap(
       terrainSupports.filter(point=>Math.abs(point.y-spec.y)<45&&Math.abs(point.x-spec.x)<spec.rx*1.2&&Math.abs(point.z-spec.z)<spec.rz*1.2).map((point) => point.clone().sub(new THREE.Vector3(spec.x, spec.y, spec.z))),
       spec.campaignIslandId ? {id:spec.campaignIslandId,x:spec.x,z:spec.z,routes:routeSupports.filter(point=>Math.abs(point.y-spec.y)<45&&Math.abs(point.x-spec.x)<spec.rx*1.2&&Math.abs(point.z-spec.z)<spec.rz*1.2).map(point=>point.clone().sub(new THREE.Vector3(spec.x,spec.y,spec.z)))} : undefined);
     coastlines.push(bindBeachCoordinates(geometry,MAP_SEA_LEVEL+0.05,spec.x,spec.z));
+    if(spec.campaignIslandId==='hidden-shores')shapeCloudIslandCore(geometry);
     applyUnitySandMetricUvs(geometry, {tileMetres:2.7,offsetMetres:[spec.x,-spec.z]});
     const mesh = new THREE.Mesh(geometry, spec.y>0?skySurface.material:islandSurface.material);
     mesh.position.set(spec.x, spec.y-0.05, spec.z);

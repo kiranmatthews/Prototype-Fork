@@ -7935,32 +7935,32 @@ validation: approximately 15 minutes. Direct publication remains explicitly
 authorized. Evidence: [corrected map and cold-loading review](performance/map-one-skater-and-cold-loading.json).
 
 
-## 2026-11-01 — Secret Island volumetric cloud banks
+## 2026-11-01 — Secret Island built from large cloud billows
 
-Replaced the Secret Island map's PNG cloud mattes with 18 drifting 3D cumulus
-banks using the existing Skystream bonus renderer. Three seeded density fields
-share about 9.7 MiB of voxel storage. Expanded sampling margins contain the
-complete billows, and selection-facing banks fade gently to keep hubs readable.
-Cloud geometry stays identical through map rotation and reflections.
+Replaced the Secret Island map's PNG mattes and sandy outer coast with a
+continuous 3D cloud shelf. Ten large billows form its perimeter and deep
+underside; a small planted clearing supports the temple. The cloud crown
+meets the eight hubs, with the complete original routes and unlocks retained.
+The old rock mesa is removed. Other islands and the skybox are unchanged.
 
-The existing feathered 360p cloud layer now composes with the ocean's reused
-opaque frame. Island geometry and interface retain their chosen resolution.
-The optional composition callback preserves colour/depth and restores state
-after failures; existing cloud-platform defaults remain unchanged. No edits to
-the island terrain, progression, skybox, collision or movement tuning.
+The shelf uses the Skystream density renderer with one baked 10.3 MiB field
+and the existing feathered 360p cloud pass. A dedicated island density shape
+combines the billows before baking sunlight, avoiding seams between cloud
+pieces. The optional light multiplier defaults to one for existing clouds.
+The ocean's opaque frame is reused without losing colour or depth, and
+ordinary geometry and UI remain at the selected resolution.
 
-Focused density/resource checks, cloud-pass state restoration and ocean sizing
-passed. A real GPU comparison found zero differing pixels between direct and
-reused composition, including sharp foreground geometry. Chrome lite/native,
-normal 720p/CRT, portrait, the Quagmire-to-Secret-Island pan and map teardown
-passed without console errors or PNG matte requests. The Skystream bonus also
-passes split-screen, context-loss recovery and exit checks. Short native-scene
-pacing samples improved from 27–34 fps to 40–44 fps with the 360p cloud pass on
-this shared Mac; these are whole-game observations, not a general FPS promise.
+Focused resource checks cover cancelled preparation, density bounds, hub
+heights, continuous perimeter and exactly-once disposal. Native Chrome
+checks the actual island pan, four hub views, normal 720p/CRT, portrait and
+map exit without console errors or PNG matte requests. Short whole-game
+1600×1000 pacing samples stayed around 60 fps with both 360p and native
+clouds on this Mac; they are capped observations rather than a universal
+performance claim. The new shelf uses one volume draw instead of an array
+of independent cloud banks.
 
-Prompt-to-playable: approximately 5 minutes; finished cloud-edge and resource
-review: approximately 12 minutes. The newer map navigation/roster update is
-preserved in the final package. Production native/normal/portrait smoke, build
-and release-size checks pass (999,247,741 / 1,000,000,000 bytes). Public
-verification is recorded in the shared release handoff. No full-suite run or level-pack
-rewrite. Evidence: [Secret Island clouds](secret-island-clouds/README.md).
+Prompt-to-playable for the requested cloud-island art revision: approximately
+12 minutes; completed local validation: approximately 18 minutes. Map movement,
+production build, release size (999,248,084 bytes), packaged lite/native, normal
+and portrait checks pass. Public verification is recorded in the release handoff. No full-suite run, movement-tuning change
+or level-pack rewrite. Evidence: [Secret Island clouds](secret-island-clouds/README.md).

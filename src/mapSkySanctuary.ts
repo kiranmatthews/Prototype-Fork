@@ -5,59 +5,60 @@ import {createCloudPlatform} from './cloudPlatform';
 
 type CloudMesh=THREE.Mesh<THREE.BufferGeometry,THREE.ShaderMaterial>;
 
-/** Seeded cumulus volumes drift around the elevated sanctuary. Three density
- * fields serve every bank, using the same 360p composite as the cloud courses. */
+/** Keep a small planted temple clearing. Its irregular lip sinks into the
+ * cloud body; the outer coastline is now authored entirely in cloud volumes.
+ * Hub pads and route support are independent of this visual terrain. */
+export function shapeCloudIslandCore(geometry:THREE.BufferGeometry):void {
+  const position=geometry.getAttribute('position'),inside:boolean[]=[];
+  for(let i=0;i<position.count;i++){
+    const x=position.getX(i),z=position.getZ(i),r=Math.hypot(x,z),angle=Math.atan2(z,x);
+    const edge=36+Math.sin(angle*3+.4)*2.4+Math.cos(angle*5)*1.3;
+    inside.push(r<edge);
+    position.setY(i,position.getY(i)-THREE.MathUtils.smoothstep(r,24,edge)*16);
+  }
+  const source=geometry.getIndex()!,indices:number[]=[];
+  for(let i=0;i<source.count;i+=3){
+    const a=source.getX(i),b=source.getX(i+1),c=source.getX(i+2);
+    if(inside[a]&&inside[b]&&inside[c])indices.push(a,b,c);
+  }
+  geometry.setIndex(indices);position.needsUpdate=true;
+  geometry.computeVertexNormals();geometry.computeBoundingSphere();
+}
+
+/** One continuous cumulus volume forms the island's perimeter and underside.
+ * Its baked light and density use the same 360p renderer as the cloud courses. */
 export class MapSkySanctuary {
   readonly root=new THREE.Group();
   readonly ready:Promise<void>;
-  private readonly templates:CloudMesh[]=[];
-  private readonly clouds:{mesh:CloudMesh;angle:number;radius:number;baseY:number;speed:number}[]=[];
-  private readonly toward=new THREE.Vector3();
+  private cloud:CloudMesh|null=null;
   private time=0;private disposed=false;
   constructor(scenery:MapScenery){
     const centre=CAMPAIGN_ISLANDS.find(i=>i.id==='hidden-shores')!.centre;
     this.root.name='world map heavenly tiki sanctuary';this.root.position.set(...centre);
     const temple=new THREE.Group();temple.position.set(0,10,0);temple.name='Meshy sky sanctuary centre';this.root.add(temple);
     const statue=scenery.addPiece(temple,{asset:'sky-tiki-sanctuary',p:[0,0,0],extent:35,yaw:-80});
-    // A full-detail Meshy mesa gives the floating land a substantial rock underside.
-    const underside=new THREE.Group();this.root.add(underside);
-    const stone=scenery.addPiece(underside,{asset:'sanctuary-mesa',p:[0,-43,0],extent:1,yaw:18,size:[118,45,106]});
-    // Defer the shared volume bake to the existing asset-preparation barrier.
-    // Geometry and voxel detail remain identical at every viewing distance.
+    // Defer the volume bake to the asset-preparation barrier. The complete
+    // density field and geometry remain identical in every view/reflection.
     const cloudLoad=Promise.resolve().then(()=>{
       if(this.disposed)return;
-      for(let i=0;i<3;i++)this.templates.push(createCloudPlatform(16,10,7319+i*3761,false,2.5) as CloudMesh);
-      for(let i=0;i<18;i++){
-        const template=this.templates[i%this.templates.length],material=template.material.clone();
-        material.uniforms.uVolume.value=template.material.uniforms.uVolume.value;
-        const mesh=new THREE.Mesh(template.geometry,material);
-        mesh.name='Secret Island drifting cumulus';
-        mesh.userData={visualOnly:true,cloudRoadVisual:true,mapCloudVolume:true};
-        mesh.scale.set(3.4+(i%5)*.4,2.1+(i%3)*.3,2.6+(i%4)*.3);
-        this.root.add(mesh);
-        this.clouds.push({mesh,angle:i*2.399963,radius:72+(i%5)*8,baseY:-8-(i%4)*4,
-          speed:(i%2?1:-1)*(.006+(i%3)*.002)});
-      }
+      const cloud=createCloudPlatform(20,20,7319,false,2.5,'island') as CloudMesh;
+      cloud.name='Secret Island continuous cloud shelf';
+      cloud.userData={...cloud.userData,mapCloudVolume:true};
+      // Preserve highlights and the pale route dots under the map's exposure.
+      cloud.material.uniforms.uLightScale.value=.7;
+      cloud.scale.setScalar(7.5);this.root.add(cloud);this.cloud=cloud;
       this.update(0);
     });
-    this.ready=Promise.all([statue,stone,cloudLoad]).then(()=>{});
+    this.ready=Promise.all([statue,cloudLoad]).then(()=>{});
     this.ready.catch(()=>{});
   }
-  update(dt:number,selected?:THREE.Vector3):void{
+  update(dt:number,_selected?:THREE.Vector3):void{
     this.time+=Math.min(dt,.1);
-    if(selected)this.toward.copy(selected).sub(this.root.position).setY(0).normalize();
-    for(const c of this.clouds){
-      const angle=c.angle+this.time*c.speed;
-      c.mesh.position.set(Math.sin(angle)*c.radius,c.baseY+Math.sin(this.time*.12+c.angle)*1.7,Math.cos(angle)*c.radius);
-      const front=selected?Math.max(0,this.toward.x*Math.sin(angle)+this.toward.z*Math.cos(angle)):0;
-      c.mesh.material.uniforms.uOpacity.value=.9-front*.3;
-    }
+    if(this.cloud)this.cloud.position.y=Math.sin(this.time*.1)*.08;
   }
   dispose():void{
     if(this.disposed)return;
     this.disposed=true;this.root.removeFromParent();
-    for(const c of this.clouds)c.mesh.material.dispose();
-    for(const template of this.templates){template.geometry.dispose();template.material.dispose();}
-    this.clouds.length=this.templates.length=0;this.root.clear();
+    this.cloud?.geometry.dispose();this.cloud?.material.dispose();this.cloud=null;this.root.clear();
   }
 }

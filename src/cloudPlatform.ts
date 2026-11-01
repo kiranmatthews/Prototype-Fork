@@ -6,7 +6,7 @@ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
  * All views use the same density field and sampling budget, including captures.
  * Conceptual references: Guerrilla's 2015 cloud presentation and GPU Gems 39.
  * Implementation is original; SimplexNoise is the existing MIT Three.js addon. */
-export function createCloudPlatform(width: number, depth: number, seed: number, landing = true, padding = 0): THREE.Mesh {
+export function createCloudPlatform(width: number, depth: number, seed: number, landing = true, padding = 0, shape: 'platform'|'island' = 'platform'): THREE.Mesh {
   let state=seed|0;
   const random=()=>{state=Math.imul(state,1664525)+1013904223|0;return (state>>>0)/4294967296;};
   const noise=new SimplexNoise({random});
@@ -14,12 +14,31 @@ export function createCloudPlatform(width: number, depth: number, seed: number, 
   // Padding expands only the sampling domain, never the density itself.
   const min=new THREE.Vector3(-width/2-.5-padding,-6.2,-depth/2-1.3-padding);
   const size=new THREE.Vector3(width+1+padding*2,8.6,depth+2.6+padding*2);
-  const nx=Math.ceil(size.x/.16),ny=56,nz=Math.ceil(size.z/.16);
+  const nx=Math.ceil(size.x/.16),ny=shape==='island'?96:56,nz=Math.ceil(size.z/.16);
   const count=nx*ny*nz,data=new Uint8Array(count*4),density=new Float32Array(count);
   const smoothMin=(a:number,b:number,k:number)=>{
     const h=Math.max(k-Math.abs(a-b),0)/k;return Math.min(a,b)-h*h*k*.25;
   };
   const lobes:{x:number;y:number;z:number;rx:number;ry:number;rz:number}[]=[];
+  if(shape==='island'){
+    // A single connected island body: large peripheral billows, a supported
+    // crown and a deep cloud underside. Bake their union and sunlight together
+    // so the silhouette has no overlapping transparent-volume seams.
+    for(let i=0;i<10;i++){
+      const a=i*Math.PI*2/10,r=7.1+(random()-.5)*.8;
+      const x=Math.cos(a)*r,z=Math.sin(a)*r,rx=2.9+random()*.7,rz=2.9+random()*.7;
+      lobes.push({x,y:-2.2+(random()-.5)*.3,z,rx,ry:2.65+random()*.5,rz});
+      for(let j=0;j<3;j++){
+        const curl=a+(random()-.5)*1.5,s=0.7+random()*.6;
+        lobes.push({x:x+Math.cos(curl)*rx*.7,y:-2.3+(random()-.5)*2.4,
+          z:z+Math.sin(curl)*rz*.7,rx:s,ry:s*.9,rz:s});
+      }
+    }
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3;
+      lobes.push({x:Math.cos(a)*3.4,y:-1.5,z:Math.sin(a)*3.4,rx:3.8,ry:2.2,rz:3.8});
+    }
+  }else{
   const columns=Math.max(3,Math.ceil(width/2.2));
   for(let i=0;i<columns;i++)for(let row=-1;row<=1;row++){
     const x=(i/(columns-1)-.5)*(width-2.7)+(random()-.5)*.55;
@@ -34,6 +53,7 @@ export function createCloudPlatform(width: number, depth: number, seed: number, 
         z:z+Math.sin(a)*rz*.8,rx:r,ry:r*.9,rz:r});
     }
   }
+  }
   for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){
     const px=min.x+x/(nx-1)*size.x,pz=min.z+z/(nz-1)*size.z;
     // Cull contributors outside this column's entire iso-surface influence.
@@ -42,7 +62,7 @@ export function createCloudPlatform(width: number, depth: number, seed: number, 
       .filter(b=>b.xz<(1+1.5/b.m)**2);
     for(let y=0;y<ny;y++){
       const py=min.y+y/(ny-1)*size.y;
-      let d=(Math.sqrt((px/(width*.47))**2+((py+2)/1.7)**2+(pz/(depth*.29))**2)-1)*1.7;
+      let d=(Math.sqrt((px/(width*.47))**2+((py+2)/1.7)**2+(pz/(depth*(shape==='island'?.47:.29)))**2)-1)*1.7;
       for(const b of nearby){
         const e=(Math.sqrt(b.xz+((py-b.y)/b.ry)**2)-1)*b.m;
         d=smoothMin(d,e,.52);
@@ -55,7 +75,11 @@ export function createCloudPlatform(width: number, depth: number, seed: number, 
       // Keep the travelling corridor clear; taller curls live along the shoulders.
       const shoulder=THREE.MathUtils.smoothstep(Math.abs(pz),1.25,depth*.43);
       const cap=.09+shoulder*.95+noise.noise3d(px*.65,2,pz*.65)*.055;
-      if(landing)d=Math.max(d,py-cap);
+      if(shape==='island'){
+        const crown=.22+noise.noise3d(px*.55,2,pz*.55)*.07+
+          THREE.MathUtils.smoothstep(Math.hypot(px,pz),6.9,9.2)*.9;
+        d=Math.max(d,py-crown);
+      }else if(landing)d=Math.max(d,py-cap);
       // Visible top ends at the authored edge; the underside may softly overhang.
       if(landing)d=Math.max(d,Math.abs(px)-width/2-Math.max(0,-py)*.13);
       density[x+nx*(y+ny*z)]=THREE.MathUtils.smoothstep(-d,-.14,.32);
@@ -85,7 +109,7 @@ export function createCloudPlatform(width: number, depth: number, seed: number, 
   const material=new THREE.ShaderMaterial({
     name:'Cumulus density · sun extinction and multiple scattering',glslVersion:THREE.GLSL3,
     transparent:true,depthWrite:true,side:THREE.BackSide,fog:true,
-    uniforms:{...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),uVolume:{value:texture},uMin:{value:min},uSize:{value:size},uOpacity:{value:1}},
+    uniforms:{...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),uVolume:{value:texture},uMin:{value:min},uSize:{value:size},uLightScale:{value:1}},
     vertexShader:`varying vec3 vOrigin;varying vec3 vDirection;
 void main(){
   vOrigin=(inverse(modelMatrix)*vec4(cameraPosition,1.0)).xyz;
@@ -95,7 +119,7 @@ void main(){
     fragmentShader:`precision highp sampler3D;
 out vec4 cloudOutput;
 #define gl_FragColor cloudOutput
-uniform sampler3D uVolume;uniform vec3 uMin;uniform vec3 uSize;uniform float uOpacity;
+uniform sampler3D uVolume;uniform vec3 uMin;uniform vec3 uSize;uniform float uLightScale;
 uniform mat4 modelViewMatrix;uniform mat4 projectionMatrix;
 varying vec3 vOrigin;varying vec3 vDirection;
 #include <fog_pars_fragment>
@@ -128,7 +152,7 @@ void main(){
   vec4 view=modelViewMatrix*vec4(vOrigin+ray*first,1.0);
   vec4 clip=projectionMatrix*view;
   gl_FragDepth=clip.z/clip.w*.5+.5;
-  gl_FragColor=vec4(sum.rgb/max(sum.a,.001),sum.a*uOpacity);
+  gl_FragColor=vec4(sum.rgb/max(sum.a,.001)*uLightScale,sum.a);
   #ifdef USE_FOG
     float cloudFog=smoothstep(fogNear,fogFar,-view.z);
     gl_FragColor.rgb=mix(gl_FragColor.rgb,fogColor,cloudFog);

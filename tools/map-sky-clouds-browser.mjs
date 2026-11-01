@@ -21,7 +21,7 @@ try{
      g.campaign.setMapFocus(key);g.switchLevel('warproom');await g.getLevel().prepareJungleAssets();
      g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);
     },key);
-    await page.waitForFunction(key=>window.__game.getWorldMapDiagnostics().selected===key&&window.__game.cloudPathPass.diagnostics.clouds===18,key);
+    await page.waitForFunction(key=>window.__game.getWorldMapDiagnostics().selected===key&&window.__game.cloudPathPass.diagnostics.clouds===1,key);
    };
    const snapshot=()=>page.evaluate(()=>{const g=window.__game,clouds=[];g.scene.traverse(o=>{if(o.userData.mapCloudVolume)clouds.push(o);});
     return {selected:g.getWorldMapDiagnostics().selected,clouds:clouds.length,textures:new Set(clouds.map(o=>o.material.uniforms.uVolume.value)).size,
@@ -35,7 +35,7 @@ try{
    for(const key of ['secret-1','secret-4','secret-5','secret-8']){
     if(key!=='secret-1')await focus(key);
     await page.waitForTimeout(700);const state=await snapshot();result.views.push(state);
-    assert.equal(state.clouds,18);assert.equal(state.textures,3);assert.equal(state.pass.height,360);
+    assert.equal(state.clouds,1);assert.equal(state.textures,1);assert.equal(state.pass.height,360);
     assert.deepEqual(state.canvas,mode==='lite'?[800,500]:[1600,1000]);
     await page.screenshot({path:`${out}/${key}-${mode}.png`});
    }
@@ -60,7 +60,7 @@ try{
    }
    await page.evaluate(()=>{const g=window.__game,clouds=[];g.scene.traverse(o=>{if(o.userData.mapCloudVolume)clouds.push(o);});const textures=new Set(clouds.map(o=>o.material.uniforms.uVolume.value));window.__mapCloudDisposed=0;for(const t of textures)t.addEventListener('dispose',()=>window.__mapCloudDisposed++);g.switchLevel('codex-lab');});
    await page.waitForFunction(()=>window.__game.getCurrentLevel().id==='codex-lab'&&window.__game.cloudPathPass.diagnostics.targetBytes===0);
-   result.exit=await snapshot();result.disposed=await page.evaluate(()=>window.__mapCloudDisposed);assert.equal(result.disposed,3);assert.equal(result.exit.clouds,0);
+   result.exit=await snapshot();result.disposed=await page.evaluate(()=>window.__mapCloudDisposed);assert.equal(result.disposed,1);assert.equal(result.exit.clouds,0);
    assert.deepEqual(requests,[]);assert.deepEqual(errors,[]);
    console.log(JSON.stringify(result));
   }finally{await page.close();await writeFile(out+'/report.json',JSON.stringify(report,null,2));}
