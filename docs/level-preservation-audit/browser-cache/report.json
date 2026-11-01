@@ -1,0 +1,103 @@
+{
+  "base": "http://127.0.0.1:5377/",
+  "cases": [
+    {
+      "name": "cached-stock",
+      "nativeGates": 11,
+      "components": 3011,
+      "spawn": [
+        -20,
+        0.12,
+        0
+      ],
+      "checkpoints": 11,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 133.29999999999973,
+          "width": 720,
+          "height": 450,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 350
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "archiveUnchanged": true
+    },
+    {
+      "name": "crate-migrated-stock",
+      "nativeGates": 11,
+      "components": 3011,
+      "spawn": [
+        -20,
+        0.12,
+        0
+      ],
+      "checkpoints": 11,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 297,
+          "maxFrameMs": 33.40000000000009,
+          "width": 720,
+          "height": 450,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 350
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "archiveUnchanged": true
+    },
+    {
+      "name": "authored-copy",
+      "nativeGates": 0,
+      "components": 2904,
+      "spawn": [
+        -19.99,
+        0.12,
+        0
+      ],
+      "checkpoints": 11,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 269,
+          "maxFrameMs": 33.299999999999955,
+          "width": 720,
+          "height": 450,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 400
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "archiveUnchanged": true
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

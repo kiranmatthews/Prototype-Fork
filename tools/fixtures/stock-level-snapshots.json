@@ -47,6 +47,14 @@
     "bonus-jungle-gate": {
       "snapshotSha256": "b050a366f59ab0547e871a74a8554677f21d4dc0917448e14d3ecf59af616cc4",
       "authoringRuntime": "v26.13.0"
+    },
+    "bonus-jungle-terraces": {
+      "snapshotSha256": "d53ff7140e2b191655ba0cb930d8b25e39d91140c4100f071dac27197e395bfe",
+      "authoringRuntime": "v26.13.0"
+    },
+    "flats": {
+      "snapshotSha256": "60e92317bf5ac9b399e806c7c6c7dca54e595ff8d907ad2504e100ba7d07192c",
+      "authoringRuntime": "v26.13.0"
     }
   }
 }

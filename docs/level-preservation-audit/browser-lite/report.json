@@ -1,0 +1,3708 @@
+{
+  "base": "http://127.0.0.1:5377/",
+  "full": false,
+  "native": false,
+  "levels": [
+    {
+      "expectedSource": "4770351:12cb7d76:9b4b93a4",
+      "expectedBuilt": "4770375:2e11e30f:8567fdd7",
+      "id": "treehouse-trail",
+      "name": "Treehouse Trail",
+      "source": "4770351:12cb7d76:9b4b93a4",
+      "built": "4770375:2e11e30f:8567fdd7",
+      "components": 1873,
+      "checkpoints": 5,
+      "crates": 12,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 272
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1152,
+        "placements": 1152,
+        "ready": 211,
+        "skipped": 639,
+        "draws": 191,
+        "triangles": 673319,
+        "allLodTriangles": 673319,
+        "cells": 351,
+        "residentCells": 191,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 33,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 1.2500000000000007,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "2049020:9da7457d:af320b5f",
+      "expectedBuilt": "2049044:3ca252f6:ec783cf0",
+      "id": "inside-your-room",
+      "name": "Inside Your Room",
+      "source": "2049020:9da7457d:af320b5f",
+      "built": "2049044:3ca252f6:ec783cf0",
+      "components": 615,
+      "checkpoints": 1,
+      "crates": 1,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 290
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": null,
+      "expectedBuilt": null,
+      "id": "jungle",
+      "name": "Jungle Ruins",
+      "source": null,
+      "built": "1205833:826c657f:d4babd",
+      "components": 4937,
+      "checkpoints": 9,
+      "crates": 88,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 660
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 4290,
+        "placements": 15127,
+        "ready": 3339,
+        "skipped": 822,
+        "draws": 488,
+        "triangles": 2964160,
+        "allLodTriangles": 2964160,
+        "cells": 1737,
+        "residentCells": 488,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 29,
+        "textureMiB": 108.02,
+        "errors": [],
+        "windTime": 1.6333333333333324,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "3010570:8b9511d9:951989",
+      "expectedBuilt": "3010688:83a59e77:f9fa7357",
+      "id": "jungle-terraces",
+      "name": "Temple of Embers",
+      "source": "3010570:8b9511d9:951989",
+      "built": "3010688:83a59e77:f9fa7357",
+      "components": 5732,
+      "checkpoints": 12,
+      "crates": 82,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 832
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 4450,
+        "placements": 4450,
+        "ready": 3858,
+        "skipped": 592,
+        "draws": 659,
+        "triangles": 4382112,
+        "allLodTriangles": 4382112,
+        "cells": 659,
+        "residentCells": 659,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 74,
+        "errors": [],
+        "windTime": 0.7500000000000007,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "17377:cc3ba578:15071e6c",
+      "expectedBuilt": "24292:d93af68e:f2e1c744",
+      "id": "flats",
+      "name": "Flats & Pipes",
+      "source": "17377:cc3ba578:15071e6c",
+      "built": "24292:d93af68e:f2e1c744",
+      "components": 332,
+      "checkpoints": 2,
+      "crates": 271,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 854
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "5665701:1e3d3a9e:dce8cd28",
+      "expectedBuilt": "5665724:a5af2946:66c44f94",
+      "id": "country-club",
+      "name": "Country Club Circuit",
+      "source": "5665701:1e3d3a9e:dce8cd28",
+      "built": "5665724:a5af2946:66c44f94",
+      "components": 3750,
+      "checkpoints": 0,
+      "crates": 32,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 986
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1514,
+        "placements": 1514,
+        "ready": 195,
+        "skipped": 1319,
+        "draws": 178,
+        "triangles": 405661,
+        "allLodTriangles": 405661,
+        "cells": 178,
+        "residentCells": 178,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 15,
+        "errors": [],
+        "windTime": 0,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "242101:254cc2d1:a5559389",
+      "expectedBuilt": "242125:dbe9944c:a59dc3f2",
+      "id": "sky",
+      "name": "Sky Bridge",
+      "source": "242101:254cc2d1:a5559389",
+      "built": "242125:dbe9944c:a59dc3f2",
+      "components": 423,
+      "checkpoints": 7,
+      "crates": 46,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1058
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 86,
+        "placements": 86,
+        "ready": 60,
+        "skipped": 0,
+        "draws": 42,
+        "triangles": 525890,
+        "allLodTriangles": 525890,
+        "cells": 58,
+        "residentCells": 42,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 18.33,
+        "errors": [],
+        "windTime": 0.6500000000000004,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "308609:a5d2da71:d0fa7809",
+      "expectedBuilt": "308633:38897cda:b7af7d46",
+      "id": "skystream",
+      "name": "The Skystream",
+      "source": "308609:a5d2da71:d0fa7809",
+      "built": "308633:38897cda:b7af7d46",
+      "components": 1389,
+      "checkpoints": 7,
+      "crates": 85,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 302,
+          "maxFrameMs": 33.29999999999998,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1058
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "25544044:3ecc34b9:b653c2d7",
+      "expectedBuilt": "25544080:fe2c2af0:775378a0",
+      "id": "coconut-cart-rally",
+      "name": "Coconut Cart Rally",
+      "source": "25544044:3ecc34b9:b653c2d7",
+      "built": "25544080:fe2c2af0:775378a0",
+      "components": 2949,
+      "checkpoints": 0,
+      "crates": 0,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 206
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 14,
+        "placements": 14,
+        "ready": 2,
+        "skipped": 0,
+        "draws": 2,
+        "triangles": 21440,
+        "allLodTriangles": 21440,
+        "cells": 14,
+        "residentCells": 2,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 6.67,
+        "errors": [],
+        "windTime": 0.9511999999880805,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "6274531:a3148f18:8edeb7e6",
+      "expectedBuilt": "6260072:fbd7930:98836a5c",
+      "id": "slipstream-race",
+      "name": "The Slipstream",
+      "source": "6274531:a3148f18:8edeb7e6",
+      "built": "6260072:fbd7930:98836a5c",
+      "components": 3888,
+      "checkpoints": 0,
+      "crates": 83,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 356
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 2048,
+        "placements": 2048,
+        "ready": 375,
+        "skipped": 1010,
+        "draws": 297,
+        "triangles": 3954298,
+        "allLodTriangles": 3954298,
+        "cells": 790,
+        "residentCells": 297,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 3,
+        "textureMiB": 162,
+        "errors": [],
+        "windTime": 0,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "6605829:aaa8ca7f:d79a7fc9",
+      "expectedBuilt": "6606007:120365:70904179",
+      "id": "test",
+      "name": "Carlisle Coast",
+      "source": "6605829:aaa8ca7f:d79a7fc9",
+      "built": "6606007:120365:70904179",
+      "components": 4082,
+      "checkpoints": 14,
+      "crates": 160,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 536
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 3524,
+        "placements": 3524,
+        "ready": 152,
+        "skipped": 2449,
+        "draws": 110,
+        "triangles": 1291987,
+        "allLodTriangles": 1291987,
+        "cells": 774,
+        "residentCells": 110,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 19.67,
+        "errors": [],
+        "windTime": 1.0833333333333344,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "2994026:638ad99c:1c6cf740",
+      "expectedBuilt": "2994204:e74ebd47:b551b295",
+      "id": "carlisle-coast",
+      "name": "Carlisle Coast",
+      "source": "2994026:638ad99c:1c6cf740",
+      "built": "2994204:e74ebd47:b551b295",
+      "components": 1361,
+      "checkpoints": 17,
+      "crates": 341,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 714
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "6490690:ea687ed8:9e727f0a",
+      "expectedBuilt": "6490714:e94a1497:d2d3798b",
+      "id": "custard-creek",
+      "name": "Custard Creek",
+      "source": "6490690:ea687ed8:9e727f0a",
+      "built": "6490714:e94a1497:d2d3798b",
+      "components": 3961,
+      "checkpoints": 11,
+      "crates": 175,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 894
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 2855,
+        "placements": 2855,
+        "ready": 251,
+        "skipped": 2334,
+        "draws": 239,
+        "triangles": 1488472,
+        "allLodTriangles": 1488472,
+        "cells": 488,
+        "residentCells": 239,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 12,
+        "textureMiB": 62.33,
+        "errors": [],
+        "windTime": 1.6999999999999988,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "7295746:b9591648:2b170b5e",
+      "expectedBuilt": "7295770:16c2dee3:58a4a929",
+      "id": "tribal-run",
+      "name": "Tribal Run",
+      "source": "7295746:b9591648:2b170b5e",
+      "built": "7295770:16c2dee3:58a4a929",
+      "components": 1513,
+      "checkpoints": 9,
+      "crates": 88,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1012
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 654,
+        "placements": 654,
+        "ready": 207,
+        "skipped": 218,
+        "draws": 186,
+        "triangles": 1141218,
+        "allLodTriangles": 1141218,
+        "cells": 395,
+        "residentCells": 186,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 51.67,
+        "errors": [],
+        "windTime": 0.8166666666666675,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "4583783:3a3a8778:25c31fec",
+      "expectedBuilt": "4583807:69af2e59:b9a61eef",
+      "id": "rumblewater-run",
+      "name": "Ripcord River",
+      "source": "4583783:3a3a8778:25c31fec",
+      "built": "4583807:69af2e59:b9a61eef",
+      "components": 2898,
+      "checkpoints": 4,
+      "crates": 46,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1302
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1711,
+        "placements": 5041,
+        "ready": 1075,
+        "skipped": 870,
+        "draws": 236,
+        "triangles": 1716470,
+        "allLodTriangles": 1716470,
+        "cells": 900,
+        "residentCells": 236,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 26,
+        "textureMiB": 206.33,
+        "errors": [],
+        "windTime": 1.4,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "5756470:808266b7:638a2425",
+      "expectedBuilt": "5757536:89498e5e:1449500e",
+      "id": "rolling-bones",
+      "name": "Rolling Bones",
+      "source": "5756470:808266b7:638a2425",
+      "built": "5757536:89498e5e:1449500e",
+      "components": 4047,
+      "checkpoints": 6,
+      "crates": 85,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 276,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1640
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 2190,
+        "placements": 6487,
+        "ready": 975,
+        "skipped": 899,
+        "draws": 234,
+        "triangles": 1718580,
+        "allLodTriangles": 1718580,
+        "cells": 1347,
+        "residentCells": 234,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 28,
+        "textureMiB": 272,
+        "errors": [],
+        "windTime": 1.6833333333333322,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "5421499:1e293e97:34edff69",
+      "expectedBuilt": "5421523:601351a8:79703e76",
+      "id": "hollowwake-descent",
+      "name": "Hollowwake Descent",
+      "source": "5421499:1e293e97:34edff69",
+      "built": "5421523:601351a8:79703e76",
+      "components": 2660,
+      "checkpoints": 5,
+      "crates": 35,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 230
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1087,
+        "placements": 1087,
+        "ready": 154,
+        "skipped": 0,
+        "draws": 77,
+        "triangles": 1515008,
+        "allLodTriangles": 1515008,
+        "cells": 563,
+        "residentCells": 77,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 158,
+        "errors": [],
+        "windTime": 1.0832333333094928,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": null,
+      "expectedBuilt": null,
+      "id": "dark",
+      "name": "The Nightworks",
+      "source": null,
+      "built": "14750:5e6c3923:45e2df57",
+      "components": 166,
+      "checkpoints": 11,
+      "crates": 18,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 306
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 10,
+        "placements": 10,
+        "ready": 10,
+        "skipped": 0,
+        "draws": 9,
+        "triangles": 22364,
+        "allLodTriangles": 22364,
+        "cells": 9,
+        "residentCells": 9,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 5.33,
+        "errors": [],
+        "windTime": 0.44999999999999996,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "155095:c337aacd:156d25b9",
+      "expectedBuilt": "155119:dbc69038:a5861a4a",
+      "id": "nightworks-after-hours",
+      "name": "Nightworks: After Hours",
+      "source": "155095:c337aacd:156d25b9",
+      "built": "155119:dbc69038:a5861a4a",
+      "components": 360,
+      "checkpoints": 7,
+      "crates": 23,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 354
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 109,
+        "placements": 109,
+        "ready": 67,
+        "skipped": 0,
+        "draws": 66,
+        "triangles": 406216,
+        "allLodTriangles": 406216,
+        "cells": 108,
+        "residentCells": 66,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 7,
+        "errors": [],
+        "windTime": 0.49999999999999994,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "327998:98201334:81639bb4",
+      "expectedBuilt": "328022:4433c879:2105c77f",
+      "id": "spaghetti-rails",
+      "name": "Spaghetti Rails",
+      "source": "327998:98201334:81639bb4",
+      "built": "328022:4433c879:2105c77f",
+      "components": 1019,
+      "checkpoints": 0,
+      "crates": 0,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 464
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 29,
+        "placements": 29,
+        "ready": 26,
+        "skipped": 0,
+        "draws": 26,
+        "triangles": 138574,
+        "allLodTriangles": 138574,
+        "cells": 29,
+        "residentCells": 26,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 7,
+        "errors": [],
+        "windTime": 0,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "292107:63348943:7a55083",
+      "expectedBuilt": "292164:8af110f9:586bfa4d",
+      "id": "spaghetti-rails-platforming",
+      "name": "Spaghetti Rails — Platforming",
+      "source": "292107:63348943:7a55083",
+      "built": "292164:8af110f9:586bfa4d",
+      "components": 2561,
+      "checkpoints": 41,
+      "crates": 41,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 470
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": null,
+      "expectedBuilt": null,
+      "id": "warproom",
+      "name": "Island World Map",
+      "source": null,
+      "built": null,
+      "components": null,
+      "checkpoints": 0,
+      "crates": 0,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1256
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": null,
+      "expectedBuilt": null,
+      "id": "beachfront",
+      "name": "Beachside Run",
+      "source": null,
+      "built": null,
+      "components": null,
+      "checkpoints": 14,
+      "crates": 148,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1352
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 556,
+        "placements": 556,
+        "ready": 188,
+        "skipped": 310,
+        "draws": 71,
+        "triangles": 942515,
+        "allLodTriangles": 942515,
+        "cells": 114,
+        "residentCells": 71,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 23,
+        "errors": [],
+        "windTime": 0.733333333333334,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "4638:54d44f9e:42a49b8e",
+      "expectedBuilt": "4979:6980066f:80b24ec5",
+      "id": "bonus-level",
+      "name": "Bonus Level",
+      "source": "4638:54d44f9e:42a49b8e",
+      "built": "4979:6980066f:80b24ec5",
+      "components": 49,
+      "checkpoints": 0,
+      "crates": 34,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 2189,
+          "maxFrameMs": 150.09999999999854,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./crossbones.png"
+        ],
+        "failed": [],
+        "revision": 1353
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "4151285:c8428315:345e34e9",
+      "expectedBuilt": "4151360:f26887cd:84a60157",
+      "id": "coastal-street-run",
+      "name": "Coastal Street Run",
+      "source": "4151285:c8428315:345e34e9",
+      "built": "4151360:f26887cd:84a60157",
+      "components": 6128,
+      "checkpoints": 10,
+      "crates": 56,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 284
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 3899,
+        "placements": 3899,
+        "ready": 684,
+        "skipped": 88,
+        "draws": 225,
+        "triangles": 1466117,
+        "allLodTriangles": 1466117,
+        "cells": 1244,
+        "residentCells": 225,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 25.33,
+        "errors": [],
+        "windTime": 1.0836333332856507,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "522026:2e4b1aee:1b7ecd48",
+      "expectedBuilt": "522050:6de00d6d:748f04cf",
+      "id": "jungle-gate-run",
+      "name": "The Ancient Gates",
+      "source": "522026:2e4b1aee:1b7ecd48",
+      "built": "522050:6de00d6d:748f04cf",
+      "components": 3011,
+      "checkpoints": 11,
+      "crates": 54,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 470
+      },
+      "ancient": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 108
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 32
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 36
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "jungle": {
+        "components": 2582,
+        "placements": 2582,
+        "ready": 729,
+        "skipped": 0,
+        "draws": 188,
+        "triangles": 1694067,
+        "allLodTriangles": 1694067,
+        "cells": 666,
+        "residentCells": 188,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 146.67,
+        "errors": [],
+        "windTime": 1.100000000000001,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "7297:2cb09848:3b13e16",
+      "expectedBuilt": "7365:1f9917d2:2ebddd1e",
+      "id": "meshylook-thorns",
+      "name": "MeshyLook Thorn Courtyards",
+      "source": "7297:2cb09848:3b13e16",
+      "built": "7365:1f9917d2:2ebddd1e",
+      "components": 48,
+      "checkpoints": 0,
+      "crates": 0,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./meshy/ancient-stone-courtyard.glb"
+        ],
+        "failed": [],
+        "revision": 472
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "2184720:5d26ff82:42e8c220",
+      "expectedBuilt": "2184778:b0a43bd3:47ba39fd",
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "source": "2184720:5d26ff82:42e8c220",
+      "built": "2184778:b0a43bd3:47ba39fd",
+      "components": 1447,
+      "checkpoints": 17,
+      "crates": 36,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 756
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 488,
+        "placements": 488,
+        "ready": 222,
+        "skipped": 12,
+        "draws": 131,
+        "triangles": 1481320,
+        "allLodTriangles": 1616075,
+        "cells": 188,
+        "residentCells": 131,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 578.67,
+        "errors": [],
+        "windTime": 2.33333333333333,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "2935:f6924cb:d0018f6b",
+      "expectedBuilt": "3001:187fc0ba:a4eac992",
+      "id": "bonus-easy",
+      "name": "Bonus: Easy Street",
+      "source": "2935:f6924cb:d0018f6b",
+      "built": "3001:187fc0ba:a4eac992",
+      "components": 42,
+      "checkpoints": 0,
+      "crates": 18,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./roo.png",
+          "./crossbones.png"
+        ],
+        "failed": [],
+        "revision": 758
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "26028:3aaa3d08:b67f96a2",
+      "expectedBuilt": "25508:ce62bb4d:a5f570e1",
+      "id": "bonus-treehouse-trail",
+      "name": "Bonus: Canopy Cache",
+      "source": "26028:3aaa3d08:b67f96a2",
+      "built": "25508:ce62bb4d:a5f570e1",
+      "components": 103,
+      "checkpoints": 0,
+      "crates": 7,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 788
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 30,
+        "placements": 30,
+        "ready": 15,
+        "skipped": 15,
+        "draws": 13,
+        "triangles": 81335,
+        "allLodTriangles": 81335,
+        "cells": 13,
+        "residentCells": 13,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 20,
+        "errors": [],
+        "windTime": 0.31666666666666665,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "449356:e3b52749:8931dff",
+      "expectedBuilt": "449412:ff5c77f:3436daed",
+      "id": "bonus-jungle",
+      "name": "Bonus: Fern Reliquary",
+      "source": "449356:e3b52749:8931dff",
+      "built": "449412:ff5c77f:3436daed",
+      "components": 1654,
+      "checkpoints": 0,
+      "crates": 20,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1054
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1553,
+        "placements": 1553,
+        "ready": 1383,
+        "skipped": 170,
+        "draws": 290,
+        "triangles": 1237815,
+        "allLodTriangles": 1237815,
+        "cells": 290,
+        "residentCells": 290,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 28,
+        "textureMiB": 91.69,
+        "errors": [],
+        "windTime": 0.6666666666666671,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "282918:4e18e292:755c9a6a",
+      "expectedBuilt": "282971:10185561:87cdfa15",
+      "id": "bonus-test-course",
+      "name": "Bonus: Quayside Cargo",
+      "source": "282918:4e18e292:755c9a6a",
+      "built": "282971:10185561:87cdfa15",
+      "components": 141,
+      "checkpoints": 0,
+      "crates": 6,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 270,
+          "maxFrameMs": 33.40000000000009,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1114
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 111,
+        "placements": 111,
+        "ready": 41,
+        "skipped": 70,
+        "draws": 28,
+        "triangles": 206861,
+        "allLodTriangles": 206861,
+        "cells": 28,
+        "residentCells": 28,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 42.33,
+        "errors": [],
+        "windTime": 0.5333333333333333,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "11488:6d2e2719:7c25bdbf",
+      "expectedBuilt": "11545:75af338e:3cbd2d48",
+      "id": "bonus-sky-bridge",
+      "name": "Bonus: Cloudtop Lockers",
+      "source": "11488:6d2e2719:7c25bdbf",
+      "built": "11545:75af338e:3cbd2d48",
+      "components": 71,
+      "checkpoints": 0,
+      "crates": 7,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 146
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 31,
+        "placements": 31,
+        "ready": 31,
+        "skipped": 0,
+        "draws": 19,
+        "triangles": 274413,
+        "allLodTriangles": 274413,
+        "cells": 19,
+        "residentCells": 19,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 18.33,
+        "errors": [],
+        "windTime": 1.2004000000357635,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "29928:e8085de3:454b75d1",
+      "expectedBuilt": "29981:762206b4:4b7d04be",
+      "id": "bonus-nightworks",
+      "name": "Bonus: Nightworks Fuse Store",
+      "source": "29928:e8085de3:454b75d1",
+      "built": "29981:762206b4:4b7d04be",
+      "components": 87,
+      "checkpoints": 0,
+      "crates": 7,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 214
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 10,
+        "placements": 10,
+        "ready": 10,
+        "skipped": 0,
+        "draws": 9,
+        "triangles": 21260,
+        "allLodTriangles": 21260,
+        "cells": 9,
+        "residentCells": 9,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 5.33,
+        "errors": [],
+        "windTime": 0.35,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "32799:3558751b:c368848f",
+      "expectedBuilt": "32889:1646f620:6508c586",
+      "id": "bonus-beachside-run",
+      "name": "Bonus: Lifeguard Lockup",
+      "source": "32799:3558751b:c368848f",
+      "built": "32889:1646f620:6508c586",
+      "components": 207,
+      "checkpoints": 0,
+      "crates": 24,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 298
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 98,
+        "placements": 98,
+        "ready": 62,
+        "skipped": 36,
+        "draws": 32,
+        "triangles": 340591,
+        "allLodTriangles": 340591,
+        "cells": 32,
+        "residentCells": 32,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 23,
+        "errors": [],
+        "windTime": 0.4833333333333333,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "270841:ee83a75c:c72a0bd2",
+      "expectedBuilt": "270931:f4e11d51:ae7620b5",
+      "id": "bonus-coastal",
+      "name": "Bonus: Rooftop Deliveries",
+      "source": "270841:ee83a75c:c72a0bd2",
+      "built": "270931:f4e11d51:ae7620b5",
+      "components": 958,
+      "checkpoints": 0,
+      "crates": 32,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 428
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 779,
+        "placements": 779,
+        "ready": 766,
+        "skipped": 13,
+        "draws": 213,
+        "triangles": 1590409,
+        "allLodTriangles": 1590409,
+        "cells": 213,
+        "residentCells": 213,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 14,
+        "textureMiB": 41.33,
+        "errors": [],
+        "windTime": 0.49999999999999994,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "28469:57219745:c0e77fc7",
+      "expectedBuilt": "28522:ed5632e:a24f9108",
+      "id": "bonus-codex-switchback",
+      "name": "Bonus: Haunted Hassle",
+      "source": "28469:57219745:c0e77fc7",
+      "built": "28522:ed5632e:a24f9108",
+      "components": 153,
+      "checkpoints": 0,
+      "crates": 8,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 640
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "32492:1a524423:914fcee7",
+      "expectedBuilt": "31906:153cf206:c4aeb6d2",
+      "id": "bonus-waterpark",
+      "name": "Bonus: Deadwater Valve House",
+      "source": "32492:1a524423:914fcee7",
+      "built": "31906:153cf206:c4aeb6d2",
+      "components": 112,
+      "checkpoints": 0,
+      "crates": 9,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./roo.png"
+        ],
+        "failed": [],
+        "revision": 641
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "81886:bd3605bc:4494323e",
+      "expectedBuilt": "81941:e8df6af3:9d953271",
+      "id": "bonus-nightworks-after-hours",
+      "name": "Bonus: Caldera Counterweights",
+      "source": "81886:bd3605bc:4494323e",
+      "built": "81941:e8df6af3:9d953271",
+      "components": 110,
+      "checkpoints": 0,
+      "crates": 16,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 690
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 39,
+        "placements": 39,
+        "ready": 39,
+        "skipped": 0,
+        "draws": 38,
+        "triangles": 258609,
+        "allLodTriangles": 258609,
+        "cells": 38,
+        "residentCells": 38,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 1,
+        "textureMiB": 4.33,
+        "errors": [],
+        "windTime": 0.31666666666666665,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "22582:76a1bb8f:b46635ff",
+      "expectedBuilt": "21817:2a05e924:24b2b67e",
+      "id": "bonus-jungle-terraces",
+      "name": "Bonus: Ember Reliquary",
+      "source": "22582:76a1bb8f:b46635ff",
+      "built": "21817:2a05e924:24b2b67e",
+      "components": 132,
+      "checkpoints": 0,
+      "crates": 9,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 242,
+          "maxFrameMs": 33.30000000000018,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 732
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 50,
+        "placements": 50,
+        "ready": 35,
+        "skipped": 15,
+        "draws": 26,
+        "triangles": 36060,
+        "allLodTriangles": 36060,
+        "cells": 26,
+        "residentCells": 26,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 17.33,
+        "errors": [],
+        "windTime": 0.2833333333333333,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "20494:7b52aede:b10b47a2",
+      "expectedBuilt": "20547:f309645d:a7c237b5",
+      "id": "bonus-drowned-crown",
+      "name": "Bonus: The Captain’s Last Ledger",
+      "source": "20494:7b52aede:b10b47a2",
+      "built": "20547:f309645d:a7c237b5",
+      "components": 105,
+      "checkpoints": 0,
+      "crates": 9,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 162
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 57,
+        "placements": 57,
+        "ready": 57,
+        "skipped": 0,
+        "draws": 25,
+        "triangles": 298070,
+        "allLodTriangles": 348670,
+        "cells": 25,
+        "residentCells": 25,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 211,
+        "errors": [],
+        "windTime": 1.0670666666428261,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "201494:9a2f2ff3:aefb4fbd",
+      "expectedBuilt": "200732:920ae276:78f8a148",
+      "id": "bonus-bone-yard",
+      "name": "Bonus: Ivory Salvage",
+      "source": "201494:9a2f2ff3:aefb4fbd",
+      "built": "200732:920ae276:78f8a148",
+      "components": 136,
+      "checkpoints": 0,
+      "crates": 10,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./roo.png"
+        ],
+        "failed": [],
+        "revision": 163
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "213974:ad88a046:1ba71cf2",
+      "expectedBuilt": "214040:56696d1:862779ff",
+      "id": "bonus-custard-creek",
+      "name": "Bonus: Willowmill Cache",
+      "source": "213974:ad88a046:1ba71cf2",
+      "built": "214040:56696d1:862779ff",
+      "components": 314,
+      "checkpoints": 0,
+      "crates": 18,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 210
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 257,
+        "placements": 257,
+        "ready": 50,
+        "skipped": 207,
+        "draws": 15,
+        "triangles": 312778,
+        "allLodTriangles": 312778,
+        "cells": 15,
+        "residentCells": 15,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 86.67,
+        "errors": [],
+        "windTime": 0.6833333333333338,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "12001:71faf697:151e6cfb",
+      "expectedBuilt": "12251:f399090e:7b81975c",
+      "id": "bonus-carlisle-coast",
+      "name": "Bonus: Springtide Skippers",
+      "source": "12001:71faf697:151e6cfb",
+      "built": "12251:f399090e:7b81975c",
+      "components": 88,
+      "checkpoints": 0,
+      "crates": 21,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 364
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "281190:5221b0c6:224fec86",
+      "expectedBuilt": "281243:71b4cfc7:b891568d",
+      "id": "bonus-mayfield-mall",
+      "name": "Bonus: After Hours",
+      "source": "281190:5221b0c6:224fec86",
+      "built": "281243:71b4cfc7:b891568d",
+      "components": 116,
+      "checkpoints": 0,
+      "crates": 8,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./roo.png"
+        ],
+        "failed": [],
+        "revision": 407
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "5360:2cdfb973:9de7759b",
+      "expectedBuilt": "5412:29f368be:95499b40",
+      "id": "bonus-skystream",
+      "name": "Bonus: Cumulus Cache",
+      "source": "5360:2cdfb973:9de7759b",
+      "built": "5412:29f368be:95499b40",
+      "components": 59,
+      "checkpoints": 0,
+      "crates": 18,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./roo.png",
+          "./crossbones.png"
+        ],
+        "failed": [],
+        "revision": 410
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "855643:5c9d9986:7635bad6",
+      "expectedBuilt": "855698:3efc5866:c7b3815e",
+      "id": "bonus-tribal-run",
+      "name": "Bonus: The Resonance Vault",
+      "source": "855643:5c9d9986:7635bad6",
+      "built": "855698:3efc5866:c7b3815e",
+      "components": 273,
+      "checkpoints": 0,
+      "crates": 20,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 464
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 126,
+        "placements": 126,
+        "ready": 121,
+        "skipped": 5,
+        "draws": 25,
+        "triangles": 99599,
+        "allLodTriangles": 99599,
+        "cells": 25,
+        "residentCells": 25,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 17.33,
+        "errors": [],
+        "windTime": 0.31666666666666665,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "1164575:c959bd0d:4db4cd45",
+      "expectedBuilt": "1164630:c62e4896:66cf66c0",
+      "id": "bonus-waterfall-climb",
+      "name": "Bonus: The Hidden Spillway",
+      "source": "1164575:c959bd0d:4db4cd45",
+      "built": "1164630:c62e4896:66cf66c0",
+      "components": 149,
+      "checkpoints": 0,
+      "crates": 22,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 245,
+          "maxFrameMs": 16.800000000000182,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./roo.png"
+        ],
+        "failed": [],
+        "revision": 473
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 30,
+        "placements": 30,
+        "ready": 0,
+        "skipped": 30,
+        "draws": 0,
+        "triangles": 0,
+        "allLodTriangles": 0,
+        "cells": 0,
+        "residentCells": 0,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 0,
+        "errors": [],
+        "windTime": 0.13333333333333333,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "101284:13b73d22:f705de3c",
+      "expectedBuilt": "101317:1c7abdc5:4d56f833",
+      "id": "bonus-jungle-gate",
+      "name": "Bonus: The Gatekeeper’s Hoard",
+      "source": "101284:13b73d22:f705de3c",
+      "built": "101317:1c7abdc5:4d56f833",
+      "components": 572,
+      "checkpoints": 0,
+      "crates": 28,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 194
+      },
+      "ancient": {
+        "requested": 4,
+        "ready": 4,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "Hidden jade gallery",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          }
+        ]
+      },
+      "jungle": {
+        "components": 474,
+        "placements": 474,
+        "ready": 471,
+        "skipped": 0,
+        "draws": 115,
+        "triangles": 1163254,
+        "allLodTriangles": 1163254,
+        "cells": 118,
+        "residentCells": 115,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 146.67,
+        "errors": [],
+        "windTime": 1.0498000000119223,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "351538:6d9d3376:699f370a",
+      "expectedBuilt": "351609:8c7bf4b8:1a730d08",
+      "id": "bonus-rooftop-relay",
+      "name": "Bonus: The Storm Parlour",
+      "source": "351538:6d9d3376:699f370a",
+      "built": "351609:8c7bf4b8:1a730d08",
+      "components": 132,
+      "checkpoints": 0,
+      "crates": 23,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 260
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 63,
+        "placements": 63,
+        "ready": 54,
+        "skipped": 9,
+        "draws": 28,
+        "triangles": 1195491,
+        "allLodTriangles": 1195491,
+        "cells": 28,
+        "residentCells": 28,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 3,
+        "textureMiB": 334.67,
+        "errors": [],
+        "windTime": 1.1166666666666676,
+        "weatherWind": {
+          "wind": [
+            5.5,
+            2.8
+          ],
+          "intensity": 0.86,
+          "time": 1.100000000000001
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "30676:9e5c6694:f76f9692",
+      "expectedBuilt": "30739:48e81f4f:a7d2ab55",
+      "id": "bonus-rumblewater-run",
+      "name": "Bonus: Sluicekeeper’s Cache",
+      "source": "30676:9e5c6694:f76f9692",
+      "built": "30739:48e81f4f:a7d2ab55",
+      "components": 214,
+      "checkpoints": 0,
+      "crates": 21,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 446
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 135,
+        "placements": 1922,
+        "ready": 1860,
+        "skipped": 62,
+        "draws": 180,
+        "triangles": 1497390,
+        "allLodTriangles": 1497390,
+        "cells": 180,
+        "residentCells": 180,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 17,
+        "textureMiB": 77,
+        "errors": [],
+        "windTime": 0.850000000000001,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "619301:420a5a5c:fd1ec546",
+      "expectedBuilt": "619357:aeece261:b922e8d5",
+      "id": "bonus-rolling-bones",
+      "name": "Bonus: Moonbone Vault",
+      "source": "619301:420a5a5c:fd1ec546",
+      "built": "619357:aeece261:b922e8d5",
+      "components": 105,
+      "checkpoints": 0,
+      "crates": 16,
+      "bonus": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 502
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 54,
+        "placements": 54,
+        "ready": 46,
+        "skipped": 8,
+        "draws": 40,
+        "triangles": 422109,
+        "allLodTriangles": 422109,
+        "cells": 40,
+        "residentCells": 40,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 133.33,
+        "errors": [],
+        "windTime": 0.733333333333334,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "56249:4c6a9403:91c4271f",
+      "expectedBuilt": "56315:56484ca2:71175e30",
+      "id": "crab-chief",
+      "name": "Tidebreak · Crab Chief",
+      "source": "56249:4c6a9403:91c4271f",
+      "built": "56315:56484ca2:71175e30",
+      "components": 172,
+      "checkpoints": 0,
+      "crates": 4,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 548
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 34,
+        "placements": 34,
+        "ready": 14,
+        "skipped": 20,
+        "draws": 10,
+        "triangles": 43520,
+        "allLodTriangles": 43520,
+        "cells": 10,
+        "residentCells": 10,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 1.33,
+        "errors": [],
+        "windTime": 0.35,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "2238902:10751d71:8130a4b5",
+      "expectedBuilt": "2238926:e92808c2:56bbdf82",
+      "id": "ghost-train",
+      "name": "Haunted Castle · Ghost Train",
+      "source": "2238902:10751d71:8130a4b5",
+      "built": "2238926:e92808c2:56bbdf82",
+      "components": 3646,
+      "checkpoints": 23,
+      "crates": 58,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./props/bonus-platform/question-masonry.glb",
+          "blob:http://127.0.0.1:5377/d3eaa865-2b3c-4d72-a4f2-43da4da9a403"
+        ],
+        "failed": [],
+        "revision": 662
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "1997197:ec970030:2dd1d194",
+      "expectedBuilt": "1997197:ec970030:2dd1d194",
+      "id": "codex-lab",
+      "name": "Haunted Hassle",
+      "source": "1997197:ec970030:2dd1d194",
+      "built": "1997197:ec970030:2dd1d194",
+      "components": 4707,
+      "checkpoints": 6,
+      "crates": 22,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1012
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "16851:e9250abb:96641e43",
+      "expectedBuilt": "16919:2bd4b6ee:b9e3be1a",
+      "id": "cave-collapse",
+      "name": "Crumblewake Cave",
+      "source": "16851:e9250abb:96641e43",
+      "built": "16919:2bd4b6ee:b9e3be1a",
+      "components": 136,
+      "checkpoints": 1,
+      "crates": 1,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 265,
+          "maxFrameMs": 83.39999999999986,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 1014
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "2253596:c2fa4e3:49ef385b",
+      "expectedBuilt": "2253620:ba59726:ccb6b780",
+      "id": "waterfall-climb",
+      "name": "Waterfall Climb",
+      "source": "2253596:c2fa4e3:49ef385b",
+      "built": "2253620:ba59726:ccb6b780",
+      "components": 864,
+      "checkpoints": 10,
+      "crates": 49,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 158
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 435,
+        "placements": 435,
+        "ready": 61,
+        "skipped": 289,
+        "draws": 61,
+        "triangles": 318372,
+        "allLodTriangles": 318372,
+        "cells": 139,
+        "residentCells": 61,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 56,
+        "errors": [],
+        "windTime": 1.050200000047685,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "643047:65b75f59:4f623d5f",
+      "expectedBuilt": "643071:8438d800:66db17cc",
+      "id": "jungle-minefield",
+      "name": "No-Man’s Grove",
+      "source": "643047:65b75f59:4f623d5f",
+      "built": "643071:8438d800:66db17cc",
+      "components": 2201,
+      "checkpoints": 5,
+      "crates": 52,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 248
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1287,
+        "placements": 1287,
+        "ready": 29,
+        "skipped": 1132,
+        "draws": 29,
+        "triangles": 55983,
+        "allLodTriangles": 55983,
+        "cells": 147,
+        "residentCells": 29,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 32,
+        "errors": [],
+        "windTime": 0.5833333333333335,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "9619787:5af93002:53b2a1fc",
+      "expectedBuilt": "9619813:891e5a81:6c21a739",
+      "id": "rooftop-relay",
+      "name": "Rooftop Relay",
+      "source": "9619787:5af93002:53b2a1fc",
+      "built": "9619813:891e5a81:6c21a739",
+      "components": 2216,
+      "checkpoints": 6,
+      "crates": 66,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 370
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 375,
+        "skipped": 140,
+        "draws": 119,
+        "triangles": 1342354,
+        "allLodTriangles": 1342354,
+        "cells": 433,
+        "residentCells": 119,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 136.33,
+        "errors": [],
+        "windTime": 1.4666666666666663,
+        "weatherWind": {
+          "wind": [
+            5.5,
+            2.8
+          ],
+          "intensity": 0.86,
+          "time": 1.3666666666666667
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "5318117:a2a8fae9:561f8be7",
+      "expectedBuilt": "5318169:4ecbb8f3:53ed257b",
+      "id": "mayfield-mall",
+      "name": "Mayfield Mall",
+      "source": "5318117:a2a8fae9:561f8be7",
+      "built": "5318169:4ecbb8f3:53ed257b",
+      "components": 2777,
+      "checkpoints": 10,
+      "crates": 32,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 594
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "6973498:e69cf49b:546eb72f",
+      "expectedBuilt": "6973522:aa68494:aea8d7c8",
+      "id": "mall",
+      "name": "Mall · New York",
+      "source": "6973498:e69cf49b:546eb72f",
+      "built": "6973522:aa68494:aea8d7c8",
+      "components": 2377,
+      "checkpoints": 5,
+      "crates": 5,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 850
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "1186768:72f68e11:c1cac1f5",
+      "expectedBuilt": "1186792:d505a63e:3ae53952",
+      "id": "school-miami",
+      "name": "School · Miami",
+      "source": "1186768:72f68e11:c1cac1f5",
+      "built": "1186792:d505a63e:3ae53952",
+      "components": 275,
+      "checkpoints": 5,
+      "crates": 5,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 850
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "500173:b9fb5c79:6bd6656b",
+      "expectedBuilt": "500165:8229a24c:4f6e538e",
+      "id": "warehouse-reference",
+      "name": "Warehouse · Reference",
+      "source": "500173:b9fb5c79:6bd6656b",
+      "built": "500165:8229a24c:4f6e538e",
+      "components": 773,
+      "checkpoints": 1,
+      "crates": 26,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 850
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "5380305:cf1f7e84:fec450fa",
+      "expectedBuilt": "5380329:48fd290d:6c69b2e1",
+      "id": "kona",
+      "name": "Kona · PS1",
+      "source": "5380305:cf1f7e84:fec450fa",
+      "built": "5380329:48fd290d:6c69b2e1",
+      "components": 1164,
+      "checkpoints": 5,
+      "crates": 5,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 240,
+          "maxFrameMs": 50,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 850
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "1829815:cf6ec107:a3dcfa1b",
+      "expectedBuilt": "1829851:8b5f6e98:61a68778",
+      "id": "jungle-cup",
+      "name": "Motu Beach Invitational",
+      "source": "1829815:cf6ec107:a3dcfa1b",
+      "built": "1829851:8b5f6e98:61a68778",
+      "components": 443,
+      "checkpoints": 0,
+      "crates": 0,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 380,
+          "maxFrameMs": 133.29999999999927,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 178
+      },
+      "ancient": null,
+      "jungle": {
+        "components": 295,
+        "placements": 295,
+        "ready": 178,
+        "skipped": 117,
+        "draws": 104,
+        "triangles": 624798,
+        "allLodTriangles": 624798,
+        "cells": 104,
+        "residentCells": 104,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 33.67,
+        "errors": [],
+        "windTime": 0.5506000000238421,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "940034:16994ce0:aa2ccd82",
+      "expectedBuilt": "940058:5abb3161:6cc1aa59",
+      "id": "warehouse",
+      "name": "Warehouse / Five Lines",
+      "source": "940034:16994ce0:aa2ccd82",
+      "built": "940058:5abb3161:6cc1aa59",
+      "components": 877,
+      "checkpoints": 3,
+      "crates": 3,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 380,
+          "maxFrameMs": 133.29999999999927,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 354
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "1267:50e75a4b:f63db3eb",
+      "expectedBuilt": "1333:5d14b8b8:1fa75bbc",
+      "id": "bone-yard",
+      "name": "Bone Yard · Wipeout Playground",
+      "source": "1267:50e75a4b:f63db3eb",
+      "built": "1333:5d14b8b8:1fa75bbc",
+      "components": 16,
+      "checkpoints": 2,
+      "crates": 2,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 380,
+          "maxFrameMs": 133.29999999999927,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 360
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    },
+    {
+      "expectedSource": "2248476:613feadd:2a810209",
+      "expectedBuilt": "2248500:171a7ae:a1b16656",
+      "id": "waterpark",
+      "name": "Deadwater Park",
+      "source": "2248476:613feadd:2a810209",
+      "built": "2248500:171a7ae:a1b16656",
+      "components": 1738,
+      "checkpoints": 2,
+      "crates": 16,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 380,
+          "maxFrameMs": 133.29999999999927,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./props/bonus-platform/question-masonry.glb"
+        ],
+        "failed": [],
+        "revision": 362
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "2258564:33d812df:189772f7",
+      "expectedBuilt": "2258588:4af0a722:3a714dec",
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "source": "2258564:33d812df:189772f7",
+      "built": "2258588:4af0a722:3a714dec",
+      "components": 1077,
+      "checkpoints": 0,
+      "crates": 0,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 380,
+          "maxFrameMs": 133.29999999999927,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./props/bonus-platform/question-masonry.glb"
+        ],
+        "failed": [],
+        "revision": 362
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": true
+    },
+    {
+      "expectedSource": "2161:8e3df8b9:6e2465ad",
+      "expectedBuilt": "2185:e9560c3a:67e6ae82",
+      "id": "backport-lab",
+      "name": "Backport Mechanics Lab",
+      "source": "2161:8e3df8b9:6e2465ad",
+      "built": "2185:e9560c3a:67e6ae82",
+      "components": 23,
+      "checkpoints": 1,
+      "crates": 3,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 380,
+          "maxFrameMs": 133.29999999999927,
+          "width": 800,
+          "height": 500,
+          "title": null
+        },
+        "pending": [
+          "./props/bonus-platform/question-masonry.glb",
+          "blob:http://127.0.0.1:5377/da80fe57-5fa1-4631-a7e6-2dbd0c093f03"
+        ],
+        "failed": [],
+        "revision": 374
+      },
+      "ancient": null,
+      "jungle": null,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC",
+      "nodeReferenceDiffers": false
+    }
+  ],
+  "errors": [],
+  "assets": [],
+  "pass": true
+}

@@ -17,9 +17,9 @@ try{
  const original=await readFile('public/levels.json'),pack=JSON.parse(original);
  const certificates=JSON.parse(await readFile('tools/fixtures/stock-level-snapshots.json','utf8')).levels;
  const compact=compactPublishedLevels(pack,api.BUILTIN_LEVELS,certificates);
- // These editor snapshots differ from the current authored source and must
- // survive compaction, even when the built-in registry has the same ID.
- const overrides=new Set(['flats','bonus-jungle-terraces']);
+ // Every published entry now has complete current source data, including
+ // the formerly snapshot-only Flats course and updated bonus camera.
+ const overrides=new Set();
  const expectedStock=pack.levels.filter(e=>!overrides.has(e.id)).map(e=>e.id),diagnostics=[];
  // Exact equality on the authoring OS can hide a stale certificate. Linux may
  // need that certificate for the same course's bounded trig roundoff.
@@ -168,13 +168,13 @@ try{
  assert.deepEqual(api.getUserLevels(),[]);assert.equal(sync.hasPulledLevels(),false);assert.deepEqual(blocked.events,[]);
  denyWrites=false;
  const fresh=makeContext();fresh.fetchRemoteLevels=async()=>compact.pack;await runFirst(fresh);
- assert.equal(api.getUserLevels()[0].id,'flats');assert.equal(sync.hasPulledLevels(),true);assert.deepEqual(fresh.events,[['refresh']]);
+ assert.deepEqual(api.getUserLevels(),[]);assert.equal(sync.hasPulledLevels(),true);assert.deepEqual(fresh.events,[['refresh']]);
  api.setUserLevels([entry]);storage.delete('solProtoCloudPulled');denyWrites=true;
  const manual=makeContext();manual.fetchRemoteLevels=async()=>compact.pack;runInNewContext(js(force.getText(ast)),manual);await manual.ui.onForceResync();
  assert.equal(api.getUserLevels()[0].id,entry.id);assert.equal(sync.hasPulledLevels(),false);
  assert.equal(manual.events.some(e=>e[0]==='switch'||e[0]==='respawn'||e[0]==='refresh'),false);
  assert.ok(manual.events.some(e=>e[0]==='message'&&e[1]==='RESTORE FAILED'));
- denyWrites=false;await manual.ui.onForceResync();assert.equal(api.getUserLevels()[0].id,'flats');assert.equal(sync.hasPulledLevels(),true);
+ denyWrites=false;await manual.ui.onForceResync();assert.deepEqual(api.getUserLevels(),[]);assert.equal(sync.hasPulledLevels(),true);
  assert.ok(manual.events.some(e=>e[0]==='switch'));assert.ok(manual.events.some(e=>e[0]==='respawn'));
  console.log(JSON.stringify({pass:true,sourceBytes:proof.sourceBytes,downloadBytes:proof.outputBytes,sourceBacked:proof.sourceBacked.length,
   retained:proof.retained,checks:'exact full-data comparison, certified stock with runtime roundoff, sub-nanometre authored variants, idempotent output, original retention, bounded fetch, atomic restore, quota/session preservation and actual startup/restore handlers'}));

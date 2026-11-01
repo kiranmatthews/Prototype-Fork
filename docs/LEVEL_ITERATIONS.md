@@ -8148,3 +8148,14 @@ Skystream fallback and Beachside woodpaths; both are documented separately.
 `8185038211e5a73c75f9`. Local increment for the active release coordinator;
 no direct push or public-deployment claim. No movement tuning or published
 level-pack changes, and no full suite.
+
+
+## 2026-11-02 — Whole-library preservation audit and recovered Ancient Gates release
+
+- Audit every current course/bonus and retained release: 70 entries, 25 bonuses, 688 successful deployment heads, 133 published-pack revisions, 484 historical source snapshots, 20 existing worktrees, 36 divergent refs and seven stashes. All successful production heads remain in main history. Preserve 143 reflog-only tips with local archive refs; leave other checkouts untouched.
+- Merge the completed Ancient Gates native-art/mechanism/matte/audio history as `172868a0` and the completed checkpoint-free bonus work as `04b4a54d`. Keep newer shared runtime changes; update the published pack only by ID. Correct the four stale Jungle Terraces bonus camera fields.
+- Recognize complete historical stock before normalization and select current source for both play and editing. Preserve original archives, sub-nanometre local edits, names, copied IDs and deliberate author saves. Keep invalid historical Rooftop data as an unvalidated archive, never as trusted construction data. Preserve the exact original saved library before replacing partially unreadable storage, including quota-failure behavior.
+- Promote the existing 332-component Flats published layout to typed source without changing its data. All 14 published entries now compact to the current source; the sync download is 20 bytes. No model, texture, movement tuning, level order or crate size is rolled back.
+- Pass 2,560 historical variants, 330 authored-edit cases, Ancient/Rooftop fixtures, six library-backup scenarios, all required level checks, editor-security/transaction and sync regressions, recovered Ancient and bonus checks. The final real Chrome sweep builds all 70 entries with exact independently compiled browser source data and no fallback or errors. Normal/native Ancient and camera views, cached-stock reloads, authored copies, and six bonus crossing/retry/finish cases pass.
+- Keep unused old font provenance in the source library and remove only JSON whitespace from four release metadata files. Preserve every numeric lexeme and string. Production build and release-size check pass at 999,167,501 bytes. No full `check:all` was run.
+- Prompt to combined native playable review: approximately 58 minutes; the complete history/browser audit took approximately 70 minutes before publication. Detailed provenance and validation: `docs/level-preservation-audit/`.

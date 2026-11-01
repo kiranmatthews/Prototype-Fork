@@ -3,6 +3,31 @@ import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {gzipSync,gunzipSync} from 'node:zlib';
 
+export const COMPACT_RELEASE_METADATA = [
+ 'carlisle-coast/contact-surfaces.json',
+ 'carlisle-coast-fidelity/contact-surfaces.json',
+ 'treehouse-trials-v2/contact-surfaces.json',
+ 'treehouse-trials-v2/provenance.json',
+];
+
+/** Remove only whitespace outside JSON strings from generated metadata.
+ * Original numeric lexemes, every string and editable source bytes survive. */
+export async function compactReleaseMetadata({root,outDir}){
+ const source=await realpath(path.join(root,'public')),output=await realpath(outDir);
+ if(source===output||source.startsWith(output+path.sep)||output.startsWith(source+path.sep))throw Error('Release output overlaps source assets');
+ let savedBytes=0;
+ for(const file of COMPACT_RELEASE_METADATA){
+  const destination=path.join(output,file);
+  if(await realpath(path.dirname(destination))!==path.dirname(destination))throw Error('Metadata output cannot contain symlinks');
+  const info=await lstat(destination);
+  if(!info.isFile()||info.isSymbolicLink())throw Error('Metadata output must be a regular file');
+  const original=await readFile(path.join(source,file),'utf8');JSON.parse(original);
+  const compact=original.replace(/("(?:[^"\\]|\\.)*")|\s+/g,(_match,string)=>string??'')+'\n';
+  await writeFile(destination,compact);savedBytes+=Buffer.byteLength(original)-Buffer.byteLength(compact);
+ }
+ return{files:COMPACT_RELEASE_METADATA.length,savedBytes};
+}
+
 /** The opt-in animation study catalogue is large numeric JSON. Preserve every
  * byte and keyframe in a compact binary download; public/ remains editable. */
 export async function prepareReviewCatalog({root,outDir}){
@@ -110,7 +135,9 @@ export function retiredFontAsset(file,versions){
  const atlas=file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.(?:png|json)$/);
  if(atlas)return !Object.values(versions).includes(Number(atlas[2]));
  const archive=file.match(/^fonts\/roo-image-font-v(\d+)\.zip$/);
- return !!archive&&!Object.values(versions).includes(Number(archive[1]));
+ const provenance=file.match(/^fonts\/roo-font-v(\d+)-provenance\.json$/);
+ const version=archive?.[1]??provenance?.[1];
+ return !!version&&!Object.values(versions).includes(Number(version));
 }
 
 /** Vite has already copied public assets. Prune only generated output before

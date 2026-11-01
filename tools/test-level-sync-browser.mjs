@@ -34,7 +34,7 @@ try{
   assert.match(state.stamp,/Codex\/sol fork/);return state;
  };
  await page.goto(new URL(`?playtest&renderdiag&level=drowned-crown${full?'':'&lite'}`,base).href,{waitUntil:'domcontentloaded',timeout:120000});
- report.cold=await ready();assert.equal(report.cold.pulled,'1');assert.deepEqual(report.cold.userIds,['flats']);assert.ok(report.cold.saved<18000);
+ report.cold=await ready();assert.equal(report.cold.pulled,'1');assert.deepEqual(report.cold.userIds,[]);assert.ok(report.cold.saved<18000);
  assert.equal(requests.length,1);report.checks.push('fresh browser adopts compact pack and renders full source Crown');
  const built=await readFile('dist/levels.json');
  const served=await context.request.get(new URL('levels.json',base).href);const servedBytes=await served.body();

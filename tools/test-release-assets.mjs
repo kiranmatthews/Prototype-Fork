@@ -2,14 +2,14 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,readFile,writeFile,symlink,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {retiredFontAsset,pruneRetiredFontAssets,prepareFontArchives,prepareReviewCatalog,LOCAL_REVIEW_DIRECTORIES,LOCAL_REVIEW_FILES,localReviewAsset,pruneLocalReviewAssets} from './release-assets.mjs';
+import {retiredFontAsset,pruneRetiredFontAssets,prepareFontArchives,prepareReviewCatalog,LOCAL_REVIEW_DIRECTORIES,LOCAL_REVIEW_FILES,localReviewAsset,pruneLocalReviewAssets,COMPACT_RELEASE_METADATA,compactReleaseMetadata} from './release-assets.mjs';
 import {gunzipSync} from 'node:zlib';
 import {zipSync,unzipSync} from 'three/examples/jsm/libs/fflate.module.js';
 import {createServer} from 'vite';
 import {measureRelease,releaseWithinBudget,RELEASE_BYTE_LIMIT} from './check-release-size.mjs';
 const versions={bonus:10,counter:10};
-for(const file of ['fonts/roo-bonus-v9.png','fonts/roo-counter-v3-light2.png','fonts/roo-bonus-v8.json','fonts/roo-image-font-v7.zip'])assert.equal(retiredFontAsset(file,versions),true,file);
-for(const file of ['fonts/roo-bonus-v10.png','fonts/roo-counter-v10-light2-cap128.png','fonts/roo-bonus-v10-light1-cap256.png','fonts/roo-counter-v10.json','fonts/roo-image-font-v10.zip','fonts/RooRegular.ttf','fonts/roo-font-v1-provenance.json','fonts/roo-bevel-source-v1.json','fonts/SECONDARY-FONT-NOTICE.md','other/roo-counter-v9.png'])assert.equal(retiredFontAsset(file,versions),false,file);
+for(const file of ['fonts/roo-bonus-v9.png','fonts/roo-counter-v3-light2.png','fonts/roo-bonus-v8.json','fonts/roo-image-font-v7.zip','fonts/roo-font-v9-provenance.json'])assert.equal(retiredFontAsset(file,versions),true,file);
+for(const file of ['fonts/roo-bonus-v10.png','fonts/roo-counter-v10-light2-cap128.png','fonts/roo-bonus-v10-light1-cap256.png','fonts/roo-counter-v10.json','fonts/roo-image-font-v10.zip','fonts/RooRegular.ttf','fonts/roo-font-v10-provenance.json','fonts/roo-bevel-source-v1.json','fonts/SECONDARY-FONT-NOTICE.md','other/roo-counter-v9.png'])assert.equal(retiredFontAsset(file,versions),false,file);
 assert.equal(retiredFontAsset('fonts/roo-counter-v10.png',{bonus:11,counter:10}),false);
 assert.equal(retiredFontAsset('fonts/roo-bonus-v10.png',{bonus:11,counter:10}),false,'active exports retain both palettes in each selected version');
 assert.equal(retiredFontAsset('fonts/roo-image-font-v10.zip',{bonus:11,counter:10}),false);
@@ -18,6 +18,23 @@ assert.throws(()=>retiredFontAsset('fonts/roo-bonus-v9.png',{bonus:undefined,cou
 const root=await mkdtemp(path.join(tmpdir(),'release-assets-'));
 try{
  const source=path.join(root,'public'),outDir=path.join(root,'dist');
+ const metadata=' { "label" : " keep spaces ", "large" : 9007199254740993, "negativeZero" : -0, "array" : [1, 2] } \n';
+ for(const base of [source,outDir])for(const file of COMPACT_RELEASE_METADATA){
+  await mkdir(path.dirname(path.join(base,file)),{recursive:true});
+  await writeFile(path.join(base,file),metadata);
+ }
+ const compacted=await compactReleaseMetadata({root,outDir});assert.ok(compacted.savedBytes>0);
+ for(const file of COMPACT_RELEASE_METADATA){
+  const packed=await readFile(path.join(outDir,file),'utf8');
+  assert.equal(packed,'{"label":" keep spaces ","large":9007199254740993,"negativeZero":-0,"array":[1,2]}\n');
+  assert.equal(await readFile(path.join(source,file),'utf8'),metadata);
+ }
+ assert.deepEqual(await compactReleaseMetadata({root,outDir}),compacted);
+ await assert.rejects(compactReleaseMetadata({root,outDir:source}),/overlaps source/);
+ const metadataFile=path.join(outDir,COMPACT_RELEASE_METADATA[0]);await rm(metadataFile);
+ await symlink(path.join(source,COMPACT_RELEASE_METADATA[0]),metadataFile);
+ await assert.rejects(compactReleaseMetadata({root,outDir}),/regular file/);
+ await rm(metadataFile);await writeFile(metadataFile,metadata);
  const catalogPath='animations/skate-review/catalog';
  const catalogBytes=Buffer.from(JSON.stringify({revision:31,clips:[{id:'study',tracks:[{keys:[{time:0,value:[0,.123456789123456,1]}]}]}]}));
  for(const base of [source,outDir]){
@@ -42,12 +59,14 @@ try{
  await symlink(path.join(source,'animations/skate-review'),path.join(catalogLink,'animations/skate-review'),'dir');
  await assert.rejects(prepareReviewCatalog({root,outDir:catalogLink}),/symlinks/);
  await mkdir(path.join(source,'fonts'),{recursive:true});await mkdir(path.join(outDir,'fonts'),{recursive:true});
- for(const name of ['roo-bonus-v9.png','roo-bonus-v10.png','roo-image-font-v10.zip','SECONDARY-FONT-NOTICE.md'])for(const directory of [source,outDir])await writeFile(path.join(directory,'fonts',name),'original '+name);
+ for(const name of ['roo-bonus-v9.png','roo-font-v9-provenance.json','roo-font-v10-provenance.json','roo-bonus-v10.png','roo-image-font-v10.zip','SECONDARY-FONT-NOTICE.md'])for(const directory of [source,outDir])await writeFile(path.join(directory,'fonts',name),'original '+name);
  const result=await pruneRetiredFontAssets({root,outDir,fontVersions:versions});
- assert.deepEqual(result.files.map(file=>file.url),['fonts/roo-bonus-v9.png']);assert.ok(result.bytes>0);
+ assert.deepEqual(result.files.map(file=>file.url),['fonts/roo-bonus-v9.png','fonts/roo-font-v9-provenance.json']);assert.ok(result.bytes>0);
+ assert.equal(await readFile(path.join(source,'fonts/roo-font-v9-provenance.json'),'utf8'),'original roo-font-v9-provenance.json','historical provenance remains in the source library');
+ await assert.rejects(readFile(path.join(outDir,'fonts/roo-font-v9-provenance.json')),/ENOENT/);
  await assert.rejects(readFile(path.join(outDir,'fonts/roo-bonus-v9.png')),/ENOENT/);
  assert.equal(await readFile(path.join(source,'fonts/roo-bonus-v9.png'),'utf8'),'original roo-bonus-v9.png','historical source artwork remains local');
- for(const name of ['roo-bonus-v10.png','roo-image-font-v10.zip','SECONDARY-FONT-NOTICE.md'])assert.deepEqual(await readFile(path.join(outDir,'fonts',name)),await readFile(path.join(source,'fonts',name)));
+ for(const name of ['roo-bonus-v10.png','roo-font-v10-provenance.json','roo-image-font-v10.zip','SECONDARY-FONT-NOTICE.md'])assert.deepEqual(await readFile(path.join(outDir,'fonts',name)),await readFile(path.join(source,'fonts',name)));
  assert.deepEqual(await pruneRetiredFontAssets({root,outDir,fontVersions:versions}),{files:[],bytes:0},'repeat build pruning is idempotent');
  await assert.rejects(pruneRetiredFontAssets({root,outDir:source,fontVersions:versions}),/overlaps source/);
  const linked=path.join(root,'linked');await mkdir(linked);await symlink(path.join(source,'fonts'),path.join(linked,'fonts'),'dir');

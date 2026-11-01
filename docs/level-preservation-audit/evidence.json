@@ -1,0 +1,52 @@
+[
+  {
+    "file": "all-deployments.jsonl",
+    "bytes": 192559,
+    "sha256": "53125273431cb0d3ad0ee1f9278c3b470065489cedad6f6fc9f5629fc903d939"
+  },
+  {
+    "file": "source-history.json",
+    "bytes": 5181990,
+    "sha256": "8bd474e10b8445a2ec3c497ba1ff832fbfb19c019e7ebe75ee87f9fdc969e247"
+  },
+  {
+    "file": "pack-history.json",
+    "bytes": 284745,
+    "sha256": "71d150b6bf8b020f05f1a3f03b5b3522e4afb45876f4ab3fba4d8a87902c5066"
+  },
+  {
+    "file": "worktrees.json",
+    "bytes": 114624,
+    "sha256": "f1c3fac1e401b1dbc5c3490bd5fc4051da4259aae4e29cbc4e5351e20c955f15"
+  },
+  {
+    "file": "branch-content.json",
+    "bytes": 112450,
+    "sha256": "c54b3b34e2edc8c1ca4b59bc081ea3bd3ffb72fb98e54781d7edb4f1723ba754"
+  },
+  {
+    "file": "primary-dirty-manifest.json",
+    "bytes": 392055,
+    "sha256": "8a38dc92fc176c7e380eaf9e5763f582484ab9840a59a28d59720aa02429ef2d"
+  },
+  {
+    "file": "stock-archive-provenance.json",
+    "bytes": 773315,
+    "sha256": "44dd7290bd534ba92644103d603df9af58b2c5fc3fbfabcafb3265efe105463a"
+  },
+  {
+    "file": "selection-after.json",
+    "bytes": 639280,
+    "sha256": "311b5f15b4458b2a8b22bf6687de297a0d87a1a85108dcbb9ac6489c905657dc"
+  },
+  {
+    "file": "current-registry.json",
+    "bytes": 13627,
+    "sha256": "4607151340c87db616ae9dced7bd98b72c6cf79b757dc20c1c0a93ff504f9cf4"
+  },
+  {
+    "file": "reflog.json",
+    "bytes": 98706,
+    "sha256": "af1d609af6c47980c877667f432494fe9bc8ba77389962e12d0736f4fc9eaade"
+  }
+]

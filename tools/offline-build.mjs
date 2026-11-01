@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets,prepareReviewCatalog} from './release-assets.mjs';
+import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets,prepareReviewCatalog,compactReleaseMetadata} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
 import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
 import {preparePublishedLevels} from './release-levels.mjs';
@@ -49,6 +49,8 @@ export function offlineBuild() {
       if (!fontVersions.bonus || !fontVersions.counter) throw new Error('Offline font versions could not be read');
       const retired=await pruneRetiredFontAssets({root,outDir,fontVersions});
       console.log(`Release assets: kept active fonts; omitted ${retired.files.length} historical files (${(retired.bytes/1048576).toFixed(1)} MiB) from generated output.`);
+      const metadata=await compactReleaseMetadata({root,outDir});
+      console.log(`Release metadata: removed ${(metadata.savedBytes/1024).toFixed(1)} KiB of whitespace; all values and source files retained.`);
       const reviews=await pruneLocalReviewAssets({root,outDir});
       console.log(`Local review galleries: ${reviews.files.length} files (${(reviews.bytes/1048576).toFixed(1)} MiB) kept in the authoring library.`);
       const archives=await prepareFontArchives({root,outDir,fontVersions});

@@ -59,6 +59,8 @@ import { marineNetBounds } from './trampolineSurface';
 import { AncientGatesMechanisms } from './ancientGatesMechanisms';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
+import { isPublishedStockLevel } from './stockLevelArchive';
+import { FLATS_LEVEL } from './levels/flats';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
@@ -2581,7 +2583,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'inside-your-room', name: TREEHOUSE_ROOM_LEVEL.name, data: TREEHOUSE_ROOM_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
-  { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
+  { id: "flats", name: "Flats & Pipes", data: FLATS_LEVEL }, // sky-deck runway opening into the transition yard
   { id: 'country-club', name: COUNTRY_CLUB_LEVEL.name, data: COUNTRY_CLUB_LEVEL },
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
   { id: 'skystream', name: SKYSTREAM_LEVEL.name, data: SKYSTREAM_LEVEL },
@@ -2648,10 +2650,14 @@ export function isBuiltin(id: string): boolean {
 const USER_KEY = "solProtoUserLevels";
 let USER_CACHE: LevelEntry[] | null = null;
 let LAST_USER_WRITE_OK = true;
+let unreadUserLibrary: string | null = null;
 // Only entry trees cloned/validated and retained by this registry are trusted.
 // Their immutable identity lets edits avoid revalidating unrelated levels.
 const CANONICAL_USER_ENTRIES = new WeakMap<LevelEntry, { bytes: number; json: string }>();
 const CANONICAL_USER_DATA = new WeakSet<CustomLevelData>();
+// A proven historical release is kept as an archive, even when newer import
+// rules reject its old geometry. Only its current source may be constructed.
+const SOURCE_STOCK_ARCHIVES = new WeakSet<LevelEntry>();
 
 /** Borrow only a registry-owned immutable validation result for construction.
  * Callers that need an editable copy must use normalizeCustomLevelData. */
@@ -2675,7 +2681,7 @@ function retainUserLevelEntry(entry: LevelEntry): LevelEntry {
   // This helper receives only the bounded plain-data output of normalization,
   // never caller-owned objects, proxies, accessors or arbitrary frozen values.
   freeze(entry);
-  if (entry.data) CANONICAL_USER_DATA.add(entry.data);
+  if (entry.data && !SOURCE_STOCK_ARCHIVES.has(entry)) CANONICAL_USER_DATA.add(entry.data);
   const json = JSON.stringify(entry);
   CANONICAL_USER_ENTRIES.set(entry, {
     bytes: new TextEncoder().encode(json).byteLength, json,
@@ -3814,9 +3820,12 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
         // Compare stock fingerprints before changing crate coordinates or
         // their revision. The chosen runtime/editor copy expands afterwards;
         // registry reads and saves keep the recoverable authoring archive.
-        const data = normalizeLevelDataFields(entry.data, true, { crateLayout: false });
+        const stock = BUILTIN_LEVELS.some(builtin => builtin.id === entry.id && builtin.data) &&
+          isPublishedStockLevel(entry);
+        const data = stock ? entry.data : normalizeLevelDataFields(entry.data, true, { crateLayout: false });
         if (!data) return null;
         normalized = { id: entry.id, name: cleanLevelName(entry.name), data };
+        if (stock) SOURCE_STOCK_ARCHIVES.add(normalized);
         entryBytes = new TextEncoder().encode(JSON.stringify(normalized)).byteLength;
       }
       bytes += entryBytes + (out.length ? 1 : 0);
@@ -3835,8 +3844,10 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
 export function getUserLevels(): LevelEntry[] {
   if (USER_CACHE) return [...USER_CACHE];
   let list: LevelEntry[] = [];
+  let original: string | null = null;
+  let incomplete = false;
   try {
-    const text = localStorage.getItem(USER_KEY) ?? "[]";
+    const text = original = localStorage.getItem(USER_KEY) ?? "[]";
     if (levelJsonTextWithinLimits(text, MAX_LEVEL_PACK_BYTES, 14)) {
       const raw: unknown = JSON.parse(text);
       if (Array.isArray(raw) && raw.length <= MAX_USER_LEVELS) {
@@ -3848,13 +3859,15 @@ export function getUserLevels(): LevelEntry[] {
           if (entry && !ids.has(entry.id)) {
             ids.add(entry.id);
             list.push(entry);
-          }
+          } else incomplete = true;
         }
-      }
-    }
+      } else incomplete = true;
+    } else incomplete = true;
   } catch {
     /* corrupt/unavailable store cannot break boot */
+    incomplete = true;
   }
+  if (incomplete && original !== null) unreadUserLibrary = original;
   USER_CACHE = list.map(retainUserLevelEntry);
   return [...USER_CACHE];
 }
@@ -3870,6 +3883,7 @@ export function restoreUserLevels(list: LevelEntry[]): boolean {
 }
 
 function writeUserLevels(list: LevelEntry[], requirePersistence: boolean): boolean {
+  if (USER_CACHE === null) getUserLevels();
   const normalized = normalizeUserLevelEntries(list);
   if (!normalized) {
     if (!requirePersistence) LAST_USER_WRITE_OK = false;
@@ -3877,10 +3891,25 @@ function writeUserLevels(list: LevelEntry[], requirePersistence: boolean): boole
   }
   const replacement = normalized.map(retainUserLevelEntry);
   try {
+    // Never overwrite the only copy of entries a newer parser cannot read.
+    // A failed backup leaves the original library on disk and the new edit
+    // exportable in this session, following the existing quota-failure rules.
+    if (unreadUserLibrary !== null) {
+      let a = 2166136261, b = 2246822519;
+      for (let i = 0; i < unreadUserLibrary.length; i++) {
+        a = Math.imul(a ^ unreadUserLibrary.charCodeAt(i), 16777619);
+        b = Math.imul(b ^ unreadUserLibrary.charCodeAt(i), 3266489917);
+      }
+      const recoveryKey = `${USER_KEY}Recovery.v1:${unreadUserLibrary.length}:${a >>> 0}:${b >>> 0}`;
+      const existing = localStorage.getItem(recoveryKey);
+      if (existing !== null && existing !== unreadUserLibrary) throw new Error('Recovery archive key collision');
+      if (existing === null) localStorage.setItem(recoveryKey, unreadUserLibrary);
+    }
     // Frozen entries have stable serialization as well as stable validation.
     // Assemble the bounded pack without traversing every untouched scene.
     const json = `[${replacement.map(entry => CANONICAL_USER_ENTRIES.get(entry)!.json).join(",")}]`;
     localStorage.setItem(USER_KEY, json);
+    unreadUserLibrary = null;
     USER_CACHE = replacement;
     LAST_USER_WRITE_OK = true;
   } catch {
@@ -4017,6 +4046,13 @@ function edgeDefaultUpgrade(entry: LevelEntry): LevelEntry | null {
   return value;
 }
 
+function followsBuiltinSource(entry: LevelEntry, builtin: LevelEntry): boolean {
+  if (entry.data?.edgeGrindingRevision === 1) return false;
+  return !!builtin.data && SOURCE_STOCK_ARCHIVES.has(entry) ||
+    isOriginalRipcordRiver(entry) || isPreviousCountryClubStock(entry) || followsMergedSlipstream(entry) ||
+    isOriginalTestCourse(entry) || isOriginalCustardCreek(entry) || isOriginalSkyBridge(entry) || isOriginalSlipstream2(entry);
+}
+
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
@@ -4029,8 +4065,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     let override = edited.get(builtin.id);
-    if (!override || isOriginalRipcordRiver(override) || isPreviousCountryClubStock(override) || followsMergedSlipstream(override)) return builtin;
-    if (override.data?.edgeGrindingRevision !== 1 && (isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override))) return builtin;
+    if (!override || followsBuiltinSource(override, builtin)) return builtin;
     // Rename the stock title on older editor overrides while keeping their geometry.
     if (builtin.id==='jungle-gate-run' && override.name==='Jungle Gate Run')
       override = {...override,name:builtin.name,data:override.data?{...override.data,name:builtin.name}:undefined};
@@ -4063,9 +4098,9 @@ export function levelList(): LevelEntry[] {
 
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
-  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !followsMergedSlipstream(l) && !isPreviousCountryClubStock(l) &&
-    (l.data?.edgeGrindingRevision === 1 || (!isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSkyBridge(l) && !isOriginalSlipstream2(l) &&
-      edgeDefaultUpgrade(l) !== BUILTIN_LEVELS.find(builtin => builtin.id === id))));
+  const builtin = BUILTIN_LEVELS.find(entry => entry.id === id);
+  return !!builtin && getUserLevels().some(entry => entry.id === id &&
+    !followsBuiltinSource(entry, builtin) && edgeDefaultUpgrade(entry) !== builtin);
 }
 
 export function findLevel(id: string): LevelEntry | null {
@@ -4113,11 +4148,12 @@ export function prepareUserLevelChange(entry: LevelEntry): PreparedUserLevelChan
   const normalized = normalizeUserLevelEntries([{ id, name: fields.name.value, data: fields.data!.value }])?.[0];
   if (!normalized?.data) return null;
   const preservesLegacyEdges = !!edgeDefaultUpgrade(normalized);
-  if (normalized.data.name !== normalized.name || preservesLegacyEdges) {
+  const preservesStockChoice = SOURCE_STOCK_ARCHIVES.has(normalized);
+  if (normalized.data.name !== normalized.name || preservesLegacyEdges || preservesStockChoice) {
     normalized.data.name = normalized.name;
     // A deliberate author save may reproduce an old default byte for byte.
     // Mark that choice before retaining it so it is never migrated away again.
-    if (preservesLegacyEdges) normalized.data.edgeGrindingRevision = 1;
+    if (preservesLegacyEdges || preservesStockChoice) normalized.data.edgeGrindingRevision = 1;
     const renamed = normalizeCustomLevelData(normalized.data);
     if (!renamed) return null;
     normalized.data = renamed;

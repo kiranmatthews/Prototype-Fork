@@ -1,0 +1,656 @@
+[
+  {
+    "id": "bonus-jungle",
+    "lite": true,
+    "spawn": {
+      "id": "bonus-jungle",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.351520092358385,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "crossing": {
+      "id": "bonus-jungle",
+      "position": [
+        59,
+        0.5999999999999996,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        59,
+        8.951491166179709,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "retry": {
+      "id": "bonus-jungle",
+      "position": [
+        -5,
+        0.12,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "finish": {
+      "id": "bonus-jungle",
+      "position": [
+        155,
+        3.466666666666667,
+        0
+      ],
+      "state": "finished",
+      "grounded": false,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        155,
+        8.196219223553392,
+        25.182540045251844
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "errors": []
+  },
+  {
+    "id": "bonus-beachside-run",
+    "lite": true,
+    "spawn": {
+      "id": "bonus-beachside-run",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.351520020133258,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "crossing": {
+      "id": "bonus-beachside-run",
+      "position": [
+        78,
+        1.399999976158142,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        78,
+        9.751491142337851,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "retry": {
+      "id": "bonus-beachside-run",
+      "position": [
+        -5,
+        0.12,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "finish": {
+      "id": "bonus-beachside-run",
+      "position": [
+        225,
+        6.266666666666667,
+        0
+      ],
+      "state": "finished",
+      "grounded": false,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        225,
+        8.33794594598563,
+        25.518671133878414
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "errors": []
+  },
+  {
+    "id": "bonus-coastal",
+    "lite": true,
+    "spawn": {
+      "id": "bonus-coastal",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.351520005709892,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "crossing": {
+      "id": "bonus-coastal",
+      "position": [
+        41,
+        1.5999999999999996,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        41,
+        9.951491166179709,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "retry": {
+      "id": "bonus-coastal",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "finish": {
+      "id": "bonus-coastal",
+      "position": [
+        281,
+        7.466666666666667,
+        0
+      ],
+      "state": "finished",
+      "grounded": false,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        281,
+        8.370688868087129,
+        25.342632797965205
+      ],
+      "hud": "bonus",
+      "resolution": 720,
+      "buffer": [
+        720,
+        450
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "errors": []
+  },
+  {
+    "id": "bonus-jungle",
+    "lite": false,
+    "spawn": {
+      "id": "bonus-jungle",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35154453608533,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "crossing": {
+      "id": "bonus-jungle",
+      "position": [
+        59,
+        0.5999999999999996,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        59,
+        8.951491166179709,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "retry": {
+      "id": "bonus-jungle",
+      "position": [
+        -5,
+        0.12,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "finish": {
+      "id": "bonus-jungle",
+      "position": [
+        155,
+        3.466666666666667,
+        0
+      ],
+      "state": "finished",
+      "grounded": false,
+      "totalCrates": 20,
+      "enemies": 3,
+      "checkpoints": 0,
+      "camera": [
+        155,
+        8.316589049757017,
+        25.67695160077466
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "errors": []
+  },
+  {
+    "id": "bonus-beachside-run",
+    "lite": false,
+    "spawn": {
+      "id": "bonus-beachside-run",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35152103296555,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "crossing": {
+      "id": "bonus-beachside-run",
+      "position": [
+        78,
+        1.399999976158142,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        78,
+        9.751491142337851,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "retry": {
+      "id": "bonus-beachside-run",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "finish": {
+      "id": "bonus-beachside-run",
+      "position": [
+        225,
+        6.266666666666667,
+        0
+      ],
+      "state": "finished",
+      "grounded": false,
+      "totalCrates": 24,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        225,
+        8.346972018363903,
+        25.719672889798478
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "errors": []
+  },
+  {
+    "id": "bonus-coastal",
+    "lite": false,
+    "spawn": {
+      "id": "bonus-coastal",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.351543088409683,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "crossing": {
+      "id": "bonus-coastal",
+      "position": [
+        41,
+        1.5999999999999996,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        41,
+        9.951491166179709,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "retry": {
+      "id": "bonus-coastal",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        -5,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "finish": {
+      "id": "bonus-coastal",
+      "position": [
+        281,
+        7.466666666666667,
+        0
+      ],
+      "state": "finished",
+      "grounded": false,
+      "totalCrates": 32,
+      "enemies": 7,
+      "checkpoints": 0,
+      "camera": [
+        281,
+        8.361248724587336,
+        25.57752237518454
+      ],
+      "hud": "bonus",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "glError": 0,
+      "stamp": "Codex/sol fork · build 11-01 21:53 UTC▶ REPLAY● RECHIGH CHIEF UGA HA KU"
+    },
+    "errors": []
+  }
+]
