@@ -48,5 +48,20 @@
     "file": "reflog.json",
     "bytes": 98706,
     "sha256": "af1d609af6c47980c877667f432494fe9bc8ba77389962e12d0736f4fc9eaade"
+  },
+  {
+    "file": "browser-public-initial.json",
+    "bytes": 97062,
+    "sha256": "e95ce8ce5b3435d7e9d4f7fd824d8287af3783217c04b2d416402b2425062f81"
+  },
+  {
+    "file": "ghost-release-build.log",
+    "bytes": 7375,
+    "sha256": "020da21e6e3bc839ab5b070e78181b6b6d7c71acadec08a2b3f754a840dfd6d9"
+  },
+  {
+    "file": "ghost-fixed-browser.log",
+    "bytes": 345,
+    "sha256": "24834824c269707a43c7ddaa479127da27cbb784b6942e7fdebf85faedcee433"
   }
 ]

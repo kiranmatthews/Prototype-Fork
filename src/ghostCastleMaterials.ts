@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
+import { releaseImageUrl } from './releaseImageUrls';
 
 export const CASTLE_TEXTURE_KINDS = ['castle-stone', 'castle-floor', 'castle-timber', 'castle-bath'] as const;
 type CastleTexture = typeof CASTLE_TEXTURE_KINDS[number];
@@ -76,7 +77,7 @@ function textureSlot(kind: CastleTexture): {value: THREE.Texture} {
     status.set(kind, 'loading');
     const pending = (async () => {
       try {
-        const response = await fetch(import.meta.env.BASE_URL + MESHY_PAINT[kind]);
+        const response = await fetch(releaseImageUrl(import.meta.env.BASE_URL + MESHY_PAINT[kind]));
         if (!response.ok) throw new Error(`Meshy material HTTP ${response.status}`);
         const bitmap = await createImageBitmap(await response.blob());
         if (requestedGeneration !== generation || materialRefs === 0) { bitmap.close(); return; }

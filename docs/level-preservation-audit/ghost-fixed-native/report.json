@@ -1,0 +1,67 @@
+{
+  "base": "http://127.0.0.1:5377/",
+  "full": true,
+  "native": true,
+  "levels": [
+    {
+      "expectedSource": "2238902:10751d71:8130a4b5",
+      "expectedBuilt": "2238926:e92808c2:56bbdf82",
+      "id": "ghost-train",
+      "name": "Haunted Castle · Ghost Train",
+      "source": "2238902:10751d71:8130a4b5",
+      "built": "2238926:e92808c2:56bbdf82",
+      "components": 3646,
+      "checkpoints": 23,
+      "crates": 58,
+      "bonus": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 308,
+          "maxFrameMs": 150.0999999999999,
+          "width": 1600,
+          "height": 1000,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 214
+      },
+      "ancient": null,
+      "jungle": null,
+      "castleTextures": {
+        "stone": "ready",
+        "floor": "ready",
+        "timber": "ready",
+        "bath": "ready",
+        "source": "Meshy model albedo and original UVs",
+        "textureKinds": [
+          "castle-bath",
+          "castle-stone",
+          "castle-floor",
+          "castle-timber"
+        ],
+        "materialRefs": 243
+      },
+      "stamp": "Codex/sol fork · build 11-01 22:35 UTC",
+      "nodeReferenceDiffers": true,
+      "presentation": {
+        "grounded": true,
+        "buffer": [
+          1600,
+          1000
+        ],
+        "ancient": null
+      }
+    }
+  ],
+  "errors": [],
+  "assets": [],
+  "pass": true
+}

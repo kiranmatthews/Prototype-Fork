@@ -8159,3 +8159,25 @@ level-pack changes, and no full suite.
 - Pass 2,560 historical variants, 330 authored-edit cases, Ancient/Rooftop fixtures, six library-backup scenarios, all required level checks, editor-security/transaction and sync regressions, recovered Ancient and bonus checks. The final real Chrome sweep builds all 70 entries with exact independently compiled browser source data and no fallback or errors. Normal/native Ancient and camera views, cached-stock reloads, authored copies, and six bonus crossing/retry/finish cases pass.
 - Keep unused old font provenance in the source library and remove only JSON whitespace from four release metadata files. Preserve every numeric lexeme and string. Production build and release-size check pass at 999,167,501 bytes. No full `check:all` was run.
 - Prompt to combined native playable review: approximately 58 minutes; the complete history/browser audit took approximately 70 minutes before publication. Detailed provenance and validation: `docs/level-preservation-audit/`.
+
+## 2026-11-02 — Ghost Train authored texture recovery discovered during public audit
+
+The complete public source sweep matched all 70 levels, but revealed two Ghost
+Train material requests still targeting PNGs after the release pipeline had
+packed them as pixel-identical WebPs. The original artwork was preserved; a
+custom fetch bypassed the shared release URL resolver and silently substituted
+procedural materials. Route that fetch through the existing resolver.
+
+A focused test reproduced the production fallback before the fix and passes
+against both real asset inventories afterward, including bitmap disposal.
+Extend the catalogue browser check to require all four castle textures to be
+ready and include Ghost Train in native review. Keep the initial failed public
+report as audit evidence. Packaged normal and native 1600×1000 Chrome reviews
+pass with supported spawn, exact source data, all textures ready and no console
+errors or failed responses. Existing release-image tests, build and release-size
+check pass at 999,167,505 bytes. No level data, geometry or source images change.
+
+Discovery to validated playable correction: approximately 6 minutes. Evidence:
+`docs/level-preservation-audit/ghost-fixed-normal/` and `ghost-fixed-native/`.
+Direct publication remains authorized; final public evidence follows in the
+owning release handoff.
