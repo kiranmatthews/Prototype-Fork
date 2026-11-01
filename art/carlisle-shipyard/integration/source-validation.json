@@ -2,8 +2,8 @@
   "sourceCommit": "2fa773bd70a7f8677667c6acf60afbca22a64200",
   "courses": {
     "main": {
-      "components": 1247,
-      "airCargoCrates": 63,
+      "components": 1361,
+      "airCargoCrates": 177,
       "sha256": "326e69f1bb2f7beae44baccfd273223ea1ee31221a725e5aefb4bb3e303fb421",
       "originalGameplayDataPreserved": true
     },

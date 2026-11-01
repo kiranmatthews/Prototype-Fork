@@ -1,0 +1,79 @@
+[
+  {
+    "command": [
+      "npm",
+      "run",
+      "check:levels"
+    ],
+    "exitCode": 0,
+    "seconds": 333.94,
+    "outputTail": "PASS compact portals remain saveable, bounded, editable, closed, non-colliding and disposable.\n{\"cells\":16,\"buriedCells\":4,\"visibleTriangles\":7584,\"hiddenTriangles\":96,\"contactRays\":96,\"maxSlope\":1.9286076486316417,\"visibilityWrappers\":1759,\"unchangedCourseSupports\":512}\nPASS forest tops and distant-fog visibility: exact return contacts, course support, transforms, editor data, secondary view and clear inspection.\nPASS 188 exact tunnel meshes, 66408 vertices and 92005 triangles across common/split/merged bores and authored gaps"
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "check:crate-jump"
+    ],
+    "exitCode": 0,
+    "seconds": 19.07,
+    "outputTail": "> node tools/test-crate-jump-parity.mjs && node tools/test-crate-fast-landing.mjs\n\ncrate jump parity ok\nPASS 18 terminal-speed crate contacts and misses; normal wood/arrow pops, solid metal and lethal nitro preserved."
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "check:crate-types"
+    ],
+    "exitCode": 0,
+    "seconds": 95.06,
+    "outputTail": "\nValidated life/multi-hit crates, triple-mask SPECIAL, fruit HUD events, rewards, contacts, checkpoints, and capture.\nValidated systemic end Nitro switch placement, tally/reset semantics, Level ownership, and capture exclusion.\nPASS explosive bundles: cube bounds, independent 3-second fuses, paused burn, detonation, reset, outline safety and countdown/idle pulses."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-air-rescue.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 13.47,
+    "outputTail": "air-rescue checks passed"
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-trampoline-contact.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 10.58,
+    "outputTail": "PASS walkable nets; safe walk/skate metal rims; grounded board trip; actual foot jump and board ollie landings; linked bounces; high-energy rim ragdoll; rotated/moving opening; unchanged tuning."
+  },
+  {
+    "command": [
+      "node",
+      "tools/test-carlisle-shipyard.mjs"
+    ],
+    "exitCode": 0,
+    "seconds": 0.3,
+    "outputTail": "PASS original main/bonus course data, authorized air-cargo additions and all 12 complete authored runtime models."
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "seconds": 59.99,
+    "outputTail": "Native geometry: 402 complete models packed losslessly, 51.0 MiB less hosted data.\nLossless images: 51 pixel-identical WebPs, 20.3 MiB less hosted data.\nAnimation catalogue: exact keyframes packed losslessly, 8.8 MiB less hosted data.\nOffline game: 1756 files, 949.3 MiB, version e279556bd0ed7b062f1f"
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "check:release"
+    ],
+    "exitCode": 0,
+    "seconds": 0.26,
+    "outputTail": "> node tools/check-release-size.mjs\n\nRelease output: 1857 files, 998,294,064 bytes / 1,000,000,000 byte budget.\nPASS release fits the hosting budget."
+  }
+]

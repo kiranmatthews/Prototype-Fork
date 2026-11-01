@@ -7771,3 +7771,18 @@ release-size checks pass. Prompt-to-validated playable fix: approximately
 23 minutes. The supplied input-only replay did not reproduce the exact ending;
 both authored vertical-lift sections were directly validated. Evidence:
 [moving platform collision](carlisle-relay/moving-platform-collision/README.md).
+
+
+### Mid-flight crate landing chains — 1 November 2026
+
+Raised the initial too-low revision into the middle of the spring descent,
+below the old apex clouds. Seven distinct chains provide 32 landing groups and
+154 wooden crates, with four-to-five ordinary stomps per sequence and 22 live
+nitros alongside selected lines. Fixed a reproduced terminal-speed crate lid
+miss using a swept contact; bounce/gravity/steering tuning and all non-cargo
+course data are preserved. Twenty-one native flights and five real-keyboard
+lite/full browser routes complete the chains and exit landings; native/normal
+visuals and consoles pass. Required level checks, focused crate/contact
+regressions, build and release-size check pass. Prompt-to-browser-validated playable revision:
+approximately 27 minutes. Evidence:
+[crate chains](carlisle-relay/air-cargo-chains/README.md).

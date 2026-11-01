@@ -15410,7 +15410,17 @@ export class Player {
       // pose lifts its visible feet above the final sampled box.
       if (this.vVel < 0) {
         const lidMargin = solid || c.nitro || c.tnt ? 0 : CRATE_STOMP_MARGIN;
-        if (this.playerBox.intersectsBox(c.box) && this.isStomping(c.box, lidMargin))
+        // At terminal speed a tick falls .87 m, beyond the old .75 m
+        // overlap window. Test the actual sole/lid crossing before relying
+        // on the sampled body overlap; keep each crate type's edge margin.
+        const top = c.box.max.y, descent = this.prevPos.y - this.pos.y;
+        const t = descent > 0 ? THREE.MathUtils.clamp((this.prevPos.y - top) / descent, 0, 1) : 0;
+        const x = THREE.MathUtils.lerp(this.prevPos.x, this.pos.x, t);
+        const z = THREE.MathUtils.lerp(this.prevPos.z, this.pos.z, t);
+        const crossed = descent > 0 && this.prevPos.y >= top - .05 && this.pos.y <= top + .05 &&
+          x >= c.box.min.x - lidMargin && x <= c.box.max.x + lidMargin &&
+          z >= c.box.min.z - lidMargin && z <= c.box.max.z + lidMargin;
+        if (crossed || this.playerBox.intersectsBox(c.box) && this.isStomping(c.box, lidMargin))
           faces.push({ crate: c, index, face: c.box.max.y });
       } else {
         if ((solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box) && this.isBonking(c.box,!solid))

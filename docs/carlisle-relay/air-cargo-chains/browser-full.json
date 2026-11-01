@@ -1,0 +1,183 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "errors": [],
+  "runs": [
+    {
+      "lite": false,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "flights": [
+        {
+          "name": "Beacon hanging steps",
+          "launched": true,
+          "landed": true,
+          "frames": 525,
+          "stomped": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "distance": 0.9848175141487797,
+          "end": {
+            "at": [
+              -67.1780722053268,
+              223.02860489124177,
+              -1147.8593820630863
+            ],
+            "forward": [
+              -0.40359379818292185,
+              0,
+              -0.9149382744580549
+            ],
+            "side": [
+              0.9149382744580549,
+              0,
+              -0.40359379818292185
+            ],
+            "spring": true,
+            "vy": 76.125,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "broken": 14,
+            "contacts": [
+              "Air cargo · Beacon hanging steps · landing 1 · parcel 1.2",
+              "Air cargo · Beacon hanging steps · landing 1 · parcel 2.2",
+              "Air cargo · Beacon hanging steps · landing 2 · parcel 1.1",
+              "Air cargo · Beacon hanging steps · landing 2 · parcel 1.2",
+              "Air cargo · Beacon hanging steps · landing 2 · parcel 2.1",
+              "Air cargo · Beacon hanging steps · landing 2 · parcel 2.2",
+              "Air cargo · Beacon hanging steps · landing 3 · parcel 1.1",
+              "Air cargo · Beacon hanging steps · landing 3 · parcel 2.1",
+              "Air cargo · Beacon hanging steps · landing 4 · parcel 1.1",
+              "Air cargo · Beacon hanging steps · landing 4 · parcel 1.2",
+              "Air cargo · Beacon hanging steps · landing 4 · parcel 2.1",
+              "Air cargo · Beacon hanging steps · landing 4 · parcel 2.2",
+              "Air cargo · Beacon hanging steps · landing 5 · parcel 1.2",
+              "Air cargo · Beacon hanging steps · landing 5 · parcel 2.2"
+            ]
+          }
+        },
+        {
+          "name": "Storm crosswind row",
+          "launched": true,
+          "landed": true,
+          "frames": 540,
+          "stomped": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "distance": 3.0687097724512515,
+          "end": {
+            "at": [
+              60.963352253968544,
+              101.07269502201765,
+              -2740.5194242545263
+            ],
+            "forward": [
+              -0.00720193422077838,
+              0,
+              -0.9999740657354468
+            ],
+            "side": [
+              0.9999740657354468,
+              0,
+              -0.00720193422077838
+            ],
+            "spring": true,
+            "vy": 79.025,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "broken": 20,
+            "contacts": [
+              "Air cargo · Storm crosswind row · landing 1 · parcel 1.2",
+              "Air cargo · Storm crosswind row · landing 1 · parcel 1.3",
+              "Air cargo · Storm crosswind row · landing 1 · parcel 2.2",
+              "Air cargo · Storm crosswind row · landing 1 · parcel 2.3",
+              "Air cargo · Storm crosswind row · landing 2 · parcel 1.1",
+              "Air cargo · Storm crosswind row · landing 2 · parcel 1.2",
+              "Air cargo · Storm crosswind row · landing 2 · parcel 2.1",
+              "Air cargo · Storm crosswind row · landing 2 · parcel 2.2",
+              "Air cargo · Storm crosswind row · landing 3 · parcel 1.1",
+              "Air cargo · Storm crosswind row · landing 3 · parcel 1.2",
+              "Air cargo · Storm crosswind row · landing 3 · parcel 2.1",
+              "Air cargo · Storm crosswind row · landing 3 · parcel 2.2",
+              "Air cargo · Storm crosswind row · landing 4 · parcel 1.1",
+              "Air cargo · Storm crosswind row · landing 4 · parcel 1.2",
+              "Air cargo · Storm crosswind row · landing 4 · parcel 2.1",
+              "Air cargo · Storm crosswind row · landing 4 · parcel 2.2",
+              "Air cargo · Storm crosswind row · landing 5 · parcel 1.2",
+              "Air cargo · Storm crosswind row · landing 5 · parcel 1.3",
+              "Air cargo · Storm crosswind row · landing 5 · parcel 2.2",
+              "Air cargo · Storm crosswind row · landing 5 · parcel 2.3"
+            ]
+          }
+        },
+        {
+          "name": "Rigging port gap",
+          "launched": true,
+          "landed": true,
+          "frames": 615,
+          "stomped": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "distance": 1.1718846274055579,
+          "end": {
+            "at": [
+              -118.9841122620728,
+              35.94944841986361,
+              -3406.8776803906944
+            ],
+            "forward": [
+              0.10481580321765274,
+              0,
+              -0.9944916527532236
+            ],
+            "side": [
+              0.9944916527532236,
+              0,
+              0.10481580321765274
+            ],
+            "spring": false,
+            "vy": 0,
+            "grounded": true,
+            "state": "ride",
+            "deaths": 0,
+            "bail": false,
+            "broken": 16,
+            "contacts": [
+              "Air cargo · Rigging port gap · landing 1 · parcel 1.2",
+              "Air cargo · Rigging port gap · landing 1 · parcel 1.3",
+              "Air cargo · Rigging port gap · landing 1 · parcel 2.2",
+              "Air cargo · Rigging port gap · landing 1 · parcel 2.3",
+              "Air cargo · Rigging port gap · landing 2 · parcel 1.1",
+              "Air cargo · Rigging port gap · landing 2 · parcel 1.2",
+              "Air cargo · Rigging port gap · landing 2 · parcel 2.1",
+              "Air cargo · Rigging port gap · landing 2 · parcel 2.2",
+              "Air cargo · Rigging port gap · landing 3 · parcel 1.1",
+              "Air cargo · Rigging port gap · landing 3 · parcel 1.2",
+              "Air cargo · Rigging port gap · landing 3 · parcel 2.1",
+              "Air cargo · Rigging port gap · landing 3 · parcel 2.2",
+              "Air cargo · Rigging port gap · landing 4 · parcel 2.1",
+              "Air cargo · Rigging port gap · landing 4 · parcel 2.2",
+              "Air cargo · Rigging port gap · landing 5 · parcel 2.1",
+              "Air cargo · Rigging port gap · landing 5 · parcel 2.2"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

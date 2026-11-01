@@ -1,0 +1,119 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "errors": [],
+  "runs": [
+    {
+      "lite": true,
+      "stamp": "Codex/sol fork · build 10-30 12:58 UTC",
+      "flights": [
+        {
+          "name": "Lift parcel cloud",
+          "launched": true,
+          "landed": true,
+          "frames": 456,
+          "stomped": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "distance": 2.443709149561104,
+          "end": {
+            "at": [
+              80.70251141293208,
+              189.49311466641595,
+              -554.98003627776
+            ],
+            "forward": [
+              0.013429228266081339,
+              0,
+              -0.9999098238482195
+            ],
+            "side": [
+              0.9999098238482195,
+              0,
+              0.013429228266081339
+            ],
+            "spring": true,
+            "vy": 63.775000000000006,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "broken": 14,
+            "contacts": [
+              "Air cargo · Lift parcel cloud · landing 1 · parcel 1.2",
+              "Air cargo · Lift parcel cloud · landing 1 · parcel 2.2",
+              "Air cargo · Lift parcel cloud · landing 2 · parcel 1.1",
+              "Air cargo · Lift parcel cloud · landing 2 · parcel 1.2",
+              "Air cargo · Lift parcel cloud · landing 2 · parcel 2.1",
+              "Air cargo · Lift parcel cloud · landing 2 · parcel 2.2",
+              "Air cargo · Lift parcel cloud · landing 3 · parcel 1.1",
+              "Air cargo · Lift parcel cloud · landing 3 · parcel 1.2",
+              "Air cargo · Lift parcel cloud · landing 3 · parcel 2.1",
+              "Air cargo · Lift parcel cloud · landing 3 · parcel 2.2",
+              "Air cargo · Lift parcel cloud · landing 4 · parcel 1.1",
+              "Air cargo · Lift parcel cloud · landing 4 · parcel 1.2",
+              "Air cargo · Lift parcel cloud · landing 4 · parcel 2.1",
+              "Air cargo · Lift parcel cloud · landing 4 · parcel 2.2"
+            ]
+          }
+        },
+        {
+          "name": "Socket starboard gap",
+          "launched": true,
+          "landed": true,
+          "frames": 486,
+          "stomped": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "distance": 3.079611782025226,
+          "end": {
+            "at": [
+              82.24536314827397,
+              193.03258210870973,
+              -719.5893467316347
+            ],
+            "forward": [
+              0.023513663820545674,
+              0,
+              -0.9997235155850512
+            ],
+            "side": [
+              0.9997235155850512,
+              0,
+              0.023513663820545674
+            ],
+            "spring": true,
+            "vy": 78.775,
+            "grounded": false,
+            "state": "air",
+            "deaths": 0,
+            "bail": false,
+            "broken": 14,
+            "contacts": [
+              "Air cargo · Socket starboard gap · landing 1 · parcel 1.2",
+              "Air cargo · Socket starboard gap · landing 1 · parcel 1.3",
+              "Air cargo · Socket starboard gap · landing 1 · parcel 2.2",
+              "Air cargo · Socket starboard gap · landing 1 · parcel 2.3",
+              "Air cargo · Socket starboard gap · landing 2 · parcel 1.1",
+              "Air cargo · Socket starboard gap · landing 2 · parcel 1.2",
+              "Air cargo · Socket starboard gap · landing 2 · parcel 2.1",
+              "Air cargo · Socket starboard gap · landing 2 · parcel 2.2",
+              "Air cargo · Socket starboard gap · landing 3 · parcel 2.1",
+              "Air cargo · Socket starboard gap · landing 3 · parcel 2.2",
+              "Air cargo · Socket starboard gap · landing 4 · parcel 1.2",
+              "Air cargo · Socket starboard gap · landing 4 · parcel 1.3",
+              "Air cargo · Socket starboard gap · landing 4 · parcel 2.2",
+              "Air cargo · Socket starboard gap · landing 4 · parcel 2.3"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

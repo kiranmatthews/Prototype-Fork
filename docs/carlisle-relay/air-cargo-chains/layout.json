@@ -1,0 +1,99 @@
+{
+  "encounters": [
+    {
+      "name": "Lift parcel cloud",
+      "jump": "Lift and skip · 2",
+      "first": [
+        560,
+        62,
+        0
+      ],
+      "landings": 4,
+      "wood": 20,
+      "nitro": 0,
+      "maxGap": 4.089632185421378
+    },
+    {
+      "name": "Socket starboard gap",
+      "jump": "Surf sockets · 3",
+      "first": [
+        724,
+        68,
+        2
+      ],
+      "landings": 4,
+      "wood": 20,
+      "nitro": 5,
+      "maxGap": 4.654991456037225
+    },
+    {
+      "name": "Beacon hanging steps",
+      "jump": "Beacon chimney · 4",
+      "first": [
+        1182,
+        119,
+        -2
+      ],
+      "landings": 5,
+      "wood": 22,
+      "nitro": 0,
+      "maxGap": 4.375117205667741
+    },
+    {
+      "name": "Dredger split row",
+      "jump": "Dredger discharge · 2",
+      "first": [
+        1946,
+        91,
+        0
+      ],
+      "landings": 4,
+      "wood": 20,
+      "nitro": 6,
+      "maxGap": 3.9999725813928504
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "jump": "Stack leap · 2",
+      "first": [
+        2392,
+        91,
+        -1
+      ],
+      "landings": 5,
+      "wood": 24,
+      "nitro": 0,
+      "maxGap": 4.765986728997503
+    },
+    {
+      "name": "Storm crosswind row",
+      "jump": "Storm fingers · 3",
+      "first": [
+        2828,
+        92,
+        6
+      ],
+      "landings": 5,
+      "wood": 24,
+      "nitro": 5,
+      "maxGap": 4.389930663596427
+    },
+    {
+      "name": "Rigging port gap",
+      "jump": "Rigging · moving rebound",
+      "first": [
+        3527,
+        115,
+        -7
+      ],
+      "landings": 5,
+      "wood": 24,
+      "nitro": 6,
+      "maxGap": 4.879488388251847
+    }
+  ],
+  "wood": 154,
+  "nitro": 22,
+  "landings": 32,
+  "levelCrates": 384
+}

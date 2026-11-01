@@ -1,5 +1,7 @@
 # Airborne cargo — Carlisle Coast
 
+Historical apex-cloud iteration. Superseded by the [mid-flight landing chains](../air-cargo-chains/README.md).
+
 Seven occasional crate formations across the existing 55 trampoline transfers.
 These are native floating crates, with ordinary spin/headbutt/stomp, stacking,
 settling and nitro rules. No movement, camera, trampoline or surface changes.

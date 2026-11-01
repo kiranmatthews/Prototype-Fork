@@ -1,0 +1,551 @@
+{
+  "flights": [
+    {
+      "name": "Lift parcel cloud",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.343144080078669,
+      "broken": 14,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 6.516666666666667,
+      "at": [
+        80.79389096110295,
+        187.35811466641596,
+        -554.6637033078848
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.5219324975163693,
+      "broken": 14,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 6.75,
+      "at": [
+        82.2551999676178,
+        190.39758210870974,
+        -719.6519981869742
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.15632799701959,
+      "broken": 16,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 7.433333333333334,
+      "at": [
+        -67.08174736064385,
+        223.02860489124177,
+        -1147.6882482382728
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.0900693519440166,
+      "broken": 16,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 6.55,
+      "at": [
+        -58.71006160890973,
+        138.46658973701014,
+        -1897.642931739773
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.1079131047522668,
+      "broken": 20,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 7.583333333333333,
+      "at": [
+        116.64882349500611,
+        102.77066213812614,
+        -2311.071079097231
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.5852179415842145,
+      "broken": 20,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 7.516666666666667,
+      "at": [
+        60.952126450962744,
+        98.42936168868432,
+        -2740.422509026098
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 2.3,
+      "held": false,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.301602648928691,
+      "broken": 20,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 8.6,
+      "at": [
+        -118.897265577818,
+        35.94944841986361,
+        -3406.5896331246267
+      ]
+    },
+    {
+      "name": "Lift parcel cloud",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.3599234796013056,
+      "broken": 14,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 7.55,
+      "at": [
+        80.70001306630934,
+        187.35811466641596,
+        -554.7083243850154
+      ]
+    },
+    {
+      "name": "Lift parcel cloud",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.389462417766769,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.85,
+      "at": [
+        80.73512031179872,
+        187.35811466641596,
+        -554.6469468951225
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.521928165073929,
+      "broken": 14,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 8.05,
+      "at": [
+        82.25518829627492,
+        190.39758210870974,
+        -719.6519927990706
+      ]
+    },
+    {
+      "name": "Socket starboard gap",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.3813547993445423,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 5.366666666666666,
+      "at": [
+        81.96291262942995,
+        190.39758210870974,
+        -719.5938267535903
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.1563281820923303,
+      "broken": 16,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 8.733333333333333,
+      "at": [
+        -67.08174627723034,
+        223.02860489124177,
+        -1147.6882481042014
+      ]
+    },
+    {
+      "name": "Beacon hanging steps",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.2071483271320675,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 5.366666666666666,
+      "at": [
+        -67.0939606091134,
+        223.02860489124177,
+        -1147.6368749716348
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.1971864017189484,
+      "broken": 16,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 7.433333333333334,
+      "at": [
+        -58.71784407191621,
+        138.46658973701014,
+        -1897.5360314545478
+      ]
+    },
+    {
+      "name": "Dredger split row",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.578708917517514,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 4.75,
+      "at": [
+        -57.91767672615708,
+        138.46658973701014,
+        -1897.3015772345636
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.107911628260086,
+      "broken": 20,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 8.65,
+      "at": [
+        116.64882082777511,
+        102.77066213812614,
+        -2311.0710812985794
+      ]
+    },
+    {
+      "name": "Counterweight hanging pallet",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.5176992815716952,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 5.3,
+      "at": [
+        115.76054838290142,
+        102.77066213812614,
+        -2311.167483592884
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.5852180554241297,
+      "broken": 20,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 8.95,
+      "at": [
+        60.95212683113553,
+        98.42936168868432,
+        -2740.4225092298366
+      ]
+    },
+    {
+      "name": "Storm crosswind row",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.514680830524234,
+      "broken": 0,
+      "deaths": 0,
+      "state": "air",
+      "bail": false,
+      "seconds": 5.6,
+      "at": [
+        60.938303157226166,
+        98.42936168868432,
+        -2740.507708022307
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 0,
+      "held": true,
+      "avoid": false,
+      "stomped": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.3013806837634236,
+      "broken": 20,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 10.183333333333334,
+      "at": [
+        -118.89655963986063,
+        35.94944841986361,
+        -3406.589304576552
+      ]
+    },
+    {
+      "name": "Rigging port gap",
+      "phase": 0,
+      "held": true,
+      "avoid": true,
+      "stomped": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "launched": true,
+      "landed": true,
+      "distance": 1.3424239280519394,
+      "broken": 0,
+      "deaths": 0,
+      "state": "ride",
+      "bail": false,
+      "seconds": 6.816666666666666,
+      "at": [
+        -117.44085969998643,
+        35.94944841986361,
+        -3406.359729452061
+      ]
+    }
+  ],
+  "errors": [],
+  "directNitro": {
+    "state": "dead",
+    "deaths": 1
+  },
+  "clearSwitch": {
+    "nitros": 22,
+    "remaining": 0
+  },
+  "passed": true
+}

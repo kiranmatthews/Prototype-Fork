@@ -1,70 +1,71 @@
 import type { CustomComponent } from '../level';
+import { CARLISLE_CRATE_SIZE } from './carlisle-cargo';
 
 type P = [number, number, number];
 type Point = (s: number, y: number, u?: number) => P;
 type Encounter = {
   name: string;
   jump: string;
-  at: P;
-  rewardSide: number;
-  rewardForward?: number;
-  heights: number[][];
-  nitro?: { side: number; count: number }[];
+  // Station, base height above the descending coast, lateral offset.
+  path: P[];
+  widths: number[];
+  nitro?: { at: P; count: number }[];
 };
 
-// Seven deliberately spaced encounters among 55 transfers. The anchors were
-// measured 0.2 seconds before the apex of native held-Jump flights, starting
-// from the actual spring. These are ordinary floating crates, not a new force,
-// launch target, moving floor or alteration to the trampoline controller.
+// Mid-flight landing pallets on the descent, rather than parcels at the held-Jump
+// apex. Each next lid is 3.8–4.4 m forward and slightly lower: ordinary wood's
+// native stomp pop can chain them without a second jump or an arrow boost.
+// Seven different lines remain occasional among the 55 spring transfers.
 const ENCOUNTERS: Encounter[] = [
-  { name: 'Lift parcel cloud', jump: 'Lift and skip · 2', at: [564.762, 98.201, 1.409],
-    rewardSide: 1.4, heights: [[1, 2, 1], [1, 1, 1]] },
-  { name: 'Socket starboard gap', jump: 'Surf sockets · 3', at: [728.551, 116.32, -4.364],
-    rewardSide: 3.6, heights: [[2, 2]], nitro: [{ side: -2, count: 5 }] },
-  { name: 'Beacon hanging steps', jump: 'Beacon chimney · 4', at: [1190.264, 173.42, 1.729],
-    rewardSide: -1.8, heights: [[1, 2, 3], [1, 1, 1]] },
-  { name: 'Dredger split row', jump: 'Dredger discharge · 2', at: [1951.366, 127.071, 2.109],
-    rewardSide: 0, heights: [[2, 2]], nitro: [{ side: -4.4, count: 3 }, { side: 4.4, count: 3 }] },
-  { name: 'Counterweight hanging pallet', jump: 'Stack leap · 2', at: [2399.255, 136.54, 1.662],
-    rewardSide: -2, heights: [[1, 1, 1], [1, 1, 1]] },
-  { name: 'Storm crosswind row', jump: 'Storm fingers · 3', at: [2833.964, 153.539, -4.07],
-    rewardSide: 4.4, rewardForward: 3, heights: [[2, 2]], nitro: [{ side: 0, count: 5 }] },
-  { name: 'Rigging port gap', jump: 'Rigging · moving rebound', at: [3527.357, 177.807, -.027],
-    rewardSide: -3.8, heights: [[1, 1], [2, 2]], nitro: [{ side: 2.2, count: 6 }] },
+  { name: 'Lift parcel cloud', jump: 'Lift and skip · 2',
+    path: [[560, 62, 0], [564, 61, .8], [568, 60, 1.6], [572, 59, 2.5]], widths: [3, 2, 2, 3] },
+  { name: 'Socket starboard gap', jump: 'Surf sockets · 3',
+    path: [[724, 68, 2], [728.2, 67, 1], [732.4, 66, -1], [736.6, 65, -3]], widths: [3, 2, 2, 3],
+    nitro: [{ at: [729, 66, -5.5], count: 5 }] },
+  { name: 'Beacon hanging steps', jump: 'Beacon chimney · 4',
+    path: [[1182, 119, -2], [1186.2, 118.2, -.8], [1190.4, 117.4, .4], [1194.6, 116.6, 1.6], [1198.8, 115.8, 2.8]], widths: [3, 2, 1, 2, 3] },
+  { name: 'Dredger split row', jump: 'Dredger discharge · 2',
+    path: [[1946, 91, 0], [1950, 90, 0], [1954, 89, 0], [1958, 88, 0]], widths: [3, 2, 2, 3],
+    nitro: [{ at: [1951, 89, -5.5], count: 3 }, { at: [1951, 89, 5.5], count: 3 }] },
+  { name: 'Counterweight hanging pallet', jump: 'Stack leap · 2',
+    path: [[2392, 91, -1], [2396.4, 90, .2], [2400.8, 89, 2], [2405.2, 88, 3.4], [2409.6, 87, 4]], widths: [3, 2, 2, 2, 3] },
+  { name: 'Storm crosswind row', jump: 'Storm fingers · 3',
+    path: [[2828, 92, 6], [2831.8, 91, 5.2], [2835.6, 90, 3.8], [2839.4, 89, 1.8], [2843.2, 88, -.4]], widths: [3, 2, 2, 2, 3],
+    nitro: [{ at: [2832, 90, -.5], count: 5 }] },
+  { name: 'Rigging port gap', jump: 'Rigging · moving rebound',
+    path: [[3527, 115, -7], [3531.4, 114, -6], [3535.8, 113, -4.5], [3540.2, 112, -2.5], [3544.6, 111, -.5]], widths: [3, 2, 2, 2, 3],
+    nitro: [{ at: [3532, 113, 1], count: 6 }] },
 ];
 
 export function buildCarlisleAirCargo(components: CustomComponent[], point: Point, group: (s: number) => number) {
-  const size = .96;
+  const size = CARLISLE_CRATE_SIZE;
   const encounters = ENCOUNTERS.map(encounter => {
-    const [s, y, u] = encounter.at, center = point(s, y, u);
-    const side = point(s, y, u + 1).map((v, i) => v - center[i]) as P;
-    const shifted = (offset: number): P => center.map((v, i) => v + side[i] * offset) as P;
     const prefix = `Air cargo · ${encounter.name}`;
-    const crate = (name: string, p: P, kind: CustomComponent['kind']) =>
-      components.push({ t: 'crate', nm: `${prefix} · ${name}`, p, kind, grp: group(s) });
-    const reward = shifted(encounter.rewardSide), depth = encounter.heights.length;
-    // Put this reward beyond the crosswind bar, so turning back toward the
-    // landing after the spin does not cut across an explosive end crate.
-    reward[0] += side[2] * (encounter.rewardForward ?? 0);
-    reward[2] -= side[0] * (encounter.rewardForward ?? 0);
-    // World-aligned native boxes touch in real columns and settle normally
-    // when the lower parcel is broken. No decorative or unbreakable stand-ins.
-    for (let tier = 0; tier < 3; tier++) for (let row = 0; row < depth; row++) {
-      const heights = encounter.heights[row];
-      for (let col = 0; col < heights.length; col++) if (tier < heights[col])
-        crate(`parcel ${row + 1}.${col + 1}.${tier + 1}`,
-          [reward[0] + (col - (heights.length - 1) / 2) * size, reward[1] + .25 + tier * size,
-            reward[2] + (row - (depth - 1) / 2) * size], 'wood');
-    }
+    const crate = (name: string, p: P, s: number, kind: CustomComponent['kind']) => {
+      const nm = `${prefix} · ${name}`;
+      components.push({ t: 'crate', nm, p, kind, grp: group(s) });
+      return nm;
+    };
+    const landings = encounter.path.map(([s, y, u], index) => {
+      const center = point(s, y, u), width = encounter.widths[index];
+      const names: string[] = [];
+      // Two touching rows give a readable landing lid. Nothing hangs above
+      // it to headbutt, and each cluster breaks/settles as ordinary crates.
+      for (let row = 0; row < 2; row++) for (let col = 0; col < width; col++)
+        names.push(crate(`landing ${index + 1} · parcel ${row + 1}.${col + 1}`,
+          [center[0] + (col - (width - 1) / 2) * size, center[1], center[2] + (row - .5) * size], s, 'wood'));
+      return { center, top: center[1] + size, names, width };
+    });
     for (const [row, bar] of (encounter.nitro ?? []).entries()) {
-      const origin = shifted(bar.side);
+      const origin = point(...bar.at);
       for (let i = 0; i < bar.count; i++)
-        crate(`nitro ${row + 1}.${i + 1}`, [origin[0] + (i - (bar.count - 1) / 2) * size, origin[1] + .1, origin[2]], 'nitro');
+        crate(`nitro ${row + 1}.${i + 1}`, [origin[0] + (i - (bar.count - 1) / 2) * size, origin[1], origin[2]], bar.at[0], 'nitro');
     }
-    return { ...encounter, center, reward, side, prefix };
+    const [s, y, u] = encounter.path[0], center = landings[0].center;
+    const side = point(s, y, u + 1).map((v, i) => v - center[i]) as P;
+    return { ...encounter, at: encounter.path[0], center, reward: center, side, rewardSide: u, prefix, landings };
   });
-  // A reachable native clear switch lets an all-crate run finish without
-  // demanding contact with the airborne explosives themselves.
+  // The existing native clear switch retains a safe all-crate finish.
   components.push({ t: 'crate', nm: 'Air cargo · home harbour nitro clear',
     p: point(3986, 12, -5.5), kind: 'nitrobang', grp: group(3986) });
   return encounters;

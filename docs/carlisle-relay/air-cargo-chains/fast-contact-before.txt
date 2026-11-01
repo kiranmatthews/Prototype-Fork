@@ -1,0 +1,22 @@
+{"childPid": 22921, "command": "node", "owner": "01a18531-75e0-7203-b8a1-2129b7839f79", "pid": 22919, "slot": 0, "startedAt": "2026-11-01T06:33:57.724370+00:00", "status": "running"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: terminal fall skipped wood lid at 0.01
+
+true !== false
+
+    at withSkateRuntime.levelEntry.id (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-crate-fast-landing.mjs:18:35)
+    at withSkateRuntime (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/jungle-cup-harness.mjs:50:11)
+    at async file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-crate-fast-landing.mjs:8:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+{"exitCode": 1, "owner": "01a18531-75e0-7203-b8a1-2129b7839f79", "slot": 0, "status": "released"}
