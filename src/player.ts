@@ -66,6 +66,7 @@ import {
 import { sfx } from './audio';
 import { FootstepAudio, footstepSurface } from './footstepAudio';
 import { Rail, RailSample, nearestRail } from './rails';
+import { naturalRailLandingTime, railLandingFraction } from './grindLanding';
 import {nearestReferenceRail} from './referenceRailCapture';
 import { Halfpipe } from './halfpipe';
 import { copingPlane, nearestCoping, nextCoping } from './vertHangPlane';
@@ -1390,6 +1391,10 @@ export class Player {
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
   private snapEase = 1; // 0 -> 1 over railSnapEase seconds after a grind starts
+  private naturalGrindRail: Rail | null = null;
+  private naturalGrindGrace = 0; // preserve an accepted tap until its natural landing
+  private readonly naturalGrindVelocity = new THREE.Vector3();
+  private readonly naturalGrindEnd = new THREE.Vector3();
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
   private grindEntryT = 0; // where on the rail this grind STARTED, for the end-to-end check
@@ -3807,6 +3812,7 @@ export class Player {
     this.releaseDiscardedBoard();this.discardedBoardLevel=null;
     this.groundHit=this.deathSupport=null;
     this.railCand=null;this.grindRail=this.lastRail=null;
+    this.naturalGrindRail=null;this.naturalGrindGrace=0;
     this.grindRun=null;this.grindCrate=this.crateFloor=null;
     this.ropeObj=null;this.lipPipe=this.hangPipe=null;
     this.wallPath=null;this.wallBox=null;this.lockedCoping=null;
@@ -3867,6 +3873,7 @@ export class Player {
     this.headYawPose = 0;
     this.grindRail = null;
     this.regrindCd = 0;
+    this.naturalGrindRail = null; this.naturalGrindGrace = 0;
     this.activeSpeedPadId = 0;
     this.speedPadCap = 0;
     this.returnPortalCoolT = 0;
@@ -4170,6 +4177,12 @@ export class Player {
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
     this.runLevel = level;
+    this.naturalGrindGrace = Math.max(0, this.naturalGrindGrace - dt);
+    if (!this.naturalGrindGrace || this.state !== 'air' || this.grounded ||
+        this.isBailing || this.wallriding || !(this.freeSkate || this.airFromSkate) ||
+        !this.naturalGrindRail?.grindable) {
+      this.naturalGrindRail = null; this.naturalGrindGrace = 0;
+    }
     if (this.trampolineAir) this.trampolineElapsed += dt;
     if (this.kiteReleased) this.kiteReleaseT += dt;
     if (this.kiteVisual) this.kiteVisual.root.visible = this.kiteTowing || this.kiteVisual.flyingAway;
@@ -4279,7 +4292,7 @@ export class Player {
     }
     this.railCand = nearestRail(level.grindRails, this.pos);
     this.railCandidateDist = this.railCand ? this.railCand.sample.distance : Infinity;
-    if (!grinding && this.kiteMotion.started && (input.grindHeld || input.grindPressed)) this.tryGrind(input.grindPressed, level);
+    if (!grinding && this.kiteMotion.started && this.grindRequested(input)) this.tryGrind(input.grindPressed, level);
     if (this.state === 'grind') {
       this.grindVel = this.kiteMotion.speed;
       this.balanceVel += this.kiteMotion.wind * .12 * dt;
@@ -4297,27 +4310,29 @@ export class Player {
         this.pos.y += this.vVel * dt;
         this.airPeakY = Math.max(this.airPeakY, this.pos.y);
       }
-      const hit = this.queryGround(level, 0, 0, oldY + (this.grounded ? .8 : .08));
-      if (hit && (this.grounded && hit.y >= oldY - .55 && hit.y <= oldY + .8 ||
-          !this.grounded && this.vVel <= 0 && hit.y >= this.pos.y && hit.y <= oldY + .08)) {
-        const landed = !this.grounded;
-        this.pos.y = hit.y; this.groundHit = hit; this.rideNormal.copy(hit.normal);
-        this.surfaceName = hit.name; this.lastGroundY = hit.y;
-        const grade = -hit.normal.dot(this.axisF) / Math.max(.1, hit.normal.y);
-        this.lastTy = grade / Math.sqrt(1 + grade * grade);
-        if (landed) {
-          if (this.flipT > 0 && this.flipT <= dt + 1e-7) this.completeDeckTrick();
-          // Keep the ordinary hybrid game's late-flip sketchy catch and lost trick.
-          if (this.flipT > 0) { this.flipT = 0; this.sketchyT = .45; this.speed *= .85; this.kiteMotion.speed = this.speed; }
-          this.emitDust(3);
+      if (!this.tryNaturalGrindLanding(dt, input, level)) {
+        const hit = this.queryGround(level, 0, 0, oldY + (this.grounded ? .8 : .08));
+        if (hit && (this.grounded && hit.y >= oldY - .55 && hit.y <= oldY + .8 ||
+            !this.grounded && this.vVel <= 0 && hit.y >= this.pos.y && hit.y <= oldY + .08)) {
+          const landed = !this.grounded;
+          this.pos.y = hit.y; this.groundHit = hit; this.rideNormal.copy(hit.normal);
+          this.surfaceName = hit.name; this.lastGroundY = hit.y;
+          const grade = -hit.normal.dot(this.axisF) / Math.max(.1, hit.normal.y);
+          this.lastTy = grade / Math.sqrt(1 + grade * grade);
+          if (landed) {
+            if (this.flipT > 0 && this.flipT <= dt + 1e-7) this.completeDeckTrick();
+            // Keep the ordinary hybrid game's late-flip sketchy catch and lost trick.
+            if (this.flipT > 0) { this.flipT = 0; this.sketchyT = .45; this.speed *= .85; this.kiteMotion.speed = this.speed; }
+            this.emitDust(3);
+          }
+          this.state = 'ride'; this.grounded = true; this.vVel = 0;
+          this.airFromSkate = this.boardOllieAir = false;
+          if (hit.lethal) this.die('contact');
+        } else if (this.grounded) {
+          this.grounded = false; this.state = 'air';
+          this.vVel = Math.max(0, this.lastTy * this.speed);
+          this.airFromSkate = true; this.airborneT = 0; this.airPeakY = this.pos.y;
         }
-        this.state = 'ride'; this.grounded = true; this.vVel = 0;
-        this.airFromSkate = this.boardOllieAir = false;
-        if (hit.lethal) this.die('contact');
-      } else if (this.grounded) {
-        this.grounded = false; this.state = 'air';
-        this.vVel = Math.max(0, this.lastTy * this.speed);
-        this.airFromSkate = true; this.airborneT = 0; this.airPeakY = this.pos.y;
       }
     }
     if (!this.stepManualBalance(dt)) { this.finishVisualStep(input,dt); return; }
@@ -8512,6 +8527,47 @@ export class Player {
     return true;
   }
 
+  /** Shared by real flight and the short rail-contact forecast. */
+  private airGravityAt(verticalSpeed = this.vVel, vertGravityTime = this.vertGravT): number {
+    if (this.parkControls && this.airFromSkate && !this.isBailing) return this.parkFlightGravity;
+    const board = this.airGrav === 'board';
+    let flatG =
+      verticalSpeed > 0
+        ? board
+          ? TUNING.boardRiseGravity
+          : TUNING.riseGravity
+        : board
+          ? this.floatAir
+            ? TUNING.rampFallGravity // ramp/downhill launch: ballistic fall, THPS-style
+            : TUNING.boardFallGravity
+          : TUNING.fallGravity;
+    if (this.parkControls && board) flatG = TUNING.boardRiseGravity;
+    // APEX FLOAT (board only): bleed a slice of gravity out of the top of the
+    // arc and hand it straight back on the way down. The hang lands where the
+    // player is actually reading the trick, and because the window is a fixed
+    // band of vertical speed it costs a big kicker air proportionally far
+    // less than a little ollie — which is what stops authored gaps going
+    // trivial. At boardApexFloat 0 this is exactly the plain two-value model.
+    if (board && TUNING.boardApexFloat > 0 && TUNING.boardApexBand > 0) {
+      const nearApex = 1 - Math.min(1, Math.abs(verticalSpeed) / TUNING.boardApexBand);
+      flatG *= 1 - TUNING.boardApexFloat * nearApex;
+    }
+    // Once the body has hit, ascent and descent share gravity. The jump's
+    // light rise/heavy fall otherwise adds energy on every bounce (enough
+    // to amplify high restitution). Preserve the authored initial trip arc.
+    return this.isBailing && this.ragImpacts > 0
+      ? Math.sqrt(TUNING.riseGravity * TUNING.fallGravity)
+      : this.vertAir || this.pipeHang
+        ? TUNING.pipeAirGravity
+        : vertGravityTime > 0 && TUNING.vertGravityBlend > 0
+          ? THREE.MathUtils.lerp(
+              flatG,
+              TUNING.pipeAirGravity,
+              vertGravityTime / TUNING.vertGravityBlend,
+            )
+          : flatG;
+  }
+
   private stepAir(
     dt: number,
     input: Input,
@@ -8812,42 +8868,7 @@ export class Player {
       // ramp launch read as short, spitting you at the floor at 24-46 u/s.
       // The mode was decided at LAUNCH (see airGrav), never re-derived here,
       // or gravity would flip mid-arc.
-      const board = this.airGrav === 'board';
-      let flatG =
-        this.vVel > 0
-          ? board
-            ? TUNING.boardRiseGravity
-            : TUNING.riseGravity
-          : board
-            ? this.floatAir
-              ? TUNING.rampFallGravity // ramp/downhill launch: ballistic fall, THPS-style
-              : TUNING.boardFallGravity
-            : TUNING.fallGravity;
-      if (this.parkControls && board) flatG = TUNING.boardRiseGravity;
-      // APEX FLOAT (board only): bleed a slice of gravity out of the top of the
-      // arc and hand it straight back on the way down. The hang lands where the
-      // player is actually reading the trick, and because the window is a fixed
-      // band of vertical speed it costs a big kicker air proportionally far
-      // less than a little ollie — which is what stops authored gaps going
-      // trivial. At boardApexFloat 0 this is exactly the plain two-value model.
-      if (board && TUNING.boardApexFloat > 0 && TUNING.boardApexBand > 0) {
-        const nearApex = 1 - Math.min(1, Math.abs(this.vVel) / TUNING.boardApexBand);
-        flatG *= 1 - TUNING.boardApexFloat * nearApex;
-      }
-      // Once the body has hit, ascent and descent share gravity. The jump's
-      // light rise/heavy fall otherwise adds energy on every bounce (enough
-      // to amplify high restitution). Preserve the authored initial trip arc.
-      const g = this.isBailing && this.ragImpacts > 0
-        ? Math.sqrt(TUNING.riseGravity * TUNING.fallGravity)
-        : this.vertAir || this.pipeHang
-          ? TUNING.pipeAirGravity
-          : this.vertGravT > 0 && TUNING.vertGravityBlend > 0
-            ? THREE.MathUtils.lerp(
-                flatG,
-                TUNING.pipeAirGravity,
-                this.vertGravT / TUNING.vertGravityBlend,
-              )
-            : flatG;
+      const g = this.airGravityAt();
       this.vVel -= g * dt;
       // Terminal velocity: cap the fall so one step can never drop farther
       // than the ground ray can reach up (2.5u) — otherwise a fast fall
@@ -8948,6 +8969,7 @@ export class Player {
       }
     }else if(this.trampolineAir)this.trampolineSomersaultStart=Infinity;
 
+    if (this.tryNaturalGrindLanding(dt, input, level)) return;
     let hit = this.queryGround(level);
     // ANALYTIC PIPE CATCH: crossed a halfpipe's cross-section curve this step
     // (jumped/fell INTO the transition — rising or falling, any speed). Land
@@ -11925,25 +11947,86 @@ export class Player {
 
   private grindRequested(input: Input): boolean {
     return input.grindPressed || input.grindHeld ||
+      (this.naturalGrindRail !== null && this.naturalGrindGrace > 0) ||
       (this.grindExitAir && this.grindOllieAir && this.grindOllieCatchGrace > 1e-6);
   }
 
-  private tryGrind(pressed: boolean, level: Level): boolean {
+  private deferNaturalGrind(rail: Rail): boolean {
+    if (this.state !== 'air' || this.grounded || !(this.freeSkate || this.airFromSkate) ||
+        this.slamActive || this.wallriding || rail.chiefTongueAssist) return false;
+    const lateral = this.slideAirLat + (this.grindExitAir ? this.grindAirLat : 0);
+    const v = this.naturalGrindVelocity.set(
+      this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed,
+    );
+    if (this.vertAir) {
+      if (this.parkControls) v.set(-this.vertNormal.z * this.vertLatVel, this.vVel, this.vertNormal.x * this.vertLatVel);
+      else {
+        v.x -= this.vertNormal.z * this.vertLatVel;
+        v.z += this.vertNormal.x * this.vertLatVel;
+      }
+    }
+    v.addScaledVector(this.axisL, lateral);
+    if (this.kiteTowing) { v.x = this.lastVelX; v.z = -this.kiteMotion.speed; }
+    const time = naturalRailLandingTime(rail, this.pos, v,
+      (vy, elapsed) => this.kiteTowing ? this.kiteMotion.gravity(vy > 0)
+        : this.airGravityAt(vy, Math.max(0, this.vertGravT - elapsed)),
+      CONST.railRideHeight, CONST.playerHalf.x + CONST.railBlockRadius,
+      CONST.fixedStep, this.kiteTowing || (this.parkControls && this.airFromSkate) ? Infinity : CONST.maxFallSpeed,
+      this.parkControls && this.airFromSkate && !this.kiteTowing);
+    if (time === null || time <= 1e-7) return false;
+    // A tap already accepted by the normal capture rules must survive the
+    // frames we deliberately leave airborne. It only arms this same rail.
+    if (this.naturalGrindRail !== rail || this.rawInput.grindPressed || this.rawInput.grindHeld)
+      this.naturalGrindGrace = time + 2 * CONST.fixedStep;
+    this.naturalGrindRail = rail;
+    return true;
+  }
+
+  private tryNaturalGrindLanding(dt: number, input: Input, level: Level): boolean {
+    const rail = this.naturalGrindRail;
+    if (!rail?.grindable || this.naturalGrindGrace <= 0 || this.state !== 'air' ||
+        this.grounded || this.isBailing || this.slamActive || this.wallriding ||
+        !(this.freeSkate || this.airFromSkate)) return false;
+    const fraction = railLandingFraction(rail, this.prevPos, this.pos,
+      CONST.railRideHeight, CONST.playerHalf.x + CONST.railBlockRadius);
+    if (fraction === null) return false;
+    this.naturalGrindEnd.copy(this.pos);
+    this.pos.lerpVectors(this.prevPos, this.naturalGrindEnd, fraction);
+    const sample = rail.closest(new THREE.Vector3(this.pos.x, this.pos.y - CONST.railRideHeight, this.pos.z));
+    if (!this.tryGrind(input.grindPressed, level, { rail, sample })) {
+      this.pos.copy(this.naturalGrindEnd);
+      return false;
+    }
+    // Finish the fraction of this physics tick after contact along the rail;
+    // neither the last free-flight frame nor its forward travel disappears.
+    this.grindT = rail.wrapDistance(this.grindT + this.grindDir * this.grindVel * dt * (1 - fraction));
+    if (!rail.closed) this.grindT = THREE.MathUtils.clamp(this.grindT, 0, rail.totalLength);
+    this.placeOnRail(rail);
+    return true;
+  }
+
+  private tryGrind(pressed: boolean, level: Level, landing?: { rail: Rail; sample: RailSample }): boolean {
     // A grind catch also mounts the board. Retain the authored grindable
     // edges, but do not let this alternate entry bypass the opening walk zone.
     if (this.boardMountBlocked) return false;
+    const buffered = this.naturalGrindRail !== null && this.naturalGrindGrace > 0;
+    const candidate = landing ?? (!pressed && !this.rawInput.grindHeld && buffered
+      ? { rail: this.naturalGrindRail!, sample: this.naturalGrindRail!.closest(this.pos) }
+      : this.railCand);
     const capture=this.parkReference?.railCapture;
     if(capture){
       // The native candidate query owns distance, sweep and endpoint rules.
       // The fork's trick completion and bail state remain separate guards.
-      if(!(pressed||this.rawInput.grindHeld)||this.regrindCd>0||this.isBailing||this.specialGrab!==null||this.flipT>CONST.fixedStep+1e-6)return false;
+      if(!(pressed||this.rawInput.grindHeld||buffered)||this.regrindCd>0||this.isBailing||this.specialGrab!==null||this.flipT>CONST.fixedStep+1e-6)return false;
       const v=this.parkVelocity;
       if(this.grounded)skateSurfaceDirection(v,this.axisF,this.rideNormal).multiplyScalar(this.speed);
       else if(this.vertAir)v.set(-this.vertNormal.z*this.vertLatVel,this.vVel,this.vertNormal.x*this.vertLatVel);
       else v.set(this.axisF.x*this.speed+this.axisL.x*this.slideAirLat,this.vVel,this.axisF.z*this.speed+this.axisL.z*this.slideAirLat);
-      const found=nearestReferenceRail(level.grindRails,this.parkRailSweepStart,this.parkRailSweepEnd,v,capture,this.grounded);
-      if(!found)return false;
+      const found=landing??nearestReferenceRail(level.grindRails,this.parkRailSweepStart,this.parkRailSweepEnd,v,capture,this.grounded);
+      if(!found || !found.rail.grindable ||
+        (!landing && !pressed && !this.rawInput.grindHeld && found.rail !== this.naturalGrindRail)) return false;
       this.railCand=found;this.railCandidateDist=found.sample.point.distanceTo(this.pos);
+      if (!landing && this.deferNaturalGrind(found.rail)) return false;
       this.enterGrind(found.rail,found.sample,level);return true;
     }
     // The takeoff hold belongs to the grind we left. A fresh press can arm
@@ -11958,14 +12041,14 @@ export class Player {
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
-    if (this.regrindCd > 0 || this.isBailing || this.specialGrab !== null || !this.railCand)
+    if (this.regrindCd > 0 || this.isBailing || this.specialGrab !== null || !candidate || !candidate.rail.grindable)
       return false;
     // Triangle must not catch and silently erase an unfinished flip. A trick
     // completing on this tick may catch; enterGrind pays it before resetting
     // the air pose. Longer flips keep their airtime and can catch afterwards.
     if (this.flipT > CONST.fixedStep + 1e-6) return false;
     if (
-      level.isTrickRail(this.railCand.rail) &&
+      level.isTrickRail(candidate.rail) &&
       !this.freeSkate &&
       !this.airFromSkate &&
       !!this.flyBoard?.visible
@@ -11979,12 +12062,12 @@ export class Player {
     // could not fall off it at all. A fresh PRESS re-arms a run-off catch;
     // intentional ollies use the fresh-press gate above plus the landing
     // envelope below. A run-off can still hold through to a different rail.
-    const returningOllie = this.grindExitAir && this.grindOllieAir && this.railCand.rail === this.lastRail;
-    if (!pressed && this.grindLatched && this.railCand.rail === this.lastRail && !returningOllie) return false;
+    const returningOllie = this.grindExitAir && this.grindOllieAir && candidate.rail === this.lastRail;
+    if (!pressed && !(buffered && this.naturalGrindRail === candidate.rail) && this.grindLatched && candidate.rail === this.lastRail && !returningOllie) return false;
     // railCand was sampled at the START of this step; re-close on the CURRENT
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
-    const s = this.railCand.rail.closest(this.pos);
+    const s = landing?.sample ?? candidate.rail.closest(this.pos);
     if (returningOllie) {
       // Catch the return at rail height, never cancel the rising pop or
       // magnet a side-exit back onto its source. Endpoint run-offs retain
@@ -11994,10 +12077,10 @@ export class Player {
       const contactWidth = CONST.playerHalf.x + CONST.railBlockRadius;
       if (this.vVel > 0 || height < -0.15 || height > 0.45 || lateral > contactWidth) return false;
     }
-    const tongueEntry = this.railCand.rail.chiefTongueAssist &&
-      s.t <= this.railCand.rail.chiefTongueAssist.entryLength;
+    const tongueEntry = candidate.rail.chiefTongueAssist &&
+      s.t <= candidate.rail.chiefTongueAssist.entryLength;
     const catchRadius = tongueEntry
-      ? this.railCand.rail.chiefTongueAssist!.catchRadius : TUNING.railSnapDistance;
+      ? candidate.rail.chiefTongueAssist!.catchRadius : TUNING.railSnapDistance;
     if (s.distance > catchRadius) return false;
     // Deck-level grabs are the normal case (rails sit ~1u above the deck);
     // only block grabbing from far beneath the rail.
@@ -12019,7 +12102,7 @@ export class Player {
         THREE.MathUtils.degToRad(TUNING.grindApproachMargin),
       );
       if (alignment + 1e-6 < minimumAlignment) {
-        this.lastRail = this.railCand.rail;
+        this.lastRail = candidate.rail;
         this.grindLatched = this.rawInput.grindHeld;
         return false;
       }
@@ -12030,9 +12113,10 @@ export class Player {
     const vx = vertVelocity ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed;
     const vz = vertVelocity ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed;
     const along = vx * s.tangent.x + vz * s.tangent.z;
-    const remaining = tongueEntry || along >= 0 ? this.railCand.rail.totalLength - s.t : s.t;
+    const remaining = tongueEntry || along >= 0 ? candidate.rail.totalLength - s.t : s.t;
     if (remaining <= Math.max(.08, Math.abs(along) * CONST.fixedStep * 2)) return false;
-    this.enterGrind(this.railCand.rail, s, level);
+    if (!landing && this.deferNaturalGrind(candidate.rail)) return false;
+    this.enterGrind(candidate.rail, s, level);
     return true;
   }
 
@@ -12084,6 +12168,7 @@ export class Player {
   }
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
+    this.naturalGrindRail = null; this.naturalGrindGrace = 0;
     if (this.manualing !== 0) this.endManual();
     if (this.state === 'air' && this.flipT > 0) this.completeDeckTrick();
     // Use this flight's landed trick, not the combo total (which includes

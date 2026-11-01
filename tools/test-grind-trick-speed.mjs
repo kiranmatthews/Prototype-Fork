@@ -24,7 +24,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) =
   const close = (a, b, label) => assert.ok(Math.abs(a - b) < 1e-7, `${label}: ${a} != ${b}`);
   function fixture({ park = false, dir = 1, speed = 12, reward = 3 } = {}) {
     TUNING.grindTrickBoost = reward; level.skatepark = park; p.competitionMode = park;
-    const heading = rails[0].tangentAt(300).multiplyScalar(dir), position = rails[0].pointAt(300).add(new THREE.Vector3(0, .25, 0));
+    const heading = rails[0].tangentAt(300).multiplyScalar(dir), position = rails[0].pointAt(300).add(new THREE.Vector3(0, CONST.railRideHeight, 0));
     p.respawn(level, true, true, { position, heading });
     p.pos.copy(position); p.prevPos.copy(position); p.axisF.copy(heading); p.axisL.set(heading.z, 0, -heading.x);
     p.camDir.set(0, 0, -1); p.state = 'air'; p.grounded = false; p.freeSkate = p.airFromSkate = true;

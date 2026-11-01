@@ -8181,3 +8181,21 @@ Discovery to validated playable correction: approximately 6 minutes. Evidence:
 `docs/level-preservation-audit/ghost-fixed-normal/` and `ghost-fixed-native/`.
 Direct publication remains authorized; final public evidence follows in the
 owning release handoff.
+
+## 2026-11-02 — Preserve natural flight into grinds
+
+Keep the existing grind proximity while allowing an already aligned airborne
+trajectory to reach the rail. Add a bounded gravity-aware contact forecast and
+swept sole crossing; carry accepted taps to that same rail and advance the
+remaining tick after contact. Ordinary snap assistance still handles misses.
+No movement tuning or level geometry changes.
+
+Validated 220 real Player flights with identical pre-contact motion, including
+native reference controls and long kite arcs; existing release-buffer, trick
+speed, transfer, solid support, platform-edge, kite and rail-query checks pass.
+Production Chrome verifies authored Sky Bridge and Jungle Cup rails in lite and
+full rendering, with normal/native contact views and clean console/asset checks.
+Build and release-size gate pass at 999,171,569 bytes. The optional unchanged
+original-C++ rail oracle lacks its external source cache; current native Player
+coverage passes. No full suite ran. Evidence: `docs/natural-grind-landings/`.
+Prompt to first validated playable build: approximately 30 minutes.

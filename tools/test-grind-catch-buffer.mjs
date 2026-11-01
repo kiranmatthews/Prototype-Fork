@@ -46,7 +46,8 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, player:p, level, s
         if (frame > takeoff && p.state === 'grind') { caught = frame; break; }
       }
       if (buffered) {
-        assert.ok(caught > takeoff && caught < impact, `replay ${impact}: released Triangle failed to catch`);
+        // A natural catch may now finish on the original impact frame.
+        assert.ok(caught > takeoff && caught <= impact, `replay ${impact}: released Triangle failed to catch (${caught}, ${p.state}, pending ${p.naturalGrindGrace})`);
         assert.equal(p.isBailing, false);
         assert.ok(p.comboMult > 1, 'catch lost the linked combo');
         assert.equal(p.grindOllieCatchGrace, 0, 'catch did not consume the request');
@@ -72,7 +73,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, player:p, level, s
   const tick = values => { rider.step(CONST.fixedStep, makeInput(values), flat); flat.update(CONST.fixedStep); };
   const launch = (park, dir) => {
     flat.skatepark = park;
-    const heading = rail.tangentAt(80).multiplyScalar(dir), position = rail.pointAt(80).add(new THREE.Vector3(0, .25, 0));
+    const heading = rail.tangentAt(80).multiplyScalar(dir), position = rail.pointAt(80).add(new THREE.Vector3(0, CONST.railRideHeight, 0));
     rider.respawn(flat, true, true, { position, heading });
     rider.pos.copy(position); rider.prevPos.copy(position); rider.axisF.copy(heading); rider.axisL.set(heading.z, 0, -heading.x);
     rider.state = 'air'; rider.grounded = false; rider.freeSkate = rider.airFromSkate = true; rider.speed = 12; rider.vVel = 0;
