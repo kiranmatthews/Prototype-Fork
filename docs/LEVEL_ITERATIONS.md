@@ -7993,3 +7993,29 @@ pass; native/full route and live release evidence are recorded in
 `docs/sky-bridge-stock-recovery` and the release handoff. No check:all run.
 First packaged saved-course recovery passed at approximately 20:11 UTC, about
 28 minutes into the investigation; release validation follows that milestone.
+
+
+## 2 November 2026 NZDT — Put Ripcord River before Jungle Ruins
+
+Brief: swap the two courses throughout gameplay, menus and the map. Motu Motu
+now runs Treehouse Trail → Banana Bay → Ripcord River → Jungle Ruins → Beach
+Street → Motu Beach Invitational. The canonical roster drives prerequisites,
+map connections, menu lists and numbered debug entries; both bonuses retain
+their parent and number. Level IDs, save/reward keys and editor map point
+indices are unchanged.
+
+Exact prior map captures now adopt the exchanged positions, including the
+latest clockwise layout and earlier straight/archipelago layouts. Historical
+slot recognition uses the previous roster rather than the newly reordered
+one. Custom map coordinates remain intact. Completed Jungle Ruins stays
+playable in old saves, its medals/records remain attached to Jungle, and an
+old unfinished Jungle focus recovers to the newly unlocked Ripcord frontier.
+
+Focused campaign, save-preview, Level Select, map geography and map-save
+checks pass. The packaged lite browser traverses the changed links in both
+directions, verifies Ripcord #3/Jungle #4 with their bonuses, and launches
+both actual courses onto supported spawns. Build/type checking and the
+999,248,414-byte release pass. Native map/menu and final public evidence are
+recorded in the release handoff. No course geometry or published level data
+changed; no check:all run. First packaged playable verification passed at
+approximately 20:33 UTC, about seven minutes after the request.

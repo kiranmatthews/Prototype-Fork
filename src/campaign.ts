@@ -123,7 +123,7 @@ export interface CampaignIslandDefinition {
 
 export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
   { id: 'island-1', name: 'Motu Motu', subtitle: 'JUNGLE · RIVER · BEACH', centre: [-155,0,110],
-    levelKeys: ['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'] },
+    levelKeys: ['treehouse-trail','beachside-run','rumblewater-run','jungle','coastal','jungle-cup'] },
   { id: 'island-2', name: 'The Uga Isles', subtitle: 'SUNSET · TRIBES · SHIPWRECKS', centre: [-175,0,-110],
     levelKeys: ['custard-creek','tribal-run','waterfall-climb','test-course','drowned-crown','crab-chief'] },
   { id: 'island-3', name: 'Spooky Shores', subtitle: 'GHOSTS · RUINS · RAILWAYS', centre: [35,0,-200],
@@ -390,6 +390,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
 };
 
 /** Original coastal slots, retained for exact saved-map migration. */
+const LEGACY_MOTU_LEVEL_KEYS = ['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'];
 const LEGACY_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly [number, number, number])[]> = {
   'island-1': [[-42,2,20],[-18,2,43],[22,3,39],[46,3.8,9],[24,2.4,-31],[-18,3,-39]],
   'island-2': [[-38,2.2,32],[-47,3,0],[-22,4.5,-34],[20,3,-36],[45,2,-8],[26,3,30]],
@@ -433,23 +434,27 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
 /** Adopt the six-island layout only for untouched old authored map captures. */
 export function migrateCampaignMapPoints(points: number[][]): number[][] {
   if (points.length < 11 || points.length > CAMPAIGN_MAP_HUBS.length) return points;
+  // Historical layouts use the old course-to-slot assignment. Reordering the
+  // current roster must not change what counts as an untouched saved map.
+  const archivedIndex = (island: CampaignIslandDefinition, key: string) =>
+    (island.id === 'island-1' ? LEGACY_MOTU_LEVEL_KEYS : island.levelKeys).indexOf(key);
   // Exact original six-island captures adopt the new geography. Preserve every
   // genuinely edited point set, including a one-coordinate change.
-  const archivedArchipelago = (groundSecret: boolean) => CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
+  const archivedArchipelago = (groundSecret: boolean, paths = LEGACY_ISLAND_PATHS) => CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
     const island = CAMPAIGN_ISLANDS.find(value => value.levelKeys.includes(hub.progressKey));
     if (!island) { const [x,y,z]=hub.mapPosition; return [x,z,0,y]; }
-    const [x,y,z] = LEGACY_ISLAND_PATHS[island.id][island.levelKeys.indexOf(hub.progressKey)];
+    const [x,y,z] = paths[island.id][archivedIndex(island,hub.progressKey)];
     const centre = groundSecret && island.id === 'hidden-shores' ? [310,0,210] : island.centre;
     return [centre[0]+x,centre[2]+z,0,centre[1]+y];
   });
-  if([archivedArchipelago(false),archivedArchipelago(true)].some(version =>
+  if([archivedArchipelago(false),archivedArchipelago(true),archivedArchipelago(false,CAMPAIGN_ISLAND_PATHS)].some(version =>
     points.every((p,i)=>p.length===4&&p.every((v,a)=>v===version[i][a]))))
     return CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]})=>[x,z,0,y]);
   const straightCentres = [-95,150,395,640,885,1155];
   const straight = CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
     const islandIndex = CAMPAIGN_ISLANDS.findIndex(island => island.levelKeys.includes(hub.progressKey));
     if (islandIndex < 0) { const [x,y,z]=hub.mapPosition; return [x,z,0,y]; }
-    const island=CAMPAIGN_ISLANDS[islandIndex], index=island.levelKeys.indexOf(hub.progressKey);
+    const island=CAMPAIGN_ISLANDS[islandIndex], index=archivedIndex(island,hub.progressKey);
     return [straightCentres[islandIndex]+(index-(island.levelKeys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][index]];
   });
   if (points.every((point,index) => point.length===4 && point.every((value,axis)=>value===straight[index][axis])))

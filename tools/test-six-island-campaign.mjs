@@ -9,7 +9,7 @@ const c=await import('data:text/javascript;base64,'+Buffer.from(code).toString('
 const {CampaignStore,CAMPAIGN_LEVELS:levels,CAMPAIGN_ISLANDS:islands,CAMPAIGN_BOSSES:bosses,campaignLevelByKey:byKey}=c;
 assert.deepEqual(islands.map(i=>[i.name,i.levelKeys.length]),[['Motu Motu',6],['The Uga Isles',6],['Spooky Shores',6],['Maynard Quay',6],['Quagmire Caverns',6],['Secret Island',8]]);
 const expected=[
- ['treehouse-trail','Treehouse Trail'],['beachfront','Banana Bay'],['jungle','Jungle Ruins'],['rumblewater-run','Ripcord River'],['coastal-street-run','Beach Street'],['jungle-cup','Motu Beach Invitational'],
+ ['treehouse-trail','Treehouse Trail'],['beachfront','Banana Bay'],['rumblewater-run','Ripcord River'],['jungle','Jungle Ruins'],['coastal-street-run','Beach Street'],['jungle-cup','Motu Beach Invitational'],
  ['custard-creek','Sunset Safari'],['tribal-run','Tribal Run'],['waterfall-climb','Waterfall Climb'],['test','Uga Ambush'],['drowned-crown','The Merchant Wreck'],['crab-chief','High Chief Uga Ha ku'],
  ['waterpark','Deadwater Park'],['codex-lab','Haunted Hassle'],['ghost-train','Ghost Train'],['hollowwake-descent','Tunnelbore Tracks'],['slipstream-race','Slipstream'],['waterpark-cup','Deadwater Cup'],
  ['carlisle-coast','Carlisle Coast'],['country-club','Country Club Circuit'],['rooftop-relay','Hogsworth Harbour'],['mayfield-mall','Mayfield Mall'],['warehouse','Factory Fuss'],['jungle-minefield','Nightmare Grove'],['nightworks-after-hours','Guptus Eruptus'],['dark','Torchlight Trouble'],['spaghetti-rails','Spaghetti Rails'],
@@ -38,13 +38,46 @@ assert.deepEqual(c.migrateCampaignMapPoints(beforeDeadwater),currentPoints);
 const customPoints=structuredClone(oldPoints);customPoints[0][0]+=3;
 assert.equal(c.migrateCampaignMapPoints(customPoints),customPoints);
 assert.equal(c.migrateCampaignMapPoints(currentPoints),currentPoints);
+// Actual published captures retain stable point identities while the two
+// course positions exchange slots. A local map edit must remain untouched.
+const previousMotu=JSON.parse(await readFile(new URL('./fixtures/motu-before-ripcord-reorder.json',import.meta.url),'utf8'));
+for(const version of previousMotu.versions){
+ assert.deepEqual(c.migrateCampaignMapPoints(version.points),currentPoints,version.revision+': stock map did not adopt reordered slots');
+ for(const index of [0,27,12]){
+  const edited=structuredClone(version.points);edited[index][0]+=.01;
+  assert.equal(c.migrateCampaignMapPoints(edited),edited,'authored map coordinates changed');
+ }
+}
+const beforeMotu=previousMotu.versions[0].points;
+assert.deepEqual(currentPoints[0],beforeMotu[27]);assert.deepEqual(currentPoints[27],beforeMotu[0]);
+currentPoints.forEach((point,index)=>{if(index!==0&&index!==27)assert.deepEqual(point,beforeMotu[index]);});
+assert.deepEqual(byKey('rumblewater-run').unlockAfter,['beachside-run']);
+assert.deepEqual(byKey('jungle').unlockAfter,['rumblewater-run']);
+assert.deepEqual(byKey('coastal').unlockAfter,['jungle']);
+const oldMotuSave=new CampaignStore();oldMotuSave.newGame(2);
+for(const id of ['treehouse-trail','beachfront','jungle'])oldMotuSave.commitClear(id,{crystal:true,boxGem:true,comboGem:false});
+oldMotuSave.commitTimeTrial('jungle',{time:73,medal:'gold'});oldMotuSave.setMapFocus('jungle');oldMotuSave.saveActive();
+const jungleAwards=structuredClone(oldMotuSave.levelProgress('jungle'));
+const reloadedMotu=new CampaignStore();reloadedMotu.load(2);
+assert.deepEqual(reloadedMotu.levelProgress('jungle'),jungleAwards);
+assert.equal(reloadedMotu.levelProgress('rumblewater-run').cleared,false,'Jungle rewards moved to Ripcord');
+assert.equal(reloadedMotu.levelPlayable('jungle'),true,'a completed Jungle Ruins was relocked');
+assert.equal(reloadedMotu.recommendedMapLevelKey(),'jungle','remembered course identity moved to another level');
+const beforeJungle=new CampaignStore();beforeJungle.newGame(3);
+for(const id of ['treehouse-trail','beachfront'])beforeJungle.commitClear(id,{});
+beforeJungle.active.mapFocus='jungle';beforeJungle.saveActive();
+const frontier=new CampaignStore();frontier.load(3);
+assert.equal(frontier.recommendedMapLevelKey(),'rumblewater-run','old unfinished Jungle focus must recover to the new unlocked frontier');
 const fresh=new CampaignStore();fresh.newGame(1);
 assert.equal(fresh.levelPlayable('treehouse-trail'),true);
 assert.equal(fresh.levelPlayable('beachfront'),false);
 fresh.commitClear('treehouse-trail',{crystal:true,boxGem:true,comboGem:false});
 assert.equal(fresh.levelPlayable('beachfront'),true);assert.equal(fresh.levelPlayable('jungle'),false);
-fresh.commitClear('beachfront',{crystal:false,boxGem:false,comboGem:false});assert.equal(fresh.levelPlayable('jungle'),true);
-for(const id of ['jungle','rumblewater-run','coastal-street-run'])fresh.commitClear(id,{crystal:false,boxGem:false,comboGem:false});
+fresh.commitClear('beachfront',{crystal:false,boxGem:false,comboGem:false});
+assert.equal(fresh.levelPlayable('rumblewater-run'),true);assert.equal(fresh.levelPlayable('jungle'),false);
+fresh.commitClear('rumblewater-run',{crystal:false,boxGem:false,comboGem:false});
+assert.equal(fresh.levelPlayable('jungle'),true);assert.equal(fresh.levelPlayable('coastal-street-run'),false);
+for(const id of ['jungle','coastal-street-run'])fresh.commitClear(id,{crystal:false,boxGem:false,comboGem:false});
 assert.equal(fresh.levelPlayable('jungle-cup'),true);assert.equal(fresh.levelPlayable('custard-creek'),false);
 fresh.recordLevelFinished('jungle-cup');assert.equal(fresh.levelPlayable('custard-creek'),false,'losing cup unlocked next island');
 fresh.commitCompetitionWin('jungle-cup');assert.equal(fresh.levelPlayable('custard-creek'),true);

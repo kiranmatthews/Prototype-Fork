@@ -85,6 +85,7 @@ try {
  // Completion and tier-owned reward models remain tied to stable IDs.
  for(const d of levels.filter(d=>!d.placeholder))Object.assign(campaign.active.levels[d.progressKey],{cleared:true,crystal:true,boxGem:true,timeMedal:'silver',bestTime:64.15,trialTimes:[64.15,68.3],cup:true,raceWon:true});
  ui.showMapSection('level-select');ui.updateLevelSelectChoice('jungle',true);
+ assert.deepEqual(rowKeys(),['treehouse-trail','beachside-run','rumblewater-run','jungle','coastal','jungle-cup']);
  assert.match(ui.levelSelectDetail.textContent,/1:04.15/);assert.equal(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').length,3);
  assert.ok(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').some(slot=>slot.dataset.medal==='silver'));
  ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/MOTU BEACH INVITATIONAL/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/BEST TIMES/);

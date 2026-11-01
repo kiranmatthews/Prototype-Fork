@@ -10,8 +10,8 @@ An em dash in the source column means a genuine Coming Soon placeholder. It cann
 | --- | --- | --- |
 | Motu Motu | Treehouse Trail | Treehouse Trail · `treehouse-trail` |
 | | Banana Bay | Beachside Run · `beachfront` |
-| | Jungle Ruins | Jungle Ruins · `jungle` |
 | | Ripcord River | Rumblewater Run · `rumblewater-run` |
+| | Jungle Ruins | Jungle Ruins · `jungle` |
 | | Beach Street | Coastal Street Run · `coastal-street-run` |
 | | Motu Beach Invitational — boss competition | Jungle Cup · `jungle-cup` |
 | The Uga Isles | Sunset Safari | Custard Creek · `custard-creek` |
@@ -78,6 +78,7 @@ The final two conditions exclude the destination's own rewards and later locked 
 - Level Stats / Level Select reveals only unlocked levels and islands. Locked names, previews, rows and island pages remain hidden; secret slots also require their individual medal/gem condition. Unlocked Coming Soon slots remain inspectable with keyboard, controller, mouse or touch, while the menu, host transition and map entry independently block unavailable gameplay.
 - The map's physical travel remains gated by progression. Unbuilt ordinary slots can be visited and do not strand existing courses later on that island. Unbuilt bosses keep the next island closed.
 - Old save progress follows stable keys. For example, `test-course` remains Uga Ambush; it is never transferred to the new Carlisle Coast placeholder. Already completed main courses remain selectable after the reorder.
+- Motu Motu places Ripcord River third and Jungle Ruins fourth. Existing medals, records and remembered completed courses retain their stable level keys; untouched older map captures adopt the new positions.
 - Unassigned and retired keys remain in the durable ledger, preserving their earned data. Editor map point indices are append-only; untouched old captures adopt the new layout while custom point coordinates remain untouched.
 - Planned cards use the shared Coming Soon illustration. Five newly assigned courses have compact previews captured from their real game geometry. Game-owned menu artwork remains in the existing pre-CRT pass.
 

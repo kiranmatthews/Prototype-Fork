@@ -1,0 +1,160 @@
+{
+  "base": "7ec1a9bdea067ba99cb65a01820d998a50f488f6",
+  "releaseBytes": 999248414,
+  "build": "passed",
+  "checks": {
+    "test-six-island-campaign": "PASS Secret Island awards and counts gems and medals only.",
+    "test-campaign-flow": "PASS standard 100% without secret gems; legacy awards remain stored without inflating quotas.",
+    "test-save-slot-previews": "PASS four-slot migration, slot-four persistence, replayed clears, non-record trials, competition finishes, map independence, failed/manual saves and safe existing preview assets.",
+    "test-level-select": "PASS unlock-based level/island discovery, independent secret slots, save-switch concealment, unlocked placeholders, reward previews, launch guards, remembered pages, controller and touch entry.",
+    "test-map-archipelago": "{\"islands\":6,\"wrappingRoutes\":6,\"themedBeacons\":38,\"meshInstances\":331,\"instancedTriangles\":1801453,\"migration\":\"pass\",\"directions\":\"main route right/left, reciprocal and unique\"}",
+    "test-world-map-save": "PASS elevated six-island map JSON round-trip and bounded editable hub coordinates."
+  },
+  "lite": {
+    "base": "http://127.0.0.1:5377/",
+    "full": false,
+    "errors": [],
+    "travel": [
+      {
+        "key": "rumblewater-run",
+        "direction": "ArrowRight"
+      },
+      {
+        "key": "jungle",
+        "direction": "ArrowRight"
+      },
+      {
+        "key": "coastal",
+        "direction": "ArrowRight"
+      },
+      {
+        "key": "jungle",
+        "direction": "ArrowLeft"
+      },
+      {
+        "key": "rumblewater-run",
+        "direction": "ArrowLeft"
+      }
+    ],
+    "entries": [
+      {
+        "id": "rumblewater-run",
+        "name": "Ripcord River",
+        "grounded": true
+      },
+      {
+        "id": "jungle",
+        "name": "Jungle Ruins",
+        "grounded": true
+      }
+    ],
+    "menu": [
+      {
+        "key": "treehouse-trail",
+        "text": "01  TREEHOUSE TRAIL"
+      },
+      {
+        "key": "beachside-run",
+        "text": "02  BANANA BAY"
+      },
+      {
+        "key": "rumblewater-run",
+        "text": "03  RIPCORD RIVER"
+      },
+      {
+        "key": "jungle",
+        "text": "04  JUNGLE RUINS"
+      },
+      {
+        "key": "coastal",
+        "text": "05  BEACH STREET"
+      },
+      {
+        "key": "jungle-cup",
+        "text": "06  MOTU BEACH INVITATIONAL"
+      }
+    ],
+    "catalogue": [
+      "3\u00b7 Ripcord River",
+      "3\u00b7 Ripcord River Bonus",
+      "4\u00b7 Jungle Ruins",
+      "4\u00b7 Jungle Ruins Bonus"
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 11-01 20:31 UTC",
+    "canvas": [
+      960,
+      540
+    ],
+    "pass": true
+  },
+  "native": {
+    "base": "http://127.0.0.1:5377/",
+    "full": true,
+    "errors": [],
+    "travel": [
+      {
+        "key": "rumblewater-run",
+        "direction": "ArrowRight"
+      },
+      {
+        "key": "jungle",
+        "direction": "ArrowRight"
+      },
+      {
+        "key": "coastal",
+        "direction": "ArrowRight"
+      },
+      {
+        "key": "jungle",
+        "direction": "ArrowLeft"
+      },
+      {
+        "key": "rumblewater-run",
+        "direction": "ArrowLeft"
+      }
+    ],
+    "entries": [],
+    "menu": [
+      {
+        "key": "treehouse-trail",
+        "text": "01  TREEHOUSE TRAIL"
+      },
+      {
+        "key": "beachside-run",
+        "text": "02  BANANA BAY"
+      },
+      {
+        "key": "rumblewater-run",
+        "text": "03  RIPCORD RIVER"
+      },
+      {
+        "key": "jungle",
+        "text": "04  JUNGLE RUINS"
+      },
+      {
+        "key": "coastal",
+        "text": "05  BEACH STREET"
+      },
+      {
+        "key": "jungle-cup",
+        "text": "06  MOTU BEACH INVITATIONAL"
+      }
+    ],
+    "catalogue": [
+      "3\u00b7 Ripcord River",
+      "3\u00b7 Ripcord River Bonus",
+      "4\u00b7 Jungle Ruins",
+      "4\u00b7 Jungle Ruins Bonus"
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 11-01 20:31 UTC",
+    "canvas": [
+      1920,
+      1080
+    ],
+    "pass": true
+  },
+  "sourceSha256": {
+    "src/campaign.ts": "471c5f4a108ee26e5052648217fa38aa94cc9d8c7e5380e3fa8263d0e30f55c5",
+    "public/levels.json": "2d3c948d55849536539faeb301fbeb86165f7d9ac3e8b92066c0c47f937bbf37"
+  }
+}

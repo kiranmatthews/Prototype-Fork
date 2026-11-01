@@ -44,7 +44,8 @@ try {
  assert.ok(Object.values(spend.tasks).reduce((sum,t)=>sum+(t.consumedCredits??t.estimatedCredits),0)<=500);
  // Exact prior map captures upgrade, while authored/custom maps are preserved.
  const oldCentres=[-95,150,395,640,885,1155];
- const old=c.CAMPAIGN_MAP_HUBS.map(h=>{const n=islands.findIndex(i=>i.levelKeys.includes(h.progressKey));if(n<0)return[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]];const i=islands[n].levelKeys.indexOf(h.progressKey);return[oldCentres[n]+(i-(islands[n].levelKeys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][i]];});
+ const oldMotu=['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'];
+ const old=c.CAMPAIGN_MAP_HUBS.map(h=>{const n=islands.findIndex(i=>i.levelKeys.includes(h.progressKey));if(n<0)return[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]];const i=(n===0?oldMotu:islands[n].levelKeys).indexOf(h.progressKey);return[oldCentres[n]+(i-(islands[n].levelKeys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][i]];});
  const current=c.CAMPAIGN_MAP_HUBS.map(h=>[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]]);
  assert.deepEqual(c.migrateCampaignMapPoints(old),current);
  const previous=JSON.parse(await readFile(new URL('./fixtures/map-archipelago-before-horizontal.json',import.meta.url),'utf8'));
