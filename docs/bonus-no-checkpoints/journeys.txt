@@ -1,0 +1,4 @@
+{"childPid": 86057, "command": "node", "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "pid": 86055, "slot": 1, "startedAt": "2026-10-28T07:34:23.165817+00:00", "status": "running"}
+{"id":"bonus-beachside-run","boxes":24,"checkpoints":0,"deaths":0,"state":"finished","seconds":119.81666666666666}
+{"id":"bonus-coastal","boxes":32,"checkpoints":0,"deaths":0,"state":"finished","seconds":146.93333333333334}
+{"exitCode": 0, "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "slot": 1, "status": "released"}

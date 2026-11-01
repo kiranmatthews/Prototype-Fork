@@ -143,6 +143,6 @@ export function resolveBonusLevel(parentId:string):CustomLevelData {
 const UNCOUNTED_CRATES=new Set(['metal','metalbounce','bang','nitrobang']);
 export function bonusCrateCount(parentId:string):number {
   if (!levelAllowsBonus(parentId)) return 0;
-  return resolveBonusLevel(parentId).components.filter(component=>component.t==='checkpoint'||component.t==='outline'||
+  return resolveBonusLevel(parentId).components.filter(component=>component.t==='outline'||
     (component.t==='crate'&&!UNCOUNTED_CRATES.has(component.kind??'wood'))).length;
 }

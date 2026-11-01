@@ -1,0 +1,93 @@
+{
+  "base": "aac956ab544572811e0787815450ce8718e09343",
+  "bonus_entries_audited": 25,
+  "changes": [
+    {
+      "id": "bonus-jungle",
+      "removed_checkpoints": 2,
+      "reward_box_target": 20
+    },
+    {
+      "id": "bonus-beachside-run",
+      "removed_checkpoints": 2,
+      "reward_box_target": 24
+    },
+    {
+      "id": "bonus-coastal",
+      "removed_checkpoints": 4,
+      "reward_box_target": 32
+    }
+  ],
+  "checks": {
+    "checkpoint_regression": "passed: source/published audit, legacy import, editor capture, bonus retry, box targets, parent checkpoint banking and repeated respawn",
+    "mask_regression": "passed: 40 real-Player cases",
+    "check_levels": {
+      "exit_code": 0,
+      "command": "package.json scripts.check:levels, executed with bundled Node"
+    },
+    "production_build": {
+      "exit_code": 0,
+      "command": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/vite/bin/vite.js build",
+      "stamp": "Codex/sol fork \u00b7 build 10-28 07:32 UTC",
+      "offline_version": "8185038211e5a73c75f9",
+      "release_mib": 948.2
+    },
+    "browser": {
+      "exit_code": 0,
+      "report": "browser/report.json",
+      "cases": 6,
+      "modes": [
+        "lite, 720 setting",
+        "full, MAX 1440x900"
+      ],
+      "verified": [
+        "supported spawn",
+        "right input follows side camera",
+        "supported former checkpoint position",
+        "no checkpoint warp",
+        "fall recovery at entrance",
+        "finish gate",
+        "zero console/page/WebGL errors"
+      ]
+    }
+  },
+  "native_journeys": [
+    {
+      "id": "bonus-jungle",
+      "boxes": 20,
+      "checkpoints": 0,
+      "deaths": 0,
+      "state": "finished",
+      "seconds": 82.23333333333333
+    },
+    {
+      "id": "bonus-beachside-run",
+      "boxes": 24,
+      "checkpoints": 0,
+      "deaths": 0,
+      "state": "finished",
+      "seconds": 119.81666666666666
+    },
+    {
+      "id": "bonus-coastal",
+      "boxes": 32,
+      "checkpoints": 0,
+      "deaths": 0,
+      "state": "finished",
+      "seconds": 146.93333333333334
+    }
+  ],
+  "preexisting_test_mismatches": [
+    {
+      "test": "tools/test-themed-bonus-flow.mjs",
+      "failure": "The Skystream still uses the shared fallback",
+      "baseline_confirmation": "Immutable base themed-bonuses.ts resolves skystream to EASY_BONUS_LEVEL; no mapping changed in this task."
+    },
+    {
+      "test": "tools/test-puzzle-bonus-replacements.mjs",
+      "failure": "Beachside woodpath !== expected mesh",
+      "baseline_confirmation": "Immutable base themed-bonuses.ts and puzzle-bonus.ts already produce woodpath in the first Beachside gameplay component; unchanged Banana Bay art converts donor platforms to woodpaths. The Jungle branch passed; current Beachside/Coastal input-only journeys were separately verified."
+    }
+  ],
+  "elapsed_prompt_to_playable_minutes": 16
+}

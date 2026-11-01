@@ -10,6 +10,63 @@ const fn = ast.statements.find(node => ts.isFunctionDeclaration(node) && node.na
 const code = ts.transpileModule(fn.getText(ast), { compilerOptions: { target: ts.ScriptTarget.ES2020 } }).outputText;
 const noop = () => {};
 await withSkateRuntime(async ({ THREE, Level, Player, scene, server }) => {
+  const { BUILTIN_LEVELS, normalizeCustomLevelData, normalizeUserLevelEntries } = await server.ssrLoadModule('/src/level.ts');
+  const { resolveBonusLevel, bonusCrateCount } = await server.ssrLoadModule('/src/levels/themed-bonuses.ts');
+  const published = JSON.parse(await readFile(new URL('../public/levels.json', import.meta.url), 'utf8'));
+  const bonuses = [...BUILTIN_LEVELS, ...published.levels].filter(entry => entry.data?.hudMode === 'bonus');
+  assert.ok(bonuses.length > 1, 'audit must cover the bonus library');
+  for (const entry of bonuses)
+    assert.equal(entry.data.components.some(component => component.t === 'checkpoint'), false, `${entry.id} still authors checkpoint crates`);
+
+  // Old saved/imported rooms must not bring checkpoint geometry, collision,
+  // respawn snapshots or an uncollectable box target back into bonus play.
+  const legacyBonus = { v: 1, name: 'Legacy bonus checkpoints', hudMode: 'bonus', spawn: [0, .1, 0], killY: -10,
+    components: [
+      { t: 'platform', p: [0, -.5, -6], s: [16, 1, 24] },
+      { t: 'checkpoint', p: [0, 0, -4] },
+      { t: 'checkpoint', p: [0, 0, -8] },
+      { t: 'crate', p: [3, 0, -4], kind: 'wood' },
+      { t: 'gate', p: [0, 0, -14] },
+    ],
+  };
+  const normalized = normalizeCustomLevelData(legacyBonus);
+  assert.ok(normalized);
+  assert.deepEqual(normalized.components, legacyBonus.components.filter(component => component.t !== 'checkpoint'));
+  assert.deepEqual(normalizeCustomLevelData(normalized), normalized, 'reopening a bonus must be idempotent');
+  const saved = normalizeUserLevelEntries([{ id: 'saved-bonus', name: legacyBonus.name, data: legacyBonus }]);
+  assert.equal(saved?.[0].data.components.some(component => component.t === 'checkpoint'), false,
+    'saved/imported libraries bypassed bonus migration');
+  // The registry retains the authoring archive; crate expansion belongs to
+  // the selected working copy, after historical stock recognition.
+  assert.deepEqual(normalizeCustomLevelData(saved?.[0].data), normalized,
+    'saved/imported working copy differs from an ordinary bonus import');
+  const ordinary = normalizeCustomLevelData({ ...legacyBonus, hudMode: undefined });
+  assert.equal(ordinary.components.filter(component => component.t === 'checkpoint').length, 2, 'ordinary checkpoints were removed');
+  assert.equal(legacyBonus.components.filter(component => component.t === 'checkpoint').length, 2, 'loading mutated caller-owned source');
+
+  const legacyLevel = new Level(scene, { id: 'saved-bonus', name: legacyBonus.name, data: legacyBonus });
+  try {
+    assert.equal(legacyLevel.checkpoints.length, 0, 'bonus still builds checkpoint meshes/colliders');
+    assert.equal(legacyLevel.totalCrates, 1, 'removed checkpoints inflated the box target');
+    assert.equal(legacyLevel.captureData().components.some(component => component.t === 'checkpoint'), false, 'editor capture resurrected a checkpoint');
+    const retryPlayer = new Player(scene);
+    retryPlayer.respawn(legacyLevel, true, true);
+    retryPlayer.pos.set(0, 0, -8);
+    legacyLevel.breakCrate(legacyLevel.crates[0]);
+    retryPlayer.cratesBroken = 1;
+    retryPlayer.respawn(legacyLevel, false, true);
+    assert.deepEqual(retryPlayer.pos.toArray(), legacyLevel.spawnPos.toArray(), 'bonus retry resumed inside the room');
+    assert.equal(legacyLevel.activeCheckpoint, null);
+    assert.equal(retryPlayer.cratesBroken, 0);
+    assert.equal(legacyLevel.crates[0].alive, true);
+  } finally { legacyLevel.dispose(); }
+
+  const authored = resolveBonusLevel('jungle'), targetBefore = bonusCrateCount('jungle');
+  authored.components.push({ t: 'checkpoint', p: [0, 0, 0] });
+  try { assert.equal(bonusCrateCount('jungle'), targetBefore, 'parent gem target counted a checkpoint that bonus loading removes'); }
+  finally { authored.components.pop(); }
+  console.log(`PASS ${bonuses.length} source/published bonus entries, legacy import/capture, checkpoint-free retry and box targets`);
+
   const { CampaignStore, mergeCompletedBonusInventory } = await server.ssrLoadModule('/src/campaign.ts');
   const campaign = new CampaignStore(); campaign.newGame(1);
   const entry = { id: 'jungle', name: 'Bonus checkpoint fixture', data: {
