@@ -59,7 +59,6 @@ async function start(canvas: OffscreenCanvas, initial: LoadingVortexConfig): Pro
     output = new CrtGuestOutputPass(() => crt?.deferredOutput ?? null, () => crt?.deferredDeconvergence ?? null);
     output.renderToScreen = true;
   }
-  await titleReady;
   if (disposed) return;
   resize(config);
   draw(0, performance.now());
@@ -82,6 +81,11 @@ async function start(canvas: OffscreenCanvas, initial: LoadingVortexConfig): Pro
   post({ type: 'ready' });
   report();
   schedule();
+  // The field can animate before optional lettering downloads. Paint late
+  // artwork even in reduced motion, without creating a second animation loop.
+  void titleReady.then(() => {
+    if (!disposed && initialized) { draw(0, performance.now()); report(); }
+  });
 }
 
 function resize(next: LoadingVortexConfig): void {
@@ -152,7 +156,10 @@ function fail(reason: string): void { post({ type: 'failed', reason }); dispose(
 
 scope.onmessage = ({ data }) => {
   try {
-    if (data.type === 'start') void start(data.canvas, data.config).catch(error => fail(String(error)));
+    if (data.type === 'start') {
+      post({ type: 'initializing' });
+      void start(data.canvas, data.config).catch(error => fail(String(error)));
+    }
     else if (data.type === 'dispose') { dispose(); post({ type: 'disposed' }); scope.close(); }
     else if (data.type === 'resize') resize(data.config);
     else if (data.type === 'visibility') {

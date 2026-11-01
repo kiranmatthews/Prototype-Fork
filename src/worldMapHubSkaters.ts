@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import { CAMPAIGN_ISLANDS } from './campaign';
+import { CAMPAIGN_ISLANDS, type CampaignIslandDefinition } from './campaign';
 import type { Level } from './level';
 import type { Player } from './player';
 
 interface HubSkater {
+  island: CampaignIslandDefinition;
   key: string;
   anchor: THREE.Group;
   body: THREE.Group;
@@ -34,37 +35,37 @@ export class WorldMapHubSkaters {
   private readonly skeletons = new Set<THREE.Skeleton>();
   private disposed = false;
 
-  constructor(private readonly player: Player, level: Level) {
+  constructor(private readonly player: Player, private readonly level: Level) {
     this.root.name = 'world-map-hub-skaters';
     const source = player.riderRef;
     if (!source) return;
     source.traverse(object => this.sources.push(object));
     for (const island of CAMPAIGN_ISLANDS) {
-      for (const key of new Set([island.levelKeys[0], island.levelKeys[island.levelKeys.length - 1]])) {
-        const pose = level.campaignMapPose(key);
-        if (!pose) continue;
-        const anchor = new THREE.Group(), body = new THREE.Group();
-        anchor.name = `map hub skater ${key}`;
-        anchor.userData.mapSkaterHub = key;
-        anchor.position.copy(pose.position);
-        body.matrixAutoUpdate = false;
-        const model = cloneRider(source, this.sources), parts: THREE.Object3D[] = [];
-        model.traverse(object => {
-          parts.push(object);
-          // Original rigid surfaces have layer zero while their render batch
-          // owns drawing. The replicas use those complete original surfaces.
-          if ((object as THREE.Mesh).isMesh && object.layers.mask === 0) object.layers.set(0);
-          if (object instanceof THREE.SkinnedMesh) this.skeletons.add(object.skeleton);
-        });
-        body.add(model); anchor.add(body); this.root.add(anchor);
-        this.riders.push({ key, anchor, body, parts });
-      }
+      const key = island.levelKeys[0];
+      const pose = level.campaignMapPose(key);
+      if (!pose) continue;
+      const anchor = new THREE.Group(), body = new THREE.Group();
+      anchor.name = `map island skater ${island.id}`;
+      anchor.userData.mapSkaterIsland = island.id;
+      anchor.userData.mapSkaterHub = key;
+      anchor.position.copy(pose.position);
+      body.matrixAutoUpdate = false;
+      const model = cloneRider(source, this.sources), parts: THREE.Object3D[] = [];
+      model.traverse(object => {
+        parts.push(object);
+        // Original rigid surfaces have layer zero while their render batch
+        // owns drawing. The replicas use those complete original surfaces.
+        if ((object as THREE.Mesh).isMesh && object.layers.mask === 0) object.layers.set(0);
+        if (object instanceof THREE.SkinnedMesh) this.skeletons.add(object.skeleton);
+      });
+      body.add(model); anchor.add(body); this.root.add(anchor);
+      this.riders.push({ island, key, anchor, body, parts });
     }
     player.group.parent?.add(this.root);
   }
 
   get diagnostics() {
-    return this.riders.map(({key, anchor}) => ({ key, visible: anchor.visible, position: anchor.position.toArray() }));
+    return this.riders.map(({island, key, anchor}) => ({ island: island.id, key, visible: anchor.visible, position: anchor.position.toArray() }));
   }
 
   sync(selected: string, moving: boolean, crossIsland: boolean, unlocked: (key: string) => boolean): void {
@@ -74,8 +75,18 @@ export class WorldMapHubSkaters {
     source.parent.updateWorldMatrix(true, false);
     this.inverse.copy(this.player.group.matrixWorld).invert();
     this.bodyMatrix.multiplyMatrices(this.inverse, source.parent.matrixWorld);
+    const selectedIsland = CAMPAIGN_ISLANDS.findIndex(island => island.levelKeys.includes(selected));
     for (const rider of this.riders) {
-      rider.anchor.visible = unlocked(rider.key) && (moving || rider.key !== selected);
+      const index = CAMPAIGN_ISLANDS.indexOf(rider.island), active = index === selectedIsland;
+      // Exactly one visible skater per island: the active rider owns coast
+      // travel; other islands wait at the endpoint facing this point in the
+      // campaign. Both pan endpoints are already occupied before take-off.
+      rider.key = active ? selected : index < selectedIsland
+        ? rider.island.levelKeys[rider.island.levelKeys.length - 1] : rider.island.levelKeys[0];
+      const pose = this.level.campaignMapPose(rider.key);
+      if (pose) rider.anchor.position.copy(pose.position);
+      rider.anchor.userData.mapSkaterHub = rider.key;
+      rider.anchor.visible = !!pose && unlocked(rider.key) && (!active || crossIsland);
       // Idle poses are shared during the pan. While the active rider walks
       // around a coast, the hub residents retain their last grounded idle.
       if (moving && !crossIsland) continue;

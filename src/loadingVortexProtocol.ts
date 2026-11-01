@@ -23,6 +23,7 @@ export type LoadingVortexRequest =
   | { type: 'dispose' };
 
 export type LoadingVortexResponse =
+  | { type: 'initializing' }
   | { type: 'ready' }
   | { type: 'failed'; reason: string }
   | { type: 'disposed' }

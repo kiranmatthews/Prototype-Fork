@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
+import { releaseImageUrl } from './releaseImageUrls';
 
 export const BLOCKWORKS_MATTE_KINDS=['bw-castle-matte','bw-rides-matte','bw-jungle-matte','bw-cobweb'] as const;
 type MatteKind=typeof BLOCKWORKS_MATTE_KINDS[number];
@@ -34,7 +35,7 @@ export class BlockworksMattes {
       const material=mat;
       this.pending.push((async()=>{
         try{
-          const response=await fetch(import.meta.env.BASE_URL+'blockworks-art/'+FILES[kind]+'.png');
+          const response=await fetch(releaseImageUrl(import.meta.env.BASE_URL+'blockworks-art/'+FILES[kind]+'.png'));
           if(!response.ok)throw Error('Matte HTTP '+response.status);
           const bitmap=await createImageBitmap(await response.blob(),{imageOrientation:'flipY'});
           if(this.disposed){bitmap.close();return;}

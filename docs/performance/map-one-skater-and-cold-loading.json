@@ -1,0 +1,134 @@
+{
+  "date": "2026-11-01",
+  "baseCommit": "c4c10ecbdafb07cbe89fa06a275f83567c6bd5b6",
+  "supersedes": "Two residents per island in c4c10ecb were contrary to the user clarification.",
+  "islandResidents": 6,
+  "visibleSkatersPerUnlockedIsland": 1,
+  "reversedCoastalSlots": [
+    "island-2",
+    "island-3",
+    "island-4",
+    "hidden-shores"
+  ],
+  "savedMaps": "Exact published archipelago, original ground secret island and older linear captures migrate; custom points remain unchanged.",
+  "sourceSha256": {
+    "src/campaign.ts": "c399fe57bf8bfd5792ccdb5a7035204411a1c2fabf2894f0f2aaf628c18a4beb",
+    "src/worldMapHubSkaters.ts": "51bd4f596ee1edad24c8770b8f8f72444a7aa5bd7b4cb375426e9cd9901e053a",
+    "src/worldMapController.ts": "ef9642e6d3dbc5851fda63261d7b5c796a26ae61533f1120a9a6468158e903f8",
+    "src/main.ts": "b159b216f610bb1ab35c61d86239c345cc8e030e8dff984b00eba84aaea18dbd",
+    "src/blockworksMattes.ts": "ce7ccb74a6174eb7b8da66ee5771dab8366a64fe84c5741acd5ce9d446a47b32",
+    "src/loadingTitle.ts": "815f05c4e98086035c7d90f5841a60444a3acebc45144381795df4b4d93c9cbf",
+    "src/loadingVortex.ts": "16205f712e88d41f0dd271a4edd322e25f87a3730ca14c42f8e44cef8d921c54",
+    "src/loadingVortex.worker.ts": "0bb6b55d43726d2245b3f9560b2f9be3e8078ef1ec7b5e9c703abebae2e8ebf1",
+    "src/loadingVortexProtocol.ts": "8b563fef6e5c1ba2ae891c2c3339f9484183cea32da0695ba07d5e9cacdca9ab"
+  },
+  "mapBrowser": [
+    {
+      "mode": "lite",
+      "buildStamp": "Codex/sol fork \u00b7 build 11-01 09:15 UTC",
+      "forwardCoastLinks": 32,
+      "islandPans": 10,
+      "minimumForwardScreenStep": 0,
+      "visibleCountEverySample": 1,
+      "matteDecodes": {
+        "bw-cobweb": "ready",
+        "bw-jungle-matte": "ready",
+        "bw-rides-matte": "ready",
+        "bw-castle-matte": "ready"
+      },
+      "exit": {
+        "skaters": [],
+        "root": false,
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "visible": true
+      },
+      "errors": []
+    },
+    {
+      "mode": "native",
+      "buildStamp": "Codex/sol fork \u00b7 build 11-01 09:15 UTC",
+      "forwardCoastLinks": 32,
+      "islandPans": 10,
+      "minimumForwardScreenStep": 0,
+      "visibleCountEverySample": 1,
+      "matteDecodes": {
+        "bw-cobweb": "ready",
+        "bw-jungle-matte": "ready",
+        "bw-rides-matte": "ready",
+        "bw-castle-matte": "ready"
+      },
+      "exit": {
+        "skaters": [],
+        "root": false,
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "visible": true
+      },
+      "errors": []
+    }
+  ],
+  "loadingBrowser": [
+    {
+      "case": "full-crt",
+      "startupFailure": null,
+      "stallFps": 59.99,
+      "errors": []
+    },
+    {
+      "case": "native",
+      "startupFailure": null,
+      "stallFps": 60.02,
+      "errors": []
+    },
+    {
+      "case": "slow-atlas",
+      "startupFailure": null,
+      "stallFps": 60.0,
+      "errors": []
+    },
+    {
+      "case": "slow-worker",
+      "startupFailure": null,
+      "stallFps": 60.01,
+      "errors": []
+    },
+    {
+      "case": "reduced",
+      "startupFailure": null,
+      "stallFps": null,
+      "errors": []
+    },
+    {
+      "case": "fallback",
+      "startupFailure": null,
+      "stallFps": null,
+      "errors": []
+    }
+  ],
+  "checks": [
+    "test-map-hub-skaters",
+    "test-map-archipelago",
+    "test-six-island-campaign",
+    "test-world-map-locomotion",
+    "test-loading-vortex-lifecycle",
+    "test-loading-title",
+    "native crate collapse/reset/stomp",
+    "npm run check:levels",
+    "npm run build",
+    "npm run check:release",
+    "git diff --check"
+  ],
+  "releaseBytes": 999247445,
+  "releaseLimitBytes": 1000000000,
+  "offlineVersion": "3fb3ca224b8cab940493",
+  "evidenceDirectory": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/evidence/01a195ed-5cfe-7ea2-a6a0-20d780fd99cd-map-corrected",
+  "correctionPromptToPlayableMinutes": 5,
+  "correctionLocalValidationMinutes": 15
+}

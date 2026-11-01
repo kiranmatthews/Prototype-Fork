@@ -77,12 +77,13 @@ export class LoadingTitle {
     this.request?.abort();
     const request = new AbortController();
     this.request = request;
-    // Optional lettering must never indefinitely hold up startup or fallback.
-    const timeout = setTimeout(() => request.abort(), 4000);
+    // Worker animation starts independently. Allow a cold hosted atlas to
+    // arrive while it moves, with bounded cancellation for offline fallback.
+    const timeout = setTimeout(() => request.abort(), 15000);
     try {
       let texture: THREE.Texture;
       if (typeof createImageBitmap === 'function') {
-        const response = await fetch(url, { signal: request.signal });
+        const response = await fetch(url, { signal: request.signal, priority: 'high' });
         if (!response.ok) throw new Error(`Loading atlas HTTP ${response.status}`);
         const image = await createImageBitmap(await response.blob(), { imageOrientation: 'flipY', premultiplyAlpha: 'none' });
         texture = new THREE.Texture(image);

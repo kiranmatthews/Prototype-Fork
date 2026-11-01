@@ -3,6 +3,7 @@ import { createServer } from 'vite';
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 const nodes = new Set(), listeners = new Set(), workers = [];
 const timers = new Map(); let timerId = 0;
+const delays = new Map();
 const originals = Object.fromEntries(['document', 'HTMLCanvasElement', 'Worker', 'setTimeout', 'clearTimeout'].map(k => [k, globalThis[k]]));
 class Canvas {
   style = {}; hidden = false; classList = { add() {} };
@@ -20,12 +21,15 @@ try {
   globalThis.document = { hidden: false, createElement: () => new Canvas(), body: { append: node => nodes.add(node) },
     addEventListener: (_, callback) => listeners.add(callback), removeEventListener: (_, callback) => listeners.delete(callback) };
   globalThis.HTMLCanvasElement = Canvas; globalThis.Worker = Worker;
-  globalThis.setTimeout = callback => { timers.set(++timerId, callback); return timerId; };
-  globalThis.clearTimeout = id => timers.delete(id);
+  globalThis.setTimeout = (callback, delay) => { timers.set(++timerId, callback); delays.set(timerId, delay); return timerId; };
+  globalThis.clearTimeout = id => { timers.delete(id); delays.delete(id); };
   const { LoadingVortexPresentation } = await server.ssrLoadModule('/src/loadingVortex.ts');
   const config = () => ({ inputWidth: 640, inputHeight: 360, outputWidth: 1280, outputHeight: 720 });
   const host = new LoadingVortexPresentation(config);
   const ready = host.prepare(); assert.equal(host.prepare(), ready); assert.equal(workers.length, 1);
+  assert.deepEqual([...delays.values()], [30000], 'Cold bundle download needs its own deadline');
+  workers[0].emit({ type: 'initializing' });
+  assert.deepEqual([...delays.values()], [8000], 'GPU initialization gets a fresh bounded budget');
   workers[0].emit({ type: 'ready' }); assert.equal(await ready, true); assert.equal(host.active, true);
   assert.equal(timers.size, 0, 'Ready must cancel the startup timeout');
   assert.equal(nodes.size, 1); host.resize(); assert.equal(workers[0].sent.at(-1).type, 'resize');
@@ -54,8 +58,13 @@ try {
   assert.equal(await live.prepare(), false, 'Later loads must use the supported fallback');
 
   const timeout = new LoadingVortexPresentation(config), waiting = timeout.prepare(), timedWorker = workers.at(-1);
-  const [id, expire] = [...timers.entries()][0]; timers.delete(id); expire();
+  const [id, expire] = [...timers.entries()][0]; timers.delete(id); delays.delete(id); expire();
   assert.equal(await waiting, false); assert.equal(timeout.active, false); timedWorker.emit({ type: 'disposed' });
+  const retry = timeout.prepare(), retriedWorker = workers.at(-1);
+  assert.notEqual(retriedWorker, timedWorker, 'Temporary startup timeout must allow a later load to recover');
+  retriedWorker.emit({type:'initializing'}); retriedWorker.emit({type:'ready'});
+  assert.equal(await retry, true); assert.equal(timeout.diagnostics.failure, null);
+  timeout.release(); retriedWorker.emit({type:'disposed'});
   assert.equal(timers.size, 0); assert.equal(listeners.size, 0);
   console.log('PASS loading worker readiness, reuse, cancellation, timeout, failure coverage and resource release');
 } finally {

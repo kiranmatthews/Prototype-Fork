@@ -389,8 +389,8 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'secret-6': {name:'Coconut Cart Rally',levelId:'coconut-cart-rally',previewKey:'coconut-cart-rally',skateRace:true,gemReward:'win',bonus:false,relicTime:125,secretRequirement:'main-medals'},
 };
 
-/** Hand-placed coastal loops, in progression order. Coordinates are island-local. */
-export const CAMPAIGN_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly [number, number, number])[]> = {
+/** Original coastal slots, retained for exact saved-map migration. */
+const LEGACY_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly [number, number, number])[]> = {
   'island-1': [[-42,2,20],[-18,2,43],[22,3,39],[46,3.8,9],[24,2.4,-31],[-18,3,-39]],
   'island-2': [[-38,2.2,32],[-47,3,0],[-22,4.5,-34],[20,3,-36],[45,2,-8],[26,3,30]],
   'island-3': [[-40,2.4,30],[-42,3,-15],[-12,3.8,-42],[27,4,-32],[47,2.5,5],[18,3,40]],
@@ -398,6 +398,11 @@ export const CAMPAIGN_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly 
   'island-5': [[42,3,-26],[5,3.8,-42],[-36,4,-25],[-44,3,16],[-8,3,42],[32,4,30]],
   'hidden-shores': [[-48,2.6,8],[-34,3.2,-32],[4,4,-48],[42,3.2,-29],[52,3,10],[28,3.8,42],[-14,3.5,44],[-32,4,13]],
 };
+
+/** Progress winds screen-right when viewed from the offshore orbit camera. */
+export const CAMPAIGN_ISLAND_PATHS = Object.fromEntries(Object.entries(LEGACY_ISLAND_PATHS).map(([id, path]) =>
+  [id, ['island-2', 'island-3', 'island-4', 'hidden-shores'].includes(id) ? [...path].reverse() : path],
+)) as typeof LEGACY_ISLAND_PATHS;
 
 let previous = '';
 export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = CAMPAIGN_ISLANDS.flatMap(island =>
@@ -430,14 +435,15 @@ export function migrateCampaignMapPoints(points: number[][]): number[][] {
   if (points.length < 11 || points.length > CAMPAIGN_MAP_HUBS.length) return points;
   // Exact original six-island captures adopt the new geography. Preserve every
   // genuinely edited point set, including a one-coordinate change.
-  const groundArchipelago=CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub=>{
-    if(hub.islandId==='hidden-shores'&&CAMPAIGN_ISLANDS[5].levelKeys.includes(hub.progressKey)){
-      const i=CAMPAIGN_ISLANDS[5].levelKeys.indexOf(hub.progressKey),p=CAMPAIGN_ISLAND_PATHS['hidden-shores'][i];
-      return [310+p[0],210+p[2],0,p[1]];
-    }
-    const [x,y,z]=hub.mapPosition;return [x,z,0,y];
+  const archivedArchipelago = (groundSecret: boolean) => CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
+    const island = CAMPAIGN_ISLANDS.find(value => value.levelKeys.includes(hub.progressKey));
+    if (!island) { const [x,y,z]=hub.mapPosition; return [x,z,0,y]; }
+    const [x,y,z] = LEGACY_ISLAND_PATHS[island.id][island.levelKeys.indexOf(hub.progressKey)];
+    const centre = groundSecret && island.id === 'hidden-shores' ? [310,0,210] : island.centre;
+    return [centre[0]+x,centre[2]+z,0,centre[1]+y];
   });
-  if(points.every((p,i)=>p.length===4&&p.every((v,a)=>v===groundArchipelago[i][a])))
+  if([archivedArchipelago(false),archivedArchipelago(true)].some(version =>
+    points.every((p,i)=>p.length===4&&p.every((v,a)=>v===version[i][a]))))
     return CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]})=>[x,z,0,y]);
   const straightCentres = [-95,150,395,640,885,1155];
   const straight = CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {

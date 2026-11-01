@@ -7894,3 +7894,42 @@ approximately 21 minutes. At the user's explicit request, this chat now owns
 publication because the release coordinator is inactive; the pending crate-size
 and loading-title commits accompany this release. Evidence:
 [map navigation review](performance/map-navigation.json).
+
+
+## 2026-11-01 — One skater per island and forward coastal winding
+
+The user's correction supersedes the preceding two-endpoint implementation:
+there must be exactly one visible skater on each unlocked island. Six island
+residents replace twelve hub copies. The live rider alone occupies the active
+island during idle, walking and boardslides. Other islands keep one resident at
+the entry/exit facing campaign progress. During a pan both islands stay occupied,
+with the active rider hidden and an exact-position handoff at arrival.
+
+Uga, Spooky, Maynard and Secret Island previously wound screen-left. Reversing
+their coastal slot order makes all 32 forward coast links move screen-right
+under the existing offshore camera. Save identities, unlock order, complete
+authored geometry and movement tuning remain intact. Exact historical map
+captures adopt the new winding; even slightly edited custom maps are preserved.
+
+The first public audit also exposed four older scenery fetches still requesting
+PNG files after release packaging converted them losslessly to WebP. They now
+use the existing release-image resolver. A cold hosted geometry-lab start could
+exhaust the worker's eight-second deadline before its first frame. Download and
+GPU initialization now have separate bounded deadlines, title downloading no
+longer blocks field animation, and temporary startup timeouts retry on later
+loads. The title uses high-priority fetching with bounded cancellation.
+
+Focused checks passed for every hub/phase, all route tangents and direction
+pairs, exact old-map migrations, custom-map preservation, shared resources,
+gameplay locomotion and loading cancellation/retry. Real Chrome lite and native
+1920×1080 each passed all 32 forward coast links and ten island pans, with exactly
+one visible skater per island on every sampled frame, four decoded scenery
+images and zero console errors. Full CRT, native, ten-second title/worker
+download delays, reduced motion and fallback passed loading regressions. The
+worker stayed about 60 fps through forced 1.5-second game-thread stalls.
+
+`check:levels`, build and release-size checks passed: 999,247,445 bytes against
+the 1,000,000,000-byte limit. No published level-pack overwrite or `check:all`.
+Corrected prompt-to-playable: approximately 5 minutes; completed local visual
+validation: approximately 15 minutes. Direct publication remains explicitly
+authorized. Evidence: [corrected map and cold-loading review](performance/map-one-skater-and-cold-loading.json).

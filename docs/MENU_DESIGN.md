@@ -32,7 +32,7 @@ Player-facing menus are game screens, composed for a TV frame. They must not beh
 
 - Map Level Stats retains level selection and entry. Gameplay pause keeps the Level Select name and requires confirmation before abandoning the current run; cancel preserves it.
 - Map progression uses Left for previous and Right for next, including the first/last hub's links to adjacent islands. Camera rotation never remaps these directions. Reserve Up/Down for an authored fork with an obvious vertical relationship. Keyboard, stick, hints and empty-space taps share these slots; direct hub selection still follows the connected route.
-- Each unlocked island entry and exit hub already has a full skater before a camera pan. Both endpoints stay occupied throughout the transition; the active rider hands over at the same position and pose. Resident skaters share the authored surfaces and textures with independent bone poses, remain beneath CRT, and release their own resources when leaving the map.
+- Each unlocked island has exactly one visible skater. The active rider owns the current island during both idle and coast travel; other islands have one resident waiting at the entry or exit facing campaign progress. Both islands stay occupied during a pan, with an exact-position handoff and no duplicate on either coast. Coastal routes wind screen-right for forward progression. Resident skaters share the authored surfaces and textures with independent bone poses, remain beneath CRT, and release their own resources when leaving the map.
 - Level Select and Level Stats show only unlocked levels and islands. Locked names, previews and island pages remain hidden. Unlocked planned slots show Coming Soon without fabricated reward ownership. The localhost `playtest` inspection session reveals every slot without awarding progress. Selection never grants entry: the menu and host independently enforce campaign gates. Actual map travel still requires unlocked routes, including the all-bosses secret-island gate. Completed main courses remain available to older saves; loading another save immediately replaces their availability. See `docs/CAMPAIGN_ISLANDS.md` for the canonical roster.
 - Short level lists start at the top of their assigned region with normal row heights; do not stretch a single unlocked row to fill the list. Keep the 44px desktop / 48px touch minimum and bounded scrolling for longer lists.
 - Pause and Options use actions/options on the left and the overall collectibles sheet on the right. No progress bar or separate map Progress submenu.
@@ -118,6 +118,13 @@ renderer. Unsupported/failed worker startup uses the existing main-renderer
 vortex and captured final loading frame; a later worker failure retains opaque
 coverage until readiness. Shared
 prompt/map/touch ink is suppressed during loading, including cached Canvas ink.
+
+Cold worker downloads and GPU initialization have separate bounded deadlines.
+The worker paints its field before the optional title image finishes downloading;
+late lettering triggers a paint even with reduced motion. Title fetches have high
+priority and a bounded cancellation window. Temporary startup timeouts retry on
+the next load instead of permanently disabling independent animation. Missing
+graphics support and runtime context failures retain the compatibility fallback.
 
 `tools/test-loading-motion-browser.mjs` blocks the game thread for 1.5 seconds
 and verifies independent animation, live final preparation, absence of duplicate

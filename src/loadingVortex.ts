@@ -36,13 +36,18 @@ export class LoadingVortexPresentation {
     document.body.append(canvas);
     this.pending = new Promise(resolve => { this.settle = resolve; });
     const result = this.pending;
+    this.failure = null;
     try {
       const worker = new Worker(new URL('./loadingVortex.worker.ts', import.meta.url), { type: 'module' });
       this.worker = worker;
       this.starts++;
       worker.onmessage = ({ data }: MessageEvent<LoadingVortexResponse>) => {
         if (this.worker !== worker) return;
-        if (data.type === 'ready') {
+        if (data.type === 'initializing') {
+          // Download time is independent of GPU setup. A cold hosted bundle
+          // must not spend the renderer's initialization budget in the queue.
+          this.armTimeout(8000, 'Loading worker initialization timed out');
+        } else if (data.type === 'ready') {
           clearTimeout(this.timeout);
           this.ready = true;
           canvas.hidden = false;
@@ -52,7 +57,7 @@ export class LoadingVortexPresentation {
         } else if (data.type === 'failed') this.fail(data.reason);
       };
       worker.onerror = event => { event.preventDefault(); this.fail(event.message || 'Loading worker unavailable'); };
-      this.timeout = setTimeout(() => this.fail('Loading worker startup timed out'), 8000);
+      this.armTimeout(30000, 'Loading worker download timed out');
       const offscreen = canvas.transferControlToOffscreen();
       worker.postMessage({ type: 'start', canvas: offscreen, config: this.config() } satisfies LoadingVortexRequest, [offscreen]);
       document.addEventListener('visibilitychange', this.visibility);
@@ -97,9 +102,16 @@ export class LoadingVortexPresentation {
     this.pending = null;
   }
 
-  private fail(reason: string): void {
+  private armTimeout(ms: number, reason: string): void {
+    clearTimeout(this.timeout);
+    // A slow download/setup is retryable on the next load; unsupported WebGL
+    // and runtime failures still select the compatibility renderer permanently.
+    this.timeout = setTimeout(() => this.fail(reason, false), ms);
+  }
+
+  private fail(reason: string, disable = true): void {
     this.failure = reason;
-    this.disabled = true;
+    this.disabled = disable;
     const covering = this.ready ? this.canvas : null;
     this.release();
     if (covering) {

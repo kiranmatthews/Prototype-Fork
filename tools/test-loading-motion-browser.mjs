@@ -14,6 +14,8 @@ const cases = [
   { name: 'lite', query: '?playtest&level=codex-lab&lite', width: 1280, height: 720 },
   { name: 'full-crt', query: '?playtest&level=codex-lab', width: 1280, height: 720, crt: true },
   { name: 'native', query: '?playtest&level=codex-lab', width: 1920, height: 1080, native: true },
+  { name: 'slow-atlas', query: '?playtest&level=codex-lab', width: 1920, height: 1080, native: true, atlasDelay: 10000 },
+  { name: 'slow-worker', query: '?playtest&level=codex-lab', width: 1920, height: 1080, native: true, workerDelay: 10000 },
   { name: 'reduced', query: '?playtest&level=codex-lab', width: 390, height: 844, reduced: true },
   { name: 'fallback', query: '?playtest&level=codex-lab&lite', width: 960, height: 720, fallback: true },
   { name: 'home-fallback-reduced', query: '?', width: 390, height: 844, fallback: true, reduced: true },
@@ -45,6 +47,14 @@ try {
       };
     }, test);
     const page = await context.newPage();
+    if (test.atlasDelay) await page.route('**/fonts/roo-counter-*', async route => {
+      await new Promise(resolve => setTimeout(resolve, test.atlasDelay));
+      await route.continue();
+    });
+    if (test.workerDelay) await page.route('**/*loadingVortex.worker*', async route => {
+      await new Promise(resolve => setTimeout(resolve, test.workerDelay));
+      await route.continue();
+    });
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     try {
@@ -59,7 +69,9 @@ try {
         'Startup must remove loading text before revealing the title or gameplay');
       const initialTitle = await page.evaluate(fallback => fallback ? window.__startupLoadingTitle :
         window.__loadingWorkerStats.find(s => s.title?.ready)?.title, test.fallback);
-      assert.equal(initialTitle?.ready, true, 'Cold startup must display Roo loading text');
+      if (!test.atlasDelay) assert.equal(initialTitle?.ready, true, 'Cold startup must display Roo loading text');
+      if (test.atlasDelay) assert.ok(await page.evaluate(() => window.__loadingWorkerStats.some(s => s.frames > 1 && !s.title?.ready)),
+        'The worker must animate while the delayed title image is downloading');
       await page.evaluate(() => {
         const g = window.__game, f = g.gameFlow;
         window.__loadingWorkerStats = [];
@@ -78,6 +90,8 @@ try {
         function assertSwitch(result) { if (!result) throw Error('Level switch failed'); }
       });
       await page.waitForFunction(() => window.__loadingHeld === 'warm', null, { timeout: 180000 });
+      if (test.atlasDelay) await page.waitForFunction(() => window.__game.getLoadingDiagnostics().animation.title?.ready,
+        null, {timeout:20000});
       const warm = await page.evaluate(() => ({ animation: window.__game.getLoadingDiagnostics().animation,
         primary: window.__game.getGameFlowVortexDiagnostics().renderedFrames,
         title: window.__game.getGameFlowVortexDiagnostics().loadingTitle }));

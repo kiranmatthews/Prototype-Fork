@@ -13,7 +13,8 @@ try{
   const {Player}=await server.ssrLoadModule('/src/player.ts');
   const {Level,findLevel}=await server.ssrLoadModule('/src/level.ts');
   const {WorldMapController}=await server.ssrLoadModule('/src/worldMapController.ts');
-  const {CAMPAIGN_MAP_EDGES}=await server.ssrLoadModule('/src/campaign.ts');
+  const {CAMPAIGN_MAP_EDGES,campaignLevelByKey}=await server.ssrLoadModule('/src/campaign.ts');
+  const {islandViewAngle}=await server.ssrLoadModule('/src/mapView.ts');
   const a=await server.ssrLoadModule('/src/animation/index.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const replay=JSON.parse(await readFile(new URL('./fixtures/world-map-skid-inputs.json',import.meta.url),'utf8'));
@@ -22,6 +23,13 @@ try{
     assert.equal(level.campaignMapNeighbor(edge.from,1,0,()=>true),edge.to,'Next hub must use right');
     assert.equal(level.campaignMapNeighbor(edge.to,-1,0,()=>true),edge.from,'Previous hub must use left');
     assert.equal(level.campaignMapNeighbor(edge.from,1,0,()=>false),null,'Direction must not bypass locks');
+    if(campaignLevelByKey(edge.from).islandId===campaignLevelByKey(edge.to).islandId){
+      for(let i=0;i<=40;i++){
+        const sample=level.campaignMapTravel(edge.from,edge.to,i/40),centre=level.campaignMapIslandCentre(edge.from);
+        const angle=islandViewAngle(sample.position,centre),right=new THREE.Vector3(Math.cos(angle),0,-Math.sin(angle));
+        assert.ok(sample.tangent.dot(right)>.2,`${edge.from} → ${edge.to} travels screen-left at ${i}/40`);
+      }
+    }
   }
   p.enterLevel(replay.level);p.respawn(level,true);
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(a.RigBinding.fromSculptRuntime(p.animationRig.root).definition));
@@ -57,6 +65,9 @@ try{
   for(let f=0;f<170;f++){
     map.step(1/60,input);level.update(1/60);
     if(!p.group.visible)hidden++;
+    const counts=new Map();for(const skater of map.diagnostics.skaters)if(skater.visible)counts.set(skater.island,(counts.get(skater.island)??0)+1);
+    if(p.group.visible){const id=campaignLevelByKey(map.selectedKey).islandId;counts.set(id,(counts.get(id)??0)+1);}
+    assert.ok([...counts.values()].every(n=>n===1),'More than one skater on an island');
     if(map.moving)for(const key of ['jungle-cup','custard-creek'])assert.ok(map.diagnostics.skaters.find(s=>s.key===key)?.visible, 'Empty hub during island pan: '+key);
     assert.notEqual(p.animationClipHint,'player.grind','island pan entered an ocean boardslide');
     assert.equal(runtime.diagnostics.transientClipId,null,'map inherited a gameplay one-shot');
