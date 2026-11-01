@@ -137,6 +137,9 @@ void main(){
       this.material.uniforms.tDepth.value=this.target!.depthTexture;
       this.material.uniforms.depthProjection.value.set(camera.projectionMatrix.elements[10],camera.projectionMatrix.elements[14]);
       this.composite.layers.mask=cameraMask;scene.add(this.composite);
+      // An ocean primary may already own the opaque colour/depth beneath us.
+      // Clear the cloud target above, but preserve the caller's main-pass policy.
+      renderer.autoClear=autoClear;
       renderer.render(scene,camera);mainRendered=true;this.frames++;
       return true;
     }finally{

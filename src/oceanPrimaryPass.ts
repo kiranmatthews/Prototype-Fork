@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
+import type { SceneRenderCallback } from './frozenScenePass';
 
 type Phase = 0 | 1 | 2; // opaque, transparent opaque-texture backdrop, remaining
 
@@ -123,6 +124,7 @@ export class OceanPrimaryPass {
     camera: THREE.Camera,
     primary: THREE.WebGLRenderTarget,
     opaque: THREE.WebGLRenderTarget,
+    renderRemaining?: SceneRenderCallback,
   ): void {
     const oldTarget = renderer.getRenderTarget();
     const oldFace = renderer.getActiveCubeFace();
@@ -173,7 +175,7 @@ export class OceanPrimaryPass {
       }
       this.select(2, true);
       renderer.setRenderTarget(primary);
-      renderer.render(scene, camera);
+      if (!renderRemaining?.(renderer, scene, camera, primary)) renderer.render(scene, camera);
     } finally {
       this.restoreMasks();
       this.shadowSourceScene = null;

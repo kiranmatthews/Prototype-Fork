@@ -6,12 +6,14 @@ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
  * All views use the same density field and sampling budget, including captures.
  * Conceptual references: Guerrilla's 2015 cloud presentation and GPU Gems 39.
  * Implementation is original; SimplexNoise is the existing MIT Three.js addon. */
-export function createCloudPlatform(width: number, depth: number, seed: number, landing = true): THREE.Mesh {
+export function createCloudPlatform(width: number, depth: number, seed: number, landing = true, padding = 0): THREE.Mesh {
   let state=seed|0;
   const random=()=>{state=Math.imul(state,1664525)+1013904223|0;return (state>>>0)/4294967296;};
   const noise=new SimplexNoise({random});
-  const min=new THREE.Vector3(-width/2-.5,-6.2,-depth/2-1.3);
-  const size=new THREE.Vector3(width+1,8.6,depth+2.6);
+  // Free-floating scenery needs room for curls beyond the nominal footprint.
+  // Padding expands only the sampling domain, never the density itself.
+  const min=new THREE.Vector3(-width/2-.5-padding,-6.2,-depth/2-1.3-padding);
+  const size=new THREE.Vector3(width+1+padding*2,8.6,depth+2.6+padding*2);
   const nx=Math.ceil(size.x/.16),ny=56,nz=Math.ceil(size.z/.16);
   const count=nx*ny*nz,data=new Uint8Array(count*4),density=new Float32Array(count);
   const smoothMin=(a:number,b:number,k:number)=>{
@@ -83,7 +85,7 @@ export function createCloudPlatform(width: number, depth: number, seed: number, 
   const material=new THREE.ShaderMaterial({
     name:'Cumulus density · sun extinction and multiple scattering',glslVersion:THREE.GLSL3,
     transparent:true,depthWrite:true,side:THREE.BackSide,fog:true,
-    uniforms:{...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),uVolume:{value:texture},uMin:{value:min},uSize:{value:size}},
+    uniforms:{...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),uVolume:{value:texture},uMin:{value:min},uSize:{value:size},uOpacity:{value:1}},
     vertexShader:`varying vec3 vOrigin;varying vec3 vDirection;
 void main(){
   vOrigin=(inverse(modelMatrix)*vec4(cameraPosition,1.0)).xyz;
@@ -93,7 +95,7 @@ void main(){
     fragmentShader:`precision highp sampler3D;
 out vec4 cloudOutput;
 #define gl_FragColor cloudOutput
-uniform sampler3D uVolume;uniform vec3 uMin;uniform vec3 uSize;
+uniform sampler3D uVolume;uniform vec3 uMin;uniform vec3 uSize;uniform float uOpacity;
 uniform mat4 modelViewMatrix;uniform mat4 projectionMatrix;
 varying vec3 vOrigin;varying vec3 vDirection;
 #include <fog_pars_fragment>
@@ -126,7 +128,7 @@ void main(){
   vec4 view=modelViewMatrix*vec4(vOrigin+ray*first,1.0);
   vec4 clip=projectionMatrix*view;
   gl_FragDepth=clip.z/clip.w*.5+.5;
-  gl_FragColor=vec4(sum.rgb/max(sum.a,.001),sum.a);
+  gl_FragColor=vec4(sum.rgb/max(sum.a,.001),sum.a*uOpacity);
   #ifdef USE_FOG
     float cloudFog=smoothstep(fogNear,fogFar,-view.z);
     gl_FragColor.rgb=mix(gl_FragColor.rgb,fogColor,cloudFog);

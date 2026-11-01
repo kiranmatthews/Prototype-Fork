@@ -1,0 +1,11 @@
+{
+  "result": {
+    "changedPixels": 0,
+    "maxError": 0,
+    "opaqueForegroundPixels": 12579,
+    "height": 360,
+    "failureRecovery": true,
+    "glError": 0
+  },
+  "errors": []
+}

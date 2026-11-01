@@ -1,0 +1,372 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "cases": [
+    {
+      "mode": "native",
+      "errors": [],
+      "matteRequests": [],
+      "views": [
+        {
+          "selected": "secret-1",
+          "clouds": 18,
+          "textures": 3,
+          "pass": {
+            "enabled": true,
+            "featherEdges": true,
+            "heightLimit": 360,
+            "width": 576,
+            "height": 360,
+            "clouds": 18,
+            "frames": 258,
+            "targetBytes": 4147200
+          },
+          "canvas": [
+            1600,
+            1000
+          ],
+          "water": {
+            "shoreContourSegments": 3662,
+            "shoreFieldBuildMs": 185.69999998807907,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 231,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 85367,
+            "tris": 169056,
+            "shoreSamples": 661,
+            "sceneWidth": 1600,
+            "sceneHeight": 1000,
+            "nativeDrawingBufferWidth": 1600,
+            "nativeDrawingBufferHeight": 1000,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 672,
+            "reflectionHeight": 420,
+            "prepassWidth": 1600,
+            "prepassHeight": 1000,
+            "reflectionRenders": 231,
+            "prepassRenders": 231,
+            "quality": "full"
+          }
+        },
+        {
+          "selected": "secret-4",
+          "clouds": 18,
+          "textures": 3,
+          "pass": {
+            "enabled": true,
+            "featherEdges": true,
+            "heightLimit": 360,
+            "width": 576,
+            "height": 360,
+            "clouds": 18,
+            "frames": 347,
+            "targetBytes": 4147200
+          },
+          "canvas": [
+            1600,
+            1000
+          ],
+          "water": {
+            "shoreContourSegments": 3662,
+            "shoreFieldBuildMs": 224.20000004768372,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 70,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 85367,
+            "tris": 169056,
+            "shoreSamples": 661,
+            "sceneWidth": 1600,
+            "sceneHeight": 1000,
+            "nativeDrawingBufferWidth": 1600,
+            "nativeDrawingBufferHeight": 1000,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 672,
+            "reflectionHeight": 420,
+            "prepassWidth": 1600,
+            "prepassHeight": 1000,
+            "reflectionRenders": 70,
+            "prepassRenders": 70,
+            "quality": "full"
+          }
+        },
+        {
+          "selected": "secret-5",
+          "clouds": 18,
+          "textures": 3,
+          "pass": {
+            "enabled": true,
+            "featherEdges": true,
+            "heightLimit": 360,
+            "width": 576,
+            "height": 360,
+            "clouds": 18,
+            "frames": 442,
+            "targetBytes": 4147200
+          },
+          "canvas": [
+            1600,
+            1000
+          ],
+          "water": {
+            "shoreContourSegments": 3662,
+            "shoreFieldBuildMs": 199,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 71,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 85367,
+            "tris": 169056,
+            "shoreSamples": 661,
+            "sceneWidth": 1600,
+            "sceneHeight": 1000,
+            "nativeDrawingBufferWidth": 1600,
+            "nativeDrawingBufferHeight": 1000,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 672,
+            "reflectionHeight": 420,
+            "prepassWidth": 1600,
+            "prepassHeight": 1000,
+            "reflectionRenders": 71,
+            "prepassRenders": 71,
+            "quality": "full"
+          }
+        },
+        {
+          "selected": "secret-8",
+          "clouds": 18,
+          "textures": 3,
+          "pass": {
+            "enabled": true,
+            "featherEdges": true,
+            "heightLimit": 360,
+            "width": 576,
+            "height": 360,
+            "clouds": 18,
+            "frames": 523,
+            "targetBytes": 4147200
+          },
+          "canvas": [
+            1600,
+            1000
+          ],
+          "water": {
+            "shoreContourSegments": 3662,
+            "shoreFieldBuildMs": 177.69999998807907,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 59,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 85367,
+            "tris": 169056,
+            "shoreSamples": 661,
+            "sceneWidth": 1600,
+            "sceneHeight": 1000,
+            "nativeDrawingBufferWidth": 1600,
+            "nativeDrawingBufferHeight": 1000,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 672,
+            "reflectionHeight": 420,
+            "prepassWidth": 1600,
+            "prepassHeight": 1000,
+            "reflectionRenders": 59,
+            "prepassRenders": 59,
+            "quality": "full"
+          }
+        }
+      ],
+      "stamp": "Codex/sol fork · build 11-01 09:29 UTC",
+      "pan": {
+        "before": {
+          "selected": "quagmire-boss",
+          "clouds": 18,
+          "textures": 3,
+          "pass": {
+            "enabled": true,
+            "featherEdges": true,
+            "heightLimit": 360,
+            "width": 576,
+            "height": 360,
+            "clouds": 18,
+            "frames": 61,
+            "targetBytes": 4147200
+          },
+          "canvas": [
+            1600,
+            1000
+          ],
+          "water": {
+            "shoreContourSegments": 3662,
+            "shoreFieldBuildMs": 185.69999998807907,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 34,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 85367,
+            "tris": 169056,
+            "shoreSamples": 661,
+            "sceneWidth": 1600,
+            "sceneHeight": 1000,
+            "nativeDrawingBufferWidth": 1600,
+            "nativeDrawingBufferHeight": 1000,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 672,
+            "reflectionHeight": 420,
+            "prepassWidth": 1600,
+            "prepassHeight": 1000,
+            "reflectionRenders": 34,
+            "prepassRenders": 34,
+            "quality": "full"
+          }
+        },
+        "after": {
+          "selected": "secret-1",
+          "clouds": 18,
+          "textures": 3,
+          "pass": {
+            "enabled": true,
+            "featherEdges": true,
+            "heightLimit": 360,
+            "width": 576,
+            "height": 360,
+            "clouds": 18,
+            "frames": 215,
+            "targetBytes": 4147200
+          },
+          "canvas": [
+            1600,
+            1000
+          ],
+          "water": {
+            "shoreContourSegments": 3662,
+            "shoreFieldBuildMs": 185.69999998807907,
+            "occludedPassFrames": 0,
+            "primaryReuseRenders": 188,
+            "primaryReuseFallbacks": 0,
+            "primaryReuseFallbackReason": null,
+            "verts": 85367,
+            "tris": 169056,
+            "shoreSamples": 661,
+            "sceneWidth": 1600,
+            "sceneHeight": 1000,
+            "nativeDrawingBufferWidth": 1600,
+            "nativeDrawingBufferHeight": 1000,
+            "preCrtSizeOverride": false,
+            "reflectionWidth": 672,
+            "reflectionHeight": 420,
+            "prepassWidth": 1600,
+            "prepassHeight": 1000,
+            "reflectionRenders": 188,
+            "prepassRenders": 188,
+            "quality": "full"
+          }
+        }
+      },
+      "normal": {
+        "selected": "secret-8",
+        "clouds": 18,
+        "textures": 3,
+        "pass": {
+          "enabled": true,
+          "featherEdges": true,
+          "heightLimit": 360,
+          "width": 576,
+          "height": 360,
+          "clouds": 18,
+          "frames": 579,
+          "targetBytes": 4147200
+        },
+        "canvas": [
+          1152,
+          720
+        ],
+        "water": {
+          "shoreContourSegments": 3662,
+          "shoreFieldBuildMs": 177.69999998807907,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 115,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 85367,
+          "tris": 169056,
+          "shoreSamples": 661,
+          "sceneWidth": 1152,
+          "sceneHeight": 720,
+          "nativeDrawingBufferWidth": 1152,
+          "nativeDrawingBufferHeight": 720,
+          "preCrtSizeOverride": true,
+          "reflectionWidth": 484,
+          "reflectionHeight": 302,
+          "prepassWidth": 1152,
+          "prepassHeight": 720,
+          "reflectionRenders": 115,
+          "prepassRenders": 115,
+          "quality": "full"
+        }
+      },
+      "portrait": {
+        "selected": "secret-8",
+        "clouds": 18,
+        "textures": 3,
+        "pass": {
+          "enabled": true,
+          "featherEdges": true,
+          "heightLimit": 360,
+          "width": 166,
+          "height": 360,
+          "clouds": 18,
+          "frames": 642,
+          "targetBytes": 1195200
+        },
+        "canvas": [
+          390,
+          844
+        ],
+        "water": {
+          "shoreContourSegments": 3662,
+          "shoreFieldBuildMs": 177.69999998807907,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 178,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 85367,
+          "tris": 169056,
+          "shoreSamples": 661,
+          "sceneWidth": 390,
+          "sceneHeight": 844,
+          "nativeDrawingBufferWidth": 390,
+          "nativeDrawingBufferHeight": 844,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 164,
+          "reflectionHeight": 354,
+          "prepassWidth": 390,
+          "prepassHeight": 844,
+          "reflectionRenders": 178,
+          "prepassRenders": 178,
+          "quality": "full"
+        }
+      },
+      "exit": {
+        "selected": "secret-8",
+        "clouds": 0,
+        "textures": 0,
+        "pass": {
+          "enabled": true,
+          "featherEdges": true,
+          "heightLimit": 360,
+          "width": 0,
+          "height": 0,
+          "clouds": 0,
+          "frames": 651,
+          "targetBytes": 0
+        },
+        "canvas": [
+          1600,
+          1000
+        ],
+        "water": null
+      },
+      "disposed": 3
+    }
+  ]
+}

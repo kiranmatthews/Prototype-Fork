@@ -1151,11 +1151,11 @@ function renderOceanPrimaryScene(
 ): boolean {
   const water = level.water;
   if (!water) return false;
-  if (water.renderPrimary(activeRenderer, activeScene, activeCamera, target)) return true;
+  if (water.renderPrimary(activeRenderer, activeScene, activeCamera, target, renderCloudPrimaryScene)) return true;
   // Reduced-resolution water and direct/scissored presentation retain their
   // original passes when the opaque surface cannot be reused exactly.
   water.renderPasses(activeRenderer, activeScene, activeCamera);
-  return false;
+  return renderCloudPrimaryScene(activeRenderer, activeScene, activeCamera, target);
 }
 
 function updateSceneryForCurrentView(): void {

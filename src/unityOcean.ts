@@ -9,6 +9,7 @@
  */
 import * as THREE from "three";
 import { OceanPrimaryPass } from "./oceanPrimaryPass";
+import type { SceneRenderCallback } from './frozenScenePass';
 import { SEA_BACKDROP_RADIUS, seaBackdropRadius, createSeaDiskGeometry } from "./seaBackdrop";
 import { SURF_DEFAULTS, SURF_GLSL, SWELL_GLSL, sampleSurf, sampleRunup, createShoreField, type ShoreField, type SurfParams } from './coastalSurf';
 
@@ -2142,6 +2143,7 @@ export class UnityOcean {
     scene: THREE.Scene,
     camera: THREE.Camera,
     target: THREE.WebGLRenderTarget | null,
+    renderRemaining?: SceneRenderCallback,
   ): boolean {
     if (this.disposed || this.quality !== "full" || !this.debug.prepass || this.prepassScale !== 1)
       return this.rejectPrimary("opaque prepass is disabled or reduced");
@@ -2181,7 +2183,7 @@ export class UnityOcean {
       const previousHasPrepass = this.oceanMaterial.uniforms.uHasPrepass.value;
       this.oceanMaterial.uniforms.uHasPrepass.value = 1;
       try {
-        this.primaryPass.render(renderer, scene, camera, target, opaque);
+        this.primaryPass.render(renderer, scene, camera, target, opaque, renderRemaining);
       } catch (error) {
         this.oceanMaterial.uniforms.uHasPrepass.value = previousHasPrepass;
         throw error;

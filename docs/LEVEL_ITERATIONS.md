@@ -7933,3 +7933,34 @@ the 1,000,000,000-byte limit. No published level-pack overwrite or `check:all`.
 Corrected prompt-to-playable: approximately 5 minutes; completed local visual
 validation: approximately 15 minutes. Direct publication remains explicitly
 authorized. Evidence: [corrected map and cold-loading review](performance/map-one-skater-and-cold-loading.json).
+
+
+## 2026-11-01 — Secret Island volumetric cloud banks
+
+Replaced the Secret Island map's PNG cloud mattes with 18 drifting 3D cumulus
+banks using the existing Skystream bonus renderer. Three seeded density fields
+share about 9.7 MiB of voxel storage. Expanded sampling margins contain the
+complete billows, and selection-facing banks fade gently to keep hubs readable.
+Cloud geometry stays identical through map rotation and reflections.
+
+The existing feathered 360p cloud layer now composes with the ocean's reused
+opaque frame. Island geometry and interface retain their chosen resolution.
+The optional composition callback preserves colour/depth and restores state
+after failures; existing cloud-platform defaults remain unchanged. No edits to
+the island terrain, progression, skybox, collision or movement tuning.
+
+Focused density/resource checks, cloud-pass state restoration and ocean sizing
+passed. A real GPU comparison found zero differing pixels between direct and
+reused composition, including sharp foreground geometry. Chrome lite/native,
+normal 720p/CRT, portrait, the Quagmire-to-Secret-Island pan and map teardown
+passed without console errors or PNG matte requests. The Skystream bonus also
+passes split-screen, context-loss recovery and exit checks. Short native-scene
+pacing samples improved from 27–34 fps to 40–44 fps with the 360p cloud pass on
+this shared Mac; these are whole-game observations, not a general FPS promise.
+
+Prompt-to-playable: approximately 5 minutes; finished cloud-edge and resource
+review: approximately 12 minutes. The newer map navigation/roster update is
+preserved in the final package. Production native/normal/portrait smoke, build
+and release-size checks pass (999,247,741 / 1,000,000,000 bytes). Public
+verification is recorded in the shared release handoff. No full-suite run or level-pack
+rewrite. Evidence: [Secret Island clouds](secret-island-clouds/README.md).
