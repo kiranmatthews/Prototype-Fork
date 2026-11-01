@@ -52,6 +52,8 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
     continue;
   }
   if (data.v !== 1) errors.push(`${label}.data.v must be 1`);
+  if (data.crateLayoutRevision !== undefined && data.crateLayoutRevision !== 1)
+    errors.push(`${label}.data.crateLayoutRevision must be 1 when present`);
   if (data.edgeGrindingRevision !== undefined && data.edgeGrindingRevision !== 1)
     errors.push(`${label}.data.edgeGrindingRevision must be 1 when present`);
   if (!finiteTuple(data.spawn, 3)) errors.push(`${label}.data.spawn must be three finite numbers`);

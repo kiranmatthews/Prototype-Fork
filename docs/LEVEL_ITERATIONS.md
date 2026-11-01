@@ -7806,3 +7806,35 @@ delayed-font/assets/GPU browser gates, reduced motion, fallback, resize, startup
 failure recovery, full rendering, build and release size passed. Total level
 preparation time is not claimed to improve. Prompt-to-validated playable fix:
 approximately 20 minutes. Evidence: [loading animation measurements](performance/loading-animation.json).
+
+
+## 2026-11-01 — Global crates enlarged by 20%
+
+Ordinary crates, metal crates and checkpoints now measure 1.152 m; race item
+boxes measure 2.304 m. Art, collision, settling, reset, capture and grind edges
+share these dimensions. A versioned one-time migration expands nearby legacy
+formations, preserves their support chains, leaves isolated placements in place,
+and keeps buried Nitro below the surface. Saved/editor layouts carry
+`crateLayoutRevision: 1` so reopening them cannot enlarge them again. New source
+layouts authored with `CRATE_SIZE` should set that revision; unmarked layouts
+retain the legacy .96 m authoring contract and migrate when loaded.
+
+Widened legacy one-line bonus containment to retain crate clearance. Corrected
+diagonal row spacing and fitted the Haunted Hassle foundry's enlarged steel
+piers, foundations and skate lids to the existing road heights. Pier counts,
+three-switch wiring and the reward/main routes are preserved; submerged legs
+absorb the extra height. No movement tuning or published level-pack overwrite.
+
+Audited all 70 built-in entries and 14 published snapshots: 4,864 crates and
+checkpoints, unchanged counts, zero crate overlaps, zero lost ground supports,
+zero changed stack contacts and no new wall intersections. The input-only
+foundry run completed both routes, all switches, the checkpoint and a real
+fall/respawn with 700 constructed steel crates retained. Six-high stack collapse,
+reset, stomps, arrow/metal/Nitro contact, multi-hit/life rewards, TNT fuses, legacy
+metal, checkpoint size and saved/native capture passed focused regressions.
+Real Chrome lite/full/native 1920×1080 and compiled-production checks passed with
+matching authored wood geometry/colliders and no console errors. `check:levels`,
+build and release-size checks passed (999,218,971 / 1,000,000,000 bytes).
+Prompt-to-playable: approximately 20 minutes; complete local validation:
+approximately 26 minutes. Release publication is owned by the active coordinator.
+Evidence: [global crate-size audit](performance/global-crate-size.json).

@@ -1,3 +1,4 @@
+import { CRATE_SIZE } from './crateDimensions';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -145,7 +146,7 @@ export function updateExplosiveBundle(bundle:ExplosiveBundle,remaining:number|un
     }
   }
 }
-export function createExplosiveBundle(nitro:boolean,size=.96):ExplosiveBundle{
+export function createExplosiveBundle(nitro:boolean,size=CRATE_SIZE):ExplosiveBundle{
   const body=new THREE.Mesh(new THREE.BoxGeometry(size,size,size),new THREE.MeshLambertMaterial({color:0xffffff,visible:false}));
   body.name=nitro?'Nitro dynamite bundle':'TNT dynamite bundle';const visual=new THREE.Group();visual.scale.setScalar(size);body.add(visual);
   const pulse={value:0};const fallbackGeometry=prepareGeometry(new THREE.BoxGeometry(1,1,1));fallbackGeometry.userData.shared=false;

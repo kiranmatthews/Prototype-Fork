@@ -110,6 +110,7 @@ console.error = (...args) => { if (!expectedAssetLog(args[0])) originalError(...
 const fixtures = [];
 try {
   const { Level, normalizeCustomLevelData, setEditorBuild } = await server.ssrLoadModule("/src/level.ts");
+  const { CRATE_SIZE } = await server.ssrLoadModule("/src/crateDimensions.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
   const { SPECIAL_POINTS_TO_FULL } = await server.ssrLoadModule("/src/specialTricks.ts");
@@ -213,12 +214,12 @@ try {
   const prepareStomp = (player) => {
     player.state = "air"; player.grounded = false; player.spinTimer = 0;
     player.slamActive = false; player.freeSkate = false; player.speed = 0;
-    player.prevPos.set(0, 1.1, 0); player.pos.set(0, 0.9, 0); player.vVel = -10;
+    player.prevPos.set(0, CRATE_SIZE + .14, 0); player.pos.set(0, CRATE_SIZE - .06, 0); player.vVel = -10;
   };
   const stomp = create("multihit");
   assert.equal(stomp.crate.woodCrate.hitsRemaining, 5, "new wood crate needs five hits");
   const collisionSize = stomp.crate.box.getSize(new THREE.Vector3()).toArray();
-  assert.deepEqual(collisionSize, [.96,.96,.96], "replacement changed the cube collider");
+  assert.deepEqual(collisionSize, [CRATE_SIZE,CRATE_SIZE,CRATE_SIZE], "crate collider differs from the shared dimensions");
   for (let hit = 1; hit <= 5; hit++) {
     prepareStomp(stomp.player);
     stomp.player.collide(stomp.level);

@@ -4,6 +4,7 @@ export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';
 export { CARLISLE_TIDAL_RELAY_LEVEL } from './carlisle-tidal-relay';
 export { WATERFALL_CLIMB_LEVEL } from './waterfall-climb';
 export { TRIBAL_RUN_LEVEL } from './tribal-run';
+import { CRATE_SIZE, LEGACY_CRATE_SIZE, migrateCrateLayout } from '../crateDimensions';
 import {uncrossOutline} from './uncross-outline';
 import {dressKookRooftops} from './rooftop-kook-art';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
@@ -22,6 +23,7 @@ export { BLOCKWORKS_GROUND, ROUTE_END, routePoint, routeTangent, routeYaw, route
 // jump gaps so forward input agrees with each takeoff-to-landing line.
 // Each district combines mechanics and hands its momentum into the next one.
 const C:CustomComponent[]=[];
+const currentSizeCrates = new Set<CustomComponent>();
 const groups:CustomGroup[]=[{id:1,nm:'Course-aligned camera nodes',editorOnly:true},{id:2,nm:'Shared excavated ground',editorOnly:true}];
 const GREY=['#aeb5bd','#8a96a2','#c5cbd0','#717f8d'];
 const AMBER='#d5a850',ICE='#a6dfe9';
@@ -113,13 +115,14 @@ function switchBox(s:number,y:number,u:number,group:number,name:string){
  const p=routePoint(s,y,u);groups.push({id:group,nm:name});add({t:'crate',p,kind:'bang',grp:group,nm:name});BLOCKWORKS_SWITCHES.push({name,group,p});
 }
 function steelPier(s:number,top:number,u:number,group:number,grp:number,pitY:number,size=3){
- // All crates remain on the world grid. Their portal legs materialize with
- // the deck; permanent feet stay below the lethal channel until activated.
- const p=routePoint(s,top,u),base=top-.96,n=Math.ceil((base-pitY+1.5)/.96),foot=base-n*.96;
- box(p,foot,size*.96,size*.96,grp,0,GREY[3],'Submerged steel footing');
- const half=(size-1)*.48;
- for(let h=0;h<n;h++)for(const dx of [-half,half])add({t:'crate',p:[p[0]+dx,foot+h*.96,p[2]],kind:'metal',outline:true,grp:group});
- for(let x=0;x<size;x++)for(let z=0;z<size;z++)add({t:'crate',p:[p[0]+(x-(size-1)/2)*.96,base,p[2]+(z-(size-1)/2)*.96],kind:'metal',outline:true,grp:group});
+ // Keep structural crate lids at their authored road/ramp height. Extra
+ // height goes into the submerged legs, while every box uses the full size.
+ const p=routePoint(s,top,u),base=top-CRATE_SIZE,n=Math.ceil((top-LEGACY_CRATE_SIZE-pitY+1.5)/LEGACY_CRATE_SIZE),foot=base-n*CRATE_SIZE;
+ box(p,foot,size*CRATE_SIZE,size*CRATE_SIZE,grp,0,GREY[3],'Submerged steel footing');
+ const half=(size-1)*CRATE_SIZE/2;
+ const place=(p:Point)=>{const c:CustomComponent={t:'crate',p,kind:'metal',outline:true,grp:group};add(c);currentSizeCrates.add(c);};
+ for(let h=0;h<n;h++)for(const dx of [-half,half])place([p[0]+dx,foot+h*CRATE_SIZE,p[2]]);
+ for(let x=0;x<size;x++)for(let z=0;z<size;z++)place([p[0]+(x-(size-1)/2)*CRATE_SIZE,base,p[2]+(z-(size-1)/2)*CRATE_SIZE]);
 }
 function mover(c:CustomComponent){add(c);BLOCKWORKS_MOVERS.push(c);}
 
@@ -222,7 +225,8 @@ export const BLOCKWORKS_VERT_AQUEDUCT={
 export const BLOCKWORKS_FOUNDRY={
  approach:routePoint(1080,3.6),stairsKey:routePoint(1085,3.6,-4.8),rewardKey:routePoint(1085,3.6,4.8),bridgeKey:routePoint(1136,8.4,-5.4),
  stairs:Array.from({length:5},(_,i)=>({s:1109.5+i*5,top:4.56+i*.96,skateTop:4.76+i*.96,u:-5.4})),
- bridge:[...Array.from({length:9},(_,i)=>({s:1143+i*6,top:8.4,u:Math.min(0,-5.4+i*1.8)})),{s:1195,top:8.4,u:0}],
+ bridge:Array.from({length:10},(_,i)=>({s:1143+i*(51/9),top:8.4,u:Math.min(0,-5.4+i*1.8)})),
+ reward:Array.from({length:4},(_,i)=>({s:1108.8+i*5.4,top:3.6,u:7+Math.min(i,2)*2})),
  exit:routePoint(1200,8.4),groups:{stairs:100,reward:101,bridge:102},
 };
 {
@@ -233,7 +237,7 @@ export const BLOCKWORKS_FOUNDRY={
  box(routePoint(1136,8.4,-5.4),8.4,7.2,7.2,g,0,GREY[2],'Upper switch tower');
  switchBox(1136,8.4,-5.4,102,'Upper key · main curved crossing');
  for(const p of f.bridge)steelPier(p.s,p.top,p.u,102,g,-2.4,4);
- for(let i=0;i<4;i++)steelPier(1110.5+i*5,3.6,7+Math.min(i,2)*2,101,g,-2.4,4);
+ for(const p of f.reward)steelPier(p.s,p.top,p.u,101,g,-2.4,4);
  const reward=routePoint(1131,3.6,11);
  box(reward,3.6,10,6,g,0,GREY[2],'Lower reward and bonus perch');crate(1131,3.6,'mask',g,11);fruit(1131,4.9,g,9);
  add({t:'bonusplatform',p:[reward[0]+3,3.6,reward[2]],to:[reward[0]-1.6,3.7,reward[2]+1],grp:g,nm:'Optional foundry bonus'});
@@ -325,12 +329,12 @@ joinBlocks(skateBlock(1823,6,7.2,14),skateBlock(1836,8.4,4.8,12,-5),16,'Relay we
 const f=BLOCKWORKS_FOUNDRY;
 let previous=skateBlock(1100,3.6,5,12,-5.4);
 for(const [i,step]of f.stairs.entries()){
- const next=skateBlock(step.s,step.skateTop,3.84,3.84,step.u,0);
+ const next=skateBlock(step.s,step.skateTop,4*CRATE_SIZE,4*CRATE_SIZE,step.u,0);
  addSkateLid(C,next,f.groups.stairs);
  joinBlocks(previous,next,f.groups.stairs,`Switch stair wedge ${i+1}`,1.8,true);previous=next;
 }
-for(const step of f.bridge)addSkateLid(C,skateBlock(step.s,step.top+.035,3.84,3.84,step.u,0),f.groups.bridge);
-for(let i=0;i<4;i++)addSkateLid(C,skateBlock(1110.5+i*5,3.635,3.84,3.84,7+Math.min(i,2)*2,0),f.groups.reward);
+for(const step of f.bridge)addSkateLid(C,skateBlock(step.s,step.top+.035,4*CRATE_SIZE,4*CRATE_SIZE,step.u,0),f.groups.bridge);
+for(const step of f.reward)addSkateLid(C,skateBlock(step.s,step.top+.035,4*CRATE_SIZE,4*CRATE_SIZE,step.u,0),f.groups.reward);
 
 // Follow the physical course. A short collinear run of nodes around each
 // jump gives the camera time to settle onto the landing line before takeoff.
@@ -357,6 +361,11 @@ export const CODEX_LAB_LEVEL:CustomLevelData={
  atmosphere:{...HAUNTED_ISLAND_ATMOSPHERE},
  medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
 };
+
+// Structural piers above are already authored at current size. Migrate the
+// ordinary legacy reward arrangements once without moving the pier anchors.
+migrateCrateLayout({...CODEX_LAB_LEVEL,components:C.filter(c=>!currentSizeCrates.has(c))});
+CODEX_LAB_LEVEL.crateLayoutRevision=1;
 
 // Three connected session areas, with five independent skill branches.
 // See docs/warehouse-flow/design.md for approach/receiver/recovery decisions.

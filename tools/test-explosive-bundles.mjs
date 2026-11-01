@@ -7,12 +7,13 @@ new Function('noop',source.slice(source.indexOf('function installHeadlessDom()')
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 const warn=console.warn;console.warn=()=>{};let level;
 try{
+ const {CRATE_SIZE}=await server.ssrLoadModule('/src/crateDimensions.ts');
  const {Level}=await server.ssrLoadModule('/src/level.ts');
  const {explosivePulse}=await server.ssrLoadModule('/src/explosiveBundle.ts');
  level=new Level(new THREE.Scene(),{id:'explosive-review',name:'Explosive review',data:{v:1,name:'Explosive review',spawn:[0,.1,8],killY:-20,components:[{t:'platform',p:[8,-.5,0],s:[32,1,24]},...['tnt','tnt','nitro','tnt'].map((kind,i)=>({t:'crate',kind,p:[i*6,0,0],...(i===3?{outline:true}:{} )})),{t:'gate',p:[0,0,-9]}]}});
  const [first,second,nitro,ghost]=level.crates;
  const a=first.explosiveBundle,b=second.explosiveBundle;
- assert.deepEqual(first.box.getSize(new THREE.Vector3()).toArray(),[.96,.96,.96]);
+ assert.deepEqual(first.box.getSize(new THREE.Vector3()).toArray(),[CRATE_SIZE,CRATE_SIZE,CRATE_SIZE]);
  assert.equal(a.fuseFraction.value,1);assert.equal(a.ember.visible,false);assert.equal(nitro.explosiveBundle.ember,undefined);
  level.lightFuse(ghost);assert.equal(ghost.fuse,undefined);assert.equal(ghost.explosiveBundle.visual.visible,false);
  level.lightFuse(first);assert.equal(first.fuse,3);assert.equal(a.ember.visible,true);

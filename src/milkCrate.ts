@@ -1,3 +1,4 @@
+import { CRATE_SIZE } from './crateDimensions';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -100,7 +101,7 @@ export function setMilkCrateState(crate: MilkCrate, hitsRemaining: number, pendi
   // contact, stacking and special-mode number printing at exactly 0.96 m.
   crate.body.material.visible=pending||runDress;
 }
-export function createMilkCrate(size = .96): MilkCrate {
+export function createMilkCrate(size = CRATE_SIZE): MilkCrate {
   const initial=fallbackTemplates();
   const body=new THREE.Mesh(new THREE.BoxGeometry(size,size,size),new THREE.MeshLambertMaterial({color:0xffffff,visible:false}));
   body.name='Five-bounce milk crate';

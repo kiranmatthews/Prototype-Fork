@@ -1,3 +1,4 @@
+import { CRATE_SIZE } from './crateDimensions';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -91,7 +92,7 @@ export function setWoodCrateState(crate: WoodCrate, hitsRemaining: number, pendi
   const index = crate.multiHit ? THREE.MathUtils.clamp(Math.ceil(hitsRemaining) + 1, 1, 6) : 0;
   crate.visual.material = crate.template.materials[index];
 }
-export function createWoodCrate(size = .96, multiHit = false): WoodCrate {
+export function createWoodCrate(size = CRATE_SIZE, multiHit = false): WoodCrate {
   const initial = fallbackTemplate();
   let proxy = proxies.get(size);
   if (!proxy) { proxy = shared(new THREE.BoxGeometry(size, size, size)); proxies.set(size, proxy); }

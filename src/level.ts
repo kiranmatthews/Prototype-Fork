@@ -238,6 +238,7 @@ import {
   woodPathProfileForComponent,
 } from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
+import { CRATE_SIZE, CRATE_SCALE, LEGACY_CRATE_SIZE, RACE_CRATE_SIZE, RACE_CRATE_HOVER, enlargedCrateLayout, migrateCrateLayout } from "./crateDimensions";
 import { surfaceBoundaryEdges, surfaceRidgeEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
 import {
   buildWoodPathLayout,
@@ -1162,6 +1163,8 @@ export interface CustomLevelData {
   v: 1;
   /** An explicit editor save that reproduces a legacy edge policy stays authored. */
   edgeGrindingRevision?: 1;
+  /** Crate coordinates already use the global 20% enlargement. */
+  crateLayoutRevision?: 1;
   name: string;
   minefields?: MinefieldData[];
   boulderChase?: BoulderChaseData;
@@ -1629,6 +1632,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     d.components = d.components.filter(
       (component, index) => component.t !== "crystal" || index === lastCrystal,
     );
+  migrateCrateLayout(d);
   return d;
 }
 
@@ -2709,7 +2713,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter', 'kiteTow',
-  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
+  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
@@ -2964,6 +2968,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.edgeGrindingRevision !== undefined && source.edgeGrindingRevision !== 1) return null;
+  if (source.crateLayoutRevision !== undefined && source.crateLayoutRevision !== 1) return null;
   if (source.encounter !== undefined && source.encounter !== 'crab-chief') return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
@@ -5622,6 +5627,7 @@ export class Level {
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
+    this.enlargeNativeCrateLayout();
     this.reconcileCrateColumnGrounds(); // support floors cannot depend on component order
     this.refreshCartonTops(true);
     this.snapshotHome(); // last: reset() needs where everything actually started
@@ -5890,7 +5896,7 @@ export class Level {
     this.crateRails.length = 0;
     this.crateRunOf.clear();
 
-    const S = 0.96; // uniform crate size
+    const S = CRATE_SIZE;
     // EVERY solid box counts, explosives included. A nitro sitting in a row is
     // part of that ledge and reads as one, so leaving it out would break the
     // line in half around a box you can plainly see — and worse, hide the
@@ -5916,8 +5922,8 @@ export class Level {
         if (other === c) return false;
         const q = other.mesh.position;
         return (
-          Math.abs(q.x - p.x) <= 0.6 &&
-          Math.abs(q.z - p.z) <= 0.6 &&
+          Math.abs(q.x - p.x) <= CRATE_SIZE * .625 &&
+          Math.abs(q.z - p.z) <= CRATE_SIZE * .625 &&
           Math.abs(other.box.min.y - c.box.max.y) <= 0.02
         );
       });
@@ -6105,7 +6111,7 @@ export class Level {
           if (candidate === bottom || visited.has(candidate)) continue;
           const p = bottom.mesh.position;
           const q = candidate.mesh.position;
-          if (Math.abs(q.x - p.x) > 0.6 || Math.abs(q.z - p.z) > 0.6)
+          if (Math.abs(q.x - p.x) > CRATE_SIZE * .625 || Math.abs(q.z - p.z) > CRATE_SIZE * .625)
             continue;
           const top = candidate.box.max.y;
           // Only a physically touching lower member belongs to this stack.
@@ -6124,6 +6130,26 @@ export class Level {
     }
   }
 
+  /** Hand-built courses retain their original authoring coordinates. Apply
+   * the same migration as saved data after all of their boxes are present. */
+  private enlargeNativeCrateLayout(): void {
+    const boxes = [...this.crates, ...this.checkpoints].filter(c => c.mesh.userData.crateLayoutRevision !== 1);
+    const placements = boxes.map(c => ({
+      p: [c.mesh.position.x, c.box.min.y, c.mesh.position.z] as [number, number, number],
+      size: (c.box.max.y - c.box.min.y) / CRATE_SCALE,
+      concealed: 'concealed' in c && c.concealed,
+    }));
+    const positions = enlargedCrateLayout(placements);
+    boxes.forEach((c, i) => {
+      const [x, y, z] = positions[i], size = c.box.getSize(new THREE.Vector3());
+      c.mesh.position.set(x, y + size.y / 2, z);
+      c.mesh.userData.crateLayoutRevision = 1;
+      c.mesh.userData.baseY = c.mesh.position.y;
+      c.box.setFromCenterAndSize(c.mesh.position, size);
+      if ('spawnPos' in c) c.spawnPos.set(x, y + .1, z);
+    });
+  }
+
   // Undo settleCrates for one crate. The box is rebuilt from its own current
   // extent so odd-sized crates keep their size.
   private restoreCrateHome(c: Crate): void {
@@ -6131,9 +6157,9 @@ export class Level {
     if (c.homeY === undefined || c.mesh.position.y === c.homeY) return;
     c.mesh.position.y = c.homeY;
     c.mesh.userData.baseY = c.homeY;
-    const sx = c.box.max.x - c.box.min.x || 0.96;
-    const sy = c.box.max.y - c.box.min.y || 0.96;
-    const sz = c.box.max.z - c.box.min.z || 0.96;
+    const sx = c.box.max.x - c.box.min.x || CRATE_SIZE;
+    const sy = c.box.max.y - c.box.min.y || CRATE_SIZE;
+    const sz = c.box.max.z - c.box.min.z || CRATE_SIZE;
     c.box.setFromCenterAndSize(
       c.mesh.position.clone(),
       new THREE.Vector3(sx, sy, sz),
@@ -6697,15 +6723,17 @@ export class Level {
   }
 
   captureData(): CustomLevelData {
+    this.enlargeNativeCrateLayout();
     if (this.builtFromData) {
       return migrateCustomLevel(
         JSON.parse(JSON.stringify(this.builtFromData)) as CustomLevelData,
       );
     }
     const r2 = (n: number): number => Math.round(n * 100) / 100;
+    const r5 = (n: number): number => Math.round(n * 100000) / 100000;
     if (this.worldMapSpec) {
       return {
-        v: 1, name: `${this.name} (copy)`,
+        v: 1, crateLayoutRevision: 1, name: `${this.name} (copy)`,
         spawn: this.spawnPos.toArray() as [number, number, number],
         killY: this.killY, hudMode: "hub", sky: this.skyPreset,
         atmosphere: resolveLevelAtmosphere(this),
@@ -6789,7 +6817,7 @@ export class Level {
           t: "metal",
           p: [
             r2(worldPosition.x),
-            r2(worldPosition.y - 0.48 * Math.abs(worldScale.y)),
+            r2(worldPosition.y - CRATE_SIZE / 2 * Math.abs(worldScale.y)),
             r2(worldPosition.z),
           ],
           ...edgeInfo(m),
@@ -7134,9 +7162,9 @@ export class Level {
       C.push({
         t: "crate",
         p: [
-          r2(cr.mesh.position.x),
-          r2((cr.homeY ?? cr.mesh.position.y) - (this.skateRace && cr.mystery ? 1.86 : .48)),
-          r2(cr.mesh.position.z),
+          r5(cr.mesh.position.x),
+          r5((cr.homeY ?? cr.mesh.position.y) - (cr.box.max.y - cr.box.min.y) / 2 - (this.skateRace && cr.mystery ? RACE_CRATE_HOVER : 0)),
+          r5(cr.mesh.position.z),
         ],
         kind: kind === "wood" ? "wood" : (kind as CustomComponent["kind"]),
         outline: cr.wasOutline || undefined,
@@ -7454,7 +7482,7 @@ export class Level {
         });
     }
     return {
-      v: 1,
+      v: 1, crateLayoutRevision: 1,
       name: `${this.name} (copy)`,
       spawn: (this.startWarpOriginalSpawn??this.spawnPos).toArray().map(r2) as [number,number,number],
       killY: r2(this.killY),
@@ -7606,6 +7634,11 @@ export class Level {
   }
 
   private buildCustom(data: CustomLevelData): void {
+    // Native wrappers also enter here directly, without buildEntry migration.
+    if (data.crateLayoutRevision !== 1) {
+      data = JSON.parse(JSON.stringify(data)) as CustomLevelData;
+      migrateCrateLayout(data);
+    }
     // Atmosphere controls lighting. Native Jungle already authors its dirt
     // explicitly; never overwrite a material the editor or a shared file chose.
     this.builtFromData = data; // captureData: a data-built level IS its own capture
@@ -8313,7 +8346,7 @@ export class Level {
             }
           } else if (c.t === "metal") {
             // unbreakable steel box: stand on it, bonk off it, never break it
-            const size = 0.96;
+            const size = CRATE_SIZE;
             const mesh = new THREE.Mesh(
               new THREE.BoxGeometry(size, size, size),
               new THREE.MeshLambertMaterial({
@@ -8547,6 +8580,7 @@ export class Level {
                 outline: c.outline || wiredToBang,
                 groupIds: gids,
                 concealed: c.kind === "nitro" && c.invisible === true,
+                currentLayout: data.crateLayoutRevision === 1,
                 noAuto: true, // the data already carries the fruit crate
               },
             );
@@ -8566,7 +8600,7 @@ export class Level {
               groupIds: gameplayGroupChainOf(c, data),
             });
           } else if (c.t === "checkpoint") {
-            this.checkpoint(c.p[1], c.p[2], c.p[0]);
+            this.checkpoint(c.p[1], c.p[2], c.p[0], data.crateLayoutRevision === 1);
           } else if (c.t === "enemy") {
             const r = c.range ?? 5;
             const foe = (c.foe ?? "grunt") as EnemyKind;
@@ -10711,7 +10745,7 @@ export class Level {
       if (!c.carton) continue;
       const p = c.mesh.position;
       c.carton.covered = this.crates.some(other => other !== c && other.alive && !other.pending &&
-        other.mesh.position.y > p.y + .02 && Math.abs(other.mesh.position.x-p.x) <= .6 && Math.abs(other.mesh.position.z-p.z) <= .6);
+        other.mesh.position.y > p.y + .02 && Math.abs(other.mesh.position.x-p.x) <= CRATE_SIZE * .625 && Math.abs(other.mesh.position.z-p.z) <= CRATE_SIZE * .625);
       if (reset) {
         c.carton.velocity = c.carton.pressTime = 0;
         c.carton.pressTarget = 1;
@@ -10745,15 +10779,14 @@ export class Level {
       const overlapZ = Math.min(feet.z+sole.z,c.box.max.z)-Math.max(feet.z-sole.z,c.box.min.z);
       // Match the existing 8 cm sole-support margin: merely grazing a
       // neighbouring carton with the broad movement box is not weight on it.
-      if (clearance < -.08 || clearance > .96*CARTON_TOP_HEIGHT || overlapX < .08 || overlapZ < .08) continue;
+      if (clearance < -.08 || clearance > CRATE_SIZE*CARTON_TOP_HEIGHT || overlapX < .08 || overlapZ < .08) continue;
       // Account for the gable hinge sitting 0.007 body-heights inside the
       // bevel. Its highest point follows the sole, with only 2 mm clearance.
-      pressMilkCarton(c.carton, Math.max(0,clearance+.96*.007-.002));
+      pressMilkCarton(c.carton, Math.max(0,clearance+CRATE_SIZE*.007-.002));
     }
   }
 
   private settleCrates(dt: number): void {
-    const SIZE = 0.96;
     // Nothing can START falling unless a crate has just left the stack, so the
     // footprint scan below (every crate against every other) only runs on the
     // frames that can matter: the count changed, or something is still on its
@@ -10773,8 +10806,8 @@ export class Level {
       x: crate.mesh.position.x,
       y: crate.mesh.position.y,
       z: crate.mesh.position.z,
-      base: crate.mesh.position.y - SIZE / 2,
-      top: crate.mesh.position.y + SIZE / 2,
+      base: crate.box.min.y,
+      top: crate.box.max.y,
       fallVel: crate.fallVel,
       solid: crate.alive && !crate.pending,
     }));
@@ -10790,14 +10823,15 @@ export class Level {
       const c = state.crate;
       if (!state.solid || c.nitro || this.skateRace && c.mystery) continue;
       const myBase = state.base;
+      const halfHeight = (c.box.max.y - c.box.min.y) / 2;
       // the highest thing under this crate's footprint, and WHAT it is
       let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
       let restOn: Crate | null = null;
       for (const support of snapshot) {
         if (support.crate === c || !support.solid) continue;
         if (
-          Math.abs(support.x - state.x) > 0.6 ||
-          Math.abs(support.z - state.z) > 0.6
+          Math.abs(support.x - state.x) > CRATE_SIZE * .625 ||
+          Math.abs(support.z - state.z) > CRATE_SIZE * .625
         )
           continue;
         const top = support.top;
@@ -10816,7 +10850,7 @@ export class Level {
           // FIXED speed rather than the speed it arrived at, so the hop is the
           // same height every time: the box neither damps out nor runs away,
           // it just bounces there. Which is what an arrow crate is for.
-          const seatedY = rest + SIZE / 2;
+          const seatedY = rest + halfHeight;
           // TUNING.crateHopSpeed sets the height, and with it the PERIOD —
           // the window you time a jump through. 0 parks the box on the pad.
           if (TUNING.crateHopSpeed <= 0) {
@@ -10832,7 +10866,7 @@ export class Level {
           const velocity = -TUNING.crateHopSpeed + TUNING.crateHopGravity * dt;
           plans.push({
             crate: c,
-            y: Math.max(rest + SIZE / 2, seatedY - velocity * dt),
+            y: Math.max(rest + halfHeight, seatedY - velocity * dt),
             fallVel: velocity,
             moving: true,
             sound: "bounce",
@@ -10843,7 +10877,7 @@ export class Level {
           // touchdown: seat it exactly, and let the tally know it moved
           plans.push({
             crate: c,
-            y: rest + SIZE / 2,
+            y: rest + halfHeight,
             fallVel: undefined,
             moving: false,
             sound: "land",
@@ -10857,7 +10891,7 @@ export class Level {
       const velocity = (state.fallVel ?? 0) + TUNING.crateHopGravity * dt;
       plans.push({
         crate: c,
-        y: Math.max(rest + SIZE / 2, state.y - velocity * dt),
+        y: Math.max(rest + halfHeight, state.y - velocity * dt),
         fallVel: velocity,
         moving: true,
         sound: null,
@@ -10871,7 +10905,7 @@ export class Level {
       plan.crate.mesh.userData.baseY = p.y;
       plan.crate.box.setFromCenterAndSize(
         p.clone(),
-        new THREE.Vector3(SIZE, SIZE, SIZE),
+        plan.crate.box.getSize(new THREE.Vector3()),
       );
       if (moved) this.cartonStacksDirty = true;
       if (moved || plan.moving || plan.sound !== null)
@@ -12064,8 +12098,8 @@ export class Level {
   private endNitroBangSiteClear(x: number, y: number, z: number): boolean {
     if (!this.bonusSiteClear(x, y, z)) return false;
     const candidate = new THREE.Box3().setFromCenterAndSize(
-      new THREE.Vector3(x, y + 0.48, z),
-      new THREE.Vector3(1.16, 1.16, 1.16),
+      new THREE.Vector3(x, y + CRATE_SIZE / 2, z),
+      new THREE.Vector3().setScalar(CRATE_SIZE + .2),
     );
     if (candidate.intersectsBox(this.finishGlow)) return false;
     if (this.bonusPlatform?.box.intersectsBox(candidate)) return false;
@@ -13067,8 +13101,9 @@ export class Level {
       theme: {...this.theme,...JUNGLE_THEME_OVERRIDES}, skyPreset:this.skyPreset,
       jungleAtmosphere:true, isCampaignMap:false, skyBackdrop:this.skyBackdrop,
     });
+    migrateCrateLayout({ v: 1, name: this.name, spawn: this.spawnPos.toArray(), killY: this.killY, components: finale.components });
     this.sceneryCaptureGroups.push(...finale.groups);
-    this.buildCustomComponents({ v: 1, name: this.name, spawn: this.spawnPos.toArray(), killY: this.killY,
+    this.buildCustomComponents({ v: 1, crateLayoutRevision: 1, name: this.name, spawn: this.spawnPos.toArray(), killY: this.killY,
       components: [
         ...lane.map(({x,y,z}): CustomComponent => ({t:'camnode',p:[x,y,z]})),
         ...finale.components,
@@ -17405,12 +17440,12 @@ export class Level {
       | "empty"
       | "bang"
       | "nitrobang",
-    opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean; concealed?: boolean },
+    opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean; concealed?: boolean; currentLayout?: boolean },
   ): void {
     const ammo=this.skateRace&&(kind==='tnt'||kind==='nitro')?kind:undefined;
     const concealed = !ammo && kind === "nitro" && opts?.concealed === true;
     const raceItem=!!this.skateRace&&(kind==='mystery'||!!ammo);
-    const size = raceItem ? 1.92 : 0.96;
+    const size = raceItem ? RACE_CRATE_SIZE : CRATE_SIZE;
     // ARROW CRATES get a per-face material list: the arrow reads on the four
     // SIDES and the lid/floor stay blank. An arrow drawn on the top face is
     // pointing at the player who is already standing on it, and the one on the
@@ -17491,10 +17526,11 @@ export class Level {
     let base = deckY;
     let onStack = false;
     let stackGround: number | undefined; // column floor, inherited from below
+    const columnReach = (opts?.currentLayout ? CRATE_SIZE : LEGACY_CRATE_SIZE) * .625;
     for (const other of this.crates) {
       const p = other.mesh.position;
-      if (Math.abs(p.x - x) < 0.6 && Math.abs(p.z - z) < 0.6) {
-        const top = p.y + size / 2;
+      if (Math.abs(p.x - x) < columnReach && Math.abs(p.z - z) < columnReach) {
+        const top = other.box.max.y - (other.mesh.userData.crateLayoutRevision === 1 ? 0 : CRATE_SIZE - LEGACY_CRATE_SIZE);
         if (Math.abs(deckY - top) < 0.9) {
           base = top;
           onStack = true;
@@ -17534,9 +17570,10 @@ export class Level {
     // Buried pressure hazards must never be repaired onto the surface or stacked.
     if (concealed) base = groundBase = deckY;
     // Item boxes hover clear of steep road faces and are collected on contact.
-    if(raceItem)base+=.9;
+    if(raceItem)base+=RACE_CRATE_HOVER;
     const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
+    mesh.userData.crateLayoutRevision = opts?.currentLayout ? 1 : 0;
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
     // NO PER-CRATE YAW. Plain boxes used to be turned 0.15 rad for a
@@ -19573,9 +19610,9 @@ export class Level {
   // A distinct blue box that sits on the deck like a normal crate. Spin or
   // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
   // the box, so it can be dodged rather than being an unmissable gate.
-  private checkpoint(deckY: number, z: number, x = 0): void {
+  private checkpoint(deckY: number, z: number, x = 0, currentLayout = false): void {
     if(this.skateRace){this.raceCheckpoints.push(new THREE.Vector3(x,deckY+.1,z));return;}
-    const size = 0.96; // same footprint as every other crate now
+    const size = CRATE_SIZE; // same footprint as every other crate now
     const gy = this.floorY(x, z, deckY);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(size, size, size),
@@ -19586,6 +19623,7 @@ export class Level {
       }),
     );
     mesh.position.set(x, gy + size / 2, z);
+    mesh.userData.crateLayoutRevision = currentLayout ? 1 : 0;
     this.root.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),

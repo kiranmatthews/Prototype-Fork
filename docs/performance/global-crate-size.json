@@ -1,0 +1,917 @@
+{
+  "date": "2026-11-01",
+  "request": "Enlarge every crate by 20% while preserving placement and stacks across all levels",
+  "base_commit": "9d96e2259a5db0b002d7489fcb1c3f607007f2e3",
+  "dimensions_metres": {
+    "ordinary_checkpoint_legacy_metal": 1.152,
+    "race_pickup": 2.304,
+    "scale": 1.2
+  },
+  "audit": {
+    "level_versions": 84,
+    "builtins": 70,
+    "published_snapshots": 14,
+    "crate_and_checkpoint_instances": 4864,
+    "counts_preserved": true,
+    "overlap_pairs_before": 54,
+    "overlap_pairs_after": 0,
+    "lost_ground_supports": 0,
+    "changed_stack_contacts": 0,
+    "new_wall_intersections": 0,
+    "note": "Four existing non-solid Coconut Cart Rally pickup/scenery contacts remain in each of its builtin/published versions. No physical crate or checkpoint intersects a wall."
+  },
+  "levels": [
+    {
+      "id": "treehouse-trail",
+      "source": "builtin",
+      "crates_and_checkpoints": 5,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "inside-your-room",
+      "source": "builtin",
+      "crates_and_checkpoints": 1,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "jungle",
+      "source": "builtin",
+      "crates_and_checkpoints": 69,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "jungle-terraces",
+      "source": "builtin",
+      "crates_and_checkpoints": 127,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "flats",
+      "source": "builtin",
+      "crates_and_checkpoints": 274,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "country-club",
+      "source": "builtin",
+      "crates_and_checkpoints": 60,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "sky",
+      "source": "builtin",
+      "crates_and_checkpoints": 40,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "skystream",
+      "source": "builtin",
+      "crates_and_checkpoints": 67,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "coconut-cart-rally",
+      "source": "builtin",
+      "crates_and_checkpoints": 52,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 4
+    },
+    {
+      "id": "slipstream-race",
+      "source": "builtin",
+      "crates_and_checkpoints": 195,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "test",
+      "source": "builtin",
+      "crates_and_checkpoints": 176,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "carlisle-coast",
+      "source": "builtin",
+      "crates_and_checkpoints": 401,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "custard-creek",
+      "source": "builtin",
+      "crates_and_checkpoints": 158,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "tribal-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 68,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "rumblewater-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 38,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "rolling-bones",
+      "source": "builtin",
+      "crates_and_checkpoints": 110,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "hollowwake-descent",
+      "source": "builtin",
+      "crates_and_checkpoints": 23,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "dark",
+      "source": "builtin",
+      "crates_and_checkpoints": 11,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "nightworks-after-hours",
+      "source": "builtin",
+      "crates_and_checkpoints": 7,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "spaghetti-rails",
+      "source": "builtin",
+      "crates_and_checkpoints": 24,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "spaghetti-rails-platforming",
+      "source": "builtin",
+      "crates_and_checkpoints": 41,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "warproom",
+      "source": "builtin",
+      "crates_and_checkpoints": 0,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "beachfront",
+      "source": "builtin",
+      "crates_and_checkpoints": 125,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-level",
+      "source": "builtin",
+      "crates_and_checkpoints": 34,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "coastal-street-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 24,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "jungle-gate-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 31,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "meshylook-thorns",
+      "source": "builtin",
+      "crates_and_checkpoints": 0,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "drowned-crown",
+      "source": "builtin",
+      "crates_and_checkpoints": 27,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-easy",
+      "source": "builtin",
+      "crates_and_checkpoints": 18,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-treehouse-trail",
+      "source": "builtin",
+      "crates_and_checkpoints": 11,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-jungle",
+      "source": "builtin",
+      "crates_and_checkpoints": 25,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-test-course",
+      "source": "builtin",
+      "crates_and_checkpoints": 7,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "source": "builtin",
+      "crates_and_checkpoints": 11,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-nightworks",
+      "source": "builtin",
+      "crates_and_checkpoints": 8,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-beachside-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 32,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-coastal",
+      "source": "builtin",
+      "crates_and_checkpoints": 43,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "source": "builtin",
+      "crates_and_checkpoints": 10,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-waterpark",
+      "source": "builtin",
+      "crates_and_checkpoints": 11,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-nightworks-after-hours",
+      "source": "builtin",
+      "crates_and_checkpoints": 16,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "source": "builtin",
+      "crates_and_checkpoints": 10,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "source": "builtin",
+      "crates_and_checkpoints": 11,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-bone-yard",
+      "source": "builtin",
+      "crates_and_checkpoints": 15,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-custard-creek",
+      "source": "builtin",
+      "crates_and_checkpoints": 18,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-carlisle-coast",
+      "source": "builtin",
+      "crates_and_checkpoints": 21,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-mayfield-mall",
+      "source": "builtin",
+      "crates_and_checkpoints": 9,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-skystream",
+      "source": "builtin",
+      "crates_and_checkpoints": 18,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-tribal-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 21,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-waterfall-climb",
+      "source": "builtin",
+      "crates_and_checkpoints": 23,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-jungle-gate",
+      "source": "builtin",
+      "crates_and_checkpoints": 35,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-rooftop-relay",
+      "source": "builtin",
+      "crates_and_checkpoints": 24,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-rumblewater-run",
+      "source": "builtin",
+      "crates_and_checkpoints": 22,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-rolling-bones",
+      "source": "builtin",
+      "crates_and_checkpoints": 16,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "crab-chief",
+      "source": "builtin",
+      "crates_and_checkpoints": 4,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "ghost-train",
+      "source": "builtin",
+      "crates_and_checkpoints": 40,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "codex-lab",
+      "source": "builtin",
+      "crates_and_checkpoints": 717,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "cave-collapse",
+      "source": "builtin",
+      "crates_and_checkpoints": 1,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "waterfall-climb",
+      "source": "builtin",
+      "crates_and_checkpoints": 27,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "jungle-minefield",
+      "source": "builtin",
+      "crates_and_checkpoints": 35,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "rooftop-relay",
+      "source": "builtin",
+      "crates_and_checkpoints": 67,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "mayfield-mall",
+      "source": "builtin",
+      "crates_and_checkpoints": 24,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "mall",
+      "source": "builtin",
+      "crates_and_checkpoints": 5,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "school-miami",
+      "source": "builtin",
+      "crates_and_checkpoints": 5,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "warehouse-reference",
+      "source": "builtin",
+      "crates_and_checkpoints": 26,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "kona",
+      "source": "builtin",
+      "crates_and_checkpoints": 5,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "jungle-cup",
+      "source": "builtin",
+      "crates_and_checkpoints": 0,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "warehouse",
+      "source": "builtin",
+      "crates_and_checkpoints": 3,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bone-yard",
+      "source": "builtin",
+      "crates_and_checkpoints": 2,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "waterpark",
+      "source": "builtin",
+      "crates_and_checkpoints": 7,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "waterpark-cup",
+      "source": "builtin",
+      "crates_and_checkpoints": 0,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "backport-lab",
+      "source": "builtin",
+      "crates_and_checkpoints": 3,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "flats",
+      "source": "published",
+      "crates_and_checkpoints": 274,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "sky",
+      "source": "published",
+      "crates_and_checkpoints": 40,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "test",
+      "source": "published",
+      "crates_and_checkpoints": 176,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "custard-creek",
+      "source": "published",
+      "crates_and_checkpoints": 158,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-custard-creek",
+      "source": "published",
+      "crates_and_checkpoints": 18,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "jungle-terraces",
+      "source": "published",
+      "crates_and_checkpoints": 127,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "source": "published",
+      "crates_and_checkpoints": 10,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "drowned-crown",
+      "source": "published",
+      "crates_and_checkpoints": 27,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "slipstream-race",
+      "source": "published",
+      "crates_and_checkpoints": 195,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "country-club",
+      "source": "published",
+      "crates_and_checkpoints": 60,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "rooftop-relay",
+      "source": "published",
+      "crates_and_checkpoints": 67,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "coconut-cart-rally",
+      "source": "published",
+      "crates_and_checkpoints": 52,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 4
+    },
+    {
+      "id": "jungle-gate-run",
+      "source": "published",
+      "crates_and_checkpoints": 31,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    },
+    {
+      "id": "bonus-jungle-gate",
+      "source": "published",
+      "crates_and_checkpoints": 35,
+      "overlap_pairs": 0,
+      "lost_supports": 0,
+      "changed_stack_contacts": 0,
+      "wall_contacts": 0
+    }
+  ],
+  "browser": [
+    {
+      "name": "lite-stack",
+      "level": "flats",
+      "crates": 272,
+      "render_pixels": [
+        640,
+        360
+      ],
+      "wood_assets_loaded": true,
+      "collision_visual_match": true,
+      "collapse": {
+        "base": 90,
+        "gaps": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stomp": {
+        "broken": true,
+        "bounce": 14
+      },
+      "errors": []
+    },
+    {
+      "name": "native-stack",
+      "level": "flats",
+      "crates": 272,
+      "render_pixels": [
+        1920,
+        1080
+      ],
+      "wood_assets_loaded": true,
+      "collision_visual_match": true,
+      "collapse": {
+        "base": 90,
+        "gaps": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stomp": {
+        "broken": true,
+        "bounce": 14
+      },
+      "errors": []
+    },
+    {
+      "name": "bonus-lane",
+      "level": "bonus-easy",
+      "crates": 18,
+      "render_pixels": [
+        1280,
+        720
+      ],
+      "wood_assets_loaded": true,
+      "collision_visual_match": true,
+      "collapse": null,
+      "stomp": null,
+      "errors": []
+    },
+    {
+      "name": "foundry",
+      "level": "codex-lab",
+      "crates": 711,
+      "render_pixels": [
+        1920,
+        1080
+      ],
+      "wood_assets_loaded": true,
+      "collision_visual_match": true,
+      "collapse": null,
+      "stomp": null,
+      "errors": []
+    }
+  ],
+  "production_browser": [
+    {
+      "name": "native-stack",
+      "render_pixels": [
+        1920,
+        1080
+      ],
+      "errors": [],
+      "collapse": {
+        "base": 90,
+        "gaps": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stomp": {
+        "broken": true,
+        "bounce": 14
+      }
+    }
+  ],
+  "checks_passed": [
+    "npm run check:levels",
+    "node tools/test-crate-rest-surface.mjs",
+    "node tools/test-crate-dimensions.mjs",
+    "node tools/test-crate-native-capture.mjs",
+    "node tools/test-life-multihit-crates.mjs",
+    "node tools/test-crate-fast-landing.mjs",
+    "node tools/test-crate-jump-parity.mjs",
+    "node tools/test-nitro-clear-switch.mjs",
+    "node tools/test-explosive-bundles.mjs",
+    "node tools/test-blockworks-foundry.mjs",
+    "node tools/audit-crate-layout.mjs (with baseline)",
+    "node tools/test-crate-size-browser.mjs (lite/full/native)",
+    "npm run build",
+    "npm run check:release"
+  ],
+  "foundry_input_run": {
+    "frames": 8278,
+    "simulated_seconds": 137.96666666666667,
+    "constructed_metal_crates": 700,
+    "intentional_death_and_checkpoint_recovery": true
+  },
+  "capture_note": "Native Flats, Jungle and Beachside counts, dimensions and saved layouts survive capture/reload. Two Jungle bank crates retain an existing ~9.6 cm terrain-capture reseat, reproduced against the base commit; no new capture drift.",
+  "release_bytes": 999218971,
+  "release_budget_bytes": 1000000000,
+  "source_sha256": {
+    "src/crateDimensions.ts": "cdb2e74881360bee54f346207e682596a4b30113c8d6e72406fdc92a04d49ee1",
+    "src/level.ts": "23a99a620b90e739f51c050af31af1a63f98d9fb15a92676eaf6531482f97dec",
+    "src/levels/codex-lab.ts": "b7bf1af7d9faea372d812f9070f7b8c7a33d0f944ee80c410ff173475b1237ca",
+    "src/woodCrate.ts": "a811cfece0b1269442452b6b82d61132a3e36a40ac64915209bc29920ffbbdc2",
+    "src/milkCrate.ts": "9cd5fd524f03db76a8bf28994ce58cb3d11c9c79d8e90cbfc8e4501de8bce4a9",
+    "src/explosiveBundle.ts": "cb9216ece2780546df8b51c47f4498dcc588521e24ae5c72fb559c736273e333"
+  }
+}
