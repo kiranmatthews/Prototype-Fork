@@ -153,6 +153,18 @@ try {
   }
 
   const deferred = () => { let resolve; const promise = new Promise(r => { resolve = r; }); return { promise, resolve }; };
+  {
+    const events = [];
+    await runLoadingTransition({ phase: phase => events.push(phase),
+      now: () => 0, wait: async () => {}, paint: async () => { events.push('paint'); },
+      prepareVortex: async () => {}, independentVortex: () => true,
+      load: () => { events.push('load'); }, waitForAssets: async () => {}, prepareDestination: async () => {},
+    }, false);
+    const visible = events.indexOf('vortex'), load = events.indexOf('load');
+    assert.ok(load > visible && events.slice(visible, load).includes('paint'),
+      'An independent loader must be visible before synchronous level construction begins');
+    assert.ok(events.indexOf('reveal') > events.indexOf('prepare-destination'));
+  }
   for (const reduced of [false, true]) {
     let clock = 0;
     const phases = [];

@@ -99,11 +99,25 @@ degraded atlas. The existing PNG geometry, painter and focus phases are retained
 
 Startup keeps the original title/loading vortex and input lock until the actual
 title or direct-playtest frame is ready; do not add another spinner or loading
-label. Transitions retain the animated vortex
-through destination assets, texture uploads and shader/geometry warmup. A captured
-loading frame covers final post/HUD requests and GPU completion, then fades into
-the ready destination. Its fullscreen raster is released afterward. Shared
+label. Loading uses a temporary OffscreenCanvas worker when supported. It runs
+the same authored Gouraud field and configured CRT/output passes at the selected
+physical resolution, independently of main-thread construction and asset parsing.
+The main renderer stops drawing hidden loading frames and prepares the destination
+behind this surface. The worker remains animated through final post/HUD requests
+and GPU completion, then fades away. Its canvas, worker, context and GPU resources
+are released after each load; hidden pages pause it, and reduced motion paints
+only on initialization/resize. Title, menus and gameplay retain their shared
+renderer. Unsupported/failed worker startup uses the existing main-renderer
+vortex and captured final loading frame; a later worker failure retains opaque
+coverage until readiness. Shared
 prompt/map/touch ink is suppressed during loading, including cached Canvas ink.
+
+`tools/test-loading-motion-browser.mjs` blocks the game thread for 1.5 seconds
+and verifies independent animation, live final preparation, absence of duplicate
+main-renderer work, resize, native/CRT rendering, reduced motion, fallback and
+resource release. `tools/test-loading-vortex-lifecycle.mjs` checks cancellation,
+late messages, failure coverage, timeout and repeated cleanup. These are focused
+checks, outside the Pages publishing path.
 
 `tools/test-menus-responsive-browser.mjs` covers all 26 catalogue screens, all adaptive
 guide pages, real touch actions, bounded swipes/focus, PNG labels and table cells.

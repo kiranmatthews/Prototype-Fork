@@ -48,6 +48,7 @@ import {configureBlockworksAssetRenderer} from './blockworksModelLoader';
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { installSceneryShadowPass } from "./sceneryShadowPass";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
+import { LoadingVortexPresentation } from './loadingVortex';
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
 import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";
@@ -205,6 +206,22 @@ configureWarehouseAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
 const gameFlowVortex = new GameFlowVortexHost();
+const loadingVortex = new LoadingVortexPresentation(() => {
+  const fixed = fixedResolutionActive();
+  const crt = !LITE_RENDER && !new URLSearchParams(location.search).has('nocrt') && crtGuestSettings.enabled;
+  const preset = { ...crtGuestSettings.exportPreset(), enabled: crt };
+  return {
+    context: gameFlow?.loadingPhase ? 'warp' : gameFlow?.vortexContext === 'menu' ? 'menu' : 'warp',
+    inputWidth: fixed ? renderQualitySizes.inputWidth : renderer.domElement.width,
+    inputHeight: fixed ? renderQualitySizes.inputHeight : renderer.domElement.height,
+    outputWidth: renderer.domElement.width, outputHeight: renderer.domElement.height,
+    antialias: !LITE_RENDER, post: fixed || crt, crt: JSON.stringify(preset),
+    lutBaseUrl: new URL(import.meta.env.BASE_URL + 'crt-guest/lut/', document.baseURI).href,
+    reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches, hidden: document.hidden,
+  };
+});
+window.addEventListener('pagehide', () => loadingVortex.release());
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => loadingVortex.resize());
 // Fixed presets own physical pixels. Only MAX/native follows display DPR,
 // capped at 2 to retain the existing native fill-rate budget.
 renderer.setPixelRatio(
@@ -1432,15 +1449,24 @@ function resize(): void {
   camera2.updateProjectionMatrix();
   if (editorViewActive) editor.syncPlayAspect(playAspect);
   gameFlowVortex.invalidate();
+  loadingVortex.resize();
   gameFlow?.requestGameplayFrame();
 }
 
 /** Compile and paint the actual loading path while the curtain is opaque. */
 async function prepareLoadingVortexPresentation(): Promise<void> {
   await graphicsRecovery.ready();
-  renderVortexWithGameFlow(0, performance.now(), "warp");
+  if (await loadingVortex.prepare()) {
+    gameFlowVortex.deactivate();
+    releaseGameplayPostForGameFlow();
+    coastPost?.suspendForLoadingWorker();
+    presentStartupFrame();
+    return;
+  }
+  const context = gameFlow.loadingPhase ? 'warp' : gameFlow.vortexContext ?? 'warp';
+  renderVortexWithGameFlow(0, performance.now(), context);
   await afterPresentationPaint();
-  renderVortexWithGameFlow(0, performance.now(), "warp");
+  renderVortexWithGameFlow(0, performance.now(), context);
 }
 
 /** Warm costly destination resources while the animated loading scene stays visible. */
@@ -2258,12 +2284,14 @@ gameFlow = new GameFlowUI(
     getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),
     onPlayMode: applyGamePlayMode,
     prepareLoadingVortex: prepareLoadingVortexPresentation,
+    independentLoadingVortex: () => loadingVortex.active,
+    revealLoadingVortex: () => loadingVortex.reveal(),
     waitForLevelData: () => firstRunLevelSync,
     waitForDestinationAssets: prepareActivePresentationAssets,
     warmDestinationFrame: warmDestinationPresentation,
     captureLoadingFrame: captureLoadingPresentation,
     prepareDestinationFrame: prepareDestinationPresentation,
-    onTransitionComplete: () => { guardGameplayFromMenu();clearBonusArrival(); },
+    onTransitionComplete: () => { guardGameplayFromMenu();clearBonusArrival();loadingVortex.release(); },
   },
   gameAudioOptions,
 );
@@ -5102,7 +5130,7 @@ function recordPresentationStage(stage:string):void {
 }
 let reportedPresentationStage='';
 function frame(nowMs: number): void {
-  if (startupFailed) return;
+  if (startupFailed) { loadingVortex.release(); return; }
   requestAnimationFrame(frame);
   if (document.hidden || graphicsRecovery.lost || renderer.getContext().isContextLost()) {stormSquall.stop();return;}
   try {
@@ -5127,6 +5155,14 @@ function advanceFrame(nowMs: number): void {
   renderer.info.reset();
   const rawDt = clock.getDelta();
   const dt = launchReview ? (launchReview.rate === 0 ? launchReview.advance : Math.min(rawDt, .1)*launchReview.rate) : Math.min(rawDt, 0.1);
+  // The worker owns loading pixels even while this thread parses assets or
+  // warms the destination. Avoid rendering a second hidden vortex/CRT graph.
+  if (loadingVortex.active && gameFlow.loadingPhase !== 'reveal') {
+    input.update(); input.consumeEdges(true);
+    if (split2p) { input2.update(); input2.consumeEdges(true); }
+    acc = 0; sfx.stopLoops(); suspendStormSquall();
+    return;
+  }
   if(launchReview)launchReview.advance=0;
   // Animation Studio owns only presentation. Its chosen clip speed advances
   // this preview clock without advancing movement, collisions, replay, or AI.
@@ -5698,7 +5734,7 @@ requestAnimationFrame(frame);
   returnFromBonus,
   showCampaignResults,
   showTimeTrialResults,
-  getLoadingDiagnostics: () => ({ phase: gameFlow.loadingPhase, ...presentationAssets.diagnostics }),
+  getLoadingDiagnostics: () => ({ phase: gameFlow.loadingPhase, animation: loadingVortex.diagnostics, ...presentationAssets.diagnostics }),
   getFontDiagnostics: rooAtlasDiagnostics,
   getSceneryDecoderDiagnostics: () => sceneryDecoderDiagnostics(renderer),
   // debug: build/inspect the level list straight from the harness
@@ -5721,6 +5757,7 @@ level.updateSceneryView(camera);
 // A direct Cup playtest/reload needs the same covered preparation as entry
 // from the map. Never freeze a partially loaded park into the intro snapshot.
 async function prepareStartupPresentation(): Promise<void> {
+  await prepareLoadingVortexPresentation();
   await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
     player.preparePresentationAssets(), skateRace.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
@@ -5731,7 +5768,7 @@ async function prepareStartupPresentation(): Promise<void> {
   } else {
     await graphicsRecovery.ready();
     // Keep the authored vortex visible until the complete title ink is ready.
-    gameFlow.setStartupLoading(false);
+    gameFlow.prepareStartupReveal();
     if(gameFlow.vortexContext)renderVortexWithGameFlow(0,performance.now(),gameFlow.vortexContext);
     else renderGameplayWithGameFlow(0);
     await waitForPresentationGpu(renderer);
@@ -5741,6 +5778,11 @@ async function prepareStartupPresentation(): Promise<void> {
     await waitForPresentationGpu(renderer);
     await afterPresentationPaint();
   }
+  if (loadingVortex.active) {
+    loadingVortex.reveal();
+    await new Promise(resolve => setTimeout(resolve, matchMedia('(prefers-reduced-motion: reduce)').matches ? 20 : 520));
+    loadingVortex.release();
+  }
   gameFlow.setStartupLoading(false);
   recordPresentationStage('startup:ready');
   finishStartup();
@@ -5748,6 +5790,7 @@ async function prepareStartupPresentation(): Promise<void> {
   startOfflineCache();
 }
 void prepareStartupPresentation().catch(error=>{
+  loadingVortex.release();
   failStartup();
   console.error('Game startup failed.',error);
 });

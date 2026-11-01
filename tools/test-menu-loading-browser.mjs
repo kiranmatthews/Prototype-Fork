@@ -66,11 +66,12 @@ try{
     if(held)window.__heldLoadingFrame=held;
     let coloured=0;
     if(held){const pixels=held.getContext('2d').getImageData(0,0,held.width,held.height).data;for(let i=0;i<pixels.length;i+=4)if(pixels[i]+pixels[i+1]+pixels[i+2]>45&&pixels[i+3]>200)coloured++;}
-    return {phase:g.gameFlow.loadingPhase,context:g.gameFlow.vortexContext,hidden:document.body.classList.contains('game-shell-transitioning'),glyphs:p.glyphs.length,words:p.words.length,curtain:getComputedStyle(curtain).backgroundColor,holding:curtain.classList.contains('holding-loading-frame'),heldPixels:held?held.width*held.height:0,coloured};
+    return {animation:g.getLoadingDiagnostics().animation,phase:g.gameFlow.loadingPhase,context:g.gameFlow.vortexContext,hidden:document.body.classList.contains('game-shell-transitioning'),glyphs:p.glyphs.length,words:p.words.length,curtain:getComputedStyle(curtain).backgroundColor,holding:curtain.classList.contains('holding-loading-frame'),heldPixels:held?held.width*held.height:0,coloured};
    });
    if(stage==='final'){
-    assert.equal(loading.phase,'prepare-destination');assert.equal(loading.holding,true);
-    assert.ok(loading.heldPixels>0&&loading.coloured/loading.heldPixels>.3,'the retained loader is empty or black');
+    assert.equal(loading.phase,'prepare-destination');
+    if(loading.animation.active){assert.equal(loading.holding,false);assert.ok(loading.animation.frames>0);}
+    else {assert.equal(loading.holding,true);assert.ok(loading.heldPixels>0&&loading.coloured/loading.heldPixels>.3,'the retained loader is empty or black');}
    }else{
     assert.equal(loading.context,'warp');assert.equal(loading.hidden,true);
     assert.equal(loading.glyphs,0);assert.equal(loading.words,0);
@@ -83,7 +84,8 @@ try{
   await page.evaluate(()=>window.__menuTransition);
   const destination=await page.evaluate(()=>({level:window.__game.getCurrentLevel().id,loading:window.__game.getLoadingDiagnostics(),events:JSON.parse(localStorage.getItem('solProtoStabilityV1')).sessions.at(-1).events,blocked:window.__game.gameFlow.blocksGameplay,heldSize:[window.__heldLoadingFrame?.width,window.__heldLoadingFrame?.height]}));
   assert.equal(destination.level,'treehouse-trail');assert.equal(destination.blocked,false);assert.deepEqual(destination.loading.pending,[]);assert.deepEqual(destination.loading.failed,[]);
-  assert.deepEqual(destination.heldSize,[1,1],'completed transitions must release their fullscreen loading raster');
+  if(destination.heldSize[0]!==undefined&&destination.heldSize[0]!==null)assert.deepEqual(destination.heldSize,[1,1],'completed transitions must release their fullscreen loading raster');
+  assert.equal(destination.loading.animation.resident,false,'completed transitions must release their loading worker');
   const warm=destination.events.findLast(e=>e.stage==='destination:scene-warmup');
   assert.equal(warm.detail.loading,'warm-destination','expensive GPU work must happen while the loading artwork is visible');
   assert.ok(destination.events.some(e=>e.stage==='destination:ready'));

@@ -484,6 +484,14 @@ export class CoastPostRenderer {
     this.crtPass?.resetHistory("game-flow presentation owns renderer");
   }
 
+  /** The loading worker owns its own field/CRT; retain no duplicate full-size targets. */
+  suspendForLoadingWorker(): void {
+    this.suspendForGameFlow();
+    this.releaseGameFlowInputTarget();
+    this.gameFlowSourceKey = null;
+    this.crtPass?.setResolution(1, 1, 1, 1);
+  }
+
   /**
    * Release the dedicated GameFlow input before recreating the larger gameplay
    * composer storage on the first destination frame under the fade.

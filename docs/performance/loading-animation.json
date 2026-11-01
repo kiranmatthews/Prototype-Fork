@@ -1,0 +1,581 @@
+{
+  "date": "2026-11-01",
+  "baseCommit": "0b67ee6c966d3ded95b7610f7723be5db691687d",
+  "baseline": [
+    {
+      "level": "treehouse-trail",
+      "loadMs": 4756.599999964237,
+      "maxVisibleMainFrameMs": 200,
+      "work": {
+        "prepare-vortex": {
+          "render": {
+            "count": 12,
+            "max": 7.900000035762787,
+            "total": 17.09999990463257
+          }
+        },
+        "vortex": {
+          "render": {
+            "count": 280,
+            "max": 0.8999999761581421,
+            "total": 36.800000071525574
+          }
+        },
+        "warm-destination": {
+          "render": {
+            "count": 235,
+            "max": 224.20000004768372,
+            "total": 817.9000000357628
+          },
+          "initTexture": {
+            "count": 191,
+            "max": 28.5,
+            "total": 362.80000001192093
+          }
+        },
+        "cover-destination": {
+          "render": {
+            "count": 48,
+            "max": 1.199999988079071,
+            "total": 13.70000010728836
+          }
+        },
+        "prepare-destination": {
+          "render": {
+            "count": 4,
+            "max": 225.30000001192093,
+            "total": 414.7999999523163
+          }
+        },
+        "reveal": {
+          "render": {
+            "count": 66,
+            "max": 2.5,
+            "total": 109.90000009536743
+          }
+        }
+      }
+    },
+    {
+      "level": "codex-lab",
+      "loadMs": 9567.5,
+      "maxVisibleMainFrameMs": 750,
+      "work": {
+        "prepare-vortex": {
+          "render": {
+            "count": 6,
+            "max": 8,
+            "total": 9.199999928474426
+          }
+        },
+        "vortex": {
+          "render": {
+            "count": 204,
+            "max": 0.30000001192092896,
+            "total": 25.20000022649765
+          }
+        },
+        "warm-destination": {
+          "render": {
+            "count": 157,
+            "max": 224.20000004768372,
+            "total": 564.9999998807907
+          },
+          "initTexture": {
+            "count": 120,
+            "max": 18.400000035762787,
+            "total": 201.6000000834465
+          }
+        },
+        "cover-destination": {
+          "render": {
+            "count": 24,
+            "max": 1.199999988079071,
+            "total": 6.200000047683716
+          }
+        },
+        "prepare-destination": {
+          "render": {
+            "count": 2,
+            "max": 225.30000001192093,
+            "total": 227.60000002384186
+          }
+        },
+        "reveal": {
+          "render": {
+            "count": 33,
+            "max": 2.5,
+            "total": 57.10000002384186
+          }
+        }
+      }
+    }
+  ],
+  "workerComparison": [
+    {
+      "level": "treehouse-trail",
+      "loadMs": 4863.399999976158,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 239,
+        "maxFrameMs": 33.30000000000018,
+        "width": 640,
+        "height": 360
+      },
+      "work": {
+        "prepare-vortex": {
+          "render": {
+            "count": 9,
+            "max": 6.399999976158142,
+            "total": 13.800000011920929
+          }
+        },
+        "warm-destination": {
+          "initTexture": {
+            "count": 191,
+            "max": 30.5,
+            "total": 440.4000000357628
+          },
+          "render": {
+            "count": 41,
+            "max": 93.5,
+            "total": 616.7000000476837
+          }
+        },
+        "prepare-destination": {
+          "render": {
+            "count": 4,
+            "max": 260.69999998807907,
+            "total": 456.4000000357628
+          }
+        },
+        "reveal": {
+          "render": {
+            "count": 66,
+            "max": 2.100000023841858,
+            "total": 105.10000014305115
+          }
+        }
+      }
+    },
+    {
+      "level": "codex-lab",
+      "loadMs": 9884.699999988079,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 3,
+        "stops": 3,
+        "failure": null,
+        "frames": 540,
+        "maxFrameMs": 33.30000000000109,
+        "width": 640,
+        "height": 360
+      },
+      "work": {
+        "prepare-vortex": {
+          "render": {
+            "count": 4,
+            "max": 6.399999976158142,
+            "total": 6.800000011920929
+          }
+        },
+        "warm-destination": {
+          "initTexture": {
+            "count": 120,
+            "max": 25.69999998807907,
+            "total": 270.3000000715256
+          },
+          "render": {
+            "count": 27,
+            "max": 48.60000002384186,
+            "total": 380.5
+          }
+        },
+        "prepare-destination": {
+          "render": {
+            "count": 2,
+            "max": 260.69999998807907,
+            "total": 262.60000002384186
+          }
+        },
+        "reveal": {
+          "render": {
+            "count": 33,
+            "max": 2,
+            "total": 57.40000009536743
+          }
+        }
+      }
+    }
+  ],
+  "production": [
+    {
+      "case": "full-crt",
+      "duringLoad": {
+        "active": true,
+        "resident": true,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 1,
+        "failure": null,
+        "frames": 147,
+        "maxFrameMs": 33.399999999999864,
+        "width": 1280,
+        "height": 720
+      },
+      "blockedMainMs": 1500.0,
+      "workerSamplesDuringBlock": [
+        {
+          "type": "stats",
+          "at": 1793517824949.2,
+          "frames": 177,
+          "maxFrameMs": 33.399999999999864,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "stats",
+          "at": 1793517825465.8,
+          "frames": 208,
+          "maxFrameMs": 33.399999999999864,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "stats",
+          "at": 1793517825965.3,
+          "frames": 238,
+          "maxFrameMs": 33.399999999999864,
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "finalPreparation": {
+        "animation": {
+          "active": true,
+          "resident": true,
+          "owner": "loading-worker",
+          "starts": 2,
+          "stops": 1,
+          "failure": null,
+          "frames": 418,
+          "maxFrameMs": 33.399999999999864,
+          "width": 1280,
+          "height": 720
+        },
+        "phase": "prepare-destination",
+        "locked": true,
+        "held": 0
+      },
+      "destination": {
+        "loading": {
+          "phase": null,
+          "animation": {
+            "active": false,
+            "resident": false,
+            "owner": "loading-worker",
+            "starts": 2,
+            "stops": 2,
+            "failure": null,
+            "frames": 512,
+            "maxFrameMs": 33.399999999999864,
+            "width": 1558,
+            "height": 720
+          },
+          "pending": [],
+          "failed": [],
+          "revision": 708
+        },
+        "blocked": false,
+        "level": "treehouse-trail"
+      },
+      "errors": []
+    },
+    {
+      "case": "native",
+      "duringLoad": {
+        "active": true,
+        "resident": true,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 1,
+        "failure": null,
+        "frames": 121,
+        "maxFrameMs": 16.799999999999955,
+        "width": 1920,
+        "height": 1080
+      },
+      "blockedMainMs": 1500.0,
+      "workerSamplesDuringBlock": [
+        {
+          "type": "stats",
+          "at": 1793517847413.7002,
+          "frames": 183,
+          "maxFrameMs": 16.800000000000182,
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "type": "stats",
+          "at": 1793517847930.5,
+          "frames": 214,
+          "maxFrameMs": 16.800000000000182,
+          "width": 1920,
+          "height": 1080
+        }
+      ],
+      "finalPreparation": {
+        "animation": {
+          "active": true,
+          "resident": true,
+          "owner": "loading-worker",
+          "starts": 2,
+          "stops": 1,
+          "failure": null,
+          "frames": 425,
+          "maxFrameMs": 16.800000000000182,
+          "width": 1920,
+          "height": 1080
+        },
+        "phase": "prepare-destination",
+        "locked": true,
+        "held": 0
+      },
+      "destination": {
+        "loading": {
+          "phase": null,
+          "animation": {
+            "active": false,
+            "resident": false,
+            "owner": "loading-worker",
+            "starts": 2,
+            "stops": 2,
+            "failure": null,
+            "frames": 520,
+            "maxFrameMs": 16.80000000000109,
+            "width": 844,
+            "height": 390
+          },
+          "pending": [],
+          "failed": [],
+          "revision": 708
+        },
+        "blocked": false,
+        "level": "treehouse-trail"
+      },
+      "errors": []
+    },
+    {
+      "case": "reduced",
+      "duringLoad": {
+        "active": true,
+        "resident": true,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 1,
+        "failure": null,
+        "frames": 1,
+        "maxFrameMs": 0,
+        "width": 720,
+        "height": 1558
+      },
+      "blockedMainMs": 1500.0,
+      "workerSamplesDuringBlock": [],
+      "finalPreparation": {
+        "animation": {
+          "active": true,
+          "resident": true,
+          "owner": "loading-worker",
+          "starts": 2,
+          "stops": 1,
+          "failure": null,
+          "frames": 1,
+          "maxFrameMs": 0,
+          "width": 720,
+          "height": 1558
+        },
+        "phase": "prepare-destination",
+        "locked": true,
+        "held": 0
+      },
+      "destination": {
+        "loading": {
+          "phase": null,
+          "animation": {
+            "active": false,
+            "resident": false,
+            "owner": "loading-worker",
+            "starts": 2,
+            "stops": 2,
+            "failure": null,
+            "frames": 3,
+            "maxFrameMs": 0,
+            "width": 1558,
+            "height": 720
+          },
+          "pending": [],
+          "failed": [],
+          "revision": 708
+        },
+        "blocked": false,
+        "level": "treehouse-trail"
+      },
+      "errors": []
+    },
+    {
+      "case": "fallback",
+      "duringLoad": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 0,
+        "stops": 0,
+        "failure": null,
+        "frames": 0,
+        "maxFrameMs": 0,
+        "width": 0,
+        "height": 0
+      },
+      "blockedMainMs": 1500.0,
+      "workerSamplesDuringBlock": [],
+      "finalPreparation": {
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 0,
+          "stops": 0,
+          "failure": null,
+          "frames": 0,
+          "maxFrameMs": 0,
+          "width": 0,
+          "height": 0
+        },
+        "phase": "prepare-destination",
+        "locked": true,
+        "held": 1
+      },
+      "destination": {
+        "loading": {
+          "phase": null,
+          "animation": {
+            "active": false,
+            "resident": false,
+            "owner": "loading-worker",
+            "starts": 0,
+            "stops": 0,
+            "failure": null,
+            "frames": 0,
+            "maxFrameMs": 0,
+            "width": 0,
+            "height": 0
+          },
+          "pending": [],
+          "failed": [],
+          "revision": 608
+        },
+        "blocked": false,
+        "level": "treehouse-trail"
+      },
+      "errors": []
+    }
+  ],
+  "startup": [
+    {
+      "case": "preparation-failure",
+      "errors": [],
+      "injectedErrors": [
+        "Game startup failed. Error: Injected preparation failure\n    at game.gameFlow.prepareMenuPresentation (<anonymous>:4:301)\n    at nM (http://127.0.0.1:5377/assets/main-s2nA5WK0.js:2791:133637)"
+      ],
+      "keyboardRecovery": true,
+      "loading": null,
+      "stamp": null
+    },
+    {
+      "case": "frame-failure",
+      "errors": [
+        "Injected startup frame failure"
+      ],
+      "injectedErrors": [
+        "Injected startup frame failure"
+      ],
+      "keyboardRecovery": null,
+      "loading": null,
+      "stamp": null
+    },
+    {
+      "case": "full-mobile",
+      "errors": [],
+      "injectedErrors": [],
+      "keyboardRecovery": null,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 1,
+          "maxFrameMs": 0,
+          "width": 720,
+          "height": 1558
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 884
+      },
+      "stamp": "Codex/sol fork \u00b7 build 11-01 07:22 UTC"
+    },
+    {
+      "case": "full-4x3",
+      "errors": [],
+      "injectedErrors": [],
+      "keyboardRecovery": null,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 114,
+          "maxFrameMs": 16.799999999999955,
+          "width": 960,
+          "height": 720
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 898
+      },
+      "stamp": "Codex/sol fork \u00b7 build 11-01 07:22 UTC"
+    }
+  ],
+  "checks": [
+    "TypeScript",
+    "test-loading-vortex-lifecycle.mjs",
+    "test-presentation-loading.mjs",
+    "test-game-flow-vortex.mjs",
+    "test-game-flow-interaction.mjs",
+    "test-menu-loading-browser.mjs (lite/full delayed fonts, assets, GPU, optional artwork)",
+    "test-loading-motion-browser.mjs (production, full CRT, MAX 1920x1080, reduced motion, fallback)",
+    "test-startup-browser.mjs (preparation/frame failure, phone reduced motion, 4:3 title)",
+    "npm run build",
+    "npm run check:release"
+  ],
+  "limitations": [
+    "Chrome on this Mac; WebKit runtime was not installed.",
+    "The fallback retains the main-thread implementation; its synchronous workload may still interrupt motion.",
+    "Work is still required to parse/build/warm a level; this change isolates loading presentation and removes duplicate loading draws, rather than promising shorter total loads."
+  ]
+}

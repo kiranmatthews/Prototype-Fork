@@ -119,6 +119,8 @@ export interface GameFlowUICallbacks {
   getRelicTarget?: (levelId: string) => number;
   getMedalTargets?: (levelId: string) => MedalTimes;
   prepareLoadingVortex?: () => Promise<void>;
+  independentLoadingVortex?: () => boolean;
+  revealLoadingVortex?: () => void;
   waitForLevelData?: () => Promise<void>;
   waitForDestinationAssets?: () => Promise<void>;
   warmDestinationFrame?: () => Promise<void>;
@@ -327,12 +329,21 @@ export class GameFlowUI {
 
   setStartupLoading(active: boolean): void {
     this.startupLoading = active;
+    if (!active && !this.transitionActive) this.destinationRevealing = false;
     this.root.inert = active;
     document.body.classList.toggle('game-startup-loading', active);
     if(!this.transitionActive)document.body.classList.toggle('game-shell-transitioning',active);
     this.syncVortexBodyClass();
     this.invalidatePreCrt();
     this.requestGameplayFrame();
+  }
+
+  /** Publish ready title ink beneath loading coverage while retaining the input lock. */
+  prepareStartupReveal(): void {
+    this.destinationRevealing = true;
+    document.body.classList.remove('game-shell-transitioning');
+    this.syncVortexBodyClass();
+    this.invalidatePreCrt();
   }
 
   async prepareMenuPresentation(): Promise<void> {
@@ -742,7 +753,7 @@ export class GameFlowUI {
             document.body.classList.add("game-shell-transitioning");
           }
           if (phase === "vortex") this.transitionCurtain.classList.add("vortex");
-          if (phase === "cover-destination") {
+          if (phase === "cover-destination" && !this.callbacks.independentLoadingVortex?.()) {
             const frame = this.callbacks.captureLoadingFrame?.();
             if (frame) {
               frame.className = 'game-loading-held-frame';
@@ -757,12 +768,16 @@ export class GameFlowUI {
             // Restore HUD/menu beneath the retained loading artwork.
             document.body.classList.remove("game-shell-transitioning");
           }
-          if (phase === "reveal") this.transitionCurtain.classList.remove("vortex", "active");
+          if (phase === "reveal") {
+            this.callbacks.revealLoadingVortex?.();
+            this.transitionCurtain.classList.remove("vortex", "active");
+          }
           this.syncVortexBodyClass();
           this.invalidatePreCrt();
           this.requestGameplayFrame();
         },
         prepareVortex: () => this.callbacks.prepareLoadingVortex?.() ?? Promise.resolve(),
+        independentVortex: () => this.callbacks.independentLoadingVortex?.() ?? false,
         load: async () => { await this.callbacks.waitForLevelData?.(); await action(); },
         waitForAssets: () => this.callbacks.waitForDestinationAssets?.() ?? Promise.resolve(),
         warmDestination: () => this.callbacks.warmDestinationFrame?.() ?? Promise.resolve(),
@@ -2309,6 +2324,10 @@ export class GameFlowUI {
       .game-transition-curtain.active.vortex { background-color: rgba(0,0,0,.16); }
       .game-transition-curtain.holding-loading-frame { background-color: #171526; }
       .game-loading-held-frame { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; }
+      .game-loading-motion { position:fixed; z-index:99; inset:0; width:100%; height:100%; pointer-events:none; opacity:1; transition:opacity .52s ease; }
+      .game-loading-motion[hidden] { display:none !important; }
+      .game-loading-motion.revealing { opacity:0; }
+      @media (prefers-reduced-motion: reduce) { .game-loading-motion { transition:none; } }
       body.game-shell-transitioning .game-shell-panel { opacity: 0; pointer-events: none; }
       body.game-shell-transitioning .game-hud-layer,
       body.game-shell-transitioning .tc-zone,

@@ -7786,3 +7786,23 @@ visuals and consoles pass. Required level checks, focused crate/contact
 regressions, build and release-size check pass. Prompt-to-browser-validated playable revision:
 approximately 27 minutes. Evidence:
 [crate chains](carlisle-relay/air-cargo-chains/README.md).
+
+### Independent loading animation — 1 November 2026
+
+Moved loading presentation to a temporary OffscreenCanvas worker, reusing the
+authored Gouraud geometry, title/warp profiles, physical resolution and CRT/output
+passes. It remains live through synchronous construction, asset parsing, uploads
+and final destination preparation. The main renderer stops duplicate loading
+draws and releases its unused presentation targets. Input stays locked through
+startup readiness and the fade. Hidden pages pause; reduced motion paints only
+when needed. Completion, cancellation, startup failure and timeout release the
+worker, canvas and GPU resources, with the original renderer as compatibility
+fallback. No level geometry, saved data or movement settings changed.
+
+Before the fix, the visible loader encountered 200–750 ms main-thread gaps.
+The isolated worker stayed near 60 Hz during an intentional 1.5-second main-thread
+stall, including native 1920×1080 and full CRT. Focused lifecycle/transition tests,
+delayed-font/assets/GPU browser gates, reduced motion, fallback, resize, startup
+failure recovery, full rendering, build and release size passed. Total level
+preparation time is not claimed to improve. Prompt-to-validated playable fix:
+approximately 20 minutes. Evidence: [loading animation measurements](performance/loading-animation.json).

@@ -212,6 +212,8 @@ export const MINIMUM_VORTEX_MS = 2000;
 export interface LoadingTransitionHooks {
   phase: (phase: LoadingTransitionPhase) => void;
   prepareVortex: () => Promise<void>;
+  /** An independently rendered surface may stay visible during synchronous builds. */
+  independentVortex?: () => boolean;
   load: () => void | Promise<void>;
   waitForAssets: () => Promise<void>;
   /** Upload/compile while the loader remains visible; do not replace its frame. */
@@ -235,11 +237,13 @@ export async function runLoadingTransition(hooks: LoadingTransitionHooks, reduce
   if (vortex) {
     hooks.phase("prepare-vortex");
     await hooks.prepareVortex();
-    // The synchronous level/collision build belongs under opaque black. Start
-    // it before revealing the animated loader; its asynchronous asset work
-    // continues while the vortex is visible.
-    loading=Promise.resolve(hooks.load());
-    void loading.catch(()=>{}); // handled by the awaited load below, after reveal
+    // The main-renderer fallback builds under the opaque curtain. A ready
+    // independent loader can cover that same work without freezing, so reveal
+    // it before starting the build below.
+    if (!hooks.independentVortex?.()) {
+      loading=Promise.resolve(hooks.load());
+      void loading.catch(()=>{}); // handled by the awaited load below, after reveal
+    }
     await paint();
     hooks.phase("vortex");
     await wait(fade);

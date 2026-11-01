@@ -62,8 +62,8 @@ export class GameFlowVortexHost {
   private maskPartsLoaded = 0;
   private context: GameFlowVortexContext | null = null;
   private permanentlyDisposed = false;
-  private readonly reducedMotion =
-    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+  constructor(private readonly reducedMotion =
+    typeof window !== "undefined" && (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false)) {}
 
   get resident(): boolean {
     return this.stage !== null;
@@ -338,7 +338,7 @@ class GameFlowVortexStage {
     this.mask?.clear();
     this.maskScene?.clear();
     this.vortexScene.clear();
-    document.body.classList.remove("game-flow-mask-ready");
+    if (typeof document !== "undefined") document.body.classList.remove("game-flow-mask-ready");
   }
 
   private syncSize(

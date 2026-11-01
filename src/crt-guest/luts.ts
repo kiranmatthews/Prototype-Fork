@@ -16,7 +16,7 @@ export const CRT_GUEST_LUT_FILES = Object.freeze({
 
 export async function loadCrtGuestLuts(
   baseUrl = "./crt-guest/lut/",
-  loader = new THREE.TextureLoader(),
+  loader: Pick<THREE.TextureLoader, 'loadAsync'> = new THREE.TextureLoader(),
 ): Promise<CrtGuestLuts> {
   const root = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   const entries = Object.entries(CRT_GUEST_LUT_FILES) as Array<
