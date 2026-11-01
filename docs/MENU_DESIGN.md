@@ -98,8 +98,13 @@ neutral resolution tries the other shipped sizes, and reconnecting retries a
 degraded atlas. The existing PNG geometry, painter and focus phases are retained.
 
 Startup keeps the original title/loading vortex and input lock until the actual
-title or direct-playtest frame is ready; do not add another spinner or loading
-label. Loading uses a temporary OffscreenCanvas worker when supported. It runs
+title or direct-playtest frame is ready. The large gold `LOADING` title reuses
+the Roo PNG atlas, with a gentle staggered squash, hop and settle. Its seven
+quads share one texture/material and the vortex scene; only 28 vertices change
+per frame. It stays beneath CRT and only appears during loading, including the
+main-renderer fallback. Reduced motion holds the neutral pose. Its decoded image
+and GPU resources are released with the loading presentation. Loading uses a
+temporary OffscreenCanvas worker when supported. It runs
 the same authored Gouraud field and configured CRT/output passes at the selected
 physical resolution, independently of main-thread construction and asset parsing.
 The main renderer stops drawing hidden loading frames and prepares the destination

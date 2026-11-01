@@ -1,7 +1,8 @@
 import { releaseImageUrl } from '../releaseImageUrls';
 import { trackPresentationImage } from '../presentationLoading';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
-import type { RooAtlasMetrics } from './bake';
+import { layoutRooAtlas, rooAtlasGlyphRect } from './atlasLayout';
+export { layoutRooAtlas, rooAtlasGlyphRect } from './atlasLayout';
 import { getRooAppearance, rooLightPosition, rooLightWeights } from './settings';
 import { displayAtlasCap, type RooAtlasCap } from './resolution';
 
@@ -95,39 +96,8 @@ if (typeof window !== 'undefined') {
     },300);
   });
 }
-
-export function layoutRooAtlas(metrics:RooAtlasMetrics,raw:string,tracking=0) {
-  const text=raw.toUpperCase();
-  const glyphs:Array<{char:string;x:number;y:number;sx:number;sy:number}>=[];
-  const optical=metrics.layouts?.[text];
-  if(optical){
-    for(const [i,entry]of optical.glyphs.entries()){
-      const g=metrics.glyphs[entry.char];if(!g)return null;
-      const sx=entry.width/(g.inkRight-g.inkLeft),sy=entry.height/((g.inkBottom??1)-(g.inkTop??0));
-      glyphs.push({char:entry.char,x:entry.x+i*tracking-g.inkLeft*sx,y:entry.y-(g.inkTop??0)*sy,sx,sy});
-    }
-    const width=optical.width+Math.max(0,glyphs.length-1)*tracking;return{glyphs,min:0,max:width,width};
-  }
-  let pen=0,min=Infinity,max=-Infinity;
-  for(let i=0;i<text.length;i++){
-    const glyph=metrics.glyphs[text[i]];
-    if(!glyph)return null; // Do not quietly turn unsupported symbols into question marks.
-    if(glyph.width){glyphs.push({char:text[i],x:pen,y:0,sx:1,sy:1});min=Math.min(min,pen+glyph.inkLeft);max=Math.max(max,pen+glyph.inkRight);}
-    pen+=glyph.advance+(metrics.kern[text.slice(i,i+2)]??0);
-    if(i<text.length-1)pen+=tracking;
-  }
-  if(!Number.isFinite(min))min=max=0;
-  return {glyphs,min,max,width:max-min};
-}
-
 function atlasUrl(palette:Palette,frame:number,size:RooAtlasCap){return releaseImageUrl(`${import.meta.env.BASE_URL}fonts/roo-${palette}-v${ROO_ATLAS_METRICS[palette].version}${frame?'-light'+frame:''}${size===512?'':'-cap'+size}.png`);}
 export function rooAtlasUrl(palette:Palette,frame=0){return images[palette][frame]?.src ?? atlasUrl(palette,frame,cap);}
-
-export function rooAtlasGlyphRect(metrics:RooAtlasMetrics,entry:{char:string;x:number;y:number;sx:number;sy:number}){
-  const g=metrics.glyphs[entry.char];
-  return{x:entry.x+g.left*entry.sx,y:entry.y+g.top*entry.sy,width:g.width/metrics.capPixels*entry.sx,height:g.height/metrics.capPixels*entry.sy};
-}
-
 /** Uses the existing Canvas2D/CRT pass: no new WebGL context, mesh, or per-frame bake. */
 interface RooTextRaster {
   canvas: HTMLCanvasElement;

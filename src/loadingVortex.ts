@@ -1,4 +1,5 @@
 import type { LoadingVortexConfig, LoadingVortexRequest, LoadingVortexResponse } from './loadingVortexProtocol';
+import type { LoadingTitleDiagnostics } from './loadingTitle';
 
 /** A temporary loading surface. Title, menus and gameplay keep their renderer. */
 export class LoadingVortexPresentation {
@@ -10,7 +11,7 @@ export class LoadingVortexPresentation {
   private ready = false;
   private disabled = false;
   private failure: string | null = null;
-  private stats = { frames: 0, maxFrameMs: 0, width: 0, height: 0 };
+  private stats = { frames: 0, maxFrameMs: 0, width: 0, height: 0, title: null as LoadingTitleDiagnostics | null };
   private starts = 0;
   private stops = 0;
 
@@ -19,7 +20,7 @@ export class LoadingVortexPresentation {
   get active(): boolean { return this.ready; }
   get diagnostics() {
     return { active: this.active, resident: this.worker !== null, owner: 'loading-worker',
-      starts: this.starts, stops: this.stops, failure: this.failure, ...this.stats };
+      starts: this.starts, stops: this.stops, failure: this.failure, ...this.stats, title: this.active ? this.stats.title : null };
   }
 
   prepare(): Promise<boolean> {
@@ -47,7 +48,7 @@ export class LoadingVortexPresentation {
           canvas.hidden = false;
           this.resolve(true);
         } else if (data.type === 'stats') {
-          this.stats = { frames: data.frames, maxFrameMs: data.maxFrameMs, width: data.width, height: data.height };
+          this.stats = { frames: data.frames, maxFrameMs: data.maxFrameMs, width: data.width, height: data.height, title: data.title };
         } else if (data.type === 'failed') this.fail(data.reason);
       };
       worker.onerror = event => { event.preventDefault(); this.fail(event.message || 'Loading worker unavailable'); };

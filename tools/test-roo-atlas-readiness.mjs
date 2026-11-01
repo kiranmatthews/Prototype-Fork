@@ -19,7 +19,7 @@ class Image {
   async decode(){decodes++;await Promise.resolve();}
 }
 const source=(await readFile(new URL('../src/roo-type/atlas.ts',import.meta.url),'utf8'))
-  .replace(/^import .*$/gm,'').replace(/^export /gm,'').replaceAll('import.meta.env.BASE_URL',"''");
+  .replace(/^(?:import .*|export \{.*\} from.*)$/gm,'').replace(/^export /gm,'').replaceAll('import.meta.env.BASE_URL',"''");
 const context=vm.createContext({Image,Map,Set,Promise,Event,queueMicrotask,setTimeout,clearTimeout,
   window:{addEventListener:(type,handler)=>listeners.set(type,handler),dispatchEvent(){}},
   displayAtlasCap:()=>128,ROO_ATLAS_METRICS:{bonus:{version:10,lightFrames:3},counter:{version:10,lightFrames:3}},

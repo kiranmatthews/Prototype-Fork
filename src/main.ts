@@ -49,6 +49,7 @@ import { configureJungleAssetRenderer } from "./jungleAssets";
 import { installSceneryShadowPass } from "./sceneryShadowPass";
 import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
 import { LoadingVortexPresentation } from './loadingVortex';
+import { loadingTitleAtlasUrl } from './loadingTitle';
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
 import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";
@@ -217,6 +218,7 @@ const loadingVortex = new LoadingVortexPresentation(() => {
     outputWidth: renderer.domElement.width, outputHeight: renderer.domElement.height,
     antialias: !LITE_RENDER, post: fixed || crt, crt: JSON.stringify(preset),
     lutBaseUrl: new URL(import.meta.env.BASE_URL + 'crt-guest/lut/', document.baseURI).href,
+    titleAtlasUrl: new URL(loadingTitleAtlasUrl(renderer.domElement.width, renderer.domElement.height), document.baseURI).href,
     reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches, hidden: document.hidden,
   };
 });
@@ -1379,6 +1381,7 @@ function renderVortexWithGameFlow(
           nowMs,
           context,
           overlay.target,
+          gameFlow.loadingArtworkVisible,
         );
         drawGameFlowPreCrt(overlay);
       },
@@ -1393,7 +1396,7 @@ function renderVortexWithGameFlow(
   gameFlow.setPreCrtComposited(false);
   gameInterface.setComposited(false);
   if (!gameFlowVortex.resident) releaseGameplayPostForGameFlow();
-  gameFlowVortex.render(renderer, dt, nowMs, context);
+  gameFlowVortex.render(renderer, dt, nowMs, context, null, gameFlow.loadingArtworkVisible);
   gameFlow.setPreCrtComposited(true);
   const size = renderer.getSize(new THREE.Vector2());
   gameFlow.drawPreCrt(renderer,{width:size.x,height:size.y},null);
@@ -1449,6 +1452,9 @@ function resize(): void {
   camera2.updateProjectionMatrix();
   if (editorViewActive) editor.syncPlayAspect(playAspect);
   gameFlowVortex.invalidate();
+  if (gameFlow?.loadingArtworkVisible && gameFlow.vortexContext && gameFlowVortex.diagnostics.loadingTitle) {
+    void gameFlowVortex.prepareLoadingTitle(gameFlow.vortexContext, loadingTitleAtlasUrl(renderer.domElement.width, renderer.domElement.height));
+  }
   loadingVortex.resize();
   gameFlow?.requestGameplayFrame();
 }
@@ -1464,6 +1470,7 @@ async function prepareLoadingVortexPresentation(): Promise<void> {
     return;
   }
   const context = gameFlow.loadingPhase ? 'warp' : gameFlow.vortexContext ?? 'warp';
+  await gameFlowVortex.prepareLoadingTitle(context, loadingTitleAtlasUrl(renderer.domElement.width, renderer.domElement.height));
   renderVortexWithGameFlow(0, performance.now(), context);
   await afterPresentationPaint();
   renderVortexWithGameFlow(0, performance.now(), context);

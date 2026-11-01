@@ -7,6 +7,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { FieldSwirl } from "./swirlfield";
+import { LoadingTitle, type LoadingTitleDiagnostics } from './loadingTitle';
 import {
   cloneGameFlowVortexProfile,
   type GameFlowVortexContext,
@@ -33,6 +34,7 @@ export interface GameFlowVortexDiagnostics {
   maskPasses: number;
   createCount: number;
   disposeCount: number;
+  loadingTitle: LoadingTitleDiagnostics | null;
 }
 
 interface StageFrameResult {
@@ -87,12 +89,17 @@ export class GameFlowVortexHost {
       maskPasses: this.maskPasses,
       createCount: this.createCount,
       disposeCount: this.disposeCount,
+      loadingTitle: this.stage?.loadingTitleDiagnostics ?? null,
     };
   }
 
   /** A resize matters only if an active stage already owns its cameras. */
   invalidate(): void {
     this.stage?.invalidate();
+  }
+
+  async prepareLoadingTitle(context: GameFlowVortexContext, atlasUrl: string): Promise<void> {
+    if (!this.permanentlyDisposed) await this.ensureStage(context).prepareLoadingTitle(atlasUrl);
   }
 
   /**
@@ -118,9 +125,11 @@ export class GameFlowVortexHost {
     nowMs: number,
     context: GameFlowVortexContext,
     target: THREE.WebGLRenderTarget | null = null,
+    loading = false,
   ): boolean {
     if (this.permanentlyDisposed) return false;
     const stage = this.ensureStage(context);
+    stage.syncLoadingTitle(loading);
     stage.prepare();
     this.context = context;
     this.maskVisible = context === "gameover";
@@ -141,6 +150,7 @@ export class GameFlowVortexHost {
       this.reducedMotion ? 0 : Math.min(0.1, Math.max(0, deltaSeconds)),
       nowMs,
       target,
+      loading,
     );
     this.targetWidth = result.targetWidth;
     this.targetHeight = result.targetHeight;
@@ -191,6 +201,28 @@ class GameFlowVortexStage {
   private needsRender = true;
   private hasRendered = false;
   private disposed = false;
+  private loadingTitle: LoadingTitle | null = null;
+
+  get loadingTitleDiagnostics(): LoadingTitleDiagnostics | null { return this.loadingTitle?.diagnostics ?? null; }
+
+  async prepareLoadingTitle(atlasUrl: string): Promise<void> {
+    if (this.disposed) return;
+    if (!this.loadingTitle) {
+      this.loadingTitle = new LoadingTitle();
+      this.vortexScene.add(this.loadingTitle.mesh);
+    }
+    await this.loadingTitle.prepare(atlasUrl);
+    this.invalidate();
+  }
+
+  syncLoadingTitle(loading: boolean): void {
+    if (!loading && this.loadingTitle) {
+      this.loadingTitle.dispose(); this.loadingTitle = null;
+      // A reduced-motion title and destination can share the menu context.
+      // Clear the old ink before the host considers skipping a static frame.
+      this.invalidate();
+    }
+  }
 
   private boneMaterial: THREE.MeshStandardMaterial | null = null;
   private skullMaterial: THREE.MeshStandardMaterial | null = null;
@@ -238,10 +270,12 @@ class GameFlowVortexStage {
     deltaSeconds: number,
     _nowMs: number,
     target: THREE.WebGLRenderTarget | null = null,
+    loading = false,
   ): StageFrameResult {
     const { targetWidth, targetHeight, viewportWidth, viewportHeight } =
       this.syncSize(renderer, target);
     this.vortex.update(deltaSeconds, this.vortexCamera);
+    if (loading) this.loadingTitle?.update(deltaSeconds, targetWidth, targetHeight, VIEW_HALF_HEIGHT * 2);
     if (this.context === "gameover" && this.mask) {
       // Host supplies zero delta for reduced motion. Accumulated time freezes
       // the mask with the field while still allowing target-backed frames to
@@ -323,6 +357,7 @@ class GameFlowVortexStage {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.loadingTitle?.dispose(); this.loadingTitle = null;
     this.vortexScene.remove(this.vortex.group);
     this.vortex.dispose();
     const geometries = new Set<THREE.BufferGeometry>();

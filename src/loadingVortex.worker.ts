@@ -39,6 +39,7 @@ async function start(canvas: OffscreenCanvas, initial: LoadingVortexConfig): Pro
   // This worker owns reduced motion by stopping its loop, preserving the last
   // field pose when the preference changes instead of rebuilding the artwork.
   vortex = new GameFlowVortexHost(false);
+  const titleReady = vortex.prepareLoadingTitle(config.context, config.titleAtlasUrl);
   settings.importJson(config.crt);
   if (config.post) {
     source = new THREE.WebGLRenderTarget(config.inputWidth, config.inputHeight, { type: THREE.HalfFloatType });
@@ -58,6 +59,7 @@ async function start(canvas: OffscreenCanvas, initial: LoadingVortexConfig): Pro
     output = new CrtGuestOutputPass(() => crt?.deferredOutput ?? null, () => crt?.deferredDeconvergence ?? null);
     output.renderToScreen = true;
   }
+  await titleReady;
   if (disposed) return;
   resize(config);
   draw(0, performance.now());
@@ -83,6 +85,7 @@ async function start(canvas: OffscreenCanvas, initial: LoadingVortexConfig): Pro
 }
 
 function resize(next: LoadingVortexConfig): void {
+  const titleChanged = config.titleAtlasUrl !== next.titleAtlasUrl || config.context !== next.context;
   config = next;
   if (!renderer) return;
   renderer.setSize(config.outputWidth, config.outputHeight, false);
@@ -90,12 +93,15 @@ function resize(next: LoadingVortexConfig): void {
   crt?.setResolution(config.inputWidth, config.inputHeight, config.outputWidth, config.outputHeight);
   settings.importJson(config.crt);
   vortex?.invalidate();
+  if (titleChanged) void vortex?.prepareLoadingTitle(config.context, config.titleAtlasUrl).then(() => {
+    if (initialized && !disposed) { draw(0, performance.now()); report(); }
+  });
   if (initialized) { draw(0, performance.now()); report(); schedule(); }
 }
 
 function draw(dt: number, now: number): void {
   if (!renderer || !vortex || disposed) return;
-  vortex.render(renderer, dt, now, config.context, source);
+  vortex.render(renderer, dt, now, config.context, source, true);
   if (source && output) {
     if (crt?.active) crt.render(renderer, source, source, dt, false);
     renderer.setRenderTarget(null);
@@ -125,7 +131,7 @@ function frame(now: number): void {
 
 function report(): void {
   post({ type: 'stats', at: performance.timeOrigin + performance.now(), frames, maxFrameMs,
-    width: config.outputWidth, height: config.outputHeight });
+    width: config.outputWidth, height: config.outputHeight, title: vortex?.diagnostics.loadingTitle ?? null });
 }
 
 function releaseLuts(value: CrtGuestLuts): void {

@@ -16,6 +16,7 @@ const cases = [
   { name: 'native', query: '?playtest&level=codex-lab', width: 1920, height: 1080, native: true },
   { name: 'reduced', query: '?playtest&level=codex-lab', width: 390, height: 844, reduced: true },
   { name: 'fallback', query: '?playtest&level=codex-lab&lite', width: 960, height: 720, fallback: true },
+  { name: 'home-fallback-reduced', query: '?', width: 390, height: 844, fallback: true, reduced: true },
 ];
 try {
   for (const test of cases) {
@@ -26,6 +27,13 @@ try {
       if (test.native) localStorage.setItem('solProtoRenderQuality.v1', JSON.stringify({ version: 1, enabled: false, baseHeight: 720, outputMultiplier: 1, fixed60: true }));
       if (test.fallback) HTMLCanvasElement.prototype.transferControlToOffscreen = undefined;
       window.__loadingWorkerStats = [];
+      const observeStartup = () => {
+        const game = window.__game;
+        const title = game?.getGameFlowVortexDiagnostics().loadingTitle;
+        if (game?.gameFlow.startupLoading && title?.ready) window.__startupLoadingTitle = title;
+        if (!game || game.gameFlow.startupLoading) requestAnimationFrame(observeStartup);
+      };
+      requestAnimationFrame(observeStartup);
       const Original = window.Worker;
       window.Worker = class extends Original {
         constructor(...args) {
@@ -41,12 +49,17 @@ try {
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     try {
       await page.goto(new URL(test.query, base).href);
-      await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay, null, { timeout: 180000 });
+      await page.waitForFunction(() => window.__game && !window.__game.gameFlow.startupLoading && !window.__game.gameFlow.loadingPhase, null, { timeout: 180000 });
       if (test.crt) await page.evaluate(() => window.__game.gameFlow.callbacks.onCrtEnabled(true));
       const startup = await page.evaluate(() => window.__game.getLoadingDiagnostics());
       assert.equal(startup.animation.active, false);
       assert.equal(startup.animation.resident, false);
       assert.equal(await page.locator('.game-loading-motion').count(), 0);
+      assert.equal(await page.evaluate(() => window.__game.getGameFlowVortexDiagnostics().loadingTitle), null,
+        'Startup must remove loading text before revealing the title or gameplay');
+      const initialTitle = await page.evaluate(fallback => fallback ? window.__startupLoadingTitle :
+        window.__loadingWorkerStats.find(s => s.title?.ready)?.title, test.fallback);
+      assert.equal(initialTitle?.ready, true, 'Cold startup must display Roo loading text');
       await page.evaluate(() => {
         const g = window.__game, f = g.gameFlow;
         window.__loadingWorkerStats = [];
@@ -66,9 +79,15 @@ try {
       });
       await page.waitForFunction(() => window.__loadingHeld === 'warm', null, { timeout: 180000 });
       const warm = await page.evaluate(() => ({ animation: window.__game.getLoadingDiagnostics().animation,
-        primary: window.__game.getGameFlowVortexDiagnostics().renderedFrames }));
+        primary: window.__game.getGameFlowVortexDiagnostics().renderedFrames,
+        title: window.__game.getGameFlowVortexDiagnostics().loadingTitle }));
       assert.equal(warm.animation.active, !test.fallback, JSON.stringify(warm));
       if (!test.fallback) assert.equal(warm.animation.failure, null);
+      const title = test.fallback ? warm.title : warm.animation.title;
+      assert.equal(title?.ready, true, 'Loading must carry the decoded Roo PNG title');
+      assert.equal(title.text, 'LOADING');
+      assert.ok(title.bounds.left > .05 && title.bounds.right < .95 && title.bounds.top > .05 && title.bounds.bottom < .95,
+        'Bouncing title must fit inside the viewport');
       await page.screenshot({ path: join(output, test.name + '-warm.png') });
       const stall = await page.evaluate(() => {
         const start = performance.timeOrigin + performance.now(), until = performance.now() + 1500;
@@ -82,9 +101,12 @@ try {
         const during = moving.stats.filter(s => s.at >= stall.start && s.at <= stall.end);
         assert.ok(during.length >= 2, 'Worker must publish frames while main JS is blocked');
         assert.ok(during.at(-1).frames - during[0].frames >= 20, 'Loader stalled behind game work');
+        assert.ok(during.at(-1).title.seconds - during[0].title.seconds > .3, 'Title bounce stalled behind game work');
+        assert.ok(new Set(moving.stats.map(s => JSON.stringify(s.title.bounds))).size > 1, 'Title vertices did not animate');
         assert.equal(moving.primary, warm.primary, 'Main renderer duplicated hidden loading work');
       }
       if (test.reduced) assert.equal(moving.animation.frames, warm.animation.frames, 'Reduced motion must not run an idle animation loop');
+      if (test.reduced) assert.equal((test.fallback ? warm.title : moving.animation.title).seconds, 0, 'Reduced motion title must hold its neutral pose');
       await page.evaluate(() => window.__continueWarm());
       await page.waitForFunction(() => window.__loadingHeld === 'final', null, { timeout: 180000 });
       const finalBefore = await page.evaluate(() => window.__game.getLoadingDiagnostics().animation.frames);
@@ -110,6 +132,9 @@ try {
         blocked: window.__game.gameFlow.blocksGameplay, level: window.__game.getCurrentLevel().id }));
       assert.equal(destination.blocked, false); assert.equal(destination.level, 'treehouse-trail');
       assert.equal(destination.loading.animation.resident, false); assert.equal(destination.loading.animation.active, false);
+      assert.equal(destination.loading.animation.title, null);
+      assert.equal(await page.evaluate(() => window.__game.getGameFlowVortexDiagnostics().loadingTitle), null,
+        'Destination must release loading lettering');
       assert.equal(destination.loading.animation.starts, destination.loading.animation.stops);
       assert.deepEqual(destination.loading.pending, []); assert.deepEqual(destination.loading.failed, []);
       assert.equal(await page.locator('.game-loading-motion,.game-loading-held-frame').count(), 0);

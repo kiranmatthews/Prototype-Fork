@@ -385,6 +385,11 @@ export class GameFlowUI {
 
   get loadingPhase(): LoadingTransitionPhase | null { return this.transitionPhase; }
 
+  /** The label belongs only to covered loading, never to the destination menu. */
+  get loadingArtworkVisible(): boolean {
+    return this.loadingVortexActive || this.startupLoading && !this.destinationRevealing;
+  }
+
   /** Leave the live character shot clear of the real responsive card bounds. */
   resultsSceneViewport(width: number, height: number): ResultsViewport {
     const card = this.panel.querySelector(".game-results-card")?.getBoundingClientRect();

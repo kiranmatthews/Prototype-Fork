@@ -1,4 +1,6 @@
-/** Only presentation settings cross this boundary; never game state or assets. */
+import type { LoadingTitleDiagnostics } from './loadingTitle';
+
+/** Only presentation settings and asset URLs cross this boundary; never game state. */
 export interface LoadingVortexConfig {
   context: 'menu' | 'warp';
   inputWidth: number;
@@ -9,6 +11,7 @@ export interface LoadingVortexConfig {
   post: boolean;
   crt: string;
   lutBaseUrl: string;
+  titleAtlasUrl: string;
   reducedMotion: boolean;
   hidden: boolean;
 }
@@ -23,4 +26,4 @@ export type LoadingVortexResponse =
   | { type: 'ready' }
   | { type: 'failed'; reason: string }
   | { type: 'disposed' }
-  | { type: 'stats'; at: number; frames: number; maxFrameMs: number; width: number; height: number };
+  | { type: 'stats'; at: number; frames: number; maxFrameMs: number; width: number; height: number; title: LoadingTitleDiagnostics | null };

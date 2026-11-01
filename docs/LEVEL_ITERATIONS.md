@@ -7838,3 +7838,30 @@ build and release-size checks passed (999,218,971 / 1,000,000,000 bytes).
 Prompt-to-playable: approximately 20 minutes; complete local validation:
 approximately 26 minutes. Release publication is owned by the active coordinator.
 Evidence: [global crate-size audit](performance/global-crate-size.json).
+
+
+## 2026-11-01 — Large Roo loading title with a gentle idle bounce
+
+Added the requested gold PNG `LOADING` title over the loading vortex. Each
+letter softly compresses, hops and settles in a staggered 2.8-second cycle.
+The existing Roo atlas supplies the exact lettering; seven quads share one
+texture/material inside the vortex scene, beneath CRT. Only 28 vertex positions
+change per frame. No new artwork or animation timer is introduced.
+
+Both worker loading and the main-renderer fallback use the same title. It fits
+portrait/landscape and native resolution, stays still for reduced motion, and
+releases before title/menu/gameplay reveal. Optional image requests have a
+bounded wait, abort on disposal and close late decoded bitmaps. Pure Roo layout
+helpers were extracted without changing existing menu/HUD measurements.
+
+Focused unit/lifecycle/readiness checks, real Chrome lite/full CRT/native and
+portrait/reduced/fallback checks passed. Compiled production additionally passed
+cold startup, native loading, reduced motion, and reduced-motion home fallback.
+The worker maintained about 60 fps through a forced 1.5-second main-thread
+stall, including independent text motion. Console errors: zero. Build and
+release-size checks passed (999,243,732 / 1,000,000,000 bytes). No level data,
+movement settings, packages or publishing workflow changed.
+
+Prompt-to-playable: approximately 7 minutes, including initial source inspection;
+complete local validation: approximately 16 minutes. Publication remains with
+the active release coordinator. Evidence: [loading title review](performance/loading-roo-title.json).

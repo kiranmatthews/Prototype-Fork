@@ -1,0 +1,338 @@
+{
+  "recordedUtc": "2026-11-01T08:24:16.626795+00:00",
+  "feature": "Large gold Roo PNG LOADING title with gentle staggered idle bounce",
+  "rendering": {
+    "quads": 7,
+    "vertices": 28,
+    "drawCallsAdded": 1,
+    "newArtAssets": 0,
+    "placement": "Existing vortex scene, below CRT",
+    "motion": "2.8 s staggered squash/hop/settle; freezes for reduced motion"
+  },
+  "checks": [
+    "test-loading-title",
+    "test-loading-vortex-lifecycle",
+    "test-roo-atlas-readiness",
+    "test-game-flow-vortex",
+    "test-loading-motion-browser (dev lite/full CRT/native/reduced/fallback; production lite/native/reduced/home fallback reduced)",
+    "npm run build",
+    "npm run check:release",
+    "git diff --check"
+  ],
+  "release": {
+    "bytes": 999243732,
+    "budgetBytes": 1000000000,
+    "offlineVersion": "a69e627aa7c2587a6d51"
+  },
+  "sourceSha256": {
+    "src/loadingTitle.ts": "a7dca6d1b397aa3310fd4c473074f1125a5adc0f5a97cf558497f5fb62cae3ae",
+    "src/roo-type/atlasLayout.ts": "eb42d2e2b9c1b1de32cc2b7d74c3811e0d91f64754db750f437f6e7e5b21e6f7",
+    "src/roo-type/atlas.ts": "c3121fc57d4484ac17bebc854a34837e6e97bbc9f8e20508679fa237954642fe",
+    "src/gameFlowVortex.ts": "a3c1638fd52461860d5180f80b3266dc2ccb07af21ce59545565b5466930f0b2",
+    "src/gameFlowUI.ts": "9471669a3199971e7ac905c3907e8eacba5d8fe29f7e1b51f7fd14bf70d0f225",
+    "src/main.ts": "ea90b8b560dda62e7ae3f772226b7101ff152cc8aa25e0ccbf3ee4444ae19d2b",
+    "src/loadingVortex.ts": "2627f5fa36d199464c203a4ef61644c80c02997f388c49e8219b60b5f55354c3",
+    "src/loadingVortex.worker.ts": "54fbef1d7d1a58008f8d600c4476a68123312d7adde25f5475d3c146b620aa3c",
+    "src/loadingVortexProtocol.ts": "a3ed7be5cea366d56562433165e138324e65586c8e3aeafce4261aa5212d04ef"
+  },
+  "browser": [
+    {
+      "suite": "dev-lite",
+      "case": "lite",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": 59.99,
+      "workerMaxFrameMs": 16.8,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 1.9332999999999976,
+        "bounds": {
+          "left": 0.2748703837112003,
+          "top": 0.41246689618644067,
+          "right": 0.725221979045098,
+          "bottom": 0.5875450211864407
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 454,
+        "maxFrameMs": 16.800000000000182,
+        "width": 422,
+        "height": 195,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "dev-full",
+      "case": "full-crt",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": 60.01,
+      "workerMaxFrameMs": 33.4,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 2.3165999999999984,
+        "bounds": {
+          "left": 0.2748703837112003,
+          "top": 0.41246689618644067,
+          "right": 0.725221979045098,
+          "bottom": 0.5875450211864407
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 504,
+        "maxFrameMs": 33.400000000000546,
+        "width": 1558,
+        "height": 720,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "dev-full",
+      "case": "native",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": 59.99,
+      "workerMaxFrameMs": 16.8,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 1.9165999999999974,
+        "bounds": {
+          "left": 0.2748703837112003,
+          "top": 0.41246689618644067,
+          "right": 0.725221979045098,
+          "bottom": 0.5875450211864407
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 545,
+        "maxFrameMs": 16.80000000000109,
+        "width": 844,
+        "height": 390,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "dev-full",
+      "case": "reduced",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": null,
+      "workerMaxFrameMs": 0,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 0,
+        "bounds": {
+          "left": 0.0978806697319522,
+          "top": 0.45935733125351197,
+          "right": 0.9022843056734016,
+          "bottom": 0.5406482021254869
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 3,
+        "maxFrameMs": 0,
+        "width": 1558,
+        "height": 720,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "dev-full",
+      "case": "fallback",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": null,
+      "workerMaxFrameMs": 0,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 1.572900000035762,
+        "bounds": {
+          "left": 0.1998271782816004,
+          "top": 0.41246689618644067,
+          "right": 0.8002959720601307,
+          "bottom": 0.5875450211864407
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 0,
+        "stops": 0,
+        "failure": null,
+        "frames": 0,
+        "maxFrameMs": 0,
+        "width": 0,
+        "height": 0,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "production",
+      "case": "lite",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": 60.0,
+      "workerMaxFrameMs": 16.8,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 1.9831999999999974,
+        "bounds": {
+          "left": 0.2748703837112003,
+          "top": 0.41246689618644067,
+          "right": 0.725221979045098,
+          "bottom": 0.5875450211864407
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 455,
+        "maxFrameMs": 33.30000000000018,
+        "width": 422,
+        "height": 195,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "production",
+      "case": "native",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": 60.03,
+      "workerMaxFrameMs": 16.8,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 1.9331999999999974,
+        "bounds": {
+          "left": 0.2748703837112003,
+          "top": 0.41246689618644067,
+          "right": 0.725221979045098,
+          "bottom": 0.5875450211864407
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 544,
+        "maxFrameMs": 33.30000000000018,
+        "width": 844,
+        "height": 390,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "production",
+      "case": "reduced",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": null,
+      "workerMaxFrameMs": 0,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 0,
+        "bounds": {
+          "left": 0.0978806697319522,
+          "top": 0.45935733125351197,
+          "right": 0.9022843056734016,
+          "bottom": 0.5406482021254869
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 2,
+        "stops": 2,
+        "failure": null,
+        "frames": 3,
+        "maxFrameMs": 0,
+        "width": 1558,
+        "height": 720,
+        "title": null
+      },
+      "consoleErrors": []
+    },
+    {
+      "suite": "production",
+      "case": "home-fallback-reduced",
+      "blockedMainMs": 1500,
+      "workerFpsDuringStall": null,
+      "workerMaxFrameMs": 0,
+      "title": {
+        "text": "LOADING",
+        "ready": true,
+        "seconds": 0,
+        "bounds": {
+          "left": 0.0978806697319522,
+          "top": 0.45935733125351197,
+          "right": 0.9022843056734016,
+          "bottom": 0.5406482021254869
+        }
+      },
+      "finalPhase": "prepare-destination",
+      "destinationLoading": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 0,
+        "stops": 0,
+        "failure": null,
+        "frames": 0,
+        "maxFrameMs": 0,
+        "width": 0,
+        "height": 0,
+        "title": null
+      },
+      "consoleErrors": []
+    }
+  ],
+  "evidenceDirectory": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/evidence/01a195ed-5cfe-7ea2-a6a0-20d780fd99cd-roo-title"
+}
