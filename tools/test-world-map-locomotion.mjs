@@ -13,10 +13,16 @@ try{
   const {Player}=await server.ssrLoadModule('/src/player.ts');
   const {Level,findLevel}=await server.ssrLoadModule('/src/level.ts');
   const {WorldMapController}=await server.ssrLoadModule('/src/worldMapController.ts');
+  const {CAMPAIGN_MAP_EDGES}=await server.ssrLoadModule('/src/campaign.ts');
   const a=await server.ssrLoadModule('/src/animation/index.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const replay=JSON.parse(await readFile(new URL('./fixtures/world-map-skid-inputs.json',import.meta.url),'utf8'));
   const scene=new THREE.Scene(),level=new Level(scene,findLevel(replay.level)),p=new Player(scene);
+  for(const edge of CAMPAIGN_MAP_EDGES){
+    assert.equal(level.campaignMapNeighbor(edge.from,1,0,()=>true),edge.to,'Next hub must use right');
+    assert.equal(level.campaignMapNeighbor(edge.to,-1,0,()=>true),edge.from,'Previous hub must use left');
+    assert.equal(level.campaignMapNeighbor(edge.from,1,0,()=>false),null,'Direction must not bypass locks');
+  }
   p.enterLevel(replay.level);p.respawn(level,true);
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(a.RigBinding.fromSculptRuntime(p.animationRig.root).definition));
   const input={moveX:0,moveY:0,mapDirectionX:0,mapDirectionY:0,consumeEdges(){}};
@@ -26,6 +32,7 @@ try{
   const campaign={recommendedMapLevelKey:()=> 'jungle',levelUnlocked:()=>true,setMapFocus(){},levelProgress:()=>null};
   const map=new WorldMapController(campaign,p,{onSelection(){},onEnterLevel(){},onOpenSection(){}});
   assert.doesNotThrow(()=>map.activate(level,'jungle'),'fresh world-map activation must render before input polling');
+  await map.preparePresentation();
   assert.equal(map.active,true);
   assert.equal(runtime.activeClipId,'player.idle');
   assert.doesNotThrow(()=>p.prepareStartPresentation(level),'startup frame preparation must also work without gameplay input');
@@ -43,13 +50,14 @@ try{
   console.log({moving,visited:[...visited],skidFrames:forbidden.length,firstSkid:forbidden[0],finalClip:runtime.activeClipId});
   assert.equal(forbidden.length,0,'map navigation entered the gameplay skid pose');
   assert.equal(runtime.activeClipId,'player.idle','map did not settle to Idle');
-  // Island transfers keep the rider idle, hide them during the sea pan,
-  // and reveal them on the destination hub with no gameplay one-shot.
-  map.activate(level,'jungle-cup');assert.ok(map.travelTo('custard-creek'));
+  // Island transfers keep both endpoint skaters occupied throughout the pan.
+  // The hidden gameplay rider hands over in place without a gameplay one-shot.
+  map.activate(level,'jungle-cup');await map.preparePresentation();assert.ok(map.travelTo('custard-creek'));
   let hidden=0;
   for(let f=0;f<170;f++){
     map.step(1/60,input);level.update(1/60);
     if(!p.group.visible)hidden++;
+    if(map.moving)for(const key of ['jungle-cup','custard-creek'])assert.ok(map.diagnostics.skaters.find(s=>s.key===key)?.visible, 'Empty hub during island pan: '+key);
     assert.notEqual(p.animationClipHint,'player.grind','island pan entered an ocean boardslide');
     assert.equal(runtime.diagnostics.transientClipId,null,'map inherited a gameplay one-shot');
   }
@@ -59,6 +67,7 @@ try{
   for(let f=0;f<170;f++){map.step(1/60,input);level.update(1/60);}
   assert.equal(map.selectedKey,'jungle-cup');assert.equal(map.moving,false);assert.equal(p.group.visible,true);
   map.deactivate();
+  assert.equal(scene.getObjectByName('world-map-hub-skaters'),undefined);
   const flat=new Level(scene,{id:'map-reentry-test',name:'Map reentry',data:{v:1,name:'Map reentry',spawn:[0,.02,0],killY:-20,
     components:[{t:'platform',p:[0,-.5,0],s:[100,1,100]},{t:'gate',p:[0,0,-45]}]}});
   const startGameplaySkid=()=>{

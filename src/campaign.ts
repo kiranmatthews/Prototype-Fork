@@ -476,8 +476,12 @@ export function migrateCampaignMapPoints(points: number[][]): number[][] {
 }
 
 const OPPOSITE_MAP_DIRECTION = {left:'right',right:'left',up:'down',down:'up'} as const;
-/** Stable authoring graph slots; the controller projects exits for its orbiting camera. */
+/** Stable progression slots, independent of the orbiting camera. */
 function mapEdgeDirection(from: CampaignLevelDefinition, to: CampaignLevelDefinition): CampaignMapDirection {
+  // Main-route input follows progression even when the coastal camera turns.
+  // Island exits are always next/right and previous/left. Authored forks may
+  // still use an unambiguous vertical branch.
+  if (from.islandId !== to.islandId || from.mapPath === 'main' && to.mapPath === 'main') return 'right';
   const dx=to.mapPosition[0]-from.mapPosition[0], dz=to.mapPosition[2]-from.mapPosition[2];
   return Math.abs(dx)>=Math.abs(dz)*.8 ? (dx>=0?'right':'left') : (dz<0?'up':'down');
 }

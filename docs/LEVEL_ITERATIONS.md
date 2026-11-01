@@ -7865,3 +7865,32 @@ movement settings, packages or publishing workflow changed.
 Prompt-to-playable: approximately 7 minutes, including initial source inspection;
 complete local validation: approximately 16 minutes. Publication remains with
 the active release coordinator. Evidence: [loading title review](performance/loading-roo-title.json).
+
+
+## 2026-11-01 — Consistent map directions and occupied island hubs
+
+Main-route progression now uses Right for next and Left for previous across all
+37 links, including every island boundary. Camera orbit no longer changes the
+input direction. Authored vertical fork directions remain supported. Keyboard,
+stick, touch directions and route metadata agree without changing unlock gates.
+
+Each island's entry and exit hub receives a complete authored skater before the
+map is revealed. The twelve resident rigs share player geometry, materials and
+textures, with independent bone poses. Both ends remain occupied for the whole
+camera pan; the hidden active rider hands over at the same position and pose.
+Ordinary coast walking and boardslides are retained. Leaving the map disposes
+only the replicas' skeleton resources and restores the gameplay player.
+
+Focused graph, six-island roster, locomotion, shared-resource ownership and exact
+handoff tests passed. Real Chrome checked every boundary in both directions:
+ten pans each in lite, native 1920×1080 and compiled production. Both endpoint
+skaters remained visible on every recorded pan frame, and gameplay teardown and
+portrait presentation passed. Console errors: zero. `npm run check:levels`,
+build and release-size checks passed (999,246,636 / 1,000,000,000 bytes). No
+movement tuning, published level snapshot or artwork was changed.
+
+Prompt-to-playable: approximately 14 minutes; completed local validation:
+approximately 21 minutes. At the user's explicit request, this chat now owns
+publication because the release coordinator is inactive; the pending crate-size
+and loading-title commits accompany this release. Evidence:
+[map navigation review](performance/map-navigation.json).

@@ -5,7 +5,7 @@ import * as THREE from 'three';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 const {CAMPAIGN_ISLANDS:islands,CAMPAIGN_LEVELS:levels,CAMPAIGN_MAP_EDGES:edges}=await server.ssrLoadModule('/src/campaign.ts');
-const view=await server.ssrLoadModule('/src/mapView.ts');await server.close();
+await server.close();
 const base=process.argv[2]||'http://127.0.0.1:6264/';
 const out=process.env.ISLAND_REVIEW_DIR||'/private/tmp/island-worlds-final';
 await mkdir(out,{recursive:true});
@@ -74,16 +74,13 @@ try{
  for(const edge of edges.filter(e=>levels.find(l=>l.progressKey===e.from).islandId!==levels.find(l=>l.progressKey===e.to).islandId)){
   for(const [from,to] of [[edge.from,edge.to],[edge.to,edge.from]]){
    await go(from);
-   const data=await page.evaluate(({from,edges})=>{
-    const l=window.__game.getLevel(),p=l.campaignMapPose(from).position,c=l.campaignMapIslandCentre(from);
-    return {p:p.toArray(),c:c.toArray(),exits:edges.filter(e=>e.from===from||e.to===from).map(e=>{const key=e.from===from?e.to:e.from;return {key,delta:l.campaignMapTravel(from,key,.08).position.sub(p).toArray()}})};
-   },{from,edges});
-   const direction=Object.entries(view.mapViewDirections(view.islandViewAngle(new THREE.Vector3(...data.p),new THREE.Vector3(...data.c)),data.exits.map(e=>({...e,delta:new THREE.Vector3(...e.delta)})))).find(([,key])=>key===to)?.[0];
+   const edge=edges.find(e=>e.from===from&&e.to===to||e.to===from&&e.from===to);
+   const direction=edge.from===from?edge.fromDirection:edge.toDirection;
    assert.ok(direction);
    await page.evaluate(()=>{
     window.__mapPanFrames=[];window.__mapPanRecord=true;
     const record=()=>{if(!window.__mapPanRecord)return;const g=window.__game;
-     window.__mapPanFrames.push({p:g.player.renderPosition.toArray(),visible:g.player.group.visible,eye:g.camera.position.toArray(),moving:document.querySelector('.world-map-ui').classList.contains('is-moving')});
+     window.__mapPanFrames.push({p:g.player.renderPosition.toArray(),visible:g.player.group.visible,skaters:g.getWorldMapDiagnostics().skaters,eye:g.camera.position.toArray(),moving:document.querySelector('.world-map-ui').classList.contains('is-moving')});
      requestAnimationFrame(record)};
     requestAnimationFrame(record);
    });
@@ -91,7 +88,8 @@ try{
    await page.waitForFunction(to=>window.__mapPanFrames.some(f=>f.moving)&&document.querySelector('.world-map-ui').dataset.selectedKey===to&&!document.querySelector('.world-map-ui').classList.contains('is-moving'),to,{timeout:60000});
    const frames=await page.evaluate(()=>{window.__mapPanRecord=false;return window.__mapPanFrames});
    const a=new THREE.Vector3(...levels.find(l=>l.progressKey===from).mapPosition),b=new THREE.Vector3(...levels.find(l=>l.progressKey===to).mapPosition);
-   assert.ok(frames.some(f=>!f.visible),'rider remains visible over the sea');
+   assert.ok(frames.some(f=>!f.visible),'active rider was not handed to resident hub skaters');
+   for(const frame of frames.filter(f=>f.moving))for(const key of [from,to])assert.ok(frame.skaters.find(s=>s.key===key)?.visible,'empty hub during pan');
    for(const frame of frames){const p=new THREE.Vector3(...frame.p);assert.ok(Math.min(p.distanceTo(a),p.distanceTo(b))<.05,'rider skates through the sea')}
    const eyeDistances=frames.slice(1).map((f,i)=>new THREE.Vector3(...f.eye).distanceTo(new THREE.Vector3(...frames[i].eye)));
    assert.ok(Math.max(...eyeDistances)<35,'camera jumped instead of panning');

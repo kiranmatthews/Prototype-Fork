@@ -16,7 +16,7 @@ try {
   for(const other of islands)if(other!==island)assert.ok(Math.hypot(island.centre[0]-other.centre[0],island.centre[1]-other.centre[1],island.centre[2]-other.centre[2])>180,'overlapping islands');
  }
  assert.deepEqual(c.validateCampaignMapGraph(),[]);
- assert.deepEqual(new Set(c.CAMPAIGN_MAP_EDGES.map(e=>e.fromDirection)),new Set(['left','right','up','down']));
+ assert.deepEqual(new Set(c.CAMPAIGN_MAP_EDGES.map(e=>e.fromDirection)),new Set(['right']));
  const manifest=JSON.parse(await readFile('public/map-landmarks/manifest.json','utf8'));
  let triangles=0,pieces=0;
  for(const level of levels){
@@ -44,5 +44,5 @@ try {
  const current=c.CAMPAIGN_MAP_HUBS.map(h=>[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]]);
  assert.deepEqual(c.migrateCampaignMapPoints(old),current);
  const custom=structuredClone(old);custom[0][0]+=.01;assert.equal(c.migrateCampaignMapPoints(custom),custom);
- console.log(JSON.stringify({islands:6,wrappingRoutes:6,themedBeacons:levels.length,meshInstances:pieces,instancedTriangles:triangles,migration:'pass',directions:'all four, reciprocal and unique'}));
+ console.log(JSON.stringify({islands:6,wrappingRoutes:6,themedBeacons:levels.length,meshInstances:pieces,instancedTriangles:triangles,migration:'pass',directions:'main route right/left, reciprocal and unique'}));
 } finally {await server.close()}

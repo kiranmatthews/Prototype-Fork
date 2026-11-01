@@ -1038,6 +1038,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     warmSkinBoundsKernel(),
     loadSky(activeSky),
     player.preparePresentationAssets(),
+    worldMapController?.preparePresentation(),
     skateRace.preparePresentationAssets(),
     level.prepareJungleAssets(),
     level.prepareSurfaceImages(),
@@ -5743,6 +5744,7 @@ requestAnimationFrame(frame);
   showTimeTrialResults,
   getLoadingDiagnostics: () => ({ phase: gameFlow.loadingPhase, animation: loadingVortex.diagnostics, ...presentationAssets.diagnostics }),
   getFontDiagnostics: rooAtlasDiagnostics,
+  getWorldMapDiagnostics: () => worldMapController?.diagnostics ?? null,
   getSceneryDecoderDiagnostics: () => sceneryDecoderDiagnostics(renderer),
   // debug: build/inspect the level list straight from the harness
   levelList,
@@ -5766,7 +5768,7 @@ level.updateSceneryView(camera);
 async function prepareStartupPresentation(): Promise<void> {
   await prepareLoadingVortexPresentation();
   await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
-    player.preparePresentationAssets(), skateRace.preparePresentationAssets(), animationPreparation]);
+    player.preparePresentationAssets(), worldMapController?.preparePresentation(), skateRace.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();
   if(shellBypass&&!editor.active) {

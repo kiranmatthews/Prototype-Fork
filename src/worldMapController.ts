@@ -12,7 +12,8 @@ import type { Level } from "./level";
 import type { Player } from "./player";
 import { sfx } from "./audio";
 import { puffs } from "./puffs";
-import { islandViewAngle, lerpOrbitAngle, mapViewDirections, islandMapFrame } from "./mapView";
+import { lerpOrbitAngle, islandMapFrame } from "./mapView";
+import { WorldMapHubSkaters } from './worldMapHubSkaters';
 
 const UP = new THREE.Vector3(0, 1, 0);
 const MAP_PLAYER_SCALE = 4.6;
@@ -61,6 +62,9 @@ export class WorldMapController {
   private readonly cameraEye = new THREE.Vector3();
   private readonly cameraTarget = new THREE.Vector3();
   private readonly desiredTarget = new THREE.Vector3();
+  private hubSkaters: WorldMapHubSkaters | null = null;
+  private hubSkatersReady: Promise<void> = Promise.resolve();
+  private activation = 0;
 
   constructor(
     private readonly campaign: CampaignStore,
@@ -84,7 +88,16 @@ export class WorldMapController {
     return this.travel !== null;
   }
 
+  get diagnostics() {
+    return { selected: this.selectedKey, destination: this.destinationKey, moving: this.moving,
+      directions: this.directionSlots(), skaters: this.hubSkaters?.diagnostics ?? [] };
+  }
+
+  preparePresentation(): Promise<void> { return this.hubSkatersReady; }
+
   activate(level: Level, preferredKey: string | null): void {
+    this.hubSkaters?.dispose(); this.hubSkaters = null;
+    const activation = ++this.activation;
     this.player.group.visible = true;
     this.player.setWorldMapPresentationScale(MAP_PLAYER_SCALE);
     const fallback = this.campaign.recommendedMapLevelKey();
@@ -107,10 +120,17 @@ export class WorldMapController {
       this.player.snapRenderInterpolation();
     }
     this.syncVisuals();
+    this.hubSkatersReady = this.player.preparePresentationAssets().then(() => {
+      if (this.level !== level || this.activation !== activation) return;
+      this.hubSkaters = new WorldMapHubSkaters(this.player, level);
+      this.syncSkaters();
+    });
     this.callbacks.onSelection(selected, false, this.availableDirections());
   }
 
   deactivate(): void {
+    this.activation++;
+    this.hubSkaters?.dispose(); this.hubSkaters = null;
     this.player.group.visible = true;
     if (this.level) {
       this.player.setWorldMapPresentationScale(null);
@@ -126,6 +146,7 @@ export class WorldMapController {
   refresh(): void {
     if (!this.level) return;
     this.syncVisuals();
+    this.syncSkaters();
     this.callbacks.onSelection(
       this.selectedKeyValue,
       this.moving,
@@ -167,6 +188,7 @@ export class WorldMapController {
       sparkClock: 0,
     };
     this.syncVisuals();
+    this.syncSkaters();
     this.callbacks.onSelection(next, true, this.noDirections());
     sfx.play(
       initial.style === "boardslide" ? "skateTransition" : "footstep1",
@@ -222,7 +244,7 @@ export class WorldMapController {
     const dy = y - THREE.MathUtils.clamp(origin.y, 24, height - 24);
     const length = Math.hypot(dx, dy);
     if (length < 40) return false;
-    // Keys, stick, hints and empty-space taps use the same island-facing slots.
+    // Keys, stick, hints and empty-space taps use the same progression slots.
     return this.navigate(dx, -dy);
   }
 
@@ -267,14 +289,14 @@ export class WorldMapController {
         eased,
       );
       if (this.travel.crossIsland) {
-        // The camera leaves the old coast before the rider is relocated. Never
-        // render an airborne skater or a rail across the ocean.
+        // Both endpoints are occupied before the camera moves. Relocate only
+        // the hidden active rider; resident rigs carry its idle pose throughout.
         const arrived = raw >= .5;
         const pose = level.campaignMapPose(arrived ? this.travel.to : this.travel.from);
         if (pose) this.player.stepWorldMapPresentation(pose.position, pose.heading, dt, "idle");
         // Apply after pose generation: the ordinary character pass restores
         // visibility for a living rider.
-        this.player.group.visible = raw < .12 || raw >= .78;
+        this.player.group.visible = !this.hubSkaters;
         if (arrived && !this.travel.relocated) {
           this.travel.relocated = true;
           this.player.snapRenderInterpolation();
@@ -339,6 +361,7 @@ export class WorldMapController {
         if (boardTravel) sfx.play("skateHalt", 0.4, 1.2);
         sfx.play("crystalGet", 0.2, 1.65);
       }
+      this.syncSkaters();
       return;
     }
 
@@ -361,6 +384,7 @@ export class WorldMapController {
     else if (input.mapProgressPressed || input.grindPressed) this.openSection("options");
     else if (input.mapSaveLoadPressed || input.spinPressed) this.openSection("save-load");
     else if (input.mapQuitPressed || input.grabPressed) this.openSection("quit");
+    this.syncSkaters();
   }
 
   frameCamera(camera: THREE.PerspectiveCamera, dt: number): void {
@@ -427,12 +451,21 @@ export class WorldMapController {
   }
 
   private directionSlots() {
-    const level=this.level,pose=level?.campaignMapPose(this.selectedKeyValue);
-    const centre=level?.campaignMapIslandCentre(this.selectedKeyValue);
-    if(!level||!pose||!centre)return {};
-    const exits=this.neighbors(this.selectedKeyValue).map(key=>({key,
-      delta:level.campaignMapTravel(this.selectedKeyValue,key,.08)!.position.sub(pose.position)}));
-    return mapViewDirections(islandViewAngle(pose.position,centre),exits);
+    const slots: Partial<Record<keyof WorldMapDirections, string>> = {};
+    if (!this.level) return slots;
+    for (const edge of CAMPAIGN_MAP_EDGES) {
+      const from = edge.from === this.selectedKeyValue, to = edge.to === this.selectedKeyValue;
+      if (!from && !to) continue;
+      const key = from ? edge.to : edge.from;
+      if (this.campaign.levelUnlocked(key) && this.level.campaignMapHas(key))
+        slots[from ? edge.fromDirection : edge.toDirection] = key;
+    }
+    return slots;
+  }
+
+  private syncSkaters(): void {
+    this.hubSkaters?.sync(this.selectedKey, this.moving, !!this.travel?.crossIsland, key => this.campaign.levelUnlocked(key));
+    this.player.group.visible = !this.travel?.crossIsland || !this.hubSkaters;
   }
 
   private noDirections(): WorldMapDirections {

@@ -5,7 +5,7 @@ import * as THREE from 'three';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 const {CAMPAIGN_LEVELS:levels,CAMPAIGN_MAP_EDGES:edges}=await server.ssrLoadModule('/src/campaign.ts');
-const view=await server.ssrLoadModule('/src/mapView.ts');await server.close();
+await server.close();
 const base=process.argv[2]||'http://127.0.0.1:6264/';
 const out=process.env.ISLAND_REVIEW_DIR||'/private/tmp/meshy-map-review';await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],checks=[];
@@ -18,9 +18,8 @@ try{
  const resolution=await page.evaluate(()=>({dpr:devicePixelRatio,ratio:window.__game.renderer.getPixelRatio(),enabled:window.__game.renderQualitySettings.enabled,canvas:[window.__game.renderer.domElement.width,window.__game.renderer.domElement.height]}));
  assert.deepEqual(resolution,{dpr:2,ratio:2,enabled:false,canvas:[3840,2160]});console.log('Native full-resolution review',JSON.stringify(resolution));
  const directionTo=async(from,to)=>{
-  const data=await page.evaluate(({from,edges})=>{const l=window.__game.getLevel(),p=l.campaignMapPose(from).position,c=l.campaignMapIslandCentre(from);return {p:p.toArray(),c:c.toArray(),exits:edges.filter(e=>e.from===from||e.to===from).map(e=>{const key=e.from===from?e.to:e.from;return {key,delta:l.campaignMapTravel(from,key,.08).position.sub(p).toArray()}})}},{from,edges});
-  const angle=view.islandViewAngle(new THREE.Vector3(...data.p),new THREE.Vector3(...data.c));
-  return Object.entries(view.mapViewDirections(angle,data.exits.map(e=>({...e,delta:new THREE.Vector3(...e.delta)})))).find(([,key])=>key===to)?.[0];
+  const edge=edges.find(e=>e.from===from&&e.to===to||e.to===from&&e.from===to);
+  return edge?.from===from?edge.fromDirection:edge?.toDirection;
  };
  const visit=async(key,capture=true)=>{
   await page.waitForFunction(key=>document.querySelector('.world-map-ui')?.dataset.selectedKey===key&&!document.querySelector('.world-map-ui')?.classList.contains('is-moving'),key,{timeout:20000});

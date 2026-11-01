@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-01",
+  "base": "b10e105229a577ecfd5bf6606b4b973ab66c8004",
+  "changes": {
+    "mainRouteLinks": 37,
+    "islandBoundaries": 5,
+    "residentHubs": 12,
+    "directions": "previous left / next right; authored vertical forks retained",
+    "geometry": "complete authored surfaces, shared geometry/materials/textures, independent bones",
+    "movementTuningChanged": false,
+    "publishedLevelsChanged": false
+  },
+  "sourceSha256": {
+    "src/campaign.ts": "f532a73da1aeb8d5bffe9acd799044b91f22c2d2cd30120578bc8723afd6a7a1",
+    "src/main.ts": "b159b216f610bb1ab35c61d86239c345cc8e030e8dff984b00eba84aaea18dbd",
+    "src/worldMapController.ts": "ef9642e6d3dbc5851fda63261d7b5c796a26ae61533f1120a9a6468158e903f8",
+    "src/worldMapHubSkaters.ts": "19d4220082dd30ed09b6c833baf50a0ae2f91060370613a41635758714f1eabe"
+  },
+  "checks": [
+    "test-map-archipelago",
+    "test-six-island-campaign",
+    "test-world-map-locomotion",
+    "test-map-hub-skaters",
+    "tsc --noEmit",
+    "npm run check:levels",
+    "npm run build",
+    "npm run check:release",
+    "git diff --check"
+  ],
+  "browser": [
+    {
+      "build": "development",
+      "mode": "lite",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "islandPans": 10,
+      "sampledMovingFrames": [
+        144,
+        156
+      ],
+      "bothEndpointsVisibleEverySample": true,
+      "horizontalInputsPassed": true,
+      "portraitReviewed": true,
+      "gameplayExit": {
+        "skaters": [],
+        "root": false,
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "visible": true
+      },
+      "errors": []
+    },
+    {
+      "build": "development",
+      "mode": "native",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "islandPans": 10,
+      "sampledMovingFrames": [
+        142,
+        155
+      ],
+      "bothEndpointsVisibleEverySample": true,
+      "horizontalInputsPassed": true,
+      "portraitReviewed": true,
+      "gameplayExit": {
+        "skaters": [],
+        "root": false,
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "visible": true
+      },
+      "errors": []
+    },
+    {
+      "build": "production",
+      "mode": "native",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "islandPans": 10,
+      "sampledMovingFrames": [
+        144,
+        156
+      ],
+      "bothEndpointsVisibleEverySample": true,
+      "horizontalInputsPassed": true,
+      "portraitReviewed": true,
+      "gameplayExit": {
+        "skaters": [],
+        "root": false,
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "visible": true
+      },
+      "errors": []
+    }
+  ],
+  "releaseBytes": 999246636,
+  "releaseLimitBytes": 1000000000,
+  "productionOfflineVersion": "d86d0895e08a3b73e227",
+  "buildNote": "Only source comments, browser stamp assertion and documentation changed after the production build. Runtime logic is identical.",
+  "evidenceDirectory": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/evidence/01a195ed-5cfe-7ea2-a6a0-20d780fd99cd-map-navigation",
+  "promptToPlayableMinutes": 14,
+  "localValidationMinutes": 21
+}
