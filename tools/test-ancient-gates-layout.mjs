@@ -10,7 +10,7 @@ const main=m.JUNGLE_GATE_RUN_LEVEL,bonus=m.ANCIENT_GATES_BONUS;
 const visualKeys=new Set(['color','tex','nm','emissive','opacity','fog','castShadow','flatShading']);
 const geometry=data=>({spawn:data.spawn,killY:data.killY,ledgeAssist:data.ledgeAssist,
  components:data.components.filter(c=>c.t!=='torch'&&!(c.t==='mesh'&&c.solid===false)&&!(c.t==='decor'&&c.solid===false))
-  .map(c=>({...Object.fromEntries(Object.entries(c).filter(([k])=>!visualKeys.has(k)&&!(c.t==='pit'&&k==='invisible'))),...(c.tex==='ice'?{icyTexture:true}:{})}))});
+  .map(c=>({...Object.fromEntries(Object.entries(c).filter(([k])=>!visualKeys.has(k)&&!(k==='dkind'&&['trialsv2plank','stonepaver','ancientcanyonrock'].includes(c.dkind)&&['spinbridge','mover','crumble','phasepad','ramp','mesh','crusher'].includes(c.t))&&!(c.t==='pit'&&k==='invisible'))),...(c.tex==='ice'?{icyTexture:true}:{})}))});
 const digest=data=>createHash('sha256').update(JSON.stringify(geometry(data))).digest('hex');
 const countBoxes=data=>data.components.filter(c=>c.t==='checkpoint'||c.t==='crate'&&!['metal','metalbounce','bang','nitrobang'].includes(c.kind)).length;
 const gate=data=>{const gates=data.components.filter(c=>c.t==='gate');assert.equal(gates.length,1);return gates[0];};

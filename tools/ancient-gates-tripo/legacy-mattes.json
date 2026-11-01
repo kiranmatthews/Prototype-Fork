@@ -1,0 +1,30 @@
+{
+  "ancientgatevalley": {
+    "file": "",
+    "image": "ancient-gates/valley-panorama-v2.webp",
+    "label": "Ancient Gates · misty jungle valley",
+    "size": [
+      540,
+      180,
+      0.02
+    ],
+    "wind": false,
+    "matte": true,
+    "edgeFade": 0.055,
+    "fog": false
+  },
+  "ancientgatehoard": {
+    "file": "",
+    "image": "ancient-gates/hoard-panorama-v2.webp",
+    "label": "Ancient Gates · shaded hoard ravine",
+    "size": [
+      540,
+      180,
+      0.02
+    ],
+    "wind": false,
+    "matte": true,
+    "edgeFade": 0.055,
+    "fog": false
+  }
+}

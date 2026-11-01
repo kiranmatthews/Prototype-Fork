@@ -1,0 +1,79 @@
+{
+  "brief": "Replace Ancient Gates non-Meshy geometry and painted scenery with ImageGen-guided Tripo tiki assets; preserve native proportions and provide believable structural support.",
+  "startedUtc": "2026-10-29T09:34:26Z",
+  "references": "tools/ancient-gates-tripo/references/prompts.json",
+  "geometry": "Complete native generated meshes retained. No decimation, distance swaps, or reflection substitutes.",
+  "placement": "Measured GLB dimensions, uniform scales (serialized to micrometre precision), connected pier stacks, surface-measured rock contacts and embedded root plinths.",
+  "cli": {
+    "version": "0.8.0",
+    "modelAlias": "tripo-p2",
+    "wireModel": "P2-20260801",
+    "textureModel": "v3.5-20260815",
+    "startingBonusCredits": 1000,
+    "creditsConsumed": 220,
+    "remainingBonusCredits": 780,
+    "tasks": [
+      {
+        "taskId": "3fd08359-0461-4253-984e-3f258e0004e8",
+        "asset": "tiki-gateway",
+        "requestedTriangles": 40000,
+        "creditsConsumed": 110,
+        "shipped": false,
+        "reason": "Submitted before user rejected the 40k budget. CLI exposes no task cancellation. Retained only as a local authoring result."
+      },
+      {
+        "taskId": "2af6c524-f693-4782-88ac-a484757b6998",
+        "asset": "tiki-gateway",
+        "requestedTriangles": 8000,
+        "triangles": 8505,
+        "creditsConsumed": 110,
+        "shipped": true
+      }
+    ]
+  },
+  "studio": {
+    "model": "Smart Mesh P2.0",
+    "topology": "Triangle",
+    "privacy": "Private",
+    "candidates": 1,
+    "startingMaxCredits": 25200,
+    "endingMaxCredits": 24810,
+    "creditsConsumed": 390,
+    "export": "GLB, 2K colour atlas; no retopology step",
+    "assets": [
+      {
+        "asset": "canyon-buttress",
+        "assetId": "77e35048-b733-4227-ab2b-e8877474e11f",
+        "requestedTriangles": 4000,
+        "triangles": 4209,
+        "generationCredits": 0,
+        "textureCredits": 0,
+        "trial": true
+      },
+      {
+        "asset": "tiki-support-pier",
+        "assetId": "24aa8b4a-a870-4d6d-92e7-93f367953aea",
+        "requestedTriangles": 4000,
+        "triangles": 4250,
+        "generationCredits": 100,
+        "textureCredits": 30
+      },
+      {
+        "asset": "tiered-shrine",
+        "assetId": "4a31af91-eaa9-4766-a2ec-734f662c8c4f",
+        "requestedTriangles": 10000,
+        "triangles": 9188,
+        "generationCredits": 100,
+        "textureCredits": 30
+      },
+      {
+        "asset": "rooted-tropical-cluster",
+        "assetId": "4d0017ae-9c0d-4a63-abea-9fcadcc718e7",
+        "requestedTriangles": 6000,
+        "triangles": 4239,
+        "generationCredits": 100,
+        "textureCredits": 30
+      }
+    ]
+  }
+}

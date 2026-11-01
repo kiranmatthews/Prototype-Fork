@@ -1,0 +1,22 @@
+{
+  "levels": [
+    {
+      "id": "jungle-gate-run",
+      "nativeProportionProps": 2578,
+      "backgroundMattes": 4,
+      "existing3DComponentsPreserved": true,
+      "connectedPierStacks": 194,
+      "gameplaySha256": "0c9e3885a778a7dd822c1e114d1793a39b35372098cf6ca6b0b198047a64b6fe"
+    },
+    {
+      "id": "bonus-jungle-gate",
+      "nativeProportionProps": 472,
+      "backgroundMattes": 2,
+      "existing3DComponentsPreserved": true,
+      "connectedPierStacks": 44,
+      "gameplaySha256": "e288b14bb9da550479616e5bfa5a7a1602814b7b8cfb97ce7b0eb8c2066a2963"
+    }
+  ],
+  "triangleCeiling": 10000,
+  "allChecksPassed": true
+}

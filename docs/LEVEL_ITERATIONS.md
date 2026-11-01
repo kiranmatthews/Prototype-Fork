@@ -8019,3 +8019,107 @@ both actual courses onto supported spawns. Build/type checking and the
 recorded in the release handoff. No course geometry or published level data
 changed; no check:all run. First packaged playable verification passed at
 approximately 20:33 UTC, about seven minutes after the request.
+## 29 October 2026 — Ancient Gates: native Tripo tiki scenery
+
+Replaced the valley and bonus-hoard painting cards and primitive temple scenery
+with five ImageGen-guided Tripo assets: guardian gateway (8,505 triangles), canyon
+buttress (4,209), support pier (4,250), shrine (9,188) and rooted planting (4,239).
+The complete native models total 2.62 MB after lossless geometry storage packing
+and 2K WebP colour atlases. No decimation or camera-distance mesh swaps were used.
+
+Every scenery prop now uses its measured native aspect ratio and one uniform
+scale. Long paving/cornice/beam runs use repeated native pieces. Connected tiki
+piers bear the decks and arch feet; trees intersect the measured rock surface
+with embedded moss plinths; overhead hazards have structural supports. The bonus
+gallery's return passage remains clear. Authored collision, traversal, hazards,
+checkpoints, finish and movement tuning are unchanged.
+
+The user's Chrome extension enabled Studio generation with Max credits: 390
+spent, leaving 24,810. CLI bonus usage was 220, leaving 780; this includes a 110
+credit 40K gateway job already submitted before the user's lower-budget request,
+which is not shipped. Remaining native assets are all below 10K triangles.
+
+Required level checks, final real-GLTF loading, aspect/connected-support checks,
+gameplay-preservation hashes, layout and conservative scenery clearance pass.
+Full rendering at native 3024×1516 covered 12 main and six bonus views with zero
+asset or console errors. Normal-resolution walking, actual K/L shortcuts, pit
+recovery and COURSE CLEAR passed. Lite mode and the final production build and
+release-size check were also verified. The existing 64 MiB source-pack and 1 GB
+release limits are retained. Itemized generation and validation evidence:
+[Tripo scenery record](ancient-gates/tripo/README.md).
+
+Timing: 09:34:26 UTC brief; first playable at about 10:18 (~44 minutes); final
+route-wide native and gameplay review at 10:51 (~77 minutes). Changes were made
+in the isolated `codex/ancient-gates-tripo` worktree and integrated with current
+`origin/main` before the final release build.
+
+
+## 30 October 2026 NZDT — Ancient Gates: native interactive mechanisms
+
+Continued the scenery brief through 25 main-course and bonus mechanisms: trap
+doors, ferries/lift, falling and phase steps, crushers, kicker and switch-restored
+masonry. Reused native Meshy timber, paving and iron-chain models with the five
+Tripo models from the first pass. No additional generation credits were spent.
+Supported rails and pier/cantilever assemblies explain their placement; restored
+bonus galleries preserve the walkable return beneath them.
+
+Cosmetic siblings follow the unchanged collision bodies. Native model ratios,
+spin contact, door deployment/reset, original hazard motion, crumble return,
+phase visibility and switch restoration pass focused comparisons and existing
+regressions. Required level checks pass. Full/native browser review (1630×1610)
+verified 21/21 main and 4/4 bonus assemblies, actual door crossing and switch
+reveals; normal 720p walking verified the gallery underpass. Sampled runtime
+states contain no errors. An older IAB observer log is retained in the evidence;
+no additional console errors occurred during the final review.
+
+Production build and release check pass: 999,907,406 bytes, offline version
+`f5e50add832f102d26a4`. The source pack remains below 64 MiB. A separate fresh
+production-tab smoke was deferred when both shared heavy-validation slots were
+occupied; the release coordinator performs final integration and deployment
+verification. The local source and native visual evidence are complete.
+
+Timing: follow-up started about 10:55 UTC, playable at 11:10 (~15 minutes), final
+native/normal mechanism review at 11:22 (~27 minutes). Commit and READY handoff
+use the isolated `codex/ancient-gates-tripo` worktree; shared `src/level.ts` hooks
+and the two published level IDs are explicitly owned in the handoff. See the
+[asset and mechanism evidence](ancient-gates/tripo/README.md).
+
+
+## 30 October 2026 NZDT — Ancient Gates: additive background mattes
+
+Added two built-in ImageGen panoramas behind the complete existing 3D scenery:
+a sunlit rainforest valley and a shaded jungle ruin for the hoard. Four main
+and two bonus panels preserve the native 2172×724 ratio with soft overlapping
+edges. The camera far plane reaches the added layer. All existing 3,050 static
+props, 238 support stacks, 15 gateways and 25 mechanisms remain intact.
+
+A component-for-component comparison against `9ec6b8af` verifies no existing
+3D scenery or gameplay data was removed, moved or replaced. The GLBs and
+mechanism runtime are unchanged. Full/native rendering (1630×1610) and normal
+720p walking passed with no console/asset errors. Matte backgrounds and source
+images are saved in the project; older background files are also retained.
+No Tripo credits were spent. Focused checks and final build/release results:
+[matte revision evidence](ancient-gates/tripo/matte-revision/).
+
+Prompt-to-playable: approximately 21 minutes, 11:46–12:07 UTC; final native and
+normal review by 12:11 UTC. This is a new local commit after `9ec6b8af`, handed
+to the active release coordinator for integration and publication.
+
+
+## 30 October 2026 NZDT — Ancient Gates: local mechanism audio
+
+The constant bump was caused by Z-only range checks on crushers and phase pads
+in a course that runs along X. Local mechanism cues now use full 3D distance
+with a smooth fade to silence; the crusher peak gain is halved from 0.8 to 0.4.
+The same fix covers falling platforms and snapping ropes. All scenery, level
+data, hazard timing, collision and movement remain unchanged.
+
+Focused runtime regression checks exercise all three axes, diagonal range,
+muted distant transitions, single-event playback and the stable human listener.
+The existing SFX/mixer lifecycle check, build and release-size gate pass. Lite
+and full-render browser audio samples are recorded alongside the checks in
+[the audio correction evidence](ancient-gates/tripo/audio-fix/).
+
+Prompt-to-playable: approximately 7 minutes, 12:18–12:25 UTC; browser and final
+verification followed. This is a separate local commit after `16c86a4e`, for the
+active release coordinator to integrate and publish.

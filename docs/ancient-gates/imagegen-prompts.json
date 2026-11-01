@@ -1,33 +1,46 @@
 {
   "mode": "built-in image_gen",
   "intent": "generate",
-  "greyboxCompletedAfter": "2026-10-27T07:34:27Z",
+  "revision": "New distant mattes behind the preserved 3D scenery",
   "assets": [
     {
-      "prompt": "Use case: stylized-concept\nAsset type: wide background matte painting for a playable side-scrolling jungle platformer, landscape 3:2 composition.\nPrimary request: the monumental tropical timber-and-stone gate atmosphere of The Great Gate from Crash Bandicoot 1, rendered with the lush, sculpted, colorful painterly environment quality of Crash Bandicoot 4.\nScene: an immense ancient gate civilization deep in a tropical ravine. Layered turquoise jungle canopies and towering ochre sandstone gate towers, distant broken aqueduct arches, huge twisted banyan trees, long waterfalls, tendrils of atmospheric mist. Several organically staggered silhouettes rather than one centered symmetrical building.\nComposition: distant scenery only, seen approximately straight-on from across the ravine. Fill the entire frame. Broad readable shapes; distant structures and greenery with excellent depth. The bottom half is dark teal jungle and cool shadowed cliffs; the upper half opens to luminous apricot sky and soft sunlit haze. The sides taper to foliage and mist, with no abrupt frame or border. No foreground platform, no playable walkway, no close-up objects.\nStyle: premium hand-painted 3D animation environment, bold bevels, warm sunlit sandstone, deep violet-blue shadow notes, vibrant emerald foliage, sophisticated lighting. Detailed but readable, playful adventurous shapes.\nConstraints: no characters, no UI, no lettering, no logos, no watermark. This is a real background texture, not a screenshot or concept-art presentation board.",
-      "original": "/Users/kiki/.codex/generated_images/01a17b4e-922f-7c92-a8d1-a21b6064c1b8/exec-c99c6dc0-dbb7-41a5-bdf7-f605dc9acc99.png",
-      "runtime": "public/ancient-gates/gate-valley.webp",
-      "sourceSha256": "37107997ac2fee53f264d0603f310441ed33496ca2564cd307d8ca09bced1253",
-      "runtimeSha256": "fb036629587ebfa70f9e0886afc1913a8f56b641c48b6808180009b07269c77b",
-      "bytes": 410620,
-      "width": 1536,
-      "height": 1024,
-      "conversion": "WebP quality 91, no resampling or creative edits",
-      "generatedFileTimestamp": "2026-10-27T07:36:59.319Z"
+      "prompt": "Use case: stylized-concept. Asset type: a finished panoramic background matte painting for the Ancient Gates side-scrolling 3D platform game. Create a very wide 3:1 landscape panorama, ideally 3072 by 1024 pixels, full bleed and opaque. Crash Bandicoot 4 inspired stylized tropical adventure art: sculpted warm sandstone ridges, layered jade rainforest canopies, distant blue-green mountains, a delicate distant waterfall and soft atmospheric cloud haze. Everything is distant scenery viewed horizontally across the valley, with the camera above the canopy looking toward far cliffs. The level's real 3D platforms and trees will sit in front of this painting. Use broad pleasing silhouettes, soft distant edges, warm sunlit rock faces, cool turquoise shaded depth, hand-painted stylized materials. Keep the central and lower-middle areas calm and low contrast for gameplay readability; build interest into widely separated landscape masses. Upper sky and outer edges dissolve gently into muted teal haze matching approximately #477e79. A few tiny weathered ruin silhouettes may be embedded naturally in the far cliffs. No totem poles, no stacked carved faces, no giant close-up gates, no nearby foliage framing, no foreground platforms, no floor or road receding into the image, no characters, no UI, no text, no border, no watermark. The two side edges should have similar soft mist and canopy density so overlapped panorama panels join quietly.",
+      "original": "tools/ancient-gates-tripo/references/valley-matte-v2.png",
+      "runtime": "public/ancient-gates/valley-panorama-v2.webp",
+      "sourceSha256": "9bf26384e3136d1f8be3bce0bfaa467e00b1f35b98a0c91aefdc349c9d9385d7",
+      "runtimeSha256": "989d67a08d1a8f879da63f203cd1b4b5703539b622687ff9429ca1e7c0b64593",
+      "bytes": 139422,
+      "width": 2172,
+      "height": 724,
+      "conversion": "WebP quality 86, no resampling or creative edits"
     },
     {
-      "prompt": "Use case: stylized-concept\nAsset type: wide interior background matte painting for a side-scrolling platformer bonus room, landscape 3:2 composition.\nPrimary request: a hidden Gatekeeper's Hoard beneath an ancient tropical gate, with the rich stylized art direction and sculpted painterly materials of Crash Bandicoot 4 and the Great Gate temple atmosphere.\nScene: an ancient jade-and-copper reliquary hall, immense thick ochre stone piers carved with abstract spiral and sun motifs, timber ceiling braces, hanging jungle roots and small vines, clusters of softly glowing amber lanterns, restrained stacks of ancient gold treasures in deep wall niches, misty emerald light through distant openings. The chamber stretches horizontally.\nComposition: straight-on view of distant interior architecture, full bleed. No foreground floor or platforms; the lower half falls into deep teal shadow, allowing bright playable platforms to be placed in front. Rhythm and depth without rigid symmetry. Dark muted teal and plum behind the action, golden highlights on upper carvings, no bright center spotlight.\nStyle: premium animated adventure environment, chunky sculpted shapes, hand-painted texture richness, beautiful golden bounced light and cool jungle shade. Warm and mysterious, not scary.\nConstraints: no characters, no game crates, no UI, no lettering, no logos, no watermark. No frame, no presentation border.",
-      "original": "/Users/kiki/.codex/generated_images/01a17b4e-922f-7c92-a8d1-a21b6064c1b8/exec-b9d21428-b291-4b2f-9750-c52edf32282c.png",
-      "runtime": "public/ancient-gates/gatekeeper-hoard.webp",
-      "sourceSha256": "54625b09a22c7052b50a641f55acdac615ff3430677f18a8d4d75ecc13809a27",
-      "runtimeSha256": "8386748e9a11ad026c9861dcb41f215f2f65488e0ad6b9f11ccbf981033b0eba",
-      "bytes": 338120,
-      "width": 1536,
-      "height": 1024,
-      "conversion": "WebP quality 91, no resampling or creative edits",
-      "generatedFileTimestamp": "2026-10-27T07:36:35.600Z"
+      "prompt": "Use case: stylized-concept. Asset type: a finished panoramic background matte painting for the Gatekeeper's Hoard bonus area of the Ancient Gates side-scrolling 3D platform game. Create a very wide 3:1 landscape panorama, ideally 3072 by 1024 pixels, full bleed and opaque. Crash Bandicoot 4 inspired stylized tropical adventure art. An expansive shaded jade-green jungle ravine with ancient sandstone terraces half reclaimed by moss, distant arch ruins carved into the rock, sweeping fern canopies, delicate hanging vines in the far distance and a warm shaft of sunlight reaching a distant pool. This is a calm view across the ravine, all objects far behind the playable 3D course. Painterly simplified sculpted forms, clean readable masses, muted deep turquoise shadows, soft gold highlights, misty atmospheric depth. Keep the central and lower-middle area spacious and low contrast; the real platforms, props and trees will be in front. Upper background and all outer edges should melt into dark muted teal mist approximately #254d50; similar quiet mist at both side edges for overlapping panels. No totem poles, no stacks of faces, no giant nearby pillars, no foreground objects or platforms, no floor path receding into the scene, no characters, no treasure piles in the foreground, no text, no UI, no frame, no watermark.",
+      "original": "tools/ancient-gates-tripo/references/hoard-matte-v2.png",
+      "runtime": "public/ancient-gates/hoard-panorama-v2.webp",
+      "sourceSha256": "3b43c4f1ca203e1ee8881e8e380bee5f8e7eefef7ff4a55d9a4c9afed8024448",
+      "runtimeSha256": "d9651ac0ae7c55f14546cb7586c57e9a2d6f64cf596bc44cfd7e6e7fb478de5f",
+      "bytes": 145352,
+      "width": 2172,
+      "height": 724,
+      "conversion": "WebP quality 86, no resampling or creative edits"
     }
   ],
-  "shippedImageBytes": 748740,
-  "provenanceRecordedAt": "2026-10-27T07:57:25.523Z"
+  "retainedLegacyImages": [
+    {
+      "runtime": "public/ancient-gates/gate-valley.webp",
+      "original": "tools/ancient-gates-tripo/references/previous-mattes/gate-valley.webp",
+      "bytes": 205882,
+      "originalBytes": 410620,
+      "conversion": "WebP quality 78, native dimensions retained"
+    },
+    {
+      "runtime": "public/ancient-gates/gatekeeper-hoard.webp",
+      "original": "tools/ancient-gates-tripo/references/previous-mattes/gatekeeper-hoard.webp",
+      "bytes": 158728,
+      "originalBytes": 338120,
+      "conversion": "WebP quality 78, native dimensions retained"
+    }
+  ],
+  "shippedImageBytes": 284774
 }

@@ -1,0 +1,318 @@
+{
+  "geometryPolicy": "Original generated triangles and vertices; no simplification or distance LODs.",
+  "rockCrownNormalized": 0.817284248183148,
+  "assets": [
+    {
+      "kind": "trialsv2plank",
+      "file": "public/treehouse-trials-v2/plank.glb",
+      "bytes": 1951432,
+      "triangles": 868,
+      "vertices": 2039,
+      "materials": 1,
+      "min": [
+        -0.5,
+        -0.01970599964261055,
+        -0.06062598526477814
+      ],
+      "max": [
+        0.5,
+        0.021004000678658485,
+        0.06527702510356903
+      ],
+      "size": [
+        1,
+        0.040710000321269035,
+        0.12590301036834717
+      ],
+      "sha256": "72f6ec515397b43f5ab3eab23106a52fff7e1dffaefc900437d3a18d6ee0f539"
+    },
+    {
+      "kind": "hazardironlink",
+      "file": "public/hazards/iron-link.glb",
+      "bytes": 761180,
+      "triangles": 320,
+      "vertices": 678,
+      "materials": 1,
+      "min": [
+        -0.2399660050868988,
+        -0.5308520793914795,
+        -0.07520836591720581
+      ],
+      "max": [
+        0.2403600662946701,
+        0.5080810189247131,
+        0.07472958415746689
+      ],
+      "size": [
+        0.4803260713815689,
+        1.0389330983161926,
+        0.1499379500746727
+      ],
+      "sha256": "93ef5544172597f5867db73a2a0ce007fb6a0ed5c8aa7e020c77a345576e1d93"
+    },
+    {
+      "kind": "ancienttikigate",
+      "file": "public/ancient-gates-tripo/tiki-gateway.glb",
+      "bytes": 515612,
+      "triangles": 8505,
+      "vertices": 6372,
+      "materials": 1,
+      "min": [
+        -0.49975585937500017,
+        -0.491455078125,
+        -0.23901367187500017
+      ],
+      "max": [
+        0.49975585937500017,
+        0.491455078125,
+        0.23901367187500017
+      ],
+      "size": [
+        0.9995117187500003,
+        0.98291015625,
+        0.47802734375000033
+      ],
+      "sha256": "0aa0babbab147eb6e11b8a06bd2cd110db436069228757a61669fcb9b097dc79"
+    },
+    {
+      "kind": "ancientcanyonrock",
+      "file": "public/ancient-gates-tripo/canyon-buttress.glb",
+      "bytes": 283976,
+      "triangles": 4209,
+      "vertices": 2698,
+      "materials": 1,
+      "min": [
+        -0.4606934189796448,
+        0,
+        -0.4948731064796448
+      ],
+      "max": [
+        0.4606934189796448,
+        0.99951171875,
+        0.4948731064796448
+      ],
+      "size": [
+        0.9213868379592896,
+        0.99951171875,
+        0.9897462129592896
+      ],
+      "sha256": "249ccb1cf64fcb4be0788c0846b326dc3b63cddb2d292c8805ea40cda88c2f9d"
+    },
+    {
+      "kind": "ancienttikipier",
+      "file": "public/ancient-gates-tripo/tiki-support-pier.glb",
+      "bytes": 769064,
+      "triangles": 4250,
+      "vertices": 6623,
+      "materials": 1,
+      "min": [
+        -0.19897465407848358,
+        0,
+        -0.19311527907848358
+      ],
+      "max": [
+        0.19897465407848358,
+        0.99951171875,
+        0.19311527907848358
+      ],
+      "size": [
+        0.39794930815696716,
+        0.99951171875,
+        0.38623055815696716
+      ],
+      "sha256": "8c740ec7bacf360a391b89aa44126c9f9f12a415c36e08ef1987ef6fc481af35"
+    },
+    {
+      "kind": "ancienttikishrine",
+      "file": "public/ancient-gates-tripo/tiered-shrine.glb",
+      "bytes": 644380,
+      "triangles": 9188,
+      "vertices": 14290,
+      "materials": 1,
+      "min": [
+        -0.4064942002296448,
+        0,
+        -0.3542481064796448
+      ],
+      "max": [
+        0.4064942002296448,
+        0.99951171875,
+        0.3542481064796448
+      ],
+      "size": [
+        0.8129884004592896,
+        0.99951171875,
+        0.7084962129592896
+      ],
+      "sha256": "0c9b5aaacdd5b4653771686549443bd9e2598ed729ce7beb042f08617349d02d"
+    },
+    {
+      "kind": "ancienttropicalplant",
+      "file": "public/ancient-gates-tripo/rooted-tropical-cluster.glb",
+      "bytes": 406092,
+      "triangles": 4239,
+      "vertices": 5109,
+      "materials": 1,
+      "min": [
+        -0.49975594878196716,
+        0,
+        -0.4504395127296448
+      ],
+      "max": [
+        0.49975594878196716,
+        0.63525390625,
+        0.4504395127296448
+      ],
+      "size": [
+        0.9995118975639343,
+        0.63525390625,
+        0.9008790254592896
+      ],
+      "sha256": "f677f3e0e5bc45cc4ca2d295639c4205ee1ea2d410a589898a859406b95adfa9"
+    },
+    {
+      "kind": "trialsv2treea",
+      "file": "public/treehouse-trials-v2/tree-a.glb",
+      "bytes": 7209120,
+      "triangles": 6591,
+      "vertices": 8581,
+      "materials": 1,
+      "min": [
+        -0.5,
+        -0.34187600016593933,
+        -0.4965769946575165
+      ],
+      "max": [
+        0.5,
+        0.34144899249076843,
+        0.5
+      ],
+      "size": [
+        1,
+        0.6833249926567078,
+        0.9965769946575165
+      ],
+      "sha256": "d725f8e5fd2940df5335c5648b81e5a1d8e0c8d370a33940d0fa9a3fec1f908f"
+    },
+    {
+      "kind": "trialsv2treeb",
+      "file": "public/treehouse-trials-v2/tree-b.glb",
+      "bytes": 7575956,
+      "triangles": 5747,
+      "vertices": 7456,
+      "materials": 1,
+      "min": [
+        -0.5,
+        -0.3218750059604645,
+        -0.338032990694046
+      ],
+      "max": [
+        0.5,
+        0.32202500104904175,
+        0.34306401014328003
+      ],
+      "size": [
+        1,
+        0.6439000070095062,
+        0.681097000837326
+      ],
+      "sha256": "d71c77acf07c104213bb186cb8acd738b5dc2bf56dde219202fbe0c552ed6339"
+    },
+    {
+      "kind": "trialsv2beam",
+      "file": "public/treehouse-trials-v2/beam.glb",
+      "bytes": 1853560,
+      "triangles": 768,
+      "vertices": 1178,
+      "materials": 1,
+      "min": [
+        -0.5,
+        -0.06703399866819382,
+        -0.04904699698090553
+      ],
+      "max": [
+        0.5,
+        0.06471099704504013,
+        0.05386602133512497
+      ],
+      "size": [
+        1,
+        0.13174499571323395,
+        0.1029130183160305
+      ],
+      "sha256": "151757fbb7f525dadf1e910a94b8b8f7ae30cd12d0fbbe0816106629c2c5ba98"
+    },
+    {
+      "kind": "treehousemossrock",
+      "file": "public/treehouse-trials/boulder.glb",
+      "bytes": 1858196,
+      "triangles": 2914,
+      "vertices": 2963,
+      "materials": 1,
+      "min": [
+        -0.5,
+        -0.19952300190925598,
+        -0.4632030129432678
+      ],
+      "max": [
+        0.5,
+        0.19775600731372833,
+        0.4664880037307739
+      ],
+      "size": [
+        1,
+        0.3972790092229843,
+        0.9296910166740417
+      ],
+      "sha256": "383d32aa033320fc21ab1e14983742192e58e305a2a14bc9151151c84449d10c"
+    },
+    {
+      "kind": "stonepaver",
+      "file": "public/jungle-kit/modular/paving-slab.glb",
+      "bytes": 1029144,
+      "triangles": 552,
+      "vertices": 865,
+      "materials": 1,
+      "min": [
+        -1,
+        0,
+        -1
+      ],
+      "max": [
+        1,
+        0.2800000011920929,
+        1
+      ],
+      "size": [
+        2,
+        0.2800000011920929,
+        2
+      ],
+      "sha256": "ceef92f1999b9233287dc2446098930d2313bd1bcde688070f7204d68f73928d"
+    },
+    {
+      "kind": "stonecornice",
+      "file": "public/jungle-kit/modular/cornice.glb",
+      "bytes": 1248248,
+      "triangles": 919,
+      "vertices": 1678,
+      "materials": 1,
+      "min": [
+        -1.5,
+        0,
+        -0.574999988079071
+      ],
+      "max": [
+        1.5,
+        0.75,
+        0.574999988079071
+      ],
+      "size": [
+        3,
+        0.75,
+        1.149999976158142
+      ],
+      "sha256": "14dd6a9aafb171ab02a8f4eb69c4b20b5ba3943254f1c21cac453d2444398447"
+    }
+  ]
+}

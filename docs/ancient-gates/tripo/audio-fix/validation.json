@@ -1,0 +1,88 @@
+{
+  "result": "PASS",
+  "validatedAt": "2026-10-29T12:32:04.072434+00:00",
+  "baseCommit": "16c86a4e3763f316b8f38aed3d997f2514a666e6",
+  "cause": "Z-only proximity gates let X-axis-distant crushers and phase pads play throughout Ancient Gates.",
+  "change": "3D squared distance falloff for crushers, phase pads, crumbles and snapping ropes; crusher peak 0.8 to 0.4.",
+  "unchangedPaths": [
+    "public/levels.json",
+    "src/ancientGatesAssets.ts",
+    "src/levels/ancient-gates-art.ts",
+    "src/levels/ancient-gates-route.ts",
+    "src/ancientGatesMechanisms.ts",
+    "public/ancient-gates",
+    "public/ancient-gates-tripo",
+    "src/audio.ts"
+  ],
+  "testedLevelBlob": "4cd019802bba47907500b07d6da543f0869a4ddb",
+  "checks": [
+    {
+      "command": "node tools/test-hazard-audio-distance.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node tools/test-audio-loops.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run check:release",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "browser": {
+    "samples": 6,
+    "renderModes": [
+      "lite",
+      "full"
+    ],
+    "fullRenderBuffer": [
+      1371,
+      720
+    ],
+    "silentFarPositions": [
+      [
+        -20,
+        0.7366666902850071,
+        0
+      ],
+      [
+        -20,
+        0.7366666902850071,
+        0
+      ],
+      [
+        1195,
+        8.000000023841858,
+        0
+      ]
+    ],
+    "nearHammerGains": [
+      0.02371701484789569,
+      0.32646446462033013
+    ],
+    "sfxBusGainsVerified": [
+      0,
+      1
+    ],
+    "volumePreferenceRestored": true,
+    "consoleErrors": 0,
+    "assetErrors": 0,
+    "mechanismsReady": 21
+  },
+  "release": {
+    "files": 1856,
+    "bytes": 999808728,
+    "budgetBytes": 1000000000,
+    "offlineVersion": "1d5b0deec80975f55a09",
+    "published": false
+  },
+  "completion": "Task-owned preview closed, server stopped and heavy lease released; local commit and coordinator handoff follow."
+}

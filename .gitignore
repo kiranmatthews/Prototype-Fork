@@ -32,3 +32,5 @@ desktop/test-results/
 /public/props/carlisle-cone/*.glb
 # The approved cone-only model is a required production asset.
 !/public/props/carlisle-cone/cone-body.glb
+# Local Tripo CLI task history.
+.tripo/

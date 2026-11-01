@@ -1,0 +1,157 @@
+{
+  "passed": true,
+  "report": [
+    {
+      "kind": "crusher",
+      "axisIndependent": true,
+      "radialCutoff": true,
+      "mechanismStillTransitions": true,
+      "oneCuePerTransition": true,
+      "humanListener": true,
+      "samples": [
+        {
+          "distance": 0,
+          "volume": 0.4
+        },
+        {
+          "distance": 5,
+          "volume": 0.3160493827160494
+        },
+        {
+          "distance": 20,
+          "volume": 0.12345679012345681
+        },
+        {
+          "distance": 44,
+          "volume": 0.00019753086419753145
+        },
+        {
+          "distance": 45,
+          "volume": 0
+        },
+        {
+          "distance": 46,
+          "volume": 0
+        },
+        {
+          "distance": 1000,
+          "volume": 0
+        }
+      ]
+    },
+    {
+      "kind": "phasepad",
+      "axisIndependent": true,
+      "radialCutoff": true,
+      "mechanismStillTransitions": true,
+      "oneCuePerTransition": true,
+      "humanListener": true,
+      "samples": [
+        {
+          "distance": 0,
+          "volume": 0.32
+        },
+        {
+          "distance": 5,
+          "volume": 0.245
+        },
+        {
+          "distance": 20,
+          "volume": 0.08
+        },
+        {
+          "distance": 39,
+          "volume": 0.00020000000000000036
+        },
+        {
+          "distance": 40,
+          "volume": 0
+        },
+        {
+          "distance": 41,
+          "volume": 0
+        },
+        {
+          "distance": 1000,
+          "volume": 0
+        }
+      ]
+    },
+    {
+      "kind": "crumble",
+      "axisIndependent": true,
+      "radialCutoff": true,
+      "mechanismStillTransitions": true,
+      "oneCuePerTransition": true,
+      "humanListener": true,
+      "samples": [
+        {
+          "distance": 0,
+          "volume": 0.45
+        },
+        {
+          "distance": 5,
+          "volume": 0.35555555555555557
+        },
+        {
+          "distance": 20,
+          "volume": 0.13888888888888892
+        },
+        {
+          "distance": 44,
+          "volume": 0.00022222222222222286
+        },
+        {
+          "distance": 45,
+          "volume": 0
+        },
+        {
+          "distance": 46,
+          "volume": 0
+        },
+        {
+          "distance": 1000,
+          "volume": 0
+        }
+      ]
+    },
+    {
+      "kind": "rope",
+      "axisIndependent": true,
+      "radialCutoff": true,
+      "mechanismStillTransitions": true,
+      "oneCuePerTransition": true,
+      "humanListener": true,
+      "samples": [
+        {
+          "distance": 0,
+          "volume": 0.5
+        },
+        {
+          "distance": 5,
+          "volume": 0.4132231404958677
+        },
+        {
+          "distance": 20,
+          "volume": 0.2024793388429752
+        },
+        {
+          "distance": 54,
+          "volume": 0.00016528925619834723
+        },
+        {
+          "distance": 55,
+          "volume": 0
+        },
+        {
+          "distance": 56,
+          "volume": 0
+        },
+        {
+          "distance": 1000,
+          "volume": 0
+        }
+      ]
+    }
+  ]
+}

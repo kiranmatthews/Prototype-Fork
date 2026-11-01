@@ -1,8 +1,8 @@
 {
   "v": 2,
   "authoringRuntime": "v24.19.0",
-  "sourceNumericTolerance": 1e-09,
-  "sourceYawToleranceDegrees": 1e-08,
+  "sourceNumericTolerance": 1e-9,
+  "sourceYawToleranceDegrees": 1e-8,
   "method": "Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete source-data comparison with bounded runtime-only roundoff at build time.",
   "levels": {
     "sky": {
@@ -41,12 +41,12 @@
       "authoringRuntime": "v24.19.0"
     },
     "jungle-gate-run": {
-      "snapshotSha256": "8c2a3887ce5d4d6e8c7aa9e4fc0201c0debc7ffc4f9bfd43ba7b2c4eeb558f2f",
-      "authoringRuntime": "v24.19.0"
+      "snapshotSha256": "3d69c883e3e051cc4c102f38d4240c760ef9cf41d652ff8abea3387767cd02a4",
+      "authoringRuntime": "v26.13.0"
     },
     "bonus-jungle-gate": {
-      "snapshotSha256": "931874b0e57b339f93d2c9be28a1e1ef0393308141501d1e1732d32a821550e1",
-      "authoringRuntime": "v24.19.0"
+      "snapshotSha256": "b050a366f59ab0547e871a74a8554677f21d4dc0917448e14d3ecf59af616cc4",
+      "authoringRuntime": "v26.13.0"
     }
   }
 }
