@@ -7964,3 +7964,32 @@ Prompt-to-playable for the requested cloud-island art revision: approximately
 production build, release size (999,248,084 bytes), packaged lite/native, normal
 and portrait checks pass. Public verification is recorded in the release handoff. No full-suite run, movement-tuning change
 or level-pack rewrite. Evidence: [Secret Island clouds](secret-island-clouds/README.md).
+
+
+## 2 November 2026 NZDT — Recover current Sky Bridge from untouched cached saves
+
+Brief: production appears to load an old Sky Bridge; audit recent releases for
+missing or overwritten work. Reproduced the latest live build loading gate
+Z=-239/304 components from an untouched saved copy. The 488 m source course
+and all 423 components remain intact. The crate-size migration added its
+revision before stock fingerprint checks, making historical copies shadow
+the source. Registry normalization now defers crate expansion until source
+selection; editor and runtime construction retain the 20% enlargement. Exact
+post-migration Sky Bridge signatures recover already-persisted affected saves.
+Local edits and saved archives remain intact; the override indicator agrees.
+
+Audited 46 successful deployments and eight level-pack versions since the
+Sky Bridge extension. All releases remain in main's ancestry, Sky Bridge's
+pack hash never changed, and subsequent pack edits touch only Carlisle and
+Rooftop Relay. No level-source deletions or wholesale pack rollback found in
+the audited window. Main/bonus Sky Bridge source and all published level data
+are unchanged by this repair. Preserve the latest Secret Island cloud release.
+
+Focused tests cover five historical Sky Bridge versions, ten raw/migrated
+saves, 70 authored variants, related stock migrations, import safety and crate
+stack/capture behavior. Packaged lite checks verify fresh, saved, migrated,
+reloaded and deliberately edited copies. Build/type checking and release size
+pass; native/full route and live release evidence are recorded in
+`docs/sky-bridge-stock-recovery` and the release handoff. No check:all run.
+First packaged saved-course recovery passed at approximately 20:11 UTC, about
+28 minutes into the investigation; release validation follows that milestone.

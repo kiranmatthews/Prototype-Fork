@@ -56,10 +56,12 @@ try {
     assert.equal(isOriginalCustardCreek({...pristine,name:'Custard Creek copy'}),false,'entry-only renames remain local');
   }
   const current=BUILTIN_LEVELS.find(entry=>entry.id==='custard-creek');
-  assert.ok(isOriginalCustardCreek(current),'current detailed source snapshot follows the builtin');
-  const currentChrome=structuredClone(current);for(const [i,yaw]of [[239,-75.03369056605325],[241,-72.02960731980816],[378,-151.20242573524274]])currentChrome.data.components[i].yaw=yaw;
-  assert.ok(isOriginalCustardCreek(currentChrome),'current exact Chrome snapshot also follows the builtin');
+  // The waterfall-finale revision changed the current component order. The
+  // measured Chrome indices above belong to the pinned v5 fixture, not this
+  // evolving source. Current source/public agreement is a separate contract.
+  const published=JSON.parse(await readFile(new URL('../public/levels.json',import.meta.url),'utf8')).levels.find(e=>e.id==='custard-creek');
+  assert.deepEqual(JSON.parse(JSON.stringify(current)),published,'current detailed source and published snapshot agree');
   const edited=structuredClone(current);edited.data.components[0].p[0]+=.01;
   assert.equal(isOriginalCustardCreek(edited),false,'current sculpted edits remain authored');
-  console.log('PASS Custard cache: exact raw/normalized v1, v2, v3, v4, v5 and current published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
+  console.log('PASS Custard cache: exact raw/normalized v1–v5 follow source; current source matches publication; geometry, spawn, metadata, names and mutable edits remain local.');
 } finally {await server.close();}

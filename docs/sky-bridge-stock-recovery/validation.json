@@ -1,0 +1,372 @@
+{
+  "build": "passed; tsc --noEmit and Vite production asset preparation",
+  "releaseBytes": 999248285,
+  "budgetBytes": 1000000000,
+  "checks": {
+    "test-sky-bridge-stock": {
+      "pass": true,
+      "evidence": "PASS 5 historical Sky Bridge versions, 10 raw/migrated saves, 70 authored variants, Carlisle/Ripcord stock selection, archive preservation and deferred crate layout.",
+      "logSha256": "c6eddf29a072aafb137501141a6c9d379c472418bfdbb9f5391073e9c60e46dd"
+    },
+    "test-custard-creek-cache": {
+      "pass": true,
+      "evidence": "PASS Custard cache: exact raw/normalized v1\u2013v5 follow source; current source matches publication; geometry, spawn, metadata, names and mutable edits remain local.",
+      "logSha256": "227d75ff73bf566fced086a4b2b32c8211d776a6dcaa7b49b755676b5835a2ac"
+    },
+    "test-country-club-stock": {
+      "pass": true,
+      "evidence": "PASS all untouched previous stock courses adopt 18 holes; edited saves remain intact; new course imports.",
+      "logSha256": "4b91056ff505cb76a0807776f8293a0c85bb589ccfbd079a7d6b8626aab0f827"
+    },
+    "test-drowned-crown-stock": {
+      "pass": true,
+      "evidence": "PASS old stock follows the full harbour; 9 authored variants and explicit editor saves stay intact; no stored data is rewritten.",
+      "logSha256": "5e544ba2711a560c58f9e8bed2003cc85feb9377e4ccb23efcc98a3dd2fbbbb2"
+    },
+    "test-edge-grinding-migration": {
+      "pass": true,
+      "evidence": "PASS 1 exact legacy defaults; edited/renamed/copied levels and deliberately saved opt-outs survive import/export.",
+      "logSha256": "7dd74c10248289c735870b2f2343c4153f95eed8e9d93234f65dbd47afa11771"
+    },
+    "test-slipstream-merge-saves": {
+      "pass": true,
+      "evidence": "PASS exact stock saves merge; all 15 deliberate local edits survive; retired selections redirect without rewriting storage",
+      "logSha256": "ce1e116d1108f34abf18a127f959eaaa1f0f64ed9e9914d80aa1881f52cba0eb"
+    },
+    "test-crate-dimensions": {
+      "pass": true,
+      "evidence": "PASS crate dimensions, six-high grids, order independence, buried hazards, migration, art/collision, grind edges, collapse/reset and save/reload.",
+      "logSha256": "be7e4aabb1d3b063e972e2ee4ade7b0971f50927df2e275b5321334a8d9dcd61"
+    },
+    "test-level-security": {
+      "pass": true,
+      "evidence": "Level security boundary: 204 adversarial and source compatibility checks passed.",
+      "logSha256": "877c80570c3533bcc11cc2b23632c8f54bfeece07c44ab7c21d5ea9786adedd2",
+      "exitCode": 0
+    },
+    "test-level-sync": {
+      "pass": true,
+      "evidence": "{\"pass\":true,\"sourceBytes\":66558198,\"downloadBytes\":40099,\"sourceBacked\":12,\"retained\":[\"flats\",\"bonus-jungle-terraces\"],\"checks\":\"exact full-data comparison, certified stock with runtime roundoff, sub-nanometre authored variants, idempotent output, original retention, bounded fetch, atomic restore, quota/session preservation and actual startup/restore handlers\"}",
+      "logSha256": "8f2e9aeddf1098a0c56f967e436e74314dae7c17c606336474f8cda650f47cee"
+    }
+  },
+  "localLite": {
+    "base": "http://127.0.0.1:5377/",
+    "full": false,
+    "expectOld": false,
+    "cases": [
+      {
+        "name": "fresh",
+        "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+        "components": 423,
+        "gate": [
+          0,
+          0,
+          -483
+        ],
+        "checkpoints": 7,
+        "clouds": 12,
+        "cloudContacts": 2,
+        "grounded": true,
+        "crateSize": 1.152,
+        "canvas": [
+          800,
+          500
+        ],
+        "archiveUnchanged": null
+      },
+      {
+        "name": "cached-stock",
+        "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+        "components": 423,
+        "gate": [
+          0,
+          0,
+          -483
+        ],
+        "checkpoints": 7,
+        "clouds": 12,
+        "cloudContacts": 2,
+        "grounded": true,
+        "crateSize": 1.152,
+        "canvas": [
+          800,
+          500
+        ],
+        "archiveUnchanged": true
+      },
+      {
+        "name": "already-migrated-stock",
+        "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+        "components": 423,
+        "gate": [
+          0,
+          0,
+          -483
+        ],
+        "checkpoints": 7,
+        "clouds": 12,
+        "cloudContacts": 2,
+        "grounded": true,
+        "crateSize": 1.152,
+        "canvas": [
+          800,
+          500
+        ],
+        "archiveUnchanged": true
+      },
+      {
+        "name": "authored-copy",
+        "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+        "components": 304,
+        "gate": [
+          0,
+          0,
+          -239
+        ],
+        "checkpoints": 3,
+        "clouds": 0,
+        "cloudContacts": 0,
+        "grounded": true,
+        "crateSize": 1.152,
+        "canvas": [
+          800,
+          500
+        ],
+        "archiveUnchanged": true
+      }
+    ],
+    "errors": [],
+    "pass": true
+  },
+  "sourceSha256": {
+    "src/level.ts": "bd5dbc2d322f3fb8ac692a9db2f51459c2d314ead7b18eec9e42bab95c42cf6f",
+    "public/levels.json": "2d3c948d55849536539faeb301fbeb86165f7d9ac3e8b92066c0c47f937bbf37",
+    "src/levels/sky-bridge.ts": "061e4a9d6b45aebfa95281889e6842985d9833069f220f5b79bdf0b276ce5c13",
+    "src/levels/sky-bridge-bonus.ts": "5d6d58f115aff8f4f8a8e3d88add04939bee03ab1109d5de576cf05f93886e83"
+  },
+  "localNative": {
+    "base": "http://127.0.0.1:5377/",
+    "full": true,
+    "expectOld": false,
+    "cases": [
+      {
+        "name": "cached-stock",
+        "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+        "components": 423,
+        "gate": [
+          0,
+          0,
+          -483
+        ],
+        "checkpoints": 7,
+        "clouds": 12,
+        "cloudContacts": 2,
+        "grounded": true,
+        "crateSize": 1.152,
+        "canvas": [
+          1600,
+          1000
+        ],
+        "archiveUnchanged": true
+      }
+    ],
+    "errors": [],
+    "pass": true
+  },
+  "nativeRoute": {
+    "base": "http://127.0.0.1:5377/",
+    "lite": false,
+    "smoke": true,
+    "spawn": {
+      "level": "sky",
+      "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+      "position": [
+        0,
+        0.7366666187594333,
+        5
+      ],
+      "grounded": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 37,
+        "targetBytes": 4147200
+      },
+      "cloudContacts": 2,
+      "gate": [
+        0,
+        0,
+        -483
+      ],
+      "checkpoints": 7,
+      "resolution": "max",
+      "canvas": [
+        1600,
+        1000
+      ]
+    },
+    "route": {
+      "review": {
+        "frame": 730,
+        "finished": true,
+        "failed": null,
+        "evidence": {
+          "jumps": 0,
+          "ice": [],
+          "falling": [],
+          "grindFrames": [
+            108,
+            90
+          ],
+          "gaps": [
+            {
+              "index": 0,
+              "from": [
+                0,
+                1.3993664447150662,
+                -345.99637968408615
+              ],
+              "speed": 22.870716305916847,
+              "board": true,
+              "to": [
+                0,
+                -4.768371586472142e-08,
+                -368.48591738490506
+              ]
+            },
+            {
+              "index": 1,
+              "from": [
+                0,
+                1.5813601845896041,
+                -456.90680092294804
+              ],
+              "speed": 22.852914662378044,
+              "board": true,
+              "to": [
+                0,
+                -4.768371586472142e-08,
+                -480.52147940740554
+              ]
+            }
+          ],
+          "checkpoints": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "bails": 0
+        }
+      },
+      "position": [
+        0,
+        0.7366666664431492,
+        -481.6684080163943
+      ],
+      "state": "finished"
+    },
+    "normal": {
+      "level": "sky",
+      "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+      "position": [
+        -1.106,
+        -4.768371586472142e-08,
+        -309
+      ],
+      "grounded": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 12,
+        "frames": 35,
+        "targetBytes": 4147200
+      },
+      "cloudContacts": 2,
+      "gate": [
+        0,
+        0,
+        -483
+      ],
+      "checkpoints": 7,
+      "resolution": 720,
+      "canvas": [
+        1152,
+        720
+      ]
+    },
+    "bonus": {
+      "level": "bonus:sky",
+      "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+      "position": [
+        -6,
+        -4.768371586472142e-08,
+        0
+      ],
+      "grounded": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 6,
+        "frames": 91,
+        "targetBytes": 4147200
+      },
+      "cloudContacts": 2,
+      "gate": [
+        62,
+        0,
+        0
+      ],
+      "checkpoints": 0,
+      "resolution": 720,
+      "canvas": [
+        1152,
+        720
+      ]
+    },
+    "bonusNative": {
+      "level": "bonus:sky",
+      "stamp": "Codex/sol fork \u00b7 build 11-01 20:09 UTC",
+      "position": [
+        25,
+        3.5762786898541066e-09,
+        0
+      ],
+      "grounded": true,
+      "cloudPass": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 6,
+        "frames": 120,
+        "targetBytes": 4147200
+      },
+      "cloudContacts": 2,
+      "gate": [
+        62,
+        0,
+        0
+      ],
+      "checkpoints": 0,
+      "resolution": "max",
+      "canvas": [
+        1600,
+        1000
+      ]
+    },
+    "errors": []
+  }
+}

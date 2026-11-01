@@ -1335,7 +1335,7 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // LEGACY MIGRATION + structural normalization. This is idempotent: opening an
 // already-current level cannot keep rewriting it, while old organizational
 // metadata remains visible in the modern group outliner.
-export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
+export function migrateCustomLevel(d: CustomLevelData, { crateLayout = true } = {}): CustomLevelData {
   migrateSlipstreamCamera(d);
   migrateDrownedCamera(d);
   // Boss retries bank phase progress in the encounter and start on the pier.
@@ -1632,7 +1632,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     d.components = d.components.filter(
       (component, index) => component.t !== "crystal" || index === lastCrystal,
     );
-  migrateCrateLayout(d);
+  if (crateLayout) migrateCrateLayout(d);
   return d;
 }
 
@@ -2929,7 +2929,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   }
 }
 
-function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelData | null {
+function normalizeLevelDataFields(value: unknown, migrate = true, options: { crateLayout?: boolean } = {}): CustomLevelData | null {
   const MAX_ABS = 100_000;
   const MAX_COMPONENTS = 10_000;
   const MAX_POINTS = 4_096;
@@ -3758,7 +3758,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     // format bounds. The canonical result must satisfy the same complete
     // contract as the next import, including serialized size and clone work.
     if (migrate)
-      return normalizeLevelDataFields(cloneBoundedLevelJson(migrateCustomLevel(source)), false);
+      return normalizeLevelDataFields(cloneBoundedLevelJson(migrateCustomLevel(source, options)), false);
     const normalized = source;
     const groups = groupIndex(normalized);
     for (const start of normalized.groups ?? []) {
@@ -3809,7 +3809,10 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
             !hasOnlyKeys(entry, new Set(["id", "name", "data"])) ||
             !validLevelId(entry.id) || typeof entry.name !== "string" ||
             entry.name.length > MAX_LEVEL_LABEL_LENGTH || ids.has(entry.id)) return null;
-        const data = normalizeLevelDataFields(entry.data);
+        // Compare stock fingerprints before changing crate coordinates or
+        // their revision. The chosen runtime/editor copy expands afterwards;
+        // registry reads and saves keep the recoverable authoring archive.
+        const data = normalizeLevelDataFields(entry.data, true, { crateLayout: false });
         if (!data) return null;
         normalized = { id: entry.id, name: cleanLevelName(entry.name), data };
         entryBytes = new TextEncoder().encode(JSON.stringify(normalized)).byteLength;
@@ -3930,20 +3933,28 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
 
 // Only exact previously published snapshots follow the new source. Any
 // authored geometry, metadata or name change keeps the player's local copy.
+const SKY_BRIDGE_SNAPSHOTS = [
+  [3560, 2625946987, 4006427273], [3602, 3548812583, 3344214389],
+  [295314, 2571905729, 1013289071], [212031, 3376620613, 487422001],
+  [211525, 1134995033, 2498548093],
+  // The crate-size release could persist these exact stock copies with its
+  // revision marker. Recognize the complete migrated values too; never strip
+  // arbitrary metadata or round positions to make an edited level match.
+  [3584, 3553980668, 163324630], [3626, 3704334736, 2171666218],
+  [295338, 851369126, 2368776784], [212055, 3828061170, 1256867982],
+  [211549, 1211357326, 989712354],
+] as const;
 export function isOriginalSkyBridge(entry: LevelEntry): boolean {
   if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || ![48,211,304].includes(entry.data?.components.length ?? 0)) return false;
   const json = JSON.stringify(entry.data);
-  if (![3560,3602,295314,212031,211525].includes(json.length)) return false;
+  if (!SKY_BRIDGE_SNAPSHOTS.some(([length]) => length === json.length)) return false;
   let a = 2166136261, b = 2246822519;
   for (let i=0; i<json.length; i++) {
     a = Math.imul(a ^ json.charCodeAt(i), 16777619);
     b = Math.imul(b ^ json.charCodeAt(i), 3266489917);
   }
-  return (json.length === 3560 && (a >>> 0) === 2625946987 && (b >>> 0) === 4006427273) ||
-    (json.length === 3602 && (a >>> 0) === 3548812583 && (b >>> 0) === 3344214389) ||
-    (json.length === 295314 && (a >>> 0) === 2571905729 && (b >>> 0) === 1013289071) ||
-    (json.length === 212031 && (a >>> 0) === 3376620613 && (b >>> 0) === 487422001) ||
-    (json.length === 211525 && (a >>> 0) === 1134995033 && (b >>> 0) === 2498548093);
+  return SKY_BRIDGE_SNAPSHOTS.some(([length, x, y]) =>
+    length === json.length && x === (a >>> 0) && y === (b >>> 0));
 }
 
 const SLIPSTREAM_2_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
@@ -3978,15 +3989,17 @@ function followsMergedSlipstream(entry: LevelEntry): boolean {
   return pristine;
 }
 
-let originalRipcordSnapshot: string | undefined;
+const originalRipcordSnapshots = new Map<boolean, string>();
 const ORIGINAL_RIPCORD_CACHE = new WeakMap<CustomLevelData, boolean>();
 /** Only an exact untouched former river follows the easier source in its slot. */
 export function isOriginalRipcordRiver(entry: LevelEntry): boolean {
   if (entry.id !== 'rumblewater-run' || entry.name !== RUMBLEWATER_RUN_LEVEL.name || !entry.data) return false;
   const cacheable = CANONICAL_USER_DATA.has(entry.data), cached = ORIGINAL_RIPCORD_CACHE.get(entry.data);
   if (cacheable && cached !== undefined) return cached;
-  originalRipcordSnapshot ??= JSON.stringify(normalizeCustomLevelData(RUMBLEWATER_RUN_LEVEL));
-  const pristine = JSON.stringify(entry.data) === originalRipcordSnapshot;
+  const crateLayout = entry.data.crateLayoutRevision === 1;
+  if (!originalRipcordSnapshots.has(crateLayout)) originalRipcordSnapshots.set(crateLayout,
+    JSON.stringify(normalizeLevelDataFields(cloneBoundedLevelJson(RUMBLEWATER_RUN_LEVEL), true, { crateLayout })));
+  const pristine = JSON.stringify(entry.data) === originalRipcordSnapshots.get(crateLayout);
   if (cacheable) ORIGINAL_RIPCORD_CACHE.set(entry.data, pristine);
   return pristine;
 }
@@ -4049,7 +4062,7 @@ export function levelList(): LevelEntry[] {
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
   return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !followsMergedSlipstream(l) && !isPreviousCountryClubStock(l) &&
-    (l.data?.edgeGrindingRevision === 1 || (!isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l) &&
+    (l.data?.edgeGrindingRevision === 1 || (!isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSkyBridge(l) && !isOriginalSlipstream2(l) &&
       edgeDefaultUpgrade(l) !== BUILTIN_LEVELS.find(builtin => builtin.id === id))));
 }
 
