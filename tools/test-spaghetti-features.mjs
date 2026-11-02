@@ -18,7 +18,9 @@ await withBlockworksRuntime(async r=>{
   assert.ok(r.p.grounded&&r.p.pos.y>c.p[1]+21,'The reward receiver physically catches the spring jump');
  }
  for(const c of C.filter(c=>c.t==='ramp')){
-  start([c.p[0],c.p[1]+.08,c.p[2]+c.len/2+6],24);
+  // Begin at the supported high end of the new gravity run-in, then ride the
+  // complete descent and kicker rather than placing inside the sloping deck.
+  start([c.p[0],c.p[1]+4.08,c.p[2]+21],20);
   let air=false,landed=false,peak=r.p.pos.y;const samples=[];
   for(let f=0;f<360;f++){
    r.tick({...r.steerToward([c.p[0],c.p[1]-9,c.p[2]-32]),jumpHeld:true});
@@ -40,7 +42,7 @@ await withBlockworksRuntime(async r=>{
    let jumpHeld=true;
    if(!r.p.grounded&&r.p.vertAir&&r.p.pipeHang)jumpHeld=r.p.vertBoardRelease.stage===1&&r.p.pos.y>r.p.hangPipe.lipY+.5&&!r.p.vertBoardRelease.pressArmed;
    const prior=r.p.hangPipe;
-   r.tick({...r.steerToward([0,c.p[1]-20,c.p[2]-80]),jumpHeld});
+   r.tick({...r.steerToward([c.p[0],c.p[1]-20,c.p[2]-80]),jumpHeld});
    if(prior&&r.p.hangPipe&&prior!==r.p.hangPipe&&r.p.vertBoardRelease.stage===2)transfers.push([r.l.halfpipes.indexOf(prior),r.l.halfpipes.indexOf(r.p.hangPipe)]);
    if(!r.p.grounded)air=true;
    if(r.p.grounded&&r.p.groundHit?.halfpipe)surfaces.add(r.l.halfpipes.indexOf(r.p.groundHit.halfpipe));

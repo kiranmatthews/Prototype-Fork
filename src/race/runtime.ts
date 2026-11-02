@@ -389,7 +389,19 @@ export class SkateRace {
    * steering three riders as lateral offsets of a single course guide. */
   private driveRailChoices(id:number,preference?:number):Input {
     const r=this.riders[id],p=r.player,network=this.level!.railChoices!,input=blankInput();
-    if(r.finish!==null||r.recovery>0||p.state==='dead'||p.skateCameraBailing)return input;
+    if(r.finish!==null||r.recovery>0||p.state==='dead')return input;
+    if(p.skateCameraBailing){
+      if(this.level!.verticalLoop){
+        // A body caught on a small landing lip needs the same recovery input
+        // a human can use. Back toward its run-in and tap Jump to flail/roll
+        // onto support; leaving every input blank can pin it on the rim.
+        input.moveY=p.grounded?-1:0;
+        input.jumpHeld=p.grounded&&(this.elapsed+id*.137)%.7<.06;
+        input.jumpPressed=input.jumpHeld&&!r.oldJump;input.jumpReleased=!input.jumpHeld&&r.oldJump;
+        r.oldJump=input.jumpHeld;r.oldGrind=false;
+      }
+      return input;
+    }
     const cursor=this.railChoiceCursors.get(id)??{s:r.progress};this.railChoiceCursors.set(id,cursor);
     const caught=p.state==='grind'?network.caught(p.pos,cursor):null,rail=caught?.rail??null;
     const choices=this.level!.skateRace!.railChoices?.[0]?.paths.length??3;
@@ -417,7 +429,7 @@ export class SkateRace {
       Math.abs(nearby.sample.point.y-p.pos.y)<3&&nearby.rail.points[nearby.rail.points.length-1].z<p.pos.z-4;
     const incidentalEdge=periodic&&p.state==='grind'&&!caught&&!recoveryGrind;
     if(lowerRoute||incidentalEdge)r.aim.set(THREE.MathUtils.clamp(p.pos.x,-40,40),p.pos.y,p.pos.z-20);
-    if(recoveryGrind||recoveryApproach)r.aim.copy(nearby!.rail.pointAt(nearby!.sample.t+(recoveryGrind?look:4)));
+    if(recoveryGrind||recoveryApproach&&Math.abs(p.speed)>=12)r.aim.copy(nearby!.rail.pointAt(nearby!.sample.t+(recoveryGrind?look:8)));
     const dx=r.aim.x-p.pos.x,dz=r.aim.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level!);
     const bn=Math.hypot(basis.x,basis.z)||1,fx=basis.x/bn,fz=basis.z/bn;
     input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
@@ -466,7 +478,13 @@ export class SkateRace {
       // Flat recovery rails conserve the speed brought to them. Build a real
       // roll before recatching; a crawl-speed capture must not last kilometres.
       input.grindHeld=Math.abs(p.speed)>=12;
-      if(recoveryGrind&&!input.grindHeld||recoveryApproach&&input.grindHeld&&nearby!.sample.distance<3&&r.oldJump)input.jumpHeld=false;
+      if(recoveryGrind&&!input.grindHeld){
+        // A catch can begin with Jump already released. Holding it false
+        // forever never creates the release edge needed to leave that rail.
+        // Charge and release an ordinary forward ollie; no speed is granted.
+        input.jumpHeld=(this.elapsed+id*.137)%1.1<.85;
+        if(!input.jumpHeld){input.moveX=0;input.moveY=1;}
+      }else if(recoveryApproach&&input.grindHeld&&nearby!.sample.distance<3&&r.oldJump)input.jumpHeld=false;
     }
     if(periodic&&p.grounded){
       const stalled=this.cartStalls.get(id);

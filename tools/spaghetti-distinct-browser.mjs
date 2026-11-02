@@ -12,7 +12,7 @@ try{
   await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,id,{timeout:180000});
   await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(null));
   if(id==='spaghetti-rails'){await page.getByRole('button',{name:'RACE',exact:true}).click();await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running');}
-  const views=id==='spaghetti-rails'?[{name:'over-under',p:[0,78,-520]},{name:'flyover',p:[0,-30,-2180]}]:[{name:'lantern-steps',p:[-9,110,-18]},{name:'counterweights',p:[-18,60,-400]},{name:'spine-stair',p:[18,48,-600]},{name:'spring-vault',p:[30,-32,-1330]}];
+  const views=id==='spaghetti-rails'?[{name:'start-forks',p:[26,114,8]},{name:'over-under',p:[0,78,-520]},{name:'flyover',p:[0,-30,-2180]}]:[{name:'lantern-steps',p:[-9,110,-18]},{name:'cargo-choice',p:[2,108,-36]},{name:'counterweights',p:[-18,60,-400]},{name:'split-drop',p:[24,120,-470]},{name:'spine-stair',p:[18,48,-600]},{name:'spring-vault',p:[30,-32,-1330]}];
   for(const view of views){
    await page.evaluate(v=>{const g=window.__game,p=g.player,V=p.pos.constructor;p.respawn(g.getLevel(),true,false,{position:new V(v.p[0],v.p[1]+.08,v.p[2]),heading:new V(0,0,-1)});p.snapRenderInterpolation();},view);
    await page.waitForTimeout(700);await page.screenshot({path:out+'/'+id+'-'+view.name+'.png'});

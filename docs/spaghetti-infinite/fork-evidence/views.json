@@ -1,0 +1,113 @@
+{
+  "reports": [
+    {
+      "name": "start-forks",
+      "p": [
+        26,
+        113.99999998807907,
+        8
+      ],
+      "id": "spaghetti-rails",
+      "grounded": true,
+      "calls": 485,
+      "triangles": 7270530
+    },
+    {
+      "name": "over-under",
+      "p": [
+        0,
+        77.99999998807907,
+        -520
+      ],
+      "id": "spaghetti-rails",
+      "grounded": true,
+      "calls": 530,
+      "triangles": 9787476
+    },
+    {
+      "name": "flyover",
+      "p": [
+        0,
+        -30.00000001192093,
+        -2180
+      ],
+      "id": "spaghetti-rails",
+      "grounded": true,
+      "calls": 547,
+      "triangles": 10379005
+    },
+    {
+      "name": "lantern-steps",
+      "p": [
+        -9,
+        109.99999997615814,
+        -18
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 604,
+      "triangles": 7410750
+    },
+    {
+      "name": "cargo-choice",
+      "p": [
+        2,
+        107.99999997615814,
+        -36
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 598,
+      "triangles": 7347321
+    },
+    {
+      "name": "counterweights",
+      "p": [
+        -18,
+        59.99999998807907,
+        -400
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 638,
+      "triangles": 8650066
+    },
+    {
+      "name": "split-drop",
+      "p": [
+        23.28,
+        120,
+        -470
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 645,
+      "triangles": 9343907
+    },
+    {
+      "name": "spine-stair",
+      "p": [
+        18,
+        47.99999998807907,
+        -600
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 675,
+      "triangles": 9229561
+    },
+    {
+      "name": "spring-vault",
+      "p": [
+        30,
+        -32.00000001192093,
+        -1330
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 651,
+      "triangles": 7590717
+    }
+  ],
+  "errors": []
+}

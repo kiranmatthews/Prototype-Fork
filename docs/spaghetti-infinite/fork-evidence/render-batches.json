@@ -1,0 +1,74 @@
+[
+  {
+    "view": "start-forks",
+    "beforeTriangles": 12938438,
+    "afterTriangles": 7270530,
+    "beforeCalls": 402,
+    "afterCalls": 485,
+    "triangleReduction": 0.4380674081369018
+  },
+  {
+    "view": "over-under",
+    "beforeTriangles": 16472218,
+    "afterTriangles": 9787476,
+    "beforeCalls": 453,
+    "afterCalls": 530,
+    "triangleReduction": 0.405819179906434
+  },
+  {
+    "view": "flyover",
+    "beforeTriangles": 17332696,
+    "afterTriangles": 10379005,
+    "beforeCalls": 422,
+    "afterCalls": 547,
+    "triangleReduction": 0.4011892321886913
+  },
+  {
+    "view": "lantern-steps",
+    "beforeTriangles": 13306558,
+    "afterTriangles": 7410750,
+    "beforeCalls": 523,
+    "afterCalls": 604,
+    "triangleReduction": 0.44307536178777407
+  },
+  {
+    "view": "cargo-choice",
+    "beforeTriangles": 13751878,
+    "afterTriangles": 7347321,
+    "beforeCalls": 521,
+    "afterCalls": 598,
+    "triangleReduction": 0.46572235443042764
+  },
+  {
+    "view": "counterweights",
+    "beforeTriangles": 18255012,
+    "afterTriangles": 8650066,
+    "beforeCalls": 564,
+    "afterCalls": 638,
+    "triangleReduction": 0.5261539132376358
+  },
+  {
+    "view": "split-drop",
+    "beforeTriangles": 15798866,
+    "afterTriangles": 9343907,
+    "beforeCalls": 560,
+    "afterCalls": 645,
+    "triangleReduction": 0.408571032882993
+  },
+  {
+    "view": "spine-stair",
+    "beforeTriangles": 15998206,
+    "afterTriangles": 9229561,
+    "beforeCalls": 595,
+    "afterCalls": 675,
+    "triangleReduction": 0.4230877512141049
+  },
+  {
+    "view": "spring-vault",
+    "beforeTriangles": 12812328,
+    "afterTriangles": 7590717,
+    "beforeCalls": 525,
+    "afterCalls": 651,
+    "triangleReduction": 0.40754584178612974
+  }
+]

@@ -32,7 +32,8 @@ export function createSpaghettiPlatformer(){
    if(j>0&&j<5)slab.pts=[[-6,-5,1],[-4,-7,1],[4,-7,1],[6,-5,1],[6,5,1],[4,7,1],[-4,7,1],[-6,5,1]];
    if(j>0){
     const a=landings[j-1];jumps.push({from:a,to:p,name:`${name} / jump ${j}`});
-    w.rail(`${name} / edge stitch ${j}`,[[a[0]+4,a[1]+1,a[2]-2],[a[0]+4,a[1]+1,a[2]-7],[p[0]+4,p[1]+1,p[2]+7],[p[0]+4,p[1]+1,p[2]+2]],2,10+chapter);
+    const dx=p[0]-a[0];
+    w.rail(`${name} / edge stitch ${j}`,[[a[0]+4,a[1]+1,a[2]],[a[0]+4+dx*.4,a[1]+1,a[2]-6],[p[0]+4-dx*.4,p[1]+1,p[2]+6],[p[0]+4,p[1]+1,p[2]]],2,10+chapter);
    }
    if(j===0&&chapter>0)w.add({t:'checkpoint',p:[p[0]-3,p[1],p[2]+3],nm:name+' checkpoint',grp:3});
    if(j===1||j===4)w.box([p[0]-2,p[1],p[2]],j===4&&chapter%3===1?'multihit':'wood',name+' cargo');
@@ -41,8 +42,16 @@ export function createSpaghettiPlatformer(){
   chapters.push({name,entry:landings[0],landings});
   const end=landings[5],reward:P=[-26*side,y-14,z-144];
   w.slab(name+' / reward balcony',reward,16,20,'#c5a871',10+chapter);
-  w.box([reward[0]-3,reward[1],reward[2]],chapter===8?'life':'wood',name+' balcony reward');
-  w.box([reward[0]+1,reward[1],reward[2]],'wood',name+' balcony stack');
+  w.box([reward[0]-1.5,reward[1],reward[2]+2],chapter===8?'life':'wood',name+' balcony reward');
+  w.box([reward[0]+1.5,reward[1],reward[2]+2],'wood',name+' balcony stack');
+  // Keep the jump sequence open down the centre. Its left rail mouths offer
+  // an early lower route and a longer cargo detour, opposite the edge stitch.
+  const landing=(j:number)=>({name:name+' / step '+(j+1),p:landings[j],w:j===0?18:12,d:j===0?20:14});
+  const balcony={name:name+' / reward balcony',p:reward,w:16,d:20};
+  w.fork(name+' / fork / lower thread',landing(0),w.lowerLanding(landings[0],132),-1,10+chapter);
+  w.fork(name+' / fork / cargo balcony',landing(2),balcony,-1,10+chapter,5.2);
+  w.fork(name+' / fork / balcony descent',balcony,w.lowerLanding(reward,108),-1,10+chapter);
+  if(chapter%3===1)for(const [dx,dz] of [[-1.5,-3],[1.5,-3],[0,-6]])w.box([reward[0]+dx,reward[1],reward[2]+dz],'wood',name+' cargo cache');
   const middle:P=[(end[0]+reward[0])/2,y-11,z-117];
   if(chapter===1||chapter===4||chapter===9)w.add({t:'crumble',p:[middle[0],middle[1]-.6,middle[2]],s:[10,1.2,12],shake:1.15,tex:'spaghetti-basalt',color:'#b79770',nm:name+' / crumbling ledge',grp:10+chapter});
   else if(chapter===2||chapter===5||chapter===8)w.add({t:'mover',p:[middle[0],middle[1]-.6,middle[2]],s:[12,1.2,12],axis:'x',amp:5,speed:.45,phase:chapter*.7,tex:'spaghetti-basalt',color:'#b7c7b8',nm:name+' / crossing ferry',grp:10+chapter});
@@ -61,19 +70,19 @@ export function createSpaghettiPlatformer(){
    w.rail(name+' / vault return',[[q[0],q[1]+1,q[2]-3],[q[0],q[1]+1,q[2]-11],w.recoveryBelow(q,80)],5,10+chapter);
   }
   if(chapter===3||chapter===7){
-   for(let k=0;k<3;k++)w.add({t:'vertramp',p:[k===1?5:k===2?-4:0,y-24-k*7,z-106-k*18],len:32,w:4,rise:5,arc:90,deck:0,yaw:90,vkind:'half',tex:'spaghetti-basalt',color:['#b7c5b0','#c8aa83','#acb6bb'][k],nm:`Lantern spine ${chapter}.${k}`,grp:10+chapter});
-   w.rail(name+' / spine return',[[0,y-32,z-145],[0,y-32,z-155],w.recoveryBelow([0,y-32,z-155],35)],3,10+chapter);
+   for(let k=0;k<3;k++)w.add({t:'vertramp',p:[-12+(k===1?5:k===2?-4:0),y-24-k*7,z-106-k*18],len:32,w:4,rise:5,arc:90,deck:0,yaw:90,vkind:'half',tex:'spaghetti-basalt',color:['#b7c5b0','#c8aa83','#acb6bb'][k],nm:`Lantern spine ${chapter}.${k}`,grp:10+chapter});
+   w.rail(name+' / spine return',[[-12,y-32,z-145],[-12,y-32,z-155],w.recoveryBelow([-12,y-32,z-155],35)],3,10+chapter);
   }
   if(chapter===0||chapter===4||chapter===8){
-   const p:P=[38,y-12,z-46];w.slab(name+' / kicker approach',[38,y-12,z-31],12,14,'#c6a56e',10+chapter);
-   w.rail(name+' / kicker entry',[[landings[1][0]+4,landings[1][1]+1,landings[1][2]],[38,y-11,z-27],[38,y-11,z-36]],4,10+chapter);
+   const p:P=[38,y-16,z-86];w.downhill(name+' / kicker approach',[38,y-14,z-71],12,14,4,10+chapter);
+   w.rail(name+' / kicker entry',[[landings[1][0]+4,landings[1][1]+1,landings[1][2]-2],[landings[1][0]+4,landings[1][1]+1,landings[1][2]-9],[38,y-11,z-64],[38,y-13,z-71]],4,10+chapter);
    w.add({t:'ramp',p,w:12,len:16,rise:4,tex:'spaghetti-basalt',color:'#c9a86e',nm:name+' / kicker',grp:10+chapter});
-   const q:P=[38,y-21,z-78];w.slab(name+' / kicker receiver',q,14,18,'#cbb68c',10+chapter);w.box(q,'wood',name+' air cargo');
-   w.rail(name+' / kicker return',[[38,y-20,z-84],w.recoveryBelow(q,74)],5,10+chapter);
+   const q:P=[38,y-25,z-118];w.slab(name+' / kicker receiver',q,14,18,'#cbb68c',10+chapter);w.box(q,'wood',name+' air cargo');
+   w.rail(name+' / kicker return',[[38,y-24,z-124],w.recoveryBelow(q,74)],5,10+chapter);
   }
   if(chapter%2===1){const p=landings[3];w.add({t:'enemy',foe:chapter%4===1?'hopper':'turtle',p:[p[0]-2,p[1],p[2]],range:1.8,speed:1.1,nm:name+' / landing guardian',grp:3});}
  }
- w.finish();w.connectRecovery([entry,...[1,3,5,7,9].map(i=>chapters[i].entry)]);
+ w.finish();w.connectRecovery();
  const data=w.data(entry);data.alwaysSkate=false;
  data.groups!.push(...LANTERN_CHAPTERS.map((nm,i)=>({id:10+i,nm,editorOnly:true})));
  return {data,islands:w.islands,recovery:w.recovery,chapters,jumps,far:w.far,finishZ:w.finishZ};

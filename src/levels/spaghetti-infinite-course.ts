@@ -29,6 +29,28 @@ export function spaghettiWorld(platforming:boolean,finishZ:number){
   return add({t:'platform',nm:name,p:[p[0],p[1]-.7,p[2]],s:[w,1.4,d],grp,tex:'spaghetti-basalt',color,emissive:platforming?'#332719':'#132a34'});
  };
  const rail=(name:string,nodes:P[],radius=4,grp=5)=>add(spaghettiRail({name,nodes,radius,stage:grp-10,choice:0,lanes:[0]}));
+ // An ordinary closed riding surface: gravity earns the launch speed. The
+ // midpoint stays in the island inventory; no extra floor fills the gaps.
+ const downhill=(name:string,p:P,width:number,length:number,drop:number,grp:number)=>{
+  islands.push({name,p:[...p],w:width,d:length});
+  const x=width/2,z=length/2,h=drop/2;
+  return add({t:'mesh',nm:name,p,vertices:[-x,h,z,x,h,z,x,-h,-z,-x,-h,-z,-x,h-1.4,z,x,h-1.4,z,x,-h-1.4,-z,-x,-h-1.4,-z],
+   indices:[0,1,2,0,2,3,4,7,6,4,6,5,4,5,1,4,1,0,7,3,2,7,2,6,4,0,3,4,3,7,5,6,2,5,2,1],
+   grindTopTriangles:2,solidSides:true,gravityTrack:true,tex:'spaghetti-basalt',color:'#c6a56e',grp});
+ };
+ const fork=(name:string,a:SpaghettiIsland,b:SpaghettiIsland,side=-1,grp=5,mouth=4)=>{
+  const ax=a.p[0]+side*mouth,bx=b.p[0]+side*3;
+  // Separate mouths can be selected on the landing, then both ends flatten
+  // before their platforms. Never turn sideways across a platform edge.
+  const nodes:P[]=[[ax,a.p[1]+.9,a.p[2]+2],[ax,a.p[1]+.9,a.p[2]-a.d/2-2],
+   [bx,b.p[1]+.9,b.p[2]+b.d/2+3],[bx,b.p[1]+.9,b.p[2]+2]];
+  const component=rail(name,nodes,6,grp);
+  const drop=a.p[1]-b.p[1],color=drop>55?'#eeac6e':drop>5?'#88d8d2':'#d5bfed';
+  const arrowWidth=Math.min(1.15,a.w/2-mouth-.1);
+  add({t:'mesh',nm:name+' / departure arrow',p:[ax,a.p[1]+.02,a.p[2]+4],vertices:[-arrowWidth,0,1.3,0,0,-1.5,arrowWidth,0,1.3,0,0,.4],indices:[0,1,3,1,2,3],
+   color,emissive:color,tex:'solid',solid:false,scenerySolid:false,castShadow:false,doubleSided:true,grp});
+  return component;
+ };
  const fruit=(p:P,name='Lantern trail')=>add({t:'wumpa',p,nm:name,grp:3});
  const box=(p:P,kind:CustomComponent['kind']='wood',name='Route reward')=>add({t:'crate',p,kind,nm:name,grp:3});
  const rows=Math.ceil((40-(finishZ+32))/24),depth=(40-(finishZ+32))/rows;
@@ -66,25 +88,41 @@ export function spaghettiWorld(platforming:boolean,finishZ:number){
  const recoveryBelow=(p:P,advance=40):P=>{
   const tier=RECOVERY_HEIGHTS.findIndex(y=>y<=p[1]-3),q=recoveryPoint(p[2]-advance,tier<0?5:tier);q[1]+=.9;return q;
  };
- const connectRecovery=(entries:P[])=>{
+ const recoveryLanding=(z:number,tier:number)=>recovery[Math.max(0,Math.min(rows-1,Math.floor((40-z)/depth)))][tier];
+ const lowerLanding=(p:P,advance=120,extra=0)=>{
+  const tier=RECOVERY_HEIGHTS.findIndex(y=>y<=p[1]-6);
+  return recoveryLanding(p[2]-advance,Math.min(5,(tier<0?5:tier)+extra));
+ };
+ const connectRecovery=()=>{
   for(let tier=0;tier<6;tier++){
-   // End each local rail at a landing centre with aligned entry/exit tangents.
-   for(let first=0;first<rows-1;first+=8){
-    const last=Math.min(rows-1,first+8),nodes:P[]=[];
-    for(let row=first;row<=last;row++){
-     const p=recovery[row][tier].p;
-     if(row===first)nodes.push([p[0],p[1]+.9,p[2]]);
-     else nodes.push([p[0],p[1]+.9,p[2]+depth/2-3]);
-     if(row===last)nodes.push([p[0],p[1]+.9,p[2]]);
-     else nodes.push([p[0],p[1]+.9,p[2]-depth/2-1]);
+   // Three interleaved threads retain every landing but replace the old
+   // near-sideways zigzags with longer forward diagonals. Each local span
+   // still hands off at a supported centre with an aligned tangent.
+   for(let thread=0;thread<3;thread++){
+    const final=rows-1-((rows-1-thread)%3);
+    for(let first=thread;first<final;first+=24){
+     const last=Math.min(final,first+24),nodes:P[]=[];
+     for(let row=first;row<=last;row+=3){
+      const p=recovery[row][tier].p;
+      if(row===first)nodes.push([p[0],p[1]+.9,p[2]]);
+      else nodes.push([p[0],p[1]+.9,p[2]+10]);
+      if(row===last)nodes.push([p[0],p[1]+.9,p[2]]);
+      else nodes.push([p[0],p[1]+.9,p[2]-10]);
+     }
+     rail(`Recovery weave / tier ${tier+1} / thread ${thread+1} / span ${(first-thread)/24+1}`,nodes,3);
     }
-    rail(`Recovery weave / tier ${tier+1} / span ${first/8+1}`,nodes,3);
+    const end=recovery[final][tier].p,x=end[0]*.4;
+    rail(`Recovery collector / tier ${tier+1} / thread ${thread+1}`,[[end[0],end[1]+.9,end[2]],[end[0],end[1]+.9,end[2]-6],[x,finishY+.9,finishZ+14],[x,finishY+.9,finishZ+5]],2);
    }
-   const end=recovery[rows-1][tier].p,x=end[0]*.4;
-   rail(`Recovery collector / tier ${tier+1}`,[[end[0],end[1]+.9,end[2]],[end[0],end[1]+.9,finishZ+29],[x,finishY+.9,finishZ+14],[x,finishY+.9,finishZ+5]],2);
-   const entry=entries[tier],target=recoveryPoint(entry[2]-108,tier);
-   rail(`Tier exchange ${tier+1}`,[[entry[0],entry[1]+3.5,entry[2]-4],
-    [entry[0],entry[1]+3.5,entry[2]-16],[target[0],target[1]+.9,target[2]]],5);
+   const spacing=platforming?9:12;
+   for(let row=3+tier%3,index=0;row+7<rows;row+=spacing,index++){
+    const a=recovery[row][tier],mode=index%3;
+    if(mode===0||tier===5)fork(`Recovery fork / ${row}.${tier} / level express`,a,recovery[row+6][tier],-1);
+    else {
+     fork(`Recovery fork / ${row}.${tier} / shallow descent`,a,recovery[row+6][tier+1],-1);
+     if(mode===2)fork(`Recovery fork / ${row}.${tier} / steep descent`,a,recovery[row+4][Math.min(5,tier+2)],1);
+    }
+   }
   }
  };
  const finish=()=>{
@@ -102,5 +140,5 @@ export function spaghettiWorld(platforming:boolean,finishZ:number){
    groups:[{id:1,nm:'Forward camera',editorOnly:true},{id:2,nm:platforming?'Lantern landings':'Race interchanges',editorOnly:true},
     {id:3,nm:'Rewards and encounters',editorOnly:true},{id:5,nm:'Six-height recovery weave',editorOnly:true},{id:90,nm:'Periodic architecture',editorOnly:true}]};
  };
- return {components,islands,recovery,add,slab,rail,fruit,box,recoveryPoint,recoveryBelow,connectRecovery,finish,data,far,finishZ,finishY};
+ return {components,islands,recovery,add,slab,downhill,rail,fork,fruit,box,recoveryPoint,recoveryBelow,recoveryLanding,lowerLanding,connectRecovery,finish,data,far,finishZ,finishY};
 }

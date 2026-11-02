@@ -8309,3 +8309,25 @@ Chrome lite/full fall cameras and native-resolution layout review are clean.
 Kept local at the user's request. Preview server: port 5248. No publishing or
 shared level-pack changes. Details and compact evidence:
 [distinct iteration](spaghetti-infinite/DISTINCT_ITERATION.md).
+
+
+## 2026-11-02 — Branching and cross-height spaghetti rails (local preview)
+
+Keep the approved long layouts and all 888 racing / 608 platforming islands.
+Add multiple selectable rail departures at 30 primary platforms per course,
+plus 120 recovery junctions. Choices include level express routes, shallow
+and steep descents, racing lane changes and platforming cargo balconies.
+Replace short sideways-heavy zigzags with forward diagonals; sloped run-ins
+feed six existing kickers. Keep foot takeoffs and both spine chains clear.
+
+Use ordinary recovery/ollie inputs for rivals stranded on low-speed grinds or
+small landing rims. Partition exact periodic render geometry into local Y/Z
+groups, reducing submitted triangles by 40–53% in the reviewed views without
+changing silhouettes or collision. Player tuning and camera are unchanged.
+
+Prompt to validated local preview: approximately **43 minutes**. Fifty foot
+jumps, 35 native fork rides, 12 rail-span handoffs, all jump features, complete
+coverage, and eight finishing racers pass. Chrome lite/full/native confirms
+visible fall framing and clean consoles. Required level checks, build and
+exact-geometry preservation checks pass. No full suite, push or publication.
+Details: [fork iteration](spaghetti-infinite/FORK_ITERATION.md).

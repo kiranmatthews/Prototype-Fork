@@ -1,0 +1,194 @@
+[
+  {
+    "platforming": false,
+    "tier": 1,
+    "frames": 4162,
+    "nativeFrames": 2339,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 810.2913847612817,
+    "length": 813.0263787559986,
+    "end": [
+      -40,
+      121.05000000000001,
+      -1119.88897054429
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 2,
+    "frames": 4162,
+    "nativeFrames": 2339,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 810.2913847612817,
+    "length": 813.0263787559986,
+    "end": [
+      -24,
+      73.05000000000001,
+      -1119.88897054429
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 3,
+    "frames": 3181,
+    "nativeFrames": 1779,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 642.7344851353187,
+    "length": 645.4297070653033,
+    "end": [
+      -8,
+      25.049999999999997,
+      -1119.9287426090223
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 4,
+    "frames": 3181,
+    "nativeFrames": 1779,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 642.7344851353187,
+    "length": 645.4297070653033,
+    "end": [
+      8,
+      -22.950000000000003,
+      -1119.9287426090223
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 5,
+    "frames": 3181,
+    "nativeFrames": 1779,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 642.7344851353187,
+    "length": 645.4297070653033,
+    "end": [
+      24,
+      -70.94999999999999,
+      -1119.9287426090223
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 6,
+    "frames": 3181,
+    "nativeFrames": 1779,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 642.7344851353187,
+    "length": 645.4297070653032,
+    "end": [
+      40,
+      -118.94999999999999,
+      -1119.9287426090223
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 1,
+    "frames": 4163,
+    "nativeFrames": 2340,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 810.7315015870547,
+    "length": 813.466535682495,
+    "end": [
+      -40,
+      121.05000000000001,
+      -1121.2649659045596
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 2,
+    "frames": 4163,
+    "nativeFrames": 2340,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 810.7315015870547,
+    "length": 813.466535682495,
+    "end": [
+      -24,
+      73.05000000000001,
+      -1121.2649659045596
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 3,
+    "frames": 3183,
+    "nativeFrames": 1780,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 643.1342178650884,
+    "length": 646.0159708927197,
+    "end": [
+      -8,
+      25.049999999999997,
+      -1121.1182469723688
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 4,
+    "frames": 3183,
+    "nativeFrames": 1780,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 643.1342178650884,
+    "length": 646.0159708927198,
+    "end": [
+      8,
+      -22.950000000000003,
+      -1121.1182469723685
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 5,
+    "frames": 3183,
+    "nativeFrames": 1780,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 643.1342178650884,
+    "length": 646.0159708927198,
+    "end": [
+      24,
+      -70.94999999999999,
+      -1121.1182469723685
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 6,
+    "frames": 3183,
+    "nativeFrames": 1780,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 643.1342178650884,
+    "length": 646.0159708927196,
+    "end": [
+      40,
+      -118.94999999999999,
+      -1121.118246972369
+    ],
+    "deaths": 0
+  }
+]
