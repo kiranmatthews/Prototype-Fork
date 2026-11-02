@@ -68,6 +68,10 @@ await withSkateRuntime(async ({ server, THREE, Player, Level }) => {
         }
         if (doubleFrame >= 0 && frame === doubleFrame + 1) input.jumpReleased = true;
         player.step(1 / 60, input, level); control.step(1 / 60, input, level); level.update(1 / 60);
+        if (doubleFrame >= 0 && frame === doubleFrame + 1) {
+          assert.equal(runtime.switchBlendDuration, .05, 'new double jump lost its source-style blend');
+          assert.equal(baseline.switchBlendDuration, 0, 'old comparison inherited the new blend');
+        }
         frames++; visited.add(runtime.activeClipId);
         maxDelta = Math.max(maxDelta, player.pos.distanceTo(control.pos));
         assert.deepEqual(player.pos.toArray(), control.pos.toArray(), `${name}: changed position at frame ${frame}`);

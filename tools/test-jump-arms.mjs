@@ -21,10 +21,12 @@ try {
   const player = new Player(new THREE.Scene());
   const binding = a.RigBinding.fromSculptRuntime(player.animationRig.root);
   const suite = a.createPlayerStarterAnimationSuite(binding.definition);
+  const {createJakStudySuite} = await server.ssrLoadModule('/tools/jak-jump-variant.ts');
   const metrics = {};
   player.enterAnimationPreview();
+  for (const [variant, document] of [['B', suite], ['C', createJakStudySuite(suite)]])
   for (const id of ['player.jump', 'player.double-jump', 'player.fall', 'player.land']) {
-    const clip = suite.clips.find(clip => clip.id === id);
+    const clip = document.clips.find(clip => clip.id === id);
     let minElbowClearance = Infinity, minWristClearance = Infinity;
     for (let frame = 0; frame <= 120; frame++) {
       player.resetAnimationPreview();
@@ -41,7 +43,7 @@ try {
         minWristClearance = Math.min(minWristClearance, sign * (local('wrist' + side).x - shoulder.x));
       }
     }
-    metrics[id] = { minElbowClearance, minWristClearance };
+    metrics[`${variant}: ${id}`] = { minElbowClearance, minWristClearance };
     assert.ok(minElbowClearance > .045, `${id} upper arm swept inside the torso line`);
     assert.ok(minWristClearance > .10, `${id} forearm swept inside the torso line`);
   }

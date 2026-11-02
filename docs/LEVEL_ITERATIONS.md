@@ -8319,3 +8319,41 @@ Production build and release-size check passed (803,491,859 bytes). The build
 contains no extracted Jak audio, local audio endpoint or development review page.
 
 Source and reproduction notes: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+### Follow-up — local A/B/C playtest, 3 November 2026 NZDT
+
+The user clarified that they want an interactive comparison before any
+publication, then requested a third, stronger Jak motion/physics experiment.
+**Nothing was pushed or published.** Total elapsed from the recorded original
+implementation start to the validated three-variant local playtest was about
+**83 minutes**, including the two scope extensions and original asset study.
+
+- The page now defaults to real gameplay on the selected course. Keyboard
+  **1 / 2 / 3** and visible buttons select A (original), B (new animation, old
+  physics), or C (further animation and on-foot physics changes). Switching
+  preserves position and momentum. The old automated viewer remains optional.
+- A restores the original audio and zero-length double-jump transition. B/C use
+  the local extracted sounds; the checkbox permits animation-only comparison.
+- C gathers earlier, folds the torso farther and retains independently shaped
+  stretch/compression. Its symmetric 60 m/s² arc gives measured tap/full peaks
+  of 1.268/2.799 m; the second pop adds 1.799 m. Air steering carries momentum.
+- C is opt-in per player and captured per launch, with no global tuner changes.
+  Switching variants during flight cannot splice gravity curves. The existing
+  hold/release gesture, skateboard mount, ollies and special launch paths remain
+  on their original rules.
+- Tests: C height/airtime, coast/recovery and selection continuity passed;
+  180 frames of hold-to-skate and 1,344 campaign/park skating frames (tap/full,
+  both stances) matched the default controller exactly with C selected. B/A
+  still match for 1,820 paired frames. B/C arm-clearance and runtime checks pass.
+  Source and local playtest modules type-check; production build and release
+  size pass (803,493,410 bytes), although release remains explicitly deferred.
+- Browser: real keyboard input activates C jumps/double jumps and A original
+  audio; toggles report zero position, vertical-velocity and speed discontinuity.
+  C's apex was reviewed at native 2560×1440 and normal 1280×720 input; its landing
+  catch and finite return to idle were checked in native mode. The retained
+  playable tab has no console errors. The full-render review logged
+  texture-loading warnings during startup.
+
+The shared release handoff is marked **LOCAL PLAYTEST — DO NOT INTEGRATE OR
+PUBLISH**. Continue evaluation at the local jump-review page.

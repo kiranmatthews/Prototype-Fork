@@ -1,5 +1,6 @@
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import type { AnimationClip } from './animation/types';
+import { studyJumpVelocity, type OnFootJumpStudy } from './onFootJumpStudy';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
@@ -613,6 +614,15 @@ const LEAN_Q = new THREE.Quaternion();
 const _renderDelta = new THREE.Vector3(); // post-step PVP root correction
 
 export class Player {
+  /** Local comparison opt-in. A selection takes effect at the next foot launch. */
+  onFootJumpStudy: Readonly<OnFootJumpStudy> | null = null;
+  private footJumpStudyLaunch: Readonly<OnFootJumpStudy> | null = null;
+  private get footJumpStudyFlight(): Readonly<OnFootJumpStudy> | null {
+    return !this.grounded && this.airGrav === 'foot' && !this.freeSkate && !this.airFromSkate &&
+      !this.isBailing && !this.slamActive && !this.slideJumpAir && !this.grindExitAir &&
+      !this.trampolineAir && !this.bounceJump && !this.kiteTowing && !this.vertAir && !this.pipeHang
+      ? this.footJumpStudyLaunch : null;
+  }
   private static readonly fruitPlayers = new WeakMap<THREE.Scene,Set<Player>>();
   pos = new THREE.Vector3(); // feet position
   /** Feet position currently presented to the renderer/camera. Never gameplay. */
@@ -2041,7 +2051,7 @@ export class Player {
     this.fallCameraLandingY = null;
     const board = this.airGrav === 'board';
     const flatG = board ? (this.parkControls ? TUNING.boardRiseGravity
-      : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : TUNING.fallGravity;
+      : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : this.footJumpStudyFlight?.gravity ?? TUNING.fallGravity;
     const gravity = this.kiteTowing ? KITE_TOW.fallGravity : this.vertAir || this.pipeHang ? TUNING.pipeAirGravity : flatG;
     const from = this.fallCameraFrom.copy(this.pos), to = this.fallCameraTo;
     // A small sole/contact allowance; the forecast never grants physical support.
@@ -2324,7 +2334,9 @@ export class Player {
         ? 1 - Math.max(0, this.vVel) / this.launchVy
         : this.airborneT;
     } else if (clipId === 'player.double-jump' || clipId === 'player.slide-jump') {
-      const splitVelocity = Math.max(clipId === 'player.slide-jump' ? this.launchVy : TUNING.doubleJumpVelocity, 0.001);
+      const study = this.footJumpStudyFlight;
+      const splitVelocity = Math.max(clipId === 'player.slide-jump' ? this.launchVy : study
+        ? studyJumpVelocity(study.doubleHeight, study.gravity, CONST.fixedStep) : TUNING.doubleJumpVelocity, 0.001);
       actionProgress = this.vVel >= 0
         ? 0.5 * (1 - this.vVel / splitVelocity)
         : 0.5 + 0.5 * Math.min(1, -this.vVel / splitVelocity);
@@ -4194,6 +4206,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    if (this.grounded) this.footJumpStudyLaunch = null;
     this.runLevel = level;
     this.wrapVerticalSpace(level);
     this.naturalGrindGrace = Math.max(0, this.naturalGrindGrace - dt);
@@ -5951,6 +5964,7 @@ export class Player {
   // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
+    this.footJumpStudyLaunch = null;
     if (this.kiteReleased) this.kiteFinishJump = true;
     this.gravityTrackAir = this.freeSkate && (!!this.groundHit?.gravityTrack || !this.grounded&&this.gravityTrackAir);
     const airborneRelaunch = this.state === 'air' && !this.grounded;
@@ -6055,6 +6069,14 @@ export class Player {
     this.vVel =
       THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t) *
       (fromSlide ? Math.sqrt(Math.max(0, TUNING.slideJumpHeight)) : 1);
+    // Study C owns only a normal on-foot launch. The board, crouch/slide,
+    // springs, kite and special-launch routes keep their authored rules.
+    if (this.onFootJumpStudy && !this.freeSkate && !fromSlide && !wasCrawling &&
+        !this.trampolineAir && !this.kiteTowing && !this.kiteReleased) {
+      this.footJumpStudyLaunch = {...this.onFootJumpStudy};
+      const study = this.footJumpStudyLaunch;
+      this.vVel = studyJumpVelocity(THREE.MathUtils.lerp(study.minimumHeight, study.maximumHeight, t), study.gravity, dt);
+    }
     // Height is proportional to launch velocity squared. A grace-window
     // slide jump may also be in crawl, but must never stack its crouch boost.
     if (wasCrawling && !fromSlide) this.vVel *= CONST.crouchJumpMult;
@@ -8550,6 +8572,7 @@ export class Player {
   /** Shared by real flight and the short rail-contact forecast. */
   private airGravityAt(verticalSpeed = this.vVel, vertGravityTime = this.vertGravT): number {
     if (this.parkControls && this.airFromSkate && !this.isBailing) return this.parkFlightGravity;
+    if (this.footJumpStudyFlight) return this.footJumpStudyFlight.gravity;
     const board = this.airGrav === 'board';
     let flatG =
       verticalSpeed > 0
@@ -8686,7 +8709,8 @@ export class Player {
         this.airTapT = 0;
         this.airJumpUsed = true;
         this.doubleJumpAir = true;
-        this.vVel = TUNING.doubleJumpVelocity;
+        const study = this.footJumpStudyFlight;
+        this.vVel = study ? studyJumpVelocity(study.doubleHeight, study.gravity, dt) : TUNING.doubleJumpVelocity;
         this.speed *= TUNING.doubleJumpHorizontalScale;
         this.slideAirLat *= TUNING.doubleJumpHorizontalScale;
         this.walkVelocity.multiplyScalar(TUNING.doubleJumpHorizontalScale);
@@ -8922,6 +8946,7 @@ export class Player {
         !this.charging &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
         Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+      const study = footAir ? this.footJumpStudyFlight : null;
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       const springControl = this.trampolineAir && this.bounceJump ? this.trampolineAirStrength : 0;
       const lateralSpeed = TUNING.walkSpeed * (1 + .6 * springControl);
@@ -8931,14 +8956,19 @@ export class Player {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
         // same direct authority follows the editable traversal retention.
-        this.speed = input.moveY * TUNING.walkSpeed * diag * doubleScale;
-        this.walkVelocity
-          .copy(this.axisF)
-          .multiplyScalar(this.speed)
-          .addScaledVector(
-            this.axisL,
-            input.moveX * lateralSpeed * diag * doubleScale,
-          );
+        if (study) {
+          const seconds = input.moveX || input.moveY ? study.steeringSeconds : study.coastSeconds;
+          const blend = 1 - Math.exp(-dt / Math.max(.001, seconds));
+          const forward = input.moveY * TUNING.walkSpeed * diag * doubleScale;
+          const sideways = input.moveX * lateralSpeed * diag * doubleScale;
+          this.walkVelocity.x += (this.axisF.x * forward + this.axisL.x * sideways - this.walkVelocity.x) * blend;
+          this.walkVelocity.z += (this.axisF.z * forward + this.axisL.z * sideways - this.walkVelocity.z) * blend;
+          this.speed = this.walkVelocity.dot(this.axisF);
+        } else {
+          this.speed = input.moveY * TUNING.walkSpeed * diag * doubleScale;
+          this.walkVelocity.copy(this.axisF).multiplyScalar(this.speed)
+            .addScaledVector(this.axisL, input.moveX * lateralSpeed * diag * doubleScale);
+        }
       } else if (Math.abs(input.moveY) > 0.05) {
         // Braking (input against travel) bites harder than stretching, in
         // either direction.
@@ -8952,7 +8982,9 @@ export class Player {
       }
       // Large spring airs allow a deliberate sidestep even on the board.
       // Neutral input adds no drift and leaves carried forward speed intact.
-      if ((footAir || springControl > 0) && Math.abs(input.moveX) > 0.05) {
+      if (study) {
+        this.pos.addScaledVector(this.axisL, this.walkVelocity.dot(this.axisL) * dt);
+      } else if ((footAir || springControl > 0) && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(
           this.axisL,
           input.moveX * lateralSpeed * diag * doubleScale * dt,

@@ -10,7 +10,8 @@ the head counterbalances. The OpenGOAL controller retimes the rising pose toward
 authored frame 20 at the physical apex; double jump restarts the same jump family
 at frame 5 with a 50 ms blend. We adapt those principles to this character's
 proportions and existing controller. This is not a claim of identical game feel:
-the requested physics preservation retains our gravity, arc and input rules.
+A and B preserve the existing physics. The later C experiment changes only
+normal on-foot flight, retaining the existing release/hold-to-skate input rules.
 
 `src/animation/jumpReferenceMotion.ts` supplies the editable pose changes:
 
@@ -24,9 +25,8 @@ the requested physics preservation retains our gravity, arc and input rules.
   chest, head, elbows and wrists follow through at different times.
 
 The shared elasticity profiles retain ownership rules; segment length curves
-remain editable in Animation Studio. No whole-skeleton scale animation, root
-motion, movement constants, jump impulses, steering, collisions or jump-input
-rules change. Slide jumps and specialized launch/board clips keep their poses.
+remain editable in Animation Studio. A/B introduce no whole-skeleton scale animation, root motion, movement
+constants, jump impulses, steering, collisions or jump-input changes. Slide jumps and specialized launch/board clips keep their poses.
 Holding jump while running still mounts the board according to the existing rule.
 
 Catalogue 38 upgrades only exact untouched old defaults, including normalized
@@ -38,10 +38,45 @@ catalogue 37 curves**, generated from `createPlayerStarterClips()` at commit
 
 ## Review and validation
 
-`jump-review.html?lite&playtest&level=codex-lab&nocrt` runs actual controller inputs
-with before/after curves, camera angles, slow motion, and pauses at charge,
-reach, apex, landing catch, rebound and settle. The page is local to development
-and is excluded from the production entry points.
+`jump-review.html?playtest&level=codex-lab&nocrt` starts in **live play** on the
+selected level, with normal keyboard/controller input and the regular camera.
+Press **1 / 2 / 3** or click the three visible buttons:
+
+| Variant | Animation | On-foot physics | Sounds |
+| --- | --- | --- | --- |
+| A · Original | Previous catalogue 37 | Original | Original |
+| B · Animation | Revised jump family | Original | Local Jak placeholders |
+| C · Jak feel | Earlier gather, deeper body fold, shorter stretch | Experimental Jak fit | Local Jak placeholders |
+
+Switching does not respawn or reset velocity. A physics selection takes effect
+at the next ground jump; each in-flight arc retains the profile it launched
+with. A's double-jump blend is the original zero-length transition; B/C use
+50 ms. Uncheck **Jak sounds in B / C** to compare motion without audio changes.
+The session uses ephemeral campaign progress and never saves animation drafts.
+
+C uses symmetric 60 m/s² gravity, approximately 1.05–2.8 m first-jump heights,
+1.8 m additional second-jump height, 120 ms directional steering and 220 ms
+neutral air coasting. The reference has 1.01–3.5 m first-jump and 1–2.5 m
+second-jump targets with a 0.7 m collision offset; our values fit those principles
+to the existing character and collision controller. The source's animation
+time-to-apex calculation uses 245760 GOAL units/s² (60 m/s²). C retains
+release-to-jump so the existing held-button skateboard mount stays intact.
+This is an experimental feel variant, not a reconstruction of every Jak input
+or collision rule. No global tuning is modified. Board, park/vert, slide,
+crouch, spring, grind-exit, kite and ragdoll paths retain their normal rules.
+
+Measured on the real controller at 60 Hz: three-frame tap peaks at 1.268 m
+with 0.417 s airtime; full jump peaks at 2.799 m with 0.617 s airtime; a second
+jump adds 1.799 m. Tests compare both directions of mid-flight profile switching
+against an uninterrupted control trajectory. The existing 1,344-frame skating
+suite runs with C selected on one rider and default settings on the other;
+all movement and contact checks match, as does the 180-frame hold-to-mount test.
+
+**Playtest options → Watch motion** retains the automated tap/full/double/run
+sequences, camera angles, slow motion and phase pauses. **Play course** returns
+to the previous course position. Add `lite` to the URL for the fast renderer.
+This development page is excluded from production. Per the user's follow-up,
+the change remains local for A/B/C evaluation and has not been pushed/published.
 
 ## Local sound placeholders
 
@@ -80,6 +115,8 @@ Focused checks:
   solve, all four clips' arm clearance, board contact regression, and elasticity.
 - `node tools/test-idle-recovery-charge.mjs`: planted charge, tap/full input,
   landing's timely idle recovery, and no second recovery fade.
+- `node tools/test-jak-jump-physics.mjs`: C heights/airtime, momentum, finite
+  recovery, selection continuity and unchanged hold-to-skate behavior.
 - `node tools/test-jump-audio.mjs`: launch fallback, atomic bank installation,
   sound selection and non-repeating variants with no extra pitch jitter.
 - `npm run check:audio`: existing loop, replay and footstep behavior.

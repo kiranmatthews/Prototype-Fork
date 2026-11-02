@@ -156,7 +156,7 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
   'player.fall',
 ]);
 
-function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
+function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpReference = false): number {
   if (!from) return 0;
   if (isLaunchClip(to)) return to === LAUNCH_CLIPS.rise || to === LAUNCH_CLIPS.boardRise ? .045 : .14;
   if (isLaunchClip(from)) return to === LAND_CLIP_ID ? LAND_IMPACT_CROSSFADE_SECONDS : .12;
@@ -177,7 +177,7 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   }
   // Capture the interrupted airborne pose before the second jump pop.
   // Only presentation blends; the controller's second impulse is immediate.
-  if (to === 'player.double-jump' && AIRBORNE_CLIP_IDS.has(from)) return .05;
+  if (jumpReference && to === 'player.double-jump' && AIRBORNE_CLIP_IDS.has(from)) return .05;
   if ((to === 'player.jump' || to === 'player.fall') &&
       (AIRBORNE_CLIP_IDS.has(from) || from === 'player.idle' || from === 'player.run' || from === LAND_CLIP_ID)) {
     return 0.1;
@@ -619,7 +619,7 @@ export class CharacterAnimationRuntime {
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
-          : authoredSwitchBlendDuration(previousClipId, clip.id)
+          : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
       // Bail's visible get-up is a moving procedural pose under its editable
       // keys. Keep that base alive during the fade, including its running
