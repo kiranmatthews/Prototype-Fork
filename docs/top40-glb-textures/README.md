@@ -55,6 +55,12 @@ inside 388 unselected models are unchanged.
   offsets, image limits, full mip chains and repeatable image replacement.
 - Existing release-texture checks, retired-pig migration / standard enemy
   checks, ordinary enemy gameplay checks and `npm run check:levels` pass.
+- Refresh Rooftop Relay's exact stock certificate after removing its seven
+  actors. The first public build retained a redundant 9.6 MB snapshot on Linux
+  because its certificate still described the old actors. The existing
+  `check:level-sync` regression reproduces this stale-certificate failure;
+  recertification preserves the exact source snapshot and restores portable
+  compaction, including the bounded runtime-roundoff tests.
 - `npm run build` and `npm run check:release` pass. Local build:
   `Codex/sol fork · build 11-02 00:43 UTC`; offline version
   `a4f1a6041418d61f3eb4`.

@@ -8223,3 +8223,11 @@ no console errors or retired-asset requests. No full suite ran.
 Prompt timestamp was not captured; the measured implementation-to-validated-
 playable window was approximately 26 minutes (00:23–00:49 UTC). Detailed
 results and reproducible tools: [top-40 validation](top40-glb-textures/README.md).
+
+Public validation also exposed Rooftop Relay's old stock certificate after
+the actor removal: Linux retained a redundant 9.6 MB snapshot. Recertify only
+that unchanged full source export; the existing level-sync regression
+reproduces the stale hash and checks portable compaction after correction.
+The first public gameplay pass confirms all three reviewed levels and Rooftop
+checkpoint/respawn/finish with no errors. Asset and runtime validation remains
+applicable; the follow-up changes only the stock certificate and these notes.
