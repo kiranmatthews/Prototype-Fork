@@ -26,7 +26,7 @@ export function withSpaghettiCavern(source:CustomLevelData):CustomLevelData {
  }
  for(const c of [...C])if(c.t==='platform'&&c.s&&c.nm?.startsWith('Decision')){
   const y=c.p[1]+c.s[1]/2+.012,z=c.p[2];
-  for(const x of [-26,0,26])mesh('Choose a forward thread',[x,y,z-1],[-2.4,0,2.8,0,0,-3.4,2.4,0,2.8,0,0,1.3],[0,1,3,1,2,3],x===0?'#e2c580':x<0?'#85c8c2':'#c1a5d7');
+  for(const x of [-26,0,26])if(Math.abs(x-c.p[0])+3<c.s[0]/2)mesh('Choose a forward thread',[x,y,z-1],[-2.4,0,2.8,0,0,-3.4,2.4,0,2.8,0,0,1.3],[0,1,3,1,2,3],x===0?'#e2c580':x<0?'#85c8c2':'#c1a5d7');
  }
  data.atmosphere={backdrop:'fog',fogEnabled:true,fogNear:100,fogFar:350,fogColor:'#263847',drawDistance:640,
   ambientSky:'#c1d2e3',ambientGround:'#748e8a',ambientIntensity:1.35,

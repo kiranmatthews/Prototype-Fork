@@ -1,0 +1,114 @@
+[
+  {
+    "platforming": false,
+    "rail": "Recovery weave / tier 1",
+    "frames": 3074,
+    "nativeFrames": 3075,
+    "maxT": 1806.1993915790245,
+    "length": 1810.0056139551502,
+    "end": [
+      30.595964960177167,
+      -110.45560422197615,
+      -913.7550437997785
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "rail": "Recovery weave / tier 2",
+    "frames": 3137,
+    "nativeFrames": 3138,
+    "maxT": 1810.4353930016339,
+    "length": 1814.1625505600311,
+    "end": [
+      10.328527465669477,
+      -110.52157511443507,
+      -913.2680220037395
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "rail": "Recovery weave / tier 3",
+    "frames": 3119,
+    "nativeFrames": 3120,
+    "maxT": 1801.285393001632,
+    "length": 1804.7622848333685,
+    "end": [
+      -10.353136995622036,
+      -111.0671575109449,
+      -913.1757362664174
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "rail": "Recovery weave / tier 4",
+    "frames": 3009,
+    "nativeFrames": 3010,
+    "maxT": 1773.157724912351,
+    "length": 1777.0219054596992,
+    "end": [
+      -31.08049999515634,
+      -111.68305555824647,
+      -913.1493750060546
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "rail": "Recovery weave / tier 1",
+    "frames": 2071,
+    "nativeFrames": 2072,
+    "maxT": 1318.7276790828346,
+    "length": 1322.4061602337442,
+    "end": [
+      10.246007922434334,
+      -110.25830032319027,
+      -649.5774702908712
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "rail": "Recovery weave / tier 2",
+    "frames": 2204,
+    "nativeFrames": 2205,
+    "maxT": 1301.6656503707482,
+    "length": 1305.3483225770945,
+    "end": [
+      30.68990024965521,
+      -110.85011083371641,
+      -649.637624687931
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "rail": "Recovery weave / tier 3",
+    "frames": 2186,
+    "nativeFrames": 2187,
+    "maxT": 1292.5156503707462,
+    "length": 1296.088895762421,
+    "end": [
+      -30.779965700739936,
+      -111.3000285827167,
+      -649.5250428740751
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "rail": "Recovery weave / tier 4",
+    "frames": 2020,
+    "nativeFrames": 2021,
+    "maxT": 1292.8026790828292,
+    "length": 1295.874772922627,
+    "end": [
+      -10.327333634535476,
+      -111.73777727577419,
+      -649.272498870492
+    ],
+    "deaths": 0
+  }
+]

@@ -8,6 +8,7 @@ interface FallCameraSubject {
   grounded: boolean;
   state: string;
   waterDeathSurface?:number|null;
+  verticalLoopOffset?:number;
 }
 
 /** Hold the last shot below the last supported course height. A shadow is
@@ -18,12 +19,19 @@ export class CameraFallHold {
   private snapVersion = -1;
   private edgeY = 0;
   private held = false;
+  private verticalLoopOffset = 0;
   followingDrop = false;
   landedFromDrop = false;
 
   shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null,
     canRecover?: () => boolean): boolean {
     const wasFollowing = this.followingDrop;
+    const offset=subject.verticalLoopOffset??0;
+    // The departure height lives in the same coordinate cell as the rider.
+    // Otherwise a downward wrap looks like a new ascent and abandons the
+    // recoverable-fall follow until the body drops below the old departure.
+    this.edgeY+=offset-this.verticalLoopOffset;
+    this.verticalLoopOffset=offset;
     this.followingDrop = false;
     this.landedFromDrop = false;
     if(subject.waterDeathSurface!=null){this.edgeY=subject.waterDeathSurface;this.held=false;return false;}

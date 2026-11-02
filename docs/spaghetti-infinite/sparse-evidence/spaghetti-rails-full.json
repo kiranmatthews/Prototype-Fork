@@ -1,0 +1,83 @@
+{
+  "full": true,
+  "spawn": {
+    "position": [
+      -2.3523775321445135,
+      64,
+      17.709638831055454
+    ],
+    "grounded": true,
+    "loop": {
+      "minY": -144,
+      "height": 288
+    },
+    "view": {
+      "copies": 1080,
+      "liveCopies": 276,
+      "staticBatches": 134,
+      "cells": 7,
+      "sharedGeometry": true
+    },
+    "render": {
+      "frame": 523,
+      "calls": 913,
+      "triangles": 16115469,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 11-02 02:13 UTC"
+  },
+  "travel": {
+    "position": [
+      -3.386703634151812,
+      -0.9645435434441064,
+      -134.8052049356945
+    ],
+    "state": "air",
+    "deaths": 0,
+    "render": {
+      "frame": 935,
+      "calls": 729,
+      "triangles": 13807302,
+      "points": 0,
+      "lines": 0
+    },
+    "loop": {
+      "copies": 1080,
+      "liveCopies": 276,
+      "staticBatches": 134,
+      "cells": 7,
+      "sharedGeometry": true
+    },
+    "performance": {
+      "gameplay": true,
+      "samples": 240,
+      "averageMs": 35.351666666567326,
+      "medianMs": 32.30000001192093,
+      "p95Ms": 66.09999996423721
+    }
+  },
+  "wrap": {
+    "offset": 288,
+    "pos": [
+      0,
+      22.000000023841856,
+      -65
+    ],
+    "camera": [
+      0,
+      27.309200637361787,
+      -59.95
+    ],
+    "state": "ride",
+    "deaths": 0,
+    "ground": "platform",
+    "seam": {
+      "milliseconds": 16.700000000000728,
+      "cameraStep": -0.852799998760247,
+      "riderStep": -0.8666666666666742
+    }
+  },
+  "finish": null,
+  "errors": []
+}

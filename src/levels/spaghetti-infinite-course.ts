@@ -19,34 +19,35 @@ export function spaghettiRail(run:SpaghettiRun,offset=0):CustomComponent {
 }
 export function spaghettiSamples(c:CustomComponent):P[]{return roundCorners(c.pts!,false).map(q=>[r(c.p[0]+q.x),r(c.p[1]+q.y),r(c.p[2]+q.z)]);}
 
-/** Every rectangular column of the corridor owns a permanent catch terrace.
- * Their union is the whole XZ domain, with overlap at tile edges. Successive
- * terraces descend; none is a dead-end that needs a respawn to leave. */
+/** Smaller islands occupy different vertical tiers. Their XZ union still
+ * catches every miss; four braided recovery rails connect every lower island. */
 export function createSpaghettiCourse(platforming=false){
-  const span=platforming?96:140,finishZ=-6*span-84,far=finishZ-24;
+  const span=platforming?96:140,finishZ=-6*span-84,finishY=-114,far=finishZ-24;
   const components:CustomComponent[]=[],runs:SpaghettiRun[]=[],line:RaceKnot[]=[];
   const docks:SpaghettiDock[]=Array.from({length:7},(_,i)=>({name:`${i+1} / ${SPAGHETTI_STAGES[i]??'Final descent'}`,
-    p:[0,64-i*16,-i*span],width:96,depth:i===0?68:24,yaw:0}));
+    p:[0,64-i*16,-i*span],width:i===0||i===3?88:18,depth:i===0?68:24,yaw:0}));
   const add=(c:CustomComponent)=>components.push(c);
   const slab=(nm:string,p:P,s:P,grp=2,color='#b5c4c5')=>add({t:'platform',nm,p,s,grp,tex:'spaghetti-basalt',color,emissive:'#26333c'});
-  const catchEnd=finishZ+18,rows=Math.ceil((40-catchEnd)/24),depth=(40-catchEnd)/rows;
+  const catchEnd=finishZ+18,rows=Math.ceil((40-catchEnd)/18),depth=(40-catchEnd)/rows;
+  // Alternate adjacent crossings; no recovery thread jumps across the whole
+  // corridor. Each tier descends independently before the finish convergence.
+  const columns=[[0,1,2,3],[1,0,3,2],[2,0,3,1],[3,1,2,0],[3,2,1,0],[2,3,0,1],[1,3,0,2],[0,2,1,3]];
+  const rowAt=(z:number)=>Math.max(0,Math.min(rows-1,Math.floor((40-z)/depth)));
   const shelfTop=(z:number,col:number)=>{
-    const row=Math.max(0,Math.min(rows-1,Math.floor((40-z)/depth)));
-    if(row>=rows-4)return -90-(row-(rows-4))*2;
+    const row=rowAt(z),tier=columns[row%columns.length].indexOf(col);
     const stage=Math.max(0,Math.min(5,Math.floor((40-(row+.5)*depth)/-span)));
-    return 38-stage*16-((Math.floor(row/2)+col)%3)*22;
+    const top=22-stage*12-tier*24;
+    return r(mix(top,-104-tier*2,Math.max(0,(row-(rows-6))/5)));
   };
-  for(let row=0;row<rows;row++)for(let col=0;col<3;col++){
-    const z=40-(row+.5)*depth,top=shelfTop(z,col);
-    slab(`Catch terrace ${row}.${col}`,[(col-1)*32,top-.8,z],[32.08,1.6,depth+.08],5,['#687e89','#738b8b','#899483'][col]);
-  }
+  const catchPoint=(row:number,tier:number):P=>{const col=columns[row%columns.length][tier],z=40-(row+.5)*depth;return [-36+col*24,shelfTop(z,col),z];};
+  const link=(nm:string,nodes:P[],grp=5)=>add(spaghettiRail({name:nm,nodes,stage:grp-10,choice:0,radius:2,lanes:[0]}));
   for(const [i,d]of docks.entries()){
-    slab(`Decision landing / ${d.name}`,[0,d.p[1]-1.2,d.p[2]],[96,2.4,d.depth]);
-    add({t:'zone',p:[...d.p],s:[96,1,d.depth],dir:'S',grp:1,nm:`Forward view / ${d.name}`});
+    for(const x of d.width>18?[0]:[-26,0,26])slab(`Decision landing / ${d.name} / ${x}`,[x,d.p[1]-1,d.p[2]],[d.width,2,d.depth]);
+    if(d.width===18)link(`Decision crosslink ${i}`,[[-26,d.p[1]+2.4,d.p[2]+8],[0,d.p[1]+2.4,d.p[2]],[26,d.p[1]+2.4,d.p[2]-8]],2);
     if(platforming&&i>0&&i<6)add({t:'checkpoint',p:[6,d.p[1],d.p[2]+4],grp:3,nm:`Thread ${i+1} checkpoint`});
     if(i<6){
       for(const x of [-26,0,26])add({t:'speedpad',p:[x,d.p[1]+.025,d.p[2]-4],s:[7,.1,4],speed:32,cycle:.65,grp:2,nm:'Thread launch'});
-      for(const x of [-12,12])add({t:'crate',kind:platforming?'wood':'mystery',p:[x,d.p[1],d.p[2]+4],grp:3,nm:'Decision landing cargo'});
+      for(const x of [-26,26])add({t:'crate',kind:platforming?'wood':'mystery',p:[x,d.p[1],d.p[2]+4],grp:3,nm:'Decision landing cargo'});
     }
   }
   line.push([0,64,18,90]);
@@ -76,6 +77,10 @@ export function createSpaghettiCourse(platforming=false){
     // Optional kicker/receiver beside the uninterrupted rails.
     if(stage===0||stage===3||stage===5){
       const x=(stage%2?-1:1)*39,z=a[2]-docks[stage].depth/2-8,y=a[1];
+      if(docks[stage].width===18){
+        slab('Kicker approach',[x,y-.6,a[2]-8],[12,1.2,8],10+stage,'#cfad78');
+        link('Kicker approach / forward link',[[Math.sign(x)*26,y+.9,a[2]+2],[x,y+.9,a[2]-3],[x,y+.9,a[2]-8]],10+stage);
+      }
       add({t:'ramp',p:[x,y,z],w:12,len:16,rise:4,yaw:0,tex:'spaghetti-basalt',color:'#cfad78',grp:10+stage,nm:'Forward kicker / amber lip'});
       slab('Kicker receiver / cargo route',[x,y-9.8,z-32],[14,1.6,18],10+stage,'#b9c4bb');
       for(const dx of [-2,0,2])add({t:'crate',kind:platforming?'wood':'mystery',p:[x+dx,y-9,z-32],grp:3,nm:'Kicker reward'});
@@ -90,34 +95,63 @@ export function createSpaghettiCourse(platforming=false){
         len:48,w:4,rise:5,arc:90,deck:0,yaw:90,vkind:'half',tex:'spaghetti-basalt',color:['#a8c6bb','#cab88b','#93afbe'][k],grp:10+stage,nm:`Spine cascade ${stage}.${k} / forward transfer`});
     }
     if(stage===1||stage===4){
-      const z=a[2]-span*.76,x=32,y=shelfTop(z,2);
+      const z=a[2]-span*.76,x=32,y=shelfTop(z,3);
       add({t:'trampoline',p:[x,y+.03,z],s:[10,.6,9],speed:32,amp:1.25,tex:'solid',color:'#cbaa72',grp:10+stage,nm:'Carlisle spring / return to the weave'});
-      slab('Spring receiver',[27,y+21.2,z-30],[16,1.6,20],10+stage,'#c9b894');
+      slab('Spring receiver',[27,y+21.2,z-30],[14,1.6,18],10+stage,'#c9b894');
       add({t:'crate',kind:platforming?'life':'mystery',p:[27,y+22,z-30],grp:3,nm:'Spring reward'});
+      const row=Math.min(rows-1,rowAt(z-54)),targets=[0,1,2,3].map(tier=>catchPoint(row,tier)).filter(p=>p[1]<=y+18);
+      const target=targets.sort((a,b)=>Math.abs(a[0]-27)-Math.abs(b[0]-27))[0];
+      link('Spring receiver / descending return',[[27,y+22.9,z-33],[27,y+22.9,z-40],[target[0],target[1]+.9,target[2]]],10+stage);
     }
     if(platforming){
-      const z=a[2]-span*.64,x=stage%2?-32:32,col=x<0?0:2;
-      add({t:'enemy',foe:stage%2?'turtle':'hopper',p:[x,shelfTop(z,col),z],range:6,speed:1.3,grp:3,nm:'Lower terrace patrol / jump above'});
+      // Patrol the inside edge of a recovery island. The outer rail remains
+      // a deliberate way around the enemy instead of an unavoidable collision.
+      const z=a[2]-span*.64,x=stage%2?-29:29,col=x<0?0:3;
+      add({t:'enemy',foe:stage%2?'turtle':'hopper',p:[x,shelfTop(z,col),z],range:2,speed:1.3,grp:3,nm:'Lower terrace patrol / jump above'});
       for(let j=0;j<4;j++)add({t:'wumpa',p:[(stage%2?-1:1)*26,a[1]-4-j*.8,a[2]-24-j*5],grp:3,nm:'Weave fruit'});
     }
   }
   const last=docks[6].p;
-  line.push([...last,90],[0,-104,finishZ,90]);
+  line.push([...last,90],[0,finishY,finishZ,90]);
   // Upper and recovery routes converge on a single supported finish.
-  add({t:'vertramp',p:[0,last[1],last[2]-8],pts:[[0,0,0,0],[0,-22,8,-15],[0,-48,8,-45],[0,finishZ+16-(last[2]-8),0,-72]],
+  add({t:'vertramp',p:[0,last[1],last[2]-8],pts:[[0,0,0,0],[0,-22,8,-15],[0,-48,8,-45],[0,finishZ+16-(last[2]-8),0,finishY-last[1]]],
     w:13,rise:3,arc:60,deck:1,vkind:'half',vert:false,tex:'spaghetti-basalt',color:'#a9bfc1',grp:2,nm:'Final gravity ribbon'});
-  slab('Finish collector / every route arrives',[0,-105.2,finishZ-3],[96,2.4,44]);
-  add({t:'gate',p:[0,-104,finishZ],grp:2,nm:'Spaghetti / shared finish'});
-  if(platforming)add({t:'crystal',p:[0,-104,finishZ+8],grp:3,nm:'Spaghetti crystal'});
-  line.forEach(p=>add({t:'camnode',p:p.slice(0,3) as P,grp:1}));
-  add({t:'camnode',p:[0,-104,finishZ-26],grp:1});
+  slab('Finish collector / every route arrives',[0,finishY-1.2,finishZ-3],[96,2.4,44]);
+  add({t:'gate',p:[0,finishY,finishZ],grp:2,nm:'Spaghetti / shared finish'});
+  if(platforming)add({t:'crystal',p:[0,finishY,finishZ+8],grp:3,nm:'Spaghetti crystal'});
+  for(const x of [-26,0,26]){
+    const exitX=x===0?4:x*.65;
+    link('Final landing / descending rail '+x,[[x,last[1]+.9,last[2]-2],[x*.9,last[1]+.9,last[2]-14],
+      [exitX,finishY+.9,finishZ+18],[exitX,finishY+.9,finishZ+10]],2);
+  }
+  const upperPlatforms=components.filter(c=>c.t==='platform'&&c.s);
+  for(let row=0;row<rows;row++)for(let col=0;col<4;col++){
+    const z=40-(row+.5)*depth,x=-36+col*24,top=shelfTop(z,col);
+    if(upperPlatforms.some(c=>Math.abs(x-c.p[0])+12<=c.s![0]/2&&Math.abs(z-c.p[2])+depth/2<=c.s![2]/2))continue;
+    slab(`Catch terrace ${row}.${col}`,[x,top-.6,z],[24.08,1.2,depth+.08],5,['#687e89','#738b8b','#899483','#8c8294'][col]);
+  }
+  for(let tier=0;tier<4;tier++){
+    const nodes:P[]=[];
+    for(let row=0;row<rows;row++){
+      const p=catchPoint(row,tier);
+      nodes.push([p[0],p[1]+.9,p[2]+depth/2-3],[p[0],p[1]+.9,p[2]-depth/2-1]);
+    }
+    const end=nodes[nodes.length-1];
+    nodes.push([end[0]*.8,finishY+.9,finishZ+8]);
+    link('Recovery weave / tier '+(tier+1),nodes);
+    const first=catchPoint(Math.min(7,rows-1),tier),launchX=first[0];
+    link('Upper to lower / tier '+(tier+1),[[launchX,64.9,-26],[launchX,64.9,-36],[first[0],first[1]+.9,first[2]]]);
+  }
+  // One ordinary corridor frame: rail choice never takes over the camera or
+  // controls, even when the player crosses a different tier during a fall.
+  add({t:'zone',p:[0,0,(42+far-2)/2],s:[104,1,44-far],dir:'S',grp:1,nm:'Steady forward corridor'});
   // Side/end walls bound the guaranteed landing domain, with no floor/ceiling.
   for(const side of [-1,1])add({t:'coastwall',p:[side*49,-144,42],pts:[[0,0],[0,far-44]],w:2,rise:288,grp:90,nm:'Periodic corridor side'});
   for(const z of [41,far-1])add({t:'coastwall',p:[-50,-144,z],pts:[[0,0],[100,0]],w:2,rise:288,grp:90,nm:'Periodic corridor end'});
   const length=line.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-line[i][0],p[1]-line[i][1],p[2]-line[i][2]),0);
   const data:CustomLevelData={v:1,name:platforming?'Spaghetti Rails — Platforming':'Spaghetti Rails',spawn:[0,64.08,18],startWarpPad:false,
-    killY:-500,verticalLoop:{...SPAGHETTI_LOOP},sky:'day',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:7,
-    cameraRig:{camDist:12,camHeight:8,camPitch:18,camFov:68},alwaysSkate:platforming,hugeDropBail:false,perfectGrindBoost:true,
+    killY:-500,verticalLoop:{...SPAGHETTI_LOOP},sky:'day',keepPlayFog:true,
+    alwaysSkate:platforming,hugeDropBail:false,perfectGrindBoost:true,
     allBalanceCrates:false,medalTimes:{gold:platforming?65:55,silver:platforming?90:75,bronze:platforming?120:100},components,
     groups:[{id:1,nm:'Forward camera',editorOnly:true},{id:2,nm:'Decision landings and finish',editorOnly:true},{id:3,nm:'Rewards and lower-route patrols',editorOnly:true},
       {id:5,nm:'Complete XZ catch terraces',editorOnly:true},...SPAGHETTI_STAGES.map((nm,i)=>({id:10+i,nm,editorOnly:true})),{id:90,nm:'Periodic cavern',editorOnly:true}]};

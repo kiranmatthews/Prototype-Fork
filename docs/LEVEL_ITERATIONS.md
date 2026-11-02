@@ -8261,3 +8261,24 @@ reproduces the stale hash and checks portable compaction after correction.
 The first public gameplay pass confirms all three reviewed levels and Rooftop
 checkpoint/respawn/finish with no errors. Asset and runtime validation remains
 applicable; the follow-up changes only the stock certificate and these notes.
+
+## 2026-11-02 — Sparse spaghetti islands, complete rails and fall visibility
+
+Replace most broad decision decks with smaller separate islands and distribute
+the catch platforms across four tiers. Average platform area falls about 46%;
+three large shared landings remain per course. Forty authored forward rails
+connect every platform, including four continuous lower recovery routes and
+links between heights, spring rewards and the final collector. Complete XZ
+landing coverage remains intact, with the original springs and spine transfers.
+
+Remove branch-driven camera turns, authored camera overrides and spring camera
+takeovers. Rebase the fall camera's remembered ledge through the vertical seam,
+clear obstructing platform undersides and keep the body framed through landing.
+The changes preserve normal camera heading/lens and movement tuning.
+
+Prompt to playable with confirmed feature traversal: approximately **31 minutes**.
+Coverage/connectivity, all eight recovery-route rides, eight-racer completion,
+spring/kicker/spine traversal, camera regressions, editor edit/undo, required
+level checks and production build pass. Chrome lite and full/native checks
+cover 2,406 fall/landing frames with visible body centres, fixed forward yaw and
+clean consoles. No full suite ran. Details: [sparse iteration](spaghetti-infinite/SPARSE_ITERATION.md).

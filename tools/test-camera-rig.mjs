@@ -102,6 +102,18 @@ try {
   assert.equal(projected.landedFromDrop, false, 'touchdown reacquisition must happen once');
   rider.grounded = false; rider.groundBelowY = null; rider.renderPosition.y = -13;
   assert.equal(projected.shouldHold(rider, -30, () => null, () => false), true, 'unreachable miss must still hold');
+  // A periodic fall rebases both the rider and the remembered departure.
+  const periodic = new CameraFallHold();
+  const looper = {renderPosition:{y:20},renderSnapVersion:0,groundBelowY:20,grounded:true,state:'ride',verticalLoopOffset:0};
+  periodic.shouldHold(looper,-500);
+  Object.assign(looper,{grounded:false,state:'air',groundBelowY:null});
+  for(const [y,offset] of [[-140,0],[143,288],[20,288],[-140,288],[143,576]]){
+    looper.renderPosition.y=y;looper.verticalLoopOffset=offset;
+    assert.equal(periodic.shouldHold(looper,-500,()=>null,()=>true),false);
+    assert.equal(periodic.followingDrop,true,'the seam must not turn a falling camera into a grounded camera');
+  }
+  Object.assign(looper,{grounded:true,state:'ride',groundBelowY:22});looper.renderPosition.y=22;
+  periodic.shouldHold(looper,-500);assert.equal(periodic.landedFromDrop,true);
   const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 400);
   const aim = new THREE.Vector3();
   const forward = new THREE.Vector3(0.6, 0, -0.8);

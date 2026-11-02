@@ -24,11 +24,12 @@ await withBlockworksRuntime(async r=>{
    peak=Math.max(peak,r.p.pos.y);
    if(!r.p.grounded&&r.p.pos.z<c.p[2])air=true;
    if(f%12===0)samples.push({p:r.p.pos.toArray(),g:r.p.grounded,vy:r.p.vVel,state:r.p.state});
-   if(air&&r.p.grounded){landed=true;break;}
+   if(air&&r.p.grounded&&r.p.pos.z<c.p[2]-c.len/2-3){landed=true;break;}
   }
   report.ramps.push({position:c.p,air,landed,peak,landing:r.p.pos.toArray(),samples});
   await writeFile(output+'/features-progress.json',JSON.stringify(report,null,2));
   assert.ok(air&&landed,'Kicker launches and has a physical landing');
+  assert.ok(Math.abs(r.p.pos.y-(c.p[1]-9))<.1&&Math.abs(r.p.pos.x-c.p[0])<7&&Math.abs(r.p.pos.z-(c.p[2]-32))<9,'The landing is on the authored kicker receiver');
  }
  for(const c of C.filter(c=>c.nm?.match(/^Spine cascade .*\.0 /))){
   start([c.p[0],c.p[1]+.08,c.p[2]+2],30);

@@ -28,7 +28,7 @@ try{
   return {rails:e.data.components.filter(c=>c.t==='rail').length,checkpoints:e.data.components.filter(c=>c.t==='checkpoint').length,
    retries:e.getLevel().raceCheckpoints.length,name:c.nm,node:c.pts[3],y:c.p[1]+c.pts[3][3],radius:c.pts[3][2],grinds:e.data.skateRace.grinds.length,paths:e.getLevel().railChoices.paths.length,nativeRails:e.getLevel().rails.length,loop:e.data.verticalLoop};
  });
- assert.equal(before.paths,18);assert.equal(before.checkpoints,before.retries);assert.equal(before.grinds,18);assert.equal(before.rails,21);assert.deepEqual(before.loop,{minY:-144,height:288});
+ assert.equal(before.paths,18);assert.equal(before.checkpoints,before.retries);assert.equal(before.grinds,18);assert.equal(before.rails,40);assert.deepEqual(before.loop,{minY:-144,height:288});
  await page.getByRole('spinbutton',{name:'node 4 · y',exact:true}).fill(String(before.y+1.25));
  await page.getByRole('spinbutton',{name:'node 4 · y',exact:true}).press('Enter');
  await page.getByRole('spinbutton',{name:'node 4 · radius',exact:true}).fill('6');

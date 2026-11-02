@@ -1,0 +1,142 @@
+[
+  {
+    "platforming": false,
+    "components": 578,
+    "rails": 40,
+    "density": {
+      "platforms": 230,
+      "averageArea": 474.31620305167996,
+      "medianArea": 431.7316830188678,
+      "largePlatforms": 3
+    },
+    "connectedPlatforms": 230,
+    "coverage": 381561,
+    "falls": [
+      {
+        "x": 0,
+        "z": -65,
+        "steps": 143,
+        "landing": [
+          0,
+          22.000000023841856,
+          -65
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": -44,
+        "z": -180,
+        "steps": 239,
+        "landing": [
+          -44,
+          -61.99999997615814,
+          -180
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": 44,
+        "z": -245,
+        "steps": 239,
+        "landing": [
+          44,
+          -61.99999997615814,
+          -245
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": 0,
+        "z": -355,
+        "steps": 170,
+        "landing": [
+          0.033227228253309225,
+          -1.9999999761581422,
+          -355.3987267390398
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": -31,
+        "z": -888,
+        "steps": 295,
+        "landing": [
+          -31,
+          -109.99999997615814,
+          -888
+        ],
+        "surface": "platform"
+      }
+    ]
+  },
+  {
+    "platforming": true,
+    "components": 490,
+    "rails": 40,
+    "density": {
+      "platforms": 170,
+      "averageArea": 491.3791682972131,
+      "medianArea": 434.09903157894723,
+      "largePlatforms": 3
+    },
+    "connectedPlatforms": 170,
+    "coverage": 279657,
+    "falls": [
+      {
+        "x": 0,
+        "z": -65,
+        "steps": 143,
+        "landing": [
+          0,
+          22.000000023841856,
+          -65
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": -44,
+        "z": -180,
+        "steps": 239,
+        "landing": [
+          -44,
+          -61.99999997615814,
+          -180
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": 44,
+        "z": -245,
+        "steps": 253,
+        "landing": [
+          44,
+          -73.99999997615814,
+          -245
+        ],
+        "surface": "platform"
+      },
+      {
+        "x": 0,
+        "z": -355,
+        "steps": 175,
+        "landing": [
+          0,
+          -6,
+          -355
+        ],
+        "surface": "vertramp"
+      },
+      {
+        "x": -31,
+        "z": -624,
+        "steps": 660,
+        "landing": [
+          -31,
+          -109.99999997615814,
+          -623.3325
+        ],
+        "surface": "platform"
+      }
+    ]
+  }
+]

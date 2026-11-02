@@ -129,6 +129,7 @@ import {
 import { CameraLookOffset } from "./cameraLook";
 import { cameraViewAt, cameraViewDirection, CameraViewFraming, BONUS_PRESENTATION_VIEW } from "./cameraViews";
 import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";
+import {CameraSightline} from './cameraSightline';
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
 import { CameraPortraitFraming } from "./cameraPortraitFraming";
@@ -2112,11 +2113,13 @@ const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 const boulderChaseCamera2=new BoulderChaseCamera();
+const periodicSightline2=new CameraSightline();
 let camera2VerticalLoopOffset=0;
 function updateCamera2(dt: number): void {
   if (!p2) return;
   if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level), () => p2!.cameraCanRecoverFall(level))) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  periodicSightline2.restore(camera2);
   carlisleSceneryCamera2.restore(camera2);
   launchCamera2.restore(camera2);
   chiefCamera2.restore(camera2);
@@ -2151,8 +2154,9 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
-  launchCamera2.apply(camera2,subject,p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
+  launchCamera2.apply(camera2,subject,level.verticalLoop?null:p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
   carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
+  periodicSightline2.apply(camera2,level.verticalLoop?p2.cameraPoseBounds:null,level,dt,framingSnap);
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4576,6 +4580,7 @@ const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 const boulderChaseCamera=new BoulderChaseCamera();
+const periodicSightline=new CameraSightline();
 const raceFinishPresentation=new RaceFinishPresentation();
 const raceFinishReducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
 let cameraVerticalLoopOffset=0;
@@ -4583,6 +4588,7 @@ function updateCamera(dt: number): void {
   raceFinishPresentation.restore(camera);
   if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level), () => player.cameraCanRecoverFall(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  periodicSightline.restore(camera);
   carlisleSceneryCamera.restore(camera);
   launchCamera.restore(camera);
   chiefCamera.restore(camera);
@@ -4626,8 +4632,9 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
-  launchCamera.apply(camera,subject,player.launchCameraPresentation,dt,framingSnap,input.lookX);
+  launchCamera.apply(camera,subject,level.verticalLoop?null:player.launchCameraPresentation,dt,framingSnap,input.lookX);
   carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
+  periodicSightline.apply(camera,level.verticalLoop?player.cameraPoseBounds:null,level,dt,framingSnap);
 }
 
 function updateBaseCamera(dt: number): void {
