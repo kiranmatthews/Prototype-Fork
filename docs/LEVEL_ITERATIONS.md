@@ -8200,6 +8200,36 @@ original-C++ rail oracle lacks its external source cache; current native Player
 coverage passes. No full suite ran. Evidence: `docs/natural-grind-landings/`.
 Prompt to first validated playable build: approximately 30 minutes.
 
+## 2026-11-02 — Forward spaghetti in an infinite vertical corridor
+
+Rebuild both Spaghetti Rails courses around six forward sections, three curved
+rail choices per section, overlapping XZ catch terraces and a 288 m periodic
+vertical cell. Falling through the seam preserves velocity, elapsed race time,
+score and checkpoint state; camera/render history rebase with the rider. The
+neighbouring views share native assets and batch exact static geometry, without
+introducing another simulation or distance-based mesh reductions.
+
+Each level includes three kicker/receiver jumps, two longitudinal halfpipes,
+two descending cascades of three crosswise halfpipes, and two Carlisle springs
+with elevated reward receivers. The platformer adds lower-route enemies, boxes,
+fruit, five checkpoints and the finish crystal. All rails advance forward;
+the broad lower finish collects every route. Ordinary edge grinding and the
+authored movement tuning remain intact.
+
+Prompt to playable with confirmed spring landings and native spine transfers:
+approximately **35 minutes**. Required level checks, interpolation, course
+projection, eight-racer completion, wrapped recovery, live editor edit/undo and
+production build pass. Chrome lite and full native 1440×900 checks show continuous
+camera/rider motion across the seam and clean consoles. The isolated full/native
+sample averages 25.18 ms in the eight-rider race and 16.80 ms in the platformer;
+these are measured local results, not a universal frame-rate guarantee.
+
+Validated 661,218 corridor coverage samples, ten real wrapped landings, four
+forward spine transfers, both spring receivers and all three kicker receivers.
+The integrated release is 803,483,131 bytes, below the 1 GB gate. Existing source
+archives and unrelated published/editor work remain intact. No full suite ran.
+Details and reproducible evidence: [spaghetti-infinite/VALIDATION.md](spaghetti-infinite/VALIDATION.md).
+
 ## 2026-11-02 — Reduce top-40 embedded textures and retire rooftop pigs
 
 Resize 104 embedded images in the 30 surviving GLBs from the catalogue's first

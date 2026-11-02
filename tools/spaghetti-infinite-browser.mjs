@@ -36,7 +36,6 @@ try{
   assert.equal(wrap.offset,288);assert.equal(wrap.deaths,travel.deaths);
   assert.ok(wrap.seam&&Math.abs(wrap.seam.cameraStep)<10&&Math.abs(wrap.seam.riderStep)<10,'Camera and rendered rider remain continuous through the coordinate rebase');
   await page.screenshot({path:out+'/'+id+'-catch.png'});
-  await writeFile(out+'/'+id+'.json',JSON.stringify({full,spawn,travel,wrap,errors},null,2));
   if(full&&id==='spaghetti-rails-platforming'){
    // Inspect the exact rendered mesh looking along both vertical directions.
    // This one-frame view only changes a cloned camera, never gameplay state.
@@ -45,7 +44,17 @@ try{
     await writeFile(out+'/vertical-'+(direction>0?'up':'down')+'.png',Buffer.from(png,'base64'));
    }
   }
-  console.log(JSON.stringify({id,full,spawn,travel,wrap,errors}));
+  let finish=null;
+  if(id==='spaghetti-rails-platforming'){
+   await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),p=g.player,gate=l.captureData().components.find(c=>c.t==='gate');p.respawn(l,true,false,{position:p.pos.clone().set(0,gate.p[1]+.08,gate.p[2]+13),heading:p.axisF.clone().set(0,0,-1)});});
+   await page.keyboard.down('ArrowUp');
+   await page.waitForFunction(()=>window.__game.player.state==='finished',null,{timeout:15000});
+   await page.keyboard.up('ArrowUp');
+   finish=await page.evaluate(()=>({state:window.__game.player.state,crystal:window.__game.player.hasCrystal}));
+   assert.ok(finish.crystal);await page.screenshot({path:out+'/platformer-finish.png'});
+  }
+  await writeFile(out+'/'+id+'.json',JSON.stringify({full,spawn,travel,wrap,finish,errors},null,2));
+  console.log(JSON.stringify({id,full,spawn,travel,wrap,finish,errors}));
  }
  assert.deepEqual(errors,[]);
 }catch(e){await page.screenshot({path:out+'/failure.png'});console.log(JSON.stringify({errors}));throw e;}finally{await browser.close();}

@@ -1,0 +1,101 @@
+{
+  "at": "2026-11-02T01:33:17.471Z",
+  "choice": "default",
+  "solo": true,
+  "seed": 270327,
+  "frames": 2433,
+  "length": 974.1024512703243,
+  "seconds": 37.533333333332486,
+  "fault": null,
+  "wrap": 0,
+  "tuningUnchanged": true,
+  "riders": [
+    {
+      "id": 0,
+      "finish": 37.533333333332486,
+      "falls": 0,
+      "deaths": 0,
+      "progress": 974.1024512703243,
+      "grindFrames": 1529,
+      "airFrames": 301,
+      "groundFrames": 603,
+      "jumps": 6,
+      "rails": [
+        1,
+        5,
+        10,
+        19,
+        25,
+        34
+      ],
+      "lastState": "ride",
+      "maxBalance": 0.1407814664111627,
+      "edgeFrames": 0
+    }
+  ],
+  "records": [
+    {
+      "frames": 0,
+      "time": 0,
+      "length": 974.1024512703243,
+      "riders": [
+        {
+          "id": 0,
+          "s": 0,
+          "p": [
+            0,
+            64,
+            18
+          ],
+          "speed": 0,
+          "state": "ride",
+          "rail": -1,
+          "falls": 0,
+          "finish": null
+        }
+      ]
+    },
+    {
+      "frames": 1200,
+      "time": 17.000000000000316,
+      "length": 974.1024512703243,
+      "riders": [
+        {
+          "id": 0,
+          "s": 473,
+          "p": [
+            -3.7,
+            14.9,
+            -453.2
+          ],
+          "speed": 31,
+          "state": "grind",
+          "rail": 19,
+          "falls": 0,
+          "finish": null
+        }
+      ]
+    },
+    {
+      "frames": 2400,
+      "time": 36.99999999999918,
+      "length": 974.1024512703243,
+      "riders": [
+        {
+          "id": 0,
+          "s": 966,
+          "p": [
+            0,
+            -104,
+            -918.2
+          ],
+          "speed": 9,
+          "state": "ride",
+          "rail": -1,
+          "falls": 0,
+          "finish": null
+        }
+      ]
+    }
+  ]
+}

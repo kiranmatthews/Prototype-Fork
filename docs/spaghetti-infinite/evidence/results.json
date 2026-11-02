@@ -1,0 +1,28 @@
+{
+  "runtimeCommit": "94ffa727",
+  "integratedBase": "81615d2c",
+  "checks": {
+    "levels": "pass",
+    "interpolation": "pass",
+    "raceCourseProjection": "pass",
+    "editor": "pass",
+    "nativeCoverageAndFalls": "pass",
+    "springsKickersSpines": "pass",
+    "eightRiders": "pass",
+    "wrappedRaceMiss": "pass",
+    "liteBrowser": "pass",
+    "fullNativeBrowser": "pass",
+    "browserCrystalAndFinish": "pass",
+    "build": "pass",
+    "releaseSize": "pass"
+  },
+  "releaseBytes": 803483131,
+  "localBuild": "Codex/sol fork \u00b7 build 11-02 01:28 UTC",
+  "offlineVersion": "601ee07381f882865023",
+  "cleanSoloSeconds": 37.533333333332486,
+  "wrappedMissSeconds": 40.86666666666563,
+  "timePenaltySeconds": 3.333333333333144,
+  "coverageSamples": 661218,
+  "movementTuningChanged": false,
+  "fullSuiteRun": false
+}

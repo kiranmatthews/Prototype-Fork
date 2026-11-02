@@ -48,4 +48,25 @@ The older `docs/spaghetti-rails/` geometry snapshots and validation remain
 historical records. Authored user edits and the shared published level pack are
 preserved. No `src/tuning.ts` changes and no full `check:all` run.
 
-Final evidence and measured results are recorded alongside this file.
+## Results
+
+All eight racers finished in 37.28–40.75 seconds, using six authored rails each,
+with no deaths or race resets. The clean solo pilot took 37.53 seconds; the same
+pilot with one deliberately injected wrapped miss took 40.87 seconds, a 3.33 s
+time penalty with its clock uninterrupted. Spring launches reached 23.91 m and
+landed on both 22 m reward tiers. Both spine cascades recorded the actual native
+pipe changes and physical landings on all three bowls.
+
+Chrome full/native 1440×900 measured average/p95 frame times of 25.18/32.30 ms
+for the eight-rider race and 16.80/18.00 ms for the platformer. Camera movement
+at the seam was under one metre after removing the 288 m coordinate shift.
+These local samples include the full existing character/render pipeline; they
+are not a frame-rate promise for other hardware. All browser consoles were
+clean, and the packaged platformer collected its crystal and entered the real
+finished state. Editor height/radius edits changed both rail and navigation,
+then exact undo restored both and TEST retained the loop metadata.
+
+The combined production build passed at 803,483,131 bytes. Its local stamp is
+`Codex/sol fork · build 11-02 01:28 UTC`; source validation is based on runtime
+commit `94ffa727`, integrated over `81615d2c`. Publication has its own build stamp.
+Compact reports and reviewed screenshots are in [evidence/](evidence/).

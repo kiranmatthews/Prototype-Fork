@@ -1,0 +1,49 @@
+{
+  "before": {
+    "rails": 21,
+    "checkpoints": 0,
+    "retries": 0,
+    "name": "1.3 / High weave / thread 1",
+    "node": [
+      -14,
+      -57,
+      8,
+      -5
+    ],
+    "y": 59.900000000000006,
+    "radius": 8,
+    "grinds": 18,
+    "paths": 18,
+    "nativeRails": 37,
+    "loop": {
+      "minY": -144,
+      "height": 288
+    }
+  },
+  "changed": {
+    "node": [
+      -14,
+      -57,
+      6,
+      -3.75
+    ],
+    "previewChanged": true,
+    "routeChanged": true,
+    "retries": 0
+  },
+  "restored": {
+    "data": true,
+    "geometry": true
+  },
+  "playable": {
+    "id": "spaghetti-rails",
+    "rails": 37,
+    "retries": 0,
+    "active": true,
+    "loop": {
+      "minY": -144,
+      "height": 288
+    }
+  },
+  "errors": []
+}
