@@ -84,10 +84,6 @@ import { createEnemyVisual } from "./enemies/runtime";
 import { BULL } from "./enemies/bull";
 import { TempleFireTiki } from "./templeFireTiki";
 import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
-import {createKookState,resetKook,stepKook,type KookRole,type KookState} from './enemies/kookBehavior';
-import {createKookVisual} from './enemies/kookVisual';
-import {KookBullet} from './enemies/kookBullet';
-import type {KookSquawk} from './enemies/kookSquawk';
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
@@ -319,7 +315,6 @@ const NO_BROKEN_CRATES: Crate[] = [];
 // (spinKill/stompKill/...) that the player's collision simply reads.
 
 export interface Enemy {
-  kook?: KookState;
   group: THREE.Group;
   box: THREE.Box3;
   attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
@@ -369,7 +364,7 @@ export interface Enemy {
 type Spine = (wz: number) => { dx: number; dy: number };
 
 interface Projectile {
-  mesh: SentryFireball | KookBullet;
+  mesh: SentryFireball;
   vel: THREE.Vector3;
   life: number;
   box: THREE.Box3;
@@ -897,8 +892,8 @@ export interface CustomComponent {
   range?: number;
   speed?: number;
   foe?: EnemyKind; // enemy variant (including the wingless moa)
-  kookRole?: KookRole;
-  alertGroup?: number; // independent rooftop lookout/gunner encounter
+  kookRole?: 'lookout' | 'gunner'; // Legacy import only; retired pig actors are removed during migration.
+  alertGroup?: number; // Legacy pig encounter field, accepted only to migrate old saves.
   artProxy?: boolean; // keep native collision/camera geometry while Meshy modules own its rendering
   invisible?: boolean; // wall/pit/ramp: collider only; nitro crate: concealed at its exact authored burial height
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
@@ -1351,6 +1346,8 @@ export function migrateCustomLevel(d: CustomLevelData, { crateLayout = true } = 
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.
   d.components = d.components.filter(c => c.t !== "enemy" || (c as { foe?: string }).foe !== "car");
+  // Retire pig actors from old editor/offline saves without discarding their levels.
+  d.components = d.components.filter(c => c.t !== "enemy" || c.kookRole === undefined);
   const ocean = d.ocean;
   if (ocean && ocean.geometryVersion !== 2) {
     // The first ocean format used clockwise yaw for straight coasts and
@@ -7226,7 +7223,7 @@ export class Level {
     }
     for (const e of this.enemies) {
       const range = r2(Math.abs((e.x1 - e.x0) / 2));
-      const foe = e.kind !== "grunt" || e.kook ? e.kind : undefined;
+      const foe = e.kind !== "grunt" ? e.kind : undefined;
       C.push(
         e.axis === "z"
           ? {
@@ -7240,8 +7237,7 @@ export class Level {
               speed: r2(e.speed),
               terrainSupports: e.terrainSupports || undefined,
               foe,
-              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group,s:[1,e.group.userData.kookHeight,1] as [number,number,number]}:{}),
-              yaw: e.kook?THREE.MathUtils.radToDeg(e.kook.bearing):90,
+              yaw: 90,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             }
@@ -7256,7 +7252,6 @@ export class Level {
               speed: r2(e.speed),
               terrainSupports: e.terrainSupports || undefined,
               foe,
-              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group,yaw:THREE.MathUtils.radToDeg(e.kook.bearing),s:[1,e.group.userData.kookHeight,1] as [number,number,number]}:{}),
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             },
@@ -8674,6 +8669,7 @@ export class Level {
           } else if (c.t === "checkpoint") {
             this.checkpoint(c.p[1], c.p[2], c.p[0], data.crateLayoutRevision === 1);
           } else if (c.t === "enemy") {
+            if (c.kookRole !== undefined) return; // Also reject retired actors in direct source fixtures.
             const r = c.range ?? 5;
             const foe = (c.foe ?? "grunt") as EnemyKind;
             // yaw 90/270 turns the patrol onto the Z axis (the walk is
@@ -8689,7 +8685,7 @@ export class Level {
                 "z",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,c.terrainSupports,c.kookRole,c.alertGroup,c.yaw,
+                c.s?.[1],c.vr,c.terrainSupports,
               );
             } else {
               this.enemy(
@@ -8701,7 +8697,7 @@ export class Level {
                 "x",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,c.terrainSupports,c.kookRole,c.alertGroup,c.yaw,
+                c.s?.[1],c.vr,c.terrainSupports,
               );
             }
           } else if (c.t === "grindosaurus") {
@@ -11208,7 +11204,7 @@ export class Level {
     this.clearProjectilesFrom(enemy);
     // Only an actual top-face stomp creates this body; slides, shockwaves,
     // spun enemies and other skins retain their original defeat presentation.
-    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin && !enemy.kook) {
+    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
       enemy.state = "crab-carcass"; enemy.stateT = 0;
       enemy.crabCarcassYaw = stompView && stompView.x * stompView.x + stompView.z * stompView.z > 1e-8
         ? Math.atan2(-stompView.x, -stompView.z) - enemy.group.rotation.y : 0;
@@ -19106,8 +19102,8 @@ export class Level {
   }
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
-  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number,kookRole?:KookRole): EnemyVisual {
-    const visual = kookRole?createKookVisual(kind,kookRole,height):skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
+  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number): EnemyVisual {
+    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }
@@ -19124,9 +19120,9 @@ export class Level {
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
     skin?:CustomComponent['dkind'],
-    height?:number,variant?:number,terrainSupports=false,kookRole?:KookRole,alertGroup=0,bearing=0,
+    height?:number,variant?:number,terrainSupports=false,
   ): void {
-    const visual = this.enemyGroup(kind,skin,height,variant,kookRole);
+    const visual = this.enemyGroup(kind,skin,height,variant);
     const { group, body } = visual;
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;
@@ -19136,11 +19132,10 @@ export class Level {
     group.position.set(gx, gy, gz);
     group.userData.baseY = gy;
     // sentry/spinner are stationary — collapse the patrol span so they hold post
-    if (!kookRole && (kind === "sentry" || kind === "spinner")) {
+    if (kind === "sentry" || kind === "spinner") {
       a0 = a1 = mid;
     }
     this.enemies.push({
-      kook:kookRole?createKookState(kookRole,alertGroup,THREE.MathUtils.degToRad(bearing)):undefined,
       group,
       box: new THREE.Box3(),
       alive: true,
@@ -19164,7 +19159,6 @@ export class Level {
       touchHurt: true,
       spinRecoil: false,
     });
-    if(kookRole)resetKook(this.enemies[this.enemies.length-1]);
   }
 
   private enemyStartState(kind: EnemyKind): string {
@@ -19194,7 +19188,6 @@ export class Level {
     e.attackBox?.makeEmpty();
     e.visual.reset();
     if(isNightworksGoblin(e))resetNightworksGoblin(e);
-    if(e.kook)resetKook(e);
     resetEnemySounds(e);
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
@@ -19275,16 +19268,7 @@ export class Level {
       let boxW = 1.3,
         boxH = 1.1,
         cy = 0.55;
-      if(e.kook){
-        stepKook(e,dt,{player:this.playerPos,enemies:this.enemies,
-          blocked:(from,to)=>this.projectilePathBlocked(from,to),
-          fire:(owner,target)=>{this.updateEnemyVisual(owner,0,0);if(!owner.visual.getMuzzlePosition(SENTRY_MUZZLE))SENTRY_MUZZLE.copy(owner.group.position).add(new THREE.Vector3(0,1.6,0));this.spawnProjectile(owner,SENTRY_MUZZLE,target);},
-          cue:(owner,cue)=>{const distance=owner.group.position.distanceTo(this.playerPos),gain=Math.max(0,1-distance/55)**2;
-            if(cue==='notice'||cue==='wake')sfx.play('pigOink',gain*.8,owner.kook?.role==='lookout'?1.08:.82,.035);
-            if(cue!=='notice')sfx.play(cue==='screech'?'pigSqueal':cue==='shot'?'kookShot':'kookCock',gain*.8,1,cue==='screech'?.015:.05);},
-        });
-        boxW=(e.kook.role==='lookout'?.95:1.45)*e.body.scale.x;boxH=e.group.userData.kookHeight;cy=boxH/2;
-      }else if(goblin){
+      if(goblin){
         boxW=GOBLIN.width;boxH=GOBLIN.height;cy=boxH/2;
         e.touchHurt=e.state!=="stagger";
       } else switch (e.kind) {
@@ -19341,13 +19325,12 @@ export class Level {
         // At unsupported patrol ends turn back instead of walking over a gap.
         const lift=e.group.position.y-e.baseY;
         const floor=this.nearbyFloorY(e.group.position.x,e.group.position.z,e.baseY);
-        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;if(!e.kook)this.faceDir(e,e.dir);}
+        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;this.faceDir(e,e.dir);}
         else e.baseY=floor;
         e.group.position.y=e.baseY+lift;
       }
-      this.updateEnemyVisual(e, dt, dt > 0 ? (goblin||e.kook ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
+      this.updateEnemyVisual(e, dt, dt > 0 ? (goblin ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
       if(e.kind==='moa')updateMoaAttack(e);
-      if(e.kook)(e.group.userData.kookSquawk as KookSquawk|undefined)?.clip((a,b)=>this.projectilePathBlocked(a,b));
       if(e.group.userData.ghostSkin==='ghostknight'){boxH=e.group.userData.ghostHeight??3.05;boxW=1.35*boxH/2.62;cy=boxH/2;}
       else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxH=e.group.userData.ghostHeight??1.8;boxW=1.05*boxH;cy=boxH/2;}
       e.box.setFromCenterAndSize(
@@ -19365,7 +19348,6 @@ export class Level {
     e.visual.update(dt, {
       kind: e.kind, state: e.state, stateTime: e.stateT, time: this.time,
       speed, verticalVelocity: e.vy,
-      attackTarget:e.kook?.target,
       locomotionTime: e.group.userData.goblinMotion?.clock,
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
@@ -19373,7 +19355,7 @@ export class Level {
       crabCarcassYaw: e.crabCarcassYaw,
       alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),
     });
-    if(!e.kook)updateEnemySounds(e, dt, speed, this.playerPos);
+    updateEnemySounds(e, dt, speed, this.playerPos);
   }
 
   // BULL: stalk → spot you in its lane → lower horns and brace → DASH (invincible,
@@ -19605,8 +19587,8 @@ export class Level {
   ): void {
     const dir = target.clone().sub(from);
     if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
-    dir.normalize().multiplyScalar(owner.kook?19:SENTRY_FIREBALL_SPEED);
-    const mesh = owner.kook?new KookBullet(dir):new SentryFireball(dir, this.time * 3.7);
+    dir.normalize().multiplyScalar(SENTRY_FIREBALL_SPEED);
+    const mesh = new SentryFireball(dir, this.time * 3.7);
     mesh.position.copy(from);
     this.root.add(mesh);
     this.projectiles.push({
@@ -19627,7 +19609,7 @@ export class Level {
       pr.mesh.update(dt);
       pr.box.setFromCenterAndSize(
         pr.mesh.position,
-        new THREE.Vector3().setScalar(pr.owner.kook?.48:.7),
+        new THREE.Vector3().setScalar(.7),
       );
       if (
         pr.life <= 0 ||

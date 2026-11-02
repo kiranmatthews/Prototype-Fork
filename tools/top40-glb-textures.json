@@ -1,0 +1,165 @@
+{
+  "v": 1,
+  "catalogueCommit": "aa5fe946a09f483f72e4605617e822d7e05b4dec",
+  "selection": "GLBs among catalogue ranks 1\u201340, excluding the two removed pig characters",
+  "limits": {
+    "colour": 1024,
+    "other": 256
+  },
+  "models": [
+    {
+      "rank": 1,
+      "file": "blockworks-art/rivet-deck-v2.glb",
+      "previousReleaseBytes": 19843092
+    },
+    {
+      "rank": 2,
+      "file": "blockworks-art/metal-wedge.glb",
+      "previousReleaseBytes": 18521620
+    },
+    {
+      "rank": 3,
+      "file": "drowned-crown/excellence/treasure-mound-hero.glb",
+      "previousReleaseBytes": 14023144
+    },
+    {
+      "rank": 5,
+      "file": "drowned-crown/excellence/treasure-mound-bank.glb",
+      "previousReleaseBytes": 13456164
+    },
+    {
+      "rank": 6,
+      "file": "drowned-crown/excellence/treasure-mound-shallow.glb",
+      "previousReleaseBytes": 13322952
+    },
+    {
+      "rank": 7,
+      "file": "rooftop-kook/clubhouse.glb",
+      "previousReleaseBytes": 12819008
+    },
+    {
+      "rank": 9,
+      "file": "rooftop-kook/storm-veranda.glb",
+      "previousReleaseBytes": 12238448
+    },
+    {
+      "rank": 11,
+      "file": "props/carlisle-buildings/fish-market.glb",
+      "previousReleaseBytes": 8301596
+    },
+    {
+      "rank": 12,
+      "file": "props/carlisle-buildings/repair-shed.glb",
+      "previousReleaseBytes": 7821252
+    },
+    {
+      "rank": 13,
+      "file": "treehouse-trail/bush.glb",
+      "previousReleaseBytes": 7608472
+    },
+    {
+      "rank": 14,
+      "file": "carlisle-coast-fidelity/ledge-root.glb",
+      "previousReleaseBytes": 7479320
+    },
+    {
+      "rank": 15,
+      "file": "carlisle-coast-fidelity/canyon-buttress.glb",
+      "previousReleaseBytes": 7396144
+    },
+    {
+      "rank": 16,
+      "file": "treehouse-trials/crabshack.glb",
+      "previousReleaseBytes": 7301064
+    },
+    {
+      "rank": 17,
+      "file": "treehouse-trail/body-v2.glb",
+      "previousReleaseBytes": 7260536
+    },
+    {
+      "rank": 18,
+      "file": "treehouse-trials/porchhut.glb",
+      "previousReleaseBytes": 7229104
+    },
+    {
+      "rank": 19,
+      "file": "treehouse-trials/cavearch.glb",
+      "previousReleaseBytes": 7180200
+    },
+    {
+      "rank": 20,
+      "file": "treehouse-trail/balcony-deck.glb",
+      "previousReleaseBytes": 6902076
+    },
+    {
+      "rank": 21,
+      "file": "treehouse-trail/host.glb",
+      "previousReleaseBytes": 6901468
+    },
+    {
+      "rank": 22,
+      "file": "treehouse-trials-v2/crabshack.glb",
+      "previousReleaseBytes": 6754640
+    },
+    {
+      "rank": 23,
+      "file": "treehouse-trail/landing.glb",
+      "previousReleaseBytes": 6577676
+    },
+    {
+      "rank": 24,
+      "file": "treehouse-trials-v2/porchhut.glb",
+      "previousReleaseBytes": 6566536
+    },
+    {
+      "rank": 25,
+      "file": "treehouse-trials-v2/tree-b.glb",
+      "previousReleaseBytes": 6553280
+    },
+    {
+      "rank": 26,
+      "file": "treehouse-trail/stairs.glb",
+      "previousReleaseBytes": 6282572
+    },
+    {
+      "rank": 27,
+      "file": "treehouse-trials-v2/tree-a.glb",
+      "previousReleaseBytes": 6215932
+    },
+    {
+      "rank": 34,
+      "file": "blockworks-art/wheel.glb",
+      "previousReleaseBytes": 5931348
+    },
+    {
+      "rank": 35,
+      "file": "blockworks-art/ghost-train-castle.glb",
+      "previousReleaseBytes": 5780612
+    },
+    {
+      "rank": 36,
+      "file": "blockworks-art/coaster-v2.glb",
+      "previousReleaseBytes": 5760852
+    },
+    {
+      "rank": 37,
+      "file": "blockworks-art/spire-v2.glb",
+      "previousReleaseBytes": 5719284
+    },
+    {
+      "rank": 38,
+      "file": "blockworks-art/viaduct-v2.glb",
+      "previousReleaseBytes": 5636708
+    },
+    {
+      "rank": 39,
+      "file": "blockworks-art/wall-bay.glb",
+      "previousReleaseBytes": 5632192
+    }
+  ],
+  "removed": [
+    "rooftop-kook/pig-matron.glb",
+    "rooftop-kook/pig-guard.glb"
+  ]
+}

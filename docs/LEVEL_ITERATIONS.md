@@ -8199,3 +8199,27 @@ Build and release-size gate pass at 999,171,569 bytes. The optional unchanged
 original-C++ rail oracle lacks its external source cache; current native Player
 coverage passes. No full suite ran. Evidence: `docs/natural-grind-landings/`.
 Prompt to first validated playable build: approximately 30 minutes.
+
+## 2026-11-02 — Reduce top-40 embedded textures and retire rooftop pigs
+
+Resize 104 embedded images in the 30 surviving GLBs from the catalogue's first
+40 entries: colour/emissive at most 1024 px, normal/data at most 256 px. Use
+bicubic sharper colour resizing, normalized-vector normal resizing and an
+exact-pixel ImageOptim pass, then package reviewed GPU and portable textures.
+Preserve original authoring models and every non-image model byte. All 770
+standalone images and 388 unselected models' image payloads remain unchanged.
+
+Remove Pig Matron and Pig Guard, their exclusive weapon/audio/behavior and all
+seven Rooftop Relay placements. Preserve catering crates and unrelated level
+entries; old saves import successfully with retired actors removed. The build
+falls from 999,171,569 to 803,491,145 bytes, leaving 196,508,855 bytes free.
+
+Focused resampling/model/scope, legacy migration, ordinary enemy, required
+level, build and release checks pass. Chrome verifies 30 models in 48 native
+GPU/portable cases, plus lite/full Rooftop and normal/MAX views of Rooftop,
+Treehouse and Drowned Crown. Support, checkpoint, respawn and finish pass with
+no console errors or retired-asset requests. No full suite ran.
+
+Prompt timestamp was not captured; the measured implementation-to-validated-
+playable window was approximately 26 minutes (00:23–00:49 UTC). Detailed
+results and reproducible tools: [top-40 validation](top40-glb-textures/README.md).

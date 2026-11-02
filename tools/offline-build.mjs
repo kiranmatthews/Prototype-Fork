@@ -3,6 +3,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets,prepareReviewCatalog,compactReleaseMetadata} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
+import {prepareTop40Textures} from './release-top40-textures.mjs';
 import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
 import {preparePublishedLevels} from './release-levels.mjs';
 import {prepareNativeGeometry} from './release-native-geometry.mjs';
@@ -57,6 +58,8 @@ export function offlineBuild() {
       console.log(`Font export: ${archives.length} on-demand archive(s), ${(archives.reduce((sum,item)=>sum+item.removedBytes-item.manifestBytes,0)/1048576).toFixed(1)} MiB less hosted data.`);
       const textures=await prepareReleaseTextures({root,outDir});
       console.log(`Reviewed textures: ${textures.images} reviewed images in ${textures.models} models, ${(textures.savedBytes/1048576).toFixed(1)} MiB less hosted data; original art retained.`);
+      const top40=await prepareTop40Textures({root,outDir});
+      console.log(`Top-40 GLB textures: ${top40.images} images in ${top40.models} models resized and optimized, ${(top40.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const shared=await prepareSharedReleaseTextures({root,outDir});
       console.log(`Shared textures: ${shared.images} exact images reused across ${shared.models} models, ${(shared.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const native=await prepareNativeGeometry({root,outDir});

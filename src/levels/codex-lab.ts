@@ -796,19 +796,10 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   // The first twelve metres of each receiver remain completely open.
   supply(r,r.a+16,(index===35?-1:1)*Math.min(r.width/2-2,4.8),'mystery',0,'Reward after the long roof transfer');
  }
- // Animal residents stroll along the roof, escalating to a final crossfire.
- // Their short supported patrols leave landing strips and the middle lane open.
- for(const [index,lookoutSide,gunnerSides]of [[8,5,[7]],[23,-5,[-7]],[43,7,[-8,10]]] as [number,number,number[]][]){
-  const r=ROOFTOP_ROOFS[index],alertGroup=r.district;
-  const foe=(offset:number,u:number,role:'lookout'|'gunner')=>{
-   const s=r.a+offset;components.push({t:'enemy',p:rooftopWorld(s,rooftopSurfaceY(r,s,u),u),
-    range:role==='lookout'?3:3.5,speed:role==='lookout'?1.05:.9,terrainSupports:true,
-    s:[1,(role==='lookout'?2.35:2.5)*1.7,1],foe:role==='lookout'?'grunt':'sentry',kookRole:role,alertGroup,yaw:rooftopYaw(s),
-    grp:300+r.district,nm:role==='lookout'?'Pig matron · lethal squeal':'Boar guard · independent patrol'});
-  };
-  foe(index===43?27:23,lookoutSide,'lookout');
-  gunnerSides.forEach((u,i)=>foe(index===43?50-i*5:43,u,'gunner'));
-  for(const side of gunnerSides){
+ // Keep the district catering supplies after removing the pig residents.
+ for(const [index,sides]of [[8,[7]],[23,[-7]],[43,[-8,10]]] as [number,number[]][]){
+  const r=ROOFTOP_ROOFS[index];
+  for(const side of sides){
    const u=Math.sign(side)*4.4,s=r.a+34;
    for(const shift of [-.55,.55])for(const stack of [0,1,2])supply(r,s,u+shift,'metal',stack,'Club catering flight cases · solid cover');
    supply(r,s-2,u,'wood',0,'Catering delivery beside the flight cases');

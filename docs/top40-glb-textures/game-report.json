@@ -1,0 +1,51 @@
+{
+  "base": "http://127.0.0.1:5198",
+  "errors": [],
+  "retiredRequests": [],
+  "levels": [
+    {
+      "id": "rooftop-relay",
+      "grounded": true,
+      "enemies": 0,
+      "buffer": [
+        1440,
+        900
+      ],
+      "triangles": 2585467,
+      "stamp": "Codex/sol fork · build 11-02 00:43 UTC"
+    },
+    {
+      "id": "treehouse-trail",
+      "grounded": true,
+      "enemies": 2,
+      "buffer": [
+        1440,
+        900
+      ],
+      "triangles": 5111557,
+      "stamp": "Codex/sol fork · build 11-02 00:43 UTC"
+    },
+    {
+      "id": "drowned-crown",
+      "grounded": true,
+      "enemies": 13,
+      "buffer": [
+        1440,
+        900
+      ],
+      "triangles": 7449660,
+      "stamp": "Codex/sol fork · build 11-02 00:43 UTC"
+    }
+  ],
+  "lite": {
+    "enemies": 0,
+    "grounded": true
+  },
+  "checkpoint": {
+    "active": 1,
+    "enemies": 0
+  },
+  "respawn": true,
+  "finish": true,
+  "passed": true
+}

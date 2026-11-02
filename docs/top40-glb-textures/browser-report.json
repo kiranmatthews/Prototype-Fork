@@ -1,0 +1,3205 @@
+{
+  "base": "http://127.0.0.1:5198/",
+  "models": [
+    {
+      "file": "blockworks-art/rivet-deck-v2.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 4903,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/metal-wedge.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 3819,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "drowned-crown/excellence/treasure-mound-hero.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 76265,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 76265,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "drowned-crown/excellence/treasure-mound-bank.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 89655,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 89655,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "drowned-crown/excellence/treasure-mound-shallow.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 55467,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 55467,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "rooftop-kook/clubhouse.glb",
+      "modes": [
+        {
+          "gpu": false,
+          "triangles": 77950,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "rooftop-kook/storm-veranda.glb",
+      "modes": [
+        {
+          "gpu": false,
+          "triangles": 77130,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-buildings/fish-market.glb",
+      "modes": [
+        {
+          "gpu": false,
+          "triangles": 42816,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "props/carlisle-buildings/repair-shed.glb",
+      "modes": [
+        {
+          "gpu": false,
+          "triangles": 47523,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trail/bush.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 1326,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 1326,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "carlisle-coast-fidelity/ledge-root.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 10517,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 10517,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "carlisle-coast-fidelity/canyon-buttress.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 12920,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 12920,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials/crabshack.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 10211,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 10211,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trail/body-v2.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 10425,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 10425,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials/porchhut.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 10091,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 10091,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials/cavearch.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 9134,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 9134,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trail/balcony-deck.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 588,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 588,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trail/host.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 9193,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 9193,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials-v2/crabshack.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 9927,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 9927,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trail/landing.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 1629,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 1629,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials-v2/porchhut.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 9903,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 9903,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials-v2/tree-b.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 7586,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 7586,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trail/stairs.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 2594,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 2594,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "treehouse-trials-v2/tree-a.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 8700,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        },
+        {
+          "gpu": false,
+          "triangles": 8700,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 0,
+              "format": 1023,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1001,
+              "wrapT": 1001,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/wheel.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 11112,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/ghost-train-castle.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 13401,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/coaster-v2.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 10720,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/spire-v2.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 9895,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/viaduct-v2.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 9741,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "blockworks-art/wall-bay.glb",
+      "modes": [
+        {
+          "gpu": true,
+          "triangles": 5340,
+          "glError": 0,
+          "buffer": [
+            1280,
+            960
+          ],
+          "maps": [
+            {
+              "slot": "map",
+              "width": 1024,
+              "height": 1024,
+              "mips": 11,
+              "format": 37808,
+              "colorSpace": "srgb",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "normalMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "roughnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            },
+            {
+              "slot": "metalnessMap",
+              "width": 256,
+              "height": 256,
+              "mips": 9,
+              "format": 37808,
+              "colorSpace": "",
+              "channel": 0,
+              "wrapS": 1000,
+              "wrapT": 1000,
+              "flipY": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

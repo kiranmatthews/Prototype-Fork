@@ -1,0 +1,240 @@
+{
+  "beforeBytes": 999171569,
+  "afterBytes": 803491145,
+  "savedBytes": 195680424,
+  "remainingBytes": 196508855,
+  "files": 1844,
+  "selectedModels": 30,
+  "untouchedModels": 388,
+  "unchangedStandaloneImages": 770,
+  "removedModels": [
+    "rooftop-kook/pig-matron.glb",
+    "rooftop-kook/pig-guard.glb",
+    "rooftop-kook/heirloom-shotgun.glb"
+  ],
+  "catalogueCommit": "aa5fe946a09f483f72e4605617e822d7e05b4dec",
+  "imageUses": 104,
+  "textureCaps": {
+    "colour": 1024,
+    "other": 256
+  },
+  "originalAuthoringModelsRetained": true,
+  "models": [
+    {
+      "rank": 1,
+      "file": "blockworks-art/rivet-deck-v2.glb",
+      "beforeBytes": 19843092,
+      "afterBytes": 1544936,
+      "images": 3
+    },
+    {
+      "rank": 2,
+      "file": "blockworks-art/metal-wedge.glb",
+      "beforeBytes": 18521620,
+      "afterBytes": 1506380,
+      "images": 3
+    },
+    {
+      "rank": 3,
+      "file": "drowned-crown/excellence/treasure-mound-hero.glb",
+      "beforeBytes": 14023144,
+      "afterBytes": 6148636,
+      "images": 4
+    },
+    {
+      "rank": 5,
+      "file": "drowned-crown/excellence/treasure-mound-bank.glb",
+      "beforeBytes": 13456164,
+      "afterBytes": 6728176,
+      "images": 4
+    },
+    {
+      "rank": 6,
+      "file": "drowned-crown/excellence/treasure-mound-shallow.glb",
+      "beforeBytes": 13322952,
+      "afterBytes": 5222912,
+      "images": 4
+    },
+    {
+      "rank": 7,
+      "file": "rooftop-kook/clubhouse.glb",
+      "beforeBytes": 12819008,
+      "afterBytes": 6223252,
+      "images": 3
+    },
+    {
+      "rank": 9,
+      "file": "rooftop-kook/storm-veranda.glb",
+      "beforeBytes": 12238448,
+      "afterBytes": 5296292,
+      "images": 3
+    },
+    {
+      "rank": 11,
+      "file": "props/carlisle-buildings/fish-market.glb",
+      "beforeBytes": 8301596,
+      "afterBytes": 2954208,
+      "images": 1
+    },
+    {
+      "rank": 12,
+      "file": "props/carlisle-buildings/repair-shed.glb",
+      "beforeBytes": 7821252,
+      "afterBytes": 2940420,
+      "images": 1
+    },
+    {
+      "rank": 13,
+      "file": "treehouse-trail/bush.glb",
+      "beforeBytes": 7608472,
+      "afterBytes": 2797544,
+      "images": 4
+    },
+    {
+      "rank": 14,
+      "file": "carlisle-coast-fidelity/ledge-root.glb",
+      "beforeBytes": 7479320,
+      "afterBytes": 2883768,
+      "images": 4
+    },
+    {
+      "rank": 15,
+      "file": "carlisle-coast-fidelity/canyon-buttress.glb",
+      "beforeBytes": 7396144,
+      "afterBytes": 2857740,
+      "images": 4
+    },
+    {
+      "rank": 16,
+      "file": "treehouse-trials/crabshack.glb",
+      "beforeBytes": 7301064,
+      "afterBytes": 2996652,
+      "images": 4
+    },
+    {
+      "rank": 17,
+      "file": "treehouse-trail/body-v2.glb",
+      "beforeBytes": 7260536,
+      "afterBytes": 2941960,
+      "images": 4
+    },
+    {
+      "rank": 18,
+      "file": "treehouse-trials/porchhut.glb",
+      "beforeBytes": 7229104,
+      "afterBytes": 3011960,
+      "images": 4
+    },
+    {
+      "rank": 19,
+      "file": "treehouse-trials/cavearch.glb",
+      "beforeBytes": 7180200,
+      "afterBytes": 2910020,
+      "images": 4
+    },
+    {
+      "rank": 20,
+      "file": "treehouse-trail/balcony-deck.glb",
+      "beforeBytes": 6902076,
+      "afterBytes": 2575120,
+      "images": 4
+    },
+    {
+      "rank": 21,
+      "file": "treehouse-trail/host.glb",
+      "beforeBytes": 6901468,
+      "afterBytes": 2773484,
+      "images": 4
+    },
+    {
+      "rank": 22,
+      "file": "treehouse-trials-v2/crabshack.glb",
+      "beforeBytes": 6754640,
+      "afterBytes": 2896440,
+      "images": 4
+    },
+    {
+      "rank": 23,
+      "file": "treehouse-trail/landing.glb",
+      "beforeBytes": 6577676,
+      "afterBytes": 2478580,
+      "images": 4
+    },
+    {
+      "rank": 24,
+      "file": "treehouse-trials-v2/porchhut.glb",
+      "beforeBytes": 6566536,
+      "afterBytes": 2958412,
+      "images": 4
+    },
+    {
+      "rank": 25,
+      "file": "treehouse-trials-v2/tree-b.glb",
+      "beforeBytes": 6553280,
+      "afterBytes": 2849780,
+      "images": 4
+    },
+    {
+      "rank": 26,
+      "file": "treehouse-trail/stairs.glb",
+      "beforeBytes": 6282572,
+      "afterBytes": 2477324,
+      "images": 4
+    },
+    {
+      "rank": 27,
+      "file": "treehouse-trials-v2/tree-a.glb",
+      "beforeBytes": 6215932,
+      "afterBytes": 2798988,
+      "images": 4
+    },
+    {
+      "rank": 34,
+      "file": "blockworks-art/wheel.glb",
+      "beforeBytes": 5931348,
+      "afterBytes": 1971960,
+      "images": 3
+    },
+    {
+      "rank": 35,
+      "file": "blockworks-art/ghost-train-castle.glb",
+      "beforeBytes": 5780612,
+      "afterBytes": 2000652,
+      "images": 3
+    },
+    {
+      "rank": 36,
+      "file": "blockworks-art/coaster-v2.glb",
+      "beforeBytes": 5760852,
+      "afterBytes": 1848892,
+      "images": 3
+    },
+    {
+      "rank": 37,
+      "file": "blockworks-art/spire-v2.glb",
+      "beforeBytes": 5719284,
+      "afterBytes": 1810524,
+      "images": 3
+    },
+    {
+      "rank": 38,
+      "file": "blockworks-art/viaduct-v2.glb",
+      "beforeBytes": 5636708,
+      "afterBytes": 1876012,
+      "images": 3
+    },
+    {
+      "rank": 39,
+      "file": "blockworks-art/wall-bay.glb",
+      "beforeBytes": 5632192,
+      "afterBytes": 1694588,
+      "images": 3
+    }
+  ],
+  "imageOptim": {
+    "inputPngBytes": 84228971,
+    "optimizedPngBytes": 79301520,
+    "exactDecodedPixels": true,
+    "lossySettingRestored": true
+  }
+}
