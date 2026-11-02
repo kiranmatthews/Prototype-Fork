@@ -4,6 +4,7 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const output=process.env.SPAGHETTI_OUTPUT??'/private/tmp/spaghetti-rails-evidence';
 await mkdir(output,{recursive:true});
 const solo=!process.argv.includes('--race'),seed=Number(process.env.SPAGHETTI_SEED??270327);
+const miss=process.argv.includes('--miss');
 await withBlockworksRuntime(async r=>{
  const registry=await r.server.ssrLoadModule('/src/level.ts');
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
@@ -17,11 +18,18 @@ await withBlockworksRuntime(async r=>{
  const tuning=JSON.stringify(r.TUNING),records=[],trace=[];
  const stats=Array.from({length:race.count},()=>({grindFrames:0,airFrames:0,groundFrames:0,jumps:0,rails:new Set(),lastState:null,maxBalance:0,edgeFrames:0}));
  const maxFrames=Number(process.env.SPAGHETTI_FRAMES??54000);
- let frames=0,lastProgress=0,stalledAt=0;
+ let frames=0,lastProgress=0,stalledAt=0,fault=null;
  for(;frames<maxFrames&&race.riders.slice(0,race.count).some(a=>a.finish===null);frames++){
   r.scene.updateMatrixWorld(true);
   const input=race.phase==='running'?race.drive(0,false,process.env.SPAGHETTI_CHOICE===undefined?undefined:Number(process.env.SPAGHETTI_CHOICE)):{moveX:0,moveY:0};
   race.step(r.dt,input);r.l.update(r.dt);r.p.commitRenderStep(r.l);race.commitRenderStep();
+  if(miss&&!fault&&race.riders[0].progress>90){
+   // One explicit fault placement below all platforms; recovery thereafter
+   // uses the same production input pilot and preserves race time/progress.
+   fault={elapsed:race.elapsed,progress:race.riders[0].progress,offset:r.p.verticalLoopOffset};
+   r.p.pos.y=-143;r.p.prevPos.copy(r.p.pos);r.p.state='air';r.p.grounded=false;r.p.vVel=-45;r.p.speed=0;
+   r.p.snapRenderInterpolation();
+  }
   for(const a of race.riders.slice(0,race.count)){
    const s=stats[a.id],p=a.player;
    if(p.state==='grind'){s.grindFrames++;s.maxBalance=Math.max(s.maxBalance,Math.abs(p.balance));if(Math.abs(p.balance)>.65)s.edgeFrames++;s.rails.add(r.l.rails.indexOf(p.grindRail));}
@@ -39,12 +47,13 @@ await withBlockworksRuntime(async r=>{
   if(lead>lastProgress+10){lastProgress=lead;stalledAt=frames;}
   if(frames-stalledAt>12000)break;
  }
- const report={at:new Date().toISOString(),choice:process.env.SPAGHETTI_CHOICE??'default',solo,seed,frames,length:race.course.length,seconds:race.elapsed,tuningUnchanged:tuning===JSON.stringify(r.TUNING),riders:race.riders.slice(0,race.count).map((a,i)=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,progress:a.progress,...stats[i],rails:[...stats[i].rails]})),records};
- await writeFile(`${output}/${solo?'solo':'race'}-${seed}.json`,JSON.stringify(report,null,2));
+ const report={at:new Date().toISOString(),choice:process.env.SPAGHETTI_CHOICE??'default',solo,seed,frames,length:race.course.length,seconds:race.elapsed,fault,wrap:r.p.verticalLoopOffset-(fault?.offset??r.p.verticalLoopOffset),tuningUnchanged:tuning===JSON.stringify(r.TUNING),riders:race.riders.slice(0,race.count).map((a,i)=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,progress:a.progress,...stats[i],rails:[...stats[i].rails]})),records};
+ await writeFile(`${output}/${solo?'solo':'race'}-${seed}${miss?'-miss':''}.json`,JSON.stringify(report,null,2));
  await writeFile(`${output}/${solo?'solo':'race'}-${seed}-trace.json`,JSON.stringify(trace));
  console.log(JSON.stringify({...report,records:undefined}));
  assert.equal(report.tuningUnchanged,true);
  assert.ok(report.riders.every(a=>a.finish!==null),'Every active racer must finish using production controls');
- assert.ok(report.riders.every(a=>a.rails.length>=source.skateRace.railChoices.length),'The race must actually use the authored rails');
+ if(!miss)assert.ok(report.riders.every(a=>a.rails.length>=source.skateRace.railChoices.length),'The race must actually use the authored rails');
+ if(miss){assert.ok(fault&&report.wrap>=source.verticalLoop.height);assert.ok(report.riders.every(a=>a.falls===0&&a.deaths===0),'A wrapped miss must recover without a race reset');}
  if(solo)assert.equal(report.riders[0].falls,0,'The reference line must complete without a fall');
 },{modulePath:process.env.SPAGHETTI_MODULE??'/src/levels/spaghetti-rails.ts',source:m=>m.SPAGHETTI_RAILS_LEVEL,levelId:'spaghetti-rails'});

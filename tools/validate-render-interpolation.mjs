@@ -40,6 +40,18 @@ try {
   near(root.position.x, 1, 1e-6, "root restore");
   near(limb.position.y, 2, 1e-6, "child restore");
 
+  // Periodic rebasing shifts both snapshots together, preserving interpolation
+  // and local animation rather than sweeping a rider through a whole cell.
+  history.apply(.5);
+  history.translateWorldY(288);
+  history.apply(.5);
+  near(root.position.y,288,1e-6,"periodic root midpoint");
+  near(root.position.x,.5,1e-6,"periodic forward midpoint");
+  near(limb.position.y,1,1e-6,"periodic local limb midpoint");
+  history.restore();
+  near(root.position.y,288,1e-6,"periodic root restore");
+  near(limb.position.y,2,1e-6,"periodic local limb restore");
+
   // Morph-only animation still participates in interpolation even though the
   // mesh's Object3D transform is unchanged.
   const face = new THREE.Mesh();

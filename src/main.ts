@@ -2112,6 +2112,7 @@ const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 const boulderChaseCamera2=new BoulderChaseCamera();
+let camera2VerticalLoopOffset=0;
 function updateCamera2(dt: number): void {
   if (!p2) return;
   if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level), () => p2!.cameraCanRecoverFall(level))) return;
@@ -2122,6 +2123,9 @@ function updateCamera2(dt: number): void {
   authoredSkateCamera2.restore(camera2);
   loopCameraFraming2.restore(camera2);
   cameraViewFraming2.restore(camera2);
+  const wrapY=p2.verticalLoopOffset-camera2VerticalLoopOffset;
+  camera2VerticalLoopOffset=p2.verticalLoopOffset;
+  if(wrapY){camera2.position.y+=wrapY;cam2Aim.y+=wrapY;}
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   const viewMatch = level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW :
@@ -4574,6 +4578,7 @@ const cameraOverlayHeroFraming = new CameraHeroFraming();
 const boulderChaseCamera=new BoulderChaseCamera();
 const raceFinishPresentation=new RaceFinishPresentation();
 const raceFinishReducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+let cameraVerticalLoopOffset=0;
 function updateCamera(dt: number): void {
   raceFinishPresentation.restore(camera);
   if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level), () => player.cameraCanRecoverFall(level))) return;
@@ -4584,6 +4589,12 @@ function updateCamera(dt: number): void {
   authoredSkateCamera.restore(camera);
   loopCameraFraming.restore(camera);
   cameraViewFraming.restore(camera);
+  const wrapY=player.verticalLoopOffset-cameraVerticalLoopOffset;
+  cameraVerticalLoopOffset=player.verticalLoopOffset;
+  if(wrapY){
+    camera.position.y+=wrapY;camTarget.y+=wrapY;aimSmooth.y+=wrapY;
+    camAnchorY+=wrapY;prevPlayerPos.y+=wrapY;
+  }
   updateBaseCamera(dt);
   const subject = player.renderPosition;
   const viewMatch = level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW :

@@ -63,6 +63,17 @@ export class RenderInterpolator {
     return this.ready;
   }
 
+  /** Rebase a periodic world without blending the player through a full cell.
+   * Only world-space tracks move; joint-local animation stays identical. */
+  translateWorldY(delta:number):void {
+    this.restore();
+    for(const track of this.tracks.values()){
+      if(track.object.parent&&this.tracks.has(track.object.parent))continue;
+      track.object.position.y+=delta;
+      track.previousPosition.y+=delta;track.currentPosition.y+=delta;
+    }
+  }
+
   /** Discard history at a semantic teleport/pause boundary. */
   snap(): void {
     // A DOM/input callback can request a respawn between RAFs. Fail safe even

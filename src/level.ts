@@ -115,6 +115,7 @@ import {
   propTint,
 } from "./props";
 import { Halfpipe } from "./halfpipe";
+import { VerticalLoopView, validVerticalLoop, type VerticalLoopData } from "./verticalLoop";
 import {
   createWarpPad,
   WarpPad,
@@ -1177,6 +1178,8 @@ export interface CustomLevelData {
   killY: number;
   /** Tall courses may end a fall this far below its apex once no lower road is reachable. */
   fallRecoveryDrop?: number;
+  /** Periodic vertical cell; authored collision stays clear of its seam. */
+  verticalLoop?: VerticalLoopData;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
   /** Continuous park: rider-relative skating/chase camera, no automatic run-mode pickups. */
@@ -2718,7 +2721,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter', 'kiteTow',
-  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
+  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
@@ -2992,6 +2995,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
   if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
   if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
   if(source.railNavigation!==undefined&&!validRailNavigation(source.railNavigation))return null;
+  if(source.verticalLoop!==undefined&&!validVerticalLoop(source.verticalLoop))return null;
   if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
   if(source.caveCollapse!==undefined&&!validCaveCollapse(source.caveCollapse))return null;
   if(source.cameraRig!==undefined){
@@ -4396,7 +4400,7 @@ export class Level {
   get railChoices():RailChoices|null {
     const authored=this.skateRace??this.railNavigation;
     if(!authored?.railChoices?.length)return null;
-    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line),authored,this.rails);
+    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line,!!this.verticalLoop),authored,this.rails,!!this.verticalLoop);
   }
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
@@ -4458,6 +4462,9 @@ export class Level {
   private wallPathSegmentByBox = new Map<THREE.Box3, number>();
   killY = -48; // per-level death height (every builder authors its own)
   fallRecoveryDrop?: number;
+  verticalLoop?: VerticalLoopData;
+  private verticalLoopView:VerticalLoopView|null=null;
+  get verticalLoopDiagnostics(){return this.verticalLoopView?.diagnostics??null;}
   private fallRecoveryCourse?: RaceCourse;
 
   /** The lane proposes candidates; live floor collision confirms each catch.
@@ -7534,6 +7541,7 @@ export class Level {
       spawn: (this.startWarpOriginalSpawn??this.spawnPos).toArray().map(r2) as [number,number,number],
       killY: r2(this.killY),
       fallRecoveryDrop: this.fallRecoveryDrop,
+      verticalLoop: this.verticalLoop,
       hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
@@ -7711,6 +7719,7 @@ export class Level {
     this.minefields = data.minefields?.length ? new Minefields(data.minefields) : null;
     this.killY = data.killY;
     this.fallRecoveryDrop = data.fallRecoveryDrop;
+    this.verticalLoop = data.verticalLoop;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.ledgeGrabs = data.ledgeGrabs !== false;
     this.finishZ = -1e9; // endless playground: no finish gate
@@ -8974,6 +8983,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.verticalLoopView?.dispose();this.verticalLoopView=null;
     this.pickupVisualBatch?.dispose();this.pickupVisualBatch=null;
     this.chaseLightning?.dispose();this.chaseLightning=undefined;
     this.caveCollapse?.dispose();this.caveCollapse=null;
@@ -16411,6 +16421,13 @@ export class Level {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    if(this.verticalLoop){
+      this.verticalLoopView??=new VerticalLoopView(this.root,this.verticalLoop,index=>{
+        const c=this.builtFromData?.components[index];
+        return !!c&&!c.amp&&!c.outline&&['platform','ramp','vertramp','rail','wall','mesh'].includes(c.t);
+      });
+      this.verticalLoopView.update(camera,clearInspectionView?0:this.atmosphere?.fogFar??300);
+    }
     if(this.atmosphere?.rain){
       if(!this.rainWeather){this.rainWeather=new RainWeather(ray=>this.raycastGround(ray));this.root.add(this.rainWeather.group);}
       this.rainWeather.setView(camera,this.atmosphere.rain,!clearInspectionView);

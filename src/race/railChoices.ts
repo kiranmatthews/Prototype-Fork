@@ -21,7 +21,7 @@ export class RailChoices {
   readonly mapLines:(readonly RaceKnot[])[]=[];
   private bindings=new Map<Rail,{path:RailChoicePath;start:number}[]>();
   private position=new THREE.Vector3();
-  constructor(readonly course:RaceCourse,data:RailNavigationData,rails:readonly Rail[]) {
+  constructor(readonly course:RaceCourse,data:RailNavigationData,rails:readonly Rail[],readonly planar=false) {
     const byName=new Map(rails.map(rail=>[rail.object.userData.sourceName as string,rail]));
     for(const [section,group]of (data.railChoices??[]).entries()) {
       const start=course.project(new THREE.Vector3(...group.from)).s,end=course.project(new THREE.Vector3(...group.to)).s;
@@ -42,7 +42,7 @@ export class RailChoices {
           spans.push({rail,start:begin,end:length});
         }
         append(new THREE.Vector3(...group.to));
-        const path:RailChoicePath={index:this.paths.length,section,choice,start,end,course:new RaceCourse(knots),rails:spans};
+        const path:RailChoicePath={index:this.paths.length,section,choice,start,end,course:new RaceCourse(knots,planar),rails:spans};
         this.paths.push(path);
         this.mapLines.push(path.course.knots);
         for(const span of spans){const list=this.bindings.get(span.rail)??[];list.push({path,start:span.start});this.bindings.set(span.rail,list);}

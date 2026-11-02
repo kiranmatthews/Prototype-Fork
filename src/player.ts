@@ -68,6 +68,7 @@ import { Rail, RailSample, nearestRail } from './rails';
 import { naturalRailLandingTime, railLandingFraction } from './grindLanding';
 import {nearestReferenceRail} from './referenceRailCapture';
 import { Halfpipe } from './halfpipe';
+import { verticalLoopShift } from './verticalLoop';
 import { copingPlane, nearestCoping, nextCoping } from './vertHangPlane';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';
@@ -1395,6 +1396,8 @@ export class Player {
   private readonly naturalGrindVelocity = new THREE.Vector3();
   private readonly naturalGrindEnd = new THREE.Vector3();
   private prevPos = new THREE.Vector3(); // for travel-direction facing
+  /** Cumulative coordinate rebases, consumed by the camera (never a respawn). */
+  verticalLoopOffset = 0;
   private grindRail: Rail | null = null;
   private grindEntryT = 0; // where on the rail this grind STARTED, for the end-to-end check
   trickSpeedBoost = 0;
@@ -2022,7 +2025,7 @@ export class Player {
    * Until that decision ends the air, the camera must keep steering readable.
    * Reuse the result instead of running another, shorter landing forecast. */
   cameraCanRecoverFall(level: Level): boolean {
-    return level.fallRecoveryDrop !== undefined && this.state === 'air' && !this.grounded;
+    return (level.verticalLoop !== undefined || level.fallRecoveryDrop !== undefined) && this.state === 'air' && !this.grounded;
   }
 
   /** Presentation-only forecast for a descending gap jump. Sweep a short arc
@@ -4173,9 +4176,26 @@ export class Player {
     return true;
   }
 
+  private wrapVerticalSpace(level:Level):void {
+    if(!level.verticalLoop||this.state==='dead'||this.state==='gameover'||this.state==='finished')return;
+    const dy=verticalLoopShift(this.pos.y,level.verticalLoop);
+    if(!dy)return;
+    this.pos.y+=dy;this.prevPos.y+=dy;this.renderPosition.y+=dy;
+    this.airPeakY+=dy;this.lastGroundY+=dy;this.vertAnchor.y+=dy;
+    this.previousCharacterBounds.min.y+=dy;this.previousCharacterBounds.max.y+=dy;
+    this.renderInterpolator.translateWorldY(dy);
+    this.group.position.copy(this.pos);
+    this.verticalLoopOffset+=dy;
+    this.fallCameraProbeValid=false;
+    // Seam space contains no support. Cached contacts must not refer to the
+    // previous cell; velocity, airtime, score and checkpoint stay untouched.
+    this.groundHit=null;this.shadowGroundY=null;
+  }
+
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
     this.runLevel = level;
+    this.wrapVerticalSpace(level);
     this.naturalGrindGrace = Math.max(0, this.naturalGrindGrace - dt);
     if (!this.naturalGrindGrace || this.state !== 'air' || this.grounded ||
         this.isBailing || this.wallriding || !(this.freeSkate || this.airFromSkate) ||
@@ -5404,6 +5424,7 @@ export class Player {
     this.updateFruit(dt, level);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'swim') {
+      this.wrapVerticalSpace(level);
       const beforeCollisionSpeed = Math.abs(this.speed);
       this.collide(level);
       if (Math.abs(this.speed) < beforeCollisionSpeed - 1e-7) this.skateOverdrive.interrupt();
@@ -5432,7 +5453,7 @@ export class Player {
           Math.max(Math.abs(this.speed), TUNING.maxSpeed, TUNING.downhillMax, TUNING.vertMax),
           Math.max(1, Math.min(TUNING.fallGravity, TUNING.boardFallGravity, TUNING.rampFallGravity, TUNING.pipeAirGravity)),
           CONST.maxFallSpeed);
-      if (this.pos.y < level.killY || courseVoid || this.raceHooks?.unrecoverableFall?.()) this.die('pit');
+      if (!level.verticalLoop && (this.pos.y < level.killY || courseVoid || this.raceHooks?.unrecoverableFall?.())) this.die('pit');
     }
 
     // Like blast hazards, the encounter also advances while hanging or on a

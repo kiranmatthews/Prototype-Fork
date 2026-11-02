@@ -116,7 +116,7 @@ export class SkateRace {
     this.clearItems();this.railTransfers.clear();this.railRetries=[];this.level=level.skateRace?level:null;this.root.visible=!!this.level;
     if(!this.level){this.course=null;return;}
     this.sections=level.skateRace!.stages??[level.name];
-    this.levelId=id;this.allocate();this.course=new RaceCourse(level.skateRace!.line);
+    this.levelId=id;this.allocate();this.course=new RaceCourse(level.skateRace!.line,!!level.verticalLoop);
     this.jumps=level.skateRace!.jumps.map(j=>({s:this.course!.project(vec().fromArray(j.takeoff)).s,end:this.course!.project(vec().fromArray(j.landing)).s}));
     this.grinds=(level.skateRace!.grinds??[]).map(g=>({s:this.course!.project(vec().fromArray(g.start)).s,end:this.course!.project(vec().fromArray(g.end)).s,lanes:g.lanes}));
     if(level.railChoices)for(const [i,jump]of level.skateRace!.jumps.entries()){
@@ -209,6 +209,7 @@ export class SkateRace {
     this.effects.pulse(r.player.pos,0xffcb79,1.8);r.knockGrace=2.4;r.boost=0;return true;
   }
   private unrecoverableFall(r:Rider):boolean {
+    if(this.level?.verticalLoop)return false;
     const p=r.player;
     if(p.state!=='air'||p.grounded||p.vVel>=0||p.pos.y>=r.anchor.y-30)return false;
     // The global kill plane sits far below this tall course. Keep every lower
@@ -401,12 +402,19 @@ export class SkateRace {
     if(p.grounded&&mouth&&(cursor.along??0)<mouth.start+18)
       path!.course.sample(Math.min((cursor.along??0)+look,mouth.start+8),0,r.aim);
     if(r.progress>this.course!.length-25)r.aim.addScaledVector(this.course!.tangent(this.course!.length),30);
+    // Periodic courses have playable terraces below the rail network. Guide
+    // a missed rider forward on their current tier instead of chasing an
+    // overhead branch or steering back toward its old entrance.
+    const periodic=this.level!.verticalLoop!==undefined;
+    const lowerRoute=periodic&&!caught&&(p.pos.y<r.aim.y-6||!path);
+    const incidentalEdge=periodic&&p.state==='grind'&&!caught;
+    if(lowerRoute||incidentalEdge)r.aim.set(THREE.MathUtils.clamp(p.pos.x,-40,40),p.pos.y,p.pos.z-20);
     const dx=r.aim.x-p.pos.x,dz=r.aim.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level!);
     const bn=Math.hypot(basis.x,basis.z)||1,fx=basis.x/bn,fz=basis.z/bn;
     input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
     input.jumpHeld=p.grounded||p.state==='grind';
     let turnback=this.railTurnbacks.get(id);
-    const reversing=!!caught&&r.velocity.dot(caught.rail.tangentAt(caught.t))<-1;
+    const reversing=incidentalEdge||!!caught&&r.velocity.dot(caught.rail.tangentAt(caught.t))<-1;
     if(reversing&&!turnback){turnback={since:this.elapsed,released:false};this.railTurnbacks.set(id,turnback);}
     if(p.grounded||!reversing&&!turnback?.released){this.railTurnbacks.delete(id);turnback=undefined;}
     const abandoning=!!turnback&&this.elapsed-turnback.since>.75;
@@ -435,6 +443,21 @@ export class SkateRace {
     }
     const next=path?.rails.find(span=>span.end>(cursor.along??0)+1);
     input.grindHeld=!!rail||!p.grounded||!!next&&next.start-(cursor.along??0)<4;
+    if(lowerRoute||incidentalEdge){
+      input.grindHeld=false;
+      input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);
+      input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
+      if(incidentalEdge){
+        const edge=this.railTurnbacks.get(id)??{since:this.elapsed,released:false};
+        this.railTurnbacks.set(id,edge);
+        input.jumpHeld=this.elapsed-edge.since<.4;
+      }
+    }
+    if(periodic&&p.grounded){
+      const stalled=this.cartStalls.get(id);
+      if(!stalled||p.pos.distanceToSquared(stalled.position)>1)this.cartStalls.set(id,{position:p.pos.clone(),since:this.elapsed});
+      else if(this.elapsed-stalled.since>1.2){input.jumpHeld=false;this.cartStalls.delete(id);}
+    }
     const threat=r.threats[0];
     if(threat?.item==='shock-shell'&&threat.seconds<.5&&p.grounded)input.jumpHeld=false;
     if(threat&&threat.item!=='shock-shell'&&threat.seconds<.3&&r.attackCooldown<=0&&this.random()>.25){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.4;}
@@ -477,10 +500,11 @@ export class SkateRace {
       if(r.finish!==null){this.finishRollout(r,dt);this.placeMarker(r);continue;}
       level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id,true);
       if(device.itemPressed&&!this.carts?.isAnimating(r.id))this.useItem(r.id,device.moveY<-.5);
-      const previousPosition=cartPrevious?.[r.id]??p.pos.clone();
+      const previousPosition=cartPrevious?.[r.id]??p.pos.clone(),previousWrap=p.verticalLoopOffset;
       if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if((!this.carts||!this.carts.isDriving(r.id)&&!this.carts.isAnimating(r.id))&&p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
       p.racePresentationInterval=r.id===0?0:p.pos.distanceToSquared(this.human.pos)<1600?1/30:1/10;
       if(!this.carts?.isDriving(r.id)&&!this.carts?.isAnimating(r.id))sfx.withGain(this.soundGain(r),()=>p.step(dt,device,level),r.id?'race-rivals':'');
+      previousPosition.y+=p.verticalLoopOffset-previousWrap;
       r.velocity.copy(p.pos).sub(previousPosition).divideScalar(Math.max(.001,dt));if(r.velocity.length()>80)r.velocity.setLength(80);
       if(device.spinPressed&&p.spinning)r.parry=.28;
       r.recovery=p.state==='dead'?1:0;

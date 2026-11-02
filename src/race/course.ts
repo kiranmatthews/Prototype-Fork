@@ -10,7 +10,7 @@ export class RaceCourse {
   private origin = new THREE.Vector3();
   private down = new THREE.Vector3(0,-1,0);
   private landing = new THREE.Vector3();
-  constructor(readonly knots: readonly RaceKnot[]) {
+  constructor(readonly knots: readonly RaceKnot[],readonly planarProjection=false) {
     for(let i=1;i<knots.length;i++)this.arc.push(this.arc[i-1]+Math.hypot(knots[i][0]-knots[i-1][0],knots[i][1]-knots[i-1][1],knots[i][2]-knots[i-1][2]));
     this.length=this.arc[this.arc.length-1];
   }
@@ -45,8 +45,8 @@ export class RaceCourse {
       const a=this.knots[i],b=this.knots[i+1],x=b[0]-a[0],y=b[1]-a[1],z=b[2]-a[2];
       const span=this.arc[i+1]-this.arc[i]||1;
       const lo=previous===undefined?0:Math.max(0,(previous-window-this.arc[i])/span),hi=previous===undefined?1:Math.min(1,(previous+window-this.arc[i])/span);
-      const t=THREE.MathUtils.clamp(((p.x-a[0])*x+(p.y-a[1])*y+(p.z-a[2])*z)/(x*x+y*y+z*z||1),lo,hi);
-      const dx=p.x-a[0]-x*t,dy=p.y-a[1]-y*t,dz=p.z-a[2]-z*t,d=dx*dx+dy*dy+dz*dz;
+      const t=THREE.MathUtils.clamp(((p.x-a[0])*x+(this.planarProjection?0:(p.y-a[1])*y)+(p.z-a[2])*z)/(x*x+(this.planarProjection?0:y*y)+z*z||1),lo,hi);
+      const dx=p.x-a[0]-x*t,dy=this.planarProjection?0:p.y-a[1]-y*t,dz=p.z-a[2]-z*t,d=dx*dx+dy*dy+dz*dz;
       if(d<best){best=d;s=this.arc[i]+(this.arc[i+1]-this.arc[i])*t;offset=(dx*-z+dz*x)/(Math.hypot(x,z)||1);}
     }
     return {s,distance:Math.sqrt(best),offset};

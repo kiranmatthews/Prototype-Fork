@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
-const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+import {homedir} from 'node:os';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||homedir()+'/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
 const base=process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5237';
 const output=process.env.SPAGHETTI_OUTPUT??'docs/spaghetti-rails/evidence/editor';
 await mkdir(output,{recursive:true});
@@ -18,16 +19,16 @@ try{
  const before=await page.evaluate(()=>{
   const g=window.__game;g.openEditor();const e=g.editor;
   if(!e.active)throw Error('Level editor did not open');
-  const i=e.data.components.findIndex(c=>c.t==='rail'&&c.nm.includes('Widow’s overhand / thread 1'));
+  const i=e.data.components.findIndex(c=>c.t==='rail'&&c.nm.includes('High weave / thread 1'));
   if(i<0)throw Error('The elevated knot branch is missing');
   const railIndex=e.data.components.slice(0,i).filter(c=>c.t==='rail').length;
   e.sel=[i];e.resizeIdx=i;e.selVtxs=new Set([3]);e.renderProps();e.onLevelRebuilt();e.focusOnItem(i);
   const c=e.data.components[i];
   window.spaghettiEditorReview={json:JSON.stringify(e.data),index:i,railIndex,node:[...c.pts[3]],railPoints:JSON.stringify(e.getLevel().rails[railIndex].points),routePoints:JSON.stringify(e.getLevel().railChoices.mapLines)};
   return {rails:e.data.components.filter(c=>c.t==='rail').length,checkpoints:e.data.components.filter(c=>c.t==='checkpoint').length,
-   retries:e.getLevel().raceCheckpoints.length,name:c.nm,node:c.pts[3],y:c.p[1]+c.pts[3][3],radius:c.pts[3][2],grinds:e.data.skateRace.grinds.length,paths:e.getLevel().railChoices.paths.length};
+   retries:e.getLevel().raceCheckpoints.length,name:c.nm,node:c.pts[3],y:c.p[1]+c.pts[3][3],radius:c.pts[3][2],grinds:e.data.skateRace.grinds.length,paths:e.getLevel().railChoices.paths.length,nativeRails:e.getLevel().rails.length,loop:e.data.verticalLoop};
  });
- assert.equal(before.paths,48);assert.equal(before.checkpoints,before.retries);assert.equal(before.rails,before.grinds);
+ assert.equal(before.paths,18);assert.equal(before.checkpoints,before.retries);assert.equal(before.grinds,18);assert.equal(before.rails,21);assert.deepEqual(before.loop,{minY:-144,height:288});
  await page.getByRole('spinbutton',{name:'node 4 · y',exact:true}).fill(String(before.y+1.25));
  await page.getByRole('spinbutton',{name:'node 4 · y',exact:true}).press('Enter');
  await page.getByRole('spinbutton',{name:'node 4 · radius',exact:true}).fill('6');
@@ -44,8 +45,8 @@ try{
  });
  assert.deepEqual(restored,{data:true,geometry:true});
  await page.locator('.ed-test').click();await page.waitForFunction(()=>!window.__game.editor.active);
- const playable=await page.evaluate(()=>{const g=window.__game;return {id:g.getCurrentLevel().id,rails:g.getLevel().rails.length,retries:g.getLevel().raceCheckpoints.length,active:g.getSkateRace().active};});
- assert.equal(playable.active,true);assert.equal(playable.retries,before.retries);assert.equal(playable.rails,before.rails);
+ const playable=await page.evaluate(()=>{const g=window.__game;return {id:g.getCurrentLevel().id,rails:g.getLevel().rails.length,retries:g.getLevel().raceCheckpoints.length,active:g.getSkateRace().active,loop:g.getLevel().verticalLoop};});
+ assert.equal(playable.active,true);assert.equal(playable.retries,before.retries);assert.equal(playable.rails,before.nativeRails);assert.deepEqual(playable.loop,before.loop);
  await page.screenshot({path:output+'/returned-to-play.png'});
  await writeFile(output+'/report.json',JSON.stringify({before,changed,restored,playable,errors},null,2));
  console.log(JSON.stringify({before,changed,restored,playable,errors}));assert.deepEqual(errors,[]);
