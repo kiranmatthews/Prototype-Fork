@@ -8354,3 +8354,24 @@ Coverage and fall probes, native rewards, focused item/HUD/balance checks,
 Chrome lite/full/native, required level checks and production build pass.
 No full suite, global tuning change, shared-pack update, push or publication.
 Details: [race iteration](spaghetti-infinite/RACE_ITEMS_HEIGHT_ITERATION.md).
+
+## 2026-11-02 — A visible box route through the platformer (local preview)
+
+Give the platformer one continuous route through all ten jump courts to the
+crystal and finish. Place every required crate on its 115 marked stops, with
+fruit across gaps and persistent gold arrows/edges after collection. Add small
+stepping stones across balcony and chapter gaps, and align balconies toward
+the next court. Keep springs, kickers, spine transfers and rail choices as
+optional board routes. Move only nearby recovery shelves that obstruct the
+route, preserving all six heights, full XZ landing coverage and rail links.
+
+Prompt-to-validated-local-preview: approximately **45 minutes**. All 114 foot
+jumps, 229 crate supports and 114 next-box sightlines pass. Chrome lite/full
+checks show the next destination from all 114 takeoffs; fall framing remains
+visible with no camera yaw change or console errors. All spring/kicker/spine
+features, checkpoint/crystal/finish, 31 fork rides and twelve native recovery
+handoffs pass. Required level checks and production build pass. The earlier
+race layout and shared gameplay tuning remain intact.
+
+Kept local at the user's request; no push, publication or shared-pack change.
+Details: [box route iteration](spaghetti-infinite/BOX_ROUTE_ITERATION.md).

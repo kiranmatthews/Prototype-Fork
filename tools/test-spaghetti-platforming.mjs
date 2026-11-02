@@ -7,8 +7,9 @@ await withBlockworksRuntime(async r=>{
  const reports=[];
  for(const jump of r.sourceModule.SPAGHETTI_PLATFORMER_JUMPS){
   const [a,b]=[jump.from,jump.to],len=Math.hypot(b[0]-a[0],b[2]-a[2]),dx=(b[0]-a[0])/len,dz=(b[2]-a[2])/len;
-  const lateral=Math.sign(b[0]-a[0])*Math.min(4,Math.abs(b[0]-a[0])/2);
-  const start=[a[0]+lateral,a[1]+.08,a[2]-(jump.name.endsWith('jump 1')?9.4:6.4)],target=[b[0]-lateral,b[1],b[2]+6.2];
+  const fromW=jump.fromWidth??12,fromD=jump.fromDepth??(jump.name.endsWith('jump 1')?20:14),toW=jump.toWidth??12,toD=jump.toDepth??14;
+  const lateral=Math.sign(b[0]-a[0])*Math.min(fromW/2-2,toW/2-2,Math.abs(b[0]-a[0])/2);
+  const start=[a[0]+lateral,a[1]+.08,a[2]-(fromD/2-.6)],target=[b[0]-lateral,b[1],Math.min(b[2]+toD/2-.8,a[2]-fromD/2-4)];
   r.p.respawn(r.l,true,false,{position:new r.THREE.Vector3(...start),heading:new r.THREE.Vector3(dx,0,dz)});
   r.stepFor(10);r.charge(26);r.releaseJump({...r.steerToward(target),spinHeld:true});
   let peak=r.p.pos.y,air=0;const samples=[];
@@ -16,7 +17,7 @@ await withBlockworksRuntime(async r=>{
    r.tick({...r.steerToward(target),jumpHeld:air===30,spinHeld:true,spinPressed:air%24===0});peak=Math.max(peak,r.p.pos.y);
    if(air%12===0)samples.push(r.snapshot());
   }
-  const good=r.p.grounded&&Math.abs(r.p.pos.y-b[1])<.15&&Math.abs(r.p.pos.x-b[0])<6&&Math.abs(r.p.pos.z-b[2])<7;
+  const good=r.p.grounded&&Math.abs(r.p.pos.y-b[1])<.15&&Math.abs(r.p.pos.x-b[0])<toW/2&&Math.abs(r.p.pos.z-b[2])<toD/2;
   reports.push({name:jump.name,good,air,peak,landing:r.p.pos.toArray(),surface:r.p.groundHit?.name,samples:good?undefined:samples});
   console.log(JSON.stringify({...reports.at(-1),samples:undefined}));
  }

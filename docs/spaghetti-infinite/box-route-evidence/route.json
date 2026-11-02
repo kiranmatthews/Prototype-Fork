@@ -1,0 +1,51 @@
+{
+  "stops": 115,
+  "boxes": 229,
+  "visibleLinks": 114,
+  "supportedBoxes": 229,
+  "largestGap": 22.203603311174515,
+  "collections": [
+    {
+      "name": "Lantern Steps / step 1",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    },
+    {
+      "name": "Lantern Steps / reward balcony",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    },
+    {
+      "name": "Counterweights / step 1",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    },
+    {
+      "name": "Spine Stair / box trail transfer 2",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    },
+    {
+      "name": "Spring Vault / step 5",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    },
+    {
+      "name": "Needle Windows / box trail exit 1",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    },
+    {
+      "name": "The Last Stitch / box trail exit 6",
+      "count": 2,
+      "broken": true,
+      "grounded": true
+    }
+  ]
+}

@@ -106,12 +106,13 @@ export function spaghettiWorld(platforming:boolean,finishZ:number){
   return [...recovery[row][tier].p];
  };
  const recoveryBelow=(p:P,advance=40):P=>{
-  const tier=recoveryHeights.findIndex(y=>y<=p[1]-3),q=recoveryPoint(p[2]-advance,tier<0?5:tier);q[1]+=.9;return q;
+  const points=recoveryHeights.map((_,tier)=>recoveryPoint(p[2]-advance,tier));
+  const q=[...(points.find(q=>q[1]<=p[1]-3)??points[5])] as P;q[1]+=.9;return q;
  };
  const recoveryLanding=(z:number,tier:number)=>recovery[Math.max(0,Math.min(rows-1,Math.floor((40-z)/depth)))][tier];
  const lowerLanding=(p:P,advance=120,extra=0)=>{
-  const candidates=recoveryHeights.map((y,i)=>({y,i})).filter(h=>h.y<=p[1]-6).sort((a,b)=>b.y-a.y);
-  return recoveryLanding(p[2]-advance,candidates[Math.min(extra,candidates.length-1)]?.i??5);
+  const candidates=recoveryHeights.map((_,tier)=>recoveryLanding(p[2]-advance,tier)).filter(h=>h.p[1]<=p[1]-6).sort((a,b)=>b.p[1]-a.p[1]);
+  return candidates[Math.min(extra,candidates.length-1)]??recoveryLanding(p[2]-advance,5);
  };
  const connectRecovery=()=>{
   for(let tier=0;tier<6;tier++){

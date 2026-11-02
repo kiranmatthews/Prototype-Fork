@@ -30,11 +30,12 @@ export function withSpaghettiCavern(source:CustomLevelData):CustomLevelData {
   for(const x of [-26,0,26])if(Math.abs(x-c.p[0])+3<c.s[0]/2)mesh('Choose a forward thread',[x,y,z-1],[-2.4,0,2.8,0,0,-3.4,2.4,0,2.8,0,0,1.3],[0,1,3,1,2,3],x===0?'#e2c580':x<0?'#85c8c2':'#c1a5d7');
  }
  if(platforming){
-  for(const c of [...C])if(c.t==='platform'&&c.s&&(/\/ step /.test(c.nm??'')||c.nm?.includes('reward balcony')||c.nm?.includes('high vault'))){
+  const markedRoute=C.some(c=>c.nm==='Box trail / gold direction');
+  for(const c of [...C])if(c.t==='platform'&&c.s&&(/\/ step /.test(c.nm??'')||c.nm?.includes('reward balcony')||!markedRoute&&c.nm?.includes('high vault'))){
    const y=c.p[1]+c.s[1]/2+.018,x=c.p[0],z=c.p[2];
    // Small gilded landing marks make the deliberate jump route legible from
    // the much quieter recovery islands. They are ordinary authored meshes.
-   mesh('Lanternworks / landing inlay',[x,y,z],[-2.4,0,1,0,0,-2,2.4,0,1,0,0,.1],[0,1,3,1,2,3],'#dfbf7b');
+   if(!markedRoute)mesh('Lanternworks / landing inlay',[x,y,z],[-2.4,0,1,0,0,-2,2.4,0,1,0,0,.1],[0,1,3,1,2,3],'#dfbf7b');
    if(c.nm?.endsWith('/ step 1')||c.nm?.includes('high vault'))for(const side of [-1,1]){
     const px=x+side*(c.s[0]/2-1.1);
     mesh('Lanternworks / amber lantern',[px,y+5,z],[-.65,0,0,0,0,.65,.65,0,0,0,0,-.65,0,1.1,0,0,-.8,0],

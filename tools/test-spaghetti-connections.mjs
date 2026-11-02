@@ -4,18 +4,23 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const output=process.env.SPAGHETTI_OUTPUT??'/private/tmp/spaghetti-connections';
 await mkdir(output,{recursive:true});
 const reports=[];
-for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
+for(const platforming of process.argv.includes('--platformer')?[true]:[false,true])await withBlockworksRuntime(async r=>{
  const rails=r.l.rails.filter(rail=>rail.object.userData.sourceName?.startsWith('Recovery weave'));
  assert.ok(rails.length>60,'Long courses keep rail queries in local spans');
  for(let tier=1;tier<=6;tier++){
   const chain=rails.filter(rail=>rail.object.userData.sourceName.startsWith(`Recovery weave / tier ${tier} /`));
   const first=chain[0],second=chain[1];
-  const start=first.points.find(p=>p.z<-105).clone();start.y+=1.5;
-  r.p.respawn(r.l,true,false,{position:start,heading:new r.THREE.Vector3(0,0,-1)});
+  // Begin on the approach to this particular handoff. The compact two-height
+  // race has several valid crossings near the old fixed z=-105 fixture.
+  const approach=first.totalLength-40,start=first.pointAt(approach);start.y+=1.5;
+  const heading=first.tangentAt(approach);heading.y=0;heading.normalize();
+  r.p.respawn(r.l,true,false,{position:start,heading});
   r.p.state='air';r.p.grounded=false;r.p.vVel=-2;r.p.speed=22;
   const deaths=r.p.totalDeaths,samples=[];let nativeFrames=0,maxT=0,frames=0,firstCaught=false,secondCaught=false;
   for(;frames<7200;frames++){
-   const correction=Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7));
+   // An input-only balance pilot countersteers firmly on slow uphill links.
+   // The test targets rail continuity, rather than a particular rider skill.
+   const correction=-Math.sign(r.p.balance+r.p.balanceVel*.3);
    r.tick({moveY:1,moveX:r.p.state==='grind'?correction:0,grindHeld:true});
    if(r.p.grindRail===first)firstCaught=true;
    if(r.p.grindRail===second){secondCaught=true;nativeFrames++;maxT=Math.max(maxT,r.p.grindT);}

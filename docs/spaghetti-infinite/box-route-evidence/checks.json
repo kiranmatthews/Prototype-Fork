@@ -1,0 +1,43 @@
+{
+  "delivery": "local only",
+  "offlineVersion": "8c1fd3e1a6653c5f88f9",
+  "requiredChecks": {
+    "npm run check:levels": "pass",
+    "npm run build": "pass"
+  },
+  "route": {
+    "stops": 115,
+    "crates": 229,
+    "checkpoints": 9,
+    "nativeJumpsPassed": 114,
+    "clearSightlines": 114,
+    "fullNativeCameraTakeoffs": 114,
+    "nativeSpinCollectionFixtures": 7
+  },
+  "preservedFeatures": {
+    "springs": 6,
+    "kickers": 3,
+    "spineChains": 2,
+    "checkpointCrystalFinish": "pass"
+  },
+  "coverage": {
+    "connectedPlatforms": 656,
+    "xzProbes": 52577,
+    "colliderRays": 2148
+  },
+  "forks": {
+    "nativeRides": 31,
+    "racePrimaryJunctions": 20,
+    "platformerPrimaryJunctions": 30,
+    "raceGeometryChanged": false
+  },
+  "browsers": {
+    "lite": "pass",
+    "fullNative": "pass",
+    "fallCamera": "pass",
+    "consoleErrors": []
+  },
+  "fullSuiteRun": false,
+  "nativeRailHandoffs": 12,
+  "promptToValidatedPreviewMinutesApprox": 45
+}

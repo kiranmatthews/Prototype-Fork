@@ -1,0 +1,197 @@
+{
+  "note": "Native input pilots: proportional countersteering on the race; firm countersteering on slow uphill platformer links. No physics or player-state intervention during traversal.",
+  "reports": [
+    {
+      "platforming": false,
+      "tier": 1,
+      "frames": 2586,
+      "nativeFrames": 2446,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 809.2140006826111,
+      "length": 812.1472695629272,
+      "end": [
+        -40,
+        13.05,
+        -1116.9386247367052
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": false,
+      "tier": 2,
+      "frames": 2586,
+      "nativeFrames": 2446,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 809.2140006826111,
+      "length": 812.1472695629274,
+      "end": [
+        -24,
+        -10.949999999999998,
+        -1116.938624736705
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": false,
+      "tier": 3,
+      "frames": 1941,
+      "nativeFrames": 1809,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 641.5063068123179,
+      "length": 644.2578951067451,
+      "end": [
+        -8,
+        13.05,
+        -1117.120305322594
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": false,
+      "tier": 4,
+      "frames": 1941,
+      "nativeFrames": 1809,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 641.5063068123179,
+      "length": 644.2578951067451,
+      "end": [
+        8,
+        -10.949999999999998,
+        -1117.120305322594
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": false,
+      "tier": 5,
+      "frames": 1941,
+      "nativeFrames": 1809,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 641.5063068123179,
+      "length": 644.2578951067451,
+      "end": [
+        24,
+        13.05,
+        -1117.120305322594
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": false,
+      "tier": 6,
+      "frames": 1941,
+      "nativeFrames": 1809,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 641.5063068123179,
+      "length": 644.2578951067451,
+      "end": [
+        40,
+        -10.949999999999998,
+        -1117.120305322594
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": true,
+      "tier": 1,
+      "frames": 2589,
+      "nativeFrames": 2449,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 810.6749184508842,
+      "length": 813.466535682495,
+      "end": [
+        -40,
+        41.05,
+        -1121.2083827683891
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": true,
+      "tier": 2,
+      "frames": 2589,
+      "nativeFrames": 2449,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 810.6749184508842,
+      "length": 813.466535682495,
+      "end": [
+        -24,
+        25.05,
+        -1121.2083827683891
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": true,
+      "tier": 3,
+      "frames": 6433,
+      "nativeFrames": 6301,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 651.0501668872574,
+      "length": 654.0048256506882,
+      "end": [
+        -8,
+        9.049999999999999,
+        -1121.0453412365691
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": true,
+      "tier": 4,
+      "frames": 2130,
+      "nativeFrames": 1998,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 647.0147145146603,
+      "length": 650.0103982717042,
+      "end": [
+        8,
+        -6.949999999999999,
+        -1121.004316242956
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": true,
+      "tier": 5,
+      "frames": 1945,
+      "nativeFrames": 1813,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 643.1295645424577,
+      "length": 646.0159708927198,
+      "end": [
+        24,
+        -22.949999999999996,
+        -1121.113593649738
+      ],
+      "deaths": 0
+    },
+    {
+      "platforming": true,
+      "tier": 6,
+      "frames": 1945,
+      "nativeFrames": 1813,
+      "firstCaught": true,
+      "secondCaught": true,
+      "maxT": 643.1295645424577,
+      "length": 646.0159708927196,
+      "end": [
+        40,
+        -38.949999999999996,
+        -1121.113593649738
+      ],
+      "deaths": 0
+    }
+  ]
+}

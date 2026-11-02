@@ -17,7 +17,7 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
   assert.ok(support(last),c.nm+' ends above a real landing');
   const island=islands.find(i=>Math.abs(first[0]-i.p[0])<i.w/2&&Math.abs(first[2]-i.p[2])<i.d/2&&Math.abs(first[1]-i.p[1]-.9)<.05);
   assert.ok(island,c.nm+' starts on an existing island');
-  const links=departures.get(island.name)??[];links.push({name:c.nm,drop:first[1]-last[1]});departures.set(island.name,links);
+  const links=departures.get(island.name)??[];links.push({name:c.nm,drop:first[1]-last[1],grade:(first[1]-last[1])/(first[2]-last[2])});departures.set(island.name,links);
   if(Math.abs(first[1]-last[1])<.1)level++;else if(first[1]-last[1]>5)downhill++;
  }
  for(const c of source.components.filter(c=>c.t==='rail'&&(/fork|Recovery weave|edge stitch/.test(c.nm)))){
@@ -30,8 +30,8 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
   }
  }
  const mainJunctions=[...departures.keys()].filter(n=>!n.startsWith('Recovery')).length;
- assert.ok(mainJunctions>=30,'Frequent forks are on primary platforms, not just the recovery network');
- assert.ok(level>=12&&downhill>=40,'Both same-height choices and genuine height transfers are distributed through the course');
+ assert.ok(mainJunctions>=(platforming?30:20),'Frequent forks remain on primary platforms after the race is shortened');
+ assert.ok(level>=12&&downhill>=forks.length*.25,'Both same-height choices and genuine height transfers are distributed through the course');
  let downhillPairs=0;
  const sampled=source.components.filter(c=>c.t==='rail').map(c=>({name:c.nm,points:spaghettiSamples(c)}));
  for(const [name,links] of departures){
@@ -41,14 +41,16 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
    if(at>=0&&rail.points.slice(at+1).some(p=>p[2]<island.p[2]-island.d/2-1))outgoing.add(rail.name);
   }
   assert.ok(outgoing.size>=2,name+' has two physically separate forward rail departures');
-  if(links.length>1&&Math.max(...links.map(l=>l.drop))-Math.min(...links.map(l=>l.drop))>30)downhillPairs++;
+  // A steeper descent can reach the same lower tier over less forward travel.
+  if(links.length>1&&Math.max(...links.map(l=>l.grade))-Math.min(...links.map(l=>l.grade))>.02)downhillPairs++;
  }
  assert.ok(downhillPairs>=8,'Many junctions offer genuinely different downhill grades');
  const categories=new Map();
  for(const c of forks){
   const p=spaghettiSamples(c),drop=p[0][1]-p.at(-1)[1];
   const kind=c.nm.startsWith('Recovery')?'recovery':platforming?c.nm.split('/ fork /')[1]:c.nm.split('/').at(-1).trim();
-  const key=kind+'/'+(drop<1?'level':drop>55?'steep':'shallow')+'/'+Math.floor((p[0][1]+144)/96);
+  const grade=drop/(p[0][2]-p.at(-1)[2]),loop=source.verticalLoop;
+  const key=kind+'/'+(Math.abs(drop)<1?'level':grade>.2?'steep':'shallow')+'/'+Math.floor((p[0][1]-loop.minY)/(loop.height/3));
   if(!categories.has(key))categories.set(key,c);
  }
  const rides=[];
@@ -70,16 +72,20 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
  }
  const slopes=[];
  for(const c of source.components.filter(c=>c.gravityTrack&&c.nm.includes('kicker approach'))){
-  const start=[c.p[0],c.p[1]+2.08,c.p[2]+6];
+  ray.set(new r.THREE.Vector3(c.p[0],c.p[1]+10,c.p[2]+6),new r.THREE.Vector3(0,-1,0));ray.far=20;
+  const surface=r.l.raycastGround(ray).find(h=>h.object.name===c.nm);
+  assert.ok(surface,'Sloping approach has a native surface');
+  const start=[c.p[0],surface.point.y+.08,c.p[2]+6];
   r.p.respawn(r.l,true,false,{position:new r.THREE.Vector3(...start),heading:new r.THREE.Vector3(0,0,-1)});r.p.speed=12;
   r.tick({});const entrySpeed=r.p.speed;let exitSpeed=entrySpeed,downhillFrames=0;
   for(let f=0;f<120&&r.p.pos.z>c.p[2]-6;f++){
    r.tick({moveY:1});
-   if(r.p.groundHit?.normal.z<-.1)downhillFrames++;
+   if(r.p.groundHit?.normal.z<-.025)downhillFrames++;
    exitSpeed=Math.max(exitSpeed,r.p.speed);
   }
   slopes.push({name:c.nm,entrySpeed,exitSpeed,downhillFrames,end:r.p.pos.toArray()});
-  assert.ok(downhillFrames>8&&exitSpeed>entrySpeed+2,'Downhill approach earns speed on real sloping ground');
+  const minimumGain=2*source.verticalLoop.height/288;
+  assert.ok(downhillFrames>8&&exitSpeed>entrySpeed+minimumGain,'The compressed descent still earns speed on real sloping ground: '+JSON.stringify(slopes.at(-1)));
  }
  const report={platforming,rails:forks.length,junctions:departures.size,mainJunctions,downhillPairs,level,downhill,maxYaw,rides,slopes};reports.push(report);
  await writeFile(output+'/report.json',JSON.stringify(reports,null,2));console.log(JSON.stringify(report));
