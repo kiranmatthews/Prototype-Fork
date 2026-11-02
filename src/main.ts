@@ -2128,7 +2128,7 @@ function updateCamera2(dt: number): void {
   cameraViewFraming2.restore(camera2);
   const wrapY=p2.verticalLoopOffset-camera2VerticalLoopOffset;
   camera2VerticalLoopOffset=p2.verticalLoopOffset;
-  if(wrapY){camera2.position.y+=wrapY;cam2Aim.y+=wrapY;}
+  if(wrapY){camera2.position.y+=wrapY;cam2Aim.y+=wrapY;launchCamera2.shiftY(wrapY);}
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   const viewMatch = level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW :
@@ -2154,7 +2154,7 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
-  launchCamera2.apply(camera2,subject,level.verticalLoop?null:p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
+  launchCamera2.apply(camera2,subject,level.verticalLoop&&!level.verticalLoop.launchCamera?null:p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
   carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
   periodicSightline2.apply(camera2,level.verticalLoop?p2.cameraPoseBounds:null,level,dt,framingSnap);
 }
@@ -4599,7 +4599,7 @@ function updateCamera(dt: number): void {
   cameraVerticalLoopOffset=player.verticalLoopOffset;
   if(wrapY){
     camera.position.y+=wrapY;camTarget.y+=wrapY;aimSmooth.y+=wrapY;
-    camAnchorY+=wrapY;prevPlayerPos.y+=wrapY;
+    camAnchorY+=wrapY;prevPlayerPos.y+=wrapY;launchCamera.shiftY(wrapY);
   }
   updateBaseCamera(dt);
   const subject = player.renderPosition;
@@ -4632,7 +4632,7 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
-  launchCamera.apply(camera,subject,level.verticalLoop?null:player.launchCameraPresentation,dt,framingSnap,input.lookX);
+  launchCamera.apply(camera,subject,level.verticalLoop&&!level.verticalLoop.launchCamera?null:player.launchCameraPresentation,dt,framingSnap,input.lookX);
   carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
   periodicSightline.apply(camera,level.verticalLoop?player.cameraPoseBounds:null,level,dt,framingSnap);
 }

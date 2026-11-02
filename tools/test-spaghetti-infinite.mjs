@@ -18,7 +18,7 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
  }
  const rails=source.components.filter(c=>c.t==='rail');
  const {spaghettiSamples}=await r.server.ssrLoadModule('/src/levels/spaghetti-infinite-course.ts');
- for(const rail of rails){const pts=spaghettiSamples(rail);for(let i=1;i<pts.length;i++)assert.ok(pts[i][2]<pts[i-1][2]+1e-8,'Every rounded rail advances forward');}
+ if(!platforming)for(const rail of rails){const pts=spaghettiSamples(rail);for(let i=1;i<pts.length;i++)assert.ok(pts[i][2]<pts[i-1][2]+1e-8,'Every race rail advances forward');}
  const islands=r.sourceModule[platforming?'SPAGHETTI_PLATFORMER_ISLANDS':'SPAGHETTI_RACE_ISLANDS'];
  const terraces=islands.map(i=>({p:[i.p[0],i.p[1]-.7,i.p[2]],s:[i.w,1.4,i.d],nm:i.name}));
  const sizes=terraces.map(c=>c.s[0]*c.s[2]).sort((a,b)=>a-b);
@@ -42,14 +42,15 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
  }
  assert.equal(seen.size,terraces.length,'Unconnected platforms: '+terraces.filter((_,i)=>!seen.has(i)).map(c=>c.nm).join(', '));
  assert.equal(new Set(parent.map((_,i)=>root(i))).size,1,'All platform rail routes join one connected network');
- assert.equal(source.cameraRig,undefined);assert.equal(source.cameraLookAhead,undefined);
- for(const x of [-47,0,47])for(const y of [-140,-30,100])assert.equal(r.l.cameraDirAt(x,y,-200),null,'The ordinary forward corridor owns the camera on every tier');
+ assert.equal(source.cameraRig,undefined);
+ if(platforming){assert.equal(source.cameraLookAhead,7);assert.ok(r.l.laneActive,'The maze itinerary owns an ordered 3D camera lane');}
+ else {assert.equal(source.cameraLookAhead,undefined);for(const x of [-47,0,47])for(const y of [-140,-30,100])assert.equal(r.l.cameraDirAt(x,y,-200),null,'The race retains its steady forward camera');}
  const far=Math.min(...source.components.filter(c=>c.nm==='Periodic corridor end').map(c=>c.p[2]))+1;
  assert.ok(-far>(platforming?2000:2200),'Both courses retain a substantial journey');
  if(!platforming)assert.ok(source.skateRace.originalLength>2250&&source.skateRace.originalLength<2280,'Race length is two thirds of the prior 3.4 km course');
  const heights=[...new Set(islands.filter(i=>i.tier!==undefined).map(i=>i.p[1]))].sort((a,b)=>a-b);
  assert.deepEqual(heights,platforming?[-40,-24,-8,8,24,40]:[-12,12]);
- assert.deepEqual(loop,platforming?{minY:-48,height:96}:{minY:-24,height:48});
+ assert.deepEqual(loop,platforming?{minY:-48,height:96,launchCamera:true}:{minY:-24,height:48});
  assert.equal(heights[0]+loop.height-heights.at(-1),platforming?16:24,'The seam has the same spacing as every other tier');
  let coverage=0;
  for(let z=40;z>=far;z-=2)for(let x=-48;x<=48;x+=2){

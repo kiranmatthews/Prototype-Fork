@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 /** One physical cell, with an empty seam above/below all rideable surfaces. */
-export interface VerticalLoopData { minY:number; height:number; }
+export interface VerticalLoopData { minY:number; height:number; launchCamera?:boolean; }
 
 export function verticalLoopShift(y:number,loop:VerticalLoopData):number {
   return -Math.floor((y-loop.minY)/loop.height)*loop.height;
@@ -11,7 +11,8 @@ export function verticalLoopShift(y:number,loop:VerticalLoopData):number {
 export function validVerticalLoop(value:unknown):value is VerticalLoopData {
   if(!value||typeof value!=='object'||Array.isArray(value))return false;
   const v=value as VerticalLoopData;
-  return Object.keys(v).every(k=>k==='minY'||k==='height')&&
+  return Object.keys(v).every(k=>k==='minY'||k==='height'||k==='launchCamera')&&
+    (v.launchCamera===undefined||typeof v.launchCamera==='boolean')&&
     Number.isFinite(v.minY)&&Math.abs(v.minY)<=10000&&Number.isFinite(v.height)&&v.height>=32&&v.height<=2048;
 }
 

@@ -1,0 +1,6235 @@
+{
+  "counts": {
+    "stops": 95,
+    "legs": 94,
+    "crates": 110,
+    "fruit": 759
+  },
+  "springs": [
+    {
+      "name": "The Broken Loom / Carlisle spring",
+      "from": [
+        -40,
+        -39.96999999999999,
+        -308
+      ],
+      "to": [
+        -40,
+        8,
+        -332
+      ],
+      "launched": true,
+      "landed": true,
+      "wrap": 0,
+      "rise": 77.94583334525457,
+      "maxCamera": 1,
+      "end": {
+        "frame": 189,
+        "time": 3.15,
+        "position": [
+          -40.960091713130176,
+          8,
+          -327.96850211476567
+        ],
+        "heading": [
+          0.36478350155357714,
+          0,
+          -0.9310923675953484
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 6.300321420372139,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 12\u201315",
+          "y": 8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.14,
+          "moveY": 0.99,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "sampleCount": 32,
+      "reviewSamples": [
+        {
+          "frame": 1,
+          "time": 0.016666666666666666,
+          "position": [
+            -40,
+            -38.03638888888888,
+            -308
+          ],
+          "heading": [
+            0.362006224400948,
+            0,
+            -0.9321756773779127
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "verticalSpeed": -3.4833333333333334,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "The Broken Loom / Carlisle spring",
+            "y": -39.96999998807906,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": true,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": true,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 97,
+          "time": 1.6166666666666667,
+          "position": [
+            -41.279515380907604,
+            29.340000011921113,
+            -317.87199228980876
+          ],
+          "heading": [
+            0.36478350155357714,
+            0,
+            -0.9310923675953484
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 6.109402589451771,
+          "verticalSpeed": 24.150000000000194,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": null,
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.28,
+            "moveY": 0.96,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 187,
+          "time": 3.1166666666666667,
+          "position": [
+            -40.99245690469446,
+            9.017500011921317,
+            -327.75562911418785
+          ],
+          "heading": [
+            0.36478350155357714,
+            0,
+            -0.9310923675953484
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 6.300321420372139,
+          "verticalSpeed": -52,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Recovery islands / rows 12\u201315",
+            "y": 8,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.15,
+            "moveY": 0.99,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Counterweights / Carlisle spring",
+      "from": [
+        -24,
+        -39.96999999999999,
+        -500
+      ],
+      "to": [
+        -40,
+        8,
+        -476
+      ],
+      "launched": true,
+      "landed": true,
+      "wrap": 0,
+      "rise": 77.94583334525457,
+      "maxCamera": 1,
+      "end": {
+        "frame": 378,
+        "time": 6.3,
+        "position": [
+          -35.644138716367344,
+          8,
+          -484.4141155413342
+        ],
+        "heading": [
+          0.3484640423457702,
+          0,
+          -0.9373221490992545
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -6.300321420372139,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 20\u201323",
+          "y": 8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.12,
+          "moveY": -0.99,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "sampleCount": 32,
+      "reviewSamples": [
+        {
+          "frame": 190,
+          "time": 3.1666666666666665,
+          "position": [
+            -24,
+            -38.03638888888888,
+            -500
+          ],
+          "heading": [
+            0.3484640423457702,
+            0,
+            -0.9373221490992545
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "verticalSpeed": -3.9833333333333334,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Counterweights / Carlisle spring",
+            "y": -39.96999998807906,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 286,
+          "time": 4.766666666666667,
+          "position": [
+            -30.02445849970093,
+            29.340000011921113,
+            -492.60989308024875
+          ],
+          "heading": [
+            0.3484640423457702,
+            0,
+            -0.9373221490992545
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.23668181006535,
+          "verticalSpeed": 24.150000000000194,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": null,
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.18,
+            "moveY": -0.98,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 376,
+          "time": 6.266666666666667,
+          "position": [
+            -35.532781011594274,
+            9.017500011921317,
+            -484.5967705209752
+          ],
+          "heading": [
+            0.3484640423457702,
+            0,
+            -0.9373221490992545
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.300321420372139,
+          "verticalSpeed": -52,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Recovery islands / rows 20\u201323",
+            "y": 8,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.12,
+            "moveY": -0.99,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Spine Stair / Carlisle spring",
+      "from": [
+        -8,
+        -39.96999999999999,
+        -716
+      ],
+      "to": [
+        -24,
+        24,
+        -692
+      ],
+      "launched": true,
+      "landed": true,
+      "wrap": 0,
+      "rise": 77.94583334525457,
+      "maxCamera": 1,
+      "end": {
+        "frame": 548,
+        "time": 9.133333333333333,
+        "position": [
+          -18.36288589455049,
+          24,
+          -702.1591908922727
+        ],
+        "heading": [
+          0.38066868905257034,
+          0,
+          -0.9247114951026604
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -6.300321420372139,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 28\u201331",
+          "y": 24,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.12,
+          "moveY": -0.99,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "sampleCount": 29,
+      "reviewSamples": [
+        {
+          "frame": 379,
+          "time": 6.316666666666666,
+          "position": [
+            -8,
+            -38.03638888888888,
+            -716
+          ],
+          "heading": [
+            0.38066868905257034,
+            0,
+            -0.9247114951026604
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "verticalSpeed": -3.9833333333333334,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Spine Stair / Carlisle spring",
+            "y": -39.96999998807906,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 463,
+          "time": 7.716666666666667,
+          "position": [
+            -13.093084586862318,
+            23.905000011921075,
+            -709.6419647377469
+          ],
+          "heading": [
+            0.38066868905257034,
+            0,
+            -0.9247114951026604
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.300321420372139,
+          "verticalSpeed": 30.750000000000203,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": null,
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.16,
+            "moveY": -0.99,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 547,
+          "time": 9.116666666666667,
+          "position": [
+            -18.304082193613187,
+            24.617500011921326,
+            -702.248538358695
+          ],
+          "heading": [
+            0.38066868905257034,
+            0,
+            -0.9247114951026604
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.300321420372139,
+          "verticalSpeed": -52,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Recovery islands / rows 28\u201331",
+            "y": 24,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.12,
+            "moveY": -0.99,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hanging Lanterns / Carlisle spring",
+      "from": [
+        8,
+        -39.96999999999999,
+        -1052
+      ],
+      "to": [
+        -8,
+        24,
+        -1028
+      ],
+      "launched": true,
+      "landed": true,
+      "wrap": 0,
+      "rise": 77.94583334525457,
+      "maxCamera": 1,
+      "end": {
+        "frame": 718,
+        "time": 11.966666666666667,
+        "position": [
+          -2.7022179193513587,
+          24,
+          -1038.122720309566
+        ],
+        "heading": [
+          0.32416694845152605,
+          0,
+          -0.9459998887587808
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -6.300321420372139,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 44\u201347",
+          "y": 24,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.15,
+          "moveY": -0.99,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "sampleCount": 29,
+      "reviewSamples": [
+        {
+          "frame": 549,
+          "time": 9.15,
+          "position": [
+            8,
+            -38.03638888888888,
+            -1052
+          ],
+          "heading": [
+            0.32416694845152605,
+            0,
+            -0.9459998887587808
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "verticalSpeed": -3.9833333333333334,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Hanging Lanterns / Carlisle spring",
+            "y": -39.96999998807906,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 633,
+          "time": 10.55,
+          "position": [
+            2.6724141507911643,
+            23.905000011921075,
+            -1045.6509019330138
+          ],
+          "heading": [
+            0.32416694845152605,
+            0,
+            -0.9459998887587808
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.23668181006535,
+          "verticalSpeed": 30.750000000000203,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": null,
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.21,
+            "moveY": -0.98,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 717,
+          "time": 11.95,
+          "position": [
+            -2.644097427491245,
+            24.617500011921326,
+            -1038.2138034223035
+          ],
+          "heading": [
+            0.32416694845152605,
+            0,
+            -0.9459998887587808
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.300321420372139,
+          "verticalSpeed": -52,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Recovery islands / rows 44\u201347",
+            "y": 24,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": -0.15,
+            "moveY": -0.99,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Spring Vault / Carlisle spring",
+      "from": [
+        -40,
+        -39.96999999999999,
+        -1316
+      ],
+      "to": [
+        -24,
+        40,
+        -1316
+      ],
+      "launched": true,
+      "landed": true,
+      "wrap": 0,
+      "rise": 84.60333334525458,
+      "maxCamera": 1,
+      "end": {
+        "frame": 881,
+        "time": 14.683333333333334,
+        "position": [
+          -24.72,
+          40,
+          -1315.8619135106312
+        ],
+        "heading": [
+          0.5599306990852873,
+          0,
+          -0.8285394451816168
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 56\u201359",
+          "y": 40,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.05,
+          "moveY": 0.1,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "sampleCount": 28,
+      "reviewSamples": [
+        {
+          "frame": 719,
+          "time": 11.983333333333333,
+          "position": [
+            -40,
+            -38.03638888888888,
+            -1316
+          ],
+          "heading": [
+            0.5599306990852873,
+            0,
+            -0.8285394451816168
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "verticalSpeed": -3.9833333333333334,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Spring Vault / Carlisle spring",
+            "y": -39.96999998807906,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 803,
+          "time": 13.383333333333333,
+          "position": [
+            -29.064917749049002,
+            27.655000011921064,
+            -1314.7202090913215
+          ],
+          "heading": [
+            0.5599306990852873,
+            0,
+            -0.8285394451816168
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 4.709331162702407,
+          "verticalSpeed": 33.7500000000002,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": null,
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0.67,
+            "moveY": 0.74,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 881,
+          "time": 14.683333333333334,
+          "position": [
+            -24.72,
+            40,
+            -1315.8619135106312
+          ],
+          "heading": [
+            0.5599306990852873,
+            0,
+            -0.8285394451816168
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Recovery islands / rows 56\u201359",
+            "y": 40,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0.05,
+            "moveY": 0.1,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "The Last Stitch / Carlisle spring",
+      "from": [
+        8,
+        -39.96999999999999,
+        -1916
+      ],
+      "to": [
+        8,
+        8,
+        -1892
+      ],
+      "launched": true,
+      "landed": true,
+      "wrap": 0,
+      "rise": 77.94583334525457,
+      "maxCamera": 1,
+      "end": {
+        "frame": 1070,
+        "time": 17.833333333333332,
+        "position": [
+          9.086767973705294,
+          8,
+          -1894.5391880444513
+        ],
+        "heading": [
+          0.5730874160858935,
+          0,
+          -0.8194942425203451
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -5.918483758531404,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 80\u201383",
+          "y": 8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.2,
+          "moveY": -0.93,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "sampleCount": 32,
+      "reviewSamples": [
+        {
+          "frame": 882,
+          "time": 14.7,
+          "position": [
+            8,
+            -38.03638888888888,
+            -1916
+          ],
+          "heading": [
+            0.5730874160858935,
+            0,
+            -0.8194942425203451
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": 0,
+          "verticalSpeed": -3.9833333333333334,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "The Last Stitch / Carlisle spring",
+            "y": -39.96999998807906,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 978,
+          "time": 16.3,
+          "position": [
+            9.792349175199575,
+            29.340000011921113,
+            -1905.145561432568
+          ],
+          "heading": [
+            0.5730874160858935,
+            0,
+            -0.8194942425203451
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -5.663925317304246,
+          "verticalSpeed": 24.150000000000194,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": null,
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0.46,
+            "moveY": -0.89,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        {
+          "frame": 1068,
+          "time": 17.8,
+          "position": [
+            9.145239821466195,
+            9.017500011921317,
+            -1894.7442120016356
+          ],
+          "heading": [
+            0.5730874160858935,
+            0,
+            -0.8194942425203451
+          ],
+          "state": "air",
+          "grounded": false,
+          "speed": -6.23668181006535,
+          "verticalSpeed": -52,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Recovery islands / rows 80\u201383",
+            "y": 8,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0.22,
+            "moveY": -0.98,
+            "jumpHeld": true,
+            "grindHeld": false,
+            "spinHeld": true,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        }
+      ]
+    }
+  ],
+  "rails": [
+    {
+      "name": "Lantern Steps / step 6 \u2192 Lantern Steps / reward balcony",
+      "rail": "Lantern Steps / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 157,
+      "end": {
+        "frame": 5777,
+        "time": 96.28333333333333,
+        "position": [
+          -19.982747354478132,
+          30.51272631645342,
+          -137.79062805490463
+        ],
+        "heading": [
+          -0.618710977134312,
+          0,
+          -0.785618690443083
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.579506094580562,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 29.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 8,
+        "railDistance": 62.15284321015201,
+        "balance": -0.06937824086789875,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Lantern Steps / reward balcony \u2192 The Broken Loom / step 1",
+      "rail": "Lantern Steps / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 205,
+      "end": {
+        "frame": 5983,
+        "time": 99.71666666666667,
+        "position": [
+          19.924578079769596,
+          32.957550186652696,
+          -194.11325279979053
+        ],
+        "heading": [
+          -0.005675486381474793,
+          0,
+          -0.9999838942974699
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 15.993293503750813,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 31.99999998807907,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 9,
+        "railDistance": 66.15396390364828,
+        "balance": -0.06613274324947736,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / step 3 \u2192 Recovery 12.3",
+      "rail": "The Broken Loom / lantern descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 149,
+      "end": {
+        "frame": 6133,
+        "time": 102.21666666666667,
+        "position": [
+          2.805101791685961,
+          -6.950000000000001,
+          -257.1256548505222
+        ],
+        "heading": [
+          -0.02774701160267805,
+          0,
+          -0.9996149775524178
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 12\u201315",
+          "y": -8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 291,
+        "railDistance": 68.22049037621822,
+        "balance": -0.06778938885346819,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 12.3 \u2192 Recovery 14.5",
+      "rail": "The Broken Loom / lantern spring approach",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 175,
+      "end": {
+        "frame": 6309,
+        "time": 105.14999999999999,
+        "position": [
+          -42.790998810735026,
+          -38.95,
+          -296.0717100828163
+        ],
+        "heading": [
+          -0.7850434951510324,
+          0,
+          -0.6194406434203773
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 12\u201315",
+          "y": -40,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 292,
+        "railDistance": 80.78653629406912,
+        "balance": -0.05487122263060971,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 15.2 \u2192 Recovery 9.2",
+      "rail": "Recovery weave / tier 3 / thread 1 / span 1",
+      "reverse": true,
+      "caught": true,
+      "reached": true,
+      "frames": 433,
+      "end": {
+        "frame": 6743,
+        "time": 112.38333333333333,
+        "position": [
+          -39.636718092408444,
+          9.049999999999999,
+          -197.76075318916128
+        ],
+        "heading": [
+          -0.04969372848757787,
+          0,
+          0.9987645034486372
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 21.992389341243605,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 8\u201311",
+          "y": 8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 186,
+        "railDistance": 252.0482387286374,
+        "balance": -0.11423976404631363,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 9.2 \u2192 The Broken Loom / step 4",
+      "rail": "The Broken Loom / lantern return to court",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 936,
+      "end": {
+        "frame": 7680,
+        "time": 128,
+        "position": [
+          -8.157695829574177,
+          31.382999999999996,
+          -251.27129151555354
+        ],
+        "heading": [
+          0.4835546695263962,
+          0,
+          -0.8753141616466729
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 3.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 30.333333309491476,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 293,
+        "railDistance": 73.51023492642257,
+        "balance": -0.14100141892374263,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / step 6 \u2192 The Broken Loom / reward balcony",
+      "rail": "The Broken Loom / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 157,
+      "end": {
+        "frame": 7838,
+        "time": 130.63333333333333,
+        "position": [
+          27.956197112385855,
+          28.505527661780324,
+          -337.95619711238584
+        ],
+        "heading": [
+          0.6374932450672182,
+          0,
+          -0.7704559445508012
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.608257266841715,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 27.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 20,
+        "railDistance": 62.30915464379077,
+        "balance": -0.06937824086789875,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / reward balcony \u2192 Counterweights / step 1",
+      "rail": "The Broken Loom / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 149,
+      "end": {
+        "frame": 7988,
+        "time": 133.13333333333333,
+        "position": [
+          -12.077567347073142,
+          19.491122077893575,
+          -394.2523339518847
+        ],
+        "heading": [
+          0.0067385596467099745,
+          0,
+          -0.9999772956491999
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 17.99999998807907,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 21,
+        "railDistance": 66.98349579987183,
+        "balance": -0.06778938885346819,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / step 3 \u2192 Recovery 20.4",
+      "rail": "Counterweights / lantern descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 147,
+      "end": {
+        "frame": 8136,
+        "time": 135.6,
+        "position": [
+          32.785201092014404,
+          -22.95033333333334,
+          -450.74672473999897
+        ],
+        "heading": [
+          0.8381557827308761,
+          0,
+          -0.5454309157673338
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 20\u201323",
+          "y": -24,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 294,
+        "railDistance": 68.60794824717217,
+        "balance": -0.06692266424072299,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 20.4 \u2192 Recovery 22.5",
+      "rail": "Counterweights / lantern spring approach",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 182,
+      "end": {
+        "frame": 8319,
+        "time": 138.65,
+        "position": [
+          -26.499304173432414,
+          -38.95,
+          -488.23280919822184
+        ],
+        "heading": [
+          -0.8372509185656918,
+          0,
+          -0.5468188908230084
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 20\u201323",
+          "y": -40,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 295,
+        "railDistance": 82.30983046568075,
+        "balance": -0.046389723426274,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 21.2 \u2192 Recovery 18.2",
+      "rail": "Recovery weave / tier 3 / thread 1 / span 1",
+      "reverse": true,
+      "caught": true,
+      "reached": true,
+      "frames": 213,
+      "end": {
+        "frame": 8533,
+        "time": 142.21666666666667,
+        "position": [
+          -8.38920054096745,
+          9.049999999999999,
+          -413.872106352792
+        ],
+        "heading": [
+          -0.1521449517361081,
+          0,
+          0.988358190971885
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 21.928286456386815,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 16\u201319",
+          "y": 8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 186,
+        "railDistance": 494.4185576109523,
+        "balance": -0.06744288113127755,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 18.2 \u2192 Counterweights / step 4",
+      "rail": "Counterweights / lantern return to court",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 583,
+      "end": {
+        "frame": 9117,
+        "time": 151.95,
+        "position": [
+          4.533334671842777,
+          18.049999999999997,
+          -451.08334169901735
+        ],
+        "heading": [
+          0.2628065434362685,
+          0,
+          -0.9648485480774072
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 3.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 16.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 296,
+        "railDistance": 51.71908815946596,
+        "balance": -0.10306697008631455,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / step 6 \u2192 Counterweights / reward balcony",
+      "rail": "Counterweights / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 168,
+      "end": {
+        "frame": 9286,
+        "time": 154.76666666666665,
+        "position": [
+          -19.984883919770596,
+          14.500629836676225,
+          -538.0688470897802
+        ],
+        "heading": [
+          -0.6691590209169801,
+          0,
+          -0.7431192399106813
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.603047092467822,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 13.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 32,
+        "railDistance": 66.54748062071367,
+        "balance": -0.06089527770172293,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / reward balcony \u2192 Spine Stair / step 1",
+      "rail": "Counterweights / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 205,
+      "end": {
+        "frame": 9492,
+        "time": 158.2,
+        "position": [
+          19.92447571154557,
+          16.95754398251791,
+          -594.1131597377687
+        ],
+        "heading": [
+          -0.006735781985766102,
+          0,
+          -0.999977314363201
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 15.993252971355702,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 15.999999988079072,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 33,
+        "railDistance": 66.15382541796494,
+        "balance": -0.06613274324947736,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / step 3 \u2192 Recovery 29.3",
+      "rail": "Spine Stair / lantern descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 135,
+      "end": {
+        "frame": 9628,
+        "time": 160.46666666666667,
+        "position": [
+          -12.384758594225465,
+          -6.949999999999999,
+          -665.1159768131309
+        ],
+        "heading": [
+          -0.29430953186891995,
+          0,
+          -0.9557101545191916
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 28\u201331",
+          "y": -8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 297,
+        "railDistance": 58.88036056981998,
+        "balance": -0.07168215952714943,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 29.3 \u2192 Recovery 31.5",
+      "rail": "Spine Stair / lantern spring approach",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 121,
+      "end": {
+        "frame": 9750,
+        "time": 162.5,
+        "position": [
+          -12.330987597627722,
+          -38.95,
+          -702.990623154183
+        ],
+        "heading": [
+          -0.18750484760027972,
+          0,
+          -0.9822636774952009
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": null,
+        "rail": 298,
+        "railDistance": 54.50089407035741,
+        "balance": -0.05938303099737979,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 30.1 \u2192 Recovery 33.1",
+      "rail": "Recovery weave / tier 2 / thread 1 / span 2",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 270,
+      "end": {
+        "frame": 10021,
+        "time": 167.01666666666665,
+        "position": [
+          39.45186790180051,
+          25.05,
+          -754.3658898099832
+        ],
+        "heading": [
+          -0.11044979176842261,
+          0,
+          -0.9938817049821935
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 21.994026156020418,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 32\u201335",
+          "y": 24,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 160,
+        "railDistance": 295.3397516227153,
+        "balance": -0.06620192339909592,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 33.1 \u2192 Spine Stair / step 4",
+      "rail": "Spine Stair / lantern return to court",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 301,
+      "end": {
+        "frame": 10323,
+        "time": 172.05,
+        "position": [
+          -13.642238160901112,
+          15.716999999999999,
+          -656.4891511078841
+        ],
+        "heading": [
+          -0.3789860393803434,
+          0,
+          0.925402389209581
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 14.66666664282481,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 299,
+        "railDistance": 123.34145426701268,
+        "balance": -0.09837527018038973,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / step 6 \u2192 Spine Stair / reward balcony",
+      "rail": "Spine Stair / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 124,
+      "end": {
+        "frame": 10448,
+        "time": 174.13333333333333,
+        "position": [
+          28.720267570594267,
+          12.533005978430824,
+          -737.3241958294244
+        ],
+        "heading": [
+          0.3630987112337861,
+          0,
+          -0.9317506779715075
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.556041997585503,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 11.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 44,
+        "railDistance": 49.127275267120766,
+        "balance": -0.06644565851001963,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / reward balcony \u2192 The Box Garden / step 1",
+      "rail": "Spine Stair / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 149,
+      "end": {
+        "frame": 10598,
+        "time": 176.63333333333333,
+        "position": [
+          -12.077721903172936,
+          3.491089293266348,
+          -794.2524744574299
+        ],
+        "heading": [
+          0.0019504517352063344,
+          0,
+          -0.9999980978672053
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 1.999999988079071,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 45,
+        "railDistance": 66.98370723361562,
+        "balance": -0.06778938885346819,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / step 6 \u2192 The Box Garden / reward balcony",
+      "rail": "The Box Garden / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 121,
+      "end": {
+        "frame": 10720,
+        "time": 178.66666666666666,
+        "position": [
+          -21.19652324559023,
+          -1.4685509398462233,
+          -937.3600049497965
+        ],
+        "heading": [
+          -0.3067840068246906,
+          0,
+          -0.951779161968042
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.556622812778304,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -2.666666678587595,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 63,
+        "railDistance": 47.88781506427708,
+        "balance": -0.05938303099737979,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / reward balcony \u2192 Hanging Lanterns / step 1",
+      "rail": "The Box Garden / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 205,
+      "end": {
+        "frame": 10926,
+        "time": 182.1,
+        "position": [
+          19.92482830996932,
+          0.9575653521193531,
+          -994.1134802817903
+        ],
+        "heading": [
+          -0.00020797499871764934,
+          0,
+          -0.9999999783731996
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 15.993392581657293,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -1.1920928910669204e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 64,
+        "railDistance": 66.15430241982875,
+        "balance": -0.06613274324947736,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / step 3 \u2192 Recovery 43.3",
+      "rail": "Hanging Lanterns / lantern descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 105,
+      "end": {
+        "frame": 11032,
+        "time": 183.86666666666667,
+        "position": [
+          -42.76618063557817,
+          -6.949999999999999,
+          -1005.4094158347524
+        ],
+        "heading": [
+          -0.8425458021533321,
+          0,
+          0.5386247035495103
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 40\u201343",
+          "y": -8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 300,
+        "railDistance": 47.98528051086041,
+        "balance": -0.05607902774489991,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 43.3 \u2192 Recovery 45.5",
+      "rail": "Hanging Lanterns / lantern spring approach",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 130,
+      "end": {
+        "frame": 11163,
+        "time": 186.05,
+        "position": [
+          1.056410935884601,
+          -38.95,
+          -1039.5819844762018
+        ],
+        "heading": [
+          0.7387363888019125,
+          0,
+          -0.6739944716834919
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": null,
+        "rail": 301,
+        "railDistance": 61.76599413656664,
+        "balance": -0.07313003329421464,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 44.1 \u2192 Recovery 41.1",
+      "rail": "Recovery weave / tier 2 / thread 3 / span 2",
+      "reverse": true,
+      "caught": true,
+      "reached": true,
+      "frames": 213,
+      "end": {
+        "frame": 11377,
+        "time": 189.61666666666667,
+        "position": [
+          -39.65774206210947,
+          25.05,
+          -965.6704287687207
+        ],
+        "heading": [
+          -0.06588504688990107,
+          0,
+          0.9978272198112834
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 21.98661567403751,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 40\u201343",
+          "y": 24,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 170,
+        "railDistance": 413.45949252671096,
+        "balance": -0.06744288113127755,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 41.1 \u2192 Hanging Lanterns / step 4",
+      "rail": "Hanging Lanterns / lantern return to court",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 238,
+      "end": {
+        "frame": 11616,
+        "time": 193.6,
+        "position": [
+          -11.649871521619907,
+          -0.617000000000003,
+          -1051.3466423432735
+        ],
+        "heading": [
+          0.340277033517368,
+          0,
+          -0.9403252312155727
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -1.6666666905085243,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 302,
+        "railDistance": 104.13092462481697,
+        "balance": -0.09058935405136978,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / step 6 \u2192 Hanging Lanterns / reward balcony",
+      "rail": "Hanging Lanterns / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 168,
+      "end": {
+        "frame": 11785,
+        "time": 196.41666666666666,
+        "position": [
+          27.991382975414705,
+          -3.5060788323877445,
+          -1138.2231464782515
+        ],
+        "heading": [
+          0.6857343907943454,
+          0,
+          -0.7278518704255064
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.628974770462555,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -4.666666678587596,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 75,
+        "railDistance": 66.70890999393232,
+        "balance": -0.06089527770172293,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / reward balcony \u2192 Spring Vault / step 1",
+      "rail": "Hanging Lanterns / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 149,
+      "end": {
+        "frame": 11935,
+        "time": 198.91666666666666,
+        "position": [
+          -12.077536768102739,
+          -12.508871435658156,
+          -1194.2523061528207
+        ],
+        "heading": [
+          0.00732389461656317,
+          0,
+          -0.9999731799241646
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -14.000000011920928,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 76,
+        "railDistance": 66.98345396764259,
+        "balance": -0.06778938885346819,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spring Vault / step 3 \u2192 Recovery 54.4",
+      "rail": "Spring Vault / lantern descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 99,
+      "end": {
+        "frame": 12035,
+        "time": 200.58333333333334,
+        "position": [
+          17.90688700851874,
+          -22.950333333333333,
+          -1265.4381794446933
+        ],
+        "heading": [
+          0.41052886955796003,
+          0,
+          -0.9118476008958205
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 52\u201355",
+          "y": -24,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 303,
+        "railDistance": 42.21125920065985,
+        "balance": -0.05752480156145972,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 54.4 \u2192 Recovery 56.5",
+      "rail": "Spring Vault / lantern spring approach",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 182,
+      "end": {
+        "frame": 12218,
+        "time": 203.63333333333333,
+        "position": [
+          -42.49944203769567,
+          -38.95,
+          -1304.2328790589079
+        ],
+        "heading": [
+          -0.8373319369701839,
+          0,
+          -0.5466948210196984
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 56\u201359",
+          "y": -40,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 304,
+        "railDistance": 82.30998502010662,
+        "balance": -0.046389723426274,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 56.0 \u2192 Recovery 59.0",
+      "rail": "Recovery weave / tier 1 / thread 3 / span 3",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 271,
+      "end": {
+        "frame": 12490,
+        "time": 208.16666666666666,
+        "position": [
+          39.44063702575616,
+          41.05,
+          -1378.33650580961
+        ],
+        "heading": [
+          0.10816825001454146,
+          0,
+          -0.994132601662772
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 21.905902706074844,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 56\u201359",
+          "y": 40,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 144,
+        "railDistance": 295.30829447639434,
+        "balance": -0.05952442073161224,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 59.0 \u2192 Recovery 54.3",
+      "rail": "Spring Vault / lantern return to court",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 284,
+      "end": {
+        "frame": 12775,
+        "time": 212.91666666666666,
+        "position": [
+          3.9214701581679274,
+          -6.950000000000001,
+          -1270.6328907951988
+        ],
+        "heading": [
+          -0.22675770591147712,
+          0,
+          0.9739512014519844
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 52\u201355",
+          "y": -8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 305,
+        "railDistance": 136.15625507044416,
+        "balance": -0.06831037592496789,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spring Vault / step 6 \u2192 Spring Vault / reward balcony",
+      "rail": "Spring Vault / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 131,
+      "end": {
+        "frame": 12907,
+        "time": 215.11666666666667,
+        "position": [
+          -20.715066897266084,
+          -17.476255574772175,
+          -1337.5372115530934
+        ],
+        "heading": [
+          -0.44521108795595576,
+          0,
+          -0.8954256458026395
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.56747954817755,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -18.666666678587593,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 87,
+        "railDistance": 51.85140102878116,
+        "balance": -0.06608362703548766,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spring Vault / reward balcony \u2192 The Bellows / step 1",
+      "rail": "Spring Vault / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 205,
+      "end": {
+        "frame": 13113,
+        "time": 218.54999999999998,
+        "position": [
+          19.924785652173846,
+          -15.042437233201584,
+          -1394.1134415019762
+        ],
+        "heading": [
+          -0.00235097557309313,
+          0,
+          -0.9999972364531089
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 15.99337569142953,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -16.00000001192093,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 88,
+        "railDistance": 66.15424471155049,
+        "balance": -0.06613274324947736,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / step 6 \u2192 The Bellows / reward balcony",
+      "rail": "The Bellows / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 123,
+      "end": {
+        "frame": 13237,
+        "time": 220.61666666666667,
+        "position": [
+          28.959871067630854,
+          -19.479320440096416,
+          -1537.607703455551
+        ],
+        "heading": [
+          0.33275101490572545,
+          0,
+          -0.9430147199695292
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.57722013714479,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -20.666666678587593,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 99,
+        "railDistance": 48.74843476279708,
+        "balance": -0.06160464726148045,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / reward balcony \u2192 Needle Windows / step 1",
+      "rail": "The Bellows / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 149,
+      "end": {
+        "frame": 13387,
+        "time": 223.11666666666667,
+        "position": [
+          -12.077726335327007,
+          -28.508911646887544,
+          -1594.252478486661
+        ],
+        "heading": [
+          0.00161591685081547,
+          0,
+          -0.9999986944055131
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -30.00000001192093,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 100,
+        "railDistance": 66.98371329683103,
+        "balance": -0.06778938885346819,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / step 6 \u2192 Needle Windows / reward balcony",
+      "rail": "Needle Windows / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 161,
+      "end": {
+        "frame": 13549,
+        "time": 225.81666666666666,
+        "position": [
+          -20.096666097301696,
+          -33.49681815593795,
+          -1738.0101509199062
+        ],
+        "heading": [
+          -0.6341072997814721,
+          0,
+          -0.7732450661749161
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.595912839546394,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -34.666666678587596,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 116,
+        "railDistance": 63.75829546541107,
+        "balance": -0.06521750040819731,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / reward balcony \u2192 The Last Stitch / step 1",
+      "rail": "Needle Windows / forward exit",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 205,
+      "end": {
+        "frame": 13755,
+        "time": 229.25,
+        "position": [
+          19.924580498360115,
+          -31.042449666766046,
+          -1794.113254998509
+        ],
+        "heading": [
+          -0.005648028912795345,
+          0,
+          -0.999984049757495
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 15.993294461384565,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -32.00000001192093,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 117,
+        "railDistance": 66.1539671755636,
+        "balance": -0.06613274324947736,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / step 3 \u2192 Recovery 79.3",
+      "rail": "The Last Stitch / lantern descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 872,
+      "end": {
+        "frame": 14628,
+        "time": 243.79999999999998,
+        "position": [
+          -42.802812190741804,
+          -6.950333333333331,
+          -1866.038244758671
+        ],
+        "heading": [
+          -0.7848455929774888,
+          0,
+          -0.6196913709128229
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 3.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 76\u201379",
+          "y": -8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 306,
+        "railDistance": 62.9949311401038,
+        "balance": -0.19393481507887933,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 79.3 \u2192 Recovery 81.5",
+      "rail": "The Last Stitch / lantern spring approach",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 130,
+      "end": {
+        "frame": 14759,
+        "time": 245.98333333333332,
+        "position": [
+          1.0567151771672625,
+          -38.95,
+          -1903.5822847143097
+        ],
+        "heading": [
+          0.7368790762739351,
+          0,
+          -0.6760245756994874
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": null,
+        "rail": 307,
+        "railDistance": 61.76642157741578,
+        "balance": -0.07313003329421464,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 80.2 \u2192 Recovery 77.2",
+      "rail": "Recovery weave / tier 3 / thread 3 / span 4",
+      "reverse": true,
+      "caught": true,
+      "reached": true,
+      "frames": 213,
+      "end": {
+        "frame": 14973,
+        "time": 249.54999999999998,
+        "position": [
+          -23.662388635112627,
+          9.049999999999999,
+          -1829.6504658873282
+        ],
+        "heading": [
+          0.04969372848758595,
+          0,
+          0.9987645034486369
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 21.992389341243605,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Recovery islands / rows 76\u201379",
+          "y": 8,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 199,
+        "railDistance": 90.43101056176438,
+        "balance": -0.06744288113127755,
+        "input": {
+          "moveX": -0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 77.2 \u2192 The Last Stitch / step 4",
+      "rail": "The Last Stitch / lantern return to court",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 157,
+      "end": {
+        "frame": 15131,
+        "time": 252.18333333333334,
+        "position": [
+          -13.472291740725051,
+          -32.95,
+          -1851.3231091441496
+        ],
+        "heading": [
+          0.2581136305088167,
+          0,
+          -0.9661145655384551
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -34.000000023841864,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 308,
+        "railDistance": 71.31938468867091,
+        "balance": -0.06937824086789875,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / step 6 \u2192 The Last Stitch / reward balcony",
+      "rail": "The Last Stitch / balcony bridge",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 115,
+      "end": {
+        "frame": 15247,
+        "time": 254.11666666666667,
+        "position": [
+          29.197044176348996,
+          -35.583,
+          -1937.2469532970192
+        ],
+        "heading": [
+          0.30949857122877444,
+          0,
+          -0.9508999076702801
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 25.774136960884405,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -36.666666678587596,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 128,
+        "railDistance": 47.202405605579536,
+        "balance": -0.05989490259143024,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / reward balcony \u2192 Finish collector",
+      "rail": "Last Stitch / final descent",
+      "reverse": false,
+      "caught": true,
+      "reached": true,
+      "frames": 291,
+      "end": {
+        "frame": 15539,
+        "time": 258.98333333333335,
+        "position": [
+          4,
+          -42.949999999999996,
+          -2069.078810871806
+        ],
+        "heading": [
+          -0.6890967072791409,
+          0,
+          -0.724669392217614
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -44.00000001192093,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 129,
+        "railDistance": 134.0413915388078,
+        "balance": -0.08777544502965663,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0.71,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    }
+  ],
+  "jumps": [
+    {
+      "name": "Lantern Steps / step 1 \u2192 Lantern Steps / step 2",
+      "reached": true,
+      "end": {
+        "frame": 1176,
+        "time": 19.6,
+        "position": [
+          -13.007210802371231,
+          33.333333309491465,
+          -13.965558389433843
+        ],
+        "heading": [
+          0.45758045553575705,
+          0,
+          -0.8891682218296428
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 33.333333309491465,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Lantern Steps / step 2 \u2192 Lantern Steps / step 3",
+      "reached": true,
+      "end": {
+        "frame": 1282,
+        "time": 21.366666666666667,
+        "position": [
+          -2.004885308307048,
+          32.66666664282481,
+          -29.793069193909005
+        ],
+        "heading": [
+          0.48044999486393863,
+          0,
+          -0.8770221219759748
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 32.66666664282481,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Lantern Steps / step 3 \u2192 Lantern Steps / step 4",
+      "reached": true,
+      "end": {
+        "frame": 1385,
+        "time": 23.083333333333332,
+        "position": [
+          -1.9996637530586114,
+          33.333333309491465,
+          -47.80904222279194
+        ],
+        "heading": [
+          -0.3461761684966823,
+          0,
+          -0.9381695264529522
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 33.333333309491465,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Lantern Steps / step 4 \u2192 Lantern Steps / step 5",
+      "reached": true,
+      "end": {
+        "frame": 1491,
+        "time": 24.85,
+        "position": [
+          2.9687716840092646,
+          32.33333330949147,
+          -65.76641371206176
+        ],
+        "heading": [
+          0.5823665257554381,
+          0,
+          -0.8129263371791695
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 6.300321420372139,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 32.33333330949147,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.12,
+          "moveY": 0.99,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Lantern Steps / step 5 \u2192 Lantern Steps / step 6",
+      "reached": true,
+      "end": {
+        "frame": 1597,
+        "time": 26.616666666666667,
+        "position": [
+          13.991953491861349,
+          31.333333321412404,
+          -83.78402055085728
+        ],
+        "heading": [
+          0.5474089977674953,
+          0,
+          -0.8368652156489637
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 31.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / step 1 \u2192 The Broken Loom / step 2",
+      "reached": true,
+      "end": {
+        "frame": 1702,
+        "time": 28.366666666666667,
+        "position": [
+          15.297194359580864,
+          31.666666642824808,
+          -213.92587304157092
+        ],
+        "heading": [
+          -0.3304034124016232,
+          0,
+          -0.9438398090107044
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 31.666666642824808,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / step 2 \u2192 The Broken Loom / step 3",
+      "reached": true,
+      "end": {
+        "frame": 1808,
+        "time": 30.133333333333333,
+        "position": [
+          8.0003542098957,
+          30.999999976158144,
+          -229.8091184249158
+        ],
+        "heading": [
+          -0.4587007605355175,
+          0,
+          -0.8885908013726779
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 30.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / step 4 \u2192 The Broken Loom / step 5",
+      "reached": true,
+      "end": {
+        "frame": 1913,
+        "time": 31.883333333333333,
+        "position": [
+          -8.000112214868667,
+          29.999999976158144,
+          -265.8099931883723
+        ],
+        "heading": [
+          -0.39755008798862507,
+          0,
+          -0.9175804746943105
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 29.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Broken Loom / step 5 \u2192 The Broken Loom / step 6",
+      "reached": true,
+      "end": {
+        "frame": 2019,
+        "time": 33.65,
+        "position": [
+          -15.000178875178777,
+          29.333333321412404,
+          -283.8155180641274
+        ],
+        "heading": [
+          -0.23354429565814822,
+          0,
+          -0.9723461636503429
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 29.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / step 1 \u2192 Counterweights / step 2",
+      "reached": true,
+      "end": {
+        "frame": 2125,
+        "time": 35.416666666666664,
+        "position": [
+          -12.003620099861427,
+          16.999999976158144,
+          -413.99189378145553
+        ],
+        "heading": [
+          0.47546448126167074,
+          0,
+          -0.8797349186309308
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 16.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / step 2 \u2192 Counterweights / step 3",
+      "reached": true,
+      "end": {
+        "frame": 2228,
+        "time": 37.13333333333333,
+        "position": [
+          -4.000504167558587,
+          17.666666642824808,
+          -429.7914042123547
+        ],
+        "heading": [
+          0.3994851102838486,
+          0,
+          -0.9167396831497485
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 17.666666642824808,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / step 4 \u2192 Counterweights / step 5",
+      "reached": true,
+      "end": {
+        "frame": 2334,
+        "time": 38.9,
+        "position": [
+          13.990670000365329,
+          16.333333309491476,
+          -465.77482261943123
+        ],
+        "heading": [
+          0.47679419240631465,
+          0,
+          -0.8790149589669167
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 16.333333309491476,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Counterweights / step 5 \u2192 Counterweights / step 6",
+      "reached": true,
+      "end": {
+        "frame": 2440,
+        "time": 40.666666666666664,
+        "position": [
+          20.999872069934355,
+          15.333333321412404,
+          -483.80632332069825
+        ],
+        "heading": [
+          0.36797461147999777,
+          0,
+          -0.929835837826304
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 15.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / step 1 \u2192 Spine Stair / step 2",
+      "reached": true,
+      "end": {
+        "frame": 2546,
+        "time": 42.43333333333333,
+        "position": [
+          12.008806588434366,
+          14.999999976158144,
+          -613.9969117233782
+        ],
+        "heading": [
+          -0.4856545567923225,
+          0,
+          -0.874150817346099
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 14.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / step 2 \u2192 Spine Stair / step 3",
+      "reached": true,
+      "end": {
+        "frame": 2652,
+        "time": 44.2,
+        "position": [
+          2.0092917548605254,
+          13.999999976158144,
+          -629.7755765626757
+        ],
+        "heading": [
+          -0.5384530851202722,
+          0,
+          -0.842655490176419
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 13.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / step 4 \u2192 Spine Stair / step 5",
+      "reached": true,
+      "end": {
+        "frame": 2758,
+        "time": 45.96666666666667,
+        "position": [
+          -7.99985826891184,
+          13.999999976158144,
+          -665.8106627147208
+        ],
+        "heading": [
+          -0.6098737617164991,
+          0,
+          -0.7924985771405315
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 13.999999976158144,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spine Stair / step 5 \u2192 Spine Stair / step 6",
+      "reached": true,
+      "end": {
+        "frame": 2864,
+        "time": 47.733333333333334,
+        "position": [
+          1.9936377363247098,
+          13.333333321412404,
+          -683.7826111127384
+        ],
+        "heading": [
+          0.5164993275886889,
+          0,
+          -0.8562875945617993
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 13.333333321412404,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / step 1 \u2192 The Box Garden / step 2",
+      "reached": true,
+      "end": {
+        "frame": 2970,
+        "time": 49.5,
+        "position": [
+          -13.999943344475632,
+          1.3333333094914754,
+          -813.9632927066284
+        ],
+        "heading": [
+          0.42873686162169466,
+          0,
+          -0.9034294125645788
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 1.3333333094914754,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / step 2 \u2192 The Box Garden / step 3",
+      "reached": true,
+      "end": {
+        "frame": 3076,
+        "time": 51.266666666666666,
+        "position": [
+          -2.0018321721749244,
+          0.6666666428248088,
+          -829.7974541440848
+        ],
+        "heading": [
+          0.5516188172655758,
+          0,
+          -0.8340963256354312
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0.6666666428248088,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / step 3 \u2192 The Box Garden / step 4",
+      "reached": true,
+      "end": {
+        "frame": 3182,
+        "time": 53.03333333333333,
+        "position": [
+          7.989986270434123,
+          -2.3841857821338408e-08,
+          -847.7744544726922
+        ],
+        "heading": [
+          0.4377945683442601,
+          0,
+          -0.8990750335362799
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -2.3841857821338408e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / step 4 \u2192 The Box Garden / step 5",
+      "reached": true,
+      "end": {
+        "frame": 3285,
+        "time": 54.75,
+        "position": [
+          6.011168784903591,
+          0.6666666428248088,
+          -865.7695367252246
+        ],
+        "heading": [
+          -0.48941164053249925,
+          0,
+          -0.8720528918083397
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 0.6666666428248088,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Box Garden / step 5 \u2192 The Box Garden / step 6",
+      "reached": true,
+      "end": {
+        "frame": 3392,
+        "time": 56.53333333333333,
+        "position": [
+          -5.9837028472689076,
+          -0.6666666785875957,
+          -883.7784896213767
+        ],
+        "heading": [
+          -0.5023352934151187,
+          0,
+          -0.8646729167665348
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -0.6666666785875957,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / step 1 \u2192 Hanging Lanterns / step 2",
+      "reached": true,
+      "end": {
+        "frame": 3497,
+        "time": 58.28333333333333,
+        "position": [
+          12.000504271746504,
+          -0.3333333571751911,
+          -1013.9989333220869
+        ],
+        "heading": [
+          -0.4746421774505746,
+          0,
+          -0.8801788473855623
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -0.3333333571751911,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / step 2 \u2192 Hanging Lanterns / step 3",
+      "reached": true,
+      "end": {
+        "frame": 3603,
+        "time": 60.05,
+        "position": [
+          3.9996146815369262,
+          -1.0000000238418578,
+          -1029.8069657980357
+        ],
+        "heading": [
+          -0.4732897061599244,
+          0,
+          -0.8809068361881707
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -1.0000000238418578,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / step 4 \u2192 Hanging Lanterns / step 5",
+      "reached": true,
+      "end": {
+        "frame": 3709,
+        "time": 61.81666666666666,
+        "position": [
+          -13.98920856172449,
+          -2.3333333571751913,
+          -1065.7720524912486
+        ],
+        "heading": [
+          -0.47607364032024413,
+          0,
+          -0.8794054178774604
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -2.3333333571751913,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Hanging Lanterns / step 5 \u2192 Hanging Lanterns / step 6",
+      "reached": true,
+      "end": {
+        "frame": 3814,
+        "time": 63.56666666666666,
+        "position": [
+          -21.000269530932055,
+          -2.666666678587595,
+          -1083.8111313202714
+        ],
+        "heading": [
+          -0.23183127753413837,
+          0,
+          -0.9727560119356184
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -2.666666678587595,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spring Vault / step 1 \u2192 Spring Vault / step 2",
+      "reached": true,
+      "end": {
+        "frame": 3920,
+        "time": 65.33333333333333,
+        "position": [
+          -10.03887744873877,
+          -14.666666690508524,
+          -1213.9550211006854
+        ],
+        "heading": [
+          0.5546908504319498,
+          0,
+          -0.8320565247908823
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -14.666666690508524,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spring Vault / step 2 \u2192 Spring Vault / step 3",
+      "reached": true,
+      "end": {
+        "frame": 4026,
+        "time": 67.1,
+        "position": [
+          1.981976511528984,
+          -15.333333357175189,
+          -1229.7759970731765
+        ],
+        "heading": [
+          0.5600778070187189,
+          0,
+          -0.828440009949485
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -15.333333357175189,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Recovery 54.3 \u2192 Spring Vault / step 6",
+      "reached": true,
+      "end": {
+        "frame": 4143,
+        "time": 69.05,
+        "position": [
+          4.0005511106650635,
+          -16.666666678587593,
+          -1283.9989023779713
+        ],
+        "heading": [
+          -0.9866464485135139,
+          0,
+          -0.16287659634112506
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -16.666666678587593,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / step 1 \u2192 The Bellows / step 2",
+      "reached": true,
+      "end": {
+        "frame": 4249,
+        "time": 70.81666666666666,
+        "position": [
+          14.010595915521318,
+          -16.66666669050852,
+          -1413.9271502403983
+        ],
+        "heading": [
+          -0.4285244304573225,
+          0,
+          -0.903530194570844
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -16.66666669050852,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / step 2 \u2192 The Bellows / step 3",
+      "reached": true,
+      "end": {
+        "frame": 4355,
+        "time": 72.58333333333333,
+        "position": [
+          2.016882926672161,
+          -17.33333335717519,
+          -1429.7777432667124
+        ],
+        "heading": [
+          -0.5512360912232424,
+          0,
+          -0.8343493103808028
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -17.33333335717519,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / step 3 \u2192 The Bellows / step 4",
+      "reached": true,
+      "end": {
+        "frame": 4458,
+        "time": 74.3,
+        "position": [
+          -7.990735955945418,
+          -16.66666669050852,
+          -1447.7736358654452
+        ],
+        "heading": [
+          -0.4392021345792403,
+          0,
+          -0.8983882707276621
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -16.66666669050852,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / step 4 \u2192 The Bellows / step 5",
+      "reached": true,
+      "end": {
+        "frame": 4564,
+        "time": 76.06666666666666,
+        "position": [
+          -8.000541047162045,
+          -17.66666669050852,
+          -1465.8125728122025
+        ],
+        "heading": [
+          0.4131628836392341,
+          0,
+          -0.910657142717781
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -17.66666669050852,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Bellows / step 5 \u2192 The Bellows / step 6",
+      "reached": true,
+      "end": {
+        "frame": 4670,
+        "time": 77.83333333333333,
+        "position": [
+          3.9820736220291617,
+          -18.666666678587593,
+          -1483.7769459241563
+        ],
+        "heading": [
+          0.5755158143489323,
+          0,
+          -0.8177906501264766
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -18.666666678587593,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / step 1 \u2192 Needle Windows / step 2",
+      "reached": true,
+      "end": {
+        "frame": 4776,
+        "time": 79.6,
+        "position": [
+          -12.007633182755836,
+          -31.000000023841856,
+          -1613.9824919873404
+        ],
+        "heading": [
+          0.495104784260017,
+          0,
+          -0.8688332708885188
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -31.000000023841856,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / step 2 \u2192 Needle Windows / step 3",
+      "reached": true,
+      "end": {
+        "frame": 4879,
+        "time": 81.31666666666666,
+        "position": [
+          -0.07045285441370996,
+          -30.33333335717519,
+          -1629.7191888662726
+        ],
+        "heading": [
+          0.5221276385039915,
+          0,
+          -0.8528673572779327
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 6.300321420372139,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -30.33333335717519,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.17,
+          "moveY": 0.99,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / step 3 \u2192 Needle Windows / step 4",
+      "reached": true,
+      "end": {
+        "frame": 4985,
+        "time": 83.08333333333333,
+        "position": [
+          0.0005183738953984593,
+          -31.000000023841856,
+          -1647.8124239213787
+        ],
+        "heading": [
+          -0.3490594053452016,
+          0,
+          -0.9371005984098262
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -31.000000023841856,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / step 4 \u2192 Needle Windows / step 5",
+      "reached": true,
+      "end": {
+        "frame": 5091,
+        "time": 84.85,
+        "position": [
+          3.982411960457578,
+          -31.666666690508528,
+          -1665.776563073543
+        ],
+        "heading": [
+          0.5539615057079872,
+          0,
+          -0.8325422813249425
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -31.666666690508528,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Needle Windows / step 5 \u2192 Needle Windows / step 6",
+      "reached": true,
+      "end": {
+        "frame": 5197,
+        "time": 86.61666666666666,
+        "position": [
+          15.979249928907542,
+          -32.666666678587596,
+          -1683.7759420660877
+        ],
+        "heading": [
+          0.5769520356885012,
+          0,
+          -0.8167780289129322
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -32.666666678587596,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / step 1 \u2192 The Last Stitch / step 2",
+      "reached": true,
+      "end": {
+        "frame": 5303,
+        "time": 88.38333333333333,
+        "position": [
+          14.004518961336416,
+          -32.66666669050853,
+          -1813.9630137901086
+        ],
+        "heading": [
+          -0.41811136907767044,
+          0,
+          -0.9083957744551635
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -32.66666669050853,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / step 2 \u2192 The Last Stitch / step 3",
+      "reached": true,
+      "end": {
+        "frame": 5409,
+        "time": 90.15,
+        "position": [
+          4.007412250712928,
+          -33.33333335717519,
+          -1829.7800905878953
+        ],
+        "heading": [
+          -0.5490038358828844,
+          0,
+          -0.8358198299788533
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -33.33333335717519,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / step 4 \u2192 The Last Stitch / step 5",
+      "reached": true,
+      "end": {
+        "frame": 5512,
+        "time": 91.86666666666666,
+        "position": [
+          -4.008620118858468,
+          -33.33333335717519,
+          -1865.7767354224454
+        ],
+        "heading": [
+          0.490485346738112,
+          0,
+          -0.8714494389436452
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -33.33333335717519,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "The Last Stitch / step 5 \u2192 The Last Stitch / step 6",
+      "reached": true,
+      "end": {
+        "frame": 5619,
+        "time": 93.65,
+        "position": [
+          8.244065387153986,
+          -34.666666678587596,
+          -1883.6904197377503
+        ],
+        "heading": [
+          0.5760139108315984,
+          0,
+          -0.8174398904680928
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -34.666666678587596,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    }
+  ]
+}

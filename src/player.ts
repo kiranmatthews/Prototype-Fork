@@ -4668,8 +4668,12 @@ export class Player {
     // is easing behind the travel direction) — stick-up is always "away from
     // camera", and the skater reads always-facing-forward.
     const chaseMode = (level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder;
+    // A maze spring crosses several camera-lane branches in one flight.
+    // Keep the launch's controls while Carlisle's independently orbitable
+    // shot is active; the receiving platform resumes the authored lane.
+    const mazeSpringAir = this.state === 'air' && this.trampolineAir && level.verticalLoop?.launchCamera;
     const laneDir =
-      this.state !== 'grind' && !this.freeSkate
+      this.state !== 'grind' && !this.freeSkate && !mazeSpringAir
         ? (this.courseInputDirection(level) ??
           (chaseMode ? (level.alwaysSkate ? this.axisF : this.camDir) : null))
         : null;
@@ -6379,9 +6383,9 @@ export class Player {
       // A real lower-road touchdown must also release the steering frame's
       // old branch. Keep continuity through air and ordinary banked bends;
       // eight metres exceeds Skystream's road banking, below its stacked legs.
-      if (this.grounded && level.fallRecoveryDrop !== undefined && this.laneCursor.s >= 0) {
+      if (this.grounded && (level.fallRecoveryDrop !== undefined || level.verticalLoop) && this.laneCursor.s >= 0) {
         const oldRoad = level.cameraLanePointAhead(this.laneCursor, 0, this.laneSupportPoint);
-        if (oldRoad && oldRoad.y - this.pos.y > 8) this.laneCursor.s = -1;
+        if (oldRoad && (level.verticalLoop ? Math.abs(oldRoad.y-this.pos.y) : oldRoad.y-this.pos.y) > 8) this.laneCursor.s = -1;
       }
       return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
     }

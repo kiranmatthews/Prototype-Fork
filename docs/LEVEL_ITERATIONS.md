@@ -8375,3 +8375,30 @@ race layout and shared gameplay tuning remain intact.
 
 Kept local at the user's request; no push, publication or shared-pack change.
 Details: [box route iteration](spaghetti-infinite/BOX_ROUTE_ITERATION.md).
+
+
+## 2026-11-03 — A collectible itinerary through the existing 3D maze (local preview)
+
+Replace the rejected straight stepping-stone corridor with a 95-stop path
+through the original 616-platform maze. Fruit and crates lead across all six
+recovery heights, including ten backward and nine sideways legs. Six Carlisle
+marine nets are mandatory transfers, launching roughly 78–85 metres to existing
+shelves. Use 43 foot jumps and 44 rail legs, preserving the original courts,
+ferries, kickers and spine geometry. All 110 crates, ten checkpoints and the
+crystal lie on the marked route; persistent small arrows retain its direction.
+
+Add ordered 3D camera guidance and opt this platformer into Carlisle's launch
+camera. Rebase its anchors at the vertical seam and hold the takeoff control
+frame throughout spring flight. Plan new connectors around existing platform
+undersides at authoring time. The race layout and global tuning stay intact.
+
+Prompt-to-validated-local-preview: approximately **70 minutes**. All native
+foot jumps, rail legs, six direct spring receivers and 110 crate contacts pass,
+as do checkpoint/crystal/finish, full coverage, connectivity and seam checks.
+Chrome lite/full/native reviews include 38 authored views, twelve spring
+flights and six falls with visible characters and clean consoles. Required
+level checks and the production build pass. Per-leg fixtures establish the
+traversal evidence; an uninterrupted all-box playthrough was not performed.
+
+Kept local at the user's request; no push, publication or shared-pack change.
+Details: [maze route iteration](spaghetti-infinite/MAZE_ROUTE_ITERATION.md).
