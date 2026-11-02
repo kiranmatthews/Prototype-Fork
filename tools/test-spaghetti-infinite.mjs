@@ -45,25 +45,27 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
  assert.equal(source.cameraRig,undefined);assert.equal(source.cameraLookAhead,undefined);
  for(const x of [-47,0,47])for(const y of [-140,-30,100])assert.equal(r.l.cameraDirAt(x,y,-200),null,'The ordinary forward corridor owns the camera on every tier');
  const far=Math.min(...source.components.filter(c=>c.nm==='Periodic corridor end').map(c=>c.p[2]))+1;
- assert.ok(-far>(platforming?2000:3300),'The courses have substantially longer journeys');
+ assert.ok(-far>(platforming?2000:2200),'Both courses retain a substantial journey');
+ if(!platforming)assert.ok(source.skateRace.originalLength>2250&&source.skateRace.originalLength<2280,'Race length is two thirds of the prior 3.4 km course');
  const heights=[...new Set(islands.filter(i=>i.tier!==undefined).map(i=>i.p[1]))].sort((a,b)=>a-b);
- assert.deepEqual(heights,[-120,-72,-24,24,72,120]);
- assert.equal(heights[0]+loop.height-heights.at(-1),48,'The seam has the same spacing as every other tier');
+ assert.deepEqual(heights,platforming?[-40,-24,-8,8,24,40]:[-12,12]);
+ assert.deepEqual(loop,platforming?{minY:-48,height:96}:{minY:-24,height:48});
+ assert.equal(heights[0]+loop.height-heights.at(-1),platforming?16:24,'The seam has the same spacing as every other tier');
  let coverage=0;
  for(let z=40;z>=far;z-=2)for(let x=-48;x<=48;x+=2){
   assert.ok(terraces.some(c=>Math.abs(x-c.p[0])<=c.s[0]/2+.001&&Math.abs(z-c.p[2])<=c.s[2]/2+.001),`No infinite-fall hole at ${x},${z}`);coverage++;
  }
- const ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,288);let physicalProbes=0;
+ const ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,loop.height);let physicalProbes=0;
  for(let z=39;z>far;z-=12)for(let x=-47.5;x<48;x+=8){
-  ray.ray.origin.set(x,143.99,z);assert.ok(r.l.raycastGround(ray).some(hit=>hit.face?.normal.y>.5),`Actual collider catches ${x},${z}`);physicalProbes++;
+  ray.ray.origin.set(x,loop.minY+loop.height-.01,z);assert.ok(r.l.raycastGround(ray).some(hit=>hit.face?.normal.y>.5),`Actual collider catches ${x},${z}`);physicalProbes++;
  }
- assert.equal(source.components.filter(c=>c.t==='trampoline').length,2);
+ assert.equal(source.components.filter(c=>c.t==='trampoline').length,platforming?6:18);
  assert.equal(source.components.filter(c=>c.t==='pit').length,0);
  r.stepFor(30);assert.ok(r.p.grounded,'Spawn has physical support');
  const tuning=JSON.stringify(r.TUNING),falls=[];
  // Below every surface: falling must wrap once, preserve momentum and land.
  for(const [x,z] of [[0,-65],[-44,-180],[44,-245],[0,-355],[-31,far+60]]){
-  r.p.respawn(r.l,true,false,{position:new THREE.Vector3(x,-143,z),heading:new THREE.Vector3(0,0,-1)});
+  r.p.respawn(r.l,true,false,{position:new THREE.Vector3(x,loop.minY+1,z),heading:new THREE.Vector3(0,0,-1)});
   r.p.state='air';r.p.grounded=false;r.p.vVel=-45;r.p.speed=0;
   const offset=r.p.verticalLoopOffset,deaths=r.p.totalDeaths;let wrapped=false,steps=0;
   for(;steps<1800&&!r.p.grounded;steps++){
@@ -77,8 +79,18 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
   assert.equal(r.p.verticalLoopOffset-offset,loop.height);
   falls.push({x,z,steps,landing:r.p.pos.toArray(),surface:r.p.groundHit?.name});
  }
+ const misses=[];
+ for(let i=0;i<18;i++){
+  const x=[-43,-21,3,25,43][i%5],z=-75-i*109,y=loop.minY+loop.height*(.08+(i%6)*.16);
+  r.p.respawn(r.l,true,false,{position:new THREE.Vector3(x,y,z),heading:new THREE.Vector3(0,0,-1)});
+  r.p.state='air';r.p.grounded=false;r.p.vVel=0;r.p.speed=0;
+  let ticks=0,stable=0;
+  for(;ticks<600&&stable<6;ticks++){r.tick({});stable=r.p.grounded?stable+1:0;}
+  misses.push({x,y,z,seconds:ticks*r.dt,landing:r.p.pos.toArray()});
+  assert.ok(stable===6&&ticks*r.dt<7,'A missed rail reaches stable ground promptly: '+JSON.stringify(misses.at(-1)));
+ }
  assert.equal(JSON.stringify(r.TUNING),tuning);
- reports.push({platforming,length:40-far,heights,components:source.components.length,rails:rails.length,density,connectedPlatforms:seen.size,coverage,physicalProbes,falls});
+ reports.push({platforming,length:40-far,heights,components:source.components.length,rails:rails.length,density,connectedPlatforms:seen.size,coverage,physicalProbes,falls,misses});
  console.log(JSON.stringify(reports.at(-1)));
 },{modulePath:platforming?'/src/levels/spaghetti-rails-platforming.ts':'/src/levels/spaghetti-rails.ts',source:m=>m[platforming?'SPAGHETTI_RAILS_PLATFORMING_LEVEL':'SPAGHETTI_RAILS_LEVEL'],levelId:platforming?'spaghetti-rails-platforming':'spaghetti-rails',endlessDeaths:true});
 await writeFile(output+'/native.json',JSON.stringify(reports,null,2));

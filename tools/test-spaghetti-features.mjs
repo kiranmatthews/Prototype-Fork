@@ -10,20 +10,20 @@ await withBlockworksRuntime(async r=>{
  for(const c of C.filter(c=>c.t==='trampoline')){
   start([c.p[0],c.p[1]+2,c.p[2]+2],20);r.p.state='air';r.p.grounded=false;r.p.vVel=-2;
   let launched=false,peak=c.p[1],velocity=0;const samples=[];
-  for(let f=0;f<300;f++){r.tick({...r.steerToward([c.p[0],c.p[1]+22,c.p[2]-30]),jumpHeld:true,spinHeld:true});peak=Math.max(peak,r.p.pos.y);if(r.p.vVel>20){launched=true;velocity=Math.max(velocity,r.p.vVel);}if(f%12===0)samples.push(r.snapshot());if(launched&&r.p.grounded)break;}
+  for(let f=0;f<300;f++){r.tick({...r.steerToward([c.p[0],c.p[1]+22/3,c.p[2]-22]),jumpHeld:true,spinHeld:true});peak=Math.max(peak,r.p.pos.y);if(r.p.vVel>12){launched=true;velocity=Math.max(velocity,r.p.vVel);}if(f%12===0)samples.push(r.snapshot());if(launched&&r.p.grounded)break;}
   report.springs.push({position:c.p,launched,velocity,rise:peak-c.p[1],landing:r.p.pos.toArray(),samples});
   await writeFile(output+'/features-progress.json',JSON.stringify(report,null,2));
   console.log(JSON.stringify({spring:{...report.springs.at(-1),samples:undefined}}));
-  assert.ok(launched&&peak-c.p[1]>22,'Carlisle spring reaches its reward tier');
-  assert.ok(r.p.grounded&&r.p.pos.y>c.p[1]+21,'The reward receiver physically catches the spring jump');
+  assert.ok(launched&&peak-c.p[1]>22/3,'Carlisle spring reaches its reward tier');
+  assert.ok(r.p.grounded&&Math.abs(r.p.pos.y-(c.p[1]+22/3-.03))<.1,'The reward receiver physically catches the spring jump');
  }
  for(const c of C.filter(c=>c.t==='ramp')){
   // Begin at the supported high end of the new gravity run-in, then ride the
   // complete descent and kicker rather than placing inside the sloping deck.
-  start([c.p[0],c.p[1]+4.08,c.p[2]+21],20);
+  start([c.p[0],c.p[1]+4/3+.08,c.p[2]+21],20);
   let air=false,landed=false,peak=r.p.pos.y;const samples=[];
   for(let f=0;f<360;f++){
-   r.tick({...r.steerToward([c.p[0],c.p[1]-9,c.p[2]-32]),jumpHeld:true});
+   r.tick({...r.steerToward([c.p[0],c.p[1]-3,c.p[2]-32]),jumpHeld:true});
    peak=Math.max(peak,r.p.pos.y);
    if(!r.p.grounded&&r.p.pos.z<c.p[2])air=true;
    if(f%12===0)samples.push({p:r.p.pos.toArray(),g:r.p.grounded,vy:r.p.vVel,state:r.p.state});
@@ -32,7 +32,7 @@ await withBlockworksRuntime(async r=>{
   report.ramps.push({position:c.p,air,landed,peak,landing:r.p.pos.toArray(),samples});
   await writeFile(output+'/features-progress.json',JSON.stringify(report,null,2));
   assert.ok(air&&landed,'Kicker launches and has a physical landing');
-  assert.ok(Math.abs(r.p.pos.y-(c.p[1]-9))<.1&&Math.abs(r.p.pos.x-c.p[0])<7&&Math.abs(r.p.pos.z-(c.p[2]-32))<9,'The landing is on the authored kicker receiver');
+  assert.ok(Math.abs(r.p.pos.y-(c.p[1]-3))<.1&&Math.abs(r.p.pos.x-c.p[0])<7&&Math.abs(r.p.pos.z-(c.p[2]-32))<9,'The landing is on the authored kicker receiver');
  }
  for(const c of C.filter(c=>c.nm?.match(/^Lantern spine .*\.0$/))){
   start([c.p[0],c.p[1]+.08,c.p[2]+2],30);
@@ -57,7 +57,7 @@ await withBlockworksRuntime(async r=>{
  // Drive into each side while falling through the seam: containment remains
  // continuous even when a whole cell changes between fixed ticks.
  for(const side of [-1,1]){
-  start([side*46,-143,-80],60);r.p.state='air';r.p.grounded=false;r.p.vVel=-60;
+  start([side*46,r.l.verticalLoop.minY+1,-80],60);r.p.state='air';r.p.grounded=false;r.p.vVel=-60;
   r.p.axisF.set(side,0,0);r.p.axisL.set(0,0,-side);
   let maximum=0;for(let f=0;f<180;f++){r.tick({});maximum=Math.max(maximum,Math.abs(r.p.pos.x));}
   report.boundary.push({side,maximum,p:r.p.pos.toArray()});

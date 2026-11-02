@@ -75,6 +75,17 @@ function sculpt(kind:string):THREE.BufferGeometry {
       sphere(.07,0x84512b,Math.cos(angle)*1.2,.225,Math.sin(angle)*1.2,[1,.6,1]);
     }
     add(new THREE.CylinderGeometry(.1,.19,.48,10),gold,0,.77);sphere(.115,0x68452d,0,1.02,0,[1,.4,1]);eyes(.75,.15,.075);
+  }else if(kind==='perfect-balance'){
+    // A centred green balance needle over a level skateboard. Shared mesh
+    // doubles as the roulette icon; no texture or extra scene pass is needed.
+    const deck=new THREE.Shape();deck.absarc(.73,-.35,.22,-Math.PI/2,Math.PI/2,false);deck.absarc(-.73,-.35,.22,Math.PI/2,Math.PI*1.5,false);deck.closePath();
+    add(extrude(deck,.18),0x46e882,0,0,-.1);
+    for(const side of [-1,1]){sphere(.16,cream,side*.58,-.7,0,[1,1,.65]);sphere(.07,ink,side*.58,-.7,.12);}
+    add(new THREE.BoxGeometry(1.9,.14,.18),ink,0,.7);
+    add(new THREE.BoxGeometry(.52,.17,.22),0x46e882,0,.7);
+    const needle=new THREE.Shape();needle.moveTo(-.22,.22);needle.lineTo(.22,.22);needle.lineTo(0,.59);needle.closePath();
+    add(extrude(needle,.16),cream,0,0,.06);sphere(.12,0x46e882,0,.04,.08);
+    for(const side of [-1,1])add(new THREE.BoxGeometry(.08,.3,.17),cream,side*.9,.7);
   }else if(kind==='mushroom'){
     sphere(.48,cream,0,-.06,0,[.84,1.05,.8]);
     add(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),0xef403b,0,.25,0,[1,.77,1]);

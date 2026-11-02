@@ -8331,3 +8331,26 @@ coverage, and eight finishing racers pass. Chrome lite/full/native confirms
 visible fall framing and clean consoles. Required level checks, build and
 exact-geometry preservation checks pass. No full suite, push or publication.
 Details: [fork iteration](spaghetti-infinite/FORK_ITERATION.md).
+
+## 2026-11-02 — Race rewards, compact height and shared speedometer (local preview)
+
+Shorten the race by one third to approximately 2.27 km, preserving eight full
+speed sections. Apply the user's chosen 48-metre wrap cell with two recovery
+heights 24 metres apart. The platformer keeps its separate 2.1 km course in a
+96-metre cell. Preserve full XZ recovery coverage, forward forks and native
+collision thickness; share complete periodic geometry out to the fog distance.
+
+Restore the race Special display, add a six-second Perfect Balance roulette
+item in place of nearby traps, place 759 frequent mystery pickups on rails at
+both heights and return them after 1.5 seconds. Eighteen race / six platformer
+springs reuse Carlisle's complete 14×16-metre marine nets. Only this race gets
+55% normal grind drift/noise and less precise club opponents. All race levels,
+including karts, display actual horizontal speed in km/h.
+
+Prompt-to-validated-build: approximately **86 minutes**, including successive
+playtest corrections. Eight native racers finish without deaths or resets;
+all 50 foot jumps, 24 springs, platformer kickers and spine transfers pass.
+Coverage and fall probes, native rewards, focused item/HUD/balance checks,
+Chrome lite/full/native, required level checks and production build pass.
+No full suite, global tuning change, shared-pack update, push or publication.
+Details: [race iteration](spaghetti-infinite/RACE_ITEMS_HEIGHT_ITERATION.md).

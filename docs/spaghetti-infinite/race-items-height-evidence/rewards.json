@@ -1,0 +1,290 @@
+{
+  "boxes": 759,
+  "special": {
+    "filledAt": 6.683333333333315,
+    "meter": 100,
+    "ready": true,
+    "activations": 1,
+    "trick": "Darkslide"
+  },
+  "pickups": [
+    {
+      "tier": 1,
+      "caught": true,
+      "collectedAt": 0.15,
+      "used": true,
+      "returnedAt": 1.649999999999999,
+      "position": [
+        -2.3615915181089093,
+        14.052,
+        -12.388697065650039
+      ]
+    },
+    {
+      "tier": 2,
+      "caught": true,
+      "collectedAt": 0.16666666666666666,
+      "used": true,
+      "returnedAt": 1.6666666666666656,
+      "position": [
+        13.638408481891098,
+        -9.948,
+        -12.388697065650042
+      ]
+    },
+    {
+      "tier": 3,
+      "caught": true,
+      "collectedAt": 0.16666666666666666,
+      "used": true,
+      "returnedAt": 1.6666666666666656,
+      "position": [
+        -31.059172854973653,
+        14.052,
+        -19.244988916297366
+      ]
+    },
+    {
+      "tier": 4,
+      "caught": true,
+      "collectedAt": 0.16666666666666666,
+      "used": true,
+      "returnedAt": 1.6666666666666656,
+      "position": [
+        -15.05917285497366,
+        -9.948,
+        -19.244988916297366
+      ]
+    },
+    {
+      "tier": 5,
+      "caught": true,
+      "collectedAt": 0.16666666666666666,
+      "used": true,
+      "returnedAt": 1.6666666666666656,
+      "position": [
+        0.9408271450263399,
+        14.052,
+        -19.244988916297366
+      ]
+    },
+    {
+      "tier": 6,
+      "caught": true,
+      "collectedAt": 0.16666666666666666,
+      "used": true,
+      "returnedAt": 1.6666666666666656,
+      "position": [
+        16.94082714502635,
+        -9.948,
+        -19.244988916297352
+      ]
+    }
+  ],
+  "springs": [
+    {
+      "name": "Race Carlisle spring / 1",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -40,
+        14.999999988079072,
+        -125.4701418439718
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 2",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -40,
+        -9.000000011920928,
+        -245.04460992907818
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 3",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -8,
+        14.999999988079072,
+        -364.6190780141846
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 4",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        8,
+        -9.000000011920928,
+        -484.1935460992909
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 5",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        40,
+        14.999999988079072,
+        -603.7680141843974
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 6",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        40,
+        -9.000000011920928,
+        -699.4275886524825
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 7",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -24,
+        14.999999988079072,
+        -819.0020567375889
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 8",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -24,
+        -9.000000011920928,
+        -938.5765248226953
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 9",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -8,
+        14.999999988079072,
+        -1058.1509929077974
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 10",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -8,
+        -9.000000011920928,
+        -1177.7254609929037
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 11",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        40,
+        14.999999988079072,
+        -1297.29992907801
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 12",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        40,
+        -9.000000011920928,
+        -1416.8743971631166
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 13",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -24,
+        14.999999988079072,
+        -1536.448865248223
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 14",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -24,
+        -9.000000011920928,
+        -1656.0233333333292
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 15",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -8,
+        14.999999988079072,
+        -1775.5978014184357
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 16",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        -8,
+        -9.000000011920928,
+        -1895.172269503542
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 17",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        24,
+        14.999999988079072,
+        -1990.8318439716272
+      ],
+      "frames": 37
+    },
+    {
+      "name": "Race Carlisle spring / 18",
+      "launched": true,
+      "rise": 3.905300294222277,
+      "landing": [
+        24,
+        -9.000000011920928,
+        -2110.406312056734
+      ],
+      "frames": 37
+    }
+  ],
+  "balance": {
+    "collectedAt": 6.566666666666649,
+    "steadyFrames": 340,
+    "expired": true,
+    "drifted": true
+  }
+}

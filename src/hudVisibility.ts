@@ -94,7 +94,8 @@ export class HudVisibilityState {
       this.inventoryOpen = false;
       this.inventoryWasHeld = input.inventoryHeld;
       return {
-        showLife: false,
+        // The portrait also owns SPECIAL. Racing still earns and uses it.
+        showLife: input.mode === "race",
         showBonusTitle: false,
         showFruit: false,
         showBoxes: false,

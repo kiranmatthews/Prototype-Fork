@@ -11744,7 +11744,7 @@ export class Player {
       const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
       const runSign = Math.sign(this.balance || 1);
       // Read live tuning against the current catch, not the combo's age.
-      const calm = this.balanceEntryEase(TUNING.grindCalm);
+      const calm = this.balanceEntryEase(TUNING.grindCalm) * (this.runLevel?.skateRace?.grindBalanceScale ?? 1);
       let control = this.rawInput.moveX * TUNING.balanceControl;
       control *= this.safeGain(this.balanceEntryAge, control, runSign);
       this.stepBalanceCore(dt, runSign, instability * calm, control, ramp, calm);

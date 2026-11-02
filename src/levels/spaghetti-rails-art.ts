@@ -15,9 +15,10 @@ export function withSpaghettiCavern(source:CustomLevelData):CustomLevelData {
   mesh('Endless cavern / basalt curtain',[0,0,0],[x,loop.minY,42,x,loop.minY,far,x,loop.minY+loop.height,far,x,loop.minY+loop.height,42],[0,1,2,0,2,3],platforming?'#594654':'#3c6071','spaghetti-cavern');
   for(let z=24;z>far;z-=platforming?112:96){
    // Faceted pilasters, four repeating strata, no overhead cap.
-   for(let y=loop.minY+36;y<loop.minY+loop.height;y+=72){
-    const vertices=[-1.3,-36,-3,1.3,-36,-3,2,-36,0,1.3,-36,3,-1.3,-36,3,-2,-36,0,
-     -1.3,36,-3,1.3,36,-3,2,36,0,1.3,36,3,-1.3,36,3,-2,36,0],indices:number[]=[];
+   const halfStratum=loop.height/8;
+   for(let y=loop.minY+halfStratum;y<loop.minY+loop.height;y+=halfStratum*2){
+    const vertices=[-1.3,-halfStratum,-3,1.3,-halfStratum,-3,2,-halfStratum,0,1.3,-halfStratum,3,-1.3,-halfStratum,3,-2,-halfStratum,0,
+     -1.3,halfStratum,-3,1.3,halfStratum,-3,2,halfStratum,0,1.3,halfStratum,3,-1.3,halfStratum,3,-2,halfStratum,0],indices:number[]=[];
     for(let j=0;j<6;j++){const k=(j+1)%6;indices.push(j,k,j+6,k,k+6,j+6);}
     mesh('Endless cavern / fluted iron pier',[side*50.4,y,z],vertices,indices,platforming?'#987a7a':'#628b97','spaghetti-basalt');
     mesh('Endless cavern / amber seam marker',[side*48.5,y,z],[-.1,-.9,-1,.1,-.9,-1,.1,.9,-1,-.1,.9,-1],[0,1,2,0,2,3],platforming?'#eac78a':'#82d9d9');
@@ -51,7 +52,7 @@ export function withSpaghettiCavern(source:CustomLevelData):CustomLevelData {
    mesh('Velocity Loom / race fin',[side*45,y,c.p[2]],[-1,0,0,1,0,0,1,12,-7,-1,9,-5],[0,1,2,0,2,3],side<0?'#73d2cf':'#d5bb7c');
   }
  }
- data.atmosphere={backdrop:'fog',fogEnabled:true,fogNear:platforming?80:120,fogFar:platforming?310:390,fogColor:platforming?'#382c42':'#203e50',drawDistance:640,
+ data.atmosphere={backdrop:'fog',fogEnabled:true,fogNear:80,fogFar:platforming?310:240,fogColor:platforming?'#382c42':'#203e50',drawDistance:platforming?640:420,
   ambientSky:platforming?'#dfcbd1':'#bdd6e5',ambientGround:platforming?'#9e8375':'#6f939a',ambientIntensity:1.45,
   sunColor:platforming?'#ffe3b7':'#d3eaf3',sunIntensity:1.3,sunDirection:[.4,.85,.3],fillColor:platforming?'#cba7bd':'#98b7c8',fillIntensity:.7,shadowStrength:.45};
  return data;

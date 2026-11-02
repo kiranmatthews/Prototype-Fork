@@ -1,0 +1,21 @@
+{
+  "reports": [
+    {
+      "id": "slipstream-race",
+      "vehicle": "skateboard",
+      "text": "6KM/H",
+      "speed": 6,
+      "native": 5.775712890771688,
+      "horizontal": 5.775712890771688
+    },
+    {
+      "id": "coconut-cart-rally",
+      "vehicle": "golf-cart",
+      "text": "51KM/H",
+      "speed": 51,
+      "native": 51.44467313383619,
+      "horizontal": 51.44467313383619
+    }
+  ],
+  "errors": []
+}

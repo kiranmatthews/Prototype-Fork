@@ -1012,7 +1012,7 @@ export class UI {
     drawBeforeFade?: GameHudFrameState['drawBeforeFade'],
   ): boolean {
     const racing=!!this.raceHud.state;
-    const frame:GameHudFrameState={debugMessages:this.debugMessagesEnabled,boost:racing?null:this.boostFrame,special:racing?null:this.specialFrame,drawBeforeFade,
+    const frame:GameHudFrameState={debugMessages:this.debugMessagesEnabled,boost:this.boostFrame,special:this.specialFrame,drawBeforeFade,
       ...(racing?{life:null,fruit:null,crates:null,score:null,clock:null,trick:null,results:null,death:null}:{}),
       ...(this.bonusTransferHud.active?{drawExtra:(ctx:CanvasRenderingContext2D,size:{width:number;height:number})=>this.bonusTransferHud.paint(ctx,size.width,size.height)}:{})};
     if(target===null){
@@ -2041,7 +2041,10 @@ export class UI {
 
   private syncHudVisibility(): void {
     if (!this.gameHudLayer) return;
-    const avatarOnly = this.hudMode === 'competition';
+    const race = this.raceHud.state;
+    const raceSpecial = !!race && !race.vehicle && race.visible &&
+      (race.phase === 'running' || race.phase === 'countdown');
+    const avatarOnly = this.hudMode === 'competition' || !!race;
     this.livesRowEl.classList.toggle('hud-avatar-only', avatarOnly);
     this.livesRowEl.classList.toggle('hud-deathcount', this.endlessDeaths && !avatarOnly);
     this.livesEl.style.display = avatarOnly ? 'none' : '';
@@ -2092,7 +2095,7 @@ export class UI {
     );
     this.setHudReveal(
       this.livesRowEl,
-      contextual && this.hudVisibilityFrame.showLife,
+      race ? raceSpecial : contextual && this.hudVisibilityFrame.showLife,
     );
     const explicitRunHud = this.runRowsHidden && !bonus;
     this.gameHudLayer.classList.toggle("hud-run-mode", explicitRunHud);

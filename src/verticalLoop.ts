@@ -12,7 +12,7 @@ export function validVerticalLoop(value:unknown):value is VerticalLoopData {
   if(!value||typeof value!=='object'||Array.isArray(value))return false;
   const v=value as VerticalLoopData;
   return Object.keys(v).every(k=>k==='minY'||k==='height')&&
-    Number.isFinite(v.minY)&&Math.abs(v.minY)<=10000&&Number.isFinite(v.height)&&v.height>=128&&v.height<=2048;
+    Number.isFinite(v.minY)&&Math.abs(v.minY)<=10000&&Number.isFinite(v.height)&&v.height>=32&&v.height<=2048;
 }
 
 function staticMaterialKey(material:THREE.Material):string {
@@ -70,7 +70,10 @@ export class VerticalLoopView {
   private owned:THREE.BufferGeometry[]=[];
   private batches=0;
   private scanAt=0;
-  constructor(private source:THREE.Group,readonly loop:VerticalLoopData,private staticComponent:(index:number)=>boolean=()=>false) {
+  private cells:number[];
+  constructor(private source:THREE.Group,readonly loop:VerticalLoopData,private staticComponent:(index:number)=>boolean=()=>false,viewDistance=300) {
+    const rings=Math.ceil(viewDistance/loop.height)+1;
+    this.cells=Array.from({length:rings*2+1},(_,i)=>i-rings).filter(i=>i!==0);
     this.root.name='Vertical loop / shared geometry neighbours';
     this.root.userData.verticalLoopView=true;
     source.add(this.root);
@@ -138,7 +141,7 @@ export class VerticalLoopView {
         if(parts.size!==1)geometry.dispose();
         continue;
       }
-      for(const cell of [-3,-2,-1,1,2,3]){
+      for(const cell of this.cells){
         // Object3D.clone JSON-copies userData, whose collision owners may be
         // circular. Only render state belongs to a periodic neighbour.
         const mesh=source instanceof THREE.SkinnedMesh?new THREE.SkinnedMesh(source.geometry,source.material):
@@ -156,7 +159,7 @@ export class VerticalLoopView {
       if(!geometry)throw new Error('Incompatible periodic geometry batch');
       for(const part of geometries)part.dispose();
       geometry.computeBoundingSphere();this.owned.push(geometry);this.batches++;
-      for(const cell of [-3,-2,-1,1,2,3]){
+      for(const cell of this.cells){
         const mesh=new THREE.Mesh(geometry,material);
         mesh.name='Periodic / native static batch';mesh.position.y=cell*this.loop.height;
         mesh.matrixAutoUpdate=false;mesh.updateMatrix();mesh.raycast=()=>{};
@@ -164,6 +167,6 @@ export class VerticalLoopView {
       }
     }
   }
-  get diagnostics(){return {copies:this.root.children.length,liveCopies:this.copies.length,staticBatches:this.batches,cells:7,sharedGeometry:true};}
+  get diagnostics(){return {copies:this.root.children.length,liveCopies:this.copies.length,staticBatches:this.batches,cells:this.cells.length+1,sharedGeometry:true};}
   dispose():void {this.root.removeFromParent();this.root.clear();this.copies.length=0;for(const geometry of this.owned)geometry.dispose();this.owned.length=0;}
 }

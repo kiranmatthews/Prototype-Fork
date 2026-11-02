@@ -1,8 +1,8 @@
-import {spaghettiWorld,type P} from './spaghetti-infinite-course';
+import {spaghettiWorld,spaghettiClearanceHeight,type P} from './spaghetti-infinite-course';
 
 export const LANTERN_CHAPTERS=['Lantern Steps','The Broken Loom','Counterweights','Spine Stair','The Box Garden','Hanging Lanterns','Spring Vault','The Bellows','Needle Windows','The Last Stitch'];
 // Keep jump courts between the six recovery strata, with head clearance.
-const chapterHeights=[112,96,60,48,12,0,-36,-48,-84,-96];
+const chapterHeights=[112,96,60,48,12,0,-36,-48,-84,-96].map(y=>spaghettiClearanceHeight(y));
 const chapterSteps=[
  {x:[-18,-9,2,-6,7,18],y:[0,-2,-4,-2,-5,-8]},
  {x:[18,12,4,-4,-12,-18],y:[0,-1,-3,-5,-6,-8]},
@@ -21,8 +21,8 @@ export interface LanternJump {from:P;to:P;name:string;}
  * reward detours. Rails connect the courts without replacing their centres. */
 export function createSpaghettiPlatformer(){
  const w=spaghettiWorld(true,-2080),jumps:LanternJump[]=[],chapters:{name:string;entry:P;landings:P[]}[]=[];
- const entry:P=[-18,112,18];
- w.slab('Lanternworks arrival',[-18,112,16],38,44,'#d9c59b');
+ const entry:P=[-18,chapterHeights[0],18];
+ w.slab('Lanternworks arrival',[-18,chapterHeights[0],16],38,44,'#d9c59b');
  for(let chapter=0;chapter<10;chapter++){
   const z=-chapter*200,y=chapterHeights[chapter],side=chapter%2?-1:1,landings:P[]=[];
   const name=LANTERN_CHAPTERS[chapter];
@@ -61,12 +61,13 @@ export function createSpaghettiPlatformer(){
    const next:P=[chapterSteps[chapter+1].x[0],chapterHeights[chapter+1],z-200];
    w.rail(name+' / forward exit',[[reward[0]+4,reward[1]+1,reward[2]-2],[reward[0]+4,reward[1]+1,reward[2]-12],[next[0]+4,next[1]+1,next[2]+4]],7,10+chapter);
   }else w.rail('Last Stitch / final descent',[[reward[0]+4,reward[1]+1,reward[2]-3],[0,y-20,z-176],[4,w.finishY+.9,w.finishZ+22],[4,w.finishY+.9,w.finishZ+8]],9,19);
-  if(chapter===2||chapter===6){
-   const p:P=[30,y-18,z-100],q:P=[30,y+4,z-130];
-   w.slab(name+' / spring well',p,12,14,'#968d84',10+chapter);
-   w.add({t:'trampoline',p:[p[0],p[1]+.03,p[2]],s:[9,.6,8],speed:32,amp:1.25,tex:'solid',color:'#d2ac67',nm:name+' / Carlisle spring',grp:10+chapter});
-   w.slab(name+' / high vault',q,12,18,'#e3c88c',10+chapter);w.box([q[0]-3.5,q[1],q[2]],'life',name+' high reward');
-   w.rail(name+' / spring approach',[[end[0],end[1]+1,end[2]+3],[p[0],p[1]+1,p[2]+3]],3,10+chapter);
+  if([1,2,3,5,6,9].includes(chapter)){
+   const p:P=[30,y-18,z-100],q:P=[30,y+4,z-122];
+   w.slab(name+' / spring well',[p[0],p[1]-2.4,p[2]],16,18,'#968d84',10+chapter);
+   w.add({t:'trampoline',p:[p[0],p[1]+.03,p[2]],s:[14,.6,16],speed:32,amp:1.25,tex:'solid',color:'#d94f15',nm:name+' / Carlisle spring',grp:10+chapter});
+   w.slab(name+' / high vault',q,14,18,'#e3c88c',10+chapter);w.box([q[0]-3.5,q[1],q[2]],chapter===2||chapter===6?'life':'multihit',name+' high reward');
+   const approach=landings[2];
+   w.rail(name+' / spring approach',[[approach[0],approach[1]+1,approach[2]],[approach[0],approach[1]+1,approach[2]-8],[p[0],p[1]+1,p[2]+3]],3,10+chapter);
    w.rail(name+' / vault return',[[q[0],q[1]+1,q[2]-3],[q[0],q[1]+1,q[2]-11],w.recoveryBelow(q,80)],5,10+chapter);
   }
   if(chapter===3||chapter===7){
@@ -84,6 +85,7 @@ export function createSpaghettiPlatformer(){
  }
  w.finish();w.connectRecovery();
  const data=w.data(entry);data.alwaysSkate=false;
+ for(const p of new Set(chapters.flatMap(c=>[c.entry,...c.landings])))p[1]/=3;
  data.groups!.push(...LANTERN_CHAPTERS.map((nm,i)=>({id:10+i,nm,editorOnly:true})));
  return {data,islands:w.islands,recovery:w.recovery,chapters,jumps,far:w.far,finishZ:w.finishZ};
 }

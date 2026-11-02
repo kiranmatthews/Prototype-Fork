@@ -16,8 +16,8 @@ try{
   if(id==='spaghetti-rails'){await page.getByRole('button',{name:'RACE',exact:true}).click();await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running');}
   await page.waitForTimeout(700);await page.screenshot({path:out+'/'+id+'-spawn.png'});
   const cases=id==='spaghetti-rails'
-   ?[{name:'front-ledge',p:[0,112,-36.5],vy:-12},{name:'under-platform',p:[0,108,-30],vy:-18},{name:'deep-wrap',p:[0,-143,-170],vy:-35},{name:'crossed-rails',p:[8,50,-900],vy:-25}]
-   :[{name:'front-ledge',p:[-18,110,-11],vy:-12},{name:'under-platform',p:[-18,106,-5],vy:-18},{name:'deep-wrap',p:[0,-143,-170],vy:-35},{name:'crossed-rails',p:[8,-30,-1200],vy:-25}];
+   ?[{name:'front-ledge',p:[0,17,-36.5],vy:-12},{name:'under-platform',p:[0,15,-30],vy:-18},{name:'deep-wrap',p:[0,-23,-170],vy:-35},{name:'crossed-rails',p:[8,-5,-900],vy:-25}]
+   :[{name:'front-ledge',p:[-18,32,-11],vy:-12},{name:'under-platform',p:[-18,29,-5],vy:-18},{name:'deep-wrap',p:[0,-47,-170],vy:-35},{name:'crossed-rails',p:[8,-30,-1200],vy:-25}];
   for(const test of cases){
    await page.evaluate(test=>{
     const g=window.__game,p=g.player,l=g.getLevel(),V=p.pos.constructor,ray=new l.poolRay.constructor();
@@ -46,7 +46,7 @@ try{
    console.log(JSON.stringify({...result,samples:undefined}));
    assert.ok(live.length>15);assert.equal(bad.length,0,'The live rider stays onscreen and unobstructed throughout the fall');
    assert.ok(result.maxYaw<.001,'Crossing rails never hijacks the forward view');
-   if(test.name==='deep-wrap')assert.equal(result.wrap,288);
+   if(test.name==='deep-wrap')assert.equal(result.wrap,id==='spaghetti-rails'?48:96);
   }
  }
  assert.deepEqual(errors,[]);

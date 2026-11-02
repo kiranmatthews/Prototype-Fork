@@ -61,6 +61,8 @@ const cache=new AssetCache<Kit,GLTF>(async (name,_dependency,wanted)=>{
 export function isCarlisleShipyard(data?: CustomLevelData) {
   return !!data && (data.name==='Carlisle Coast' && data.components.some(c=>c.nm==='Carlisle Coast · 4 km') || data.name==='Bonus: Springtide Skippers');
 }
+/** Reuse the exact authored housing without loading the rest of the harbour. */
+export const acquireCarlisleNetHousing=()=>cache.acquire('net-housing');
 /** These old visual-only massing blocks are replaced by piers and harbour buildings. */
 export function isCarlisleMassing(c: CustomComponent) {
   return c.solid===false && !c.lethal && (c.nm==='Grey sea'||c.nm==='Coastal strata'||c.nm==='Outer sea stack'||

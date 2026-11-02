@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-02T08:00:58Z",
+  "delivery": "local only",
+  "offlineVersion": "bf4bd7674c5250d2bbfb",
+  "productionFiles": 1751,
+  "productionMiB": 765.2,
+  "checks": {
+    "npm run check:levels": "pass",
+    "npm run build": "pass",
+    "test-hud-visibility": "pass",
+    "test-special-system": "pass",
+    "test-race-rail-items": "pass",
+    "test-race-powerup-presentation": "pass",
+    "test-race-grind-ease": "pass",
+    "test-spaghetti-render-batches": "pass",
+    "test-spaghetti-platforming": "pass",
+    "test-spaghetti-infinite": "pass",
+    "test-spaghetti-race-rewards": "pass",
+    "test-spaghetti-features": "pass",
+    "test-spaghetti-rails --race (seed 270327)": "pass",
+    "test-spaghetti-race-browser (lite and full/native)": "pass",
+    "test-spaghetti-sparse-browser (full/native)": "pass",
+    "test-race-speedometer-browser (skateboard and kart)": "pass"
+  },
+  "fullSuiteRun": false,
+  "promptToValidatedBuildMinutes": 86,
+  "scopeNote": "Successive local playtest corrections; platformer path redesign requested after this validated checkpoint."
+}

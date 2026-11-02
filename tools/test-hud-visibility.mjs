@@ -171,6 +171,15 @@ const frame = (overrides = {}) => ({
 
 {
   const state = new hud.HudVisibilityState();
+  for(const inventoryHeld of [false,true,false]){
+    assert.deepEqual(state.update(frame({mode:'race',inventoryHeld})),{
+      showLife:true,showBonusTitle:false,showFruit:false,showBoxes:false,showEarnedRelics:false,showScore:false,
+    },'Racing keeps the portrait/SPECIAL visible without the score or collection counters');
+  }
+}
+
+{
+  const state = new hud.HudVisibilityState();
   for (const [inventoryHeld, nowMs] of [[false,0],[true,100],[false,200],[true,300],[true,6_000_000]]) {
     assert.deepEqual(state.update(frame({mode:"competition",inventoryHeld,nowMs})), {
       showLife:true,showBonusTitle:false,showFruit:false,showBoxes:false,showEarnedRelics:false,showScore:true,
