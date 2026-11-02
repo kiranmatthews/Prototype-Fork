@@ -175,6 +175,9 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
     return LAND_IMPACT_CROSSFADE_SECONDS;
   }
+  // Capture the interrupted airborne pose before the second jump pop.
+  // Only presentation blends; the controller's second impulse is immediate.
+  if (to === 'player.double-jump' && AIRBORNE_CLIP_IDS.has(from)) return .05;
   if ((to === 'player.jump' || to === 'player.fall') &&
       (AIRBORNE_CLIP_IDS.has(from) || from === 'player.idle' || from === 'player.run' || from === LAND_CLIP_ID)) {
     return 0.1;

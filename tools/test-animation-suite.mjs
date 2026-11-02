@@ -344,7 +344,7 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 37);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 38);
   assert.equal(starterClips.length, 39);
   for (const id of [
     'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
@@ -600,27 +600,27 @@ try {
   assert.ok(run.proceduralDrivers.every(driver=>driver.id.includes(':elasticity:')&&driver.target.kind==='scalar'),
     'Jog_Fwd keeps its joint cadence; only independent length elasticity is added');
 
-  assert.equal(doubleJump.name, 'Double Jump — Split High Jump');
+  assert.equal(doubleJump.name, 'Double Jump — Second Pop and Tuck');
   assert.equal(doubleJump.duration, 1);
-  assert.equal(doubleJump.tracks.length, 19);
+  assert.equal(doubleJump.tracks.length, 24);
   assert.equal(doubleJump.tracks.filter((track) => track.kind === 'scalar').length, 9);
   assert.equal(doubleJump.metadata.progressSource, 'gameplay-actionProgress');
   assert.equal(doubleJump.metadata.poseIntent,
-    'upright split-legged high jump; no forward somersault');
+    'second pop reuses trailing arms and broad asymmetric tuck; arms lift during descent');
   assert.equal(doubleJump.proceduralDrivers.some((driver) =>
     driver.source === FORWARD_ROLL_TUCK_INPUT), false);
-  const fullSplit = sampleClip(doubleJump, 0.12);
-  const doubleRoot = new THREE.Quaternion().fromArray(fullSplit.joints.root.quaternion);
+  const secondReach = sampleClip(doubleJump, 0.12);
+  const doubleRoot = new THREE.Quaternion().fromArray(secondReach.joints.root.quaternion);
   near(Math.abs(doubleRoot.dot(new THREE.Quaternion())), 1);
-  const leftHipQuaternion = new THREE.Quaternion().fromArray(fullSplit.joints.hipLeft.quaternion);
-  const rightHipQuaternion = new THREE.Quaternion().fromArray(fullSplit.joints.hipRight.quaternion);
+  const leftHipQuaternion = new THREE.Quaternion().fromArray(secondReach.joints.hipLeft.quaternion);
+  const rightHipQuaternion = new THREE.Quaternion().fromArray(secondReach.joints.hipRight.quaternion);
   const leftKneeDirection = new THREE.Vector3(0, -1, 0).applyQuaternion(leftHipQuaternion);
   const rightKneeDirection = new THREE.Vector3(0, -1, 0).applyQuaternion(rightHipQuaternion);
-  assert.ok(leftKneeDirection.x > 0.85,
-    'left double-jump thigh did not straddle toward anatomical left');
-  assert.ok(rightKneeDirection.x < -0.85,
-    'right double-jump thigh did not straddle toward anatomical right');
-  assert.ok(fullSplit.joints.kneeLeft && fullSplit.joints.kneeRight);
+  assert.ok(leftKneeDirection.x > .08 && leftKneeDirection.x < .25,
+    'left double-jump thigh should reach down with modest clearance');
+  assert.ok(rightKneeDirection.x < -.08 && rightKneeDirection.x > -.25,
+    'right double-jump thigh should reach down with modest clearance');
+  assert.ok(secondReach.joints.kneeLeft && secondReach.joints.kneeRight);
 
   near(ropeHang.duration, UNITY_ROPE_HANG_DURATION);
   assert.equal(ropeHang.loop.mode, 'loop');
@@ -982,7 +982,7 @@ try {
     binding.definition,
   );
   assert.equal(findClip(upgradedDoubleJump, 'player.double-jump').name,
-    'Double Jump — Split High Jump');
+    'Double Jump — Second Pop and Tuck');
 
   // The airborne catalog upgrade replaces the exact shipped v6 clips so
   // an untouched browser draft cannot mask the phase-locked stretch arc. A
@@ -1008,7 +1008,7 @@ try {
   const upgradedAirborneDoubleJump = findClip(upgradedAirborne, 'player.double-jump');
   const upgradedAirborneFall = findClip(upgradedAirborne, 'player.fall');
   const upgradedAirborneLand = findClip(upgradedAirborne, 'player.land');
-  assert.equal(upgradedAirborneJump.name, 'Jump — Stretch, Apex Squash');
+  assert.equal(upgradedAirborneJump.name, 'Jump — Trail, Gather, Float');
   assert.equal(upgradedAirborneJump.metadata.progressSource, 'gameplay-actionProgress');
   assert.equal(upgradedAirborneDoubleJump.duration, 1);
   assert.equal(upgradedAirborneDoubleJump.metadata.progressSource, 'gameplay-actionProgress');

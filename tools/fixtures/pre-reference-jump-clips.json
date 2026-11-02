@@ -1,0 +1,4380 @@
+[
+  {
+    "id": "player.jump",
+    "name": "Jump — Stretch, Apex Squash",
+    "rigId": "player-procedural-v1",
+    "duration": 1,
+    "playbackSpeed": 1,
+    "loop": {
+      "mode": "once",
+      "seamless": false
+    },
+    "range": {
+      "start": 0,
+      "end": 1
+    },
+    "rootMotion": {
+      "mode": "in-place"
+    },
+    "transformSpace": "rest-local-delta",
+    "tracks": [
+      {
+        "id": "player.jump:root:position",
+        "kind": "position",
+        "target": "root",
+        "keys": [
+          {
+            "id": "player.jump:root:position:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0.08,
+              0
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:root:position:key-1",
+            "time": 0.1,
+            "value": [
+              0,
+              0.14,
+              -0.01
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:root:position:key-2",
+            "time": 0.5,
+            "value": [
+              0,
+              0.12,
+              -0.01
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:root:position:key-3",
+            "time": 0.85,
+            "value": [
+              0,
+              0,
+              0.005
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:root:position:key-4",
+            "time": 1,
+            "value": [
+              0,
+              -0.08,
+              0.015
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:spine:quaternion",
+        "kind": "quaternion",
+        "target": "spine",
+        "keys": [
+          {
+            "id": "player.jump:spine:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:spine:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              -0.08987854919801104,
+              0,
+              0,
+              0.9959527330119943
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:spine:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.04997916927067833,
+              0,
+              0,
+              0.9987502603949663
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:spine:quaternion:key-3",
+            "time": 0.85,
+            "value": [
+              0.03998933418663416,
+              0,
+              0,
+              0.9992001066609779
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:spine:quaternion:key-4",
+            "time": 1,
+            "value": [
+              0.10977830083717481,
+              0,
+              0,
+              0.9939560979566968
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:hipLeft:quaternion",
+        "kind": "quaternion",
+        "target": "hipLeft",
+        "keys": [
+          {
+            "id": "player.jump:hipLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.03998933418663416,
+              0,
+              0,
+              0.9992001066609779
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipLeft:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              0.07492970727274234,
+              0,
+              0,
+              0.9971888181122075
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.024997395914712332,
+              0,
+              0,
+              0.9996875162757026
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipLeft:quaternion:key-3",
+            "time": 0.85,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipLeft:quaternion:key-4",
+            "time": 1,
+            "value": [
+              -0.3801884151231614,
+              0,
+              0,
+              0.9249090598573131
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:kneeLeft:quaternion",
+        "kind": "quaternion",
+        "target": "kneeLeft",
+        "keys": [
+          {
+            "id": "player.jump:kneeLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeLeft:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              0.02999550020249566,
+              0,
+              0,
+              0.9995500337489875
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.08987854919801104,
+              0,
+              0,
+              0.9959527330119943
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeLeft:quaternion:key-3",
+            "time": 0.85,
+            "value": [
+              0.4439481069655198,
+              0,
+              0,
+              0.8960524975255253
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeLeft:quaternion:key-4",
+            "time": 1,
+            "value": [
+              0.6631354426633497,
+              0,
+              0,
+              0.7484994219661651
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:hipRight:quaternion",
+        "kind": "quaternion",
+        "target": "hipRight",
+        "keys": [
+          {
+            "id": "player.jump:hipRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.024997395914712332,
+              0,
+              0,
+              0.9996875162757026
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipRight:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.01499943750632809,
+              0,
+              0,
+              0.9998875021093592
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipRight:quaternion:key-3",
+            "time": 0.85,
+            "value": [
+              -0.19376653496242194,
+              0,
+              0,
+              0.9810476695495772
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:hipRight:quaternion:key-4",
+            "time": 1,
+            "value": [
+              -0.361615431964962,
+              0,
+              0,
+              0.9323273456060345
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:kneeRight:quaternion",
+        "kind": "quaternion",
+        "target": "kneeRight",
+        "keys": [
+          {
+            "id": "player.jump:kneeRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeRight:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              0.02999550020249566,
+              0,
+              0,
+              0.9995500337489875
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.08987854919801104,
+              0,
+              0,
+              0.9959527330119943
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeRight:quaternion:key-3",
+            "time": 0.85,
+            "value": [
+              0.4259394650659996,
+              0,
+              0,
+              0.9047516632199635
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:kneeRight:quaternion:key-4",
+            "time": 1,
+            "value": [
+              0.644217687237691,
+              0,
+              0,
+              0.7648421872844885
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.torso.length:scalar",
+        "kind": "scalar",
+        "target": "deform.torso.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.torso.length:scalar:key-0",
+            "time": 0,
+            "value": 1.25,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.torso.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.42,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.torso.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.36,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.torso.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.9,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.torso.length:scalar:key-4",
+            "time": 1,
+            "value": 0.78,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.arm.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.left.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.arm.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.24,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.left.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.34,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.3,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.left.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.92,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.left.length:scalar:key-4",
+            "time": 1,
+            "value": 0.86,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.arm.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.left.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.arm.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.3,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.left.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.42,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.36,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.left.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.88,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.left.length:scalar:key-4",
+            "time": 1,
+            "value": 0.82,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.arm.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.right.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.arm.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.24,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.right.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.34,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.3,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.right.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.92,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.upper.right.length:scalar:key-4",
+            "time": 1,
+            "value": 0.86,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.arm.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.right.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.arm.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.3,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.right.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.42,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.36,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.right.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.88,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.arm.lower.right.length:scalar:key-4",
+            "time": 1,
+            "value": 0.82,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.leg.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.left.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.leg.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.4,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.left.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.55,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.48,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.left.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.left.length:scalar:key-4",
+            "time": 1,
+            "value": 0.74,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.leg.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.left.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.leg.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.48,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.left.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.65,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.56,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.left.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.left.length:scalar:key-4",
+            "time": 1,
+            "value": 0.7,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.leg.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.right.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.leg.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.4,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.right.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.55,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.48,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.right.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.upper.right.length:scalar:key-4",
+            "time": 1,
+            "value": 0.74,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:deform.leg.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.right.length",
+        "keys": [
+          {
+            "id": "player.jump:deform.leg.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.48,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.right.length:scalar:key-1",
+            "time": 0.1,
+            "value": 1.65,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 1.56,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.right.length:scalar:key-3",
+            "time": 0.85,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:deform.leg.lower.right.length:scalar:key-4",
+            "time": 1,
+            "value": 0.7,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:shoulderLeft:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderLeft",
+        "keys": [
+          {
+            "id": "player.jump:shoulderLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.9287891927915487,
+              0.14988749906939203,
+              0.05400026464289387,
+              0.3346167126651681
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderLeft:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              -0.9514279633436381,
+              0.16822066249625173,
+              0.044893788942711225,
+              0.2539117700924202
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.8518132811724081,
+              0.1638205918626378,
+              0.093970718277131,
+              0.488616876301414
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderLeft:quaternion:key-3",
+            "time": 0.75,
+            "value": [
+              -0.6313762241158432,
+              0.12798629680985413,
+              0.1519506855116402,
+              0.7495962650805187
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderLeft:quaternion:key-4",
+            "time": 0.9,
+            "value": [
+              -0.4249510591202517,
+              0.09279877810210717,
+              0.1921080736078349,
+              0.8797155632305358
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderLeft:quaternion:key-5",
+            "time": 1,
+            "value": [
+              -0.31126032278874366,
+              0.07123982160926001,
+              0.2114269061419155,
+              0.9237643436687658
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:elbowLeft:quaternion",
+        "kind": "quaternion",
+        "target": "elbowLeft",
+        "keys": [
+          {
+            "id": "player.jump:elbowLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.14943813247359922,
+              0,
+              0,
+              0.9887710779360422
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowLeft:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              -0.1395431146442365,
+              0,
+              0,
+              0.9902159962126371
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.17410813759359595,
+              0,
+              0,
+              0.9847265389049334
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowLeft:quaternion:key-3",
+            "time": 0.75,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowLeft:quaternion:key-4",
+            "time": 0.9,
+            "value": [
+              -0.24740395925452294,
+              0,
+              0,
+              0.9689124217106447
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowLeft:quaternion:key-5",
+            "time": 1,
+            "value": [
+              -0.27154693695611287,
+              0,
+              0,
+              0.962425197628238
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:wristLeft:quaternion",
+        "kind": "quaternion",
+        "target": "wristLeft",
+        "keys": [
+          {
+            "id": "player.jump:wristLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:wristLeft:quaternion:key-1",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:shoulderRight:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderRight",
+        "keys": [
+          {
+            "id": "player.jump:shoulderRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.9287891927915487,
+              -0.14988749906939203,
+              -0.05400026464289387,
+              0.3346167126651681
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderRight:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              -0.9514279633436381,
+              -0.16822066249625173,
+              -0.044893788942711225,
+              0.2539117700924202
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.8518132811724081,
+              -0.1638205918626378,
+              -0.093970718277131,
+              0.488616876301414
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderRight:quaternion:key-3",
+            "time": 0.75,
+            "value": [
+              -0.6313762241158432,
+              -0.12798629680985413,
+              -0.1519506855116402,
+              0.7495962650805187
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderRight:quaternion:key-4",
+            "time": 0.9,
+            "value": [
+              -0.4249510591202517,
+              -0.09279877810210717,
+              -0.1921080736078349,
+              0.8797155632305358
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:shoulderRight:quaternion:key-5",
+            "time": 1,
+            "value": [
+              -0.31126032278874366,
+              -0.07123982160926001,
+              -0.2114269061419155,
+              0.9237643436687658
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:elbowRight:quaternion",
+        "kind": "quaternion",
+        "target": "elbowRight",
+        "keys": [
+          {
+            "id": "player.jump:elbowRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.14943813247359922,
+              0,
+              0,
+              0.9887710779360422
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowRight:quaternion:key-1",
+            "time": 0.1,
+            "value": [
+              -0.1395431146442365,
+              0,
+              0,
+              0.9902159962126371
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.17410813759359595,
+              0,
+              0,
+              0.9847265389049334
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowRight:quaternion:key-3",
+            "time": 0.75,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowRight:quaternion:key-4",
+            "time": 0.9,
+            "value": [
+              -0.24740395925452294,
+              0,
+              0,
+              0.9689124217106447
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:elbowRight:quaternion:key-5",
+            "time": 1,
+            "value": [
+              -0.27154693695611287,
+              0,
+              0,
+              0.962425197628238
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.jump:wristRight:quaternion",
+        "kind": "quaternion",
+        "target": "wristRight",
+        "keys": [
+          {
+            "id": "player.jump:wristRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.jump:wristRight:quaternion:key-1",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      }
+    ],
+    "proceduralOrder": "keyed-then-procedural",
+    "proceduralDrivers": [
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.torso.length",
+        "order": 900,
+        "name": "Forward-roll squash · deform.torso.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.torso.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.arm.upper.left.length",
+        "order": 901,
+        "name": "Forward-roll squash · deform.arm.upper.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.upper.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.arm.lower.left.length",
+        "order": 902,
+        "name": "Forward-roll squash · deform.arm.lower.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.lower.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.arm.upper.right.length",
+        "order": 903,
+        "name": "Forward-roll squash · deform.arm.upper.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.upper.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.arm.lower.right.length",
+        "order": 904,
+        "name": "Forward-roll squash · deform.arm.lower.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.lower.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.leg.upper.left.length",
+        "order": 905,
+        "name": "Forward-roll squash · deform.leg.upper.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.upper.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.leg.lower.left.length",
+        "order": 906,
+        "name": "Forward-roll squash · deform.leg.lower.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.lower.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.leg.upper.right.length",
+        "order": 907,
+        "name": "Forward-roll squash · deform.leg.upper.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.upper.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.jump:driver:forward-roll-squash:deform.leg.lower.right.length",
+        "order": 908,
+        "name": "Forward-roll squash · deform.leg.lower.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.lower.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      }
+    ],
+    "markers": [
+      {
+        "id": "player.jump:takeoff-stretch",
+        "time": 0.1,
+        "name": "Maximum rising stretch"
+      },
+      {
+        "id": "player.jump:apex-squash",
+        "time": 1,
+        "name": "Apex catch-up squash"
+      }
+    ],
+    "contacts": [],
+    "events": [
+      {
+        "id": "player.jump:launch",
+        "time": 0,
+        "name": "launch"
+      }
+    ],
+    "tags": [
+      "player",
+      "jump",
+      "squash-stretch",
+      "rise-stretch",
+      "apex-squash",
+      "forward-roll-squash"
+    ],
+    "metadata": {
+      "starterQuality": "authored-foundation",
+      "starterCatalogVersion": 37,
+      "progressSource": "gameplay-actionProgress",
+      "deformationArc": "charged squash -> rising stretch -> apex squash -> neutral fall",
+      "jumpArmRevision": 1,
+      "forwardRollInput": "forwardRollTuck",
+      "forwardRollSquashMultiplier": 0.3,
+      "elasticityRevision": 1,
+      "elasticityPrinciple": "independent segment compression, extension and rebound",
+      "elasticityProfile": "jump"
+    }
+  },
+  {
+    "id": "player.double-jump",
+    "name": "Double Jump — Split High Jump",
+    "rigId": "player-procedural-v1",
+    "duration": 1,
+    "playbackSpeed": 1,
+    "loop": {
+      "mode": "once",
+      "seamless": false
+    },
+    "range": {
+      "start": 0,
+      "end": 1
+    },
+    "rootMotion": {
+      "mode": "in-place"
+    },
+    "transformSpace": "rest-local-delta",
+    "tracks": [
+      {
+        "id": "player.double-jump:root:quaternion",
+        "kind": "quaternion",
+        "target": "root",
+        "keys": [
+          {
+            "id": "player.double-jump:root:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:root:quaternion:key-1",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:spine:quaternion",
+        "kind": "quaternion",
+        "target": "spine",
+        "keys": [
+          {
+            "id": "player.double-jump:spine:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:spine:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              -0.02999550020249566,
+              0,
+              0,
+              0.9995500337489875
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:spine:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.03998933418663416,
+              0,
+              0,
+              0.9992001066609779
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:spine:quaternion:key-3",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:hipLeft:quaternion",
+        "kind": "quaternion",
+        "target": "hipLeft",
+        "keys": [
+          {
+            "id": "player.double-jump:hipLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.09195266597143172,
+              0.03887696361761665,
+              0.3874728726327713,
+              0.9164595255079894
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:hipLeft:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              -0.12417422328107273,
+              0.08314155224518775,
+              0.5501136883470723,
+              0.8216101109747757
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:hipLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.1787978658142329,
+              0.10717673732728306,
+              0.5028408942091014,
+              0.838865606201104
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:hipLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.055230507412352685,
+              0.023351084001410494,
+              0.38871759955316715,
+              0.9194035815269358
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:hipRight:quaternion",
+        "kind": "quaternion",
+        "target": "hipRight",
+        "keys": [
+          {
+            "id": "player.double-jump:hipRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.09195266597143172,
+              -0.03887696361761665,
+              -0.3874728726327713,
+              0.9164595255079894
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:hipRight:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              -0.12417422328107273,
+              -0.08314155224518775,
+              -0.5501136883470723,
+              0.8216101109747757
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:hipRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.1787978658142329,
+              -0.10717673732728306,
+              -0.5028408942091014,
+              0.838865606201104
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:hipRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.055230507412352685,
+              -0.023351084001410494,
+              -0.38871759955316715,
+              0.9194035815269358
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:kneeLeft:quaternion",
+        "kind": "quaternion",
+        "target": "kneeLeft",
+        "keys": [
+          {
+            "id": "player.double-jump:kneeLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:kneeLeft:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              0.02999550020249566,
+              0,
+              0,
+              0.9995500337489875
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:kneeLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.15931820661424598,
+              0,
+              0,
+              0.9872272833756269
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:kneeLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              0.08987854919801104,
+              0,
+              0,
+              0.9959527330119943
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:kneeRight:quaternion",
+        "kind": "quaternion",
+        "target": "kneeRight",
+        "keys": [
+          {
+            "id": "player.double-jump:kneeRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:kneeRight:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              0.02999550020249566,
+              0,
+              0,
+              0.9995500337489875
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:kneeRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.15931820661424598,
+              0,
+              0,
+              0.9872272833756269
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:kneeRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              0.08987854919801104,
+              0,
+              0,
+              0.9959527330119943
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:shoulderLeft:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderLeft",
+        "keys": [
+          {
+            "id": "player.double-jump:shoulderLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.04358534361903319,
+              0.06094898566497772,
+              0.8111288458550603,
+              0.5800478724983475
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:shoulderLeft:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              -0.05092806278344628,
+              0.11379860089563035,
+              0.9056422522575396,
+              0.4053002859377394
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:shoulderLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.03564647772631229,
+              -0.0659074324919912,
+              0.8771174625342089,
+              0.4743948733761486
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:shoulderLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.016023252243595347,
+              0.019186588807158858,
+              0.7673036573838881,
+              0.6407965570778233
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:shoulderRight:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderRight",
+        "keys": [
+          {
+            "id": "player.double-jump:shoulderRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.04358534361903319,
+              -0.06094898566497772,
+              -0.8111288458550603,
+              0.5800478724983475
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:shoulderRight:quaternion:key-1",
+            "time": 0.12,
+            "value": [
+              -0.05092806278344628,
+              -0.11379860089563035,
+              -0.9056422522575396,
+              0.4053002859377394
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:shoulderRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              0.03564647772631229,
+              0.0659074324919912,
+              -0.8771174625342089,
+              0.4743948733761486
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:shoulderRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.016023252243595347,
+              -0.019186588807158858,
+              -0.7673036573838881,
+              0.6407965570778233
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:elbowLeft:quaternion",
+        "kind": "quaternion",
+        "target": "elbowLeft",
+        "keys": [
+          {
+            "id": "player.double-jump:elbowLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:elbowLeft:quaternion:key-1",
+            "time": 1,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:elbowRight:quaternion",
+        "kind": "quaternion",
+        "target": "elbowRight",
+        "keys": [
+          {
+            "id": "player.double-jump:elbowRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "linear"
+          },
+          {
+            "id": "player.double-jump:elbowRight:quaternion:key-1",
+            "time": 1,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "linear"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.torso.length:scalar",
+        "kind": "scalar",
+        "target": "deform.torso.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.torso.length:scalar:key-0",
+            "time": 0,
+            "value": 1.16,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.torso.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.26,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.torso.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.84,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.torso.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.torso.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.arm.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.left.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.arm.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.12,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.left.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.2,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.9,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.left.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.left.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.arm.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.left.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.arm.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.16,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.left.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.24,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.88,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.left.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.left.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.arm.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.right.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.arm.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.12,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.right.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.2,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.9,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.right.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.upper.right.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.arm.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.right.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.arm.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.16,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.right.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.24,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.88,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.right.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.arm.lower.right.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.leg.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.left.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.leg.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.2,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.left.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.3,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.left.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.left.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.leg.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.left.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.leg.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1.24,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.left.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.36,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.left.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.left.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.left.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.leg.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.right.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.leg.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.2,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.right.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.3,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.right.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.upper.right.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.double-jump:deform.leg.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.right.length",
+        "keys": [
+          {
+            "id": "player.double-jump:deform.leg.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1.24,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.right.length:scalar:key-1",
+            "time": 0.12,
+            "value": 1.36,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.right.length:scalar:key-2",
+            "time": 0.5,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.right.length:scalar:key-3",
+            "time": 0.72,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.double-jump:deform.leg.lower.right.length:scalar:key-4",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      }
+    ],
+    "proceduralOrder": "procedural-then-keyed",
+    "proceduralDrivers": [],
+    "markers": [
+      {
+        "id": "player.double-jump:split",
+        "time": 0.12,
+        "name": "Full split"
+      },
+      {
+        "id": "player.double-jump:apex",
+        "time": 0.5,
+        "name": "High-jump apex squash"
+      }
+    ],
+    "contacts": [],
+    "events": [],
+    "tags": [
+      "player",
+      "double-jump",
+      "split",
+      "high-jump",
+      "no-roll"
+    ],
+    "metadata": {
+      "starterQuality": "authored-foundation",
+      "starterCatalogVersion": 37,
+      "progressSource": "gameplay-actionProgress",
+      "poseIntent": "upright split-legged high jump; no forward somersault",
+      "elasticityRevision": 1,
+      "elasticityPrinciple": "independent segment compression, extension and rebound",
+      "elasticityProfile": "double-jump"
+    }
+  },
+  {
+    "id": "player.fall",
+    "name": "Fall — Apex Squash to Neutral",
+    "rigId": "player-procedural-v1",
+    "duration": 1,
+    "playbackSpeed": 1,
+    "loop": {
+      "mode": "once",
+      "seamless": false
+    },
+    "range": {
+      "start": 0,
+      "end": 1
+    },
+    "rootMotion": {
+      "mode": "in-place"
+    },
+    "transformSpace": "rest-local-delta",
+    "tracks": [
+      {
+        "id": "player.fall:root:position",
+        "kind": "position",
+        "target": "root",
+        "keys": [
+          {
+            "id": "player.fall:root:position:key-0",
+            "time": 0,
+            "value": [
+              0,
+              -0.08,
+              0.015
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:root:position:key-1",
+            "time": 0.18,
+            "value": [
+              0,
+              -0.04,
+              0.01
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:root:position:key-2",
+            "time": 0.38,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:root:position:key-3",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:spine:quaternion",
+        "kind": "quaternion",
+        "target": "spine",
+        "keys": [
+          {
+            "id": "player.fall:spine:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.10977830083717481,
+              0,
+              0,
+              0.9939560979566968
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:spine:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:spine:quaternion:key-2",
+            "time": 0.38,
+            "value": [
+              0.009999833334166664,
+              0,
+              0,
+              0.9999500004166653
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:spine:quaternion:key-3",
+            "time": 1,
+            "value": [
+              0.009999833334166664,
+              0,
+              0,
+              0.9999500004166653
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:hipLeft:quaternion",
+        "kind": "quaternion",
+        "target": "hipLeft",
+        "keys": [
+          {
+            "id": "player.fall:hipLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.3801884151231614,
+              0,
+              0,
+              0.9249090598573131
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:hipLeft:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              -0.23770262642713458,
+              0,
+              0,
+              0.9713379748520297
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:hipLeft:quaternion:key-2",
+            "time": 0.38,
+            "value": [
+              -0.12464979926970444,
+              0.0024933284380513347,
+              0.019842630440821962,
+              0.991999234310446
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:hipLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.12464979926970444,
+              0.0024933284380513347,
+              0.019842630440821962,
+              0.991999234310446
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:kneeLeft:quaternion",
+        "kind": "quaternion",
+        "target": "kneeLeft",
+        "keys": [
+          {
+            "id": "player.fall:kneeLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.6631354426633497,
+              0,
+              0,
+              0.7484994219661651
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:kneeLeft:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              0.43496553411123023,
+              0,
+              0,
+              0.9004471023526769
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:kneeLeft:quaternion:key-2",
+            "time": 0.38,
+            "value": [
+              0.24740395925452294,
+              0,
+              0,
+              0.9689124217106447
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:kneeLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              0.24740395925452294,
+              0,
+              0,
+              0.9689124217106447
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:hipRight:quaternion",
+        "kind": "quaternion",
+        "target": "hipRight",
+        "keys": [
+          {
+            "id": "player.fall:hipRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.361615431964962,
+              0,
+              0,
+              0.9323273456060345
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:hipRight:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              -0.2279775235351884,
+              0,
+              0,
+              0.9736663950053749
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:hipRight:quaternion:key-2",
+            "time": 0.38,
+            "value": [
+              -0.13951520695158268,
+              -0.0027906762391196518,
+              -0.0198029996626633,
+              0.9900179596147465
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:hipRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.13951520695158268,
+              -0.0027906762391196518,
+              -0.0198029996626633,
+              0.9900179596147465
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:kneeRight:quaternion",
+        "kind": "quaternion",
+        "target": "kneeRight",
+        "keys": [
+          {
+            "id": "player.fall:kneeRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.644217687237691,
+              0,
+              0,
+              0.7648421872844885
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:kneeRight:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              0.41687080242921076,
+              0,
+              0,
+              0.9089657496748851
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:kneeRight:quaternion:key-2",
+            "time": 0.38,
+            "value": [
+              0.26673143668883115,
+              0,
+              0,
+              0.9637708963658905
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:kneeRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              0.26673143668883115,
+              0,
+              0,
+              0.9637708963658905
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.torso.length:scalar",
+        "kind": "scalar",
+        "target": "deform.torso.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.torso.length:scalar:key-0",
+            "time": 0,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.torso.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.9,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.torso.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.torso.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.arm.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.left.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.arm.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 0.86,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.upper.left.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.94,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.upper.left.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.upper.left.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.arm.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.left.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.arm.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.lower.left.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.91,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.lower.left.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.lower.left.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.arm.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.right.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.arm.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 0.86,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.upper.right.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.94,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.upper.right.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.upper.right.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.arm.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.right.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.arm.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.lower.right.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.91,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.lower.right.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.arm.lower.right.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.leg.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.left.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.leg.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 0.74,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.upper.left.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.88,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.upper.left.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.upper.left.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.leg.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.left.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.leg.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 0.7,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.lower.left.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.84,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.lower.left.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.lower.left.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.leg.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.right.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.leg.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 0.74,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.upper.right.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.88,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.upper.right.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.upper.right.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:deform.leg.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.right.length",
+        "keys": [
+          {
+            "id": "player.fall:deform.leg.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 0.7,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.lower.right.length:scalar:key-1",
+            "time": 0.18,
+            "value": 0.84,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.lower.right.length:scalar:key-2",
+            "time": 0.38,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:deform.leg.lower.right.length:scalar:key-3",
+            "time": 1,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:shoulderLeft:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderLeft",
+        "keys": [
+          {
+            "id": "player.fall:shoulderLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.31126032278874366,
+              0.07123982160926001,
+              0.2114269061419155,
+              0.9237643436687658
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:shoulderLeft:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              -0.2655812991417277,
+              0.056606647281386396,
+              0.20062706030694505,
+              0.9412815963899147
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:shoulderLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.18546023470649134,
+              0.03566768221174487,
+              0.18546023470649134,
+              0.9643323177882551
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:shoulderLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.10819582104233458,
+              0.01857255081221661,
+              0.1681598275217792,
+              0.9796279891229875
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:elbowLeft:quaternion",
+        "kind": "quaternion",
+        "target": "elbowLeft",
+        "keys": [
+          {
+            "id": "player.fall:elbowLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.27154693695611287,
+              0,
+              0,
+              0.962425197628238
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:elbowLeft:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              -0.24740395925452294,
+              0,
+              0,
+              0.9689124217106447
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:elbowLeft:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:elbowLeft:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.17410813759359595,
+              0,
+              0,
+              0.9847265389049334
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:wristLeft:quaternion",
+        "kind": "quaternion",
+        "target": "wristLeft",
+        "keys": [
+          {
+            "id": "player.fall:wristLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:wristLeft:quaternion:key-1",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:shoulderRight:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderRight",
+        "keys": [
+          {
+            "id": "player.fall:shoulderRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.31126032278874366,
+              -0.07123982160926001,
+              -0.2114269061419155,
+              0.9237643436687658
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:shoulderRight:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              -0.2655812991417277,
+              -0.056606647281386396,
+              -0.20062706030694505,
+              0.9412815963899147
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:shoulderRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.18546023470649134,
+              -0.03566768221174487,
+              -0.18546023470649134,
+              0.9643323177882551
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:shoulderRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.10819582104233458,
+              -0.01857255081221661,
+              -0.1681598275217792,
+              0.9796279891229875
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:elbowRight:quaternion",
+        "kind": "quaternion",
+        "target": "elbowRight",
+        "keys": [
+          {
+            "id": "player.fall:elbowRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.27154693695611287,
+              0,
+              0,
+              0.962425197628238
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:elbowRight:quaternion:key-1",
+            "time": 0.18,
+            "value": [
+              -0.24740395925452294,
+              0,
+              0,
+              0.9689124217106447
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:elbowRight:quaternion:key-2",
+            "time": 0.5,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:elbowRight:quaternion:key-3",
+            "time": 1,
+            "value": [
+              -0.17410813759359595,
+              0,
+              0,
+              0.9847265389049334
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.fall:wristRight:quaternion",
+        "kind": "quaternion",
+        "target": "wristRight",
+        "keys": [
+          {
+            "id": "player.fall:wristRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.fall:wristRight:quaternion:key-1",
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      }
+    ],
+    "proceduralOrder": "keyed-then-procedural",
+    "proceduralDrivers": [
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.torso.length",
+        "order": 900,
+        "name": "Forward-roll squash · deform.torso.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.torso.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.arm.upper.left.length",
+        "order": 901,
+        "name": "Forward-roll squash · deform.arm.upper.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.upper.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.arm.lower.left.length",
+        "order": 902,
+        "name": "Forward-roll squash · deform.arm.lower.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.lower.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.arm.upper.right.length",
+        "order": 903,
+        "name": "Forward-roll squash · deform.arm.upper.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.upper.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.arm.lower.right.length",
+        "order": 904,
+        "name": "Forward-roll squash · deform.arm.lower.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.arm.lower.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.leg.upper.left.length",
+        "order": 905,
+        "name": "Forward-roll squash · deform.leg.upper.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.upper.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.leg.lower.left.length",
+        "order": 906,
+        "name": "Forward-roll squash · deform.leg.lower.left.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.lower.left.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.leg.upper.right.length",
+        "order": 907,
+        "name": "Forward-roll squash · deform.leg.upper.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.upper.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      },
+      {
+        "schema": "sol-procedural-driver",
+        "version": 1,
+        "id": "player.fall:driver:forward-roll-squash:deform.leg.lower.right.length",
+        "order": 908,
+        "name": "Forward-roll squash · deform.leg.lower.right.length",
+        "target": {
+          "kind": "scalar",
+          "target": "deform.leg.lower.right.length",
+          "baseValue": 1
+        },
+        "blend": "multiply",
+        "source": "forwardRollTuck",
+        "amplitude": -0.7,
+        "frequency": 1,
+        "phase": 0,
+        "bias": 1,
+        "seed": 0,
+        "clamp": [
+          0.3,
+          1
+        ],
+        "type": "response",
+        "inputRange": [
+          0,
+          1
+        ],
+        "curve": "smootherstep",
+        "extrapolate": false
+      }
+    ],
+    "markers": [
+      {
+        "id": "player.fall:apex-squash",
+        "time": 0,
+        "name": "Apex catch-up squash"
+      },
+      {
+        "id": "player.fall:neutral",
+        "time": 0.38,
+        "name": "Neutral descent"
+      }
+    ],
+    "contacts": [],
+    "events": [],
+    "tags": [
+      "player",
+      "fall",
+      "squash-stretch",
+      "neutralize",
+      "forward-roll-squash"
+    ],
+    "metadata": {
+      "starterQuality": "authored-foundation",
+      "starterCatalogVersion": 37,
+      "progressSource": "gameplay-actionProgress",
+      "deformationArc": "apex squash -> neutral descent",
+      "jumpArmRevision": 1,
+      "forwardRollInput": "forwardRollTuck",
+      "forwardRollSquashMultiplier": 0.3,
+      "elasticityRevision": 1,
+      "elasticityPrinciple": "independent segment compression, extension and rebound",
+      "elasticityProfile": "fall"
+    }
+  },
+  {
+    "id": "player.land",
+    "name": "Land — Independent Compression Starter",
+    "rigId": "player-procedural-v1",
+    "duration": 0.45,
+    "playbackSpeed": 1,
+    "loop": {
+      "mode": "once",
+      "seamless": false
+    },
+    "range": {
+      "start": 0,
+      "end": 0.45
+    },
+    "rootMotion": {
+      "mode": "in-place"
+    },
+    "transformSpace": "rest-local-delta",
+    "tracks": [
+      {
+        "id": "player.land:root:position",
+        "kind": "position",
+        "target": "root",
+        "keys": [
+          {
+            "id": "player.land:root:position:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0.04,
+              0
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:root:position:key-1",
+            "time": 0.075,
+            "value": [
+              0,
+              -0.18,
+              0.035
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:root:position:key-2",
+            "time": 0.18,
+            "value": [
+              0,
+              0.06,
+              -0.012
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:root:position:key-3",
+            "time": 0.3,
+            "value": [
+              0,
+              0.015,
+              0
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:root:position:key-4",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:spine:quaternion",
+        "kind": "quaternion",
+        "target": "spine",
+        "keys": [
+          {
+            "id": "player.land:spine:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.01999866669333308,
+              0,
+              0,
+              0.9998000066665778
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:spine:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:spine:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              0.0799146939691727,
+              0,
+              0,
+              0.9968017063026194
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:spine:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:hipLeft:quaternion",
+        "kind": "quaternion",
+        "target": "hipLeft",
+        "keys": [
+          {
+            "id": "player.land:hipLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.08987854919801104,
+              0,
+              0,
+              0.9959527330119943
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:hipLeft:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              -0.41678743104782656,
+              0.008336860231964092,
+              0.01817810306340366,
+              0.908783962584641
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:hipLeft:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              -0.22310636213174545,
+              0,
+              0,
+              0.9747941070689433
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:hipLeft:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:kneeLeft:quaternion",
+        "kind": "quaternion",
+        "target": "kneeLeft",
+        "keys": [
+          {
+            "id": "player.land:kneeLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.18885889497650057,
+              0,
+              0,
+              0.9820042351172703
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:kneeLeft:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              0.6889214451105513,
+              0,
+              0,
+              0.7248360107409052
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:kneeLeft:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              0.3986093279844229,
+              0,
+              0,
+              0.9171208228166051
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:kneeLeft:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:hipRight:quaternion",
+        "kind": "quaternion",
+        "target": "hipRight",
+        "keys": [
+          {
+            "id": "player.land:hipRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.10977830083717481,
+              0,
+              0,
+              0.9939560979566968
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:hipRight:quaternion:key-1",
+            "time": 0.085,
+            "value": [
+              -0.38934046123627647,
+              -0.007787847632100989,
+              -0.01841999182329376,
+              0.9208767879444093
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:hipRight:quaternion:key-2",
+            "time": 0.21,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:hipRight:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:kneeRight:quaternion",
+        "kind": "quaternion",
+        "target": "kneeRight",
+        "keys": [
+          {
+            "id": "player.land:kneeRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:kneeRight:quaternion:key-1",
+            "time": 0.085,
+            "value": [
+              0.6668696350036979,
+              0,
+              0,
+              0.7451744023448704
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:kneeRight:quaternion:key-2",
+            "time": 0.21,
+            "value": [
+              0.3801884151231614,
+              0,
+              0,
+              0.9249090598573131
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:kneeRight:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.torso.length:scalar",
+        "kind": "scalar",
+        "target": "deform.torso.length",
+        "keys": [
+          {
+            "id": "player.land:deform.torso.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.torso.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.72,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.torso.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.torso.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.torso.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.arm.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.left.length",
+        "keys": [
+          {
+            "id": "player.land:deform.arm.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.left.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.left.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.06,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.left.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.left.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.arm.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.left.length",
+        "keys": [
+          {
+            "id": "player.land:deform.arm.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.left.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.left.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.08,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.left.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.left.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.arm.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.upper.right.length",
+        "keys": [
+          {
+            "id": "player.land:deform.arm.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.right.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.82,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.right.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.06,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.right.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.upper.right.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.arm.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.arm.lower.right.length",
+        "keys": [
+          {
+            "id": "player.land:deform.arm.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.right.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.78,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.right.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.08,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.right.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.arm.lower.right.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.leg.upper.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.left.length",
+        "keys": [
+          {
+            "id": "player.land:deform.leg.upper.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.left.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.68,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.left.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.08,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.left.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.left.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.leg.lower.left.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.left.length",
+        "keys": [
+          {
+            "id": "player.land:deform.leg.lower.left.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.left.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.72,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.left.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.06,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.left.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.left.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.leg.upper.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.upper.right.length",
+        "keys": [
+          {
+            "id": "player.land:deform.leg.upper.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.right.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.68,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.right.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.08,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.right.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.upper.right.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:deform.leg.lower.right.length:scalar",
+        "kind": "scalar",
+        "target": "deform.leg.lower.right.length",
+        "keys": [
+          {
+            "id": "player.land:deform.leg.lower.right.length:scalar:key-0",
+            "time": 0,
+            "value": 1,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.right.length:scalar:key-1",
+            "time": 0.075,
+            "value": 0.72,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.right.length:scalar:key-2",
+            "time": 0.18,
+            "value": 1.06,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.right.length:scalar:key-3",
+            "time": 0.34,
+            "value": 0.98,
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:deform.leg.lower.right.length:scalar:key-4",
+            "time": 0.45,
+            "value": 1,
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:shoulderLeft:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderLeft",
+        "keys": [
+          {
+            "id": "player.land:shoulderLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.10819582104233458,
+              0.01857255081221661,
+              0.1681598275217792,
+              0.9796279891229875
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:shoulderLeft:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              0.048719399681258456,
+              -0.011150670638347763,
+              0.2228275372748544,
+              0.9735758682665858
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:shoulderLeft:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              -0.04934079950446238,
+              0.007962591616274304,
+              0.1591191003416372,
+              0.9859935063404226
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:shoulderLeft:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0.12467473338522769,
+              0.992197667229329
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:elbowLeft:quaternion",
+        "kind": "quaternion",
+        "target": "elbowLeft",
+        "keys": [
+          {
+            "id": "player.land:elbowLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.17410813759359595,
+              0,
+              0,
+              0.9847265389049334
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:elbowLeft:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:elbowLeft:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              -0.1395431146442365,
+              0,
+              0,
+              0.9902159962126371
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:elbowLeft:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:wristLeft:quaternion",
+        "kind": "quaternion",
+        "target": "wristLeft",
+        "keys": [
+          {
+            "id": "player.land:wristLeft:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:wristLeft:quaternion:key-1",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:shoulderRight:quaternion",
+        "kind": "quaternion",
+        "target": "shoulderRight",
+        "keys": [
+          {
+            "id": "player.land:shoulderRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.10819582104233458,
+              -0.01857255081221661,
+              -0.1681598275217792,
+              0.9796279891229875
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:shoulderRight:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              0.048719399681258456,
+              0.011150670638347763,
+              -0.2228275372748544,
+              0.9735758682665858
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:shoulderRight:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              -0.04934079950446238,
+              -0.007962591616274304,
+              -0.1591191003416372,
+              0.9859935063404226
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:shoulderRight:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              -0.12467473338522769,
+              0.992197667229329
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:elbowRight:quaternion",
+        "kind": "quaternion",
+        "target": "elbowRight",
+        "keys": [
+          {
+            "id": "player.land:elbowRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              -0.17410813759359595,
+              0,
+              0,
+              0.9847265389049334
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:elbowRight:quaternion:key-1",
+            "time": 0.075,
+            "value": [
+              -0.20845989984609956,
+              0,
+              0,
+              0.9780309147241483
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:elbowRight:quaternion:key-2",
+            "time": 0.2,
+            "value": [
+              -0.1395431146442365,
+              0,
+              0,
+              0.9902159962126371
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:elbowRight:quaternion:key-3",
+            "time": 0.45,
+            "value": [
+              -0.059964006479444595,
+              0,
+              0,
+              0.9982005399352042
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      },
+      {
+        "id": "player.land:wristRight:quaternion",
+        "kind": "quaternion",
+        "target": "wristRight",
+        "keys": [
+          {
+            "id": "player.land:wristRight:quaternion:key-0",
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          },
+          {
+            "id": "player.land:wristRight:quaternion:key-1",
+            "time": 0.45,
+            "value": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "interpolation": "cubic"
+          }
+        ]
+      }
+    ],
+    "proceduralOrder": "procedural-then-keyed",
+    "proceduralDrivers": [],
+    "markers": [
+      {
+        "id": "player.land:impact",
+        "time": 0.075,
+        "name": "Impact compression"
+      },
+      {
+        "id": "player.land:rebound",
+        "time": 0.18,
+        "name": "Rebound overshoot"
+      },
+      {
+        "id": "player.land:settle",
+        "time": 0.34,
+        "name": "Cushion settle"
+      }
+    ],
+    "contacts": [
+      {
+        "id": "player.land:left-foot",
+        "start": 0.055,
+        "end": 0.45,
+        "effector": "footLeft",
+        "mode": "plant",
+        "weight": 1
+      },
+      {
+        "id": "player.land:right-foot",
+        "start": 0.065,
+        "end": 0.45,
+        "effector": "footRight",
+        "mode": "plant",
+        "weight": 1
+      }
+    ],
+    "events": [
+      {
+        "id": "player.land:impact-event",
+        "time": 0.075,
+        "name": "land-impact"
+      }
+    ],
+    "tags": [
+      "player",
+      "landing",
+      "cushion",
+      "squash-stretch"
+    ],
+    "metadata": {
+      "starterQuality": "authored-foundation",
+      "starterCatalogVersion": 37,
+      "deformationArc": "neutral fall -> cushion squash -> rebound -> settle",
+      "continuedRunTransition": {
+        "impactCrossfadeSeconds": 0.06,
+        "blendStartSeconds": 0.055,
+        "blendEndSeconds": 0.28,
+        "phaseSource": "touchdown gait phase plus authored playback clock",
+        "contactPolicy": "phase-matched moving run feet; no gameplay or world-space foot lock"
+      },
+      "jumpArmRevision": 1,
+      "elasticityRevision": 1,
+      "elasticityPrinciple": "independent segment compression, extension and rebound",
+      "elasticityProfile": "land"
+    }
+  }
+]

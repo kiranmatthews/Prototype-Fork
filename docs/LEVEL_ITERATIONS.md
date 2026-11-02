@@ -8282,3 +8282,40 @@ spring/kicker/spine traversal, camera regressions, editor edit/undo, required
 level checks and production build pass. Chrome lite and full/native checks
 cover 2,406 fall/landing frames with visible body centres, fixed forward yaw and
 clean consoles. No full suite ran. Details: [sparse iteration](spaghetti-infinite/SPARSE_ITERATION.md).
+
+
+## 3 November 2026 NZDT — Jak-informed jump, double jump and landing
+
+**Brief:** use the supplied local Jak and Daxter motion reference to move the
+character closer to Jak's jump and double jump, including original jump SFX as
+local placeholders, while preserving movement physics and segment elasticity.
+
+**Playable:** the revised pose sequence and six decoded sound variations were
+working in the local real-input preview by 11:22 UTC on 2 November (00:22 NZDT
+on 3 November), approximately **46 minutes** from the recorded 10:36:22 UTC
+implementation start. This includes reference comparison and audio extraction.
+
+- Original editable poses now trail the arms at launch, gather asymmetric knees
+  into a broad tucked apex, lift the arms during descent, and recover through
+  planted landing compression, rebound and a finite settle. Double jump uses
+  the same pose family with a 50 ms blend instead of the previous wide split.
+- Catalogue 38 upgrades only untouched defaults; edited or deleted saved clips
+  remain intact. No tuning, jump impulses, input rules, steering, collisions or
+  whole-skeleton scale changed.
+- Added a reproducible resident-bank extractor and optional development-only
+  audio endpoint. The actual launch cues play the extracted whoosh/voice
+  variants through the existing sound bus. Source game assets remain outside
+  Git and the published build; normal project SFX remain the release fallback.
+- Validation: animation suite, idle/charge recovery, audio regression suite and
+  local sound-bank tests passed. Seven real-input scenarios matched before/after
+  movement exactly for 1,820 frames; landing soles remained 6–34 mm above
+  support. All four clips clear the torso; maximum descent/landing shoulder step
+  is 16 degrees at 60 Hz.
+- Browser review: real-controller tap/full/double/running motions, front/side/
+  oblique views, full renderer at native 1630×1706 and normal 720×754 input;
+  both extracted launch cues played and the console was clear.
+
+Production build and release-size check passed (803,491,859 bytes). The build
+contains no extracted Jak audio, local audio endpoint or development review page.
+
+Source and reproduction notes: [Jump motion study](JUMP_MOTION_STUDY.md).

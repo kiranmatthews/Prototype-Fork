@@ -6126,11 +6126,11 @@ export class Player {
       // Platform jumps keep the upright jump/fall pose at every run-up speed.
       this.flipTimer = 0;
       this.lastJumpType = 'Running Jump';
-      sfx.play('footstep2', 0.55, 1.5);
+      sfx.playJump();
     } else {
       // (near-)standing: plain vertical Crash hop
       this.lastJumpType = wasCrawling ? 'Crouch Jump' : 'Neutral Hop';
-      sfx.play('footstep2', 0.55, 1.5);
+      sfx.playJump();
     }
     this.state = 'air';
     this.grounded = false;
@@ -8690,13 +8690,12 @@ export class Player {
         this.speed *= TUNING.doubleJumpHorizontalScale;
         this.slideAirLat *= TUNING.doubleJumpHorizontalScale;
         this.walkVelocity.multiplyScalar(TUNING.doubleJumpHorizontalScale);
-        // The Unity second jump is a high split-legged lift, not another copy
-        // of the running somersault. Choosing it cleanly interrupts any first-
-        // jump flip that was still in progress.
+        // The second jump owns its pose and cleanly interrupts any first-jump
+        // flip that was still in progress.
         this.flipTimer = 0;
         this.starTimer = 0;
         this.lastJumpType = 'Double Jump';
-        sfx.play('footstep2', 0.6, 1.8);
+        sfx.playJump(true);
       }
     } else {
       this.airTapT = 0;
