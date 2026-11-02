@@ -1,0 +1,20 @@
+{
+  "checks": {
+    "npm run check:levels": "passed",
+    "npm run build": "passed",
+    "full suite": "not run",
+    "publication": "local only"
+  },
+  "offlineVersion": "6872c6ce39a7ff12248d",
+  "promptStartUTC": "2026-11-02T03:26:31Z",
+  "validatedUTC": "2026-11-02T04:18:52Z",
+  "sourceSHA256": {
+    "src/levels/spaghetti-infinite-course.ts": "83219f329b860812498002d7b066093cae3e041bc928055d495d1587600bcf29",
+    "src/levels/spaghetti-race-course.ts": "5c308f6773d54a7e831e29f5da7995b49a39a3be2c61c883438a5d8dae4ca21b",
+    "src/levels/spaghetti-platformer-course.ts": "631df3b06474eb4c6c3591e1855a7bc4666d28fbe8904ac206f12fbc187b71d3",
+    "src/levels/spaghetti-rails-art.ts": "1ac700149c88bb4a37c2a8e63577f2f0285ec33e15c659c4d0e1f31776aeed08",
+    "src/levels/spaghetti-rails-network.ts": "18a28fce95e2c0085d484191a27259ae5f0fa63f4bad48b5e0cf2b3b7787a1d9",
+    "src/levels/spaghetti-rails-platforming.ts": "2e4436e14b08a91345b8c0ffc94f861b55d2ff87dbc3f2a8d2ce5b55bac73774",
+    "src/race/runtime.ts": "3decba64b451db8f58c94bdb234789e4bbfd79c526aa1ef013f4410707d8fa56"
+  }
+}

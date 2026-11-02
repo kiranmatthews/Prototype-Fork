@@ -18,7 +18,7 @@ await withBlockworksRuntime(async r=>{
  const tuning=JSON.stringify(r.TUNING),records=[],trace=[];
  const stats=Array.from({length:race.count},()=>({grindFrames:0,airFrames:0,groundFrames:0,jumps:0,rails:new Set(),lastState:null,maxBalance:0,edgeFrames:0}));
  const maxFrames=Number(process.env.SPAGHETTI_FRAMES??54000);
- let frames=0,lastProgress=0,stalledAt=0,fault=null;
+ let frames=0,lastProgress=0,stalledAt=0,fault=null;const bestProgress=Array(race.count).fill(0);
  for(;frames<maxFrames&&race.riders.slice(0,race.count).some(a=>a.finish===null);frames++){
   r.scene.updateMatrixWorld(true);
   const input=race.phase==='running'?race.drive(0,false,process.env.SPAGHETTI_CHOICE===undefined?undefined:Number(process.env.SPAGHETTI_CHOICE)):{moveX:0,moveY:0};
@@ -43,7 +43,8 @@ await withBlockworksRuntime(async r=>{
    records.push(state);console.log(JSON.stringify(state));await writeFile(output+'/latest.json',JSON.stringify(state,null,2));
    await writeFile(output+'/trace-latest.json',JSON.stringify(trace));
   }
-  const lead=Math.max(...race.riders.slice(0,race.count).map(a=>a.progress));
+  race.riders.slice(0,race.count).forEach((a,i)=>{bestProgress[i]=Math.max(bestProgress[i],a.progress);});
+  const lead=bestProgress.reduce((a,b)=>a+b,0);
   if(lead>lastProgress+10){lastProgress=lead;stalledAt=frames;}
   if(frames-stalledAt>12000)break;
  }

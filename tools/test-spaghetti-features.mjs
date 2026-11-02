@@ -9,10 +9,11 @@ await withBlockworksRuntime(async r=>{
  const start=(position,speed=0)=>{r.p.respawn(r.l,true,false,{position:new THREE.Vector3(...position),heading:new THREE.Vector3(0,0,-1)});r.p.speed=speed;};
  for(const c of C.filter(c=>c.t==='trampoline')){
   start([c.p[0],c.p[1]+2,c.p[2]+2],20);r.p.state='air';r.p.grounded=false;r.p.vVel=-2;
-  let launched=false,peak=c.p[1],velocity=0;
-  for(let f=0;f<300;f++){r.tick({...r.steerToward([27,c.p[1]+22,c.p[2]-30]),jumpHeld:true,spinHeld:true});peak=Math.max(peak,r.p.pos.y);if(r.p.vVel>20){launched=true;velocity=Math.max(velocity,r.p.vVel);}if(launched&&r.p.grounded)break;}
-  report.springs.push({position:c.p,launched,velocity,rise:peak-c.p[1],landing:r.p.pos.toArray()});
-  console.log(JSON.stringify({spring:report.springs.at(-1)}));
+  let launched=false,peak=c.p[1],velocity=0;const samples=[];
+  for(let f=0;f<300;f++){r.tick({...r.steerToward([c.p[0],c.p[1]+22,c.p[2]-30]),jumpHeld:true,spinHeld:true});peak=Math.max(peak,r.p.pos.y);if(r.p.vVel>20){launched=true;velocity=Math.max(velocity,r.p.vVel);}if(f%12===0)samples.push(r.snapshot());if(launched&&r.p.grounded)break;}
+  report.springs.push({position:c.p,launched,velocity,rise:peak-c.p[1],landing:r.p.pos.toArray(),samples});
+  await writeFile(output+'/features-progress.json',JSON.stringify(report,null,2));
+  console.log(JSON.stringify({spring:{...report.springs.at(-1),samples:undefined}}));
   assert.ok(launched&&peak-c.p[1]>22,'Carlisle spring reaches its reward tier');
   assert.ok(r.p.grounded&&r.p.pos.y>c.p[1]+21,'The reward receiver physically catches the spring jump');
  }
@@ -31,7 +32,7 @@ await withBlockworksRuntime(async r=>{
   assert.ok(air&&landed,'Kicker launches and has a physical landing');
   assert.ok(Math.abs(r.p.pos.y-(c.p[1]-9))<.1&&Math.abs(r.p.pos.x-c.p[0])<7&&Math.abs(r.p.pos.z-(c.p[2]-32))<9,'The landing is on the authored kicker receiver');
  }
- for(const c of C.filter(c=>c.nm?.match(/^Spine cascade .*\.0 /))){
+ for(const c of C.filter(c=>c.nm?.match(/^Lantern spine .*\.0$/))){
   start([c.p[0],c.p[1]+.08,c.p[2]+2],30);
   const samples=[],surfaces=new Set(),transfers=[];let air=false;
   const first=r.l.halfpipes.findIndex(h=>h.cross===c.p[2]);
@@ -69,6 +70,6 @@ await withBlockworksRuntime(async r=>{
  start([0,gate.p[1]+.08,gate.p[2]+13]);
  for(let f=0;f<600&&r.p.state!=='finished';f++)r.tick(r.steerToward([0,gate.p[1],gate.p[2]-4]));
  report.finish={state:r.p.state,crystal:r.p.hasCrystal,p:r.p.pos.toArray(),checkpoint};
- await writeFile(output+'/features.json',JSON.stringify(report,null,2));console.log(JSON.stringify({...report,ramps:report.ramps.map(({samples,...v})=>v),spines:report.spines.map(({samples,...v})=>v)}));
+ await writeFile(output+'/features.json',JSON.stringify(report,null,2));console.log(JSON.stringify({...report,springs:report.springs.map(({samples,...v})=>v),ramps:report.ramps.map(({samples,...v})=>v),spines:report.spines.map(({samples,...v})=>v)}));
  assert.ok(r.p.hasCrystal);assert.equal(r.p.state,'finished');
 },{modulePath:'/src/levels/spaghetti-rails-platforming.ts',source:m=>m.SPAGHETTI_RAILS_PLATFORMING_LEVEL,levelId:'spaghetti-rails-platforming',endlessDeaths:true});

@@ -13,7 +13,7 @@ import type { WipeoutCause } from '../character/wipeoutPolicy';
 import { RaceCourse } from './course';
 import type { RailChoiceCursor } from './railChoices';
 import { RivalGrindControl } from './rivalGrind';
-import type { Rail } from '../rails';
+import { nearestRail, type Rail } from '../rails';
 import { prepareRaceItemPictures } from './itemPictures';
 import { RaceItemDeck, freshRaceSeed } from './itemOdds';
 import { RaceItemEffects, raceTargetRing } from './effects';
@@ -406,9 +406,18 @@ export class SkateRace {
     // a missed rider forward on their current tier instead of chasing an
     // overhead branch or steering back toward its old entrance.
     const periodic=this.level!.verticalLoop!==undefined;
-    const lowerRoute=periodic&&!caught&&(p.pos.y<r.aim.y-6||!path);
-    const incidentalEdge=periodic&&p.state==='grind'&&!caught;
+    const lowerRoute=periodic&&!caught&&(Math.abs(p.pos.y-r.aim.y)>6||!path);
+    // A recovery route can be above or below the race line after a wrap.
+    // Follow its real authored rail using ordinary capture/balance input;
+    // abandoning every non-race rail strands riders behind its landing mouth.
+    const nearby=periodic&&!caught&&(lowerRoute||p.state==='grind')?nearestRail(this.level!.rails,p.pos):null;
+    const recoveryGrind=!!nearby&&p.state==='grind'&&nearby.sample.distance<1.3&&
+      nearby.sample.tangent.z<-.01&&r.velocity.dot(nearby.sample.tangent)>-1;
+    const recoveryApproach=!!nearby&&p.grounded&&lowerRoute&&nearby.sample.distance<10&&
+      Math.abs(nearby.sample.point.y-p.pos.y)<3&&nearby.rail.points[nearby.rail.points.length-1].z<p.pos.z-4;
+    const incidentalEdge=periodic&&p.state==='grind'&&!caught&&!recoveryGrind;
     if(lowerRoute||incidentalEdge)r.aim.set(THREE.MathUtils.clamp(p.pos.x,-40,40),p.pos.y,p.pos.z-20);
+    if(recoveryGrind||recoveryApproach)r.aim.copy(nearby!.rail.pointAt(nearby!.sample.t+(recoveryGrind?look:4)));
     const dx=r.aim.x-p.pos.x,dz=r.aim.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level!);
     const bn=Math.hypot(basis.x,basis.z)||1,fx=basis.x/bn,fz=basis.z/bn;
     input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
@@ -416,7 +425,7 @@ export class SkateRace {
     let turnback=this.railTurnbacks.get(id);
     const reversing=incidentalEdge||!!caught&&r.velocity.dot(caught.rail.tangentAt(caught.t))<-1;
     if(reversing&&!turnback){turnback={since:this.elapsed,released:false};this.railTurnbacks.set(id,turnback);}
-    if(p.grounded||!reversing&&!turnback?.released){this.railTurnbacks.delete(id);turnback=undefined;}
+    if(p.grounded||recoveryGrind||!reversing&&!turnback?.released){this.railTurnbacks.delete(id);turnback=undefined;}
     const abandoning=!!turnback&&this.elapsed-turnback.since>.75;
     if(id>0){
       let control=this.rivalGrindControls.get(id);
@@ -443,7 +452,7 @@ export class SkateRace {
     }
     const next=path?.rails.find(span=>span.end>(cursor.along??0)+1);
     input.grindHeld=!!rail||!p.grounded||!!next&&next.start-(cursor.along??0)<4;
-    if(lowerRoute||incidentalEdge){
+    if((lowerRoute||incidentalEdge)&&!recoveryGrind&&!recoveryApproach){
       input.grindHeld=false;
       input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);
       input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
@@ -452,6 +461,12 @@ export class SkateRace {
         this.railTurnbacks.set(id,edge);
         input.jumpHeld=this.elapsed-edge.since<.4;
       }
+    }
+    if(recoveryGrind||recoveryApproach){
+      // Flat recovery rails conserve the speed brought to them. Build a real
+      // roll before recatching; a crawl-speed capture must not last kilometres.
+      input.grindHeld=Math.abs(p.speed)>=12;
+      if(recoveryGrind&&!input.grindHeld||recoveryApproach&&input.grindHeld&&nearby!.sample.distance<3&&r.oldJump)input.jumpHeld=false;
     }
     if(periodic&&p.grounded){
       const stalled=this.cartStalls.get(id);

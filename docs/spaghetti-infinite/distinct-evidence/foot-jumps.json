@@ -1,0 +1,602 @@
+[
+  {
+    "name": "Lantern Steps / jump 1",
+    "good": true,
+    "air": 71,
+    "peak": 116.08666665474573,
+    "landing": [
+      -13.024192641962571,
+      109.99999997615814,
+      -11.741937659289855
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": 114.0866666428248,
+    "landing": [
+      -2.0182621352517627,
+      107.99999997615814,
+      -29.772872597879427
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 3",
+    "good": true,
+    "air": 63,
+    "peak": 112.0866666428248,
+    "landing": [
+      -2.5118793504743606,
+      109.99999997615814,
+      -47.66718583084799
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 4",
+    "good": true,
+    "air": 73,
+    "peak": 114.0866666428248,
+    "landing": [
+      2.979415893036263,
+      106.99999997615814,
+      -65.77950729563265
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 5",
+    "good": true,
+    "air": 73,
+    "peak": 111.0866666428248,
+    "landing": [
+      13.981455148247898,
+      103.99999998807907,
+      -83.77130824013271
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": 100.08666665474573,
+    "landing": [
+      15,
+      94.99999997615814,
+      -211.8000000000001
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": 99.0866666428248,
+    "landing": [
+      7.488120649525575,
+      92.99999997615814,
+      -229.66718583084824
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": 97.0866666428248,
+    "landing": [
+      -0.5118793504744246,
+      90.99999997615814,
+      -247.66718583084824
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": 95.0866666428248,
+    "landing": [
+      -8.512905834052212,
+      89.99999997615814,
+      -265.666919495502
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 5",
+    "good": true,
+    "air": 71,
+    "peak": 94.0866666428248,
+    "landing": [
+      -15,
+      87.99999998807907,
+      -283.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 1",
+    "good": true,
+    "air": 73,
+    "peak": 64.08666665474574,
+    "landing": [
+      -12.030354061004854,
+      56.999999976158136,
+      -411.7642115228977
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 2",
+    "good": true,
+    "air": 63,
+    "peak": 61.08666664282481,
+    "landing": [
+      -4.000518967185555,
+      58.999999976158136,
+      -429.79521262241786
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": 63.08666664282481,
+    "landing": [
+      3.999481032814426,
+      56.999999976158136,
+      -447.79521262241786
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 4",
+    "good": true,
+    "air": 71,
+    "peak": 61.08666664282481,
+    "landing": [
+      14.006703526390327,
+      54.999999976158136,
+      -465.81559480342867
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 5",
+    "good": true,
+    "air": 73,
+    "peak": 59.08666664282481,
+    "landing": [
+      21,
+      51.99999998807907,
+      -483.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 1",
+    "good": true,
+    "air": 73,
+    "peak": 52.08666665474574,
+    "landing": [
+      11.512745762134598,
+      44.999999976158136,
+      -611.6216628577768
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 2",
+    "good": true,
+    "air": 73,
+    "peak": 49.08666664282481,
+    "landing": [
+      1.5059832054300255,
+      41.999999976158136,
+      -629.6462183698817
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 3",
+    "good": true,
+    "air": 63,
+    "peak": 46.08666664282481,
+    "landing": [
+      -8.495231845960374,
+      43.999999976158136,
+      -647.645883746279
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 4",
+    "good": true,
+    "air": 71,
+    "peak": 48.08666664282481,
+    "landing": [
+      -8.000518967185602,
+      41.999999976158136,
+      -665.7952126224208
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 5",
+    "good": true,
+    "air": 71,
+    "peak": 46.08666664282481,
+    "landing": [
+      2.006703526390323,
+      39.99999998807907,
+      -683.8155948034256
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 1",
+    "good": true,
+    "air": 71,
+    "peak": 16.08666665474573,
+    "landing": [
+      -14,
+      9.999999976158144,
+      -811.7999999999996
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": 14.086666642824804,
+    "landing": [
+      -2.027472836845371,
+      7.999999976158142,
+      -829.7679414469309
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": 12.086666642824802,
+    "landing": [
+      8.006703526390304,
+      5.999999976158142,
+      -847.8155948034256
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 4",
+    "good": true,
+    "air": 63,
+    "peak": 10.086666642824804,
+    "landing": [
+      5.504768154039626,
+      7.999999976158142,
+      -865.645883746279
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 5",
+    "good": true,
+    "air": 74,
+    "peak": 12.086666642824802,
+    "landing": [
+      -6.411280947153362,
+      3.999999988079071,
+      -883.4747366572815
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": 4.086666654745734,
+    "landing": [
+      11.510798600372791,
+      -1.0000000238418578,
+      -1011.6211266119119
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": 3.086666642824805,
+    "landing": [
+      3.4881206495247907,
+      -3.0000000238418583,
+      -1029.6671858308512
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": 1.0866666428248049,
+    "landing": [
+      -4.511879350475209,
+      -5.000000023841858,
+      -1047.6671858308512
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 4",
+    "good": true,
+    "air": 71,
+    "peak": -0.9133333571751951,
+    "landing": [
+      -14.495231845961934,
+      -7.000000023841858,
+      -1065.6458837462847
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": -2.9133333571751945,
+    "landing": [
+      -21,
+      -8.000000011920928,
+      -1083.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 1",
+    "good": true,
+    "air": 71,
+    "peak": -31.913333345254262,
+    "landing": [
+      -9.98646190998516,
+      -38.000000023841864,
+      -1211.8076985899393
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": -33.91333335717519,
+    "landing": [
+      1.9725271631547097,
+      -40.000000023841864,
+      -1229.767941446931
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": -35.91333335717519,
+    "landing": [
+      13.97252716315475,
+      -42.000000023841864,
+      -1247.767941446931
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 4",
+    "good": true,
+    "air": 63,
+    "peak": -37.91333335717519,
+    "landing": [
+      13.48812064952479,
+      -40.000000023841864,
+      -1265.6671858308512
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 5",
+    "good": true,
+    "air": 74,
+    "peak": -35.91333335717519,
+    "landing": [
+      3.5076735930098177,
+      -44.00000001192093,
+      -1283.6466839004706
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 1",
+    "good": true,
+    "air": 71,
+    "peak": -43.91333334525426,
+    "landing": [
+      13.488120649525232,
+      -50.000000023841864,
+      -1411.6671858308496
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": -45.91333335717519,
+    "landing": [
+      1.5827205588569453,
+      -52.000000023841864,
+      -1429.471420855513
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 3",
+    "good": true,
+    "air": 63,
+    "peak": -47.91333335717519,
+    "landing": [
+      -8.495231845961934,
+      -50.000000023841864,
+      -1447.6458837462847
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 4",
+    "good": true,
+    "air": 73,
+    "peak": -45.91333335717519,
+    "landing": [
+      -8.000089587871235,
+      -53.000000023841864,
+      -1465.7929504142244
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 5",
+    "good": true,
+    "air": 73,
+    "peak": -48.91333335717519,
+    "landing": [
+      3.9750475495219884,
+      -56.00000001192093,
+      -1483.7707908876605
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 1",
+    "good": true,
+    "air": 73,
+    "peak": -79.91333334525427,
+    "landing": [
+      -12.030354061004854,
+      -87.00000002384186,
+      -1611.7642115228962
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 2",
+    "good": true,
+    "air": 63,
+    "peak": -82.9133333571752,
+    "landing": [
+      -0.09535508783919601,
+      -85.00000002384186,
+      -1629.686270613704
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": -80.9133333571752,
+    "landing": [
+      -0.5118793504752095,
+      -87.00000002384186,
+      -1647.6671858308512
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 4",
+    "good": true,
+    "air": 71,
+    "peak": -82.9133333571752,
+    "landing": [
+      3.972527163154714,
+      -89.00000002384186,
+      -1665.767941446931
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 5",
+    "good": true,
+    "air": 73,
+    "peak": -84.9133333571752,
+    "landing": [
+      15.975047549522023,
+      -92.00000001192093,
+      -1683.7707908876605
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 1",
+    "good": true,
+    "air": 71,
+    "peak": -91.91333334525427,
+    "landing": [
+      13.488120649525234,
+      -98.00000002384186,
+      -1811.6671858308496
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 2",
+    "good": true,
+    "air": 71,
+    "peak": -93.9133333571752,
+    "landing": [
+      3.5047681540380666,
+      -100.00000002384186,
+      -1829.6458837462847
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 3",
+    "good": true,
+    "air": 71,
+    "peak": -95.9133333571752,
+    "landing": [
+      -6.495231845961934,
+      -102.00000002384186,
+      -1847.6458837462847
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 4",
+    "good": true,
+    "air": 63,
+    "peak": -97.9133333571752,
+    "landing": [
+      -3.9932964736096297,
+      -100.00000002384186,
+      -1865.8155948034316
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 5",
+    "good": true,
+    "air": 74,
+    "peak": -95.9133333571752,
+    "landing": [
+      7.976404336800869,
+      -104.00000001192093,
+      -1883.772050266365
+    ],
+    "surface": "platform"
+  }
+]

@@ -8282,3 +8282,30 @@ spring/kicker/spine traversal, camera regressions, editor edit/undo, required
 level checks and production build pass. Chrome lite and full/native checks
 cover 2,406 fall/landing frames with visible body centres, fixed forward yaw and
 clean consoles. No full suite ran. Details: [sparse iteration](spaghetti-infinite/SPARSE_ITERATION.md).
+
+## 2026-11-02 — Distinct, longer spaghetti courses (local preview)
+
+Replace the shared six-section layout with separate race and platforming
+courses. The race is now 3.41 km with twelve long speed sections, over/under
+rail choices, chicanes, banking bowls and spaced interchanges. The platformer
+is about 2.1 km with ten individually patterned jump courts, fifty foot jumps,
+moving/crumbling transfers, guarded rewards, nine checkpoints and optional
+board routes. Teal lane markings and amber lantern landings distinguish them.
+
+Distribute recovery islands across six evenly spaced heights, including both
+sides of the periodic seam. Average platform area falls another 15%/24%; every
+island remains connected by rails and every corridor column still has a real
+landing. Pack exact recovery cuboids into small native mesh/BVH groups. Spread
+height exchanges along the courses. Rival pilots follow recovery rails and
+build speed before recatching them; player physics/tuning remain unchanged.
+
+Prompt to validated local build: approximately **52 minutes**. Fifty foot-jump
+fixtures, all twelve tier/rail-junction rides, spring/kicker/spine receivers,
+checkpoint/crystal/finish, full coverage/collider probes and an eight-rider
+race pass. All racers finish in 112.40–344.65 seconds with no deaths or resets.
+Chrome lite/full fall cameras and native-resolution layout review are clean.
+`npm run check:levels` and `npm run build` pass; no full suite ran.
+
+Kept local at the user's request. Preview server: port 5248. No publishing or
+shared level-pack changes. Details and compact evidence:
+[distinct iteration](spaghetti-infinite/DISTINCT_ITERATION.md).

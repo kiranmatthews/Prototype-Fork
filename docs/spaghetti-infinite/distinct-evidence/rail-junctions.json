@@ -1,0 +1,194 @@
+[
+  {
+    "platforming": false,
+    "tier": 1,
+    "frames": 2457,
+    "nativeFrames": 1949,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 524.0684408642113,
+    "length": 526.8334121692438,
+    "end": [
+      -8,
+      121.05000000000001,
+      -352.7668939431944
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 2,
+    "frames": 1963,
+    "nativeFrames": 1483,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 460.4644481700384,
+    "length": 463.1873858997929,
+    "end": [
+      8,
+      73.05000000000001,
+      -352.80892751847244
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 3,
+    "frames": 2170,
+    "nativeFrames": 1690,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 524.0085488685706,
+    "length": 526.9634565119947,
+    "end": [
+      24,
+      25.049999999999997,
+      -352.57695760480294
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 4,
+    "frames": 2378,
+    "nativeFrames": 1794,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 555.9340873837752,
+    "length": 558.8514918180957,
+    "end": [
+      40,
+      -22.950000000000003,
+      -352.6144608139065
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 5,
+    "frames": 2170,
+    "nativeFrames": 1586,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 492.08301035336603,
+    "length": 495.0754212058938,
+    "end": [
+      -40,
+      -70.94999999999999,
+      -352.5394543956992
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": false,
+    "tier": 6,
+    "frames": 1963,
+    "nativeFrames": 1483,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 460.4644481700384,
+    "length": 463.18738589979284,
+    "end": [
+      -24,
+      -118.94999999999999,
+      -352.8089275184725
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 1,
+    "frames": 2644,
+    "nativeFrames": 1883,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 524.0650626738923,
+    "length": 527.0604121692438,
+    "end": [
+      -8,
+      121.05000000000001,
+      -353.00465050464845
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 2,
+    "frames": 1964,
+    "nativeFrames": 1483,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 460.46449781542765,
+    "length": 463.4143858997928,
+    "end": [
+      8,
+      73.05000000000001,
+      -353.05011191563483
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 3,
+    "frames": 2172,
+    "nativeFrames": 1691,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 524.3155748458369,
+    "length": 527.1904565119946,
+    "end": [
+      24,
+      25.049999999999997,
+      -353.12511833384224
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 4,
+    "frames": 2380,
+    "nativeFrames": 1795,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 556.2411133610415,
+    "length": 559.0784918180956,
+    "end": [
+      40,
+      -22.950000000000003,
+      -353.1626215429459
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 5,
+    "frames": 2172,
+    "nativeFrames": 1587,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 492.39003633063226,
+    "length": 495.30242120589367,
+    "end": [
+      -40,
+      -70.94999999999999,
+      -353.0876151247386
+    ],
+    "deaths": 0
+  },
+  {
+    "platforming": true,
+    "tier": 6,
+    "frames": 1964,
+    "nativeFrames": 1483,
+    "firstCaught": true,
+    "secondCaught": true,
+    "maxT": 460.46449781542765,
+    "length": 463.41438589979276,
+    "end": [
+      -24,
+      -118.94999999999999,
+      -353.0501119156349
+    ],
+    "deaths": 0
+  }
+]
