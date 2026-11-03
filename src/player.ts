@@ -619,6 +619,7 @@ export class Player {
   onFootJumpStudy: Readonly<OnFootJumpStudy> | null = null;
   private footJumpStudyLaunch: Readonly<OnFootJumpStudy> | null = null;
   private footStudyFrame = 0;
+  private footStudyCharge = 0;
   private footStudyImpact = 0;
   private ledgeSourceSeconds = 0;
   private ledgeSourceSide = 0;
@@ -1375,6 +1376,7 @@ export class Player {
   private ledgePhase: 'grip' | 'climb' = 'grip';
   private ledgeClimbT = 0; // clamber clock
   private ledgeClimbK = 0; // clamber progress 0..1 (drives the mantle pose)
+  private ledgeClimbRecovery = -1; // D's short pose settle after control returns
   private readonly ledgeClimbFrom = new THREE.Vector3();
   private readonly ledgeClimbTo = new THREE.Vector3();
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
@@ -2412,6 +2414,8 @@ export class Player {
           jakLedgeRestSeconds: this.ledgeRestSeconds,
           jakLedgeMoving: Math.abs(this.ledgeShimmy) > .05 || this.ledgeHands.reaching ? 1 : 0,
           jakLedgeSide: this.ledgeSourceSide,
+          jakLedgeClimbRecovery: this.directFootStudy && this.ledgeClimbRecovery >= 0
+            ? Math.min(1, this.ledgeClimbRecovery / .2) : -1,
           jakLedgeRelease: this.state === 'air' && !this.doubleJumpAir && this.hangExitW > 0 &&
             (this.hangClipName === 'drop' || this.hangClipName === 'fall')
             ? this.hangClipT / this.hangClipRate : -1,
@@ -4112,6 +4116,7 @@ export class Player {
     this.ledgePhase = 'grip';
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
+    this.ledgeClimbRecovery = -1;
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
     this.ledgeClimbQueued = false;
@@ -4579,6 +4584,8 @@ export class Player {
     }
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
+    if (this.ledgeClimbRecovery >= 0) this.ledgeClimbRecovery = this.ledgeClimbRecovery >= .2
+      ? -1 : Math.min(.2, this.ledgeClimbRecovery + dt);
     this.hangExitW = Math.max(0, this.hangExitW - dt * 2.6);
     if (this.state !== 'hang' && this.hangClipName) {
       if (this.hangExitW > 0) this.hangClipT += dt * this.hangClipRate;
@@ -5995,6 +6002,7 @@ export class Player {
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
     this.footJumpStudyLaunch = null;
+    this.ledgeClimbRecovery = -1;
     if(this.onFootJumpStudy?.direct)this.hangExitW = 0;
     if (this.kiteReleased) this.kiteFinishJump = true;
     this.gravityTrackAir = this.freeSkate && (!!this.groundHit?.gravityTrack || !this.grounded&&this.gravityTrackAir);
@@ -6105,6 +6113,7 @@ export class Player {
     if (this.onFootJumpStudy && !this.freeSkate && !fromSlide && !wasCrawling &&
         !this.trampolineAir && !this.kiteTowing && !this.kiteReleased) {
       this.footJumpStudyLaunch = {...this.onFootJumpStudy};
+      this.footStudyCharge = t;
       const study = this.footJumpStudyLaunch;
       this.vVel = studyJumpVelocity(THREE.MathUtils.lerp(study.minimumHeight, study.maximumHeight, t), study.gravity, dt);
       if (study.direct) {
@@ -6996,7 +7005,7 @@ export class Player {
       this.slideTimer > 0 ||
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
-          (!this.directFootStudy && planarSpeed > TUNING.walkSpeed + 0.5) ||
+          ((!this.directFootStudy || this.onFootJumpStudy?.nativeLocomotion) && planarSpeed > TUNING.walkSpeed + 0.5) ||
           rollingOut));
 
     // Enter/leave free-heading mode. Walking and canned slides keep the
@@ -7084,7 +7093,7 @@ export class Player {
     const slickWalk = this.groundHit !== null && !!this.groundHit.slippy;
     const iceGrip = this.authoredIceGrip();
     if (this.freeSkate || this.crawling || slamFlat || this.slideTimer > 0) this.walkRamp = 0;
-    else if (this.directFootStudy && !slickWalk) this.walkRamp = walkDir ? 1 : 0;
+    else if (this.directFootStudy && !this.onFootJumpStudy?.nativeLocomotion && !slickWalk) this.walkRamp = walkDir ? 1 : 0;
     else if (walkDir && TUNING.walkRampTime > 0)
       this.walkRamp = Math.min(1, this.walkRamp + dt / TUNING.walkRampTime);
     else if (walkDir) this.walkRamp = 1;
@@ -7152,7 +7161,7 @@ export class Player {
       // can slide through the old vector rather than snapping through zero.
       // A planted charge remains pinned exactly as before.
       const planted = this.charging && this.chargePlanted;
-      const footSpeed = this.directFootStudy ? this.onFootJumpStudy?.runSpeed ?? TUNING.walkSpeed : TUNING.walkSpeed;
+      const footSpeed = this.directFootStudy && !this.onFootJumpStudy?.nativeLocomotion ? this.onFootJumpStudy?.runSpeed ?? TUNING.walkSpeed : TUNING.walkSpeed;
       const targetForward = planted ? 0 : input.moveY * footSpeed * runScale;
       const targetLateral = planted ? 0 : input.moveX * footSpeed * runScale;
       this.walkTarget
@@ -7193,7 +7202,7 @@ export class Player {
           : Infinity;
         this.walkVelocity.lerp(this.walkTarget, Math.min(1, CONST.slipAccel * iceGrip * dt,
           turnLimit / Math.max(this.walkVelocity.distanceTo(this.walkTarget), 1e-6)));
-      } else if (this.directFootStudy) {
+      } else if (this.directFootStudy && !this.onFootJumpStudy?.nativeLocomotion) {
         const delta = this.walkVelocity.distanceTo(this.walkTarget);
         const thrust = jakFootThrust(this.walkVelocity.length(), this.walkTarget.length(), input.moveY, false);
         this.walkVelocity.lerp(this.walkTarget, Math.min(1, thrust * dt / Math.max(1e-8, delta)));
@@ -8757,7 +8766,9 @@ export class Player {
         this.airJumpUsed = true;
         this.doubleJumpAir = true;
         const study = this.footJumpStudyFlight;
-        this.vVel = study ? studyJumpVelocity(study.doubleHeight, study.gravity, dt) : TUNING.doubleJumpVelocity;
+        this.vVel = study ? studyJumpVelocity(THREE.MathUtils.lerp(
+          study.doubleMinimumHeight ?? study.doubleHeight, study.doubleHeight, this.footStudyCharge),
+          study.gravity, dt) : TUNING.doubleJumpVelocity;
         if (directStudy) {
           this.footStudyFrame = 5;
         }
@@ -9006,7 +9017,7 @@ export class Player {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
         // same direct authority follows the editable traversal retention.
-        if (study) {
+        if (study && !study.nativeLocomotion) {
           const seconds = input.moveX || input.moveY ? study.steeringSeconds : study.coastSeconds;
           let blend = 1 - Math.exp(-dt / Math.max(.001, seconds));
           const studySpeed = study.direct ? (this.doubleJumpAir ? 8 : study.runSpeed ?? TUNING.walkSpeed) : TUNING.walkSpeed;
@@ -10445,6 +10456,7 @@ export class Player {
       // This runs only when choosing a new contact, not during its playback.
       if(!this.runLevel)return;
       const proposed=target.clone();
+      const reachRadius=Math.max(this.ledgeHands.spread,proposed.distanceTo(centre))+.04;
       for(const fraction of [1,.65,.3,0]) {
         target.copy(centre).lerp(proposed,fraction);
         const frame=ledgeBasis(this.ledgeNormal,CONST.playerHalf.x,CONST.playerHalf.z);
@@ -10466,6 +10478,10 @@ export class Player {
             if(supported(middle))inside=middle;else outside=middle;
           }
           target.x+=frame.nx*(inside+outside)*.5;target.z+=frame.nz*(inside+outside)*.5;
+          // A broad support probe can find the next face much farther along
+          // a corner. Shorten this reach instead of throwing the glove past
+          // its planned radius and forcing the planted arm out of contact.
+          if(Math.hypot(target.x-centre.x,target.z-centre.z)>reachRadius)continue;
           target.y=lip.y+.025;return;
         }
       }
@@ -16915,7 +16931,7 @@ export class Player {
       // first, the over-the-lip travel overlaps the tail of the rise, so the
       // path rounds the corner instead of snapping between two points.
       this.ledgeClimbT += dt;
-      const T = Math.max(0.12, TUNING.ledgeClimbTime);
+      const T = Math.max(0.12, TUNING.ledgeClimbTime) * (this.directFootStudy ? 1.25 : 1);
       const t = Math.min(1, this.ledgeClimbT / T);
       ledgeClimbPoint(this.pos, this.ledgeClimbFrom, this.ledgeClimbTo, this.ledgeLip, t);
       this.ledgeClimbK = t;
@@ -16923,10 +16939,12 @@ export class Player {
       this.collide(level, true);
       if (this.state !== 'hang') return;
       if (t >= 1) {
-        // topped out: stand it up (a whisper of lift keeps the beat alive)
-        this.state = 'air';
-        this.grounded = false;
-        this.vVel = TUNING.ledgeClimbPop;
+        // D finishes on the validated deck, with its pose settling while the
+        // normal walk controller resumes. Other variants retain their pop.
+        this.state = this.directFootStudy ? 'ride' : 'air';
+        this.grounded = this.directFootStudy;
+        this.vVel = this.directFootStudy ? 0 : TUNING.ledgeClimbPop;
+        this.ledgeClimbRecovery = this.directFootStudy ? 0 : -1;
         this.airborneT = 0;
         this.launchVy = this.vVel;
         this.airPeakY = this.pos.y;
@@ -16981,7 +16999,7 @@ export class Player {
           LEDGE_CANDIDATE,
           this.ledgeAnchor,
           basis,
-          shim * 2.4 * dt,
+          shim * (this.directFootStudy ? this.ledgeHands.traverseSpeed : 2.4) * dt,
         );
         const lip = this.resolveLedgeSupport(
           level,
@@ -17054,12 +17072,12 @@ export class Player {
     this.ledgeLanding.copy(LEDGE_LANDING);
     this.ledgeClimbFrom.copy(this.pos);
     this.ledgeClimbTo.copy(this.ledgeLanding);
-    this.ledgeClimbTo.y += 0.06;
+    this.ledgeClimbTo.y += this.directFootStudy ? 0 : 0.06;
     if (!this.ledgeClimbPathClear(this.ledgeClimbTo, level)) return false;
     this.ledgePhase = 'climb';
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
-    this.setHangClip('climb', Math.max(0.12, TUNING.ledgeClimbTime)); // clip time-fits the clamber
+    this.setHangClip('climb', Math.max(0.12, TUNING.ledgeClimbTime) * (this.directFootStudy ? 1.25 : 1));
     sfx.play('ollie', 0.4, 1.15);
     this.emitDust(2);
     return true;
@@ -18398,7 +18416,8 @@ export class Player {
     // on the exact frame the clip changes back to locomotion.
     const recoveryWeight = this.bailRiseAge < 0 ? 1 : THREE.MathUtils.smoothstep(this.bailRiseAge, .2, .65);
     const weight = walkWeight * recoveryWeight * (1 - THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5));
-    if (weight <= 0.002) return;
+    const directContact = this.directFootStudy && this.authoredClip(hint)?.metadata?.jakDirect;
+    if (weight <= 0.002 && !directContact) return;
 
     const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
     if (normal.y < 0.1) return;
@@ -18418,7 +18437,11 @@ export class Player {
 
     // Keep the authored planted load above its support plane, also correcting
     // downward penetration. This moves presentation only, never collision.
-    const drop = (hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? clearance - .006 : Math.max(0, clearance - .006)) * weight;
+    // D's independent stride/rebound mix can briefly extend a shoe below the
+    // floor. Fit only that penetration at full weight; upward authored bounce
+    // and the native idle/walk seating keep their usual ownership.
+    const drop = directContact && clearance < .006 ? clearance - .006
+      : (hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? clearance - .006 : Math.max(0, clearance - .006)) * weight;
     if (Math.abs(drop) < 1e-8) return;
     // A running lean or sloped parent must not turn a vertical correction
     // into a sideways move. Convert a WORLD-up delta into the rider's parent.

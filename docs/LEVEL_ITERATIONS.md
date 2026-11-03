@@ -8512,3 +8512,40 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   `ledge-shimmy-review/`. Local D comparison retained; no publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## Direct Jak D — movement, proportions and jump-height polish
+
+- Completed 4 November 2026 NZDT in the existing isolated comparison worktree.
+  Approximately 34 minutes prompt-to-validated playable (21:25–21:59 UTC,
+  3 November), including calibration, corner/contact corrections and browser
+  review. Local playtest only; no integration or publication authorized.
+- Reduced the run's excessive lower-waist stretch while retaining source limb
+  directions and independent segment elasticity. Restored our native analog
+  walk, 9 m/s run, acceleration, turn inertia, coasting and air steering in D.
+  Added a Walk, run and turn inspection sequence.
+- Measured the actual skull mesh against A. Raised D's first arc and calibrated
+  the second boost by first-jump charge; twelve tap/partial/full/running/double
+  comparisons match visible head peaks within 0.0152 m with the flip enabled.
+  A/B/C, global tuning and the jump/skate gesture remain unchanged.
+- Blended continuing strides underneath the source landing rebound, with a
+  phase-continuous return to run/idle and a D-only floor-penetration correction.
+  No head-position jump at the final recovery handoff in the test fixtures.
+- Widened ledge grip from 0.60 to 0.70 m and slowed D traversal from 2.4 to
+  2.0 m/s. Bounded projected corner contacts to their planned reach. Pull-up
+  takes 0.475 s plus a 0.20 s visual settle with controls already active;
+  finishing on the deck avoids an extra jump/landing or air-control speed spike.
+- Checks: 6,620 new movement/height/recovery frames; exact 240-frame A/D native
+  locomotion parity; 1,599 source poses; 2,485 ledge/flip frames; 1,731 reversal
+  and corner frames; 30/60/120 Hz hand contacts; campaign/park skateboard parity;
+  runtime routing, strict playtest types, build and release size. Worst ledge
+  grip residual is 0.000273 m. Release output is 803,510,039 bytes; the local
+  review entry and external source bank remain excluded.
+- Browser: lite and full rendering, normal/native resolution, waist/run views,
+  running rebound and recovery, manual corner traversal and pull-up into
+  movement. A/B/C/D switches preserve position/velocity. No console errors;
+  the final scene switch logged a brief texture-image warning burst, recorded
+  with the otherwise clean browser passes. Evidence is external
+  `d-movement-polish/`; port 5188 remains the
+  local playtest. No level geometry, shared level pack or production entry edits.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

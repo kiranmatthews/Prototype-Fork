@@ -284,6 +284,9 @@ export class CharacterAnimationRuntime {
   private pendingRunHandoffOffset: number | null = null;
   private pendingIdleHandoffOffset: number | null = null;
   private recoveryIdle: { source: ClipId; offset: number; clock: number } | null = null;
+  private directRecovery: {
+    source: ClipId; runOffset: number; idleOffset: number; runClock: number; idleClock: number;
+  } | null = null;
   private recoveryIdleWeight = 0;
   private recoveryIdleTimelineTime: number | null = null;
   private landingRunBlendProgress = 0;
@@ -531,7 +534,7 @@ export class CharacterAnimationRuntime {
       }
       // Ice balance and gravity-slope gliding start on contact, without a dry
       // landing plant/recovery. Board contact retains its procedural spring.
-      if (justLanded && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && (intent.motion.inputs?.jakLedgeClimbRecovery ?? -1) < 0 && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         const directLanding = this.findPlayableClip(LAND_CLIP_ID)?.metadata?.jakDirect;
         const directMovingLanding = directLanding && moveIntent > .05 && (intent.motion.inputs?.footSpeed ?? 0) > 3;
@@ -593,6 +596,13 @@ export class CharacterAnimationRuntime {
           requested = cycle < a ? 'player.hang' : 'player.jak-hang-shift';
           directTime = cycle < a ? cycle : cycle - a;
         }
+      } else if ((inputs.jakLedgeClimbRecovery ?? -1) >= 0 &&
+          ['player.run','player.idle','player.jump','player.fall'].includes(hint)) {
+        // The feet have reached the deck and movement is already live. Keep
+        // the pull-up's final pose for its finite settle, without a fake jump
+        // and landing one-shot between the climb and the next running step.
+        requested = 'player.climb';
+        directTime = this.findPlayableClip(requested)!.duration;
       } else if (hint === 'player.climb') {
         directTime = intent.motion.actionProgress * this.findPlayableClip('player.climb')!.duration;
       } else if ((hint === 'player.jump' || hint === 'player.fall') && inputs.jakLedgeRelease >= 0) {
@@ -647,14 +657,14 @@ export class CharacterAnimationRuntime {
         ? this.closestLocomotionOffset(clip, this.lastSampledPose, intent.motion) : null;
       const runHandoffOffset =
         this.manualClipId === null &&
-        (previousClipId === LAND_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID) && clip.id === 'player.run'
+        (previousClipId === LAND_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID || previousClip?.metadata?.jakDirect) && clip.id === 'player.run'
           ? this.pendingRunHandoffOffset
           : null;
       const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
-        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID)
+        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID || previousClip?.metadata?.jakDirect)
         ? this.pendingIdleHandoffOffset : null;
       const switchBlendDuration = this.manualClipId === null
-        ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
+        ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : clip.metadata?.jakDirect ? (previousClipId ? clip.id === LAND_CLIP_ID ? .02
             : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14 : .05 : 0)
@@ -687,7 +697,7 @@ export class CharacterAnimationRuntime {
       this.playbackSeconds = 0;
       const directOffset = clip.metadata?.jakDirect && clip.id === RUN_STOP_CLIP_ID && previousClipId === 'player.run'
         ? ((50 + (5 / 6) * ((this.timelineTime ?? 0) * 60 - 25)) % 50) / 60
-        : clip.metadata?.jakDirect && clip.id === 'player.run' && previousClipId?.startsWith('player.jak-run-land') ? .5 : null;
+        : null;
       this.playbackOffset = directOffset ?? idleHandoffOffset ?? runHandoffOffset ?? matchedOffset ?? 0;
       this.pendingRunHandoffOffset = null;
       this.pendingIdleHandoffOffset = null;
@@ -824,6 +834,14 @@ export class CharacterAnimationRuntime {
       this.recoveryIdle = null;
       this.pendingIdleHandoffOffset = null;
     }
+    if (this.manualClipId === null && clip.metadata?.jakDirect &&
+        (this.transient?.kind === 'landing' || clip.id === 'player.climb')) {
+      const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
+      const phase = clip.id === 'player.climb'
+        ? recovery >= 0 ? .7 + recovery * .3 : motion.actionProgress * .7
+        : (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
+      pose = this.recoverDirectLocomotion(clip, pose, motion, phase, dt);
+    } else this.directRecovery = null;
     // Complete the revolution, then recover into the locomotion actually
     // being performed. Releasing the stick can settle into Idle; the roll
     // must never manufacture a final running stride on a stationary player.
@@ -964,6 +982,42 @@ export class CharacterAnimationRuntime {
     this.recoveryIdleWeight = weight;
     this.recoveryIdleTimelineTime = idleTime;
     if (phase >= 1 - 1e-8 && weight >= 1 - 1e-8) this.pendingIdleHandoffOffset = idleTime - idle.range.start;
+    return result;
+  }
+
+  /** Resume strides under the source rebound. The waist and root finish their
+   * bounce independently of the legs, then hand off at the very same phase. */
+  private recoverDirectLocomotion(clip: AnimationClip, pose: PoseBuffer, motion: ProceduralMotionContext,
+    phase: number, dt: number): PoseBuffer {
+    const run = this.findPlayableClip('player.run'), idle = this.findPlayableClip('player.idle');
+    if (!run || !idle) return pose;
+    if (this.directRecovery?.source !== clip.id) this.directRecovery = {
+      source: clip.id, runOffset: this.closestLocomotionOffset(run, pose, motion),
+      idleOffset: this.closestLocomotionOffset(idle, pose, motion), runClock: 0, idleClock: 0,
+    };
+    else {
+      this.directRecovery.runClock += dt * this.runtimeSpeed * this.locomotionPlaybackScale(run, motion);
+      this.directRecovery.idleClock += dt * this.runtimeSpeed;
+    }
+    const state = this.directRecovery;
+    const runTime = clipTimeAt(run, state.runClock, {offset: state.runOffset});
+    const idleTime = clipTimeAt(idle, state.idleClock, {offset: state.idleOffset});
+    const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
+    const moving = smoothstep01((motion.inputs?.footSpeed ?? 0) / .8);
+    const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)),
+      canonical(this.samplePoseAt(run, runTime, motion, true)), moving);
+    const source = canonical(pose);
+    const climb = clip.id === 'player.climb';
+    const bodyWeight = smoothstep01((phase - (climb ? .62 : .45)) / (climb ? .38 : .55));
+    const legsWeight = smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
+    const result = blendPoses(source, target, bodyWeight);
+    const stride = blendPoses(source, target, legsWeight);
+    for (const id of ['hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight','toeLeft','toeRight'])
+      if (stride.joints[id]) result.joints[id] = stride.joints[id];
+    for (const [id, value] of Object.entries(stride.scalars ?? {}))
+      if (id.startsWith('deform.leg.')) result.scalars![id] = value;
+    this.pendingRunHandoffOffset = runTime - run.range.start;
+    this.pendingIdleHandoffOffset = idleTime - idle.range.start;
     return result;
   }
 
@@ -1218,6 +1272,7 @@ export class CharacterAnimationRuntime {
     this.crawlPalmWeight = 0;
     this.switchOutgoingCrawlPalmWeight = 0;
     this.currentClipId = null;
+    this.directRecovery = null;
     if (clearRequest) this.requestedClipId = null;
     this.elapsedSeconds = 0;
     this.playbackSeconds = 0;

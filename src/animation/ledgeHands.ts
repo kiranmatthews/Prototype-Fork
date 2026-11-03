@@ -17,7 +17,8 @@ export class LedgeHandMotion {
   private lastDirection = 0;
   private settlePasses = 0;
   readonly duration = .12;
-  readonly spread = .30;
+  readonly spread = .35;
+  readonly traverseSpeed = 2;
 
   get reaching(): boolean { return this.active !== null; }
 
@@ -49,7 +50,7 @@ export class LedgeHandMotion {
     const direction = moving && Math.abs(speed) > .05 ? Math.sign(speed) : 0;
     // Refitting a corner changes the capsule's clearance in a single frame.
     // Predict only traversal along the lip, never that outward correction.
-    velocity.copy(side).multiplyScalar(THREE.MathUtils.clamp(speed, -2.4, 2.4));
+    velocity.copy(side).multiplyScalar(THREE.MathUtils.clamp(speed, -this.traverseSpeed, this.traverseSpeed));
     if (direction) this.settlePasses = 2;
     if (direction && direction !== this.lastDirection) {
       this.next = direction > 0 ? 'left' : 'right';

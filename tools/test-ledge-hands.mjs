@@ -14,7 +14,7 @@ try {
     for(let f=0;f<fps*7;f++) {
       const t=f/fps,move=t<1.17?first:t<2.5?-first:t<3?0:t<4.17?first:t<5?-first:0;
       const before=[hands.left.clone(),hands.right.clone()];
-      centre.x+=move*2.4/fps;hands.update(1/fps,centre,side,!!move,project);
+      centre.x+=move*hands.traverseSpeed/fps;hands.update(1/fps,centre,side,!!move,project);
       const distances=[hands.left.distanceTo(before[0]),hands.right.distanceTo(before[1])];
       assert.ok(Math.min(...distances)<1e-10,'both hands moved in one frame');
       if(move&&Math.max(...distances)>.001)plantedFrames++;

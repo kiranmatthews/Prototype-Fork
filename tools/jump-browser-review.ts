@@ -208,6 +208,12 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
   }
+  if (mode === 'Walk, run and turn') {
+    const demo = {moveX:frame>=210&&frame<285?-1:0,moveY:frame<90?.3:frame<210?1:0,
+      jumpHeld:false,jumpPressed:false,jumpReleased:false};
+    nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(frame>480)resetInspector();return;
+  }
   const running = mode === 'Running jump' || mode === 'Run and stop';
   const hold = mode === 'Tap jump' ? 3 : running ? 18 : 35, release = 50 + hold;
   const demo = {moveX: 0, moveY: running && (mode !== 'Run and stop' || frame < 145) ? 1 : 0,
@@ -268,7 +274,7 @@ instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in
 const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. Air physics changes on your next foot jump.';
 panel.append(instructions, continuity);
 const directHint = document.createElement('p');
-directHint.textContent = 'D adds Jak’s ledge catches, hanging, pull-up and release, plus the restored forward flip. Release to jump; hold while running to skate.';
+directHint.textContent = 'D pairs Jak’s motion with our walk, run, turns and inertia. Wider ledge grips, a gentler pull-up, and a forward jump flip. Release to jump; hold while running to skate.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
 const flipLabel=document.createElement('label'),flipBox=document.createElement('input');
@@ -325,7 +331,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Run and stop',
+const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Run and stop','Walk, run and turn',
   'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -358,7 +364,7 @@ function report() {
   instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in air for double jump. Hold while running to skate.';
   playButton.setAttribute('aria-pressed', String(!inspect)); inspectButton.setAttribute('aria-pressed', String(inspect));
   const audio = before || !jakSounds ? 'Original sounds' : sfx.jumpAudioSource;
-  current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Direct source motion + Jak timing'} · ${audio}`;
+  current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Direct Jak motion + our locomotion'} · ${audio}`;
   const d = runtime.diagnostics, scalars = runtime.lastSampledPose?.scalars;
   motionSelect.value=mode;
   viewSelect.value=angle===Math.PI?'Front':angle===Math.PI/2?'Side':angle===0?'Behind':'Oblique';
@@ -366,6 +372,7 @@ function report() {
   status.textContent = JSON.stringify({variant, mode: inspect ? mode : 'Live play', before, frame, frozen, slow, stopAt,
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
+    footSpeed:+p.walkVelocity.length().toFixed(3),turning:p.walkTurnaround,
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
     jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
     cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),

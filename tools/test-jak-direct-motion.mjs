@@ -41,7 +41,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
   }
   assert.ok(maxDirectionError<.001,`retarget bone directions changed ${maxDirectionError}`);
   const runtime=createCharacterAnimationRuntime(p,suite), results=[];
-  let minimumSole=Infinity, maximumPlantedSole=-Infinity, liveApexDirectionError=0;
+  let minimumSole=Infinity, maximumPlantedSole=-Infinity, liveApexDirectionError=0,minimumSoleFrame;
   for(const [name,hold,move,second] of [['tap',1,0,false],['full',35,0,false],['double',35,0,true],['running recovery',18,1,false]]) {
     p.enterLevel('jak-direct');p.respawn(level,true);p.freeSkate=false;p.onFootJumpStudy=JAK_DIRECT_PHYSICS;runtime.restart();
     let peak=0,air=-1,land=-1,secondFrame=-1,secondY=0,secondPeak=0,maxSpeed=0;const clips=new Set();
@@ -68,16 +68,17 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
           const vertices=sole.geometry.getAttribute('position');
           for(let i=0;i<vertices.count;i++)planted=Math.min(planted,new THREE.Vector3().fromBufferAttribute(vertices,i).applyMatrix4(sole.matrixWorld).y);
         }
-        minimumSole=Math.min(minimumSole,planted);maximumPlantedSole=Math.max(maximumPlantedSole,planted);
+        if(planted<minimumSole){minimumSole=planted;minimumSoleFrame={name,frame,clip:runtime.activeClipId,time:runtime.diagnostics.timelineTime,footSpeed:p.walkVelocity.length(),root:p.pos.y};}
+        maximumPlantedSole=Math.max(maximumPlantedSole,planted);
       }
       assert.equal(p.freeSkate,false,'on-foot D accidentally mounted a board');
       assert.ok(p.pos.toArray().every(Number.isFinite));
     }
     assert.equal(air,40+hold,'D must retain release-to-jump');assert.ok(land>air);
     assert.equal(runtime.activeClipId,'player.idle','recovery/pacing failed to finish');
-    if(name==='full')assert.ok(peak>2.65&&peak<2.95);
-    if(name==='tap')assert.ok(peak>.85&&peak<1.2);
-    if(second){assert.ok(clips.has('player.double-jump'));assert.ok(secondPeak>1.65&&secondPeak<1.95);}
+    if(name==='full')assert.ok(Math.abs(peak-JAK_DIRECT_PHYSICS.maximumHeight)<.03);
+    if(name==='tap')assert.ok(Math.abs(peak-THREE.MathUtils.lerp(JAK_DIRECT_PHYSICS.minimumHeight,JAK_DIRECT_PHYSICS.maximumHeight,1/24))<.03);
+    if(second){assert.ok(clips.has('player.double-jump'));assert.ok(Math.abs(secondPeak-JAK_DIRECT_PHYSICS.doubleHeight)<.04);}
     if(move){assert.ok(clips.has('player.jak-run-land'));assert.ok(clips.has('player.run-stop'));}
     results.push({name,peak,airtime:(land-air)/60,secondPeak,maxSpeed,clips:[...clips]});
   }
@@ -92,7 +93,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
   }
   assert.ok(mounted&&boardAir,'hold-to-skate and release-to-ollie must both remain available');
   assert.ok(liveApexDirectionError<.001,`a legacy layer changed the live source pose: ${liveApexDirectionError}`);
-  assert.ok(minimumSole>=-.002,'direct motion penetrated the supporting floor');
+  assert.ok(minimumSole>=-.002,`direct motion penetrated the supporting floor: ${minimumSole} ${JSON.stringify(minimumSoleFrame)}`);
   runtime.dispose();
   console.log('PASS D direct source retarget, release-to-jump, double jump, recovery and pace-to-idle',JSON.stringify({samples,maxDirectionError,liveApexDirectionError,minimumSole,maximumPlantedSole,results},null,2));
 },{levelEntry:{id:'jak-direct',name:'Direct Jak test',data:{v:1,name:'Direct Jak test',spawn:[0,.02,0],killY:-30,

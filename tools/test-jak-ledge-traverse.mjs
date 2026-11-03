@@ -49,19 +49,21 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
     results.push({kind:'reversals',first,maxHipStep,maxGrip,maxReverse,planted});
   }
   for(const direction of [-1,1]) {
-    reset(direction*8.7);let maxGrip=0,maxHipStep=0,maxPlanarStep=0,travel=0;
+    reset(direction*8.7);let maxGrip=0,maxHipStep=0,maxPlanarStep=0,travel=0,maxGripFrame;
     const faces=new Set();let hip=point('hips'),position=p.pos.clone();
     for(let f=0;f<240;f++) {
       const normal=p.ledgeNormal.clone(),oldHip=hip;
       tick({moveX:normal.z*direction,moveY:normal.x*direction});
       assert.equal(p.state,'hang',`corner lost grip at ${f}`);assert.equal(p.ledgePhase,'grip');
       faces.add(p.ledgeNormal.toArray().map(x=>Math.round(x)).join(','));
-      maxGrip=Math.max(maxGrip,p.ledgeGripError);travel+=p.pos.distanceTo(position);
+      if(p.ledgeGripError>maxGrip){maxGrip=p.ledgeGripError;maxGripFrame={f,position:p.pos.toArray(),normal:p.ledgeNormal.toArray(),lift:p.ledgeReachLift,
+        left:p.ledgeHands.left.toArray(),right:p.ledgeHands.right.toArray(),hip:point('hips').toArray()};}
+      travel+=p.pos.distanceTo(position);
       hip=point('hips');maxHipStep=Math.max(maxHipStep,hip.distanceTo(oldHip));
       maxPlanarStep=Math.max(maxPlanarStep,Math.hypot(hip.x-oldHip.x,hip.z-oldHip.z));position.copy(p.pos);
     }
     assert.ok(faces.size>=3,'test did not traverse corners');assert.ok(travel>9,'corner traversal stalled');
-    assert.ok(maxGrip<.006,`corner glove slipped: ${maxGrip}`);
+    assert.ok(maxGrip<.006,`corner glove slipped: ${maxGrip} ${JSON.stringify(maxGripFrame)}`);
     assert.ok(maxPlanarStep<.08,`corner body snapped sideways: ${maxPlanarStep}`);
     assert.ok(maxHipStep<.15,`corner body snapped: ${maxHipStep}`);
     results.push({kind:'corners',direction,maxGrip,maxHipStep,maxPlanarStep,travel,faces:[...faces]});

@@ -144,20 +144,23 @@ fall, full/short landing recovery, run-squash and weak run-squash, and the compl
 three-cycle run-to-stance lead-in followed by the source settle. Source jump
 frame 20 follows the physical apex; double jump restarts at frame 5. Running
 blends walk/run by speed and advances by distance (2.8/6.25 m stride lengths).
-Moving landings use the source's early catch followed by its 5 m recovery stride;
-normal running resumes at source frame 30. Letting go of movement plays the
-source pacing sequence, then reaches idle. New input interrupts recovery.
+Moving landings retain the source catch/rebound while blending the legs into
+a continuing, phase-matched walk/run cycle. The waist and root finish their
+bounce separately. Letting go of movement plays the source pacing sequence,
+then reaches idle. New input interrupts recovery.
 
 **The user's explicit control preference is retained:** release to jump, hold
 while running to skate, and tap/release again in the air for double jump. The
-project's charge gesture maps onto the source height range; D does not switch
-to Jak's immediate press/hold input. D uses 60 m/s² flight gravity, 1.01–2.8 m
-charge targets and a 1.8 m second pop, with the source -15 to +3 m/s double-jump
-window. Flat movement uses the stone-surface thrust/friction values: 10 m/s
-running, 8 m/s second-jump target speed, 37.5 m/s² forward thrust, and the source
-nonlinear braking rule (air seek/friction factors .3/.2). Existing collision,
-camera and special-surface systems still apply. This is direct motion retargeting
-and selected controller rules, not a port of the entire Jak engine.
+project's charge gesture remains intact; D does not switch to Jak's immediate
+press/hold input. Following the 4 November movement-polish request, D keeps
+60 m/s² flight gravity and the source -15 to +3 m/s double-jump window, but uses
+our native walk/run acceleration, turns, inertia and air steering. The new
+2.900–3.613 m first-jump targets are calibrated to A's visible skull peaks with
+the forward flip enabled. The second boost interpolates 0.5845–0.7915 m by the
+first jump's charge, accounting for D's higher first arc. See the measurements
+below. Existing collision, camera and special-surface systems still apply.
+This is direct motion retargeting and selected controller rules, not a port of
+the entire Jak engine.
 
 The page defaults to D when the local bank is available. **Watch motion → Show
 original Jak alongside (D)** plays the full original model beside Bone Man at
@@ -179,7 +182,7 @@ served there. Neither the retargeted keys nor the original model enter Git or
 the production bundle. The source overlay loads only when requested in the
 local inspector. Its complete LOD0 geometry is retained.
 
-Validation: 1,025 sampled poses preserve all eight major limb directions to
+Initial D validation (before the later height/locomotion changes): 1,025 sampled poses preserve all eight major limb directions to
 within 0.0000013 degrees; the actual live apex also matches after runtime
 composition. Real-input tap/full peaks are 1.083/2.799 m and the second pop adds
 1.799 m. Landing and pacing finish; no supporting-floor penetration was found.
@@ -290,3 +293,77 @@ stays below 1 mm in the straight/corner fixture. The existing 2,485-frame
 ledge/flip/skate regression, strict playtest types and production build pass.
 Manual browser reversals, an actual corner traverse and normal/native views
 are saved in the external `ledge-shimmy-review` directory. No console errors.
+
+## D — movement, proportions and height polish, 4 November 2026 NZDT
+
+The run's source waist could extend to more than twice its stance length.
+Bone Man already has a separate lower-spine segment, so that translation made
+the pelvis and legs appear detached from the upper body. Walk/run, run-stop
+and moving-land clips now retain 25% of that length variation, bounded to
+0.85–1.18 times the resting waist. Source bending, limb directions and the
+independent editable segment deformation controls remain. This correction is
+local to D's generated suite.
+
+D now follows the game's native walk/run controller, including analog walking,
+the 9 m/s run cap, acceleration ramp, committed turns, stopping inertia and air
+steering. A 240-frame walk/accelerate/turn/coast sequence produces exactly the
+same positions, speeds and turnaround flags as A. The inspector adds **Walk,
+run and turn** for viewing this without repeated manual setup.
+
+Jump heights are matched using the highest world-space vertex of Bone Man's
+actual skull mesh during flight, rather than just the collision root. These
+measurements use default Bone Man proportions, the restored flip enabled, and
+the same charge durations; double jumps are released at each variant's apex.
+The highest error across 12 tap/partial/full/running/double comparisons is
+0.0152 m. Representative peaks above the common floor:
+
+| Jump | A skull peak | D skull peak |
+| --- | ---: | ---: |
+| Tap, 1 frame | 5.0475 m | 5.0491 m |
+| Half charge, 12 frames | 5.3521 m | 5.3672 m |
+| Full charge, 24 frames | 5.7154 m | 5.7159 m |
+| Tap + double | 6.6634 m | 6.6638 m |
+| Full + double | 7.4345 m | 7.4359 m |
+
+The higher first arc compensates for the flip lowering the visible head. Its
+charge-dependent second boost compensates for that higher starting point.
+Changing the presentation-only flip toggle still leaves controller movement
+identical; the height comparison above specifically describes flip-on D.
+
+Moving landings now resume the distance-driven walk/run stride under the source
+rebound. Legs recover first; the torso/root keep their finite bounce, and the
+incoming loop continues from the same sampled phase. Starting to run during a
+standing landing also uses this path. The measured head displacement at the
+final landing-to-locomotion handoff is zero in the comparison fixtures. After
+independent leg/torso blending, a D-only sole correction lifts any downward
+floor penetration without suppressing the upward rebound or moving collision.
+
+Ledge grips widen from 0.60 to 0.70 m; D traverses at 2.0 instead of 2.4 m/s,
+retaining the 0.12 s alternating reaches so the wider trailing grip stays in
+reach around corners. Its pull-up takes 0.475 instead of 0.38 s.
+Corner contact projection is bounded to the planned reach radius; a support
+probe on the next face must shorten the reach instead of extending it.
+The source root changes from hand-relative to foot-relative during the latter
+half, then a 0.20 s pose settle blends into the requested movement. The validated
+deck becomes ground support immediately, preventing an extra air step, speed
+spike or landing one-shot. Controls resume during that settle. The default-rig
+late climb head step is below 0.060 m/frame at 60 Hz, including running away.
+
+`tools/test-jak-d-polish.mjs /path/to/motion.json` exercises 6,620 native frames
+for skull peaks, exact A/D locomotion parity, waist range, landing handoff and
+stationary/moving pull-up recovery. `--calibrate` additionally solves height
+targets against A and prints the measurements without changing source files.
+The focused source-retarget, ledge/flip, corner/reversal and skateboard checks
+also pass: 1,599 source poses, 2,485 ledge/flip frames, 1,731 traversal frames
+and the campaign/park board comparison. Worst straight/corner grip residual
+is 0.000273 m, with no backwards torso steps during traversal. Strict playtest
+types, runtime routing, production build and release-size checks pass (803,510,039
+bytes). Browser evidence in the external `d-movement-polish/` directory
+shows normal/native rendering, the source comparison, running rebound, a manual
+corner traverse and a pull-up into movement. No browser errors. The final scene
+switch emitted 44 texture-without-image warnings within 0.4 s; no later warnings
+were recorded during the remaining review. The earlier browser passes were
+warning-free. Both console captures are retained with the evidence.
+
+This remains a local A/B/C/D comparison. A/B/C, level data, global tuning, source
+assets and production entrypoints are unchanged; no publication is authorized.

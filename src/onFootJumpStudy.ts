@@ -4,9 +4,13 @@ export interface OnFootJumpStudy {
   readonly minimumHeight: number;
   readonly maximumHeight: number;
   readonly doubleHeight: number;
+  /** Optional tap-launch boost; full charge uses doubleHeight. */
+  readonly doubleMinimumHeight?: number;
   readonly steeringSeconds: number;
   readonly coastSeconds: number;
   readonly direct?: boolean;
+  /** Keep the game's authored walk/run acceleration, turns and air steering. */
+  readonly nativeLocomotion?: boolean;
   readonly runSpeed?: number;
   /** Presentation only; source roll-jump around the hips, on the same arc. */
   readonly flip?: boolean;

@@ -10,8 +10,9 @@ export interface JakMotionBank {
   clips: Record<string, {duration: number; frames: number; samples: Frame[]}>;
 }
 export const JAK_DIRECT_PHYSICS: Readonly<OnFootJumpStudy> = Object.freeze({
-  gravity: 60, minimumHeight: 1.01, maximumHeight: 2.8, doubleHeight: 1.8,
-  steeringSeconds: .10, coastSeconds: .20, direct: true, runSpeed: 10,
+  // Measured against A's visible skull peak, including the restored flip.
+  gravity: 60, minimumHeight: 2.9, maximumHeight: 3.613, doubleHeight: .7915, doubleMinimumHeight: .5845,
+  steeringSeconds: .10, coastSeconds: .20, direct: true, nativeLocomotion: true,
 });
 
 // Source and destination both face +Z in rig space. The source bind has
@@ -61,7 +62,7 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
   const targetAnkleY=definitions.get('hips')!.rest.position[1]-targetLegLength;
   const neutralAnkleY=Math.min(neutral.Lankle.p[1],neutral.Rankle.p[1]);
   const waistRatio=v(definitions.get('spine')!.rest.position).length()/vector(neutral,'hips','upper_body').length();
-  const retarget=(frame:Frame, rootMode='feet', phase=0)=>{
+  const retarget=(frame:Frame, rootMode='feet', phase=0, locomotion=false)=>{
     const locals:Record<string,QuaternionTuple>={}, positions:Record<string,THREE.Vector3>={}, worlds:Record<string,THREE.Quaternion>={};
     const lengths:Record<string,number>={}, translations:Record<string,Vec3Tuple>={};
     for(const [, [a,b,control]] of Object.entries(segments))
@@ -85,7 +86,15 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
       // spine is a separate segment; carry that motion without scaling its
       // skeleton or forcing the upper chest's length onto the lower back.
       if(joint.id==='spine') {
-        offset.copy(vector(frame,'hips','upper_body').multiplyScalar(waistRatio).applyQuaternion(parentQ.clone().invert()));
+        const waist=vector(frame,'hips','upper_body').multiplyScalar(waistRatio);
+        if(locomotion) {
+          // Jak's waist stretches to twice its stance length in the run.
+          // Bone Man's separate lower spine already fills the waist; retain
+          // the bend and a restrained elastic pulse within that segment.
+          const rest=v(joint.rest.position).length();
+          waist.setLength(rest*THREE.MathUtils.clamp(1+(waist.length()/rest-1)*.25,.85,1.18));
+        }
+        offset.copy(waist.applyQuaternion(parentQ.clone().invert()));
         translations.spine=offset.clone().sub(v(joint.rest.position)).toArray() as Vec3Tuple;
       }
       const parentSegment=joint.parentId?segments[joint.parentId]:null;
@@ -103,12 +112,13 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
       // The gameplay arc carries the hips. Copying the rolling clip's root
       // would add a second trajectory and make the feet orbit the floor.
       root.splice(0,3,0,0,0);
-    } else if(rootMode==='hands' || rootMode==='release') {
+    } else if(rootMode==='hands' || rootMode==='release' || rootMode==='climb') {
       // Contact-relative retargeting preserves the catch's pendulum/squash.
       // Final world-space glove contacts adapt to the live lip/proportions.
       const centre=positions.wristLeft.clone().add(positions.wristRight).multiplyScalar(.5);
       const handRoot=new THREE.Vector3(0,1.25,.35).sub(centre);
       if(rootMode==='release')handRoot.lerp(v(root),THREE.MathUtils.smoothstep(phase,.35,1));
+      if(rootMode==='climb')handRoot.lerp(v(root),THREE.MathUtils.smoothstep(phase,.45,1));
       root.splice(0,3,...handRoot.toArray());
     }
     return {locals,lengths,translations,root};
@@ -143,8 +153,9 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const original=suite.clips.find(c=>c.id===id)??suite.clips.find(c=>c.id==='player.land')!;
     const tracks:AnimationTrack[]=[];
     const ledge=name.includes('edge-grab');
-    const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':ledge?'hands':'feet';
-    const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1)));
+    const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':id==='player.climb'?'climb':ledge?'hands':'feet';
+    const locomotion=['player.run','player.walk','player.run-stop','player.jak-run-land','player.jak-run-land-weak'].includes(id);
+    const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1),locomotion));
     for(const target of Object.keys(poses[0].locals))tracks.push({id:`${id}:${target}:source`,kind:'quaternion',target,
       keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.locals[target],interpolation:'linear'}))});
     tracks.push({id:`${id}:root:source`,kind:'position',target:'root',keys:poses.map((pose,i)=>({id:`${id}:root:p${i}`,time:Math.min(reference.duration,i/60),value:pose.root,interpolation:'linear'}))});
