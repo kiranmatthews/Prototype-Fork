@@ -8427,3 +8427,29 @@ shared-pack changes, full suite, push or publication.
 
 Prompt to validated local preview: approximately **50 minutes**. Details:
 [downhill restart iteration](spaghetti-infinite/DOWNHILL_RESTART_ITERATION.md).
+
+## 2026-11-03 — P1 platformer with rotating infinite space (local preview)
+
+Restore the selected P1 folded maze: 79 platforms, 54 rails, eighteen branch
+routes and its original checkpoint/fruit/crystal route. Replace the fatal
+abyss with 192 m vertical repeats, each lower instance yawed five degrees.
+Measured free fall is 3.93 seconds through the first cell and 3.69 seconds at
+terminal speed thereafter. Real landing times depend on the original maze.
+
+Use one rigid transform for the neighbour geometry and player/camera seam.
+Preserve momentum, interpolation, input orientation and collected progress;
+hold the airborne camera frame until real support resumes P1's height-aware
+route. Exact shared geometry and bounded render neighbours keep resources
+constant through repeated falls. The race layout and physics tuning remain
+unchanged.
+
+Native still/moving/upward wraps, rotated landing collision, checkpoint,
+crystal and finish fixtures pass. Chrome lite/full/MAX and normal presentation
+show visible characters and continuous cameras, including 683 frames across
+three moving falls; consoles are clean. The separate race smoke, focused
+camera/interpolation/geometry regressions, required level checks and production
+build pass. No full all-box playthrough or full suite was run.
+
+Prompt to validated local preview: approximately **23 minutes**. No shared
+pack update, push or publication. Details and evidence:
+[P1 infinite twist iteration](spaghetti-infinite/P1_TWIST_ITERATION.md).

@@ -1,0 +1,211 @@
+{
+  "scope": "Native P1 restoration, isometry/render continuity, repeated physical falls, landing, checkpoint and crystal/finish fixtures. Not a complete manual playthrough.",
+  "spawn": {
+    "frame": 30,
+    "time": 0.5,
+    "position": [
+      0,
+      164,
+      108
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 164,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "fall": [
+    {
+      "seconds": 3.933333333333333,
+      "verticalSpeed": -52,
+      "offset": 192
+    },
+    {
+      "seconds": 7.616666666666666,
+      "verticalSpeed": -52,
+      "offset": 384
+    },
+    {
+      "seconds": 11.316666666666666,
+      "verticalSpeed": -52,
+      "offset": 576
+    },
+    {
+      "seconds": 15,
+      "verticalSpeed": -52,
+      "offset": 768
+    },
+    {
+      "seconds": 18.7,
+      "verticalSpeed": -52,
+      "offset": 960
+    }
+  ],
+  "movingFall": {
+    "wraps": 3,
+    "speed": 21
+  },
+  "upward": {
+    "position": [
+      769.4852900493655,
+      0.5575000000000045,
+      631.4747923554053
+    ],
+    "verticalSpeed": 39.45
+  },
+  "catch": {
+    "frame": 1715,
+    "time": 28.583333333333332,
+    "position": [
+      8.881784197001252e-15,
+      164,
+      100.00000000000001
+    ],
+    "heading": [
+      0.014872700828058704,
+      0,
+      -0.9998893952683363
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "platform",
+      "y": 164,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "finish": {
+    "frame": 1933,
+    "time": 32.21666666666667,
+    "position": [
+      15,
+      20.726666669150195,
+      -418.4499999999976
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "warp plinth rim",
+      "y": 20.726666669150195,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 1,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "loop": {
+    "minY": 0,
+    "height": 192,
+    "twist": {
+      "degrees": 5,
+      "center": [
+        -50,
+        -130
+      ]
+    }
+  },
+  "counts": {
+    "platforms": 79,
+    "rails": 54,
+    "branches": 18
+  }
+}

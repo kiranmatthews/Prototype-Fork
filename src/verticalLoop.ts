@@ -2,16 +2,36 @@ import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 /** One physical cell, with an empty seam above/below all rideable surfaces. */
-export interface VerticalLoopData { minY:number; height:number; launchCamera?:boolean; }
+export interface VerticalLoopData {
+  minY:number; height:number; launchCamera?:boolean;
+  /** Yaw of each LOWER copy, in degrees, around a fixed world X/Z centre. */
+  twist?:{degrees:number;center:[number,number]};
+}
 
 export function verticalLoopShift(y:number,loop:VerticalLoopData):number {
   return -Math.floor((y-loop.minY)/loop.height)*loop.height;
 }
 
+export function verticalLoopYaw(loop:VerticalLoopData,offset:number):number {
+  return -offset/loop.height*(loop.twist?.degrees??0)*Math.PI/180;
+}
+
+/** The same screw isometry owns render neighbours and simulation rebasing.
+ * T(a)T(b)=T(a+b), so multiple wraps and upward travel are exact inverses. */
+export function verticalLoopTransform(loop:VerticalLoopData,offset:number,target=new THREE.Matrix4()):THREE.Matrix4 {
+  const yaw=verticalLoopYaw(loop,offset),c=Math.cos(yaw),s=Math.sin(yaw);
+  const [x,z]=loop.twist?.center??[0,0];
+  return target.set(c,0,s,x-c*x-s*z, 0,1,0,offset, -s,0,c,z+s*x-c*z, 0,0,0,1);
+}
+
 export function validVerticalLoop(value:unknown):value is VerticalLoopData {
   if(!value||typeof value!=='object'||Array.isArray(value))return false;
   const v=value as VerticalLoopData;
-  return Object.keys(v).every(k=>k==='minY'||k==='height'||k==='launchCamera')&&
+  const twist=v.twist;
+  const validTwist=twist===undefined||!!twist&&typeof twist==='object'&&!Array.isArray(twist)&&
+    Object.keys(twist).every(k=>k==='degrees'||k==='center')&&Number.isFinite(twist.degrees)&&Math.abs(twist.degrees)<=45&&
+    Array.isArray(twist.center)&&twist.center.length===2&&twist.center.every(n=>Number.isFinite(n)&&Math.abs(n)<=10000);
+  return validTwist&&Object.keys(v).every(k=>k==='minY'||k==='height'||k==='launchCamera'||k==='twist')&&
     (v.launchCamera===undefined||typeof v.launchCamera==='boolean')&&
     Number.isFinite(v.minY)&&Math.abs(v.minY)<=10000&&Number.isFinite(v.height)&&v.height>=32&&v.height<=2048;
 }
@@ -65,7 +85,7 @@ export function partitionPeriodicGeometry(geometry:THREE.BufferGeometry):Map<str
  * Transform/visibility mirrors also keep broken boxes broken in every cell. */
 export class VerticalLoopView {
   readonly root=new THREE.Group();
-  private copies:{source:THREE.Mesh;mesh:THREE.Mesh;offset:number}[]=[];
+  private copies:{source:THREE.Mesh;mesh:THREE.Mesh;transform:THREE.Matrix4}[]=[];
   private known=new WeakSet<THREE.Object3D>();
   private inverse=new THREE.Matrix4();
   private owned:THREE.BufferGeometry[]=[];
@@ -85,14 +105,14 @@ export class VerticalLoopView {
     if(this.scanAt++%60===0)this.scan();
     this.source.updateWorldMatrix(true,true);
     this.inverse.copy(this.source.matrixWorld).invert();
-    for(const {source,mesh,offset} of this.copies){
+    for(const {source,mesh,transform} of this.copies){
       let visible=true,ancestor:THREE.Object3D|null=source;
       for(;ancestor&&ancestor!==this.source;ancestor=ancestor.parent)if(!ancestor.visible){visible=false;break;}
       if(!ancestor)visible=false;
       mesh.visible=visible;
       mesh.geometry=source.geometry;mesh.material=source.material;
       mesh.matrix.multiplyMatrices(this.inverse,source.matrixWorld);
-      mesh.matrix.elements[13]+=offset;
+      mesh.matrix.premultiply(transform);
       mesh.matrixWorldNeedsUpdate=true;
       // Skinned proxies share the live bone palette and exact source shape.
       if(source instanceof THREE.SkinnedMesh&&mesh instanceof THREE.SkinnedMesh){
@@ -152,7 +172,7 @@ export class VerticalLoopView {
         mesh.matrixAutoUpdate=false;mesh.castShadow=false;mesh.receiveShadow=source.receiveShadow;mesh.renderOrder=source.renderOrder;
         // Raycasts on the level root (editor/inspection) must not pick ghosts.
         mesh.raycast=()=>{};
-        this.root.add(mesh);this.copies.push({source,mesh,offset:cell*this.loop.height});
+        this.root.add(mesh);this.copies.push({source,mesh,transform:verticalLoopTransform(this.loop,cell*this.loop.height)});
       }
     }
     for(const {material,geometries} of batches.values()){
@@ -162,8 +182,8 @@ export class VerticalLoopView {
       geometry.computeBoundingSphere();this.owned.push(geometry);this.batches++;
       for(const cell of this.cells){
         const mesh=new THREE.Mesh(geometry,material);
-        mesh.name='Periodic / native static batch';mesh.position.y=cell*this.loop.height;
-        mesh.matrixAutoUpdate=false;mesh.updateMatrix();mesh.raycast=()=>{};
+        mesh.name='Periodic / native static batch';
+        mesh.matrixAutoUpdate=false;verticalLoopTransform(this.loop,cell*this.loop.height,mesh.matrix);mesh.raycast=()=>{};
         this.root.add(mesh);
       }
     }

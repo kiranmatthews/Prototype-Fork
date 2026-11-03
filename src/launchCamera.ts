@@ -31,6 +31,11 @@ export class LaunchCamera {
   shiftY(offset:number):void {
     this.height+=offset;this.basePosition.y+=offset;this.shotPosition.y+=offset;this.aim.y+=offset;
   }
+  transformWorld(matrix:THREE.Matrix4,rotation:THREE.Quaternion,yaw:number):void {
+    this.height+=matrix.elements[13];this.yaw+=yaw;
+    this.basePosition.applyMatrix4(matrix);this.shotPosition.applyMatrix4(matrix);this.aim.applyMatrix4(matrix);
+    this.baseRotation.premultiply(rotation);this.shotRotation.premultiply(rotation);
+  }
   restore(camera:THREE.PerspectiveCamera):void {
     if(!this.saved)return;
     camera.position.copy(this.basePosition);camera.quaternion.copy(this.baseRotation);

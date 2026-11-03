@@ -4401,7 +4401,10 @@ export class Level {
   get railChoices():RailChoices|null {
     const authored=this.skateRace??this.railNavigation;
     if(!authored?.railChoices?.length)return null;
-    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line,!!this.verticalLoop),authored,this.rails,!!this.verticalLoop);
+    // A twisted repeat can contain P1's folded, vertically separated knots.
+    // Their native 3D navigation must not collapse onto the forward race plane.
+    const planar=!!this.verticalLoop&&!this.verticalLoop.twist;
+    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line,planar),authored,this.rails,planar);
   }
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;

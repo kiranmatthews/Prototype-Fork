@@ -68,7 +68,7 @@ import { Rail, RailSample, nearestRail } from './rails';
 import { naturalRailLandingTime, railLandingFraction } from './grindLanding';
 import {nearestReferenceRail} from './referenceRailCapture';
 import { Halfpipe } from './halfpipe';
-import { verticalLoopShift } from './verticalLoop';
+import {verticalLoopShift,verticalLoopTransform,verticalLoopYaw} from './verticalLoop';
 import { copingPlane, nearestCoping, nextCoping } from './vertHangPlane';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';
@@ -1398,6 +1398,10 @@ export class Player {
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   /** Cumulative coordinate rebases, consumed by the camera (never a respawn). */
   verticalLoopOffset = 0;
+  private readonly loopRebaseMatrix=new THREE.Matrix4();
+  private readonly loopRebaseRotation=new THREE.Quaternion();
+  /** A tumbling cell must not select an unrelated camera lane mid-fall. */
+  get twistingSpaceAir():boolean {return !!this.runLevel?.verticalLoop?.twist&&this.state==='air'&&!this.grounded;}
   private grindRail: Rail | null = null;
   private grindEntryT = 0; // where on the rail this grind STARTED, for the end-to-end check
   trickSpeedBoost = 0;
@@ -4180,10 +4184,32 @@ export class Player {
     if(!level.verticalLoop||this.state==='dead'||this.state==='gameover'||this.state==='finished')return;
     const dy=verticalLoopShift(this.pos.y,level.verticalLoop);
     if(!dy)return;
-    this.pos.y+=dy;this.prevPos.y+=dy;this.renderPosition.y+=dy;
-    this.airPeakY+=dy;this.lastGroundY+=dy;this.vertAnchor.y+=dy;
-    this.previousCharacterBounds.min.y+=dy;this.previousCharacterBounds.max.y+=dy;
-    this.renderInterpolator.translateWorldY(dy);
+    const yaw=verticalLoopYaw(level.verticalLoop,dy);
+    if(yaw){
+      const matrix=verticalLoopTransform(level.verticalLoop,dy,this.loopRebaseMatrix);
+      const rotation=this.loopRebaseRotation.setFromAxisAngle(THREE.Object3D.DEFAULT_UP,yaw);
+      // World-space history and momentum cross the seam as one rigid frame.
+      // Scalar speeds, trick angles, timers and local animation do not change.
+      for(const point of [this.pos,this.prevPos,this.renderPosition,this.vertAnchor,this.naturalGrindEnd,
+        this.parkRailSweepStart,this.parkRailSweepEnd,this.parkPropSweepEnd,this.bailRecoveryAnchor])point.applyMatrix4(matrix);
+      for(const direction of [this.axisF,this.axisL,this.camDir,this.walkVelocity,this.walkIntent,this.slideVec,
+        this.parkVelocity,this.parkPropVelocity,this.parkCameraForward,this.naturalGrindVelocity,
+        this.alignNormal,this.rideNormal,this.vertNormal,this.wallNormal,this.spinePoseFrom,
+        this.bailVelocity,this.bailRecoveryMomentum,this.bailRecoverySpin,this.netRenderOffset,this.previousNetRenderOffset])direction.applyQuaternion(rotation);
+      this.ragQ.premultiply(rotation);this.bailRecoveryOrientation.premultiply(rotation);
+      this.visualYaw=wrapAngle(this.visualYaw+yaw);
+      this.previousCharacterBounds.applyMatrix4(matrix);
+      this.interactionVersion++;
+      this.renderInterpolator.transformWorld(matrix,rotation);
+      // Before the first captured frame the interpolator has no root to move.
+      if(!this.renderInterpolator.hasPose)this.group.quaternion.premultiply(rotation);
+      this.laneCursor.s=-1;
+    }else{
+      this.pos.y+=dy;this.prevPos.y+=dy;this.renderPosition.y+=dy;this.vertAnchor.y+=dy;
+      this.previousCharacterBounds.min.y+=dy;this.previousCharacterBounds.max.y+=dy;
+      this.renderInterpolator.translateWorldY(dy);
+    }
+    this.airPeakY+=dy;this.lastGroundY+=dy;
     this.group.position.copy(this.pos);
     this.verticalLoopOffset+=dy;
     this.fallCameraProbeValid=false;
@@ -6368,6 +6394,7 @@ export class Player {
   bossInputForWorld(x:number,z:number):ChiefDeviceInput {return this.chiefInput.inputForWorld(x,z,this.camDir);}
 
   private courseInputDirection(level:Level):{x:number;z:number}|null {
+    if(this.twistingSpaceAir)return this.camDir;
     if (level.boss) return this.chiefInput.sample(this.rawInput?.moveX??0,this.rawInput?.moveY??0,this.camDir);
     if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) { this.viewInput.reset();this.chiefInput.reset(); return null; }
     if(this.authoredVertReturnInput){
