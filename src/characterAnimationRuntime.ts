@@ -1,4 +1,5 @@
 import type { Player, PlayerAnimationClipHint } from './player';
+import { MathUtils } from 'three';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
@@ -532,7 +533,14 @@ export class CharacterAnimationRuntime {
       // landing plant/recovery. Board contact retains its procedural spring.
       if (justLanded && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
-        this.transient = this.makeTransient('landing', LAND_CLIP_ID);
+        const directLanding = this.findPlayableClip(LAND_CLIP_ID)?.metadata?.jakDirect;
+        const directMovingLanding = directLanding && moveIntent > .05 && (intent.motion.inputs?.footSpeed ?? 0) > 3;
+        const landing = directMovingLanding
+          ? (intent.motion.inputs?.jakImpact ?? 0) > 15 ? 'player.jak-run-land' : 'player.jak-run-land-weak'
+          : directLanding && (intent.motion.inputs?.jakFrame ?? 40) < 38
+            ? (intent.motion.inputs?.jakFrame ?? 40) >= 35 ? 'player.jak-short-land' : 'player.jak-soft-land'
+            : LAND_CLIP_ID;
+        this.transient = this.makeTransient('landing', landing);
       } else if (this.transient?.kind === 'landing') {
         if (
           !grounded ||
@@ -619,6 +627,7 @@ export class CharacterAnimationRuntime {
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
+          : clip.metadata?.jakDirect ? (previousClipId ? clip.id === LAND_CLIP_ID ? .02 : .05 : 0)
           : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
       // Bail's visible get-up is a moving procedural pose under its editable
@@ -646,7 +655,10 @@ export class CharacterAnimationRuntime {
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
-      this.playbackOffset = idleHandoffOffset ?? runHandoffOffset ?? matchedOffset ?? 0;
+      const directOffset = clip.metadata?.jakDirect && clip.id === RUN_STOP_CLIP_ID && previousClipId === 'player.run'
+        ? ((50 + (5 / 6) * ((this.timelineTime ?? 0) * 60 - 25)) % 50) / 60
+        : clip.metadata?.jakDirect && clip.id === 'player.run' && previousClipId?.startsWith('player.jak-run-land') ? .5 : null;
+      this.playbackOffset = directOffset ?? idleHandoffOffset ?? runHandoffOffset ?? matchedOffset ?? 0;
       this.pendingRunHandoffOffset = null;
       this.pendingIdleHandoffOffset = null;
       this.restartPending = false;
@@ -666,7 +678,11 @@ export class CharacterAnimationRuntime {
         Math.min(1, Math.max(0, motion.actionProgress)) *
         (clip.range.end - clip.range.start)
       : clipTimeAt(clip, this.playbackSeconds, { offset: this.playbackOffset });
-    if (this.manualClipId === null && this.transient?.kind === 'run-stop') {
+    if (clip.metadata?.jakDirect && this.manualClipId === null &&
+        (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
+      this.timelineTime = Math.min(clip.range.end, (motion.inputs?.jakFrame ?? 0) / 60);
+    }
+    if (this.manualClipId === null && this.transient?.kind === 'run-stop' && !clip.metadata?.jakDirect) {
       const span = Math.max(1e-6, clip.range.end - clip.range.start);
       const coasting = motion.normalizedSpeed > .005;
       if (!coasting) this.runStopSettleElapsed += dt * this.runtimeSpeed * clip.playbackSpeed;
@@ -689,7 +705,7 @@ export class CharacterAnimationRuntime {
     let pose = this.samplePoseAt(clip, this.timelineTime, motion, this.manualClipId === null);
     let landingRunBlendWeight = 0;
     let landingRunBlendInFlight = false;
-    if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID) {
+    if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID && !clip.metadata?.jakDirect) {
       const runClip = this.findPlayableClip('player.run');
       if (runClip) {
         // This clock intentionally continues beyond an edited Land range. The
@@ -770,7 +786,7 @@ export class CharacterAnimationRuntime {
     // own channel until the last part of the bounce.
     this.recoveryIdleWeight = 0;
     this.recoveryIdleTimelineTime = null;
-    if (this.manualClipId === null && hint === 'player.idle' &&
+    if (this.manualClipId === null && hint === 'player.idle' && !clip.metadata?.jakDirect &&
         (this.transient?.kind === 'landing' || this.transient?.kind === 'run-stop')) {
       pose = this.recoverIntoIdle(clip, pose, motion, dt);
     } else {
@@ -921,7 +937,23 @@ export class CharacterAnimationRuntime {
   }
 
   private samplePoseAt(clip: AnimationClip, time: number, motion: ProceduralMotionContext, includeVariant: boolean): PoseBuffer {
+    if (clip.metadata?.jakDirect && (clip.id === 'player.jump' || clip.id === 'player.double-jump') &&
+        (motion.inputs?.jakFrame ?? 0) > 40) {
+      const fall = this.findPlayableClip('player.fall');
+      if (fall) return sampleComposedClip(fall, clipTimeAt(fall, ((motion.inputs?.jakFrame ?? 40) - 40) / 60), motion);
+    }
     const pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    if (clip.metadata?.jakDirect) {
+      const speed = motion.inputs?.footSpeed ?? 0;
+      const alternateId = clip.id === 'player.run' ? PLAYER_WALK_CLIP_ID
+        : clip.id === 'player.jump' || clip.id === 'player.double-jump' ? 'player.jak-jump-forward' : null;
+      const alternate = alternateId ? this.findPlayableClip(alternateId) : null;
+      if (!alternate) return pose;
+      const weight = clip.id === 'player.run' ? 1 - MathUtils.clamp((speed - 4) / 5, 0, 1)
+        : MathUtils.clamp((speed - 2.5) / 5, 0, 1);
+      const other = sampleComposedClip(alternate, time, motion);
+      return blendPoses(pose, other, weight);
+    }
     if(includeVariant&&(clip.id===LAUNCH_CLIPS.rise||clip.id===LAUNCH_CLIPS.boardRise))
       return tuneLaunchBackLean(pose,TUNING.launchBackLean,this.binding.definition);
     const variant = includeVariant ? clipVariantBlend(clip) ?? (clip.id === 'player.run'
@@ -1075,6 +1107,16 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
+    if (this.manualClipId === null && clip.metadata?.jakDirect) {
+      const speed = motion.inputs?.footSpeed ?? 0;
+      if (clip.id === 'player.run') {
+        const runWeight = MathUtils.clamp((speed - 4) / 5, 0, 1);
+        return speed / (2.8 + (6.25 - 2.8) * runWeight);
+      }
+      if (clip.id === 'player.jak-run-land' || clip.id === 'player.jak-run-land-weak')
+        return this.playbackSeconds < .05 ? 1 : Math.max(5, speed) / 5;
+      return 1;
+    }
     if (this.manualClipId === null && clip.id === CROUCH_CLIP_IDS.move) {
       // One complete left/right crawl cycle covers 1.8 m. Integrate distance
       // into the existing clock so analog speed changes never restart a pose;

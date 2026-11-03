@@ -6,6 +6,7 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
   const a=await server.ssrLoadModule('/src/animation/index.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const {JAK_JUMP_PHYSICS}=await server.ssrLoadModule('/tools/jak-jump-variant.ts');
+  const {JAK_DIRECT_PHYSICS}=await server.ssrLoadModule('/tools/jak-direct-motion.ts');
   const rest={grounded:true,charge:0,verticalVelocity:0,launchVelocity:10,contactBounce:0,mount:0};
   const loaded={...rest,charge:1};
   const at=seconds=>({...rest,grounded:false,verticalVelocity:10-seconds*20});
@@ -28,7 +29,7 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
   const level=new Level(new THREE.Scene(),{id:'ollie-test',name:'Ollie test',data:{v:1,name:'Ollie test',spawn:[0,.02,0],killY:-30,
     components:[{t:'platform',p:[0,-.5,0],s:[1000,1,1000]},{t:'gate',p:[0,0,-450]}]}});
   const p=new Player(level.scene),control=new Player(level.scene);
-  p.onFootJumpStudy=JAK_JUMP_PHYSICS; // C must not alter any mounted-board path.
+  p.onFootJumpStudy=process.argv.includes('--direct-jak')?JAK_DIRECT_PHYSICS:JAK_JUMP_PHYSICS;
   const binding=a.RigBinding.fromSculptRuntime(p.animationRig.root);
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(binding.definition));
   const joint=n=>p.riderG.getObjectByName(n).getWorldPosition(new THREE.Vector3());

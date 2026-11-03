@@ -1,6 +1,6 @@
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import type { AnimationClip } from './animation/types';
-import { studyJumpVelocity, type OnFootJumpStudy } from './onFootJumpStudy';
+import { jakFootThrust, studyJumpVelocity, type OnFootJumpStudy } from './onFootJumpStudy';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
@@ -617,6 +617,13 @@ export class Player {
   /** Local comparison opt-in. A selection takes effect at the next foot launch. */
   onFootJumpStudy: Readonly<OnFootJumpStudy> | null = null;
   private footJumpStudyLaunch: Readonly<OnFootJumpStudy> | null = null;
+  private footStudyFrame = 0;
+  private footStudyImpact = 0;
+  private get directFootStudy(): boolean {
+    return this.onFootJumpStudy?.direct === true && !this.freeSkate && !this.alwaysSkate &&
+      !this.isBailing && !this.crawling && !this.sliding && !this.swimming && !this.slamActive &&
+      !this.kiteTowing && !this.kiteReleased && !this.trampolineAir && !this.grindExitAir;
+  }
   private get footJumpStudyFlight(): Readonly<OnFootJumpStudy> | null {
     return !this.grounded && this.airGrav === 'foot' && !this.freeSkate && !this.airFromSkate &&
       !this.isBailing && !this.slamActive && !this.slideJumpAir && !this.grindExitAir &&
@@ -2223,6 +2230,7 @@ export class Player {
         this.ropeReleaseDuration > 0 &&
         this.ropeReleaseElapsed < this.ropeReleaseDuration
       ) return UNITY_ROPE_CLIP_IDS.release;
+      if (this.footJumpStudyFlight?.direct) return 'player.jump';
       return this.vVel > 0 ? 'player.jump' : 'player.fall';
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
@@ -2387,6 +2395,9 @@ export class Player {
         grounded: this.grounded,
         actionProgress,
         inputs: {
+          jakFrame: this.footStudyFrame,
+          jakImpact: this.footStudyImpact,
+          footSpeed: this.walkVelocity.length(),
           travelSign,
           launchId: this.trampolineLaunchId,
           iceEffort,
@@ -6076,6 +6087,9 @@ export class Player {
       this.footJumpStudyLaunch = {...this.onFootJumpStudy};
       const study = this.footJumpStudyLaunch;
       this.vVel = studyJumpVelocity(THREE.MathUtils.lerp(study.minimumHeight, study.maximumHeight, t), study.gravity, dt);
+      if (study.direct) {
+        this.footStudyFrame = 0;
+      }
     }
     // Height is proportional to launch velocity squared. A grace-window
     // slide jump may also be in crawl, but must never stack its crouch boost.
@@ -6962,7 +6976,7 @@ export class Player {
       this.slideTimer > 0 ||
       (boardAvailable &&
         ((steepGround && !footPlant && !footSlip) ||
-          planarSpeed > TUNING.walkSpeed + 0.5 ||
+          (!this.directFootStudy && planarSpeed > TUNING.walkSpeed + 0.5) ||
           rollingOut));
 
     // Enter/leave free-heading mode. Walking and canned slides keep the
@@ -7050,6 +7064,7 @@ export class Player {
     const slickWalk = this.groundHit !== null && !!this.groundHit.slippy;
     const iceGrip = this.authoredIceGrip();
     if (this.freeSkate || this.crawling || slamFlat || this.slideTimer > 0) this.walkRamp = 0;
+    else if (this.directFootStudy && !slickWalk) this.walkRamp = walkDir ? 1 : 0;
     else if (walkDir && TUNING.walkRampTime > 0)
       this.walkRamp = Math.min(1, this.walkRamp + dt / TUNING.walkRampTime);
     else if (walkDir) this.walkRamp = 1;
@@ -7117,8 +7132,9 @@ export class Player {
       // can slide through the old vector rather than snapping through zero.
       // A planted charge remains pinned exactly as before.
       const planted = this.charging && this.chargePlanted;
-      const targetForward = planted ? 0 : input.moveY * TUNING.walkSpeed * runScale;
-      const targetLateral = planted ? 0 : input.moveX * TUNING.walkSpeed * runScale;
+      const footSpeed = this.directFootStudy ? this.onFootJumpStudy?.runSpeed ?? TUNING.walkSpeed : TUNING.walkSpeed;
+      const targetForward = planted ? 0 : input.moveY * footSpeed * runScale;
+      const targetLateral = planted ? 0 : input.moveX * footSpeed * runScale;
       this.walkTarget
         .copy(this.axisF)
         .multiplyScalar(targetForward)
@@ -7157,6 +7173,11 @@ export class Player {
           : Infinity;
         this.walkVelocity.lerp(this.walkTarget, Math.min(1, CONST.slipAccel * iceGrip * dt,
           turnLimit / Math.max(this.walkVelocity.distanceTo(this.walkTarget), 1e-6)));
+      } else if (this.directFootStudy) {
+        const delta = this.walkVelocity.distanceTo(this.walkTarget);
+        const thrust = jakFootThrust(this.walkVelocity.length(), this.walkTarget.length(), input.moveY, false);
+        this.walkVelocity.lerp(this.walkTarget, Math.min(1, thrust * dt / Math.max(1e-8, delta)));
+        this.walkTurnaround = false; this.walkIntent.set(0, 0, 0);
       } else if (!walkDir) {
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
@@ -8687,6 +8708,12 @@ export class Player {
     // to that (arrow-crate boosts get longer, quick taps shorter). A plain
     // walk-off fall launches with no pop — it keeps the base window so ledge
     // saves still work.
+    const directStudy = this.footJumpStudyFlight?.direct === true;
+    if (directStudy) {
+      const remaining = 20 - this.footStudyFrame;
+      this.footStudyFrame += !this.doubleJumpAir && this.footStudyFrame >= 2 && this.vVel > 0 && remaining > 0
+        ? Math.min(3, remaining, remaining / Math.max(.001, this.vVel / this.footJumpStudyFlight!.gravity * 60)) : 1;
+    }
     const djWindow =
       TUNING.doubleJumpWindow *
       (this.launchVy > 1
@@ -8695,7 +8722,7 @@ export class Player {
     if (
       TUNING.doubleJump > 0.5 &&
       !this.isBailing &&
-      this.airborneT <= djWindow && // only this early into the air
+      (directStudy ? this.vVel < 3 && this.vVel > -15 : this.airborneT <= djWindow) &&
       (!this.airFromSkate || this.bounceJump) && // a crate bounce earns a tap even mid-skate-air
       !coyoteInputOwned &&
       !this.vertAir &&
@@ -8711,6 +8738,9 @@ export class Player {
         this.doubleJumpAir = true;
         const study = this.footJumpStudyFlight;
         this.vVel = study ? studyJumpVelocity(study.doubleHeight, study.gravity, dt) : TUNING.doubleJumpVelocity;
+        if (directStudy) {
+          this.footStudyFrame = 5;
+        }
         this.speed *= TUNING.doubleJumpHorizontalScale;
         this.slideAirLat *= TUNING.doubleJumpHorizontalScale;
         this.walkVelocity.multiplyScalar(TUNING.doubleJumpHorizontalScale);
@@ -8945,7 +8975,7 @@ export class Player {
         (!this.freeSkate || this.bounceJump) &&
         !this.charging &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
-        Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+        Math.abs(this.speed) <= (this.footJumpStudyFlight?.runSpeed ?? TUNING.walkSpeed) + 0.5;
       const study = footAir ? this.footJumpStudyFlight : null;
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       const springControl = this.trampolineAir && this.bounceJump ? this.trampolineAirStrength : 0;
@@ -8958,9 +8988,16 @@ export class Player {
         // same direct authority follows the editable traversal retention.
         if (study) {
           const seconds = input.moveX || input.moveY ? study.steeringSeconds : study.coastSeconds;
-          const blend = 1 - Math.exp(-dt / Math.max(.001, seconds));
-          const forward = input.moveY * TUNING.walkSpeed * diag * doubleScale;
-          const sideways = input.moveX * lateralSpeed * diag * doubleScale;
+          let blend = 1 - Math.exp(-dt / Math.max(.001, seconds));
+          const studySpeed = study.direct ? (this.doubleJumpAir ? 8 : study.runSpeed ?? TUNING.walkSpeed) : TUNING.walkSpeed;
+          const forward = input.moveY * studySpeed * diag * doubleScale;
+          const sideways = input.moveX * (study.direct ? studySpeed : lateralSpeed) * diag * doubleScale;
+          if (study.direct) {
+            this.walkTarget.copy(this.axisF).multiplyScalar(forward).addScaledVector(this.axisL, sideways);
+            const delta = this.walkVelocity.distanceTo(this.walkTarget);
+            const thrust = jakFootThrust(this.walkVelocity.length(), this.walkTarget.length(), input.moveY, true);
+            blend = Math.min(1, thrust * dt / Math.max(1e-8, delta));
+          }
           this.walkVelocity.x += (this.axisF.x * forward + this.axisL.x * sideways - this.walkVelocity.x) * blend;
           this.walkVelocity.z += (this.axisF.z * forward + this.axisL.z * sideways - this.walkVelocity.z) * blend;
           this.speed = this.walkVelocity.dot(this.axisF);
@@ -9133,6 +9170,7 @@ export class Player {
     }
 
     if (landNow && hit) {
+      this.footStudyImpact = Math.max(0, -this.vVel);
       const audibleSkateLanding = !this.skateSoundContact;
       const vertPressStillHeld =
         input.jumpHeld &&
@@ -19715,7 +19753,8 @@ export class Player {
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     const launchOwnsBody = !this.airFromSkate && isLaunchClip(this.animationClipHint);
-    if ((this.state === 'dead' && this.bailing) || launchOwnsBody) {
+    const directOwnsBody = this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump'].includes(this.animationClipHint);
+    if ((this.state === 'dead' && this.bailing) || launchOwnsBody || directOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
       this.bodyGroup.rotation.x = 0;
@@ -19765,7 +19804,7 @@ export class Player {
       breathe * 0.015 * this.idleAmp;
     // Launch keys already contain their load, waist pivot and extension.
     // Retiring the ordinary charge/run offsets prevents a second visual dip.
-    if (launchOwnsBody) this.bodyGroup.position.y = 0;
+    if (launchOwnsBody || directOwnsBody) this.bodyGroup.position.y = 0;
     // The somersault wheels around the WAIST, not the feet (the rig's origin):
     // counter-translate so the hip stays pinned on the jump arc while the
     // body rotates about it. The offset lives in the group frame, so the

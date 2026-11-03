@@ -1,0 +1,145 @@
+import * as THREE from 'three';
+import { withCharacterElasticity } from '../src/animation';
+import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefinition, QuaternionTuple, Vec3Tuple } from '../src/animation';
+import type { OnFootJumpStudy } from '../src/onFootJumpStudy';
+
+type JointSample = {p: Vec3Tuple; q: QuaternionTuple};
+type Frame = Record<string, JointSample>;
+export interface JakMotionBank {
+  version: number; fps: number; source: string; bind: Frame;
+  clips: Record<string, {duration: number; frames: number; samples: Frame[]}>;
+}
+export const JAK_DIRECT_PHYSICS: Readonly<OnFootJumpStudy> = Object.freeze({
+  gravity: 60, minimumHeight: 1.01, maximumHeight: 2.8, doubleHeight: 1.8,
+  steeringSeconds: .10, coastSeconds: .20, direct: true, runSpeed: 10,
+});
+
+// Source and destination both face +Z in rig space. The source bind has
+// horizontal arms and differently oriented bones; copying local quaternions
+// would twist the limbs. Align each bind segment, then transfer world motion
+// and solve destination locals in hierarchy order. Only proportions differ.
+const mapping: Record<string, string> = {
+  hips:'hips',torsoRoot:'upper_body',spine:'upper_body',chest:'chest',neck:'neckA',head:'neckB',
+  shoulderLeft:'Larm',elbowLeft:'Lforarm',wristLeft:'sk_lhand',
+  shoulderRight:'Rarm',elbowRight:'Rforarm',wristRight:'sk_rhand',
+  hipLeft:'Lthigh',kneeLeft:'Lknee',ankleLeft:'Lankle',
+  hipRight:'Rthigh',kneeRight:'Rknee',ankleRight:'Rankle',
+};
+const segments: Record<string, [string,string,string]> = {
+  shoulderLeft:['Larm','Lforarm','deform.arm.upper.left.length'],
+  elbowLeft:['Lforarm','sk_lhand','deform.arm.lower.left.length'],
+  shoulderRight:['Rarm','Rforarm','deform.arm.upper.right.length'],
+  elbowRight:['Rforarm','sk_rhand','deform.arm.lower.right.length'],
+  hipLeft:['Lthigh','Lknee','deform.leg.upper.left.length'],
+  kneeLeft:['Lknee','Lankle','deform.leg.lower.left.length'],
+  hipRight:['Rthigh','Rknee','deform.leg.upper.right.length'],
+  kneeRight:['Rknee','Rankle','deform.leg.lower.right.length'],
+};
+const v=(p:number[])=>new THREE.Vector3().fromArray(p);
+const q=(p:number[])=>new THREE.Quaternion().fromArray(p).normalize();
+const vector=(f:Frame,a:string,b:string)=>v(f[b].p).sub(v(f[a].p));
+
+export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinition, bank:JakMotionBank):AnimationSuiteDocument {
+  if(bank.version!==1 || bank.fps!==60 || !bank.clips.jump)throw new Error('Unsupported local Jak motion bank');
+  const suite=structuredClone(base);
+  const neutral=bank.clips['stance-loop'].samples[0];
+  const definitions=new Map(rig.joints.map(j=>[j.id,j]));
+  const correction=new Map<string,THREE.Quaternion>();
+  for(const [id,source] of Object.entries(mapping)) {
+    const restDirection=segments[id] ? vector(bank.bind,segments[id][0],segments[id][1]).normalize() : null;
+    const align=restDirection?new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,-1,0),restDirection):new THREE.Quaternion();
+    // Hands inherit the calibrated forearm frame; keep source wrist flex/twist.
+    if(id.startsWith('wrist')) {
+      const s=id.endsWith('Left')?'Left':'Right', seg=segments[`elbow${s}`];
+      align.setFromUnitVectors(new THREE.Vector3(0,-1,0),vector(bank.bind,seg[0],seg[1]).normalize());
+    }
+    correction.set(id,q(bank.bind[source].q).invert().multiply(align));
+  }
+  const targetLegLength=Math.abs(definitions.get('kneeLeft')!.rest.position[1])+Math.abs(definitions.get('ankleLeft')!.rest.position[1]);
+  const sourceLegLength=vector(neutral,'Lthigh','Lknee').length()+vector(neutral,'Lknee','Lankle').length();
+  const legRatio=targetLegLength/sourceLegLength;
+  const targetAnkleY=definitions.get('hips')!.rest.position[1]-targetLegLength;
+  const neutralAnkleY=Math.min(neutral.Lankle.p[1],neutral.Rankle.p[1]);
+  const waistRatio=v(definitions.get('spine')!.rest.position).length()/vector(neutral,'hips','upper_body').length();
+  const retarget=(frame:Frame)=>{
+    const locals:Record<string,QuaternionTuple>={}, positions:Record<string,THREE.Vector3>={}, worlds:Record<string,THREE.Quaternion>={};
+    const lengths:Record<string,number>={}, translations:Record<string,Vec3Tuple>={};
+    for(const [, [a,b,control]] of Object.entries(segments))
+      lengths[control]=vector(frame,a,b).length()/vector(neutral,a,b).length();
+    lengths['deform.torso.length']=vector(frame,'upper_body','neckA').length()/vector(neutral,'upper_body','neckA').length();
+    for(const joint of rig.joints) {
+      const parentQ=joint.parentId?worlds[joint.parentId]:new THREE.Quaternion();
+      const parentP=joint.parentId?positions[joint.parentId]:new THREE.Vector3();
+      const source=mapping[joint.id];
+      let desired=source?q(frame[source].q).multiply(correction.get(joint.id)!):parentQ.clone().multiply(q(joint.rest.quaternion));
+      if(segments[joint.id]) {
+        const [a,b]=segments[joint.id];
+        const expected=new THREE.Vector3(0,-1,0).applyQuaternion(desired);
+        desired.premultiply(new THREE.Quaternion().setFromUnitVectors(expected,vector(frame,a,b).normalize()));
+      }
+      worlds[joint.id]=desired;
+      const local=q(joint.rest.quaternion).invert().multiply(parentQ.clone().invert().multiply(desired));
+      if(source || ['root','torsoRoot','clavicleLeft','clavicleRight','toeLeft','toeRight'].includes(joint.id))locals[joint.id]=local.toArray() as QuaternionTuple;
+      const offset=v(joint.rest.position);
+      // The source waist also translates as it compresses. Bone Man's lower
+      // spine is a separate segment; carry that motion without scaling its
+      // skeleton or forcing the upper chest's length onto the lower back.
+      if(joint.id==='spine') {
+        offset.copy(vector(frame,'hips','upper_body').multiplyScalar(waistRatio).applyQuaternion(parentQ.clone().invert()));
+        translations.spine=offset.clone().sub(v(joint.rest.position)).toArray() as Vec3Tuple;
+      }
+      const parentSegment=joint.parentId?segments[joint.parentId]:null;
+      if(parentSegment)offset.multiplyScalar(lengths[parentSegment[2]]);
+      if(['chest','neck','clavicleLeft','clavicleRight'].includes(joint.id))offset.y*=lengths['deform.torso.length'];
+      positions[joint.id]=offset.applyQuaternion(parentQ).add(parentP);
+    }
+    // Match the source's foot lift while retaining this character's lengths.
+    // This includes the authored landing compression and subsequent rebound.
+    const sourceFloor=Math.min(frame.Lankle.p[1],frame.Rankle.p[1]);
+    const rootY=targetAnkleY+(sourceFloor-neutralAnkleY)*legRatio-
+      Math.min(positions.ankleLeft.y,positions.ankleRight.y);
+    return {locals,lengths,translations,root:[frame.main.p[0]*legRatio,rootY,frame.main.p[2]*legRatio] as Vec3Tuple};
+  };
+  const specs:[string,string,boolean][]=[
+    ['player.idle','stance-loop',true],['player.run','run',true],['player.walk','walk',true],
+    ['player.run-stop','run-to-stance',false],['player.jump','jump',false],
+    ['player.double-jump','jump',false],['player.fall','jump-loop',true],
+    ['player.land','jump-land',false],['player.jak-run-land','run-squash',false],
+    ['player.jak-run-land-weak','run-squash-weak',false],['player.jak-jump-forward','jump-forward',false],
+    ['player.jak-short-land','jump-short-land',false],
+    ['player.jak-soft-land','jump-land',false],
+  ];
+  for(const [id,name,loop] of specs) {
+    const stopLead=id==='player.run-stop'?bank.clips['run-to-stance-loop']:null;
+    const source=bank.clips[name];
+    const shortTail=id==='player.jak-short-land'?bank.clips['jump-land']:null;
+    const startFrame=id==='player.jak-soft-land'?50:0;
+    const reference=stopLead?{
+      ...source,duration:stopLead.frames/60*3+source.duration,
+      samples:[...Array.from({length:3},()=>stopLead.samples.slice(0,stopLead.frames)).flat(),...source.samples],
+    }:shortTail?{...source,duration:(source.frames+shortTail.frames-50)/60,
+      samples:[...source.samples.slice(0,source.frames),...shortTail.samples.slice(50)]}
+    :startFrame?{...source,duration:source.duration-startFrame/60,samples:source.samples.slice(startFrame)}:source;
+    const original=suite.clips.find(c=>c.id===id)??suite.clips.find(c=>c.id==='player.land')!;
+    const tracks:AnimationTrack[]=[];
+    const poses=reference.samples.map(retarget);
+    for(const target of Object.keys(poses[0].locals))tracks.push({id:`${id}:${target}:source`,kind:'quaternion',target,
+      keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.locals[target],interpolation:'linear'}))});
+    tracks.push({id:`${id}:root:source`,kind:'position',target:'root',keys:poses.map((pose,i)=>({id:`${id}:root:p${i}`,time:Math.min(reference.duration,i/60),value:pose.root,interpolation:'linear'}))});
+    for(const target of Object.keys(poses[0].translations))tracks.push({id:`${id}:${target}:position:source`,kind:'position',target,
+      keys:poses.map((pose,i)=>({id:`${id}:${target}:p${i}`,time:Math.min(reference.duration,i/60),value:pose.translations[target],interpolation:'linear'}))});
+    for(const target of Object.keys(poses[0].lengths))tracks.push({id:`${id}:${target}:source`,kind:'scalar',target,
+      keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.lengths[target],interpolation:'linear'}))});
+    const clip:AnimationClip=withCharacterElasticity({...original,id,name:`D · Jak ${name} (direct retarget)`,duration:reference.duration,
+      playbackSpeed:1,range:{start:0,end:reference.duration},loop:{...original.loop,mode:loop?'loop':'once'},
+      tracks,proceduralDrivers:[],contacts:[],events:[],markers:[],
+      metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,
+        ...(stopLead?{jakSourceLeadClip:'run-to-stance-loop',jakSourceLeadFrames:stopLead.frames,jakSourceLeadRepeats:3}:{}),
+        ...(shortTail?{jakSourceTailClip:'jump-land',jakSourceTailAt:source.frames,jakSourceTailFrame:50}:{}),
+        ...(startFrame?{jakSourceStartFrame:startFrame}:{}),
+        referenceStudy:'Direct local source sample retarget; source data excluded from Git and production'},
+    },rig);
+    const index=suite.clips.findIndex(c=>c.id===id);if(index>=0)suite.clips[index]=clip;else suite.clips.push(clip);
+  }
+  return suite;
+}

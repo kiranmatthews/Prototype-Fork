@@ -8357,3 +8357,44 @@ implementation start to the validated three-variant local playtest was about
 
 The shared release handoff is marked **LOCAL PLAYTEST — DO NOT INTEGRATE OR
 PUBLISH**. Continue evaluation at the local jump-review page.
+
+### Follow-up — D direct Jak retarget, 3 November 2026 NZDT
+
+The user requested direct reconstruction on Bone Man, including recovery
+pacing, and a check for usable Jak board motion. Prompt → validated local
+playtest: **approximately 50 minutes** (estimated; the first retained clock
+checkpoint is 09:28 UTC and final live review is around 10:10 UTC). One control
+preference was clarified: preserve release-to-jump / hold-to-skate. **Local only;
+no push, integration or publication.**
+
+- D retargets the supplied game's sampled skeleton curves onto the existing
+  character, including waist translation, independent stretch, jump-forward
+  blending, double-jump restart, fall, landing variants, walk/run, and the full
+  three-cycle pacing lead-in and run-to-stance settle. Source files stay outside
+  the repository. Main-body directions are preserved; Bone Man's proportions,
+  procedural fingers and accessories remain its own.
+- Source apex timing, jump heights, double-jump window, flat-foot thrust and
+  nonlinear braking are isolated behind D. Existing charge/release and mount
+  gestures, collisions and special-surface handling remain available. Mounted
+  skating retains the original controller and pose ownership.
+- The local A/B/C/D page supports 1–4 selection, course play, automated motion,
+  a Run and stop sequence, and a synchronized original-Jak overlay. Controls
+  can collapse to reveal both characters. No campaign or animation drafts save.
+- Validation: 1,025 retargeted pose samples and the live composed apex preserve
+  source limb directions. Measured tap/full peaks 1.083/2.799 m; second pop
+  1.799 m. Recovery finishes, soles stay above support, and hold-to-skate with
+  release-to-ollie works. D-enabled skating matches the default for 1,344 frames
+  across campaign/park, both stances and charge lengths. C physics, 1,820 A/B
+  paired frames, animation-runtime checks and strict types pass.
+- Browser: full jump, double jump, landing catch and pacing compared beside the
+  original, including front/side/oblique inspection. Full-render native
+  1506×1706 and normal 720×816 inputs checked. Live keyboard release launches D;
+  local source audio plays and no console errors were logged. The user's prior
+  1080p render setting was restored. Build and release-size check pass
+  (803,497,488 bytes); extracted model/motion paths and the review page are absent
+  from production output.
+- Jak II's jetboard has appropriate ride/lean, pump, jump, landing, grind and
+  trick clips. The supplied Jak 1 data lacks those; direct board retargeting
+  needs legitimate Jak II data. Existing skating was not replaced.
+
+Reproduction and source details: [Jump motion study](JUMP_MOTION_STUDY.md).

@@ -1,7 +1,8 @@
 # Jump motion study — 3 November 2026 NZDT
 
 The local Jak and Daxter study informs the timing and silhouettes of original
-Prototype Fork animation curves. Extracted models and animation samples remain
+Prototype Fork animation curves in B/C. D directly retargets the supplied game
+data for local comparison. Extracted models and animation samples remain
 outside the repository and the published game.
 
 The source's arms trail low at takeoff, spread into bent wings as the knees
@@ -40,18 +41,19 @@ catalogue 37 curves**, generated from `createPlayerStarterClips()` at commit
 
 `jump-review.html?playtest&level=codex-lab&nocrt` starts in **live play** on the
 selected level, with normal keyboard/controller input and the regular camera.
-Press **1 / 2 / 3** or click the three visible buttons:
+Press **1 / 2 / 3 / 4** or click the four visible buttons:
 
 | Variant | Animation | On-foot physics | Sounds |
 | --- | --- | --- | --- |
 | A · Original | Previous catalogue 37 | Original | Original |
 | B · Animation | Revised jump family | Original | Local Jak placeholders |
 | C · Jak feel | Earlier gather, deeper body fold, shorter stretch | Experimental Jak fit | Local Jak placeholders |
+| D · Direct Jak | Extracted source curves retargeted to Bone Man | Source jump timing and flat-foot movement, existing input gesture | Local Jak placeholders |
 
-Switching does not respawn or reset velocity. A physics selection takes effect
+Switching does not respawn or reset velocity. An air-physics selection takes effect
 at the next ground jump; each in-flight arc retains the profile it launched
 with. A's double-jump blend is the original zero-length transition; B/C use
-50 ms. Uncheck **Jak sounds in B / C** to compare motion without audio changes.
+50 ms. Uncheck **Jak sounds in B / C / D** to compare motion without audio changes.
 The session uses ephemeral campaign progress and never saves animation drafts.
 
 C uses symmetric 60 m/s² gravity, approximately 1.05–2.8 m first-jump heights,
@@ -124,3 +126,77 @@ Focused checks:
 Review at full render resolution as well as the normal game presentation. The
 reference is pose/timing guidance, not an assertion that our motion reconstructs
 the original game's renderer, physics, animation blending or effects.
+
+## D — direct source retarget, 3 November 2026 NZDT
+
+D loads the extracted Jak 1 `eichar-lod0` skeleton samples from a local-only
+endpoint. `tools/extract-jak-motion.mjs` samples the original curves at 60 Hz;
+`tools/jak-direct-motion.ts` maps source world frames onto Bone Man's semantic
+rig, calibrating the different arm bind axes and solving local rotations in
+hierarchy order. It transfers the waist's compression/translation as a separate
+lower-spine motion. The shared editable segment-length controls carry the
+source stretch and rebound without scaling the whole skeleton.
+The twenty sampled source joints drive the main body; Bone Man retains its own
+proportions, procedural fingers and accessory motion.
+
+This includes stance, walk/run, jump and jump-forward, the second jump's restart,
+fall, full/short landing recovery, run-squash and weak run-squash, and the complete
+three-cycle run-to-stance lead-in followed by the source settle. Source jump
+frame 20 follows the physical apex; double jump restarts at frame 5. Running
+blends walk/run by speed and advances by distance (2.8/6.25 m stride lengths).
+Moving landings use the source's early catch followed by its 5 m recovery stride;
+normal running resumes at source frame 30. Letting go of movement plays the
+source pacing sequence, then reaches idle. New input interrupts recovery.
+
+**The user's explicit control preference is retained:** release to jump, hold
+while running to skate, and tap/release again in the air for double jump. The
+project's charge gesture maps onto the source height range; D does not switch
+to Jak's immediate press/hold input. D uses 60 m/s² flight gravity, 1.01–2.8 m
+charge targets and a 1.8 m second pop, with the source -15 to +3 m/s double-jump
+window. Flat movement uses the stone-surface thrust/friction values: 10 m/s
+running, 8 m/s second-jump target speed, 37.5 m/s² forward thrust, and the source
+nonlinear braking rule (air seek/friction factors .3/.2). Existing collision,
+camera and special-surface systems still apply. This is direct motion retargeting
+and selected controller rules, not a port of the entire Jak engine.
+
+The page defaults to D when the local bank is available. **Watch motion → Show
+original Jak alongside (D)** plays the full original model beside Bone Man at
+the same source frame, including walk/run and jump-forward blends. **Run and
+stop** includes the landing and full pacing sequence. Use **Hide controls** for
+an unobstructed comparison, then **Show controls** to change the view. A/B/C
+remain available; selecting a variant does not teleport or reset velocity.
+
+```sh
+node tools/extract-jak-motion.mjs /path/to/local-study/eichar-lod0.glb /path/to/local-study/motion.json
+JAK_REFERENCE_AUDIO_DIR=/path/to/local-study/audio npm run dev -- --host 127.0.0.1 --port 5188
+node tools/test-jak-direct-motion.mjs /path/to/local-study/motion.json
+node tools/test-skate-charge-ollie.mjs --direct-jak
+```
+
+The motion directory defaults to the audio directory's parent, with an optional
+`JAK_REFERENCE_MOTION_DIR` override. Only `motion.json` and `eichar-lod0.glb` are
+served there. Neither the retargeted keys nor the original model enter Git or
+the production bundle. The source overlay loads only when requested in the
+local inspector. Its complete LOD0 geometry is retained.
+
+Validation: 1,025 sampled poses preserve all eight major limb directions to
+within 0.0000013 degrees; the actual live apex also matches after runtime
+composition. Real-input tap/full peaks are 1.083/2.799 m and the second pop adds
+1.799 m. Landing and pacing finish; no supporting-floor penetration was found.
+Hold-to-skate/release-to-ollie is exercised in D. The D-enabled 1,344-frame
+campaign/park skating regression matches the default controller exactly in
+both stances, including contacts and animation ownership. C physics, 1,820
+paired A/B frames, runtime checks, strict types, build and release size pass.
+
+### Board reference
+
+Jak II has a dedicated jetboard controller and matching `jakb-board-*` clips:
+ride/turn in four directions, duck/pump, airborne lean, get-on/get-on-land,
+jump/jump-loop, hit, flips, spins and grinds. Those are suitable source motions
+for a future skating retarget. The supplied **Jak 1** bank does not contain
+them; direct extraction requires legitimate Jak II game data. Jak 1's ice-skate
+motion and zoomer riding are different actions. D leaves current skating intact.
+
+Primary evidence: [Jak 1 flat thrust](https://github.com/open-goal/jak-project/blob/v0.3.9/goal_src/jak1/engine/target/logic-target.gc),
+[surface constants](https://github.com/open-goal/jak-project/blob/v0.3.9/goal_src/jak1/engine/collide/surface-h.gc),
+[Jak II board source documentation](https://opengoal.dev/docs/source-docs/jak2/packages/engine/target/board/).

@@ -9,6 +9,18 @@ export function localJakAudio(directory = process.env.JAK_REFERENCE_AUDIO_DIR) {
     configureServer(server) {
       if (!directory) return;
       const root = path.resolve(directory);
+      const motionRoot = path.resolve(process.env.JAK_REFERENCE_MOTION_DIR ?? path.dirname(root));
+      server.middlewares.use('/__jak-reference-motion', async (req, res) => {
+        const file = (req.url ?? '').split('?')[0].slice(1);
+        if (!['GET','HEAD'].includes(req.method ?? '') || !['motion.json','eichar-lod0.glb'].includes(file)) {
+          res.statusCode = 404; res.end(); return;
+        }
+        try {
+          const bytes = await readFile(path.join(motionRoot, file));
+          res.setHeader('Content-Type', file.endsWith('.glb') ? 'model/gltf-binary' : 'application/json'); res.setHeader('Cache-Control','no-store');
+          res.end(req.method === 'HEAD' ? undefined : bytes);
+        } catch { res.statusCode = 404; res.end(); }
+      });
       server.middlewares.use('/__jak-reference-audio', async (req, res) => {
         const file = (req.url ?? '').split('?')[0].slice(1);
         if (!['GET', 'HEAD'].includes(req.method ?? '') ||
