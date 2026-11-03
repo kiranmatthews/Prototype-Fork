@@ -8472,3 +8472,23 @@ course ends), with 7,347 support probes, clear entrance breaks, natural end
 releases and a charged jump exit. Shoreline and source-normalization checks,
 required level checks, production build/type-check and release-size validation
 pass. Release output is 809,017,352 bytes. No full suite ran.
+
+### 2026-11-04 — Banana Bay cloud sky and western mainland
+
+Replace the painted island sky with a clean cloud-only panorama and reuse the
+existing HDR sun bloom and occluded flare. Align its directional light, retain
+full ocean reflections, and add a large sandstone mainland behind the left
+coastal wall before the departure pier. Twenty-five full existing cliff meshes
+surround a simple closed island core, extending approximately 550 m west. The
+single existing ocean now wraps farther west around the new headland.
+
+Prompt to full browser-reviewed playable result: approximately **19 minutes**.
+Native/MAX and normal 480-line CRT presentation reviewed, with a lite smoke
+pass and keyboard traversal of the departure pier. Focused checks confirm the
+new rocks clear the entire curved corridor, and that native/captured water has
+no folds, overlaps, join holes or dry-shore crossings. Source sand and original
+lagoon crossing geometry remain intact. Required level checks, production
+build/type-check and the 810,274,603-byte release-size check pass; no full suite.
+
+Artwork, exact imagegen prompt and implementation evidence:
+[Banana Bay sky and island](banana-bay-island-sky/README.md).

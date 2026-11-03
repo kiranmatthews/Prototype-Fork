@@ -5,11 +5,12 @@ import { beachfrontPointAtDistance, beachfrontSandHeight, beachfrontYawAtDistanc
 import { COASTAL_TOWN_ASSETS } from '../coastalTownAssets';
 import { BAY_ATMOSPHERE, BAY_OCEAN_LOOK } from './banana-bay-theme';
 import { createBananaBayCoast, createBananaBayFinale, BAY_FINALE_END_Z } from './banana-bay-route';
+import { createBananaBayIsland } from './banana-bay-island';
 
 type P = [number,number,number];
 export const SUNNY_ISLAND_OFFSET: P = [0,0,-780];
 export const SUNNY_BEACH_OCEAN_LOOK=BAY_OCEAN_LOOK;
-export const SUNNY_BEACH_ATMOSPHERE=BAY_ATMOSPHERE;
+export const SUNNY_BEACH_ATMOSPHERE={...BAY_ATMOSPHERE,sunDirection:[.42,.52,-.74] as P};
 export const SUNNY_BEACH_END_Z=BAY_FINALE_END_Z;
 const r=(v:number)=>Math.round(v*1000)/1000;
 const translate=(p:readonly number[]):P=>p.map((v,i)=>r(v+SUNNY_ISLAND_OFFSET[i])) as P;
@@ -42,7 +43,7 @@ const connector:CustomComponent={t:'woodpath',p:start,pts:SUNNY_CONNECTOR_POINTS
   widths:[6.8,6.8,7.2,8,10],w:7,curve:'spline',structureStyle:'beach',plankPalette:'placeholder-board',polePalette:'placeholder-pole',
   scaffold:true,supports:true,rails:true,terrainSupports:false,supportBaseY:-3.6,supportDepth:4.65,spacing:.72,baySpacing:4.2,
   tex:'plank',color:'#c89758',seed:84199,nm:'Beach to Island Hopper / continuous departure pier',grp:30};
-const components:CustomComponent[]=[...beach,connector,
+const components:CustomComponent[]=[...beach,connector,...createBananaBayIsland(),
   {t:'pit',p:[0,-2.9,-997],s:[260,1,550],invisible:true,nm:'Lagoon deep-water recovery',grp:30},
   {t:'checkpoint',p:[1,1.05,-738],nm:'Lagoon departure checkpoint',grp:30},
   ...[716,730].map(d=>({t:'camnode' as const,p:beachPoint(d,0,1.05),radius:10,grp:5})),
@@ -114,7 +115,7 @@ for(const [i,[x,z,k]] of [[68,-805,1.8],[-75,-895,2.1],[80,-980,2.4],[-68,-1100,
 
 export const SUNNY_BEACH_LEVEL:CustomLevelData={
   v:1,name:'Beachside Run',spawn:[...BEACHFRONT_RUN_LEVEL.spawn],killY:-12,
-  sky:'coast',jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,
+  sky:'tropical-clouds',jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,
   cameraRig:{camDist:9.4,camHeight:5.6,camPitch:18,camFov:59},cameraLookAhead:6,
   atmosphere:SUNNY_BEACH_ATMOSPHERE,
   shoreFoam:ISLAND_HOPPER_LEVEL.shoreFoam?.map(o=>({...o,center:translate(o.center)})),

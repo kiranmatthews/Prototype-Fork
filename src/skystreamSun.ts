@@ -4,8 +4,8 @@ import { Lensflare, LensflareElement } from 'three/addons/objects/Lensflare.js';
 export const SKYSTREAM_SUN = new THREE.Vector3(-.34,.38,-.86).normalize();
 
 /** GPU-occluded optical ghosts. The sun's HDR disk and bloom live in the
- * directional sky shader; these elements track that same immutable direction. */
-export function createSkystreamSun(): Lensflare {
+ * directional sky shader; these elements track that same world direction. */
+export function createSkystreamSun(direction = SKYSTREAM_SUN): Lensflare {
   const flare=new Lensflare();flare.name='Skystream sun · occluded lens flare';flare.visible=false;
   const texture=(ring:boolean)=>{
     const size=128,data=new Uint8Array(size*size*4);
@@ -24,7 +24,7 @@ export function createSkystreamSun(): Lensflare {
   const render=flare.onBeforeRender;
   flare.onBeforeRender=function(renderer,scene,camera,geometry,material,group){
     const e=camera.matrixWorld.elements,d=('far' in camera?Number(camera.far):400)*.92;
-    this.matrixWorld.makeTranslation(e[12]+SKYSTREAM_SUN.x*d,e[13]+SKYSTREAM_SUN.y*d,e[14]+SKYSTREAM_SUN.z*d);
+    this.matrixWorld.makeTranslation(e[12]+direction.x*d,e[13]+direction.y*d,e[14]+direction.z*d);
     render.call(this,renderer,scene,camera,geometry,material,group);
   };
   return flare;

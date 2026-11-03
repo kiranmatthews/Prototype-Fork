@@ -19,6 +19,9 @@ for(const [label,d]of [['Opening shore',70],['Cove shore',290],['Late shore',660
 button('Join overview',()=>shot('Join overview',[55,20,-693],[-9,-.3,-756]));
 button('Join low',()=>shot('Join low',[21,4.5,-722],[-3,-.36,-781]));
 button('Join reverse',()=>shot('Join reverse',[19,6,-799],[0,-.36,-722]));
+button('Island vista',()=>shot('Island vista',[56,18,-759],[-115,25,-664]));
+button('Island coast',()=>shot('Island coast',[35,12,-595],[-65,26,-671]));
+button('Cloud sky and sun',()=>shot('Cloud sky and sun',[150,7,-800],[360,267,-1170]));
 button('Lagoon shore',()=>shot('Lagoon shore',[48,6,-864],[8,-.36,-866]));
 button('Finale shore',()=>shot('Finale shore',[50,10,-1160],[0,-.36,-1210]));
 button('Native MAX',()=>{g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});

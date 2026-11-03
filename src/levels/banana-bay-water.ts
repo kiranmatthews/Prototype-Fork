@@ -4,8 +4,9 @@ import { BEACHFRONT_SAND_BANK_LATERAL_SEGMENTS, BEACHFRONT_SAND_SUBMERGED_LATERA
   BEACHFRONT_SAND_WATERLINE_COLUMN, BEACHFRONT_SAND_TEXTURE_TILE_SIZE } from '../beachfrontCourse';
 
 export const BANANA_BAY_SHORE_CLEARANCE=.65;
-export const BANANA_BAY_OCEAN_WIDTH=900;
-const LAGOON_WEST_EDGE=-400;
+export const BANANA_BAY_OCEAN_WIDTH=1400;
+// Continue the same single water surface around the mainland's western rim.
+const LAGOON_WEST_EDGE=-900;
 
 /** Read the actual fine sand contour, including its baked X reflection.
  * Parallel +X water rows keep the wide ocean injective through the tight

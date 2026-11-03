@@ -142,6 +142,8 @@ export function usesNightworksAtmosphere(data: CustomLevelData): boolean {
 
 export interface SkyPresetDef {
   file: string; // painted backdrop in public/
+  /** HDR sun disk and occluded flare, independent of the painted panorama. */
+  bloomSun?: [number, number, number];
   label: string; // what the editor dropdown shows
   fog: number; // the colour the world fades into
   fogFarCap: number; // clamp on the level's own fogFar — how far you can see
@@ -217,6 +219,15 @@ export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     sunTint:0xffe1ae,sunK:1,sunMul:1,groundTint:0x796a48,groundK:1,
     hemiTint:0xd5dcc5,hemiK:1,hemiMul:1,fillTint:0xc1cbbb,fillK:1,fillMul:.3,
     top:'#91aaa9',bottom:'#e5dbc6',stars:false,sunHex:null,imgH:887,horizonPx:444,farPlane:300,
+  },
+  'tropical-clouds': {
+    file:'banana-bay/cloud-sky-v1.png',label:'Tropical clouds',fog:0xb8e7ed,fogFarCap:620,
+    sunTint:0xfff9ec,sunK:1,sunMul:1,groundTint:0xead2a0,groundK:1,
+    hemiTint:0xd5efff,hemiK:1,hemiMul:1,fillTint:0xc7edff,fillK:1,fillMul:.3,
+    top:'#1489ec',bottom:'#83dcea',stars:false,sunHex:null,
+    // This painting contains sky only, right down to its clear horizon row.
+    imgH:724,horizonPx:724,oceanContentFraction:1,seaHorizon:true,farPlane:720,
+    bloomSun:[.42,.52,-.74],
   },
   clouds: {
     file: 'sky-bridge/cloud-sea.webp', label: 'cloud sea', fog: 0xeef4f6, fogFarCap: 160,

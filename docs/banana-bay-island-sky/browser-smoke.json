@@ -1,0 +1,105 @@
+{
+  "scenarios": [
+    {
+      "ready": true,
+      "view": "Play join",
+      "quality": "full",
+      "resolution": 480,
+      "buffer": [
+        853,
+        480
+      ],
+      "player": {
+        "p": [
+          -0.1517607660270344,
+          1.0578093389997902,
+          -744.8326589102146
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "checkpoint": [
+          1,
+          1.149999952340948,
+          -738
+        ]
+      },
+      "water": {
+        "shoreContourSegments": 1660,
+        "shoreFieldBuildMs": 142.20000004768372,
+        "occludedPassFrames": 4420,
+        "primaryReuseRenders": 7312,
+        "primaryReuseFallbacks": 2210,
+        "primaryReuseFallbackReason": null,
+        "verts": 91866,
+        "tris": 181455,
+        "shoreSamples": 1011,
+        "sceneWidth": 853,
+        "sceneHeight": 480,
+        "nativeDrawingBufferWidth": 853,
+        "nativeDrawingBufferHeight": 480,
+        "preCrtSizeOverride": true,
+        "reflectionWidth": 256,
+        "reflectionHeight": 144,
+        "prepassWidth": 853,
+        "prepassHeight": 480,
+        "reflectionRenders": 7312,
+        "prepassRenders": 7312,
+        "quality": "full"
+      },
+      "assets": [],
+      "stamp": "Codex/sol fork · build 11-03 21:22 UTC"
+    },
+    {
+      "ready": true,
+      "view": "Play finish",
+      "quality": "full",
+      "resolution": 480,
+      "buffer": [
+        853,
+        480
+      ],
+      "player": {
+        "p": [
+          0.010797587592758787,
+          1.0499999523162842,
+          -1379.2000323858185
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "checkpoint": [
+          -2.125,
+          1.1541444425996108,
+          -1.625
+        ]
+      },
+      "water": {
+        "shoreContourSegments": 1660,
+        "shoreFieldBuildMs": 142.20000004768372,
+        "occludedPassFrames": 4420,
+        "primaryReuseRenders": 9189,
+        "primaryReuseFallbacks": 2210,
+        "primaryReuseFallbackReason": null,
+        "verts": 91866,
+        "tris": 181455,
+        "shoreSamples": 1011,
+        "sceneWidth": 853,
+        "sceneHeight": 480,
+        "nativeDrawingBufferWidth": 853,
+        "nativeDrawingBufferHeight": 480,
+        "preCrtSizeOverride": true,
+        "reflectionWidth": 256,
+        "reflectionHeight": 144,
+        "prepassWidth": 853,
+        "prepassHeight": 480,
+        "reflectionRenders": 9189,
+        "prepassRenders": 9189,
+        "quality": "full"
+      },
+      "assets": [],
+      "stamp": "Codex/sol fork · build 11-03 21:22 UTC"
+    }
+  ],
+  "console": []
+}

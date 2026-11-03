@@ -26,10 +26,11 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, 
     const sky=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyMist=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyHazeColor={value:new THREE.Color()},skyHazeStrength={value:0},skyOpaqueBackdrop={value:0};
-    const skyProjection={setHazeElevation(){},setStormGlow(){},setDustHaze(){},setCloudRoadSky(){}};
+    const skyProjection={setHazeElevation(){},setStormGlow(){},setDustHaze(){},setCloudRoadSky(){},setBloomSun(){}};
+    const SKYSTREAM_SUN=new THREE.Vector3(-.34,.38,-.86).normalize(),skySunDirection=SKYSTREAM_SUN.clone();
     const stormSquall={stop(){}};
     const skystreamSun={visible:false};
-    const skyCache=new Map(settings.painted===false?[]:['day','sunset','night','coast'].map(k=>[k,{bg:new THREE.Texture(),mist:new THREE.Texture()}]));
+    const skyCache=new Map(settings.painted===false?[]:['day','sunset','night','coast','tropical-clouds'].map(k=>[k,{bg:new THREE.Texture(),mist:new THREE.Texture()}]));
     const releaseBonusParallax=()=>{},retainOnlyActiveSky=()=>{},loadSky=()=>{},configureCoastPost=()=>{};
     const visualTreatmentActivity=()=>({any:false}),visualTreatmentSettings={value:{}};
     const ensureBonusParallax=()=>({visible:true,setVisible(){},reset(){}}),player={pos:new THREE.Vector3()},loadedLevelId=current.id;
