@@ -1,0 +1,202 @@
+{
+  "sections": [
+    {
+      "index": 0,
+      "start": -30,
+      "end": 51.8,
+      "playableEnd": 51.8,
+      "metres": 82.162852390726,
+      "frames": 316,
+      "raisedSteps": 14,
+      "exit": "air"
+    },
+    {
+      "index": 1,
+      "start": 58.2,
+      "end": 341.8,
+      "playableEnd": 341.8,
+      "metres": 284.87839848106506,
+      "frames": 873,
+      "raisedSteps": 45,
+      "exit": "air"
+    },
+    {
+      "index": 2,
+      "start": 348.2,
+      "end": 430,
+      "playableEnd": 430,
+      "metres": 82.16285239072596,
+      "frames": 337,
+      "raisedSteps": 18,
+      "exit": "air"
+    },
+    {
+      "index": 3,
+      "start": 441,
+      "end": 531.8,
+      "playableEnd": 531.8,
+      "metres": 91.1628523907259,
+      "frames": 378,
+      "raisedSteps": 17,
+      "exit": "air"
+    },
+    {
+      "index": 4,
+      "start": 538.2,
+      "end": 756.8,
+      "playableEnd": 756.8,
+      "metres": 219.66388726261155,
+      "frames": 825,
+      "raisedSteps": 259,
+      "exit": "air"
+    },
+    {
+      "index": 5,
+      "start": 763.2,
+      "end": 900,
+      "playableEnd": 900,
+      "metres": 137.39216767401413,
+      "frames": 503,
+      "raisedSteps": 20,
+      "exit": "air"
+    },
+    {
+      "index": 6,
+      "start": 912,
+      "end": 1001.8,
+      "playableEnd": 1001.8,
+      "metres": 90.1628523907259,
+      "frames": 345,
+      "raisedSteps": 17,
+      "exit": "air"
+    },
+    {
+      "index": 7,
+      "start": 1008.2,
+      "end": 1201.8,
+      "playableEnd": 1201.8,
+      "metres": 195.15743673258518,
+      "frames": 656,
+      "raisedSteps": 245,
+      "exit": "air"
+    },
+    {
+      "index": 8,
+      "start": 1208.2,
+      "end": 1461.8,
+      "playableEnd": 1461.8,
+      "metres": 254.83185292723564,
+      "frames": 677,
+      "raisedSteps": 31,
+      "exit": "air"
+    },
+    {
+      "index": 9,
+      "start": 1468.2,
+      "end": 1721.8,
+      "playableEnd": 1721.8,
+      "metres": 254.66679182106884,
+      "frames": 769,
+      "raisedSteps": 34,
+      "exit": "air"
+    },
+    {
+      "index": 10,
+      "start": 1728.2,
+      "end": 1810,
+      "playableEnd": 1810,
+      "metres": 82.11582082420753,
+      "frames": 305,
+      "raisedSteps": 12,
+      "exit": "air"
+    },
+    {
+      "index": 11,
+      "start": 1823,
+      "end": 1896.8,
+      "playableEnd": 1896.8,
+      "metres": 74.11582082420753,
+      "frames": 271,
+      "raisedSteps": 13,
+      "exit": "air"
+    },
+    {
+      "index": 12,
+      "start": 1903.2,
+      "end": 2141.8,
+      "playableEnd": 2141.8,
+      "metres": 240.06665691881477,
+      "frames": 727,
+      "raisedSteps": 315,
+      "exit": "air"
+    },
+    {
+      "index": 13,
+      "start": 2148.2,
+      "end": 2351.8,
+      "playableEnd": 2351.8,
+      "metres": 204.61608438918356,
+      "frames": 521,
+      "raisedSteps": 23,
+      "exit": "air"
+    },
+    {
+      "index": 14,
+      "start": 2358.2,
+      "end": 2591.8,
+      "playableEnd": 2591.8,
+      "metres": 234.50417037789344,
+      "frames": 693,
+      "raisedSteps": 33,
+      "exit": "air"
+    },
+    {
+      "index": 15,
+      "start": 2598.2,
+      "end": 2680,
+      "playableEnd": 2680,
+      "metres": 82.16285239072609,
+      "frames": 282,
+      "raisedSteps": 14,
+      "exit": "air"
+    },
+    {
+      "index": 16,
+      "start": 2694,
+      "end": 2871.8,
+      "playableEnd": 2871.8,
+      "metres": 178.53383410619008,
+      "frames": 558,
+      "raisedSteps": 325,
+      "exit": "air"
+    },
+    {
+      "index": 17,
+      "start": 2878.2,
+      "end": 2986.8,
+      "playableEnd": 2986.8,
+      "metres": 109.1375785153788,
+      "frames": 358,
+      "raisedSteps": 20,
+      "exit": "air"
+    },
+    {
+      "index": 18,
+      "start": 2993.2,
+      "end": 3030,
+      "playableEnd": 3027.5,
+      "metres": 37.02175769117106,
+      "frames": 132,
+      "raisedSteps": 8,
+      "exit": "grind"
+    }
+  ],
+  "supportProbes": 7347,
+  "openingProbes": 42,
+  "jumpExit": {
+    "state": "air",
+    "upwardSpeed": 11.625
+  },
+  "rails": 19,
+  "pass": true
+}

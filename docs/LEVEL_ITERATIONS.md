@@ -8451,3 +8451,24 @@ checks, production build/type-check and release-size validation pass. Release
 output: 809,015,865 bytes. No full suite ran.
 
 Evidence and imagegen provenance: [Beach craft pass](beach-bahia/polish/README.md).
+
+### 2026-11-04 — Beach Street grindable seawall cap
+
+Make the existing rock wall top grindable. Add invisible native coping paths
+that follow the road grade and raised pier caps, with continuous travel through
+grade changes and real breaks at beach entrances and canals. Place the line
+0.2 m toward the beach side of the cap to clear the retained road obstacles.
+Small hidden top surfaces support landings; the visible masonry and authored
+movement tuning are unchanged.
+
+Prompt to first browser-validated playable grind: approximately **12 minutes**.
+The native/MAX browser run catches the wall and grinds 47 m using keyboard
+input, retaining four lives with no console or asset errors. Evidence:
+[wall-grind browser result](beach-bahia/polish/wall-grind-browser.json) and
+[native screenshot](beach-bahia/polish/wall-grind-native.jpg).
+
+Native physics traverses all 19 connected sections (2.9 km inside the sealed
+course ends), with 7,347 support probes, clear entrance breaks, natural end
+releases and a charged jump exit. Shoreline and source-normalization checks,
+required level checks, production build/type-check and release-size validation
+pass. Release output is 809,017,352 bytes. No full suite ran.

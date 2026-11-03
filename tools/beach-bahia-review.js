@@ -6,9 +6,9 @@ const g=await new Promise(resolve=>{const ready=()=>{const game=window.__game;if
 g.restoreBuiltin('coastal-street-run');await g.switchLevel('coastal-street-run');await g.getLevel().prepareJungleAssets();
 const panel=document.createElement('section');panel.style.cssText='position:fixed;z-index:2147483646;left:10px;top:10px;padding:8px;background:#11262ee8;color:white;font:12px monospace;max-width:680px';
 const buttons=document.createElement('div'),status=document.createElement('pre');status.style.cssText='white-space:pre-wrap;max-height:80px;overflow:auto';panel.append(buttons,status);document.body.append(panel);
-let eye=null,target=[0,0,0],angle=52;
+let eye=null,target=[0,0,0],angle=52,wallReviewFrozen=false,wallReview=null;
 const render=g.renderer.render.bind(g.renderer),view=g.getLevel().updateSceneryView.bind(g.getLevel()),step=g.player.step.bind(g.player);
-g.player.step=(...args)=>{if(!eye)step(...args);};
+g.player.step=(...args)=>{if(!eye&&!wallReviewFrozen)step(...args);};
 function camera(){if(!eye)return;g.camera.position.fromArray(eye);g.camera.up.set(0,1,0);g.camera.fov=angle;g.camera.lookAt(new THREE.Vector3().fromArray(target));g.camera.updateProjectionMatrix();g.camera.updateMatrixWorld(true);}
 g.getLevel().updateSceneryView=(c,...args)=>{camera();view(c,...args);};
 g.renderer.render=(scene,c)=>{
@@ -42,8 +42,26 @@ button('Next shop placement',()=>{
 });
 button('Native MAX',()=>{g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
 button('Normal presentation',()=>{g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});
-button('Play',()=>{eye=null;g.player.respawn(g.getLevel(),true);});
+button('Play',()=>{eye=null;wallReviewFrozen=false;g.player.respawn(g.getLevel(),true);});
+button('Test wall grind',()=>{
+ eye=null;wallReviewFrozen=false;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);
+ const p=g.player,l=g.getLevel(),rail=l.rails.find(r=>r.object.userData.sourceName==='Bahia wall cap grind 1');
+ const start=rail.closest(new THREE.Vector3(7.2,14,0)).point;
+ p.respawn(l,true,false,{position:start.clone().add(new THREE.Vector3(-.6,.14,0)),heading:new THREE.Vector3(0,0,-1)});
+ const keys=new Set(),key=(code,down)=>{if(keys.has(code)===down)return;down?keys.add(code):keys.delete(code);
+  document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code,bubbles:true}));};
+ wallReview={done:false,caught:false,frames:0,start:start.toArray(),trace:[]};key('KeyE',true);
+ const check=()=>{
+  wallReview.frames++;wallReview.caught ||= p.state==='grind';
+  const snap={position:p.pos.toArray(),state:p.state,balance:p.balance,lives:p.lives};
+  if(wallReview.frames%15===0)wallReview.trace.push(snap);
+  if(-p.pos.z>47||p.state==='dead'||p.state==='gameover'||wallReview.frames>1800){
+   for(const code of [...keys])key(code,false);wallReview.final=snap;wallReview.done=true;wallReviewFrozen=true;return;
+  }
+  key('ArrowLeft',p.balance>.1);key('ArrowRight',p.balance<-.1);requestAnimationFrame(check);
+ };requestAnimationFrame(check);
+});
 button('Run full route',()=>{eye=null;runRoute({beats,jumps,preview:false});});
 button('Hide controls',()=>panel.style.opacity=panel.style.opacity==='0'?'1':'0');
-setInterval(()=>{const p=window.__kitePilot,l=g.getLevel();status.textContent=JSON.stringify({ready:true,assets:l.jungleAssetDiagnostics?.errors??[],buffer:[g.renderer.domElement.width,g.renderer.domElement.height],position:g.player.pos.toArray(),route:p?{done:p.done,crashes:p.crashes,checkpoints:p.checkpoints.length,jumps:p.jumps.length,final:p.final}:null,stamp:document.querySelector('.hud-build')?.textContent});},1000);
+setInterval(()=>{const p=window.__kitePilot,l=g.getLevel();status.textContent=JSON.stringify({ready:true,assets:l.jungleAssetDiagnostics?.errors??[],buffer:[g.renderer.domElement.width,g.renderer.domElement.height],position:g.player.pos.toArray(),wallGrind:wallReview,route:p?{done:p.done,crashes:p.crashes,checkpoints:p.checkpoints.length,jumps:p.jumps.length,final:p.final}:null,stamp:document.querySelector('.hud-build')?.textContent});},1000);
 shot([2,15,-37],[31,.4,-72],60);

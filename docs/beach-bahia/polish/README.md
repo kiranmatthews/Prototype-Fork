@@ -65,7 +65,7 @@ the normal player, keyboard input, collision, checkpoints and finish.
   probes, 3,936 animated-wave probes and exact shared edges across eighteen
   sand patches. Minimum animated shoreline separation is 0.645 m. All nine
   room floors clear their underlying terrace by at least 0.04 m.
-- Complete source survives editor normalization at 9,060 components. The
+- Complete source survives editor normalization at 9,341 components. The
   retained islands and original gameplay groups match their baseline hashes.
 - [Native gameplay report](gameplay/native.json): all thirteen jumps, all 24
   main-route crates, crystal and finish; deliberate collisions, missed-canal
@@ -74,7 +74,7 @@ the normal player, keyboard input, collision, checkpoints and finish.
   states, thirteen jumps and the crystal. The separate 32-crate bonus was not
   entered. Normal presentation and native 1506 × 1706 rendering were both used.
   No console warnings/errors or failed assets.
-- Production build/type-check and release-size check pass: 809,015,865 bytes
+- Production build/type-check and release-size check pass: 809,017,352 bytes
   against the existing 1,000,000,000-byte hosting budget. No full suite ran.
 
 The release checkout now skips the large `art/` and `docs/` authoring archives,
@@ -84,6 +84,27 @@ of the same commit produced the same 1,853 files and byte count; all game assets
 match exactly, and all JavaScript matches after normalizing build timestamps and
 generated bundle filenames. See [checkout validation](checkout-validation.json).
 The authoring library remains in the repository.
+
+## Grindable stone cap
+
+The native grind path follows the cap's road grades and raised pier tops, and
+continues through grade joins. Beach entrances and canals are actual breaks.
+The line sits 0.2 m toward the beach side of the wall centre so the rider clears
+the existing road obstacles. Hidden support faces match the stone caps; no
+additional rail is drawn and movement tuning is unchanged.
+
+The [native-resolution browser check](wall-grind-browser.json) catches and
+travels 47 m using keyboard grind/balance input, retaining all four lives and
+reporting no failed assets or console errors. The player is frozen only after
+that completed traversal for the screenshot.
+
+[Native physics checks](wall-grind-validation.json) traverse all nineteen
+connected sections, covering 2.9 km inside the existing sealed course ends.
+They check 7,347 support points, all fourteen entrance breaks, catches from
+incoming jumps, uninterrupted pier/grade travel, natural end releases and a
+charged jump off the cap. The existing walking finish handoff is retained.
+
+![Grindable stone cap](wall-grind-native.jpg)
 
 ![Completed real-input route](route-finish.png)
 

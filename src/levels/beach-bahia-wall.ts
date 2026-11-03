@@ -5,6 +5,21 @@ type Road={start:number;end:number;startY:number;endY:number};
 const stone=['#efd1a3','#f0d8b1','#e5c7a0','#f5dcb6','#dfc3a1','#ecd0aa'];
 const cap=['#ffe0a6','#f3d3a1','#ffe6b8','#f1cc94'];
 const random=(n:number)=>{const x=Math.sin(n*127.1+39.7)*43758.5453;return x-Math.floor(x);};
+const wallCapTop=1.2825;
+
+// The visible masonry owns the silhouette. These tiny, hidden top faces give
+// the cap solid support without turning every stone joint into a grind end.
+function capSupport(a:number,b:number,ya:number,yb:number,width:number,name:string):CustomComponent{
+ return {t:'mesh',p:[7.2,ya,-a],vertices:[-width/2,0,0,width/2,0,0,-width/2,yb-ya,a-b,width/2,yb-ya,a-b],
+  indices:[0,1,2,1,3,2],invisible:true,grp:105,nm:name};
+}
+function pierCapSupport(z:number,top:number,width:number,depth:number,bevel:number,name:string):CustomComponent{
+ const vertices:number[]=[],indices:number[]=[];
+ for(const [d,y]of [[-depth/2,-bevel],[-depth/2+bevel,0],[depth/2-bevel,0],[depth/2,-bevel]])
+  for(const x of [-width/2,width/2])vertices.push(x,y,-d);
+ for(let i=0;i<6;i+=2)indices.push(i,i+1,i+2,i+1,i+3,i+2);
+ return {t:'mesh',p:[7.2,top,-z],vertices,indices,invisible:true,grp:105,nm:name};
+}
 
 // A masonry face is a shallow chamfered slab embedded in the continuous
 // mortar core. No hidden inner cube faces: both exposed sides are authored.
@@ -42,7 +57,12 @@ function batch(parts:CustomComponent[],name:string):CustomComponent {
 }
 
 export function bahiaSeawall(road:readonly Road[],heightAt:(d:number)=>number,openings:readonly number[]):CustomComponent[]{
- const out:CustomComponent[]=[],open=(d:number)=>openings.some(z=>Math.abs(z-d)<3.2);
+ const out:CustomComponent[]=[],grindRuns:CustomComponent[]=[],open=(d:number)=>openings.some(z=>Math.abs(z-d)<3.2);
+ const piers:number[]=[];
+ for(const seg of road)for(let z=seg.start+9;z<seg.end-3;z+=14)
+  if(!openings.some(d=>Math.abs(d-z)<6))piers.push(z);
+ const crests=[...piers.map(z=>({z,y:heightAt(z)+1.425,flat:.48})),
+  ...openings.flatMap(z=>[-1,1].map(side=>({z:z+side*3.35,y:heightAt(z+side*3.35)+1.575,flat:.41})))];
  let index=0;
  for(const seg of road){
   const cuts=new Set([seg.start,seg.end]);
@@ -52,6 +72,25 @@ export function bahiaSeawall(road:readonly Road[],heightAt:(d:number)=>number,op
    const a=ends[k-1],b=ends[k];if(open((a+b)/2))continue;
    out.push({t:'wallpath',p:[7.2,heightAt(a)-.12,-a],pts:[[0,0,0,0],[0,a-b,0,heightAt(b)-heightAt(a)]],
     w:.85,rise:1.3,tex:'bahia-plaster',color:'#ae9073',grp:105,nm:`Bahia sandstone seawall ${++index}`});
+   out.push(capSupport(a,b,heightAt(a)+wallCapTop,heightAt(b)+wallCapTop,1.036,`Bahia wall cap support ${index}`));
+   const nearby=crests.filter(c=>c.z+.9>a&&c.z-.9<b),stations=new Set([a,b]);
+   for(const c of nearby)for(const d of [c.z-.9,c.z-c.flat,c.z+c.flat,c.z+.9])if(d>a&&d<b)stations.add(d);
+   const crestAt=(d:number)=>Math.max(heightAt(d)+wallCapTop,...nearby.map(c=>{
+    const t=Math.max(0,Math.min(1,(.9-Math.abs(d-c.z))/(.9-c.flat)));
+    return THREE.MathUtils.lerp(heightAt(d)+wallCapTop,c.y,t);
+   }));
+   // A single native coping follows the grade and the raised pier caps. Its
+   // ends are the real wall ends: access bays and canals never get a rail.
+   // Keep the rider's body clear of the existing road obstacles at x=6.8.
+   // This is still inside the cap's broad, flat top (x=6.682..7.718).
+   const coping:CustomComponent={t:'rail',p:[7.4,heightAt(a),-a],pts:[...stations].sort((x,y)=>x-y)
+    .map(d=>[0,a-d,0,crestAt(d)-heightAt(a)+.02]),invisible:true,coping:true,grp:105,nm:`Bahia wall cap grind ${grindRuns.length+1}`};
+   const previous=grindRuns[grindRuns.length-1],last=previous?.pts?.[previous.pts.length-1];
+   // Grade changes are knots in the same grind, not artificial launch ends.
+   if(previous&&last&&Math.abs(previous.p[2]+last[1]+a)<.00001){
+    previous.pts!.push(...coping.pts!.slice(1).map((q):[number,number,number,number]=>
+     [q[0],coping.p[2]+q[1]-previous.p[2],0,coping.p[1]+(q[3]??0)-previous.p[1]]));
+   }else{grindRuns.push(coping);out.push(coping);}
    for(let start=a;start<b-.01;start+=12){
     const end=Math.min(start+12,b),kit=new BahiaCraft([7.2,0,-start],0,105,'Bahia dressed sandstone',true);
     const grade=(heightAt(end)-heightAt(start))/(end-start);
@@ -79,13 +118,13 @@ export function bahiaSeawall(road:readonly Road[],heightAt:(d:number)=>number,op
  }
  // Intermediate piers give the long promenade a human-scale cadence. Their
  // 14 m spacing is independent of access bays, whose clear width stays intact.
- for(const seg of road)for(let z=seg.start+9;z<seg.end-3;z+=14){
-  if(openings.some(d=>Math.abs(d-z)<6))continue;
+ for(const z of piers){
   const kit=new BahiaCraft([7.2,heightAt(z),-z],0,105,'Bahia intermediate pier',true);
   kit.box('pier foot',[0,.05,0],[1.16,.28,1.04],'#ddbf96',.07);
   for(let i=0;i<3;i++)kit.mesh('pier ashlar',bahiaBevel([1.03,.37,.87],.07,z+i,.012),[0,.38+i*.33,0],stone[(i+Math.floor(z))%stone.length]);
   kit.box('pier bevelled cap',[0,1.3,0],[1.28,.25,1.11],'#fbe0b2',.075);
   out.push({t:'wall',p:[7.2,heightAt(z)-.08,-z],s:[1.12,1.5,1.02],invisible:true,grp:105,nm:'Bahia intermediate pier contact'});
+  out.push(pierCapSupport(z,heightAt(z)+1.425,1.13,1.11,.075,'Bahia intermediate pier cap support'));
   out.push(batch(kit.components,`Bahia rhythm pier ${z.toFixed(2)}`));
  }
  for(const z of openings)for(const side of [-1,1]){
@@ -94,6 +133,7 @@ export function bahiaSeawall(road:readonly Road[],heightAt:(d:number)=>number,op
   kit.box('broad limestone foot',[0,.06,0],[1.28,.3,.91],'#d9b991',.07);
   for(let i=0;i<3;i++)kit.mesh('shaped pier course',bahiaBevel([1.06-i*.035,.4,.7-i*.018],.075,z+i,.012),[0,.39+i*.37,0],stone[(i+Math.floor(z))%stone.length]);
   kit.box('projecting capstone',[0,1.45,0],[1.36,.25,.99],'#ffe2ad',.085);
+  out.push(pierCapSupport(d,heightAt(d)+1.575,1.19,.99,.085,'Bahia access pier cap support'));
   // Short rounded returns frame the bay on the sand side, ending clear of the
   // 6.4 m opening. Their foot is fitted into the sand instead of hovering.
   for(let i=0;i<3;i++){
