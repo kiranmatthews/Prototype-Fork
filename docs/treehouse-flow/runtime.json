@@ -1,0 +1,169 @@
+{
+  "river": [
+    {
+      "position": [
+        34.6,
+        -13.86681148214224,
+        -362.2
+      ],
+      "ground": "Exact visible river stone support 1"
+    },
+    {
+      "position": [
+        35.7,
+        -13.800000019073487,
+        -366.1
+      ],
+      "ground": "Exact visible river stone support 2"
+    },
+    {
+      "position": [
+        34.8,
+        -13.880000019073487,
+        -370.1
+      ],
+      "ground": "Exact visible river stone support 3"
+    },
+    {
+      "position": [
+        34.6,
+        -13.86681148214224,
+        -374.1
+      ],
+      "ground": "Exact visible river stone support 4"
+    },
+    {
+      "position": [
+        35.7,
+        -13.800000019073487,
+        -378.1
+      ],
+      "ground": "Exact visible river stone support 5"
+    },
+    {
+      "position": [
+        34.8,
+        -13.880000019073487,
+        -382.1
+      ],
+      "ground": "Exact visible river stone support 6"
+    }
+  ],
+  "pipe": [
+    {
+      "frame": 1121,
+      "time": 18.683333333333334,
+      "position": [
+        57,
+        -7.2,
+        -566.5650000000078
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.3,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Halfpipe exit and broken-bridge approach",
+        "y": -7.2,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0.7,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    {
+      "frame": 1599,
+      "time": 26.65,
+      "position": [
+        57,
+        -7.2,
+        -519.4349999999922
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": -6.3,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Top of climb into the sunlit cavern",
+        "y": -7.2,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": -0.7,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  ],
+  "runway": {
+    "straightMetres": 37.5,
+    "ropeLength": 25
+  },
+  "rope": {
+    "grindFrames": 251,
+    "minY": -7.200000003576279,
+    "landing": [
+      36.35,
+      -7.200000003576279,
+      -657.5944444444435
+    ]
+  }
+}

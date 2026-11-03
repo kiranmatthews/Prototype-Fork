@@ -152,5 +152,14 @@ export function repairTreehouseWorld(input:readonly CustomComponent[]):CustomCom
     C.push({t:'decor',dkind:'trialsv2fernb',p:treehouseTrialPoint([35+dx*.63,-7.18,z+2]),s:[4,2.45,3.94],yaw,
       nm:'Exit layered fern foreground',grp:17});
   }
+  // A little real foliage overlaps the foot of the painted groves, while the
+  // continuing path and the open canopy view remain easy to read.
+  for(const [dx,z,width,yaw] of [[-7.8,-440,3.5,28],[8.4,-448,3.2,-35],[-8.8,-453,3.8,51],[8.1,-465,3.4,-23]] as const){
+    C.push({t:'decor',dkind:'trialsv2fernb',p:treehouseTrialPoint([35+dx,-7.3,z]),
+      s:[width,width*1.838/3,width*2.957/3],yaw,nm:'Exit matte · small foreground fern',grp:17});
+    C.push({t:'decor',dkind:'trialsv2groundcovera',p:treehouseTrialPoint([35+dx*1.13,-7.34,z+1.3]),
+      s:[width*1.2,width*1.2*1.043/5,width*1.2*2.581/5],yaw:yaw+37,
+      nm:'Exit matte · low foreground leaf cluster',grp:17});
+  }
   return C;
 }

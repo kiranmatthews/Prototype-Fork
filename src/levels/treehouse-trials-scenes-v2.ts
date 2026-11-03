@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {exactTreehouseSupport} from './treehouse-exact-support';
+import {TREEHOUSE_RIVER_STONES} from './treehouse-trials-continuity';
 import type { CustomComponent } from '../level';
 
 type P = [number, number, number];
@@ -171,13 +172,9 @@ function riverMargin(z:number,near:boolean):void {
 riverMargin(-228,true);riverMargin(-240,false);
 // Nine-by-nine contact grids are a bounded downsample of the measured
 // 41x41 GLB height fields. They fit the actual flat top and sloped stone edges.
-for(const [index,kind,x,z,top,w,d] of [
-  [0,'trialsv2riverstonea',34.6,-230.2,-13.88,6.2,3.8],
-  [1,'trialsv2riverstoneb',35.7,-234.1,-13.82,6,4.1],
-  [2,'trialsv2riverstonec',34.8,-238.1,-13.9,6.5,4],
-] as const){
-  const contactTop=index===0?.97507:1;
-  prop(kind,[x,top-contactTop,z],[w,1,d],'Hero flat naturally rounded river stone fitted to its native support',0,G.landscape);
+for(const [index,stone] of TREEHOUSE_RIVER_STONES.entries()){
+  prop(stone.kind,[stone.x,stone.top-stone.contactTop,stone.z],[stone.width,1,stone.depth],
+    'Hero flat naturally rounded river stone fitted to its native support',0,G.landscape);
   add(exactTreehouseSupport(C[C.length-1],`Exact visible river stone support ${index+1}`));
 }
 for(const [dx,z,size,yaw] of [[-7.5,-228.9,4.8,23],[8.8,-239,4.5,48],[-11,-236.5,5.4,-15],[13,-232,5.2,69],[-6,-238.8,3.7,28],[7.8,-228.2,3.9,-39]] as const){
@@ -307,6 +304,27 @@ for(let first=0;first<boardCount;first+=20){
   }
   surface([pipe.x,pipe.y,pipe.z],vertices,ix,`Fitted narrow timber halfpipe boards ${first}`,'treehouse-timber',undefined,uv,false,G.craft);
   C[C.length-1].castShadow=false;
+}
+// Close both exposed ends beneath the exact board profile. These small manual
+// cheek panels leave the flat riding lane open and retain native pipe contact.
+for(const end of [-1,1]){
+  const z=pipe.z+end*pipe.length/2-(end>0?.16:0);
+  for(const side of [-1,1]){
+    const cheek=new THREE.Shape();
+    cheek.moveTo(side*pipe.flat,-.3);
+    cheek.lineTo(side*pipe.flat,0);
+    for(let i=1;i<=12;i++){
+      const a=Math.PI/2*i/12;
+      cheek.lineTo(side*(pipe.flat+pipe.radius*Math.sin(a)),pipe.radius*(1-Math.cos(a)));
+    }
+    cheek.lineTo(side*deck,pipe.radius);
+    cheek.lineTo(side*deck,-.3);
+    cheek.closePath();
+    sculpt(new THREE.ExtrudeGeometry(cheek,{depth:.16,bevelEnabled:false,steps:1}),
+      [pipe.x,pipe.y,z],`Halfpipe closed timber end cheek ${end}/${side}`,'#c5aa83');
+  }
+  sculpt(new THREE.BoxGeometry(pipe.flat*2,.3,.16),[pipe.x,pipe.y-.15,z+.08],
+    `Halfpipe closed timber end sill ${end}`,'#c5aa83');
 }
 for(const side of [-1,1]){
   const outer=side*(deck+.3);

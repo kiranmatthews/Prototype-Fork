@@ -3,7 +3,7 @@ import {referenceTreehouseOpening} from './treehouse-reference-opening';
 import {encloseTreehouseWorld} from './treehouse-enclosure';
 import * as THREE from "three";
 import {repairTreehouseWorld} from "./treehouse-scenic-repairs";
-import { treehouseTrialPoint, densifyTreehouseRoute, treehouseTrialContinuity, TREEHOUSE_TRIALS_OPENING_OCEAN } from "./treehouse-trials-continuity";
+import { treehouseTrialPoint, densifyTreehouseRoute, treehouseTrialContinuity, TREEHOUSE_TRIALS_OPENING_OCEAN, TREEHOUSE_RIVER_STONES } from "./treehouse-trials-continuity";
 import type { CustomComponent, CustomLevelData } from "../level";
 import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_CLEARING_ROUTE, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_BALCONY_SPAWN } from "./treehouse-opening";
 import { TREEHOUSE_TRIALS_ART_COMPONENTS } from "./treehouse-trials-art";
@@ -316,9 +316,11 @@ const authoredTrailRoute: Point[] = [
   [X, 0, -16], [X, 0, -28], [X, -3, -42], [X, -2.2, -46], [X, -5.1, -50],
   [X, -6.7, -67], [X, -5.9, -71], [X, -9.0, -75], [X, -10.6, -94], [X, -9.8, -98], [X, -13, -102],
   [X, -14, -112], [X, -14, -136], [X, -13.23, -148], [X, -14, -160], [X, -14, -176], [X, -14, -207],
-  [X, -14, -224], [34.6, -13.88, -230.2], [35.7, -13.82, -234.1], [34.8, -13.9, -238.1],
+  [X, -14, -224], ...TREEHOUSE_RIVER_STONES.map(stone=>[stone.x,stone.top,stone.z] as Point),
   [X, -14, -249], [X, -14, -252], [X, -10.8, -269], [X, -7.2, -284], [X, -7.2, -296],
-  [X, -7.2, -319], [X, -7.2, -342], [X, -7.2, -350], [X + 1.35, -5.88, -362], [X, -7.2, -374],
+  [X, -7.2, -319], [X, -7.2, -342], [X + 1.35, -7.2, -348],
+  [X + 1.35, -7.2, -350], [X + 1.35, -7.2, -355],
+  [X + 1.35, -5.88, -362], [X, -7.2, -374],
   [X, -7.2, -385], [X, -7.2, -410],
 ];
 const sourceTrailRoute: readonly Point[] = authoredTrailRoute.map(([x,y,z]) =>

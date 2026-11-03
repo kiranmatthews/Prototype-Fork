@@ -17,13 +17,30 @@ export const TREEHOUSE_TRIALS_JOINS = [
   {near:372, far:378, extra:20, y:-7.2, name:'Cavern pipe into the broken bridge'},
   {near:386, far:398, extra:12, y:-7.2, name:'Longer broken bridge crossing'},
   {near:405, far:417, extra:20, y:-7.2, name:'Cave mouth into sunlit jungle'},
+  // Linear insertions preserve even stone spacing and leave a truly straight
+  // runway after the cavern bend. Append to retain existing planting seeds.
+  {near:228, far:240, extra:12, y:-14, name:'Six-stone river crossing', linear:true},
+  {near:378, far:380, extra:30, y:-7.2, name:'Straight approach to final rope', linear:true},
+] as const;
+
+// Source stations occupy the original river interval; the linear extension
+// places these six unchanged stone shapes at the original four-metre spacing.
+export const TREEHOUSE_RIVER_STONES = [
+  {kind:'trialsv2riverstonea',x:34.6,z:-229.1,top:-13.88,width:6.2,depth:3.8,contactTop:.97507},
+  {kind:'trialsv2riverstoneb',x:35.7,z:-231.05,top:-13.82,width:6,depth:4.1,contactTop:1},
+  {kind:'trialsv2riverstonec',x:34.8,z:-233.05,top:-13.9,width:6.5,depth:4,contactTop:1},
+  {kind:'trialsv2riverstonea',x:34.6,z:-235.05,top:-13.88,width:6.2,depth:3.8,contactTop:.97507},
+  {kind:'trialsv2riverstoneb',x:35.7,z:-237.05,top:-13.82,width:6,depth:4.1,contactTop:1},
+  {kind:'trialsv2riverstonec',x:34.8,z:-239.05,top:-13.9,width:6.5,depth:4,contactTop:1},
 ] as const;
 
 export function treehouseTrialZ(z:number):number {
   const progress=-z;
   let extra=0;
   for(const join of TREEHOUSE_TRIALS_JOINS)
-    extra+=join.extra*THREE.MathUtils.smoothstep(progress,join.near,join.far);
+    extra+=join.extra*('linear' in join
+      ?THREE.MathUtils.clamp((progress-join.near)/(join.far-join.near),0,1)
+      :THREE.MathUtils.smoothstep(progress,join.near,join.far));
   return r(z-extra);
 }
 
@@ -93,6 +110,17 @@ function landscapeSkirts():CustomComponent[]{
   strip(-162,-189,-7,-61,false,'Distant coast forest earth beyond the left shoulder');
   for(const side of [-1,1])strip(-228,-240,35+side*27,35+side*42,true,'Supported distant forest bank beside the shallow river');
   strip(-444,-500,-7,77,true,'Sunlit forest earth beyond the finish');
+  // The distant continuation starts slightly above the finish path. Close
+  // that exposed soil edge so the foreground foliage never frames a sky slit.
+  const endV:number[]=[],endIx:number[]=[],endUv:number[]=[];
+  for(let col=0;col<=6;col++){
+    const x=-7+14*col,relief=Math.sin(-444*.13+x*.17)*.45*col/6+Math.sin(x*.11)*.22*col/6;
+    endV.push(x-35,.28+relief,0,x-35,-1,0);endUv.push(x/9,0,x/9,1/9);
+    if(col<6){const a=col*2;endIx.push(a,a+1,a+2,a+1,a+3,a+2);}
+  }
+  result.push({t:'mesh',p:[35,-7.2,-444],vertices:endV.map(r),indices:endIx,uvs:endUv,
+    solid:false,edgeGrinding:false,tex:'treehouse-loam',color:'#82915a',
+    nm:'Sunlit forest earth · closed continuation bank',grp:16});
   return result.map(stretchComponent);
 }
 export const treehouseShoreZ=(x:number)=>16+x*.07+Math.sin(x*.1)*1.4;
@@ -250,7 +278,7 @@ function joinPlanting():CustomComponent[] {
   const plant=(kind:NonNullable<CustomComponent['dkind']>,p:Point,s:Point,yaw:number,name:string)=>
     C.push({t:'decor',dkind:kind,p:[r(p[0]+treehouseTrialOffset(sourceZ(p[2]))),r(p[1]),r(p[2])],s,yaw,nm:name,grp:17});
   for(const [j,join] of TREEHOUSE_TRIALS_JOINS.entries()){
-    if(j===2||j===6||j===7||join.name==='Longer broken bridge crossing')continue;
+    if(j===2||j===6||j===7||join.name==='Longer broken bridge crossing'||'linear' in join)continue;
     const near=treehouseTrialZ(-join.near),far=treehouseTrialZ(-join.far);
     for(let z=near-5,i=0;z>far+3;z-=8.8,i++)for(const side of [-1,1]){
       const shift=Math.sin(i*2.1+j)*.7;
@@ -264,7 +292,7 @@ function joinPlanting():CustomComponent[] {
   }
   // Extra cavern length is enclosed by the warped rock shell. Sculpted
   // shoulders make that longer gallery read as a continuous natural room.
-  for(const [near,far] of [[314,326],[372,378]] as const){
+  for(const [near,far] of [[314,326],[372,380]] as const){
     let i=0;
     for(let z=treehouseTrialZ(-near)-5;z>treehouseTrialZ(-far)+3;z-=10,i++)for(const side of [-1,1]){
       plant('trialsv2cavewallb',[35+side*14,-9.45,z],[11.5,11.057,7.13],side*90+i*7,

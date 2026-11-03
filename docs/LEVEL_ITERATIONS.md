@@ -8350,3 +8350,24 @@ finish. Ocean/Treehouse regressions, required level checks, production build
 and release-size check pass; no full suite ran. Release: 805,689,721 bytes.
 
 Before/after images and reusable review controls: [Shoreline iteration](banana-bay-seams/README.md).
+
+## 2026-11-04 — Treehouse Trails river and final approach
+
+Double the shallow river from 12 m to 24 m and repeat its original stepping
+stones to make six, retaining their measured support surfaces. Close both
+halfpipe ends with fitted manual timber panels. Insert 30 m of level straight
+path after the cave bend, align its camera spine with the rope, and move the
+complete rope/landing/exit assembly together. Add four small ferns and four
+low leaf clusters before the end matte, and close the exposed soil edge there.
+
+Prompt to browser-validated playable: approximately **30 minutes**
+(14:10–14:40 UTC). Native collision checks pass for all six stones, both
+halfpipe entrances and the 37.5 m straight approach. The actual 25 m rope carries
+251 headless grind frames. A full-render browser run from the halfpipe to the
+finish takes 21.8 seconds with a banked checkpoint and no deaths; camera yaw
+stays within 0.038 degrees of straight ahead over the final 30 m. Lite, normal,
+MAX/native 3024 × 1724, checkpoint/fall recovery and clean-console reviews pass.
+Required level checks, production build and release-size check pass; no full
+suite ran. Release: 805,692,064 bytes.
+
+Evidence and local review controls: [Treehouse flow iteration](treehouse-flow/README.md).

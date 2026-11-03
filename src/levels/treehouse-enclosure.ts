@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type {CustomComponent} from '../level';
-import {treehouseTrialPoint,treehouseTrialZ,treehouseTrialOffset} from './treehouse-trials-continuity';
+import {treehouseTrialPoint,treehouseTrialZ,treehouseTrialOffset,TREEHOUSE_TRIALS_JOINS} from './treehouse-trials-continuity';
 
 type P=[number,number,number];
 type Kind=NonNullable<CustomComponent['dkind']>;
@@ -9,7 +9,7 @@ const profile:P[]=[[35,0,-16],[35,0,-28],[35,-1.7,-35],[35,-3,-42],[35,-2.2,-46]
   [35,-5.1,-50],[35,-6.7,-67],[35,-5.9,-71],[35,-9,-75],[35,-10.6,-94],
   [35,-9.8,-98],[35,-13,-102],[35,-14,-112],[35,-14,-282],[35,-7.2,-314],[35,-7.2,-500]];
 function sourceZ(world:number):number{
-  let a=world,b=world+234;
+  let a=world,b=world+TREEHOUSE_TRIALS_JOINS.reduce((sum,join)=>sum+join.extra,0);
   for(let i=0;i<24;i++){const m=(a+b)/2;if(treehouseTrialZ(m)<world)a=m;else b=m;}
   return (a+b)/2;
 }
@@ -39,7 +39,8 @@ const intervals=[[-16,-282],[-411,-500]] as const;
  * Sample in world metres so stretched joining sections receive equal density.
  * Every root and matte foot is seated in the same continuous earth profile. */
 export function encloseTreehouseWorld(input:readonly CustomComponent[]):CustomComponent[]{
-  const bendRelief=(z:number)=>11*Math.exp(-Math.pow((z+569)/17,4));
+  const bendCenter=treehouseTrialZ(-375.35);
+  const bendRelief=(z:number)=>11*Math.exp(-Math.pow((z-bendCenter)/17,4));
   const C:CustomComponent[]=input.map((c):CustomComponent=>{
     if(c.t==='decor'&&c.nm==='Halfpipe · fern fronds overhanging the outer deck'){
       const cx=35+treehouseTrialOffset(sourceZ(c.p[2])),side=Math.sign(c.p[0]-cx)||1;

@@ -1,0 +1,59 @@
+{
+ "mode": "Pit respawn",
+ "seconds": 21.8,
+ "position": [
+  32.9,
+  -14,
+  -330
+ ],
+ "state": "ride",
+ "grounded": true,
+ "deaths": 0,
+ "checkpoints": 1,
+ "grindFrames": 186,
+ "maxTurn": 0.003941832889648139,
+ "runwayYaw": 0.0376384268947954,
+ "balance": 0,
+ "balanceVelocity": 0,
+ "balanceControl": 3.4,
+ "stones": 6,
+ "render": {
+  "viewportWidth": 1512,
+  "viewportHeight": 862,
+  "inputWidth": 1263,
+  "inputHeight": 720,
+  "outputWidth": 1263,
+  "outputHeight": 720
+ },
+ "assetErrors": [],
+ "results": [
+  {
+   "name": "River to finish",
+   "pass": false,
+   "seconds": 8.7,
+   "position": [
+    50.09144039035128,
+    -14,
+    -429.68706404042393
+   ],
+   "state": "dead",
+   "grindFrames": 0,
+   "maxTurn": 0,
+   "runwayYaw": 0
+  },
+  {
+   "name": "Pipe to finish",
+   "pass": true,
+   "seconds": 21.8,
+   "position": [
+    54.75300550762462,
+    -6.473333330849806,
+    -706.5821589080423
+   ],
+   "state": "finished",
+   "grindFrames": 186,
+   "maxTurn": 0.003941832889648139,
+   "runwayYaw": 0.0376384268947954
+  }
+ ]
+}
