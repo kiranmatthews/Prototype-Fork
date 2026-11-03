@@ -13,7 +13,8 @@
       "snapshotSha256": "a0ad01c405c47c3b29a34b110d00875bcfdc872ad4edcc299c3e78518a518ccb"
     },
     "custard-creek": {
-      "snapshotSha256": "ef4d9aa5b2462617c1756dad08820dcdd0e22c66463bccecfbd3f6b24abc7d4a"
+      "snapshotSha256": "0c665b0292715a9386185e58dd77ec331f53a10968bd6b0f3a384d30a6ac8a0d",
+      "authoringRuntime": "v26.13.0"
     },
     "bonus-custard-creek": {
       "snapshotSha256": "d029cd4d31c300f1ca0a9e44c12d043ad15e463bc266a2400ab31391dce75eb2"

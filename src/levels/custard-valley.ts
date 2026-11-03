@@ -1,7 +1,7 @@
 import type {CustomComponent,CustomGroup} from '../level';
 import {buildCustardFinale,CUSTARD_FINALE_GROUP,CUSTARD_POOL_Y} from './custard-finale';
 type P=[number,number,number];
-interface Course {point(s:number,y?:number,u?:number):P;height(s:number):number;yaw(s:number):number}
+interface Course {point(s:number,y?:number,u?:number):P;height(s:number):number;yaw(s:number):number;waterfallRun?:boolean}
 export const CUSTARD_VALLEY_GROUPS:CustomGroup[]=[{id:93,nm:'Custard · dense layered willow forest'},{id:94,nm:'Custard · waterfall summit'},CUSTARD_FINALE_GROUP];
 const rand=(n:number)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
 
@@ -59,7 +59,7 @@ export function custardValley(course:Course):CustomComponent[]{
  // Pale, rounded shoulders frame the brink in the same geology as the pool.
  for(const [side,w] of [[-1,36],[1,32]])prop('custarderodedcliff',2443,side*34,-30,
   [w,w*.428683,w*.920158],course.yaw(2443)+side*72,'Custard rounded foreground waterfall shoulder',94,'#ffffff');
- out.push(...buildCustardFinale(course));
+ if(!course.waterfallRun)out.push(...buildCustardFinale(course));
  // The river physically turns over the brink; this visible mesh is neither a
  // supporting bridge nor a flat billboard standing in for the entire fall.
  const rows=[[2440,-12,34],[2445,-12,34],[2448,-13,31],[2452,-17,28],[2457,-24,26],[2461,CUSTARD_POOL_Y,25]];

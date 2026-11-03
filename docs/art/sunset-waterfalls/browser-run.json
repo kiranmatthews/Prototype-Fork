@@ -1,0 +1,46 @@
+{
+  "mode": "PASS",
+  "target": 14,
+  "seconds": 71.8,
+  "jumps": 12,
+  "position": [
+    581.12,
+    -254,
+    561.4
+  ],
+  "state": "ride",
+  "grounded": true,
+  "deaths": 0,
+  "checkpoints": 2,
+  "launch": {
+    "weight": 0,
+    "launchId": 13,
+    "height": -243.02505750935646,
+    "yaw": 2.916559178424677,
+    "position": [
+      587.8514943617052,
+      -243.02505750935646,
+      531.0940354062473
+    ]
+  },
+  "art": {
+    "nets": 12,
+    "corners": 48,
+    "trianglesPerCorner": 5082,
+    "status": "ready",
+    "errors": []
+  },
+  "assets": [],
+  "results": [
+    {
+      "pass": true,
+      "jumps": 12,
+      "seconds": 71.8,
+      "position": [
+        580.8936906186526,
+        -253.2733333308498,
+        561.6392328659762
+      ]
+    }
+  ]
+}

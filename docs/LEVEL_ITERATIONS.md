@@ -8371,3 +8371,29 @@ Required level checks, production build and release-size check pass; no full
 suite ran. Release: 805,692,064 bytes.
 
 Evidence and local review controls: [Treehouse flow iteration](treehouse-flow/README.md).
+
+## 2026-11-04 — Sunset Safari waterfall trampoline descent
+
+Extend the old finish bank into a 614 m descending waterfall gorge, with twelve
+native trampolines, two safe checkpoint terraces and a new finish 248 m lower.
+Reuse Carlisle's bounce controls, elastic rope net and launch camera. Build
+chunky timber frames, water piles and cliff brackets manually; add separately
+generated rope-lashed corner joints from Tripo Studio's web plan. Every joint
+uses Smart Mesh P2.0 with a 5,000-triangle target and 5,082 verified triangles,
+following a Crash 4 aesthetic imagegen reference pass. Keep the full geometry
+at every viewing distance. Stepped pools have local water reset volumes; the
+ordered camera spine and locally lighter haze keep descending landings visible.
+
+Prompt to browser-validated playable: approximately **42 minutes**
+(14:54–15:36 UTC), including image generation, browser modelling and geometry
+refinement. The native input run completes all twelve bounces in 72.77 seconds
+with zero deaths; the full-render browser run takes 71.8 seconds and activates
+both new terrace checkpoints. Deliberately missing the lowest net hits its
+own water at -242.12 m. MAX/native and normal-resolution reviews cover the
+complete asset, cliffs, foam, landings and relocated finish with no console or
+asset errors. Rope weight, recovery, camera visibility restoration and disposal
+checks pass, as does the existing Carlisle net regression. Required level
+checks, production build and release-size check pass; no full suite ran.
+Release output: 806,898,461 bytes.
+
+Evidence, source reference and Tripo settings: [Sunset waterfall iteration](art/sunset-waterfalls/README.md).

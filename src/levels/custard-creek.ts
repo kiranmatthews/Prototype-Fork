@@ -2,6 +2,7 @@ import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
 import {buildCreekBank,buildCreekCollision,type CreekBank} from './custard-terrain';
 import {buildCreekArt,CUSTARD_ART_GROUPS} from './custard-creek-art';
 import {custardValley,CUSTARD_VALLEY_GROUPS} from './custard-valley';
+import {buildSunsetWaterfalls,SUNSET_WATERFALL_GROUPS} from './sunset-waterfalls';
 
 type Point=[number,number,number];
 type Scalar=number|((s:number)=>number);
@@ -179,14 +180,14 @@ for(let a=-16;a<2450;a+=16){
  const p=custardPoint(a,water-.35),corners=[custardPoint(a,p[1],-33),custardPoint(a,p[1],33),custardPoint(b,p[1],33),custardPoint(b,p[1],-33)];
  add({t:'pit',p,pts:corners.map(q=>[q[0]-p[0],q[2]-p[2]]),invisible:true,nm:'Custard river contact reset'});
 }
-add({t:'pit',p:[420,-25,-150],s:[1400,1,1200],invisible:true,nm:'Creek fall reset'});
-for(let s=15;s<2448;s+=8)add({t:'camnode',p:custardPoint(s,custardHeight(s)+.8),radius:0,nm:'Ordered folded creek camera'});
+// Local river-contact strips remain above the old course; a single broad
+// horizontal reset plane would cut through the new descending waterfall run.
+for(let s=15;s<2440;s+=8)add({t:'camnode',p:custardPoint(s,custardHeight(s)+.8),radius:0,nm:'Ordered folded creek camera'});
 add({t:'camnode',p:custardPoint(-16,.8),radius:0,nm:'Creek entry camera'});
 // Put the near-end camera first; camnodes are a travelled chain, not a set.
 const camera=C.filter(c=>c.t==='camnode');C.splice(0,C.length,...C.filter(c=>c.t!=='camnode'),camera[camera.length-1],...camera.slice(0,-1));
 for(let s=20;s<2420;s+=24){const road=CUSTARD_CREEK_ROADS.find(r=>s>=r.a&&s<=r.b);if(road)add({t:'wumpa',p:custardPoint(s,custardHeight(s)+1.3,value(road.offset,s)),grp:section(s).grp,nm:'Onward creek fruit'});}
 add({t:'clock',p:custardPoint(8,0,-4),nm:'Creek time trial'});add({t:'crystal',p:custardPoint(833,custardHeight(833)+1.4),nm:'Mill crown crystal'});
-add({t:'gate',p:custardPoint(CUSTARD_CREEK_END),yaw:custardYaw(CUSTARD_CREEK_END),nm:'Custard Creek finish'});
 // Shape the stone only after every actor, patrol and joining bank is known.
 // Protected pockets keep footholds generous while quiet stretches can erode.
 const anchors:{s:number;u:number;y:number;radius:number;along?:number}[]=[];
@@ -194,7 +195,7 @@ const anchor=(p:Point,radius=.85,along=2.8)=>{
  const s=custardProgress(p),c=custardPoint(s,0),d=custardTangent(s),u=-(p[0]-c[0])*d[2]+(p[2]-c[2])*d[0];
  anchors.push({s,u,y:p[1],radius,along});
 };
-anchor(custardPoint(0,0),1.8);anchor(custardPoint(8,0,-4),1.0);
+anchor(custardPoint(0,0),1.8);anchor(custardPoint(8,0,-4),1.0);anchor(custardPoint(CUSTARD_CREEK_END),3.3,5);
 for(const c of C){
  if(c.t==='crate')anchor(c.p,1.05);
  if(c.t==='checkpoint'){anchor(c.p,1.1);anchor([c.p[0]-1.05,c.p[1],c.p[2]],.85);}
@@ -227,16 +228,17 @@ const sculpted:CustomComponent[]=[];
 for(const c of C){const bank=pendingBanks.get(c);if(bank)sculpted.push(...buildCreekBank({point:custardPoint,height:custardHeight},bank),...buildCreekCollision({point:custardPoint,height:custardHeight},bank));else sculpted.push(c);}
 C.splice(0,C.length,...sculpted);
 export const CUSTARD_NATIVE_BANKS=C.filter(c=>c.t==='mesh'&&c.solid!==false);
-export const CUSTARD_CREEK_CAMERA=C.filter(c=>c.t==='camnode').map(c=>c.p);
-export const CUSTARD_CREEK_GAMEPLAY=Object.fromEntries(['enemy','stone','crusher','pendulum','mover','crumble','rail','vertramp','checkpoint','crate','gate'].map(t=>[t,C.filter(c=>c.t===t).length]));
 for(const c of C)if(c.t==='crumble'||c.t==='mover'||c.t==='pendulum')c.tex=c.nm==='Reedbed ferry'?'creek-raft':'coast-timber';
 C.push(...buildCreekArt({point:custardPoint,height:custardHeight,yaw:custardYaw,roads:CUSTARD_CREEK_ROADS,gaps:CUSTARD_CREEK_GAPS,surfaces:CUSTARD_NATIVE_BANKS}));
-C.push(...custardValley({point:custardPoint,height:custardHeight,yaw:custardYaw}));
-export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'sunset',spawn:custardPoint(0,.12),killY:-34,
+C.push(...custardValley({point:custardPoint,height:custardHeight,yaw:custardYaw,waterfallRun:true}));
+C.push(...buildSunsetWaterfalls({point:custardPoint,yaw:custardYaw}));
+export const CUSTARD_CREEK_CAMERA=C.filter(c=>c.t==='camnode').map(c=>c.p);
+export const CUSTARD_CREEK_GAMEPLAY=Object.fromEntries(['enemy','stone','crusher','pendulum','mover','crumble','rail','vertramp','trampoline','checkpoint','crate','gate'].map(t=>[t,C.filter(c=>c.t===t).length]));
+export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'sunset',spawn:custardPoint(0,.12),killY:-290,hugeDropBail:false,
  jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:55,fogFar:190,fogColor:'#c19f91',
   ambientSky:'#c5c4d7',ambientGround:'#80684c',ambientIntensity:1.12,
   sunColor:'#ffca85',sunIntensity:1.9,fillColor:'#b2bdcf',fillIntensity:.40,shadowStrength:.80,
   sunDirection:[-.72,.30,-.63],drawDistance:230,backdrop:'painted sky',fallbackTop:'#6f798f',fallbackBottom:'#ebbb91',fallbackFog:'#b9a29a',
   fallbackSunColor:'#ffe3a4',fallbackSunU:.64,fallbackSunV:.38,fallbackStars:false,fallbackRidges:true},
- medalTimes:{gold:180,silver:210,bronze:255},groups:[...groups,...CUSTARD_ART_GROUPS,...CUSTARD_VALLEY_GROUPS],components:C};
+ medalTimes:{gold:255,silver:290,bronze:340},groups:[...groups,...CUSTARD_ART_GROUPS,...CUSTARD_VALLEY_GROUPS,...SUNSET_WATERFALL_GROUPS],components:C};

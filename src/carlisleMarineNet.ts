@@ -59,8 +59,8 @@ export class CarlisleMarineNet {
   private readonly maxDepth:number;
   private readonly weightDepth:number;
   private pressed=false;
-  constructor(readonly width:number,readonly length:number,readonly frameHeight=marineFrameHeight(width,length)) {
-    this.group.name='Laced elastic marine net';this.group.userData.visualOnly=true;
+  constructor(readonly width:number,readonly length:number,readonly frameHeight=marineFrameHeight(width,length),style:'marine'|'tribal'='marine') {
+    this.group.name=style==='tribal'?'Old brown rope trampoline net':'Laced elastic marine net';this.group.userData.visualOnly=true;
     const w=width,d=length,h=frameHeight;
     const [x0,x1,z0,z1]=marineNetBounds(w,d);
     const cx=(x0+x1)/2,cz=(z0+z1)/2,hx=(x1-x0)/2,hz=(z1-z0)/2;
@@ -69,7 +69,7 @@ export class CarlisleMarineNet {
     this.weightDepth=Math.min(.65,Math.min(w,d)*.085);
     this.uniforms.netLoad.value.w=THREE.MathUtils.clamp(Math.min(w,d)*.18,1.2,3.4);
     this.eyes=MARINE_NET_EYES.map(([x,y,z])=>new THREE.Vector3(x*w,(y-.87)*h,z*d));
-    this.resourceKey=[w,d,h].join(':');
+    this.resourceKey=[w,d,h,style].join(':');
     let shared=ropeResources.get(this.resourceKey);
     if(!shared){
       const radius=Math.min(w,d)*.0038,sag=Math.min(.15,Math.min(w,d)*.012);
@@ -79,7 +79,8 @@ export class CarlisleMarineNet {
       const tube=(curve:THREE.Curve<THREE.Vector3>,r:number,color:number,mobility:(t:number)=>number=()=>1,segments?:number)=>{
         const arc=curve.getLength(),count=segments??Math.max(8,Math.ceil(arc/(Math.min(w,d)*.025)));
         const geometry=new THREE.TubeGeometry(curve,count,r,6,false),n=geometry.attributes.position.count;
-        const colors=new Float32Array(n*3),flex=new Float32Array(n),c=new THREE.Color(color),uv=geometry.attributes.uv;
+        const brown:Record<number,number>={0xcb551f:0x785136,0xe77630:0x987348,0xe98039:0x9c794f,0xb3481d:0x65452f,0xf49a54:0xb08b5a};
+        const colors=new Float32Array(n*3),flex=new Float32Array(n),c=new THREE.Color(style==='tribal'?(brown[color]??color):color),uv=geometry.attributes.uv;
         for(let i=0;i<n;i++){
           const t=uv.getX(i),shade=.94+.06*Math.sin(t*arc*19);
           colors.set([c.r*shade,c.g*shade,c.b*shade],i*3);flex[i]=mobility(curve.getUtoTmapping(t,0));

@@ -1,0 +1,17 @@
+{
+  "asset": "rope-corner.glb",
+  "purpose": "Rope-lashed carved timber joints for Sunset Safari waterfall trampolines",
+  "generatedWith": "Tripo Studio web app, Smart Mesh P2.0",
+  "taskUrl": "https://studio.tripo3d.ai/workspace/generate/75042cd1-5b82-4448-99cf-9bd5bbffa91a",
+  "reference": "docs/art/sunset-waterfalls/rope-corner-crash4-reference.png",
+  "referenceProcess": "Imagegen Crash Bandicoot 4 aesthetic pass, before modelling",
+  "requestedTopology": "Triangle",
+  "requestedTriangles": 5000,
+  "actualTriangles": 5082,
+  "absoluteTriangleLimit": 30000,
+  "textureExport": "2K base color",
+  "credits": {"geometry":100,"texture":30,"source":"web plan credits"},
+  "manualParts": ["frame beams","piles","diagonal supports","cliff brackets"],
+  "reusedMechanics": ["native trampoline","Carlisle elastic net","native launch camera"],
+  "decimationOrDistanceLod": false
+}

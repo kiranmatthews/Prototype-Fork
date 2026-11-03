@@ -56,6 +56,7 @@ import { HazardVisuals } from './hazardVisuals';
 import { createCarlisleCones, isCarlisleConeRow } from './carlisleCone';
 import { createCarlisleShipyard, isCarlisleShipyard, isCarlisleMassing } from './carlisleShipyard';
 import { marineNetBounds } from './trampolineSurface';
+import {createTribalTrampolines,isTribalTrampoline} from './tribalTrampolines';
 import { AncientGatesMechanisms } from './ancientGatesMechanisms';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
@@ -4685,6 +4686,7 @@ export class Level {
   private hazardVisuals:HazardVisuals|null=null;
   private carlisleCones:ReturnType<typeof createCarlisleCones>=null;
   private carlisleShipyard:ReturnType<typeof createCarlisleShipyard>=null;
+  private tribalTrampolines:ReturnType<typeof createTribalTrampolines>=null;
   private ancientMechanisms:AncientGatesMechanisms|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
@@ -7751,6 +7753,7 @@ export class Level {
     if (!EDITOR_BUILD) {
       this.carlisleCones=createCarlisleCones(this.root,data);
       this.carlisleShipyard=createCarlisleShipyard(this.root,data,this.groundMeshes);
+      this.tribalTrampolines=createTribalTrampolines(data,this.groundMeshes);
     }
   }
 
@@ -8886,7 +8889,7 @@ export class Level {
             const pad = this.buildMechanicPad(c, 0xff8a2b, 0x4a1600);
             pad.userData.trampolineBounce = Math.max(0.1, c.speed ?? 16);
             pad.userData.trampolineHeldMult = Math.max(1, c.amp ?? 1.25);
-            if (isCarlisleShipyard(data)) pad.userData.trampolineNetBounds = marineNetBounds(c.s?.[0] ?? 5, c.s?.[2] ?? 5);
+            if (isCarlisleShipyard(data)||isTribalTrampoline(c)) pad.userData.trampolineNetBounds = marineNetBounds(c.s?.[0] ?? 5, c.s?.[2] ?? 5);
           } else if (c.t === "speedpad") {
             const pad = this.buildMechanicPad(c, 0x2bdfff, 0x00334a);
             pad.userData.speedPadSpeed = Math.max(0.1, c.speed ?? 48);
@@ -9030,6 +9033,7 @@ export class Level {
     this.jungleAssets = null;
     this.carlisleCones?.dispose();this.carlisleCones=null;
     this.carlisleShipyard?.dispose();this.carlisleShipyard=null;
+    this.tribalTrampolines?.dispose();this.tribalTrampolines=null;
     this.ancientMechanisms?.dispose();this.ancientMechanisms=null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;this.swimmingPools.length=0;
@@ -10091,6 +10095,7 @@ export class Level {
     this.minefields?.update(dt);
     this.carlisleCones?.update(dt,this.playerPos);
     this.carlisleShipyard?.update(dt,this.playerPos);
+    this.tribalTrampolines?.update(dt);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.meshSideCollisions.beginStep();
@@ -16400,6 +16405,7 @@ export class Level {
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
   get carlisleShipyardDiagnostics() { return this.carlisleShipyard?.diagnostics ?? null; }
+  get tribalTrampolineDiagnostics() { return this.tribalTrampolines?.diagnostics ?? null; }
   get carlisleConeDiagnostics() { return this.carlisleCones?.diagnostics ?? null; }
   get ancientMechanismDiagnostics(){return this.ancientMechanisms?.diagnostics??null;}
   get hazardAssetDiagnostics() { return this.hazardVisuals?.diagnostics ?? null; }
@@ -16451,6 +16457,7 @@ export class Level {
     this.pickupVisualBatch?.sync();
     this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
+    if(!clearInspectionView)this.tribalTrampolines?.view(camera,this.scene);
     this.nightworksPlume?.render(camera);
     this.nightworksLighting?.update(camera);
     this.stadiumLighting?.update(camera);
@@ -16459,7 +16466,7 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     // Use the authored fog horizon; the theme's inherited 150 m jungle limit
     // can be much closer than the actual atmosphere rendered by the camera.
-    const fogFar=this.atmosphere?.fogFar??this.theme.fogFar;
+    const fogFar=this.tribalTrampolines&&this.scene.fog instanceof THREE.Fog?this.scene.fog.far:this.atmosphere?.fogFar??this.theme.fogFar;
     const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
     this.blockworksSurfaces?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
     this.blockworksAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
@@ -16482,7 +16489,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
