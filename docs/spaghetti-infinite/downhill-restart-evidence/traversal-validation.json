@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "source": "Final native run; no simulation or movement changes after capture",
+  "rivals": [
+    {
+      "id": 1,
+      "finish": 242.88333333341876,
+      "grindMetres": 1954.483483270159,
+      "rails": 13
+    },
+    {
+      "id": 2,
+      "finish": 297.8000000000578,
+      "grindMetres": 1685.300886602636,
+      "rails": 10
+    },
+    {
+      "id": 3,
+      "finish": 315.56666666670833,
+      "grindMetres": 568.8810460801728,
+      "rails": 5
+    },
+    {
+      "id": 4,
+      "finish": 219.96666666673386,
+      "grindMetres": 1268.5803972422577,
+      "rails": 9
+    },
+    {
+      "id": 5,
+      "finish": 187.7833333333749,
+      "grindMetres": 2621.815969501793,
+      "rails": 13
+    },
+    {
+      "id": 6,
+      "finish": 265.7833333334203,
+      "grindMetres": 1657.1293098880808,
+      "rails": 12
+    },
+    {
+      "id": 7,
+      "finish": 290.7000000000643,
+      "grindMetres": 1500.452254192801,
+      "rails": 15
+    }
+  ],
+  "averageRivalGrindMetres": 1608.0919066825575,
+  "referenceGrindMetres": 2563.9788944581474
+}

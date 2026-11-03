@@ -1,0 +1,382 @@
+{
+  "reports": [
+    {
+      "full": false,
+      "firstFill": 7.733333333333311,
+      "activations": 1,
+      "pickups": 4,
+      "uses": 4,
+      "specialPaints": 231,
+      "meter": 100,
+      "balancePaints": 13,
+      "balanceUses": 1,
+      "balanceSeconds": 5.533333333333335,
+      "speedText": "110",
+      "speedKmh": 109.5943053337296,
+      "visible": true,
+      "avatarOnly": true,
+      "aria": "100",
+      "springs": 18,
+      "housingParts": 18,
+      "housingVertices": 111024,
+      "art": {
+        "status": "ready",
+        "errors": []
+      },
+      "boxes": 706,
+      "tuningUnchanged": true,
+      "buffer": [
+        800,
+        500
+      ],
+      "samples": [
+        {
+          "t": 0.016666666666666666,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 0.5333333333333333,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 1.0333333333333345,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 1.5499999999999994,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 2.066666666666664,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 2.583333333333329,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 3.099999999999994,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 3.6166666666666587,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 4.133333333333324,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 4.649999999999989,
+          "meter": 17.333333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 5.166666666666654,
+          "meter": 31.083333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 5.6833333333333185,
+          "meter": 44.833333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 6.199999999999983,
+          "meter": 58.583333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 6.716666666666648,
+          "meter": 72.16666666666667,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 7.233333333333313,
+          "meter": 90.83333333333334,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 7.749999999999978,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 8.24999999999999,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 8.750000000000014,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 9.250000000000039,
+          "meter": 100,
+          "item": null,
+          "state": "air"
+        },
+        {
+          "t": 9.750000000000064,
+          "meter": 100,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 10.250000000000089,
+          "meter": 100,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 10.750000000000114,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 11.250000000000139,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 11.750000000000163,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 12.250000000000188,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        }
+      ]
+    },
+    {
+      "full": true,
+      "firstFill": 7.733333333333311,
+      "activations": 1,
+      "pickups": 4,
+      "uses": 4,
+      "specialPaints": 120,
+      "meter": 100,
+      "balancePaints": 11,
+      "balanceUses": 1,
+      "balanceSeconds": 5.2166666666666694,
+      "speedText": "110",
+      "speedKmh": 109.59422070444333,
+      "visible": true,
+      "avatarOnly": true,
+      "aria": "100",
+      "springs": 18,
+      "housingParts": 18,
+      "housingVertices": 111024,
+      "art": {
+        "status": "ready",
+        "errors": []
+      },
+      "boxes": 706,
+      "tuningUnchanged": true,
+      "buffer": [
+        1600,
+        1000
+      ],
+      "samples": [
+        {
+          "t": 0.016666666666666666,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 0.5333333333333333,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 1.0333333333333345,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 1.5499999999999994,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 2.066666666666664,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 2.583333333333329,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 3.099999999999994,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 3.6166666666666587,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 4.133333333333324,
+          "meter": 0,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 4.649999999999989,
+          "meter": 17.333333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 5.166666666666654,
+          "meter": 31.083333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 5.6833333333333185,
+          "meter": 44.833333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 6.199999999999983,
+          "meter": 58.583333333333336,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 6.716666666666648,
+          "meter": 72.16666666666667,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 7.233333333333313,
+          "meter": 90.83333333333334,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 7.749999999999978,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 8.24999999999999,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 8.750000000000014,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 9.250000000000039,
+          "meter": 100,
+          "item": null,
+          "state": "air"
+        },
+        {
+          "t": 9.750000000000064,
+          "meter": 100,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 10.250000000000089,
+          "meter": 100,
+          "item": null,
+          "state": "ride"
+        },
+        {
+          "t": 10.750000000000114,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 11.250000000000139,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 11.750000000000163,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        },
+        {
+          "t": 12.250000000000188,
+          "meter": 100,
+          "item": null,
+          "state": "grind"
+        }
+      ]
+    }
+  ],
+  "platformer": {
+    "id": "spaghetti-rails-platforming",
+    "art": {
+      "status": "ready",
+      "errors": []
+    },
+    "springs": 6,
+    "loop": {
+      "minY": -48,
+      "height": 96,
+      "launchCamera": true
+    }
+  },
+  "errors": []
+}

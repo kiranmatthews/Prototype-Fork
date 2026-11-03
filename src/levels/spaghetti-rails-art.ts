@@ -6,13 +6,14 @@ export function withSpaghettiCavern(source:CustomLevelData):CustomLevelData {
  const data=structuredClone(source),C=data.components,loop=data.verticalLoop!,platforming=!data.skateRace;
  for(const c of C)if(['platform','vertramp','ramp'].includes(c.t))c.emissive??='#24343c';
  const far=Math.min(...C.filter(c=>c.nm==='Periodic corridor end').map(c=>c.p[2]));
+ const near=Math.max(42,...C.filter(c=>c.nm==='Periodic corridor end').map(c=>c.p[2]));
  const put=(c:CustomComponent)=>C.push({grp:90,solid:false,scenerySolid:false,castShadow:false,...c});
  const mesh=(nm:string,p:P,v:number[],indices:number[],color:string,tex='solid' as CustomComponent['tex'])=>
   put({t:'mesh',nm,p,vertices:v,indices,color,tex,doubleSided:true,emissive:nm.includes('amber')?'#b28a42':'#1c2b39'});
  // Broad textured wall panels retain vertical rhythm across the seam.
  for(const side of [-1,1]){
   const x=side*52;
-  mesh('Endless cavern / basalt curtain',[0,0,0],[x,loop.minY,42,x,loop.minY,far,x,loop.minY+loop.height,far,x,loop.minY+loop.height,42],[0,1,2,0,2,3],platforming?'#594654':'#3c6071','spaghetti-cavern');
+  mesh('Endless cavern / basalt curtain',[0,0,0],[x,loop.minY,near,x,loop.minY,far,x,loop.minY+loop.height,far,x,loop.minY+loop.height,near],[0,1,2,0,2,3],platforming?'#594654':'#3c6071','spaghetti-cavern');
   for(let z=24;z>far;z-=platforming?112:96){
    // Faceted pilasters, four repeating strata, no overhead cap.
    const halfStratum=loop.height/8;

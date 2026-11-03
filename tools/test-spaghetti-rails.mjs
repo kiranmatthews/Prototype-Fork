@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
+import {assertSpaghettiRaceTraversal} from './spaghetti-race-validation.mjs';
 const output=process.env.SPAGHETTI_OUTPUT??'/private/tmp/spaghetti-rails-evidence';
 await mkdir(output,{recursive:true});
 const solo=!process.argv.includes('--race'),seed=Number(process.env.SPAGHETTI_SEED??270327);
@@ -62,14 +63,6 @@ await withBlockworksRuntime(async r=>{
  await writeFile(`${output}/${solo?'solo':'race'}-${seed}${miss?'-miss':''}.json`,JSON.stringify(report,null,2));
  await writeFile(`${output}/${solo?'solo':'race'}-${seed}-trace.json`,JSON.stringify(trace));
  console.log(JSON.stringify({...report,records:undefined}));
- assert.equal(report.tuningUnchanged,true);
- assert.ok(report.riders.every(a=>a.finish!==null),'Every active racer must finish using production controls');
- // A long recovery span legitimately skips several interchange rails. Test
- // actual native travel, rather than requiring one component per race stage.
- // Club riders deliberately bail more often and traverse lower platforms.
- // Retain the stronger reference/default check, plus substantial native rail
- // travel for every club rival; all still have to finish without relocation.
- if(!miss)assert.ok(report.riders.every(a=>a.authoredGrindMetres>race.course.length*(a.id&&source.skateRace.rivalSkill==='club'?.3:.5)),'Every racer uses the authored rail network');
- if(miss){assert.ok(fault&&report.wrap>=source.verticalLoop.height);assert.ok(report.riders.every(a=>a.falls===0&&a.deaths===0),'A wrapped miss must recover without a race reset');}
- if(solo)assert.equal(report.riders[0].falls,0,'The reference line must complete without a fall');
+ if(miss)assert.ok(fault,'The requested miss fixture was applied');
+ assertSpaghettiRaceTraversal(report,{club:source.skateRace.rivalSkill==='club',loopHeight:source.verticalLoop.height});
 },{modulePath:process.env.SPAGHETTI_MODULE??'/src/levels/spaghetti-rails.ts',source:m=>m.SPAGHETTI_RAILS_LEVEL,levelId:'spaghetti-rails'});

@@ -8402,3 +8402,28 @@ traversal evidence; an uninterrupted all-box playthrough was not performed.
 
 Kept local at the user's request; no push, publication or shared-pack change.
 Details: [maze route iteration](spaghetti-infinite/MAZE_ROUTE_ITERATION.md).
+
+## 2026-11-03 — Version 1 race restart with downhill decks (local preview)
+
+Restore the selected history version 1 race foundation: twelve sections,
+three primary lines, six recovery heights and the original 288-metre wrap.
+Keep the newer Special, Perfect Balance roulette, club rivals, easier balance,
+speedometer, frequent items and eighteen complete Carlisle marine nets.
+Lengthen every deck by 2–4× and give it a varying forward downhill grade.
+Refit rail heights and ramp joins to the actual surfaces; preserve the native
+rounded curves, all connected landing footprints and full recovery coverage.
+The platformer keeps its existing maze itinerary.
+
+The race has 904 decks, 183 rails, 706 mystery pickups and a roughly 3.47 km
+route. The final collector uses the longer deck to clear its descending joins.
+Eleven downhill rides, three kicker landings, all eighteen spring receivers,
+full coverage/connectivity, five wrapped falls, native rewards and eight
+finishing racers pass without deaths or resets. Update the club-rival rail-use
+assertion to permit individual platform-heavy recoveries on the longer decks;
+the recorded final run passes the extracted validator. Chrome lite/full/native
+checks show working HUDs, complete artwork, visible rider and clean consoles.
+Required level checks and production build pass. No global runtime/tuning or
+shared-pack changes, full suite, push or publication.
+
+Prompt to validated local preview: approximately **50 minutes**. Details:
+[downhill restart iteration](spaghetti-infinite/DOWNHILL_RESTART_ITERATION.md).

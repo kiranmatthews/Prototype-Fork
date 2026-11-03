@@ -1,107 +1,98 @@
 import type {RaceKnot,SkateRaceData} from '../race/types';
-import {spaghettiWorld,spaghettiRail,spaghettiSamples,spaghettiClearanceHeight,type P,type SpaghettiDock,type SpaghettiRun} from './spaghetti-infinite-course';
+import {spaghettiRail,spaghettiSamples,type P,type SpaghettiDock,type SpaghettiRun} from './spaghetti-infinite-course';
+import {spaghettiRaceWorld,raceDeckY,type RaceDeck} from './spaghetti-race-world';
 
-export const SPAGHETTI_STAGES=['Rolling Start','Slipstream Gates','Over / Under','Split Chicane','Copper Bowl','Open Throttle','Twin Spines','Finish Dive'];
-// Eight intact sections retain their long open approaches. Remove a third of
-// the journey instead of squeezing every platform and jump closer together.
-const spans=[240,280,260,300,220,320,260,248];
-
-/** Uninterrupted competitive lines, rare shared interchanges and optional
- * launch routes. No platforming sequence is reused by this course. */
+// Version 1's twelve sections and three primary lines. Later dense forks and
+// the 48 m compression are deliberately absent; current race systems remain.
+export const SPAGHETTI_STAGES=['Rolling Start','Slipstream Gates','Over / Under','Split Chicane','Copper Bowl','Open Throttle','Needle Exchange','Twin Spines','The Flyover','Sprint Gallery','Final Switch','Finish Dive'];
+const spans=[240,280,260,300,220,320,260,300,240,280,300,260];
 export function createSpaghettiRace(){
- const length=spans.reduce((a,b)=>a+b,0),w=spaghettiWorld(false,-length-112),docks:SpaghettiDock[]=[],runs:SpaghettiRun[]=[];
- const line:RaceKnot[]=[],railChoices:NonNullable<SkateRaceData['railChoices']>=[],grinds:NonNullable<SkateRaceData['grinds']>=[];
+ const length=spans.reduce((a,b)=>a+b,0),w=spaghettiRaceWorld(-length-112),docks:SpaghettiDock[]=[],runs:SpaghettiRun[]=[],decks:RaceDeck[][]=[];
+ const line:RaceKnot[]=[],railChoices:NonNullable<SkateRaceData['railChoices']>=[];
  let z=0;
  for(let i=0;i<=spans.length;i++){
-  const d:SpaghettiDock={name:SPAGHETTI_STAGES[i]??'Final approach',p:[0,spaghettiClearanceHeight(114-i*216/spans.length,false),z],width:i===0?96:i===4||i===8?76:16,depth:i===0?68:i===4||i===8?32:24,yaw:0};docks.push(d);
-  for(const x of d.width>16?[0]:[-26,0,26])w.slab(`Race interchange ${i+1} / ${x}`,[x,d.p[1],z],d.width,d.depth,'#94b5bf',10+i);
-  if(i<spans.length){
-   for(const x of [-26,0,26])w.add({t:'speedpad',p:[x,d.p[1]+.03,z-5],s:[6,.1,5],speed:32,cycle:.65,nm:'Race launch strip',grp:10+i});
-   for(const x of [-26,0,26])w.box([x,d.p[1],z+5],'mystery','Race item choice');
+  const d:SpaghettiDock={name:SPAGHETTI_STAGES[i]??'Final approach',p:[0,114-i*18,z],width:i===0?96:i===4||i===8?76:16,depth:i===0?68:i===4||i===8?32:24,yaw:0};docks.push(d);
+  const positions=d.width>16?[0]:[-26,0,26];decks[i]=positions.map((x,lane)=>w.slab(`Race interchange ${i+1} / ${x}`,[x,d.p[1],z],d.width,d.depth,'#94b5bf',10+i,
+   i===0?2:[2,2.5,3,3.5,4][(i*2+lane)%5],i===0?.035:[.035,.055,.075,.10][(i+lane*2)%4]));
+  d.depth=decks[i][Math.floor(decks[i].length/2)].d;
+  if(i<spans.length)for(const [lane,x] of [-26,0,26].entries()){
+   const deck=decks[i][decks[i].length===1?0:lane];
+   w.add({t:'speedpad',p:[x,raceDeckY(deck,z-5)+.03,z-5],s:[6,.1,3],speed:32,cycle:.65,nm:'Race launch strip',grp:10+i});
+   w.box([x,raceDeckY(deck,z+5),z+5]);
+   const p:P=[x,raceDeckY(deck,z-12)+.025,z-12];
+   w.add({t:'mesh',nm:'Race downhill / direction',p,vertices:[-2.4,deck.grade*2.8,2.8,0,-deck.grade*3.4,-3.4,2.4,deck.grade*2.8,2.8,0,deck.grade*1.3,1.3],indices:[0,1,3,1,2,3],
+    color:lane===1?'#e2c580':'#85c8c2',emissive:'#44554a',tex:'solid',solid:false,scenerySolid:false,castShadow:false,grp:10+i});
   }
   line.push([0,d.p[1],z,90]);z-=spans[i]??0;
  }
- line.unshift([0,docks[0].p[1],26,90]);
+ const spawn:P=[0,raceDeckY(decks[0][0],26),26];line.unshift([...spawn,90]);
  for(let stage=0;stage<spans.length;stage++){
-  const a=docks[stage],b=docks[stage+1],span=spans[stage],paths:string[][]=[];
-  const mode=stage%4;
+  const a=docks[stage],b=docks[stage+1],span=spans[stage],paths:string[][]=[],mode=stage%4;
   for(let choice=0;choice<3;choice++){
    const x=[-26,0,26][choice],sign=stage%2?-1:1,amp=choice===1?(mode===3?12:5):(mode===2?57:12);
-   const nodes:P[]=[[x,a.p[1]+.9,a.p[2]-a.depth/2+9],[x,a.p[1]+.9,a.p[2]-a.depth/2-10]];
-   for(const t of [.22,.44,.66,.82]){
+   const from=decks[stage][decks[stage].length===1?0:choice],to=decks[stage+1][decks[stage+1].length===1?0:choice];
+   const startZ=from.p[2]-from.d/2+9,endZ=to.p[2]+to.d/2-7,fromY=raceDeckY(from,startZ),toY=raceDeckY(to,endZ);
+   const gap=startZ-endZ,edge=3/gap;
+   const nodes:P[]=[[x,fromY+.9,startZ]];
+   for(const t of [edge,.22,.44,.66,.82,1-edge]){
     const wave=Math.sin((mode===3?3:2)*Math.PI*t)*sign;
     const xx=mode===2&&choice!==1?x*Math.cos(Math.PI*2*t):x+amp*wave;
-    nodes.push([Math.max(-40,Math.min(40,xx)),a.p[1]+(b.p[1]-a.p[1])*t+.9+(choice-1)*(mode===2?10:4)*Math.sin(Math.PI*t),a.p[2]-span*t]);
+    nodes.push([Math.max(-40,Math.min(40,xx)),fromY+(toY-fromY)*t+.9+(choice-1)*(mode===2?10:4)*Math.sin(Math.PI*t),startZ-gap*t]);
    }
-   nodes.push([x,b.p[1]+.9,b.p[2]+b.depth/2+10],[x,b.p[1]+.9,b.p[2]+b.depth/2-7]);
+   nodes.push([x,toY+.9,endZ]);
    const name=`${stage+1}.${choice+1} / ${['Low ribbon','Needle line','High weave'][choice]} / ${SPAGHETTI_STAGES[stage]}`;
-   const run:SpaghettiRun={name,stage,choice,nodes,radius:14,lanes:[0]};runs.push(run);
-   const component=spaghettiRail(run),samples=spaghettiSamples(component);w.add(component);paths.push([name]);grinds.push({start:samples[0],end:samples[samples.length-1],lanes:[0]});
+   const run:SpaghettiRun={name,stage,choice,nodes,radius:Math.min(14,gap/8),lanes:[0]};runs.push(run);w.add(spaghettiRail(run));paths.push([name]);
   }
   railChoices.push({from:[...a.p],to:[...b.p],paths});
   if([1,5,10].includes(stage)){
-   const x=stage%2?-39:39,y=a.p[1]-4,q=a.p[2]-22;
-   w.downhill('Race kicker approach',[x,y+2,a.p[2]-7],12,14,4,10+stage);
-   w.rail('Race kicker entry '+stage,[[Math.sign(x)*26,y+4.9,a.p[2]+10],[x,y+4.9,a.p[2]-1],[x,y+3,a.p[2]-7]],3,10+stage);
+   const x=stage%2?-39:39,source=decks[stage][decks[stage].length===1?0:x<0?0:2],entryZ=source.p[2]-source.d/2-24;
+   const y=raceDeckY(source,source.p[2]-source.d/2)-4,q=entryZ-20;
+   const approach=w.slab('Race kicker approach / '+stage,[x,y+2,entryZ],12,12,'#d4b473',10+stage,2,1/6);
+   w.rail('Race kicker entry '+stage,[[Math.sign(x)*26,raceDeckY(source,source.p[2]-source.d/2+3)+.9,source.p[2]-source.d/2+3],[x,raceDeckY(approach,entryZ+8)+.9,entryZ+8],[x,y+.9,entryZ-12]],3,10+stage);
    w.add({t:'ramp',p:[x,y,q],w:12,len:16,rise:4,tex:'spaghetti-basalt',color:'#d4b473',nm:'Race kicker / '+stage,grp:10+stage});
-   w.slab('Race kicker receiver',[x,y-9,q-32],14,18,'#cfbc90',10+stage);
-   w.box([x,y-9,q-32],'mystery','Air-route item');
-   w.rail('Race kicker return '+stage,[[x,y-8.1,q-38],[Math.sign(x)*26,b.p[1]+.9,b.p[2]+5]],12,10+stage);
+   const receiver=w.slab('Race kicker receiver / '+stage,[x,y-9,q-40],14,18,'#cfbc90',10+stage,2.5,.045);
+   w.box([x,receiver.p[1],receiver.p[2]],'mystery','Air-route item');
+   w.rail('Race kicker return '+stage,[[x,receiver.p[1]+.9,receiver.p[2]],[Math.sign(x)*26,b.p[1]+.9,b.p[2]+5]],12,10+stage);
   }
-  if(stage===3||stage===6)w.add({t:'vertramp',p:[0,a.p[1]-24,a.p[2]-span*.52],len:span*.62,w:10,rise:7,arc:84,deck:2,vkind:'half',tex:'spaghetti-basalt',color:'#739b9f',nm:'Race banking bowl / '+stage,grp:10+stage});
-  if(stage===6)for(let k=0;k<3;k++)w.add({t:'vertramp',p:[k===1?5:0,a.p[1]-34-k*7,a.p[2]-82-k*18],len:42,w:4,rise:5,arc:90,deck:0,yaw:90,vkind:'half',tex:'spaghetti-basalt',color:'#9bb8b1',nm:`Race spine ${stage}.${k}`,grp:10+stage});
+  if(stage===3||stage===7)w.add({t:'vertramp',p:[0,a.p[1]-24,a.p[2]-span*.52],len:span*.62,w:10,rise:7,arc:84,deck:2,vkind:'half',tex:'spaghetti-basalt',color:'#739b9f',nm:'Race banking bowl / '+stage,grp:10+stage});
+  if(stage===7)for(let k=0;k<3;k++)w.add({t:'vertramp',p:[k===1?5:0,a.p[1]-34-k*7,a.p[2]-82-k*18],len:42,w:4,rise:5,arc:90,deck:0,yaw:90,vkind:'half',tex:'spaghetti-basalt',color:'#9bb8b1',nm:`Race spine ${stage}.${k}`,grp:10+stage});
  }
- // Every racing interchange offers a second mouth beside the continuous
- // competition line. Alternate line changes, shallow descents and double
- // drops; the lower route trades a straighter run for a later rejoin.
- for(let stage=0;stage<spans.length;stage++)for(const [lane,x] of [-26,0,26].entries()){
-  const a=docks[stage],b=docks[stage+1],from={name:a.name,p:[x,a.p[1],a.p[2]] as P,w:16,d:a.depth};
-  const mode=(stage+lane)%3;
-  if(mode===0){
-   const bx=[-26,0,26][(lane+1)%3];
-   w.fork(`Race fork / ${stage}.${lane} / inside line`,from,{name:b.name,p:[bx,b.p[1],b.p[2]],w:16,d:b.depth},-1,10+stage);
-  }else{
-   w.fork(`Race fork / ${stage}.${lane} / shallow descent`,from,w.lowerLanding(from.p,168),-1,10+stage);
-   if(mode===2)w.fork(`Race fork / ${stage}.${lane} / steep descent`,from,w.lowerLanding(from.p,108,1),1,10+stage);
-  }
- }
+ w.clearPrimaryDecks();
+ // Keep the eighteen complete Carlisle nets and dense item distribution.
+ // Choose open launch shafts; their longer receivers start beyond the net.
+ const used=new Set<RaceDeck>();
  for(let index=0;index<18;index++){
-  const z=-112-index*(length-130)/17,targetX=[-32,0,32][Math.floor(index/2)%3];
-  const p=Array.from({length:6},(_,tier)=>w.recoveryPoint(z,tier)).filter(p=>Math.sign(p[1])===(index%2?-1:1))
-   .sort((a,b)=>Math.abs(a[0]-targetX)-Math.abs(b[0]-targetX))[0],q:P=[p[0],p[1]+18,p[2]-18];
-  w.add({t:'trampoline',p:[p[0],p[1]+.03,p[2]],s:[14,.6,16],speed:32,amp:1.25,tex:'solid',color:'#d94f15',nm:'Race Carlisle spring / '+(index+1),grp:3});
-  w.slab('Race spring prize',q,14,18,'#cab88d');w.box([q[0],q[1],q[2]],'mystery','Spring shortcut item');
-  const target=w.recoveryBelow(q,58);w.rail('Race spring return '+(index+1),[[q[0],q[1]+.9,q[2]-3],[q[0],q[1]+.9,q[2]-9],target],4);
+  const at=-112-index*(length-180)/17,tier=[4,2,3,1,5][index%5],stretch=[2,3,4][index%3],depth=16*stretch;
+  const candidates=w.recovery.flat().filter(s=>s.tier!==0&&!used.has(s)&&Math.abs(s.p[2]-at)<90).sort((a,b)=>Math.abs(a.p[2]-at)+Math.abs(a.tier!-tier)*45-(Math.abs(b.p[2]-at)+Math.abs(b.tier!-tier)*45));
+  const s=candidates.find(s=>!w.islands.some(a=>a!==s&&Math.abs(a.p[0]-s.p[0])<(a.w+14)/2&&a.p[2]+a.d/2>s.p[2]-20-depth&&a.p[2]-a.d/2<s.p[2]+8&&a.p[1]>s.p[1]+2&&a.p[1]<s.p[1]+35))??candidates[0];
+  used.add(s);const p=s.p,q:P=[p[0],p[1]+18,p[2]-20-depth/2];
+  s.spring=w.add({t:'trampoline',p:[p[0],p[1]+.03,p[2]],s:[14,.6,16],speed:32,amp:1.25,tex:'solid',color:'#d94f15',nm:'Race Carlisle spring / '+(index+1),grp:3});
+  const prize=w.slab('Race spring prize / '+(index+1),q,14,16,'#cab88d',3,stretch,.035);
+  w.box([...q],'mystery','Spring shortcut item');
+  const endZ=q[2]-prize.d/2+4,target=w.recoveryBelow([q[0],q[1],endZ],58);
+  w.rail('Race spring return '+(index+1),[[q[0],raceDeckY(prize,endZ)+.9,endZ],[q[0],raceDeckY(prize,endZ-4)+.9,endZ-4],target],4);
  }
- const last=docks[docks.length-1];
- for(const x of [-26,0,26])w.rail('Race final descent '+x,[[x,last.p[1]+.9,last.p[2]-3],[x,last.p[1]+.9,last.p[2]-15],[x===0?4:x*.6,w.finishY+.9,w.finishZ+24],[x===0?4:x*.6,w.finishY+.9,w.finishZ+8]],9,2);
- w.finish();w.connectRecovery();
- // Keep pickups on the actual rounded ride lines, including every recovery
- // height and the sloping forks. No extra platforms or collision obstacles.
+ for(const [lane,x] of [-26,0,26].entries()){
+  const s=decks[decks.length-1][lane],z=s.p[2]-s.d/2+4;
+  w.rail('Race final descent '+x,[[x,raceDeckY(s,z)+.9,z],[x,raceDeckY(s,z-6)+.9,z-6],[x===0?4:x*.6,w.finishY+.9,w.finishZ+24],[x===0?4:x*.6,w.finishY+.9,w.finishZ+8]],9,2);
+ }
+ w.finish();w.connectRecovery([spawn,...[2,4,6,9,12].map(i=>docks[i].p)]);w.fitRails();
  const pickupPoints=w.components.filter(c=>c.t==='crate').map(c=>c.p);
  for(const c of w.components.filter(c=>c.t==='rail')){
-  const samples=spaghettiSamples(c),distances=[0];
-  for(let i=1;i<samples.length;i++)distances.push(distances[i-1]+Math.hypot(...samples[i].map((v,k)=>v-samples[i-1][k])));
-  const length=distances[distances.length-1];if(length<45)continue;
-  const count=Math.max(1,Math.ceil(length/(c.nm?.startsWith('Recovery')?120:84)));
-  let segment=1;
+  const samples=spaghettiSamples(c),distances=[0];for(let i=1;i<samples.length;i++)distances.push(distances[i-1]+Math.hypot(...samples[i].map((v,k)=>v-samples[i-1][k])));
+  const length=distances[distances.length-1];if(length<45)continue;const count=Math.max(1,Math.ceil(length/(c.nm?.startsWith('Recovery')?120:84)));let segment=1;
   for(let i=0;i<count;i++){
-   const at=(i+.5)*length/count;
-   while(segment<distances.length-1&&distances[segment]<at)segment++;
+   const at=(i+.5)*length/count;while(segment<distances.length-1&&distances[segment]<at)segment++;
    const a=samples[segment-1],b=samples[segment],t=(at-distances[segment-1])/(distances[segment]-distances[segment-1]);
    const p:P=[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t-.9,a[2]+(b[2]-a[2])*t];
    if(pickupPoints.some(q=>Math.hypot(...p.map((v,k)=>v-q[k]))<6))continue;
    w.box(p,'mystery',`Rail item / ${c.nm} / ${i+1}`);pickupPoints.push(p);
   }
  }
- const data=w.data([0,docks[0].p[1],26]);line.push([0,w.finishY,w.finishZ,90]);
- for(const p of line)p[1]*=w.scale;
- for(const d of docks)d.p[1]*=w.scale;
- for(const run of runs)for(const p of run.nodes)p[1]=p[1]*w.scale+.9*(1-w.scale);
- for(const g of grinds){g.start[1]=g.start[1]*w.scale+.9*(1-w.scale);g.end[1]=g.end[1]*w.scale+.9*(1-w.scale);}
- for(const choice of railChoices){choice.from[1]*=w.scale;choice.to[1]*=w.scale;}
+ const data=w.data(spawn);line.push([0,w.finishY,w.gateZ,90]);
+ const grinds=runs.map(run=>{const c=w.components.find(c=>c.t==='rail'&&c.nm===run.name)!,samples=spaghettiSamples(c);return {start:samples[0],end:samples[samples.length-1],lanes:[0]};});
  data.skateRace={v:1,racers:8,seed:270327,gemReward:'win',rivalSkill:'club',grindBalanceScale:.55,itemRespawnSeconds:1.5,itemPool:'rail',stages:SPAGHETTI_STAGES,line,jumps:[],grinds,railChoices,finishWidth:90,
   originalLength:line.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-line[i][0],p[1]-line[i][1],p[2]-line[i][2]),0)};
  data.groups!.push(...SPAGHETTI_STAGES.map((nm,i)=>({id:10+i,nm,editorOnly:true})));
- return {data,docks,runs,islands:w.islands,recovery:w.recovery,far:w.far,finishZ:w.finishZ};
+ return {data,docks,runs,islands:w.islands,recovery:w.recovery,far:w.far,near:w.near,finishZ:w.finishZ};
 }

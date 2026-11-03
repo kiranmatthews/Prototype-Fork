@@ -5,6 +5,7 @@ const output=process.env.SPAGHETTI_OUTPUT??'/private/tmp/spaghetti-race-rewards'
 await mkdir(output,{recursive:true});
 await withBlockworksRuntime(async r=>{
  const C=r.sourceModule.SPAGHETTI_RAILS_LEVEL.components;
+ const {raceDeckY}=await r.server.ssrLoadModule('/src/levels/spaghetti-race-world.ts');
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  const data=r.sourceModule.SPAGHETTI_RAILS_LEVEL;
@@ -76,12 +77,13 @@ await withBlockworksRuntime(async r=>{
   assert.ok(returnedAt-collectedAt>=1.45&&returnedAt-collectedAt<1.6,'Boxes return for the following racers');
  }
  for(const c of C.filter(c=>c.t==='trampoline')){
+  const number=c.nm.split(' / ').at(-1),receiver=r.sourceModule.SPAGHETTI_RACE_ISLANDS.find(s=>s.name==='Race spring prize / '+number);assert.ok(receiver);
   race.reset('time-trial');race.phase='running';
   r.p.resetRacePosition(r.l,new r.THREE.Vector3(c.p[0],c.p[1]+1,c.p[2]+4),new r.THREE.Vector3(0,0,-1));
   r.p.state='air';r.p.grounded=false;r.p.vVel=-2;r.p.speed=20;
   let launched=false,peak=c.p[1],previous={},frames=0;const samples=[];
   for(;frames<360;frames++){
-   const input=normalizeGameInput({...r.steerToward([c.p[0],c.p[1]+3,c.p[2]-18]),jumpHeld:true},previous);previous=input;
+   const input=normalizeGameInput({...r.steerToward(receiver.p),jumpHeld:true},previous);previous=input;
    r.scene.updateMatrixWorld(true);race.step(r.dt,input);
    peak=Math.max(peak,r.p.pos.y);if(r.p.vVel>12)launched=true;
    if(frames%6===0)samples.push({p:r.p.pos.toArray(),state:r.p.state,bail:r.p.skateCameraBailing,hit:r.p.groundHit?.name,rim:r.p.groundHit?.trampolineRim,vy:r.p.vVel});
@@ -89,7 +91,7 @@ await withBlockworksRuntime(async r=>{
   }
   report.springs.push({name:c.nm,launched,rise:peak-c.p[1],landing:r.p.pos.toArray(),frames});
   await writeFile(output+'/progress.json',JSON.stringify({...report,samples},null,2));
-  assert.ok(launched&&r.p.grounded&&Math.abs(r.p.pos.y-(c.p[1]+2.97))<.1,'Race spring reaches its useful forward receiver: '+JSON.stringify(report.springs.at(-1)));
+  assert.ok(launched&&r.p.grounded&&Math.abs(r.p.pos.y-raceDeckY(receiver,r.p.pos.z))<.15&&Math.abs(r.p.pos.x-receiver.p[0])<receiver.w/2&&Math.abs(r.p.pos.z-receiver.p[2])<receiver.d/2,'Race spring reaches its useful forward receiver: '+JSON.stringify(report.springs.at(-1)));
  }
  assert.equal(JSON.stringify(r.TUNING),tuning);
  await writeFile(output+'/rewards.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
