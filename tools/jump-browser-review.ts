@@ -8,6 +8,8 @@ import previousClips from './fixtures/pre-reference-jump-clips.json';
 import { sfx } from '../src/audio';
 import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
 import { createJakDirectSuite, JAK_DIRECT_PHYSICS, type JakMotionBank } from './jak-direct-motion';
+import { GreenEcoFire } from '../src/greenEcoFire';
+import { JUMP_ECO_VENTS } from './jump-eco-vents';
 
 const g: any = await new Promise(resolve => {
   const poll = () => {
@@ -17,6 +19,9 @@ const g: any = await new Promise(resolve => {
 });
 g.campaign.startEphemeral();
 const p = g.player, runtime = g.characterAnimationRuntime;
+const ecoFire = new GreenEcoFire(g.scene, JUMP_ECO_VENTS);
+let ecoEnabled = true, ecoVisit = 0;
+let ecoCpuMs = 0;
 const binding = RigBinding.fromSculptRuntime(p.animationRig.root);
 const suite = createPlayerStarterAnimationSuite(binding.definition);
 const oldSuite = {...suite, clips: suite.clips.map(clip =>
@@ -29,6 +34,14 @@ try {
 } catch (error) { console.warn('Local Jak motion unavailable', error); }
 let variant: 'A' | 'B' | 'C' | 'D' = 'B';
 let before = false, inspect = false, jakSounds = true;
+const nativePuffUpdate = g.puffs.update.bind(g.puffs);
+g.puffs.update = (dt: number, camera: THREE.Camera) => {
+  nativePuffUpdate(dt, camera);
+  ecoFire.enabled = ecoEnabled && !inspect && g.getCurrentLevel().id === 'codex-lab';
+  const start = performance.now();
+  ecoFire.update(dt, camera);
+  ecoCpuMs += (performance.now() - start - ecoCpuMs) * .04;
+};
 let reviewLevel: Level | null = null, savedCoursePosition: THREE.Vector3 | null = null;
 let mode = 'Full jump', frame = 0, frozen = false, slow = false, skips = 0;
 let angle = Math.PI / 2, stopAt = 'None', hadAir = false, landFrame = 0, doubleFrame = 0;
@@ -212,6 +225,10 @@ const soundLabel = document.createElement('label'), soundBox = document.createEl
 soundBox.type = 'checkbox'; soundBox.checked = true;
 soundBox.onchange = () => {jakSounds = soundBox.checked; soundBox.blur();};
 soundLabel.append(soundBox, ' Jak sounds in B / C / D'); options.append(soundLabel);
+const ecoLabel = document.createElement('label'), ecoBox = document.createElement('input');
+ecoBox.type = 'checkbox'; ecoBox.checked = true;
+ecoBox.onchange = () => {ecoEnabled = ecoBox.checked; ecoBox.blur();};
+ecoLabel.append(ecoBox, ' Green eco fire'); options.append(ecoLabel);
 const modes = document.createElement('div'); options.append(modes);
 const playButton = button(modes, 'Play course', () => setInspect(false));
 const inspectButton = button(modes, 'Watch motion', () => setInspect(true));
@@ -219,6 +236,15 @@ button(modes, 'Restart course', () => {
   setInspect(false); p.enterLevel(g.getCurrentLevel().id); p.respawn(g.getLevel(), true, true);
   p.freeSkate = false; runtime.restart(); visited.clear();
 });
+const ecoNote = document.createElement('small');
+button(modes, 'Next eco vent', () => {
+  setInspect(false); ecoEnabled = ecoBox.checked = true;
+  const vent = JUMP_ECO_VENTS[ecoVisit++ % JUMP_ECO_VENTS.length];
+  p.enterLevel(g.getCurrentLevel().id);
+  p.respawn(g.getLevel(), true, true, {position: new THREE.Vector3(...vent.approach)});
+  p.freeSkate = false; runtime.restart(); ecoNote.textContent = `Eco vent · ${vent.name}`;
+});
+options.append(ecoNote);
 const inspectorControls = document.createElement('div'); inspectorControls.hidden = true; options.append(inspectorControls);
 const sourceLabel = document.createElement('label'), sourceBox = document.createElement('input'), sourceNote = document.createElement('small');
 sourceBox.type = 'checkbox'; sourceBox.onchange = () => {if (sourceBox.checked) void loadSource(); sourceBox.blur();};
@@ -255,7 +281,7 @@ function report() {
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
-    visited: [...visited]}, null, 2);
+    ecoFire: {...ecoFire.diagnostics, cpuMs: +ecoCpuMs.toFixed(3)}, visited: [...visited]}, null, 2);
   requestAnimationFrame(report);
 }
 p.freeSkate = false; chooseVersion(directSuite ? 'D' : 'B'); report();

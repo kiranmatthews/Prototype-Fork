@@ -8398,3 +8398,27 @@ no push, integration or publication.**
   needs legitimate Jak II data. Existing skating was not replaced.
 
 Reproduction and source details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## 2026-11-03 — Green eco fire in the jump comparison
+
+- Request: recreate the large Sentinel Beach green eco vent effect and scatter
+  a few through the local Jump A/B/C/D playtest. Prompt-to-playable: about
+  9 minutes (10:12:58–10:22 UTC); validated handoff about 18 minutes.
+- Inspected OpenGOAL's green-vent group and harvester definitions. The source
+  uses hot-dot, flash and puff sprites; the recreation uses textureless Gouraud
+  fans for luminous wisps, curled trails, motes and the vent mouth.
+- Added reusable `GreenEcoFire` and four editable Puff Studio layer presets.
+  Seven local course placements, a show/hide checkbox and a Next eco vent
+  shortcut are available with A, B, C and D. Published level data, movement,
+  jump/skate controls and animation definitions remain unchanged.
+- Cost: one shared batch/two draw calls per view, zero textures/lights. All
+  seven vents at 30/60/120 Hz peaked at 377/768 particles. Dedicated effect
+  pool preserves gameplay dust; offscreen emitters cull as complete effects.
+- Validation: finite geometry, capacity, lifecycle and disposal checks; puff
+  preparation/upload regressions; seven real-course supported placements and
+  approach positions, no added collision; strict source/playtest types and
+  production build pass. Browser review at normal and native/MAX rendering
+  shows visible plumes, grounded player and no console errors. Original 720p
+  setting restored and local playtest left available. No publication.
+
+Details and reuse: [Green eco fire](GREEN_ECO_FIRE.md).

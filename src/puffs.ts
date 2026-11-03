@@ -178,6 +178,41 @@ const SURFACES: Record<SurfaceKind, SurfaceProfile> = {
 // Everything the game asks for, expressed as parameter sets over the one
 // technique. A new effect is a new entry here, not new code.
 export const PUFF_PRESETS: Record<string, PuffPreset> = {
+  // Green eco vent layers. Source composition: Jak 1 collectables-part.gc,
+  // group-part-vent-green-active (222–226): hot dots, trails, flashes, mist.
+  // Our gradients are untextured fans, with no extracted game textures.
+  greenEcoFire: {
+    blend: 'softAdd', orient: 'billboardY', ring: [8, 8], halo: .35,
+    size: [.75, 1.05], aspect: .66, grow: .15, growY: .8, growCurve: 1,
+    centre: 0xd5ff45, inner: 0x68f52a, outer: 0x06c82c, fadeTo: 0x00b844,
+    alpha: [.55, .8], haloAlpha: .5, outerAlpha: 0, fadeIn: .07, bright: 1.5,
+    up: [4.2, 5.5], gravity: -.5, drag: .3, turbulence: 1.4, turbRate: 2.5,
+    wobble: .13, swirl: .04, wobbleRate: 3, neighbour: .6, centreDrift: .06,
+    spin: 0, life: [.85, 1.25], rate: 15, count: 12,
+  },
+  greenEcoRibbon: {
+    blend: 'softAdd', ring: [6, 6], halo: .3,
+    size: [.23, .31], grow: .22, growCurve: 1,
+    centre: 0xeeff52, inner: 0x88ff09, outer: 0x0adc30, fadeTo: 0x00d348,
+    alpha: [.8, 1], haloAlpha: .65, outerAlpha: 0, fadeIn: .03, bright: 1.7,
+    up: .25, drag: .2, wobble: .04, swirl: 0, centreDrift: 0,
+    life: [.32, .48], rate: 60, count: 18,
+  },
+  greenEcoMote: {
+    blend: 'softAdd', ring: [6, 6], halo: .22,
+    size: [.08, .16], grow: .1, growCurve: 1,
+    centre: 0xf7ff99, inner: 0xc5ff15, outer: 0x20f523, fadeTo: 0x06c438,
+    alpha: [.8, 1], haloAlpha: .65, outerAlpha: 0, fadeIn: .04, bright: 2,
+    up: [2, 3.5], drag: .25, gravity: .4, turbulence: .6, turbRate: 2,
+    wobble: .05, swirl: 0, centreDrift: 0, life: [.65, 1.1], rate: 7.5, count: 8,
+  },
+  greenEcoGlow: {
+    blend: 'softAdd', orient: 'surface', ring: [8, 8], halo: .32,
+    size: [1.1, 1.45], grow: 1.05, growCurve: 1,
+    centre: 0xd7ff51, inner: 0x55ee14, outer: 0x00aa25,
+    alpha: [.45, .65], haloAlpha: .55, outerAlpha: 0, fadeIn: .1, bright: 1.4,
+    wobble: .1, swirl: .05, wobbleRate: 2, centreDrift: 0, life: [.6, .9], rate: 5, count: 3,
+  },
   // ── THE HOUSE STYLE ────────────────────────────────────────────────────
   // Every preset here is written in the language of the one that was tuned
   // BY HAND (torchSmoke, below), because every pass I authored by guesswork
@@ -910,6 +945,15 @@ export class PuffSystem {
     }
   }
 
+  /** Release an owned effect field. The global gameplay system stays attached. */
+  dispose(): void {
+    this.clear();
+    for (const b of new Set([...this.batches.values(), ...this.preparedBatches.values()])) {
+      b.mesh?.removeFromParent(); b.geo.dispose(); b.material.dispose();
+    }
+    this.batches.clear(); this.preparedBatches.clear(); this.root = null;
+  }
+
   private batch(style: BlendStyle): Batch {
     let b = this.batches.get(style);
     if (!b) {
@@ -1543,6 +1587,13 @@ export class PuffSystem {
     let c = 0;
     for (const b of this.batches.values()) if (b.mesh.visible) c++;
     return c;
+  }
+
+  /** Submitted triangles per material pass, for effect budget inspection. */
+  get triangleCount(): number {
+    let count = 0;
+    for (const b of this.batches.values()) count += b.iCount / 3;
+    return count;
   }
 }
 
