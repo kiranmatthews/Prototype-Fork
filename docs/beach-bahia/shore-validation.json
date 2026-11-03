@@ -21,23 +21,78 @@
   },
   "manualShops": {
     "snack": {
-      "triangles": 7344,
-      "parts": 92,
+      "triangles": 17528,
+      "totalWithSign": 17528,
+      "parts": 333,
       "transparentPanes": 2
     },
     "funville": {
-      "triangles": 6554,
-      "parts": 84,
+      "triangles": 17000,
+      "totalWithSign": 24372,
+      "parts": 311,
       "transparentPanes": 3
     },
     "pizza": {
-      "triangles": 7950,
-      "parts": 94,
+      "triangles": 13336,
+      "totalWithSign": 16262,
+      "parts": 274,
       "transparentPanes": 3
     }
   },
+  "shopFloorClearance": [
+    {
+      "shop": "Bahia snack / interior floor",
+      "z": -20,
+      "clearance": 0.03999965667724403
+    },
+    {
+      "shop": "Bahia funville / interior floor",
+      "z": -237.5,
+      "clearance": 0.0519999718666071
+    },
+    {
+      "shop": "Bahia pizza / interior floor",
+      "z": -469.5,
+      "clearance": 0.0400001335144049
+    },
+    {
+      "shop": "Bahia snack / interior floor",
+      "z": -832,
+      "clearance": 0.05199978399276972
+    },
+    {
+      "shop": "Bahia pizza / interior floor",
+      "z": -1180,
+      "clearance": 0.03999965667724581
+    },
+    {
+      "shop": "Bahia funville / interior floor",
+      "z": -1528,
+      "clearance": 0.03999965667724581
+    },
+    {
+      "shop": "Bahia snack / interior floor",
+      "z": -1905,
+      "clearance": 0.040000133514408454
+    },
+    {
+      "shop": "Bahia funville / interior floor",
+      "z": -2325.5,
+      "clearance": 0.040000133514408454
+    },
+    {
+      "shop": "Bahia pizza / interior floor",
+      "z": -2746,
+      "clearance": 0.05071134523845444
+    }
+  ],
   "minimumAnimatedShoreMargin": 0.6450057999368752,
-  "components": 8266,
+  "wall": {
+    "stoneBays": 259,
+    "entrances": 14,
+    "piers": 197
+  },
+  "components": 9060,
   "patches": 18,
   "islands": 5,
   "pass": true

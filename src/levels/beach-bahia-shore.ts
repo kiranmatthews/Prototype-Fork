@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomLevelData } from '../level';
+import {bahiaSeawall} from './beach-bahia-wall';
 
 type Road = {start:number;end:number;startY:number;endY:number};
 type Gap = {start:number;end:number};
@@ -66,36 +67,8 @@ export function dressBahiaShore(data:CustomLevelData,road:readonly Road[],height
     })};
   // Low, cream stone parapet with genuinely open access bays. The original
   // four canal gaps stay open; their pits, launch ramps and camera are untouched.
-  let wallIndex=0;
-  for(const segment of road){
-    const cuts=new Set([segment.start,segment.end]);
-    for(const z of BAHIA_OPENINGS)for(const edge of [z-3.2,z+3.2])
-      if(edge>segment.start&&edge<segment.end)cuts.add(edge);
-    const ends=[...cuts].sort((a,b)=>a-b);
-    for(let i=1;i<ends.length;i++){
-      const a=ends[i-1],b=ends[i];if(opening((a+b)/2))continue;
-      const pts:[number,number,number,number][]=[[0,0,0,0],[0,-(b-a),0,heightAt(b)-heightAt(a)]];
-      const nm=`Bahia sandstone seawall ${++wallIndex}`;
-      put({t:'wallpath',p:[7.2,heightAt(a)-.1,-a],pts,w:.8,rise:1.16,tex:'bay-stucco',color:'#e8d9bd',nm});
-      put({t:'wallpath',p:[7.2,heightAt(a)+1.06,-a],pts,w:1.02,rise:.2,tex:'bay-stucco',color:'#fff1d0',
-        solid:false,nm:`${nm} cream coping`});
-      // Shallow inset mortar joints read as individual stone panels at both
-      // native and normal resolution without replacing the wall silhouette.
-      for(let z=a+3;z<b-.3;z+=3.2)for(const x of [6.792,7.608])
-        put({t:'decor',dkind:'block',p:[x,heightAt(z)+.48,-z],s:[.012,.99,.035],
-          tex:'solid',color:'#b8ac94',solid:false,scenerySolid:false,nm:'Bahia sandstone panel joint'});
-      for(const x of [6.791,7.609])put({t:'mesh',p:[x,heightAt(a)+.48,-a],
-        vertices:[0,0,0,0,.035,0,0,heightAt(b)-heightAt(a),a-b,0,heightAt(b)-heightAt(a)+.035,a-b],
-        indices:[0,1,2,1,3,2],doubleSided:true,solid:false,tex:'solid',color:'#b8ac94',nm:'Bahia sandstone horizontal mortar'});
-    }
-  }
+  data.components.push(...bahiaSeawall(road,heightAt,BAHIA_OPENINGS));
   for(const z of BAHIA_OPENINGS){
-    for(const side of [-1,1]){
-      const d=z+side*3.35;
-      put({t:'wall',p:[7.2,heightAt(d)-.1,-d],s:[1.1,1.38,.65],tex:'bay-stucco',color:'#ecddbf',nm:'Bahia beach opening stone pier'});
-      put({t:'decor',dkind:'block',p:[7.2,heightAt(d)+1.33,-d],s:[1.28,.18,.82],tex:'bay-stucco',color:'#fff1d0',
-        solid:false,scenerySolid:false,nm:'Bahia beach opening pier cap'});
-    }
     // A fitted apron reaches the sand at the same height; never a floating
     // stair set that clips into the changing road grades.
     const v:number[]=[],uv:number[]=[],ix:number[]=[];
@@ -106,6 +79,9 @@ export function dressBahiaShore(data:CustomLevelData,road:readonly Road[],height
     for(let i=0;i<2;i++)ix.push(i,i+1,i+3,i+1,i+4,i+3);
     put({t:'mesh',p:[0,0,0],vertices:v,indices:ix,uvs:uv,tex:'bay-paving',color:'#f6e6c5',
       nm:'Bahia beach access fitted apron',edgeGrinding:false});
+    const potZ=z+(BAHIA_OPENINGS.indexOf(z)%2?4.25:-4.25),y=heightAt(potZ)-.1;
+    put({t:'decor',dkind:'baypot',p:[9,y,-potZ],s:[1.15,1.065,.99],yaw:z%91,
+      solid:false,scenerySolid:false,nm:'Bahia beach access flowering pot'});
   }
   // A few familiar coastal palms frame the beach without hiding the water.
   for(let z=85,i=0;z<2990;z+=116,i++){

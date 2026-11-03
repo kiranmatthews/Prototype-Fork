@@ -1,8 +1,12 @@
 # Beach Street: Bahia Bay
 
+The [second craft pass](polish/README.md) refines all nine shops and the complete
+seawall. Its current screenshots, budgets and validation supersede the initial
+delivery evidence below.
+
 The right side of `coastal-street-run` uses a continuous beach made with Treehouse Trails' `unity-sand` material, metric UVs, and curved shoreline ocean. The cream stone wall has fourteen access openings. Sand follows the existing road grades, with a broad upper shelf, and continues below sea level. Both water layers begin 0.65 m seaward of the sea-level contour. Original offshore islands, roads, pits, kite encounters, checkpoints and finish remain unchanged.
 
-Nine business slots alternate Snack Shack, Funville and Bahia Pizza among the original shops. Walls, frames, glass, service hatches, counters, slush machines, arcade cabinets, booths and awnings are separate manually authored components. Glass has actual interior geometry behind it. The only generated meshes are the three sculpted signs.
+Nine business slots alternate Snack Shack, Funville and Bahia Pizza among the original shops. Walls, frames, glass, service hatches, counters, slush machines, arcade cabinets, booths and awnings are separate manually authored components. Glass has actual interior geometry behind it. The pizza slice and Funville marquee use generated meshes; the refined Snack Shack plaque and lettering are now manual geometry.
 
 ## Reference and modelling sequence
 
@@ -19,7 +23,7 @@ Nine business slots alternate Snack Shack, Funville and Bahia Pizza among the or
 
 An initial HD generation was rejected and removed before delivery. The final assets above were generated anew with Smart Mesh. `AGENTS.md` now records Smart Mesh always, a 30,000-triangle absolute per-model ceiling, smaller budgets appropriate to each object, and manual construction for simple geometry. The ceilings are not targets.
 
-Per-asset manifests beside the GLBs record Tripo task IDs, budgets, SHA-256 hashes and compression verification. A complete manually authored shop uses approximately 6.5–8k triangles before its sign.
+Per-asset manifests beside the GLBs record Tripo task IDs, budgets, SHA-256 hashes and compression verification. The original Snack Shack sign is retained as an unused authoring asset; its misspelled lettering was replaced in the second pass. A complete refined shop, including its sign, uses 16,262–24,372 triangles.
 
 ## Focused validation and review
 
@@ -29,7 +33,7 @@ The local-only `tools/beach-bahia-review.html?playtest&level=coastal-street-run`
 
 `tools/beach-bahia/import-signs.mjs` takes `pizza-slice snack-sign funville-marquee`; it expects `bahia-<name>-smart.glb` exports in `BAHIA_DOWNLOADS`. `BAHIA_GLTF_PACKAGE` points to a package.json with `@gltf-transform/core`, `@gltf-transform/extensions` and `meshoptimizer` installed. These authoring tools do not enter the game bundle.
 
-## Completed checks
+## Initial delivery checks
 
 - `npm run check:levels`: pass.
 - `node tools/test-beach-bahia.mjs`: pass; 8,465 dry probes, 140 supported access probes, 3,936 wave samples. Minimum animated shoreline margin: 0.645 m. 18 joined sand patches; 8,266 total level components.

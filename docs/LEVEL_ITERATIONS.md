@@ -8424,3 +8424,30 @@ production build and release-size check pass. No full suite ran.
 Release output: 806,901,635 bytes.
 
 Evidence and visible review controls: [Tribal moving-platform iteration](tribal-moving/README.md).
+
+## 2026-11-04 — Beach Street architecture and seawall refinement
+
+Replace the long flat seawall faces with staggered limestone courses, separate
+softened capstones, 197 piers and fourteen dressed beach entrances. Refine all
+nine Bahia businesses with bevelled construction, fitted window reveals,
+transparent glazing, separate door hardware, stocked interiors and curved
+awnings. Correct the Snack Shack lettering with a manually built plaque.
+Seat level rooms above the uphill terrace corner and move nearby palms clear
+of the signs. Reuse the existing Crash 4 reference passes and compliant Smart
+Mesh signs; imagegen supplies one subtle tintable plaster material. Complete
+businesses use 16,262–24,372 triangles including signs. All final geometry is
+retained at every viewing distance.
+
+Prompt to browser-validated playable: approximately **40 minutes**
+(18:55–19:35 UTC). Every shop placement, interiors, both wall faces, entrances,
+high beach and full coast were inspected at native/MAX resolution and normal
+presentation. The complete browser route finishes with zero crashes, all
+thirteen jumps, eleven checkpoint states and the crystal, with no console or
+asset errors. Native full-route, fatal-collision and checkpoint recovery checks
+pass. The 8,465 dry-ground and 3,936 animated-wave probes retain a 0.645 m minimum
+shoreline margin; all nine room floors clear their graded terraces. The original
+gameplay and five offshore islands retain exact baseline hashes. Required level
+checks, production build/type-check and release-size validation pass. Release
+output: 809,015,865 bytes. No full suite ran.
+
+Evidence and imagegen provenance: [Beach craft pass](beach-bahia/polish/README.md).

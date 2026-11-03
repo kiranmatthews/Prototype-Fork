@@ -31,10 +31,14 @@ await withSkateRuntime(async({server,THREE,Level})=>{
   const floor=source.components.find(c=>c.nm===`Bahia ${kind} / interior floor`);
   const kit=source.components.filter(c=>c.grp===floor.grp&&c.nm?.startsWith(`Bahia ${kind} /`));
   const triangles=kit.reduce((n,c)=>n+(c.indices?.length??0)/3,0);
-  assert.ok(triangles<10000,`${kind} manual kit stays small`);
+  const signTriangles=kind==='funville'?report.assets['funville-marquee'].triangles:kind==='pizza'?report.assets['pizza-slice'].triangles:0;
+  assert.ok(triangles<=20000&&triangles+signTriangles<=30000,`${kind} complete furnished shop stays under 30k triangles`);
   const glass=kit.filter(c=>c.nm.endsWith('separate transparent glass pane'));
   assert.ok(glass.length>0&&glass.every(c=>c.opacity>0&&c.opacity<.25&&c.solid===false),`${kind} has transparent separate panes`);
-  report.manualShops[kind]={triangles,parts:kit.length,transparentPanes:glass.length};
+  if(kind==='snack')assert.equal(kit.filter(c=>c.nm.includes('hand-built sign letter')).map(c=>c.nm.at(-1)).join(''),'SNACKSHACK','correct geometric lettering replaces the misspelled generated plaque');
+  assert.ok(kit.some(c=>c.nm.endsWith('foundation skirt fitted below terrace')),'closed foundations at graded shop placements');
+  for(const c of kit)if(c.t==='mesh')assert.ok([...(c.vertices??[]),...(c.normals??[]),...(c.uvs??[]),...(c.colors??[])].every(Number.isFinite),'finite manual geometry');
+  report.manualShops[kind]={triangles,totalWithSign:triangles+signTriangles,parts:kit.length,transparentPanes:glass.length};
  }
  const data={...source,components:source.components.filter(c=>c.t!=='decor'&&c.solid!==false)};
  const l=new Level(new THREE.Scene(),{id:'bahia-test',name:source.name,data});
@@ -45,6 +49,23 @@ await withSkateRuntime(async({server,THREE,Level})=>{
   assert.ok(water&&horizon);
   const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
   const ground=(x,z)=>{ray.set(new THREE.Vector3(x,30,z),down);return ray.intersectObjects(l.groundMeshes,false)[0]?.point.y;};
+  // The terrace is visual scenery, so inspect its authored triangles rather
+  // than the road collision mesh beneath it.
+  const terraces=source.components.filter(c=>c.nm==='Town terrace foundation / follows the road grade').map(c=>{
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(c.vertices,3));g.setIndex(c.indices);
+   const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));m.position.fromArray(c.p);m.rotation.y=(c.yaw??0)*Math.PI/180;m.updateMatrixWorld(true);return m;
+  });
+  report.shopFloorClearance=[];
+  for(const floor of source.components.filter(c=>/^Bahia .* \/ interior floor$/.test(c.nm??''))){
+   const top=floor.p[1]+.12;
+   const clearance=Math.min(...[-5.3,-2.65,0,2.65,5.3].map(d=>{
+    ray.set(new THREE.Vector3(floor.p[0],30,floor.p[2]+d),down);
+    return top-ray.intersectObjects(terraces,false)[0]?.point.y;
+   }));
+   assert.ok(clearance>.025,`terrace cannot clip through ${floor.nm} at ${floor.p[2]}: ${clearance}`);
+   report.shopFloorClearance.push({shop:floor.nm,z:floor.p[2],clearance});
+  }
+  terraces.forEach(m=>{m.geometry.dispose();m.material.dispose();});
   for(let z=0;z<=3020;z+=19)for(let x=8;x<shore(z)+1;x+=.65){
    const y=ground(x,-z);assert.ok(y!==undefined,`continuous sand ${x}/${z}`);
    if(y<-.6)continue;
@@ -64,6 +85,10 @@ await withSkateRuntime(async({server,THREE,Level})=>{
   for(const z of openings){
    const y=ground(6.5,-z);
    assert.ok(!l.walls.some(w=>w.containsPoint(new THREE.Vector3(7.2,y+.55,-z))),'opening has no wall '+z);
+   for(let dz=-2.6;dz<=2.6;dz+=1.3)for(let x=6.5;x<=11;x+=.75){
+    const h=ground(x,-z+dz);assert.ok(Number.isFinite(h));
+    assert.ok(!l.walls.some(w=>w.containsPoint(new THREE.Vector3(x,h+.55,-z+dz))),`entrance remains clear ${z}/${x}/${dz}`);
+   }
    for(const x of [7,7.6,8,9,10,11,13,20,28,35]){assert.ok(Number.isFinite(ground(x,-z)),'supported access '+z);report.accessProbes++;}
   }
   const patches=source.components.filter(c=>c.nm?.startsWith('Bahia continuous Treehouse sand'));
@@ -71,6 +96,9 @@ await withSkateRuntime(async({server,THREE,Level})=>{
    const a=patches[i-1],b=patches[i];
    for(let j=0;j<33;j++)assert.ok(Math.abs(a.vertices.at(-33+j)+(j%3===2?a.p[2]:0)-b.vertices[j]-(j%3===2?b.p[2]:0))<.00002,'exact shared sand patch edge');
   }
+  const stoneBays=source.components.filter(c=>c.nm?.startsWith('Bahia hand-set stone bay'));
+  assert.ok(stoneBays.length>200&&stoneBays.every(c=>c.indices.length/3<2000),'small complete stone bays, never a distance-dependent mesh substitute');
+  report.wall={stoneBays:stoneBays.length,entrances:openings.length,piers:source.components.filter(c=>c.nm?.startsWith('Bahia rhythm pier')).length};
   report.components=source.components.length;report.patches=patches.length;report.islands=5;report.pass=true;
  }finally{l.dispose();}
 },{levelEntry:{id:'empty',name:empty.name,data:empty}});

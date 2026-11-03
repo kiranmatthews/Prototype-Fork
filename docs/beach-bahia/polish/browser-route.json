@@ -1,0 +1,37 @@
+{
+  "status": {
+    "ready": true,
+    "assets": [],
+    "buffer": [
+      1506,
+      1706
+    ],
+    "position": [
+      0,
+      7.000000011920929,
+      -3003.2
+    ],
+    "route": {
+      "done": true,
+      "crashes": [],
+      "checkpoints": 11,
+      "jumps": 13,
+      "final": {
+        "z": 3003.3799856840064,
+        "x": -0.08286933397899825,
+        "y": 8.701944456365371,
+        "state": "finished",
+        "grounded": false,
+        "lives": 102,
+        "speed": 9,
+        "crates": 24,
+        "totalCrates": 56,
+        "bonusCrates": 32,
+        "crystal": true,
+        "gem": false
+      }
+    },
+    "stamp": "Codex/sol fork · build 11-03 19:03 UTC"
+  },
+  "console": []
+}

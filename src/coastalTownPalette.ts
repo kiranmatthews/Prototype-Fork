@@ -1,6 +1,7 @@
 import type { CustomAtmosphereData } from './level';
 
 export const COASTAL_TOWN_TEXTURES = {
+  'bahia-plaster': 'bahia-painted-plaster.png',
   'bay-paving': 'paving-albedo.webp',
   'bay-stucco': 'stucco-albedo.webp',
   'bay-terracotta': 'terracotta-albedo.webp',

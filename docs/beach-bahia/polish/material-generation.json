@@ -1,0 +1,10 @@
+{
+  "tool": "imagegen",
+  "reference": "docs/beach-bahia/concepts/snack-shack-crash4.webp",
+  "prompt": "Use case: stylized-concept. Asset type: one seamless repeatable game albedo texture, for hand-built stucco walls and bevelled sandstone pieces in a Crash Bandicoot 4 aesthetic Bahia Bay / Disney The Weekenders beach street. The supplied image is a material style reference only; DO NOT draw the shop, any architectural part, edges, lettering, or composition. Generate a perfectly flat orthographic full-bleed square texture of softly hand-painted ivory chalky stone plaster. Near-white warm ivory average, subtle peach and pale lavender brush planes, restrained natural mottling, sparse thin shallow hairline weathering. Beautiful deliberate broad painterly marks, not photographic grit, not random noise. Low contrast so it can be tinted gold, coral, teal or purple in a 3D game. Consistent texel size throughout. Seamless on every edge. Entire image is the material swatch, no frame, object, floor, lighting gradient, highlights, shadows, ambient occlusion, text or grid. Neutral diffuse albedo only, no baked directional light.",
+  "original": "/Users/kiki/.codex/generated_images/01a1a12a-a004-7f10-a5cd-5126d5708418/exec-949bcbfb-4ccf-41b8-9e5a-4446f3b40275.png",
+  "asset": "public/coastal-town/bahia-painted-plaster.png",
+  "width": 1254,
+  "height": 1254,
+  "transparent": false
+}

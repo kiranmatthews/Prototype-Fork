@@ -160,9 +160,12 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
     const grp=1000+building;
     art.groups.push({id:grp,parent:100,nm:`Store ${String(building+1).padStart(3,'0')} / separate editable parts`,editorOnly:true});
     const business=BAHIA_BUSINESS_SLOTS.get(building);
-    if(business)art.components.push(...bahiaShop([-12.85,heightAt(z)+1.04,-z],90,grp,business));
+    // A room stays level while the continuous terrace below follows the road.
+    // Seat the floor above its uphill corner so paving cannot cut through the
+    // checkerboard, furniture or transparent door at sloped shop placements.
+    if(business)art.components.push(...bahiaShop([-12.85,Math.max(heightAt(z-5.6),heightAt(z),heightAt(z+5.6))+1.07,-z],90,grp,business));
     else art.building([-12.85,heightAt(z)+1.04,-z],90,building,grp,{height:7.6+(building%4===2?1.2:0),width:10.8});
-    if (building%3===0) art.palm([business?-7.65:-9.2,heightAt(z)+1.0,-z-(business?6.2:5.1)],building*57,.85);
+    if (building%3===0) art.palm([business?-7.65:-9.2,heightAt(z)+1.0,-z-(business?9.4:5.1)],building*57,.85);
     if (building%4===0) art.asset('baylamp',[-7.9,heightAt(z)+1.03,-z-5],.95,0,101);
     if(z>1370&&z<1810&&building%3===0) {
       art.surfboard([-8.15,heightAt(z)+1.05,-z+3.8],90,TEAL,grp);
