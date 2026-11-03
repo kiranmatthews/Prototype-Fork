@@ -36,6 +36,8 @@ pushes to `origin/main`, follows GitHub runs and verifies the public deployment.
 
 ## Guardrails
 
+- **Tripo: SMART MESH ALWAYS. Never use HD Model or Ultra Mesh for game assets.** Use the Tripo web app's plan credits. Set and inspect the polygon budget before submitting each component: **30,000 triangles is the absolute maximum per model.** Use only the detail the piece needs: small props such as a pizza slice should be around 5,000 or fewer, and simpler pieces can be much lower. Verify exported triangle counts before integration. Build simple rectangles, walls, frames, transparent doors and glass manually. Generate complex pieces separately, and run every modelling reference through a Crash 4 aesthetic imagegen pass first. These explicit asset-authoring budgets take precedence over preserving an accidentally generated oversized mesh; retain the final approved geometry at all viewing distances.
+
 - World units are approximately metres; Three.js is right-handed, Y-up, and the normal corridor direction is negative Z.
 - `platform.p` is its centre; its top is `p.y + s.y / 2`. Spawn slightly above supported ground. Ramps rise from +Z toward -Z before yaw, and a rail at yaw `0` runs along Z.
 - Every published level needs one `gate`, a reachable spawn, and `killY` below its playable geometry.

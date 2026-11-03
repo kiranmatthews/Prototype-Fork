@@ -1,0 +1,44 @@
+{
+  "dryProbes": 8465,
+  "accessProbes": 140,
+  "waveProbes": 3936,
+  "assets": {
+    "pizza-slice": {
+      "triangles": 2926,
+      "budget": 3000,
+      "bytes": 648444
+    },
+    "snack-sign": {
+      "triangles": 4974,
+      "budget": 5000,
+      "bytes": 629444
+    },
+    "funville-marquee": {
+      "triangles": 7372,
+      "budget": 8000,
+      "bytes": 843792
+    }
+  },
+  "manualShops": {
+    "snack": {
+      "triangles": 7344,
+      "parts": 92,
+      "transparentPanes": 2
+    },
+    "funville": {
+      "triangles": 6554,
+      "parts": 84,
+      "transparentPanes": 3
+    },
+    "pizza": {
+      "triangles": 7950,
+      "parts": 94,
+      "transparentPanes": 3
+    }
+  },
+  "minimumAnimatedShoreMargin": 0.6450057999368752,
+  "components": 8266,
+  "patches": 18,
+  "islands": 5,
+  "pass": true
+}

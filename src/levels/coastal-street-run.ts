@@ -2,6 +2,7 @@ import type { CustomComponent, CustomLevelData } from "../level";
 import { buildCoastalStreetKit } from "../coastalStreetKit";
 import { decorateCoastalTown } from './coastal-town-art';
 import { enhanceBeachStreet } from './beach-street-gameplay';
+import { dressBahiaShore } from './beach-bahia-shore';
 
 /**
  * Unity's three-kilometre street is authored along native +Z. We keep every
@@ -655,3 +656,4 @@ export const COASTAL_STREET_RUN_LEVEL: CustomLevelData = {
 
 enhanceBeachStreet(COASTAL_STREET_RUN_LEVEL, heightAt);
 decorateCoastalTown(COASTAL_STREET_RUN_LEVEL, roadSegments, heightAt, gaps);
+dressBahiaShore(COASTAL_STREET_RUN_LEVEL, roadSegments, heightAt, gaps);

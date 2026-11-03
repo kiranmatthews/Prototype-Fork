@@ -8282,3 +8282,32 @@ spring/kicker/spine traversal, camera regressions, editor edit/undo, required
 level checks and production build pass. Chrome lite and full/native checks
 cover 2,406 fall/landing frames with visible body centres, fixed forward yaw and
 clean consoles. No full suite ran. Details: [sparse iteration](spaghetti-infinite/SPARSE_ITERATION.md).
+
+## 2026-11-04 — Beach Street: Bahia beach and modular businesses
+
+Replace the right-side boundary with a low cream stone wall, fourteen open
+access bays and a continuous warm beach using Treehouse Trails' sand material
+and curved shoreline. Fit the upper sand to the changing road grades; keep the
+water beyond the actual sea-level contour. Preserve all five offshore islands
+and the complete original gameplay route.
+
+Slot nine Snack Shack, Funville and Bahia Pizza shops among the original row.
+Create Weekenders reference studies and a separate Crash 4 aesthetic imagegen
+pass before modelling. Build shells, clear glazing, frames and interior props
+manually. Generate only the sculpted signs through Tripo's web plan with Smart
+Mesh P2.0: pizza 2,926, Snack Shack 4,974 and Funville 7,372 triangles. Record the
+Smart Mesh rule and 30k absolute ceiling in AGENTS.md; reject the initial
+oversized HD assets and keep them out of the release.
+
+Prompt to validated playable: approximately **60 minutes** (11:28–12:28 UTC),
+including reference generation, the corrected Smart Mesh pipeline and visual
+refinement. Required level checks, production build and release-size check pass.
+Focused geometry checks cover 8,465 dry-ground probes, 3,936 animated-wave
+samples, 140 access probes, exact shared sand edges, per-asset budgets and
+unchanged island/gameplay hashes. The existing kite physics regression passes
+all route jumps, pit death, checkpoint respawn and finish. Chrome lite/full
+reviews cover all shops, native MAX and normal presentation; the full 3 km
+keyboard playthrough finishes with 11 checkpoint states, 13 jumps, zero crashes
+and no console errors. No full suite ran. Release output: 805,684,970 bytes.
+
+Evidence, reference sequence and provenance: [Bahia iteration](beach-bahia/README.md).

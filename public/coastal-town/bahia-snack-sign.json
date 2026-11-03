@@ -1,0 +1,22 @@
+{
+  "name": "snack-sign",
+  "source": "Tripo web app, Smart Mesh P2.0, Triangle; plan credits",
+  "taskId": "b8b77c31-c9ef-434b-b49f-14ecb00e06b3",
+  "credits": 110,
+  "steps": {
+    "smartMesh": 100,
+    "texture2K": 10
+  },
+  "textureResolution": 2048,
+  "triangleBudget": 5000,
+  "reference": "docs/beach-bahia/concepts/snack-sign-crash4.webp",
+  "nativeSha256": "206ec706b71cd1df478c5577692ee63e541057e86adb51e854352c7d78d90766",
+  "sha256": "b9749ec3337dee1c52c854d225c8b82bb40994fa0b0af40140578d3e742a94cd",
+  "bytes": 629444,
+  "vertices": 3500,
+  "triangles": 4974,
+  "compression": "lossless EXT_meshopt_compression",
+  "allVertexValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "originalTextureBytesVerified": true
+}

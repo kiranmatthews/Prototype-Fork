@@ -1,0 +1,22 @@
+{
+  "name": "pizza-slice",
+  "source": "Tripo web app, Smart Mesh P2.0, Triangle; plan credits",
+  "taskId": "a6469a72-166c-4770-80a3-7d8fd28cb946",
+  "credits": 110,
+  "steps": {
+    "smartMesh": 100,
+    "texture2K": 10
+  },
+  "textureResolution": 2048,
+  "triangleBudget": 3000,
+  "reference": "docs/beach-bahia/concepts/pizza-sign-crash4.webp",
+  "nativeSha256": "944b330c02a4c3506bd0b6bae9e8ee580d4224fbaba28e67ce5867912f0ece02",
+  "sha256": "77744cc3dd942256113a89a7f707bcb1e31c94308d854dbbbed53ccfc59e451f",
+  "bytes": 648444,
+  "vertices": 3173,
+  "triangles": 2926,
+  "compression": "lossless EXT_meshopt_compression",
+  "allVertexValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "originalTextureBytesVerified": true
+}
