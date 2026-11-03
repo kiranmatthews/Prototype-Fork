@@ -78,6 +78,7 @@ export function dressTribalRun(data:CustomLevelData,course:Course):void{
    if(c.normals){c.colors=[];for(let i=0;i<c.normals.length;i+=3){const top=c.normals[i+1]>.6;c.colors.push(...(top?[1,1,1]:[.61,.73,.66]));}}
   }
   if(c.t==='vertramp'){c.tex='tribal-sunstone';c.color='#d8f0df';}
+  if(c.t==='mover'){c.tex='creek-raft';c.color='#bb8750';}
   if(c.t==='crumble'){c.tex='treehouse-timber';c.color='#e4c58d';}
   if(c.t==='rail')c.color='#e7ba61';
  }

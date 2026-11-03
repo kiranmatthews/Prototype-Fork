@@ -23,8 +23,8 @@ export interface EnemyNodeBinding {
 }
 export type EnemyNodeMap = Partial<Record<EnemyNodeRole,string | EnemyNodeBinding>>;
 export interface EnemyVisualOptions {
-  /** Nightworks quarry crew; gameplay kind and takedown rules stay independent. */
-  appearance?: "nightworks";
+  /** Costume/theme only; gameplay kind and takedown rules stay independent. */
+  appearance?: "nightworks" | "tribal";
   /** Files are baked to metres, Y-up, forward +Z before runtime loading. */
   url?: string;
   /** Optional alternate carcass path; false for custom non-crab art/fixtures. */
@@ -68,7 +68,7 @@ export interface EnemyVisualDiagnostics {
   kind: EnemyKind;
   status: 'loading' | 'ready' | 'error' | 'disposed';
   url: string;
-  appearance?: "nightworks";
+  appearance?: "nightworks" | "tribal";
   carcass?: { url: string; status: "loading" | "ready" | "error" | "disposed"; error?: string };
   error?: string;
   clips: string[];

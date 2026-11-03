@@ -1,0 +1,594 @@
+{
+  "stage": "spawn",
+  "rides": [],
+  "actions": [],
+  "counts": {
+    "movers": 35,
+    "crabs": 34,
+    "fireHeads": 8,
+    "components": 2263
+  },
+  "geometry": {
+    "supportProbes": 1479,
+    "maxHeightError": 0.03738955750210149,
+    "openGaps": 29,
+    "headingProbes": 580,
+    "minHeadingDot": 0.9998720957904964,
+    "crateSeats": [
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -1.961181640625,
+          0,
+          -35.2568359375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          5.9326171875,
+          0,
+          -39.61083984375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -19.474365234375,
+          0,
+          -154.638671875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -15.87060546875,
+          0,
+          -162.898681640625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -75.564208984375,
+          0,
+          -230.569580078125
+        ],
+        "runtimeY": 0,
+        "supportY": 1.3877787807814457e-17
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -73.18701171875,
+          0,
+          -239.261962890625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -120.72216796875,
+          0,
+          -292.884521484375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -114.60205078125,
+          0,
+          -299.527099609375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -117.882568359375,
+          0,
+          -371.12744140625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -109.166015625,
+          0,
+          -373.4150390625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -41.8037109375,
+          -0.497314453125,
+          -432.662109375
+        ],
+        "runtimeY": -0.4973170459557128,
+        "supportY": -0.4973170459557136
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -35.082763671875,
+          -0.66259765625,
+          -426.6552734375
+        ],
+        "runtimeY": -0.6626946888391405,
+        "supportY": -0.6626946888391407
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          53.96337890625,
+          -2.60009765625,
+          -433.482666015625
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          56.755859375,
+          -2.60009765625,
+          -424.911865234375
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          123.485595703125,
+          -2.60009765625,
+          -403.124755859375
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          123.64599609375,
+          -2.60009765625,
+          -394.1123046875
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          173.066162109375,
+          -2.2099609375,
+          -347.21728515625
+        ],
+        "runtimeY": -2.2099614920326047,
+        "supportY": -2.2099614920326056
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          168.285888671875,
+          -2.038330078125,
+          -339.573486328125
+        ],
+        "runtimeY": -2.0382706649499633,
+        "supportY": -2.0382706649499633
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          207.537109375,
+          0,
+          -279.262451171875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          206.509765625,
+          0,
+          -270.316162109375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          279.78857421875,
+          0,
+          -275.8779296875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          287.33056640625,
+          0,
+          -270.94580078125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          331.4775390625,
+          0,
+          -345.95068359375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          340.052490234375,
+          0,
+          -348.725830078125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          339.203125,
+          0.0009765625,
+          -440.404052734375
+        ],
+        "runtimeY": 0.000976670483083808,
+        "supportY": 0.0009766704830835998
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          346.00048828125,
+          0.030517578125,
+          -446.322509765625
+        ],
+        "runtimeY": 0.030572138359264756,
+        "supportY": 0.030572138359264728
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          320.290283203125,
+          2.26416015625,
+          -512.62158203125
+        ],
+        "runtimeY": 2.264079990306925,
+        "supportY": 2.2640799903069246
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          325.0947265625,
+          2.346435546875,
+          -520.24755859375
+        ],
+        "runtimeY": 2.3464136677251393,
+        "supportY": 2.3464136677251397
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          284.742919921875,
+          1.33056640625,
+          -563.235595703125
+        ],
+        "runtimeY": 1.3305670147480226,
+        "supportY": 1.3305670147480229
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          234.03955078125,
+          0,
+          -599.15771484375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          165.958740234375,
+          0,
+          -635.3486328125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          163.633056640625,
+          0,
+          -644.0546875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          97.766845703125,
+          2.6396484375,
+          -660.64306640625
+        ],
+        "runtimeY": 2.639643290536778,
+        "supportY": 2.6396432905367777
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          66.428466796875,
+          4.800048828125,
+          -717.88916015625
+        ],
+        "runtimeY": 4.800048828125,
+        "supportY": 4.800048828125
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          72.842041015625,
+          4.800048828125,
+          -724.2236328125
+        ],
+        "runtimeY": 4.800048828125,
+        "supportY": 4.800048828125
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          66.293212890625,
+          4.26904296875,
+          -790.017333984375
+        ],
+        "runtimeY": 4.269040033911432,
+        "supportY": 4.269040033911433
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          107.760009765625,
+          -1,
+          -852.602783203125
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          116.475341796875,
+          -1,
+          -850.300048828125
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          171.603271484375,
+          -1,
+          -895.35498046875
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          238.465087890625,
+          -1,
+          -907.32763671875
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          242.940185546875,
+          -1,
+          -899.50146484375
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          304.849853515625,
+          -1,
+          -903.13525390625
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          357.74462890625,
+          -1,
+          -928.462646484375
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          396.177001953125,
+          -1,
+          -984.817138671875
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          405.051025390625,
+          -0.999267578125,
+          -986.39306640625
+        ],
+        "runtimeY": -0.9992719692932983,
+        "supportY": -0.9992719692932978
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          411.991455078125,
+          0.8671875,
+          -1053.0791015625
+        ],
+        "runtimeY": 0.867042228487355,
+        "supportY": 0.8670422284873555
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          406.47119140625,
+          2.270751953125,
+          -1113.614990234375
+        ],
+        "runtimeY": 2.2705766026678535,
+        "supportY": 2.2705766026678535
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          372.967041015625,
+          0,
+          -1174.472412109375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          374.162353515625,
+          0,
+          -1183.4033203125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          299.277587890625,
+          0,
+          -1225.10302734375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          299.513916015625,
+          0,
+          -1234.113037109375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          7.1064453125,
+          0,
+          -47.547119140625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          -49.080322265625,
+          -0.222412109375,
+          -422.138916015625
+        ],
+        "runtimeY": -0.22247329287081818,
+        "supportY": -0.2224732928708183
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          340.26708984375,
+          0,
+          -347.61376953125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          180.059814453125,
+          0,
+          -638.48486328125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          101.24462890625,
+          -0.9521484375,
+          -835.01611328125
+        ],
+        "runtimeY": -0.9521498585277985,
+        "supportY": -0.9521498585277983
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          384.28955078125,
+          0.029296875,
+          -1174.67529296875
+        ],
+        "runtimeY": 0.02944502714542452,
+        "supportY": 0.029445027145424338
+      }
+    ],
+    "checkpoints": 9,
+    "authoredRails": 0,
+    "surfaceEdges": 1618
+  },
+  "costumeTriangles": 276
+}

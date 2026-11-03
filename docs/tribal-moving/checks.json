@@ -1,0 +1,24 @@
+{
+  "native": {
+    "pass": true,
+    "seconds": 515.1,
+    "rides": 35,
+    "deaths": 0,
+    "checkpoints": 9,
+    "crystal": true,
+    "maxFrameTravel": 0.7419883409150482
+  },
+  "geometry": {
+    "supportProbes": 1479,
+    "openGaps": 29,
+    "cameraHeadingProbes": 580,
+    "minHeadingDot": 0.9998720957904964,
+    "crateSeats": 57
+  },
+  "costumeTriangles": 276,
+  "enemyRuntime": "passed",
+  "build": "passed",
+  "releaseBytes": 806901635,
+  "fullSuiteRun": false,
+  "levelChecks": "passed"
+}

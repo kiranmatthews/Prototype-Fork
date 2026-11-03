@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createTurtleShellEyes } from './turtleShellEyes';
+import { dressTribalCrab } from './tribalCrabDress';
 import { sampleFrogHop } from './frogHop';
 import { createFrogKick } from './frogRig';
 import { createGoblinStumble } from './goblinStumble';
@@ -213,6 +214,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   let rotorSpeed=0,alert=0;
   let turtleCenterY=0, turtleHalfWidth=0, turtleStretchHeight=0;
   let turtleEyes:ReturnType<typeof createTurtleShellEyes>;
+  let tribalDress:ReturnType<typeof dressTribalCrab>|undefined;
   let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
   let frogKick:ReturnType<typeof createFrogKick>;
   let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
@@ -284,6 +286,10 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     });
     if(kind==='turtle'&&options.appearance!=='nightworks'){
       turtleEyes=createTurtleShellEyes(model);
+    }
+    if(kind==='grunt'&&options.appearance==='tribal'){
+      tribalDress=dressTribalCrab(nodes.head?.node,nodes.pincerLeft?.node,nodes.pincerRight?.node);
+      diagnostic.meshes+=3;
     }
     poses=[...capturePose(model),...(base?capturePose(base):[])];
     animationPoses=[...capturePose(model),...(base?capturePose(base):[])];
@@ -646,6 +652,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       carcassModel?.removeFromParent();carcassModel=null;carcassLease?.release();
       mixer?.stopAllAction();fadingActions.clear();if(model)mixer?.uncacheRoot(model);mixer=null;
       // Remove borrowed geometry and textures before Level's generic traversal.
+      tribalDress?.dispose();tribalDress=undefined;
       group.clear();group.removeFromParent();
       for(const skeleton of instanceSkeletons)skeleton.dispose();instanceSkeletons.clear();
       for(const material of instanceMaterials)material.dispose();instanceMaterials.clear();materialRest.clear();

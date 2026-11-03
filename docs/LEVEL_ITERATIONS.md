@@ -8397,3 +8397,30 @@ checks, production build and release-size check pass; no full suite ran.
 Release output: 806,898,461 bytes.
 
 Evidence, source reference and Tripo settings: [Sunset waterfall iteration](art/sunset-waterfalls/README.md).
+
+## 2026-11-04 — Tribal Run moving platforms and bush corridor
+
+Break the 2.32 km causeway into 30 fixed landings and 29 river crossings, with
+35 native timber decks: 18 ferries aligned to the bends, six pairs of alternating
+lifts and five orbiting rafts. Enclose the route with closed earth banks and
+Treehouse Trails' thickets, mature trees, ferns and high canopy boughs. Add 34
+masked crab patrols and eight inward-facing fire heads with an open escape
+verge. The masks, shields and spears use 276 manually authored triangles per
+crab and follow its existing animated joints. Retain the nine safe checkpoints,
+bonus entrance/return, crystal and finish; the separate bonus is unchanged.
+No movement tuning, new asset download or distance-based mesh substitution.
+
+Prompt to browser-validated playable: approximately **45 minutes**
+(16:18–17:03 UTC). The continuous native input run rides all 35 decks, banks
+all nine checkpoints, collects the crystal and finishes in 515.1 seconds with
+zero deaths. The full-render browser opening run clears five crossings in
+96.92 seconds; its final three crossings reach Course Clear with the crystal
+in 46.7 seconds, both without deaths. Geometry checks pass 1,479 support probes,
+all 29 open gaps, 580 camera-heading probes and all 57 crate seats. MAX/native
+3024 × 1724, normal 720p and lite reviews cover foliage, platform clearances,
+riverbanks and enemy costumes; checkpoint/pit recovery and console checks pass.
+Existing enemy-runtime animation/lifetime checks, required level checks,
+production build and release-size check pass. No full suite ran.
+Release output: 806,901,635 bytes.
+
+Evidence and visible review controls: [Tribal moving-platform iteration](tribal-moving/README.md).

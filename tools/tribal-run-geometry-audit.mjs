@@ -33,7 +33,7 @@ export function auditTribalGeometry(r){
  let openGaps=0;
  for(const gap of m.TRIBAL_RUN_GAPS){
   const p=m.tribalPoint((gap.a+gap.b)/2,gap.top,gap.u);
-  assert.equal(hits(p).length,0,`${gap.name}: a hidden surface fills the deliberate gap`);openGaps++;
+  assert.equal(hits(p).filter(h=>h.object.userData.moverId===undefined).length,0,`${gap.name}: a hidden fixed surface fills the deliberate gap`);openGaps++;
  }
  let headingProbes=0,minHeadingDot=1;
  for(let s=0;s<2320;s+=4){
@@ -46,7 +46,7 @@ export function auditTribalGeometry(r){
  for(const c of source.components.filter(c=>c.t==='crate')){
   const runtime=l.crates.find(b=>b.name===c.nm&&Math.hypot(b.mesh.position.x-c.p[0],b.mesh.position.z-c.p[2])<.1)
    ??l.crates.find(b=>Math.hypot(b.mesh.position.x-c.p[0],b.mesh.position.z-c.p[2])<.1);
-  assert.ok(runtime,`missing crate ${c.nm}`);
+  assert.ok(runtime,`missing crate ${c.nm} at ${c.p}`);
   const y=runtime.box.min.y,p=[c.p[0],y,c.p[2]],hit=hits(p,.08,.2).find(h=>Math.abs(h.point.y-y)<.09);
   assert.ok(hit,`unsupported crate ${c.nm} at ${c.p}`);
   assert.ok(Math.abs(y-c.p[1])<.12,`crate ${c.nm} needed a large automatic seating repair`);

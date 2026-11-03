@@ -1,0 +1,16 @@
+{
+  "checkpoint": true,
+  "waterEntry": [
+    3.39,
+    -10.7,
+    -105.78
+  ],
+  "returned": [
+    -68.83,
+    0,
+    -228.43
+  ],
+  "grounded": true,
+  "checkpoints": 1,
+  "consoleErrors": []
+}

@@ -8709,7 +8709,7 @@ export class Level {
                 "z",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,c.terrainSupports,
+                c.s?.[1],c.vr,c.terrainSupports,c.tex==='tribal-weave',
               );
             } else {
               this.enemy(
@@ -8721,7 +8721,7 @@ export class Level {
                 "x",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,c.terrainSupports,
+                c.s?.[1],c.vr,c.terrainSupports,c.tex==='tribal-weave',
               );
             }
           } else if (c.t === "grindosaurus") {
@@ -19137,8 +19137,8 @@ export class Level {
   }
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
-  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number): EnemyVisual {
-    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
+  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number,tribal=false): EnemyVisual {
+    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: tribal ? "tribal" : this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }
@@ -19155,9 +19155,9 @@ export class Level {
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
     skin?:CustomComponent['dkind'],
-    height?:number,variant?:number,terrainSupports=false,
+    height?:number,variant?:number,terrainSupports=false,tribal=false,
   ): void {
-    const visual = this.enemyGroup(kind,skin,height,variant);
+    const visual = this.enemyGroup(kind,skin,height,variant,tribal);
     const { group, body } = visual;
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;

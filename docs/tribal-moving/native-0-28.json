@@ -1,0 +1,2480 @@
+{
+  "stage": "Finish gate",
+  "rides": [
+    {
+      "name": "River crossing 1",
+      "mover": 0,
+      "kind": "ferry",
+      "board": {
+        "frame": 976,
+        "s": 90.18700392412084,
+        "position": [
+          5.037886664926155,
+          0,
+          -90.03702120256932
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 0,
+        "deaths": 0
+      },
+      "carry": 0.9182776787744056,
+      "exit": {
+        "frame": 1314,
+        "s": 121.06260092719842,
+        "position": [
+          0.536509209865783,
+          0,
+          -120.56420884180076
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.166666666666666
+    },
+    {
+      "name": "River crossing 2",
+      "mover": 1,
+      "kind": "ferry",
+      "board": {
+        "frame": 2276,
+        "s": 204.5782709545257,
+        "position": [
+          -41.83196445035781,
+          0,
+          -191.9174949963983
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 1,
+        "deaths": 0
+      },
+      "carry": 0.6763425671274598,
+      "exit": {
+        "frame": 2613,
+        "s": 235.0625727931944,
+        "position": [
+          -60.04138131751774,
+          0,
+          -216.36766538616965
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.916666666666666
+    },
+    {
+      "name": "River crossing 3",
+      "mover": 2,
+      "kind": "lifts",
+      "board": {
+        "frame": 3066,
+        "s": 282.4735800726577,
+        "position": [
+          -90.40488999035922,
+          -0.906199605886431,
+          -252.6999213037487
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 2,
+        "deaths": 0
+      },
+      "carry": 0.44288507619495965
+    },
+    {
+      "name": "River crossing 3",
+      "mover": 3,
+      "kind": "lifts",
+      "board": {
+        "frame": 3338,
+        "s": 297.4742691887091,
+        "position": [
+          -100.12064478540229,
+          -0.10721078398798911,
+          -264.124538712787
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 3,
+        "deaths": 0
+      },
+      "carry": 1.1394638868322473,
+      "exit": {
+        "frame": 3589,
+        "s": 312.4163896818703,
+        "position": [
+          -109.00938244930084,
+          0,
+          -276.1287757585629
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.216666666666667
+    },
+    {
+      "name": "River crossing 4",
+      "mover": 4,
+      "kind": "ferry",
+      "board": {
+        "frame": 4230,
+        "s": 354.1794044633556,
+        "position": [
+          -120.86727912374819,
+          0,
+          -315.77840542413173
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 4,
+        "deaths": 0
+      },
+      "carry": 1.1203391935393967,
+      "exit": {
+        "frame": 4568,
+        "s": 387.09475636027156,
+        "position": [
+          -119.19622334340409,
+          0,
+          -348.64728716458006
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.65
+    },
+    {
+      "name": "River crossing 5",
+      "mover": 5,
+      "kind": "orbit",
+      "board": {
+        "frame": 5393,
+        "s": 435.8833720443676,
+        "position": [
+          -104.91969043512903,
+          0,
+          -395.75773236845606
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 5,
+        "deaths": 0
+      },
+      "carry": 2.061233694309139,
+      "exit": {
+        "frame": 5781,
+        "s": 466.8273641506918,
+        "position": [
+          -78.81270289086378,
+          0,
+          -413.52510875321514
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 13.816666666666666
+    },
+    {
+      "name": "River crossing 6",
+      "mover": 6,
+      "kind": "ferry",
+      "board": {
+        "frame": 6831,
+        "s": 552.2314665577691,
+        "position": [
+          2.7698293992658463,
+          -2.4794921875,
+          -436.4216976726565
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 6,
+        "deaths": 0
+      },
+      "carry": 1.1176714054370622,
+      "exit": {
+        "frame": 7168,
+        "s": 585.0941294200438,
+        "position": [
+          35.5255517121378,
+          -2.60009765625,
+          -433.8110084300301
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 12.366666666666667
+    },
+    {
+      "name": "River crossing 7",
+      "mover": 7,
+      "kind": "ferry",
+      "board": {
+        "frame": 8129,
+        "s": 624.1841410254635,
+        "position": [
+          73.24740071863688,
+          -2.60009765625,
+          -423.63338864916045
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 7,
+        "deaths": 0
+      },
+      "carry": 1.065622985652794,
+      "exit": {
+        "frame": 8467,
+        "s": 657.086729294766,
+        "position": [
+          103.33238377113423,
+          -2.60009765625,
+          -410.312613090542
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 16
+    },
+    {
+      "name": "River crossing 8",
+      "mover": 8,
+      "kind": "lifts",
+      "board": {
+        "frame": 8916,
+        "s": 704.2633715161322,
+        "position": [
+          143.08679669581664,
+          -1.3211515062255172,
+          -384.95770935665087
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 8,
+        "deaths": 0
+      },
+      "carry": 0.46191894635343966
+    },
+    {
+      "name": "River crossing 8",
+      "mover": 9,
+      "kind": "lifts",
+      "board": {
+        "frame": 9236,
+        "s": 719.1758598061342,
+        "position": [
+          152.99736628960903,
+          -2.7527827547340347,
+          -373.81012938740207
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 9,
+        "deaths": 0
+      },
+      "carry": 1.0937671820173114,
+      "exit": {
+        "frame": 9490,
+        "s": 734.3364997790538,
+        "position": [
+          161.66899050036056,
+          -2.582256951941418,
+          -361.4015452589948
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 11
+    },
+    {
+      "name": "River crossing 9",
+      "mover": 10,
+      "kind": "ferry",
+      "board": {
+        "frame": 10073,
+        "s": 772.0339721897537,
+        "position": [
+          177.56022289093616,
+          -0.832763671875,
+          -327.23773955288584
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 10,
+        "deaths": 0
+      },
+      "carry": 0.9164810443395395,
+      "exit": {
+        "frame": 10411,
+        "s": 802.9837281809123,
+        "position": [
+          189.83316592303137,
+          -0.24403448185454746,
+          -298.8266119593514
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.15
+    },
+    {
+      "name": "River crossing 10",
+      "mover": 11,
+      "kind": "orbit",
+      "board": {
+        "frame": 11208,
+        "s": 860.5927407120444,
+        "position": [
+          232.56716508337405,
+          0,
+          -263.6919360487467
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 11,
+        "deaths": 0
+      },
+      "carry": 1.0305447290759482,
+      "exit": {
+        "frame": 11573,
+        "s": 891.1420743679469,
+        "position": [
+          263.09300018746495,
+          0,
+          -267.1695014159027
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 11.916666666666666
+    },
+    {
+      "name": "River crossing 11",
+      "mover": 12,
+      "kind": "ferry",
+      "board": {
+        "frame": 12052,
+        "s": 933.2535456683986,
+        "position": [
+          301.95704647700876,
+          0,
+          -283.0156129169346
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 12,
+        "deaths": 0
+      },
+      "carry": 1.3391405610645302,
+      "exit": {
+        "frame": 12365,
+        "s": 963.0519743398545,
+        "position": [
+          319.78997236918883,
+          0,
+          -306.9906404051998
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 7.333333333333333
+    },
+    {
+      "name": "River crossing 12",
+      "mover": 13,
+      "kind": "ferry",
+      "board": {
+        "frame": 13316,
+        "s": 1048.1988187486193,
+        "position": [
+          343.8990163955334,
+          0,
+          -388.1576444595849
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 13,
+        "deaths": 0
+      },
+      "carry": 0.5792091302500234,
+      "exit": {
+        "frame": 13652,
+        "s": 1075.0011030353805,
+        "position": [
+          344.93600822201336,
+          0,
+          -414.93780646772206
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.716666666666667
+    },
+    {
+      "name": "River crossing 13",
+      "mover": 14,
+      "kind": "lifts",
+      "board": {
+        "frame": 14172,
+        "s": 1132.2997077642406,
+        "position": [
+          337.5650318446402,
+          1.715721385385306,
+          -471.6711261562073
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 14,
+        "deaths": 0
+      },
+      "carry": 0.5265432060233662
+    },
+    {
+      "name": "River crossing 13",
+      "mover": 15,
+      "kind": "lifts",
+      "board": {
+        "frame": 14518,
+        "s": 1146.5894698570971,
+        "position": [
+          333.9150159059705,
+          0.9790463134359885,
+          -485.48414217014584
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 15,
+        "deaths": 0
+      },
+      "carry": 0.2586353526341973,
+      "exit": {
+        "frame": 14765,
+        "s": 1160.4218531531121,
+        "position": [
+          329.8770423672869,
+          1.792514850706147,
+          -498.7149855810391
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 11.316666666666666
+    },
+    {
+      "name": "River crossing 14",
+      "mover": 16,
+      "kind": "ferry",
+      "board": {
+        "frame": 15276,
+        "s": 1196.1777332821844,
+        "position": [
+          315.6862552863086,
+          2.19091796875,
+          -531.5430519906865
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 16,
+        "deaths": 0
+      },
+      "carry": 0.9409480697032383,
+      "exit": {
+        "frame": 15614,
+        "s": 1227.0684116659384,
+        "position": [
+          297.2915876572857,
+          1.7662752397298394,
+          -556.3417627114022
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 9.183333333333334
+    },
+    {
+      "name": "River crossing 15",
+      "mover": 17,
+      "kind": "orbit",
+      "board": {
+        "frame": 15995,
+        "s": 1258.93450121106,
+        "position": [
+          275.6236454923072,
+          0.387451171875,
+          -580.271451818184
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 17,
+        "deaths": 0
+      },
+      "carry": 1.5504518729012726,
+      "exit": {
+        "frame": 16371,
+        "s": 1289.02262235681,
+        "position": [
+          248.42325031646416,
+          0.06690787080454497,
+          -594.0715219278161
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 8.2
+    },
+    {
+      "name": "River crossing 16",
+      "mover": 18,
+      "kind": "ferry",
+      "board": {
+        "frame": 17273,
+        "s": 1323.2987734640872,
+        "position": [
+          219.11027429316644,
+          0,
+          -611.7873175191385
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 18,
+        "deaths": 0
+      },
+      "carry": 2.0880012825887375,
+      "exit": {
+        "frame": 17563,
+        "s": 1353.0620216389252,
+        "position": [
+          193.45468615286663,
+          0,
+          -626.8804010584829
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 15.133333333333333
+    },
+    {
+      "name": "River crossing 17",
+      "mover": 19,
+      "kind": "ferry",
+      "board": {
+        "frame": 18523,
+        "s": 1414.0487727772131,
+        "position": [
+          136.52938006401706,
+          1.13916015625,
+          -648.1732735554862
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 19,
+        "deaths": 0
+      },
+      "carry": 0.9222309991270013,
+      "exit": {
+        "frame": 18861,
+        "s": 1444.973941027437,
+        "position": [
+          107.63032150442895,
+          2.1000543779165772,
+          -659.1370095021471
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 13.7
+    },
+    {
+      "name": "River crossing 18",
+      "mover": 20,
+      "kind": "lifts",
+      "board": {
+        "frame": 19142,
+        "s": 1468.3561218998263,
+        "position": [
+          88.94546795385942,
+          4.452758111878477,
+          -673.0878430148312
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 20,
+        "deaths": 0
+      },
+      "carry": 0.3169277213932189
+    },
+    {
+      "name": "River crossing 18",
+      "mover": 21,
+      "kind": "lifts",
+      "board": {
+        "frame": 19550,
+        "s": 1482.5886591653107,
+        "position": [
+          81.65742574305813,
+          3.7706745805374986,
+          -685.3136707415867
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 21,
+        "deaths": 0
+      },
+      "carry": 0.22394687272361288,
+      "exit": {
+        "frame": 19798,
+        "s": 1496.421287482593,
+        "position": [
+          75.89802978047099,
+          4.629767311518751,
+          -697.8778613045374
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 12.366666666666667
+    },
+    {
+      "name": "River crossing 19",
+      "mover": 22,
+      "kind": "ferry",
+      "board": {
+        "frame": 20479,
+        "s": 1542.1803734096045,
+        "position": [
+          66.45558613545262,
+          4.800048828125,
+          -742.5727695863437
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 22,
+        "deaths": 0
+      },
+      "carry": 1.0877582806556747,
+      "exit": {
+        "frame": 20817,
+        "s": 1575.0859579363425,
+        "position": [
+          67.4384956639193,
+          4.799849123841566,
+          -775.4571852741553
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.85
+    },
+    {
+      "name": "River crossing 20",
+      "mover": 23,
+      "kind": "orbit",
+      "board": {
+        "frame": 21213,
+        "s": 1606.6694336863748,
+        "position": [
+          78.69380856393317,
+          1.04150390625,
+          -804.4254153868304
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 23,
+        "deaths": 0
+      },
+      "carry": 1.0936402135150198,
+      "exit": {
+        "frame": 21656,
+        "s": 1637.062131762562,
+        "position": [
+          91.82371324892198,
+          -0.5419422557431139,
+          -831.5520672467999
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 9.566666666666666
+    },
+    {
+      "name": "River crossing 21",
+      "mover": 24,
+      "kind": "ferry",
+      "board": {
+        "frame": 22429,
+        "s": 1692.1720145051822,
+        "position": [
+          132.9377991408819,
+          -1,
+          -868.190218403707
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 24,
+        "deaths": 0
+      },
+      "carry": 1.090019332596479,
+      "exit": {
+        "frame": 22767,
+        "s": 1725.0932185972636,
+        "position": [
+          160.85638853065342,
+          -0.9999999999999998,
+          -885.6349952713156
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 11.066666666666666
+    },
+    {
+      "name": "River crossing 22",
+      "mover": 25,
+      "kind": "ferry",
+      "board": {
+        "frame": 23098,
+        "s": 1756.2034100612887,
+        "position": [
+          188.7541945017783,
+          -1,
+          -899.5533482975869
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 25,
+        "deaths": 0
+      },
+      "carry": 1.9203035655272918,
+      "exit": {
+        "frame": 23418,
+        "s": 1789.0698848299103,
+        "position": [
+          221.3096260707474,
+          -0.9999999999999998,
+          -904.1032257397837
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 6.433333333333334
+    },
+    {
+      "name": "River crossing 23",
+      "mover": 26,
+      "kind": "lifts",
+      "board": {
+        "frame": 23832,
+        "s": 1828.4753662321527,
+        "position": [
+          260.63138560853804,
+          -1.583500362555839,
+          -901.7043186877889
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 26,
+        "deaths": 0
+      },
+      "carry": 0.6015183547274211
+    },
+    {
+      "name": "River crossing 23",
+      "mover": 27,
+      "kind": "lifts",
+      "board": {
+        "frame": 24102,
+        "s": 1844.837915454686,
+        "position": [
+          276.92043207898666,
+          -0.6026758157056016,
+          -900.1642512021223
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 27,
+        "deaths": 0
+      },
+      "carry": 0.5653185173088945,
+      "exit": {
+        "frame": 24345,
+        "s": 1858.3446533950726,
+        "position": [
+          290.39510904705384,
+          -0.9999999999999998,
+          -899.227917900682
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.05
+    },
+    {
+      "name": "River crossing 24",
+      "mover": 28,
+      "kind": "ferry",
+      "board": {
+        "frame": 25060,
+        "s": 1891.4588462801312,
+        "position": [
+          323.6604888918832,
+          -1,
+          -900.544263952998
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 28,
+        "deaths": 0
+      },
+      "carry": 1.7905345652308704,
+      "exit": {
+        "frame": 25368,
+        "s": 1923.0674780480806,
+        "position": [
+          350.8198607174196,
+          -0.9999999999999998,
+          -917.0641330010374
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 12.55
+    },
+    {
+      "name": "River crossing 25",
+      "mover": 29,
+      "kind": "orbit",
+      "board": {
+        "frame": 26334,
+        "s": 1953.0055116087356,
+        "position": [
+          374.50526851907864,
+          -1,
+          -936.1227594836765
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 29,
+        "deaths": 0
+      },
+      "carry": 1.6719178050470136,
+      "exit": {
+        "frame": 26698,
+        "s": 1983.0404372298624,
+        "position": [
+          388.5281318036657,
+          -0.9999999999999998,
+          -963.2029344838082
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 17.983333333333334
+    },
+    {
+      "name": "River crossing 26",
+      "mover": 30,
+      "kind": "ferry",
+      "board": {
+        "frame": 27628,
+        "s": 2032.0971868215347,
+        "position": [
+          409.16225565321207,
+          -0.3037109375,
+          -1007.5651232353074
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 30,
+        "deaths": 0
+      },
+      "carry": 1.128069887834742,
+      "exit": {
+        "frame": 27965,
+        "s": 2065.010613336046,
+        "position": [
+          414.99149604972524,
+          0.3545429722460174,
+          -1039.958041684458
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 14.6
+    },
+    {
+      "name": "River crossing 27",
+      "mover": 31,
+      "kind": "ferry",
+      "board": {
+        "frame": 28280,
+        "s": 2094.0318731391903,
+        "position": [
+          416.1625177747186,
+          1.93115234375,
+          -1068.9614621131316
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 31,
+        "deaths": 0
+      },
+      "carry": 1.2210440037330803,
+      "exit": {
+        "frame": 28616,
+        "s": 2127.054378012442,
+        "position": [
+          412.83154648376654,
+          2.261600488282901,
+          -1101.813675992232
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 6.666666666666667
+    },
+    {
+      "name": "River crossing 28",
+      "mover": 32,
+      "kind": "lifts",
+      "board": {
+        "frame": 28972,
+        "s": 2158.334622498812,
+        "position": [
+          405.61739961006407,
+          1.1080438795954,
+          -1132.279774953541
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 32,
+        "deaths": 0
+      },
+      "carry": 0.371523516353043
+    },
+    {
+      "name": "River crossing 28",
+      "mover": 33,
+      "kind": "lifts",
+      "board": {
+        "frame": 29247,
+        "s": 2173.759604753724,
+        "position": [
+          399.1221510028207,
+          -0.42103791743583496,
+          -1146.3024719694379
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 33,
+        "deaths": 0
+      },
+      "carry": 0.8218649829666125,
+      "exit": {
+        "frame": 29499,
+        "s": 2188.491474643294,
+        "position": [
+          391.94109981367444,
+          0.459307939073208,
+          -1159.145657013606
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.283333333333333
+    },
+    {
+      "name": "River crossing 29",
+      "mover": 34,
+      "kind": "ferry",
+      "board": {
+        "frame": 30229,
+        "s": 2240.173500963739,
+        "position": [
+          354.1677010176511,
+          0,
+          -1194.0678073836727
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 34,
+        "deaths": 0
+      },
+      "carry": 1.083408189790907,
+      "exit": {
+        "frame": 30567,
+        "s": 2273.0979833186316,
+        "position": [
+          326.5503820219102,
+          0,
+          -1211.992952695175
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "seconds": 10.983333333333333
+    }
+  ],
+  "actions": [
+    {
+      "label": "Walk to bank 86.4",
+      "start": 24,
+      "end": 680
+    },
+    {
+      "label": "River crossing 1 wait for boarding",
+      "start": 704,
+      "end": 910
+    },
+    {
+      "label": "River crossing 1 board 0",
+      "start": 937,
+      "end": 976
+    },
+    {
+      "label": "River crossing 1 ride to exit",
+      "start": 1012,
+      "end": 1225
+    },
+    {
+      "label": "River crossing 1 jump to fixed landing",
+      "start": 1252,
+      "end": 1314
+    },
+    {
+      "label": "Walk to bank 200.4",
+      "start": 1314,
+      "end": 1934
+    },
+    {
+      "label": "River crossing 2 wait for boarding",
+      "start": 1958,
+      "end": 2210
+    },
+    {
+      "label": "River crossing 2 board 0",
+      "start": 2237,
+      "end": 2276
+    },
+    {
+      "label": "River crossing 2 ride to exit",
+      "start": 2312,
+      "end": 2524
+    },
+    {
+      "label": "River crossing 2 jump to fixed landing",
+      "start": 2551,
+      "end": 2613
+    },
+    {
+      "label": "Walk to bank 276.4",
+      "start": 2613,
+      "end": 2952
+    },
+    {
+      "label": "River crossing 3 wait for boarding",
+      "start": 2976,
+      "end": 2976
+    },
+    {
+      "label": "River crossing 3 board 0",
+      "start": 3003,
+      "end": 3066
+    },
+    {
+      "label": "River crossing 3 walk to lift edge",
+      "start": 3102,
+      "end": 3229
+    },
+    {
+      "label": "River crossing 3 wait for boarding",
+      "start": 3247,
+      "end": 3247
+    },
+    {
+      "label": "River crossing 3 board 1",
+      "start": 3274,
+      "end": 3338
+    },
+    {
+      "label": "River crossing 3 ride to exit",
+      "start": 3374,
+      "end": 3499
+    },
+    {
+      "label": "River crossing 3 jump to fixed landing",
+      "start": 3526,
+      "end": 3589
+    },
+    {
+      "label": "Walk to bank 350.4",
+      "start": 3589,
+      "end": 3905
+    },
+    {
+      "label": "River crossing 4 wait for boarding",
+      "start": 3929,
+      "end": 4164
+    },
+    {
+      "label": "River crossing 4 board 0",
+      "start": 4191,
+      "end": 4230
+    },
+    {
+      "label": "River crossing 4 ride to exit",
+      "start": 4266,
+      "end": 4479
+    },
+    {
+      "label": "River crossing 4 jump to fixed landing",
+      "start": 4506,
+      "end": 4568
+    },
+    {
+      "label": "Walk to bank 430.4",
+      "start": 4568,
+      "end": 4928
+    },
+    {
+      "label": "River crossing 5 wait for boarding",
+      "start": 4952,
+      "end": 5304
+    },
+    {
+      "label": "River crossing 5 board 0",
+      "start": 5331,
+      "end": 5393
+    },
+    {
+      "label": "River crossing 5 ride to exit",
+      "start": 5429,
+      "end": 5692
+    },
+    {
+      "label": "River crossing 5 jump to fixed landing",
+      "start": 5719,
+      "end": 5781
+    },
+    {
+      "label": "Walk to bank 548.4",
+      "start": 5781,
+      "end": 6402
+    },
+    {
+      "label": "River crossing 6 wait for boarding",
+      "start": 6426,
+      "end": 6764
+    },
+    {
+      "label": "River crossing 6 board 0",
+      "start": 6791,
+      "end": 6831
+    },
+    {
+      "label": "River crossing 6 ride to exit",
+      "start": 6867,
+      "end": 7079
+    },
+    {
+      "label": "River crossing 6 jump to fixed landing",
+      "start": 7106,
+      "end": 7168
+    },
+    {
+      "label": "Walk to bank 620.4",
+      "start": 7168,
+      "end": 7483
+    },
+    {
+      "label": "River crossing 7 wait for boarding",
+      "start": 7507,
+      "end": 8063
+    },
+    {
+      "label": "River crossing 7 board 0",
+      "start": 8090,
+      "end": 8129
+    },
+    {
+      "label": "River crossing 7 ride to exit",
+      "start": 8165,
+      "end": 8378
+    },
+    {
+      "label": "River crossing 7 jump to fixed landing",
+      "start": 8405,
+      "end": 8467
+    },
+    {
+      "label": "Walk to bank 698.4",
+      "start": 8467,
+      "end": 8806
+    },
+    {
+      "label": "River crossing 8 wait for boarding",
+      "start": 8830,
+      "end": 8830
+    },
+    {
+      "label": "River crossing 8 board 0",
+      "start": 8857,
+      "end": 8916
+    },
+    {
+      "label": "River crossing 8 walk to lift edge",
+      "start": 8952,
+      "end": 9080
+    },
+    {
+      "label": "River crossing 8 wait for boarding",
+      "start": 9098,
+      "end": 9148
+    },
+    {
+      "label": "River crossing 8 board 1",
+      "start": 9175,
+      "end": 9236
+    },
+    {
+      "label": "River crossing 8 ride to exit",
+      "start": 9272,
+      "end": 9401
+    },
+    {
+      "label": "River crossing 8 jump to fixed landing",
+      "start": 9428,
+      "end": 9490
+    },
+    {
+      "label": "Walk to bank 768.4",
+      "start": 9490,
+      "end": 9778
+    },
+    {
+      "label": "River crossing 9 wait for boarding",
+      "start": 9802,
+      "end": 10009
+    },
+    {
+      "label": "River crossing 9 board 0",
+      "start": 10036,
+      "end": 10073
+    },
+    {
+      "label": "River crossing 9 ride to exit",
+      "start": 10109,
+      "end": 10324
+    },
+    {
+      "label": "River crossing 9 jump to fixed landing",
+      "start": 10351,
+      "end": 10411
+    },
+    {
+      "label": "Walk to bank 856.4",
+      "start": 10411,
+      "end": 10834
+    },
+    {
+      "label": "River crossing 10 wait for boarding",
+      "start": 10858,
+      "end": 11119
+    },
+    {
+      "label": "River crossing 10 board 0",
+      "start": 11146,
+      "end": 11208
+    },
+    {
+      "label": "River crossing 10 ride to exit",
+      "start": 11244,
+      "end": 11484
+    },
+    {
+      "label": "River crossing 10 jump to fixed landing",
+      "start": 11511,
+      "end": 11573
+    },
+    {
+      "label": "Walk to bank 928.4",
+      "start": 11573,
+      "end": 11901
+    },
+    {
+      "label": "River crossing 11 wait for boarding",
+      "start": 11925,
+      "end": 11963
+    },
+    {
+      "label": "River crossing 11 board 0",
+      "start": 11990,
+      "end": 12052
+    },
+    {
+      "label": "River crossing 11 ride to exit",
+      "start": 12088,
+      "end": 12276
+    },
+    {
+      "label": "River crossing 11 jump to fixed landing",
+      "start": 12303,
+      "end": 12365
+    },
+    {
+      "label": "Walk to bank 1044.4",
+      "start": 12365,
+      "end": 12985
+    },
+    {
+      "label": "River crossing 12 wait for boarding",
+      "start": 13009,
+      "end": 13250
+    },
+    {
+      "label": "River crossing 12 board 0",
+      "start": 13277,
+      "end": 13316
+    },
+    {
+      "label": "River crossing 12 ride to exit",
+      "start": 13352,
+      "end": 13563
+    },
+    {
+      "label": "River crossing 12 jump to fixed landing",
+      "start": 13590,
+      "end": 13652
+    },
+    {
+      "label": "Walk to bank 1126.4",
+      "start": 13652,
+      "end": 14062
+    },
+    {
+      "label": "River crossing 13 wait for boarding",
+      "start": 14086,
+      "end": 14086
+    },
+    {
+      "label": "River crossing 13 board 0",
+      "start": 14113,
+      "end": 14172
+    },
+    {
+      "label": "River crossing 13 walk to lift edge",
+      "start": 14208,
+      "end": 14336
+    },
+    {
+      "label": "River crossing 13 wait for boarding",
+      "start": 14354,
+      "end": 14430
+    },
+    {
+      "label": "River crossing 13 board 1",
+      "start": 14457,
+      "end": 14518
+    },
+    {
+      "label": "River crossing 13 ride to exit",
+      "start": 14554,
+      "end": 14675
+    },
+    {
+      "label": "River crossing 13 jump to fixed landing",
+      "start": 14702,
+      "end": 14765
+    },
+    {
+      "label": "Walk to bank 1192.4",
+      "start": 14765,
+      "end": 15039
+    },
+    {
+      "label": "River crossing 14 wait for boarding",
+      "start": 15063,
+      "end": 15210
+    },
+    {
+      "label": "River crossing 14 board 0",
+      "start": 15237,
+      "end": 15276
+    },
+    {
+      "label": "River crossing 14 ride to exit",
+      "start": 15312,
+      "end": 15525
+    },
+    {
+      "label": "River crossing 14 jump to fixed landing",
+      "start": 15552,
+      "end": 15614
+    },
+    {
+      "label": "Walk to bank 1254.4",
+      "start": 15614,
+      "end": 15855
+    },
+    {
+      "label": "River crossing 15 wait for boarding",
+      "start": 15879,
+      "end": 15905
+    },
+    {
+      "label": "River crossing 15 board 0",
+      "start": 15932,
+      "end": 15995
+    },
+    {
+      "label": "River crossing 15 ride to exit",
+      "start": 16031,
+      "end": 16282
+    },
+    {
+      "label": "River crossing 15 jump to fixed landing",
+      "start": 16309,
+      "end": 16371
+    },
+    {
+      "label": "Walk to bank 1318.4",
+      "start": 16371,
+      "end": 16631
+    },
+    {
+      "label": "River crossing 16 wait for boarding",
+      "start": 16655,
+      "end": 17184
+    },
+    {
+      "label": "River crossing 16 board 0",
+      "start": 17211,
+      "end": 17273
+    },
+    {
+      "label": "River crossing 16 ride to exit",
+      "start": 17309,
+      "end": 17474
+    },
+    {
+      "label": "River crossing 16 jump to fixed landing",
+      "start": 17501,
+      "end": 17563
+    },
+    {
+      "label": "Walk to bank 1410.4",
+      "start": 17563,
+      "end": 18015
+    },
+    {
+      "label": "River crossing 17 wait for boarding",
+      "start": 18039,
+      "end": 18459
+    },
+    {
+      "label": "River crossing 17 board 0",
+      "start": 18486,
+      "end": 18523
+    },
+    {
+      "label": "River crossing 17 ride to exit",
+      "start": 18559,
+      "end": 18774
+    },
+    {
+      "label": "River crossing 17 jump to fixed landing",
+      "start": 18801,
+      "end": 18861
+    },
+    {
+      "label": "Walk to bank 1462.4",
+      "start": 18861,
+      "end": 19032
+    },
+    {
+      "label": "River crossing 18 wait for boarding",
+      "start": 19056,
+      "end": 19056
+    },
+    {
+      "label": "River crossing 18 board 0",
+      "start": 19083,
+      "end": 19142
+    },
+    {
+      "label": "River crossing 18 walk to lift edge",
+      "start": 19178,
+      "end": 19305
+    },
+    {
+      "label": "River crossing 18 wait for boarding",
+      "start": 19323,
+      "end": 19462
+    },
+    {
+      "label": "River crossing 18 board 1",
+      "start": 19489,
+      "end": 19550
+    },
+    {
+      "label": "River crossing 18 ride to exit",
+      "start": 19586,
+      "end": 19708
+    },
+    {
+      "label": "River crossing 18 jump to fixed landing",
+      "start": 19735,
+      "end": 19798
+    },
+    {
+      "label": "Walk to bank 1538.4",
+      "start": 19798,
+      "end": 20142
+    },
+    {
+      "label": "River crossing 19 wait for boarding",
+      "start": 20166,
+      "end": 20413
+    },
+    {
+      "label": "River crossing 19 board 0",
+      "start": 20440,
+      "end": 20479
+    },
+    {
+      "label": "River crossing 19 ride to exit",
+      "start": 20515,
+      "end": 20728
+    },
+    {
+      "label": "River crossing 19 jump to fixed landing",
+      "start": 20755,
+      "end": 20817
+    },
+    {
+      "label": "Walk to bank 1602.4",
+      "start": 20817,
+      "end": 21058
+    },
+    {
+      "label": "River crossing 20 wait for boarding",
+      "start": 21082,
+      "end": 21121
+    },
+    {
+      "label": "River crossing 20 board 0",
+      "start": 21148,
+      "end": 21213
+    },
+    {
+      "label": "River crossing 20 ride to exit",
+      "start": 21249,
+      "end": 21565
+    },
+    {
+      "label": "River crossing 20 jump to fixed landing",
+      "start": 21592,
+      "end": 21656
+    },
+    {
+      "label": "Walk to bank 1688.4",
+      "start": 21656,
+      "end": 22079
+    },
+    {
+      "label": "River crossing 21 wait for boarding",
+      "start": 22103,
+      "end": 22363
+    },
+    {
+      "label": "River crossing 21 board 0",
+      "start": 22390,
+      "end": 22429
+    },
+    {
+      "label": "River crossing 21 ride to exit",
+      "start": 22465,
+      "end": 22678
+    },
+    {
+      "label": "River crossing 21 jump to fixed landing",
+      "start": 22705,
+      "end": 22767
+    },
+    {
+      "label": "Walk to bank 1752.4",
+      "start": 22767,
+      "end": 23008
+    },
+    {
+      "label": "River crossing 22 wait for boarding",
+      "start": 23032,
+      "end": 23032
+    },
+    {
+      "label": "River crossing 22 board 0",
+      "start": 23059,
+      "end": 23098
+    },
+    {
+      "label": "River crossing 22 ride to exit",
+      "start": 23134,
+      "end": 23329
+    },
+    {
+      "label": "River crossing 22 jump to fixed landing",
+      "start": 23356,
+      "end": 23418
+    },
+    {
+      "label": "Walk to bank 1822.4",
+      "start": 23418,
+      "end": 23718
+    },
+    {
+      "label": "River crossing 23 wait for boarding",
+      "start": 23742,
+      "end": 23742
+    },
+    {
+      "label": "River crossing 23 board 0",
+      "start": 23769,
+      "end": 23832
+    },
+    {
+      "label": "River crossing 23 walk to lift edge",
+      "start": 23868,
+      "end": 23995
+    },
+    {
+      "label": "River crossing 23 wait for boarding",
+      "start": 24013,
+      "end": 24013
+    },
+    {
+      "label": "River crossing 23 board 1",
+      "start": 24040,
+      "end": 24102
+    },
+    {
+      "label": "River crossing 23 ride to exit",
+      "start": 24138,
+      "end": 24256
+    },
+    {
+      "label": "River crossing 23 jump to fixed landing",
+      "start": 24283,
+      "end": 24345
+    },
+    {
+      "label": "Walk to bank 1886.4",
+      "start": 24345,
+      "end": 24591
+    },
+    {
+      "label": "River crossing 24 wait for boarding",
+      "start": 24615,
+      "end": 24971
+    },
+    {
+      "label": "River crossing 24 board 0",
+      "start": 24998,
+      "end": 25060
+    },
+    {
+      "label": "River crossing 24 ride to exit",
+      "start": 25096,
+      "end": 25279
+    },
+    {
+      "label": "River crossing 24 jump to fixed landing",
+      "start": 25306,
+      "end": 25368
+    },
+    {
+      "label": "Walk to bank 1948.4",
+      "start": 25368,
+      "end": 25595
+    },
+    {
+      "label": "River crossing 25 wait for boarding",
+      "start": 25619,
+      "end": 26245
+    },
+    {
+      "label": "River crossing 25 board 0",
+      "start": 26272,
+      "end": 26334
+    },
+    {
+      "label": "River crossing 25 ride to exit",
+      "start": 26370,
+      "end": 26609
+    },
+    {
+      "label": "River crossing 25 jump to fixed landing",
+      "start": 26636,
+      "end": 26698
+    },
+    {
+      "label": "Walk to bank 2028.4",
+      "start": 26698,
+      "end": 27065
+    },
+    {
+      "label": "River crossing 26 wait for boarding",
+      "start": 27089,
+      "end": 27563
+    },
+    {
+      "label": "River crossing 26 board 0",
+      "start": 27590,
+      "end": 27628
+    },
+    {
+      "label": "River crossing 26 ride to exit",
+      "start": 27664,
+      "end": 27878
+    },
+    {
+      "label": "River crossing 26 jump to fixed landing",
+      "start": 27905,
+      "end": 27965
+    },
+    {
+      "label": "Walk to bank 2090.4",
+      "start": 27965,
+      "end": 28192
+    },
+    {
+      "label": "River crossing 27 wait for boarding",
+      "start": 28216,
+      "end": 28216
+    },
+    {
+      "label": "River crossing 27 board 0",
+      "start": 28243,
+      "end": 28280
+    },
+    {
+      "label": "River crossing 27 ride to exit",
+      "start": 28316,
+      "end": 28528
+    },
+    {
+      "label": "River crossing 27 jump to fixed landing",
+      "start": 28555,
+      "end": 28616
+    },
+    {
+      "label": "Walk to bank 2152.4",
+      "start": 28616,
+      "end": 28858
+    },
+    {
+      "label": "River crossing 28 wait for boarding",
+      "start": 28882,
+      "end": 28882
+    },
+    {
+      "label": "River crossing 28 board 0",
+      "start": 28909,
+      "end": 28972
+    },
+    {
+      "label": "River crossing 28 walk to lift edge",
+      "start": 29008,
+      "end": 29135
+    },
+    {
+      "label": "River crossing 28 wait for boarding",
+      "start": 29153,
+      "end": 29153
+    },
+    {
+      "label": "River crossing 28 board 1",
+      "start": 29180,
+      "end": 29247
+    },
+    {
+      "label": "River crossing 28 ride to exit",
+      "start": 29283,
+      "end": 29408
+    },
+    {
+      "label": "River crossing 28 jump to fixed landing",
+      "start": 29435,
+      "end": 29499
+    },
+    {
+      "label": "Walk to bank 2236.4",
+      "start": 29499,
+      "end": 29884
+    },
+    {
+      "label": "River crossing 29 wait for boarding",
+      "start": 29908,
+      "end": 30163
+    },
+    {
+      "label": "River crossing 29 board 0",
+      "start": 30190,
+      "end": 30229
+    },
+    {
+      "label": "River crossing 29 ride to exit",
+      "start": 30265,
+      "end": 30478
+    },
+    {
+      "label": "River crossing 29 jump to fixed landing",
+      "start": 30505,
+      "end": 30567
+    },
+    {
+      "label": "Walk to bank 2292",
+      "start": 30567,
+      "end": 30749
+    },
+    {
+      "label": "Finish gate",
+      "start": 30773,
+      "end": 30906
+    }
+  ],
+  "counts": {
+    "movers": 35,
+    "crabs": 34,
+    "fireHeads": 8,
+    "components": 2263
+  },
+  "geometry": {
+    "supportProbes": 1479,
+    "maxHeightError": 0.03738955750210149,
+    "openGaps": 29,
+    "headingProbes": 580,
+    "minHeadingDot": 0.9998720957904964,
+    "crateSeats": [
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -1.961181640625,
+          0,
+          -35.2568359375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          5.9326171875,
+          0,
+          -39.61083984375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -19.474365234375,
+          0,
+          -154.638671875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -15.87060546875,
+          0,
+          -162.898681640625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -75.564208984375,
+          0,
+          -230.569580078125
+        ],
+        "runtimeY": 0,
+        "supportY": 1.3877787807814457e-17
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -73.18701171875,
+          0,
+          -239.261962890625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -120.72216796875,
+          0,
+          -292.884521484375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -114.60205078125,
+          0,
+          -299.527099609375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -117.882568359375,
+          0,
+          -371.12744140625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -109.166015625,
+          0,
+          -373.4150390625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -41.8037109375,
+          -0.497314453125,
+          -432.662109375
+        ],
+        "runtimeY": -0.4973170459557128,
+        "supportY": -0.4973170459557136
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          -35.082763671875,
+          -0.66259765625,
+          -426.6552734375
+        ],
+        "runtimeY": -0.6626946888391405,
+        "supportY": -0.6626946888391407
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          53.96337890625,
+          -2.60009765625,
+          -433.482666015625
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          56.755859375,
+          -2.60009765625,
+          -424.911865234375
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          123.485595703125,
+          -2.60009765625,
+          -403.124755859375
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          123.64599609375,
+          -2.60009765625,
+          -394.1123046875
+        ],
+        "runtimeY": -2.60009765625,
+        "supportY": -2.60009765625
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          173.066162109375,
+          -2.2099609375,
+          -347.21728515625
+        ],
+        "runtimeY": -2.2099614920326047,
+        "supportY": -2.2099614920326056
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          168.285888671875,
+          -2.038330078125,
+          -339.573486328125
+        ],
+        "runtimeY": -2.0382706649499633,
+        "supportY": -2.0382706649499633
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          207.537109375,
+          0,
+          -279.262451171875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          206.509765625,
+          0,
+          -270.316162109375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          279.78857421875,
+          0,
+          -275.8779296875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          287.33056640625,
+          0,
+          -270.94580078125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          331.4775390625,
+          0,
+          -345.95068359375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          340.052490234375,
+          0,
+          -348.725830078125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          339.203125,
+          0.0009765625,
+          -440.404052734375
+        ],
+        "runtimeY": 0.000976670483083808,
+        "supportY": 0.0009766704830835998
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          346.00048828125,
+          0.030517578125,
+          -446.322509765625
+        ],
+        "runtimeY": 0.030572138359264756,
+        "supportY": 0.030572138359264728
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          320.290283203125,
+          2.26416015625,
+          -512.62158203125
+        ],
+        "runtimeY": 2.264079990306925,
+        "supportY": 2.2640799903069246
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          325.0947265625,
+          2.346435546875,
+          -520.24755859375
+        ],
+        "runtimeY": 2.3464136677251393,
+        "supportY": 2.3464136677251397
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          284.742919921875,
+          1.33056640625,
+          -563.235595703125
+        ],
+        "runtimeY": 1.3305670147480226,
+        "supportY": 1.3305670147480229
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          234.03955078125,
+          0,
+          -599.15771484375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          165.958740234375,
+          0,
+          -635.3486328125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          163.633056640625,
+          0,
+          -644.0546875
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          97.766845703125,
+          2.6396484375,
+          -660.64306640625
+        ],
+        "runtimeY": 2.639643290536778,
+        "supportY": 2.6396432905367777
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          66.428466796875,
+          4.800048828125,
+          -717.88916015625
+        ],
+        "runtimeY": 4.800048828125,
+        "supportY": 4.800048828125
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          72.842041015625,
+          4.800048828125,
+          -724.2236328125
+        ],
+        "runtimeY": 4.800048828125,
+        "supportY": 4.800048828125
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          66.293212890625,
+          4.26904296875,
+          -790.017333984375
+        ],
+        "runtimeY": 4.269040033911432,
+        "supportY": 4.269040033911433
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          107.760009765625,
+          -1,
+          -852.602783203125
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          116.475341796875,
+          -1,
+          -850.300048828125
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          171.603271484375,
+          -1,
+          -895.35498046875
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          238.465087890625,
+          -1,
+          -907.32763671875
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          242.940185546875,
+          -1,
+          -899.50146484375
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          304.849853515625,
+          -1,
+          -903.13525390625
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          357.74462890625,
+          -1,
+          -928.462646484375
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          396.177001953125,
+          -1,
+          -984.817138671875
+        ],
+        "runtimeY": -1,
+        "supportY": -1
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          405.051025390625,
+          -0.999267578125,
+          -986.39306640625
+        ],
+        "runtimeY": -0.9992719692932983,
+        "supportY": -0.9992719692932978
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          411.991455078125,
+          0.8671875,
+          -1053.0791015625
+        ],
+        "runtimeY": 0.867042228487355,
+        "supportY": 0.8670422284873555
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          406.47119140625,
+          2.270751953125,
+          -1113.614990234375
+        ],
+        "runtimeY": 2.2705766026678535,
+        "supportY": 2.2705766026678535
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          372.967041015625,
+          0,
+          -1174.472412109375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          374.162353515625,
+          0,
+          -1183.4033203125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          299.277587890625,
+          0,
+          -1225.10302734375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Bush-corridor supplies",
+        "p": [
+          299.513916015625,
+          0,
+          -1234.113037109375
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          7.1064453125,
+          0,
+          -47.547119140625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          -49.080322265625,
+          -0.222412109375,
+          -422.138916015625
+        ],
+        "runtimeY": -0.22247329287081818,
+        "supportY": -0.2224732928708183
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          340.26708984375,
+          0,
+          -347.61376953125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          180.059814453125,
+          0,
+          -638.48486328125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          101.24462890625,
+          -0.9521484375,
+          -835.01611328125
+        ],
+        "runtimeY": -0.9521498585277985,
+        "supportY": -0.9521498585277983
+      },
+      {
+        "name": "Mask before the next moving-platform stretch",
+        "p": [
+          384.28955078125,
+          0.029296875,
+          -1174.67529296875
+        ],
+        "runtimeY": 0.02944502714542452,
+        "supportY": 0.029445027145424338
+      }
+    ],
+    "checkpoints": 9,
+    "authoredRails": 0,
+    "surfaceEdges": 1618
+  },
+  "costumeTriangles": 276,
+  "result": {
+    "frame": 30906,
+    "s": 2308.4811846040925,
+    "position": [
+      297.1609984637783,
+      0.7266666691501933,
+      -1231.6585041997544
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "seconds": 515.1,
+    "checkpoints": 9,
+    "crystal": true
+  },
+  "maxFrameTravel": 0.7419883409150482,
+  "pass": true
+}

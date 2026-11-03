@@ -1,0 +1,138 @@
+{
+  "mode": "PASS",
+  "stage": "River crossing 5 jump to fixed landing",
+  "seconds": 96.91666666666667,
+  "rides": 6,
+  "resolution": 720,
+  "position": [
+    -78.63,
+    0,
+    -413.7
+  ],
+  "state": "ride",
+  "grounded": true,
+  "deaths": 0,
+  "checkpoints": 1,
+  "enemies": 34,
+  "enemyArt": [
+    {
+      "kind": "grunt",
+      "status": "ready",
+      "url": "/enemies/grunt.glb",
+      "appearance": "tribal",
+      "clips": [
+        "Meshy Quadruped Walk"
+      ],
+      "activeClip": "Meshy Quadruped Walk",
+      "mappedNodes": {
+        "torso": "torso",
+        "head": "head",
+        "pincerUpperLeft": "pincerUpperLeft",
+        "pincerUpperRight": "pincerUpperRight",
+        "pincerLowerLeft": "pincerLowerLeft",
+        "pincerLowerRight": "pincerLowerRight",
+        "pincerLeft": "pincerLeft",
+        "pincerRight": "pincerRight",
+        "frontUpperLeft": "frontUpperLeft",
+        "frontUpperRight": "frontUpperRight",
+        "frontLowerLeft": "frontLowerLeft",
+        "frontLowerRight": "frontLowerRight",
+        "frontFootLeft": "frontFootLeft",
+        "frontFootRight": "frontFootRight",
+        "hindUpperLeft": "hindUpperLeft",
+        "hindUpperRight": "hindUpperRight",
+        "hindLowerLeft": "hindLowerLeft",
+        "hindLowerRight": "hindLowerRight",
+        "hindFootLeft": "hindFootLeft",
+        "hindFootRight": "hindFootRight",
+        "motionRoot": "enemyRoot"
+      },
+      "skinnedMeshes": 1,
+      "meshes": 4,
+      "animationTime": 0.0764463022355436,
+      "gaitPhase": 0.0764463022355435,
+      "state": "patrol",
+      "carcass": {
+        "url": "/enemies/crab-stomped.glb",
+        "status": "ready"
+      },
+      "playbackRate": 2.15,
+      "gaitHz": 2.15,
+      "plantedFeet": {
+        "frontLeft": false,
+        "frontRight": true,
+        "hindLeft": false,
+        "hindRight": true
+      }
+    },
+    {
+      "kind": "grunt",
+      "status": "ready",
+      "url": "/enemies/grunt.glb",
+      "appearance": "tribal",
+      "clips": [
+        "Meshy Quadruped Walk"
+      ],
+      "activeClip": "Meshy Quadruped Walk",
+      "mappedNodes": {
+        "torso": "torso",
+        "head": "head",
+        "pincerUpperLeft": "pincerUpperLeft",
+        "pincerUpperRight": "pincerUpperRight",
+        "pincerLowerLeft": "pincerLowerLeft",
+        "pincerLowerRight": "pincerLowerRight",
+        "pincerLeft": "pincerLeft",
+        "pincerRight": "pincerRight",
+        "frontUpperLeft": "frontUpperLeft",
+        "frontUpperRight": "frontUpperRight",
+        "frontLowerLeft": "frontLowerLeft",
+        "frontLowerRight": "frontLowerRight",
+        "frontFootLeft": "frontFootLeft",
+        "frontFootRight": "frontFootRight",
+        "hindUpperLeft": "hindUpperLeft",
+        "hindUpperRight": "hindUpperRight",
+        "hindLowerLeft": "hindLowerLeft",
+        "hindLowerRight": "hindLowerRight",
+        "hindFootLeft": "hindFootLeft",
+        "hindFootRight": "hindFootRight",
+        "motionRoot": "enemyRoot"
+      },
+      "skinnedMeshes": 1,
+      "meshes": 4,
+      "animationTime": 0.09112797583931853,
+      "gaitPhase": 0.09112797583931842,
+      "state": "patrol",
+      "carcass": {
+        "url": "/enemies/crab-stomped.glb",
+        "status": "ready"
+      },
+      "playbackRate": 2.15,
+      "gaitHz": 2.15,
+      "plantedFeet": {
+        "frontLeft": false,
+        "frontRight": true,
+        "hindLeft": false,
+        "hindRight": true
+      }
+    }
+  ],
+  "assets": [],
+  "results": [
+    {
+      "pass": true,
+      "frame": 5815,
+      "s": 466.8273126042311,
+      "position": [
+        -78.81311956020046,
+        0,
+        -413.5257345329311
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "seconds": 96.91666666666667,
+      "checkpoints": 1,
+      "crystal": false
+    }
+  ]
+}
