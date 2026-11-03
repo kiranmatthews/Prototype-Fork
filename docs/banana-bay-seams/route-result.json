@@ -1,0 +1,14 @@
+{
+  "state": "finished",
+  "frames": 13743,
+  "seconds": 229.04999999999998,
+  "deaths": 0,
+  "cratesBroken": 98,
+  "enemiesDefeated": 14,
+  "position": [
+    -0.0479170879294289,
+    1.7766666691501933,
+    -1379.5302190093353
+  ],
+  "completionScope": "continuous main-route traversal; optional cargo separately validated"
+}

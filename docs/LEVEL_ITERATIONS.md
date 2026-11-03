@@ -8330,3 +8330,23 @@ the boulder fall at MAX/native 3024 × 1724. Required level checks, production
 build and release-size check pass; no full suite ran. Release: 805,685,438 bytes.
 
 Evidence and reusable local review controls: [Chasm iteration](ripcord-chasm/README.md).
+
+## 2026-11-04 — Banana Bay shoreline and join seams
+
+Remove the water folds and exposed far-sea reflection where the original beach
+joins Island Hopper. Use a fixed-column ocean grid, follow the actual fine sand
+contour, clip zero-overlap foam off dry ground, and reveal the real seabed
+through transparent shallows. Weld a rounded submerged cap onto the beach end.
+Preserve all original sand positions, scenery, distant islands and gameplay.
+
+Prompt to browser-validated playable: approximately **42 minutes**
+(13:14–13:56 UTC). The old join had 6,506 reversed triangles and 1,306 overlapping
+probe locations. The corrected grid has none across 16,371 coverage probes and
+uses 173,680 detailed-water triangles, down from 263,168. Dry-sand, animated
+shoreline and rotated editor-copy checks pass. The complete native route
+finishes in 229.05 seconds with zero deaths. Chrome MAX/native, normal and lite
+reviews verify the shoreline, join, checkpoint, deliberate fall/recovery and
+finish. Ocean/Treehouse regressions, required level checks, production build
+and release-size check pass; no full suite ran. Release: 805,689,721 bytes.
+
+Before/after images and reusable review controls: [Shoreline iteration](banana-bay-seams/README.md).

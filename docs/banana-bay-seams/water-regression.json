@@ -1,0 +1,22 @@
+[
+  {
+    "label": "full native",
+    "triangles": 173680,
+    "joinProbes": 5457,
+    "folds": 0,
+    "drySandProbes": 704,
+    "dryWaveProbes": 1200
+  },
+  {
+    "label": "full editor copy",
+    "triangles": 173680,
+    "joinProbes": 5457,
+    "folds": 0
+  },
+  {
+    "label": "lite editor copy",
+    "triangles": 38986,
+    "joinProbes": 5457,
+    "folds": 0
+  }
+]

@@ -1,0 +1,34 @@
+// Local-only visual fixtures over the real level, ocean and game renderer.
+import * as THREE from 'three';
+import {beachfrontPointAtDistance as point,beachfrontSandHeight as sand} from '../src/beachfrontCourse.ts';
+const panel=document.createElement('section');panel.style.cssText='position:fixed;z-index:2147483646;left:10px;top:10px;padding:8px;background:#10292de8;color:white;font:12px monospace;max-width:870px';
+const buttons=document.createElement('div'),status=document.createElement('pre');status.id='bay-review-status';status.style.cssText='white-space:pre-wrap;max-height:90px;overflow:auto';panel.append(buttons,status);document.body.append(panel);
+const g=await new Promise(resolve=>{const check=()=>{const g=window.__game;if(g&&!g.gameFlow.blocksGameplay)resolve(g);else{status.textContent='Loading the playable level';requestAnimationFrame(check);}};check();});
+const l=g.getLevel(),p=g.player,water=l.water;
+const playerStep=p.step.bind(p);
+p.step=()=>{};status.textContent='Preparing native scenery';await l.prepareJungleAssets();
+let eye=null,target=null,viewName='join';
+const render=g.renderer.render.bind(g.renderer),view=l.updateSceneryView.bind(l),update=water.update.bind(water);
+function camera(){if(!eye)return;g.camera.position.fromArray(eye);g.camera.up.set(0,1,0);g.camera.fov=58;g.camera.lookAt(new THREE.Vector3(...target));g.camera.updateProjectionMatrix();g.camera.updateMatrixWorld(true);}
+l.updateSceneryView=(c,...args)=>{camera();view(c,...args);};
+water.update=(dt,c)=>{camera();update(dt,c);};
+g.renderer.render=(scene,c)=>{if(scene===g.scene&&c===g.camera){camera();view(c);}render(scene,c);};
+const shot=(name,e,t)=>{viewName=name;eye=e;target=t;};
+const button=(label,fn)=>{const b=document.createElement('button');b.textContent=label;b.style.margin='3px';b.onclick=fn;buttons.append(b);};
+for(const [label,d]of [['Opening shore',70],['Cove shore',290],['Late shore',660]])button(label,()=>{const q=point(d,-12);shot(label,[-q[0]+12,4,q[2]+16],[-q[0]-3,-.2,q[2]-12]);});
+button('Join overview',()=>shot('Join overview',[55,20,-693],[-9,-.3,-756]));
+button('Join low',()=>shot('Join low',[21,4.5,-722],[-3,-.36,-781]));
+button('Join reverse',()=>shot('Join reverse',[19,6,-799],[0,-.36,-722]));
+button('Lagoon shore',()=>shot('Lagoon shore',[48,6,-864],[8,-.36,-866]));
+button('Finale shore',()=>shot('Finale shore',[50,10,-1160],[0,-.36,-1210]));
+button('Native MAX',()=>{g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
+button('Normal presentation',()=>{g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});
+button('Freeze waves',()=>water.debug.freeze=!water.debug.freeze);
+const playAt=(name,position)=>{viewName=name;eye=null;target=null;p.step=playerStep;
+ p.respawn(l,true,false,position?{position:new THREE.Vector3(...position),heading:new THREE.Vector3(0,0,-1)}:undefined);};
+button('Play spawn',()=>playAt('Play spawn'));
+button('Play join',()=>{const q=point(710,0);playAt('Play join',[-q[0],q[1]+.4,q[2]]);});
+button('Play finish',()=>playAt('Play finish',[0,1.25,-1367]));
+button('Hide controls',()=>panel.style.opacity=panel.style.opacity==='0'?'1':'0');
+shot('Join overview',[55,20,-693],[-9,-.3,-756]);
+setInterval(()=>{status.textContent=JSON.stringify({ready:true,view:viewName,quality:water.quality,resolution:g.renderQualitySettings.regularResolution,buffer:[g.renderer.domElement.width,g.renderer.domElement.height],player:{p:p.pos.toArray(),state:p.state,grounded:p.grounded,deaths:p.totalDeaths,checkpoint:l.currentSpawn.toArray()},water:water.stats,assets:l.jungleAssetDiagnostics?.errors??[],stamp:document.querySelector('.hud-build')?.textContent});},500);

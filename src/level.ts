@@ -182,6 +182,7 @@ import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
+import { bananaBayWaterShore, extendBananaBayBeachSand, BANANA_BAY_OCEAN_WIDTH } from './levels/banana-bay-water';
 import { WATERPARK_ISLAND_OCEAN_LOOK } from './levels/slipstream-island';
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
@@ -1241,6 +1242,10 @@ export interface CustomOceanData {
   horizonOffset?: number;
   /** Limit the far sea to the authored coast when inland terrain lies below it. */
   horizonMode?: "surround" | "shoreline";
+  /** Local XZ extrusion for a continuous ocean along a wide concave shoreline. */
+  ribbonDirection?: [number, number];
+  /** Detail interval projected onto ribbonDirection in local XZ coordinates. */
+  ribbonFocus?: [number, number];
   /** Optional playable water extent in world XZ: minX, minZ, maxX, maxZ. */
   swimBounds?: [number, number, number, number];
   /** Version 2 uses the editor's world Three positions and positive-Y yaw. */
@@ -3024,11 +3029,13 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     if (
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
-        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode", "look", "shoreGeometry", "horizonOffset"])) ||
+        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds", "horizonMode", "look", "shoreGeometry", "horizonOffset", "ribbonDirection", "ribbonFocus"])) ||
       (ocean.look !== undefined && ocean.look !== "pirate-harbour" && ocean.look !== 'sunny-beach' && ocean.look !== 'waterpark-island') ||
       (ocean.shoreGeometry !== undefined && ocean.shoreGeometry !== "ground") ||
       (ocean.horizonOffset !== undefined && (!Number.isFinite(ocean.horizonOffset) || ocean.horizonOffset < 0 || ocean.horizonOffset > MAX_ABS || ocean.horizonMode !== "shoreline")) ||
       (ocean.horizonMode !== undefined && ocean.horizonMode !== "surround" && ocean.horizonMode !== "shoreline") ||
+      (ocean.ribbonDirection !== undefined && (!finiteTuple(ocean.ribbonDirection,2) || Math.hypot(...ocean.ribbonDirection)<1e-6 || ocean.ribbonDirection.some(n=>Math.abs(n)>MAX_ABS))) ||
+      (ocean.ribbonFocus !== undefined && (!ocean.ribbonDirection || !finiteTuple(ocean.ribbonFocus,2) || ocean.ribbonFocus[0]>=ocean.ribbonFocus[1] || ocean.ribbonFocus.some(n=>Math.abs(n)>MAX_ABS))) ||
       (ocean.swimBounds !== undefined && (!finiteTuple(ocean.swimBounds, 4) ||
         ocean.swimBounds.some((n) => Math.abs(n) > MAX_ABS) ||
         ocean.swimBounds[0] >= ocean.swimBounds[2] || ocean.swimBounds[1] >= ocean.swimBounds[3])) ||
@@ -7635,6 +7642,11 @@ export class Level {
         extendUnityTails: spec.extendTails,
         horizonMode: spec.horizonMode,
         horizonOffset: spec.horizonOffset,
+        ribbonDirection: spec.ribbonDirection && [spec.ribbonDirection[0]*cosine+spec.ribbonDirection[1]*sine,
+          -spec.ribbonDirection[0]*sine+spec.ribbonDirection[1]*cosine],
+        ribbonFocus: spec.ribbonFocus && spec.ribbonDirection && spec.ribbonFocus.map(n=>n+
+          (spec.p[0]*(spec.ribbonDirection![0]*cosine+spec.ribbonDirection![1]*sine)+
+           spec.p[2]*(-spec.ribbonDirection![0]*sine+spec.ribbonDirection![1]*cosine))/Math.hypot(...spec.ribbonDirection!)) as [number,number] | undefined,
         // This deep harbour needs a bounded refraction capture at native 4K;
         // the primary scene and planar reflection retain their own resolution.
         prepassMaxHeight: spec.look === "pirate-harbour" ? 1080 : undefined,
@@ -11859,6 +11871,8 @@ export class Level {
     };
 
     const reference = createUnityBeachfrontReference({ mirrorX: true, cliffs: false });
+    const shore = bananaBayWaterShore(reference.sand.geometry,SUNNY_BEACH_END_Z);
+    extendBananaBayBeachSand(reference.sand.geometry);
     this.beachfrontReferenceDispose = reference.dispose;
     this.root.add(reference.group);
     reference.sand.userData.edgeGrinding = false;
@@ -11885,16 +11899,10 @@ export class Level {
 
     // Ease the water's landward edge behind the new archipelago, keeping one
     // continuous ocean rather than overlapping two independently rendered seas.
-    const shore = [...reference.shore];
-    const last = shore[shore.length-1];
-    for(let i=1;i<=40;i++) {
-      const t=i/40,e=t*t*(3-2*t);
-      shore.push({x:THREE.MathUtils.lerp(last.x,-106,e),z:last.z-90*t,sx:1,sz:0,beachSlope:0,bedSlope:0});
-    }
-    for(let z=last.z-92;z>=SUNNY_BEACH_END_Z-90;z-=4)shore.push({x:-106,z,sx:1,sz:0,beachSlope:0,bedSlope:0});
     const firstShore = shore[0];
     this.rememberSourceOcean(shore, -0.36, "unity");
-    if(this.capturedOceanSpec){this.capturedOceanSpec.width=300;this.capturedOceanSpec.shoreGeometry='ground';this.capturedOceanSpec.look='sunny-beach';}
+    if(this.capturedOceanSpec)Object.assign(this.capturedOceanSpec,{width:BANANA_BAY_OCEAN_WIDTH,overlap:0,
+      ribbonDirection:[1,0],ribbonFocus:[-80,80],shoreGeometry:'ground',look:'sunny-beach'});
     this.water = new CoastWater({
       shore,
       seaLevel: -0.36,
@@ -11904,7 +11912,10 @@ export class Level {
       terrainHeight: () => -0.36,
       extendUnityTails: true,
       sourceCoordinates: "unity",
-      oceanWidth:300,
+      oceanWidth:BANANA_BAY_OCEAN_WIDTH,
+      shoreOverlap:0,
+      ribbonDirection:[1,0],
+      ribbonFocus:[-80,80],
     });
     // Bright, gently rippled lagoon: keep the literal wave simulation and
     // shoreline depth response, with less mirror glare obscuring the islands.

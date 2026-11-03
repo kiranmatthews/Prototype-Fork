@@ -67,6 +67,10 @@ export interface CoastWaterOpts {
   shoreSampleMetres?: number;
   /** Across-water subdivisions; source quality uses 128. */
   lateralSegments?: number;
+  /** Fixed world-XZ extrusion for wide concave coasts whose normal offsets fold. */
+  ribbonDirection?: readonly [number, number];
+  /** Fixed projected-XZ interval retaining 2m cells; outer cells grow offshore. */
+  ribbonFocus?: readonly [number, number];
 }
 
 export type OceanQuality = "full" | "lite";
@@ -273,6 +277,7 @@ interface WaveEvaluation {
 }
 
 const OCEAN_VERTEX = /* glsl */ `
+uniform float uLandRunup;
 attribute float aShoreDistance;
 attribute float aOceanAlong;
 attribute vec4 aOceanTangent;
@@ -323,7 +328,7 @@ void main() {
   float wetFront = coast.x + surfRunup(baseWorld.xz, uTime);
   float beachSlope = abs(coast.w) / max(abs(coast.x), 0.25);
   float film = smoothstep(-0.15, 0.15, wetFront) * (1.0 - smoothstep(0.5, 0.8, beachSlope));
-  if (coast.x < 0.0) world.y += max(-coast.w + 0.028, 0.0) * film;
+  if (coast.x < 0.0) world.y += max(-coast.w + 0.028, 0.0) * film * uLandRunup;
   // Meshes are authored at sea level. Keep the uniform in the interface for
   // reflection/depth consumers and protect against transformed authoring.
   world.y += uSeaLevel - (modelMatrix * vec4(0.0, uSeaLevel, 0.0, 1.0)).y;
@@ -348,6 +353,7 @@ void main() {
 `;
 
 const OCEAN_FRAGMENT = /* glsl */ `
+uniform float uLandRunup;
 uniform float uOceanWidth;
 uniform float uHasHorizonSky;
 uniform sampler2D uNormalMap;
@@ -713,6 +719,9 @@ void main() {
     * smoothstep(0.57, 0.78, laceNoise) * smoothstep(8.0, 24.0, pixelCoast.x) * 0.28;
   finalColor = mix(finalColor, uIntersection.rgb, max(surfMask, whitecap) * uIntersection.a);
   shoreAlpha = max(shoreAlpha, surfMask * 0.88);
+  // A zero-overlap coast deliberately excludes landward water. Clip foam
+  // against the real bed too, so broad endcap cells cannot flash on dry sand.
+  shoreAlpha *= mix(smoothstep(0.0, 0.06, pixelCoast.w), 1.0, uLandRunup);
 
   // Main-light shadow attenuation, with Unity's authored translucent black
   // overlay. Three supplies the live directional shadow map to this material.
@@ -771,6 +780,9 @@ void main() {
 `;
 
 const HORIZON_FRAGMENT = /* glsl */ `
+uniform sampler2D uCoastMap;
+uniform vec4 uCoastBounds;
+uniform float uHasCoastMap;
 uniform vec3 uNearColor;
 uniform vec3 uFarFogColor;
 uniform float uTime;
@@ -799,6 +811,14 @@ void main() {
   float travel = (uSeaLevel - vSeaOrigin.y) / ray.y;
   if (travel <= 0.0) discard;
   vec3 world = vSeaOrigin + ray * travel;
+  // The far-sea fill must not paint an opaque mirror over the shallow seabed
+  // revealed by the main water's transparent shore. Share its real bed field.
+  float bedAlpha = 1.0;
+  vec2 coastUv = (world.xz - uCoastBounds.xy) / uCoastBounds.zw;
+  if (uHasCoastMap > 0.5 && all(greaterThanEqual(coastUv, vec2(0.0)))
+      && all(lessThanEqual(coastUv, vec2(1.0)))) {
+    bedAlpha = smoothstep(0.03, 0.12, texture2D(uCoastMap, coastUv).w);
+  }
   vec4 view = viewMatrix * vec4(world, 1.0);
   vec4 clip = uHorizonProjection * view;
   // The plane can reach beyond the geometry draw distance. Keep correct depth
@@ -839,7 +859,7 @@ void main() {
     float fogFactor = clamp((viewDepth - fogNear) / max(fogFar - fogNear, 0.000001), 0.0, 1.0);
     if (uHasHorizonSky < 0.5 || uFogWithSky > 0.5) color = mix(color, fogColor, fogFactor);
   #endif
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color, bedAlpha);
   #include <colorspace_fragment>
 }
 `;
@@ -1127,6 +1147,54 @@ function makeRibbonGeometry(
   return geometry;
 }
 
+/** Fixed columns prevent a wide headland turn from shearing whole rows across
+ * the beach. Only its clipped boundary moves; interior cells remain aligned. */
+function makeParallelRibbonGeometry(
+  shore: DenseShoreSample[], seaLevel: number, direction: readonly number[],
+  focus: readonly number[], oceanWidth: number, spacing: number, tangentW: number,
+): THREE.BufferGeometry {
+  const [sx,sz]=direction;
+  const lateral=shore.map(p=>p.x*sx+p.z*sz);
+  const min=Math.min(...lateral),max=Math.max(...lateral)+oceanWidth;
+  const focusMin=THREE.MathUtils.clamp(focus[0],min,max),focusMax=THREE.MathUtils.clamp(focus[1],min,max);
+  const columns:number[]=[];
+  let step=spacing;
+  for(let x=focusMin-step;x>min;x-=step){columns.unshift(x);step*=1.35;}
+  for(let x=focusMin;x<=focusMax&&x<max;x+=spacing)columns.push(x);
+  step=spacing;
+  for(let x=focusMax+step;x<max;x+=step){columns.push(x);step*=1.35;}
+  columns.push(max);
+  const positions:number[]=[],distances:number[]=[],along:number[]=[],tangents:number[]=[],indices:number[]=[];
+  let previous:{x:number;index:number}[]=[];
+  for(let row=0;row<shore.length;row++){
+    const s=shore[row],start=lateral[row],current:{x:number;index:number}[]=[];
+    for(const x of [start,...columns.filter(x=>x>start+1e-5)]){
+      const d=x-start,index=distances.length;
+      positions.push(s.x+sx*d,seaLevel+RIBBON_Y_OFFSET,s.z+sz*d);
+      distances.push(d);along.push(row/(shore.length-1));tangents.push(-sx,0,-sz,tangentW);
+      current.push({x,index});
+    }
+    // Zipper the two clipped rows. Interior columns coincide, so triangles
+    // stay small at every actual shore, including the end of the headland.
+    let a=0,b=0;
+    const triangle=(x:number,y:number,z:number)=>tangentW>0?indices.push(x,z,y):indices.push(x,y,z);
+    while(previous.length&&(a<previous.length-1||b<current.length-1)){
+      if(b===current.length-1||(a<previous.length-1&&previous[a+1].x<=current[b+1].x)){
+        triangle(previous[a].index,previous[a+1].index,current[b].index);a++;
+      }else{
+        triangle(previous[a].index,current[b+1].index,current[b].index);b++;
+      }
+    }
+    previous=current;
+  }
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+  geometry.setIndex(indices);
+  setOceanAttributes(geometry,new Float32Array(distances),new Float32Array(tangents));
+  geometry.setAttribute('aOceanAlong',new THREE.Float32BufferAttribute(along,1));
+  return geometry;
+}
+
 
 function rgbaUniform(color: OceanColor): THREE.Vector4 {
   return new THREE.Vector4(color.r, color.g, color.b, color.a);
@@ -1190,6 +1258,7 @@ export class UnityOcean {
   private primaryPass: OceanPrimaryPass | null = null;
   private readonly primarySizeScratch = new THREE.Vector2();
   private shoreField: ShoreField | null = null;
+  private readonly landRunup: boolean;
 
   constructor(opts: CoastWaterOpts) {
     if (opts.prepassMaxHeight !== undefined &&
@@ -1199,6 +1268,7 @@ export class UnityOcean {
     this.withReflectionScene = opts.withReflectionScene;
     this.withRefractionScene = opts.withRefractionScene;
     this.seaLevel = opts.seaLevel;
+    this.landRunup = (opts.shoreOverlap ?? SHORE_OVERLAP) > 0;
     this.quality = opts.quality ?? detectQuality();
     const lite = this.quality === "lite";
     const exactUnitySource = opts.sourceCoordinates === "unity";
@@ -1279,6 +1349,7 @@ export class UnityOcean {
         // on every editor rebuild (and every coastal level switch).
         uTime: { value: 0 },
         uSurf: { value: new THREE.Vector4() },
+        uLandRunup: { value: this.landRunup ? 1 : 0 },
         uCoastMap: { value: this.fallbackColor },
         uCoastBounds: { value: new THREE.Vector4(0, 0, 1, 1) },
         uHasCoastMap: { value: 0 },
@@ -1396,13 +1467,15 @@ export class UnityOcean {
       ]),
     });
 
-    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak','uHasHorizonSky','uFogWithSky'])
+    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak','uHasHorizonSky','uFogWithSky','uCoastMap','uCoastBounds','uHasCoastMap'])
       this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
 
     // Inland routes may descend below an elevated opening lagoon. Keep their
     // far sea on the authored side of the shore instead of under the whole level.
     const shorelineHorizon = opts.horizonMode === "shoreline";
-    const horizonShore = opts.horizonOffset ? renderShore.map(row=>({...row,x:row.x+row.sx*opts.horizonOffset!,z:row.z+row.sz*opts.horizonOffset!})) : renderShore;
+    const direction = opts.ribbonDirection && unit2(...opts.ribbonDirection);
+    const geometryShore = direction ? renderShore.map(row=>({...row,sx:direction[0],sz:direction[1]})) : renderShore;
+    const horizonShore = opts.horizonOffset ? geometryShore.map(row=>({...row,x:row.x+row.sx*opts.horizonOffset!,z:row.z+row.sz*opts.horizonOffset!})) : geometryShore;
     this.horizon = new THREE.Mesh(
       shorelineHorizon
         ? makeRibbonGeometry(horizonShore, this.seaLevel, 1, -1, SEA_BACKDROP_RADIUS * 2, 0)
@@ -1427,8 +1500,8 @@ export class UnityOcean {
     // Winding and tangent handedness follow the actual shoreline, including
     // courses reflected in X. Shader source coordinates alone cannot tell
     // which side of an arbitrarily authored shore contains the ocean.
-    const firstRow = renderShore[0];
-    const secondRow = renderShore[1] ?? firstRow;
+    const firstRow = geometryShore[0];
+    const secondRow = geometryShore[1] ?? firstRow;
     const shoreHandedness = firstRow && secondRow
       ? (secondRow.z - firstRow.z) * firstRow.sx - (secondRow.x - firstRow.x) * firstRow.sz
       : 0;
@@ -1436,8 +1509,12 @@ export class UnityOcean {
       ? Math.sign(shoreHandedness)
       : -this.sourceZSign;
     this.ribbon = new THREE.Mesh(
-      makeRibbonGeometry(
-        renderShore,
+      direction && opts.ribbonFocus ? makeParallelRibbonGeometry(
+        geometryShore, this.seaLevel, direction, opts.ribbonFocus,
+        Math.max(1,opts.oceanWidth??OCEAN_WIDTH),
+        Math.max(lite?4:2,(opts.ribbonFocus[1]-opts.ribbonFocus[0])/ribbonLateralSegments),ribbonTangentW,
+      ) : makeRibbonGeometry(
+        geometryShore,
         this.seaLevel,
         ribbonLateralSegments,
         ribbonTangentW,
@@ -1645,7 +1722,7 @@ export class UnityOcean {
     const surf=sampleSurf(coast.distance,bx,bz,time,this.params,coast.depth);
     const film=THREE.MathUtils.smoothstep(coast.distance+sampleRunup(bx,bz,time,this.params),-.15,.15)
       *(1-THREE.MathUtils.smoothstep(coast.slope,.5,.8));
-    const swashHeight=coast.distance<0?Math.max(-coast.depth+.028,0)*film:0;
+    const swashHeight=this.landRunup&&coast.distance<0?Math.max(-coast.depth+.028,0)*film:0;
     const nx=wave.nx/Math.max(wave.ny,0.001)-coast.nx*surf.slope;
     const nz=wave.nz/Math.max(wave.ny,0.001)-coast.nz*surf.slope;
     const norm=Math.hypot(nx,1,nz);
