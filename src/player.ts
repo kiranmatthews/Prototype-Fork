@@ -619,6 +619,12 @@ export class Player {
   private footJumpStudyLaunch: Readonly<OnFootJumpStudy> | null = null;
   private footStudyFrame = 0;
   private footStudyImpact = 0;
+  private ledgeSourceSeconds = 0;
+  private ledgeSourceSide = 0;
+  private ledgeGripOrigin = new THREE.Vector3();
+  private ledgeGripNormal = new THREE.Vector3();
+  /** Read-only presentation evidence for the local motion comparison. */
+  ledgeGripError = 0;
   private get directFootStudy(): boolean {
     return this.onFootJumpStudy?.direct === true && !this.freeSkate && !this.alwaysSkate &&
       !this.isBailing && !this.crawling && !this.sliding && !this.swimming && !this.slamActive &&
@@ -2396,6 +2402,14 @@ export class Player {
         actionProgress,
         inputs: {
           jakFrame: this.footStudyFrame,
+          jakFlip: this.footJumpStudyLaunch?.flip && !this.doubleJumpAir ? 1 : 0,
+          jakFlipProgress: this.footJumpStudyFlight?.flip
+            ? Math.min(1, this.airborneT / Math.max(.28, (2 * this.launchVy / this.footJumpStudyFlight.gravity - CONST.fixedStep) * .88)) : 0,
+          jakLedgeSeconds: this.ledgeSourceSeconds,
+          jakLedgeSide: this.ledgeSourceSide,
+          jakLedgeRelease: this.state === 'air' && !this.doubleJumpAir && this.hangExitW > 0 &&
+            (this.hangClipName === 'drop' || this.hangClipName === 'fall')
+            ? this.hangClipT / this.hangClipRate : -1,
           jakImpact: this.footStudyImpact,
           footSpeed: this.walkVelocity.length(),
           travelSign,
@@ -5976,6 +5990,7 @@ export class Player {
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
     this.footJumpStudyLaunch = null;
+    if(this.onFootJumpStudy?.direct)this.hangExitW = 0;
     if (this.kiteReleased) this.kiteFinishJump = true;
     this.gravityTrackAir = this.freeSkate && (!!this.groundHit?.gravityTrack || !this.grounded&&this.gravityTrackAir);
     const airborneRelaunch = this.state === 'air' && !this.grounded;
@@ -10394,6 +10409,57 @@ export class Player {
           this.score(CONST.ptsEnemy, 'Takedown');
       }
     }
+  }
+
+  /** Source ledge poses are contact-relative. Translate only the visual body
+   * and solve gloves after editable segment proportions/elasticity, leaving
+   * the collision body, lip traversal and skateboard solver untouched. */
+  private alignAuthoredLedgeHands(): void {
+    this.ledgeGripError = 0;
+    if (this.state !== 'hang' || !this.directFootStudy || !this.authoredClip('player.hang')?.metadata?.jakLedge ||
+        !this.armL || !this.armR || !this.elbowL || !this.elbowR || !this.wristL || !this.wristR ||
+        !this.gloveLeft || !this.gloveRight || !this.bodyGroup.parent) return;
+    const weight = this.ledgePhase === 'climb' ? 1 - THREE.MathUtils.smoothstep(this.ledgeClimbK, .45, .8)
+      : THREE.MathUtils.smoothstep(this.ledgeEaseT / LEDGE_EASE, 0, 1);
+    if (weight <= 0) return;
+    const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
+    const centre = ledgeEdgePoint(new THREE.Vector3(), this.ledgeAnchor, basis);
+    centre.y = this.ledgeLip + .025;
+    this.bodyGroup.updateWorldMatrix(true, true);
+    const side = new THREE.Vector3(1,0,0).applyQuaternion(this.bodyGroup.getWorldQuaternion(new THREE.Quaternion()));
+    side.y = 0; side.normalize();
+    if(this.ledgeGripNormal.dot(this.ledgeNormal)<.99) {
+      this.ledgeGripOrigin.copy(centre);this.ledgeGripNormal.copy(this.ledgeNormal);
+    }
+    // Existing shimmy locomotion remains available. Alternate short hand
+    // reaches along the lip; the other glove holds a fixed world contact.
+    const travel=centre.clone().sub(this.ledgeGripOrigin).dot(side), stride=.28;
+    const targetFor=(sign:number)=>{
+      const phase=travel/stride+(sign>0?0:.5), whole=Math.floor(phase);
+      const reach=THREE.MathUtils.smoothstep(phase-whole,.65,1);
+      const target=this.ledgeGripOrigin.clone().addScaledVector(side,sign*.24+(whole+reach)*stride);
+      target.y=centre.y+Math.sin(reach*Math.PI)*.065*Math.min(1,Math.abs(this.ledgeShimmy)*4);
+      return target;
+    };
+    const leftTarget=targetFor(1),rightTarget=targetFor(-1);
+    const gripCentre=leftTarget.clone().add(rightTarget).multiplyScalar(.5);
+    const left = this.gloveLeft.gripSocket, right = this.gloveRight.gripSocket;
+    const midpoint = left.getWorldPosition(new THREE.Vector3()).add(right.getWorldPosition(new THREE.Vector3())).multiplyScalar(.5);
+    const delta = gripCentre.sub(midpoint).multiplyScalar(weight);
+    // Leave a small elbow bend on Bone Man's longer gloves; a perfectly
+    // straight source arm otherwise puts the opposite grip beyond reach.
+    delta.y += .045 * weight;
+    const parent = this.bodyGroup.parent;
+    this.bodyGroup.position.add(parent.worldToLocal(midpoint.clone().add(delta)).sub(parent.worldToLocal(midpoint.clone())));
+    this.bodyGroup.updateWorldMatrix(true, true);
+    const solve = (root: THREE.Object3D, mid: THREE.Object3D, end: THREE.Object3D, effector: THREE.Object3D, target:THREE.Vector3) => {
+      const pole = mid.getWorldPosition(new THREE.Vector3()).addScaledVector(this.ledgeNormal, .2);
+      for (let i=0;i<4;i++)solveTwoBoneIk({root,mid,end,effector,target,pole,weight,
+        accountForParentScale:true,tolerance:.002});
+      this.ledgeGripError = Math.max(this.ledgeGripError,effector.getWorldPosition(new THREE.Vector3()).distanceTo(target));
+    };
+    solve(this.armR,this.elbowR,this.wristR,left,leftTarget);
+    solve(this.armL,this.elbowL,this.wristL,right,rightTarget);
   }
 
   /** Unity applies its authored rope clips first, then pins both wrists back
@@ -16670,6 +16736,15 @@ export class Player {
   // The catch itself, shared by the AABB and mesh variants: the detection has
   // set the anchor/normal/lip/box — this settles the body into the hang.
   private commitLedgeCatch(level: Level): boolean {
+    const incoming = this.airFromSkate ? this.axisF.clone().multiplyScalar(this.speed) : this.walkVelocity.clone();
+    const tangent = new THREE.Vector3(this.ledgeNormal.z, 0, -this.ledgeNormal.x);
+    const along = incoming.lengthSq() > .01 ? incoming.normalize().dot(tangent) : 0;
+    this.ledgeSourceSide = along > .3 ? 1 : along < -.3 ? -1 : 0;
+    this.ledgeSourceSeconds = 0;
+    // A catch cancels the visual somersault, retaining the already-selected
+    // air parameters used by the existing ledge exit.
+    if(this.footJumpStudyLaunch)this.footJumpStudyLaunch={...this.footJumpStudyLaunch,flip:false};
+    this.ledgeGripNormal.set(0,0,0);
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
     this.ledgePhase = 'grip';
@@ -16733,6 +16808,7 @@ export class Player {
   // is screen-UP (same convention as the movement + manual-flick code).
   private stepHang(dt: number, input: Input, level: Level): void {
     this.runTime += dt;
+    this.ledgeSourceSeconds += dt;
     if (this.ledgeMoverId !== undefined) {
       const delta = level.moverDelta(this.ledgeMoverId, this.pos);
       if (delta.lengthSq() > 0) {
@@ -16742,6 +16818,7 @@ export class Player {
         this.ledgeFrom.add(delta);
         this.ledgeClimbFrom.add(delta);
         this.ledgeClimbTo.add(delta);
+        this.ledgeGripOrigin.add(delta);
         this.ledgeLip += delta.y;
       }
     }
@@ -19753,7 +19830,7 @@ export class Player {
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     const launchOwnsBody = !this.airFromSkate && isLaunchClip(this.animationClipHint);
-    const directOwnsBody = this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump'].includes(this.animationClipHint);
+    const directOwnsBody = this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
     if ((this.state === 'dead' && this.bailing) || launchOwnsBody || directOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
@@ -20225,6 +20302,7 @@ export class Player {
       );
     }
     this.alignHandsToRopeGrip(dt);
+    this.alignAuthoredLedgeHands();
     // Character Lab proportions and authored animation both move endpoints.
     // Plant only after both layers so feet cannot slide away from the deck.
     // The hop needs a fully seated reference from its first frame; the old

@@ -200,3 +200,54 @@ motion and zoomer riding are different actions. D leaves current skating intact.
 Primary evidence: [Jak 1 flat thrust](https://github.com/open-goal/jak-project/blob/v0.3.9/goal_src/jak1/engine/target/logic-target.gc),
 [surface constants](https://github.com/open-goal/jak-project/blob/v0.3.9/goal_src/jak1/engine/collide/surface-h.gc),
 [Jak II board source documentation](https://opengoal.dev/docs/source-docs/jak2/packages/engine/target/board/).
+
+## D — ledge suite and restored forward jump flip, 4 November 2026 NZDT
+
+The local extractor now also samples all seven Jak 1 ledge clips:
+`falling-to-edge-grab`, `edge-grab-swing-left`, `edge-grab-swing-right`,
+`edge-grab-stance0`, `edge-grab-stance1`, `edge-grab-to-jump`, and `edge-grab-off`.
+The 1.15-second catch selects its swing from incoming lateral velocity, then
+alternates the complete 0.667- and 2.767-second hold poses. Climb input can
+interrupt the catch immediately after the existing grip settle. The source
+20-frame pull-up follows the existing mantle progress; the release plays over
+the existing drop. Collision, reach, grip timeout, climb path and input remain
+owned by the ledge controller.
+
+Retarget the hanging poses relative to the hands instead of the feet. Adapt
+Bone Man's glove sockets to the actual world lip after source elasticity and
+editable proportions. The contact solve eases out during pull-up. Existing
+shimmy movement uses alternating planted hands and short reaches; Jak's left
+and right swing clips are directional catches, not invented source shimmy
+animations. Moving platforms carry the contact origin with the ledge.
+
+**Jak forward flip in D** defaults on. The source `wheel-flip` (roll jump) supplies
+the full rotation, tuck and unfurl; `wheel-flip-land` supplies stationary
+recovery. The pose rotates about Bone Man's hips without adding source root
+travel. Its 39 frames fit the normal jump's flight, finishing before touchdown;
+double jump and ledge catch interrupt it. Running landings keep the existing
+Jak run-squash and subsequent run-to-stance pacing. Switching the checkbox off
+restores D's upright source jump. A/B/C remain unchanged.
+
+Under **Playtest options**, **Ledge playground** opens a local two-height block
+fixture with normal controls. **Watch motion → Motion** selects the three
+catches, holds, climb, release, shimmy, or the jump examples. View, slow motion,
+freeze and pause-at controls support inspection. **Show original Jak alongside
+(D)** uses the same source frame with contact/hip placement normalized for the
+comparison; it retains the complete original geometry. This is source motion
+adapted to Bone Man's proportions and our controller, not a replacement for
+Jak's entire ledge or rolling-jump physics.
+
+Source implementation evidence is the locally available OpenGOAL v0.3.9
+`goal_src/jak1/engine/target/target2.gc` (`target-edge-grab`,
+`target-edge-grab-jump`, `target-edge-grab-off`) and `target.gc`
+(`target-wheel-flip`, `target-wheel-flip-land`). Source keys and the original
+model remain in the external study directory, served only by the local dev
+middleware. They are absent from Git and the production release.
+
+Validation adds `node tools/test-jak-ledge-flip.mjs /path/to/motion.json`:
+2,485 native frames cover all catches, both hold poses, climb, release,
+planted shimmy contacts, exact flip-off/on movement parity for tap/full/running
+and double jumps, and hold-to-skate. Maximum settled/catch grip error is
+0.000193 m on the default Bone Man. The raw retarget test now checks 1,599 poses,
+preserving major limb directions within 0.0000013 degrees. Strict playtest types,
+production build and release-size checks are also required before handoff.

@@ -8452,3 +8452,34 @@ Details and reuse: [Green eco fire](GREEN_ECO_FIRE.md).
   unchanged. Local commit/handoff only; no publication.
 
 Details and limitations: [Green eco fire](GREEN_ECO_FIRE.md).
+
+## 2026-11-04 — Jak ledge suite and restored standard jump flip in local D
+
+- Brief: add Jak's ledge family and restore Bone Man's normal forward flip
+  using a source rolling/flip animation. About 27 minutes prompt-to-verified
+  playable comparison (11:13:24–11:40 UTC, 3 November); subsequent validation,
+  release-asset preparation and local handoff followed. No public release.
+- Sampled seven source ledge motions plus wheel-flip and wheel-flip-land from
+  the user's existing local Jak 1 GLB. D selects straight/left/right catches,
+  alternates both holds, follows the existing climb progress, and plays release
+  over the existing drop. Climb input can interrupt the catch. Adapted glove
+  contacts after segment elasticity; retained shimmy with alternate plants.
+- D's standard jump now uses the source roll-jump rotation/tuck about the hips.
+  Removed source root travel and fitted the clip to the existing jump arc.
+  Double jump/catch interrupt it; running recovery and pacing remain available.
+  The forward-flip checkbox restores the previous upright D jump for comparison.
+  A/B/C, release-to-jump, hold-to-skate and board simulation are preserved.
+- Local fixture, motion/view selectors, slow/freeze/phase stops and original Jak
+  alongside make the suite reviewable. Fixed source skin-matrix refresh and
+  placed reference ledge poses along the lip so comparison geometry is visible.
+- Checks: 1,599 source poses match eight major limb directions; 2,485 native
+  frames cover the ledge family, planted shimmy, exact flip-off/on physics for
+  tap/full/running/double jumps, and hold-to-skate. Maximum catch/hold glove
+  error 0.000193 m. Strict source/playtest types, build and release-size pass.
+  Source bank, model and local review are absent from the production output.
+- Browser: full-render catch, pull-up, release and flip comparison; side/front
+  flip views; normal 720p and native render paths; A/B/C/D switches preserve
+  position/velocity/speed. Restored normal rendering. Proof is in the external
+  `ledge-flip-review` directory; source data remains outside Git.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

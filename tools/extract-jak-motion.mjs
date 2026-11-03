@@ -32,7 +32,9 @@ const pose=()=>Object.fromEntries(names.map(name=>{
   return [name,{p:round(n.getWorldPosition(new THREE.Vector3()).toArray()),q:round(n.getWorldQuaternion(new THREE.Quaternion()).toArray())}];
 }));
 const bind=pose(), rest=nodes.map(n=>({p:n.position.clone(),q:n.quaternion.clone(),s:n.scale.clone()}));
-const selected=['jump','jump-forward','jump-loop','jump-land','jump-short-land','run','walk','run-squash','run-squash-weak','run-to-stance','run-to-stance-loop','stance-loop','turn-around'];
+const selected=['jump','jump-forward','jump-loop','jump-land','jump-short-land','run','walk','run-squash','run-squash-weak','run-to-stance','run-to-stance-loop','stance-loop','turn-around',
+  'falling-to-edge-grab','edge-grab-swing-left','edge-grab-swing-right','edge-grab-stance0','edge-grab-stance1','edge-grab-to-jump','edge-grab-off',
+  'wheel-flip','wheel-flip-land','duck-roll','duck-roll-end','duck-high-jump'];
 const clips={};
 for(const anim of doc.animations.filter(a=>selected.some(name=>a.name===`eichar-${name}`))) {
   nodes.forEach((n,i)=>{n.position.copy(rest[i].p);n.quaternion.copy(rest[i].q);n.scale.copy(rest[i].s);});

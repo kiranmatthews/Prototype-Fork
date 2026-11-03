@@ -10,6 +10,8 @@ import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
 import { createJakDirectSuite, JAK_DIRECT_PHYSICS, type JakMotionBank } from './jak-direct-motion';
 import { GreenEcoFire, type GreenEcoRendering } from '../src/greenEcoFire';
 import { JUMP_ECO_VENTS } from './jump-eco-vents';
+import { CONST } from '../src/tuning';
+import { ledgeBasis, ledgeEdgePoint } from '../src/ledgeTraversal';
 
 const g: any = await new Promise(resolve => {
   const poll = () => {
@@ -33,7 +35,7 @@ try {
   if (response.ok) directSuite = createJakDirectSuite(suite, binding.definition, await response.json() as JakMotionBank);
 } catch (error) { console.warn('Local Jak motion unavailable', error); }
 let variant: 'A' | 'B' | 'C' | 'D' = 'B';
-let before = false, inspect = false, jakSounds = true;
+let before = false, inspect = false, jakSounds = true, jumpFlip = true;
 const nativePuffUpdate = g.puffs.update.bind(g.puffs);
 g.puffs.update = (dt: number, camera: THREE.Camera) => {
   nativePuffUpdate(dt, camera);
@@ -101,7 +103,24 @@ function updateSource() {
   }
   sourceMixer.update(0);
   sourceOffset.set(Math.cos(angle),0,-Math.sin(angle)).multiplyScalar(2.5);
+  if(mode.toLowerCase().includes('ledge') || mode.startsWith('Catch '))
+    sourceOffset.set(p.ledgeNormal.z,0,-p.ledgeNormal.x).multiplyScalar(2.5);
   sourceModel.position.copy(p.pos).add(sourceOffset); p.bodyGroup.getWorldQuaternion(sourceModel.quaternion);
+  sourceModel.updateWorldMatrix(true,true);
+  if (clip?.metadata?.jakRootMode === 'flip') {
+    const hip = sourceModel.getObjectByName('hips')!.getWorldPosition(new THREE.Vector3());
+    sourceModel.position.add(p.pos.clone().add(sourceOffset).add(new THREE.Vector3(0,1.028,0)).sub(hip));
+  } else if (clip?.metadata?.jakLedge && p.state === 'hang') {
+    const hands = sourceModel.getObjectByName('sk_lhand')!.getWorldPosition(new THREE.Vector3())
+      .add(sourceModel.getObjectByName('sk_rhand')!.getWorldPosition(new THREE.Vector3())).multiplyScalar(.5);
+    const centre = ledgeEdgePoint(new THREE.Vector3(),p.ledgeAnchor,ledgeBasis(p.ledgeNormal,CONST.playerHalf.x,CONST.playerHalf.z))
+      .add(sourceOffset); centre.y=p.ledgeLip+.025;
+    const weight = p.ledgePhase === 'climb' ? 1-THREE.MathUtils.smoothstep(p.ledgeClimbK,.45,.8) : 1;
+    sourceModel.position.add(centre.sub(hands).multiplyScalar(weight));
+  }
+  // This scene skips automatic matrix traversal. SkinnedMesh's override must
+  // refresh bindMatrixInverse after placement, not just Object3D world frames.
+  sourceModel.updateMatrixWorld(true);
   return true;
 }
 const visited = new Set<string>(), soundPlays = {old: 0, new: 0};
@@ -117,7 +136,7 @@ function chooseVersion(next: 'A' | 'B' | 'C' | 'D') {
   if (next === 'D' && !directSuite) return;
   const position = p.pos.clone(), velocity = p.vVel, speed = p.speed;
   variant = next; before = next === 'A';
-  p.onFootJumpStudy = next === 'D' ? JAK_DIRECT_PHYSICS : next === 'C' ? JAK_JUMP_PHYSICS : null;
+  p.onFootJumpStudy = next === 'D' ? {...JAK_DIRECT_PHYSICS,flip:jumpFlip} : next === 'C' ? JAK_JUMP_PHYSICS : null;
   // No respawn, restart, input reset or camera reset. Airborne progress and
   // landing time continue while the next presentation frame reads the new keys.
   runtime.setDocument(before ? oldSuite : variant === 'D' ? directSuite! : variant === 'C' ? studySuite : suite);
@@ -129,6 +148,19 @@ function resetInspector() {
   if (!reviewLevel) return;
   frame = landFrame = doubleFrame = 0; frozen = hadAir = false; visited.clear();
   p.enterLevel('jump-review'); p.respawn(reviewLevel, true); p.freeSkate = false;
+  if (mode.toLowerCase().includes('ledge') || mode.startsWith('Catch ')) {
+    p.respawn(reviewLevel,true,true,{position:new THREE.Vector3(1020,mode==='Play ledges'?.02:2.35,mode==='Play ledges'?2:-.7)});
+    p.freeSkate=false;
+    if(mode!=='Play ledges') {
+      p.state='air';p.grounded=false;p.vVel=-1;p.airborneT=.4;p.launchVy=15;p.airFromSkate=false;
+      p.pos.z=-1.1;p.prevPos.copy(p.pos);
+      p.walkVelocity.set(mode==='Catch left'?4:mode==='Catch right'?-4:0,0,-4);
+      p.lastVelX=p.walkVelocity.x;p.lastVelZ=-4;
+      p.rawInput={...p.rawInput,moveX:0,moveY:1,jumpHeld:false,jumpPressed:false,jumpReleased:false};
+      const wall=reviewLevel.walls.find(w=>Math.abs(w.max.y-3.35)<.01);
+      if(wall)p.tryLedgeGrab(wall,reviewLevel);
+    }
+  }
   runtime.restart();
 }
 function setInspect(value: boolean) {
@@ -139,6 +171,8 @@ function setInspect(value: boolean) {
     reviewLevel ??= new Level(g.scene, {id: 'jump-review', name: 'Jump review', data: {
       v: 1, name: 'Jump review', spawn: [1000, .02, 0], killY: -30, components: [
         {t: 'platform', p: [1000, -.5, 0], s: [200, 1, 200]}, {t: 'gate', p: [1000, 0, -90]},
+        {t: 'platform', p: [1020, 1.8, -4], s: [8, 3.6, 5]},
+        {t: 'platform', p: [1027, .85, -4], s: [4, 1.7, 5]},
       ],
     }});
     resetInspector();
@@ -149,6 +183,7 @@ function setInspect(value: boolean) {
     p.freeSkate = false; runtime.restart();
   }
   inspectorControls.hidden = !inspect;
+  panel.classList.toggle('inspecting',inspect);
 }
 const nativeStep = p.step.bind(p);
 p.step = (dt: number, input: any, level: Level) => {
@@ -158,6 +193,20 @@ p.step = (dt: number, input: any, level: Level) => {
     return result;
   }
   if (!reviewLevel || frozen || slow && ++skips % 3 !== 0) return;
+  if (mode==='Play ledges') {
+    nativeStep(dt,input,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');return;
+  }
+  if (mode.toLowerCase().includes('ledge') || mode.startsWith('Catch ')) {
+    p.camDir.set(0,0,-1);
+    const demo={moveX:mode==='Shimmy ledge'&&frame>90&&frame<160?.6:0,
+      moveY:mode==='Climb ledge'&&frame===230?1:mode==='Release ledge'&&frame>230?-1:0,
+      jumpHeld:false,jumpPressed:false,jumpReleased:false};
+    nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Catch'&&frame===20 || stopAt==='Settled'&&frame===160 ||
+      stopAt==='Pull-up'&&p.state==='hang'&&p.ledgePhase==='climb'&&p.ledgeClimbK>=.5 ||
+      stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
+    if(frame>400)resetInspector();return;
+  }
   const running = mode === 'Running jump' || mode === 'Run and stop';
   const hold = mode === 'Tap jump' ? 3 : running ? 18 : 35, release = 50 + hold;
   const demo = {moveX: 0, moveY: running && (mode !== 'Run and stop' || frame < 145) ? 1 : 0,
@@ -218,9 +267,13 @@ instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in
 const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. Air physics changes on your next foot jump.';
 panel.append(instructions, continuity);
 const directHint = document.createElement('p');
-directHint.textContent = 'D uses extracted Jak motion and recovery pacing. Your release-to-jump / hold-to-skate controls stay the same.';
+directHint.textContent = 'D adds Jak’s ledge catches, hanging, pull-up and release, plus the restored forward flip. Release to jump; hold while running to skate.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
+const flipLabel=document.createElement('label'),flipBox=document.createElement('input');
+flipBox.type='checkbox';flipBox.checked=true;
+flipBox.onchange=()=>{jumpFlip=flipBox.checked;chooseVersion(variant);flipBox.blur();};
+flipLabel.append(flipBox,' Jak forward flip in D');options.append(flipLabel);
 const soundLabel = document.createElement('label'), soundBox = document.createElement('input');
 soundBox.type = 'checkbox'; soundBox.checked = true;
 soundBox.onchange = () => {jakSounds = soundBox.checked; soundBox.blur();};
@@ -241,12 +294,14 @@ ecoFreeze.type = 'checkbox'; ecoFreeze.onchange = () => {ecoFire.paused = ecoFre
 ecoFreezeLabel.append(ecoFreeze, ' Freeze eco for comparison'); options.append(ecoFreezeLabel);
 const ecoRenderNote = document.createElement('small');
 ecoRenderNote.textContent = 'Same original particle motion in both views.'; options.append(ecoRenderNote);
+for(const element of [ecoLabel,ecoRenderLabel,ecoFreezeLabel,ecoRenderNote])element.classList.add('eco-control');
 void ecoFire.loadSourceTextures('/__jak-reference-eco').then(() => {originalEco.disabled = false;}).catch(() => {
   ecoRenderNote.textContent = 'Gouraud puffs ready. Original textures need the local Jak study files.';
 });
 const modes = document.createElement('div'); options.append(modes);
 const playButton = button(modes, 'Play course', () => setInspect(false));
 const inspectButton = button(modes, 'Watch motion', () => setInspect(true));
+button(modes,'Ledge playground',()=>{mode='Play ledges';angle=0;setInspect(true);resetInspector();});
 button(modes, 'Restart course', () => {
   setInspect(false); p.enterLevel(g.getCurrentLevel().id); p.respawn(g.getLevel(), true, true);
   p.freeSkate = false; runtime.restart(); visited.clear();
@@ -264,14 +319,19 @@ const inspectorControls = document.createElement('div'); inspectorControls.hidde
 const sourceLabel = document.createElement('label'), sourceBox = document.createElement('input'), sourceNote = document.createElement('small');
 sourceBox.type = 'checkbox'; sourceBox.onchange = () => {if (sourceBox.checked) void loadSource(); sourceBox.blur();};
 sourceLabel.append(sourceBox,' Show original Jak alongside (D)'); inspectorControls.append(sourceLabel,sourceNote);
-for (const name of ['Tap jump', 'Full jump', 'Double jump', 'Running jump', 'Run and stop'])
-  button(inspectorControls, name, () => {mode = name; resetInspector();});
-for (const [name, a] of [['Front', Math.PI], ['Side', Math.PI / 2], ['Behind', 0], ['Oblique', .7]] as const)
-  button(inspectorControls, name, () => angle = a);
+const select=(label:string,values:string[],change:(value:string)=>void)=>{
+  const row=document.createElement('label'),control=document.createElement('select');
+  control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
+  control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
+};
+const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Run and stop',
+  'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+motionSelect.value=mode;
+const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
+viewSelect.value='Side';
 button(inspectorControls, 'Freeze / play', () => frozen = !frozen);
 button(inspectorControls, 'Slow / realtime', () => slow = !slow);
-for (const name of ['None', 'Charge', 'Reach', 'Apex', 'Catch', 'Rebound', 'Settled'])
-  button(inspectorControls, 'Pause: ' + name, () => {stopAt = name; resetInspector();});
+select('Pause at',['None','Charge','Reach','Apex','Catch','Rebound','Settled','Pull-up','Release'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -292,10 +352,16 @@ function report() {
   const audio = before || !jakSounds ? 'Original sounds' : sfx.jumpAudioSource;
   current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Direct source motion + Jak timing'} · ${audio}`;
   const d = runtime.diagnostics, scalars = runtime.lastSampledPose?.scalars;
+  motionSelect.value=mode;
+  viewSelect.value=angle===Math.PI?'Front':angle===Math.PI/2?'Side':angle===0?'Behind':'Oblique';
+  sourceNote.hidden=!sourceBox.checked;
   status.textContent = JSON.stringify({variant, mode: inspect ? mode : 'Live play', before, frame, frozen, slow, stopAt,
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
+    jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
+    sourceHip:sourceModel?.getObjectByName('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
+    targetHip:binding.joints.get('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
     ecoFire: {...ecoFire.diagnostics, cpuMs: +ecoCpuMs.toFixed(3)}, visited: [...visited]}, null, 2);
   requestAnimationFrame(report);
 }

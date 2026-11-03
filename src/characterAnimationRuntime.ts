@@ -537,6 +537,7 @@ export class CharacterAnimationRuntime {
         const directMovingLanding = directLanding && moveIntent > .05 && (intent.motion.inputs?.footSpeed ?? 0) > 3;
         const landing = directMovingLanding
           ? (intent.motion.inputs?.jakImpact ?? 0) > 15 ? 'player.jak-run-land' : 'player.jak-run-land-weak'
+          : directLanding && intent.motion.inputs?.jakFlip ? 'player.jak-flip-land'
           : directLanding && (intent.motion.inputs?.jakFrame ?? 40) < 38
             ? (intent.motion.inputs?.jakFrame ?? 40) >= 35 ? 'player.jak-short-land' : 'player.jak-soft-land'
             : LAND_CLIP_ID;
@@ -573,6 +574,33 @@ export class CharacterAnimationRuntime {
 
     let requested: ClipId =
       this.manualClipId ?? this.transient?.clipId ?? hint;
+    // Local D supplies this complete source family. These presentation clocks
+    // never hold a movement state or consume jump/skate input.
+    let directTime: number | null = null;
+    if (this.manualClipId === null && this.findPlayableClip('player.hang')?.metadata?.jakLedge) {
+      const inputs = intent.motion.inputs ?? {};
+      if (hint === 'player.hang') {
+        const catchId = inputs.jakLedgeSide > 0 ? 'player.jak-ledge-left'
+          : inputs.jakLedgeSide < 0 ? 'player.jak-ledge-right' : 'player.jak-ledge-catch';
+        const catchDuration = this.findPlayableClip(catchId)!.duration;
+        const elapsed = inputs.jakLedgeSeconds ?? 0;
+        if (elapsed < catchDuration) {requested = catchId; directTime = elapsed;}
+        else {
+          const a = this.findPlayableClip('player.hang')!.duration;
+          const b = this.findPlayableClip('player.jak-hang-shift')!.duration;
+          const cycle = (elapsed - catchDuration) % (a + b);
+          requested = cycle < a ? 'player.hang' : 'player.jak-hang-shift';
+          directTime = cycle < a ? cycle : cycle - a;
+        }
+      } else if (hint === 'player.climb') {
+        directTime = intent.motion.actionProgress * this.findPlayableClip('player.climb')!.duration;
+      } else if ((hint === 'player.jump' || hint === 'player.fall') && inputs.jakLedgeRelease >= 0) {
+        requested = 'player.jak-ledge-off'; directTime = inputs.jakLedgeRelease;
+      } else if (hint === 'player.jump' && inputs.jakFlip && this.player.onFootJumpStudy?.flip) {
+        requested = inputs.jakFlipProgress < 1 ? 'player.jak-flip' : 'player.fall';
+        if (requested === 'player.jak-flip') directTime = inputs.jakFlipProgress * this.findPlayableClip(requested)!.duration;
+      }
+    }
     let clip = this.findPlayableClip(requested);
     // The pre-animation-suite skate mount/stance already eases skatePose,
     // sidePose and deckPose, solves conventional knees/ankles, and plants the
@@ -682,6 +710,7 @@ export class CharacterAnimationRuntime {
         (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
       this.timelineTime = Math.min(clip.range.end, (motion.inputs?.jakFrame ?? 0) / 60);
     }
+    if (directTime !== null) this.timelineTime = Math.min(clip.range.end, Math.max(clip.range.start, directTime));
     if (this.manualClipId === null && this.transient?.kind === 'run-stop' && !clip.metadata?.jakDirect) {
       const span = Math.max(1e-6, clip.range.end - clip.range.start);
       const coasting = motion.normalizedSpeed > .005;

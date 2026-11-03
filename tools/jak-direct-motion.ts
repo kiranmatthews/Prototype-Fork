@@ -61,7 +61,7 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
   const targetAnkleY=definitions.get('hips')!.rest.position[1]-targetLegLength;
   const neutralAnkleY=Math.min(neutral.Lankle.p[1],neutral.Rankle.p[1]);
   const waistRatio=v(definitions.get('spine')!.rest.position).length()/vector(neutral,'hips','upper_body').length();
-  const retarget=(frame:Frame)=>{
+  const retarget=(frame:Frame, rootMode='feet', phase=0)=>{
     const locals:Record<string,QuaternionTuple>={}, positions:Record<string,THREE.Vector3>={}, worlds:Record<string,THREE.Quaternion>={};
     const lengths:Record<string,number>={}, translations:Record<string,Vec3Tuple>={};
     for(const [, [a,b,control]] of Object.entries(segments))
@@ -98,7 +98,20 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const sourceFloor=Math.min(frame.Lankle.p[1],frame.Rankle.p[1]);
     const rootY=targetAnkleY+(sourceFloor-neutralAnkleY)*legRatio-
       Math.min(positions.ankleLeft.y,positions.ankleRight.y);
-    return {locals,lengths,translations,root:[frame.main.p[0]*legRatio,rootY,frame.main.p[2]*legRatio] as Vec3Tuple};
+    const root:Vec3Tuple=[frame.main.p[0]*legRatio,rootY,frame.main.p[2]*legRatio];
+    if(rootMode==='flip') {
+      // The gameplay arc carries the hips. Copying the rolling clip's root
+      // would add a second trajectory and make the feet orbit the floor.
+      root.splice(0,3,0,0,0);
+    } else if(rootMode==='hands' || rootMode==='release') {
+      // Contact-relative retargeting preserves the catch's pendulum/squash.
+      // Final world-space glove contacts adapt to the live lip/proportions.
+      const centre=positions.wristLeft.clone().add(positions.wristRight).multiplyScalar(.5);
+      const handRoot=new THREE.Vector3(0,1.25,.35).sub(centre);
+      if(rootMode==='release')handRoot.lerp(v(root),THREE.MathUtils.smoothstep(phase,.35,1));
+      root.splice(0,3,...handRoot.toArray());
+    }
+    return {locals,lengths,translations,root};
   };
   const specs:[string,string,boolean][]=[
     ['player.idle','stance-loop',true],['player.run','run',true],['player.walk','walk',true],
@@ -108,10 +121,17 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     ['player.jak-run-land-weak','run-squash-weak',false],['player.jak-jump-forward','jump-forward',false],
     ['player.jak-short-land','jump-short-land',false],
     ['player.jak-soft-land','jump-land',false],
+    ['player.jak-flip','wheel-flip',false],['player.jak-flip-land','wheel-flip-land',false],
+    ['player.jak-ledge-catch','falling-to-edge-grab',false],
+    ['player.jak-ledge-left','edge-grab-swing-left',false],
+    ['player.jak-ledge-right','edge-grab-swing-right',false],
+    ['player.hang','edge-grab-stance0',true],['player.jak-hang-shift','edge-grab-stance1',true],
+    ['player.climb','edge-grab-to-jump',false],['player.jak-ledge-off','edge-grab-off',false],
   ];
   for(const [id,name,loop] of specs) {
     const stopLead=id==='player.run-stop'?bank.clips['run-to-stance-loop']:null;
     const source=bank.clips[name];
+    if(!source)throw new Error(`Missing ${name}; rerun tools/extract-jak-motion.mjs on the local GLB`);
     const shortTail=id==='player.jak-short-land'?bank.clips['jump-land']:null;
     const startFrame=id==='player.jak-soft-land'?50:0;
     const reference=stopLead?{
@@ -122,7 +142,9 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     :startFrame?{...source,duration:source.duration-startFrame/60,samples:source.samples.slice(startFrame)}:source;
     const original=suite.clips.find(c=>c.id===id)??suite.clips.find(c=>c.id==='player.land')!;
     const tracks:AnimationTrack[]=[];
-    const poses=reference.samples.map(retarget);
+    const ledge=name.includes('edge-grab');
+    const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':ledge?'hands':'feet';
+    const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1)));
     for(const target of Object.keys(poses[0].locals))tracks.push({id:`${id}:${target}:source`,kind:'quaternion',target,
       keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.locals[target],interpolation:'linear'}))});
     tracks.push({id:`${id}:root:source`,kind:'position',target:'root',keys:poses.map((pose,i)=>({id:`${id}:root:p${i}`,time:Math.min(reference.duration,i/60),value:pose.root,interpolation:'linear'}))});
@@ -133,7 +155,8 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const clip:AnimationClip=withCharacterElasticity({...original,id,name:`D · Jak ${name} (direct retarget)`,duration:reference.duration,
       playbackSpeed:1,range:{start:0,end:reference.duration},loop:{...original.loop,mode:loop?'loop':'once'},
       tracks,proceduralDrivers:[],contacts:[],events:[],markers:[],
-      metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,
+      metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,jakRootMode:rootMode,
+        ...(ledge?{jakLedge:true}:{}),
         ...(stopLead?{jakSourceLeadClip:'run-to-stance-loop',jakSourceLeadFrames:stopLead.frames,jakSourceLeadRepeats:3}:{}),
         ...(shortTail?{jakSourceTailClip:'jump-land',jakSourceTailAt:source.frames,jakSourceTailFrame:50}:{}),
         ...(startFrame?{jakSourceStartFrame:startFrame}:{}),

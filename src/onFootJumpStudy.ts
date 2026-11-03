@@ -8,6 +8,8 @@ export interface OnFootJumpStudy {
   readonly coastSeconds: number;
   readonly direct?: boolean;
   readonly runSpeed?: number;
+  /** Presentation only; source roll-jump around the hips, on the same arc. */
+  readonly flip?: boolean;
 }
 
 /** Compensate half a fixed step for this controller's semi-implicit integrator. */
