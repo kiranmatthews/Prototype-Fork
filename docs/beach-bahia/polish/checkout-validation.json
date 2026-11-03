@@ -1,0 +1,45 @@
+{
+  "sourceCommit": "37660941c9203d8d170c80196928d6b01ebe5554",
+  "fullRelease": {
+    "files": 1853,
+    "bytes": 809015865
+  },
+  "sparseRelease": {
+    "files": 1853,
+    "bytes": 809015865
+  },
+  "identicalFiles": 1839,
+  "changedBuildMetadataOrBundleReferences": [
+    "golf-cart-lab.html",
+    "index.html",
+    "labs/index.html",
+    "release.json",
+    "reset-local-data.html",
+    "skate-pose-review.html",
+    "sw.js"
+  ],
+  "fullHashedBundles": [
+    "assets/fieldstudio-CZVyeAFV.js",
+    "assets/golfCartLab-BhiNiH6a.js",
+    "assets/index-B6ND-62Q.js",
+    "assets/labs-NEWQk86Q.js",
+    "assets/main--PCAPZMd.js",
+    "assets/resetLocalData-VD5NzUcc.js",
+    "assets/skatePoseReview-iBqjhVVv.js"
+  ],
+  "sparseHashedBundles": [
+    "assets/fieldstudio-BTzOEzF3.js",
+    "assets/golfCartLab-B4bA_-7C.js",
+    "assets/index-BDD49jiV.js",
+    "assets/labs-D0NfpcSa.js",
+    "assets/main-BuPp4udF.js",
+    "assets/resetLocalData-C480ELi5.js",
+    "assets/skatePoseReview-C4vl-RKB.js"
+  ],
+  "toolCatalogueEntries": 138,
+  "toolCatalogueIdentical": true,
+  "buildPassed": true,
+  "releaseSizePassed": true,
+  "notes": "Both builds use the same commit. Build timestamps change the main bundle hash and its importers, HTML references, release metadata, and offline manifest; all same-path game assets match byte-for-byte. No authoring files were removed from the repository.",
+  "javascriptEquivalentAfterBuildTimeAndBundleHashNormalization": true
+}

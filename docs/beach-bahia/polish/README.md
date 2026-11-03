@@ -77,6 +77,14 @@ the normal player, keyboard input, collision, checkpoints and finish.
 - Production build/type-check and release-size check pass: 809,015,865 bytes
   against the existing 1,000,000,000-byte hosting budget. No full suite ran.
 
+The release checkout now skips the large `art/` and `docs/` authoring archives,
+retaining the three imported level snapshots and all HTML tool-catalogue entries.
+An explicitly requested full suite restores the complete checkout. Two builds
+of the same commit produced the same 1,853 files and byte count; all game assets
+match exactly, and all JavaScript matches after normalizing build timestamps and
+generated bundle filenames. See [checkout validation](checkout-validation.json).
+The authoring library remains in the repository.
+
 ![Completed real-input route](route-finish.png)
 
 ![Stone entrance](beach-entry-native.png)

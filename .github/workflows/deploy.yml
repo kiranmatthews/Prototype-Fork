@@ -29,6 +29,21 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Normal releases do not need 4.9 GB of authoring/review archives.
+          # Keep tool-catalogue HTML and the three imported level snapshots.
+          sparse-checkout: |
+            /*
+            !/docs/
+            !/art/
+            /docs/**/*.html
+            /docs/mall/source-survey.json
+            /docs/mall/retail-rails.json
+            /docs/school/source-geometry.json
+          sparse-checkout-cone-mode: false
+      - name: Restore authoring files for the explicitly requested full suite
+        if: github.event_name == 'workflow_dispatch' && inputs.full_suite
+        run: git sparse-checkout disable
       - uses: actions/setup-node@v4
         with:
           node-version: 22
