@@ -584,11 +584,12 @@ export class CharacterAnimationRuntime {
           : inputs.jakLedgeSide < 0 ? 'player.jak-ledge-right' : 'player.jak-ledge-catch';
         const catchDuration = this.findPlayableClip(catchId)!.duration;
         const elapsed = inputs.jakLedgeSeconds ?? 0;
-        if (elapsed < catchDuration) {requested = catchId; directTime = elapsed;}
+        if(inputs.jakLedgeMoving) {requested='player.hang';directTime=0;}
+        else if (elapsed < catchDuration) {requested = catchId; directTime = elapsed;}
         else {
           const a = this.findPlayableClip('player.hang')!.duration;
           const b = this.findPlayableClip('player.jak-hang-shift')!.duration;
-          const cycle = (elapsed - catchDuration) % (a + b);
+          const cycle = Math.min(elapsed-catchDuration,inputs.jakLedgeRestSeconds??0) % (a + b);
           requested = cycle < a ? 'player.hang' : 'player.jak-hang-shift';
           directTime = cycle < a ? cycle : cycle - a;
         }
@@ -655,7 +656,8 @@ export class CharacterAnimationRuntime {
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
-          : clip.metadata?.jakDirect ? (previousClipId ? clip.id === LAND_CLIP_ID ? .02 : .05 : 0)
+          : clip.metadata?.jakDirect ? (previousClipId ? clip.id === LAND_CLIP_ID ? .02
+            : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14 : .05 : 0)
           : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
       // Bail's visible get-up is a moving procedural pose under its editable

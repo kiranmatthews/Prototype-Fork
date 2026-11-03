@@ -251,3 +251,42 @@ and double jumps, and hold-to-skate. Maximum settled/catch grip error is
 0.000193 m on the default Bone Man. The raw retarget test now checks 1,599 poses,
 preserving major limb directions within 0.0000013 degrees. Strict playtest types,
 production build and release-size checks are also required before handoff.
+
+## D — ledge traversal polish, 4 November 2026 NZDT
+
+The initial short, reduced-input shimmy check missed full-speed reversals.
+Distance-quantised hand targets dragged the visual torso sideways and could
+rewind during a direction change. The local playground also displayed an
+inspection camera while movement could still read the course camera.
+
+D now uses a timed alternating reach with one fixed world-space plant. A
+reversal redirects the lifted hand from its current position; releasing the
+stick finishes the reach and settles the displaced grips once. The torso
+follows the ledge independently of the contact midpoint. A small bounded visual
+path and facing transition handle corner clearance changes. Hand destinations
+are projected onto the actual top boundary, including narrow supports, and a
+shoulder adjustment fits the edited arm lengths after the IK solve. Moving
+platforms carry the stored contacts and visual centre. Switching away from D
+clears those contacts before returning to it.
+
+Traversal uses the source's quiet hanging pose while hands are stepping. The
+expressive alternating source holds resume after stopping. These reaches are
+an adaptation for our existing shimmy controller; the original swing-left and
+swing-right clips remain directional catches. The existing 2.4 m/s traversal,
+collision path, climb/drop logic, jump physics and skating gesture are retained.
+
+The playground now resolves input through the displayed camera, including its
+frozen diagnostic view. **Watch motion → Shimmy ledge** exercises full-speed
+reversals. **Control this ledge** takes over the current hanging pose without
+respawning, leaving the same controls available for manual practice.
+
+Validation: `tools/test-ledge-hands.mjs` checks planted contacts, reversals,
+finite settling and moving-support carry at 30/60/120 Hz. The external-bank
+`tools/test-jak-ledge-traverse.mjs` checks 1,731 native frames: both directions,
+multiple reversals, stopping, both corner routes and switching back to D.
+Straight traversal's worst hip displacement fell from 0.133 to 0.052 m/frame
+at 60 Hz, with no backwards steps against held input. Default-rig hand residual
+stays below 1 mm in the straight/corner fixture. The existing 2,485-frame
+ledge/flip/skate regression, strict playtest types and production build pass.
+Manual browser reversals, an actual corner traverse and normal/native views
+are saved in the external `ledge-shimmy-review` directory. No console errors.

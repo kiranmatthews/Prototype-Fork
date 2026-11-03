@@ -8483,3 +8483,32 @@ Details and limitations: [Green eco fire](GREEN_ECO_FIRE.md).
   `ledge-flip-review` directory; source data remains outside Git.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## 2026-11-04 — Fix D's sideways ledge traversal
+
+- Brief: sideways movement was broken; continue polishing the ledge exploration.
+  About 35 minutes prompt-to-browser-verified playable correction, including
+  full-speed reversals and a manual corner traverse (approximately 12:11–12:46
+  UTC, 3 November). Final regression/build and local handoff followed.
+- Replaced distance-quantised hand stepping with timed alternating reaches,
+  fixed plants, continuous reversal redirection and a finite stopped settle.
+  Removed the hand midpoint's lateral tug on the torso. Added bounded visual
+  corner travel/facing, real lip projection and an arm-length-aware shoulder
+  correction after independent segment deformation.
+- Quiet source hold during traversal; original expressive holds resume at
+  rest. Contact history clears when switching away from D. The local ledge
+  playground now uses its displayed camera for input; Control this ledge lets
+  the player take over an inspection pose without resetting their position.
+- Preserved the existing traversal speed and collision path, climb/drop,
+  release-to-jump, hold-to-skate, A/B/C and the source flip. No level-data,
+  geometry, global tuning, source-asset or production-entrypoint edits.
+- Checks: 1,731 native traversal frames plus 2,485 ledge/flip/skate frames;
+  30/60/120 Hz contact-driver checks; strict types and build. Straight hip step
+  improves from 0.133 to 0.052 m/frame at 60 Hz; no backwards motion against
+  input; hand residual below 1 mm in the default-rig straight/corner fixture.
+- Browser: keyboard reversals in behind/oblique views, ground jump/catch/climb,
+  manual traversal around the block corner, normal 720p and native rendering.
+  No console warnings/errors; normal rendering restored. Evidence is external
+  `ledge-shimmy-review/`. Local D comparison retained; no publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

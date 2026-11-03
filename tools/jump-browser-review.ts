@@ -192,13 +192,14 @@ p.step = (dt: number, input: any, level: Level) => {
     frame++; visited.add(runtime.activeClipId ?? 'legacy');
     return result;
   }
+  if(mode==='Play ledges')p.camDir.set(-Math.sin(angle),0,-Math.cos(angle));
   if (!reviewLevel || frozen || slow && ++skips % 3 !== 0) return;
   if (mode==='Play ledges') {
     nativeStep(dt,input,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');return;
   }
   if (mode.toLowerCase().includes('ledge') || mode.startsWith('Catch ')) {
     p.camDir.set(0,0,-1);
-    const demo={moveX:mode==='Shimmy ledge'&&frame>90&&frame<160?.6:0,
+    const demo={moveX:mode==='Shimmy ledge'?(frame>90&&frame<150?1:frame>=150&&frame<250?-1:frame>=280&&frame<340?1:0):0,
       moveY:mode==='Climb ledge'&&frame===230?1:mode==='Release ledge'&&frame>230?-1:0,
       jumpHeld:false,jumpPressed:false,jumpReleased:false};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
@@ -331,6 +332,13 @@ const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=
 viewSelect.value='Side';
 button(inspectorControls, 'Freeze / play', () => frozen = !frozen);
 button(inspectorControls, 'Slow / realtime', () => slow = !slow);
+button(inspectorControls, 'Control this ledge', () => {
+  mode='Play ledges';frozen=false;slow=false;stopAt='None';
+  if(p.state!=='hang')resetInspector();
+});
+const ledgeHint=document.createElement('small');
+ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
+inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Catch','Rebound','Settled','Pull-up','Release'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
@@ -360,6 +368,7 @@ function report() {
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
     jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
+    cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),
     sourceHip:sourceModel?.getObjectByName('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
     targetHip:binding.joints.get('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
     ecoFire: {...ecoFire.diagnostics, cpuMs: +ecoCpuMs.toFixed(3)}, visited: [...visited]}, null, 2);

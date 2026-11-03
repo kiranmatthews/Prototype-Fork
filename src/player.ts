@@ -1,6 +1,7 @@
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import type { AnimationClip } from './animation/types';
 import { jakFootThrust, studyJumpVelocity, type OnFootJumpStudy } from './onFootJumpStudy';
+import { LedgeHandMotion } from './animation/ledgeHands';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
@@ -621,8 +622,10 @@ export class Player {
   private footStudyImpact = 0;
   private ledgeSourceSeconds = 0;
   private ledgeSourceSide = 0;
-  private ledgeGripOrigin = new THREE.Vector3();
-  private ledgeGripNormal = new THREE.Vector3();
+  private readonly ledgeHands = new LedgeHandMotion();
+  private ledgeRestSeconds = 0;
+  private ledgeReachLift = 0;
+  private ledgeVisualCentre: THREE.Vector3 | null = null;
   /** Read-only presentation evidence for the local motion comparison. */
   ledgeGripError = 0;
   private get directFootStudy(): boolean {
@@ -2406,6 +2409,8 @@ export class Player {
           jakFlipProgress: this.footJumpStudyFlight?.flip
             ? Math.min(1, this.airborneT / Math.max(.28, (2 * this.launchVy / this.footJumpStudyFlight.gravity - CONST.fixedStep) * .88)) : 0,
           jakLedgeSeconds: this.ledgeSourceSeconds,
+          jakLedgeRestSeconds: this.ledgeRestSeconds,
+          jakLedgeMoving: Math.abs(this.ledgeShimmy) > .05 || this.ledgeHands.reaching ? 1 : 0,
           jakLedgeSide: this.ledgeSourceSide,
           jakLedgeRelease: this.state === 'air' && !this.doubleJumpAir && this.hangExitW > 0 &&
             (this.hangClipName === 'drop' || this.hangClipName === 'fall')
@@ -10414,52 +10419,112 @@ export class Player {
   /** Source ledge poses are contact-relative. Translate only the visual body
    * and solve gloves after editable segment proportions/elasticity, leaving
    * the collision body, lip traversal and skateboard solver untouched. */
-  private alignAuthoredLedgeHands(): void {
+  private alignAuthoredLedgeHands(dt:number): void {
     this.ledgeGripError = 0;
     if (this.state !== 'hang' || !this.directFootStudy || !this.authoredClip('player.hang')?.metadata?.jakLedge ||
         !this.armL || !this.armR || !this.elbowL || !this.elbowR || !this.wristL || !this.wristR ||
-        !this.gloveLeft || !this.gloveRight || !this.bodyGroup.parent) return;
+        !this.gloveLeft || !this.gloveRight || !this.bodyGroup.parent) {
+      this.ledgeHands.reset();this.ledgeVisualCentre=null;this.ledgeReachLift=0;return;
+    }
     const weight = this.ledgePhase === 'climb' ? 1 - THREE.MathUtils.smoothstep(this.ledgeClimbK, .45, .8)
       : THREE.MathUtils.smoothstep(this.ledgeEaseT / LEDGE_EASE, 0, 1);
     if (weight <= 0) return;
     const basis = ledgeBasis(this.ledgeNormal, CONST.playerHalf.x, CONST.playerHalf.z);
     const centre = ledgeEdgePoint(new THREE.Vector3(), this.ledgeAnchor, basis);
     centre.y = this.ledgeLip + .025;
-    this.bodyGroup.updateWorldMatrix(true, true);
-    const side = new THREE.Vector3(1,0,0).applyQuaternion(this.bodyGroup.getWorldQuaternion(new THREE.Quaternion()));
-    side.y = 0; side.normalize();
-    if(this.ledgeGripNormal.dot(this.ledgeNormal)<.99) {
-      this.ledgeGripOrigin.copy(centre);this.ledgeGripNormal.copy(this.ledgeNormal);
+    if(this.ledgePhase==='grip') {
+      if(!this.ledgeVisualCentre)this.ledgeVisualCentre=centre.clone();
+      const offset=centre.clone().sub(this.ledgeVisualCentre);
+      this.ledgeVisualCentre.add(offset.clampLength(0,3.2*dt));
+      centre.copy(this.ledgeVisualCentre);
     }
-    // Existing shimmy locomotion remains available. Alternate short hand
-    // reaches along the lip; the other glove holds a fixed world contact.
-    const travel=centre.clone().sub(this.ledgeGripOrigin).dot(side), stride=.28;
-    const targetFor=(sign:number)=>{
-      const phase=travel/stride+(sign>0?0:.5), whole=Math.floor(phase);
-      const reach=THREE.MathUtils.smoothstep(phase-whole,.65,1);
-      const target=this.ledgeGripOrigin.clone().addScaledVector(side,sign*.24+(whole+reach)*stride);
-      target.y=centre.y+Math.sin(reach*Math.PI)*.065*Math.min(1,Math.abs(this.ledgeShimmy)*4);
-      return target;
-    };
-    const leftTarget=targetFor(1),rightTarget=targetFor(-1);
+    this.bodyGroup.updateWorldMatrix(true, true);
+    const side = new THREE.Vector3(-basis.tx,0,-basis.tz);
+    if(this.ledgePhase==='grip')this.ledgeHands.update(dt,centre,side,Math.abs(this.ledgeShimmy)>.05,target=>{
+      // A reach at a seam/corner must land on a real lip, not in empty air.
+      // This runs only when choosing a new contact, not during its playback.
+      if(!this.runLevel)return;
+      const proposed=target.clone();
+      for(const fraction of [1,.65,.3,0]) {
+        target.copy(centre).lerp(proposed,fraction);
+        const frame=ledgeBasis(this.ledgeNormal,CONST.playerHalf.x,CONST.playerHalf.z);
+        const anchor=target.clone().addScaledVector(this.ledgeNormal,frame.skin);anchor.y=this.ledgeAnchor.y;
+        const lip=this.resolveLedgeSupport(this.runLevel,anchor,frame,this.ledgeLip,new THREE.Vector3());
+        if(lip) {
+          ledgeEdgePoint(target,anchor,frame);
+          // The controller permits a wide inward support probe. A glove needs
+          // the actual boundary, especially on the far side of a corner.
+          const supported=(distance:number)=>this.probeWalkableLedgeTop(this.runLevel!,
+            target.x+frame.nx*distance,target.z+frame.nz*distance,
+            lip.y+1,lip.y-.9,lip.y-.45,lip.y+.55)!==null;
+          const innerHit=[-.02,-.06,-.14,-.3,-.6,-1.2].find(supported);
+          const outerHit=[.02,.06,.14,.35].find(distance=>!supported(distance));
+          if(innerHit===undefined||outerHit===undefined)continue;
+          let inside:number=innerHit,outside:number=outerHit;
+          for(let i=0;i<10;i++) {
+            const middle=(inside+outside)*.5;
+            if(supported(middle))inside=middle;else outside=middle;
+          }
+          target.x+=frame.nx*(inside+outside)*.5;target.z+=frame.nz*(inside+outside)*.5;
+          target.y=lip.y+.025;return;
+        }
+      }
+      target.copy(centre);
+    });
+    const leftTarget=this.ledgeHands.left,rightTarget=this.ledgeHands.right;
     const gripCentre=leftTarget.clone().add(rightTarget).multiplyScalar(.5);
     const left = this.gloveLeft.gripSocket, right = this.gloveRight.gripSocket;
     const midpoint = left.getWorldPosition(new THREE.Vector3()).add(right.getWorldPosition(new THREE.Vector3())).multiplyScalar(.5);
-    const delta = gripCentre.sub(midpoint).multiplyScalar(weight);
+    const delta = gripCentre.clone().sub(midpoint).multiplyScalar(weight);
+    // Hands may pause while the other reaches; the torso must keep following
+    // the physical body, never be pulled sideways by the contact midpoint.
+    const hips=this.animationRig.jointsById.get('hips')!.node.getWorldPosition(new THREE.Vector3());
+    const facing=new THREE.Vector3(Math.sin(this.visualYaw),0,Math.cos(this.visualYaw));
+    const bodyCentre=centre.clone().addScaledVector(facing,hips.clone().sub(midpoint).dot(facing));
+    delta.x=(bodyCentre.x-hips.x)*weight;delta.z=(bodyCentre.z-hips.z)*weight;
     // Leave a small elbow bend on Bone Man's longer gloves; a perfectly
     // straight source arm otherwise puts the opposite grip beyond reach.
     delta.y += .045 * weight;
     const parent = this.bodyGroup.parent;
     this.bodyGroup.position.add(parent.worldToLocal(midpoint.clone().add(delta)).sub(parent.worldToLocal(midpoint.clone())));
     this.bodyGroup.updateWorldMatrix(true, true);
+    // A trailing plant can need a little shoulder lift during a reversal.
+    // Fit that lift to the actual edited arm lengths, without dragging the
+    // torso sideways, stretching the whole rig, or sliding the planted glove.
+    const liftFor = (root:THREE.Object3D,mid:THREE.Object3D,effector:THREE.Object3D,target:THREE.Vector3) => {
+      const shoulder=root.getWorldPosition(new THREE.Vector3()), elbow=mid.getWorldPosition(new THREE.Vector3());
+      const reach=shoulder.distanceTo(elbow)+elbow.distanceTo(effector.getWorldPosition(new THREE.Vector3()));
+      const offset=target.clone().sub(shoulder);
+      return offset.y-Math.sqrt(Math.max(0,(reach-.015)**2-offset.x**2-offset.z**2));
+    };
+    if(this.ledgePhase==='grip') {
+      const required=Math.max(0,liftFor(this.armR,this.elbowR,left,leftTarget),liftFor(this.armL,this.elbowL,right,rightTarget));
+      this.ledgeReachLift=Math.max(Math.min(required,.32),this.ledgeReachLift-.5*dt);
+    }
+    const lift=this.ledgeReachLift*weight*(this.ledgePhase==='climb'?1-THREE.MathUtils.smoothstep(this.ledgeClimbK,0,.45):1);
+    this.bodyGroup.position.add(parent.worldToLocal(new THREE.Vector3(0,lift,0)).sub(parent.worldToLocal(new THREE.Vector3())));
+    this.bodyGroup.updateWorldMatrix(true,true);
     const solve = (root: THREE.Object3D, mid: THREE.Object3D, end: THREE.Object3D, effector: THREE.Object3D, target:THREE.Vector3) => {
       const pole = mid.getWorldPosition(new THREE.Vector3()).addScaledVector(this.ledgeNormal, .2);
       for (let i=0;i<4;i++)solveTwoBoneIk({root,mid,end,effector,target,pole,weight,
         accountForParentScale:true,tolerance:.002});
-      this.ledgeGripError = Math.max(this.ledgeGripError,effector.getWorldPosition(new THREE.Vector3()).distanceTo(target));
+      if(weight>.99)this.ledgeGripError = Math.max(this.ledgeGripError,effector.getWorldPosition(new THREE.Vector3()).distanceTo(target));
     };
     solve(this.armR,this.elbowR,this.wristR,left,leftTarget);
     solve(this.armL,this.elbowL,this.wristL,right,rightTarget);
+    // Re-measure after rotating the edited, non-uniform limb segments. Their
+    // effective world reach can shorten around a corner, so finish the small
+    // shoulder adjustment using the solved pose rather than a stale length.
+    for(let pass=0;pass<2 && this.ledgePhase==='grip' && this.ledgeGripError>.002;pass++) {
+      const extra=Math.min(.4-this.ledgeReachLift,Math.max(0,
+        liftFor(this.armR,this.elbowR,left,leftTarget),liftFor(this.armL,this.elbowL,right,rightTarget)));
+      if(extra<=.001)break;
+      this.ledgeReachLift+=extra;
+      this.bodyGroup.position.add(parent.worldToLocal(new THREE.Vector3(0,extra,0)).sub(parent.worldToLocal(new THREE.Vector3())));
+      this.bodyGroup.updateWorldMatrix(true,true);this.ledgeGripError=0;
+      solve(this.armR,this.elbowR,this.wristR,left,leftTarget);
+      solve(this.armL,this.elbowL,this.wristL,right,rightTarget);
+    }
   }
 
   /** Unity applies its authored rope clips first, then pins both wrists back
@@ -16741,10 +16806,13 @@ export class Player {
     const along = incoming.lengthSq() > .01 ? incoming.normalize().dot(tangent) : 0;
     this.ledgeSourceSide = along > .3 ? 1 : along < -.3 ? -1 : 0;
     this.ledgeSourceSeconds = 0;
+    this.ledgeRestSeconds = 0;
+    this.ledgeReachLift = 0;
+    this.ledgeVisualCentre = null;
     // A catch cancels the visual somersault, retaining the already-selected
     // air parameters used by the existing ledge exit.
     if(this.footJumpStudyLaunch)this.footJumpStudyLaunch={...this.footJumpStudyLaunch,flip:false};
-    this.ledgeGripNormal.set(0,0,0);
+    this.ledgeHands.reset();
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
     this.ledgePhase = 'grip';
@@ -16818,7 +16886,8 @@ export class Player {
         this.ledgeFrom.add(delta);
         this.ledgeClimbFrom.add(delta);
         this.ledgeClimbTo.add(delta);
-        this.ledgeGripOrigin.add(delta);
+        this.ledgeHands.carry(delta);
+        this.ledgeVisualCentre?.add(delta);
         this.ledgeLip += delta.y;
       }
     }
@@ -16886,6 +16955,8 @@ export class Player {
         basis,
       );
       const { shim } = gripIntent;
+      this.ledgeRestSeconds = Math.abs(shim)>LEDGE_SHIM_INPUT_THRESHOLD || this.ledgeHands.reaching
+        ? 0 : this.ledgeRestSeconds + dt;
       this.ledgeShimmy +=
         ((Math.abs(shim) > LEDGE_SHIM_INPUT_THRESHOLD ? shim : 0) - this.ledgeShimmy) *
         Math.min(1, 12 * dt);
@@ -18874,7 +18945,8 @@ export class Player {
     }
     if (this.kiteTowing && this.state !== 'grind') targetYaw *= this.kitePoseMotion;
     if (this.state === 'hang') {
-      this.visualYaw = targetYaw;
+      this.visualYaw = this.ledgeSourceSeconds>LEDGE_EASE && this.authoredClip('player.hang')?.metadata?.jakLedge
+        ? stepFacingYaw(this.visualYaw,targetYaw,8*dt,1) : targetYaw;
     } else if (intentFacing) {
       // Pure lateral reversals are exactly PI apart, where "shortest" has no
       // unique sign. Turn toward screen-right clockwise and screen-left
@@ -19835,6 +19907,7 @@ export class Player {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
       this.bodyGroup.rotation.x = 0;
+      if (this.state==='hang' && directOwnsBody) this.bodyGroup.rotation.z=0;
     } else {
       // forward lean builds with real running speed (sprint posture)
       const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1));
@@ -20302,7 +20375,7 @@ export class Player {
       );
     }
     this.alignHandsToRopeGrip(dt);
-    this.alignAuthoredLedgeHands();
+    this.alignAuthoredLedgeHands(dt);
     // Character Lab proportions and authored animation both move endpoints.
     // Plant only after both layers so feet cannot slide away from the deck.
     // The hop needs a fully seated reference from its first frame; the old
