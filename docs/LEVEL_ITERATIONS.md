@@ -8311,3 +8311,22 @@ keyboard playthrough finishes with 11 checkpoint states, 13 jumps, zero crashes
 and no console errors. No full suite ran. Release output: 805,684,970 bytes.
 
 Evidence, reference sequence and provenance: [Bahia iteration](beach-bahia/README.md).
+
+## 2026-11-04 — Ripcord River finish chasm
+
+Widen the last gap from 12 m to 56 m so the final boulder falls clear of the
+sanctuary. Add an 86.65 m grind rail with supported entry and exit, a 40 m
+approach bank, and fruit guiding the player onto the rail. Keep the rail 10.8 m
+off the stone's centreline at the drop, then curve it back toward the crystal.
+Preserve the finish position, four checkpoints, chase speeds and player tuning.
+
+Prompt to browser-validated playable: approximately **18 minutes**
+(12:40–12:58 UTC). The full native input run finishes in 89.68 seconds with four
+checkpoints, the crystal, zero deaths and an uninterrupted grind over the gap.
+The actual boulder fall clears the rail by at least 2.66 m and the far bank by
+4.74 m. Ground rays verify the open centre and both shoulders. Chrome lite/full
+reviews cover the crossing, deliberate pit death and supported respawn, and
+the boulder fall at MAX/native 3024 × 1724. Required level checks, production
+build and release-size check pass; no full suite ran. Release: 805,685,438 bytes.
+
+Evidence and reusable local review controls: [Chasm iteration](ripcord-chasm/README.md).

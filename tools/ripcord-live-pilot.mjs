@@ -19,6 +19,7 @@ export function createRipcordLivePilot(g,name='inner-low'){
  const {until,untilPred,hop,stepFor}=rumblewaterSteps({r,s,follow,skate,grind,report});
  function* play(){
   yield* stepFor(20);
+  if(name!=='chasm'){
   yield* hop(142.2,156,m.terraceLane);yield* hop(234.2,250,m.terraceLane);
   yield* until(405,()=>skate(s=>s<330?m.terraceLane(s):0),'terrace vault');
   const twin=s=>m.twinLane(s,side),a=side<0?548:626,b=side<0?557:636;
@@ -35,7 +36,13 @@ export function createRipcordLivePilot(g,name='inner-low'){
   yield* hop(1338.2,1353,m.canopyLane);yield* hop(1452.2,1466,m.canopyLane);
   yield* until(1608,()=>skate(m.canopyLane),'thunder checkpoint');
   yield* hop(1704.2,1719);yield* hop(1798.2,1811);
-  yield* hop(m.RIPCORD_BOULDER_END-1.8,m.RIPCORD_BOULDER_END+15);
+  }
+  yield* until(m.RIPCORD_BOULDER_END-23,()=>skate(m.ripcordEscapeApproachLane),'escape rail approach');
+  yield* untilPred(()=>p.state==='grind',()=>grind(m.ripcordEscapeRailLane),{maxFrames:400,label:'chasm escape rail catch'});
+  report.chasmCatch=r.snapshot();
+  yield* until(m.RIPCORD_SANCTUARY_START+7,()=>grind(m.ripcordEscapeRailLane),'chasm grind');
+  report.chasmCrossing=r.snapshot();
+  yield* untilPred(()=>p.state==='finished'||p.grounded&&p.state!=='grind',()=>follow(0,{jumpHeld:true}),{maxFrames:400,label:'sanctuary rail landing'});
   yield* untilPred(()=>p.state==='finished',()=>skate(),{maxFrames:900,label:'Ripcord sanctuary finish'});
  }
  const iterator=play();

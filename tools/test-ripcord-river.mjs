@@ -37,7 +37,8 @@ await withBlockworksRuntime(async r=>{
   assert.ok(r.l.raycastGround(ray).some(h=>h.face&&h.face.normal.y>.15),'supported widened route '+s+'/'+u);
  }
  for(const gap of m.RIPCORD_GAPS){
-  assert.ok(gap.b-gap.a>=8&&gap.b-gap.a<=12.0001,'normal 8–12 m jumps, no extreme crossings');
+  if(gap.name==='Ripcord final boulder drop')assert.equal(gap.b-gap.a,56,'final chasm requires the escape rail');
+  else assert.ok(gap.b-gap.a>=8&&gap.b-gap.a<=12.0001,'ordinary jumps remain 8–12 m');
   const p=m.ripcordPoint((gap.a+gap.b)/2,undefined,gap.u);ray.set(new r.THREE.Vector3(...p).add(new r.THREE.Vector3(0,.25,0)),down);ray.far=.5;
   assert.equal(r.l.raycastGround(ray).length,0,gap.name+' remains physically open');
  }

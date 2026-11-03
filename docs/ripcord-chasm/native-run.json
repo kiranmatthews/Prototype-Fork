@@ -1,0 +1,183 @@
+{
+  "gapMetres": 56,
+  "railMetres": 86.65496733293082,
+  "seconds": 89.68333333333334,
+  "deaths": 0,
+  "checkpoints": 4,
+  "crystal": true,
+  "grindFrames": 112,
+  "closestRail": 2.6598035792998083,
+  "farBankClearance": 4.74325304680433,
+  "boulderFall": {
+    "frames": 176,
+    "first": {
+      "s": 1863.0895043643966,
+      "y": -34.081999999999994
+    },
+    "last": {
+      "s": 1906.1461971630629,
+      "y": -136.74866666666645
+    }
+  },
+  "pilot": {
+    "jump142.2": {
+      "frame": 504,
+      "position": [
+        9.061738043067333,
+        16.829801838150704,
+        -156.93458151050933
+      ],
+      "state": "ride",
+      "progress": 156.67261279228123
+    },
+    "jump234.2": {
+      "frame": 751,
+      "position": [
+        20.93164731442359,
+        13.747112963755033,
+        -250.125419849896
+      ],
+      "state": "ride",
+      "progress": 250.08748384891223
+    },
+    "jump546.2": {
+      "frame": 1645,
+      "position": [
+        -26.156116900812844,
+        3.3603096624414808,
+        -563.3291497920752
+      ],
+      "state": "ride",
+      "progress": 564.8383500882971
+    },
+    "jump902.2": {
+      "frame": 2612,
+      "position": [
+        -27.31396612573323,
+        -9.278670614483005,
+        -917.0321698696868
+      ],
+      "state": "ride",
+      "progress": 917.3054620621417
+    },
+    "jump1008.2": {
+      "frame": 2890,
+      "position": [
+        -17.378734366805453,
+        -14.355980909157333,
+        -1023.0566714165867
+      ],
+      "state": "ride",
+      "progress": 1022.4362299261902
+    },
+    "jump1338.2": {
+      "frame": 3888,
+      "position": [
+        39.70095430807853,
+        -23.458308248987546,
+        -1353.5450074810904
+      ],
+      "state": "ride",
+      "progress": 1353.2819839623207
+    },
+    "jump1452.2": {
+      "frame": 4187,
+      "position": [
+        48.5080854955596,
+        -28.387030054115932,
+        -1467.1820580892286
+      ],
+      "state": "ride",
+      "progress": 1467.031807853411
+    },
+    "jump1704.2": {
+      "frame": 4925,
+      "position": [
+        7.846482938916608,
+        -37.65722644551728,
+        -1722.9474982700658
+      ],
+      "state": "ride",
+      "progress": 1722.9462430672145
+    },
+    "jump1798.2": {
+      "frame": 5118,
+      "position": [
+        -10.654555028774052,
+        -40.75261682186164,
+        -1816.7379919895388
+      ],
+      "state": "ride",
+      "progress": 1816.748407924521
+    },
+    "chasmCatch": {
+      "frame": 5174,
+      "position": [
+        -5.560302261757851,
+        -41.578511174161875,
+        -1843.3863204107674
+      ],
+      "state": "grind"
+    },
+    "chasmCrossing": {
+      "frame": 5346,
+      "position": [
+        -27.07434300722848,
+        -43.420804065016824,
+        -1926.3865928792977
+      ],
+      "state": "grind"
+    }
+  },
+  "final": {
+    "frame": 5381,
+    "time": 89.68333333333334,
+    "position": [
+      -28.873472723829167,
+      -44.25133333355685,
+      -1943.649839412381
+    ],
+    "heading": [
+      -0.09602439644885423,
+      0,
+      -0.9953789807337872
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "warp pad",
+      "y": -44.25133333355685,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": -1,
+      "jumpHeld": true,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

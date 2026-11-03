@@ -51,7 +51,12 @@ let lo=0,hi=RUMBLEWATER_END;
 for(let i=0;i<32;i++){const mid=(lo+hi)/2;if(riverLength(mid,ripcordPoint)<ROLLING_BONES_LENGTH*.7)lo=mid;else hi=mid;}
 export const RIPCORD_END=(lo+hi)/2;
 export const RIPCORD_LENGTH=riverLength(RIPCORD_END,ripcordPoint);
-export const RIPCORD_BOULDER_END=RIPCORD_END-30;
+// The last stone drops down a full-width, 56 m chasm. The escape rail stays
+// outside its radius until the falling stone is safely below the crossing.
+export const RIPCORD_BOULDER_END=RIPCORD_END-82;
+export const RIPCORD_SANCTUARY_START=RIPCORD_END-26;
+export const ripcordEscapeRailLane=(s:number)=>10.8*(1-smooth((s-RIPCORD_BOULDER_END-26)/(RIPCORD_SANCTUARY_START-RIPCORD_BOULDER_END-26)));
+export const ripcordEscapeApproachLane=(s:number)=>ripcordEscapeRailLane(s)*smooth((s-RIPCORD_BOULDER_END+40)/20);
 export const RIPCORD_SECTIONS=[
  {a:0,b:376,name:'Broken terraces'},
  {a:376,b:777,name:'Twin spillways'},
@@ -77,8 +82,9 @@ function fruit(a:number,b:number,u:Scalar=0,lift:Scalar=1,step=8){
 function box(s:number,u=0,kind:CustomComponent['kind']='wood'){
  C.push({t:'crate',p:ripcordPoint(s,ripcordHeight(s),u),kind,grp:group(s),nm:'Ripcord supplies'});
 }
-function gap(a:number,b:number,u:number,name:string,route?:'left'|'right'){
+function gap(a:number,b:number,u:number,name:string,route?:'left'|'right',jumpMarkers=true){
  RIPCORD_GAPS.push({a,b,u,name,route});
+ if(!jumpMarkers)return;
  for(const side of [-1,1])C.push({t:'decor',dkind:'coastpillar',p:ripcordPoint(a-5,ripcordHeight(a-5)-.2,u+side*5.8),s:[.62,1.95,.52],yaw:ripcordYaw(a-5),scenerySolid:false,grp:group(a),nm:name+' takeoff markers'});
  fruit(a-18,a-2,u,1,4);fruit(a+4,a+4,u,2.5);
 }
@@ -138,9 +144,14 @@ fruit(1198,1320,0);fruit(1360,1436,canopyLane);fruit(1474,1537,canopyLane);box(1
 
 pipe(1600,1706,0,4.5,3.5,'Thunder first bowl');gap(1706,1716,0,'Thunder bowl leap');bank(1716,1760,18,0,'Thunder landing island');
 pipe(1760,1800,0,4.5,3.5,'Thunder short bowl');gap(1800,1808,0,'Thunder stepping leap');
-pipe(1808,RIPCORD_BOULDER_END,0,4.5,3.5,'Thunder last sweep');gap(RIPCORD_BOULDER_END,RIPCORD_BOULDER_END+12,0,'Ripcord final boulder drop');
-bank(RIPCORD_BOULDER_END+12,RIPCORD_END+20,24,0,'Ripcord sanctuary island');
-fruit(1612,1686);fruit(1726,1748);fruit(1770,1784);fruit(1820,RIPCORD_BOULDER_END-22);fruit(RIPCORD_BOULDER_END+18,RIPCORD_END-4,0,1,5);
+pipe(1808,RIPCORD_BOULDER_END-40,0,4.5,3.5,'Thunder last sweep');
+bank(RIPCORD_BOULDER_END-40,RIPCORD_BOULDER_END,24,0,'Ripcord escape rail approach');
+gap(RIPCORD_BOULDER_END,RIPCORD_SANCTUARY_START,0,'Ripcord final boulder drop',undefined,false);
+bank(RIPCORD_SANCTUARY_START,RIPCORD_END+20,24,0,'Ripcord sanctuary island');
+rail(RIPCORD_BOULDER_END-20,RIPCORD_SANCTUARY_START+8,ripcordEscapeRailLane,'Ripcord chasm escape rail');
+fruit(1612,1686);fruit(1726,1748);fruit(1770,1784);fruit(1820,RIPCORD_BOULDER_END-40);
+fruit(RIPCORD_BOULDER_END-36,RIPCORD_BOULDER_END-20,ripcordEscapeApproachLane,1,4);
+fruit(RIPCORD_SANCTUARY_START+12,RIPCORD_END-4,0,1,5);
 C.push({t:'crystal',p:ripcordPoint(RIPCORD_END-10,ripcordHeight(RIPCORD_END-10)+1.2),grp:144,nm:'Ripcord sanctuary crystal'},
  {t:'crate',kind:'nitrobang',p:ripcordPoint(RIPCORD_END-6,ripcordHeight(RIPCORD_END-6),8),grp:144,nm:'Ripcord nitro clear'},
  {t:'gate',p:ripcordPoint(RIPCORD_END),yaw:ripcordYaw(RIPCORD_END),grp:144,nm:'Ripcord sanctuary'});
