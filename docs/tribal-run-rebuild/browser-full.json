@@ -1,0 +1,28 @@
+{
+  "url": "http://127.0.0.1:5194/tribal-moving-review.html?playtest&level=tribal-run",
+  "rendering": "full, normal 720 lines; separate MAX/native inspection",
+  "courseClear": true,
+  "observedResult": "COURSE CLEAR — Tribal Run; Rewards earned: Crystal",
+  "seconds": 416.46666666666664,
+  "movingPlatforms": 29,
+  "checkpoints": 9,
+  "deaths": 0,
+  "assetErrors": [],
+  "consoleWarningsAndErrors": [],
+  "inputPilotModeAtOutro": "Input pilot",
+  "notes": "The production result flow consumes the finished state and pauses Player steps before the generator can return. Course Clear and the earned crystal were verified in the rendered result UI and accessibility tree.",
+  "riverReset": {
+    "assets": [],
+    "checkpoints": 9,
+    "deaths": 0,
+    "grounded": true,
+    "mode": "Water reset",
+    "position": [
+      371.27,
+      12,
+      -1180.01
+    ],
+    "state": "ride"
+  },
+  "levelDataSha256": "d2f42eee83e87e260fd566f80f1fe857c173c45fb83b350e51cdd8c7883e376c"
+}

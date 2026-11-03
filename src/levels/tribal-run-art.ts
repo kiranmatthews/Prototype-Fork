@@ -74,11 +74,11 @@ export function dressTribalRun(data:CustomLevelData,course:Course):void{
  for(const c of base){
   if(c.t==='pit')c.invisible=true;
   if(c.t==='mesh'){
-   c.tex=c.nm?.startsWith('Canopy loom')?'treehouse-timber':'tribal-sunstone';c.color='#e8e6d4';
+   if(!c.slip){const loam=c.nm?.startsWith('Rootstep Rise')||c.nm?.startsWith('Echo Switchbacks');c.tex=loam?'treehouse-loam':c.nm?.startsWith('Canopy Weave')?'treehouse-timber':'tribal-sunstone';c.color=loam?'#c5c89b':'#e8e6d4';}
    if(c.normals){c.colors=[];for(let i=0;i<c.normals.length;i+=3){const top=c.normals[i+1]>.6;c.colors.push(...(top?[1,1,1]:[.61,.73,.66]));}}
   }
   if(c.t==='vertramp'){c.tex='tribal-sunstone';c.color='#d8f0df';}
-  if(c.t==='mover'){c.tex='creek-raft';c.color='#bb8750';}
+  if(c.t==='mover'&&!c.vertices){c.tex='creek-raft';c.color='#bb8750';}
   if(c.t==='crumble'){c.tex='treehouse-timber';c.color='#e4c58d';}
   if(c.t==='rail')c.color='#e7ba61';
  }
@@ -172,7 +172,8 @@ export function dressTribalRun(data:CustomLevelData,course:Course):void{
  // verge pieces: entry procession, great court, and the final sun-drum stage.
  k.prop('coastarch',at(-14,-1),[27,17,9],yaw(0),'#ead4a2','Festival entrance · full Meshy gateway',104);
  k.gong(at(985,7.7,-25),7,yaw(985)+22);
- k.gong(at(2308,7.7,24),6.5,yaw(2308)-28);
+ const finish=data.components.find(c=>c.t==='gate')!;
+ k.gong(at(2308,finish.p[1]+7.7,24),6.5,yaw(2308)-28);
  for(const [s,u]of [[88,-31],[963,31],[1618,-32],[2280,-31]]){
   k.prop('trialsv2porchhut',at(s,-.8,u),[12,8.2,10.5],yaw(s)+(u>0?-75:75),'#eddbb3','Meshy festival musicians pavilion',104);
   k.prop('coastv2buttress',at(s,-14,u),[17,13.4,15],yaw(s),'#b8bda1','Pavilion island foundation',103);

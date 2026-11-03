@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 100,
+  "startingBalance": 1,
+  "tasks": {}
+}

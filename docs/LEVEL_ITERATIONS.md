@@ -8517,3 +8517,35 @@ native traversal and tribal-art checks, production build and release-size
 check pass; no full suite ran. Other published levels are unchanged.
 
 Evidence: [Expanded Sunset Safari run](sunset-expanded-run/README.md).
+
+## 2026-11-04 — Tribal Run varied jungle traversal and camera
+
+Replace the repeated flat/ferry pattern with eight distinct passages over
+2.32 km: rooted climbs, six Carlisle-style wet moss sections, 29 moving decks,
+side-to-side drum sequences, orbiting rafts, alternating lifts and seven rails.
+Playable ground ranges from -4 to +22 m. Closed forest banks follow the actual
+offset paths; broad dry receivers provide room after slides and descending
+rails. Separate the final rising decks to prevent competing ground contacts,
+retain all nine checkpoints, and place the crystal on the final grind line.
+Keep movement tuning and full asset geometry intact.
+
+Prompt to fully browser-reviewed playable geometry/camera: approximately
+**59 minutes** (22:37–23:36 UTC). The native input-only run clears every mover
+and rail, all checkpoints, the crystal and finish in 410.583 seconds with zero
+deaths. The full-render browser reaches Course Clear with the crystal in
+416.467 seconds, also with zero deaths; a river drop returns to the final
+checkpoint. MAX/native and normal presentation were inspected. The collision
+audit passes 1,740 support/seam probes, 580 camera-heading probes, 45 crate
+seats and 23 deliberate gaps. The first ferry's full-jump camera rise drops
+from 2.977 m to 0.496 m with essentially the same player jump height.
+Required level checks, production type-check/build and the 810,281,371-byte
+release-size check pass; no full suite was requested or run.
+
+The character portion is explicitly **unfinished**: the current enemy is a
+crab under a costume. A Pacific guardian reference was generated with the
+requested Crash 4 style and Bone Man proportions. Meshy generation and rigging
+await web sign-in/plan-credit access; the API profile has one credit. No model
+job has been submitted. The prepared target is Smart Topology at 15,000
+triangles, with the user's 30,000-triangle absolute ceiling preserved.
+
+Evidence and remaining character work: [Tribal Run rebuild](tribal-run-rebuild/README.md).

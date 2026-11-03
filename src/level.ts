@@ -6616,8 +6616,8 @@ export class Level {
     else if(c.tex==='custard-foam')material=custardFoamMaterial(this.standingWaterClock,c);
     else if(c.tex==='waterfall-cascade')material=createWaterfallClimbCurtain(this.standingWaterClock,this.surfaceTexture(c.tex),c.color??'#ccefe5');
     else if(c.tex==='custard-cascade')material=custardWaterfallMaterial(this.standingWaterClock,c.color??'#91c5b1');
-    else if(c.tex==='tribal-sunstone')material=new THREE.MeshStandardMaterial({
-      color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.88,metalness:0,
+    else if(c.tex==='tribal-sunstone'||c.tex==='tribal-wet-moss')material=new THREE.MeshStandardMaterial({
+      color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:c.tex==='tribal-wet-moss'?.25:.88,metalness:0,
       map:this.surfaceTexture(c.tex),bumpMap:this.surfaceTexture(c.tex),bumpScale:.025,
       side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false,
     });

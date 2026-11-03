@@ -1,0 +1,3589 @@
+{
+  "stage": "Festival finish",
+  "counts": {
+    "movers": 29,
+    "enemies": 35,
+    "rails": 7,
+    "slides": 6,
+    "components": 2298
+  },
+  "rides": [
+    {
+      "name": "Root ferry",
+      "mover": 0,
+      "board": {
+        "frame": 915,
+        "s": 91.86574402411426,
+        "position": [
+          4.609635877969658,
+          7.000000023841858,
+          -91.7008673971512
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 0,
+        "deaths": 0
+      },
+      "carry": 0.23085773741732832,
+      "exit": {
+        "frame": 1247,
+        "s": 121.97834560339557,
+        "position": [
+          0.37742371277712233,
+          6.953548981905656,
+          -121.46999694727009
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Basin lift pair",
+      "mover": 1,
+      "board": {
+        "frame": 3835,
+        "s": 406.3075914988499,
+        "position": [
+          -115.00220295995865,
+          5.219558024454177,
+          -367.38452947985076
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 1,
+        "deaths": 0
+      },
+      "carry": 0.23057768638677886
+    },
+    {
+      "name": "Basin lift pair",
+      "mover": 2,
+      "board": {
+        "frame": 4066,
+        "s": 419.0383779494229,
+        "position": [
+          -112.84869807834484,
+          6.231873178501795,
+          -380.2757662211987
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 2,
+        "deaths": 0
+      },
+      "carry": 0.3593498274394717,
+      "exit": {
+        "frame": 4301,
+        "s": 431.7851701100821,
+        "position": [
+          -107.78408382794753,
+          7,
+          -392.4968423008418
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Rainwash turning raft",
+      "mover": 3,
+      "board": {
+        "frame": 4827,
+        "s": 482.1832859744153,
+        "position": [
+          -64.95960213414276,
+          -4.114071870041891,
+          -420.03194701498165
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 3,
+        "deaths": 0
+      },
+      "carry": 1.0305751786117396,
+      "exit": {
+        "frame": 5073,
+        "s": 500.32289451423134,
+        "position": [
+          -48.02367716887964,
+          -3.9814176140721194,
+          -426.3533937177296
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 4,
+      "board": {
+        "frame": 5718,
+        "s": 571.0127971500401,
+        "position": [
+          22.249477142749008,
+          1.7657264829736015,
+          -443.5565950281175
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 4,
+        "deaths": 0
+      },
+      "carry": 0.16202161683524943
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 5,
+      "board": {
+        "frame": 5937,
+        "s": 580.4184258989549,
+        "position": [
+          31.08954652864714,
+          3.6956860648751606,
+          -435.7583607497092
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 5,
+        "deaths": 0
+      },
+      "carry": 0.9539461392060155
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 6,
+      "board": {
+        "frame": 6155,
+        "s": 591.3504130837571,
+        "position": [
+          42.29226119893507,
+          4.235899297202256,
+          -435.6139183739498
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 6,
+        "deaths": 0
+      },
+      "carry": 0.18014052956228946
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 7,
+      "board": {
+        "frame": 6369,
+        "s": 601.0106613911826,
+        "position": [
+          50.49265494233731,
+          4.595377845274809,
+          -428.1451104883729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 7,
+        "deaths": 0
+      },
+      "carry": 0.595324009035663
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 8,
+      "board": {
+        "frame": 6581,
+        "s": 611.1266175362964,
+        "position": [
+          61.412521171040595,
+          6.285316039075887,
+          -429.6075105378756
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 8,
+        "deaths": 0
+      },
+      "carry": 0.6478348728985884
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 9,
+      "board": {
+        "frame": 6791,
+        "s": 621.167574056587,
+        "position": [
+          70.02169201079667,
+          8.065480762390425,
+          -423.56289706036273
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 9,
+        "deaths": 0
+      },
+      "carry": 0.27459567126295525
+    },
+    {
+      "name": "Crosscurrent stepping drums",
+      "mover": 10,
+      "board": {
+        "frame": 7022,
+        "s": 632.7353537153799,
+        "position": [
+          78.6449848075334,
+          7.837915792856186,
+          -414.1515462778151
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 10,
+        "deaths": 0
+      },
+      "carry": 0.16915809512673893,
+      "exit": {
+        "frame": 7263,
+        "s": 644.2903784429291,
+        "position": [
+          88.5695477445553,
+          7.142095585423462,
+          -408.8034584791214
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "High-bank ferry",
+      "mover": 11,
+      "board": {
+        "frame": 9474,
+        "s": 874.3172985012125,
+        "position": [
+          246.4465612528383,
+          12.000000023841858,
+          -264.8883336539004
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 11,
+        "deaths": 0
+      },
+      "carry": 1.2832024548913996,
+      "exit": {
+        "frame": 9761,
+        "s": 903.9708191582612,
+        "position": [
+          275.57707323855226,
+          11.914947489016471,
+          -270.11362883282004
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Canopy entry lifts",
+      "mover": 12,
+      "board": {
+        "frame": 12205,
+        "s": 1137.9222989999098,
+        "position": [
+          336.2358570446568,
+          10.489944017342326,
+          -477.1343907951284
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 12,
+        "deaths": 0
+      },
+      "carry": 0.6139774101960126
+    },
+    {
+      "name": "Canopy entry lifts",
+      "mover": 13,
+      "board": {
+        "frame": 12436,
+        "s": 1152.4413366421502,
+        "position": [
+          332.2312663856042,
+          10.028305239651594,
+          -491.0872222340282
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 13,
+        "deaths": 0
+      },
+      "carry": 1.2988780345318214,
+      "exit": {
+        "frame": 12664,
+        "s": 1166.0451444154035,
+        "position": [
+          327.8231702207848,
+          10.000481644468692,
+          -503.9520064727334
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Canopy crossing weave",
+      "mover": 14,
+      "board": {
+        "frame": 12925,
+        "s": 1180.8207550247573,
+        "position": [
+          313.4406618883502,
+          11.911310331291158,
+          -513.614021671682
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 14,
+        "deaths": 0
+      },
+      "carry": 0.11436353115805915
+    },
+    {
+      "name": "Canopy crossing weave",
+      "mover": 15,
+      "board": {
+        "frame": 13150,
+        "s": 1192.0706119695665,
+        "position": [
+          313.55534220069165,
+          12.583596409719256,
+          -525.722417723151
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 15,
+        "deaths": 0
+      },
+      "carry": 0.3532223906262975
+    },
+    {
+      "name": "Canopy crossing weave",
+      "mover": 16,
+      "board": {
+        "frame": 13384,
+        "s": 1202.7925145318643,
+        "position": [
+          315.5033541235272,
+          13.95080454817295,
+          -539.2367563628952
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 16,
+        "deaths": 0
+      },
+      "carry": 0.9082072622533315
+    },
+    {
+      "name": "Canopy crossing weave",
+      "mover": 17,
+      "board": {
+        "frame": 13597,
+        "s": 1213.4035919904982,
+        "position": [
+          306.4614219453217,
+          15.84508124591883,
+          -546.1529564907768
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 17,
+        "deaths": 0
+      },
+      "carry": 0.9803336141851104
+    },
+    {
+      "name": "Canopy crossing weave",
+      "mover": 18,
+      "board": {
+        "frame": 13811,
+        "s": 1224.133445670645,
+        "position": [
+          302.4534955018901,
+          17.556975235146602,
+          -557.0400166489281
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 18,
+        "deaths": 0
+      },
+      "carry": 0.962414092550775,
+      "exit": {
+        "frame": 14052,
+        "s": 1236,
+        "position": [
+          297.61797413406435,
+          17,
+          -569.6369976869829
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Sunken stair ferry",
+      "mover": 19,
+      "board": {
+        "frame": 15508,
+        "s": 1423.8336259926145,
+        "position": [
+          127.25006916556612,
+          18.000000023841856,
+          -651.2906576074652
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 19,
+        "deaths": 0
+      },
+      "carry": 0.23797123597177877,
+      "exit": {
+        "frame": 15840,
+        "s": 1453.9754489376464,
+        "position": [
+          99.8414630820507,
+          17.813741867832476,
+          -663.6629094905286
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Sunken stair lifts",
+      "mover": 20,
+      "board": {
+        "frame": 16765,
+        "s": 1564.2583215599207,
+        "position": [
+          66.75192417568937,
+          8.400727467909556,
+          -764.6513490440634
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 20,
+        "deaths": 0
+      },
+      "carry": 0.15449197655623192
+    },
+    {
+      "name": "Sunken stair lifts",
+      "mover": 21,
+      "board": {
+        "frame": 17002,
+        "s": 1578.508349966587,
+        "position": [
+          68.1274496993668,
+          8.20396800220427,
+          -778.8163376457087
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 21,
+        "deaths": 0
+      },
+      "carry": 0.576486962409384,
+      "exit": {
+        "frame": 17240,
+        "s": 1591.9906187642773,
+        "position": [
+          70.79923663747063,
+          8.999092091282389,
+          -792.0137624095188
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Echo turning drum",
+      "mover": 22,
+      "board": {
+        "frame": 19136,
+        "s": 1819.3726622725367,
+        "position": [
+          251.4493728782059,
+          12.613047847596471,
+          -901.241753950754
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 22,
+        "deaths": 0
+      },
+      "carry": 0.5479986888160108,
+      "exit": {
+        "frame": 19538,
+        "s": 1839.969004847276,
+        "position": [
+          272.0757760723841,
+          12.13613499839411,
+          -900.6466356082333
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 22,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "High drum switchback",
+      "mover": 23,
+      "board": {
+        "frame": 20416,
+        "s": 1946.8087549170202,
+        "position": [
+          361.9803953620584,
+          13.372583788381098,
+          -938.7778422767715
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 23,
+        "deaths": 0
+      },
+      "carry": 0.1448829782988299
+    },
+    {
+      "name": "High drum switchback",
+      "mover": 24,
+      "board": {
+        "frame": 20637,
+        "s": 1958.0521763723038,
+        "position": [
+          372.854302119715,
+          15.06960185034013,
+          -943.9046861865155
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 24,
+        "deaths": 0
+      },
+      "carry": 0.9620491786986711
+    },
+    {
+      "name": "High drum switchback",
+      "mover": 25,
+      "board": {
+        "frame": 20876,
+        "s": 1970.287236233576,
+        "position": [
+          386.70035223523803,
+          14.214035319649849,
+          -949.1043809125571
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 25,
+        "deaths": 0
+      },
+      "carry": 0.9616557834335362,
+      "exit": {
+        "frame": 21113,
+        "s": 1982.1383835030763,
+        "position": [
+          395.0212728731622,
+          12.211371300243448,
+          -958.3118335778843
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Final rising drums",
+      "mover": 26,
+      "board": {
+        "frame": 23141,
+        "s": 2182.9227353704405,
+        "position": [
+          394.891414944055,
+          5.835917717251287,
+          -1154.419312997967
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 26,
+        "deaths": 0
+      },
+      "carry": 0.2503518291182722
+    },
+    {
+      "name": "Final rising drums",
+      "mover": 27,
+      "board": {
+        "frame": 23346,
+        "s": 2192.4424830424255,
+        "position": [
+          389.4882282183863,
+          8.070083751837837,
+          -1162.245921546702
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 27,
+        "deaths": 0
+      },
+      "carry": 0.06092000297311745
+    },
+    {
+      "name": "Final rising drums",
+      "mover": 28,
+      "board": {
+        "frame": 23679,
+        "s": 2201.950105772315,
+        "position": [
+          383.35146748921096,
+          11.272434591102977,
+          -1169.4980643561184
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 28,
+        "deaths": 0
+      },
+      "carry": 0.10710327799483578,
+      "exit": {
+        "frame": 23885,
+        "s": 2211.892695178909,
+        "position": [
+          376.3094355411008,
+          12,
+          -1176.5080600487206
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    }
+  ],
+  "actions": [
+    {
+      "label": "Follow climbing path to 86.2",
+      "start": 24,
+      "end": 681
+    },
+    {
+      "label": "Root ferry boarding window 0",
+      "start": 703,
+      "end": 822
+    },
+    {
+      "label": "Root ferry board 0",
+      "start": 855,
+      "end": 915
+    },
+    {
+      "label": "Root ferry cross moving deck 0",
+      "start": 933,
+      "end": 1041
+    },
+    {
+      "label": "Root ferry exit window",
+      "start": 1055,
+      "end": 1154
+    },
+    {
+      "label": "Root ferry fixed landing",
+      "start": 1187,
+      "end": 1247
+    },
+    {
+      "label": "Follow climbing path to 191",
+      "start": 1247,
+      "end": 1809
+    },
+    {
+      "label": "Root ridge grind catch",
+      "start": 1831,
+      "end": 1859
+    },
+    {
+      "label": "Root ridge grind grind",
+      "start": 1859,
+      "end": 2380
+    },
+    {
+      "label": "Root ridge grind landing",
+      "start": 2380,
+      "end": 2391
+    },
+    {
+      "label": "Root ridge grind brake on dry runout",
+      "start": 2391,
+      "end": 2431
+    },
+    {
+      "label": "Root ridge grind settle on runout",
+      "start": 2433,
+      "end": 2471
+    },
+    {
+      "label": "Follow climbing path to 358",
+      "start": 2491,
+      "end": 3281
+    },
+    {
+      "label": "Rainwash lip jump run up",
+      "start": 3303,
+      "end": 3351
+    },
+    {
+      "label": "Rainwash lip jump running charge",
+      "start": 3351,
+      "end": 3381
+    },
+    {
+      "label": "Rainwash lip jump",
+      "start": 3382,
+      "end": 3478
+    },
+    {
+      "label": "Follow climbing path to 400.2",
+      "start": 3478,
+      "end": 3721
+    },
+    {
+      "label": "Basin lift pair boarding window 0",
+      "start": 3743,
+      "end": 3743
+    },
+    {
+      "label": "Basin lift pair board 0",
+      "start": 3776,
+      "end": 3835
+    },
+    {
+      "label": "Basin lift pair cross moving deck 0",
+      "start": 3853,
+      "end": 3959
+    },
+    {
+      "label": "Basin lift pair boarding window 1",
+      "start": 3973,
+      "end": 3973
+    },
+    {
+      "label": "Basin lift pair board 1",
+      "start": 4006,
+      "end": 4066
+    },
+    {
+      "label": "Basin lift pair cross moving deck 1",
+      "start": 4084,
+      "end": 4193
+    },
+    {
+      "label": "Basin lift pair exit window",
+      "start": 4207,
+      "end": 4207
+    },
+    {
+      "label": "Basin lift pair fixed landing",
+      "start": 4240,
+      "end": 4301
+    },
+    {
+      "label": "Follow climbing path to 476.2",
+      "start": 4301,
+      "end": 4712
+    },
+    {
+      "label": "Rainwash turning raft boarding window 0",
+      "start": 4734,
+      "end": 4734
+    },
+    {
+      "label": "Rainwash turning raft board 0",
+      "start": 4767,
+      "end": 4827
+    },
+    {
+      "label": "Rainwash turning raft cross moving deck 0",
+      "start": 4845,
+      "end": 4957
+    },
+    {
+      "label": "Rainwash turning raft exit window",
+      "start": 4971,
+      "end": 4971
+    },
+    {
+      "label": "Rainwash turning raft fixed landing",
+      "start": 5004,
+      "end": 5073
+    },
+    {
+      "label": "Follow climbing path to 566.2",
+      "start": 5073,
+      "end": 5604
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 0",
+      "start": 5626,
+      "end": 5626
+    },
+    {
+      "label": "Crosscurrent stepping drums board 0",
+      "start": 5659,
+      "end": 5718
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 0",
+      "start": 5736,
+      "end": 5837
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 1",
+      "start": 5851,
+      "end": 5851
+    },
+    {
+      "label": "Crosscurrent stepping drums board 1",
+      "start": 5884,
+      "end": 5937
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 1",
+      "start": 5955,
+      "end": 6052
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 2",
+      "start": 6066,
+      "end": 6066
+    },
+    {
+      "label": "Crosscurrent stepping drums board 2",
+      "start": 6099,
+      "end": 6155
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 2",
+      "start": 6173,
+      "end": 6262
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 3",
+      "start": 6276,
+      "end": 6276
+    },
+    {
+      "label": "Crosscurrent stepping drums board 3",
+      "start": 6309,
+      "end": 6369
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 3",
+      "start": 6387,
+      "end": 6475
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 4",
+      "start": 6489,
+      "end": 6489
+    },
+    {
+      "label": "Crosscurrent stepping drums board 4",
+      "start": 6522,
+      "end": 6581
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 4",
+      "start": 6599,
+      "end": 6688
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 5",
+      "start": 6702,
+      "end": 6702
+    },
+    {
+      "label": "Crosscurrent stepping drums board 5",
+      "start": 6735,
+      "end": 6791
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 5",
+      "start": 6809,
+      "end": 6918
+    },
+    {
+      "label": "Crosscurrent stepping drums boarding window 6",
+      "start": 6932,
+      "end": 6932
+    },
+    {
+      "label": "Crosscurrent stepping drums board 6",
+      "start": 6965,
+      "end": 7022
+    },
+    {
+      "label": "Crosscurrent stepping drums cross moving deck 6",
+      "start": 7040,
+      "end": 7148
+    },
+    {
+      "label": "Crosscurrent stepping drums exit window",
+      "start": 7162,
+      "end": 7162
+    },
+    {
+      "label": "Crosscurrent stepping drums fixed landing",
+      "start": 7195,
+      "end": 7263
+    },
+    {
+      "label": "Follow climbing path to 683",
+      "start": 7263,
+      "end": 7639
+    },
+    {
+      "label": "Cross-river vine rail catch",
+      "start": 7661,
+      "end": 7698
+    },
+    {
+      "label": "Cross-river vine rail grind",
+      "start": 7698,
+      "end": 8312
+    },
+    {
+      "label": "Cross-river vine rail landing",
+      "start": 8312,
+      "end": 8328
+    },
+    {
+      "label": "Cross-river vine rail brake on dry runout",
+      "start": 8328,
+      "end": 8380
+    },
+    {
+      "label": "Cross-river vine rail settle on runout",
+      "start": 8382,
+      "end": 8420
+    },
+    {
+      "label": "Follow climbing path to 782",
+      "start": 8440,
+      "end": 8668
+    },
+    {
+      "label": "Fern-bank gap run up",
+      "start": 8690,
+      "end": 8736
+    },
+    {
+      "label": "Fern-bank gap running charge",
+      "start": 8736,
+      "end": 8763
+    },
+    {
+      "label": "Fern-bank gap",
+      "start": 8764,
+      "end": 8824
+    },
+    {
+      "label": "Follow climbing path to 868.2",
+      "start": 8824,
+      "end": 9359
+    },
+    {
+      "label": "High-bank ferry boarding window 0",
+      "start": 9381,
+      "end": 9381
+    },
+    {
+      "label": "High-bank ferry board 0",
+      "start": 9414,
+      "end": 9474
+    },
+    {
+      "label": "High-bank ferry cross moving deck 0",
+      "start": 9492,
+      "end": 9603
+    },
+    {
+      "label": "High-bank ferry exit window",
+      "start": 9617,
+      "end": 9668
+    },
+    {
+      "label": "High-bank ferry fixed landing",
+      "start": 9701,
+      "end": 9761
+    },
+    {
+      "label": "Follow climbing path to 1023",
+      "start": 9761,
+      "end": 10689
+    },
+    {
+      "label": "Drum-court climbing rail catch",
+      "start": 10711,
+      "end": 10745
+    },
+    {
+      "label": "Drum-court climbing rail grind",
+      "start": 10745,
+      "end": 11526
+    },
+    {
+      "label": "Drum-court climbing rail landing",
+      "start": 11526,
+      "end": 11530
+    },
+    {
+      "label": "Drum-court climbing rail brake on dry runout",
+      "start": 11530,
+      "end": 11560
+    },
+    {
+      "label": "Drum-court climbing rail settle on runout",
+      "start": 11562,
+      "end": 11600
+    },
+    {
+      "label": "Follow climbing path to 1132.2",
+      "start": 11620,
+      "end": 12092
+    },
+    {
+      "label": "Canopy entry lifts boarding window 0",
+      "start": 12114,
+      "end": 12114
+    },
+    {
+      "label": "Canopy entry lifts board 0",
+      "start": 12147,
+      "end": 12205
+    },
+    {
+      "label": "Canopy entry lifts cross moving deck 0",
+      "start": 12223,
+      "end": 12330
+    },
+    {
+      "label": "Canopy entry lifts boarding window 1",
+      "start": 12344,
+      "end": 12344
+    },
+    {
+      "label": "Canopy entry lifts board 1",
+      "start": 12377,
+      "end": 12436
+    },
+    {
+      "label": "Canopy entry lifts cross moving deck 1",
+      "start": 12454,
+      "end": 12558
+    },
+    {
+      "label": "Canopy entry lifts exit window",
+      "start": 12572,
+      "end": 12572
+    },
+    {
+      "label": "Canopy entry lifts fixed landing",
+      "start": 12605,
+      "end": 12664
+    },
+    {
+      "label": "Follow climbing path to 1176.2",
+      "start": 12664,
+      "end": 12813
+    },
+    {
+      "label": "Canopy crossing weave boarding window 0",
+      "start": 12835,
+      "end": 12835
+    },
+    {
+      "label": "Canopy crossing weave board 0",
+      "start": 12868,
+      "end": 12925
+    },
+    {
+      "label": "Canopy crossing weave cross moving deck 0",
+      "start": 12943,
+      "end": 13045
+    },
+    {
+      "label": "Canopy crossing weave boarding window 1",
+      "start": 13059,
+      "end": 13059
+    },
+    {
+      "label": "Canopy crossing weave board 1",
+      "start": 13092,
+      "end": 13150
+    },
+    {
+      "label": "Canopy crossing weave cross moving deck 1",
+      "start": 13168,
+      "end": 13278
+    },
+    {
+      "label": "Canopy crossing weave boarding window 2",
+      "start": 13292,
+      "end": 13292
+    },
+    {
+      "label": "Canopy crossing weave board 2",
+      "start": 13325,
+      "end": 13384
+    },
+    {
+      "label": "Canopy crossing weave cross moving deck 2",
+      "start": 13402,
+      "end": 13492
+    },
+    {
+      "label": "Canopy crossing weave boarding window 3",
+      "start": 13506,
+      "end": 13506
+    },
+    {
+      "label": "Canopy crossing weave board 3",
+      "start": 13539,
+      "end": 13597
+    },
+    {
+      "label": "Canopy crossing weave cross moving deck 3",
+      "start": 13615,
+      "end": 13709
+    },
+    {
+      "label": "Canopy crossing weave boarding window 4",
+      "start": 13723,
+      "end": 13723
+    },
+    {
+      "label": "Canopy crossing weave board 4",
+      "start": 13756,
+      "end": 13811
+    },
+    {
+      "label": "Canopy crossing weave cross moving deck 4",
+      "start": 13829,
+      "end": 13947
+    },
+    {
+      "label": "Canopy crossing weave exit window",
+      "start": 13961,
+      "end": 13961
+    },
+    {
+      "label": "Canopy crossing weave fixed landing",
+      "start": 13994,
+      "end": 14052
+    },
+    {
+      "label": "Follow climbing path to 1277",
+      "start": 14052,
+      "end": 14415
+    },
+    {
+      "label": "Canopy descent rail catch",
+      "start": 14437,
+      "end": 14472
+    },
+    {
+      "label": "Canopy descent rail grind",
+      "start": 14472,
+      "end": 14742
+    },
+    {
+      "label": "Canopy descent rail landing",
+      "start": 14742,
+      "end": 14763
+    },
+    {
+      "label": "Canopy descent rail brake on dry runout",
+      "start": 14763,
+      "end": 14843
+    },
+    {
+      "label": "Canopy descent rail settle on runout",
+      "start": 14845,
+      "end": 14883
+    },
+    {
+      "label": "Follow climbing path to 1418.2",
+      "start": 14903,
+      "end": 15320
+    },
+    {
+      "label": "Sunken stair ferry boarding window 0",
+      "start": 15342,
+      "end": 15415
+    },
+    {
+      "label": "Sunken stair ferry board 0",
+      "start": 15448,
+      "end": 15508
+    },
+    {
+      "label": "Sunken stair ferry cross moving deck 0",
+      "start": 15526,
+      "end": 15634
+    },
+    {
+      "label": "Sunken stair ferry exit window",
+      "start": 15648,
+      "end": 15747
+    },
+    {
+      "label": "Sunken stair ferry fixed landing",
+      "start": 15780,
+      "end": 15840
+    },
+    {
+      "label": "Follow climbing path to 1482",
+      "start": 15840,
+      "end": 16011
+    },
+    {
+      "label": "Basin stone jump run up",
+      "start": 16033,
+      "end": 16080
+    },
+    {
+      "label": "Basin stone jump running charge",
+      "start": 16080,
+      "end": 16108
+    },
+    {
+      "label": "Basin stone jump",
+      "start": 16109,
+      "end": 16169
+    },
+    {
+      "label": "Follow climbing path to 1558.2",
+      "start": 16169,
+      "end": 16649
+    },
+    {
+      "label": "Sunken stair lifts boarding window 0",
+      "start": 16671,
+      "end": 16671
+    },
+    {
+      "label": "Sunken stair lifts board 0",
+      "start": 16704,
+      "end": 16765
+    },
+    {
+      "label": "Sunken stair lifts cross moving deck 0",
+      "start": 16783,
+      "end": 16891
+    },
+    {
+      "label": "Sunken stair lifts boarding window 1",
+      "start": 16905,
+      "end": 16905
+    },
+    {
+      "label": "Sunken stair lifts board 1",
+      "start": 16938,
+      "end": 17002
+    },
+    {
+      "label": "Sunken stair lifts cross moving deck 1",
+      "start": 17020,
+      "end": 17131
+    },
+    {
+      "label": "Sunken stair lifts exit window",
+      "start": 17145,
+      "end": 17145
+    },
+    {
+      "label": "Sunken stair lifts fixed landing",
+      "start": 17178,
+      "end": 17240
+    },
+    {
+      "label": "Follow climbing path to 1679",
+      "start": 17240,
+      "end": 17911
+    },
+    {
+      "label": "Echo ridge rail catch",
+      "start": 17933,
+      "end": 17967
+    },
+    {
+      "label": "Echo ridge rail grind",
+      "start": 17967,
+      "end": 18261
+    },
+    {
+      "label": "Echo ridge rail landing",
+      "start": 18261,
+      "end": 18280
+    },
+    {
+      "label": "Echo ridge rail brake on dry runout",
+      "start": 18280,
+      "end": 18351
+    },
+    {
+      "label": "Echo ridge rail settle on runout",
+      "start": 18353,
+      "end": 18391
+    },
+    {
+      "label": "Follow climbing path to 1814.2",
+      "start": 18411,
+      "end": 18882
+    },
+    {
+      "label": "Echo turning drum boarding window 0",
+      "start": 18904,
+      "end": 19046
+    },
+    {
+      "label": "Echo turning drum board 0",
+      "start": 19079,
+      "end": 19136
+    },
+    {
+      "label": "Echo turning drum cross moving deck 0",
+      "start": 19154,
+      "end": 19261
+    },
+    {
+      "label": "Echo turning drum exit window",
+      "start": 19275,
+      "end": 19446
+    },
+    {
+      "label": "Echo turning drum fixed landing",
+      "start": 19479,
+      "end": 19538
+    },
+    {
+      "label": "Follow climbing path to 1894",
+      "start": 19538,
+      "end": 19861
+    },
+    {
+      "label": "Echo bank jump run up",
+      "start": 19883,
+      "end": 19931
+    },
+    {
+      "label": "Echo bank jump running charge",
+      "start": 19931,
+      "end": 19960
+    },
+    {
+      "label": "Echo bank jump",
+      "start": 19961,
+      "end": 20021
+    },
+    {
+      "label": "Follow climbing path to 1942.2",
+      "start": 20021,
+      "end": 20305
+    },
+    {
+      "label": "High drum switchback boarding window 0",
+      "start": 20327,
+      "end": 20327
+    },
+    {
+      "label": "High drum switchback board 0",
+      "start": 20360,
+      "end": 20416
+    },
+    {
+      "label": "High drum switchback cross moving deck 0",
+      "start": 20434,
+      "end": 20537
+    },
+    {
+      "label": "High drum switchback boarding window 1",
+      "start": 20551,
+      "end": 20551
+    },
+    {
+      "label": "High drum switchback board 1",
+      "start": 20584,
+      "end": 20637
+    },
+    {
+      "label": "High drum switchback cross moving deck 1",
+      "start": 20655,
+      "end": 20770
+    },
+    {
+      "label": "High drum switchback boarding window 2",
+      "start": 20784,
+      "end": 20784
+    },
+    {
+      "label": "High drum switchback board 2",
+      "start": 20817,
+      "end": 20876
+    },
+    {
+      "label": "High drum switchback cross moving deck 2",
+      "start": 20894,
+      "end": 21003
+    },
+    {
+      "label": "High drum switchback exit window",
+      "start": 21017,
+      "end": 21017
+    },
+    {
+      "label": "High drum switchback fixed landing",
+      "start": 21050,
+      "end": 21113
+    },
+    {
+      "label": "Follow climbing path to 2041",
+      "start": 21113,
+      "end": 21594
+    },
+    {
+      "label": "Last chorus ascent catch",
+      "start": 21616,
+      "end": 21655
+    },
+    {
+      "label": "Last chorus ascent grind",
+      "start": 21655,
+      "end": 22573
+    },
+    {
+      "label": "Last chorus ascent landing",
+      "start": 22573,
+      "end": 22581
+    },
+    {
+      "label": "Last chorus ascent brake on dry runout",
+      "start": 22581,
+      "end": 22614
+    },
+    {
+      "label": "Last chorus ascent settle on runout",
+      "start": 22616,
+      "end": 22654
+    },
+    {
+      "label": "Follow climbing path to 2178.2",
+      "start": 22674,
+      "end": 23027
+    },
+    {
+      "label": "Final rising drums boarding window 0",
+      "start": 23049,
+      "end": 23049
+    },
+    {
+      "label": "Final rising drums board 0",
+      "start": 23082,
+      "end": 23141
+    },
+    {
+      "label": "Final rising drums cross moving deck 0",
+      "start": 23159,
+      "end": 23241
+    },
+    {
+      "label": "Final rising drums boarding window 1",
+      "start": 23255,
+      "end": 23255
+    },
+    {
+      "label": "Final rising drums board 1",
+      "start": 23288,
+      "end": 23346
+    },
+    {
+      "label": "Final rising drums cross moving deck 1",
+      "start": 23364,
+      "end": 23446
+    },
+    {
+      "label": "Final rising drums boarding window 2",
+      "start": 23460,
+      "end": 23588
+    },
+    {
+      "label": "Final rising drums board 2",
+      "start": 23621,
+      "end": 23679
+    },
+    {
+      "label": "Final rising drums cross moving deck 2",
+      "start": 23697,
+      "end": 23779
+    },
+    {
+      "label": "Final rising drums exit window",
+      "start": 23793,
+      "end": 23793
+    },
+    {
+      "label": "Final rising drums fixed landing",
+      "start": 23826,
+      "end": 23885
+    },
+    {
+      "label": "Follow climbing path to 2239",
+      "start": 23885,
+      "end": 24123
+    },
+    {
+      "label": "Festival finish grind catch",
+      "start": 24145,
+      "end": 24172
+    },
+    {
+      "label": "Festival finish grind grind",
+      "start": 24172,
+      "end": 24402
+    },
+    {
+      "label": "Festival finish grind landing",
+      "start": 24402,
+      "end": 24417
+    },
+    {
+      "label": "Festival finish grind brake on dry runout",
+      "start": 24417,
+      "end": 24490
+    },
+    {
+      "label": "Festival finish grind settle on runout",
+      "start": 24492,
+      "end": 24530
+    },
+    {
+      "label": "Follow climbing path to 2292",
+      "start": 24550,
+      "end": 24550
+    },
+    {
+      "label": "Festival finish",
+      "start": 24572,
+      "end": 24635
+    }
+  ],
+  "rails": [
+    {
+      "name": "Root ridge grind",
+      "start": {
+        "frame": 1859,
+        "s": 192.12973933628024,
+        "position": [
+          -37.533752814430166,
+          10,
+          -179.54560383308802
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 2391,
+        "s": 241.52990984660235,
+        "position": [
+          -63.642420626393836,
+          10,
+          -221.74026674703833
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Cross-river vine rail",
+      "start": {
+        "frame": 7698,
+        "s": 684.9316145562491,
+        "position": [
+          133.0847530856105,
+          11.702568096880935,
+          -404.7843942583396
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 8328,
+        "s": 756.5469241752626,
+        "position": [
+          163.2711719314189,
+          11.025683200315546,
+          -337.85110335949406
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Drum-court climbing rail",
+      "start": {
+        "frame": 10745,
+        "s": 1024.710506422335,
+        "position": [
+          335.58633938050923,
+          0,
+          -365.89720705170754
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 11530,
+        "s": 1072.790300516363,
+        "position": [
+          350.87550409576625,
+          5.916765807442798,
+          -412.7993274839148
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Canopy descent rail",
+      "start": {
+        "frame": 14472,
+        "s": 1278.8298155431678,
+        "position": [
+          253.1508691149596,
+          22,
+          -582.8162348176422
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 14763,
+        "s": 1355.0187080574638,
+        "position": [
+          196.31842350521362,
+          12,
+          -635.6311044359068
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Echo ridge rail",
+      "start": {
+        "frame": 17967,
+        "s": 1680.6731450929306,
+        "position": [
+          120.48877766679352,
+          6.348935578897265,
+          -865.4542284148699
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 18280,
+        "s": 1749.9356905743489,
+        "position": [
+          185.5196625674798,
+          1,
+          -891.1054223603611
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Last chorus ascent",
+      "start": {
+        "frame": 21655,
+        "s": 2043.391488117802,
+        "position": [
+          405.88642102299093,
+          12.839499818871461,
+          -1019.8684275412887
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 22581,
+        "s": 2102.967193595124,
+        "position": [
+          421.48488083737396,
+          17.985860711847934,
+          -1078.2623482770205
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Festival finish grind",
+      "start": {
+        "frame": 24172,
+        "s": 2240.0669938701167,
+        "position": [
+          351.11047005609333,
+          11.999671781978273,
+          -1189.454790905174
+        ],
+        "state": "grind",
+        "grounded": false,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 24417,
+        "s": 2290.6131843393423,
+        "position": [
+          314.99100542417347,
+          6,
+          -1226.3288699069724
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      }
+    }
+  ],
+  "jumps": [
+    {
+      "name": "Root ferry board 0",
+      "start": {
+        "frame": 822,
+        "s": 86.05681520162119,
+        "position": [
+          4.747409830430648,
+          7,
+          -85.89365292495964
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 915,
+        "s": 91.86574402411426,
+        "position": [
+          4.609635877969658,
+          7.000000023841858,
+          -91.7008673971512
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 0,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Root ferry fixed landing",
+      "start": {
+        "frame": 1154,
+        "s": 115.24657221338275,
+        "position": [
+          1.9050081509502348,
+          7.000000023841858,
+          -114.90642828365776
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 0,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 1247,
+        "s": 121.97834560339557,
+        "position": [
+          0.37742371277712233,
+          6.953548981905656,
+          -121.46999694727009
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Rainwash lip jump",
+      "start": {
+        "frame": 3303,
+        "s": 357.82591909078735,
+        "position": [
+          -126.37392314437368,
+          -2,
+          -319.185404672131
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 3478,
+        "s": 372.19464608480234,
+        "position": [
+          -121.80370039773298,
+          -2,
+          -333.8790703795774
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Basin lift pair board 0",
+      "start": {
+        "frame": 3743,
+        "s": 400.0498514170184,
+        "position": [
+          -116.58981181933252,
+          4.932335870488108,
+          -361.3350359196388
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 3835,
+        "s": 406.3075914988499,
+        "position": [
+          -115.00220295995865,
+          5.219558024454177,
+          -367.38452947985076
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 1,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Basin lift pair board 1",
+      "start": {
+        "frame": 3973,
+        "s": 413.16297990938995,
+        "position": [
+          -113.6393475299406,
+          5.8330137435693,
+          -374.17243520666347
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 1,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 4066,
+        "s": 419.0383779494229,
+        "position": [
+          -112.84869807834484,
+          6.231873178501795,
+          -380.2757662211987
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 2,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Basin lift pair fixed landing",
+      "start": {
+        "frame": 4207,
+        "s": 426.06992723979295,
+        "position": [
+          -110.5250702821583,
+          7.151119611229756,
+          -387.25963499731716
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 2,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 4301,
+        "s": 431.7851701100821,
+        "position": [
+          -107.78408382794753,
+          7,
+          -392.4968423008418
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Rainwash turning raft board 0",
+      "start": {
+        "frame": 4734,
+        "s": 476.30835343708,
+        "position": [
+          -69.396011704829,
+          -3.784523680169114,
+          -415.72683024323095
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 3,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 4827,
+        "s": 482.1832859744153,
+        "position": [
+          -64.95960213414276,
+          -4.114071870041891,
+          -420.03194701498165
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 3,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Rainwash turning raft fixed landing",
+      "start": {
+        "frame": 4971,
+        "s": 496.01607815543974,
+        "position": [
+          -51.669094953396964,
+          -4.097033091575021,
+          -423.7041510452134
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 3,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 5073,
+        "s": 500.32289451423134,
+        "position": [
+          -48.02367716887964,
+          -3.9814176140721194,
+          -426.3533937177296
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 0",
+      "start": {
+        "frame": 5626,
+        "s": 566.0580064820149,
+        "position": [
+          17.076839195361497,
+          1.4771756348119198,
+          -443.88680400452006
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 5718,
+        "s": 571.0127971500401,
+        "position": [
+          22.249477142749008,
+          1.7657264829736015,
+          -443.5565950281175
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 4,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 1",
+      "start": {
+        "frame": 5851,
+        "s": 576.4369974636487,
+        "position": [
+          27.602729639022986,
+          0.8598463817056408,
+          -440.160787532664
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 4,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 5937,
+        "s": 580.4184258989549,
+        "position": [
+          31.08954652864714,
+          3.6956860648751606,
+          -435.7583607497092
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 5,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 2",
+      "start": {
+        "frame": 6066,
+        "s": 587.071345761268,
+        "position": [
+          37.507606381191906,
+          2.7158419772018747,
+          -433.648302957054
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 5,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 6155,
+        "s": 591.3504130837571,
+        "position": [
+          42.29226119893507,
+          4.235899297202256,
+          -435.6139183739498
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 6,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 3",
+      "start": {
+        "frame": 6276,
+        "s": 596.4666433832082,
+        "position": [
+          47.137038941426454,
+          4.722330704258464,
+          -433.47556609227837
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 6,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 6369,
+        "s": 601.0106613911826,
+        "position": [
+          50.49265494233731,
+          4.595377845274809,
+          -428.1451104883729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 7,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 4",
+      "start": {
+        "frame": 6489,
+        "s": 606.6430497044123,
+        "position": [
+          55.888039538587705,
+          5.857979202616539,
+          -426.74688417578494
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 7,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 6581,
+        "s": 611.1266175362964,
+        "position": [
+          61.412521171040595,
+          6.285316039075887,
+          -429.6075105378756
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 8,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 5",
+      "start": {
+        "frame": 6702,
+        "s": 616.7733436265391,
+        "position": [
+          66.92998132479386,
+          6.235413355426046,
+          -428.13741641485655
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 8,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 6791,
+        "s": 621.167574056587,
+        "position": [
+          70.02169201079667,
+          8.065480762390425,
+          -423.56289706036273
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 9,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums board 6",
+      "start": {
+        "frame": 6932,
+        "s": 627.4885576850907,
+        "position": [
+          74.67276006339387,
+          6.646592118039974,
+          -418.0489553208969
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 9,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 7022,
+        "s": 632.7353537153799,
+        "position": [
+          78.6449848075334,
+          7.837915792856186,
+          -414.1515462778151
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 10,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Crosscurrent stepping drums fixed landing",
+      "start": {
+        "frame": 7162,
+        "s": 639.8505680816928,
+        "position": [
+          84.63390601774428,
+          7.102943790596652,
+          -410.45122318813577
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 10,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 7263,
+        "s": 644.2903784429291,
+        "position": [
+          88.5695477445553,
+          7.142095585423462,
+          -408.8034584791214
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Fern-bank gap",
+      "start": {
+        "frame": 8690,
+        "s": 781.8513088392637,
+        "position": [
+          184.97785637903843,
+          4,
+          -319.6930379432112
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 8824,
+        "s": 795.9485474618044,
+        "position": [
+          190.565752310342,
+          4,
+          -306.87876235933925
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "High-bank ferry board 0",
+      "start": {
+        "frame": 9381,
+        "s": 868.0539390341149,
+        "position": [
+          240.1816694970248,
+          12,
+          -264.8776252887996
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 9474,
+        "s": 874.3172985012125,
+        "position": [
+          246.4465612528383,
+          12.000000023841858,
+          -264.8883336539004
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 11,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "High-bank ferry fixed landing",
+      "start": {
+        "frame": 9668,
+        "s": 897.2617944658812,
+        "position": [
+          269.11255917735923,
+          12.000000023841858,
+          -268.29157149391875
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 11,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 9761,
+        "s": 903.9708191582612,
+        "position": [
+          275.57707323855226,
+          11.914947489016471,
+          -270.11362883282004
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy entry lifts board 0",
+      "start": {
+        "frame": 12114,
+        "s": 1132.0558444854582,
+        "position": [
+          337.60380738726616,
+          9.924037704692278,
+          -471.42973641254594
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 12205,
+        "s": 1137.9222989999098,
+        "position": [
+          336.2358570446568,
+          10.489944017342326,
+          -477.1343907951284
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 12,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy entry lifts board 1",
+      "start": {
+        "frame": 12344,
+        "s": 1145.2598969906683,
+        "position": [
+          334.2531799331933,
+          9.495192341502557,
+          -484.1985427797955
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 12,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 12436,
+        "s": 1152.4413366421502,
+        "position": [
+          332.2312663856042,
+          10.028305239651594,
+          -491.0872222340282
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 13,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy entry lifts fixed landing",
+      "start": {
+        "frame": 12572,
+        "s": 1160.2579269843213,
+        "position": [
+          329.7660619961896,
+          9.251068720061763,
+          -498.5023724704139
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 13,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 12664,
+        "s": 1166.0451444154035,
+        "position": [
+          327.8231702207848,
+          10.000481644468692,
+          -503.9520064727334
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy crossing weave board 0",
+      "start": {
+        "frame": 12835,
+        "s": 1176.0677311404613,
+        "position": [
+          315.67009204969963,
+          10.851889317957829,
+          -509.60696734497014
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 12925,
+        "s": 1180.8207550247573,
+        "position": [
+          313.4406618883502,
+          11.911310331291158,
+          -513.614021671682
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 14,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy crossing weave board 1",
+      "start": {
+        "frame": 13059,
+        "s": 1187.1502673162863,
+        "position": [
+          312.5990319744464,
+          11.880373651019681,
+          -519.9188689399449
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 14,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 13150,
+        "s": 1192.0706119695665,
+        "position": [
+          313.55534220069165,
+          12.583596409719256,
+          -525.722417723151
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 15,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy crossing weave board 2",
+      "start": {
+        "frame": 13292,
+        "s": 1198.0017519179428,
+        "position": [
+          314.6332774105867,
+          13.894447796285647,
+          -533.0463560302137
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 15,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 13384,
+        "s": 1202.7925145318643,
+        "position": [
+          315.5033541235272,
+          13.95080454817295,
+          -539.2367563628952
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 16,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy crossing weave board 3",
+      "start": {
+        "frame": 13506,
+        "s": 1208.614989044093,
+        "position": [
+          312.34835619679467,
+          14.692845668626472,
+          -544.366829953442
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 16,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 13597,
+        "s": 1213.4035919904982,
+        "position": [
+          306.4614219453217,
+          15.84508124591883,
+          -546.1529564907768
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 17,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy crossing weave board 4",
+      "start": {
+        "frame": 13723,
+        "s": 1219.8200813892238,
+        "position": [
+          302.45917601872594,
+          15.285243570321256,
+          -551.2051637383199
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 17,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 13811,
+        "s": 1224.133445670645,
+        "position": [
+          302.4534955018901,
+          17.556975235146602,
+          -557.0400166489281
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 18,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Canopy crossing weave fixed landing",
+      "start": {
+        "frame": 13961,
+        "s": 1231.5665983412384,
+        "position": [
+          300.24073408162286,
+          16.445856571600586,
+          -565.5189170382516
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 18,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 14052,
+        "s": 1236,
+        "position": [
+          297.61797413406435,
+          17,
+          -569.6369976869829
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Sunken stair ferry board 0",
+      "start": {
+        "frame": 15415,
+        "s": 1418.0544890731042,
+        "position": [
+          132.75467557969412,
+          18,
+          -649.5297616926408
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 15508,
+        "s": 1423.8336259926145,
+        "position": [
+          127.25006916556612,
+          18.000000023841856,
+          -651.2906576074652
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 19,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Sunken stair ferry fixed landing",
+      "start": {
+        "frame": 15747,
+        "s": 1447.2320834288214,
+        "position": [
+          105.67487841274846,
+          18.000000023841856,
+          -660.2724385690071
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 19,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 15840,
+        "s": 1453.9754489376464,
+        "position": [
+          99.8414630820507,
+          17.813741867832476,
+          -663.6629094905286
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Basin stone jump",
+      "start": {
+        "frame": 16033,
+        "s": 1481.854815235536,
+        "position": [
+          78.79274617824642,
+          4.004193212223253,
+          -682.9324575005126
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 16169,
+        "s": 1495.505452652479,
+        "position": [
+          73.77510235494482,
+          4,
+          -696.094200851998
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Sunken stair lifts board 0",
+      "start": {
+        "frame": 16671,
+        "s": 1558.0447524735716,
+        "position": [
+          66.5685808037328,
+          9,
+          -758.4468744104831
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 16765,
+        "s": 1564.2583215599207,
+        "position": [
+          66.75192417568937,
+          8.400727467909556,
+          -764.6513490440634
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 20,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Sunken stair lifts board 1",
+      "start": {
+        "frame": 16905,
+        "s": 1571.256999991983,
+        "position": [
+          67.28131699112251,
+          10.403575769958572,
+          -771.6232228199697
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 20,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 17002,
+        "s": 1578.508349966587,
+        "position": [
+          68.1274496993668,
+          8.20396800220427,
+          -778.8163376457087
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 21,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Sunken stair lifts fixed landing",
+      "start": {
+        "frame": 17145,
+        "s": 1586.2549354965138,
+        "position": [
+          69.49614221802746,
+          10.32154619559633,
+          -786.4321965352519
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 21,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 17240,
+        "s": 1591.9906187642773,
+        "position": [
+          70.79923663747063,
+          8.999092091282389,
+          -792.0137624095188
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Echo turning drum board 0",
+      "start": {
+        "frame": 19046,
+        "s": 1814.0558259287882,
+        "position": [
+          246.26566431892306,
+          11.155223094733598,
+          -902.9537134900737
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 19136,
+        "s": 1819.3726622725367,
+        "position": [
+          251.4493728782059,
+          12.613047847596471,
+          -901.241753950754
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 22,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Echo turning drum fixed landing",
+      "start": {
+        "frame": 19446,
+        "s": 1833.4003532073605,
+        "position": [
+          265.6791596453132,
+          11.84755801876706,
+          -902.7407266367189
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 22,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 19538,
+        "s": 1839.969004847276,
+        "position": [
+          272.0757760723841,
+          12.13613499839411,
+          -900.6466356082333
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 22,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Echo bank jump",
+      "start": {
+        "frame": 19883,
+        "s": 1893.847645060022,
+        "position": [
+          326.6973507510641,
+          3,
+          -898.8434254721517
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 20021,
+        "s": 1907.5370305631518,
+        "position": [
+          339.6103057974803,
+          3,
+          -905.5613766343972
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "High drum switchback board 0",
+      "start": {
+        "frame": 20327,
+        "s": 1942.0784445470074,
+        "position": [
+          358.90521108692786,
+          11.457764844317104,
+          -935.4430934817146
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 20416,
+        "s": 1946.8087549170202,
+        "position": [
+          361.9803953620584,
+          13.372583788381098,
+          -938.7778422767715
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 23,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "High drum switchback board 1",
+      "start": {
+        "frame": 20551,
+        "s": 1953.2441393548963,
+        "position": [
+          367.4910625128483,
+          12.386392169349426,
+          -942.214499133623
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 23,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 20637,
+        "s": 1958.0521763723038,
+        "position": [
+          372.854302119715,
+          15.06960185034013,
+          -943.9046861865155
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 24,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "High drum switchback board 2",
+      "start": {
+        "frame": 20784,
+        "s": 1965.176286490304,
+        "position": [
+          380.89250214955536,
+          14.040799185449492,
+          -946.7853527810357
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 24,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 20876,
+        "s": 1970.287236233576,
+        "position": [
+          386.70035223523803,
+          14.214035319649849,
+          -949.1043809125571
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 25,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "High drum switchback fixed landing",
+      "start": {
+        "frame": 21017,
+        "s": 1977.6409784757143,
+        "position": [
+          392.6498294383409,
+          14.500585108344461,
+          -954.2333246097432
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 25,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 21113,
+        "s": 1982.1383835030763,
+        "position": [
+          395.0212728731622,
+          12.211371300243448,
+          -958.3118335778843
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Final rising drums board 0",
+      "start": {
+        "frame": 23049,
+        "s": 2178.0633250768487,
+        "position": [
+          397.2601655884082,
+          5.475462752125097,
+          -1150.1787323358246
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 23141,
+        "s": 2182.9227353704405,
+        "position": [
+          394.891414944055,
+          5.835917717251287,
+          -1154.419312997967
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 26,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Final rising drums board 1",
+      "start": {
+        "frame": 23255,
+        "s": 2187.5511906857832,
+        "position": [
+          392.32090708570144,
+          7.173883797687859,
+          -1158.265175320727
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 26,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 23346,
+        "s": 2192.4424830424255,
+        "position": [
+          389.4882282183863,
+          8.070083751837837,
+          -1162.245921546702
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 27,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Final rising drums board 2",
+      "start": {
+        "frame": 23588,
+        "s": 2197.0588065392653,
+        "position": [
+          386.56674311379345,
+          10.146590205826518,
+          -1165.8159890009458
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 27,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 23679,
+        "s": 2201.950105772315,
+        "position": [
+          383.35146748921096,
+          11.272434591102977,
+          -1169.4980643561184
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 28,
+        "deaths": 0
+      },
+      "doubled": true
+    },
+    {
+      "name": "Final rising drums fixed landing",
+      "start": {
+        "frame": 23793,
+        "s": 2206.5525794975047,
+        "position": [
+          380.13719942673583,
+          11.453181821364515,
+          -1172.7875573566466
+        ],
+        "state": "ride",
+        "grounded": true,
+        "mover": 28,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 23885,
+        "s": 2211.892695178909,
+        "position": [
+          376.3094355411008,
+          12,
+          -1176.5080600487206
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0
+      },
+      "doubled": true
+    }
+  ],
+  "geometry": {
+    "supportProbes": 1740,
+    "maxHeightError": 0.03518337045660047,
+    "openGaps": 23,
+    "headingProbes": 580,
+    "minHeadingDot": 0.9861657017439573,
+    "crateSeats": [
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -2.167724609375,
+          1.278076171875,
+          -30.241455078125
+        ],
+        "runtimeY": 1.278484223533951,
+        "supportY": 1.2784842235339513
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          5.34912109375,
+          1.885986328125,
+          -32.6474609375
+        ],
+        "runtimeY": 1.886322756821479,
+        "supportY": 1.886322756821479
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -5.559326171875,
+          4.179443359375,
+          -137.437744140625
+        ],
+        "runtimeY": 4.180151543101073,
+        "supportY": 4.180151543101073
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -29.68505859375,
+          7.926025390625,
+          -161.934814453125
+        ],
+        "runtimeY": 7.923589482334612,
+        "supportY": 7.923589482334611
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -89.637451171875,
+          12.2568359375,
+          -241.913330078125
+        ],
+        "runtimeY": 12.2571153181145,
+        "supportY": 12.2571153181145
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -123.082275390625,
+          -1.16943359375,
+          -346.01416015625
+        ],
+        "runtimeY": -1.1686443264394812,
+        "supportY": -1.1686443264394808
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -115.4462890625,
+          -0.2646484375,
+          -348.006591796875
+        ],
+        "runtimeY": -0.2634814974860866,
+        "supportY": -0.2634814974860863
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -34.84814453125,
+          1,
+          -434.220458984375
+        ],
+        "runtimeY": 1,
+        "supportY": 1
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          -2.113037109375,
+          1,
+          -445.738525390625
+        ],
+        "runtimeY": 1,
+        "supportY": 1
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          113.74462890625,
+          8.992431640625,
+          -417.0859375
+        ],
+        "runtimeY": 8.992431495918602,
+        "supportY": 8.992431495918602
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          113.58740234375,
+          9.050537109375,
+          -410.388427734375
+        ],
+        "runtimeY": 9.050543199729713,
+        "supportY": 9.050543199729713
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          180.67578125,
+          6.073974609375,
+          -330.737060546875
+        ],
+        "runtimeY": 6.07411633078624,
+        "supportY": 6.07411633078624
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          214.5654296875,
+          4.509765625,
+          -273.90087890625
+        ],
+        "runtimeY": 4.5077214467013125,
+        "supportY": 4.507721446701312
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          214.2900390625,
+          5.427490234375,
+          -266.0302734375
+        ],
+        "runtimeY": 5.424728526520115,
+        "supportY": 5.424728526520115
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          291.234375,
+          6.44970703125,
+          -276.840576171875
+        ],
+        "runtimeY": 6.451500952888926,
+        "supportY": 6.451500952888926
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          297.92626953125,
+          5.10302734375,
+          -271.543701171875
+        ],
+        "runtimeY": 5.103923049140047,
+        "supportY": 5.103923049140047
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          321.4208984375,
+          0,
+          -318.305908203125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          332.746826171875,
+          0,
+          -349.68408203125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          340.533203125,
+          0,
+          -350.698486328125
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          338.63232421875,
+          6,
+          -446.3017578125
+        ],
+        "runtimeY": 6,
+        "supportY": 6
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          345.418212890625,
+          6,
+          -450.331787109375
+        ],
+        "runtimeY": 6,
+        "supportY": 6
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          274.97607421875,
+          19.060791015625,
+          -573.024658203125
+        ],
+        "runtimeY": 19.059941831585352,
+        "supportY": 19.059941831585352
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          183.6865234375,
+          12,
+          -631.756103515625
+        ],
+        "runtimeY": 12,
+        "supportY": 12
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          146.1669921875,
+          15.80908203125,
+          -641.784423828125
+        ],
+        "runtimeY": 15.808367801200756,
+        "supportY": 15.808367801200758
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          68.77197265625,
+          5.82568359375,
+          -727.5546875
+        ],
+        "runtimeY": 5.827468210279745,
+        "supportY": 5.827468210279745
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          76.333984375,
+          6.840087890625,
+          -731.6279296875
+        ],
+        "runtimeY": 6.8401944304710955,
+        "supportY": 6.840194430471096
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          70.739013671875,
+          5.3154296875,
+          -812.075439453125
+        ],
+        "runtimeY": 5.312175169320378,
+        "supportY": 5.312175169320379
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          109.73388671875,
+          2.3544921875,
+          -858.08740234375
+        ],
+        "runtimeY": 2.3545003025547713,
+        "supportY": 2.3545003025547717
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          116.306396484375,
+          3.313232421875,
+          -855.07958984375
+        ],
+        "runtimeY": 3.313240415433479,
+        "supportY": 3.3132404154334796
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          199.588623046875,
+          1,
+          -911.57763671875
+        ],
+        "runtimeY": 1,
+        "supportY": 1
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          350.5048828125,
+          4.71875,
+          -924.93359375
+        ],
+        "runtimeY": 4.716514651985774,
+        "supportY": 4.716514651985774
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          396.77685546875,
+          8,
+          -988.83056640625
+        ],
+        "runtimeY": 8,
+        "supportY": 8
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          404.257080078125,
+          8,
+          -988.921630859375
+        ],
+        "runtimeY": 8,
+        "supportY": 8
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          356.27392578125,
+          12,
+          -1183.154541015625
+        ],
+        "runtimeY": 12,
+        "supportY": 12
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          357.790283203125,
+          12,
+          -1190.243408203125
+        ],
+        "runtimeY": 12,
+        "supportY": 12
+      },
+      {
+        "name": "Island guardian supplies",
+        "p": [
+          302.749267578125,
+          6,
+          -1223.020751953125
+        ],
+        "runtimeY": 6,
+        "supportY": 6
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          8.132080078125,
+          7,
+          -69.66943359375
+        ],
+        "runtimeY": 7,
+        "supportY": 7
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          -75.4755859375,
+          10,
+          -241.27490234375
+        ],
+        "runtimeY": 10.00149971497601,
+        "supportY": 10.00149971497601
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          -11.178466796875,
+          1,
+          -432.9970703125
+        ],
+        "runtimeY": 1,
+        "supportY": 1
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          320.009765625,
+          0,
+          -299.68994140625
+        ],
+        "runtimeY": 0,
+        "supportY": 0
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          344.087646484375,
+          7.037109375,
+          -458.323974609375
+        ],
+        "runtimeY": 7.036646344724383,
+        "supportY": 7.036646344724383
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          154.0029296875,
+          13.435791015625,
+          -647.070068359375
+        ],
+        "runtimeY": 13.436446269659422,
+        "supportY": 13.436446269659422
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          113.3388671875,
+          1.81103515625,
+          -850.883056640625
+        ],
+        "runtimeY": 1.8129109464612903,
+        "supportY": 1.8129109464612903
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          405.76953125,
+          8.145751953125,
+          -995.89990234375
+        ],
+        "runtimeY": 8.145930008902202,
+        "supportY": 8.1459300089022
+      },
+      {
+        "name": "Mask before the next platforming phrase",
+        "p": [
+          358.725341796875,
+          12,
+          -1189.83544921875
+        ],
+        "runtimeY": 12,
+        "supportY": 12
+      }
+    ],
+    "checkpoints": 9,
+    "authoredRails": 7,
+    "surfaceEdges": 666
+  },
+  "result": {
+    "frame": 24635,
+    "s": 2309.0089023583814,
+    "position": [
+      297.17344233167927,
+      6.726666669150194,
+      -1232.5760301742453
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "seconds": 410.5833333333333,
+    "checkpoints": 9,
+    "crystal": true
+  },
+  "slipperyFrames": 604,
+  "maxFrameTravel": 0.8055081173934728,
+  "pass": true
+}
