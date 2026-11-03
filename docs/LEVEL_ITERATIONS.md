@@ -8422,3 +8422,33 @@ Reproduction and source details: [Jump motion study](JUMP_MOTION_STUDY.md).
   setting restored and local playtest left available. No publication.
 
 Details and reuse: [Green eco fire](GREEN_ECO_FIRE.md).
+
+## 2026-11-04 — Port the original green eco graph, then swap to Gouraud puffs
+
+- Follow-up: match the original J&D vent first, then substitute Gouraud puffs.
+  Cumulative prompt-to-playable time was about 44 minutes from the original
+  10:12:58 UTC brief to the verified source/Gouraud comparison at 10:57 UTC on
+  3 November. This includes the first sketch and subsequent fidelity requests;
+  the source-port iteration followed the 10:30 UTC first-sketch commit.
+- Replaced the invented helices/extra motes/floor disk with the 222–227 source
+  particle graph: fifteen orbit bindings, delayed trails, native 300 Hz timer,
+  original velocities, random ranges, lifetimes, shrink and colour relaunches.
+  Extracted the three original sprites locally for the first reference render.
+- Swapped only the renderer to Gouraud triangle fans. Default is now Gouraud;
+  Original textures and Freeze eco for comparison permit direct inspection of
+  the same particle frame. Superseded approximate layer presets were removed.
+  The source PNGs remain outside Git and release assets.
+- Seven unchanged placements, three instanced draw calls per view. Full-field
+  stress peak: 4,041 particles, 162,456 Gouraud triangles, no drops. Original
+  sprite quads use two triangles each; no claim that Gouraud is universally
+  faster. Three visible vents measured about 0.36 ms CPU update on this Mac.
+- Validation: source-equation/lifecycle tests, exact 30/60/120 Hz final-state
+  equality, renderer switches preserving instance buffers, resource cleanup,
+  puff preparation/upload regressions, strict source/playtest types, build and
+  release-size check. Browser comparison at normal and native resolution;
+  all A/B/C/D switches continuous, skate gesture works, no console errors.
+- Normal 720p restored; local D playtest uses animated Gouraud eco. Movement,
+  jump/skate controls, animation definitions and published level data are
+  unchanged. Local commit/handoff only; no publication.
+
+Details and limitations: [Green eco fire](GREEN_ECO_FIRE.md).

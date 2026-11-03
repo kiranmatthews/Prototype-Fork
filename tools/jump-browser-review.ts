@@ -8,7 +8,7 @@ import previousClips from './fixtures/pre-reference-jump-clips.json';
 import { sfx } from '../src/audio';
 import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
 import { createJakDirectSuite, JAK_DIRECT_PHYSICS, type JakMotionBank } from './jak-direct-motion';
-import { GreenEcoFire } from '../src/greenEcoFire';
+import { GreenEcoFire, type GreenEcoRendering } from '../src/greenEcoFire';
 import { JUMP_ECO_VENTS } from './jump-eco-vents';
 
 const g: any = await new Promise(resolve => {
@@ -229,6 +229,21 @@ const ecoLabel = document.createElement('label'), ecoBox = document.createElemen
 ecoBox.type = 'checkbox'; ecoBox.checked = true;
 ecoBox.onchange = () => {ecoEnabled = ecoBox.checked; ecoBox.blur();};
 ecoLabel.append(ecoBox, ' Green eco fire'); options.append(ecoLabel);
+const ecoRenderLabel = document.createElement('label'), ecoRender = document.createElement('select');
+ecoRender.setAttribute('aria-label', 'Eco rendering');
+ecoRenderLabel.append('Eco rendering ', ecoRender);
+ecoRender.add(new Option('Gouraud puffs', 'gouraud'));
+const originalEco = new Option('Original textures', 'original'); originalEco.disabled = true; ecoRender.add(originalEco);
+ecoRender.onchange = () => {ecoFire.rendering = ecoRender.value as GreenEcoRendering; ecoRender.blur();};
+options.append(ecoRenderLabel);
+const ecoFreezeLabel = document.createElement('label'), ecoFreeze = document.createElement('input');
+ecoFreeze.type = 'checkbox'; ecoFreeze.onchange = () => {ecoFire.paused = ecoFreeze.checked; ecoFreeze.blur();};
+ecoFreezeLabel.append(ecoFreeze, ' Freeze eco for comparison'); options.append(ecoFreezeLabel);
+const ecoRenderNote = document.createElement('small');
+ecoRenderNote.textContent = 'Same original particle motion in both views.'; options.append(ecoRenderNote);
+void ecoFire.loadSourceTextures('/__jak-reference-eco').then(() => {originalEco.disabled = false;}).catch(() => {
+  ecoRenderNote.textContent = 'Gouraud puffs ready. Original textures need the local Jak study files.';
+});
 const modes = document.createElement('div'); options.append(modes);
 const playButton = button(modes, 'Play course', () => setInspect(false));
 const inspectButton = button(modes, 'Watch motion', () => setInspect(true));

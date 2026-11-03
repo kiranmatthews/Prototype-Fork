@@ -10,6 +10,17 @@ export function localJakAudio(directory = process.env.JAK_REFERENCE_AUDIO_DIR) {
       if (!directory) return;
       const root = path.resolve(directory);
       const motionRoot = path.resolve(process.env.JAK_REFERENCE_MOTION_DIR ?? path.dirname(root));
+      server.middlewares.use('/__jak-reference-eco', async (req, res) => {
+        const file = (req.url ?? '').split('?')[0].slice(1);
+        if (!['GET','HEAD'].includes(req.method ?? '') || !['hotdot.png','bigpuff.png','starflash.png'].includes(file)) {
+          res.statusCode = 404; res.end(); return;
+        }
+        try {
+          const bytes = await readFile(path.join(motionRoot, 'eco', file));
+          res.setHeader('Content-Type','image/png'); res.setHeader('Cache-Control','no-store');
+          res.end(req.method === 'HEAD' ? undefined : bytes);
+        } catch { res.statusCode = 404; res.end(); }
+      });
       server.middlewares.use('/__jak-reference-motion', async (req, res) => {
         const file = (req.url ?? '').split('?')[0].slice(1);
         if (!['GET','HEAD'].includes(req.method ?? '') || !['motion.json','eichar-lod0.glb'].includes(file)) {
