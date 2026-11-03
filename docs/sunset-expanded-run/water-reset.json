@@ -1,0 +1,36 @@
+{
+ "mode": "Water reset",
+ "resolution": 720,
+ "target": 10,
+ "seconds": 62.833333333333336,
+ "jumps": 9,
+ "position": [
+  634.7,
+  -122,
+  327.25
+ ],
+ "state": "ride",
+ "grounded": true,
+ "deaths": 0,
+ "checkpoints": 1,
+ "launch": {
+  "weight": 0,
+  "launchId": -1,
+  "height": 0.7428958690397529,
+  "yaw": 2.916624118219293,
+  "position": [
+   637.4646340858673,
+   0.7428958690397529,
+   259.5136299808782
+  ]
+ },
+ "art": {
+  "nets": 20,
+  "corners": 80,
+  "trianglesPerCorner": 5082,
+  "status": "ready",
+  "errors": []
+ },
+ "assets": [],
+ "results": []
+}

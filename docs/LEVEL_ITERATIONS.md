@@ -8492,3 +8492,28 @@ build/type-check and the 810,274,603-byte release-size check pass; no full suite
 
 Artwork, exact imagegen prompt and implementation evidence:
 [Banana Bay sky and island](banana-bay-island-sky/README.md).
+
+## 2026-11-04 — Sunset Safari varied trampoline challenge
+
+Expand the waterfall finale from twelve to twenty native trampolines, covering
+784 m instead of 614 m. Twelve net sizes range from 10 × 15 m to 22 × 28 m;
+left/right placements span 35 m. Four uphill transfers and five long flat
+river reaches break up the seven falls. Three checkpoint shelves divide the
+run into groups of five. Move the finish to station 3222, fit all timber frames
+and submerged piles to the individual nets, and resize the existing full
+5,082-triangle Smart Mesh rope joints for smaller assemblies. Carlisle's
+controls, rope deformation and launch camera remain shared. The forward
+camera axis stays steady while the player chooses lateral transfers; local
+haze is lighter during the high arcs. Medal times allow for the longer run.
+
+Prompt to full-render browser-validated playable: approximately **17 minutes**
+(22:01–22:18 UTC). Native and real-browser pilots land on all twenty nets in
+order, with zero deaths or unintended rim bails, all three terrace checkpoints
+and the final gate. The trampoline sequence takes 149.33 seconds natively and
+149.35 seconds in both lite and full rendering. A missed final net meets its
+own water reset at -278.12 m. Review covers MAX/native and normal presentation,
+small frames, flat pools and raised nets. Required level checks, the focused
+native traversal and tribal-art checks, production build and release-size
+check pass; no full suite ran. Other published levels are unchanged.
+
+Evidence: [Expanded Sunset Safari run](sunset-expanded-run/README.md).

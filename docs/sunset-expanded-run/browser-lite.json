@@ -1,0 +1,70 @@
+{
+ "mode": "PASS",
+ "resolution": 720,
+ "target": 23,
+ "seconds": 149.35,
+ "jumps": 20,
+ "position": [
+  543.19,
+  -264,
+  727.12
+ ],
+ "state": "ride",
+ "grounded": true,
+ "deaths": 0,
+ "checkpoints": 3,
+ "launch": {
+  "weight": 0,
+  "launchId": 20,
+  "height": -252.64992258634803,
+  "yaw": 2.916625962306353,
+  "position": [
+   549.3665804757109,
+   -252.64992258634803,
+   701.0074489510964
+  ]
+ },
+ "art": {
+  "nets": 20,
+  "corners": 80,
+  "trianglesPerCorner": 5082,
+  "status": "ready",
+  "errors": []
+ },
+ "assets": [],
+ "results": [
+  {
+   "pass": true,
+   "jumps": 20,
+   "unexpectedBails": 0,
+   "landingNames": [
+    "Waterfall spring 1",
+    "Waterfall spring 2",
+    "Waterfall spring 3",
+    "Waterfall spring 4",
+    "Waterfall spring 5",
+    "Waterfall spring 6",
+    "Waterfall spring 7",
+    "Waterfall spring 8",
+    "Waterfall spring 9",
+    "Waterfall spring 10",
+    "Waterfall spring 11",
+    "Waterfall spring 12",
+    "Waterfall spring 13",
+    "Waterfall spring 14",
+    "Waterfall spring 15",
+    "Waterfall spring 16",
+    "Waterfall spring 17",
+    "Waterfall spring 18",
+    "Waterfall spring 19",
+    "Waterfall spring 20"
+   ],
+   "seconds": 149.35,
+   "position": [
+    543.2922447072117,
+    -263.2733333308498,
+    727.4067434498733
+   ]
+  }
+ ]
+}

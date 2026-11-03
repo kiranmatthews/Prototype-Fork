@@ -50,13 +50,14 @@ class TribalTrampolines {
    const scale=3.6/(box.max.x-box.min.x),normalise=new THREE.Matrix4().makeTranslation(-centre.x,-box.min.y,-centre.z);
    for(const {mesh,mount}of this.entries){
     const c=data.components[mesh.userData.editorIdx],[w,h,d]=c.s!;
+    const fit=Math.min(1,w/20,d/28);
     gltf.scene.traverse(n=>{
      const source=n as THREE.Mesh;if(!source.isMesh)return;
      const instances=new THREE.InstancedMesh(source.geometry,source.material,4);instances.name='Smart Mesh 5082-triangle rope-lashed timber corners';
      let i=0;for(const x of [-1,1])for(const z of [-1,1]){
       const turn=Math.atan2(x,z)-Math.PI/4;
-      const matrix=new THREE.Matrix4().compose(new THREE.Vector3(x*w*.4225,h/2-1.1,z*d*.451786),
-       new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),turn),new THREE.Vector3(scale,scale,scale));
+      const matrix=new THREE.Matrix4().compose(new THREE.Vector3(x*w*.4225,h/2-1.1*fit,z*d*.451786),
+       new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),turn),new THREE.Vector3(scale*fit,scale*fit,scale*fit));
       matrix.multiply(normalise).multiply(source.matrixWorld);instances.setMatrixAt(i++,matrix);this.diagnostics.corners++;
      }
      instances.instanceMatrix.needsUpdate=true;instances.castShadow=true;instances.receiveShadow=true;instances.computeBoundingBox();instances.computeBoundingSphere();mount.add(instances);
@@ -77,8 +78,8 @@ class TribalTrampolines {
   if(scene.fog!==this.fog){this.fog=scene.fog;this.baseFog={near:scene.fog.near,far:scene.fog.far};}
   const distance=Math.min(...this.entries.map(e=>Math.hypot(camera.position.x-e.mesh.position.x,camera.position.z-e.mesh.position.z)));
   const blend=1-THREE.MathUtils.smoothstep(distance,55,105);
-  this.fog.near=THREE.MathUtils.lerp(this.baseFog!.near,120,blend);
-  this.fog.far=THREE.MathUtils.lerp(this.baseFog!.far,225,blend);
+  this.fog.near=THREE.MathUtils.lerp(this.baseFog!.near,170,blend);
+  this.fog.far=THREE.MathUtils.lerp(this.baseFog!.far,300,blend);
  }
  dispose(){
   this.disposed=true;

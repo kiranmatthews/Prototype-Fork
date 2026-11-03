@@ -11,16 +11,48 @@ export const SUNSET_WATERFALL_GROUPS:CustomGroup[]=[
  {id:99,nm:'Sunset · stepped river gorge'},
 ];
 export const SUNSET_WATERFALL_ROUTE=[
- {s:2452,y:-10,kind:'spring'}, {s:2496,y:-22,kind:'spring'},
- {s:2540,y:-42,kind:'spring'}, {s:2584,y:-64,kind:'spring'},
- {s:2628,y:-84,kind:'rest'}, {s:2650,y:-98,kind:'spring'},
- {s:2694,y:-104,kind:'spring'}, {s:2738,y:-126,kind:'spring'},
- {s:2782,y:-148,kind:'spring'}, {s:2826,y:-168,kind:'rest'},
- {s:2848,y:-182,kind:'spring'}, {s:2892,y:-190,kind:'spring'},
- {s:2936,y:-212,kind:'spring'}, {s:2980,y:-234,kind:'spring'},
- {s:3024,y:-254,kind:'finish'},
+ {s:2452,y:-10,u:0,w:20,d:28,kind:'spring'},
+ {s:2488,y:-20,u:10,w:16,d:22,kind:'spring'},
+ {s:2520,y:-13,u:-12,w:12,d:18,kind:'spring'},
+ {s:2552,y:-20,u:14,w:11,d:16,kind:'spring'},
+ {s:2586,y:-43,u:-9,w:18,d:24,kind:'spring'},
+ {s:2620,y:-52,u:0,kind:'rest'},
+ {s:2642,y:-65,u:0,w:20,d:28,kind:'spring'},
+ {s:2680,y:-80,u:-14,w:14,d:20,kind:'spring'},
+ {s:2712,y:-70,u:12,w:12,d:18,kind:'spring'},
+ {s:2744,y:-87,u:18,w:10,d:16,kind:'spring'},
+ {s:2778,y:-111,u:-12,w:17,d:22,kind:'spring'},
+ {s:2810,y:-122,u:0,kind:'rest'},
+ {s:2832,y:-135,u:0,w:22,d:28,kind:'spring'},
+ {s:2868,y:-147,u:-14,w:13,d:18,kind:'spring'},
+ {s:2898,y:-138,u:8,w:11,d:16,kind:'spring'},
+ {s:2932,y:-155,u:-17,w:10,d:15,kind:'spring'},
+ {s:2966,y:-175,u:12,w:16,d:22,kind:'spring'},
+ {s:3000,y:-190,u:0,kind:'rest'},
+ {s:3022,y:-203,u:0,w:20,d:28,kind:'spring'},
+ {s:3058,y:-216,u:16,w:12,d:18,kind:'spring'},
+ {s:3090,y:-208,u:-13,w:10,d:15,kind:'spring'},
+ {s:3124,y:-229,u:10,w:14,d:20,kind:'spring'},
+ {s:3160,y:-248,u:-11,w:18,d:26,kind:'spring'},
+ {s:3198,y:-264,u:0,kind:'finish'},
 ] as const;
-export const SUNSET_WATERFALL_FINISH=3052;
+export const SUNSET_WATERFALL_FINISH=3222;
+// Water elevations are independent of the nets. Long quiet reaches allow
+// low, high and uphill landings over the same pool between the major falls.
+export const SUNSET_WATERFALL_POOLS=[
+ {start:2461,end:2562,y:-28}, {start:2574,end:2626,y:-66},
+ {start:2636,end:2756,y:-96}, {start:2770,end:2816,y:-136},
+ {start:2826,end:2944,y:-164}, {start:2958,end:3006,y:-204},
+ {start:3016,end:3136,y:-238}, {start:3150,end:3260,y:-278},
+] as const;
+export function waterfallWaterY(s:number):number {
+ for(let i=0;i<SUNSET_WATERFALL_POOLS.length;i++){
+  const pool=SUNSET_WATERFALL_POOLS[i],next=SUNSET_WATERFALL_POOLS[i+1];
+  if(s<=pool.end||!next)return pool.y;
+  if(s<next.start)return THREE.MathUtils.lerp(pool.y,next.y,(s-pool.end)/(next.start-pool.end));
+ }
+ return SUNSET_WATERFALL_POOLS[SUNSET_WATERFALL_POOLS.length-1].y;
+}
 const q=(n:number)=>Math.round(n*10000)/10000;
 
 /** Carlisle's authoring-time flight measurement, using the production gravity
@@ -33,19 +65,20 @@ export function waterfallFlight(up:number,dy:number):number {
  }
  return 30;
 }
-export function waterfallLaunch(distance:number,drop:number):number {
+export function waterfallLaunch(distance:number,drop:number,entryDepth=28):number {
  let lo=0,hi=150;
- // Held Jump reaches the far half of the broad net; the unboosted arc still
- // reaches its near half. No target attraction or authored air velocity.
- for(let i=0;i<32;i++){const mid=(lo+hi)/2;if(waterfallFlight(mid*1.25,drop)*TUNING.walkSpeed<distance+3)lo=mid;else hi=mid;}
+ // Budget for diagonal air control and entry near the previous net's rim.
+ // Held Jump leaves time to line up a small receiver, using native braking
+ // and sidesteps; there is no target attraction or authored air velocity.
+ for(let i=0;i<32;i++){const mid=(lo+hi)/2;if(waterfallFlight(mid*1.25,drop)*TUNING.walkSpeed*.82<distance+entryDepth*.365+3)lo=mid;else hi=mid;}
  return q(hi);
 }
 
-/** A 614 m extension: twelve native springs, two safe ledges, thirteen
- * descending water terraces. All simple framing/supports are authored meshes. */
+/** Twenty native springs across a 784 m gorge, three checkpoint ledges and
+ * eight water terraces. Simple frames and supports remain authored meshes. */
 export function buildSunsetWaterfalls(course:Course):CustomComponent[]{
  const C:CustomComponent[]=[],yaw=course.yaw(2430);
- const group=(s:number)=>s<2618?96:s<2816?97:98;
+ const group=(s:number)=>s<2630?96:s<3000?97:98;
  const point=(s:number,y:number,u=0)=>course.point(s,y,u);
  const geom=(name:string,p:P,g:THREE.BufferGeometry,extra:Partial<CustomComponent>={})=>{
   C.push({t:'mesh',p,vertices:Array.from(g.attributes.position.array).map(q),indices:g.index?Array.from(g.index.array):undefined,
@@ -69,34 +102,36 @@ export function buildSunsetWaterfalls(course:Course):CustomComponent[]{
  };
  let springIndex=0;
  SUNSET_WATERFALL_ROUTE.forEach((node,i)=>{
-  const {s,y,kind}=node,grp=group(s);
+  const {s,y,u,kind}=node,grp=group(s);
   if(kind==='spring'){
    const next=SUNSET_WATERFALL_ROUTE[i+1],name=`Waterfall spring ${++springIndex}`;
-   C.push({t:'trampoline',p:point(s,y),s:[20,.7,28],yaw,speed:waterfallLaunch(next.s-s,next.y-y),amp:1.25,
+   const distance=Math.hypot(next.s-s,next.u-u),launch=waterfallLaunch(distance,next.y-y,node.d);
+   const {w,d}=node,frameU=w*.4225,frameS=d*.451786,pileS=d*.414286,timber=Math.min(1.6,Math.max(.9,w*.08));
+   C.push({t:'trampoline',p:point(s,y,u),s:[w,.7,d],yaw,speed:launch,amp:1.25,
     tex:'tribal-weave',color:'#795132',grp,nm:name});
    // The hand-built timber follows the exact Carlisle rope anchor footprint.
-   for(const u of [-8.45,8.45])beam(`${name} · chunky side frame`,point(s-12.65,y-.55,u),point(s+12.65,y-.55,u),1.6,1.6);
-   for(const ds of [-12.65,12.65])beam(`${name} · chunky end frame`,point(s+ds,y-.55,-9.25),point(s+ds,y-.55,9.25),1.6,1.6);
-   const bottom=springIndex===1?-34:y-12;
-   for(const u of [-8.45,8.45])for(const ds of [-11.6,11.6]){
-    beam(`${name} · water pile`,point(s+ds,bottom,u),point(s+ds,y-.3,u),1.15,1.15);
-    beam(`${name} · diagonal pile brace`,point(s+ds,bottom+2,u),point(s+ds*.3,y-1,u),.65,.65);
+   for(const du of [-frameU,frameU])beam(`${name} · chunky side frame`,point(s-frameS,y-.55,u+du),point(s+frameS,y-.55,u+du),timber,timber);
+   for(const ds of [-frameS,frameS])beam(`${name} · chunky end frame`,point(s+ds,y-.55,u-frameU-timber/2),point(s+ds,y-.55,u+frameU+timber/2),timber,timber);
+   for(const du of [-frameU,frameU])for(const ds of [-pileS,pileS]){
+    const bottom=waterfallWaterY(s+ds)-6;
+    beam(`${name} · water pile`,point(s+ds,bottom,u+du),point(s+ds,y-.3,u+du),timber*.72,timber*.72);
+    beam(`${name} · diagonal pile brace`,point(s+ds,bottom+2,u+du),point(s+ds*.3,y-1,u+du),.65,.65);
    }
    // Alternating cliff brackets visibly pin the larger assemblies to rock.
-   const side=springIndex%2?1:-1;
-   for(const ds of [-9,9])beam(`${name} · cliffside support`,point(s+ds,y-8,side*24),point(s+ds,y-1,side*7.5),.9,1.1);
+   const side=Math.sign(u)||(springIndex%2?1:-1);
+   for(const ds of [-pileS*.75,pileS*.75])beam(`${name} · cliffside support`,point(s+ds,y-8,side*42),point(s+ds,y-1,u+side*frameU),.9,1.1);
    for(let n=1;n<=5;n++){
-    const t=n/6,flight=waterfallFlight(waterfallLaunch(next.s-s,next.y-y)*1.25,next.y-y),time=t*flight;
-    let h=0,v=waterfallLaunch(next.s-s,next.y-y)*1.25;
+    const t=n/6,flight=waterfallFlight(launch*1.25,next.y-y),time=t*flight;
+    let h=0,v=launch*1.25;
     for(let f=0;f<Math.round(time*60);f++){v=Math.max(-CONST.maxFallSpeed,v-(v>0?TUNING.riseGravity:TUNING.fallGravity)/60);h+=v/60;}
-    C.push({t:'wumpa',p:point(s+TUNING.walkSpeed*time,y+h+1),grp,nm:`${name} · flight fruit ${n}`});
+    C.push({t:'wumpa',p:point(s+(next.s-s)*t,y+h+1,u+(next.u-u)*t),grp,nm:`${name} · flight fruit ${n}`});
    }
   }else{
-   const end=kind==='finish'?3066:s+8,start=s-18;
+   const end=kind==='finish'?SUNSET_WATERFALL_FINISH+18:s+8,start=s-18;
    C.push({t:'platform',p:point((start+end)/2,y-2),s:[25,4,end-start],yaw,tex:'custard-sandstone',color:'#e1c28f',grp,nm:`Waterfall ${kind} landing shelf`});
    prop('custardboulder',(start+end)/2,y-26,0,[33,25.5,end-start+10],18,`Waterfall ${kind} shelf bedrock`);
    if(kind==='rest'){
-    C.push({t:'checkpoint',p:point(s,y),grp,nm:`Waterfall terrace ${s===2628?'one':'two'} · safe restart`});
+    C.push({t:'checkpoint',p:point(s,y),grp,nm:`Waterfall terrace ${s} · safe restart`});
     for(const u of [-7,7])C.push({t:'crate',kind:u<0?'wood':'mystery',p:point(s+6,y,u),grp,nm:'Waterfall terrace supplies'});
    }else C.push({t:'gate',p:point(SUNSET_WATERFALL_FINISH,y),yaw,grp,nm:'Sunset Safari · waterfall run finish'});
   }
@@ -104,27 +139,25 @@ export function buildSunsetWaterfalls(course:Course):CustomComponent[]{
  C.push({t:'checkpoint',p:point(2403,-6,-3),grp:96,nm:'Waterfall brink · safe restart'});
  // Preserve the existing first fall. The new basins continue its -28 m pool
  // and connect each lower terrace with one contiguous folding water sheet.
- const terraces=SUNSET_WATERFALL_ROUTE.filter(n=>n.s>2452&&n.kind!=='rest');
- for(let i=0;i<terraces.length;i++){
-  const n=terraces[i],prev=i?terraces[i-1]:null,next=terraces[i+1];
-  const y=i===0?-28:n.y-8,start=i===0?2461:prev!.s+25,end=next?n.s+15:3090;
-  const width=30+3*Math.sin(i*1.8);
+ for(let i=0;i<SUNSET_WATERFALL_POOLS.length;i++){
+  const {start,end,y}=SUNSET_WATERFALL_POOLS[i],next=SUNSET_WATERFALL_POOLS[i+1];
+  const width=34+2*Math.sin(i*1.8);
   surface(`Waterfall basin ${i+1}`,[[start,y,width],[end,y,width]],'custard-water','#85d7c4',{materialStyle:'jungle-stream',opacity:.98,emissive:'#0a2923',lethal:true});
   surface(`Waterfall submerged bed ${i+1}`,[[start,y-5,width+4],[end,y-5,width+4]],'custard-pool-bed','#62a899');
   const p=point((start+end)/2,y-.35);
   C.push({t:'pit',p,s:[width*2,1,end-start+.2],yaw,invisible:true,grp:99,nm:`Waterfall basin ${i+1} contact reset`});
   if(next){
-   const lower=next.y-8;
-   surface(`Waterfall descending curtain ${i+1}`,[[end-1,y,width],[end+2,y-1,width-1],[end+7,lower+3,width-2],[end+10,lower,width-1]],'custard-cascade','#acd9c1');
-   surface(`Waterfall cascade foam ${i+1}`,[[end+8,lower+.08,width-1],[end+15,lower+.08,width-1]],'custard-foam','#e1f5d7',{opacity:.64});
+   const lower=next.y,nextWidth=34+2*Math.sin((i+1)*1.8);
+   surface(`Waterfall descending curtain ${i+1}`,[[end,y,width],[end+2,y-1,width],[next.start-3,lower+3,nextWidth],[next.start,lower,nextWidth]],'custard-cascade','#acd9c1');
+   surface(`Waterfall cascade foam ${i+1}`,[[next.start,lower+.08,nextWidth],[next.start+9,lower+.08,nextWidth]],'custard-foam','#e1f5d7',{opacity:.64});
   }
   // Full-height rock banks are actual closed volumes with inset water edges.
   for(const side of [-1,1]){
-   const top=n.y+12+(side<0?5:0),bottom=y-17,centre=(start+end)/2,origin=point(centre,0);
+   const top=y+48+(side<0?5:0),bottom=y-17,centre=(start+end)/2,origin=point(centre,0);
    const profile=[[-3,0],[-2,.34],[1,.52],[3,.55],[6,.84],[11,.96],[21,1],[31,.85],[39,0]];
    const vertices:number[]=[],uvs:number[]=[],indices:number[]=[],rows=6,count=profile.length;
    for(let row=0;row<=rows;row++){
-    const station=start-6+(end-start+12)*row/rows,ridge=top+2*Math.sin(station*.087+side),wave=1.5*Math.sin(station*.12+side);
+    const station=start-8+(end-start+16)*row/rows,ridge=top+2*Math.sin(station*.087+side),wave=1.5*Math.sin(station*.12+side);
     for(let j=0;j<count;j++){
      const [offset,height]=profile[j],u=side*(width+offset+wave*Math.sin(j*.6)),h=bottom+(ridge-bottom)*height;
      const v=point(station,h,u);vertices.push(v[0]-origin[0],h,v[2]-origin[2]);uvs.push(station/8,(u+h)/8);
@@ -146,10 +179,12 @@ export function buildSunsetWaterfalls(course:Course):CustomComponent[]{
    }
   }
  }
- for(let s=2447;s<=3069;s+=8){
+ for(let s=2447;s<=SUNSET_WATERFALL_FINISH+24;s+=5){
   let a:typeof SUNSET_WATERFALL_ROUTE[number]=SUNSET_WATERFALL_ROUTE[0],b:typeof SUNSET_WATERFALL_ROUTE[number]=SUNSET_WATERFALL_ROUTE[SUNSET_WATERFALL_ROUTE.length-1];
   for(let i=1;i<SUNSET_WATERFALL_ROUTE.length;i++)if(s<=SUNSET_WATERFALL_ROUTE[i].s){a=SUNSET_WATERFALL_ROUTE[i-1];b=SUNSET_WATERFALL_ROUTE[i];break;}
   const t=THREE.MathUtils.clamp((s-a.s)/(b.s-a.s),0,1),y=a.y+(b.y-a.y)*t;
+  // Keep the river's forward axis steady through the airborne zigzags. The
+  // player chooses each side transfer while Carlisle's launch shot reveals it.
   C.push({t:'camnode',p:point(s,y+.8),radius:0,grp:group(s),nm:'Ordered descending waterfall camera'});
  }
  return C;

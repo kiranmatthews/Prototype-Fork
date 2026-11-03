@@ -1,0 +1,223 @@
+{
+  "runs": [
+    {
+      "boosted": true,
+      "seconds": 149.33333333333334,
+      "jumps": 20,
+      "position": [
+        543.1328808004798,
+        -263.2733333308498,
+        727.4005680358819
+      ],
+      "maxCameraStep": 21.6701036163301
+    }
+  ],
+  "pads": [
+    {
+      "name": "Waterfall spring 1",
+      "y": -10,
+      "size": [
+        20,
+        0.7,
+        28
+      ],
+      "launch": 84.5637
+    },
+    {
+      "name": "Waterfall spring 2",
+      "y": -20,
+      "size": [
+        16,
+        0.7,
+        22
+      ],
+      "launch": 86.6159
+    },
+    {
+      "name": "Waterfall spring 3",
+      "y": -13,
+      "size": [
+        12,
+        0.7,
+        18
+      ],
+      "launch": 85.36
+    },
+    {
+      "name": "Waterfall spring 4",
+      "y": -20,
+      "size": [
+        11,
+        0.7,
+        16
+      ],
+      "launch": 81.5403
+    },
+    {
+      "name": "Waterfall spring 5",
+      "y": -43,
+      "size": [
+        18,
+        0.7,
+        24
+      ],
+      "launch": 80.4042
+    },
+    {
+      "name": "Waterfall spring 6",
+      "y": -65,
+      "size": [
+        20,
+        0.7,
+        28
+      ],
+      "launch": 87.454
+    },
+    {
+      "name": "Waterfall spring 7",
+      "y": -80,
+      "size": [
+        14,
+        0.7,
+        20
+      ],
+      "launch": 88.9601
+    },
+    {
+      "name": "Waterfall spring 8",
+      "y": -70,
+      "size": [
+        12,
+        0.7,
+        18
+      ],
+      "launch": 72.9148
+    },
+    {
+      "name": "Waterfall spring 9",
+      "y": -87,
+      "size": [
+        10,
+        0.7,
+        16
+      ],
+      "launch": 86.4954
+    },
+    {
+      "name": "Waterfall spring 10",
+      "y": -111,
+      "size": [
+        17,
+        0.7,
+        22
+      ],
+      "launch": 77.88
+    },
+    {
+      "name": "Waterfall spring 11",
+      "y": -135,
+      "size": [
+        22,
+        0.7,
+        28
+      ],
+      "launch": 85.799
+    },
+    {
+      "name": "Waterfall spring 12",
+      "y": -147,
+      "size": [
+        13,
+        0.7,
+        18
+      ],
+      "launch": 83.2388
+    },
+    {
+      "name": "Waterfall spring 13",
+      "y": -138,
+      "size": [
+        11,
+        0.7,
+        16
+      ],
+      "launch": 84.0071
+    },
+    {
+      "name": "Waterfall spring 14",
+      "y": -155,
+      "size": [
+        10,
+        0.7,
+        15
+      ],
+      "launch": 85.9408
+    },
+    {
+      "name": "Waterfall spring 15",
+      "y": -175,
+      "size": [
+        16,
+        0.7,
+        22
+      ],
+      "launch": 79.5578
+    },
+    {
+      "name": "Waterfall spring 16",
+      "y": -203,
+      "size": [
+        20,
+        0.7,
+        28
+      ],
+      "launch": 86.4855
+    },
+    {
+      "name": "Waterfall spring 17",
+      "y": -216,
+      "size": [
+        12,
+        0.7,
+        18
+      ],
+      "launch": 90.0852
+    },
+    {
+      "name": "Waterfall spring 18",
+      "y": -208,
+      "size": [
+        10,
+        0.7,
+        15
+      ],
+      "launch": 81.4104
+    },
+    {
+      "name": "Waterfall spring 19",
+      "y": -229,
+      "size": [
+        14,
+        0.7,
+        20
+      ],
+      "launch": 84.7443
+    },
+    {
+      "name": "Waterfall spring 20",
+      "y": -248,
+      "size": [
+        18,
+        0.7,
+        26
+      ],
+      "launch": 85.36
+    }
+  ],
+  "camera": [],
+  "miss": {
+    "caught": true,
+    "y": -278.12
+  },
+  "assetTriangles": 5082
+}

@@ -12,7 +12,7 @@ await withSkateRuntime(async({player:p,level:l,THREE,CONST,server})=>{
  for(let i=0;i<60;i++){p.step(CONST.fixedStep,makeInput(),l);l.update(CONST.fixedStep);p.commitRenderStep(l);}
  assert.ok(p.grounded);assert.ok(surface.weightOffset(0,0)<-.5,'old rope visibly dents under supported feet');
  const scene=new THREE.Scene();scene.fog=new THREE.Fog('#c19f91',55,190);const camera=new THREE.PerspectiveCamera();
- camera.position.set(0,110,0);owner.view(camera,scene);assert.equal(scene.fog.near,120);assert.equal(scene.fog.far,225);
+ camera.position.set(0,110,0);owner.view(camera,scene);assert.equal(scene.fog.near,170);assert.equal(scene.fog.far,300);
  camera.position.set(1000,0,0);owner.view(camera,scene);assert.equal(scene.fog.near,55);assert.equal(scene.fog.far,190);
  camera.position.set(0,110,0);owner.view(camera,scene);owner.dispose();assert.equal(scene.fog.near,55);assert.equal(scene.fog.far,190);
  assert.equal((await server.ssrLoadModule('/src/trampolineSurface.ts')).trampolineSurfacePresentations.has(mesh),false);
