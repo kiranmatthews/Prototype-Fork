@@ -8,7 +8,7 @@ export const FRUIT_VARIANTS = [
   { name: 'Golden pear', width: .91, height: 1.06, taper: -.045, lean: -.035, blush: .025, leaves: 3, crown: .26 },
   { name: 'Ruby cheek', width: 1.08, height: .96, taper: .13, lean: .025, blush: -.065, leaves: 3, crown: .48 },
   { name: 'Round ripe', width: 1.08, height: .91, taper: .065, lean: -.024, blush: -.015, leaves: 2, crown: .65 },
-  { name: 'Long mango', width: .87, height: 1.07, taper: .025, lean: .055, blush: .005, leaves: 3, crown: -.5 },
+  { name: 'Long mango', width: 1.02, height: 1, taper: .11, lean: .024, blush: .005, leaves: 3, crown: -.26 },
   { name: 'Wild gold', width: .97, height: 1, taper: .11, lean: -.045, blush: -.035, leaves: 2, crown: -.8 },
 ] as const;
 
@@ -39,9 +39,9 @@ const CROWNS: readonly (readonly CrownLeaf[])[] = [
     {yaw:3.31,length:.37,width:.135,rise:.10,droop:.16,roll:-.52,twist:-.35,sway:-.026},
   ],
   [
-    {yaw:-.22,length:.41,width:.119,rise:.105,droop:.22,roll:.61,twist:.52,sway:.031},
-    {yaw:3.35,length:.37,width:.132,rise:.14,droop:.15,roll:-.58,twist:.38,sway:-.025},
-    {yaw:1.54,length:.32,width:.10,rise:.08,droop:.205,roll:.21,twist:.67,sway:.021},
+    {yaw:-.20,length:.35,width:.142,rise:.085,droop:.15,roll:.42,twist:.45,sway:.020},
+    {yaw:3.36,length:.37,width:.133,rise:.11,droop:.15,roll:-.50,twist:.26,sway:-.022},
+    {yaw:1.65,length:.285,width:.108,rise:.06,droop:.17,roll:.22,twist:.42,sway:.016},
   ],
   [
     {yaw:-.15,length:.39,width:.127,rise:.14,droop:.16,roll:.62,twist:.54,sway:.030},

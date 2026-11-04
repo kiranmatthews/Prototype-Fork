@@ -1,0 +1,113 @@
+{
+  "base": "61b052074a84528d0d6ee8bf58a7f684cc6b461e",
+  "variants": [
+    {
+      "variant": 0,
+      "name": "Classic",
+      "before": {
+        "width": 0.7422373592853546,
+        "height": 0.7852096855640411,
+        "depth": 0.6900832951068878,
+        "heightToWidth": 1.0578956660441632
+      },
+      "after": {
+        "width": 0.7422373592853546,
+        "height": 0.7852096855640411,
+        "depth": 0.6900832951068878,
+        "heightToWidth": 1.0578956660441632
+      },
+      "unchanged": true,
+      "triangles": 4904
+    },
+    {
+      "variant": 1,
+      "name": "Golden pear",
+      "before": {
+        "width": 0.6713515520095825,
+        "height": 0.8169883787631989,
+        "depth": 0.6846574246883392,
+        "heightToWidth": 1.2169307962686255
+      },
+      "after": {
+        "width": 0.6713515520095825,
+        "height": 0.8169883787631989,
+        "depth": 0.6846574246883392,
+        "heightToWidth": 1.2169307962686255
+      },
+      "unchanged": true,
+      "triangles": 4904
+    },
+    {
+      "variant": 2,
+      "name": "Ruby cheek",
+      "before": {
+        "width": 0.7869033813476562,
+        "height": 0.7375416457653046,
+        "depth": 0.6737865209579468,
+        "heightToWidth": 0.9372709067562851
+      },
+      "after": {
+        "width": 0.7869033813476562,
+        "height": 0.7375416457653046,
+        "depth": 0.6737865209579468,
+        "heightToWidth": 0.9372709067562851
+      },
+      "unchanged": true,
+      "triangles": 4904
+    },
+    {
+      "variant": 3,
+      "name": "Round ripe",
+      "before": {
+        "width": 0.7656847536563873,
+        "height": 0.697818249464035,
+        "depth": 0.676266074180603,
+        "heightToWidth": 0.9113649529153242
+      },
+      "after": {
+        "width": 0.7656847536563873,
+        "height": 0.697818249464035,
+        "depth": 0.676266074180603,
+        "heightToWidth": 0.9113649529153242
+      },
+      "unchanged": true,
+      "triangles": 4352
+    },
+    {
+      "variant": 4,
+      "name": "Long mango",
+      "before": {
+        "width": 0.6100452244281769,
+        "height": 0.8249330520629883,
+        "depth": 0.6983622610569,
+        "heightToWidth": 1.3522490120896127
+      },
+      "after": {
+        "width": 0.7095795571804047,
+        "height": 0.7693203389644623,
+        "depth": 0.7004442811012268,
+        "heightToWidth": 1.08419180228563
+      },
+      "unchanged": false,
+      "triangles": 4904
+    },
+    {
+      "variant": 5,
+      "name": "Wild gold",
+      "before": {
+        "width": 0.6703532040119171,
+        "height": 0.7693203389644623,
+        "depth": 0.7300346195697784,
+        "heightToWidth": 1.1476343133146056
+      },
+      "after": {
+        "width": 0.6703532040119171,
+        "height": 0.7693203389644623,
+        "depth": 0.7300346195697784,
+        "heightToWidth": 1.1476343133146056
+      },
+      "unchanged": true,
+      "triangles": 4352
+    }
+  ]
+}
