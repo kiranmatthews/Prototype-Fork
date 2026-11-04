@@ -19,8 +19,12 @@ const direct=(catalogue.sourceInventory?.standaloneParticles??[]).flatMap(entry=
   [...new Set(entry.launches.map(l=>l.is3d))].map(is3d=>({id:10000+entry.particle*2+Number(is3d),
     name:`direct-${entry.particle}${is3d?'-3d':''}`,source:entry.source,directLaunch:{particle:entry.particle},
     items:[{particle:entry.particle,flags:['launch-asap',...(is3d?['is-3d']:[])]}]})));
+const allExhibits=[...catalogue.groups,...direct],requested=option('--exhibits');
+const selection=requested?new Set(requested.split(',').map(Number)):null;
+if(selection)for(const id of selection)assert.ok(Number.isInteger(id)&&allExhibits.some(e=>e.id===id),`Unknown exhibit ${id}`);
+const exhibits=selection?allExhibits.filter(e=>selection.has(e.id)):allExhibits;
 const rows=[],seen=new Set(),callbacks=new Set(),births=new Set(),observed=new Set(),auxiliary=new Set();let samples=0,auxiliarySamples=0;
-for(const group of [...catalogue.groups,...direct]) {
+for(const group of exhibits) {
   const motion=new ParticleMotion(group,definitions,12000,group.id+1,catalogue.callbackPrograms);
   let peak=0,sounds=0,peakAuxiliary=0;const emitted=new Set();
   for(let frame=0;frame<Math.ceil(seconds*60);frame++) {
@@ -46,13 +50,14 @@ for(const group of [...catalogue.groups,...direct]) {
     peakAuxiliary,auxiliaryDrops:motion.auxiliaryDrops,
     textureCount:emitted.size,soundEvents:sounds,hostInputs:[...motion.hostInputs],issues:[...motion.issues]});
 }
-const report={createdAt:new Date().toISOString(),secondsPerExhibit:seconds,groups:catalogue.groups.length,
-  directExhibits:direct.length,particleSamples:samples,sourceDefinitions:definitions.size,
+const report={createdAt:new Date().toISOString(),secondsPerExhibit:seconds,scope:selection?'selected-exhibits':'full-catalogue',
+  selectedExhibits:selection?[...selection].sort((a,b)=>a-b):null,groups:exhibits.filter(e=>!e.directLaunch).length,
+  directExhibits:exhibits.filter(e=>e.directLaunch).length,particleSamples:samples,sourceDefinitions:definitions.size,
   reachedDefinitions:[...seen].filter(id=>definitions.has(id)).length,
   compiledContactCallbacks:Object.keys(catalogue.callbackPrograms??{}).length,
   observedUpdateCallbacks:[...callbacks].sort(),observedBirthCallbacks:[...births].sort(),
   observedDefinitions:observed.size,auxiliarySamples,observedAuxiliaryDefinitions:[...auxiliary].sort((a,b)=>a-b),
-  unobservedDeclaredAuxiliary:catalogue.particles.filter(p=>p.fields.some(f=>f.field==='flags'&&f.value?.includes('aux-list'))&&!auxiliary.has(p.id)).map(p=>p.id),
+  unobservedDeclaredAuxiliary:catalogue.particles.filter(p=>(!selection||seen.has(p.id))&&p.fields.some(f=>f.field==='flags'&&f.value?.includes('aux-list'))&&!auxiliary.has(p.id)).map(p=>p.id),
   auxiliaryDropExhibits:rows.filter(r=>r.auxiliaryDrops).map(r=>({name:r.name,dropped:r.auxiliaryDrops})),
   zeroEmissionExhibits:rows.filter(r=>r.peakParticles===0).map(r=>r.name),
   capacityDropExhibits:rows.filter(r=>r.dropped>0).map(r=>({name:r.name,dropped:r.dropped})),

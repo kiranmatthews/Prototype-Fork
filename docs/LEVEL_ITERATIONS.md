@@ -8949,3 +8949,21 @@ dust deduplication in `src/player.ts`, and bonus-death cleanup in `src/main.ts`.
   Local commit only; no publication.
 
 Details: [Jak asset lab](JAK_ASSET_LAB.md).
+
+## Jak archive — recover aliased source launchers, 5 November 2026 NZDT
+
+- Recovered 28 additional emitting effects from local aliases/material branches
+  and finite eco-powerup ID choices. The explorable lab now has 1,380 exhibits.
+  Three empty definitions and 25 referenced IDs without definitions are audited
+  explicitly; no substitute visuals. Unassigned definitions fall from 87 to 56.
+- Twenty-two focused source tests pass. All 28 new emitters pass 5,040 simulation
+  steps / 7,392 particle samples without nonfinite state, zero emission or drops.
+  Packed asset hashes reverified; only source-analysis metadata changes. Browser
+  search and Original/Gouraud checks cover eco, snow, water and wall-spark cases
+  at native resolution, with eco/snow also at 720p and no console warnings/errors.
+- Approximately 19 minutes source-to-validated catalogue (06:03–06:22 NZDT),
+  within the still-open whole-game brief. The unchanged frontend reuses the
+  preceding normal/standalone build evidence. Shared runtime, level data and D
+  remain unchanged. Local commit/handoff; no publication or full-suite run.
+
+Details: [Jak asset lab](JAK_ASSET_LAB.md).

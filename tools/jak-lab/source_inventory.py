@@ -4,6 +4,7 @@ from __future__ import annotations
 from collections import defaultdict
 import hashlib
 from host_replays import tracker_launch
+from source_aliases import analyse, FUNCTIONS
 
 
 def inventory(source, particles, groups, parse, walk):
@@ -18,7 +19,29 @@ def inventory(source, particles, groups, parse, walk):
     tracker_launches = []
 
     def particle_references(form):
-        return [f[2] for f in walk([form]) if len(f) >= 3 and f[:2] == ['->', '*part-id-table*']]
+        references = []
+        for f in walk([form]):
+            values = [f[2]] if len(f) >= 3 and f[:2] == ['->', '*part-id-table*'] else []
+            if id(f) in alias_references:
+                values += sorted(alias_references[id(f)].particles)
+            if id(f) in alias_launches:
+                values += sorted(alias_launches[id(f)][0].particles)
+            for value in values:
+                if value not in references:
+                    references.append(value)
+        return references
+
+    def callback_launch_references(form, root=True):
+        if not isinstance(form, list) or not form:
+            return set()
+        head = form[0]
+        if head in ('quote', 'quasiquote', 'defmacro') or (not root and isinstance(head, str) and head in FUNCTIONS):
+            return set()
+        resolution = alias_launches.get(id(form))
+        references = set(resolution[0].particles) if resolution else set()
+        for child in form:
+            references.update(callback_launch_references(child, False))
+        return references
 
     def function_name(form):
         if form[0] in ('defun', 'defun-debug', 'defbehavior'):
@@ -40,16 +63,19 @@ def inventory(source, particles, groups, parse, walk):
         except (ValueError, StopIteration, RecursionError) as error:
             failures.append({'file': relative, 'error': str(error)})
             continue
+        alias_launches, alias_references = analyse(forms)
 
         def visit(form, context=None):
             if not isinstance(form, list) or not form:
                 return
             head = form[0]
+            if head in ('quote', 'quasiquote', 'defmacro'):
+                return
             if isinstance(head, str) and head in ('defun', 'defun-debug', 'defbehavior', 'defmethod', 'defstate'):
                 context = function_name(form)
                 if context in callback_names:
                     callbacks.append({'name': context, 'source': {'file': relative, 'line': form.line},
-                                      'form': form, 'directParticleReferences': particle_references(form)})
+                                      'form': form, 'directParticleReferences': sorted(callback_launch_references(form))})
                 # Candidates are evidence for a manual procedural-render audit,
                 # not a claim that every draw method is a novel effect.
                 if any(word in context.lower() for word in ('draw', 'render')):
@@ -60,10 +86,18 @@ def inventory(source, particles, groups, parse, walk):
                 tracker_launches.append(tracker)
             if head in ('launch-particles', 'sp-launch-particles', 'sp-launch-particles-var',
                         'sp-launch-particles-death', 'sp-queue-launch'):
-                references = particle_references(form)
+                resolution = alias_launches.get(id(form))
+                references = sorted(resolution[0].particles) if resolution else []
+                systems = sorted(s.removeprefix('*sp-particle-system-').removesuffix('*')
+                                 for s in resolution[1].systems) if resolution else []
                 direct_ids.update(i for i in references if isinstance(i, int))
                 launches.append({'source': provenance, 'call': head, 'particles': references,
-                                 'is3d': '*sp-particle-system-3d*' in form, 'form': form})
+                                 'is3d': systems == ['3d'], 'systems': systems,
+                                 'launcherResolved': bool(resolution and resolution[0].complete
+                                                          and not resolution[0].systems and not resolution[0].other),
+                                 'systemResolved': bool(resolution and resolution[1].complete and systems
+                                                        and not resolution[1].particles and not resolution[1].other),
+                                 'form': form})
             if head in ('set!', '+!', '-!', '*!', '/!', 'logior!', 'logclear!') and len(form) > 2:
                 references = particle_references(form[1]) if isinstance(form[1], list) else []
                 if references:
@@ -99,12 +133,15 @@ def inventory(source, particles, groups, parse, walk):
     all_reached = reachable(roots | direct_ids)
     direct_sources = defaultdict(list)
     for launch in launches:
-        for id in launch['particles']:
-            if isinstance(id, int):
-                direct_sources[id].append({'source': launch['source'], 'is3d': launch['is3d']})
+        for particle_id in launch['particles']:
+            if isinstance(particle_id, int):
+                # Keep known possible systems distinct. An unknown host system
+                # is not evidence for a made-up 2D standalone exhibit.
+                for system in launch['systems']:
+                    direct_sources[particle_id].append({'source': launch['source'], 'is3d': system == '3d'})
     standalones = [{'particle': id, 'source': definitions[id]['source'], 'launches': direct_sources[id],
                     'alsoInGroupGraph': id in group_reached}
-                   for id in sorted(direct_ids & definitions.keys())]
+                   for id in sorted(direct_ids & definitions.keys()) if definitions[id]['fields']]
     return {
         'sourceFiles': source_files, 'parseFailures': failures,
         'callbackDefinitions': callbacks, 'missingCallbackDefinitions': sorted(callback_names - {c['name'] for c in callbacks}),
@@ -115,6 +152,10 @@ def inventory(source, particles, groups, parse, walk):
             'scannedSourceFiles': len(source_files), 'parseFailures': len(failures),
             'particlesInGroupGraph': len(group_reached), 'particlesOutsideGroupGraph': sorted(definitions.keys() - group_reached),
             'directLaunchSites': len(launches), 'directParticleRoots': len(direct_ids),
+            'definedDirectParticleRoots': len(direct_ids & definitions.keys()),
+            'emptyDirectParticleDefinitions': sorted(i for i in direct_ids & definitions.keys() if not definitions[i]['fields']),
+            'unresolvedDirectLauncherSites': sum(not item['launcherResolved'] for item in launches),
+            'unresolvedDirectSystemSites': sum(not item['systemResolved'] for item in launches),
             'runtimePatchSites': len(patches), 'callbackDefinitions': len(callbacks),
             'particlesOutsideGroupAndDirectGraphs': sorted(definitions.keys() - all_reached),
             'undefinedDirectParticleReferences': sorted(direct_ids - definitions.keys()),

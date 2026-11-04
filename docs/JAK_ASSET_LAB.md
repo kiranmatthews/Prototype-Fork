@@ -20,12 +20,13 @@ matches the release's SHA-256:
 The source inventory scans every Jak 1 `.gc` file, preserving file hashes and line
 locations. Current evidence is 533 parsed files, zero parse failures, 2,515
 particle definitions in 104 files and 675 named effect groups. All 79 referenced
-birth/update callbacks have source definitions. The audit additionally found 98
-direct launch sites, 70 direct particle roots, 394 runtime particle patch sites
-and hundreds of procedural draw/render candidates requiring review. The named group
+birth/update callbacks have source definitions. The audit additionally found 97
+direct launch sites, 126 referenced direct particle IDs (101 defined), 393 runtime
+particle patch sites and hundreds of procedural draw/render candidates requiring
+review. The named group
 graphs, including callback-launched children, reach 2,369 particle definitions;
 another 146 are outside those graphs.
-Following direct launch roots reduces the unresolved set to 87. Those 87 are
+Following direct launch roots reduces the unresolved set to 56. Those 56 are
 not automatically classified as unused: computed IDs, host launch paths and
 unused source variants still need distinguishing.
 
@@ -40,9 +41,11 @@ original/Gouraud/both views, matched animation playback, scrubbing, pause,
 restart, source scale and normal/native render resolution. Direct launchers
 are included separately and explicitly repeat once per second for inspection;
 that frequency is a lab control, not a reconstructed host object's update rate.
-The current catalogue contains 1,350 exhibits: 605 models/scenes, 675 named
-particle groups and 70 direct launcher exhibits. Relevant effects expose root
-height, heading, surface slope, water level and fade controls. These are explicit
+The current catalogue contains 1,380 exhibits: 605 models/scenes, 675 named
+particle groups, 98 direct launcher exhibits and two source draw assemblies.
+Three explicitly empty direct definitions stay in the source audit without
+blank visual exhibits; 25 referenced IDs have no source definition and remain
+flagged for review. Relevant effects expose root height, heading, surface slope, water level and fade controls. These are explicit
 inspection inputs until the actual host object's states have been ported.
 The 24 level scenes also expose 2,936 named source parts through a searchable
 Scene parts inspector; these remain inside their parent scene, not duplicate
@@ -565,3 +568,58 @@ before hosting metadata. Hashes/logs are in `source-assembly-delivery.json` and
 `source-assembly-build.log`. Test tabs and the guarded server are closed; the
 user's D playtest remains open. No shared game runtime, level data, extracted
 asset bytes or held D code changed. No publication; the whole-game goal is open.
+
+
+## Lexical launch recovery — material variants and eco powerups
+
+The source inventory now follows local launcher/system aliases through parallel
+`let`, sequential `let*`, casts, conditional return values and finite integer
+index choices. This recovers the cage's aliased 3D launcher, ordinary/jump debris
+selected by foot-contact material, Zoomer surface/wall effects, and the two-way
+eco-powerup sprite selections. A branch's incidental table reads are not treated
+as its returned launcher. Shadowed locals, argument evaluation order, assignment
+and unknown mutations are tracked; loop-carried mutations remain conservative.
+Quoted forms and macro templates are not runtime launch/patch sites. Callback
+graph edges use actual resolved launch arguments and exclude nested function
+definitions. Existing callback graphs/programs are unchanged on the real source.
+
+There are **28 new emitting direct exhibits**, bringing the lab to **1,380**.
+Particles 97, 98 and 99 are explicitly empty `defpart` declarations, so they stay
+in source coverage without fabricated visual exhibits. The same branch analysis
+finds 25 table IDs without source definitions; they remain explicitly unresolved
+rather than being replaced with nearby effects. Five computed launcher sites and
+one computed system site still require host/dispatcher analysis. The remaining
+56 definitions outside group/direct reachability are not declared unused.
+
+All 533 source file hashes match the previously inventoried tree. The source
+particle/group/model/texture definitions and compiled contact programs are exact
+matches; only source-analysis metadata changes. The verified metadata refresh
+rehashes every existing packed asset and changes no geometry, images, animation
+or material data. The refreshed raw catalogue is promoted only after the new
+emitters pass simulation and selected browser checks; the previous raw catalogue
+is retained as `catalogue.before-aliases.json`.
+
+Twenty-two focused inventory/compiler/replay tests cover real lookup semantics
+and negative cases: shadowing, parallel/sequential binding, conditional values,
+non-returned table reads, partial unknown IDs, unknown systems, quoted code,
+callback edges, mutation and empty definitions. The audit's new `--exhibits`
+option rejects unknown IDs and labels scoped reports explicitly. All 28 added
+emitters pass 5,040 fixed steps with 7,392 finite particle samples, zero capacity
+or auxiliary drops and no zero-emission cases. This supplements the previous
+whole-catalogue audit; it does not relabel that older run as current full coverage.
+
+Browser checks confirm catalogue search and paired Original/Gouraud rendering
+for yellow eco 269, snow debris 2250, water puff 2208 and metal sparks 2226. Eco
+and snow are captured at native 2560×1440 and 720p; all four are checked at native
+resolution with no console warnings/errors. The UI retains the time-of-day color
+and host emission-patch gaps. Evidence: `source-alias-resolution.json`,
+`source-alias-particle-audit.json`, `source-alias-browser.json`,
+`source-alias-validation.log` and `recovered-*.png` under `.jak-lab-data/evidence/`.
+
+The normal/standalone builds from `947b2475` remain applicable: frontend and
+runtime sources are unchanged. The new packed catalogue is 8,818,828 bytes, SHA-256
+`363fdb1bb2d461fa15eb59397bf5451cda30c7207273d3ee63b0ba3d2d1d9eb7`;
+packed assets/catalogue total 231,782,862 bytes. With the unchanged 681,357-byte
+frontend the deliverable is 232,464,219 bytes before hosting metadata. Updated
+hashes are in `source-alias-delivery.json`. No redundant build or full simulation
+audit; no publication. The original whole-game objective remains incomplete.
