@@ -1,5 +1,6 @@
 import { releaseImageUrl } from './releaseImageUrls';
-import { createSkystreamSun, SKYSTREAM_SUN } from './skystreamSun';
+import { createSkystreamSun } from './skystreamSun';
+import { installBananaBaySkySun } from './bananaBaySkySun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
 import { CountryClubCarts } from './golf-cart/course';
 import { SkateRace } from './race/runtime';
@@ -861,8 +862,10 @@ function setEditorView(editing: boolean, changed = false): void {
 }
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
-const skySunDirection=SKYSTREAM_SUN.clone();
-const skystreamSun=createSkystreamSun(skySunDirection);scene.add(skystreamSun);
+const skystreamSun=createSkystreamSun();scene.add(skystreamSun);
+const bananaBaySunDirection=new THREE.Vector3(...SKY_PRESETS['tropical-clouds'].bloomSun!).normalize();
+const bananaBaySun=createSkystreamSun(bananaBaySunDirection);bananaBaySun.name='Banana Bay sun · occluded lens flare';scene.add(bananaBaySun);
+const setBananaBaySkySun=installBananaBaySkySun(sky.material,bananaBaySunDirection);
 let proceduralSkyKey = "";
 let levelPostEnabled = false;
 
@@ -882,16 +885,16 @@ function applyTheme(): void {
   // and sun. Inheriting them from a collider also recoloured Sky Bridge.
   const skystreamSkyActive=current.id==='skystream'||current.id==='bonus:skystream'||current.id==='bonus-skystream';
   skyProjection.setCloudRoadSky(skystreamSkyActive);
-  const presetSun=SKY_PRESETS[skyPreset].bloomSun;
-  if(presetSun)skySunDirection.fromArray(presetSun).normalize();else skySunDirection.copy(SKYSTREAM_SUN);
-  skyProjection.setBloomSun(skystreamSkyActive||presetSun?skySunDirection:null);
-  skystreamSun.visible=(skystreamSkyActive||!!presetSun)&&!LITE;
+  skystreamSun.visible=skystreamSkyActive&&!LITE;
+  const bananaBaySkyActive=current.id==='beachfront'&&skyPreset==='tropical-clouds';
+  setBananaBaySkySun(bananaBaySkyActive);
+  bananaBaySun.visible=bananaBaySkyActive&&!LITE;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.
   // The editor deliberately restores the dome alongside its fog-free lens.
   syncSkyBackdropVisibility();
-  levelPostEnabled = (skyPreset === "coast" || skyPreset === 'tropical-clouds' || current.id==='jungle-cup') && !NO_COAST_POST;
+  levelPostEnabled = (skyPreset === "coast" || bananaBaySkyActive || current.id==='jungle-cup') && !NO_COAST_POST;
   // On initial campaign boot and during fade-backed level travel, the private
   // game-flow renderer owns the framebuffer. Do not allocate the much larger
   // gameplay composer behind it; renderPrimaryScene creates that scope for the
@@ -1065,7 +1068,7 @@ function updateWaterPresentation(dt: number): void {
   } else {
     level.water.clearPreCrtRenderSize();
   }
-  level.water.setQuality((level.skyPreset === "coast" || level.skyPreset === 'tropical-clouds' || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.applyMotuOceanLook();
   level.water.setSkyUrl(import.meta.env.BASE_URL + SEA_SKY_ART[activeSky],

@@ -8571,3 +8571,16 @@ checks pass. Lite and full-render MAX/native browser checks pass, together
 with production build and release-size validation. No full suite was run.
 
 Evidence: [Loose board support](loose-board-platforms/README.md).
+## 2026-11-04 — Restore shared skies, preserve Banana Bay
+
+Restored the shared sky projection shader byte for byte to its pre-Banana-Bay
+version. Banana Bay's cloud painting and bloom sun remain, with the added sun
+isolated to that level's own shader extension and flare state. Other sky art,
+level geometry and authored atmosphere settings are unchanged.
+
+Approximately 12 minutes to the first browser-reviewed rollback. Focused
+shader-switching regression and 428 atmosphere checks pass, as do the production
+build/type-check and release-size check (810,285,333 bytes). Browser review
+covers seven levels, returning from Banana Bay and Skystream, MAX/native and
+normal presentation, with no warnings/errors after the final changes.
+See [sky restoration evidence](sky-restoration/README.md). No full suite run.

@@ -1,0 +1,177 @@
+{
+  "views": [
+    {
+      "level": "custard-creek",
+      "preset": "sunset",
+      "sky": "Distant sky backdrop",
+      "visible": true,
+      "artwork": "painted",
+      "texture": [
+        1774,
+        887
+      ],
+      "water": false,
+      "haze": 1,
+      "tint": 0,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "beachfront",
+      "preset": "tropical-clouds",
+      "sky": "Sea-level sky backdrop",
+      "visible": true,
+      "artwork": "painted",
+      "texture": [
+        2172,
+        724
+      ],
+      "water": true,
+      "haze": 0,
+      "tint": 0,
+      "bananaSun": {
+        "0": 0.42118096351623535,
+        "1": 0.5214621424674988,
+        "2": -0.7420807480812073
+      },
+      "program": "sea-level-hemisphere-v9-cloud-road-blue-banana-bay-sun-v1",
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "coastal-street-run",
+      "preset": "coastal-town",
+      "sky": "Sea-level sky backdrop",
+      "visible": true,
+      "artwork": "procedural",
+      "texture": [
+        512,
+        512
+      ],
+      "water": true,
+      "haze": 0,
+      "tint": 0,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "tribal-run",
+      "preset": "day",
+      "sky": "Distant sky backdrop",
+      "visible": false,
+      "artwork": "procedural",
+      "texture": [
+        512,
+        512
+      ],
+      "water": false,
+      "haze": 0,
+      "tint": 0,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "treehouse-trail",
+      "preset": "day",
+      "sky": "Sea-level sky backdrop",
+      "visible": true,
+      "artwork": "procedural",
+      "texture": [
+        512,
+        512
+      ],
+      "water": true,
+      "haze": 0,
+      "tint": 0,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "skystream",
+      "preset": "clouds",
+      "sky": "Distant sky backdrop",
+      "visible": true,
+      "artwork": "painted",
+      "texture": [
+        1774,
+        887
+      ],
+      "water": false,
+      "haze": 0,
+      "tint": 1,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        1506,
+        1706
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "sky",
+      "preset": "clouds",
+      "sky": "Distant sky backdrop",
+      "visible": true,
+      "artwork": "painted",
+      "texture": [
+        1774,
+        887
+      ],
+      "water": false,
+      "haze": 0,
+      "tint": 0,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        1506,
+        1706
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    },
+    {
+      "level": "custard-creek",
+      "preset": "sunset",
+      "sky": "Distant sky backdrop",
+      "visible": true,
+      "artwork": "painted",
+      "texture": [
+        1774,
+        887
+      ],
+      "water": false,
+      "haze": 1,
+      "tint": 0,
+      "bananaSun": null,
+      "program": "sea-level-hemisphere-v9-cloud-road-blue",
+      "buffer": [
+        480,
+        544
+      ],
+      "stamp": "Codex/sol fork · build 11-04 01:06 UTC"
+    }
+  ],
+  "console": []
+}
