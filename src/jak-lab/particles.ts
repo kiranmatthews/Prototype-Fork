@@ -163,8 +163,8 @@ export class ParticleExhibit {
   private readonly batches = new Map<string,SpriteBatch>();
   private readonly textures = new Map<string,THREE.Texture>();
   private distortion: DistortionBatch | null = null;
-  private readonly extent: number;
-  private readonly sourceRadius: number;
+  private extent: number;
+  private sourceRadius: number;
   private mode: RenderingMode = 'compare';
   private nextDirectLaunch = 300;
   private constructor(readonly definition: EffectDefinition, catalogue: Catalogue, private readonly sceneTexture: THREE.IUniform) {
@@ -201,7 +201,18 @@ export class ParticleExhibit {
         exhibit.textures.set(id,texture);
       }
       // Start at a readable moment, with both displays reading one simulation.
-      exhibit.update(definition.directLaunch?1/60:.5);return exhibit;
+      exhibit.update(definition.directLaunch?1/60:.5);
+      if(exhibit.motion.hostInputs.has('racer speed')||exhibit.motion.hostInputs.has('racer heat')) {
+        // The HUD's source sphere is a culling bound (100 m for its pie
+        // slices), not their visible size. Fit the isolated live sprites;
+        // their source positions, dimensions and native-scale option stay exact.
+        exhibit.sourceRadius=Math.max(1,...exhibit.motion.particles.map(p=>
+          (p.position.length()+.5*Math.hypot(p.values['scale-x']??0,p.values['scale-y']??0))/4096));
+        exhibit.extent=Math.min(1,3.5/exhibit.sourceRadius);
+        for(const group of [exhibit.original,exhibit.alternative])group.children[0].position.set(0,exhibit.sourceRadius,0);
+        exhibit.setNativeScale(false);
+      }
+      return exhibit;
     } catch(error) {
       exhibit.dispose();throw error;
     }

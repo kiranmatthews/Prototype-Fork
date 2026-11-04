@@ -20,12 +20,16 @@ const element=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElemen
 const canvas=host.querySelector<HTMLCanvasElement>('canvas.world')!;
 const loading=element('loading');
 const hostControls=document.createElement('details');hostControls.id='effect-host';hostControls.hidden=true;
-hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Inspection inputs for callbacks: a stationary origin and flat water by default.</p>
+hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Adjust the conditions that drive this effect.</p>
   <label class="field" id="host-root-field">HOST HEIGHT (m)<input id="host-root" type="range" min="-10" max="40" step=".1" value="0" aria-label="Effect host height"></label>
   <label class="field" id="host-heading-field">HEADING<input id="host-heading" type="range" min="0" max="360" step="1" value="0" aria-label="Effect heading"></label>
   <label class="field" id="host-slope-field">SURFACE SLOPE<input id="host-slope" type="range" min="-70" max="70" step="1" value="0" aria-label="Effect surface slope"></label>
   <label class="field" id="host-water-field">WATER HEIGHT (m)<input id="host-water" type="range" min="-10" max="10" step=".1" value="0" aria-label="Effect water height"></label>
-  <label class="check" id="host-fade-field"><input id="host-fade" type="checkbox">Fade out eco</label>`;
+  <label class="check" id="host-fade-field"><input id="host-fade" type="checkbox">Fade out eco</label>
+  <label class="field" id="host-racer-speed-field">ZOOMER SPEED (m/s)<input id="host-racer-speed" type="number" min="0" max="50" step=".5" value="0" aria-label="Zoomer speed"></label>
+  <label class="field" id="host-racer-heat-field">ZOOMER HEAT (%)<input id="host-racer-heat" type="number" min="0" max="120" step="1" value="50" aria-label="Zoomer heat"></label>
+  <label class="check" id="host-racer-entering-field"><input id="host-racer-entering" type="checkbox">HUD entering (instant needle)</label>
+  <p class="muted" id="host-racer-note">Source needle and heat behavior, shown as isolated HUD layers. Full HUD placement is still pending.</p>`;
 element('status').before(hostControls);
 const replayField=document.createElement('div');replayField.hidden=true;
 replayField.innerHTML=`<label class="field">EMISSION PLAYBACK<select id="host-replay" aria-label="Emission playback"></select></label><p class="source" id="host-replay-note"></p>`;
@@ -144,11 +148,17 @@ async function boot():Promise<void> {
       element('host-slope-field').hidden=!inputs.has('target yaw/normal')&&!inputs.has('userdata normal vector');
       element('host-water-field').hidden=!inputs.has('ocean height');
       element('host-fade-field').hidden=!inputs.has('fade-out');
+      element('host-racer-speed-field').hidden=element('host-racer-entering-field').hidden=!inputs.has('racer speed');
+      element('host-racer-heat-field').hidden=!inputs.has('racer heat');
+      element('host-racer-note').hidden=!inputs.has('racer speed')&&!inputs.has('racer heat');
       element<HTMLInputElement>('host-root').value=String(h.root.y/4096);
       element<HTMLInputElement>('host-heading').value=String((h.targetYaw??0)*360/65536);
       element<HTMLInputElement>('host-slope').value=String(Math.atan2(h.targetNormal.z,h.targetNormal.y)*180/Math.PI);
       element<HTMLInputElement>('host-water').value=String(h.oceanHeight(new THREE.Vector3())/4096);
       element<HTMLInputElement>('host-fade').checked=h.fadeOut;
+      element<HTMLInputElement>('host-racer-speed').value=String(h.racerSpeed/4096);
+      element<HTMLInputElement>('host-racer-heat').value=String(h.racerHeat*100);
+      element<HTMLInputElement>('host-racer-entering').checked=h.racerHudOffset>=10;
     }
     animationSelect.replaceChildren();
     element('animation-field').hidden=!(view instanceof ModelExhibit&&view.clips.length);
@@ -292,6 +302,13 @@ async function boot():Promise<void> {
     h.fadeOut=element<HTMLInputElement>('host-fade').checked;
     if(id!=='host-fade')view.restart();
   };
+  for(const id of ['host-racer-speed','host-racer-heat','host-racer-entering'])element<HTMLInputElement>(id).oninput=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit))return;
+    const speedInput=element<HTMLInputElement>('host-racer-speed'),heatInput=element<HTMLInputElement>('host-racer-heat');
+    if(speedInput.value!==''&&speedInput.validity.valid)view.motion.host.racerSpeed=Number(speedInput.value)*4096;
+    if(heatInput.value!==''&&heatInput.validity.valid)view.motion.host.racerHeat=Number(heatInput.value)/100;
+    view.motion.host.racerHudOffset=element<HTMLInputElement>('host-racer-entering').checked?10:0;
+  };
   nativeScale.onchange=()=>{loaded.get(selected.id)?.setNativeScale(nativeScale.checked);focus();};
   animationSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.setClip(animationSelect.value);};
   element<HTMLInputElement>('timeline').oninput=event=>{
@@ -347,6 +364,11 @@ async function boot():Promise<void> {
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
         view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
+      if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('racer speed')||view.motion.hostInputs.has('racer heat'))) {
+        const h=view.motion.host;
+        element('statistics').textContent+=`\nZOOMER  ${(h.racerSpeed/4096).toFixed(1)} m/s · ${(h.racerHeat*100).toFixed(0)}% heat`;
+        element('statistics').textContent+=`\nANGLES  ${view.motion.particles.map(p=>(((p.values['rot-z']??0)/65536*360+360)%360).toFixed(1)+'°').join(' / ')}`;
+      }
       if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String((view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }

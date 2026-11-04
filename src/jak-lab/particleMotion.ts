@@ -18,17 +18,36 @@ interface LaunchState {
   item: EffectItem; active: boolean; launched: boolean; credit: number;
   parent: LabParticle | null; offset: number; spawnTime: number; origin: Vector3 | null; direct: boolean;
 }
+const RACER_HEAT_SLICES = ['part-hud-zoomer-heat-slice-01-func', 'part-hud-zoomer-heat-slice-02-func', 'part-hud-zoomer-heat-slice-03-func'];
+const RACER_SPEEDS = [0, 122880, 131072, 139264, 147456, 155648, 163840, 172032];
+const RACER_ANGLES = [42780.445, 27488.71, 14927.645, 7281.778, -546.13336, -6371.5557, -10922.667, -15473.777];
 const KNOWN_CALLBACKS = new Set(['sparticle-track-root', 'sparticle-track-root-prim',
   'part-tracker-track-root', 'eco-fadeout', 'eco-track-root-prim-fadeout', 'sparticle-track-root-money',
   'bird-bob-func', 'tra-bird-bob-func', 'snow-bird-bob-func',
   'sparticle-seagull-moon', 'tra-sparticle-seagull-moon', 'sparticle-snow-birds-moon',
-  'part-tracker-track-target-joint']);
+  'part-tracker-track-target-joint', 'part-hud-racer-speed-func', 'part-hud-racer-heat-func', ...RACER_HEAT_SLICES]);
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
   'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
   'birth-func-target-orient', 'birth-func-vector-orient', 'birth-func-random-rot']);
 const UP = new Vector3(0, 1, 0);
 const signed16 = (value: number) => (Math.trunc(value) << 16) >> 16;
+
+// racer-part.gc:11 and trigonometry.gc:56. The angle table is deliberately
+// nonlinear; source deg-seek quantizes before taking the signed shortest turn.
+function racerSpeedAngle(speed: number): number {
+  const speeds = RACER_SPEEDS, angles = RACER_ANGLES;
+  let index = 1; while (index < speeds.length - 1 && speed > speeds[index]) index++;
+  const t = Math.max(0, Math.min(1, (speed - speeds[index - 1]) / (speeds[index] - speeds[index - 1])));
+  return Math.fround((1 - t) * angles[index - 1] + t * angles[index]);
+}
+function seekAngle(current: number, target: number, maximum: number): number {
+  const start = signed16(current), end = signed16(target), difference = signed16(end - start);
+  const step = Math.trunc(maximum);
+  // The source 64-bit abs overflows for the exact half turn and takes +step.
+  return difference === -32768 ? signed16(start + step) :
+    Math.abs(difference) <= step ? end : signed16(start + Math.sign(difference) * step);
+}
 
 /** Explicit inspection inputs. Defaults are a stationary origin and flat water;
  * they are not inferred game object states. Source pointers become typed data. */
@@ -37,6 +56,8 @@ export interface ParticleHost {
   targetYaw: number | null; targetNormal: Vector3; vectorNormal: Vector3 | null;
   targetJoints: Map<number, Vector3>; particleQuaternion: Quaternion;
   oceanHeight: (position: Vector3) => number;
+  /** Source units/second, heat/heat-max ratio, and integer HUD offset. */
+  racerSpeed: number; racerHeat: number; racerHudOffset: number;
 }
 
 /** Source numeric field rules and launch graph. Units remain GOAL units until
@@ -51,7 +72,8 @@ export class ParticleMotion {
   readonly referencedParticleIds = new Set<number>();
   readonly host: ParticleHost = {root: new Vector3(), primitive: new Vector3(), fadeOut: false, hudMoney: false,
     targetYaw: 0, targetNormal: UP.clone(), vectorNormal: null, targetJoints: new Map(),
-    particleQuaternion: new Quaternion(), oceanHeight: () => 0};
+    particleQuaternion: new Quaternion(), oceanHeight: () => 0,
+    racerSpeed: 0, racerHeat: .5, racerHudOffset: 0};
   readonly hostInputs = new Set<string>();
   readonly soundEvents: {name: string; position: Vector3 | null}[] = [];
   clock = 0;
@@ -95,6 +117,8 @@ export class ParticleMotion {
           if (name.includes('track-root-prim')) this.hostInputs.add('primitive');
           if (name.includes('fadeout')) this.hostInputs.add('fade-out');
           if (name === 'part-tracker-track-target-joint') this.hostInputs.add('target joint transforms');
+          if (name === 'part-hud-racer-speed-func') this.hostInputs.add('racer speed');
+          if (name === 'part-hud-racer-heat-func' || RACER_HEAT_SLICES.includes(name)) this.hostInputs.add('racer heat');
         }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
         if (field.field === 'birth-func') {
@@ -305,6 +329,25 @@ export class ParticleMotion {
     else if (name === 'part-tracker-track-target-joint' && this.host.targetYaw !== null) {
       const joint = Math.trunc(v.userdata ?? 0), position = this.host.targetJoints.get(joint);
       if (position) p.position.copy(position); else this.issues.add(`Missing target joint transform: ${joint}`);
+    } else if (name === 'part-hud-racer-speed-func') {
+      const target = racerSpeedAngle(this.host.racerSpeed), current = v['rot-z'] ?? 0;
+      v['rot-z'] = this.host.racerHudOffset < 10 ?
+        seekAngle(current, target, (target < current ? 131072 : 32768) * PARTICLE_STEP) : target;
+    } else if (name === 'part-hud-racer-heat-func' || RACER_HEAT_SLICES.includes(name)) {
+      // Heat is the source heat/heat-max ratio. Do not clamp it: the native
+      // callback extrapolates. Blink phase uses the lab's 60 Hz source clock.
+      const heat = this.host.racerHeat, bright = !(Math.trunc(this.clock / STEP_TICKS) & 8);
+      if (name === 'part-hud-racer-heat-func') {
+        v['rot-z'] = Math.fround(182.04445 * (-45 + 215 * heat));
+        v.r = 128; v.g = v.b = heat > .8 && bright ? 0 : 128;
+      } else {
+        const slice = RACER_HEAT_SLICES.indexOf(name) + 1;
+        v['rot-z'] = Math.fround(182.04445 * (-45 - 90 * slice + 215 * heat));
+        if (slice > 1) v['rot-z'] = Math.max(-24576, v['rot-z']);
+        if (heat < .6) {v.r = Math.fround(213.33333 * heat); v.g = 128; v.b = 0;}
+        else if (heat < .8) {v.r = 128; v.g = Math.fround(128 - 640 * (heat - .6)); v.b = 0;}
+        else {v.r = 128; v.g = v.b = bright ? 0 : 100;}
+      }
     }
     if ((name === 'eco-fadeout' || name === 'eco-track-root-prim-fadeout') && !this.host.fadeOut) v['next-time'] = STEP_TICKS * 2;
   }

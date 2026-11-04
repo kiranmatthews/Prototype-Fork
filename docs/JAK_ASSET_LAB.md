@@ -82,7 +82,7 @@ The complete 605-model pack passed semantic and gzip verification. Its size is:
 | Catalogue | 8,816,274 |
 | Packed assets and catalogue | **231,780,308** |
 
-The standalone frontend adds approximately 671 KB before HTTP compression.
+The standalone frontend adds approximately 675 KB before HTTP compression.
 This needs a separate delivery origin rather than the main game's remaining
 Pages allowance. The release coordinator owns hosting and deployment setup.
 The frontend accepts `?catalogue=<URL>` with that host's CORS support.
@@ -106,12 +106,13 @@ particle updates; callback kills retire the particle on the following step.
 Fractional launch credit remains attached to the source launcher. Sound events
 are recorded but are not yet connected to playback.
 
-The runtime implements all 11 referenced birth callback names, plus 33 update
+The runtime implements all 11 referenced birth callback names, plus 38 update
 callback names (including the 20 contact callbacks). Parent-relative births,
 root/primitive following, bird motion, eco fade and target/surface orientation
 have focused checks. Some implementations require typed host data such as a
 joint, parent particle, normal or HUD money value. The inspector reports missing
-inputs. The other 35 callback names, mostly HUD behavior and sun tracking, remain
+inputs. Five Zoomer speed/heat callbacks now use explicit inspection inputs.
+The other 30 callback names, mostly HUD behavior and sun tracking, remain
 unported; name coverage does not prove complete host reconstruction.
 
 **Unfinished fidelity requirements:**
@@ -187,6 +188,7 @@ node tools/jak-lab/test-particle-motion.mjs
 node tools/jak-lab/test-model-geometry.mjs
 node tools/jak-lab/test-background-parts.mjs
 node tools/jak-lab/test-distortion.mjs
+node tools/jak-lab/test-racer-hud.mjs --catalogue .jak-lab-data/export/catalogue.json
 npx tsc --noEmit
 
 # Run this whole-catalogue simulation through the shared heavy-job guard.
@@ -454,3 +456,54 @@ was needed for a material-only change. Current frontend: 670,731 bytes; combined
 with the unchanged packed assets/catalogue: 232,451,039 bytes before hosting
 metadata. Hashes and logs are in `material-opacity-delivery.json` and
 `material-opacity-build.log` under the evidence directory.
+
+## Zoomer speed and heat callbacks
+
+The five referenced racer HUD callbacks now follow
+`levels/racer_common/racer-part.gc:11–137` from the pinned source. The speed dial
+uses its eight nonlinear calibration points, clamped interpolation, asymmetric
+seek rates, signed integer angle wrapping and the immediate-needle branch while
+the HUD offset is at least ten. Native `deg-seek`'s exact half-turn case is
+preserved. Heat drives the dial and three pie slices, including the two lower
+angle clamps, separate 60%/80% color thresholds and eight-frame flashing. The
+dial flashes strictly above 80%; pie slices flash at 80%. Overheat extrapolation
+is preserved. These are source state rules, not inferred target acceleration.
+
+Effect inputs expose Zoomer speed (metres/second), normalized heat (percent),
+and HUD entering. Updates preserve the current needle so its source seek can
+play. Restart retains the inputs and replays the initial pose. Original and
+Gouraud share the same state and blink clock. Flash phase uses the lab's 60 Hz
+clock; it is not synchronized to an unported running game's global frame count.
+The HUD layer is framed from its actual sprite size, since the source's 100 m
+pie-group sphere is a culling bound. Source dimensions/positions and world-scale
+inspection remain intact.
+
+The UI still explicitly reports **Screen-space host layout**. These are isolated
+layers in the gallery; the complete speed/heat instrument layout, HVDF transforms,
+HUD entrance positions and their underlying gameplay host are not yet recreated.
+Source texture/Gouraud edge approximation and blended-layer sorting remain part
+of the wider rendering audit.
+
+Focused regression checks cover the calibration landmarks, clamping, signed
+seek rates, exact half-turn, HUD entry boundary, heat angles/colors/flash
+thresholds, overheat, restart and 30/60/120 Hz fixed-step parity. Fifteen cases
+exercise the actual source groups 108, 112 and 114 for 480 frames, observing all
+five callbacks with finite values and no capacity drops. Existing particle
+motion/lifecycle and auxiliary-distortion regressions pass. The catalogue and
+source asset bytes are unchanged; no whole-catalogue extraction or audit rerun
+was needed for these scoped callbacks.
+
+Browser review covers the 30 m/s needle at 151°, immediate 42 m/s at 275°, the
+80% heat needle at 127°, 70% orange pie slices and both red/pale 95% flash phases.
+Paired Original/Gouraud views, native 2560×1440 and normal 1280×720 rendering
+pass with an empty warning/error log. The pale-phase capture uses the visible
+source clock at 45 ticks to verify the shared blink state. Evidence:
+`.jak-lab-data/evidence/racer-hud-{checks,browser,provenance}.json` and
+`racer-*.png`. The original whole-game brief remains in progress.
+
+Root TypeScript, the required normal build and the standalone build pass under
+the shared resource guard. The new frontend is 674,390 bytes; combined with the
+unchanged asset/catalogue pack it is 232,454,698 bytes before host metadata.
+Current hashes and logs: `racer-hud-delivery.json` and `racer-hud-build.log`.
+No shared game runtime, level data, package configuration or held D animation
+code changes. All test tabs and guarded servers are closed after review.
