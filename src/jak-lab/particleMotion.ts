@@ -32,6 +32,8 @@ const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userd
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
   'birth-func-target-orient', 'birth-func-vector-orient', 'birth-func-random-rot']);
 const UP = new Vector3(0, 1, 0);
+const RGB = ['r', 'g', 'b'];
+const LIGHTING_FIELDS = [...RGB, 'fade-r', 'fade-g', 'fade-b'];
 const signed16 = (value: number) => (Math.trunc(value) << 16) >> 16;
 
 // racer-part.gc:11 and trigonometry.gc:56. The angle table is deliberately
@@ -59,6 +61,8 @@ export interface ParticleHost {
   oceanHeight: (position: Vector3) => number;
   /** Source units/second, heat/heat-max ratio, and integer HUD offset. */
   racerSpeed: number; racerHeat: number; racerHudOffset: number;
+  /** current-prt-color RGB, applied at birth/relaunch, never to auxiliary radii. */
+  particleColor: Vector3;
 }
 
 /** Source numeric field rules and launch graph. Units remain GOAL units until
@@ -74,7 +78,7 @@ export class ParticleMotion {
   readonly host: ParticleHost = {root: new Vector3(), primitive: new Vector3(), fadeOut: false, hudMoney: false,
     targetYaw: 0, targetNormal: UP.clone(), vectorNormal: null, targetJoints: new Map(),
     particleQuaternion: new Quaternion(), oceanHeight: () => 0,
-    racerSpeed: 0, racerHeat: .5, racerHudOffset: 0};
+    racerSpeed: 0, racerHeat: .5, racerHudOffset: 0, particleColor: new Vector3(1, 1, 1)};
   readonly hostInputs = new Set<string>();
   readonly soundEvents: {name: string; position: Vector3 | null}[] = [];
   clock = 0;
@@ -132,11 +136,13 @@ export class ParticleMotion {
           if (name === 'birth-func-ocean-height') this.hostInputs.add('ocean height');
         }
         if (field.field === 'flags' && (field.value as string[]).includes('aux-list')) this.hostInputs.add('root');
-        if (field.field === 'flags' && (field.value as string[]).includes('bit12')) this.issues.add('Time-of-day host colour');
+        if (field.field === 'flags' && (field.value as string[]).includes('bit12') &&
+            !(field.value as string[]).includes('aux-list')) this.hostInputs.add('particle lighting');
         if (field.field === 'next-launcher') visit(field.base ?? 0);
       }
     };
     group.items.forEach(item => visit(item.particle));
+    if (group.items.some(item => item['hour-mask'])) this.hostInputs.add('time of day');
     if (group.flags?.includes('screen-space')) this.issues.add('Screen-space host layout');
   }
   private random(sound = false): number {
@@ -152,6 +158,11 @@ export class ParticleMotion {
     return Math.fround((field.base ?? 0) + random * (field.mult ?? 1));
   }
   private assign(particle: LabParticle, definition: ParticleDefinition, relaunch = false): void {
+    // sp-relaunch-setup-fields tests the PREVIOUS flags. The source sentinel
+    // lets partial fields (including copies) preserve already lit live values.
+    const litRelaunch = relaunch && particle.flags.has('bit12') && !particle.flags.has('aux-list');
+    const previous = litRelaunch ? LIGHTING_FIELDS.map(channel => particle.values[channel] ?? 0) : null;
+    if (previous) for (const channel of LIGHTING_FIELDS) particle.values[channel] = 99999;
     particle.definitionId = definition.id;
     if (relaunch) particle.values['next-launcher'] = 0;
     for (const field of definition.fields) {
@@ -169,6 +180,10 @@ export class ParticleMotion {
         if (field.field === 'func' && particle.values.func === 0) particle.callback = '';
       }
     }
+    if (previous) LIGHTING_FIELDS.forEach((channel, i) => {
+      particle.values[channel] = particle.values[channel] === 99999 ? previous[i] :
+        Math.fround(particle.values[channel] * this.host.particleColor.getComponent(i % 3));
+    });
     if (!relaunch) {
       particle.blend = particle.flags.has('bit3') ? 'additive' : particle.flags.has('bit4') ? 'subtractive' : 'normal';
       particle.depthWrite = particle.flags.has('bit9');
@@ -211,6 +226,9 @@ export class ParticleMotion {
         callback: '', birth: '', age: 0, blend: 'normal', depthWrite: false, controlled: !state.direct};
       this.assign(p, definition);
       const v = p.values;
+      // sp-launch-particles-var clamps authored RGB before birth callbacks;
+      // auxiliary sprite RGB stores geometric radii and must remain untouched.
+      if (!p.flags.has('aux-list')) for (const channel of RGB) v[channel] = Math.min(255, v[channel] ?? 0);
       p.position.set(v.x ?? 0, v.y ?? 0, v.z ?? 0);
       const velocity = new Vector3(v['vel-x'] ?? 0, v['vel-y'] ?? 0, v['vel-z'] ?? 0);
       // GOAL matrices use row vectors: x then y then z is Three's ZYX.
@@ -236,6 +254,12 @@ export class ParticleMotion {
       p.position.add(p.parent?.position ?? state.origin ?? this.host.root);
       this.birth(p, state.quaternion);
       this.setupAuxiliary(p);
+      if (p.flags.has('bit12') && !p.flags.has('aux-list')) {
+        for (const [i, channel] of RGB.entries()) {
+          v[channel] = Math.fround((v[channel] ?? 0) * this.host.particleColor.getComponent(i));
+          v[`fade-${channel}`] = Math.fround((v[`fade-${channel}`] ?? 0) * this.host.particleColor.getComponent(i));
+        }
+      }
       if (state.item.binding) {
         const child = this.states.find(candidate => candidate.item.particle === state.item.binding && !candidate.active);
         if (child) {child.active = true; child.launched = false; child.parent = p; p.child = child;}

@@ -39,6 +39,26 @@ export interface HostReplay {
   kind: 'part-tracker'; group: string; duration: number; linger: number;
   source: Provenance & {function: string | null}; formSha256: string;
 }
+export interface ParticleLightingSnapshot {
+  source: Provenance;
+  particle: number[]; ambient: number[]; light: number[];
+}
+export interface ParticleLightingSelection {
+  kind: 'cycle' | 'snapshot'; snapshot: number | null;
+  source: Provenance; function: string;
+}
+export interface ParticleLightingContext {
+  id: string; source: Provenance; levels: string[]; lights: string; palette: string;
+  presets: ParticleLightingSelection[];
+}
+export interface ParticleLightingLibrary {
+  sources: {file: string; sha256: string}[];
+  lightTables: {id: string; source: Provenance; snapshots: ParticleLightingSnapshot[]}[];
+  palettes: {id: string; source: Provenance; hours: {
+    snapshot1: number; snapshot2: number; 'morph-start': number; 'morph-end': number;
+  }[]}[];
+  contexts: ParticleLightingContext[];
+}
 export interface Catalogue {
   schemaVersion: number; game: string; sourceVersion: string;
   coverage: {
@@ -50,6 +70,7 @@ export interface Catalogue {
   particles: ParticleDefinition[]; groups: EffectDefinition[];
   models: ModelDefinition[]; textures: TextureDefinition[];
   callbackPrograms?: Record<string, ContactCallback>;
+  particleLighting?: ParticleLightingLibrary | null;
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];
     runtimeParticlePatches: {particles: unknown[]; source: Provenance}[];

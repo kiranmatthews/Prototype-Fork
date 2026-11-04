@@ -8967,3 +8967,27 @@ Details: [Jak asset lab](JAK_ASSET_LAB.md).
   remain unchanged. Local commit/handoff; no publication or full-suite run.
 
 Details: [Jak asset lab](JAK_ASSET_LAB.md).
+
+## Jak archive — source particle lighting, 5 November 2026 NZDT
+
+- Recovered 25 source mood contexts / 26 actual palette or fixed-snapshot
+  selections, using all 17 light tables and seven hourly interpolation tables.
+  Ported birth/relaunch RGB and fade lighting, the pre-birth colour clamp,
+  inherited-field sentinel behavior and alpha/distortion exclusions. Base
+  palettes and hour are inspectable in both render modes; local environmental
+  events and cross-level lighting remain explicitly unfinished.
+- Focus now isolates the selected complete exhibit after browser review exposed
+  light/colour contamination from neighbouring effects. Explore restores nearby
+  exhibits. Source geometry, silhouettes, skins, images and animation are intact.
+- Twenty-four Python tests, focused source-simulation regressions, 2,496 palette
+  samples and 762,012 paired real-effect particle samples pass. Lighting preserves
+  travel, rotation, alpha and lifetime. Packed hashes, normal/final standalone
+  builds and TypeScript pass; no full suite. Native/720p day/night, fixed cave,
+  mode switching and Focus/Explore pass with clean consoles. The final production
+  bundle also passes a native check against the packed archive.
+- Approximately 22 minutes source-to-validated playable (06:31–06:53 NZDT),
+  within the still-open whole-game brief. Frontend 686,185 bytes; combined
+  standalone delivery 232,509,396 bytes before host metadata. Local commit and
+  handoff only; no integration/publication, game-runtime, D or level-pack edits.
+
+Details: [Jak asset lab](JAK_ASSET_LAB.md).

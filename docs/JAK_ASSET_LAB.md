@@ -623,3 +623,71 @@ packed assets/catalogue total 231,782,862 bytes. With the unchanged 681,357-byte
 frontend the deliverable is 232,464,219 bytes before hosting metadata. Updated
 hashes are in `source-alias-delivery.json`. No redundant build or full simulation
 audit; no publication. The original whole-game objective remains incomplete.
+
+## Source particle lighting and isolated inspection
+
+The lab now extracts all 17 light tables, seven hourly interpolation tables and
+25 mood contexts from the pinned `mood-tables.gc`, with level ownership from
+`level-info.gc`. Its 26 selectable presets correspond to actual
+`update-mood-palette` / `update-mood-quick` call sites, including fixed cave and
+boss snapshots. Unspecified vector components remain zero; unused snapshots
+are not assigned invented hours. Each record retains source lines and hashes.
+This adds metadata only: the 605 models, 4,002 images and 1,380 exhibits are
+unchanged, and every stored asset hash passes the packing refresh.
+
+`particleLighting.ts` follows the original hourly snapshot/morph selection and
+RGB interpolation. Only an all-zero interpolated particle colour falls back to
+the source ambient/directional-light formula. `ParticleMotion` applies that
+colour to RGB and RGB fade at birth, after birth callbacks, with the source
+pre-callback 255 RGB clamp. Alpha is untouched. Auxiliary sprite RGB stores
+distortion radii and bypasses both clamp and tint. Relaunch uses the old flags
+and the source 99999 sentinel: unspecified fields retain their already lit live
+values, while replacement fields use the current lighting. Live particles are
+not multiplied again each frame. The translated native launcher is Git-blob
+verified at `d6f0d33d310c854fc227568d1be366fac34de599` in the pinned OpenGOAL
+commit; `sparticle-launcher.gc:456` supplies the relaunch rules.
+
+Effect inputs exposes base particle lighting and time of day, with source
+provenance. Changing either restarts the selected simulation; both render
+variants still read the same particles. The hour also drives existing source
+emission masks. These are **immutable base palettes**, not reconstructed local
+lightning/flames, quest-driven table changes, target/camera state, cross-level
+blends or complete scene lighting. The UI states that limitation. There are 360
+definitions explicitly requesting this lighting without the auxiliary flag;
+that count does not prove all their host behavior is complete.
+
+Browser review also revealed neighbouring large effects washing over the selected
+exhibit. Focus now streams and renders only the selected complete exhibit.
+Explore restores nearby exhibits; no geometry, animation or particle silhouette
+is reduced. This makes isolated colour comparisons readable while preserving
+the explorable collection. Gallery spacing/placement and whole-catalogue visual
+review remain open work.
+
+Validation includes 24 Python inventory/compiler/replay tests, source birth and
+partial-relaunch cases in 2D/3D, callback ordering, alpha/auxiliary exclusions,
+palette fallback/precedence, hour wrapping and 2,496 palette samples. Four real
+source groups at three hours produce 762,012 paired particle samples: lighting
+changes RGB while positions, orientations, alpha and lifetimes match exactly;
+all values remain finite and no capacity/auxiliary drops occur. Existing
+particle, distortion, Zoomer HUD and source-assembly checks pass. These are
+focused checks, not a rerun or replacement of the full catalogue audit.
+
+Native 2560×1440 and normal 1280×720 browser checks compare the same 60-particle,
+5-tick snow burst. Sentinel Beach noon gives RGB multipliers
+`0.6825 / 0.6710 / 0.6782`; midnight gives `0.3082 / 0.4115 / 0.7335` in both
+variants. Spider Cave's fixed snapshot stays `0.1750 / 0.3000 / 0.3750` across
+those hours. Original/Gouraud switching, input edits, restart and Focus/Explore
+pass, with seven nearby exhibits restored in Explore and one in Focus. Console
+warnings/errors are empty. The actual final production bundle independently
+loads the packed archive and passes the native midnight check without errors.
+
+Normal build, final root TypeScript and standalone build pass. The final lab-only
+UI corrections do not change the normal game's bundle inputs. Frontend size is
+686,185 bytes; packed catalogue is 8,859,177 bytes and the combined deliverable
+is 232,509,396 bytes before host metadata. The raw catalogue is promoted after
+validation, with `catalogue.before-lighting.json` retained. Evidence and exact
+hashes are in `.jak-lab-data/evidence/particle-lighting-{checks,provenance,browser,
+production,delivery}.json`, the validation/final-build logs and corresponding
+PNG captures. Test tabs and guarded servers are closed; the user's jump tab is
+preserved. Local only, with no shared game runtime or level-pack edits and no
+publication. The whole-game objective remains incomplete.

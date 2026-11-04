@@ -16,6 +16,7 @@ import struct
 
 from source_inventory import inventory
 from compile_callbacks import compile_callbacks
+from particle_lighting import extract_particle_lighting
 
 
 class Form(list):
@@ -290,7 +291,8 @@ def build_catalogue(project: Path):
             'coverage': coverage, 'sourceFiles': definitions, 'groupTable': table,
             'particles': particles, 'groups': groups, 'artGroups': art_groups,
             'jointGeometries': geometry, 'models': models, 'textures': textures,
-            'sourceInventory': source_inventory, 'callbackPrograms': callback_programs}
+            'sourceInventory': source_inventory, 'callbackPrograms': callback_programs,
+            'particleLighting': extract_particle_lighting(source, parse, walk)}
 
 
 def refresh_inventory(previous_file: Path, project: Path):
@@ -305,7 +307,8 @@ def refresh_inventory(previous_file: Path, project: Path):
     if updated['sourceFiles'] != catalogue['sourceInventory']['sourceFiles']:
         raise ValueError('Source tree changed; rebuild the complete catalogue')
     callbacks, failures = compile_callbacks(updated['callbackDefinitions'])
-    catalogue.update(sourceInventory=updated, callbackPrograms=callbacks)
+    catalogue.update(sourceInventory=updated, callbackPrograms=callbacks,
+                     particleLighting=extract_particle_lighting(source, parse, walk))
     catalogue['coverage'].update(sourceAudit=updated['coverage'],
                                  compiledContactCallbacks=len(callbacks), unsupportedContactCallbacks=failures)
     return catalogue

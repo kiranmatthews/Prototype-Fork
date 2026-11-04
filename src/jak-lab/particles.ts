@@ -3,6 +3,7 @@ import {ParticleMotion, type LabParticle} from './particleMotion';
 import {assetURL, type Catalogue, type EffectDefinition, type HostReplay, type RenderingMode} from './types';
 import {DistortionBatch, PARTICLE_SPRITE_LAYER} from './distortion';
 import {SourceAssembly} from './sourceAssemblies';
+import {ParticleLighting} from './particleLighting';
 
 const vertexShader = /* glsl */`
   attribute vec4 profile;
@@ -164,6 +165,7 @@ export class ParticleExhibit {
   readonly issues: Set<string>;
   readonly replays: HostReplay[];
   readonly assembly:SourceAssembly|null;
+  readonly lighting:ParticleLighting|null;
   readonly original = new THREE.Group();
   readonly alternative = new THREE.Group();
   private readonly batches = new Map<string,SpriteBatch>();
@@ -177,6 +179,9 @@ export class ParticleExhibit {
   private nextDirectLaunch = 300;
   private constructor(readonly definition: EffectDefinition, catalogue: Catalogue, private readonly sceneTexture: THREE.IUniform) {
     this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1,catalogue.callbackPrograms);
+    this.lighting=catalogue.particleLighting?new ParticleLighting(catalogue.particleLighting,definition.source.file):null;
+    this.refreshLighting();
+    if(!this.lighting&&this.motion.hostInputs.has('particle lighting'))this.motion.issues.add('Source lighting tables unavailable');
     this.assembly=definition.sourceAssembly?new SourceAssembly(definition.sourceAssembly):null;
     if(this.assembly) {
       this.motion.sourceEmitter=motion=>this.assembly!.emit(motion);
@@ -263,6 +268,9 @@ export class ParticleExhibit {
     this.assembly.camera.copy(this.cameraPoint).divideScalar(this.scale)
       .sub(this.original.children[0].position).multiplyScalar(4096);
   }
+  refreshLighting():void {
+    if(this.lighting)this.motion.host.particleColor.fromArray(this.lighting.sample(this.motion.hour));
+  }
   update(dt:number):void {
     if(this.definition.directLaunch&&this.motion.clock>=this.nextDirectLaunch) {
       this.motion.triggerDirect();this.nextDirectLaunch=this.motion.clock+300;
@@ -291,6 +299,7 @@ export class ParticleExhibit {
     dropped:this.motion.dropped,sourceQueueDrops:this.motion.queueDrops,batches:this.batches.size,
     distortions:this.distortions,auxiliaryDrops:this.motion.auxiliaryDrops,
     assembly:this.assembly?.kind,sourceCalls:this.assembly?.calls,
+    lighting:this.lighting?.selected.id,hour:this.motion.hour,particleColor:this.motion.host.particleColor.toArray(),
     replay:this.motion.replayPhase,replaySource:this.motion.replay?.source,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
   dispose():void {
     for(const batch of this.batches.values())batch.dispose();

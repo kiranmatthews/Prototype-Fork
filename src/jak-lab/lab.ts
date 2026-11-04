@@ -27,6 +27,10 @@ hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Adjust 
   <label class="field" id="host-slope-field">SURFACE SLOPE<input id="host-slope" type="range" min="-70" max="70" step="1" value="0" aria-label="Effect surface slope"></label>
   <label class="field" id="host-water-field">WATER HEIGHT (m)<input id="host-water" type="range" min="-10" max="10" step=".1" value="0" aria-label="Effect water height"></label>
   <label class="check" id="host-fade-field"><input id="host-fade" type="checkbox">Fade out eco</label>
+  <label class="field" id="host-lighting-field">BASE PARTICLE LIGHTING<select id="host-lighting" aria-label="Particle lighting"></select></label>
+  <label class="field" id="host-hour-field">TIME OF DAY (0–24 h)<input id="host-hour" type="number" min="0" max="24" step=".25" value="12" aria-label="Time of day"></label>
+  <p class="muted" id="host-lighting-note"></p>
+  <p class="source" id="host-lighting-source"></p>
   <label class="field" id="host-racer-speed-field">ZOOMER SPEED (m/s)<input id="host-racer-speed" type="number" min="0" max="50" step=".5" value="0" aria-label="Zoomer speed"></label>
   <label class="field" id="host-racer-heat-field">ZOOMER HEAT (%)<input id="host-racer-heat" type="number" min="0" max="120" step="1" value="50" aria-label="Zoomer heat"></label>
   <label class="check" id="host-racer-entering-field"><input id="host-racer-entering" type="checkbox">HUD entering (instant needle)</label>
@@ -168,6 +172,16 @@ async function boot():Promise<void> {
       element('host-slope-field').hidden=!inputs.has('target yaw/normal')&&!inputs.has('userdata normal vector');
       element('host-water-field').hidden=!inputs.has('ocean height');
       element('host-fade-field').hidden=!inputs.has('fade-out');
+      const lit=inputs.has('particle lighting'),timed=inputs.has('time of day');
+      element('host-lighting-field').hidden=!lit||!view.lighting;
+      element('host-hour-field').hidden=!lit&&!timed;
+      element('host-lighting-note').hidden=element('host-lighting-source').hidden=!lit&&!timed;
+      const lightingSelect=element<HTMLSelectElement>('host-lighting');lightingSelect.replaceChildren();
+      for(const preset of view.lighting?.presets??[])lightingSelect.add(new Option(
+        `${areaNames[preset.context.id]??pretty(preset.context.id)} · ${preset.selection.kind==='cycle'?'day cycle':`snapshot ${preset.selection.snapshot}`}`,preset.id));
+      if(view.lighting)lightingSelect.value=view.lighting.selected.id;
+      element<HTMLInputElement>('host-hour').value=String(view.motion.hour);
+      describeLighting(view);
       element('host-racer-speed-field').hidden=element('host-racer-entering-field').hidden=!inputs.has('racer speed');
       element('host-racer-heat-field').hidden=!inputs.has('racer heat');
       element('host-racer-note').hidden=!inputs.has('racer speed')&&!inputs.has('racer heat');
@@ -206,6 +220,14 @@ async function boot():Promise<void> {
       element('provenance').textContent=selected.model?.path??selected.effect?.source.file??'';
     }
     loading.textContent=view?'':errors.get(selected.id)??`Loading ${selected.name}…`;
+  }
+  function describeLighting(view:ParticleExhibit):void {
+    const lit=view.motion.hostInputs.has('particle lighting'),preset=view.lighting?.selected;
+    element('host-lighting-note').textContent=lit?
+      'Original base palettes. Local lighting events and area transitions are still pending. Changing these inputs restarts the effect.':
+      'Time of day controls source emission hours. Changing it restarts the effect.';
+    element('host-lighting-source').textContent=lit&&preset?
+      `${preset.context.source.file}:${preset.context.source.line}\n${preset.selection.source.file}:${preset.selection.source.line}`:'';
   }
   function select(exhibit:Exhibit,preservePart=false):void {
     if(selected.id!==exhibit.id){partSearch.value='';sceneParts.open=false;}
@@ -255,8 +277,8 @@ async function boot():Promise<void> {
     page=0;renderResults();
   }
   async function stream():Promise<void> {
-    const candidates=exhibits.map(exhibit=>({exhibit,distance:camera.position.distanceToSquared(locations.get(exhibit.id)!)}))
-      .filter(item=>item.distance<34*34||item.exhibit.id===selected.id).sort((a,b)=>a.distance-b.distance).slice(0,7);
+    const candidates=exploring?exhibits.map(exhibit=>({exhibit,distance:camera.position.distanceToSquared(locations.get(exhibit.id)!)}))
+      .filter(item=>item.distance<34*34||item.exhibit.id===selected.id).sort((a,b)=>a.distance-b.distance).slice(0,7):[];
     wanted=new Set([selected.id,...candidates.map(item=>item.exhibit.id)]);
     for(const [id,view] of loaded)if(!wanted.has(id)){view.dispose();loaded.delete(id);}
     for(const [id,sprite] of labels)if(!wanted.has(id)){sprite.material.map?.dispose();sprite.material.dispose();sprite.removeFromParent();labels.delete(id);}
@@ -330,6 +352,16 @@ async function boot():Promise<void> {
     if(heatInput.value!==''&&heatInput.validity.valid)view.motion.host.racerHeat=Number(heatInput.value)/100;
     view.motion.host.racerHudOffset=element<HTMLInputElement>('host-racer-entering').checked?10:0;
   };
+  const updateLighting=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit))return;
+    const hour=element<HTMLInputElement>('host-hour');
+    if(hour.value===''||!hour.validity.valid)return;
+    view.motion.hour=Number(hour.value)%24;
+    if(view.lighting)view.lighting.select(element<HTMLSelectElement>('host-lighting').value);
+    view.refreshLighting();view.restart();describeLighting(view);
+  };
+  element<HTMLInputElement>('host-hour').oninput=updateLighting;
+  element<HTMLSelectElement>('host-lighting').onchange=updateLighting;
   for(const id of ['assembly-enabled','assembly-length','assembly-slope','assembly-heading'])element<HTMLInputElement>(id).oninput=()=>{
     const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit)||!view.assembly)return;
     view.assembly.enabled=element<HTMLInputElement>('assembly-enabled').checked;
@@ -389,6 +421,10 @@ async function boot():Promise<void> {
       movement.normalize().multiplyScalar(dt*(keys.has('ShiftLeft')||keys.has('ShiftRight')?24:7));camera.position.add(movement);camera.position.y=Math.max(.5,camera.position.y);
     }
     if(!exploring)controls.update();
+    // Large source sprites/scenes can extend beyond their gallery plinths.
+    // Focus is an isolated inspection; Explore restores nearby full exhibits.
+    for(const [id,view] of loaded)view.root.visible=exploring||id===selected.id;
+    for(const [id,caption] of labels)if(id!==selected.id)caption.visible=exploring;
     if(!paused)for(const view of loaded.values()) {
       if(view instanceof ParticleExhibit)view.setInspectionCamera(camera.position);
       view.update(dt*speed);
@@ -405,10 +441,12 @@ async function boot():Promise<void> {
       }
       if(view instanceof ParticleExhibit&&view.assembly)
         element('statistics').textContent+=`\nSOURCE CALLS / FRAME  ${view.assembly.calls}\nEMITTER  ${view.assembly.enabled?'on':'off'}`;
+      if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('particle lighting')||view.motion.hostInputs.has('time of day')))
+        element('statistics').textContent+=`\nHOUR  ${view.motion.hour.toFixed(2)}\nPARTICLE RGB  ${view.motion.host.particleColor.toArray().map(v=>v.toFixed(4)).join(' / ')}`;
       if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String((view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }
-    particlePass.render(renderer,scene,camera,[...loaded.values()].some(view=>view instanceof ParticleExhibit&&view.distortions>0));
+    particlePass.render(renderer,scene,camera,[...loaded.values()].some(view=>view.root.visible&&view instanceof ParticleExhibit&&view.distortions>0));
   });
   // Read-only diagnostic surface for whole-catalogue validation and inspection.
   Object.defineProperty(window,'__jakLab',{value:{catalogue,exhibits,get selected(){return selected.id;},
