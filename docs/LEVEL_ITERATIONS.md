@@ -8835,3 +8835,42 @@ coordinator reactivated by the user during this task.
 The final six-pocket version passes the focused regression, `check:levels`,
 production build/type-check and `check:release` (814,174,482 bytes). No full
 suite was run.
+
+## 2026-11-05 — Production crate family, fracture effects and checkpoints
+
+Rebuilt fourteen crate/checkpoint variants as one procedural art kit: bowed and
+beveled timber, inset planks, broad grain, pale worn edges, forged hardware and
+consistent painted identifiers. Every face, including the underside, is modeled.
+Complete variants range from 3,480 to 5,280 triangles, sharing geometry and
+materials with no distance-dependent geometry substitution. The ArtStation
+reference and original ImageGen direction sheet are recorded in
+`docs/crate-art-production/ART_DIRECTION.md`; no Tripo credits were used.
+
+Added finite contact squash/rebound, five-hit pips/cracks, independent TNT fuse
+burn/countdown and Nitro twitch, depressed spent switches, and a floating compass
+seal after a checkpoint is banked. Breaks throw matching timber, pale jagged
+fracture ends, splinters and forged nails. Oriented shard bounds contact actual
+level solids, rebound and settle, then retire. Impact stars and shock rings layer
+with the established dust/explosion clouds. The level-owned pool caps at 192
+shards and twelve bursts; reset, bonus death and disposal clear it. Gameplay
+colliders, rewards, banked snapshots, fuse duration and movement tuning retain
+their existing contracts.
+
+Approximately 52 minutes prompt-to-first playable keyboard smash, from 12:34:56
+to around 13:27 UTC. That is wall-clock time including the machine restart,
+durable-checkout recovery and shared validation queue. Confirmed common downtime
+was 305 seconds; recovery/capacity interruptions are excluded from productive
+authoring, whose exact split was not separately captured. Full/native review
+finished around 13:34 UTC.
+
+Focused geometry/debris, life/five-hit, explosives, Nitro-clear and real-Player
+bonus/checkpoint checks pass. Browser review covered all six directions, flying
+and settled fragments, real movement/spin, stomps, countdown, switches, outlines,
+checkpoint banking, pit respawn, hard reset and time-trial labels. Full rendering
+was reviewed at 3024×1724 native and 842×480 CRT with no console errors. The
+production build/typecheck passes. No level data changed and no full audit suite
+was run.
+Evidence and reproduction controls are in `docs/crate-art-production/VALIDATION.md`.
+Publication is handed to the active release coordinator with scoped ownership
+of the crate/checkpoint portions of `src/level.ts`, two presentation calls and
+dust deduplication in `src/player.ts`, and bonus-death cleanup in `src/main.ts`.

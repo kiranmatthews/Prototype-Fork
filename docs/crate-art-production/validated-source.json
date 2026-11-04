@@ -1,0 +1,30 @@
+{
+  "runtimeCommit": "a83983e76e0080dac76d7ee9872f0745e423a814",
+  "baseCommit": "4f5639b21a698b1fb85114bd5f735dc412e1ab7b",
+  "blobs": {
+    "src/crateArt.ts": "bfa4aa67ea587c62efb887d9430f000d766c5ad7",
+    "src/crateEffects.ts": "6b3885aaefdac46aa5046c1e16be06f0e38b16bc",
+    "src/level.ts": "5f6a60371176f3800322f551208f3ca1ebce90ff",
+    "src/player.ts": "9e2d13ffdf93d18889a58f2ec0efbbeb632300ec",
+    "src/main.ts": "24bc74c30965f6e66ed92da3e5cf63cdb87296dc",
+    "tools/test-crate-art.mjs": "2ebf5d29fcb83ccd794b858813ecfbf6a8eedcb2",
+    "tools/test-life-multihit-crates.mjs": "b3762ebbd91cb811f9efa6db86abbf9248297440",
+    "tools/test-explosive-bundles.mjs": "ad920a944d0c6c59d20060ba01008a61e9039b7c",
+    "tools/test-nitro-clear-switch.mjs": "719b10ae71992305dd9f0bead318f5b149e28491",
+    "tools/test-bonus-checkpoint.mjs": "9ca61d1a313fd83c744539a23a982e5afa0b82d3"
+  },
+  "finalCheckpointCheck": "passed",
+  "productionBuild": "passed",
+  "offlineVersion": "d51be64d5eb78055c82c",
+  "offlineFiles": 1762,
+  "offlineMiB": 775.4,
+  "fullBrowserConsoleErrors": 0,
+  "nativeBuffer": [
+    3024,
+    1724
+  ],
+  "crtBuffer": [
+    842,
+    480
+  ]
+}

@@ -16,4 +16,5 @@ ImageGen prompt (built-in tool):
 
 Recovery note: the original `/private/tmp` checkout disappeared in the machine restart before any runtime edits. The generated concept and research survived. Source work resumed in the durable ignored `.release-queue/worktrees/crate-art-production` checkout; downtime and recovery are excluded from productive authoring time.
 
-Validation and final measurements are recorded separately after browser review.
+Validation, measured budgets, native/CRT screenshots and reproduction steps are
+recorded in `VALIDATION.md` and the adjacent JSON evidence.

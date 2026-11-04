@@ -27,7 +27,8 @@ uses one draw; painted identifiers add one. Accessories are separate meshes.
 
 The final review removed an unnecessary new `activateCheckpoint` early return
 so repeat calls preserve the pre-existing snapshot API. Final checkpoint check
-and production rebuild are pending the shared validation slot. No level data,
+and production rebuild both pass on runtime commit
+`a83983e76e0080dac76d7ee9872f0745e423a814`. No level data,
 movement tuning, authored colliders, fuse timing or blast radius were changed.
 No full `check:all` suite was requested or run.
 
@@ -86,6 +87,12 @@ interval includes the machine restart, checkout recovery and shared validation
 queue. Those interruptions are excluded from productive authoring; an exact
 active-authoring split was not captured. Full/native review finished around
 13:34 UTC and the first build passed around 13:37 UTC.
+
+The final guarded checkpoint check/build completed successfully on the same
+runtime commit, producing offline version `d51be64d5eb78055c82c` (1,762 files,
+775.4 MiB). Vite reported its existing large-chunk advisory; there were no build
+errors. `validated-source.json` identifies the exact runtime and test blobs.
+The later validation-record commit changes documentation only.
 
 Publication belongs to the active release coordinator. This feature does not
 depend on the held animation branch or the separate particle experiment.
