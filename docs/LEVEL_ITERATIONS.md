@@ -9222,3 +9222,28 @@ The complete production build passes in 125.53 seconds. Final local validation
 completed around 10:40 Auckland, approximately 36 minutes after the request,
 including the shared-capacity wait. The review server/browser are closed and the
 guard lease released. Publication is handed to the active release coordinator.
+
+
+## 2026-11-05 — Banana Bay glossy surface regression
+
+The user corrected the reported level from Beach Street to Banana Bay before
+source edits. Traced its water highlights to the HDR specular values inherited
+by the sunny palette, and its wet-sand polish to the shared coastal roughness
+reduction. The 4 November lower sun exposed that existing sand finish.
+Banana Bay now supplies restrained water highlights and keeps damp sand rough;
+its wet colour, waves, reflections, caustics, sky and shoreline geometry remain
+authored. Other coastal sand keeps its existing finish.
+
+The correction was locally rendered within approximately 25 minutes of the
+initial report, including the target clarification; this is a wall-clock
+estimate rather than a captured geometry timer. Final validation timing and
+full/native evidence are recorded in
+[the surface regression trace](banana-bay-surface-regression/README.md).
+The focused surface and ocean-formula checks, required level checks and
+production build pass. Full rendering was reviewed at 3024 × 1612 native/MAX
+and 900 × 480 CRT, including matched fixed-wave surface comparisons, keyboard
+movement and spawn reset, with no console warnings/errors or asset failures.
+Completed local review took approximately 65 minutes from the initial report,
+including shared validation waiting and a browser evidence-export stall.
+The validated commits are handed to the active release coordinator; no full
+audit suite or separate publication workflow was run.

@@ -1,0 +1,495 @@
+{
+  "sourceCommit": "4b7e4c113f72b112a65f5ee1aa8b2e5d3e6793e8",
+  "entry": "assets/index-DtBJJGvE.js",
+  "offlineVersion": "bf63a4abc8d4cd438722",
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "checks": {
+    "surface-look": "passed",
+    "ocean-formulas": "passed",
+    "check:levels": "passed",
+    "build": "passed"
+  },
+  "views": [
+    {
+      "surface": {
+        "sand": "published",
+        "glint": "published",
+        "light": "current",
+        "time": 6.662200000002974,
+        "freeze": true,
+        "specular": {
+          "r": 14.27,
+          "g": 22.6274,
+          "b": 24.66,
+          "a": 1
+        },
+        "reflection": 0.38,
+        "depthFoam": true,
+        "sun": [
+          0.42,
+          0.52,
+          -0.74
+        ],
+        "sandWet": true,
+        "buffer": [
+          3024,
+          1612
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "scene": {
+        "ready": true,
+        "view": "Water glint",
+        "quality": "full",
+        "resolution": "max",
+        "buffer": [
+          3024,
+          1612
+        ],
+        "player": {
+          "p": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "checkpoint": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ]
+        },
+        "water": {
+          "shoreContourSegments": 1660,
+          "shoreFieldBuildMs": 175.10000000149012,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 223,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 91866,
+          "tris": 181455,
+          "shoreSamples": 1011,
+          "sceneWidth": 3024,
+          "sceneHeight": 1612,
+          "nativeDrawingBufferWidth": 3024,
+          "nativeDrawingBufferHeight": 1612,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 907,
+          "reflectionHeight": 484,
+          "prepassWidth": 3024,
+          "prepassHeight": 1612,
+          "reflectionRenders": 223,
+          "prepassRenders": 223,
+          "quality": "full"
+        },
+        "assets": [],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "image": "water-before.jpg",
+      "imageSha256": "85edbef21cbc6dd9b1d108af4f67a5606ad89dcdc633cf7b630a587eba04f25a"
+    },
+    {
+      "surface": {
+        "sand": "fixed",
+        "glint": "fixed",
+        "light": "current",
+        "time": 6.662200000002974,
+        "freeze": true,
+        "specular": {
+          "r": 0.45,
+          "g": 0.6,
+          "b": 0.65,
+          "a": 1
+        },
+        "reflection": 0.38,
+        "depthFoam": true,
+        "sun": [
+          0.42,
+          0.52,
+          -0.74
+        ],
+        "sandWet": true,
+        "buffer": [
+          3024,
+          1612
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "scene": {
+        "ready": true,
+        "view": "Water glint",
+        "quality": "full",
+        "resolution": "max",
+        "buffer": [
+          3024,
+          1612
+        ],
+        "player": {
+          "p": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "checkpoint": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ]
+        },
+        "water": {
+          "shoreContourSegments": 1660,
+          "shoreFieldBuildMs": 175.10000000149012,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 492,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 91866,
+          "tris": 181455,
+          "shoreSamples": 1011,
+          "sceneWidth": 3024,
+          "sceneHeight": 1612,
+          "nativeDrawingBufferWidth": 3024,
+          "nativeDrawingBufferHeight": 1612,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 907,
+          "reflectionHeight": 484,
+          "prepassWidth": 3024,
+          "prepassHeight": 1612,
+          "reflectionRenders": 492,
+          "prepassRenders": 492,
+          "quality": "full"
+        },
+        "assets": [],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "image": "water-after.jpg",
+      "imageSha256": "9a6de815d5083f2013d25e947a39740a72067434c6129af53007d93d164b9b78"
+    },
+    {
+      "surface": {
+        "sand": "published",
+        "glint": "published",
+        "light": "current",
+        "time": 6.662200000002974,
+        "freeze": true,
+        "specular": {
+          "r": 14.27,
+          "g": 22.6274,
+          "b": 24.66,
+          "a": 1
+        },
+        "reflection": 0.38,
+        "depthFoam": true,
+        "sun": [
+          0.42,
+          0.52,
+          -0.74
+        ],
+        "sandWet": true,
+        "buffer": [
+          3024,
+          1612
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "scene": {
+        "ready": true,
+        "view": "Sand glint",
+        "quality": "full",
+        "resolution": "max",
+        "buffer": [
+          3024,
+          1612
+        ],
+        "player": {
+          "p": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "checkpoint": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ]
+        },
+        "water": {
+          "shoreContourSegments": 1660,
+          "shoreFieldBuildMs": 175.10000000149012,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 1027,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 91866,
+          "tris": 181455,
+          "shoreSamples": 1011,
+          "sceneWidth": 3024,
+          "sceneHeight": 1612,
+          "nativeDrawingBufferWidth": 3024,
+          "nativeDrawingBufferHeight": 1612,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 907,
+          "reflectionHeight": 484,
+          "prepassWidth": 3024,
+          "prepassHeight": 1612,
+          "reflectionRenders": 1027,
+          "prepassRenders": 1027,
+          "quality": "full"
+        },
+        "assets": [],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "image": "sand-before.jpg",
+      "imageSha256": "04392391e66e10e45d4c5a95da4557ab6f8f0f95564f81d00354699cd332f926"
+    },
+    {
+      "surface": {
+        "sand": "fixed",
+        "glint": "fixed",
+        "light": "current",
+        "time": 6.662200000002974,
+        "freeze": true,
+        "specular": {
+          "r": 0.45,
+          "g": 0.6,
+          "b": 0.65,
+          "a": 1
+        },
+        "reflection": 0.38,
+        "depthFoam": true,
+        "sun": [
+          0.42,
+          0.52,
+          -0.74
+        ],
+        "sandWet": true,
+        "buffer": [
+          3024,
+          1612
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "scene": {
+        "ready": true,
+        "view": "Sand glint",
+        "quality": "full",
+        "resolution": "max",
+        "buffer": [
+          3024,
+          1612
+        ],
+        "player": {
+          "p": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "checkpoint": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ]
+        },
+        "water": {
+          "shoreContourSegments": 1660,
+          "shoreFieldBuildMs": 175.10000000149012,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 2212,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 91866,
+          "tris": 181455,
+          "shoreSamples": 1011,
+          "sceneWidth": 3024,
+          "sceneHeight": 1612,
+          "nativeDrawingBufferWidth": 3024,
+          "nativeDrawingBufferHeight": 1612,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 907,
+          "reflectionHeight": 484,
+          "prepassWidth": 3024,
+          "prepassHeight": 1612,
+          "reflectionRenders": 2212,
+          "prepassRenders": 2212,
+          "quality": "full"
+        },
+        "assets": [],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "image": "sand-after.jpg",
+      "imageSha256": "aa3e6f6823ac5c66c652004059a7efbeeb7ec820bb943af4a9f4d773e80a3fb3"
+    },
+    {
+      "surface": {
+        "sand": "fixed",
+        "glint": "fixed",
+        "light": "current",
+        "time": 11.71750000000373,
+        "freeze": false,
+        "specular": {
+          "r": 0.45,
+          "g": 0.6,
+          "b": 0.65,
+          "a": 1
+        },
+        "reflection": 0.38,
+        "depthFoam": true,
+        "sun": [
+          0.42,
+          0.52,
+          -0.74
+        ],
+        "sandWet": true,
+        "buffer": [
+          900,
+          480
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "scene": {
+        "ready": true,
+        "view": "Play spawn",
+        "quality": "full",
+        "resolution": 480,
+        "buffer": [
+          900,
+          480
+        ],
+        "player": {
+          "p": [
+            -4.718199253718916,
+            0.3425638906820536,
+            -13.80189444947473
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "checkpoint": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ]
+        },
+        "water": {
+          "shoreContourSegments": 1660,
+          "shoreFieldBuildMs": 175.10000000149012,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 2890,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 91866,
+          "tris": 181455,
+          "shoreSamples": 1011,
+          "sceneWidth": 900,
+          "sceneHeight": 480,
+          "nativeDrawingBufferWidth": 900,
+          "nativeDrawingBufferHeight": 480,
+          "preCrtSizeOverride": true,
+          "reflectionWidth": 270,
+          "reflectionHeight": 144,
+          "prepassWidth": 900,
+          "prepassHeight": 480,
+          "reflectionRenders": 2890,
+          "prepassRenders": 2890,
+          "quality": "full"
+        },
+        "assets": [],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "image": "gameplay-normal.jpg",
+      "imageSha256": "70b7c611252fbd064ec38256a0a0c67cf55106c420d38a198b2d316d8a38a7f8"
+    },
+    {
+      "surface": {
+        "sand": "fixed",
+        "glint": "fixed",
+        "light": "current",
+        "time": 33.134000000003745,
+        "freeze": false,
+        "specular": {
+          "r": 0.45,
+          "g": 0.6,
+          "b": 0.65,
+          "a": 1
+        },
+        "reflection": 0.38,
+        "depthFoam": true,
+        "sun": [
+          0.42,
+          0.52,
+          -0.74
+        ],
+        "sandWet": true,
+        "buffer": [
+          3024,
+          1612
+        ],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "scene": {
+        "ready": true,
+        "view": "Play spawn",
+        "quality": "full",
+        "resolution": "max",
+        "buffer": [
+          3024,
+          1612
+        ],
+        "player": {
+          "p": [
+            -2.125,
+            1.0374777757094265,
+            -1.625
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "checkpoint": [
+            -2.125,
+            1.1541444425996108,
+            -1.625
+          ]
+        },
+        "water": {
+          "shoreContourSegments": 1660,
+          "shoreFieldBuildMs": 175.10000000149012,
+          "occludedPassFrames": 0,
+          "primaryReuseRenders": 3511,
+          "primaryReuseFallbacks": 0,
+          "primaryReuseFallbackReason": null,
+          "verts": 91866,
+          "tris": 181455,
+          "shoreSamples": 1011,
+          "sceneWidth": 3024,
+          "sceneHeight": 1612,
+          "nativeDrawingBufferWidth": 3024,
+          "nativeDrawingBufferHeight": 1612,
+          "preCrtSizeOverride": false,
+          "reflectionWidth": 907,
+          "reflectionHeight": 484,
+          "prepassWidth": 3024,
+          "prepassHeight": 1612,
+          "reflectionRenders": 3511,
+          "prepassRenders": 3511,
+          "quality": "full"
+        },
+        "assets": [],
+        "stamp": "Codex/sol fork \u00b7 build 11-04 21:25 UTC"
+      },
+      "image": "gameplay-native.jpg",
+      "imageSha256": "8e8cf9f45cfd4d36d287023624f935e539cf3ad0035ec3cd74297f8260d0e770"
+    }
+  ]
+}
