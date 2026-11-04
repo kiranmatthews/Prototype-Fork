@@ -1,0 +1,10 @@
+{
+  "fruitSourceBlob": "f52cd3dbd3459b46828f947540eba9717cc339d0",
+  "checks": [
+    {
+      "check": "fruit-geometry-and-motion",
+      "exitCode": 0,
+      "seconds": 1.42
+    }
+  ]
+}

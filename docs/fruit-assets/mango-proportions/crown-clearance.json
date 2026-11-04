@@ -1,0 +1,24 @@
+{
+  "method": "Vertical projection of leaf vertices onto the fruit body; root first 20 percent excluded; penetration tolerance 0.002 model units. This is a fit diagnostic, complemented by browser review.",
+  "variant": 4,
+  "leaves": [
+    {
+      "leaf": 0,
+      "verticesInside": 0,
+      "worstPenetration": 0,
+      "tipGap": 0.13215590266085442
+    },
+    {
+      "leaf": 1,
+      "verticesInside": 0,
+      "worstPenetration": 0,
+      "tipGap": null
+    },
+    {
+      "leaf": 2,
+      "verticesInside": 0,
+      "worstPenetration": 0,
+      "tipGap": 0.038270896177694386
+    }
+  ]
+}

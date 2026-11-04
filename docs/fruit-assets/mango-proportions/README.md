@@ -8,7 +8,7 @@ assembled pickup or changing motion settings.
 
 `geometry.json` compares the previous `61b05207` geometry with the correction.
 All vertex attributes and indices for the other five variants are byte-identical.
-The complete mango remains 4,904 triangles at every distance.
+The complete mango remains 4,904 triangles at every distance. The wider body initially intersected two folded leaves; their folds were lifted and fitted to the new shoulders. `crown-clearance.json` records the final vertex-clearance diagnostic, with no sampled leaf penetration outside the roots.
 
 The existing `node tools/test-milk.mjs` check passes: complete closed geometry,
 attached crown flex, morph normals, pooling, variant switching, flight handoff

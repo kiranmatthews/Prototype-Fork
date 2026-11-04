@@ -39,9 +39,9 @@ const CROWNS: readonly (readonly CrownLeaf[])[] = [
     {yaw:3.31,length:.37,width:.135,rise:.10,droop:.16,roll:-.52,twist:-.35,sway:-.026},
   ],
   [
-    {yaw:-.20,length:.35,width:.142,rise:.085,droop:.15,roll:.42,twist:.45,sway:.020},
+    {yaw:-.20,length:.35,width:.142,rise:.115,droop:.14,roll:.32,twist:.45,sway:.020},
     {yaw:3.36,length:.37,width:.133,rise:.11,droop:.15,roll:-.50,twist:.26,sway:-.022},
-    {yaw:1.65,length:.285,width:.108,rise:.06,droop:.17,roll:.22,twist:.42,sway:.016},
+    {yaw:1.65,length:.30,width:.108,rise:.105,droop:.135,roll:.22,twist:.42,sway:.016},
   ],
   [
     {yaw:-.15,length:.39,width:.127,rise:.14,droop:.16,roll:.62,twist:.54,sway:.030},
