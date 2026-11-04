@@ -28,6 +28,9 @@ desktop/test-results/
 # Local multi-chat release handoffs and coordinator state.
 .release-queue/
 
+# Durable, local Jak source installation and complete disc exports.
+/.jak-lab-data/
+
 # Local Tripo character experiments; provenance and preparation scripts are tracked.
 /public/props/carlisle-cone/*.glb
 # The approved cone-only model is a required production asset.

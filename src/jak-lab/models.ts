@@ -1,0 +1,193 @@
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
+import {assetURL, type ModelDefinition, type RenderingMode} from './types';
+
+const loader = new GLTFLoader();
+const imagePixels = new WeakMap<object, ImageData>();
+
+function pixels(texture: THREE.Texture): ImageData {
+  const image = texture.image as HTMLImageElement | ImageBitmap;
+  const cached = imagePixels.get(image); if (cached) return cached;
+  const canvas = document.createElement('canvas');
+  canvas.width = image.width; canvas.height = image.height;
+  const context = canvas.getContext('2d', {willReadFrequently: true})!;
+  context.drawImage(image, 0, 0);
+  const data = context.getImageData(0, 0, canvas.width, canvas.height);
+  imagePixels.set(image, data); return data;
+}
+
+function sample(texture: THREE.Texture, uv: THREE.Vector2, result: THREE.Color): number {
+  texture.transformUv(uv);
+  const image = pixels(texture);
+  const x = Math.max(0, Math.min(image.width - 1, uv.x * image.width - .5));
+  const y = Math.max(0, Math.min(image.height - 1, uv.y * image.height - .5));
+  const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
+  const rgba = [0, 0, 0, 0];
+  for (let row = 0; row < 2; row++) for (let column = 0; column < 2; column++) {
+    const index = (Math.min(image.height - 1, y0 + row) * image.width + Math.min(image.width - 1, x0 + column)) * 4;
+    const weight = (row ? fy : 1 - fy) * (column ? fx : 1 - fx) / 255;
+    for (let channel = 0; channel < 4; channel++) rgba[channel] += image.data[index + channel] * weight;
+  }
+  result.setRGB(rgba[0], rgba[1], rgba[2], texture.colorSpace === THREE.SRGBColorSpace ? THREE.SRGBColorSpace : THREE.LinearSRGBColorSpace);
+  return rgba[3];
+}
+
+/** Texture-free vertex colour + vertex lighting; all authored triangles,
+ * joint weights, normals, morphs and animation tracks are retained. */
+function gouraud(mesh: THREE.Mesh): void {
+  const source = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[];
+  let geometry = mesh.geometry.clone();
+  // A GLTF multi-material mesh may share a vertex between distinct textures.
+  // Expanding its indices preserves every triangle and gives each its own ink.
+  if (source.length > 1 && geometry.index) {
+    const expanded = geometry.toNonIndexed(); geometry.dispose(); geometry = expanded;
+  }
+  mesh.geometry = geometry;
+  // Prelit background exports may have colors/UVs but no normals. The Gouraud
+  // alternative needs geometric normals for its vertex-lighting calculation.
+  if(!geometry.getAttribute('normal'))geometry.computeVertexNormals();
+  const uv = geometry.getAttribute('uv'), old = geometry.getAttribute('color');
+  const color = new Float32Array(geometry.getAttribute('position').count * 4);
+  const sampled = new THREE.Color(), coordinate = new THREE.Vector2();
+  const paint = (index: number, material: THREE.MeshStandardMaterial) => {
+    let alpha = 1; sampled.setRGB(1, 1, 1);
+    if (material.map && uv) alpha = sample(material.map, coordinate.set(uv.getX(index), uv.getY(index)), sampled);
+    if (old) sampled.multiply(new THREE.Color(old.getX(index), old.getY(index), old.getZ(index)));
+    if (old?.itemSize === 4) alpha *= old.getW(index);
+    color.set([sampled.r, sampled.g, sampled.b, alpha], index * 4);
+  };
+  if (source.length === 1) {
+    for (let i = 0; i < color.length / 4; i++) paint(i, source[0]);
+  } else for (const group of geometry.groups) {
+    for (let i = group.start; i < group.start + group.count; i++) paint(i, source[group.materialIndex ?? 0]);
+  }
+  geometry.setAttribute('color', new THREE.BufferAttribute(color, 4));
+  const materials = source.map(material => new THREE.MeshLambertMaterial({
+    name: `${material.name} · Gouraud`, color: material.color, vertexColors: true,
+    side: material.side, transparent: material.transparent, opacity: material.opacity,
+    alphaTest: material.alphaTest, depthWrite: material.depthWrite, blending: material.blending,
+  }));
+  mesh.material = Array.isArray(mesh.material) ? materials : materials[0];
+}
+
+/** OpenGOAL exports shared vertex buffers containing unrelated unused vertices.
+ * Measure the actually referenced vertices, including their bind transforms. */
+function preciseBounds(root: THREE.Object3D): THREE.Box3 {
+  root.updateMatrixWorld(true);
+  const box = new THREE.Box3(), point = new THREE.Vector3();
+  root.traverse(node => {
+    if (!(node instanceof THREE.Mesh)) return;
+    if (node instanceof THREE.SkinnedMesh) node.skeleton.update();
+    const geometry = node.geometry;
+    const local = new THREE.Box3();
+    const indices = geometry.index ? new Set(Array.from(geometry.index.array as ArrayLike<number>)) :
+      Array.from({length: geometry.getAttribute('position').count}, (_, i) => i);
+    for (const index of indices) {
+      node.getVertexPosition(index, point); local.expandByPoint(point); point.applyMatrix4(node.matrixWorld);
+      if (point.toArray().every(Number.isFinite)) box.expandByPoint(point);
+    }
+    // WebGLRenderer also uses the sphere for transparent sorting, even with
+    // frustum culling disabled. Never let it evaluate unrelated skin vertices.
+    if (node instanceof THREE.SkinnedMesh) {
+      node.boundingBox = local; node.boundingSphere = local.getBoundingSphere(new THREE.Sphere());
+    }
+    node.frustumCulled = false;
+  });
+  if (box.isEmpty()) throw new Error('Export has no finite referenced geometry');
+  return box;
+}
+
+export class ModelExhibit {
+  readonly root = new THREE.Group();
+  readonly original = new THREE.Group();
+  readonly alternative = new THREE.Group();
+  readonly clips: THREE.AnimationClip[];
+  readonly dimensions: THREE.Vector3;
+  readonly mixers: THREE.AnimationMixer[];
+  private actions: THREE.AnimationAction[] = [];
+  private view: RenderingMode = 'compare';
+  private displayScale: number;
+  private elapsed = 0;
+  private readonly source: THREE.Object3D;
+  private readonly derived: THREE.Object3D;
+
+  private constructor(source: THREE.Object3D, clips: THREE.AnimationClip[], readonly definition: ModelDefinition) {
+    this.source = source;
+    const bounds = preciseBounds(source), center = bounds.getCenter(new THREE.Vector3());
+    this.dimensions = bounds.getSize(new THREE.Vector3());
+    this.displayScale = Math.min(2, 3.8 / Math.max(...this.dimensions.toArray()));
+    const derived = this.derived = clone(source);
+    derived.traverse(node => {if (node instanceof THREE.Mesh) gouraud(node);});
+    source.position.sub(new THREE.Vector3(center.x, bounds.min.y, center.z));
+    derived.position.copy(source.position);
+    this.original.add(source); this.alternative.add(derived);
+    this.root.add(this.original, this.alternative);
+    this.clips = clips;
+    this.mixers = [new THREE.AnimationMixer(source), new THREE.AnimationMixer(derived)];
+    if (clips.length) this.setClip(clips.find(clip => /idle|stance|loop/i.test(clip.name))?.name ?? clips[0].name);
+    this.setRendering('compare');
+  }
+  static async load(definition: ModelDefinition): Promise<ModelExhibit> {
+    const url=assetURL(definition.path);
+    let asset;
+    if(definition.encoding==='gzip') {
+      const response=await fetch(url);
+      if(!response.ok||!response.body)throw new Error(`Model transfer failed (${response.status})`);
+      const data=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+      if(data.byteLength!==definition.decodedBytes)throw new Error('Incomplete model transfer');
+      asset=await loader.parseAsync(data,new URL('./',new URL(url,location.href)).href);
+    } else asset=await loader.loadAsync(url);
+    return new ModelExhibit(asset.scene, asset.animations, definition);
+  }
+  get scale(): number {return this.original.scale.x;}
+  get time(): number {return this.elapsed;}
+  get duration(): number {return this.actions[0]?.getClip().duration ?? 0;}
+  get clipName(): string {return this.actions[0]?.getClip().name ?? '';}
+  setClip(name: string): void {
+    const clip = this.clips.find(candidate => candidate.name === name); if (!clip) return;
+    for (const action of this.actions) action.stop();
+    this.actions = this.mixers.map(mixer => mixer.clipAction(clip).reset().play());
+    this.seek(0);
+  }
+  setNativeScale(native: boolean): void {
+    for (const group of [this.original, this.alternative]) group.scale.setScalar(native ? 1 : this.displayScale);
+  }
+  setRendering(mode: RenderingMode): void {
+    this.view = mode;
+    this.original.visible = mode !== 'gouraud'; this.alternative.visible = mode !== 'original';
+    this.original.position.x = mode === 'compare' ? -2.6 : 0;
+    this.alternative.position.x = mode === 'compare' ? 2.6 : 0;
+    this.setNativeScale(false);
+  }
+  seek(time: number): void {
+    this.elapsed = time;
+    for (const mixer of this.mixers) mixer.setTime(time);
+    // Keep both render modes in the same exact source pose.
+    this.root.updateMatrixWorld(true);
+  }
+  update(dt: number): void {this.seek(this.elapsed + dt);}
+  get diagnostics() {return {view: this.view, scale: this.scale, clip: this.clipName, seconds: this.elapsed};}
+  dispose(): void {
+    for (const mixer of this.mixers) {mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot());}
+    const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>(), textures = new Set<THREE.Texture>();
+    for (const root of [this.source, this.derived]) root.traverse(node => {
+      if (!(node instanceof THREE.Mesh)) return;
+      geometries.add(node.geometry);
+      for (const material of Array.isArray(node.material) ? node.material : [node.material]) {
+        materials.add(material);
+        for (const value of Object.values(material)) if (value instanceof THREE.Texture) textures.add(value);
+      }
+    });
+    for (const geometry of geometries) geometry.dispose();
+    for (const material of materials) material.dispose();
+    const images=new Set<ImageBitmap>();
+    for (const texture of textures) {
+      const image=texture.image as ImageBitmap|undefined;
+      if(image&&typeof image.close==='function')images.add(image);
+      texture.dispose();
+    }
+    for(const image of images)image.close();
+    this.root.removeFromParent();
+  }
+}
