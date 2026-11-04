@@ -27,6 +27,15 @@ All examples have at least one of 15 categories; none is left under Other.
 An eco explosion can therefore appear in both Eco & energy and Hits, explosions
 & debris. The complete source names remain searchable.
 
+The effects-only preview is validated at source commit `c4fd585b`. Fifteen browser
+observations cover category/area counts, pagination, empty results, legacy model
+links, effect playback, private mesh/HUD dependencies, source assemblies and
+Explore/Focus at 720p and native 2560×1440. All result cards fit their panel; the
+console has no warnings/errors. The existing local port-5193 preview now serves
+this version. Its immutable delivery snapshot is
+`.jak-lab-data/delivery/effects-only-c4fd585b/`; the release coordinator owns Labs
+integration and public deployment. See the ignored `effects-only-*` evidence.
+
 Only 45 full source models remain as private dependencies: the 44 disappearance
 examples and the animated power-cell HUD driver. Their geometry, skinning,
 animations and images are intact; none has a standalone browsing card. The
@@ -90,6 +99,8 @@ builds and refuses to infer model dependencies without disappearance metadata.
 | Mesh-disappearance emission streams | 499,101 |
 | Catalogue | 6,451,672 |
 | Packed assets and catalogue | **11,918,285** |
+| Independent frontend | 725,666 |
+| Complete hosted payload | **12,643,951** |
 
 The release coordinator confirmed that this pruned footprint fits the current
 main-site budget and will add the preview to Labs through the normal build.
@@ -146,9 +157,9 @@ unported; name coverage does not prove complete host reconstruction.
   visual fidelity across the catalogue at native and normal resolution.
   Source cutout coverage is now retained in Gouraud models; the wider material
   and lighting review remains open.
-- Finish standalone packaging, full catalogue visual checks and
-  browser review with no errors; verify final hosted behavior and hand off a
-  coherent READY increment to the coordinator.
+- Continue the full catalogue fidelity audit after the validated effects-only
+  preview ships. The release coordinator owns integration and verification of
+  hosted behavior; this preview does not claim every effect is fully reconstructed.
 
 ## Reproduce locally
 

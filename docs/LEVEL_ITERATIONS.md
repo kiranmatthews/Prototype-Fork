@@ -9106,10 +9106,19 @@ Details: [Jak asset lab](JAK_ASSET_LAB.md).
   effects-only scope and refuses missing dependency metadata.
 - Five pruning/scope fixtures, six existing packing fixtures, the 821-example
   category/index check and every retained asset's hash/reference check pass.
-  Final build and native/720p browser validation are pending shared capacity.
-- First recorded source edit: 09:27:34 NZDT. Prompt-to-validated-playable timing
-  will be completed with the browser pass; shared capacity waits are recorded
-  separately. This is the user-authorized effects-only preview for publication
-  in Labs, while the broader effect-fidelity goal continues. No game runtime,
-  D animation or level-pack changes; the coordinator owns Labs integration and
-  publication.
+  Normal build passes (offline version `2a1d770885d2eada1b12`, 1,750 files,
+  765.2 MiB), as does the standalone build (`jak-lab-mBfPDqIK.js`). No full suite.
+- Fifteen real-browser observations pass at 720p/native: category/area counts,
+  empty/static-search results, pagination, old model links, water, health and
+  power-cell HUDs, disappearance playback, particle-built cage, Explore/Focus
+  and the user's current effect 553. No console warnings/errors; all result
+  cards fit their fixed panel. The validated frontend is promoted on port 5193.
+  Evidence and the final screenshot are in ignored `effects-only-*` files.
+- Approximately 47 minutes from first recorded source edit to validated
+  playable (09:27–10:14 NZDT), including the 09:40–09:55 shared-capacity queue
+  during which lightweight source review continued. This is the user-authorized
+  effects-only preview for publication in Labs; the original whole-game
+  prompt-to-final interval remains open. No game runtime, D animation or
+  level-pack changes. The review tab and heavy lease are closed; the user's
+  port-5193 preview and port-5188 jump playtest remain running. The coordinator
+  owns Labs integration and publication.
