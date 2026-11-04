@@ -2407,6 +2407,8 @@ export class Player {
         actionProgress,
         inputs: {
           jakFrame: this.footStudyFrame,
+          jakGravity: this.airGravityAt(),
+          jakJumpCharge: this.footStudyCharge,
           jakFlip: this.footJumpStudyLaunch?.flip && !this.doubleJumpAir ? 1 : 0,
           jakFlipProgress: this.footJumpStudyFlight?.flip
             ? Math.min(1, this.airborneT / Math.max(.28, (2 * this.launchVy / this.footJumpStudyFlight.gravity - CONST.fixedStep) * .88)) : 0,

@@ -8576,3 +8576,28 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   and Chrome test tab closed. Release output 803,509,782 bytes. No publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## Direct Jak D — smooth double-jump transition and visible lift
+
+- Completed 4 November 2026 NZDT, approximately 23 minutes prompt-to-validated
+  playable (03:54–04:17 UTC). Local A/B/C/D comparison only.
+- Replaced the frozen three-frame double-jump handoff with a 0.14-second moving
+  blend. Retimed source extension/gather to the second arc, using captured charge
+  to preserve the calibrated head reach. Added Running double jump inspection and
+  a Second boost pause point; source overlay follows the new presentation clock.
+- Eighteen standing/running, flip-on/off and early/late second-jump cases pass.
+  All 3,600 recorded physics frames exactly match the prior implementation.
+  Worst three-frame head rise improves from 0.0126 to 0.4749 m; worst per-frame
+  hip rotation falls from 85.6 to 31.5 degrees. Initial head/hip movement is upward.
+- Existing 6,620-frame polish regression passes without relaxing assertions:
+  A/D head peaks within 0.0151 m, continuous landing handoffs, native locomotion
+  and climb recovery. Board parity passes across 1,344 frames. Runtime routing,
+  strict review types, build and release size pass (803,510,877 bytes).
+- Browser: full rendering, normal/native resolution, standing/running boost,
+  A/D switching and running rebound. Original rendering settings restored.
+  No console errors or warnings. Evidence: external `d-double-jump/`.
+  The jump/skate gesture, physical jump
+  heights, board motion, A/B/C and source assets remain unchanged. No publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

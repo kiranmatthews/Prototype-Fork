@@ -87,7 +87,8 @@ function updateSource() {
     time += (Number(clip.metadata.jakSourceTailFrame) - Number(clip.metadata.jakSourceTailAt)) / 60;
   }
   time += Number(clip?.metadata?.jakSourceStartFrame ?? 0) / 60;
-  if (name === 'jump' && p.footStudyFrame > 40) {name = 'jump-loop'; time = ((p.footStudyFrame - 40) / 60) % (28 / 60);}
+  const poseFrame = runtime.diagnostics.motionContext?.inputs?.jakFrame ?? p.footStudyFrame;
+  if (name === 'jump' && poseFrame > 40) {name = 'jump-loop'; time = ((poseFrame - 40) / 60) % (28 / 60);}
   for (const action of sourceActions.values()) action.weight = 0;
   const set = (id: string, weight: number) => {
     const action = sourceActions.get(id); if (!action) return;
@@ -224,11 +225,12 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Restart'&&frame===205 || stopAt==='Settled'&&frame===430)frozen=true;
     if(frame>480)resetInspector();return;
   }
-  const running = mode === 'Running jump' || mode === 'Run and stop';
+  const secondJump = mode === 'Double jump' || mode === 'Running double jump';
+  const running = mode === 'Running jump' || mode === 'Running double jump' || mode === 'Run and stop';
   const hold = mode === 'Tap jump' ? 3 : running ? 18 : 35, release = 50 + hold;
   const demo = {moveX: 0, moveY: running && (mode !== 'Run and stop' || frame < 145) ? 1 : 0,
     jumpHeld: frame >= 50 && frame < release, jumpPressed: frame === 50, jumpReleased: frame === release};
-  if (mode === 'Double jump' && hadAir && !doubleFrame && p.vVel < 2) {
+  if (secondJump && hadAir && !doubleFrame && p.vVel < 2) {
     demo.jumpPressed = demo.jumpHeld = true; doubleFrame = frame;
   }
   if (doubleFrame && frame === doubleFrame + 1) demo.jumpReleased = true;
@@ -236,10 +238,11 @@ p.step = (dt: number, input: any, level: Level) => {
   visited.add(runtime.activeClipId ?? 'legacy');
   if (!p.grounded) hadAir = true; else if (hadAir && !landFrame) landFrame = frame;
   const phase = runtime.diagnostics.motionContext?.actionProgress ?? 0;
-  const targetAir = mode !== 'Double jump' || doubleFrame > 0 && frame > doubleFrame + 1;
+  const targetAir = !secondJump || doubleFrame > 0 && frame > doubleFrame + 1;
   if (stopAt === 'Charge' && frame === release || targetAir && (
       stopAt === 'Reach' && !p.grounded && phase >= .12 && p.vVel > 0 ||
       stopAt === 'Apex' && !p.grounded && p.vVel <= 0 ||
+      stopAt === 'Second boost' && doubleFrame > 0 && frame === doubleFrame + 6 ||
       stopAt === 'Catch' && landFrame && frame === landFrame + 5 ||
       stopAt === 'Rebound' && landFrame && frame === landFrame + 11 ||
       stopAt === 'Settled' && landFrame && frame === landFrame + 40)) frozen = true;
@@ -341,7 +344,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Run and stop','Walk, run and turn','Reverse and restart',
+const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
   'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -355,7 +358,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart'],value=>{stopAt=value;resetInspector();});
+select('Pause at',['None','Charge','Reach','Apex','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);

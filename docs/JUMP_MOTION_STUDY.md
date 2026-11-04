@@ -418,3 +418,45 @@ Evidence is external in `d-locomotion-continuity/`, beside the source bank.
 
 Approximately 22 minutes prompt-to-validated playable (03:09–03:31 UTC).
 Local comparison only; no integration or publication.
+
+
+## D — double-jump continuity and upward accent, 4 November 2026 NZDT
+
+The second impulse already moved the controller upward, but its presentation
+crossfaded from a frozen airborne pose in 0.05 seconds. Interrupting the flip
+could turn the hips 85.6 degrees in one 60 Hz step. The reused first-jump source
+also gathered too early for the short second arc, obscuring its upward motion.
+
+D now keeps the outgoing airborne source moving through a 0.14-second blend.
+Its double-jump source clock follows the actual remaining rise, with the apex
+pose adapted to the captured first-jump charge. The extension reads as a second
+lift and the gather flows into descent. Original source poses and independent
+segment deformation remain intact. Player supplies the current flight gravity
+and captured charge to presentation; no velocity, height, eligibility or input
+rule changes. The source overlay follows the retimed pose clock. Watch motion
+adds Running double jump and a Second boost pause point.
+
+`tools/test-jak-double-jump.mjs /path/to/motion.json` covers eighteen real-player
+cases: short/partial/full charge, standing/running, flip on/off, and three second
+jump timings near/below the apex. It checks a positive initial head/hip rise and
+bounded interrupted-flip rotation. `--baseline /path/to/before.json` additionally
+compares every physical position and velocity sample; all 3,600 frames match the
+pre-change recording exactly. The weakest three-frame head rise improves from
+0.0126 to 0.4749 m, and worst per-frame hip rotation drops from 85.6 to 31.5 degrees.
+Every tested first-four-frame head step remains upward (minimum 0.1189 m).
+
+The existing 6,620-frame polish regression passes unchanged: twelve A/D head
+peak comparisons remain within 0.0151 m; double-jump errors are below 0.0086 m,
+landing handoffs stay continuous, and movement/climb checks pass. Campaign/park
+board parity passes over 1,344 frames. Runtime routing, strict review types,
+production build and release-size check pass (803,510,877 bytes). Source assets
+and the local review entry remain excluded from release.
+
+Browser review covers standing/running double jumps, interrupted flip, native
+resolution and normal 720p presentation, A/D switching, and running landing
+rebound. Evidence is external in `d-double-jump/` beside the source bank, including
+before/after physical traces, height checks, build log, screenshots and console
+capture. No console errors or warnings were recorded in the final browser pass.
+Original render settings are restored. This is a local A/B/C/D follow-up;
+no integration or publication. Approximately 23 minutes prompt-to-validated
+playable (03:54–04:17 UTC), followed by the local commit and handoff.

@@ -647,6 +647,8 @@ export class CharacterAnimationRuntime {
           (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)) ||
           (clip.metadata?.jakDirect && previousClipId === RUN_STOP_CLIP_ID && clip.id === 'player.run'));
       const previousClip = previousClipId ? this.findPlayableClip(previousClipId) : null;
+      const directDoubleSwitch = this.manualClipId === null && clip.metadata?.jakDirect &&
+        clip.id === 'player.double-jump' && previousClip?.metadata?.jakDirect;
       // A steady outgoing loop keeps moving as it fades. If input reverses
       // during a fade, start from the last fully mixed pose instead: restarting
       // a raw source there would pop the entire skeleton back to that source.
@@ -654,6 +656,18 @@ export class CharacterAnimationRuntime {
         ? { clip: previousClip, playbackSeconds: this.playbackSeconds, offset: this.playbackOffset,
             rate: this.locomotionPlaybackScale(previousClip, this.motionContext), motion: this.motionContext }
         : null;
+      // Finish the interrupted airborne motion as it fades; a frozen flip
+      // followed by a three-frame upright snap hides the second impulse.
+      if (directDoubleSwitch && !this.switchOutgoingPose && previousClip && this.motionContext && this.timelineTime !== null) {
+        const flipAdvance = (intent.motion.inputs?.jakFlipProgress ?? 0) -
+          (this.motionContext.inputs?.jakFlipProgress ?? 0);
+        this.locomotionOutgoing = {
+          clip: previousClip, playbackSeconds: 0, offset: this.timelineTime - previousClip.range.start,
+          rate: previousClip.id === 'player.jak-flip' && dt > 0
+            ? Math.max(0, flipAdvance) * previousClip.duration / dt / previousClip.playbackSpeed : 1,
+          motion: this.motionContext,
+        };
+      }
       const matchedOffset = locomotionSwitch && this.lastSampledPose
         ? this.closestLocomotionOffset(clip, this.lastSampledPose, intent.motion) : null;
       const runHandoffOffset =
@@ -667,7 +681,7 @@ export class CharacterAnimationRuntime {
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
-          : clip.metadata?.jakDirect ? (previousClipId ? clip.id === LAND_CLIP_ID ? .02
+          : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? .14 : clip.id === LAND_CLIP_ID ? .02
             : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14 : .05 : 0)
           : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
@@ -709,6 +723,21 @@ export class CharacterAnimationRuntime {
     }
 
     let motion = this.motionForClip(clip, intent.motion);
+    if (clip.metadata?.jakDirect && clip.id === 'player.double-jump' && this.manualClipId === null) {
+      // The second arc is much shorter than the first. Pace the source's
+      // extension and gather across that rise, then continue into descent.
+      // Reconstruct the launch age from its existing frame clock; physics,
+      // jump eligibility and the calibrated height remain controller-owned.
+      const ageFrames = Math.max(0, (motion.inputs?.jakFrame ?? 5) - 5);
+      const remainingFrames = motion.verticalVelocity / Math.max(.001, motion.inputs?.jakGravity ?? 60) * 60;
+      // A small boost gathers less before its apex; the longer charged arc
+      // has time for the deeper tuck. This preserves the calibrated head reach.
+      const apexFrame = 11 + 3 * MathUtils.clamp(motion.inputs?.jakJumpCharge ?? 1, 0, 1);
+      const sourceFrame = remainingFrames >= 0
+        ? 5 + (apexFrame - 5) * ageFrames / Math.max(1, ageFrames + remainingFrames)
+        : apexFrame - remainingFrames;
+      motion = { ...motion, inputs: { ...motion.inputs, jakFrame: sourceFrame } };
+    }
     const gameplayProgressTimeline =
       this.manualClipId === null && usesActionProgressTimeline(clip);
     this.timelineTime = gameplayProgressTimeline
