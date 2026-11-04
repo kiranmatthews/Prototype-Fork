@@ -9247,3 +9247,26 @@ Completed local review took approximately 65 minutes from the initial report,
 including shared validation waiting and a browser evidence-export stall.
 The validated commits are handed to the active release coordinator; no full
 audit suite or separate publication workflow was run.
+
+## Jak effects lab — first-person particle HUD, 5 November 2026 NZDT
+
+- Added the complete first-person overlay plus isolated left/right/selector
+  layers using original placement, 4:3/16:9 profiles, source callback thresholds,
+  waiting/arrival/departure and progress-menu/cinematic suppression. Original
+  and Gouraud share one controller. The lab now has 822 categorized effects;
+  no new models, textures or packed assets were added.
+- Two Python fixtures, actual-source extraction/mutation checks, 2,040 exact
+  callback comparisons and 858 source-host frames replayed across four views
+  pass: 3,432 frames and 4,644 finite samples. Existing HUD and particle-motion
+  regressions, focused types, category/index and 453 asset hash checks pass.
+- Required normal build passes (offline version `7882277f3b69807bdf73`, 1,750
+  files / 765.2 MiB), along with the standalone build (`jak-lab-Dl2wbNtu.js`).
+  Nineteen browser observations cover both resolutions/renderers/formats,
+  suppression/restoration, lifecycle and cleanup, individual/assembly navigation,
+  and existing health/power-cell HUDs. No console warnings/errors. No full suite.
+- Approximately 30 minutes from first recorded source edit to validated playable
+  (10:23–10:53 NZDT), including the 10:31–10:45 shared-capacity queue while source
+  review continued. Promoted the verified preview on port 5193 and sealed a new
+  immutable delivery; the previous published snapshot is intact. The review tab
+  and heavy lease are closed. No game/D/level-pack changes; coordinator handoff
+  only. The whole-game prompt-to-final interval remains open.

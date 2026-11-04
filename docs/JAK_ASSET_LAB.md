@@ -1002,6 +1002,20 @@ Focused validation passes:
   new metadata field changed. Assets remain 5,466,613 bytes; the catalogue is
   6,454,260 bytes, for 11,920,873 packed bytes including metadata.
 
-Build and browser validation are pending the scheduled shared-capacity slot.
-Evidence is in ignored `.jak-lab-data/evidence/first-person-*` files; the
-candidate remains separate from the immutable effects-only release snapshot.
+The required normal build passes (1,750 files / 765.2 MiB, offline version
+`7882277f3b69807bdf73`), as does the standalone build (`jak-lab-Dl2wbNtu.js`).
+Nineteen browser observations cover normal/native resolution, Original/Gouraud/
+Both, both display formats, progress-menu and cinematic suppression/restoration,
+arrival/departure/cleanup, deterministic paused restart, all three isolated
+layers, assembly navigation, and existing health/power-cell regressions. The
+console has no warnings or errors. The validated frontend and metadata are
+promoted on port 5193; the user's existing browser and jump playtest were preserved.
+
+Evidence is in ignored `.jak-lab-data/evidence/first-person-*` files. The sealed
+`delivery/first-person-ece47955` snapshot is separate from the previous immutable
+effects-only release. It contains 12,651,123 hosted bytes; its manifest SHA-256 is
+`b9143c499e18a6ce3726bdfdc4f11d55ab1c56cb3bec2cef040148f9b4eae288`.
+The review tab and guarded validation server are closed and the lease released.
+The coordinator owns publication. Thirteen progress-menu callbacks and the
+broader effect-host/rendering/composition audit remain; this is a validated
+increment, not completion of the whole-game fidelity goal.
