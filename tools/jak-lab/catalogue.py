@@ -20,6 +20,7 @@ from particle_lighting import extract_particle_lighting
 from sun_particles import extract_sun_particles
 from fuel_cell_hud import extract_fuel_cell_hud
 from screen_hud import extract_screen_hud
+from first_person_hud import extract_first_person_hud
 
 
 class Form(list):
@@ -298,7 +299,8 @@ def build_catalogue(project: Path):
             'particleLighting': extract_particle_lighting(source, parse, walk),
             'sunParticles': extract_sun_particles(source, parse, walk),
             'fuelCellHud': extract_fuel_cell_hud(source, parse, walk),
-            'screenHud': extract_screen_hud(source, parse, walk)}
+            'screenHud': extract_screen_hud(source, parse, walk),
+            'firstPersonHud': extract_first_person_hud(source, parse, walk)}
 
 
 def refresh_inventory(previous_file: Path, project: Path):
@@ -317,7 +319,8 @@ def refresh_inventory(previous_file: Path, project: Path):
                      particleLighting=extract_particle_lighting(source, parse, walk),
                      sunParticles=extract_sun_particles(source, parse, walk),
                      fuelCellHud=extract_fuel_cell_hud(source, parse, walk),
-                     screenHud=extract_screen_hud(source, parse, walk))
+                     screenHud=extract_screen_hud(source, parse, walk),
+                     firstPersonHud=extract_first_person_hud(source, parse, walk))
     catalogue['coverage'].update(sourceAudit=updated['coverage'],
                                  compiledContactCallbacks=len(callbacks), unsupportedContactCallbacks=failures)
     return catalogue

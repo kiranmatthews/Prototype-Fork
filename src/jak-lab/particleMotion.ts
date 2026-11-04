@@ -36,6 +36,8 @@ const ECO_CALLBACKS=['part-hud-eco-timer-01-func','part-hud-eco-timer-02-func','
 const SCREEN_HUD_CALLBACKS=[...HEALTH_CALLBACKS,...ECO_CALLBACKS,'part-hud-buzzer-func',
   'part-hud-eco-timer-backing-func','part-hud-eco-timer-func'];
 for(const name of SCREEN_HUD_CALLBACKS)KNOWN_CALLBACKS.add(name);
+const FIRST_PERSON_CALLBACKS=['part-first-person-hud-left-func','part-first-person-hud-right-func','part-first-person-hud-selector-func'];
+for(const name of FIRST_PERSON_CALLBACKS)KNOWN_CALLBACKS.add(name);
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
   'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
@@ -83,6 +85,9 @@ export interface ParticleHost {
     health:number|null;frame:number;healthScale:number;buzzerScale:number;
     ecoFraction:number;ecoType:'blue'|'yellow'|'red'|'green';
     ecoScale:number;ecoBackingScale:number;ecoTimerScale:number;
+  };
+  firstPerson?: {
+    offset:number;movie:boolean;xScale:number;yScale:number;xOffset:number;positions:number[][];
   };
 }
 
@@ -153,6 +158,7 @@ export class ParticleMotion {
           if (name === 'sparticle-track-sun') {this.hostInputs.add('sun');this.hostInputs.add('time of day');}
           if (FUEL_CELL_CALLBACKS.includes(name)) this.hostInputs.add('fuel-cell HUD');
           if (SCREEN_HUD_CALLBACKS.includes(name)) this.hostInputs.add('screen HUD');
+          if (FIRST_PERSON_CALLBACKS.includes(name)) this.hostInputs.add('first-person HUD');
         }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
         if (field.field === 'birth-func') {
@@ -405,6 +411,21 @@ export class ParticleMotion {
       if(v.a!==0)v.a=Math.fround(128*this.host.sunFade);
       if(part===0||part===1||part===2)RGB.forEach((channel,i)=>
         v[channel]=Math.fround(this.host.sunColor.getComponent(i)/(part===0?1:4)));
+    }
+    else if (FIRST_PERSON_CALLBACKS.includes(name)) {
+      const h=this.host.firstPerson,f=Math.fround;
+      if(!h){this.issues.add('Missing first-person HUD host');return;}
+      const index=FIRST_PERSON_CALLBACKS.indexOf(name);
+      let amount=f(f(.00024414062)*f(h.offset));if(h.movie)amount=1;
+      // In the source, the below-threshold expressions return 4×/2× amount
+      // without assigning it. Preserve the stored value, including the step.
+      if(amount>(index===2?.5:.25))amount=1;
+      if(index===2)v.a=f(64-f(64*amount));
+      else {
+        h.positions[index][0]=index===0?59-h.xOffset:452+h.xOffset;
+        v['scale-x']=f(4096*f(f(h.xScale)+f(10*amount)));
+        v['scale-y']=f(4096*f(f(h.yScale)+f(10*amount)));
+      }
     }
     else if (SCREEN_HUD_CALLBACKS.includes(name)) {
       const h=this.host.hud,f=Math.fround;

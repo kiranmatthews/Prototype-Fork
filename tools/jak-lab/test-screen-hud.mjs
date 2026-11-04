@@ -104,7 +104,7 @@ for(const kind of ['health','power','buzzers'])for(const format of ['4:3','16:9'
   const remaining=hud.remaining;hud.update(.5);assert.equal(hud.remaining,remaining);assert.equal(hud.phase,'hidden');
   hud.charge=1.2;hud.restart();hud.update(.2);assert.ok(hud.fraction>1,'source overcharge branches must remain inspectable');
 }
-const additions=screenHudDefinitions(catalogue);assert.equal(additions.length,2);
+const additions=screenHudDefinitions(catalogue);assert.equal(additions.length,2+Number(!!catalogue.firstPersonHud));
 for(const effect of additions)assert.ok(screenHudDefinition(effect,catalogue));
 assert.equal(JSON.stringify(catalogue),immutable);
 const result={status:'PASS',callbackSamples,frames,particleSamples,checks:[

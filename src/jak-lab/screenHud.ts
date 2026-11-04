@@ -3,13 +3,14 @@ import type {ParticleMotion} from './particleMotion';
 import type {Catalogue,EffectDefinition,ScreenHudDefinition,ScreenHudProfile} from './types';
 
 export interface ScreenHudLayer {motion:ParticleMotion;origin:Vector3;sourceIndex:number}
+const entries=(catalogue:Catalogue)=>[...(catalogue.screenHud?.entries??[]),...(catalogue.firstPersonHud?[catalogue.firstPersonHud]:[])];
 export function screenHudDefinitions(catalogue:Catalogue):EffectDefinition[] {
-  return (catalogue.screenHud?.entries??[]).filter(entry=>entry.profiles[0].layers.length>1).map((entry,index)=>({
+  return entries(catalogue).filter(entry=>entry.profiles[0].layers.length>1).map((entry,index)=>({
     id:31001+index,name:`${entry.name} · source HUD assembly`,source:entry.source,screenHud:entry.id,items:[],
   }));
 }
 export function screenHudDefinition(effect:EffectDefinition,catalogue:Catalogue):ScreenHudDefinition|undefined {
-  return catalogue.screenHud?.entries.find(entry=>effect.screenHud===entry.id||
+  return entries(catalogue).find(entry=>effect.screenHud===entry.id||
     entry.profiles[0].layers.some(layer=>layer.group===effect.name));
 }
 

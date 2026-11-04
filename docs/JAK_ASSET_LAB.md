@@ -125,7 +125,7 @@ particle updates; callback kills retire the particle on the following step.
 Fractional launch credit remains attached to the source launcher. Sound events
 are recorded but are not yet connected to playback.
 
-The runtime implements all 11 referenced birth callback names, plus 52 update
+The runtime implements all 11 referenced birth callback names, plus 55 update
 callback names (including the 20 contact callbacks). Parent-relative births,
 root/primitive following, bird motion, eco fade and target/surface orientation
 have focused checks. Some implementations require typed host data such as a
@@ -136,7 +136,10 @@ The four power-cell HUD callbacks use the actual animated source joints and
 screen-space host, including arrival, timeout and cleanup.
 Nine health, eco-timer and scout-fly callbacks now use source screen placement,
 live inspection values and the original host lifecycle.
-The other 16 callback names, all HUD behavior, remain
+Three first-person callbacks now use the original screen placement, both NTSC
+formats and arrival/progress-menu/cinematic/departure behavior. This later local
+increment is described below; it does not change the sealed preview above.
+The other 13 callback names, all progress-menu behavior, remain
 unported; name coverage does not prove complete host reconstruction.
 
 **Unfinished fidelity requirements:**
@@ -954,3 +957,51 @@ and lighting state, effect composition and broad visual review remain.
 The release coordinator owns final integration and hosted validation. The
 completed review tab and guarded job are closed; a lightweight local static
 server keeps port 5193 available for the user's testing without a heavy lease.
+
+## First-person particle HUD — 5 November 2026 NZDT
+
+The first-person overlay has three source layers: the left frame, right frame
+and selector. Assembly `effect:31003` and individual groups 611–613 share the
+same controller, screen projection and Original/Gouraud state. There are now
+822 local effect examples, including three composite screen HUDs. This adds no
+model or texture dependencies and preserves the existing 453 packed asset files.
+
+`first_person_hud.py` extracts both original NTSC scale profiles, layer origins,
+maximum offset and four seek rates from `engine/target/target2.gc`. Its metadata
+records six source hashes and three callback-body fingerprints. Unknown layer
+order, scale fields or host rate expressions fail extraction. The candidate
+catalogue adds only `firstPersonHud`; all previous metadata and asset identities
+are unchanged.
+
+The controller preserves the original waiting frame, 350-unit entrance/exit,
+200-unit progress-menu suppression and 150-unit restoration. It keeps the
+source post-before-callback origin order, including the first-frame offscreen
+origins. Cinematics suppress the layers immediately through their callbacks.
+The original quarter/half threshold steps are preserved: the source's
+below-threshold multiplication expressions do not assign their results. This
+HUD persists until explicitly hidden; it has no invented tally timeout.
+Departure frees its particles, and restarting restores deterministic origins.
+
+Inspection controls expose progress-menu state, cinematic activity and both
+4:3/16:9 formats. The full frame stays visible, and irrelevant tally-hold/crop
+controls are hidden. These are effect-host inputs; the full first-person camera,
+progress menu, text and gameplay are outside this particle exhibit.
+
+Focused validation passes:
+
+- Two Python fixtures, actual-source extraction and three mutation rejections.
+- 2,040 exact comparisons against an independent evaluator of the three GOAL
+  callback bodies, including movie/setting-movie combinations and thresholds.
+- 858 independently evaluated source-host frames, each replayed as the complete
+  assembly and three isolated layers: 3,432 frames and 4,644 finite samples.
+- Fixed-step rate independence, persistent counts, cleanup/reactivation,
+  deterministic restart, source-origin order and unchanged catalogue inputs.
+- Existing health/eco/scout-fly regression, particle motion, focused TypeScript
+  and the 822-example effects-only/category index.
+- Candidate metadata refresh rehashed all 453 files and proves that only the
+  new metadata field changed. Assets remain 5,466,613 bytes; the catalogue is
+  6,454,260 bytes, for 11,920,873 packed bytes including metadata.
+
+Build and browser validation are pending the scheduled shared-capacity slot.
+Evidence is in ignored `.jak-lab-data/evidence/first-person-*` files; the
+candidate remains separate from the immutable effects-only release snapshot.

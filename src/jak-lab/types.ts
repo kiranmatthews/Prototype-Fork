@@ -80,7 +80,7 @@ export interface FuelCellHudLibrary {
   callbacks: {name: string; source: Provenance; formSha256: string}[];
   sources: {file: string; sha256: string}[];
 }
-export type ScreenHudKind='health'|'power'|'buzzers';
+export type ScreenHudKind='health'|'power'|'buzzers'|'first-person';
 export interface ScreenHudProfile {
   id:'4:3'|'16:9';
   layers:{group:string;position:[number,number,number];source:Provenance}[];
@@ -92,6 +92,12 @@ export interface ScreenHudDefinition {
 }
 export interface ScreenHudLibrary {
   entries:ScreenHudDefinition[];ecoFullTicks:number;
+  callbacks:{name:string;source:Provenance;formSha256:string}[];
+  sources:{file:string;sha256:string}[];
+}
+export interface FirstPersonHudDefinition extends ScreenHudDefinition {
+  id:'first-person';maximumOffset:number;
+  rates:{arrival:number;departure:number;restore:number;suppress:number};
   callbacks:{name:string;source:Provenance;formSha256:string}[];
   sources:{file:string;sha256:string}[];
 }
@@ -125,6 +131,7 @@ export interface Catalogue {
   sunParticles?: SunParticleLibrary | null;
   fuelCellHud?: FuelCellHudLibrary | null;
   screenHud?: ScreenHudLibrary | null;
+  firstPersonHud?: FirstPersonHudDefinition | null;
   meshDeaths?: {profiles:MeshDeathProfile[]; texture:string; models:MeshDeathReference[]};
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];

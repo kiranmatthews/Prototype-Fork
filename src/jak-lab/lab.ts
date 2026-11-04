@@ -4,7 +4,8 @@ import {ModelExhibit} from './models';
 import {ParticleExhibit} from './particles';
 import {FuelCellHudExhibit} from './fuelCellHudExhibit';
 import {ScreenHudExhibit} from './screenHudExhibit';
-import {screenHudDefinition} from './screenHud';
+import {ScreenHud,screenHudDefinition} from './screenHud';
+import {FirstPersonHud} from './firstPersonHud';
 import {ParticleRenderPass} from './distortion';
 import {effectExhibits} from './exhibits';
 import {effectCategories,categoryLabel,type EffectCategory} from './effectCategories';
@@ -50,8 +51,10 @@ element('status').before(hostControls);
 const hudControls=document.createElement('details');hudControls.hidden=true;
 hudControls.innerHTML=`<summary id="hud-summary">Power-cell HUD</summary>
   <label class="field">SOURCE DISPLAY<select id="hud-format" aria-label="HUD display format"><option value="4:3">4:3 · NTSC</option><option value="16:9">16:9 · NTSC</option></select></label>
-  <label class="check"><input type="checkbox" id="hud-full-frame">Show full HUD frame</label>
-  <label class="check"><input type="checkbox" id="hud-hold" checked>Hold visible</label>
+  <label class="check" id="hud-full-frame-field"><input type="checkbox" id="hud-full-frame">Show full HUD frame</label>
+  <label class="check" id="hud-hold-field"><input type="checkbox" id="hud-hold" checked>Hold visible</label>
+  <label class="field" id="hud-progress-field">PROGRESS MENU<select id="hud-progress" aria-label="Progress menu state"><option value="absent">Closed</option><option value="open">Open</option><option value="going-out">Closing</option><option value="gone">Gone</option></select></label>
+  <label class="check" id="hud-movie-field"><input type="checkbox" id="hud-movie">Cinematic active</label>
   <label class="field" id="hud-health-field">HEALTH<select id="hud-health" aria-label="Health"><option value="3">3 · full</option><option value="2">2</option><option value="1">1 · low health</option><option value="0.5">½</option><option value="0">0</option><option value="none">No target</option></select></label>
   <label class="field" id="hud-eco-type-field">ECO TYPE<select id="hud-eco-type" aria-label="Eco type"><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="red">Red</option><option value="green">Green</option></select></label>
   <label class="field" id="hud-eco-charge-field">STARTING ECO (%)<input id="hud-eco-charge" aria-label="Starting eco (%)" type="number" min="0" max="120" step="1" value="100"></label>
@@ -172,14 +175,21 @@ async function boot():Promise<void> {
       const kind=view instanceof ScreenHudExhibit?view.hud.definition.id:'fuel-cell';
       element('hud-summary').textContent=view instanceof ScreenHudExhibit?view.hud.definition.name:'Power-cell HUD';
       element('hud-health-field').hidden=kind!=='health';
+      element('hud-hold-field').hidden=element('hud-full-frame-field').hidden=kind==='first-person';
+      element('hud-progress-field').hidden=element('hud-movie-field').hidden=kind!=='first-person';
       for(const id of ['hud-eco-type-field','hud-eco-charge-field','hud-eco-drain-field'])element(id).hidden=kind!=='power';
       element('hud-note').textContent='Restart replays the arrival. Turn off Hold visible to see the original timed departure. The close view crops the same screen without moving its layers. Tally text and sounds are not replayed.'+
         (kind==='power'?' A full eco charge lasts 20 source seconds. A changing charge keeps the HUD visible; Hide also stops the drain.':'');
-      if(view instanceof ScreenHudExhibit) {
+      if(view instanceof ScreenHudExhibit&&view.hud instanceof ScreenHud) {
         element<HTMLSelectElement>('hud-health').value=view.hud.health===null?'none':String(view.hud.health);
         element<HTMLSelectElement>('hud-eco-type').value=view.hud.ecoType;
         element<HTMLInputElement>('hud-eco-charge').value=String(Math.round(view.hud.charge*100));
         element<HTMLInputElement>('hud-eco-drain').checked=view.hud.drain;
+      }
+      if(view instanceof ScreenHudExhibit&&view.hud instanceof FirstPersonHud) {
+        element<HTMLSelectElement>('hud-progress').value=view.hud.progressState;
+        element<HTMLInputElement>('hud-movie').checked=view.hud.movie;
+        element('hud-note').textContent='Original first-person frame and selector. Opening the progress menu pushes the overlay away; closing it restores the overlay. Cinematics suppress it immediately. Show HUD replays the original arrival; Hide HUD plays the departure.';
       }
     }
     deathControls.hidden=!(view instanceof ModelExhibit&&view.deathPlayback);
@@ -392,16 +402,20 @@ async function boot():Promise<void> {
     view.hud.hold=element<HTMLInputElement>('hud-hold').checked;};
   element('hud-show').onclick=()=>{const view=loaded.get(selected.id);if(isHud(view))view.hud.show();};
   element('hud-hide').onclick=()=>{const view=loaded.get(selected.id);if(isHud(view)){view.hud.hide();inspect();}};
-  element('hud-health').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit){
+  element('hud-health').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof ScreenHud){
     const value=element<HTMLSelectElement>('hud-health').value;view.hud.health=value==='none'?null:Number(value);view.update(1/60);
   }};
-  element('hud-eco-type').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit){
+  element('hud-eco-type').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof ScreenHud){
     view.hud.ecoType=element<HTMLSelectElement>('hud-eco-type').value as typeof view.hud.ecoType;view.update(1/60);
   }};
-  element('hud-eco-charge').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit){
+  element('hud-eco-charge').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof ScreenHud){
     const value=Number(element<HTMLInputElement>('hud-eco-charge').value);if(Number.isFinite(value))view.hud.setCharge(Math.max(0,Math.min(120,value))/100);view.update(1/60);
   }};
-  element('hud-eco-drain').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit)view.hud.drain=element<HTMLInputElement>('hud-eco-drain').checked;};
+  element('hud-eco-drain').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof ScreenHud)view.hud.drain=element<HTMLInputElement>('hud-eco-drain').checked;};
+  element('hud-progress').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof FirstPersonHud)
+    view.hud.progressState=element<HTMLSelectElement>('hud-progress').value as typeof view.hud.progressState;};
+  element('hud-movie').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit&&view.hud instanceof FirstPersonHud)
+    view.hud.movie=element<HTMLInputElement>('hud-movie').checked;};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
   deathSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit){view.setDeathReplay(deathSelect.value);inspect();if(!exploring)focus();}};
@@ -508,9 +522,11 @@ async function boot():Promise<void> {
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nEFFECT  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
         view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:
         isHud(view)?`HUD  ${view.hud.phase}\nFORMAT  ${view.hud.profile.id} · NTSC\nOFFSET  ${view.hud.offset}\nPARTICLES  ${view.particles}\nSOURCE CLOCK  ${view.clock} / 300 Hz\nCAPACITY DROPS  ${view.dropped}`:'';
-      if(view instanceof ScreenHudExhibit)element('statistics').textContent+=view.hud.definition.id==='health'?
+      if(view instanceof ScreenHudExhibit&&view.hud instanceof ScreenHud)element('statistics').textContent+=view.hud.definition.id==='health'?
         `\nHEALTH  ${view.hud.health??'no target'}`:view.hud.definition.id==='power'?
           `\nECO  ${view.hud.ecoType} · ${(view.hud.fraction*100).toFixed(1)}% · ${(view.hud.remaining/300).toFixed(2)} s`:'';
+      if(view instanceof ScreenHudExhibit&&view.hud instanceof FirstPersonHud)element('statistics').textContent+=
+        `\nPROGRESS  ${view.hud.progressState}\nCINEMATIC  ${view.hud.movie?'active':'off'}`;
       if(view instanceof ModelExhibit&&view.deathPlayback) {
         const death=view.deathPlayback;
         element('statistics').textContent+=`\nDEATH  ${death.phase}${death.profileId?' · '+death.profileId:''}\nPARTICLES  ${death.motion.particles.length} · EMITTED ${death.launched}\nCAPACITY DROPS  ${death.motion.dropped}`;

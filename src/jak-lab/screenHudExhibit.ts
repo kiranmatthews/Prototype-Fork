@@ -2,13 +2,15 @@ import * as THREE from 'three';
 import {HudScreen,type HudCrop} from './hudScreen';
 import {ParticleMotion} from './particleMotion';
 import {ScreenHud,screenHudDefinition} from './screenHud';
+import {FirstPersonHud} from './firstPersonHud';
 import type {Catalogue,EffectDefinition,RenderingMode,ScreenHudKind} from './types';
 
-const crops:Record<ScreenHudKind,HudCrop>={health:[-236,-116,112,38],power:[104,252,-26,-112],buzzers:[-248,-140,-40,-112]};
+const crops:Record<ScreenHudKind,HudCrop>={health:[-236,-116,112,38],power:[104,252,-26,-112],
+  buzzers:[-248,-140,-40,-112],'first-person':[-256,256,112,-112]};
 
 export class ScreenHudExhibit {
   readonly screen:HudScreen;
-  readonly hud:ScreenHud;
+  readonly hud:ScreenHud|FirstPersonHud;
   get root(){return this.screen.root;}
   get original(){return this.screen.original;}
   get alternative(){return this.screen.alternative;}
@@ -17,7 +19,7 @@ export class ScreenHudExhibit {
   get issues(){return new Set(this.hud.layers.flatMap(layer=>[...layer.motion.issues]));}
   private constructor(readonly definition:EffectDefinition,readonly catalogue:Catalogue) {
     const host=screenHudDefinition(definition,catalogue);
-    if(!host||!catalogue.screenHud)throw new Error('Missing source HUD host');
+    if(!host||host.id!=='first-person'&&!catalogue.screenHud)throw new Error('Missing source HUD host');
     this.screen=new HudScreen(crops[host.id]);
     const particles=new Map(catalogue.particles.map(p=>[p.id,p]));
     const layers=host.profiles[0].layers.flatMap((layer,sourceIndex)=>{
@@ -27,7 +29,9 @@ export class ScreenHudExhibit {
       return [{motion:new ParticleMotion(group,particles,12000,group.id+1,catalogue.callbackPrograms),
         origin:new THREE.Vector3(),sourceIndex}];
     });
-    this.hud=new ScreenHud(host,catalogue.screenHud.ecoFullTicks,layers);
+    this.hud=host.id==='first-person'?new FirstPersonHud(catalogue.firstPersonHud!,layers):
+      new ScreenHud(host,catalogue.screenHud!.ecoFullTicks,layers);
+    if(host.id==='first-person')this.screen.setFullFrame(true);
   }
   static async load(definition:EffectDefinition,catalogue:Catalogue):Promise<ScreenHudExhibit> {
     const exhibit=new ScreenHudExhibit(definition,catalogue);
@@ -52,7 +56,8 @@ export class ScreenHudExhibit {
   render(renderer:THREE.WebGLRenderer):void {this.screen.render(renderer);}
   get diagnostics(){return {kind:this.hud.definition.id,phase:this.hud.phase,hold:this.hud.hold,offset:this.hud.offset,
     format:this.hud.profile.id,fullFrame:this.fullFrame,clock:this.hud.clock,particles:this.particles,
-    health:this.hud.health,eco:this.hud.ecoType,ecoTicks:this.hud.remaining,
+    ...(this.hud instanceof ScreenHud?{health:this.hud.health,eco:this.hud.ecoType,ecoTicks:this.hud.remaining}:
+      {movie:this.hud.movie,progressState:this.hud.progressState}),
     layers:this.hud.layers.map(({sourceIndex,origin,motion})=>({sourceIndex,origin:origin.toArray(),
       particles:motion.particles.map(p=>({id:p.id,definition:p.definitionId,position:p.position.toArray(),values:{...p.values}}))})),
     issues:[...this.issues]};}
