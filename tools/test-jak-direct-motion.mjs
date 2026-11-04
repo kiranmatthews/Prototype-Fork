@@ -5,7 +5,7 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const source=process.argv[2]??process.env.JAK_REFERENCE_MOTION_FILE;
 if(!source)throw new Error('Pass the local motion.json exported by extract-jak-motion.mjs');
 const bank=JSON.parse(await readFile(source,'utf8'));
-await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
+await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
   const a=await server.ssrLoadModule('/src/animation/index.ts');
   const {createJakDirectSuite,JAK_DIRECT_PHYSICS}=await server.ssrLoadModule('/tools/jak-direct-motion.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
@@ -33,6 +33,13 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
       for(const [j,c,s,t] of segments) {
         const got=isolated.joints.get(c).getWorldPosition(new THREE.Vector3()).sub(isolated.joints.get(j).getWorldPosition(new THREE.Vector3())).normalize();
         const want=new THREE.Vector3().fromArray(sourceFrames[frame][t].p).sub(new THREE.Vector3().fromArray(sourceFrames[frame][s].p)).normalize();
+        if(clip.id==='player.jak-flip') {
+          // D completes the source's final 23 degrees before contact. The
+          // articulated limbs must still follow the source under that turn.
+          const sourceHip=new THREE.Quaternion().fromArray(sourceFrames[frame].hips.q)
+            .multiply(new THREE.Quaternion().fromArray(bank.bind.hips.q).invert());
+          want.applyQuaternion(isolated.joints.get('hips').getWorldQuaternion(new THREE.Quaternion()).multiply(sourceHip.invert()));
+        }
         maxDirectionError=Math.max(maxDirectionError,got.angleTo(want));
       }
       assert.ok(Object.values(pose.scalars).every(Number.isFinite));samples++;
@@ -79,9 +86,10 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
     }
     assert.equal(air,40+hold,'D must retain release-to-jump');assert.ok(land>air);
     assert.equal(runtime.activeClipId,'player.idle','recovery/pacing failed to finish');
-    if(name==='full')assert.ok(Math.abs(peak-JAK_DIRECT_PHYSICS.maximumHeight)<.03);
-    if(name==='tap')assert.ok(Math.abs(peak-THREE.MathUtils.lerp(JAK_DIRECT_PHYSICS.minimumHeight,JAK_DIRECT_PHYSICS.maximumHeight,1/24))<.03);
-    if(second){assert.ok(clips.has('player.double-jump'));assert.ok(Math.abs(secondPeak-JAK_DIRECT_PHYSICS.doubleHeight)<.04);}
+    const height=velocity=>{let y=0,max=0;while(velocity>0){velocity-=TUNING.riseGravity/60;y+=velocity/60;max=Math.max(max,y);}return max;};
+    if(name==='full')assert.ok(Math.abs(peak-height(TUNING.jumpVelocity))<.03);
+    if(name==='tap')assert.ok(Math.abs(peak-height(THREE.MathUtils.lerp(TUNING.jumpMinVelocity,TUNING.jumpVelocity,1/24)))<.03);
+    if(second){assert.ok(clips.has('player.double-jump'));assert.ok(Math.abs(secondPeak-height(TUNING.doubleJumpVelocity))<.04);}
     if(move){assert.ok(clips.has('player.jak-run-land'));assert.ok(clips.has('player.run-stop'));}
     results.push({name,peak,airtime:(land-air)/60,secondPeak,maxSpeed,clips:[...clips]});
   }

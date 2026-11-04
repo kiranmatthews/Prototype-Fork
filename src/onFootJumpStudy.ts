@@ -1,5 +1,6 @@
 /** Optional per-player experiment. No global tuning or skateboard values. */
-export interface OnFootJumpStudy {
+interface StudyPhysics {
+  readonly nativePhysics?: false;
   readonly gravity: number;
   readonly minimumHeight: number;
   readonly maximumHeight: number;
@@ -8,13 +9,19 @@ export interface OnFootJumpStudy {
   readonly doubleMinimumHeight?: number;
   readonly steeringSeconds: number;
   readonly coastSeconds: number;
+}
+
+export type OnFootJumpStudy = (StudyPhysics | {
+  /** Animation-only study: all movement uses the live UI tuning path. */
+  readonly nativePhysics: true;
+}) & {
   readonly direct?: boolean;
   /** Keep the game's authored walk/run acceleration, turns and air steering. */
   readonly nativeLocomotion?: boolean;
   readonly runSpeed?: number;
   /** Presentation only; source roll-jump for running takeoffs, on the same arc. */
   readonly flip?: boolean;
-}
+};
 
 /** Compensate half a fixed step for this controller's semi-implicit integrator. */
 export function studyJumpVelocity(height: number, gravity: number, dt: number): number {

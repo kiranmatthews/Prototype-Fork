@@ -610,8 +610,8 @@ export class CharacterAnimationRuntime {
       } else if ((hint === 'player.jump' || hint === 'player.fall') && inputs.jakLedgeRelease >= 0) {
         requested = 'player.jak-ledge-off'; directTime = inputs.jakLedgeRelease;
       } else if (hint === 'player.jump' && inputs.jakFlip && this.player.onFootJumpStudy?.flip) {
-        requested = inputs.jakFlipProgress < 1 ? 'player.jak-flip' : 'player.fall';
-        if (requested === 'player.jak-flip') directTime = inputs.jakFlipProgress * this.findPlayableClip(requested)!.duration;
+        requested = inputs.jakFlipProgress < 1.14 ? 'player.jak-flip' : 'player.fall';
+        if (requested === 'player.jak-flip') directTime = Math.min(1, inputs.jakFlipProgress) * this.findPlayableClip(requested)!.duration;
       }
     }
     let clip = this.findPlayableClip(requested);
@@ -744,7 +744,9 @@ export class CharacterAnimationRuntime {
       const apexFrame = 11 + gatherFrames * MathUtils.clamp(motion.inputs?.jakJumpCharge ?? 1, 0, 1);
       const sourceFrame = remainingFrames >= 0
         ? 5 + (apexFrame - 5) * ageFrames / Math.max(1, ageFrames + remainingFrames)
-        : apexFrame - remainingFrames;
+        : this.player.onFootJumpStudy?.nativePhysics
+          ? apexFrame + (40 - apexFrame) * Math.min(1, (motion.inputs?.jakDescentProgress ?? 0) / .85)
+          : apexFrame - remainingFrames;
       motion = { ...motion, inputs: { ...motion.inputs, jakFrame: sourceFrame } };
     }
     const gameplayProgressTimeline =
@@ -971,6 +973,17 @@ export class CharacterAnimationRuntime {
       pose = {joints:Object.fromEntries(Object.entries(pose.joints).filter(([id])=>owned.has(id))),
         scalars:Object.fromEntries(Object.entries(pose.scalars).filter(([id])=>id.startsWith('deform.arm.')||id==='deform.torso.length'))};
     }
+    if (this.manualClipId === null && clip.metadata?.jakDirect && clip.id === 'player.double-jump' &&
+        motion.inputs?.jakRollLaunch && (motion.inputs.jakFlipProgress ?? 2) < 1.3) {
+      // The second impulse is immediate, but it must not reverse/cancel a
+      // partly completed somersault through shortest-path quaternion blending.
+      const roll = this.findPlayableClip('player.jak-flip')!;
+      const progress = motion.inputs.jakFlipProgress ?? 0;
+      const rollPose = this.samplePoseAt(roll, Math.min(1, progress) * roll.duration, motion, true);
+      const weight = 1 - smoothstep01((progress - 1.14) / .16);
+      const turned = blendPoses(pose, rollPose, weight);
+      pose.joints.hips = turned.joints.hips;
+    }
     const directLandingSpring = clip.metadata?.jakDirect && this.transient?.kind === 'landing';
     if (this.manualClipId === null && clip.metadata?.jakDirect && (directLandingSpring || !motion.grounded &&
         ['player.jump','player.double-jump','player.jak-flip','player.fall'].includes(clip.id))) {
@@ -1081,7 +1094,7 @@ export class CharacterAnimationRuntime {
       if (fall) return sampleComposedClip(fall, clipTimeAt(fall, ((motion.inputs?.jakFrame ?? 40) - 40) / 60), motion);
     }
     let pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
-    if (clip.metadata?.jakDirect && clip.id === 'player.jump' && !motion.inputs?.jakFlip) {
+    if (clip.metadata?.jakDirect && clip.id === 'player.jump' && !motion.inputs?.jakFlip && !this.player.onFootJumpStudy?.nativePhysics) {
       // An upright skull extends higher than the rolled pose on the same arc.
       // Gather the authored root during the rise, then release on descent;
       // retain the calibrated head reach without changing flight physics.
@@ -1108,7 +1121,10 @@ export class CharacterAnimationRuntime {
       const speed = motion.inputs?.footSpeed ?? 0;
       const alternate = this.findPlayableClip('player.jak-jump-forward');
       if (!alternate) return pose;
-      const weight = MathUtils.clamp((speed - 2.5) / 5, 0, 1);
+      // The forward source holds a bent trailing leg at its final key. Open
+      // both legs as the descent finishes instead of holding that tuck to impact.
+      const weight = MathUtils.clamp((speed - 2.5) / 5, 0, 1) *
+        (this.player.onFootJumpStudy?.nativePhysics ? 1 - smoothstep01((time * 60 - 28) / 12) : 1);
       const other = sampleComposedClip(alternate, time, motion);
       return blendPoses(pose, other, weight);
     }

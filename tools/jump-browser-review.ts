@@ -10,7 +10,7 @@ import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
 import { createJakDirectSuite, JAK_DIRECT_PHYSICS, type JakMotionBank } from './jak-direct-motion';
 import { GreenEcoFire, type GreenEcoRendering } from '../src/greenEcoFire';
 import { JUMP_ECO_VENTS } from './jump-eco-vents';
-import { CONST } from '../src/tuning';
+import { CONST, TUNING } from '../src/tuning';
 import { ledgeBasis, ledgeEdgePoint } from '../src/ledgeTraversal';
 
 const g: any = await new Promise(resolve => {
@@ -251,6 +251,8 @@ p.step = (dt: number, input: any, level: Level) => {
   if (stopAt === 'Charge' && frame === release || targetAir && (
       stopAt === 'Reach' && !p.grounded && phase >= .12 && p.vVel > 0 ||
       stopAt === 'Apex' && !p.grounded && p.vVel <= 0 ||
+      stopAt === 'Roll complete' && !p.grounded && runtime.diagnostics.motionContext?.inputs?.jakRollLaunch &&
+        (runtime.diagnostics.motionContext?.inputs?.jakFlipProgress ?? 0) >= 1.1 ||
       stopAt === 'Second boost' && doubleFrame > 0 && frame === doubleFrame + 6 ||
       stopAt === 'Catch' && landFrame && frame === landFrame + 5 ||
       stopAt === 'Rebound' && landFrame && frame === landFrame + 11 ||
@@ -295,7 +297,7 @@ const controlsToggle = button(panel,'Hide controls',() => {
 controlsToggle.className = 'controls-toggle';
 const instructions = document.createElement('p');
 instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in air for double jump. Controller controls work too.';
-const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. Air physics changes on your next foot jump.';
+const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. D follows the live TUNER values.';
 panel.append(instructions, continuity);
 const directHint = document.createElement('p');
 directHint.textContent = 'D uses Bone Man’s idle, a 50/50 Bone Man + Jak run, and Jak’s jumps and ledges. Vertical and short hops stay upright; running jumps roll. Release to jump; hold while running to skate.';
@@ -369,7 +371,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart'],value=>{stopAt=value;resetInspector();});
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -388,13 +390,16 @@ function report() {
   instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in air for double jump. Hold while running to skate.';
   playButton.setAttribute('aria-pressed', String(!inspect)); inspectButton.setAttribute('aria-pressed', String(inspect));
   const audio = before || !jakSounds ? 'Original sounds' : sfx.jumpAudioSource;
-  current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Native idle + 50/50 run + Jak jumps'} · ${audio}`;
+  current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Jak hybrid · live UI tuning'} · ${audio}`;
   const d = runtime.diagnostics, scalars = runtime.lastSampledPose?.scalars;
   motionSelect.value=mode;
   viewSelect.value=angle===Math.PI?'Front':angle===Math.PI/2?'Side':angle===0?'Behind':'Oblique';
   sourceNote.hidden=!sourceBox.checked;
   status.textContent = JSON.stringify({variant, mode: inspect ? mode : 'Live play', before, frame, frozen, slow, stopAt,
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
+    rollProgress: d.motionContext?.inputs?.jakFlipProgress,
+    tuning: {jumpMinVelocity:TUNING.jumpMinVelocity,jumpVelocity:TUNING.jumpVelocity,riseGravity:TUNING.riseGravity,
+      fallGravity:TUNING.fallGravity,doubleJumpVelocity:TUNING.doubleJumpVelocity,doubleJumpWindow:TUNING.doubleJumpWindow},
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
     footSpeed:+p.walkVelocity.length().toFixed(3),turning:p.walkTurnaround,
     gaitSpeed:+(d.motionContext?.normalizedSpeed ?? 0).toFixed(3),

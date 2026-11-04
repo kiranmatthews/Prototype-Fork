@@ -8705,3 +8705,29 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   No integration or publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## D — UI tuning and a complete forward roll
+
+- Completed 5 November 2026 NZDT, approximately 28 minutes prompt-to-validated
+  playable (00:18–00:46 NZDT). Local A/B/C/D comparison only.
+- Removed D's custom height/gravity/second-boost profile. It uses the live TUNER
+  movement path, including asymmetric gravity and the double-jump window. Retired
+  physical compensation for pose-dependent head height; A/B/C remain unchanged.
+- Completed the source roll's remaining 23° in the air and fitted the animation
+  to the tuned arc, with time to open out. An early double jump preserves forward
+  rotation and applies its boost immediately. Very short/vertical hops stay
+  upright. Native descent timing releases both legs before contact; independent
+  squash/stretch and the existing landing recovery are retained.
+- Checks: 7,200 exact paired A/D physics frames across twelve tuning scenarios,
+  including live edits; every started roll finishes forward and opens before
+  landing. Rubber, direct retarget, double jump, precision hops, landing/climb,
+  skating, C physics, runtime, strict types, build and release size pass
+  (803,516,367 bytes). No full-suite run.
+- Browser: the UI jump-strength change 14 → 18 raises D's paused apex from
+  2.849 m to 4.757 m; A at 18 also measures 4.757 m. Restored 14. Full-render
+  normal/native roll completion and double continuation reviewed; no console
+  warnings/errors. Normal 720p/2× restored, D in real-time live play. Added
+  Roll complete inspection pause. Evidence: external `d-ui-tuning-roll/`.
+  No integration or publication; level data and extracted assets unchanged.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

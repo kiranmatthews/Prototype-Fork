@@ -641,3 +641,52 @@ to validated playable (22:38–23:06 NZDT), followed by local commit/handoff.
 The user allowed slight D tuning changes, but the animation changes needed no
 physics retune. A/B/C, precision-hop selection, skating and level data remain
 unchanged. Local comparison only; no integration or publication.
+
+## D — live UI tuning and complete somersaults, 5 November 2026 NZDT
+
+D now opts into presentation only. Normal jump min/max velocity, charge time,
+rise/fall gravity, double-jump velocity/window/toggle/horizontal retention and
+movement all use the existing live TUNER path. Its former calibrated height and
+constant-gravity profile has been removed. The earlier skull-height compensation
+is bypassed, and the calibration solver has been retired: physical movement now
+matches A rather than altering the arc to compensate for different poses. C
+retains its separate experiment. Jump/skate input and board physics are unchanged.
+
+The source wheel-flip finishes about 23 degrees short of upright and expects
+its ground recovery to finish the rotation. D now completes that final turn
+in the airborne clip. Its presentation clock fits the UI-tuned rise/fall arc,
+leaving a brief open-pose settle before falling/landing. An early double jump
+applies the native impulse immediately while the hips continue the committed
+forward somersault; a quaternion blend cannot reverse the unfinished turn.
+Vertical/precision hops remain upright, including extremely short tuned arcs
+with less than 0.30 seconds available for the full roll.
+
+First- and second-jump descent timing now opens the legs before contact under
+native asymmetric gravity. The moving source's bent trailing leg fades out at
+the end instead of staying tucked. The shared roll stretch pulse has a slightly
+longer crest to retain its rubbery extension during the shorter animation.
+Independent segment deformation, source articulation, native idle, hybrid run,
+ledge contacts and finite landing handoffs remain intact. Watch motion adds a
+Roll complete pause point; the playtest labels D as following live UI tuning.
+
+Validation: a new twelve-scenario, 7,200-frame A/D regression compares all
+physical samples exactly, including altered rise/fall gravity, low/high launch
+strength, early double jumps, disabled/expired double windows, horizontal
+retention, and tuning edits during flight. Every started test roll completes
+forward (at least 358.4 degrees measured with elastic lag) and opens before
+landing. Short arcs/vertical jumps do not roll. The 1,440-frame rubber regression
+passes with maximum motion steps below 31.1 degrees and roll shin lengths around
+0.82–1.18. Existing direct-retarget, double-jump, precision, landing/climb,
+skating, C-physics, runtime and strict review-type checks pass. The landing test
+now checks exact physical peak/airtime parity instead of calibrated skull peaks.
+Build and release-size check pass (803,516,367 bytes); no full-suite run.
+
+In the actual browser, changing `jumpVelocity` from 14 to 18 moved D's paused
+full-jump apex from 2.849 m to 4.757 m; A also measured 4.757 m at 18. The original
+14 setting was restored. The completed roll was inspected in full rendering at
+normal 720p and native resolution, still airborne with straightening legs; the
+double-jump continuation was also reviewed. No console warnings/errors. Normal
+720p/2× rendering and real-time live play were restored, with D selected. Evidence
+is external in `d-ui-tuning-roll/` beside the source bank. Approximately 28 minutes
+prompt-to-validated playable (00:18–00:46 NZDT), followed by local commit/handoff.
+Source assets remain outside Git/production. No integration or publication.

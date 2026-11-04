@@ -10,9 +10,8 @@ export interface JakMotionBank {
   clips: Record<string, {duration: number; frames: number; samples: Frame[]}>;
 }
 export const JAK_DIRECT_PHYSICS: Readonly<OnFootJumpStudy> = Object.freeze({
-  // Measured against A's visible skull peak, including the restored flip.
-  gravity: 60, minimumHeight: 2.9, maximumHeight: 3.613, doubleHeight: .7915, doubleMinimumHeight: .5845,
-  steeringSeconds: .10, coastSeconds: .20, direct: true, nativeLocomotion: true,
+  // D supplies presentation only. The live tuner owns every movement value.
+  nativePhysics: true, direct: true, nativeLocomotion: true,
 });
 
 // Source and destination both face +Z in rig space. The source bind has
@@ -180,10 +179,19 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':id==='player.climb'?'climb':ledge?'hands':'feet';
     const locomotion=['player.run','player.walk','player.jak-run-land','player.jak-run-land-weak'].includes(id);
     const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1),locomotion));
+    if(id==='player.jak-flip') {
+      // The source ends 23 degrees short of upright, expecting its ground
+      // recovery to finish the turn. Finish that last part in the air instead.
+      const open=q(retarget(neutral,'flip').locals.hips);
+      for(let i=0;i<poses.length;i++) {
+        const weight=THREE.MathUtils.smoothstep(i/(poses.length-1),.82,1);
+        poses[i].locals.hips=q(poses[i].locals.hips).slerp(open,weight).toArray() as QuaternionTuple;
+      }
+    }
     const elasticProfile=id==='player.jak-flip'?'jak-flip':id==='player.double-jump'?'jak-double-jump':null;
     if(elasticProfile) {
       const amplitudes=characterElasticityAmplitudes(elasticProfile);
-      const beats=id==='player.jak-flip'?[[0,0],[.10,.65],[.26,-.9],[.58,-.65],[.76,.9],[.91,-.15],[1,0]]
+      const beats=id==='player.jak-flip'?[[0,0],[.10,.65],[.26,-.9],[.58,-.65],[.76,.9],[.86,.9],[.95,-.10],[1,0]]
         :[[0,0],[5/40,-.28],[9/40,1],[14/40,-.65],[22/40,.25],[34/40,0],[1,0]];
       for(let i=0;i<poses.length;i++) {
         const phase=i/Math.max(1,poses.length-1);

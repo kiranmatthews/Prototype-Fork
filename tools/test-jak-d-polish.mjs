@@ -13,17 +13,17 @@ await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
   const direct=createJakDirectSuite(base,binding.definition,bank);
   const runtime=createCharacterAnimationRuntime(p,old);
   const point=id=>binding.joints.get(id).getWorldPosition(new THREE.Vector3());
-  const reset=(variant,profile)=>{
+  const reset=variant=>{
     p.enterLevel('jak-polish');p.respawn(level,true,true);p.freeSkate=false;
-    p.onFootJumpStudy=variant==='D'?{...JAK_DIRECT_PHYSICS,flip:true,...profile}:null;
+    p.onFootJumpStudy=variant==='D'?{...JAK_DIRECT_PHYSICS,flip:true}:null;
     runtime.setDocument(variant==='D'?direct:old);runtime.restart();
   };
   const tick=input=>{
     p.camDir.set(0,0,-1);p.step(1/60,makeInput(input),level);level.update(1/60);p.commitRenderStep(level);
   };
   const headTop=()=>new THREE.Box3().setFromObject(p.meshyHead.mesh,true).max.y;
-  const jump=(variant,hold,move=false,double=false,profile)=>{
-    reset(variant,profile);let air=-1,land=-1,second=-1,headPeak=-Infinity,rootPeak=-Infinity,peakFrame=-1;
+  const jump=(variant,hold,move=false,double=false)=>{
+    reset(variant);let air=-1,land=-1,second=-1,headPeak=-Infinity,rootPeak=-Infinity,peakFrame=-1;
     let maxHeadStep=0,maxRecoveryHeadStep=0,handoffHeadStep=0,oldHead=headTop(),oldClip=null;const clips=new Set();
     for(let f=0;f<240;f++) {
       const input={moveY:move?1:0,jumpPressed:f===50,jumpHeld:f>=50&&f<50+hold,jumpReleased:f===50+hold};
@@ -50,27 +50,6 @@ await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
   const jumps=[];
   for(const [hold,move,double] of [[1,false,false],[3,false,false],[6,false,false],[12,false,false],[18,false,false],[24,false,false],[35,false,false],[1,true,false],[18,true,false],[1,false,true],[12,false,true],[24,false,true]])
     for(const variant of ['A','D'])jumps.push(jump(variant,hold,move,double));
-  let calibration;
-  if(process.argv.includes('--calibrate')) {
-    const solve=(target,measure)=>{
-      let lo=0.05,hi=7,last;
-      for(let i=0;i<11;i++) {
-        const height=(lo+hi)/2;last=measure(height);
-        if(last.headPeak<target)lo=height;else hi=height;
-      }
-      return {height:(lo+hi)/2,last};
-    };
-    const fullA=jump('A',35),tapA=jump('A',1),doubleA=jump('A',35,false,true);
-    const full=solve(fullA.headPeak,height=>jump('D',35,false,false,{maximumHeight:height}));
-    const tap=solve(tapA.headPeak,height=>jump('D',1,false,false,{maximumHeight:full.height,minimumHeight:height}));
-    const profile={maximumHeight:full.height,minimumHeight:tap.height};
-    const second=solve(doubleA.headPeak,height=>jump('D',35,false,true,{...profile,doubleHeight:height,doubleMinimumHeight:height}));
-    const doubleTapA=jump('A',1,false,true);
-    const secondTap=solve(doubleTapA.headPeak,height=>jump('D',1,false,true,{...profile,doubleHeight:second.height,doubleMinimumHeight:height}));
-    calibration={...profile,doubleHeight:second.height,doubleMinimumHeight:secondTap.height,targets:[tapA,fullA,doubleA,doubleTapA],matches:[tap.last,full.last,second.last,secondTap.last],
-      intermediate:jump('D',12,false,false,{...profile,doubleHeight:second.height}),
-      intermediateDouble:jump('D',12,false,true,{...profile,doubleHeight:second.height,doubleMinimumHeight:secondTap.height})};
-  }
   const runs=[],runTraces=[];
   for(const variant of ['A','D']) {
     reset(variant);const rows=[];
@@ -106,12 +85,15 @@ await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
     assert.ok(!clips.slice(exited,exited+24).some(c=>c.includes('jump')||c.includes('land')),'climb introduced a second jump/landing');
     climbs.push({moving,exited,maxLateHeadStep,clips:[...new Set(clips)],samples:samples.slice(20,48)});
   }
-  if(!process.argv.includes('--calibrate')&&!process.argv.includes('--measure'))for(let i=0;i<jumps.length;i+=2) {
-    const [before,after]=jumps.slice(i,i+2),error=Math.abs(after.headPeak-before.headPeak);
-    assert.ok(error<.06,`head peak differs by ${error}m for hold=${before.hold}, moving=${before.move}, double=${before.double}`);
+  if(!process.argv.includes('--measure'))for(let i=0;i<jumps.length;i+=2) {
+    const [before,after]=jumps.slice(i,i+2),error=Math.abs(after.rootPeak-before.rootPeak);
+    // D now follows UI physics exactly; pose-dependent skull height is no
+    // longer compensated by a hidden stronger launch and second-jump profile.
+    assert.ok(error<1e-9,`physical peak differs by ${error}m for hold=${before.hold}, moving=${before.move}, double=${before.double}`);
+    assert.equal(after.land,before.land,'D changed native airtime');
     assert.ok(after.handoffHeadStep<.04,`landing to locomotion snapped by ${after.handoffHeadStep}m`);
   }
-  console.log(JSON.stringify({tuning:{walkSpeed:TUNING.walkSpeed,walkRampTime:TUNING.walkRampTime,walkSlowdownTime:TUNING.walkSlowdownTime},rig:binding.definition.joints.filter(j=>['hips','torsoRoot','spine','chest'].includes(j.id)),jumps,runs,climbs,calibration},null,2));
+  console.log(JSON.stringify({tuning:{walkSpeed:TUNING.walkSpeed,walkRampTime:TUNING.walkRampTime,walkSlowdownTime:TUNING.walkSlowdownTime},rig:binding.definition.joints.filter(j=>['hips','torsoRoot','spine','chest'].includes(j.id)),jumps,runs,climbs},null,2));
   runtime.dispose();
 },{levelEntry:{id:'jak-polish',name:'D polish',data:{v:1,name:'D polish',spawn:[0,.02,0],killY:-30,
  components:[{t:'platform',p:[0,-.5,0],s:[500,1,500]},{t:'platform',p:[20,1.8,-4],s:[8,3.6,5]},{t:'gate',p:[0,0,-200]}]}}});

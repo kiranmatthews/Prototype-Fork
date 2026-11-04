@@ -621,6 +621,10 @@ export class Player {
   private footStudyFrame = 0;
   private footStudyCharge = 0;
   private footStudyImpact = 0;
+  private footStudyLaunchY = 0;
+  private footStudyApexY = 0;
+  private footStudyFlipDuration = 0;
+  private footStudyFlipProgress = 0;
   private ledgeSourceSeconds = 0;
   private ledgeSourceSide = 0;
   private readonly ledgeHands = new LedgeHandMotion();
@@ -639,6 +643,10 @@ export class Player {
       !this.isBailing && !this.slamActive && !this.slideJumpAir && !this.grindExitAir &&
       !this.trampolineAir && !this.bounceJump && !this.kiteTowing && !this.vertAir && !this.pipeHang
       ? this.footJumpStudyLaunch : null;
+  }
+  private get footJumpStudyPhysics() {
+    const study = this.footJumpStudyFlight;
+    return study && !study.nativePhysics ? study : null;
   }
   private static readonly fruitPlayers = new WeakMap<THREE.Scene,Set<Player>>();
   pos = new THREE.Vector3(); // feet position
@@ -2069,7 +2077,7 @@ export class Player {
     this.fallCameraLandingY = null;
     const board = this.airGrav === 'board';
     const flatG = board ? (this.parkControls ? TUNING.boardRiseGravity
-      : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : this.footJumpStudyFlight?.gravity ?? TUNING.fallGravity;
+      : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : this.footJumpStudyPhysics?.gravity ?? TUNING.fallGravity;
     const gravity = this.kiteTowing ? KITE_TOW.fallGravity : this.vertAir || this.pipeHang ? TUNING.pipeAirGravity : flatG;
     const from = this.fallCameraFrom.copy(this.pos), to = this.fallCameraTo;
     // A small sole/contact allowance; the forecast never grants physical support.
@@ -2353,7 +2361,7 @@ export class Player {
         ? 1 - Math.max(0, this.vVel) / this.launchVy
         : this.airborneT;
     } else if (clipId === 'player.double-jump' || clipId === 'player.slide-jump') {
-      const study = this.footJumpStudyFlight;
+      const study = this.footJumpStudyPhysics;
       const splitVelocity = Math.max(clipId === 'player.slide-jump' ? this.launchVy : study
         ? studyJumpVelocity(study.doubleHeight, study.gravity, CONST.fixedStep) : TUNING.doubleJumpVelocity, 0.001);
       actionProgress = this.vVel >= 0
@@ -2411,8 +2419,10 @@ export class Player {
           jakJumpCharge: this.footStudyCharge,
           jakUprightLaunch: this.footJumpStudyLaunch?.direct && !this.footJumpStudyLaunch.flip ? 1 : 0,
           jakFlip: this.footJumpStudyLaunch?.flip && !this.doubleJumpAir ? 1 : 0,
-          jakFlipProgress: this.footJumpStudyFlight?.flip
-            ? Math.min(1, this.airborneT / Math.max(.28, (2 * this.launchVy / this.footJumpStudyFlight.gravity - CONST.fixedStep) * .88)) : 0,
+          jakRollLaunch: this.footJumpStudyFlight?.flip ? 1 : 0,
+          jakFlipProgress: this.footStudyFlipProgress,
+          jakDescentProgress: Math.sqrt(THREE.MathUtils.clamp(
+            (this.footStudyApexY - this.pos.y) / Math.max(.001, this.footStudyApexY - this.footStudyLaunchY), 0, 1)),
           jakLedgeSeconds: this.ledgeSourceSeconds,
           jakLedgeRestSeconds: this.ledgeRestSeconds,
           jakLedgeMoving: Math.abs(this.ledgeShimmy) > .05 || this.ledgeHands.reaching ? 1 : 0,
@@ -6124,9 +6134,18 @@ export class Player {
           Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > .45};
       this.footStudyCharge = t;
       const study = this.footJumpStudyLaunch;
-      this.vVel = studyJumpVelocity(THREE.MathUtils.lerp(study.minimumHeight, study.maximumHeight, t), study.gravity, dt);
+      if (!study.nativePhysics)
+        this.vVel = studyJumpVelocity(THREE.MathUtils.lerp(study.minimumHeight, study.maximumHeight, t), study.gravity, dt);
       if (study.direct) {
         this.footStudyFrame = 0;
+        this.footStudyLaunchY = this.footStudyApexY = this.pos.y;
+        this.footStudyFlipProgress = 0;
+        const rise = study.nativePhysics ? TUNING.riseGravity : study.gravity;
+        const fall = study.nativePhysics ? TUNING.fallGravity : study.gravity;
+        const airtime = this.vVel / rise + this.vVel / Math.sqrt(rise * fall) - dt;
+        if (airtime < .30) this.footJumpStudyLaunch = {...study, flip: false};
+        // Leave time for the feet to open and the elastic joints to settle.
+        this.footStudyFlipDuration = Math.max(.12, Math.min(.70, airtime * .72));
       }
     }
     // Height is proportional to launch velocity squared. A grace-window
@@ -8630,7 +8649,7 @@ export class Player {
   /** Shared by real flight and the short rail-contact forecast. */
   private airGravityAt(verticalSpeed = this.vVel, vertGravityTime = this.vertGravT): number {
     if (this.parkControls && this.airFromSkate && !this.isBailing) return this.parkFlightGravity;
-    if (this.footJumpStudyFlight) return this.footJumpStudyFlight.gravity;
+    if (this.footJumpStudyPhysics) return this.footJumpStudyPhysics.gravity;
     const board = this.airGrav === 'board';
     let flatG =
       verticalSpeed > 0
@@ -8747,9 +8766,17 @@ export class Player {
     // saves still work.
     const directStudy = this.footJumpStudyFlight?.direct === true;
     if (directStudy) {
+      this.footStudyApexY = Math.max(this.footStudyApexY, this.pos.y);
+      if (this.footJumpStudyFlight?.flip)
+        this.footStudyFlipProgress = Math.min(2, this.footStudyFlipProgress + dt / Math.max(.001, this.footStudyFlipDuration));
       const remaining = 20 - this.footStudyFrame;
       this.footStudyFrame += !this.doubleJumpAir && this.footStudyFrame >= 2 && this.vVel > 0 && remaining > 0
-        ? Math.min(3, remaining, remaining / Math.max(.001, this.vVel / this.footJumpStudyFlight!.gravity * 60)) : 1;
+        ? Math.min(3, remaining, remaining / Math.max(.001, this.vVel / this.airGravityAt() * 60)) : 1;
+      if (!this.doubleJumpAir && this.vVel <= 0 && this.footStudyFrame < 40 && this.footJumpStudyFlight?.nativePhysics) {
+        const descent = Math.sqrt(THREE.MathUtils.clamp((this.footStudyApexY - this.pos.y) /
+          Math.max(.001, this.footStudyApexY - this.footStudyLaunchY), 0, 1));
+        this.footStudyFrame = 20 + 20 * Math.min(1, descent / .85);
+      }
     }
     const djWindow =
       TUNING.doubleJumpWindow *
@@ -8759,7 +8786,7 @@ export class Player {
     if (
       TUNING.doubleJump > 0.5 &&
       !this.isBailing &&
-      (directStudy ? this.vVel < 3 && this.vVel > -15 : this.airborneT <= djWindow) &&
+      (directStudy && this.footJumpStudyPhysics ? this.vVel < 3 && this.vVel > -15 : this.airborneT <= djWindow) &&
       (!this.airFromSkate || this.bounceJump) && // a crate bounce earns a tap even mid-skate-air
       !coyoteInputOwned &&
       !this.vertAir &&
@@ -8773,12 +8800,13 @@ export class Player {
         this.airTapT = 0;
         this.airJumpUsed = true;
         this.doubleJumpAir = true;
-        const study = this.footJumpStudyFlight;
+        const study = this.footJumpStudyPhysics;
         this.vVel = study ? studyJumpVelocity(THREE.MathUtils.lerp(
           study.doubleMinimumHeight ?? study.doubleHeight, study.doubleHeight, this.footStudyCharge),
           study.gravity, dt) : TUNING.doubleJumpVelocity;
         if (directStudy) {
           this.footStudyFrame = 5;
+          this.footStudyApexY = this.pos.y;
         }
         this.speed *= TUNING.doubleJumpHorizontalScale;
         this.slideAirLat *= TUNING.doubleJumpHorizontalScale;
@@ -9025,7 +9053,7 @@ export class Player {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
         // same direct authority follows the editable traversal retention.
-        if (study && !study.nativeLocomotion) {
+        if (study && !study.nativePhysics && !study.nativeLocomotion) {
           const seconds = input.moveX || input.moveY ? study.steeringSeconds : study.coastSeconds;
           let blend = 1 - Math.exp(-dt / Math.max(.001, seconds));
           const studySpeed = study.direct ? (this.doubleJumpAir ? 8 : study.runSpeed ?? TUNING.walkSpeed) : TUNING.walkSpeed;
