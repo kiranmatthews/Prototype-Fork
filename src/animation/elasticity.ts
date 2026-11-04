@@ -12,7 +12,7 @@ type Amplitudes = readonly [number,number,number,number,number];
 const PROFILES:Record<string,Amplitudes> = {
   idle:[.022,.012,.022,.008,.010], walk:[.040,.020,.035,.035,.048], run:[.070,.025,.050,.055,.080],
   'ice-skate':[.040,.020,.045,0,0], // independent upper-body rebound; feet retain deck contact
-  'skate-push':[.055,.025,.04,0,0], 'skate-cruise':[.035,.02,.035,0,0],
+  'skate-mount-load':[.06,.025,.035,0,0], 'skate-cruise':[.035,.02,.035,0,0],
   'skate-charge':[.08,.035,.05,0,0],
   'vert-pump':[.055,.025,.045,0,0],
   'spine-transfer':[.065,.035,.055,0,0], // planted deck contacts keep both leg lengths

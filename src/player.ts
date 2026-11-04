@@ -18847,11 +18847,11 @@ export class Player {
       eligible:this.grounded&&this.state==='ride'&&!this.crawling&&!this.sliding&&
         !this.wallriding&&!this.grabbing&&!this.manualing&&this.flipT<=0&&
         this.lipStallT<=0&&this.revertPoseT<=0&&!this.spinning&&!this.onTransition,
-      preparing:this.charging&&Math.hypot(input.moveX,input.moveY)>.25&&!this.boardMountBlocked,
+      preparing:this.charging&&(input.moveX!==0||input.moveY!==0)&&!this.boardMountBlocked,
       holdProgress:this.skateCharge/Math.max(.001,TUNING.skateHoldTime),charging:this.charging,
       charge:this.charging?Math.min(1,this.chargeTimer/Math.max(.001,TUNING.jumpChargeTime)):0,
       braking:input.grabHeld||this.brakeT>.05,
-      speed:this.speed,topSpeed:TUNING.maxSpeed,heading:Math.atan2(this.axisF.x,this.axisF.z),time:this.runTime,
+      heading:Math.atan2(this.axisF.x,this.axisF.z),time:this.runTime,
     });
     const visualStance=this.stance;
     const mountPose = sampleSkateMount(dismountT >= 0
@@ -20407,26 +20407,30 @@ export class Player {
     // constructor after that layer would bake the lean into every grab.
     if(skateTravel&&this.boardG&&this.riderG)
       this.skateAnimation??=new SkateAnimation(this.group,this.bodyGroup,this.riderG,this.boardG);
-    if(skateTravel&&(Object.keys(skateTravel.deformations).length||skateTravel.arms||skateTravel.chestPitch||skateTravel.chestRoll||skateTravel.push||skateTravel.bounce)){
+    if(skateTravel&&(Object.keys(skateTravel.deformations).length||skateTravel.arms||skateTravel.chestPitch||skateTravel.chestRoll||skateTravel.preparation||skateTravel.bounce)){
       for(const node of [this.spineG,this.headM,this.armR,this.armL,this.elbowR,this.elbowL,this.wristR,this.wristL])
         if(node)this.skateTravelRotations.push({node,rotation:node.quaternion.clone()});
       if(Object.keys(skateTravel.deformations).length)this.playerAnimationBridge.modulateDeformations(skateTravel.deformations);
       if(this.spineG){
+        this.spineG.rotation.x+=.20*skateTravel.preparation;
         this.spineG.rotation.z+=visualStance*skateTravel.chestPitch;
         this.spineG.rotation.x+=visualStance*skateTravel.chestRoll;
       }
-      if(this.headM){this.headM.rotation.z-=visualStance*skateTravel.chestPitch*.45;this.headM.rotation.x-=visualStance*skateTravel.chestRoll*.6;}
+      if(this.headM){this.headM.rotation.x-=.12*skateTravel.preparation;this.headM.rotation.z-=visualStance*skateTravel.chestPitch*.45;this.headM.rotation.x-=visualStance*skateTravel.chestRoll*.6;}
       for(const [arm,elbow,wrist,side] of [[this.armR,this.elbowR,this.wristR,1],[this.armL,this.elbowL,this.wristL,-1]] as const){
         // Grounded travel has low, bent balance arms. The on-foot jump's
         // high charge wind-up used to leave one hand waving beside the head.
-        const rear=side===visualStance;
-        const swing=Math.cos(2*Math.PI*(skateTravel.pushPhase-.25))*.32*skateTravel.push;
-        if(arm){
-          arm.rotation.x=-.12-.22*this.chargePose+(rear?1:-1)*swing+skateTravel.steer*.12;
-          arm.rotation.z=side*(.42+.08*this.chargePose)+skateTravel.steer*.10;
+        if(skateTravel.weight){
+          if(arm){
+            arm.rotation.x=-.12-.22*this.chargePose+skateTravel.steer*.12;
+            arm.rotation.z=side*(.42+.08*this.chargePose)+skateTravel.steer*.10;
+          }
+          if(elbow)elbow.rotation.x=-.42-.16*this.chargePose;
+          if(wrist)wrist.rotation.x=side*.12*skateTravel.bounce;
+        }else{
+          if(arm){arm.rotation.x+=.38*skateTravel.preparation;arm.rotation.z+=side*.10*skateTravel.preparation;}
+          if(elbow)elbow.rotation.x-=.20*skateTravel.preparation;
         }
-        if(elbow)elbow.rotation.x=-.42-.16*this.chargePose;
-        if(wrist)wrist.rotation.x=side*.12*skateTravel.bounce;
       }
     }
     const iceSkate = this.iceSkateMotion.step(dt, {
@@ -20576,6 +20580,7 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
+    this.skateAnimation?.applyMountLoad(skateTravel?.preparation??0,this.chargePlanted);
     if(this.boardG){
       if(skateTravel)this.boardG.userData.skateTravel={...skateTravel,deformations:undefined,boardVisible:this.boardG.visible};
       else delete this.boardG.userData.skateTravel;

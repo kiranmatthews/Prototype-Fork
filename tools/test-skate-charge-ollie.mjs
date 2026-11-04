@@ -75,13 +75,7 @@ await withSkateRuntime(async ({server,THREE,Player,level,player:p})=>{
         // has a deeper, supported ground-charge pose.
         const leading=poseInfo.knees[stance>0?1:0],trailing=poseInfo.knees[stance>0?0:1];
         const raisedOllie=!p.grounded&&p.boardOllieAir&&noseTilt>.12;
-        // D's grounded push deliberately bends one knee while the other
-        // shoe reaches the floor. Its reach and hip clearance replace the
-        // old two-shoes-on-deck silhouette bound; air/landing bounds stay.
-        const pushing=p.grounded&&(p.boardG.userData.skatePushContact?.weight??0)>.02;
-        const hipHeight=joint('hips').y-p.pos.y;
-        if(pushing ? Math.max(leading,trailing)>=1.9||hipHeight<.75
-          :raisedOllie ? leading>=2.1||trailing>=1.15||(leading+trailing)/2>=1.4
+        if(raisedOllie ? leading>=2.1||trailing>=1.15||(leading+trailing)/2>=1.4
           :p.grounded&&p.chargePose>.1&&process.argv.includes('--direct-jak')?Math.max(leading,trailing)>=1.65||(leading+trailing)/2>=1.5
           : Math.max(leading,trailing)>=1.5||(leading+trailing)/2>=1.15)poseErrors.push({problem:'knee bend',...poseInfo});
         if(frame===59+hold)releaseFlex=c.bodyFlex;

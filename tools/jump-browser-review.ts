@@ -205,25 +205,26 @@ p.step = (dt: number, input: any, level: Level) => {
     p.camDir.set(0,0,-1);
     const cancel=mode==='Skate cancel',turn=mode==='Skate carve',remount=mode==='Skate remount';
     const earlyJump=mode==='Skate early ollie',chargeStudy=mode==='Skate cruise and charge';
-    const release=cancel?48:earlyJump?66:220;
+    const release=cancel?100:earlyJump?66:220;
     if(remount&&remountFrame<0&&p.boardG?.userData.skateTravel?.phase==='dismount')remountFrame=frame;
     const brake=!chargeStudy&&frame>=260&&frame<350&&remountFrame<0;
     const restart=remountFrame>=0&&frame<remountFrame+100;
     const demo={moveX:turn&&frame>=130&&frame<200?.65:0,
-      moveY:brake?-1:frame<260||restart?1:0,
+      moveY:cancel&&frame>=54&&frame<100?0:brake?-1:frame<260||restart?1:0,
       jumpHeld:chargeStudy?frame>=100&&frame<280:frame>=30&&frame<release||restart,
       jumpPressed:chargeStudy?frame===100:frame===30||frame===remountFrame,
       jumpReleased:chargeStudy?frame===280:frame===release||remountFrame>=0&&frame===remountFrame+100,
       grabHeld:brake,grabPressed:frame===260,spinHeld:false,spinPressed:false};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
     const travel=p.boardG?.userData.skateTravel;
-    if(stopAt==='Preparation'&&travel?.phase==='prepare'&&frame>=45 ||
+    if(stopAt==='Preparation'&&travel?.phase==='prepare'&&travel.preparation>.18 ||
+      stopAt==='Loaded preparation'&&travel?.phase==='prepare'&&travel.preparation>.82 ||
+      stopAt==='Cancel mount'&&travel?.phase==='cancel'&&frame>=57 ||
+      stopAt==='Cancelled'&&cancel&&frame===80 ||
       stopAt==='Mount smear'&&travel?.phase==='mount'&&travel.smear&&travel.age>.08 ||
       stopAt==='Mount hop'&&travel?.phase==='mount'&&travel.age>.25 ||
-      stopAt==='Push'&&p.boardG?.userData.skatePushContact?.grounded ||
-      stopAt==='Push recovery'&&travel?.push>.1&&travel.pushPhase>.7 ||
       stopAt==='Cruise'&&chargeStudy&&frame===85 ||
-      stopAt==='Full charge'&&travel?.charge>.99&&travel.push<.001&&frame>150 ||
+      stopAt==='Full charge'&&travel?.charge>.99&&frame>150 ||
       stopAt==='Dismount smear'&&travel?.phase==='dismount'&&travel.smear&&travel.age>.08 ||
       stopAt==='Stowed'&&frame>350&&travel?.phase==='stowed')frozen=true;
     if(frame>560)resetInspector();return;
@@ -409,7 +410,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Preparation','Mount smear','Mount hop','Push','Push recovery','Cruise','Full charge','Dismount smear','Stowed'],value=>{stopAt=value;resetInspector();});
+  'Preparation','Loaded preparation','Cancel mount','Cancelled','Mount smear','Mount hop','Cruise','Full charge','Dismount smear','Stowed'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -444,7 +445,7 @@ function report() {
     walkBlend:+(d.motionContext?.inputs?.[LOCOMOTION_WALK_BLEND_INPUT] ?? 0).toFixed(3),
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
     jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
-    boardTravel:p.boardG?.userData.skateTravel,boardPush:p.boardG?.userData.skatePushContact,
+    boardTravel:p.boardG?.userData.skateTravel,mountLoad:p.boardG?.userData.skateMountLoad,
     boardContact:p.boardG?.userData.skateContact,spin:p.spinEffectDiagnostics,
     knees:Object.fromEntries(['left','right'].map(side=>{const at=(name:string)=>p.riderG.getObjectByName(name+'-'+side)!.getWorldPosition(new THREE.Vector3());return [side,at('knee').sub(at('hip')).angleTo(at('ankle').sub(at('knee')))];})),
     cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),

@@ -8766,3 +8766,34 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   No level-pack changes, integration or publication.
 
 Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+
+## D — board swap correction and cancellable mount load (local checkpoint)
+
+- 5 November 2026 NZDT. The user rejected the earlier carry/grab and kick-push
+  quality; its recorded technical checks do not establish visual acceptance.
+  Removed carried-board/hand-fetch routes and then removed kick-pushing entirely.
+  The existing current-character smear briefly covers committed board swaps.
+- Connected the previously unused preparation meter to visible torso/arm load
+  and a lower pelvis, preserving the current stride's two foot targets. It
+  follows live hold tuning. Releasing direction unwinds over 0.18 s; re-pressing
+  continues from the current pose. Release-to-jump remains authoritative.
+  Retained low balance arms, turn lean and the deeper two-foot skate charge.
+- Local playable correction took about 54 minutes from the initial rejection
+  (09:22–10:16 NZDT), including substantial shared-capacity waiting; the later
+  kick-removal/mount-load request was playable in about six minutes. Idle
+  resource waits are not productive authoring time.
+- Lightweight checks: five TS modules transpile, modified scripts parse,
+  whitespace check passes, and 420 pure preparation/cancel samples pass at
+  30/60/120 fps. Lite browser: load/cancel hidden-board behavior, both stances,
+  lower charge and measured sole retention reviewed. New evidence is external
+  `skate-correction/`; previous `skate-travel/` proof belongs to the rejected work.
+- **Validation incomplete:** required native movement/contact/ollie checks,
+  production build and normal/native full-render review remain pending. The
+  shared helper returned 75 again at 10:20 NZDT; no further polling or heavy job
+  was started. This checkpoint is not marked validated or READY.
+- All work remains local at port 5189. The user explicitly reaffirmed that this
+  entire exploration stays local until they are extremely satisfied with its
+  quality. No integration, push or publication is authorized or attempted.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).

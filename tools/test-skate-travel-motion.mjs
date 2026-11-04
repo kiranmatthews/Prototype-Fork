@@ -19,22 +19,22 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
   const knee=side=>joint('knee-'+side).sub(joint('hip-'+side)).angleTo(joint('ankle-'+side).sub(joint('knee-'+side)));
   const samples=[],errors=[];let frames=0;
   try{
-    for(const stance of [-1,1])for(const scenario of ['mount-stop','cancel','early-ollie','remount','carve','charge']){
+    for(const stance of [-1,1])for(const scenario of ['mount-stop','cancel','release-cancel','early-ollie','remount','carve','charge']){
       for(const rider of [p,control]){
         rider.enterLevel('travel-test');rider.respawn(level,true);rider.freeSkate=scenario==='charge';rider.stance=stance;
         if(scenario==='charge')rider.speed=9;
       }
       runtime.restart();
-      const phases=new Set();let pushGround=0,hiddenFrames=0,smearFrames=0,remountStart=-1,mounts=0;
-      let maxPushError=0,maxPushKnee=0,minPushHip=Infinity,maxLean=0,cruiseHip=0,chargeHip=0,chargeFeet=0;
+      const phases=new Set();let hiddenFrames=0,smearFrames=0,remountStart=-1,mounts=0;
+      let maxLoadError=0,maxLoadDrop=0,maxPreparation=0,cancelSettled=false,maxLean=0,cruiseHip=0,chargeHip=0,chargeFeet=0;
       for(let frame=0;frame<530;frame++){
         const previous=p.boardG.userData.skateTravel;
         if(scenario==='remount'&&remountStart<0&&previous?.phase==='dismount')remountStart=frame;
-        const chargeStudy=scenario==='charge',release=scenario==='cancel'?48:scenario==='early-ollie'?66:220;
+        const chargeStudy=scenario==='charge',release=scenario==='cancel'?100:scenario==='release-cancel'?48:scenario==='early-ollie'?66:220;
         const brake=!chargeStudy&&frame>=260&&frame<350&&remountStart<0;
         const remount=remountStart>=0&&frame<remountStart+100;
         const input=makeInput({moveX:scenario==='carve'&&frame>=130&&frame<200?.65:0,
-          moveY:brake?-1:frame<260||remount?1:0,
+          moveY:scenario==='cancel'&&frame>=54&&frame<100?0:brake?-1:frame<260||remount?1:0,
           jumpHeld:chargeStudy?frame>=100&&frame<280:frame>=30&&frame<release||remount,
           jumpPressed:chargeStudy?frame===100:frame===30||frame===remountStart,
           jumpReleased:chargeStudy?frame===280:frame===release||frame===remountStart+100&&remountStart>=0,
@@ -51,36 +51,32 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
         }
         if(pose.smear){smearFrames++;assert.ok(['mount','dismount'].includes(pose.phase));}
         if(pose.phase==='mount'&&previous?.phase!=='mount')mounts++;
-        const push=board.userData.skatePushContact;
-        if(push){
-          const foot=joint(push.foot),error=foot.distanceTo(new THREE.Vector3(...push.target));
-          maxPushError=Math.max(maxPushError,error);
-          if(error>.01)errors.push({scenario,stance,frame,problem:'push contact',error});
-          maxPushKnee=Math.max(maxPushKnee,knee('left'),knee('right'));
-          const hip=joint('hips').y-p.pos.y;minPushHip=Math.min(minPushHip,hip);
-          if(hip<.75||Math.max(knee('left'),knee('right'))>1.9)errors.push({scenario,stance,frame,problem:'push collapse',hip,knees:[knee('left'),knee('right')]});
-          assert.equal(push.foot,`socket-foot-${stance>0?'left':'right'}`,'leading foot pushed instead of rear foot');
-          if(push.weight>.8){
-            const local=board.worldToLocal(foot.clone());
-            if(local.x*stance<board.userData.settings.deckHalfWidth*board.userData.settings.overallScale)
-              errors.push({scenario,stance,frame,problem:'push on wrong edge',local:local.toArray()});
-          }
-          if(push.grounded)pushGround++;
+        assert.equal(board.userData.skatePushContact,undefined,'removed kick-push returned');
+        maxPreparation=Math.max(maxPreparation,pose.preparation);
+        const load=board.userData.skateMountLoad;
+        if(load){
+          maxLoadError=Math.max(maxLoadError,load.footError);maxLoadDrop=Math.max(maxLoadDrop,load.drop);
+          if(load.footError>.004)errors.push({scenario,stance,frame,problem:'preparation moved a sole',error:load.footError});
+        }
+        if(scenario==='cancel'&&frame===80){
+          cancelSettled=pose.phase==='stowed'&&pose.preparation===0&&!board.visible&&!pose.smear;
+          assert.ok(cancelSettled,'released direction did not unwind the load');
         }
         maxLean=Math.max(maxLean,Math.abs(pose.steer));
         if(chargeStudy&&frame===84)cruiseHip=joint('hips').y-p.pos.y;
         if(chargeStudy&&frame===250){
           chargeHip=joint('hips').y-p.pos.y;chargeFeet=board.userData.skateContact.footError;
-          assert.ok(pose.charge>.99&&pose.push<.001,'full charge must plant both feet');
+          assert.ok(pose.charge>.99,'full charge must plant both feet');
           assert.ok(chargeFeet<.006,'full-charge feet left the deck');
         }
       }
-      samples.push({scenario,stance,phases:[...phases],hiddenFrames,smearFrames,mounts,pushGround,
-        maxPushError,maxPushKnee,minPushHip:Number.isFinite(minPushHip)?minPushHip:null,maxLean,cruiseHip,chargeHip,chargeFeet});
-      if(scenario==='cancel')assert.ok(phases.has('cancel')&&!phases.has('mount')&&smearFrames===0,'cancel committed a board swap');
+      samples.push({scenario,stance,phases:[...phases],hiddenFrames,smearFrames,mounts,
+        maxLoadError,maxLoadDrop,maxPreparation,cancelSettled,maxLean,cruiseHip,chargeHip,chargeFeet});
+      if(scenario==='cancel'||scenario==='release-cancel')assert.ok(!phases.has('mount')&&smearFrames===0,'cancel committed a board swap');
+      if(scenario==='cancel')assert.ok(phases.has('cancel')&&maxLoadDrop>.12,'cancel did not exercise the visible load');
       if(scenario==='mount-stop'){
-        for(const phase of ['prepare','mount','push','charge','dismount','stowed'])assert.ok(phases.has(phase),`missing ${phase}`);
-        assert.ok(pushGround>0,'push never touches ground');assert.ok(smearFrames>0&&smearFrames<30,'handoff cover is missing or persistent');
+        for(const phase of ['prepare','mount','charge','dismount','stowed'])assert.ok(phases.has(phase),`missing ${phase}`);
+        assert.ok(maxLoadDrop>.15,'mount load was not visible');assert.ok(smearFrames>0&&smearFrames<30,'handoff cover is missing or persistent');
       }
       if(scenario==='carve')assert.ok(maxLean>.2,'turning never affected balance');
       if(scenario==='remount')assert.ok(mounts>=2,'remount was not exercised');
@@ -93,17 +89,34 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
         pose=motion.step(1/fps,{enabled:true,available:true,eligible:true,grounded:true,
           mounted:time>=1&&time<3||reverseAt>0&&time>=3+reverseAt&&time<5,
           preparing:time<1,holdProgress:time,charging:time<2,charge:time>1?1:0,braking:time>2.8&&time<3,
-          speed:8,topSpeed:20,heading:time>1&&time<2?.8*time:1.6,time});
+          heading:time>1&&time<2?.8*time:1.6,time});
         if(pose.smear)covered++;
         assert.ok(Object.values(pose.deformations).every(v=>Number.isFinite(v)&&v>.9&&v<1.1));
       }
       assert.equal(pose.phase,'stowed');assert.equal(pose.smear,false);assert.equal(pose.weight,0);
       assert.ok(covered/fps<.85,'smear never settled');
     }
+    // Cancel through direction release at different live hold durations,
+    // then re-press during unwind: no forced commit and no pose restart snap.
+    for(const hold of [.2,.55,1])for(const fps of [30,60,120]){
+      const motion=new SkateTravelMotion();let pose;
+      const base={enabled:true,available:true,eligible:true,grounded:true,mounted:false,
+        charging:true,charge:1,braking:false,heading:0};
+      for(let frame=0;frame<Math.floor(hold*.8*fps);frame++)
+        pose=motion.step(1/fps,{...base,preparing:true,holdProgress:frame/fps/hold,time:frame/fps});
+      const loaded=pose.preparation;
+      pose=motion.step(1/fps,{...base,preparing:false,holdProgress:0,time:1});
+      assert.ok(pose.preparation<=loaded&&pose.preparation>0&&!pose.smear);
+      const reversing=pose.preparation;
+      pose=motion.step(1/fps,{...base,preparing:true,holdProgress:0,time:1+1/fps});
+      assert.equal(pose.preparation,reversing,'re-press restarted the mount pose');
+      for(let frame=0;frame<fps/2;frame++)pose=motion.step(1/fps,{...base,preparing:false,holdProgress:0,time:2+frame/fps});
+      assert.equal(pose.preparation,0);assert.equal(pose.phase,'stowed');assert.equal(pose.smear,false);
+    }
     const report={frames,samples,errors,errorCount:errors.length};
     console.log(JSON.stringify(report,null,2));
     if(process.env.SKATE_TRAVEL_REPORT)await writeFile(process.env.SKATE_TRAVEL_REPORT,JSON.stringify(report,null,2));
     assert.equal(errors.length,0,'Skate pose/contact failures; see measurements above');
-    console.log('PASS hidden inventory, finite swap smear, toe-side rear pushes, charge depth, stances, cancellation/remount, exact controller parity');
+    console.log('PASS hidden inventory, finite swap smear, removed push, planted cancellable mount load, charge depth, stances, cancellation/remount, exact controller parity');
   }finally{runtime.dispose();}
 },{levelEntry:entry});

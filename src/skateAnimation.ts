@@ -7,7 +7,7 @@ import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
 import type { SpineTransferMotion } from './vertSkateMotion';
 import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion, sampleSkateRevert } from './skateBodyMotion';
-import { travelEase, type SkateTravelPose } from './skateTravelMotion';
+import { type SkateTravelPose } from './skateTravelMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -88,9 +88,7 @@ export class SkateAnimation {
   private temp = new THREE.Vector3();
   private q = new THREE.Quaternion();
   private matrix = new THREE.Matrix4();
-  private pushAnchor:THREE.Vector3|null=null;
-  private pushReleaseAge=-1;
-  private pushPlanted=false;
+  private mountLoadRotations:Array<{node:THREE.Object3D;rotation:THREE.Quaternion}>=[];
 
   constructor(private group: THREE.Group, private body: THREE.Group,
     private rider: THREE.Group, private board: THREE.Group) {
@@ -121,6 +119,8 @@ export class SkateAnimation {
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
+    for(const {node,rotation} of this.mountLoadRotations)node.quaternion.copy(rotation);
+    this.mountLoadRotations.length=0;
     if (this.spine && this.spineBefore) this.spine.quaternion.copy(this.spineBefore);
     if (this.waist && this.waistBefore) this.waist.quaternion.copy(this.waistBefore);
     this.spineBefore = null;
@@ -209,9 +209,30 @@ export class SkateAnimation {
     return limb.socket.getWorldPosition(socket).distanceTo(target);
   }
 
+  /** Cancellable on-foot mount load. Preserve the current stride's sole
+   * targets while lowering the pelvis; no foot cycle or physics is replaced. */
+  applyMountLoad(weight:number,planted:boolean):void {
+    delete this.board.userData.skateMountLoad;
+    if(weight<=.001||!this.feet||!this.rider.parent)return;
+    const targets=this.feet.map(foot=>({position:foot.socket.getWorldPosition(new THREE.Vector3()),
+      rotation:foot.end.getWorldQuaternion(new THREE.Quaternion()),
+      pole:foot.mid.getWorldPosition(new THREE.Vector3())}));
+    for(const foot of this.feet)for(const node of [foot.root,foot.mid,foot.end])
+      this.mountLoadRotations.push({node,rotation:node.quaternion.clone()});
+    // The planted jump charge already supplies a squat. Add the larger
+    // visible load to moving strides, which the authored run otherwise hides.
+    const drop=(planted?.065:.20)*weight;
+    const position=this.rider.getWorldPosition(new THREE.Vector3()).addScaledVector(Y,-drop);
+    this.rider.position.copy(this.rider.parent.worldToLocal(position));
+    let error=0;
+    for(let i=0;i<2;i++)error=Math.max(error,this.solve(this.feet[i],targets[i].position,
+      targets[i].rotation,targets[i].pole,1,96));
+    this.board.userData.skateMountLoad={weight,drop,footError:error};
+  }
+
   apply(p: SkatePoseInput): boolean {
     if (!p.active || !this.feet || !this.hands || !this.hips) { this.impossibleActive=false;this.deckCaught=false;this.shoveDeckYaw=null; this.lastActive = false; this.darkWeight = this.darkPop = this.manualWeight = this.manualBalance = 0;
-      this.pushAnchor=null;this.pushReleaseAge=-1;this.pushPlanted=false;delete this.board.userData.skatePushContact;return false; }
+      return false; }
     this.darkWeight = clamp(this.darkWeight + (p.darkslide ? 1 : -1) * p.dt / .22, 0, 1);
     const dark = smooth(this.darkWeight);
     this.darkPop = p.darkslide ? Math.sin(Math.PI*dark) : this.darkPop*Math.exp(-20*p.dt);
@@ -293,10 +314,8 @@ export class SkateAnimation {
     });
     if (p.iceBrace) springFlex = Math.min(1.24, springFlex + clamp(p.iceBrace, 0, .5));
     if(p.travel?.weight&&p.grounded){
-      // Stand over the supporting leg during a kick, then gather into the
-      // deeper two-foot charge. Combining a full crouch with a ground reach
-      // folds the front knee and makes the whole rider sag off the deck.
-      springFlex=Math.min(1.48,THREE.MathUtils.lerp(springFlex+.34*p.charge*p.charge,.68,p.travel.push));
+      // Held charge progressively compresses both knees over fixed soles.
+      springFlex=Math.min(1.48,springFlex+.34*p.charge*p.charge);
     }
     const vertLoad=clamp(p.vertPump??0,0,1),transfer=p.spineTransfer;
     if(vertLoad>0||transfer){
@@ -500,49 +519,6 @@ export class SkateAnimation {
         footTargets[i].lerp(underside, dark).addScaledVector(this.up, .22 * darkPop);
       }
     }
-    const pushing=p.travel?.weight&&p.grounded&&!p.grind&&!p.manual&&!p.lip&&!p.flip&&gw<.001&&p.wallWeight<.001
-      ?p.travel:null;
-    if(pushing&&pushing.push>.001){
-      const u=pushing.pushPhase,w=pushing.push;
-      const reach=travelEase(u/.20),recover=travelEase((u-.58)/.42);
-      const stride=u<.32?THREE.MathUtils.lerp(-footSpan,.10,travelEase(u/.25))
-        :THREE.MathUtils.lerp(.10,-.38,travelEase((u-.32)/.28));
-      // Toe side follows the rider-facing basis. The old minus sign
-      // sent the rear foot across the heel edge and crossed the legs.
-      const x=p.stance*(s.deckHalfWidth*scale+.13);
-      const kick=this.support.clone().addScaledVector(this.right,x).addScaledVector(this.forward,stride);
-      const contactWindow=u>=.32&&u<=.50&&w>.8;
-      if(u<.25){this.pushAnchor=null;this.pushReleaseAge=-1;this.pushPlanted=false;}
-      if(contactWindow&&!this.pushPlanted){this.pushAnchor=kick.clone();this.pushPlanted=true;this.pushReleaseAge=-1;}
-      let groundContact=false,releaseLift=0;
-      if(this.pushAnchor){
-        // A fast board shortens the plant. Keep its world anchor through a
-        // finite lift/recovery instead of teleporting the shoe to the board.
-        const behind=-this.pushAnchor.clone().sub(this.support).dot(this.forward);
-        if(this.pushReleaseAge<0&&(!contactWindow||behind>.45))this.pushReleaseAge=0;
-        if(this.pushReleaseAge>=0){
-          this.pushReleaseAge+=p.dt;
-          const releaseSeconds=clamp(.65/Math.max(1,Math.abs(p.speed)),.018,.16);
-          const release=travelEase(this.pushReleaseAge/releaseSeconds);
-          kick.lerp(this.pushAnchor,1-release);
-          releaseLift=.13*Math.sin(Math.PI*release);
-          if(release>=1)this.pushAnchor=null;
-        }else{kick.copy(this.pushAnchor);groundContact=true;}
-      }
-      const along=kick.clone().sub(this.support).dot(this.forward);
-      if(along<-.44)kick.addScaledVector(this.forward,-.44-along);
-      const floorNormal=p.groundNormal??Y;
-      const deckHeight=surface(0,0)+.006;
-      const floorHeight=groundContact?.008:u<.32
-        ?THREE.MathUtils.lerp(deckHeight+.06*Math.sin(Math.PI*reach),.008,travelEase((u-.20)/.12))
-        :.008+(deckHeight-.008)*travelEase((u-.54)/.24)+.08*Math.sin(Math.PI*recover)+releaseLift;
-      kick.addScaledVector(floorNormal,floorHeight-kick.clone().sub(this.support).dot(floorNormal));
-      const weight=w;
-      footTargets[back].lerp(kick,weight);
-      soleRotations[back].slerp(this.frame,weight);
-      soleRotations[front].slerp(this.frame,weight*.48);
-      this.board.userData.skatePushContact={grounded:groundContact,weight,toeSide:p.stance,foot:this.feet[back].socket.name,target:footTargets[back].toArray()};
-    }else{this.pushAnchor=null;this.pushReleaseAge=-1;this.pushPlanted=false;delete this.board.userData.skatePushContact;}
     if(footFlip){
       // Slide the leading shoe along the raised nose and off its edge before
       // retracting it. The trailing foot catches first; both travel DOWN to
@@ -566,12 +542,6 @@ export class SkateAnimation {
     // Pelvis follows the weighted truck while both feet retain their own
     // contact. The bounce is absorbed by knees, never by the rail/deck.
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
-    if(pushing){
-      // Weight remains over the supporting truck; the pushing leg reaches
-      // independently instead of dragging the pelvis halfway off the deck.
-      pelvis.lerp(footTargets[front],pushing.push*.45);
-      pelvis.addScaledVector(this.right,p.stance*.025*pushing.push).addScaledVector(this.forward,.035*pushing.push);
-    }
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
 
@@ -609,7 +579,7 @@ export class SkateAnimation {
     const trickHeight = .46 - .29 * gw - .065 * p.charge - .11 * bounce + breathe;
     const restingBreath = Math.sin(p.time*5.6)*.005*(.35+.65*Math.min(1,Math.abs(p.speed)/5));
     // Keep a little reach in reserve under the grind's nonuniform body lean.
-    const reserve=waistGrab ? .025*smooth(gw) : uprightGrind ? .025 : backflip ? .025*Math.max(backflip.compression,backflip.rebound) : footFlip ? (scoopFlip?.085:.025)*footFlip.tuck : impossible ? .025*impossible.wrap : pushing ? .018*pushing.push : 0;
+    const reserve=waistGrab ? .025*smooth(gw) : uprightGrind ? .025 : backflip ? .025*Math.max(backflip.compression,backflip.rebound) : footFlip ? (scoopFlip?.085:.025)*footFlip.tuck : impossible ? .025*impossible.wrap : 0;
     const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-reserve, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
@@ -658,7 +628,6 @@ export class SkateAnimation {
       const kneeForward=tweak?grabForward:waistGrab||p.lip||uprightGrind||backflip||footFlip||impossible||this.deckCaught?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
-      if(pushing&&i===back)pole.addScaledVector(this.forward,.50*pushing.push);
       if(tweak)pole.addScaledVector(grabForward,(tweak.kneeForward-.65)*tweakWeight).addScaledVector(this.up,-tweak.kneeDown*tweakWeight).addScaledVector(X.clone().applyQuaternion(grabFrame),tweak.kneeSide*p.stance*tweakWeight);
       const footWeight=underProgress>0?underMotion.footContact:1;
       const airFeet=underProgress>0?underMotion.airFeet:0;
@@ -675,7 +644,7 @@ export class SkateAnimation {
       // shoe socket offset; the normal convergence tolerance still exits early.
       if(solveWeight>0){
         const soleQ=soleRotations[i];
-        let error=this.solve(this.feet[i],target,soleQ,pole,solveWeight,waistGrab||backflip||footFlip||impossible||this.deckCaught||pushing?192:64,footFrame,waistGrab||!!footFlip||!!impossible||this.deckCaught);
+        let error=this.solve(this.feet[i],target,soleQ,pole,solveWeight,waistGrab||backflip||footFlip||impossible||this.deckCaught?192:64,footFrame,waistGrab||!!footFlip||!!impossible||this.deckCaught);
         if((waistGrab||footFlip||impossible||this.deckCaught)&&(!scoopFlip||footFlip!.rearContact>.001||footFlip!.turn>.999)){
           // Keep both feet seated after the half-turn while the skater falls;
           // handing back to the old ankle solve at the catch caused a dip.
