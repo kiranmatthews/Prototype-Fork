@@ -8584,3 +8584,28 @@ build/type-check and release-size check (810,285,333 bytes). Browser review
 covers seven levels, returning from Banana Bay and Skystream, MAX/native and
 normal presentation, with no warnings/errors after the final changes.
 See [sky restoration evidence](sky-restoration/README.md). No full suite run.
+
+## 2026-11-04 — Tripo Smart Mesh guardian for Tribal Run
+
+Replaced all 35 Tribal Run crab stand-ins with the prepared Pacific-inspired
+guardian. Used the user's requested Tripo web plan credits: Smart Mesh P2.0,
+15,000 target triangles, 16,132 verified export triangles, 65 joints and 150
+credits total. The full final mesh remains at all distances. No API credits.
+
+Approximately 50 minutes from the web-credit clarification to the first in-level
+review, including the intervening shared-sky rollback. The actual generation
+was submitted at 01:28 UTC and the first playable model review at 01:46 UTC.
+
+Corrected the oversized feet's imported walk clearance, retained hip sway,
+added shared per-segment elasticity, separated hands from foot contacts and
+fitted the combat box to the humanoid. Patrols turn smoothly; stomp falls settle
+above their support and spin retains the existing fling. Ordinary crab behavior
+is preserved. No level geometry, movement tuning or sky settings changed.
+
+Actual GLB/runtime and Player spin/stomp checks pass, including all skin weights,
+independent instances, finite defeat/reset, all 35 assignments, zero planted
+ankle displacement from elasticity and positive walk/fall ground clearance.
+The shared enemy runtime check, production build/type-check and release-size
+check pass (814,174,039 bytes). Browser checks include front/40°/90°, normal and
+MAX/native rendering, full Tribal Run, contact hurt/respawn and a clean console.
+No full suite was run. See [guardian review](tribal-guardian/README.md).

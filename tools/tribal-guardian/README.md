@@ -1,38 +1,63 @@
-# Tribal Run guardian — generation pending
+# Tribal Run guardian
 
-The imagegen reference in `references/guardian.png` is the prepared production
-input for the requested Meshy character. Its prompt is saved alongside it.
-It uses the current Bone Man's proportions and an explicit Crash 4 aesthetic
-pass: an adult Pacific island guardian with woven clothing, large readable
-hands and feet, an unobstructed face and separated limbs for rigging.
+The user explicitly replaced the pending Meshy request with **Tripo web plan
+credits** on 4 November 2026. No Meshy task was submitted. The old empty Meshy
+journal is historical; it is not the production pipeline for this character.
 
-No Meshy task has been submitted. On 4 November 2026 the authenticated API
-profile had one credit; generation needs fifteen and humanoid rigging five.
-The web workspace was signed out. The user has been asked to sign in so web
-plan credits can be used. Do not silently replace this request with Tripo,
-pretend the current decorated crab is the new character, or submit duplicates.
+The imagegen reference in `references/guardian.png` is the production input.
+Its saved prompt explicitly applies the Crash 4 aesthetic and Bone Man-like
+proportions before modelling: an adult Pacific island guardian with woven
+clothing, readable hands/feet and separated limbs for rigging.
 
-Use Smart Topology at 15,000 triangles, textured GLB and humanoid rigging with
-the included walk. Inspect the budget before submission and count the actual
-exported triangles before integration. The absolute model limit is 30,000.
-Keep the complete final mesh at every viewing distance. No high-poly source,
-decimation stand-in or distance LOD is required.
+## Generation
 
-`meshy_assets.py` reuses the project's official CLI submission journal. Set
-`ENEMY_MESHY_CLI` to the installed official CLI entry point, then run:
+- [Tripo web model](https://studio.tripo3d.ai/workspace/generate/76caae3a-d78c-41f5-ae02-baa31743b900)
+- **Smart Mesh P2.0**, triangular topology, **15,000 triangle target inspected
+  before submission**. Export verified at **16,132 triangles**; absolute cap 30,000.
+- Web credits: 100 mesh + 30 reference texturing + 20 humanoid rig = **150**.
+  Preset motions did not debit additional credits. No API generation was used.
+- 2k colour texture, 65-joint Mixamo-compatible humanoid skin. All final mesh
+  geometry remains at every distance and in reflections; no LOD or decimation.
+- Provenance lane: **generative-assist**, using the external GLB directly. This
+  is not a procedural CharacterIR factory or a claim of code-authored geometry.
+
+`tripo-web.json` records the source/export hashes. Raw unrigged, walk-only and
+four-clip exports are preserved in the ignored `.img2threejs/enemies/tribal-guardian-tripo-web/`
+working folder. The source reference and final GLB are committed.
+
+## Motion preparation
 
 ```sh
-python3 tools/tribal-guardian/meshy_assets.py create guardian --image tools/tribal-guardian/references/guardian.png --triangles 15000 --dry-run
+node tools/tribal-guardian/prepare.mjs .img2threejs/enemies/tribal-guardian-tripo-web/motion.glb
 ```
 
-After account access is available, use either that CLI workflow or the signed-in
-web UI. Download and preserve the source mesh, humanoid skeleton and walk
-provenance. Inspect the new skeleton's actual names before mapping semantic
-joints; the existing Meshy goblin mapping is a reference, not proof of a match.
+The preparation script preserves every source mesh/skin accessor, vertex,
+triangle, UV, weight and texture. It removes only the walk's linear travel,
+retaining its hip sway and joint motion. The source walk has two complete
+strides in 2.333 seconds, measured at 0.564 metres/second before display scale.
+The oversized feet needed up to 6.25 cm of ankle correction in the one-metre
+source; analytic hip/knee correction keeps their soles above the ground.
 
-Integration must select the new GLB for `appearance: 'tribal'`, fit the measured
-body and collision box, and remove crab costume/carcass behavior for this
-appearance only. Preserve other grunt enemies. Reuse shared per-segment
-elasticity and foot-contact correction; never animate whole-skeleton scale.
-Review complete walk/turn/defeat cycles at front, 40° and 90°, and test both
-spin and stomp interactions in Tribal Run before publication.
+The production asset includes the corrected walk, a three-second breathing idle
+and a 0.84-second sideways fall. The fall's contact height is fitted per frame
+and checked against the deformed body during the runtime's per-segment rebound. Runtime elasticity
+uses an editable guardian profile, preserves both animated ankle trajectories,
+and never animates the actor's or complete skeleton's scale. Hands never receive
+foot pins. Stomp falls settle before disappearing; spin retains the game fling.
+
+`preparation.json` records mesh budget, source/output hashes, sampled clearance,
+clip timing and the mapping derived from this actual rig. `review.html` displays
+production runtime from front, 40° and 90°, with native and normal resolution.
+
+## Runtime scope and verification
+
+Only `appearance: 'tribal'` grunts select the new model. Crab accessories,
+clacking, the widened crab stomp and carcass behavior no longer apply to them.
+Their measured body uses a 2.43 m tall, 1.15 m wide combat box; hair and swinging
+hands are artwork. Patrol ends have a short planted turn. Ordinary grunts,
+Nightworks goblins and other species keep their existing behavior.
+
+Run `node tools/test-tribal-guardian.mjs` for the actual GLB, weights, independent
+skins, floor clearance, planted ankle preservation, finite defeat/reset,
+35 authored enemy assignments and real Player spin/stomp collisions. The shared
+runtime regression remains `node tools/test-enemy-runtime.mjs`.

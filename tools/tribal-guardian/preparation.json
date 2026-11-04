@@ -1,0 +1,51 @@
+{
+  "sourceSha256": "125bb33eb3ed6fa6180f57e579aec6b47b6105aefc3adff22eb44ac99da8865c",
+  "outputSha256": "f823d43cf959e5afc563b66723ecfa140aa2a862ad92f05563417ea2cc013759",
+  "sourceBytes": 2865572,
+  "outputBytes": 3888428,
+  "triangles": 16132,
+  "vertices": 18817,
+  "joints": 65,
+  "sourceWalkSpeed": 0.5640178685238594,
+  "clips": [
+    {
+      "name": "walk",
+      "duration": 2.3333333333333335,
+      "samples": 141,
+      "minimumFootClearance": 0.0029991767339796957,
+      "maxAnkleCorrection": 0.06244467535262143
+    },
+    {
+      "name": "idle",
+      "duration": 3,
+      "samples": 181,
+      "minimumFootClearance": 0.002990460180768171,
+      "maxAnkleCorrection": 0.01838975985633037
+    },
+    {
+      "name": "fall",
+      "duration": 0.8400000000000001,
+      "samples": 51,
+      "minimumFootClearance": null,
+      "maxAnkleCorrection": 0
+    }
+  ],
+  "meshAndSkinUnchanged": true,
+  "mapping": {
+    "torso": "mixamorigSpine2",
+    "head": "mixamorigHead",
+    "motionRoot": "Armature",
+    "frontUpperLeft": "mixamorigLeftArm",
+    "frontLowerLeft": "mixamorigLeftForeArm",
+    "frontFootLeft": "mixamorigLeftHand",
+    "hindUpperLeft": "mixamorigLeftUpLeg",
+    "hindLowerLeft": "mixamorigLeftLeg",
+    "hindFootLeft": "mixamorigLeftFoot",
+    "frontUpperRight": "mixamorigRightArm",
+    "frontLowerRight": "mixamorigRightForeArm",
+    "frontFootRight": "mixamorigRightHand",
+    "hindUpperRight": "mixamorigRightUpLeg",
+    "hindLowerRight": "mixamorigRightLeg",
+    "hindFootRight": "mixamorigRightFoot"
+  }
+}

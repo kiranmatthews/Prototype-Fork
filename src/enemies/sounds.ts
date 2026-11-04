@@ -36,6 +36,9 @@ export function playEnemySound(actor:SoundActor,cue:Cue,listener:Point):void {
   let clip=BANK[actor.kind][cue];
   const ghost=actor.group.userData.ghostSkin;
   const goblin=actor.visual.diagnostics.appearance==='nightworks';
+  const guardian=actor.visual.diagnostics.appearance==='tribal';
+  if(cue==='step'&&guardian)clip=sound('footstep2',.24,.85);
+  if(cue==='idle'&&guardian)clip=undefined;
   if(cue==='step'&&ghost)clip=sound('enemyMetalStep',.24,ghost==='ghostknight'?.85:1.3);
   if(cue==='idle'&&goblin)clip=sound('enemyGoblinMutter',.28);
   if(cue==='step'&&goblin)clip=sound('enemyTurtleStep',.23,1.15);

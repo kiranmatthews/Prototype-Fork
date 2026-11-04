@@ -149,6 +149,7 @@ import {
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';
+import { TRIBAL_GUARDIAN, isTribalGuardian, stepTribalGuardian } from './enemies/tribalGuardian';
 import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bonus';
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
@@ -11231,7 +11232,7 @@ export class Level {
     this.clearProjectilesFrom(enemy);
     // Only an actual top-face stomp creates this body; slides, shockwaves,
     // spun enemies and other skins retain their original defeat presentation.
-    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
+    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !isTribalGuardian(enemy) && !enemy.group.userData.ghostSkin) {
       enemy.state = "crab-carcass"; enemy.stateT = 0;
       enemy.crabCarcassYaw = stompView && stompView.x * stompView.x + stompView.z * stompView.z > 1e-8
         ? Math.atan2(-stompView.x, -stompView.z) - enemy.group.rotation.y : 0;
@@ -11277,6 +11278,7 @@ export class Level {
       sfx.play("enemyDown", .7, .9);
       return true;
     }
+    if(isTribalGuardian(enemy)){enemy.state='defeated';enemy.stateT=0;}
     if (fling) {
       // ping away instead of popping; update() flies it into whatever lines up
       enemy.flungVel = fling.clone();
@@ -19284,12 +19286,12 @@ export class Level {
       });
       if (!e.alive) {
         if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
-        if (e.roast || e.shell || e.crabCarcass || e.state === "shell-flung" || e.state === "crab-carcass-flung") e.stateT += dt;
+        if (isTribalGuardian(e) || e.roast || e.shell || e.crabCarcass || e.state === "shell-flung" || e.state === "crab-carcass-flung") e.stateT += dt;
         if (e.shell?.bounceT !== undefined) e.shell.bounceT += dt;
         this.updateEnemyVisual(e, dt, 0);
         if (e.defeatedT !== undefined) {
           e.defeatedT += dt;
-          if (e.defeatedT >= 0.12) e.group.visible = false;
+          if (e.defeatedT >= (isTribalGuardian(e)?TRIBAL_GUARDIAN.defeatSeconds:.12)) e.group.visible = false;
         }
         continue;
       }
@@ -19312,7 +19314,9 @@ export class Level {
           boxW = 1.65; boxH = 2.95; cy = 1.475;
           break;
         case "grunt":
-          this.patrolStep(e, dt);
+          if(isTribalGuardian(e)){
+            stepTribalGuardian(e,dt);boxW=TRIBAL_GUARDIAN.width;boxH=TRIBAL_GUARDIAN.height;cy=boxH/2;
+          }else this.patrolStep(e, dt);
           break;
         case "spiker":
           this.patrolStep(e, dt);
@@ -19360,7 +19364,8 @@ export class Level {
         // At unsupported patrol ends turn back instead of walking over a gap.
         const lift=e.group.position.y-e.baseY;
         const floor=this.nearbyFloorY(e.group.position.x,e.group.position.z,e.baseY);
-        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;this.faceDir(e,e.dir);}
+        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;
+          if(isTribalGuardian(e)){e.state='turn';e.stateT=0;}else this.faceDir(e,e.dir);}
         else e.baseY=floor;
         e.group.position.y=e.baseY+lift;
       }

@@ -1,0 +1,45 @@
+{
+  "provider": "Tripo Studio web",
+  "generationLane": "generative-assist",
+  "modelId": "76caae3a-d78c-41f5-ae02-baa31743b900",
+  "mode": "Smart Mesh",
+  "version": "P2.0",
+  "topology": "Triangle",
+  "targetTriangles": 15000,
+  "actualTriangles": 16132,
+  "absoluteMaximumTriangles": 30000,
+  "startingWebCredits": 23380,
+  "endingWebCredits": 23230,
+  "charges": {
+    "smartMesh": 100,
+    "texture": 30,
+    "humanoidRig": 20,
+    "presetAnimations": 0
+  },
+  "referenceSha256": "699571e78225ec9a537baae5c5646aaf5604fb7ec09995f116f4aeda646e6e62",
+  "exports": {
+    "unrigged.glb": {
+      "sha256": "a7731f18d623ba7c2d282d288900f454b702537a4d81871190b8df99007fc69e",
+      "bytes": 1822604
+    },
+    "walk.glb": {
+      "sha256": "b53090282a08e1fe0f9794a8ce78fed9accde2bd51258e7c06b0c58709f974df",
+      "bytes": 2288140
+    },
+    "motion.glb": {
+      "sha256": "125bb33eb3ed6fa6180f57e579aec6b47b6105aefc3adff22eb44ac99da8865c",
+      "bytes": 2865572
+    }
+  },
+  "sourceClips": [
+    "defeat_02",
+    "idle",
+    "walk",
+    "fall"
+  ],
+  "rigPreset": "Mixamo",
+  "joints": 65,
+  "textureResolution": "2k",
+  "archive": ".img2threejs/enemies/tribal-guardian-tripo-web",
+  "apiCreditsUsed": 0
+}

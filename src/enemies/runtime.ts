@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createTurtleShellEyes } from './turtleShellEyes';
-import { dressTribalCrab } from './tribalCrabDress';
+import { TRIBAL_GUARDIAN } from './tribalGuardian';
 import { sampleFrogHop } from './frogHop';
 import { createFrogKick } from './frogRig';
 import { createGoblinStumble } from './goblinStumble';
@@ -12,7 +12,7 @@ import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.j
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { AssetCache, disposeTextures } from '../assetLifetime';
 import { sceneryLoads } from '../assetLoadQueue';
-import { sampleEnemyElasticity, enemyElasticPulse, sampleTurtleShellBounce, TURTLE_SHELL_BOUNCE, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE } from './elasticity';
+import { sampleEnemyElasticity, enemyElasticPulse, sampleTurtleShellBounce, TURTLE_SHELL_BOUNCE, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE, TRIBAL_GUARDIAN_ELASTICITY_PROFILE } from './elasticity';
 import {ENEMY_MOTION,enemyWalkRate,enemyGlance,ease,createEnemyPoseBlend} from './motion';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg,
   type EnemyNodeBinding, type EnemyNodeMap, type EnemyNodeRole, type EnemyVisual,
@@ -193,28 +193,28 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
   if(kind==='moa')return createMoaVisual(options.url);
   const motionKind=kind;
+  const tribal=kind==='grunt'&&options.appearance==='tribal';
   const bull=kind==='charger'&&options.appearance!=='nightworks';
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.
-  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(options.appearance==='nightworks'?GOBLIN.artworkScale:2*(bull?BULL.sizeMultiplier:1));group.add(artwork);
+  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(tribal?TRIBAL_GUARDIAN.artworkScale:options.appearance==='nightworks'?GOBLIN.artworkScale:2*(bull?BULL.sizeMultiplier:1));group.add(artwork);
   const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;artwork.add(body);
   const modelMount=new THREE.Group();modelMount.name=`Enemy_${kind}_ModelMount`;body.add(modelMount);
-  const url=options.url??`${import.meta.env.BASE_URL}enemies/${options.appearance==='nightworks'?'nightworks-snot-goblin':kind}.glb`;
+  const url=options.url??`${import.meta.env.BASE_URL}enemies/${tribal?'tribal-guardian':options.appearance==='nightworks'?'nightworks-snot-goblin':kind}.glb`;
   const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url,appearance:options.appearance,clips:[],activeClip:null,
     mappedNodes:{},skinnedMeshes:0,meshes:0,animationTime:0,gaitPhase:0,state:startState};
   group.userData.enemyVisual=diagnostic;
   let disposed=false,model:THREE.Group|null=null,mixer:THREE.AnimationMixer|null=null;
   let muzzle:THREE.Vector3|null=null;
   let nodes:BoundNodes={},poses:NodePose[]=[],animationPoses:NodePose[]=[],walk:THREE.AnimationAction|null=null;
-  let idle:THREE.AnimationAction|null=null,currentAction:THREE.AnimationAction|null=null;
+  let idle:THREE.AnimationAction|null=null,defeat:THREE.AnimationAction|null=null,currentAction:THREE.AnimationAction|null=null;
   const fadingActions=new Map<THREE.AnimationAction,number>();
   let walkContacts=options.walkContacts;
   let walkSpeed=options.walkSpeed??2.4,phase=0,deathTime=0,wasAlive=true,rotorAngle=0,bladeAngle=0;
   let rotorSpeed=0,alert=0;
   let turtleCenterY=0, turtleHalfWidth=0, turtleStretchHeight=0;
   let turtleEyes:ReturnType<typeof createTurtleShellEyes>;
-  let tribalDress:ReturnType<typeof dressTribalCrab>|undefined;
   let poseBlend:ReturnType<typeof createEnemyPoseBlend>|undefined;
   let frogKick:ReturnType<typeof createFrogKick>;
   let goblinStumble:ReturnType<typeof createGoblinStumble>|undefined;
@@ -224,8 +224,9 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   const footTargets=new Map<EnemyLeg,{position:THREE.Vector3;matrix:THREE.Matrix4}>();
   const delta=new THREE.Vector3(),position=new THREE.Vector3(),rotation=new THREE.Quaternion();
   const inverse=new THREE.Matrix4();
+  const guardianFallBounds=tribal?new THREE.Box3():null;
   const lease=assets.acquire(url);
-  const carcassUrl=kind==='grunt'&&options.appearance!=='nightworks'&&options.stompCarcassUrl!==false
+  const carcassUrl=kind==='grunt'&&!tribal&&options.appearance!=='nightworks'&&options.stompCarcassUrl!==false
     ?options.stompCarcassUrl??url.slice(0,url.lastIndexOf('/')+1)+'crab-stomped.glb':null;
   const carcassLease=carcassUrl?assets.acquire(carcassUrl):null;
   let carcassModel:THREE.Group|null=null;
@@ -287,10 +288,6 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     if(kind==='turtle'&&options.appearance!=='nightworks'){
       turtleEyes=createTurtleShellEyes(model);
     }
-    if(kind==='grunt'&&options.appearance==='tribal'){
-      tribalDress=dressTribalCrab(nodes.head?.node,nodes.pincerLeft?.node,nodes.pincerRight?.node);
-      diagnostic.meshes+=3;
-    }
     poses=[...capturePose(model),...(base?capturePose(base):[])];
     animationPoses=[...capturePose(model),...(base?capturePose(base):[])];
     diagnostic.mappedNodes=Object.fromEntries(Object.entries(nodes).map(([role,binding])=>[role,binding.node.name]));
@@ -304,6 +301,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       const idleClip=clips.find(clip=>/idle|breath/i.test(clip.name)&&clip!==walkClip);
       if(walkClip)walk=mixer.clipAction(walkClip);
       if(idleClip)idle=mixer.clipAction(idleClip);
+      const fallClip=tribal?clips.find(clip=>clip.name==='fall'):undefined;
+      if(fallClip){defeat=mixer.clipAction(fallClip).setLoop(THREE.LoopOnce,1);defeat.clampWhenFinished=true;}
     }
     if(options.appearance==='nightworks')goblinStumble=createGoblinStumble(model,group);
     diagnostic.status='ready';group.userData.assetReady=true;
@@ -313,7 +312,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     const result:Partial<Record<EnemyLeg,boolean>>={};
     for(const leg of ENEMY_LEGS){
       // Goblins are bipedal: arm bindings receive deformation, never foot pins.
-      if(options.appearance==='nightworks'&&leg.startsWith('front')){result[leg]=false;continue;}
+      if((tribal||options.appearance==='nightworks')&&leg.startsWith('front')){result[leg]=false;continue;}
       const diagonal=leg==='frontLeft'||leg==='hindRight';
       const intervals=currentAction===walk&&walk?walkContacts?.[leg]:undefined;
       const contact=intervals?intervals.some(([start,end])=>start<=end
@@ -385,6 +384,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   function customPose(frame:EnemyAnimationFrame,dt:number):void {
     const t=frame.stateTime;
     if(!frame.alive){
+      if(tribal)return; // The imported fall owns the articulated defeat pose.
       if(kind==='turtle'&&(frame.state==='shell'||frame.state==='shell-flung')){
         const turn=ease(t/.36), bounce=sampleTurtleShellBounce(frame.shellBounceTime);
         const angle=Math.PI*turn+bounce.wiggle*TURTLE_SHELL_BOUNCE.rock*turn;
@@ -532,6 +532,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     }
     carcassModel?.removeFromParent();
     if(!model)return;
+    if(tribal)modelMount.position.y=0;
     if(goblinStumble){
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();
       const pose=goblinStumble.update(step,frame,deathTime);
@@ -544,11 +545,11 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // PropertyMixer deliberately skips unchanged key values. Restore its last
     // clean authored sample, not bind TRS, before updating; otherwise a dt=0
     // sample or constant track gets erased underneath an otherwise valid fade.
-    restorePose(mixer&&frame.alive?animationPoses:poses);
+    restorePose(mixer&&(frame.alive||tribal)?animationPoses:poses);
     for(const [material,rest] of materialRest){const value=material as THREE.MeshStandardMaterial;value.emissive.copy(rest.emissive);value.emissiveIntensity=rest.intensity;}
     const walking=frame.alive&&frame.grounded&&frame.speed>.05&&(kind!=='hopper'||options.appearance==='nightworks')&&kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
-    const next=frame.alive?(walking?walk:idle):null;
-    if(!frame.alive){
+    const next=frame.alive?(walking?walk:idle):tribal?defeat:null;
+    if(!frame.alive&&!tribal){
       // Defeat owns a finite pose from this tick. Neither an active clip nor
       // an outgoing locomotion blend may keep moving the defeated skeleton.
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();
@@ -580,14 +581,17 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // Ease out the crouch's contact correction after takeoff. Dropping it in
     // one frame exposes the bent legs' uncorrected pose beneath the floor.
     const release=kind==='hopper'&&frame.alive&&frame.state==='leap'?sampleFrogHop(frame).load:0;
-    rememberFeet(release>0?{frontLeft:true,frontRight:true,hindLeft:true,hindRight:true}:planted);
+    // The guardian's oversized toes have clearance authored into every frame.
+    // Preserve that ankle trajectory during swing too; contacts still control
+    // the independent thigh/calf stretch and the footfall timing below.
+    rememberFeet(tribal?{hindLeft:true,hindRight:true}:release>0?{frontLeft:true,frontRight:true,hindLeft:true,hindRight:true}:planted);
     alert+=(THREE.MathUtils.clamp(frame.alert??0,0,1)-alert)*(1-Math.exp(-step*5));
     poseBlend?.begin(step,{...frame,kind});
     customPose(frame,step);
     poseBlend?.end();
-    const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime,
-      options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
-    const stretchSegment=frogKick?orientedSegment:segment;
+    const elastic=sampleEnemyElasticity(kind,frame,tribal?phase*2:phase,planted,deathTime,
+      tribal?TRIBAL_GUARDIAN_ELASTICITY_PROFILE:options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
+    const stretchSegment=frogKick||tribal?orientedSegment:segment;
     if(kind!=='sentry'&&kind!=='spinner')stretchSegment(nodes.torso,elastic.torso);
     if(kind==='turtle'&&!frame.alive&&(frame.state==='shell'||frame.state==='shell-flung'))
       body.position.y+=turtleStretchHeight*(elastic.torso-1)*ease(frame.stateTime/.36);
@@ -596,6 +600,15 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       stretchSegment(nodes[lower],1+(elastic.legs[leg].lower-1)*(1-release));}
     plantFeet(release>0?release:1);group.updateMatrixWorld(true);
     for(const skeleton of instanceSkeletons)skeleton.update();
+    if(guardianFallBounds&&!frame.alive&&!frame.flung){
+      // Joint crossfades and the finite rebound can lower a shoulder slightly
+      // below either source clip. Fit only defeated artwork to its support;
+      // gameplay position and the rig's scale remain untouched.
+      guardianFallBounds.setFromObject(model,true);
+      const floor=group.getWorldPosition(position).y+.004;
+      modelMount.position.y=Math.max(0,floor-guardianFallBounds.min.y)/artwork.scale.y;
+      group.updateMatrixWorld(true);for(const skeleton of instanceSkeletons)skeleton.update();
+    }
     const visibleAction=currentAction??fadingActions.keys().next().value;
     diagnostic.activeClip=visibleAction?.getClip().name??null;
     diagnostic.animationTime=visibleAction?.time??0;diagnostic.gaitPhase=phase;
@@ -652,7 +665,6 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       carcassModel?.removeFromParent();carcassModel=null;carcassLease?.release();
       mixer?.stopAllAction();fadingActions.clear();if(model)mixer?.uncacheRoot(model);mixer=null;
       // Remove borrowed geometry and textures before Level's generic traversal.
-      tribalDress?.dispose();tribalDress=undefined;
       group.clear();group.removeFromParent();
       for(const skeleton of instanceSkeletons)skeleton.dispose();instanceSkeletons.clear();
       for(const material of instanceMaterials)material.dispose();instanceMaterials.clear();materialRest.clear();

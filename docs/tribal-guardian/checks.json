@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "triangles": 16132,
+  "joints": 65,
+  "lowestWalkPointMetres": 0.004759398285638079,
+  "lowestFallPointMetres": 0.004000000020309617,
+  "plantedAnkleErrorMetres": 0,
+  "torsoScaleRange": [
+    0.9440247702747597,
+    1.0559932015622657
+  ],
+  "maximumTurnRadiansPer60HzFrame": 0.13778915147323656,
+  "tribalEnemies": 35,
+  "spinAndStomp": true,
+  "ordinaryCrabPreserved": true,
+  "browserAnglesDegrees": [
+    0,
+    40,
+    90
+  ],
+  "nativeBuffer": [
+    2560,
+    1440
+  ],
+  "normalBuffer": [
+    853,
+    480
+  ],
+  "browserConsoleWarningsOrErrors": []
+}

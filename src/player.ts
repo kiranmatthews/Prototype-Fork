@@ -14021,7 +14021,7 @@ export class Player {
         }
         continue;
       }
-      const crabStomp = e.kind === 'grunt' && e.visual.diagnostics.appearance !== 'nightworks' &&
+      const crabStomp = e.kind === 'grunt' && e.visual.diagnostics.appearance !== 'nightworks' && e.visual.diagnostics.appearance !== 'tribal' &&
         !e.group.userData.ghostSkin && e.stompKill && this.isCrabStomping(e.box);
       // A feet-first landing owns the stomped model even when a spin overlaps
       // on this tick. Side spins retain the ordinary pinball fling.
