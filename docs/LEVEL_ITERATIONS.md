@@ -8835,3 +8835,26 @@ coordinator reactivated by the user during this task.
 The final six-pocket version passes the focused regression, `check:levels`,
 production build/type-check and `check:release` (814,174,482 bytes). No full
 suite was run.
+
+## 5 November 2026 — Life icon alignment and Bone Head portrait
+
+Lowered the Classic life portrait/SPECIAL anchor from -14% to -4% of its own
+height, aligning the visible head with the adjacent life number. Generated a
+transparent Bone Head portrait with the built-in ImageGen tool, using the actual
+Crowned Inferno Skull model for identity and the Roo HUD icon for illustration
+style. Skull selection now uses `bone-head.png`; BoolieRoo retains `roo.png` in
+both direct DOM and pre-CRT Canvas presentation, including live switches and
+reload persistence. Modern and Bonus layout policy is unchanged. No levels,
+movement, tuning, character meshes or animations changed.
+
+Prompt-to-verified-playable preview: approximately 30 minutes wall clock,
+approximately 19 minutes active after the coordinator's 5m05s common restart
+allowance and about six additional minutes of recovery/capacity hold, with no
+double counting. The first build was interrupted by the host restart; all source
+and generated artwork survived. The completed guarded build passes, as do the
+Modern HUD and visibility checks. Production Chrome review covers 13 settled
+captures across lite, normal full rendering, MAX/native, desktop, 4:3 and compact
+viewports, with both portraits, Modern readout and reload persistence; no console
+errors. An existing broader HUD source-regex failure was reproduced on the
+unchanged base and excluded. See `docs/bone-head-hud/validation.md` for exact
+build, browser evidence, harness corrections and the ImageGen source/prompt.

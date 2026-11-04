@@ -4,20 +4,21 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv[2]||'http://127.0.0.1:5198/';
-const out=fileURLToPath(new URL('./',import.meta.url));
+const out=(process.env.HUD_REVIEW_OUTPUT||fileURLToPath(new URL('./',import.meta.url))).replace(/\/?$/, '/');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const report={base,cases:[],errors:[],requests:[]};
 async function ready(page){
-  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.transitionActive&&window.__game.getGameHudDiagnostics().lifeFaceReady,null,{timeout:120000});
+  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.startupLoading&&!window.__game.gameFlow.loadingPhase&&!document.getElementById('game-startup')&&window.__game.getGameHudDiagnostics().lifeFaceReady,null,{timeout:180000});
 }
 async function check(page,label,style){
   await page.waitForFunction(style=>window.__game.getCharacterHeadStyle()===style&&document.querySelector('.hud-icon-face')?.dataset.headStyle===style&&window.__game.getGameHudDiagnostics().lifeFaceReady,style);
   await page.waitForTimeout(400);
+  await page.waitForFunction(()=>document.querySelector('.hud-lives')?.getBoundingClientRect().width>0);
   const snapshot=await page.evaluate(()=>{
     const g=window.__game,face=document.querySelector('.hud-icon-face'),wrap=face.parentElement,value=document.querySelector('.hud-lives'),row=face.closest('.hud-life-row');
     const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom,right:r.right};};
-    return {head:g.getCharacterHeadStyle(),face:rect(face),value:rect(value),label:face.getAttribute('aria-label'),background:getComputedStyle(face).backgroundImage,transform:getComputedStyle(wrap).transform,visibility:getComputedStyle(row).visibility,opacity:getComputedStyle(row).opacity,hud:g.getGameHudDiagnostics(),resolution:g.renderQualitySettings.regularResolution,composited:document.querySelector('.game-hud-layer').classList.contains('precrt-composited'),modern:g.player.endlessDeaths,viewport:[innerWidth,innerHeight]};
+    return {head:g.getCharacterHeadStyle(),face:rect(face),value:rect(value),accessibleLabel:face.getAttribute('aria-label'),background:getComputedStyle(face).backgroundImage,transform:getComputedStyle(wrap).transform,visibility:getComputedStyle(row).visibility,opacity:getComputedStyle(row).opacity,hud:g.getGameHudDiagnostics(),resolution:g.renderQualitySettings.regularResolution,composited:document.querySelector('.game-hud-layer').classList.contains('precrt-composited'),modern:g.player.endlessDeaths,viewport:[innerWidth,innerHeight]};
   });
   assert.match(snapshot.background,style==='skull'?/bone-head\.png/:/roo\.png/);
   assert.match(snapshot.hud.lifeFaceUrl,style==='skull'?/bone-head\.png/:/roo\.png/);
@@ -65,7 +66,7 @@ try{
     await context.close();
   }
   assert.deepEqual(report.errors,[]);
-  assert.ok(report.requests.every(r=>r.status===200));
+  assert.ok(report.requests.every(r=>r.status===200||r.status===304));
   console.log('PASS portrait selection, reload persistence, desktop/compact alignment, lite/full/MAX and clean console.');
 }finally{
   await writeFile(`${out}report.json`,JSON.stringify(report,null,2));

@@ -1,0 +1,683 @@
+{
+  "base": "http://127.0.0.1:5198/",
+  "cases": [
+    {
+      "label": "lite-skull-1080",
+      "head": "skull",
+      "face": {
+        "x": 1779,
+        "y": 41.36537170410156,
+        "width": 111,
+        "height": 111,
+        "bottom": 152.36537170410156,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 22.414749145507812,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 180.2116241455078,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "lite-roo-1080",
+      "head": "alternate",
+      "face": {
+        "x": 1779,
+        "y": 37.49799346923828,
+        "width": 111,
+        "height": 110.99999237060547,
+        "bottom": 148.49798583984375,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 18.54737091064453,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 176.34424591064453,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/roo.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./roo.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "BoolieRoo"
+    },
+    {
+      "label": "lite-roo-reloaded",
+      "head": "alternate",
+      "face": {
+        "x": 1779,
+        "y": 39.96049499511719,
+        "width": 111,
+        "height": 111,
+        "bottom": 150.9604949951172,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 21.009872436523438,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 178.80674743652344,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/roo.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./roo.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "BoolieRoo"
+    },
+    {
+      "label": "lite-skull-switched-back",
+      "head": "skull",
+      "face": {
+        "x": 1779,
+        "y": 36.57130432128906,
+        "width": 111,
+        "height": 111,
+        "bottom": 147.57130432128906,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 17.620681762695312,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 175.4175567626953,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "lite-skull-1280x720",
+      "head": "skull",
+      "face": {
+        "x": 1172.96875,
+        "y": 29.23436737060547,
+        "width": 77.03125,
+        "height": 77.03124237060547,
+        "bottom": 106.26560974121094,
+        "right": 1250
+      },
+      "value": {
+        "x": 1113.375,
+        "y": 18.237491607666016,
+        "width": 51.59375,
+        "height": 105.203125,
+        "bottom": 123.44061660766602,
+        "right": 1164.96875
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -3.08125)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1280,
+        720
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "lite-skull-1024x768",
+      "head": "skull",
+      "face": {
+        "x": 911.828125,
+        "y": 31.751466751098633,
+        "width": 82.171875,
+        "height": 82.171875,
+        "bottom": 113.92334175109863,
+        "right": 994
+      },
+      "value": {
+        "x": 848.796875,
+        "y": 20.022716522216797,
+        "width": 55.03125,
+        "height": 112.203125,
+        "bottom": 132.2258415222168,
+        "right": 903.828125
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -3.28688)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1024,
+        768
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "lite-skull-390x844",
+      "head": "skull",
+      "face": {
+        "x": 312,
+        "y": 23.934919357299805,
+        "width": 64,
+        "height": 64,
+        "bottom": 87.9349193572998,
+        "right": 376
+      },
+      "value": {
+        "x": 270.1875,
+        "y": 19.948043823242188,
+        "width": 37.8125,
+        "height": 77.09375,
+        "bottom": 97.04179382324219,
+        "right": 308
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -2.56)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "lite-skull-844x390",
+      "head": "skull",
+      "face": {
+        "x": 746,
+        "y": 23.321535110473633,
+        "width": 68,
+        "height": 68,
+        "bottom": 91.32153511047363,
+        "right": 814
+      },
+      "value": {
+        "x": 700.1875,
+        "y": 21.494659423828125,
+        "width": 37.8125,
+        "height": 77.09375,
+        "bottom": 98.58840942382812,
+        "right": 738
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -2.72)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "lite-skull-modern",
+      "head": "skull",
+      "face": {
+        "x": 1123.75,
+        "y": 21.909034729003906,
+        "width": 77.03125,
+        "height": 77.03125,
+        "bottom": 98.9402847290039,
+        "right": 1200.78125
+      },
+      "value": {
+        "x": 1074.53125,
+        "y": 102.9402847290039,
+        "width": 175.46875,
+        "height": 47.32811737060547,
+        "bottom": 150.26840209960938,
+        "right": 1250
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "none",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": false,
+      "modern": true,
+      "viewport": [
+        1280,
+        720
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "full-skull-1080",
+      "head": "skull",
+      "face": {
+        "x": 1779,
+        "y": 41.935272216796875,
+        "width": 111,
+        "height": 111,
+        "bottom": 152.93527221679688,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 22.984649658203125,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 180.78152465820312,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1280,
+        "height": 720,
+        "textureWidth": 1280,
+        "textureHeight": 320,
+        "uploadedPixels": 12566528,
+        "canvasFrames": 62,
+        "textureUploads": 62,
+        "textureReallocations": 4,
+        "compositeDraws": 62,
+        "primitives": 6,
+        "lastCanvasMs": 0.5999999999767169,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": true,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "full-roo-1080",
+      "head": "alternate",
+      "face": {
+        "x": 1779,
+        "y": 39.66388702392578,
+        "width": 111,
+        "height": 110.99999237060547,
+        "bottom": 150.66387939453125,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 20.71326446533203,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 178.51013946533203,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/roo.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1280,
+        "height": 720,
+        "textureWidth": 1280,
+        "textureHeight": 320,
+        "uploadedPixels": 36732928,
+        "canvasFrames": 121,
+        "textureUploads": 121,
+        "textureReallocations": 4,
+        "compositeDraws": 121,
+        "primitives": 6,
+        "lastCanvasMs": 0.40000000002328306,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./roo.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": 720,
+      "composited": true,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "BoolieRoo"
+    },
+    {
+      "label": "full-native-skull-1080",
+      "head": "skull",
+      "face": {
+        "x": 1779,
+        "y": 36.06139373779297,
+        "width": 111,
+        "height": 111.00000762939453,
+        "bottom": 147.0614013671875,
+        "right": 1890
+      },
+      "value": {
+        "x": 1693.609375,
+        "y": 17.11077117919922,
+        "width": 77.390625,
+        "height": 157.796875,
+        "bottom": 174.90764617919922,
+        "right": 1771
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "matrix(1, 0, 0, 1, 0, -4.44)",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1280,
+        "height": 720,
+        "textureWidth": 1280,
+        "textureHeight": 320,
+        "uploadedPixels": 55574528,
+        "canvasFrames": 167,
+        "textureUploads": 167,
+        "textureReallocations": 4,
+        "compositeDraws": 167,
+        "primitives": 6,
+        "lastCanvasMs": 0.5,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": "max",
+      "composited": false,
+      "modern": false,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "Bone Head"
+    },
+    {
+      "label": "full-native-skull-modern",
+      "head": "skull",
+      "face": {
+        "x": 1702.90625,
+        "y": 19.59246826171875,
+        "width": 111,
+        "height": 111,
+        "bottom": 130.59246826171875,
+        "right": 1813.90625
+      },
+      "value": {
+        "x": 1626.8125,
+        "y": 134.59246826171875,
+        "width": 263.1875,
+        "height": 70.984375,
+        "bottom": 205.57684326171875,
+        "right": 1890
+      },
+      "background": "url(\"http://127.0.0.1:5198/bone-head.png\")",
+      "transform": "none",
+      "visibility": "visible",
+      "opacity": "1",
+      "hud": {
+        "width": 1280,
+        "height": 720,
+        "textureWidth": 1280,
+        "textureHeight": 320,
+        "uploadedPixels": 55574528,
+        "canvasFrames": 167,
+        "textureUploads": 167,
+        "textureReallocations": 4,
+        "compositeDraws": 167,
+        "primitives": 6,
+        "lastCanvasMs": 0.5,
+        "lifeFaceReady": true,
+        "lifeFaceUrl": "./bone-head.png",
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "resolution": "max",
+      "composited": false,
+      "modern": true,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "accessibleLabel": "Bone Head"
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:5198/bone-head.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5198/roo.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5198/roo.png",
+      "status": 304
+    },
+    {
+      "url": "http://127.0.0.1:5198/bone-head.png",
+      "status": 304
+    },
+    {
+      "url": "http://127.0.0.1:5198/bone-head.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5198/roo.png",
+      "status": 200
+    }
+  ],
+  "reviewResult": "PASS: 13 settled gameplay captures; correct selected portrait, reload persistence, readable life lettering, clean console, normal pre-CRT and MAX/direct presentation. Cached HTTP 304 responses accepted; original harness status assertion required 200. Case names restored from the recorded execution order after correcting an accessibility-label name collision."
+}
