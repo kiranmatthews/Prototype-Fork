@@ -12,7 +12,7 @@ export interface OnFootJumpStudy {
   /** Keep the game's authored walk/run acceleration, turns and air steering. */
   readonly nativeLocomotion?: boolean;
   readonly runSpeed?: number;
-  /** Presentation only; source roll-jump around the hips, on the same arc. */
+  /** Presentation only; source roll-jump for running takeoffs, on the same arc. */
   readonly flip?: boolean;
 }
 

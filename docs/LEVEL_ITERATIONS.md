@@ -8656,3 +8656,27 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   physics, A/B/C and level data retained. No integration or publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## D — upright vertical and precision jumps
+
+- Completed 4 November 2026 NZDT, approximately 15 minutes prompt-to-validated
+  playable (21:34–21:49 NZDT). Local A/B/C/D comparison only.
+- Captured the roll choice at takeoff: running momentum plus committed movement
+  input roll; vertical, walking and short-nudge jumps stay upright. Steering
+  cannot start a roll in midair, and upright jumps keep the upright landing.
+- Kept physical arcs intact while matching upright head reach to A. A finite
+  root gather and a shorter upright-to-double transition preserve the height
+  calibration and second-jump lift. Running flips retain their existing motion.
+- Added Precision jump inspection and a 4,840-frame launch-selection regression.
+  Exact enabled/disabled physics parity; all 3,600 double-jump physical frames
+  match the prior validated version. Existing 6,620-frame polish suite passes;
+  all twelve A/D head peaks are within 0.023 m. Idle/recovery, source retarget,
+  skating parity, runtime routing, strict types, build and release size pass
+  (803,512,107 bytes). No full-suite run.
+- Browser confirms upright vertical/short hops and running rolls in full render
+  at normal/native resolution, with no console warnings/errors. Original render
+  settings restored; D ready in live play. Evidence: external `d-precision-jumps/`.
+  No integration or publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

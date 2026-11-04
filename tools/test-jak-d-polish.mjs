@@ -106,7 +106,7 @@ await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
     assert.ok(!clips.slice(exited,exited+24).some(c=>c.includes('jump')||c.includes('land')),'climb introduced a second jump/landing');
     climbs.push({moving,exited,maxLateHeadStep,clips:[...new Set(clips)],samples:samples.slice(20,48)});
   }
-  if(!process.argv.includes('--calibrate'))for(let i=0;i<jumps.length;i+=2) {
+  if(!process.argv.includes('--calibrate')&&!process.argv.includes('--measure'))for(let i=0;i<jumps.length;i+=2) {
     const [before,after]=jumps.slice(i,i+2),error=Math.abs(after.headPeak-before.headPeak);
     assert.ok(error<.06,`head peak differs by ${error}m for hold=${before.hold}, moving=${before.move}, double=${before.double}`);
     assert.ok(after.handoffHeadStep<.04,`landing to locomotion snapped by ${after.handoffHeadStep}m`);

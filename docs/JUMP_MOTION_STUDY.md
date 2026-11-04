@@ -554,3 +554,41 @@ Production build and release-size check pass (803,511,584 bytes); local review
 entry and source assets remain excluded. Approximately 15 minutes from prompt
 to validated playable (05:59–06:14 UTC), followed by local commit and handoff.
 No integration or publication.
+
+## D — upright precision jumps, 4 November 2026 NZDT
+
+The roll is now selected at takeoff only when the player has both running
+momentum (above 45% of native run speed) and committed movement input (above
+45%). Vertical jumps, analog walking hops, short nudges and releases after
+braking use the upright Jak jump. The choice remains fixed through the first
+flight; air steering cannot start a roll halfway through it. Running jumps in
+forward, sideways and diagonal directions retain the roll. The optional flip
+checkbox still disables it entirely. Landing selection follows the captured
+choice, so upright hops do not play a roll landing.
+
+The upright first-jump root gathers and releases smoothly around the apex to
+retain the previous visible head-height calibration. It does not change the
+physical arc or scale the skeleton; source limb motion and segment elasticity
+remain intact. An upright-to-double-jump transition uses a 0.10-second moving
+blend and slightly shallower gather; an interrupted roll retains 0.14 seconds.
+This preserves the immediate second-jump lift after the pose change. Watch
+motion adds Precision jump, and the checkbox is labeled Running jump flip in D.
+
+Validation: eleven launch cases over 4,840 real-controller frames, with exact
+physics parity between roll enabled/disabled. The 0.45 m nudge, 1.23 m precision
+hop and 2.46 m walking hop remain upright; running/strafe/diagonal jumps roll.
+Late steering does not change the decision. All 3,600 double-jump physical
+samples also exactly match the prior validated implementation. The weakest
+three-frame head lift is 0.500 m; interrupted-rotation steps remain below
+0.550 radians. The existing 6,620-frame height/recovery regression passes with
+all twelve A/D head peaks within 0.023 m. Idle/landing recovery (3,360 frames),
+pure-source retargeting, jump/skate gestures, 1,344-frame skating parity, runtime
+routing, strict review types, build and release-size check pass (803,512,107 bytes).
+
+Browser review confirms vertical and precision hops use `player.jump` while
+running jumps use `player.jak-flip`, at normal 720p and native resolution. No
+console warnings/errors; original 720p/2× settings restored and D left in live
+play. Evidence is external in `d-precision-jumps/` beside the source bank.
+Approximately 15 minutes prompt-to-validated playable (21:34–21:49 NZDT), followed
+by local commit/handoff. No integration or publication; A/B/C and level data
+are unchanged.

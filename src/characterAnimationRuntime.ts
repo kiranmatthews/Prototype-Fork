@@ -649,6 +649,9 @@ export class CharacterAnimationRuntime {
       const previousClip = previousClipId ? this.findPlayableClip(previousClipId) : null;
       const directDoubleSwitch = this.manualClipId === null && clip.metadata?.jakDirect &&
         clip.id === 'player.double-jump' && previousClip?.metadata?.jakDirect;
+      // Upright hops need less rotation to unwind; finish that shorter blend
+      // before the second apex so its upward accent stays visible.
+      const directDoubleBlend = previousClipId === 'player.jak-flip' ? .14 : .10;
       // A steady outgoing loop keeps moving as it fades. If input reverses
       // during a fade, start from the last fully mixed pose instead: restarting
       // a raw source there would pop the entire skeleton back to that source.
@@ -681,7 +684,7 @@ export class CharacterAnimationRuntime {
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
-          : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? .14 : clip.id === LAND_CLIP_ID ? .02
+          : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? directDoubleBlend : clip.id === LAND_CLIP_ID ? .02
             : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14 : .05 : 0)
           : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
@@ -731,8 +734,10 @@ export class CharacterAnimationRuntime {
       const ageFrames = Math.max(0, (motion.inputs?.jakFrame ?? 5) - 5);
       const remainingFrames = motion.verticalVelocity / Math.max(.001, motion.inputs?.jakGravity ?? 60) * 60;
       // A small boost gathers less before its apex; the longer charged arc
-      // has time for the deeper tuck. This preserves the calibrated head reach.
-      const apexFrame = 11 + 3 * MathUtils.clamp(motion.inputs?.jakJumpCharge ?? 1, 0, 1);
+      // has time for the deeper tuck. Upright launches need one less gather
+      // frame to retain the calibrated head reach after their shorter fade.
+      const gatherFrames = motion.inputs?.jakUprightLaunch ? 2 : 3;
+      const apexFrame = 11 + gatherFrames * MathUtils.clamp(motion.inputs?.jakJumpCharge ?? 1, 0, 1);
       const sourceFrame = remainingFrames >= 0
         ? 5 + (apexFrame - 5) * ageFrames / Math.max(1, ageFrames + remainingFrames)
         : apexFrame - remainingFrames;
@@ -1060,6 +1065,15 @@ export class CharacterAnimationRuntime {
       if (fall) return sampleComposedClip(fall, clipTimeAt(fall, ((motion.inputs?.jakFrame ?? 40) - 40) / 60), motion);
     }
     let pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    if (clip.metadata?.jakDirect && clip.id === 'player.jump' && !motion.inputs?.jakFlip) {
+      // An upright skull extends higher than the rolled pose on the same arc.
+      // Gather the authored root during the rise, then release on descent;
+      // retain the calibrated head reach without changing flight physics.
+      const frame = motion.inputs?.jakFrame ?? 0;
+      const gather = smoothstep01((frame - 2) / 9) * (1 - smoothstep01((frame - 29) / 11));
+      const root = pose.joints.root?.position;
+      if (root) root[1] -= .33 * gather;
+    }
     const nativeRunId = clip.metadata?.jakNativeRunClip;
     const nativeRun = typeof nativeRunId === 'string' ? this.findPlayableClip(nativeRunId) : null;
     if (nativeRun) {

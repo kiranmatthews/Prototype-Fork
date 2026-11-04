@@ -2409,6 +2409,7 @@ export class Player {
           jakFrame: this.footStudyFrame,
           jakGravity: this.airGravityAt(),
           jakJumpCharge: this.footStudyCharge,
+          jakUprightLaunch: this.footJumpStudyLaunch?.direct && !this.footJumpStudyLaunch.flip ? 1 : 0,
           jakFlip: this.footJumpStudyLaunch?.flip && !this.doubleJumpAir ? 1 : 0,
           jakFlipProgress: this.footJumpStudyFlight?.flip
             ? Math.min(1, this.airborneT / Math.max(.28, (2 * this.launchVy / this.footJumpStudyFlight.gravity - CONST.fixedStep) * .88)) : 0,
@@ -6106,6 +6107,7 @@ export class Player {
     // scalar is the forward axis), but it still deserves a Forward Flip.
     const planar =
       Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
+    const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
     this.crawling = false;
     this.vVel =
       THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t) *
@@ -6114,7 +6116,12 @@ export class Player {
     // springs, kite and special-launch routes keep their authored rules.
     if (this.onFootJumpStudy && !this.freeSkate && !fromSlide && !wasCrawling &&
         !this.trampolineAir && !this.kiteTowing && !this.kiteReleased) {
-      this.footJumpStudyLaunch = {...this.onFootJumpStudy};
+      // Commit the presentation at takeoff. Vertical/precision hops stay
+      // upright; only a running launch earns the source roll. Air steering
+      // must not start a flip halfway through an otherwise upright jump.
+      this.footJumpStudyLaunch = {...this.onFootJumpStudy,
+        flip: this.onFootJumpStudy.flip && spd > TUNING.walkSpeed * .45 &&
+          Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > .45};
       this.footStudyCharge = t;
       const study = this.footJumpStudyLaunch;
       this.vVel = studyJumpVelocity(THREE.MathUtils.lerp(study.minimumHeight, study.maximumHeight, t), study.gravity, dt);
@@ -6125,7 +6132,6 @@ export class Player {
     // Height is proportional to launch velocity squared. A grace-window
     // slide jump may also be in crawl, but must never stack its crouch boost.
     if (wasCrawling && !fromSlide) this.vVel *= CONST.crouchJumpMult;
-    const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
     // Crouch and slide jumps strike the classic Crash star pose in the air.
     if (fromSlide || wasCrawling) this.starTimer = 0.6;
     if (fromSlide) {

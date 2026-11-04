@@ -29,8 +29,8 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
     const rows=[];let second=-1,maxNativePoseError=0,maxNativePointError=0,idleFrames=0;
     for(let f=0;f<420;f++) {
       const moving=kind==='run-stop'||kind==='walk-stop';
-      const jumping=kind.endsWith('land'),hold=kind==='tap-land'?3:35;
-      const input={moveY:moving&&f>=30&&f<150?(kind==='walk-stop'?.3:1):0,
+      const jumping=kind.endsWith('land'),hold=kind==='tap-land'?3:kind==='flip-land'?18:35;
+      const input={moveY:kind==='flip-land'&&f<=50+hold?1:moving&&f>=30&&f<150?(kind==='walk-stop'?.3:1):0,
         jumpPressed:jumping&&f===50,jumpHeld:jumping&&f>=50&&f<50+hold,jumpReleased:jumping&&f===50+hold};
       if(kind==='double-land'&&f>50+hold&&!p.grounded&&second<0&&p.vVel<2){second=f;input.jumpPressed=input.jumpHeld=true;}
       if(second>=0&&f===second+1)input.jumpReleased=true;
@@ -71,6 +71,8 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
       handoffs.push({f:i,from:previous.clip,angle,distance,worst,before:previous.rest,after:current.rest});
     }
     assert.ok(idleFrames>100,`${kind}: never settled into idle`);
+    if(kind==='flip-land')assert.ok(rows.some(r=>r.clip==='player.jak-flip')&&rows.some(r=>r.clip==='player.jak-flip-land'),
+      'running jump fixture must retain the roll and its stationary recovery');
     if(!measure) {
       assert.ok(maxNativePoseError<1e-6,`${kind}: idle differs from native by ${maxNativePoseError} radians`);
       assert.ok(maxNativePointError<.002,`${kind}: rendered idle differs from A by ${maxNativePointError} metres`);

@@ -236,8 +236,8 @@ p.step = (dt: number, input: any, level: Level) => {
   }
   const secondJump = mode === 'Double jump' || mode === 'Running double jump';
   const running = mode === 'Running jump' || mode === 'Running double jump' || mode === 'Run and stop';
-  const hold = mode === 'Tap jump' ? 3 : running ? 18 : 35, release = 50 + hold;
-  const demo = {moveX: 0, moveY: running && (mode !== 'Run and stop' || frame < 145) ? 1 : 0,
+  const hold = mode === 'Tap jump' ? 3 : running || mode === 'Precision jump' ? 18 : 35, release = 50 + hold;
+  const demo = {moveX: 0, moveY: mode === 'Precision jump' ? .2 : running && (mode !== 'Run and stop' || frame < 145) ? 1 : 0,
     jumpHeld: frame >= 50 && frame < release, jumpPressed: frame === 50, jumpReleased: frame === release};
   if (secondJump && hadAir && !doubleFrame && p.vVel < 2) {
     demo.jumpPressed = demo.jumpHeld = true; doubleFrame = frame;
@@ -298,13 +298,13 @@ instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in
 const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. Air physics changes on your next foot jump.';
 panel.append(instructions, continuity);
 const directHint = document.createElement('p');
-directHint.textContent = 'D uses Bone Man’s idle, a 50/50 Bone Man + Jak run, and Jak’s jumps and ledges. Strides stay aligned through turns, braking and restarts. Release to jump; hold while running to skate.';
+directHint.textContent = 'D uses Bone Man’s idle, a 50/50 Bone Man + Jak run, and Jak’s jumps and ledges. Vertical and short hops stay upright; running jumps roll. Release to jump; hold while running to skate.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
 const flipLabel=document.createElement('label'),flipBox=document.createElement('input');
 flipBox.type='checkbox';flipBox.checked=true;
 flipBox.onchange=()=>{jumpFlip=flipBox.checked;chooseVersion(variant);flipBox.blur();};
-flipLabel.append(flipBox,' Jak forward flip in D');options.append(flipLabel);
+flipLabel.append(flipBox,' Running jump flip in D');options.append(flipLabel);
 const soundLabel = document.createElement('label'), soundBox = document.createElement('input');
 soundBox.type = 'checkbox'; soundBox.checked = true;
 soundBox.onchange = () => {jakSounds = soundBox.checked; soundBox.blur();};
@@ -355,7 +355,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
   'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
