@@ -14,8 +14,12 @@ export function validRailNavigation(value:unknown):value is RailNavigationData {
 export function validSkateRace(value: unknown): value is SkateRaceData {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const r = value as SkateRaceData;
-  const keys = ['v','racers','vehicle','gemReward','seed','stages','line','jumps','grinds','railChoices','finishWidth','originalLength'];
+  const keys = ['v','racers','vehicle','gemReward','rivalSkill','grindBalanceScale','itemRespawnSeconds','itemPool','seed','stages','line','jumps','grinds','railChoices','finishWidth','originalLength'];
   return Object.keys(r).every(k => keys.includes(k)) && r.v === 1 && r.racers === 8 && (r.vehicle===undefined||r.vehicle==='golf-cart') && (r.gemReward===undefined||r.gemReward==='win') && Number.isSafeInteger(r.seed) &&
+    (r.rivalSkill===undefined||r.rivalSkill==='club') &&
+    (r.itemPool===undefined||r.itemPool==='rail'&&r.vehicle===undefined) &&
+    (r.grindBalanceScale===undefined||Number.isFinite(r.grindBalanceScale)&&r.grindBalanceScale>=.35&&r.grindBalanceScale<=1) &&
+    (r.itemRespawnSeconds===undefined||Number.isFinite(r.itemRespawnSeconds)&&r.itemRespawnSeconds>=.75&&r.itemRespawnSeconds<=10) &&
     (r.stages===undefined||Array.isArray(r.stages)&&r.stages.length>0&&r.stages.length<=16&&r.stages.every(s=>typeof s==='string'&&s.length>0&&s.length<=60)) &&
     Number.isFinite(r.originalLength) && r.originalLength > 0 && r.originalLength < 20000 &&
     Number.isFinite(r.finishWidth) && r.finishWidth >= 4 && r.finishWidth <= 100 &&

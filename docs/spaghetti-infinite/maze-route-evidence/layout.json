@@ -1,0 +1,1884 @@
+{
+  "stops": 95,
+  "boxes": [
+    {
+      "name": "Lantern itinerary / 1 / box",
+      "p": [
+        -16.4,
+        34,
+        18
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 2 / box",
+      "p": [
+        -19.431083505599865,
+        34,
+        -0.7155417527999326
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern Steps checkpoint",
+      "p": [
+        -20.8,
+        34,
+        2.2
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 3 / box",
+      "p": [
+        -7.634749066156866,
+        33.33333333333333,
+        -17.16567998487364
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 4 / box",
+      "p": [
+        0.5379015222075885,
+        32.666666666666664,
+        -35.35017845431448
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 5 / box",
+      "p": [
+        -4.7029132345601905,
+        33.33333333333333,
+        -53.063215113849026
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 6 / box",
+      "p": [
+        5.634749066156866,
+        32.33333333333333,
+        -72.83432001512637
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 7 / box",
+      "p": [
+        19.31489197476222,
+        31.333333333333332,
+        -90.9116244263434
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 8 / box",
+      "p": [
+        -27.46870890755044,
+        29.333333333333332,
+        -144.63473943069735
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 8 / cache",
+      "p": [
+        -24.53129109244956,
+        29.333333333333332,
+        -143.36526056930265
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 9 / box",
+      "p": [
+        19.517893276880823,
+        32,
+        -200.50596442562693
+      ],
+      "supported": true
+    },
+    {
+      "name": "The Broken Loom checkpoint",
+      "p": [
+        15.2,
+        32,
+        -197.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 10 / box",
+      "p": [
+        10.537901522207589,
+        31.666666666666664,
+        -217.3501784543145
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 11 / box",
+      "p": [
+        5.576714408099802,
+        31,
+        -236.27197734334038
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 12 / box",
+      "p": [
+        6.90116607032458,
+        -8,
+        -258.8370021517672
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 13 / box",
+      "p": [
+        -38.4,
+        -40,
+        -297.5
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 13 / cache",
+      "p": [
+        -41.6,
+        -40,
+        -297.5
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 14 / box",
+      "p": [
+        -38.40030570214729,
+        8,
+        -332.03127544432175
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 15 / box",
+      "p": [
+        -38.81830322581277,
+        8,
+        -186.92130044318378
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 16 / box",
+      "p": [
+        -5.462098477792411,
+        30.333333333333332,
+        -253.3501784543145
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 17 / box",
+      "p": [
+        -10.482106723119177,
+        30,
+        -272.5059644256269
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 18 / box",
+      "p": [
+        -19.1700124703057,
+        29.333333333333332,
+        -291.09136191033457
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 19 / box",
+      "p": [
+        27.508727112135098,
+        27.333333333333332,
+        -343.4673251450383
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 19 / cache",
+      "p": [
+        24.491272887864902,
+        27.333333333333332,
+        -344.5326748549617
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 20 / box",
+      "p": [
+        -19.39865164179446,
+        18,
+        -400.7770286898858
+      ],
+      "supported": true
+    },
+    {
+      "name": "Counterweights checkpoint",
+      "p": [
+        -20.8,
+        18,
+        -397.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 21 / box",
+      "p": [
+        -6.537901522207589,
+        17,
+        -417.35017845431446
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 22 / box",
+      "p": [
+        -0.19530275628181995,
+        17.666666666666664,
+        -437.5880355264882
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 23 / box",
+      "p": [
+        40.949130429815824,
+        -24,
+        -453.28808052046355
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 24 / box",
+      "p": [
+        -25.599436120613575,
+        -40,
+        -489.45752534783435
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 24 / cache",
+      "p": [
+        -22.400563879386425,
+        -40,
+        -489.54247465216565
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 25 / box",
+      "p": [
+        -41.59969429785271,
+        8,
+        -475.96872455567825
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 26 / box",
+      "p": [
+        -9.43899061681828,
+        8,
+        -404.69950411343245
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 27 / box",
+      "p": [
+        9.39865164179446,
+        17,
+        -453.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 28 / box",
+      "p": [
+        16.482106723119177,
+        16.333333333333332,
+        -472.5059644256269
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 29 / box",
+      "p": [
+        25.24647213139306,
+        15.333333333333332,
+        -491.0031486558135
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 30 / box",
+      "p": [
+        -27.46870890755044,
+        13.333333333333332,
+        -544.6347394306973
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 30 / cache",
+      "p": [
+        -24.53129109244956,
+        13.333333333333332,
+        -543.3652605693027
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 31 / box",
+      "p": [
+        19.39865164179446,
+        16,
+        -600.7770286898858
+      ],
+      "supported": true
+    },
+    {
+      "name": "Spine Stair checkpoint",
+      "p": [
+        15.2,
+        16,
+        -597.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 32 / box",
+      "p": [
+        6.60134835820554,
+        15,
+        -617.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 33 / box",
+      "p": [
+        -0.6299595318574864,
+        14,
+        -636.826431555334
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 34 / box",
+      "p": [
+        -9.597030979378268,
+        -8,
+        -668.097427156923
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 35 / box",
+      "p": [
+        -6.400712377595419,
+        -40,
+        -705.547739929027
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 35 / cache",
+      "p": [
+        -9.599287622404582,
+        -40,
+        -705.452260070973
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 36 / box",
+      "p": [
+        -25.599319418864155,
+        24,
+        -692.046662580769
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 37 / box",
+      "p": [
+        38.434596098335476,
+        24,
+        -764.3309238955613
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 38 / box",
+      "p": [
+        -13.462098477792411,
+        14.666666666666666,
+        -654.6498215456855
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 39 / box",
+      "p": [
+        -2.6013483582055397,
+        14,
+        -671.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 40 / box",
+      "p": [
+        4.564022560413617,
+        13.333333333333332,
+        -690.7056690392805
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 41 / box",
+      "p": [
+        27.508727112135098,
+        11.333333333333332,
+        -743.4673251450383
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 41 / cache",
+      "p": [
+        24.491272887864902,
+        11.333333333333332,
+        -744.5326748549617
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 42 / box",
+      "p": [
+        -19.462098477792413,
+        2,
+        -800.6498215456855
+      ],
+      "supported": true
+    },
+    {
+      "name": "The Box Garden checkpoint",
+      "p": [
+        -20.8,
+        2,
+        -797.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 43 / box",
+      "p": [
+        -8.66871952905945,
+        1.3333333333333333,
+        -817.1124796860396
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 44 / box",
+      "p": [
+        0.6013483582055397,
+        0.6666666666666666,
+        -836.7770286898858
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 45 / box",
+      "p": [
+        13.39865164179446,
+        0,
+        -854.7770286898858
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 46 / box",
+      "p": [
+        0.6687195290594501,
+        0.6666666666666666,
+        -871.1124796860396
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 47 / box",
+      "p": [
+        -8.423499104002852,
+        -0.6666666666666666,
+        -890.2732122342067
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 48 / box",
+      "p": [
+        -27.46870890755044,
+        -2.6666666666666665,
+        -944.6347394306973
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 48 / cache",
+      "p": [
+        -24.53129109244956,
+        -2.6666666666666665,
+        -943.3652605693027
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 49 / box",
+      "p": [
+        19.39865164179446,
+        0,
+        -1000.7770286898858
+      ],
+      "supported": true
+    },
+    {
+      "name": "Hanging Lanterns checkpoint",
+      "p": [
+        15.2,
+        0,
+        -997.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 50 / box",
+      "p": [
+        6.537901522207589,
+        -0.3333333333333333,
+        -1017.3501784543145
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 51 / box",
+      "p": [
+        -1.1694757484602414,
+        -1,
+        -1037.0919370282957
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 52 / box",
+      "p": [
+        -40.730323120290265,
+        -8,
+        -1005.4235969022056
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 53 / box",
+      "p": [
+        9.599287622404582,
+        -40,
+        -1041.547739929027
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 53 / cache",
+      "p": [
+        6.400712377595419,
+        -40,
+        -1041.452260070973
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 54 / box",
+      "p": [
+        -6.40030570214729,
+        24,
+        -1027.9687245556781
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 55 / box",
+      "p": [
+        -38.611253123231,
+        24,
+        -955.2054044347818
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 56 / box",
+      "p": [
+        -9.39865164179446,
+        -1.6666666666666665,
+        -1053.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 57 / box",
+      "p": [
+        -16.482106723119177,
+        -2.333333333333333,
+        -1072.5059644256269
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 58 / box",
+      "p": [
+        -25.107224975544987,
+        -2.6666666666666665,
+        -1091.155012057742
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 59 / box",
+      "p": [
+        27.5087271121351,
+        -4.666666666666666,
+        -1143.4673251450383
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 59 / cache",
+      "p": [
+        24.4912728878649,
+        -4.666666666666666,
+        -1144.5326748549617
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 60 / box",
+      "p": [
+        -19.33128047094055,
+        -14,
+        -1200.8875203139603
+      ],
+      "supported": true
+    },
+    {
+      "name": "Spring Vault checkpoint",
+      "p": [
+        -20.8,
+        -14,
+        -1197.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 61 / box",
+      "p": [
+        -4.66871952905945,
+        -14.666666666666666,
+        -1217.1124796860397
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 62 / box",
+      "p": [
+        4.4901514109936285,
+        -15.333333333333332,
+        -1236.5294877130543
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 63 / box",
+      "p": [
+        24.949130429815824,
+        -24,
+        -1269.2880805204636
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 64 / box",
+      "p": [
+        -41.59929552510577,
+        -40,
+        -1305.5474744497249
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 64 / cache",
+      "p": [
+        -38.40070447489423,
+        -40,
+        -1305.4525255502751
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 65 / box",
+      "p": [
+        -22.400680581135845,
+        40,
+        -1315.953337419231
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 66 / box",
+      "p": [
+        41.599681778061615,
+        40,
+        -1387.9680906136437
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 67 / box",
+      "p": [
+        9.5036694775815,
+        -8,
+        -1268.5467889009387
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 68 / box",
+      "p": [
+        -1.5059532738477772,
+        -16.666666666666664,
+        -1289.4595328529992
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 69 / box",
+      "p": [
+        -24.531291092449557,
+        -18.666666666666664,
+        -1343.3652605693026
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 69 / cache",
+      "p": [
+        -27.468708907550443,
+        -18.666666666666664,
+        -1344.6347394306974
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 70 / box",
+      "p": [
+        16.537901522207587,
+        -16,
+        -1399.3501784543146
+      ],
+      "supported": true
+    },
+    {
+      "name": "The Bellows checkpoint",
+      "p": [
+        15.2,
+        -16,
+        -1397.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 71 / box",
+      "p": [
+        11.33128047094055,
+        -16.666666666666664,
+        -1418.8875203139603
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 72 / box",
+      "p": [
+        -3.3986516417944603,
+        -17.333333333333332,
+        -1435.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 73 / box",
+      "p": [
+        -10.537901522207589,
+        -16.666666666666664,
+        -1453.3501784543146
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 74 / box",
+      "p": [
+        -5.33128047094055,
+        -17.666666666666664,
+        -1472.8875203139603
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 75 / box",
+      "p": [
+        9.456549038170023,
+        -18.666666666666664,
+        -1489.3378331785675
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 76 / box",
+      "p": [
+        24.4912728878649,
+        -20.666666666666664,
+        -1544.5326748549617
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 76 / cache",
+      "p": [
+        27.5087271121351,
+        -20.666666666666664,
+        -1543.4673251450383
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 77 / box",
+      "p": [
+        -16.60134835820554,
+        -30,
+        -1599.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Needle Windows checkpoint",
+      "p": [
+        -20.8,
+        -30,
+        -1597.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 78 / box",
+      "p": [
+        -9.33128047094055,
+        -31,
+        -1618.8875203139603
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 79 / box",
+      "p": [
+        5.462098477792411,
+        -30.333333333333332,
+        -1636.6498215456854
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 80 / box",
+      "p": [
+        -5.33128047094055,
+        -31,
+        -1654.8875203139603
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 81 / box",
+      "p": [
+        9.33128047094055,
+        -31.666666666666664,
+        -1671.1124796860397
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 82 / box",
+      "p": [
+        18.70799804826342,
+        -32.666666666666664,
+        -1689.056214560025
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 83 / box",
+      "p": [
+        -24.531291092449557,
+        -34.666666666666664,
+        -1743.3652605693026
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 83 / cache",
+      "p": [
+        -27.468708907550443,
+        -34.666666666666664,
+        -1744.6347394306974
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 84 / box",
+      "p": [
+        16.537901522207587,
+        -32,
+        -1799.3501784543146
+      ],
+      "supported": true
+    },
+    {
+      "name": "The Last Stitch checkpoint",
+      "p": [
+        15.2,
+        -32,
+        -1797.8
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 85 / box",
+      "p": [
+        11.39865164179446,
+        -32.666666666666664,
+        -1818.7770286898858
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 86 / box",
+      "p": [
+        0.11301967561405966,
+        -33.33333333333333,
+        -1834.4039966939495
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 87 / box",
+      "p": [
+        -39.26967687970973,
+        -8,
+        -1866.5764030977944
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 88 / box",
+      "p": [
+        6.4,
+        -40,
+        -1905.5
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 88 / cache",
+      "p": [
+        9.6,
+        -40,
+        -1905.5
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 89 / box",
+      "p": [
+        6.40030570214729,
+        8,
+        -1892.0312754443219
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 90 / box",
+      "p": [
+        -25.436129548907868,
+        8,
+        -1820.705359425225
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 91 / box",
+      "p": [
+        -8.60134835820554,
+        -34,
+        -1853.2229713101142
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 92 / box",
+      "p": [
+        -1.33128047094055,
+        -33.33333333333333,
+        -1872.8875203139603
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 93 / box",
+      "p": [
+        13.478545802052128,
+        -34.666666666666664,
+        -1889.388524480266
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 94 / box",
+      "p": [
+        24.72834455702256,
+        -36.666666666666664,
+        -1943.0289735151161
+      ],
+      "supported": true
+    },
+    {
+      "name": "Lantern itinerary / 94 / cache",
+      "p": [
+        27.27165544297744,
+        -36.666666666666664,
+        -1944.9710264848839
+      ],
+      "supported": true
+    }
+  ],
+  "collections": [
+    {
+      "name": "Lanternworks arrival",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Lantern Steps / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 12.3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 14.5",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Recovery 15.2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 9.2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Broken Loom / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 20.4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 22.5",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Recovery 21.2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 18.2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Counterweights / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 29.3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 31.5",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Recovery 30.1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 33.1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spine Stair / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Box Garden / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 43.3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 45.5",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Recovery 44.1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 41.1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Hanging Lanterns / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Spring Vault / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spring Vault / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spring Vault / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 54.4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 56.5",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Recovery 56.0",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 59.0",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 54.3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spring Vault / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Spring Vault / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Bellows / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Needle Windows / reward balcony",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / step 1",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / step 2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / step 3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 79.3",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 81.5",
+      "count": 2,
+      "broken": true
+    },
+    {
+      "name": "Recovery 80.2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "Recovery 77.2",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / step 4",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / step 5",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / step 6",
+      "count": 1,
+      "broken": true
+    },
+    {
+      "name": "The Last Stitch / reward balcony",
+      "count": 2,
+      "broken": true
+    }
+  ],
+  "clippedRails": [],
+  "junctions": [
+    {
+      "name": "The Broken Loom / lantern descent",
+      "near": [
+        {
+          "name": "The Broken Loom / lantern descent",
+          "d": 1.2999999999999972
+        },
+        {
+          "name": "The Broken Loom / fork / cargo balcony",
+          "d": 4.333589736004089
+        },
+        {
+          "name": "The Broken Loom / spring approach",
+          "d": 6.391748152457544
+        }
+      ]
+    },
+    {
+      "name": "The Broken Loom / lantern spring approach",
+      "near": [
+        {
+          "name": "The Broken Loom / lantern spring approach",
+          "d": 1.2999999999999998
+        },
+        {
+          "name": "Recovery weave / tier 4 / thread 1 / span 1",
+          "d": 5.166236541235795
+        },
+        {
+          "name": "Recovery fork / 12.3 / shallow descent",
+          "d": 9.093404203047394
+        }
+      ]
+    },
+    {
+      "name": "The Broken Loom / lantern return to court",
+      "near": [
+        {
+          "name": "The Broken Loom / lantern return to court",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery weave / tier 3 / thread 1 / span 1",
+          "d": 5.166236541235796
+        },
+        {
+          "name": "Recovery fork / 5.2 / level express",
+          "d": 7.821689270656008
+        }
+      ]
+    },
+    {
+      "name": "Counterweights / lantern descent",
+      "near": [
+        {
+          "name": "Counterweights / lantern descent",
+          "d": 1.300333333333338
+        },
+        {
+          "name": "Counterweights / edge stitch 2",
+          "d": 4.08875542904742
+        },
+        {
+          "name": "Counterweights / fork / cargo balcony",
+          "d": 4.333689741753299
+        }
+      ]
+    },
+    {
+      "name": "Counterweights / lantern spring approach",
+      "near": [
+        {
+          "name": "Counterweights / lantern spring approach",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery weave / tier 5 / thread 3 / span 1",
+          "d": 5.1662365412357945
+        },
+        {
+          "name": "Counterweights / lantern descent",
+          "d": 10.084188949924421
+        }
+      ]
+    },
+    {
+      "name": "Counterweights / lantern return to court",
+      "near": [
+        {
+          "name": "Counterweights / lantern return to court",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery weave / tier 3 / thread 1 / span 1",
+          "d": 5.166236541235796
+        },
+        {
+          "name": "Recovery weave / tier 3 / thread 3 / span 1",
+          "d": 10.627272794025123
+        }
+      ]
+    },
+    {
+      "name": "Spine Stair / lantern descent",
+      "near": [
+        {
+          "name": "Spine Stair / lantern descent",
+          "d": 1.299999999999999
+        },
+        {
+          "name": "Spine Stair / fork / cargo balcony",
+          "d": 4.3335897360040905
+        },
+        {
+          "name": "Spine Stair / spring approach",
+          "d": 6.391748152457546
+        }
+      ]
+    },
+    {
+      "name": "Spine Stair / lantern spring approach",
+      "near": [
+        {
+          "name": "Spine Stair / lantern spring approach",
+          "d": 1.2999999999999998
+        },
+        {
+          "name": "Recovery weave / tier 4 / thread 1 / span 2",
+          "d": 2.411319870799681
+        },
+        {
+          "name": "Recovery weave / tier 4 / thread 3 / span 2",
+          "d": 5.166236541235795
+        }
+      ]
+    },
+    {
+      "name": "Spine Stair / lantern return to court",
+      "near": [
+        {
+          "name": "Spine Stair / lantern return to court",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery weave / tier 2 / thread 1 / span 2",
+          "d": 5.166236541235795
+        },
+        {
+          "name": "Spine Stair / forward exit",
+          "d": 22.871894027754088
+        }
+      ]
+    },
+    {
+      "name": "Hanging Lanterns / lantern descent",
+      "near": [
+        {
+          "name": "Hanging Lanterns / lantern descent",
+          "d": 1.2999999999999998
+        },
+        {
+          "name": "Hanging Lanterns / fork / cargo balcony",
+          "d": 4.3335897360040905
+        },
+        {
+          "name": "Hanging Lanterns / spring approach",
+          "d": 6.391748152457546
+        }
+      ]
+    },
+    {
+      "name": "Hanging Lanterns / lantern spring approach",
+      "near": [
+        {
+          "name": "Hanging Lanterns / lantern spring approach",
+          "d": 1.2999999999999998
+        },
+        {
+          "name": "The Box Garden / kicker return",
+          "d": 3.7908818075985113
+        },
+        {
+          "name": "Recovery weave / tier 4 / thread 2 / span 2",
+          "d": 5.166236541235795
+        }
+      ]
+    },
+    {
+      "name": "Hanging Lanterns / lantern return to court",
+      "near": [
+        {
+          "name": "Hanging Lanterns / lantern return to court",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery weave / tier 2 / thread 3 / span 2",
+          "d": 5.166236541235795
+        },
+        {
+          "name": "Recovery weave / tier 1 / thread 1 / span 2",
+          "d": 16.600442942354068
+        }
+      ]
+    },
+    {
+      "name": "Spring Vault / lantern descent",
+      "near": [
+        {
+          "name": "Spring Vault / lantern descent",
+          "d": 1.3003333333333327
+        },
+        {
+          "name": "Spring Vault / edge stitch 2",
+          "d": 2.5966898543219443
+        },
+        {
+          "name": "Spring Vault / fork / cargo balcony",
+          "d": 4.333689741753299
+        }
+      ]
+    },
+    {
+      "name": "Spring Vault / lantern spring approach",
+      "near": [
+        {
+          "name": "Spring Vault / lantern spring approach",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery fork / 50.2 / steep descent",
+          "d": 3.1128764832546763
+        },
+        {
+          "name": "Recovery weave / tier 5 / thread 1 / span 3",
+          "d": 5.1662365412357945
+        }
+      ]
+    },
+    {
+      "name": "Spring Vault / lantern return to court",
+      "near": [
+        {
+          "name": "Spring Vault / lantern return to court",
+          "d": 1.2999999999999972
+        },
+        {
+          "name": "Recovery weave / tier 1 / thread 3 / span 3",
+          "d": 5.166236541235795
+        },
+        {
+          "name": "Recovery fork / 57.0 / level express",
+          "d": 24.737736780039477
+        }
+      ]
+    },
+    {
+      "name": "The Last Stitch / lantern descent",
+      "near": [
+        {
+          "name": "The Last Stitch / lantern descent",
+          "d": 1.300333333333331
+        },
+        {
+          "name": "The Last Stitch / fork / cargo balcony",
+          "d": 4.3336897417532985
+        },
+        {
+          "name": "The Last Stitch / spring approach",
+          "d": 6.391814218201277
+        }
+      ]
+    },
+    {
+      "name": "The Last Stitch / lantern spring approach",
+      "near": [
+        {
+          "name": "The Last Stitch / lantern spring approach",
+          "d": 1.2999999999999998
+        },
+        {
+          "name": "Recovery weave / tier 4 / thread 2 / span 4",
+          "d": 5.166236541235795
+        },
+        {
+          "name": "The Last Stitch / lantern descent",
+          "d": 6.7858731478805785
+        }
+      ]
+    },
+    {
+      "name": "The Last Stitch / lantern return to court",
+      "near": [
+        {
+          "name": "The Last Stitch / lantern return to court",
+          "d": 1.3000000000000007
+        },
+        {
+          "name": "Recovery fork / 77.2 / steep descent",
+          "d": 1.6401219466856745
+        },
+        {
+          "name": "Recovery weave / tier 3 / thread 1 / span 4",
+          "d": 2.4113198707996193
+        }
+      ]
+    }
+  ],
+  "tiers": [
+    -8,
+    -40,
+    8,
+    -24,
+    24,
+    40
+  ],
+  "direction": {
+    "forward": 75,
+    "backward": 10,
+    "sideways": 9
+  },
+  "finish": {
+    "state": "finished",
+    "crystal": true,
+    "checkpoint": true
+  }
+}

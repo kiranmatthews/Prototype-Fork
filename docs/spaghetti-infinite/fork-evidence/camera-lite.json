@@ -1,0 +1,85 @@
+{
+  "errors": [],
+  "reports": [
+    {
+      "id": "spaghetti-rails",
+      "full": false,
+      "name": "front-ledge",
+      "frames": 136,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 0
+    },
+    {
+      "id": "spaghetti-rails",
+      "full": false,
+      "name": "under-platform",
+      "frames": 50,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 0
+    },
+    {
+      "id": "spaghetti-rails",
+      "full": false,
+      "name": "deep-wrap",
+      "frames": 75,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 288
+    },
+    {
+      "id": "spaghetti-rails",
+      "full": false,
+      "name": "crossed-rails",
+      "frames": 30,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 0
+    },
+    {
+      "id": "spaghetti-rails-platforming",
+      "full": false,
+      "name": "front-ledge",
+      "frames": 324,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 288
+    },
+    {
+      "id": "spaghetti-rails-platforming",
+      "full": false,
+      "name": "under-platform",
+      "frames": 207,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 0
+    },
+    {
+      "id": "spaghetti-rails-platforming",
+      "full": false,
+      "name": "deep-wrap",
+      "frames": 81,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 288
+    },
+    {
+      "id": "spaghetti-rails-platforming",
+      "full": false,
+      "name": "crossed-rails",
+      "frames": 99,
+      "invisibleFrames": 0,
+      "worst": [],
+      "maxYaw": 0,
+      "wrap": 0
+    }
+  ]
+}

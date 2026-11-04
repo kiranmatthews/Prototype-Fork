@@ -131,6 +131,7 @@ import { CameraLookOffset } from "./cameraLook";
 import { cameraViewAt, cameraViewDirection, CameraViewFraming, BONUS_PRESENTATION_VIEW } from "./cameraViews";
 import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";
 import {CameraSightline} from './cameraSightline';
+import {verticalLoopTransform,verticalLoopYaw} from './verticalLoop';
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
 import { CameraPortraitFraming } from "./cameraPortraitFraming";
@@ -2122,6 +2123,7 @@ const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 const boulderChaseCamera2=new BoulderChaseCamera();
 const periodicSightline2=new CameraSightline();
 let camera2VerticalLoopOffset=0;
+const cameraLoopMatrix=new THREE.Matrix4(),cameraLoopRotation=new THREE.Quaternion();
 function updateCamera2(dt: number): void {
   if (!p2) return;
   if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level), () => p2!.cameraCanRecoverFall(level))) return;
@@ -2135,7 +2137,16 @@ function updateCamera2(dt: number): void {
   cameraViewFraming2.restore(camera2);
   const wrapY=p2.verticalLoopOffset-camera2VerticalLoopOffset;
   camera2VerticalLoopOffset=p2.verticalLoopOffset;
-  if(wrapY){camera2.position.y+=wrapY;cam2Aim.y+=wrapY;}
+  if(wrapY){
+    if(level.verticalLoop?.twist){
+      const yaw=verticalLoopYaw(level.verticalLoop,wrapY),matrix=verticalLoopTransform(level.verticalLoop,wrapY,cameraLoopMatrix);
+      const rotation=cameraLoopRotation.setFromAxisAngle(THREE.Object3D.DEFAULT_UP,yaw);
+      for(const point of [camera2.position,cam2Aim])point.applyMatrix4(matrix);
+      for(const direction of [cam2F,cam2ViewForward])direction.applyQuaternion(rotation);
+      camera2.quaternion.premultiply(rotation);cam2LaneHeading.rotateWorldY(yaw);
+      launchCamera2.transformWorld(matrix,rotation,yaw);cam2LaneCursor.s=-1;
+    }else{camera2.position.y+=wrapY;cam2Aim.y+=wrapY;launchCamera2.shiftY(wrapY);}
+  }
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   const viewMatch = level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW :
@@ -2161,7 +2172,7 @@ function updateCamera2(dt: number): void {
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
   if(level.boss)p2.camDir.copy(chiefCamera2.heading);
-  launchCamera2.apply(camera2,subject,level.verticalLoop?null:p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
+  launchCamera2.apply(camera2,subject,level.verticalLoop&&!level.verticalLoop.launchCamera?null:p2.launchCameraPresentation,dt,framingSnap,input2.lookX);
   carlisleSceneryCamera2.apply(camera2,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
   periodicSightline2.apply(camera2,level.verticalLoop?p2.cameraPoseBounds:null,level,dt,framingSnap);
 }
@@ -2213,12 +2224,13 @@ function updateBaseCamera2(dt: number): void {
     camera2.updateProjectionMatrix();
   }
   if (cameraFallHold2.landedFromDrop) cam2LaneCursor.s = -1;
-  const lf = level.cameraDirAt(
+  const twistingAir=p2.twistingSpaceAir;
+  const lf = (twistingAir&&!snapped ? cam2F : level.cameraDirAt(
     subject.x,
     subject.y,
     subject.z,
     cam2LaneCursor,
-  ) ?? { x: 0, z: -1 };
+  )) ?? { x: 0, z: -1 };
   const turn = snapped ? 1 : Math.min(1, 3.5 * dt);
   cam2F.x += (lf.x - cam2F.x) * turn;
   cam2F.z += (lf.z - cam2F.z) * turn;
@@ -2226,11 +2238,11 @@ function updateBaseCamera2(dt: number): void {
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
   const framing = cameraRigFraming(cameraValues, p2Side, 0, 0, true, TUNING);
-  const laneTarget = level.cameraLookAhead && !level.zoneAt(subject.x, subject.z)
+  const laneTarget = !twistingAir && level.cameraLookAhead && !level.zoneAt(subject.x, subject.z)
     ? level.cameraLanePointAhead(cam2LaneCursor, level.cameraLookAhead, cam2LaneTarget)
     : null;
   const laneOrigin = laneTarget ? level.cameraLanePointAhead(cam2LaneCursor, 0, cam2LaneOrigin) : null;
-  cam2ViewForward.copy(cam2LaneHeading.step(laneOrigin, laneTarget, cam2F, dt, snapped));
+  if(!twistingAir||snapped)cam2ViewForward.copy(cam2LaneHeading.step(laneOrigin, laneTarget, cam2F, dt, snapped));
   const tx = subject.x - cam2ViewForward.x * framing.distance;
   const tz = subject.z - cam2ViewForward.z * framing.distance;
   const ty = subject.y + framing.height;
@@ -4605,8 +4617,18 @@ function updateCamera(dt: number): void {
   const wrapY=player.verticalLoopOffset-cameraVerticalLoopOffset;
   cameraVerticalLoopOffset=player.verticalLoopOffset;
   if(wrapY){
-    camera.position.y+=wrapY;camTarget.y+=wrapY;aimSmooth.y+=wrapY;
-    camAnchorY+=wrapY;prevPlayerPos.y+=wrapY;
+    if(level.verticalLoop?.twist){
+      const yaw=verticalLoopYaw(level.verticalLoop,wrapY),matrix=verticalLoopTransform(level.verticalLoop,wrapY,cameraLoopMatrix);
+      const rotation=cameraLoopRotation.setFromAxisAngle(THREE.Object3D.DEFAULT_UP,yaw);
+      for(const point of [camera.position,camTarget,aimSmooth,prevPlayerPos])point.applyMatrix4(matrix);
+      for(const direction of [camF,camControlDir,cameraViewForward])direction.applyQuaternion(rotation);
+      camera.quaternion.premultiply(rotation);cameraLaneHeading.rotateWorldY(yaw);
+      launchCamera.transformWorld(matrix,rotation,yaw);cameraLaneCursor.s=-1;
+    }else{
+      camera.position.y+=wrapY;camTarget.y+=wrapY;aimSmooth.y+=wrapY;
+      prevPlayerPos.y+=wrapY;launchCamera.shiftY(wrapY);
+    }
+    camAnchorY+=wrapY;
   }
   updateBaseCamera(dt);
   const subject = player.renderPosition;
@@ -4639,7 +4661,7 @@ function updateCamera(dt: number): void {
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
   if(level.boss)camControlDir.copy(chiefCamera.heading);
-  launchCamera.apply(camera,subject,level.verticalLoop?null:player.launchCameraPresentation,dt,framingSnap,input.lookX);
+  launchCamera.apply(camera,subject,level.verticalLoop&&!level.verticalLoop.launchCamera?null:player.launchCameraPresentation,dt,framingSnap,input.lookX);
   carlisleSceneryCamera.apply(camera,level.hudMode==='bonus'?null:level.carlisleScenery,subject,dt,framingSnap,zoneDirection==='E'||zoneDirection==='W');
   periodicSightline.apply(camera,level.verticalLoop?player.cameraPoseBounds:null,level,dt,framingSnap);
 }
@@ -4795,7 +4817,8 @@ function updateBaseCamera(dt: number): void {
   // Actual lower-road contact releases the old branch preference. Yaw keeps
   // its normal easing; airborne crossings retain their original lane.
   if (cameraFallHold.landedFromDrop) cameraLaneCursor.s = -1;
-  const lf = level.cameraDirAt(subject.x, subject.y, subject.z, cameraLaneCursor);
+  const twistingAir=player.twistingSpaceAir;
+  const lf = twistingAir&&!snapped ? camF : level.cameraDirAt(subject.x, subject.y, subject.z, cameraLaneCursor);
   const turnK = snapped ? 1 : Math.min(1, 3.5 * dt);
   camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
   camF.z += ((lf ? lf.z : -1) - camF.z) * turnK;
@@ -4863,11 +4886,11 @@ function updateBaseCamera(dt: number): void {
   const effY = THREE.MathUtils.lerp(camAnchorY, followY, airLift) + poseYOffset;
   // Course controls keep the local tangent. The authored look-ahead affects
   // only the shot, bringing the upcoming bend into narrow screens as well.
-  const laneTarget = level.cameraLookAhead && lf && !znHere
+  const laneTarget = !twistingAir && level.cameraLookAhead && lf && !znHere
     ? level.cameraLanePointAhead(cameraLaneCursor, level.cameraLookAhead, cameraLaneTarget)
     : null;
   const laneOrigin = laneTarget ? level.cameraLanePointAhead(cameraLaneCursor, 0, cameraLaneOrigin) : null;
-  cameraViewForward.copy(cameraLaneHeading.step(laneOrigin, laneTarget, camF, dt, snapped));
+  if(!twistingAir||snapped)cameraViewForward.copy(cameraLaneHeading.step(laneOrigin, laneTarget, camF, dt, snapped));
   camTarget.set(
     subject.x - cameraViewForward.x * framing.distance,
     effY + framing.height,
@@ -4917,7 +4940,7 @@ function updateBaseCamera(dt: number): void {
 
   // Publish the unchanged local course frame. Lane anticipation and manual
   // peeking are presentation-only and must not steer gameplay or replay yaw.
-  if (laneTarget) camControlDir.copy(camF);
+  if (laneTarget||twistingAir) camControlDir.copy(camF);
   else camControlDir.subVectors(aimSmooth, camera.position);
   camControlDir.y = 0;
   if (camControlDir.lengthSq() > 1e-6) camControlDir.normalize();

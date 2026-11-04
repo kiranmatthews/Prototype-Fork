@@ -13,6 +13,18 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 
 ## Concurrent release coordination
 
+**Active again as of 5 November 2026, at the user's request.** Feature chats
+work, test and commit locally, then hand off validated increments to the
+coordinator. Continue independent local work after handoff; do not wait for
+GitHub or duplicate coordinator release checks.
+
+The unfinished experiments in **Locate OpenGOAL character animations**
+(`codex/jump-reference-motion`) are explicitly held from publication until the
+user releases that hold. The user lifted the `codex/spaghetti-infinite` hold
+on 5 November and requested publication. The separate particle-harvesting fork
+(**Locate OpenGOAL character animations (3)**) is publishable when complete;
+keep its scoped particle work separate from the held animation experiments.
+
 The user has appointed **Coordinate local work and releases**
 (`01a17b2e-3553-70e0-abb3-0bcc400dcc1b`) as release coordinator. While this
 coordination is active, it overrides the default individual publishing step:

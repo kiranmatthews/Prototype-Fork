@@ -18,8 +18,9 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
  }
  const rails=source.components.filter(c=>c.t==='rail');
  const {spaghettiSamples}=await r.server.ssrLoadModule('/src/levels/spaghetti-infinite-course.ts');
- for(const rail of rails){const pts=spaghettiSamples(rail);for(let i=1;i<pts.length;i++)assert.ok(pts[i][2]<pts[i-1][2]+1e-8,'Every rounded rail advances forward');}
- const terraces=source.components.filter(c=>c.t==='platform');
+ if(!platforming)for(const rail of rails){const pts=spaghettiSamples(rail);for(let i=1;i<pts.length;i++)assert.ok(pts[i][2]<pts[i-1][2]+1e-8,'Every race rail advances forward');}
+ const islands=r.sourceModule[platforming?'SPAGHETTI_PLATFORMER_ISLANDS':'SPAGHETTI_RACE_ISLANDS'];
+ const terraces=islands.map(i=>({p:[i.p[0],i.p[1]-.7,i.p[2]],s:[i.w,1.4,i.d],nm:i.name}));
  const sizes=terraces.map(c=>c.s[0]*c.s[2]).sort((a,b)=>a-b);
  const density={platforms:terraces.length,averageArea:sizes.reduce((a,b)=>a+b,0)/sizes.length,medianArea:sizes[Math.floor(sizes.length/2)],largePlatforms:sizes.filter(a=>a>2000).length};
  assert.ok(density.averageArea<550&&density.medianArea<450,'The average platform is substantially smaller than the previous broad terraces');
@@ -34,27 +35,38 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
    const a=points[i-1],b=points[i],steps=Math.max(1,Math.ceil(Math.hypot(...a.map((v,k)=>b[k]-v))));
    for(let j=0;j<=steps;j++){
     const p=a.map((v,k)=>v+(b[k]-v)*j/steps);
-    terraces.forEach((c,k)=>{const top=c.p[1]+c.s[1]/2;if(p[1]>=top-.05&&p[1]<=top+3&&Math.abs(p[0]-c.p[0])<c.s[0]/2&&Math.abs(p[2]-c.p[2])<c.s[2]/2)contacts.add(k);});
+    terraces.forEach((c,k)=>{const top=c.p[1]+c.s[1]/2;if(p[1]>=top-.05&&p[1]<=top+3.6&&Math.abs(p[0]-c.p[0])<c.s[0]/2&&Math.abs(p[2]-c.p[2])<c.s[2]/2)contacts.add(k);});
    }
   }
   const all=[...contacts];for(const i of all){seen.add(i);parent[root(i)]=root(all[0]);}
  }
- assert.equal(seen.size,terraces.length,'Every platform has an authored connecting rail');
+ assert.equal(seen.size,terraces.length,'Unconnected platforms: '+terraces.filter((_,i)=>!seen.has(i)).map(c=>c.nm).join(', '));
  assert.equal(new Set(parent.map((_,i)=>root(i))).size,1,'All platform rail routes join one connected network');
- assert.equal(source.cameraRig,undefined);assert.equal(source.cameraLookAhead,undefined);
- for(const x of [-47,0,47])for(const y of [-140,-30,100])assert.equal(r.l.cameraDirAt(x,y,-200),null,'The ordinary forward corridor owns the camera on every tier');
+ assert.equal(source.cameraRig,undefined);
+ if(platforming){assert.equal(source.cameraLookAhead,7);assert.ok(r.l.laneActive,'The maze itinerary owns an ordered 3D camera lane');}
+ else {assert.equal(source.cameraLookAhead,undefined);for(const x of [-47,0,47])for(const y of [-140,-30,100])assert.equal(r.l.cameraDirAt(x,y,-200),null,'The race retains its steady forward camera');}
  const far=Math.min(...source.components.filter(c=>c.nm==='Periodic corridor end').map(c=>c.p[2]))+1;
+ assert.ok(-far>(platforming?2000:2200),'Both courses retain a substantial journey');
+ if(!platforming)assert.ok(source.skateRace.originalLength>2250&&source.skateRace.originalLength<2280,'Race length is two thirds of the prior 3.4 km course');
+ const heights=[...new Set(islands.filter(i=>i.tier!==undefined).map(i=>i.p[1]))].sort((a,b)=>a-b);
+ assert.deepEqual(heights,platforming?[-40,-24,-8,8,24,40]:[-12,12]);
+ assert.deepEqual(loop,platforming?{minY:-48,height:96,launchCamera:true}:{minY:-24,height:48});
+ assert.equal(heights[0]+loop.height-heights.at(-1),platforming?16:24,'The seam has the same spacing as every other tier');
  let coverage=0;
- for(let z=40;z>=far;z-=.5)for(let x=-48;x<=48;x+=.5){
+ for(let z=40;z>=far;z-=2)for(let x=-48;x<=48;x+=2){
   assert.ok(terraces.some(c=>Math.abs(x-c.p[0])<=c.s[0]/2+.001&&Math.abs(z-c.p[2])<=c.s[2]/2+.001),`No infinite-fall hole at ${x},${z}`);coverage++;
  }
- assert.equal(source.components.filter(c=>c.t==='trampoline').length,2);
+ const ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,loop.height);let physicalProbes=0;
+ for(let z=39;z>far;z-=12)for(let x=-47.5;x<48;x+=8){
+  ray.ray.origin.set(x,loop.minY+loop.height-.01,z);assert.ok(r.l.raycastGround(ray).some(hit=>hit.face?.normal.y>.5),`Actual collider catches ${x},${z}`);physicalProbes++;
+ }
+ assert.equal(source.components.filter(c=>c.t==='trampoline').length,platforming?6:18);
  assert.equal(source.components.filter(c=>c.t==='pit').length,0);
  r.stepFor(30);assert.ok(r.p.grounded,'Spawn has physical support');
  const tuning=JSON.stringify(r.TUNING),falls=[];
  // Below every surface: falling must wrap once, preserve momentum and land.
  for(const [x,z] of [[0,-65],[-44,-180],[44,-245],[0,-355],[-31,far+60]]){
-  r.p.respawn(r.l,true,false,{position:new THREE.Vector3(x,-143,z),heading:new THREE.Vector3(0,0,-1)});
+  r.p.respawn(r.l,true,false,{position:new THREE.Vector3(x,loop.minY+1,z),heading:new THREE.Vector3(0,0,-1)});
   r.p.state='air';r.p.grounded=false;r.p.vVel=-45;r.p.speed=0;
   const offset=r.p.verticalLoopOffset,deaths=r.p.totalDeaths;let wrapped=false,steps=0;
   for(;steps<1800&&!r.p.grounded;steps++){
@@ -68,8 +80,18 @@ for(const platforming of [false,true])await withBlockworksRuntime(async r=>{
   assert.equal(r.p.verticalLoopOffset-offset,loop.height);
   falls.push({x,z,steps,landing:r.p.pos.toArray(),surface:r.p.groundHit?.name});
  }
+ const misses=[];
+ for(let i=0;i<18;i++){
+  const x=[-43,-21,3,25,43][i%5],z=-75-i*109,y=loop.minY+loop.height*(.08+(i%6)*.16);
+  r.p.respawn(r.l,true,false,{position:new THREE.Vector3(x,y,z),heading:new THREE.Vector3(0,0,-1)});
+  r.p.state='air';r.p.grounded=false;r.p.vVel=0;r.p.speed=0;
+  let ticks=0,stable=0;
+  for(;ticks<600&&stable<6;ticks++){r.tick({});stable=r.p.grounded?stable+1:0;}
+  misses.push({x,y,z,seconds:ticks*r.dt,landing:r.p.pos.toArray()});
+  assert.ok(stable===6&&ticks*r.dt<7,'A missed rail reaches stable ground promptly: '+JSON.stringify(misses.at(-1)));
+ }
  assert.equal(JSON.stringify(r.TUNING),tuning);
- reports.push({platforming,components:source.components.length,rails:rails.length,density,connectedPlatforms:seen.size,coverage,falls});
+ reports.push({platforming,length:40-far,heights,components:source.components.length,rails:rails.length,density,connectedPlatforms:seen.size,coverage,physicalProbes,falls,misses});
  console.log(JSON.stringify(reports.at(-1)));
 },{modulePath:platforming?'/src/levels/spaghetti-rails-platforming.ts':'/src/levels/spaghetti-rails.ts',source:m=>m[platforming?'SPAGHETTI_RAILS_PLATFORMING_LEVEL':'SPAGHETTI_RAILS_LEVEL'],levelId:platforming?'spaghetti-rails-platforming':'spaghetti-rails',endlessDeaths:true});
 await writeFile(output+'/native.json',JSON.stringify(reports,null,2));

@@ -15,7 +15,9 @@ try{
   if(full)await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(null));
   if(id==='spaghetti-rails'){await page.getByRole('button',{name:'RACE',exact:true}).click();await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running');}
   await page.waitForTimeout(700);await page.screenshot({path:out+'/'+id+'-spawn.png'});
-  const cases=[{name:'front-ledge',p:[0,62,-36.5],vy:-12},{name:'under-platform',p:[0,57,-30],vy:-18},{name:'deep-wrap',p:[0,-128,-170],vy:-35},{name:'crossed-rails',p:[8,40,id==='spaghetti-rails'?-349:-241],vy:-25}];
+  const cases=id==='spaghetti-rails'
+   ?[{name:'front-ledge',p:[0,17,-36.5],vy:-12},{name:'under-platform',p:[0,15,-30],vy:-18},{name:'deep-wrap',p:[0,-23,-170],vy:-35},{name:'crossed-rails',p:[8,-5,-900],vy:-25}]
+   :[{name:'front-ledge',p:[-18,32,-11],vy:-12},{name:'under-platform',p:[-18,29,-5],vy:-18},{name:'deep-wrap',p:[0,-47,-170],vy:-35},{name:'crossed-rails',p:[8,-30,-1200],vy:-25}];
   for(const test of cases){
    await page.evaluate(test=>{
     const g=window.__game,p=g.player,l=g.getLevel(),V=p.pos.constructor,ray=new l.poolRay.constructor();
@@ -30,7 +32,7 @@ try{
      const hit=ray.intersectObjects(l.groundMeshes,false).find(h=>h.object.visible&&!h.object.userData.editorGhost);
      const forward=c.getWorldDirection(new V());
      samples.push({t:t-first,p:p.pos.toArray(),eye:c.position.toArray(),state:p.state,grounded:p.grounded,offset:p.verticalLoopOffset-start,screen:screen.toArray(),low:Math.min(...corners.map(p=>p.y)),high:Math.max(...corners.map(p=>p.y)),yaw:Math.atan2(forward.x,-forward.z),blocked:hit?{name:hit.object.name,point:hit.point.toArray(),distance:hit.distance}:null});
-     probe.done=t-first>5500||t-first>1000&&(p.grounded||p.state==='grind');
+     probe.done=t-first>5500||t-first>1000&&samples.length>30&&(p.grounded||p.state==='grind');
      if(!probe.done)requestAnimationFrame(sample);
     });
    },test);
@@ -44,7 +46,7 @@ try{
    console.log(JSON.stringify({...result,samples:undefined}));
    assert.ok(live.length>15);assert.equal(bad.length,0,'The live rider stays onscreen and unobstructed throughout the fall');
    assert.ok(result.maxYaw<.001,'Crossing rails never hijacks the forward view');
-   if(test.name==='deep-wrap')assert.equal(result.wrap,288);
+   if(test.name==='deep-wrap')assert.equal(result.wrap,id==='spaghetti-rails'?48:96);
   }
  }
  assert.deepEqual(errors,[]);

@@ -1,0 +1,162 @@
+[
+  {
+    "platforming": false,
+    "length": 3436,
+    "heights": [
+      -120,
+      -72,
+      -24,
+      24,
+      72,
+      120
+    ],
+    "components": 1341,
+    "rails": 302,
+    "density": {
+      "platforms": 888,
+      "averageArea": 403.89492612612713,
+      "medianArea": 386.750229787234,
+      "largePlatforms": 4
+    },
+    "connectedPlatforms": 888,
+    "coverage": 84231,
+    "physicalProbes": 3444,
+    "falls": [
+      {
+        "x": 0,
+        "z": -65,
+        "steps": 29,
+        "landing": [
+          0,
+          120,
+          -65
+        ],
+        "surface": "Recovery islands / rows 4–7"
+      },
+      {
+        "x": -44,
+        "z": -180,
+        "steps": 140,
+        "landing": [
+          -44,
+          24,
+          -180
+        ],
+        "surface": "Recovery islands / rows 8–11"
+      },
+      {
+        "x": 44,
+        "z": -245,
+        "steps": 29,
+        "landing": [
+          44,
+          120,
+          -245
+        ],
+        "surface": "Recovery islands / rows 8–11"
+      },
+      {
+        "x": 0,
+        "z": -355,
+        "steps": 29,
+        "landing": [
+          0,
+          120,
+          -355
+        ],
+        "surface": "Recovery islands / rows 16–19"
+      },
+      {
+        "x": -31,
+        "z": -3336,
+        "steps": 29,
+        "landing": [
+          -31,
+          120,
+          -3336
+        ],
+        "surface": "Recovery islands / rows 140–140"
+      }
+    ]
+  },
+  {
+    "platforming": true,
+    "length": 2144,
+    "heights": [
+      -120,
+      -72,
+      -24,
+      24,
+      72,
+      120
+    ],
+    "components": 1062,
+    "rails": 271,
+    "density": {
+      "platforms": 608,
+      "averageArea": 375.6804947368395,
+      "medianArea": 387.2063999999999,
+      "largePlatforms": 1
+    },
+    "connectedPlatforms": 608,
+    "coverage": 52577,
+    "physicalProbes": 2148,
+    "falls": [
+      {
+        "x": 0,
+        "z": -65,
+        "steps": 29,
+        "landing": [
+          0,
+          120,
+          -65
+        ],
+        "surface": "Recovery islands / rows 4–7"
+      },
+      {
+        "x": -44,
+        "z": -180,
+        "steps": 140,
+        "landing": [
+          -44,
+          24,
+          -180
+        ],
+        "surface": "Recovery islands / rows 8–11"
+      },
+      {
+        "x": 44,
+        "z": -245,
+        "steps": 29,
+        "landing": [
+          44,
+          120,
+          -245
+        ],
+        "surface": "Recovery islands / rows 8–11"
+      },
+      {
+        "x": 0,
+        "z": -355,
+        "steps": 29,
+        "landing": [
+          0,
+          120,
+          -355
+        ],
+        "surface": "Recovery islands / rows 16–19"
+      },
+      {
+        "x": -31,
+        "z": -2044,
+        "steps": 29,
+        "landing": [
+          -31,
+          120,
+          -2044
+        ],
+        "surface": "Recovery islands / rows 84–86"
+      }
+    ]
+  }
+]

@@ -177,6 +177,7 @@ const hud = await readFile(`${root}src/gameHudSurface.ts`, 'utf8');
 assert.ok(hud.includes('paintSpecial'), 'pre-CRT HUD must paint the radial SPECIAL meter');
 const ui = await readFile(`${root}src/ui.ts`, 'utf8');
 assert.ok(ui.includes('hud-special-ready'), 'DOM HUD must expose SPECIAL readiness');
+assert.doesNotMatch(ui,/special:\s*racing\s*\?\s*null/,'Race SPECIAL must reach the composited HUD as well as the DOM');
 
 const audio = await readFile(`${root}src/audio.ts`, 'utf8');
 assert.ok(audio.includes("specialTrick: 'special-trick.mp3'"), 'SPECIAL sting is not preloaded');

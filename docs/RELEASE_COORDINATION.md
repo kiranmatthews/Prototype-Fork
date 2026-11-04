@@ -1,4 +1,50 @@
-# Release coordination — 27 October 2026
+# Release coordination
+
+## Current status — active again 5 November 2026
+
+The user reactivated **Coordinate local work and releases** for the next batch
+of concurrent chats. Feature owners work, test and commit locally, submit an
+immutable handoff, and continue independent work. The coordinator integrates
+and publishes ready increments. Reuse valid evidence and keep reviews bounded;
+do not block unrelated authoring on GitHub or coordinator review.
+
+The reactivation audit uses `origin/main` at
+`fcde2825a9ce41db0e88b7e9b90d5da3a691daf4`; its Pages run `41758018856` succeeded.
+The previous READY gameplay backlog is already published. Local audit results
+are in `.release-queue/reactivation-20261105-*.json`; current dispositions and
+handoffs are in the shared inbox. Preserve the dirty primary checkout and base
+new integration work on current `origin/main` in a separate worktree.
+
+Explicit publication holds:
+
+- **Locate OpenGOAL character animations** (`01a19bb4-0de7-79a1-9881-c7c1b3dd3dec`),
+  branch `codex/jump-reference-motion`: the user says the animation experiments
+  are unfinished. Hold the entire local chain, working changes and subsequent
+  experiments until the user lifts this hold; a historical READY marker does
+  not override it.
+The user lifted the **Rework spaghetti levels** hold on 5 November and requested
+publication of its complete validated seven-commit chain through `08dcece8`.
+Historical LOCAL_ONLY handoff text is superseded by that direct authorization.
+
+The separate **Locate OpenGOAL character animations (3)** particle-harvesting
+fork (`01a1a66e-202a-79d1-93bc-f6516ab3cf5b`) is publishable when complete. Keep
+its scoped particle lab separate from unfinished animation dependencies.
+
+Coordinate through 9am Pacific/Auckland on 5 November 2026
+(`2026-11-04T20:00:00Z`) or until account usage remaining reaches zero, whichever
+comes first. Do not spend reset credits or purchase usage.
+
+Do not reject unrelated work merely because a held branch also edits a shared
+runtime file. Apply only declared ready commits and their allowed dependencies.
+Beach source `a1f1d729` is unpublished verification documentation only; its
+gameplay is already on main and needs no repeat gameplay review.
+
+The coordinator was retired from 28 October until this reactivation. The last
+release from that cycle was `aac956ab544572811e0787815450ce8718e09343`, verified
+through Pages run `40580839323`. Its evidence and source mappings remain in the
+shared inbox. No background polling job was started by this reactivation audit.
+
+## Active coordination procedure
 
 **Coordinate local work and releases** (`01a17b2e-3553-70e0-abb3-0bcc400dcc1b`)
 is the sole active release coordinator, as requested by the user. This section

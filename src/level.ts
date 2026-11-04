@@ -55,6 +55,7 @@ import {createWaterfallClimbCurtain} from './waterfallClimbMaterials';
 import { HazardVisuals } from './hazardVisuals';
 import { createCarlisleCones, isCarlisleConeRow } from './carlisleCone';
 import { createCarlisleShipyard, isCarlisleShipyard, isCarlisleMassing } from './carlisleShipyard';
+import { SpaghettiSprings } from './spaghettiSprings';
 import { marineNetBounds } from './trampolineSurface';
 import {createTribalTrampolines,isTribalTrampoline} from './tribalTrampolines';
 import { AncientGatesMechanisms } from './ancientGatesMechanisms';
@@ -4409,7 +4410,10 @@ export class Level {
   get railChoices():RailChoices|null {
     const authored=this.skateRace??this.railNavigation;
     if(!authored?.railChoices?.length)return null;
-    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line,!!this.verticalLoop),authored,this.rails,!!this.verticalLoop);
+    // A twisted repeat can contain P1's folded, vertically separated knots.
+    // Their native 3D navigation must not collapse onto the forward race plane.
+    const planar=!!this.verticalLoop&&!this.verticalLoop.twist;
+    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line,planar),authored,this.rails,planar);
   }
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
@@ -4688,6 +4692,7 @@ export class Level {
   private carlisleCones:ReturnType<typeof createCarlisleCones>=null;
   private carlisleShipyard:ReturnType<typeof createCarlisleShipyard>=null;
   private tribalTrampolines:ReturnType<typeof createTribalTrampolines>=null;
+  private spaghettiSprings:SpaghettiSprings|null=null;
   private ancientMechanisms:AncientGatesMechanisms|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
@@ -7755,6 +7760,7 @@ export class Level {
       this.carlisleCones=createCarlisleCones(this.root,data);
       this.carlisleShipyard=createCarlisleShipyard(this.root,data,this.groundMeshes);
       this.tribalTrampolines=createTribalTrampolines(data,this.groundMeshes);
+      if(data.verticalLoop&&data.name.startsWith('Spaghetti Rails'))this.spaghettiSprings=new SpaghettiSprings(data,this.groundMeshes);
     }
   }
 
@@ -8890,7 +8896,7 @@ export class Level {
             const pad = this.buildMechanicPad(c, 0xff8a2b, 0x4a1600);
             pad.userData.trampolineBounce = Math.max(0.1, c.speed ?? 16);
             pad.userData.trampolineHeldMult = Math.max(1, c.amp ?? 1.25);
-            if (isCarlisleShipyard(data)||isTribalTrampoline(c)) pad.userData.trampolineNetBounds = marineNetBounds(c.s?.[0] ?? 5, c.s?.[2] ?? 5);
+            if (isCarlisleShipyard(data)||isTribalTrampoline(c)||(data.verticalLoop&&data.name.startsWith('Spaghetti Rails'))) pad.userData.trampolineNetBounds = marineNetBounds(c.s?.[0] ?? 5, c.s?.[2] ?? 5);
           } else if (c.t === "speedpad") {
             const pad = this.buildMechanicPad(c, 0x2bdfff, 0x00334a);
             pad.userData.speedPadSpeed = Math.max(0.1, c.speed ?? 48);
@@ -9035,6 +9041,7 @@ export class Level {
     this.carlisleCones?.dispose();this.carlisleCones=null;
     this.carlisleShipyard?.dispose();this.carlisleShipyard=null;
     this.tribalTrampolines?.dispose();this.tribalTrampolines=null;
+    this.spaghettiSprings?.dispose();this.spaghettiSprings=null;
     this.ancientMechanisms?.dispose();this.ancientMechanisms=null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;this.swimmingPools.length=0;
@@ -10097,6 +10104,7 @@ export class Level {
     this.carlisleCones?.update(dt,this.playerPos);
     this.carlisleShipyard?.update(dt,this.playerPos);
     this.tribalTrampolines?.update(dt);
+    this.spaghettiSprings?.update(dt);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
     this.meshSideCollisions.beginStep();
@@ -16444,7 +16452,7 @@ export class Level {
       this.verticalLoopView??=new VerticalLoopView(this.root,this.verticalLoop,index=>{
         const c=this.builtFromData?.components[index];
         return !!c&&!c.amp&&!c.outline&&['platform','ramp','vertramp','rail','wall','mesh'].includes(c.t);
-      });
+      },this.atmosphere?.fogFar??300);
       this.verticalLoopView.update(camera,clearInspectionView?0:this.atmosphere?.fogFar??300);
     }
     if(this.atmosphere?.rain){
@@ -16491,7 +16499,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}

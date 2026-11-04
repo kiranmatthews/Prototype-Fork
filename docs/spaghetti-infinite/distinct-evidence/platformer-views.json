@@ -1,0 +1,53 @@
+{
+  "reports": [
+    {
+      "name": "lantern-steps",
+      "p": [
+        -9,
+        109.99999997615814,
+        -18
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 415,
+      "triangles": 5340482
+    },
+    {
+      "name": "counterweights",
+      "p": [
+        -18,
+        59.99999998807907,
+        -400
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 430,
+      "triangles": 5769110
+    },
+    {
+      "name": "spine-stair",
+      "p": [
+        18,
+        47.99999998807907,
+        -600
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 453,
+      "triangles": 6301326
+    },
+    {
+      "name": "spring-vault",
+      "p": [
+        30,
+        -32.00000001192093,
+        -1330
+      ],
+      "id": "spaghetti-rails-platforming",
+      "grounded": true,
+      "calls": 403,
+      "triangles": 5901858
+    }
+  ],
+  "errors": []
+}

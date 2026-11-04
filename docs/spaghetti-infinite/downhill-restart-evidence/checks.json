@@ -1,0 +1,21 @@
+{
+  "checkLevels": "pass",
+  "build": "pass",
+  "offlineVersion": "41a23b1287e6109d345f",
+  "downhill": "pass",
+  "raceRewards": "pass",
+  "nativeRace": "All eight finish, no deaths or race resets; final record passes the updated club-field traversal validator",
+  "chromeLiteFullNative": "pass; clean consoles",
+  "chromeFinalKicker": "pass; full/native 1600x1000",
+  "localOnly": true,
+  "geometryBase": "c82ddfd36bd918c9d99fc3a3efea15d18289382c",
+  "sourceSha256": {
+    "src/levels/spaghetti-race-course.ts": "e3a09c4c43248778d55c28b53e25686018dbf6163953003cdb2f2874bd9b87a5",
+    "src/levels/spaghetti-race-world.ts": "7131b4603f4eb4bf188ac477811e688e2398e4f820eca99154111a2a9d702a4b",
+    "src/levels/spaghetti-rails-art.ts": "e28e70ff7b202a5108d3184288fa91c6bb2a968fc0888653dd8abe6d2c713e96",
+    "tools/test-spaghetti-downhill.mjs": "fab2a0dc02ba59431aff4fa71cf3e79224c30aaf7f922ee661509c99563d0694",
+    "tools/test-spaghetti-race-rewards.mjs": "8da93a3f64ed053221c1e2c9ad93dfa93e1fe2895ad98c2af6e04fcebfed6936",
+    "tools/test-spaghetti-rails.mjs": "3a935a79c58473f1cc2ab06ecc39f6316055384851d116e177df06c417ea917c",
+    "tools/spaghetti-race-validation.mjs": "b697550f1c568d5a5996ecb8bd9db40d4cb07770bd0d45c9cadcf50fcb19baf0"
+  }
+}

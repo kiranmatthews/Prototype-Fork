@@ -74,6 +74,19 @@ export class RenderInterpolator {
     }
   }
 
+  /** Re-express both interpolation endpoints in a rotated periodic cell.
+   * Root transforms move together; child-local pose and scale stay intact. */
+  transformWorld(matrix:THREE.Matrix4,rotation:THREE.Quaternion):void {
+    this.restore();
+    for(const track of this.tracks.values()){
+      if(track.object.parent&&this.tracks.has(track.object.parent))continue;
+      track.object.position.applyMatrix4(matrix);
+      track.previousPosition.applyMatrix4(matrix);track.currentPosition.applyMatrix4(matrix);
+      track.object.quaternion.premultiply(rotation);
+      track.previousQuaternion.premultiply(rotation);track.currentQuaternion.premultiply(rotation);
+    }
+  }
+
   /** Discard history at a semantic teleport/pause boundary. */
   snap(): void {
     // A DOM/input callback can request a respawn between RAFs. Fail safe even

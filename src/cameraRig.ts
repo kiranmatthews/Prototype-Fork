@@ -158,6 +158,10 @@ export class CourseCameraHeading {
   private active = false;
   readonly forward = new THREE.Vector3(0, 0, -1);
 
+  rotateWorldY(yaw:number):void {
+    this.yaw+=yaw;this.forward.applyAxisAngle(THREE.Object3D.DEFAULT_UP,yaw);
+  }
+
   step(origin: THREE.Vector3 | null, ahead: THREE.Vector3 | null,
     local: { x: number; z: number }, dt: number, snap: boolean): THREE.Vector3 {
     if (!origin || !ahead) {

@@ -85,6 +85,7 @@ export class RaceHud {
       const go=this.element.querySelector<HTMLElement>('[data-race-go]');if(go){go.hidden=s.runTime>=.8;go.style.display=s.runTime<.8?'block':'none';}
       this.setText('[data-race-rank]',s.mode==='race'?`${s.rank} / 8`:'TIME TRIAL');
       this.setText('[data-race-clock]',time(s.elapsed));
+      this.setText('[data-race-speed]',String(Math.round(s.speedKmh)));
       this.setText('[data-race-boxes]',`${s.boxes} / ${s.totalBoxes} BOXES`);
       this.setText('[data-race-status]',s.freeze>0?`FROZEN ${Math.ceil(s.freeze)}s`:s.recovering>0?(s.cart?.onFoot?'BACK ON YOUR FEET':s.vehicle?'BACK IN THE CART':'BACK ON BOARD'):s.star>0?`STAR ${Math.ceil(s.star)}`:s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
       if(s.cart){
@@ -158,7 +159,8 @@ export class RaceHud {
       this.element.innerHTML='<div class="comp-countdown" data-race-go style="position:absolute;left:50%;top:12vh;transform:translateX(-50%)"><strong>GO!</strong></div><div class="comp-run-hud"><strong data-race-rank></strong><strong data-race-clock></strong><span>'+(s.gemReward==='win'?'':'<small data-race-boxes></small>')+'<small data-race-status></small></span></div>'+
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(64px,12vh)"><button class="game-menu-button game-results-medal" data-race-action="item" style="pointer-events:auto;width:clamp(96px,14vw,152px);height:clamp(72px,12vh,112px);display:flex;align-items:center"></button></div>'+
         '<div class="comp-run-hud" data-race-threats style="top:max(86px,19vh);left:5vw;display:flex;gap:12px" role="status" aria-label="Incoming weapons"></div>'+
-        '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(138px,30vh);width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>';
+        '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(138px,30vh);width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>'+
+        '<div class="comp-run-hud" data-race-speedometer aria-label="Speed in kilometres per hour" style="left:auto;right:5vw;top:auto;bottom:6vh;display:flex;gap:.4em;align-items:baseline;justify-content:flex-end;min-width:5em;font-variant-numeric:tabular-nums"><strong data-race-speed>0</strong><small>KM/H</small></div>';
       if(s.vehicle)this.element.insertAdjacentHTML('beforeend','<div class="comp-run-hud" data-cart-hud style="top:auto;bottom:12vh;left:5vw;max-width:66vw;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;font-size:clamp(12px,2vw,20px)"><small data-cart-action></small><small data-cart-notice role="status"></small></div>');
     }else if(s.phase==='countdown'){
       this.element.innerHTML=`<div class="comp-countdown" style="position:absolute;left:50%;top:12vh;transform:translateX(-50%)"><strong>${Math.max(1,Math.ceil(s.countdown))}</strong></div>`;

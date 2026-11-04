@@ -8609,3 +8609,194 @@ The shared enemy runtime check, production build/type-check and release-size
 check pass (814,174,039 bytes). Browser checks include front/40°/90°, normal and
 MAX/native rendering, full Tribal Run, contact hurt/respawn and a clean console.
 No full suite was run. See [guardian review](tribal-guardian/README.md).
+
+## 2026-11-02 — Distinct, longer spaghetti courses (local preview)
+
+Replace the shared six-section layout with separate race and platforming
+courses. The race is now 3.41 km with twelve long speed sections, over/under
+rail choices, chicanes, banking bowls and spaced interchanges. The platformer
+is about 2.1 km with ten individually patterned jump courts, fifty foot jumps,
+moving/crumbling transfers, guarded rewards, nine checkpoints and optional
+board routes. Teal lane markings and amber lantern landings distinguish them.
+
+Distribute recovery islands across six evenly spaced heights, including both
+sides of the periodic seam. Average platform area falls another 15%/24%; every
+island remains connected by rails and every corridor column still has a real
+landing. Pack exact recovery cuboids into small native mesh/BVH groups. Spread
+height exchanges along the courses. Rival pilots follow recovery rails and
+build speed before recatching them; player physics/tuning remain unchanged.
+
+Prompt to validated local build: approximately **52 minutes**. Fifty foot-jump
+fixtures, all twelve tier/rail-junction rides, spring/kicker/spine receivers,
+checkpoint/crystal/finish, full coverage/collider probes and an eight-rider
+race pass. All racers finish in 112.40–344.65 seconds with no deaths or resets.
+Chrome lite/full fall cameras and native-resolution layout review are clean.
+`npm run check:levels` and `npm run build` pass; no full suite ran.
+
+Kept local at the user's request. Preview server: port 5248. No publishing or
+shared level-pack changes. Details and compact evidence:
+[distinct iteration](spaghetti-infinite/DISTINCT_ITERATION.md).
+
+
+## 2026-11-02 — Branching and cross-height spaghetti rails (local preview)
+
+Keep the approved long layouts and all 888 racing / 608 platforming islands.
+Add multiple selectable rail departures at 30 primary platforms per course,
+plus 120 recovery junctions. Choices include level express routes, shallow
+and steep descents, racing lane changes and platforming cargo balconies.
+Replace short sideways-heavy zigzags with forward diagonals; sloped run-ins
+feed six existing kickers. Keep foot takeoffs and both spine chains clear.
+
+Use ordinary recovery/ollie inputs for rivals stranded on low-speed grinds or
+small landing rims. Partition exact periodic render geometry into local Y/Z
+groups, reducing submitted triangles by 40–53% in the reviewed views without
+changing silhouettes or collision. Player tuning and camera are unchanged.
+
+Prompt to validated local preview: approximately **43 minutes**. Fifty foot
+jumps, 35 native fork rides, 12 rail-span handoffs, all jump features, complete
+coverage, and eight finishing racers pass. Chrome lite/full/native confirms
+visible fall framing and clean consoles. Required level checks, build and
+exact-geometry preservation checks pass. No full suite, push or publication.
+Details: [fork iteration](spaghetti-infinite/FORK_ITERATION.md).
+
+## 2026-11-02 — Race rewards, compact height and shared speedometer (local preview)
+
+Shorten the race by one third to approximately 2.27 km, preserving eight full
+speed sections. Apply the user's chosen 48-metre wrap cell with two recovery
+heights 24 metres apart. The platformer keeps its separate 2.1 km course in a
+96-metre cell. Preserve full XZ recovery coverage, forward forks and native
+collision thickness; share complete periodic geometry out to the fog distance.
+
+Restore the race Special display, add a six-second Perfect Balance roulette
+item in place of nearby traps, place 759 frequent mystery pickups on rails at
+both heights and return them after 1.5 seconds. Eighteen race / six platformer
+springs reuse Carlisle's complete 14×16-metre marine nets. Only this race gets
+55% normal grind drift/noise and less precise club opponents. All race levels,
+including karts, display actual horizontal speed in km/h.
+
+Prompt-to-validated-build: approximately **86 minutes**, including successive
+playtest corrections. Eight native racers finish without deaths or resets;
+all 50 foot jumps, 24 springs, platformer kickers and spine transfers pass.
+Coverage and fall probes, native rewards, focused item/HUD/balance checks,
+Chrome lite/full/native, required level checks and production build pass.
+No full suite, global tuning change, shared-pack update, push or publication.
+Details: [race iteration](spaghetti-infinite/RACE_ITEMS_HEIGHT_ITERATION.md).
+
+## 2026-11-02 — A visible box route through the platformer (local preview)
+
+Give the platformer one continuous route through all ten jump courts to the
+crystal and finish. Place every required crate on its 115 marked stops, with
+fruit across gaps and persistent gold arrows/edges after collection. Add small
+stepping stones across balcony and chapter gaps, and align balconies toward
+the next court. Keep springs, kickers, spine transfers and rail choices as
+optional board routes. Move only nearby recovery shelves that obstruct the
+route, preserving all six heights, full XZ landing coverage and rail links.
+
+Prompt-to-validated-local-preview: approximately **45 minutes**. All 114 foot
+jumps, 229 crate supports and 114 next-box sightlines pass. Chrome lite/full
+checks show the next destination from all 114 takeoffs; fall framing remains
+visible with no camera yaw change or console errors. All spring/kicker/spine
+features, checkpoint/crystal/finish, 31 fork rides and twelve native recovery
+handoffs pass. Required level checks and production build pass. The earlier
+race layout and shared gameplay tuning remain intact.
+
+Kept local at the user's request; no push, publication or shared-pack change.
+Details: [box route iteration](spaghetti-infinite/BOX_ROUTE_ITERATION.md).
+
+
+## 2026-11-03 — A collectible itinerary through the existing 3D maze (local preview)
+
+Replace the rejected straight stepping-stone corridor with a 95-stop path
+through the original 616-platform maze. Fruit and crates lead across all six
+recovery heights, including ten backward and nine sideways legs. Six Carlisle
+marine nets are mandatory transfers, launching roughly 78–85 metres to existing
+shelves. Use 43 foot jumps and 44 rail legs, preserving the original courts,
+ferries, kickers and spine geometry. All 110 crates, ten checkpoints and the
+crystal lie on the marked route; persistent small arrows retain its direction.
+
+Add ordered 3D camera guidance and opt this platformer into Carlisle's launch
+camera. Rebase its anchors at the vertical seam and hold the takeoff control
+frame throughout spring flight. Plan new connectors around existing platform
+undersides at authoring time. The race layout and global tuning stay intact.
+
+Prompt-to-validated-local-preview: approximately **70 minutes**. All native
+foot jumps, rail legs, six direct spring receivers and 110 crate contacts pass,
+as do checkpoint/crystal/finish, full coverage, connectivity and seam checks.
+Chrome lite/full/native reviews include 38 authored views, twelve spring
+flights and six falls with visible characters and clean consoles. Required
+level checks and the production build pass. Per-leg fixtures establish the
+traversal evidence; an uninterrupted all-box playthrough was not performed.
+
+Kept local at the user's request; no push, publication or shared-pack change.
+Details: [maze route iteration](spaghetti-infinite/MAZE_ROUTE_ITERATION.md).
+
+## 2026-11-03 — Version 1 race restart with downhill decks (local preview)
+
+Restore the selected history version 1 race foundation: twelve sections,
+three primary lines, six recovery heights and the original 288-metre wrap.
+Keep the newer Special, Perfect Balance roulette, club rivals, easier balance,
+speedometer, frequent items and eighteen complete Carlisle marine nets.
+Lengthen every deck by 2–4× and give it a varying forward downhill grade.
+Refit rail heights and ramp joins to the actual surfaces; preserve the native
+rounded curves, all connected landing footprints and full recovery coverage.
+The platformer keeps its existing maze itinerary.
+
+The race has 904 decks, 183 rails, 706 mystery pickups and a roughly 3.47 km
+route. The final collector uses the longer deck to clear its descending joins.
+Eleven downhill rides, three kicker landings, all eighteen spring receivers,
+full coverage/connectivity, five wrapped falls, native rewards and eight
+finishing racers pass without deaths or resets. Update the club-rival rail-use
+assertion to permit individual platform-heavy recoveries on the longer decks;
+the recorded final run passes the extracted validator. Chrome lite/full/native
+checks show working HUDs, complete artwork, visible rider and clean consoles.
+Required level checks and production build pass. No global runtime/tuning or
+shared-pack changes, full suite, push or publication.
+
+Prompt to validated local preview: approximately **50 minutes**. Details:
+[downhill restart iteration](spaghetti-infinite/DOWNHILL_RESTART_ITERATION.md).
+
+## 2026-11-03 — P1 platformer with rotating infinite space (local preview)
+
+Restore the selected P1 folded maze: 79 platforms, 54 rails, eighteen branch
+routes and its original checkpoint/fruit/crystal route. Replace the fatal
+abyss with 192 m vertical repeats, each lower instance yawed five degrees.
+Measured free fall is 3.93 seconds through the first cell and 3.69 seconds at
+terminal speed thereafter. Real landing times depend on the original maze.
+
+Use one rigid transform for the neighbour geometry and player/camera seam.
+Preserve momentum, interpolation, input orientation and collected progress;
+hold the airborne camera frame until real support resumes P1's height-aware
+route. Exact shared geometry and bounded render neighbours keep resources
+constant through repeated falls. The race layout and physics tuning remain
+unchanged.
+
+Native still/moving/upward wraps, rotated landing collision, checkpoint,
+crystal and finish fixtures pass. Chrome lite/full/MAX and normal presentation
+show visible characters and continuous cameras, including 683 frames across
+three moving falls; consoles are clean. The separate race smoke, focused
+camera/interpolation/geometry regressions, required level checks and production
+build pass. No full all-box playthrough or full suite was run.
+
+Prompt to validated local preview: approximately **23 minutes**. No shared
+pack update, push or publication. Details and evidence:
+[P1 infinite twist iteration](spaghetti-infinite/P1_TWIST_ITERATION.md).
+
+## 2026-11-05 — Coordinated Spaghetti publication
+
+The user released the local-only hold and requested publication of the seven
+Spaghetti commits through `08dcece8`: the longer downhill race with Special,
+Perfect Balance and complete spring nets, plus the selected P1 platformer with
+192 m repeating space and five-degree rotation. Preserve both Tribal and
+Spaghetti trampoline lifecycles when integrating onto `fcde2825`; retain the
+current published level pack and the held OpenGOAL animation experiments.
+
+All 51 other changed source/tool files match the validated owner source exactly.
+Reuse the owner's full race, native geometry and level-validation evidence.
+The affected Tribal trampoline and race reward checks pass, as do the combined
+production build and release-size check (814,207,982 bytes). Production Chrome
+checks cover native/normal presentation, supported spawn, rotated catches,
+repeated moving falls with no deaths, crystal/finish, race Special and Perfect
+Balance, accurate HUD speed and all eighteen spring housings; consoles are clean.
+No full suite was run. Coordinator integration to validated production preview:
+approximately 13 minutes. Matching deployment and public verification are
+recorded separately in the local release ledger after publication.

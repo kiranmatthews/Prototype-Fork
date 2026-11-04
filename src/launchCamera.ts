@@ -27,6 +27,15 @@ export class LaunchCamera {
   private readonly matrix=new THREE.Matrix4();
   private readonly up=new THREE.Vector3(0,1,0);
   get diagnostics(){return {weight:this.weight,launchId:this.launchId,height:this.height,yaw:this.yaw,position:this.shotPosition.toArray()};}
+  /** The periodic world rebases the subject and every persistent camera anchor together. */
+  shiftY(offset:number):void {
+    this.height+=offset;this.basePosition.y+=offset;this.shotPosition.y+=offset;this.aim.y+=offset;
+  }
+  transformWorld(matrix:THREE.Matrix4,rotation:THREE.Quaternion,yaw:number):void {
+    this.height+=matrix.elements[13];this.yaw+=yaw;
+    this.basePosition.applyMatrix4(matrix);this.shotPosition.applyMatrix4(matrix);this.aim.applyMatrix4(matrix);
+    this.baseRotation.premultiply(rotation);this.shotRotation.premultiply(rotation);
+  }
   restore(camera:THREE.PerspectiveCamera):void {
     if(!this.saved)return;
     camera.position.copy(this.basePosition);camera.quaternion.copy(this.baseRotation);

@@ -1,0 +1,551 @@
+[
+  {
+    "platforming": false,
+    "rails": 129,
+    "junctions": 96,
+    "mainJunctions": 30,
+    "downhillPairs": 23,
+    "level": 31,
+    "downhill": 98,
+    "maxYaw": 57.01962036714015,
+    "rides": [
+      {
+        "name": "Race fork / 0.0 / inside line",
+        "caught": true,
+        "frames": 516,
+        "maxT": 239.14729240223284,
+        "length": 242.7067827945621,
+        "end": [
+          -3,
+          97.05000000000001,
+          -234.44050960767075
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 0.1 / shallow descent",
+        "caught": true,
+        "frames": 362,
+        "maxT": 167.34175377880788,
+        "length": 171.26026836627034,
+        "end": [
+          -11,
+          73.05000000000001,
+          -157.84048541253753
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 0.2 / steep descent",
+        "caught": true,
+        "frames": 346,
+        "maxT": 161.13591836585755,
+        "length": 164.98450086792224,
+        "end": [
+          -5,
+          25.050000000000004,
+          -109.96741749793533
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 2.0 / steep descent",
+        "caught": true,
+        "frames": 238,
+        "maxT": 114.07890767017614,
+        "length": 117.83905501409218,
+        "end": [
+          -37,
+          25.050000000000004,
+          -613.459852656084
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 4.0 / shallow descent",
+        "caught": true,
+        "frames": 341,
+        "maxT": 159.8796291879836,
+        "length": 163.7218947751905,
+        "end": [
+          -27,
+          25.049999999999997,
+          -1236.6397344127931
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 4.1 / steep descent",
+        "caught": true,
+        "frames": 284,
+        "maxT": 135.9822232025808,
+        "length": 139.71059537234524,
+        "end": [
+          -21,
+          -22.950000000000003,
+          -1188.8106278302355
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 4.2 / inside line",
+        "caught": true,
+        "frames": 472,
+        "maxT": 223.6227730595227,
+        "length": 227.50317772083136,
+        "end": [
+          -29,
+          25.049999999999997,
+          -1294.1195953386914
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 10.0 / shallow descent",
+        "caught": true,
+        "frames": 382,
+        "maxT": 168.79821821839602,
+        "length": 172.7052546370482,
+        "end": [
+          -27,
+          -70.94999999999999,
+          -2866.6459635813476
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 10.1 / steep descent",
+        "caught": true,
+        "frames": 245,
+        "maxT": 117.56748450691612,
+        "length": 121.07597437657519,
+        "end": [
+          -21,
+          -118.94999999999999,
+          -2795.129510130341
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Race fork / 10.2 / inside line",
+        "caught": true,
+        "frames": 629,
+        "maxT": 301.3007160006876,
+        "length": 305.26532764037813,
+        "end": [
+          -29,
+          -82.94999999999999,
+          -2994.0353883603093
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 3.0 / level express",
+        "caught": true,
+        "frames": 382,
+        "maxT": 140.0666666666658,
+        "length": 143.83420223820218,
+        "end": [
+          21,
+          121.05000000000001,
+          -181.9631736483218
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 15.0 / shallow descent",
+        "caught": true,
+        "frames": 312,
+        "maxT": 150.664103000655,
+        "length": 154.25321785045207,
+        "end": [
+          37,
+          73.05000000000001,
+          -469.8011688381463
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 27.0 / steep descent",
+        "caught": true,
+        "frames": 289,
+        "maxT": 140.746827785285,
+        "length": 144.62283012298673,
+        "end": [
+          43,
+          25.050000000000004,
+          -709.2308558183267
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 5.2 / level express",
+        "caught": true,
+        "frames": 382,
+        "maxT": 140.0666666666658,
+        "length": 143.83420223820218,
+        "end": [
+          -27,
+          25.049999999999997,
+          -229.90643605966932
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 17.2 / shallow descent",
+        "caught": true,
+        "frames": 312,
+        "maxT": 150.664103000655,
+        "length": 154.25321785045207,
+        "end": [
+          -11,
+          -22.950000000000003,
+          -517.7444312494938
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 29.2 / steep descent",
+        "caught": true,
+        "frames": 289,
+        "maxT": 140.746827785285,
+        "length": 144.6228301229866,
+        "end": [
+          -5,
+          -70.94999999999999,
+          -757.1741182296743
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 4.4 / level express",
+        "caught": true,
+        "frames": 382,
+        "maxT": 140.0666666666658,
+        "length": 143.83420223820218,
+        "end": [
+          -43,
+          -70.94999999999999,
+          -205.93480485399556
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 16.4 / shallow descent",
+        "caught": true,
+        "frames": 312,
+        "maxT": 150.664103000655,
+        "length": 154.25321785045207,
+        "end": [
+          -27,
+          -118.94999999999999,
+          -493.77280004382
+        ],
+        "deaths": 0
+      }
+    ],
+    "slopes": [
+      {
+        "name": "Race kicker approach",
+        "entrySpeed": 11.9894,
+        "exitSpeed": 20.57637207877077,
+        "downhillFrames": 46,
+        "end": [
+          -39,
+          92.22252689137369,
+          -253.2211558801921
+        ]
+      },
+      {
+        "name": "Race kicker approach",
+        "entrySpeed": 11.9894,
+        "exitSpeed": 20.57637207877077,
+        "downhillFrames": 46,
+        "end": [
+          -39,
+          20.22252689137388,
+          -1313.2211558801914
+        ]
+      },
+      {
+        "name": "Race kicker approach",
+        "entrySpeed": 11.9894,
+        "exitSpeed": 20.57637207877077,
+        "downhillFrames": 46,
+        "end": [
+          39,
+          -69.77747310862625,
+          -2713.221155880192
+        ]
+      }
+    ]
+  },
+  {
+    "platforming": true,
+    "rails": 99,
+    "junctions": 84,
+    "mainJunctions": 30,
+    "downhillPairs": 12,
+    "level": 24,
+    "downhill": 75,
+    "maxYaw": 56.976401073994445,
+    "rides": [
+      {
+        "name": "Lantern Steps / fork / lower thread",
+        "caught": true,
+        "frames": 310,
+        "maxT": 149.94899235585746,
+        "length": 153.87987091540154,
+        "end": [
+          21,
+          73.05000000000001,
+          -134.06912144045592
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Lantern Steps / fork / cargo balcony",
+        "caught": true,
+        "frames": 236,
+        "maxT": 108.54612952614048,
+        "length": 112.16532078257022,
+        "end": [
+          -29,
+          99.05000000000001,
+          -138.38080874357024
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Lantern Steps / fork / balcony descent",
+        "caught": true,
+        "frames": 244,
+        "maxT": 115.98910290645084,
+        "length": 119.60119634966931,
+        "end": [
+          -27,
+          73.05000000000001,
+          -254.38790655678153
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Counterweights / fork / balcony descent",
+        "caught": true,
+        "frames": 241,
+        "maxT": 114.07855600448727,
+        "length": 117.87730207039746,
+        "end": [
+          21,
+          25.049999999999997,
+          -638.2012539340898
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Spine Stair / fork / cargo balcony",
+        "caught": true,
+        "frames": 242,
+        "maxT": 109.65925093456602,
+        "length": 113.27816438833297,
+        "end": [
+          23,
+          35.05,
+          -738.3810865462331
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "The Box Garden / fork / lower thread",
+        "caught": true,
+        "frames": 307,
+        "maxT": 148.19004843274334,
+        "length": 152.01829840594112,
+        "end": [
+          37,
+          -22.950000000000003,
+          -926.1717500268022
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Spring Vault / fork / balcony descent",
+        "caught": true,
+        "frames": 286,
+        "maxT": 136.13168603484903,
+        "length": 139.654712216996,
+        "end": [
+          37,
+          -70.94999999999999,
+          -1454.476973817853
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "The Bellows / fork / cargo balcony",
+        "caught": true,
+        "frames": 238,
+        "maxT": 109.46783576238887,
+        "length": 113.46698948129144,
+        "end": [
+          23,
+          -60.95,
+          -1538.0008462810974
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Needle Windows / fork / lower thread",
+        "caught": true,
+        "frames": 264,
+        "maxT": 126.78658732774282,
+        "length": 130.76510089312688,
+        "end": [
+          -11,
+          -118.94999999999999,
+          -1718.021486434616
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 3.0 / level express",
+        "caught": true,
+        "frames": 382,
+        "maxT": 140.0666666666658,
+        "length": 144.00419723587154,
+        "end": [
+          21,
+          121.05000000000001,
+          -182.06246943079427
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 12.0 / shallow descent",
+        "caught": true,
+        "frames": 312,
+        "maxT": 150.661569943801,
+        "length": 154.41185858394888,
+        "end": [
+          -27,
+          73.05000000000001,
+          -398.2497113598521
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 21.0 / steep descent",
+        "caught": true,
+        "frames": 289,
+        "maxT": 140.74555080330987,
+        "length": 144.70260631903824,
+        "end": [
+          43,
+          25.050000000000004,
+          -566.0429444842716
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 5.2 / level express",
+        "caught": true,
+        "frames": 382,
+        "maxT": 140.0666666666658,
+        "length": 144.00419723587154,
+        "end": [
+          -27,
+          25.049999999999997,
+          -230.06246943079427
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 14.2 / shallow descent",
+        "caught": true,
+        "frames": 312,
+        "maxT": 150.66156994380103,
+        "length": 154.41185858394886,
+        "end": [
+          21,
+          -22.950000000000003,
+          -446.2497113598522
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 23.2 / steep descent",
+        "caught": true,
+        "frames": 289,
+        "maxT": 140.74555080330987,
+        "length": 144.70260631903824,
+        "end": [
+          -5,
+          -70.94999999999999,
+          -614.0429444842716
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 4.4 / level express",
+        "caught": true,
+        "frames": 382,
+        "maxT": 140.0666666666658,
+        "length": 144.00419723587154,
+        "end": [
+          -43,
+          -70.94999999999999,
+          -206.06246943079427
+        ],
+        "deaths": 0
+      },
+      {
+        "name": "Recovery fork / 13.4 / shallow descent",
+        "caught": true,
+        "frames": 312,
+        "maxT": 150.661569943801,
+        "length": 154.41185858394888,
+        "end": [
+          -11,
+          -118.94999999999999,
+          -422.2497113598521
+        ],
+        "deaths": 0
+      }
+    ],
+    "slopes": [
+      {
+        "name": "Lantern Steps / kicker approach",
+        "entrySpeed": 11.9894,
+        "exitSpeed": 20.57637207877077,
+        "downhillFrames": 46,
+        "end": [
+          38,
+          96.22252689137368,
+          -77.22115588019213
+        ]
+      },
+      {
+        "name": "The Box Garden / kicker approach",
+        "entrySpeed": 11.9894,
+        "exitSpeed": 20.57637207877077,
+        "downhillFrames": 46,
+        "end": [
+          38,
+          -3.7774731086264444,
+          -877.2211558801926
+        ]
+      },
+      {
+        "name": "Needle Windows / kicker approach",
+        "entrySpeed": 11.9894,
+        "exitSpeed": 20.57637207877077,
+        "downhillFrames": 46,
+        "end": [
+          38,
+          -99.77747310862613,
+          -1677.2211558801914
+        ]
+      }
+    ]
+  }
+]

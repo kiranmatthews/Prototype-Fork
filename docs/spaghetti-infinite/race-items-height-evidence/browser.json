@@ -1,0 +1,77 @@
+{
+  "reports": [
+    {
+      "full": false,
+      "firstFill": 6.683333333333315,
+      "activations": 1,
+      "pickups": 4,
+      "uses": 4,
+      "specialPaints": 66,
+      "meter": 100,
+      "balancePaints": 15,
+      "balanceUses": 1,
+      "balanceSeconds": 5.250000000000003,
+      "speedText": "110",
+      "speedKmh": 109.78085240258356,
+      "visible": true,
+      "avatarOnly": true,
+      "aria": "100",
+      "springs": 18,
+      "housingParts": 18,
+      "housingVertices": 111024,
+      "art": {
+        "status": "ready",
+        "errors": []
+      },
+      "boxes": 759,
+      "tuningUnchanged": true,
+      "buffer": [
+        800,
+        500
+      ]
+    },
+    {
+      "full": true,
+      "firstFill": 6.683333333333315,
+      "activations": 1,
+      "pickups": 4,
+      "uses": 4,
+      "specialPaints": 56,
+      "meter": 100,
+      "balancePaints": 15,
+      "balanceUses": 1,
+      "balanceSeconds": 5.083333333333337,
+      "speedText": "110",
+      "speedKmh": 109.7807986136871,
+      "visible": true,
+      "avatarOnly": true,
+      "aria": "100",
+      "springs": 18,
+      "housingParts": 18,
+      "housingVertices": 111024,
+      "art": {
+        "status": "ready",
+        "errors": []
+      },
+      "boxes": 759,
+      "tuningUnchanged": true,
+      "buffer": [
+        1600,
+        1000
+      ]
+    }
+  ],
+  "platformer": {
+    "id": "spaghetti-rails-platforming",
+    "art": {
+      "status": "ready",
+      "errors": []
+    },
+    "springs": 6,
+    "loop": {
+      "minY": -48,
+      "height": 96
+    }
+  },
+  "errors": []
+}

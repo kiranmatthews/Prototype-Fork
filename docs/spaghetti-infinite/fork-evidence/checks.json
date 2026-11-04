@@ -1,0 +1,12 @@
+{
+  "check:levels": "passed",
+  "build": "passed",
+  "fullSuiteRun": false,
+  "offlineVersion": "b147751e2b21ab7186aa",
+  "exactRenderPartition": {
+    "triangles": 25344,
+    "localBatches": 21,
+    "neighbourTriangles": 152064,
+    "exactGeometry": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "completed": "2026-11-03T09:36:32Z",
+  "scope": "Local preview only",
+  "checks": {
+    "p1_native_twist": "pass",
+    "periodic_exact_geometry": "pass",
+    "legacy_launch_camera": "pass",
+    "render_interpolation": "pass",
+    "camera_rig": "pass",
+    "levels": "pass",
+    "build": "pass",
+    "chrome_lite": "pass",
+    "chrome_full_native": "pass"
+  },
+  "build": {
+    "offlineVersion": "497b71ca30729840d34a",
+    "files": 1751,
+    "megabytes": 765.2
+  },
+  "note": "Native tests use controlled initial placements. Browser tests include live held-input travel, falls and local crystal/finish fixtures; not an uninterrupted all-box playthrough."
+}

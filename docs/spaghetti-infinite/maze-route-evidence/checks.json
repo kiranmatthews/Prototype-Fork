@@ -1,0 +1,14 @@
+{
+  "levelChecks": "pass",
+  "productionBuild": "pass",
+  "offlineVersion": "611f8ff41c0e611964f4",
+  "offlineFiles": 1751,
+  "offlineMiB": 765.2,
+  "launchCameraSeam": "pass: identical framing, rotation and weight over 96 m rebase",
+  "nativeRoute": "43 jumps, 44 rail legs, 6 spring transfers",
+  "collectibles": "All 110 crates at 94 stops; supported checkpoints, crystal and finish",
+  "coverage": "Complete platform connectivity and XZ fall coverage for both levels",
+  "browser": "38 views, 12 direct spring flights, 6 fall fixtures; lite and full/native; no console errors",
+  "scope": "Local-only. Per-leg native inputs; not an uninterrupted all-box playthrough.",
+  "apexVisualCheck": "Twelve live spring flights rechecked with airborne-only apex capture; all receivers and six fall fixtures pass; no errors."
+}

@@ -11,11 +11,18 @@ export class RaceItemDeck {
   private seed=1;
   private recent:RaceItem[]=[];
   reset(seed:number):void {this.seed=seed||1;this.recent=[];}
-  draw(rank:number,gap:number,heavy:boolean,ultra=false,rally=false):RaceItem {
+  draw(rank:number,gap:number,heavy:boolean,ultra=false,rally=false,pool?:'rail'):RaceItem {
     const weights:Partial<Record<RaceItem,number>>=rank<=2?
       {tnt:12,nitro:10,banana:18,'green-shell':14,shield:21,mushroom:17,horn:13,boomerang:10,'water-bomb':7}:
       rank<=5?{tnt:10,nitro:8,banana:7,'green-shell':9,'red-shell':21,shield:17,mushroom:24,horn:7,boomerang:8,'water-bomb':7}:
       {tnt:5,nitro:4,'green-shell':4,'red-shell':20,shield:16,mushroom:40,horn:8,boomerang:7,'water-bomb':5};
+    if(pool==='rail'&&!rally){
+      for(const key of Object.keys(weights))delete weights[key as RaceItem];
+      Object.assign(weights,rank<=2?
+        {'perfect-balance':30,'green-shell':20,shield:22,mushroom:28}:
+        rank<=5?{'perfect-balance':26,'green-shell':10,'red-shell':22,shield:16,mushroom:26}:
+        {'perfect-balance':24,'green-shell':6,'red-shell':24,shield:14,mushroom:32});
+    }
     if(rank>2&&gap>70)weights.mushroom!+=15;
     if(rank>=5&&gap>45&&heavy){weights['blue-shell']=7;if(rank>=6&&gap>90)weights['shock-shell']=4;}
     if(ultra){weights.star=.06;if(heavy&&rank>=5&&gap>70)weights['tidal-wave']=.04;}

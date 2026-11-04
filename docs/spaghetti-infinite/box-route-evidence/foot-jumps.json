@@ -1,0 +1,1370 @@
+[
+  {
+    "name": "Lantern Steps / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": 38.08666665474574,
+    "landing": [
+      -13.006161419042323,
+      33.333333309491465,
+      -13.973566660714626
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": 37.41999997615814,
+    "landing": [
+      -2.004367710959469,
+      32.66666664282481,
+      -29.79321088549807
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 3",
+    "good": true,
+    "air": 66,
+    "peak": 36.75333330949148,
+    "landing": [
+      -1.8134818930283272,
+      33.333333309491465,
+      -47.77055868851142
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": 37.41999997615814,
+    "landing": [
+      2.9766175259909184,
+      32.33333330949147,
+      -65.77436509040825
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": 36.419999976158145,
+    "landing": [
+      13.97515178184239,
+      31.333333321412404,
+      -83.7542125471447
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 1",
+    "good": true,
+    "air": 68,
+    "peak": 36.08666665474574,
+    "landing": [
+      15.30922018103853,
+      31.666666642824808,
+      -213.9994798636267
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": 35.753333309491474,
+    "landing": [
+      8,
+      30.999999976158144,
+      -229.8000000000002
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": 35.08666664282481,
+    "landing": [
+      0,
+      30.333333309491476,
+      -247.8000000000002
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 4",
+    "good": true,
+    "air": 68,
+    "peak": 34.419999976158145,
+    "landing": [
+      -8,
+      29.999999976158144,
+      -265.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": 34.08666664282482,
+    "landing": [
+      -15,
+      29.333333321412404,
+      -283.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": 22.086666654745734,
+    "landing": [
+      -12.005958877053907,
+      16.999999976158144,
+      -413.9862945827747
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 2",
+    "good": true,
+    "air": 66,
+    "peak": 21.086666642824806,
+    "landing": [
+      -4,
+      17.666666642824808,
+      -429.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": 21.75333330949147,
+    "landing": [
+      4,
+      16.999999976158144,
+      -447.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": 21.086666642824806,
+    "landing": [
+      13.99404112294605,
+      16.333333309491476,
+      -465.78391103195383
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": 20.419999976158138,
+    "landing": [
+      21,
+      15.333333321412404,
+      -483.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": 20.086666654745734,
+    "landing": [
+      12.014480853431701,
+      14.999999976158144,
+      -613.9743074948525
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": 19.086666642824806,
+    "landing": [
+      2.0059588770539296,
+      13.999999976158144,
+      -629.7839110319538
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 3",
+    "good": true,
+    "air": 66,
+    "peak": 18.086666642824806,
+    "landing": [
+      -8.022091773352754,
+      14.66666664282481,
+      -647.783226164935
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": 18.753333309491474,
+    "landing": [
+      -8.596471440499384,
+      13.999999976158144,
+      -665.7762372263077
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": 18.086666642824806,
+    "landing": [
+      1.9940411229460653,
+      13.333333321412404,
+      -683.7839110319538
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": 6.086666654745734,
+    "landing": [
+      -14,
+      1.3333333094914754,
+      -814.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": 5.41999997615814,
+    "landing": [
+      -2.0449424366732996,
+      0.6666666428248088,
+      -829.748015573332
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": 4.753333309491472,
+    "landing": [
+      7.994041122946051,
+      -2.3841857821338408e-08,
+      -847.7839110319538
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 4",
+    "good": true,
+    "air": 66,
+    "peak": 4.086666642824806,
+    "landing": [
+      6.005958877053949,
+      0.6666666428248088,
+      -865.7839110319538
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / jump 5",
+    "good": true,
+    "air": 70,
+    "peak": 4.753333309491472,
+    "landing": [
+      -5.960505081425849,
+      -0.6666666785875957,
+      -883.7457272657695
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 1",
+    "good": true,
+    "air": 68,
+    "peak": 4.086666654745734,
+    "landing": [
+      12.013862818326514,
+      -0.3333333571751911,
+      -1013.9763798436998
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": 3.7533333094914716,
+    "landing": [
+      4,
+      -1.0000000238418578,
+      -1029.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": 3.086666642824805,
+    "landing": [
+      -4,
+      -1.6666666905085243,
+      -1047.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": 2.4199999761581386,
+    "landing": [
+      -13.99404112294605,
+      -2.3333333571751913,
+      -1065.78391103196
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / jump 5",
+    "good": true,
+    "air": 68,
+    "peak": 1.753333309491472,
+    "landing": [
+      -21,
+      -2.666666678587595,
+      -1083.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": -9.913333345254268,
+    "landing": [
+      -10.010857093936114,
+      -14.666666690508524,
+      -1213.988415903117
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": -10.580000023841864,
+    "landing": [
+      1.9605050814258516,
+      -15.333333357175189,
+      -1229.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": -11.246666690508528,
+    "landing": [
+      13.960505081425824,
+      -16.000000023841856,
+      -1247.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 4",
+    "good": true,
+    "air": 66,
+    "peak": -11.913333357175196,
+    "landing": [
+      14.004917391884588,
+      -15.333333357175189,
+      -1265.7288514044276
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / jump 5",
+    "good": true,
+    "air": 70,
+    "peak": -11.246666690508528,
+    "landing": [
+      4.315769003185688,
+      -16.666666678587593,
+      -1283.761575883332
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": -11.913333345254268,
+    "landing": [
+      14.488614940078632,
+      -16.66666669050852,
+      -1413.9535265195775
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": -12.58000002384186,
+    "landing": [
+      2.0394949185741504,
+      -17.33333335717519,
+      -1429.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 3",
+    "good": true,
+    "air": 66,
+    "peak": -13.246666690508528,
+    "landing": [
+      -7.994041122946051,
+      -16.66666669050852,
+      -1447.78391103196
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": -12.58000002384186,
+    "landing": [
+      -8.354810986871543,
+      -17.66666669050852,
+      -1465.792573723534
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": -13.580000023841862,
+    "landing": [
+      3.9605050814258553,
+      -18.666666678587593,
+      -1483.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": -25.913333345254266,
+    "landing": [
+      -12.005958877053907,
+      -31.000000023841856,
+      -1613.9862945827801
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 2",
+    "good": true,
+    "air": 66,
+    "peak": -26.913333357175194,
+    "landing": [
+      -0.04826445530428958,
+      -30.33333335717519,
+      -1629.7450518079763
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": -26.246666690508526,
+    "landing": [
+      0,
+      -31.000000023841856,
+      -1647.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 4",
+    "good": true,
+    "air": 69,
+    "peak": -26.913333357175194,
+    "landing": [
+      3.9605050814258553,
+      -31.666666690508528,
+      -1665.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / jump 5",
+    "good": true,
+    "air": 69,
+    "peak": -27.580000023841865,
+    "landing": [
+      15.960505081425824,
+      -32.666666678587596,
+      -1683.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 1",
+    "good": true,
+    "air": 69,
+    "peak": -27.91333334525427,
+    "landing": [
+      14.003950785152101,
+      -32.66666669050853,
+      -1813.961955325713
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 2",
+    "good": true,
+    "air": 69,
+    "peak": -28.580000023841862,
+    "landing": [
+      4.005958877053949,
+      -33.33333335717519,
+      -1829.78391103196
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 3",
+    "good": true,
+    "air": 69,
+    "peak": -29.246666690508526,
+    "landing": [
+      -5.994041122946051,
+      -34.000000023841864,
+      -1847.78391103196
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 4",
+    "good": true,
+    "air": 66,
+    "peak": -29.9133333571752,
+    "landing": [
+      -4.180707347198856,
+      -33.33333335717519,
+      -1865.7985411364373
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / jump 5",
+    "good": true,
+    "air": 70,
+    "peak": -29.246666690508526,
+    "landing": [
+      7.960505081425839,
+      -34.666666678587596,
+      -1883.7457272657696
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / step 6 \u2192 Lantern Steps / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": 35.41999998807908,
+    "landing": [
+      18,
+      30.666666654745736,
+      -101.80000000000021
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / box trail transfer 1 \u2192 Lantern Steps / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": 34.753333321412406,
+    "landing": [
+      18,
+      29.99999998807907,
+      -119.80000000000021
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / box trail transfer 2 \u2192 Lantern Steps / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": 34.08666665474574,
+    "landing": [
+      18,
+      29.333333321412404,
+      -137.05000000000018
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / reward balcony \u2192 Lantern Steps / box trail exit 1",
+    "good": true,
+    "air": 66,
+    "peak": 33.41999998807908,
+    "landing": [
+      18,
+      30.222222210301293,
+      -158.05000000000018
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / box trail exit 1 \u2192 Lantern Steps / box trail exit 2",
+    "good": true,
+    "air": 66,
+    "peak": 34.30888887696797,
+    "landing": [
+      18,
+      31.11111109919018,
+      -175.0666666666669
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Lantern Steps / box trail exit 2 \u2192 The Broken Loom / step 1",
+    "good": true,
+    "air": 66,
+    "peak": 35.19777776585685,
+    "landing": [
+      18,
+      31.99999998807907,
+      -192.3833333333335
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / step 6 \u2192 The Broken Loom / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": 33.41999998807908,
+    "landing": [
+      -18,
+      28.666666654745736,
+      -301.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / box trail transfer 1 \u2192 The Broken Loom / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": 32.753333321412406,
+    "landing": [
+      -17.699143610324672,
+      27.99999998807907,
+      -319.8692669362267
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / box trail transfer 2 \u2192 The Broken Loom / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": 32.086666654745734,
+    "landing": [
+      -18,
+      27.333333321412404,
+      -337.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / reward balcony \u2192 The Broken Loom / box trail exit 1",
+    "good": true,
+    "air": 73,
+    "peak": 31.419999988079066,
+    "landing": [
+      -18,
+      24.222222210301293,
+      -358.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / box trail exit 1 \u2192 The Broken Loom / box trail exit 2",
+    "good": true,
+    "air": 73,
+    "peak": 28.308888876967956,
+    "landing": [
+      -18,
+      21.111111099190182,
+      -375.06666666666575
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Broken Loom / box trail exit 2 \u2192 Counterweights / step 1",
+    "good": true,
+    "air": 73,
+    "peak": 25.197777765856845,
+    "landing": [
+      -18,
+      17.99999998807907,
+      -392.3833333333326
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / step 6 \u2192 Counterweights / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": 19.419999988079066,
+    "landing": [
+      23.5,
+      14.666666654745738,
+      -501.79999999999916
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / box trail transfer 1 \u2192 Counterweights / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": 18.753333321412402,
+    "landing": [
+      22.495455844122716,
+      13.999999988079072,
+      -519.7259144981623
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / box trail transfer 2 \u2192 Counterweights / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": 18.086666654745734,
+    "landing": [
+      21.5,
+      13.333333321412404,
+      -537.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / reward balcony \u2192 Counterweights / box trail exit 1",
+    "good": true,
+    "air": 66,
+    "peak": 17.419999988079063,
+    "landing": [
+      20.5,
+      14.222222210301293,
+      -558.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / box trail exit 1 \u2192 Counterweights / box trail exit 2",
+    "good": true,
+    "air": 66,
+    "peak": 18.308888876967956,
+    "landing": [
+      19.5,
+      15.111111099190182,
+      -575.0666666666657
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Counterweights / box trail exit 2 \u2192 Spine Stair / step 1",
+    "good": true,
+    "air": 66,
+    "peak": 19.197777765856845,
+    "landing": [
+      18.5,
+      15.999999988079072,
+      -592.3833333333326
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / step 6 \u2192 Spine Stair / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": 17.419999988079063,
+    "landing": [
+      3.8333333333333335,
+      12.666666654745738,
+      -701.8299999999991
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / box trail transfer 1 \u2192 Spine Stair / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": 16.753333321412395,
+    "landing": [
+      -0.5,
+      11.999999988079072,
+      -719.8299999999991
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / box trail transfer 2 \u2192 Spine Stair / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": 16.08666665474573,
+    "landing": [
+      -4.833333333333333,
+      11.333333321412404,
+      -737.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / reward balcony \u2192 Spine Stair / box trail exit 1",
+    "good": true,
+    "air": 73,
+    "peak": 15.419999988079065,
+    "landing": [
+      -8.833333333333332,
+      8.222222210301293,
+      -758.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / box trail exit 1 \u2192 Spine Stair / box trail exit 2",
+    "good": true,
+    "air": 73,
+    "peak": 12.308888876967954,
+    "landing": [
+      -12.5,
+      5.1111110991901825,
+      -775.0666666666657
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spine Stair / box trail exit 2 \u2192 The Box Garden / step 1",
+    "good": true,
+    "air": 73,
+    "peak": 9.197777765856847,
+    "landing": [
+      -16.166666666666664,
+      1.999999988079071,
+      -792.3833333333326
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / step 6 \u2192 The Box Garden / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": 3.419999988079067,
+    "landing": [
+      -7.5,
+      -1.3333333452542622,
+      -901.7999999999992
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / box trail transfer 1 \u2192 The Box Garden / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": 2.7533333214124007,
+    "landing": [
+      -2.5,
+      -2.000000011920929,
+      -919.7999999999992
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / box trail transfer 2 \u2192 The Box Garden / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": 2.0866666547457338,
+    "landing": [
+      2.7199999999999998,
+      -2.666666678587595,
+      -936.9564630061889
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / reward balcony \u2192 The Box Garden / box trail exit 1",
+    "good": true,
+    "air": 66,
+    "peak": 1.4199999880790681,
+    "landing": [
+      7.166666666666666,
+      -1.7777777896987068,
+      -958.0499999999993
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / box trail exit 1 \u2192 The Box Garden / box trail exit 2",
+    "good": true,
+    "air": 66,
+    "peak": 2.308888876967956,
+    "landing": [
+      11.5,
+      -0.888888900809818,
+      -975.0666666666657
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Box Garden / box trail exit 2 \u2192 Hanging Lanterns / step 1",
+    "good": true,
+    "air": 66,
+    "peak": 3.197777765856845,
+    "landing": [
+      15.833333333333332,
+      -1.1920928910669204e-08,
+      -992.3833333333326
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / step 6 \u2192 Hanging Lanterns / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": 1.4199999880790681,
+    "landing": [
+      -23.5,
+      -3.333333345254262,
+      -1101.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / box trail transfer 1 \u2192 Hanging Lanterns / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": 0.7533333214124007,
+    "landing": [
+      -22.5,
+      -4.000000011920929,
+      -1119.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / box trail transfer 2 \u2192 Hanging Lanterns / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": 0.08666665474573365,
+    "landing": [
+      -21.5,
+      -4.666666678587595,
+      -1137.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / reward balcony \u2192 Hanging Lanterns / box trail exit 1",
+    "good": true,
+    "air": 73,
+    "peak": -0.5800000119209314,
+    "landing": [
+      -20.5,
+      -7.777777789698705,
+      -1158.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / box trail exit 1 \u2192 Hanging Lanterns / box trail exit 2",
+    "good": true,
+    "air": 73,
+    "peak": -3.6911111230320413,
+    "landing": [
+      -19.5,
+      -10.888888900809816,
+      -1175.0666666666705
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Hanging Lanterns / box trail exit 2 \u2192 Spring Vault / step 1",
+    "good": true,
+    "air": 73,
+    "peak": -6.802222234143153,
+    "landing": [
+      -18.719954128966922,
+      -14.000000011920928,
+      -1192.4255394436095
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / step 6 \u2192 Spring Vault / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": -12.580000011920932,
+    "landing": [
+      1.6666666666666665,
+      -17.33333334525426,
+      -1301.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / box trail transfer 1 \u2192 Spring Vault / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": -13.2466666785876,
+    "landing": [
+      5,
+      -18.00000001192093,
+      -1319.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / box trail transfer 2 \u2192 Spring Vault / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": -13.913333345254268,
+    "landing": [
+      8.333333333333332,
+      -18.666666678587593,
+      -1337.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / reward balcony \u2192 Spring Vault / box trail exit 1",
+    "good": true,
+    "air": 66,
+    "peak": -14.580000011920927,
+    "landing": [
+      11.333333333333332,
+      -17.777777789698707,
+      -1358.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / box trail exit 1 \u2192 Spring Vault / box trail exit 2",
+    "good": true,
+    "air": 66,
+    "peak": -13.691111123032046,
+    "landing": [
+      14,
+      -16.888888900809814,
+      -1375.0666666666705
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Spring Vault / box trail exit 2 \u2192 The Bellows / step 1",
+    "good": true,
+    "air": 66,
+    "peak": -12.802222234143155,
+    "landing": [
+      16.666666666666664,
+      -16.00000001192093,
+      -1392.3833333333362
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / step 6 \u2192 The Bellows / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": -14.580000011920927,
+    "landing": [
+      5.666666666666667,
+      -19.33333334525426,
+      -1501.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / box trail transfer 1 \u2192 The Bellows / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": -15.246666678587593,
+    "landing": [
+      1.0000000000000009,
+      -20.00000001192093,
+      -1519.8300000000033
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / box trail transfer 2 \u2192 The Bellows / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": -15.913333345254264,
+    "landing": [
+      -3.666666666666666,
+      -20.666666678587593,
+      -1537.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / reward balcony \u2192 The Bellows / box trail exit 1",
+    "good": true,
+    "air": 73,
+    "peak": -16.58000001192093,
+    "landing": [
+      -8,
+      -23.777777789698703,
+      -1558.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / box trail exit 1 \u2192 The Bellows / box trail exit 2",
+    "good": true,
+    "air": 73,
+    "peak": -19.69111112303204,
+    "landing": [
+      -12,
+      -26.888888900809814,
+      -1575.0666666666705
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Bellows / box trail exit 2 \u2192 Needle Windows / step 1",
+    "good": true,
+    "air": 73,
+    "peak": -22.80222223414315,
+    "landing": [
+      -16,
+      -30.00000001192093,
+      -1592.3833333333362
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / step 6 \u2192 Needle Windows / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": -28.58000001192093,
+    "landing": [
+      19.833333333333336,
+      -33.33333334525426,
+      -1701.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / box trail transfer 1 \u2192 Needle Windows / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": -29.246666678587594,
+    "landing": [
+      19.5,
+      -34.00000001192093,
+      -1719.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / box trail transfer 2 \u2192 Needle Windows / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": -29.91333334525427,
+    "landing": [
+      19.166666666666664,
+      -34.666666678587596,
+      -1737.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / reward balcony \u2192 Needle Windows / box trail exit 1",
+    "good": true,
+    "air": 66,
+    "peak": -30.580000011920937,
+    "landing": [
+      18.833333333333336,
+      -33.7777777896987,
+      -1758.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / box trail exit 1 \u2192 Needle Windows / box trail exit 2",
+    "good": true,
+    "air": 66,
+    "peak": -29.69111112303204,
+    "landing": [
+      18.5,
+      -32.88888890080982,
+      -1775.0666666666705
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "Needle Windows / box trail exit 2 \u2192 The Last Stitch / step 1",
+    "good": true,
+    "air": 66,
+    "peak": -28.80222223414315,
+    "landing": [
+      18.166666666666664,
+      -32.00000001192093,
+      -1792.3833333333362
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / step 6 \u2192 The Last Stitch / box trail transfer 1",
+    "good": true,
+    "air": 69,
+    "peak": -30.580000011920937,
+    "landing": [
+      10.833333333333334,
+      -35.33333334525426,
+      -1901.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail transfer 1 \u2192 The Last Stitch / box trail transfer 2",
+    "good": true,
+    "air": 69,
+    "peak": -31.246666678587594,
+    "landing": [
+      8.5,
+      -36.00000001192093,
+      -1919.8000000000034
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail transfer 2 \u2192 The Last Stitch / reward balcony",
+    "good": true,
+    "air": 69,
+    "peak": -31.913333345254262,
+    "landing": [
+      6.166666666666667,
+      -36.666666678587596,
+      -1937.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / reward balcony \u2192 The Last Stitch / box trail exit 1",
+    "good": true,
+    "air": 70,
+    "peak": -32.58000001192092,
+    "landing": [
+      4.642857142857142,
+      -37.71428572620664,
+      -1958.050000000003
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail exit 1 \u2192 The Last Stitch / box trail exit 2",
+    "good": true,
+    "air": 70,
+    "peak": -33.62761905953997,
+    "landing": [
+      3.928571428571429,
+      -38.76190477382569,
+      -1976.5785714285755
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail exit 2 \u2192 The Last Stitch / box trail exit 3",
+    "good": true,
+    "air": 70,
+    "peak": -34.67523810715902,
+    "landing": [
+      3.2142857142857144,
+      -39.80952382144474,
+      -1996.007142857147
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail exit 3 \u2192 The Last Stitch / box trail exit 4",
+    "good": true,
+    "air": 70,
+    "peak": -35.72285715477807,
+    "landing": [
+      2.5,
+      -40.857142869063786,
+      -2015.4357142857184
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail exit 4 \u2192 The Last Stitch / box trail exit 5",
+    "good": true,
+    "air": 70,
+    "peak": -36.77047620239711,
+    "landing": [
+      1.7857142857142858,
+      -41.90476191668284,
+      -2034.86428571429
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail exit 5 \u2192 The Last Stitch / box trail exit 6",
+    "good": true,
+    "air": 70,
+    "peak": -37.818095250016164,
+    "landing": [
+      1.0714285714285714,
+      -42.95238096430188,
+      -2054.292857142861
+    ],
+    "surface": "platform"
+  },
+  {
+    "name": "The Last Stitch / box trail exit 6 \u2192 Lanternworks / crystal landing",
+    "good": true,
+    "air": 70,
+    "peak": -38.86571429763521,
+    "landing": [
+      0.3571428571428572,
+      -44.00000001192093,
+      -2071.6214285714314
+    ],
+    "surface": "platform"
+  }
+]

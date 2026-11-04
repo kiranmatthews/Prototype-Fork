@@ -15,6 +15,14 @@ export interface SkateRaceData extends RailNavigationData {
   vehicle?: 'golf-cart';
   /** Win-only courses award the clear gem for first place, never crate completion. */
   gemReward?: 'win';
+  /** Club riders react less precisely on rails; player physics are unchanged. */
+  rivalSkill?: 'club';
+  /** Seconds before a collected mystery box returns; omitted keeps four. */
+  itemRespawnSeconds?: number;
+  /** Open rail networks favour traversal and ranged items over nearby traps. */
+  itemPool?: 'rail';
+  /** Native rail drift/noise multiplier; leaves manual balance and physics alone. */
+  grindBalanceScale?: number;
   seed: number;
   stages?: string[];
   jumps: { takeoff: RacePoint; landing: RacePoint }[];
@@ -23,7 +31,7 @@ export interface SkateRaceData extends RailNavigationData {
   finishWidth: number;
   originalLength: number;
 }
-export type RaceItem = 'tnt' | 'nitro' | 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave';
+export type RaceItem = 'tnt' | 'nitro' | 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave' | 'perfect-balance';
 export const RALLY_ITEM_NAMES:Partial<Record<RaceItem,string>>={banana:'BANANA BOMB TRIO','green-shell':'TRIPLE COCONUT CANNON','red-shell':'HOMING COCONUT','blue-shell':'CLUB PRESIDENT ERASER','shock-shell':'BAD WEATHER POLICY','water-bomb':'POOL PARTY MORTAR',horn:'FOURTEEN FORE!',mushroom:'QUESTIONABLE ENERGY DRINK',boomerang:'RETURN TO SENDER',star:'LIABILITY WAIVER','tidal-wave':'TSUNAMI TEE TIME'};
 export const RALLY_ITEM_DESCRIPTIONS:Partial<Record<RaceItem,string>>={
   banana:'Drop three explosive peels behind your kart; the splash catches nearby rivals',
@@ -62,6 +70,7 @@ export interface RaceHudState {
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
   phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
   rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;
+  speedKmh: number;
   threats: readonly RaceThreat[];
   boxes: number; totalBoxes: number; won: boolean; timeTrialUnlocked: boolean;
   racers: { id: number; name: string; color: string; x: number; y: number; z: number; progress: number; finish: number | null }[];
@@ -74,6 +83,7 @@ export const RACE_ROSTER = [
   { name: 'SOL', color: '#f1dc68' }, { name: 'VOSS', color: '#e46b5e' },
 ] as const;
 export const RACE_ITEMS: Record<RaceItem,{name:string;color:string;description:string}> = {
+  'perfect-balance': {name:'PERFECT BALANCE',color:'#46e882',description:'Six seconds of perfect grind and manual balance; save it for a long rail or transfer'},
   tnt: {name:'TNT',color:'#ff5535',description:'Drop unlit TNT; contact sticks it to a racer and starts a three-second fuse. Bump another racer to pass it on'},
   nitro: {name:'NITRO',color:'#8cee36',description:'Drop a contact mine behind you; jump over it, shield or clear it with a shell'},
   banana: {name:'BANANA PEEL',color:'#ffda39',description:'Drop behind you to trap a rival or block a shell'},
