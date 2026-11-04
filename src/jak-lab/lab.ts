@@ -155,7 +155,7 @@ async function boot():Promise<void> {
     element('timeline-field').hidden=!(view instanceof ModelExhibit&&view.clips.length);
     if(view instanceof ModelExhibit) {
       for(const clip of view.clips)animationSelect.add(new Option(clip.name,clip.name));animationSelect.value=view.clipName;
-      status.classList.remove('pending');status.textContent='Original geometry and animation. Gouraud uses sampled vertex colour and vertex lighting; no diffuse textures.';
+      status.classList.remove('pending');status.textContent='Original geometry and animation. Gouraud uses vertex colour and vertex lighting, with the original opacity masks.';
       element('provenance').textContent=`${selected.model!.path}\n${view.dimensions.toArray().map(v=>v.toFixed(2)).join(' × ')} m · ${view.clips.length} source animations`;
       const part=view.partSelection?.current;
       if(part) {

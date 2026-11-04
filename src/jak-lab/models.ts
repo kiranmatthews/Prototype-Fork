@@ -37,8 +37,8 @@ function sample(texture: THREE.Texture, uv: THREE.Vector2, result: THREE.Color):
   return rgba[3];
 }
 
-/** Texture-free vertex colour + vertex lighting; all authored triangles,
- * joint weights, normals, morphs and animation tracks are retained. */
+/** Vertex colour + vertex lighting, with original fragment opacity masks;
+ * all authored triangles, weights, normals, morphs and tracks are retained. */
 function gouraud(mesh: THREE.Mesh): void {
   const source = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[];
   let geometry = compactGeometry(mesh.geometry);
@@ -56,7 +56,7 @@ function gouraud(mesh: THREE.Mesh): void {
   const sampled = new THREE.Color(), coordinate = new THREE.Vector2();
   const paint = (index: number, material: THREE.MeshStandardMaterial) => {
     let alpha = 1; sampled.setRGB(1, 1, 1);
-    if (material.map && uv) alpha = sample(material.map, coordinate.set(uv.getX(index), uv.getY(index)), sampled);
+    if (material.map && uv) sample(material.map, coordinate.set(uv.getX(index), uv.getY(index)), sampled);
     if (old) sampled.multiply(new THREE.Color(old.getX(index), old.getY(index), old.getZ(index)));
     if (old?.itemSize === 4) alpha *= old.getW(index);
     color.set([sampled.r, sampled.g, sampled.b, alpha], index * 4);

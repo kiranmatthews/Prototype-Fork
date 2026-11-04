@@ -54,7 +54,10 @@ Models retain the complete source geometry, skin weights, morphs and animation
 keys. Gouraud models sample source textures into vertex colors and use vertex
 lighting, including the albedo multiplication before interpolation. The custom
 material is necessary because Three r166's stock Lambert material calculates
-lighting per fragment. Skinning, morphs, two-sided lighting and source alpha
+lighting per fragment. Source cutout/transparency masks remain per fragment;
+sampling only their corner values would change leaf and hole silhouettes. The
+Gouraud fragment shader samples only opacity, not diffuse RGB. Opaque materials
+omit the diffuse map. Skinning, morphs, two-sided lighting and source alpha
 settings remain supported. Per-draw vertex compaction avoids multiplying large
 background buffers for every material while preserving every triangle and
 attribute value. No camera-dependent LOD or mesh decimation is used. Streaming disposes
@@ -131,8 +134,8 @@ unported; name coverage does not prove complete host reconstruction.
   inferred universally from it.
 - Verify blended-particle sorting, source color/alpha conventions and Gouraud
   visual fidelity across the catalogue at native and normal resolution.
-  Close vegetation inspection shows that sampling cutout alpha only at vertices
-  can change its visible silhouette; that material limitation remains to fix.
+  Source cutout coverage is now retained in Gouraud models; the wider material
+  and lighting review remains open.
 - Finish standalone packaging, full catalogue visual checks and
   browser review with no errors; verify final hosted behavior and hand off a
   coherent READY increment to the coordinator.
@@ -413,6 +416,41 @@ render modes, close views, normal/native resolution and native world scale.
 Restoring the complete scene gives its original 501.86 × 171.85 × 520.66 m bounds.
 Console warnings/errors are empty. Evidence is
 `.jak-lab-data/evidence/background-parts-browser-review.json` and the
-`background-part*` / `background-plant*` images. The close plant view revealed the
-Gouraud cutout-alpha limitation noted above; individual-instance recovery and
-full scene/material fidelity remain unfinished.
+`background-part*` / `background-plant*` images. Those plant images predate the
+opacity correction below. Individual-instance recovery and full scene/material
+fidelity remain unfinished.
+
+## Gouraud opacity coverage
+
+Close inspection exposed a real silhouette error: baking texture alpha at only
+triangle corners could erase whole leaves. Gouraud materials now preserve the
+source texture's alpha at fragments while still computing RGB and lighting at
+vertices. Existing UV channels/transforms, separate green-channel alpha maps,
+vertex alpha, alpha test, opacity and blend modes remain in their original
+pipeline. Texture alpha is no longer also baked into vertex alpha, avoiding
+double multiplication. Opaque materials retain no diffuse texture map. No
+triangles, UVs, transforms, images or source asset bytes change.
+
+The real WebGL fixture at `tools/jak-lab/material-review.html` compares framebuffer
+alpha for opaque, cutout, blended and separate-alpha/UV1 materials. Across
+320×240 and 640×480, all eight cases have zero alpha error and zero coverage
+mismatches, including transformed UVs and partially transparent vertex colors.
+Both texture masks and vertex alpha are exercised. The fixture also rejects an
+empty render or an unnecessary opaque diffuse map. Strict fixture TypeScript
+passes after explicitly typing its interchangeable material slot.
+
+Sentinel Beach's `bch-exotic-plant.mb` (node 328, three draws / 740 triangles) was
+reviewed with matching close views in Original and Gouraud at native 2560×1440,
+then Gouraud at 1280×720. Leaf openings and outlines remain intact; lighting and
+RGB are intentionally the vertex approximation. Console warnings/errors are
+empty. Evidence: `.jak-lab-data/evidence/material-opacity-gpu.json`,
+`material-plant-browser.json` and `material-plant-*.png`. Earlier screenshots
+must not be used as evidence of this correction. Full-catalogue material review
+and the original whole-brief elapsed interval remain open.
+
+The guarded normal build and standalone build pass, as do root TypeScript,
+strict fixture TypeScript and diff checks. No whole-catalogue simulation rerun
+was needed for a material-only change. Current frontend: 670,731 bytes; combined
+with the unchanged packed assets/catalogue: 232,451,039 bytes before hosting
+metadata. Hashes and logs are in `material-opacity-delivery.json` and
+`material-opacity-build.log` under the evidence directory.

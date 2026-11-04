@@ -7,6 +7,10 @@ export function gouraudMaterial(source: THREE.MeshStandardMaterial): THREE.MeshL
     name: `${source.name} · Gouraud`, color: source.color, vertexColors: true,
     emissive: source.emissive ?? 0, emissiveIntensity: source.emissiveIntensity ?? 1,
     side: source.side, transparent: source.transparent, opacity: source.opacity,
+    // RGB is baked at vertices, but coverage is a fragment property. Sampling
+    // cutout alpha at only a triangle's corners can erase entire leaves/holes.
+    map: source.transparent||source.alphaTest>0 ? source.map : null,
+    alphaMap: source.alphaMap??null,
     alphaTest: source.alphaTest, depthWrite: source.depthWrite, depthTest: source.depthTest,
     blending: source.blending, blendSrc: source.blendSrc, blendDst: source.blendDst,
     blendEquation: source.blendEquation, premultipliedAlpha: source.premultipliedAlpha,
@@ -14,7 +18,7 @@ export function gouraudMaterial(source: THREE.MeshStandardMaterial): THREE.MeshL
     polygonOffsetUnits: source.polygonOffsetUnits,
   });
   material.userData.gouraud = true;
-  material.customProgramCacheKey = () => 'jak-lab-gouraud-vertex-light-v1';
+  material.customProgramCacheKey = () => 'jak-lab-gouraud-vertex-light-mask-v2';
   material.onBeforeCompile = shader => {
     shader.vertexShader = shader.vertexShader.replace('#include <common>', `#include <common>
       #include <lights_pars_begin>
@@ -59,6 +63,10 @@ export function gouraudMaterial(source: THREE.MeshStandardMaterial): THREE.MeshL
     shader.fragmentShader = shader.fragmentShader.replace('#include <common>', `#include <common>
       varying vec3 vLabFrontLight;
       varying vec3 vLabBackLight;
+    `).replace('#include <map_fragment>', `
+      #ifdef USE_MAP
+        diffuseColor.a *= texture2D(map, vMapUv).a;
+      #endif
     `).replace('#include <color_fragment>', `
       #if defined(USE_COLOR_ALPHA)
         diffuseColor.a *= vColor.a;
