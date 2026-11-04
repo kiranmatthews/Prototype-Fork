@@ -7,7 +7,7 @@ from particle_lighting import extract_particle_lighting, TABLES, RUNTIME, LEVELS
 
 
 class ParticleLightingTests(unittest.TestCase):
-    def extract(self, transform=lambda s: s):
+    def extract(self, transform=lambda s: s, runtime_transform=lambda s: s):
         tables = '''
 (define *fixture-lights* (new 'static 'mood-lights-table :data
  (new 'static 'inline-array mood-lights 8
@@ -18,16 +18,21 @@ class ParticleLightingTests(unittest.TestCase):
 (define *fixture-mood* (new 'global 'mood-context))
 (set! (-> *fixture-mood* mood-lights-table) *fixture-lights*)
 (set! (-> *fixture-mood* palette-interp) *fixture-hours*)
+(define *fixture-sun* (new 'static 'mood-sun-table :data
+ (new 'static 'inline-array mood-sun 8 REPEAT_SUN)))
+(set! (-> *fixture-mood* mood-sun-table) *fixture-sun*)
+(set! (-> *fixture-mood* sky-texture-interp) *fixture-hours*)
 '''.replace('REPEAT_LIGHTS', "(new 'static 'mood-lights) " * 7).replace(
-            'REPEAT_HOURS', "(new 'static 'sky-color-hour :snapshot2 1 :morph-end 0.5) " * 24)
+            'REPEAT_HOURS', "(new 'static 'sky-color-hour :snapshot2 1 :morph-end 0.5) " * 24).replace(
+            'REPEAT_SUN', "(new 'static 'mood-sun :sun-color (new 'static 'vector :x 255.0 :y 128.0)) " * 8)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             for file, text in {
                 TABLES: transform(tables),
-                RUNTIME: '''(defun update-fixture ((arg0 mood-context))
+                RUNTIME: runtime_transform('''(defun update-fixture ((arg0 mood-context))
                   (if (condition) (update-mood-palette arg0 time 0)
                    (update-mood-quick arg0 0 0 1 0)))
-                  (defun other () (update-mood-quick other-context 0 0 7 0))''',
+                  (defun other () (update-mood-quick other-context 0 0 7 0))'''),
                 LEVELS: "(define beach (new 'static 'level-load-info :name 'beach :mood '*fixture-mood* :mood-func 'update-fixture))",
             }.items():
                 path = root / file
@@ -49,6 +54,16 @@ class ParticleLightingTests(unittest.TestCase):
         self.assertEqual([(s['kind'], s['snapshot']) for s in context['presets']], [('cycle', None), ('snapshot', 1)])
         self.assertTrue(all(s['function'] == 'update-fixture' for s in context['presets']))
         self.assertTrue(all(len(s['sha256']) == 64 for s in data['sources']))
+
+    def test_sun_has_its_own_quick_snapshot_and_cycle_call(self):
+        data = self.extract(runtime_transform=lambda s: s.replace('(if (condition)',
+                            '(update-mood-sky-texture arg0 time) (if (condition)'))
+        context = data['contexts'][0]
+        self.assertEqual([(p['kind'], p['snapshot']) for p in context['sunPresets']], [('cycle', None), ('snapshot', 0)])
+        self.assertEqual(context['presets'][1]['snapshot'], 1)
+        self.assertEqual(data['sunTables'][0]['snapshots'][0]['color'], [255, 128, 0, 0])
+        self.assertEqual(context['sunFades'][0]['fade'], 0)
+        self.assertEqual(context['skyPalette'], '*fixture-hours*')
 
     def test_rejects_truncation_computed_numbers_and_dangling_tables(self):
         for old, new in [('mood-lights 8', 'mood-lights 7'),

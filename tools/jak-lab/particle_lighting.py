@@ -61,7 +61,7 @@ def extract_particle_lighting(source, parse, walk):
     texts = {name: (source / name).read_text() for name in (TABLES, RUNTIME, LEVELS)}
     forms = {name: parse(text) for name, text in texts.items()}
     provenance = lambda file, form: {'file': file, 'line': form.line}
-    lights, palettes, contexts = {}, {}, {}
+    lights, suns, palettes, contexts = {}, {}, {}, {}
     for form in forms[TABLES]:
         if len(form) != 3 or form[0] != 'define' or not isinstance(form[2], list) or form[2][0] != 'new':
             continue
@@ -72,6 +72,11 @@ def extract_particle_lighting(source, parse, walk):
             lights[symbol] = {'id': symbol, 'source': provenance(TABLES, form), 'snapshots': [
                 {'source': provenance(TABLES, row), **{name: vector(properties(row).get(key)) for name, key in
                  [('particle', ':prt-color'), ('ambient', ':amb-color'), ('light', ':lgt-color')]}}
+                for row in rows]}
+        elif kind == 'mood-sun-table':
+            rows = array(properties(value)[':data'], 'mood-sun', 8)
+            suns[symbol] = {'id': symbol, 'source': provenance(TABLES, form), 'snapshots': [
+                {'source': provenance(TABLES, row), 'color': vector(properties(row).get(':sun-color'))}
                 for row in rows]}
         elif kind == 'sky-color-day':
             rows = array(properties(value)[':hour'], 'sky-color-hour', 24)
@@ -92,8 +97,9 @@ def extract_particle_lighting(source, parse, walk):
     for form in forms[TABLES]:
         if len(form) == 3 and form[0] == 'set!' and isinstance(form[1], list) and len(form[1]) == 3 and form[1][0] == '->':
             symbol, field = form[1][1:]
-            if symbol in contexts and field in ('mood-lights-table', 'palette-interp'):
-                contexts[symbol][{'mood-lights-table': 'lights', 'palette-interp': 'palette'}[field]] = form[2]
+            if symbol in contexts and field in ('mood-lights-table', 'palette-interp', 'mood-sun-table', 'sky-texture-interp'):
+                contexts[symbol][{'mood-lights-table': 'lights', 'palette-interp': 'palette',
+                                  'mood-sun-table': 'sun', 'sky-texture-interp': 'skyPalette'}[field]] = form[2]
     functions = {f[1]: f for f in forms[RUNTIME] if len(f) >= 4 and f[0] == 'defun'}
     owners = {'*default-mood*': {'update-mood-default'}}
     for form in forms[LEVELS]:
@@ -103,20 +109,24 @@ def extract_particle_lighting(source, parse, walk):
         context = unquote(fields.get(':mood'))
         if context in contexts:
             contexts[context]['levels'].append(unquote(fields[':name']))
+            contexts[context].setdefault('sunFades', []).append({'level': unquote(fields[':name']),
+                'fade': numeric(fields.get(':sun-fade', 0)), 'source': provenance(LEVELS, form)})
             owners.setdefault(context, set()).add(unquote(fields[':mood-func']))
     for symbol, context in contexts.items():
         if context.get('lights') not in lights or context.get('palette') not in palettes:
             raise ValueError(f'Missing source lighting table: {symbol}')
+        if suns and (context.get('sun') not in suns or context.get('skyPalette') not in palettes):
+            raise ValueError(f'Missing source sun table: {symbol}')
         # A real callback can choose both day-cycle and fixed snapshots. Keep
         # every selector, but do not invent its gameplay condition in the lab.
-        choices = {}
+        choices, sun_choices = {}, {}
         for name, function in functions.items():
             for call in walk(function[3:]):
-                if len(call) < 2 or call[0] not in ('update-mood-palette', 'update-mood-quick'):
+                if len(call) < 2 or call[0] not in ('update-mood-palette', 'update-mood-quick', 'update-mood-sky-texture'):
                     continue
                 if call[1] != symbol and not (call[1] == 'arg0' and name in owners.get(symbol, set())):
                     continue
-                if call[0] == 'update-mood-palette':
+                if call[0] in ('update-mood-palette', 'update-mood-sky-texture'):
                     kind, snapshot = 'cycle', None
                 else:
                     snapshot = numeric(call[4])
@@ -124,9 +134,20 @@ def extract_particle_lighting(source, parse, walk):
                         raise ValueError('Computed quick lighting selector is not supported')
                     kind = 'snapshot'
                 key = (kind, snapshot)
-                choices.setdefault(key, {'kind': kind, 'snapshot': snapshot, 'source': provenance(RUNTIME, call), 'function': name})
+                selection = {'kind': kind, 'snapshot': snapshot, 'source': provenance(RUNTIME, call), 'function': name}
+                if call[0] != 'update-mood-sky-texture':
+                    choices.setdefault(key, selection)
+                if call[0] != 'update-mood-palette':
+                    # Quick's sun selector is arg2; arg3 selects particle light.
+                    sun_snapshot = numeric(call[3]) if kind == 'snapshot' else None
+                    if sun_snapshot is not None and (type(sun_snapshot) is not int or not 0 <= sun_snapshot < 8):
+                        raise ValueError('Computed quick sun selector is not supported')
+                    sun_choices.setdefault((kind, sun_snapshot), {**selection, 'snapshot': sun_snapshot})
         context['presets'] = list(choices.values())
+        if suns:
+            context['sunPresets'] = list(sun_choices.values())
         if not context['presets']:
             raise ValueError(f'No proven lighting selector for {symbol}')
     return {'sources': [{'file': name, 'sha256': hashlib.sha256(text.encode()).hexdigest()} for name, text in texts.items()],
-            'lightTables': list(lights.values()), 'palettes': list(palettes.values()), 'contexts': list(contexts.values())}
+            'lightTables': list(lights.values()), 'sunTables': list(suns.values()),
+            'palettes': list(palettes.values()), 'contexts': list(contexts.values())}

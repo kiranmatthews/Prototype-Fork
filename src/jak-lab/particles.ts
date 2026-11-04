@@ -4,6 +4,7 @@ import {assetURL, type Catalogue, type EffectDefinition, type HostReplay, type R
 import {DistortionBatch, PARTICLE_SPRITE_LAYER} from './distortion';
 import {SourceAssembly} from './sourceAssemblies';
 import {ParticleLighting} from './particleLighting';
+import {SunParticles} from './sunParticles';
 
 const vertexShader = /* glsl */`
   attribute vec4 profile;
@@ -166,6 +167,7 @@ export class ParticleExhibit {
   readonly replays: HostReplay[];
   readonly assembly:SourceAssembly|null;
   readonly lighting:ParticleLighting|null;
+  readonly sun:SunParticles|null;
   readonly original = new THREE.Group();
   readonly alternative = new THREE.Group();
   private readonly batches = new Map<string,SpriteBatch>();
@@ -180,6 +182,9 @@ export class ParticleExhibit {
   private constructor(readonly definition: EffectDefinition, catalogue: Catalogue, private readonly sceneTexture: THREE.IUniform) {
     this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1,catalogue.callbackPrograms);
     this.lighting=catalogue.particleLighting?new ParticleLighting(catalogue.particleLighting,definition.source.file):null;
+    this.sun=catalogue.sunParticles?.hosts.some(host=>host.group===definition.name)&&catalogue.particleLighting?
+      new SunParticles(this.motion,catalogue.sunParticles,catalogue.particleLighting):null;
+    if(this.motion.hostInputs.has('sun')&&!this.sun)this.motion.issues.add('Source sun host data unavailable');
     this.refreshLighting();
     if(!this.lighting&&this.motion.hostInputs.has('particle lighting'))this.motion.issues.add('Source lighting tables unavailable');
     this.assembly=definition.sourceAssembly?new SourceAssembly(definition.sourceAssembly):null;
@@ -199,9 +204,9 @@ export class ParticleExhibit {
       !(definition.sourceAssembly==='eco-beam'&&patch.source.file==='engine/common-obs/generic-obs.gc'&&patch.source.line===1491))??[];
     if(patches.length)this.issues.add(`Host emission changes: ${patches.length} source sites`);
     const bounds=definition.bounds;
-    this.sourceRadius=this.assembly?.radius??Math.max(1,bounds?.[4]??1);
+    this.sourceRadius=this.sun?.radius??this.assembly?.radius??Math.max(1,bounds?.[4]??1);
     this.extent=Math.min(1,3.5/this.sourceRadius);
-    const centre=this.assembly?.centre??(bounds?new THREE.Vector3(bounds[1],bounds[2],bounds[3]):new THREE.Vector3());
+    const centre=this.sun?.centre??this.assembly?.centre??(bounds?new THREE.Vector3(bounds[1],bounds[2],bounds[3]):new THREE.Vector3());
     for(const group of [this.original,this.alternative]) {
       const display=new THREE.Group();display.position.copy(centre).negate();display.position.y+=this.sourceRadius;group.add(display);
     }
@@ -276,6 +281,11 @@ export class ParticleExhibit {
       this.motion.triggerDirect();this.nextDirectLaunch=this.motion.clock+300;
     }
     this.motion.update(dt);
+    // Camera-relative sky positions remain intact in the simulation. Isolated
+    // gallery framing recentres the whole sun without changing its geometry.
+    if(this.sun)for(const group of [this.original,this.alternative]) {
+      group.children[0].position.copy(this.sun.centre).negate();group.children[0].position.y+=this.sourceRadius;
+    }
     const grouped=new Map<string,LabParticle[]>();
     for(const particle of this.motion.particles) {
       if(particle.callback==='add-to-sprite-aux-list')continue;
@@ -300,6 +310,8 @@ export class ParticleExhibit {
     distortions:this.distortions,auxiliaryDrops:this.motion.auxiliaryDrops,
     assembly:this.assembly?.kind,sourceCalls:this.assembly?.calls,
     lighting:this.lighting?.selected.id,hour:this.motion.hour,particleColor:this.motion.host.particleColor.toArray(),
+    sun:this.sun?{active:this.sun.active,palette:this.sun.selected.id,fade:this.sun.fade,
+      position:this.sun.centre.toArray(),color:this.motion.host.sunColor.toArray()}:undefined,
     replay:this.motion.replayPhase,replaySource:this.motion.replay?.source,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
   dispose():void {
     for(const batch of this.batches.values())batch.dispose();

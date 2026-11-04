@@ -27,6 +27,7 @@ const KNOWN_CALLBACKS = new Set(['sparticle-track-root', 'sparticle-track-root-p
   'bird-bob-func', 'tra-bird-bob-func', 'snow-bird-bob-func',
   'sparticle-seagull-moon', 'tra-sparticle-seagull-moon', 'sparticle-snow-birds-moon',
   'part-tracker-track-target-joint', 'part-hud-racer-speed-func', 'part-hud-racer-heat-func', ...RACER_HEAT_SLICES]);
+KNOWN_CALLBACKS.add('sparticle-track-sun');
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
   'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
@@ -63,6 +64,8 @@ export interface ParticleHost {
   racerSpeed: number; racerHeat: number; racerHudOffset: number;
   /** current-prt-color RGB, applied at birth/relaunch, never to auxiliary radii. */
   particleColor: Vector3;
+  /** Camera in GOAL units; sky upload positions in metres, before ×4096. */
+  camera: Vector3; suns: Vector3[]; sunColor: Vector3; sunFade: number;
 }
 
 /** Source numeric field rules and launch graph. Units remain GOAL units until
@@ -78,7 +81,8 @@ export class ParticleMotion {
   readonly host: ParticleHost = {root: new Vector3(), primitive: new Vector3(), fadeOut: false, hudMoney: false,
     targetYaw: 0, targetNormal: UP.clone(), vectorNormal: null, targetJoints: new Map(),
     particleQuaternion: new Quaternion(), oceanHeight: () => 0,
-    racerSpeed: 0, racerHeat: .5, racerHudOffset: 0, particleColor: new Vector3(1, 1, 1)};
+    racerSpeed: 0, racerHeat: .5, racerHudOffset: 0, particleColor: new Vector3(1, 1, 1),
+    camera: new Vector3(), suns: [], sunColor: new Vector3(), sunFade: 1};
   readonly hostInputs = new Set<string>();
   readonly soundEvents: {name: string; position: Vector3 | null}[] = [];
   clock = 0;
@@ -90,6 +94,8 @@ export class ParticleMotion {
   replay: HostReplay | null = null;
   /** Source host draw/update calls, executed once per simulation frame. */
   sourceEmitter: ((motion: ParticleMotion) => void) | null = null;
+  /** A source host may spawn its keyed group once, then kill it on deactivation. */
+  hostEmission: 'held' | 'once' | 'off' = 'held';
   private readonly states: LaunchState[];
   private randomState: number;
   private soundRandomState: number;
@@ -126,6 +132,7 @@ export class ParticleMotion {
           if (name === 'part-tracker-track-target-joint') this.hostInputs.add('target joint transforms');
           if (name === 'part-hud-racer-speed-func') this.hostInputs.add('racer speed');
           if (name === 'part-hud-racer-heat-func' || RACER_HEAT_SLICES.includes(name)) this.hostInputs.add('racer heat');
+          if (name === 'sparticle-track-sun') {this.hostInputs.add('sun');this.hostInputs.add('time of day');}
         }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
         if (field.field === 'birth-func') {
@@ -369,6 +376,16 @@ export class ParticleMotion {
         }
       }
     } else if (name === 'sparticle-track-root' || name === 'part-tracker-track-root') p.position.copy(this.host.root);
+    else if (name === 'sparticle-track-sun') {
+      const part=Math.trunc(v.userdata??0),sun=this.host.suns[Math.trunc(part/4)];
+      if(!sun){this.issues.add(`Missing source sun orbit ${Math.trunc(part/4)}`);return;}
+      p.position.copy(this.host.camera).addScaledVector(sun,4096);
+      for(const axis of ['x','y','z'] as const)p.position[axis]=Math.fround(p.position[axis]);
+      // The zero-alpha green core stays zero; the source bit2 then retires it.
+      if(v.a!==0)v.a=Math.fround(128*this.host.sunFade);
+      if(part===0||part===1||part===2)RGB.forEach((channel,i)=>
+        v[channel]=Math.fround(this.host.sunColor.getComponent(i)/(part===0?1:4)));
+    }
     else if (name === 'sparticle-track-root-prim' || name === 'eco-track-root-prim-fadeout') p.position.copy(this.host.primitive);
     else if (name === 'sparticle-track-root-money' && !this.host.hudMoney) p.position.copy(this.host.root).addScaledVector(UP, 2048);
     else if (name === 'bird-bob-func' || name === 'tra-bird-bob-func' || name === 'snow-bird-bob-func')
@@ -404,7 +421,8 @@ export class ParticleMotion {
     particle.alive = false;
     if (particle.child) {particle.child.active = false; particle.child.parent = null; particle.child.launched = false;}
   }
-  get replayPhase(): 'held' | 'emitting' | 'lingering' | 'finished' {
+  get replayPhase(): 'held' | 'emitting' | 'lingering' | 'finished' | 'persistent' | 'inactive' {
+    if(this.hostEmission!=='held')return this.hostEmission==='once'?'persistent':'inactive';
     if (!this.replay) return 'held';
     const hostTime = Math.max(0, this.clock - STEP_TICKS);
     if (hostTime < this.replay.duration) return 'emitting';
@@ -422,6 +440,13 @@ export class ParticleMotion {
     this.soundEvents.length = 0;
     this.auxiliaryParticles.length = 0;
     this.sourceEmitter?.(this);
+    if(this.hostEmission==='off') {
+      for(const particle of this.particles)if(particle.controlled)this.retire(particle);
+      for(const state of this.states) {
+        state.launched=false;state.credit=0;state.parent=null;
+        state.active=!state.item.flags?.includes('start-dead');
+      }
+    }
     if (this.replay && previous >= this.replayCleanupTime) {
       // kill-and-free-particles matches the launch-control key. Unkeyed
       // secondary callback splashes belong to the shared particle system.
@@ -430,8 +455,10 @@ export class ParticleMotion {
     // Source group launchers run in reverse order. A newly bound child can
     // therefore emit no earlier than the next group pass.
     for (let index = this.states.length - 1; index >= 0; index--) {
+      if(this.hostEmission==='off')break;
       if (this.replay && previous >= this.replay.duration) break;
       const state = this.states[index]; if (!state.active) continue;
+      if(this.hostEmission==='once'&&state.launched)continue;
       const item = state.item;
       const falloff = item['falloff-to'] ? Math.max(0, 1 - this.cameraDistance / item['falloff-to']) : 1;
       if (item.flags?.includes('launch-asap') || item.flags?.includes('bit6')) {

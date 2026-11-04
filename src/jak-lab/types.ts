@@ -50,6 +50,8 @@ export interface ParticleLightingSelection {
 export interface ParticleLightingContext {
   id: string; source: Provenance; levels: string[]; lights: string; palette: string;
   presets: ParticleLightingSelection[];
+  sun?: string; skyPalette?: string; sunPresets?: ParticleLightingSelection[];
+  sunFades?: {level: string; fade: number; source: Provenance}[];
 }
 export interface ParticleLightingLibrary {
   sources: {file: string; sha256: string}[];
@@ -58,6 +60,14 @@ export interface ParticleLightingLibrary {
     snapshot1: number; snapshot2: number; 'morph-start': number; 'morph-end': number;
   }[]}[];
   contexts: ParticleLightingContext[];
+  sunTables?: {id: string; source: Provenance; snapshots: {source: Provenance; color: number[]}[]}[];
+}
+export type SunHours = {op: 'and' | 'or'; terms: SunHours[]} | {op: '<' | '<=' | '>' | '>='; hour: number};
+export interface SunOrbit {slot: number; highNoon: number; tilt: number; rise: number; distance: number; source: Provenance}
+export interface SunParticleLibrary {
+  sources: {file: string; sha256: string}[];
+  orbits: SunOrbit[];
+  hosts: {group: string; orbit: number; hours: SunHours; source: Provenance}[];
 }
 export interface MeshDeathProfile {
   id:string; vertexSkip:number; frames:number; overlap:number; particle:number;
@@ -86,6 +96,7 @@ export interface Catalogue {
   models: ModelDefinition[]; textures: TextureDefinition[];
   callbackPrograms?: Record<string, ContactCallback>;
   particleLighting?: ParticleLightingLibrary | null;
+  sunParticles?: SunParticleLibrary | null;
   meshDeaths?: {profiles:MeshDeathProfile[]; texture:string; models:MeshDeathReference[]};
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];

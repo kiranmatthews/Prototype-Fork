@@ -31,6 +31,8 @@ hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Adjust 
   <label class="field" id="host-hour-field">TIME OF DAY (0–24 h)<input id="host-hour" type="number" min="0" max="24" step=".25" value="12" aria-label="Time of day"></label>
   <p class="muted" id="host-lighting-note"></p>
   <p class="source" id="host-lighting-source"></p>
+  <label class="field" id="host-sun-palette-field">AREA SUN PRESET<select id="host-sun-palette" aria-label="Sun palette"></select></label>
+  <label class="field" id="host-sun-fade-field">SUN FADE (0–1)<input id="host-sun-fade" type="number" min="0" max="1" step=".05" value="1" aria-label="Sun fade"></label>
   <label class="field" id="host-racer-speed-field">ZOOMER SPEED (m/s)<input id="host-racer-speed" type="number" min="0" max="50" step=".5" value="0" aria-label="Zoomer speed"></label>
   <label class="field" id="host-racer-heat-field">ZOOMER HEAT (%)<input id="host-racer-heat" type="number" min="0" max="120" step="1" value="50" aria-label="Zoomer heat"></label>
   <label class="check" id="host-racer-entering-field"><input id="host-racer-entering" type="checkbox">HUD entering (instant needle)</label>
@@ -192,13 +194,21 @@ async function boot():Promise<void> {
       element('host-water-field').hidden=!inputs.has('ocean height');
       element('host-fade-field').hidden=!inputs.has('fade-out');
       const lit=inputs.has('particle lighting'),timed=inputs.has('time of day');
-      element('host-lighting-field').hidden=!lit||!view.lighting;
+      element('host-lighting-field').hidden=!lit||!view.lighting||!!view.sun;
       element('host-hour-field').hidden=!lit&&!timed;
       element('host-lighting-note').hidden=element('host-lighting-source').hidden=!lit&&!timed;
       const lightingSelect=element<HTMLSelectElement>('host-lighting');lightingSelect.replaceChildren();
       for(const preset of view.lighting?.presets??[])lightingSelect.add(new Option(
         `${areaNames[preset.context.id]??pretty(preset.context.id)} · ${preset.selection.kind==='cycle'?'day cycle':`snapshot ${preset.selection.snapshot}`}`,preset.id));
       if(view.lighting)lightingSelect.value=view.lighting.selected.id;
+      element('host-sun-palette-field').hidden=element('host-sun-fade-field').hidden=!view.sun;
+      const sunSelect=element<HTMLSelectElement>('host-sun-palette');sunSelect.replaceChildren();
+      for(const preset of view.sun?.presets??[])sunSelect.add(new Option(
+        `${preset.context.id} · ${preset.selection.kind==='cycle'?'day cycle':'snapshot '+preset.selection.snapshot}`,preset.id));
+      if(view.sun) {
+        sunSelect.value=view.sun.selected.id;
+        element<HTMLInputElement>('host-sun-fade').value=String(view.sun.fade);
+      }
       element<HTMLInputElement>('host-hour').value=String(view.motion.hour);
       describeLighting(view);
       element('host-racer-speed-field').hidden=element('host-racer-entering-field').hidden=!inputs.has('racer speed');
@@ -234,7 +244,8 @@ async function boot():Promise<void> {
       }
     } else if(view instanceof ParticleExhibit) {
       status.classList.toggle('pending',view.issues.size>0);
-      status.textContent=view.issues.size?`Source graph loaded. Fidelity work remaining:\n${[...view.issues].join('\n')}`:
+      status.textContent=view.issues.size?`Source graph loaded. Fidelity work remaining:\n${[...view.issues].join('\n')}`:view.sun?
+        'Original sun layers and source lifecycle. The Gouraud version uses the same simulation with colours interpolated across a texture-free mesh.':
         'Source emission graph. Original and Gouraud views share one simulation. Distortion samples the scene per pixel in Original and per vertex in Gouraud. Visual verification pending.';
       element('provenance').textContent=`${selected.effect!.source.file}:${selected.effect!.source.line}\n`+
         (view.assembly?`Source host draw · particle ${selected.effect!.items[0].particle} · 60 Hz`:
@@ -247,6 +258,16 @@ async function boot():Promise<void> {
     loading.textContent=view?'':errors.get(selected.id)??`Loading ${selected.name}…`;
   }
   function describeLighting(view:ParticleExhibit):void {
+    if(view.sun) {
+      const sun=view.sun,preset=sun.selected;
+      element('host-lighting-note').textContent='Original sun layers, recentered for inspection. '+
+        'The source orbit, hour gates, colour palette and opposing rotations are preserved. '+
+        (sun.host.orbit===1?'Green flares keep their authored colour; the preset only changes the initial fade. ':'')+
+        'Sky backgrounds, terrain occlusion and local mood events are still pending. Preset changes reset the fade input.';
+      element('host-lighting-source').textContent=`${sun.host.source.file}:${sun.host.source.line}\n`+
+        `${preset.selection.source.file}:${preset.selection.source.line}`;
+      return;
+    }
     const lit=view.motion.hostInputs.has('particle lighting'),preset=view.lighting?.selected;
     element('host-lighting-note').textContent=lit?
       'Original base palettes. Local lighting events and area transitions are still pending. Changing these inputs restarts the effect.':
@@ -388,6 +409,17 @@ async function boot():Promise<void> {
   };
   element<HTMLInputElement>('host-hour').oninput=updateLighting;
   element<HTMLSelectElement>('host-lighting').onchange=updateLighting;
+  element<HTMLSelectElement>('host-sun-palette').onchange=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit)||!view.sun)return;
+    view.sun.select(element<HTMLSelectElement>('host-sun-palette').value);
+    element<HTMLInputElement>('host-sun-fade').value=String(view.sun.fade);
+    view.restart();describeLighting(view);
+  };
+  element<HTMLInputElement>('host-sun-fade').oninput=()=>{
+    const view=loaded.get(selected.id),input=element<HTMLInputElement>('host-sun-fade');
+    if(!(view instanceof ParticleExhibit)||!view.sun||input.value===''||!input.validity.valid)return;
+    view.sun.fade=Number(input.value);view.restart();
+  };
   for(const id of ['assembly-enabled','assembly-length','assembly-slope','assembly-heading'])element<HTMLInputElement>(id).oninput=()=>{
     const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit)||!view.assembly)return;
     view.assembly.enabled=element<HTMLInputElement>('assembly-enabled').checked;
@@ -474,8 +506,17 @@ async function boot():Promise<void> {
       }
       if(view instanceof ParticleExhibit&&view.assembly)
         element('statistics').textContent+=`\nSOURCE CALLS / FRAME  ${view.assembly.calls}\nEMITTER  ${view.assembly.enabled?'on':'off'}`;
-      if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('particle lighting')||view.motion.hostInputs.has('time of day')))
-        element('statistics').textContent+=`\nHOUR  ${view.motion.hour.toFixed(2)}\nPARTICLE RGB  ${view.motion.host.particleColor.toArray().map(v=>v.toFixed(4)).join(' / ')}`;
+      if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('particle lighting')||view.motion.hostInputs.has('time of day'))) {
+        element('statistics').textContent+=`\nHOUR  ${view.motion.hour.toFixed(2)}`;
+        if(!view.sun)element('statistics').textContent+=`\nPARTICLE RGB  ${view.motion.host.particleColor.toArray().map(v=>v.toFixed(4)).join(' / ')}`;
+      }
+      if(view instanceof ParticleExhibit&&view.sun) {
+        const sun=view.sun;
+        element('statistics').textContent+=`\nSUN  ${sun.active?'visible':'outside source hours / faded out'}`+
+          (sun.host.orbit===0?`\nSUN RGB  ${view.motion.host.sunColor.toArray().map(v=>v.toFixed(2)).join(' / ')}`:
+            '\nCOLOUR  authored green flares')+
+          `\nSOURCE OFFSET (m)  ${sun.centre.toArray().map(v=>v.toFixed(1)).join(' / ')}`;
+      }
       if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String(
         view.deathPlayback?.active?Math.min(1,view.time/view.duration):(view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;

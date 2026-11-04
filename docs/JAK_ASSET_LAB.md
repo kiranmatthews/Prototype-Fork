@@ -112,13 +112,14 @@ particle updates; callback kills retire the particle on the following step.
 Fractional launch credit remains attached to the source launcher. Sound events
 are recorded but are not yet connected to playback.
 
-The runtime implements all 11 referenced birth callback names, plus 38 update
+The runtime implements all 11 referenced birth callback names, plus 39 update
 callback names (including the 20 contact callbacks). Parent-relative births,
 root/primitive following, bird motion, eco fade and target/surface orientation
 have focused checks. Some implementations require typed host data such as a
 joint, parent particle, normal or HUD money value. The inspector reports missing
 inputs. Five Zoomer speed/heat callbacks now use explicit inspection inputs.
-The other 30 callback names, mostly HUD behavior and sun tracking, remain
+Sun tracking now uses the source orbits, colour selectors and host lifecycle.
+The other 29 callback names, mostly HUD behavior, remain
 unported; name coverage does not prove complete host reconstruction.
 
 **Unfinished fidelity requirements:**
@@ -785,3 +786,66 @@ whole-game objective and final delivery remain open. Remaining work includes
 53 definitions outside the resolved group/direct/death paths, unresolved host
 launches, 30 callbacks, dynamic texture/lighting state, full source assemblies,
 procedural renderers, individual prop-instance recovery and broad visual review.
+
+## Sun and green-sun host behaviour — 5 November 2026 NZDT
+
+Groups 35 and 36 now use `sparticle-track-sun` and the actual
+`time-of-day-update` spawn/kill conditions. They spawn once while their source
+window is active, retain their infinite-lifetime particles, and free the keyed
+group when the hour or fade makes it inactive. The normal sun has three live
+layers. The green sun's authored zero-alpha core dies under its original bit2
+flag, leaving two flares; it is not replaced with a fabricated centre.
+
+The catalogue records the literal sky orbit setup, visibility predicates and
+six source-file hashes. The two solar orbits use the source float32 arithmetic,
+signed-angle truncation and sine/cosine polynomial approximations. The callback
+positions sprites at source-camera + sky-position × 4096, updates nonzero alpha
+from sun-fade, and replaces RGB only for the normal sun's core and two quarter-
+intensity flares. Green flares retain their authored RGB. Opposing rotation,
+textures, sprite dimensions and additive blending remain source-owned.
+
+Fourteen sun tables, their eight snapshots each, 26 actual cycle/quick selectors
+and 27 level fade records are now extracted. Sun cycles read
+`sky-texture-interp`, independently of particle `palette-interp`; quick updates
+read their distinct sun snapshot argument. The final-boss sun's snapshot 3 is
+therefore not confused with its particle-lighting snapshot 5. Inputs allow hour,
+source sun preset and fade inspection. Selecting a preset restores the first
+associated level's authored initial fade; contexts without a directly associated
+level use an explicit isolated-inspection fade of one. Dynamic mood mutations,
+area transitions and full sky/terrain occlusion remain unfinished.
+
+The gallery recentres each complete sun for inspection. Simulation retains its
+original camera-relative position and 9,950 m orbit-distance parameter; the
+source camera is the origin in this isolated view. Framing uses the full rotating
+sprite dimensions instead of the unrelated 70 m source culling sphere. Original
+world-scale viewing remains available. Both representations share the same
+particles, with source texture sampling in Original and the existing adaptive
+vertex-colour mesh in Gouraud. No geometry reduction or asset-byte changes.
+
+Validation:
+
+- Five parser/selector fixtures pass, including rejection of unsupported gates,
+  computed thresholds and wrong group bindings. An independent evaluator of the
+  pinned GOAL function AST produces 1,290 orbit samples; the TypeScript result
+  matches every component exactly.
+- The sun regression covers 6,192 frames and 9,567 particle samples: strict and
+  inclusive hour boundaries, camera translation, persistent identity, opposing
+  rotations, source alpha behaviour, cleanup/reactivation, all 26 presets and
+  deterministic restart, with no capacity drops or source-data mutations.
+- Existing particle-motion and lighting checks pass. Root TypeScript, required
+  normal build and final independent production build pass. Normal output has
+  1,750 files / 765.2 MiB, offline version `aac7e093c7ad5a8e334e`. No full suite.
+- Twenty-three browser observations cover original/Gouraud/both, 1280×720 and
+  native 2560×1440, original world scale, palette/fade/hour controls, live rotation,
+  restart and source-window cleanup. The final green sun remains at two live
+  particles after 69.9 source seconds. Console warnings/errors are empty.
+
+Evidence is `.jak-lab-data/evidence/sun-{checks,orbit-oracle,browser,delivery}.json`,
+the sun build logs and `sun-*.png` / `green-sun-*.png`. The packed catalogue is
+9,332,184 bytes; unchanged assets are 226,933,574 bytes. The final frontend is
+702,936 bytes, for 236,968,694 bytes before hosting metadata. The old raw catalogue
+is preserved as `catalogue.before-sun.json`; the new catalogue was promoted only
+after validation. This is a local progress increment, not completion of the
+whole-game fidelity audit. All 1,424 exhibits remain; the remaining 29 callbacks,
+53 unresolved definitions, scene/host reconstruction and broad visual audit are
+still open. No integration or publication.

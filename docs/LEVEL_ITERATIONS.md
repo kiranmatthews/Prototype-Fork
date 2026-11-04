@@ -9017,3 +9017,26 @@ complete visual audit of all models/markers. Local commit and coordinator
 handoff only; no game runtime, level pack, D animation, hosting or publication
 changes. Gameplay host movement/audio, unresolved definitions/callbacks,
 procedural renderers and the wider whole-game fidelity audit remain unfinished.
+
+## Jak archive — original sun and green-sun behaviour, 5 November 2026 NZDT
+
+- Ported the original camera-relative solar orbits, source colour selectors,
+  infinite particle lifetimes, opposing flare rotations and exact host hour/fade
+  gates. Original/Gouraud views share the simulation and preserve full source
+  sprite dimensions. Recentered inspection and original world scale both work.
+- Added 14 source sun tables, 26 proven sun selectors and 27 level fade records.
+  The green sun keeps its authored green flares and invisible core behaviour;
+  no replacement glow or invented centre. Full sky/terrain composition remains
+  unfinished and is labelled in the inspector.
+- Five Python fixtures, 1,290 exact source-AST orbit comparisons, 6,192 simulation
+  frames / 9,567 finite particle samples, existing particle/lighting checks,
+  TypeScript, normal build and independent build pass. Browser inspection covers
+  both effects, original/Gouraud/both, 720p/native, source scale, controls and
+  cleanup with no console warnings/errors. No full-suite run.
+- First recorded source edit to completed browser verification: approximately
+  18 minutes (07:58–08:16 NZDT). The full goal's prompt-to-playable interval remains
+  open because the whole-game archive is unfinished. Evidence: local
+  `.jak-lab-data/evidence/sun-*` and `green-sun-*`. No change to D, the game runtime
+  or level pack; local commit/handoff only.
+
+Details: [Jak asset lab](JAK_ASSET_LAB.md).
