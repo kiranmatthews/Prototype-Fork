@@ -11,11 +11,11 @@ try {
  const {Level}=await server.ssrLoadModule('/src/level.ts');
  const {SUNNY_BEACH_LEVEL}=await server.ssrLoadModule('/src/levels/sunny-beach.ts');
  const {JUNGLE_FRUIT_CLEARINGS}=await server.ssrLoadModule('/src/levels/fruit-clusters.ts');
- for(const entry of [{id:'jungle',name:'Jungle Ruins'},{id:'beachfront',name:SUNNY_BEACH_LEVEL.name,data:SUNNY_BEACH_LEVEL}]) {
+ for(const entry of [{id:'jungle',name:'Jungle Ruins'},{id:'beachfront',name:SUNNY_BEACH_LEVEL.name}]) {
   const level=new Level(new THREE.Scene(),entry);
   try {
    level.root.updateMatrixWorld(true);
-   const authored=entry.data?.components.filter(c=>c.nm?.startsWith('Loose fruit /'));
+   const authored=SUNNY_BEACH_LEVEL.components.filter(c=>c.nm?.startsWith('Loose fruit /'));
    const cluster=entry.id==='jungle'?level.pickups.filter(p=>JUNGLE_FRUIT_CLEARINGS.some(z=>p.mesh.position.z<=z+.23&&p.mesh.position.z>=z-1.63)):
     level.pickups.filter(p=>authored.some(c=>p.mesh.position.distanceTo(new THREE.Vector3(...c.p))<1e-5));
    assert.equal(cluster.length,entry.id==='jungle'?24:30,'loose cluster members are missing');
@@ -33,7 +33,7 @@ try {
    level.setTimeTrial(false);assert.ok(cluster.every(p=>p.mesh.visible),'fruit lost on trial exit');
    for(const p of cluster){p.alive=false;p.mesh.visible=false;}
    level.reset(false);assert.ok(cluster.every(p=>p.alive&&p.mesh.visible),'soft respawn lost fruit');
-   const capture=level.captureData();assert.ok(cluster.every(p=>capture.components.some(c=>c.t==='wumpa'&&p.mesh.position.distanceTo(new THREE.Vector3(...c.p))<1e-5)),'editor capture dropped cluster');
+   const capture=level.captureData();assert.ok(cluster.every(p=>capture.components.some(c=>c.t==='wumpa'&&p.mesh.position.toArray().map((v,i)=>Math.round((i===1?p.mesh.userData.baseY:v)*100)/100).every((v,i)=>v===c.p[i]))),'editor capture dropped cluster');
    reports.push({level:entry.name,count:cluster.length,minClearance:Math.min(...clearance),maxClearance:Math.max(...clearance),trialAndRespawn:true,editorCapture:true});
   } finally {level.dispose();}
  }

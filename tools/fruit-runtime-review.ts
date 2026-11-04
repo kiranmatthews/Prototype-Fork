@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { renderQualitySettings } from '../src/render-quality/settings';
 import { JUNGLE_FRUIT_CLEARINGS } from '../src/levels/fruit-clusters';
+import { SUNNY_BEACH_LEVEL } from '../src/levels/sunny-beach';
 const params=new URLSearchParams(location.search);
 renderQualitySettings.setRegularResolution(params.has('native')?null:720);
 await import('../src/main');
@@ -22,7 +23,7 @@ const position=(at:THREE.Vector3,heading=new THREE.Vector3(0,0,-1))=>{
 function selectCluster(index:number){
  const l=g.getLevel();
  if(params.get('level')==='beachfront'){
-  const authored=l.builtFromData.components.filter((c:any)=>c.nm?.startsWith('Loose fruit /'));
+  const authored=SUNNY_BEACH_LEVEL.components.filter((c:any)=>c.nm?.startsWith('Loose fruit /'));
   const slice=authored.slice(index*6,index*6+6);
   selected=l.pickups.filter((f:any)=>slice.some((c:any)=>f.mesh.position.distanceTo(new THREE.Vector3(...c.p))<.3));
  }else{
