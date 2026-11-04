@@ -3272,6 +3272,7 @@ function returnFromBonus(completed: boolean): void {
       // A bonus death also ends the parent's current debris lifetime, even
       // though its crate/checkpoint state is resumed rather than reset.
       level.discardedBoards.clear();
+      level.crateEffects.clear();
     }
     player.resumeSuspendedLevel(level, returnPoint, state);
     competition = session.parentCompetition;

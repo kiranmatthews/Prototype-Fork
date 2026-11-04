@@ -217,7 +217,7 @@ try {
     player.prevPos.set(0, CRATE_SIZE + .14, 0); player.pos.set(0, CRATE_SIZE - .06, 0); player.vVel = -10;
   };
   const stomp = create("multihit");
-  assert.equal(stomp.crate.woodCrate.hitsRemaining, 5, "new wood crate needs five hits");
+  assert.equal(stomp.crate.art.state.hits, 5, "new wood crate needs five hits");
   const collisionSize = stomp.crate.box.getSize(new THREE.Vector3()).toArray();
   assert.deepEqual(collisionSize, [CRATE_SIZE,CRATE_SIZE,CRATE_SIZE], "crate collider differs from the shared dimensions");
   for (let hit = 1; hit <= 5; hit++) {
@@ -225,7 +225,7 @@ try {
     stomp.player.collide(stomp.level);
     assert.equal(activeFruit(stomp.player), hit * 2, `stomp ${hit} did not pay two fruit`);
     assert.equal(stomp.crate.alive, hit < 5, `stomp ${hit} alive state`);
-    assert.equal(stomp.crate.woodCrate.hitsRemaining, 5-hit, `stomp ${hit} wood durability`);
+    assert.equal(stomp.crate.art.state.hits, 5-hit, `stomp ${hit} wood durability`);
     assert.deepEqual(stomp.crate.box.getSize(new THREE.Vector3()).toArray(), collisionSize, "a hit changed support bounds");
     assert.equal(stomp.player.cratesBroken, hit === 5 ? 1 : 0, `stomp ${hit} crate tally`);
   }
@@ -291,15 +291,15 @@ try {
   assert.equal(checkpoint.crate.hitsRemaining, 1);
   checkpoint.level.reset(false);
   assert.equal(checkpoint.crate.hitsRemaining, 3, "soft reset lost checkpointed hit progress");
-  assert.equal(checkpoint.crate.woodCrate.hitsRemaining, 3, "checkpoint restored the wrong wood durability");
+  assert.equal(checkpoint.crate.art.state.hits, 3, "checkpoint restored the wrong wood durability");
   checkpoint.level.reset(true);
   assert.equal(checkpoint.crate.hitsRemaining, 5, "hard reset did not restore five hits");
-  assert.equal(checkpoint.crate.woodCrate.hitsRemaining, 5, "restart did not restore wood durability");
+  assert.equal(checkpoint.crate.art.state.hits, 5, "restart did not restore wood durability");
   checkpoint.level.setTimeTrial(true);
-  assert.equal(checkpoint.crate.woodCrate.visual.visible, false, "wood visual covers run-mode printing");
-  assert.equal(checkpoint.crate.mesh.material.visible, true, "time trial cube disappeared");
+  assert.equal(checkpoint.crate.art.root.visible, true, "run mode lost the modeled crate");
+  assert.equal(checkpoint.crate.mesh.material.visible, false, "legacy cube covers the run-mode art");
   checkpoint.level.setTimeTrial(false);
-  assert.equal(checkpoint.crate.woodCrate.visual.visible, true, "standard mode lost the wood crate");
+  assert.equal(checkpoint.crate.art.root.visible, true, "standard mode lost the wood crate");
   assert.equal(checkpoint.crate.mesh.material.visible, false, "solid proxy cube covers the wood model");
 
   console.log("Validated life/multi-hit crates, triple-mask SPECIAL, fruit HUD events, rewards, contacts, checkpoints, and capture.");

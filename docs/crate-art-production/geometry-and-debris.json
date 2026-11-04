@@ -1,0 +1,92 @@
+{
+  "pass": true,
+  "allSixFaces": true,
+  "settled": 15,
+  "lifetimeAndPool": true,
+  "variants": [
+    {
+      "kind": "wood",
+      "triangles": 3960,
+      "shellDraws": 1,
+      "shared": true
+    },
+    {
+      "kind": "empty",
+      "triangles": 3960,
+      "shellDraws": 1,
+      "shared": true
+    },
+    {
+      "kind": "mystery",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "life",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "mask",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "multihit",
+      "triangles": 4920,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "bouncy",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "metalbounce",
+      "triangles": 4920,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "metal",
+      "triangles": 5280,
+      "shellDraws": 1,
+      "shared": true
+    },
+    {
+      "kind": "tnt",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "nitro",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "bang",
+      "triangles": 4920,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "nitrobang",
+      "triangles": 4920,
+      "shellDraws": 2,
+      "shared": true
+    },
+    {
+      "kind": "checkpoint",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true
+    }
+  ]
+}
