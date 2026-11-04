@@ -3,7 +3,10 @@ import type { CustomAtmosphereData } from '../levelAtmosphere';
 import { COASTAL_TOWN_ASSETS } from '../coastalTownAssets';
 
 export type BayPoint = [number, number, number];
+// Keep the lagoon's glint within its painted palette. Inheriting MatrixRex's
+// 14–25 HDR specular values overwhelms the shallows with bloom-white glare.
 export const BAY_OCEAN_LOOK = {normalStrength:1.35,reflectionStrength:.38,causticsStrength:.4,
+  specular:{r:.45,g:.6,b:.65,a:1},
   shallow:{r:.07,g:.82,b:.75,a:.7},deep:{r:.015,g:.42,b:.56,a:1},depthDistance:2.5,foamStrength:.48,intersectionWidth:.85};
 export const BAY_ATMOSPHERE: CustomAtmosphereData = {
   fogEnabled:true,fogNear:160,fogFar:620,fogColor:'#b8e7ed',

@@ -1760,9 +1760,12 @@ export class UnityOcean {
         shader.uniforms.uSurf=u.uSurf;shader.uniforms.uSandTime=u.uTime;
         shader.uniforms.uSandCoast=u.uCoastMap;shader.uniforms.uSandBounds=u.uCoastBounds;
         shader.uniforms.uSandSea={value:this.seaLevel};
+        // Banana Bay's painted sand darkens when damp, but must not become
+        // a polished coating under its lower sun. Other coasts retain their look.
+        shader.uniforms.uSandWetRoughness={value:material.userData.texKind==='sunny-sand'?0.92:0.24};
         shader.vertexShader='varying vec3 vSandWorld;\n'+shader.vertexShader.replace('#include <begin_vertex>',
           '#include <begin_vertex>\nvSandWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');
-        shader.fragmentShader=`varying vec3 vSandWorld; uniform float uSandTime; uniform float uSandSea;
+        shader.fragmentShader=`varying vec3 vSandWorld; uniform float uSandTime; uniform float uSandSea; uniform float uSandWetRoughness;
           uniform sampler2D uSandCoast; uniform vec4 uSandBounds;\n${SURF_GLSL}\n`+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
           float sandShore=texture2D(uSandCoast,clamp((vSandWorld.xz-uSandBounds.xy)/uSandBounds.zw,0.0,1.0)).r;
@@ -1772,9 +1775,9 @@ export class UnityOcean {
           float sandWet=max(freshWet,damp)*(1.0-smoothstep(uSandSea+0.7,uSandSea+1.4,vSandWorld.y));
           diffuseColor.rgb*=mix(vec3(1.0),vec3(0.58,0.67,0.71),sandWet*0.8);`);
         shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',
-          '#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,0.24,sandWet);');
+          '#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,uSandWetRoughness,sandWet);');
       };
-      material.customProgramCacheKey=()=>cacheKey+'-coastal-wet-sand-v1';material.needsUpdate=true;
+      material.customProgramCacheKey=()=>cacheKey+'-coastal-wet-sand-v2';material.needsUpdate=true;
     }
   }
 
