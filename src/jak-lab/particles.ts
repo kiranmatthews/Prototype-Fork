@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {ParticleMotion, type LabParticle} from './particleMotion';
 import {assetURL, type Catalogue, type EffectDefinition, type HostReplay, type RenderingMode} from './types';
 import {DistortionBatch, PARTICLE_SPRITE_LAYER} from './distortion';
+import {SourceAssembly} from './sourceAssemblies';
 
 const vertexShader = /* glsl */`
   attribute vec4 profile;
@@ -9,7 +10,7 @@ const vertexShader = /* glsl */`
   attribute vec2 size;
   attribute vec4 rgba;
   attribute vec4 orientation;
-  attribute vec2 rotationMode;
+  attribute vec3 rotationMode;
   varying vec4 ink;
   varying vec2 sourceUV;
   vec3 turn(vec4 q, vec3 v) { return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v); }
@@ -17,8 +18,11 @@ const vertexShader = /* glsl */`
     vec2 offset = position.xy * size;
     vec4 viewed;
     if (rotationMode.y > 0.5) {
-      viewed = modelViewMatrix * vec4(centre + turn(orientation, vec3(offset, 0.0)), 1.0);
+      // Source cdata[12..15]: 3D sprites occupy XZ; Y is the normal axis.
+      viewed = modelViewMatrix * vec4(centre + turn(orientation, vec3(offset.x, 0.0, offset.y)), 1.0);
     } else {
+      // cdata[4..7] anchors the left edge at the origin (needles, ribbons).
+      offset.x += rotationMode.z * size.x;
       viewed = modelViewMatrix * vec4(centre, 1.0);
       float c = cos(rotationMode.x), s = sin(rotationMode.x);
       // Include the exhibit's uniform inspection scale in billboard offsets.
@@ -116,7 +120,7 @@ function material(texture: THREE.Texture, original: boolean, blend: LabParticle[
   return result;
 }
 
-class SpriteBatch {
+export class SpriteBatch {
   readonly original: THREE.Mesh<THREE.InstancedBufferGeometry,THREE.ShaderMaterial>;
   readonly gouraud: THREE.Mesh<THREE.InstancedBufferGeometry,THREE.ShaderMaterial>;
   private capacity = 0;
@@ -129,7 +133,7 @@ class SpriteBatch {
   write(particles: LabParticle[]): void {
     if(particles.length>this.capacity) {
       this.capacity = 2**Math.ceil(Math.log2(Math.max(16,particles.length)));
-      for(const [name,width] of Object.entries({centre:3,size:2,rgba:4,orientation:4,rotationMode:2})) {
+      for(const [name,width] of Object.entries({centre:3,size:2,rgba:4,orientation:4,rotationMode:3})) {
         const attribute = new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*width),width).setUsage(THREE.DynamicDrawUsage);
         this.attributes[name]=attribute;
         for(const mesh of [this.original,this.gouraud])mesh.geometry.setAttribute(name,attribute);
@@ -141,7 +145,8 @@ class SpriteBatch {
       this.attributes.size.setXY(index,(v['scale-x']??0)/4096,(v['scale-y']??0)/4096);
       this.attributes.rgba.setXYZW(index,v.r??0,v.g??0,v.b??0,v.a??0);
       const q=particle.orientation;this.attributes.orientation.setXYZW(index,q.x,q.y,q.z,q.w);
-      this.attributes.rotationMode.setXY(index,(v['rot-z']??0)*Math.PI*2/65536,particle.is3d?1:0);
+      this.attributes.rotationMode.setXYZ(index,(v['rot-z']??0)*Math.PI*2/65536,particle.is3d?1:0,
+        !particle.is3d&&(Math.trunc(v['rot-x']??0)&15)===4?.5:0);
     }
     for(const attribute of Object.values(this.attributes)) {
       attribute.clearUpdateRanges();attribute.addUpdateRange(0,particles.length*attribute.itemSize);attribute.needsUpdate=true;
@@ -158,6 +163,7 @@ export class ParticleExhibit {
   readonly motion: ParticleMotion;
   readonly issues: Set<string>;
   readonly replays: HostReplay[];
+  readonly assembly:SourceAssembly|null;
   readonly original = new THREE.Group();
   readonly alternative = new THREE.Group();
   private readonly batches = new Map<string,SpriteBatch>();
@@ -166,9 +172,16 @@ export class ParticleExhibit {
   private extent: number;
   private sourceRadius: number;
   private mode: RenderingMode = 'compare';
+  private nativeScale=false;
+  private readonly cameraPoint=new THREE.Vector3();
   private nextDirectLaunch = 300;
   private constructor(readonly definition: EffectDefinition, catalogue: Catalogue, private readonly sceneTexture: THREE.IUniform) {
     this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1,catalogue.callbackPrograms);
+    this.assembly=definition.sourceAssembly?new SourceAssembly(definition.sourceAssembly):null;
+    if(this.assembly) {
+      this.motion.sourceEmitter=motion=>this.assembly!.emit(motion);
+      this.motion.hostInputs.delete('particle quaternion');
+    }
     this.issues=this.motion.issues;
     const timings=new Set<string>();
     this.replays=(catalogue.sourceInventory?.partTrackerLaunches??[]).flatMap(entry=>{
@@ -177,12 +190,13 @@ export class ParticleExhibit {
       if(timings.has(key))return [];timings.add(key);return [replay];
     });
     const patches=catalogue.sourceInventory?.runtimeParticlePatches.filter(patch=>patch.particles.some(id=>
-      typeof id==='number'&&this.motion.referencedParticleIds.has(id)))??[];
+      typeof id==='number'&&this.motion.referencedParticleIds.has(id))&&
+      !(definition.sourceAssembly==='eco-beam'&&patch.source.file==='engine/common-obs/generic-obs.gc'&&patch.source.line===1491))??[];
     if(patches.length)this.issues.add(`Host emission changes: ${patches.length} source sites`);
     const bounds=definition.bounds;
-    this.sourceRadius=Math.max(1,bounds?.[4]??1);
+    this.sourceRadius=this.assembly?.radius??Math.max(1,bounds?.[4]??1);
     this.extent=Math.min(1,3.5/this.sourceRadius);
-    const centre=bounds?new THREE.Vector3(bounds[1],bounds[2],bounds[3]):new THREE.Vector3();
+    const centre=this.assembly?.centre??(bounds?new THREE.Vector3(bounds[1],bounds[2],bounds[3]):new THREE.Vector3());
     for(const group of [this.original,this.alternative]) {
       const display=new THREE.Group();display.position.copy(centre).negate();display.position.y+=this.sourceRadius;group.add(display);
     }
@@ -229,9 +243,25 @@ export class ParticleExhibit {
     this.setNativeScale(false);
   }
   setNativeScale(native:boolean):void {
+    this.nativeScale=native;
     for(const group of [this.original,this.alternative])group.scale.setScalar(native?1:this.extent);
     const offset=this.mode==='compare'?Math.max(2.6,this.sourceRadius*this.scale+.6):0;
     this.original.position.x=-offset;this.alternative.position.x=offset;
+  }
+  refreshAssembly():void {
+    if(!this.assembly)return;
+    this.sourceRadius=this.assembly.radius;this.extent=Math.min(1,3.5/this.sourceRadius);
+    for(const group of [this.original,this.alternative]) {
+      group.children[0].position.copy(this.assembly.centre).negate();group.children[0].position.y+=this.sourceRadius;
+    }
+    this.setNativeScale(this.nativeScale);
+  }
+  setInspectionCamera(position:THREE.Vector3):void {
+    if(!this.assembly)return;
+    this.root.updateWorldMatrix(true,false);
+    this.cameraPoint.copy(position);this.root.worldToLocal(this.cameraPoint);
+    this.assembly.camera.copy(this.cameraPoint).divideScalar(this.scale)
+      .sub(this.original.children[0].position).multiplyScalar(4096);
   }
   update(dt:number):void {
     if(this.definition.directLaunch&&this.motion.clock>=this.nextDirectLaunch) {
@@ -260,6 +290,7 @@ export class ParticleExhibit {
   get diagnostics(){return {view:this.mode,particles:this.motion.particles.length,ticks:this.motion.clock,
     dropped:this.motion.dropped,sourceQueueDrops:this.motion.queueDrops,batches:this.batches.size,
     distortions:this.distortions,auxiliaryDrops:this.motion.auxiliaryDrops,
+    assembly:this.assembly?.kind,sourceCalls:this.assembly?.calls,
     replay:this.motion.replayPhase,replaySource:this.motion.replay?.source,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
   dispose():void {
     for(const batch of this.batches.values())batch.dispose();

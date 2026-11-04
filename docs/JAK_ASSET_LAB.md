@@ -507,3 +507,61 @@ unchanged asset/catalogue pack it is 232,454,698 bytes before host metadata.
 Current hashes and logs: `racer-hud-delivery.json` and `racer-hud-build.log`.
 No shared game runtime, level data, package configuration or held D animation
 code changes. All test tabs and guarded servers are closed after review.
+
+## Source eco beam, sage-cage bars and sprite geometry
+
+Two additional exhibits now execute the source host draw calls that assemble
+these effects. `effect:30001` follows `draw-eco-beam` in
+`engine/common-obs/generic-obs.gc:1483`: three 3D planes at the endpoint midpoint,
+successive 60-degree local rolls, and the source length patched into particle
+2528. Inspection controls set length, slope and heading without changing the
+source launcher's random ranges or shared fractional emission credit.
+`effect:30002` follows `citb-sagecage-draw-bars` in
+`levels/citadel/citadel-sages.gc:34`: twelve exact authored bar positions, the
+source joint/camera rotation and direct particle 2473 emission. Both renew at
+60 Hz and retain the source five-tick lifetime; disabling emission clears them
+on the next simulation frame. Original and Gouraud share one simulation.
+
+These are host-driven assemblies, not extra source defpartgroups. The catalogue
+still contains 675 original groups; the viewer has 1,352 exhibits including the
+two derived assemblies. Their provenance identifies the host function and
+particle. The beam's inspection endpoints replace its gameplay targets; Jungle
+camera gating/collision/blue-eco collection remain unported. The isolated cage
+bars use an inspection joint heading. Its mesh, skeleton animation, sound and
+cloning behavior remain separate or unassembled. Neither exhibit closes those
+remaining whole-game fidelity gaps.
+
+The pinned renderer's `sprite3_3d.vert` and source `sprite.gc:292–307` also expose
+two shared geometry errors. 3D sprites use the local XZ plane, with Y as its
+normal axis. Two-dimensional corner mode 4 anchors the left edge, rather than
+centering the quad. Both rendering variants now use those conventions; 99
+reachable non-distortion 2D definitions specify that anchor. The shader and
+renderer downloads are Git-blob verified against the pinned OpenGOAL tree;
+hashes and URLs are in `.jak-lab-data/native-source/sprite-provenance.json`.
+
+The focused source-catalogue regression verifies beam endpoints, plane angles,
+cage positions/heights, camera rotation, per-call quaternion/field isolation,
+shared fractional credit, source retirement, enable/restart and 30/60/120 Hz
+parity. The actual SpriteBatch GPU fixture compares both variants with independent
+CPU source-corner geometry in seven configurations and two resolutions: all
+28 comparisons pass, with at most one edge pixel difference. Negative controls
+reject the old XY plane and centered anchor. This verifies geometry coverage,
+not every source texture/projection/fog behavior.
+
+Browser review covers beam length 20 m, slope 30 degrees and heading 40 degrees,
+cage heading 45 degrees, emission off/on/restart, Original/Gouraud/Both, native
+2560×1440 and normal 1280×720. Existing exit-chamber ripples now lie on the source
+plane; the Zoomer needle retains its 151-degree pose at 30 m/s with the corrected
+pivot. No console warnings/errors or capacity drops. Evidence is
+`.jak-lab-data/evidence/source-assemblies-{checks,browser}.json`,
+`sprite-geometry-gpu.json` and the `source-beam-*`, `source-cage-*`,
+`source-ripple-*` and `source-needle-*` images. Those selected checks do not
+constitute whole-catalogue visual approval.
+
+Root and strict fixture TypeScript, focused particle/source-assembly checks,
+the required normal build and standalone build pass. Frontend size is 681,357
+bytes; the combined unchanged asset pack plus frontend is 232,461,665 bytes
+before hosting metadata. Hashes/logs are in `source-assembly-delivery.json` and
+`source-assembly-build.log`. Test tabs and the guarded server are closed; the
+user's D playtest remains open. No shared game runtime, level data, extracted
+asset bytes or held D code changed. No publication; the whole-game goal is open.

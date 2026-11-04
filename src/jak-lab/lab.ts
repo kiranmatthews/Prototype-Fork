@@ -3,6 +3,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {ModelExhibit} from './models';
 import {ParticleExhibit} from './particles';
 import {ParticleRenderPass} from './distortion';
+import {sourceAssemblyDefinitions} from './sourceAssemblies';
 import type {Catalogue, EffectDefinition, Exhibit, RenderingMode} from './types';
 import {configureAssetBase} from './types';
 import './lab.css';
@@ -31,6 +32,14 @@ hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Adjust 
   <label class="check" id="host-racer-entering-field"><input id="host-racer-entering" type="checkbox">HUD entering (instant needle)</label>
   <p class="muted" id="host-racer-note">Source needle and heat behavior, shown as isolated HUD layers. Full HUD placement is still pending.</p>`;
 element('status').before(hostControls);
+const assemblyControls=document.createElement('details');assemblyControls.id='source-assembly';assemblyControls.hidden=true;
+assemblyControls.innerHTML=`<summary>Source assembly</summary>
+  <label class="check"><input id="assembly-enabled" type="checkbox" checked>Emitter on</label>
+  <label class="field" id="assembly-length-field">BEAM LENGTH (m)<input id="assembly-length" type="number" min="1" max="40" step=".5" value="12" aria-label="Beam length"></label>
+  <label class="field" id="assembly-slope-field">BEAM SLOPE (degrees)<input id="assembly-slope" type="number" min="-80" max="80" step="5" value="0" aria-label="Beam slope"></label>
+  <label class="field">HEADING (degrees)<input id="assembly-heading" type="number" min="-180" max="180" step="5" value="0" aria-label="Assembly heading"></label>
+  <p class="muted" id="assembly-note"></p>`;
+hostControls.before(assemblyControls);
 const replayField=document.createElement('div');replayField.hidden=true;
 replayField.innerHTML=`<label class="field">EMISSION PLAYBACK<select id="host-replay" aria-label="Emission playback"></select></label><p class="source" id="host-replay-note"></p>`;
 hostControls.before(replayField);
@@ -59,7 +68,7 @@ async function boot():Promise<void> {
         directLaunch:{particle:entry.particle,function:launch.source.function}};
     }));
   const exhibits:Exhibit[]=[...catalogue.models.map(model=>({id:'model:'+model.id,name:pretty(model.name),area:model.area,kind:model.background?'scene' as const:'object' as const,model})),
-    ...[...catalogue.groups,...directEffects].map(effect=>({id:'effect:'+effect.id,name:pretty(effect.name),area:effect.source.file.startsWith('levels/')?effect.source.file.split('/')[1]:'engine',kind:'effect' as const,effect}))]
+    ...[...catalogue.groups,...directEffects,...sourceAssemblyDefinitions].map(effect=>({id:'effect:'+effect.id,name:pretty(effect.name),area:effect.source.file.startsWith('levels/')?effect.source.file.split('/')[1]:'engine',kind:'effect' as const,effect}))]
     .sort((a,b)=>(a.area===b.area?0:a.area==='common'?-1:b.area==='common'?1:a.area.localeCompare(b.area))||a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name));
   const locations=new Map(exhibits.map((exhibit,index)=>[exhibit.id,new THREE.Vector3((index%8-3.5)*16,0,-Math.floor(index/8)*17)]));
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
@@ -127,6 +136,17 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
+    assemblyControls.hidden=!(view instanceof ParticleExhibit&&view.assembly);
+    if(view instanceof ParticleExhibit&&view.assembly) {
+      const a=view.assembly;
+      element('selected-kind').textContent='Source effect assembly';
+      element<HTMLInputElement>('assembly-enabled').checked=a.enabled;
+      element<HTMLInputElement>('assembly-length').value=String(a.length);
+      element<HTMLInputElement>('assembly-slope').value=String(a.slope);
+      element<HTMLInputElement>('assembly-heading').value=String(a.heading);
+      element('assembly-length-field').hidden=element('assembly-slope-field').hidden=a.kind!=='eco-beam';
+      element('assembly-note').textContent=a.note;
+    }
     sceneParts.hidden=!(view instanceof ModelExhibit&&view.partSelection?.parts.length);
     if(view instanceof ModelExhibit&&view.partSelection)renderPartOptions(view);
     replayField.hidden=!(view instanceof ParticleExhibit&&view.replays.length);
@@ -178,7 +198,8 @@ async function boot():Promise<void> {
       status.textContent=view.issues.size?`Source graph loaded. Fidelity work remaining:\n${[...view.issues].join('\n')}`:
         'Source emission graph. Original and Gouraud views share one simulation. Distortion samples the scene per pixel in Original and per vertex in Gouraud. Visual verification pending.';
       element('provenance').textContent=`${selected.effect!.source.file}:${selected.effect!.source.line}\n`+
-        (selected.effect!.directLaunch?`Direct emitter ${selected.effect!.directLaunch!.particle} · launched once per second for inspection`:
+        (view.assembly?`Source host draw · particle ${selected.effect!.items[0].particle} · 60 Hz`:
+        selected.effect!.directLaunch?`Direct emitter ${selected.effect!.directLaunch!.particle} · launched once per second for inspection`:
           `Group ${selected.effect!.id} · ${selected.effect!.items.length} launch bindings`);
     } else {
       status.classList.toggle('pending',errors.has(selected.id));status.textContent=errors.get(selected.id)??'Loading original source assets…';
@@ -309,6 +330,16 @@ async function boot():Promise<void> {
     if(heatInput.value!==''&&heatInput.validity.valid)view.motion.host.racerHeat=Number(heatInput.value)/100;
     view.motion.host.racerHudOffset=element<HTMLInputElement>('host-racer-entering').checked?10:0;
   };
+  for(const id of ['assembly-enabled','assembly-length','assembly-slope','assembly-heading'])element<HTMLInputElement>(id).oninput=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit)||!view.assembly)return;
+    view.assembly.enabled=element<HTMLInputElement>('assembly-enabled').checked;
+    for(const field of ['length','slope','heading'] as const) {
+      const input=element<HTMLInputElement>(`assembly-${field}`);
+      if(input.value!==''&&input.validity.valid)view.assembly[field]=Number(input.value);
+    }
+    view.refreshAssembly();
+    if(id==='assembly-length')focus();
+  };
   nativeScale.onchange=()=>{loaded.get(selected.id)?.setNativeScale(nativeScale.checked);focus();};
   animationSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.setClip(animationSelect.value);};
   element<HTMLInputElement>('timeline').oninput=event=>{
@@ -358,17 +389,22 @@ async function boot():Promise<void> {
       movement.normalize().multiplyScalar(dt*(keys.has('ShiftLeft')||keys.has('ShiftRight')?24:7));camera.position.add(movement);camera.position.y=Math.max(.5,camera.position.y);
     }
     if(!exploring)controls.update();
-    if(!paused)for(const view of loaded.values())view.update(dt*speed);
+    if(!paused)for(const view of loaded.values()) {
+      if(view instanceof ParticleExhibit)view.setInspectionCamera(camera.position);
+      view.update(dt*speed);
+    }
     tick+=dt;statsTick+=dt;if(tick>.3){tick=0;void stream();}
     if(statsTick>.25){statsTick=0;
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
-        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
+        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
       if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('racer speed')||view.motion.hostInputs.has('racer heat'))) {
         const h=view.motion.host;
         element('statistics').textContent+=`\nZOOMER  ${(h.racerSpeed/4096).toFixed(1)} m/s · ${(h.racerHeat*100).toFixed(0)}% heat`;
         element('statistics').textContent+=`\nANGLES  ${view.motion.particles.map(p=>(((p.values['rot-z']??0)/65536*360+360)%360).toFixed(1)+'°').join(' / ')}`;
       }
+      if(view instanceof ParticleExhibit&&view.assembly)
+        element('statistics').textContent+=`\nSOURCE CALLS / FRAME  ${view.assembly.calls}\nEMITTER  ${view.assembly.enabled?'on':'off'}`;
       if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String((view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }

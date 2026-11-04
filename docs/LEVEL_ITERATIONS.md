@@ -8930,3 +8930,22 @@ Evidence and reproduction controls are in `docs/crate-art-production/VALIDATION.
 Publication is handed to the active release coordinator with scoped ownership
 of the crate/checkpoint portions of `src/level.ts`, two presentation calls and
 dust deduplication in `src/player.ts`, and bonus-death cleanup in `src/main.ts`.
+
+## Jak archive — source effect assemblies and sprite geometry, 5 November 2026 NZDT
+
+- Added the eco beam's three source planes and the sage cage's twelve source bar
+  positions as inspectable Original/Gouraud assemblies, with per-frame source
+  emission, authored lifetimes and shared simulation. Corrected the common 3D
+  sprite plane and 2D left-edge pivot against the pinned renderer.
+- Source-catalogue motion checks and 28 GPU geometry comparisons pass. Browser
+  review covers native/720p, beam controls, cage rotation, emission off/restart,
+  and existing ripple/Zoomer layers without console errors or capacity drops.
+  Required normal and standalone builds pass. No full-suite run.
+- This is a validated increment of the ongoing whole-game brief. Prompt-to-final
+  playable elapsed time remains open; the resumed validation window was about
+  13 minutes (05:49–06:02 NZDT), excluding earlier implementation. The cage mesh
+  animation/composite, remaining host behavior and whole-catalogue review are
+  unfinished. Source assets, game runtime, level pack and D remain unchanged.
+  Local commit only; no publication.
+
+Details: [Jak asset lab](JAK_ASSET_LAB.md).

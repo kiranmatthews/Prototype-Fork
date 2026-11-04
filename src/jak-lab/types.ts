@@ -18,7 +18,9 @@ export interface EffectDefinition {
   bounds?: [string, number, number, number, number];
   duration?: number; 'linger-duration'?: number; flags?: string[];
   directLaunch?: {particle: number; function: string | null};
+  sourceAssembly?: SourceAssemblyKind;
 }
+export type SourceAssemblyKind='eco-beam'|'sage-cage';
 export interface ModelDefinition {
   id: string; path: string; name: string; area: string; background: boolean;
   bytes: number; sha256: string; meshes: string[];

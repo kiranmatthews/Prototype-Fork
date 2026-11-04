@@ -17,6 +17,7 @@ export interface LabParticle {
 interface LaunchState {
   item: EffectItem; active: boolean; launched: boolean; credit: number;
   parent: LabParticle | null; offset: number; spawnTime: number; origin: Vector3 | null; direct: boolean;
+  definitionOverride?: ParticleDefinition; quaternion?: Quaternion;
 }
 const RACER_HEAT_SLICES = ['part-hud-zoomer-heat-slice-01-func', 'part-hud-zoomer-heat-slice-02-func', 'part-hud-zoomer-heat-slice-03-func'];
 const RACER_SPEEDS = [0, 122880, 131072, 139264, 147456, 155648, 163840, 172032];
@@ -83,6 +84,8 @@ export class ParticleMotion {
   hour = 12;
   cameraDistance = 0; // GOAL units; zero disables distance attenuation in the lab.
   replay: HostReplay | null = null;
+  /** Source host draw/update calls, executed once per simulation frame. */
+  sourceEmitter: ((motion: ParticleMotion) => void) | null = null;
   private readonly states: LaunchState[];
   private randomState: number;
   private soundRandomState: number;
@@ -188,7 +191,7 @@ export class ParticleMotion {
     if (!relaunch) p.values['rot-x'] = Math.max(3, Math.min(11, Math.trunc(p.values['rot-x'] ?? 0)));
   }
   private spawn(state: LaunchState, rate = 1): void {
-    const definition = this.definitions.get(state.item.particle); if (!definition) return;
+    const definition = state.definitionOverride ?? this.definitions.get(state.item.particle); if (!definition) return;
     const num = definition.fields.find(field => field.field === 'num');
     if (!num) return;
     // Without a launch-state, native accumulation belongs to the launcher,
@@ -231,7 +234,7 @@ export class ParticleMotion {
         p.orbit.setFromAxisAngle(this.vector, (v.y ?? 0) * ANGLE);
       }
       p.position.add(p.parent?.position ?? state.origin ?? this.host.root);
-      this.birth(p);
+      this.birth(p, state.quaternion);
       this.setupAuxiliary(p);
       if (state.item.binding) {
         const child = this.states.find(candidate => candidate.item.particle === state.item.binding && !candidate.active);
@@ -240,7 +243,7 @@ export class ParticleMotion {
       this.particles.push(p);
     }
   }
-  private birth(p: LabParticle): void {
+  private birth(p: LabParticle, quaternion?: Quaternion): void {
     const v = p.values;
     if (p.birth === 'birth-func-random-next-time') v['next-time'] = Math.trunc(this.random() * (v.userdata ?? 0));
     if (p.birth === 'birth-func-y->userdata') v.userdata = (v.userdata ?? 0) + p.position.y;
@@ -259,7 +262,7 @@ export class ParticleMotion {
       v['next-time'] = p.parent.values['next-time'] ?? 0; v['scale-x'] = 163.85638 * v['next-time'];
     }
     if (p.birth === 'birth-func-ocean-height') p.position.y = this.host.oceanHeight(p.position) + (v.userdata ?? 0);
-    if (p.birth === 'birth-func-set-quat') p.orientation.copy(this.host.particleQuaternion).normalize();
+    if (p.birth === 'birth-func-set-quat') p.orientation.copy(quaternion ?? this.host.particleQuaternion).normalize();
     if (p.birth === 'birth-func-copy-target-y-rot' && this.host.targetYaw !== null)
       this.rotateMotion(p, this.host.targetYaw - 16384);
     if (p.birth === 'birth-func-target-orient' && this.host.targetYaw !== null) {
@@ -372,6 +375,7 @@ export class ParticleMotion {
     const previous = this.clock; this.clock += STEP_TICKS;
     this.soundEvents.length = 0;
     this.auxiliaryParticles.length = 0;
+    this.sourceEmitter?.(this);
     if (this.replay && previous >= this.replayCleanupTime) {
       // kill-and-free-particles matches the launch-control key. Unkeyed
       // secondary callback splashes belong to the shared particle system.
@@ -483,6 +487,21 @@ export class ParticleMotion {
     if (!this.group.directLaunch) return;
     // A native direct launcher retains fractional birth credit between calls.
     for (const state of this.states) state.launched = false;
+  }
+  emitSource(id: number, origin: Vector3, is3d: boolean, quaternion?: Quaternion,
+    initialValues: Readonly<Record<string, number>> = {}): void {
+    const source = this.definitions.get(id); if (!source) throw new Error(`Missing source particle ${id}`);
+    for (const [name, value] of Object.entries(initialValues)) {
+      if (!Number.isFinite(value) || !source.fields.some(f => f.field === name && ['float','int','float-int'].includes(f.op)))
+        throw new Error(`Unsupported source field override ${id}:${name}`);
+    }
+    // A host changes a launcher's initial value, retaining its authored random
+    // range/type/order. Per-call copies avoid mutating the catalogue or another
+    // exhibit, and source fractional credit stays shared by launcher ID.
+    const definitionOverride = Object.keys(initialValues).length ? {...source, fields: source.fields.map(field =>
+      Object.prototype.hasOwnProperty.call(initialValues, field.field) ? {...field, base: initialValues[field.field]} : field)} : source;
+    this.spawn({item:{particle:id,flags:is3d?['is-3d']:[]},active:true,launched:false,credit:0,parent:null,
+      offset:0,spawnTime:this.clock,origin,direct:true,definitionOverride,quaternion});
   }
   reset(): void {
     this.particles.length = 0; this.clock = this.carry = this.nextId = this.dropped = this.queueDrops = 0; this.randomState = this.seed || 1;
