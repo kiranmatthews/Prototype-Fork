@@ -1,0 +1,39 @@
+{
+ "level": "Jungle Ruins",
+ "action": "spin",
+ "frames": 0,
+ "position": [
+  -1.5,
+  1.496,
+  -16.894
+ ],
+ "grounded": true,
+ "cluster": 0,
+ "remaining": 0,
+ "visible": 0,
+ "fruit": 13,
+ "delta": 7,
+ "flights": [],
+ "variants": [],
+ "quality": {
+  "viewportWidth": 1280,
+  "viewportHeight": 720,
+  "inputWidth": 1280,
+  "inputHeight": 720,
+  "outputWidth": 1280,
+  "outputHeight": 720
+ },
+ "trial": false,
+ "result": {
+  "action": "spin",
+  "fruitDelta": 7,
+  "collected": 0,
+  "crateBroken": true,
+  "deaths": 0,
+  "position": [
+   -1.5,
+   1.496,
+   -16.894
+  ]
+ }
+}

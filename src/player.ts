@@ -15053,12 +15053,11 @@ export class Player {
       }
       // Phyllotaxis: each fruit a golden angle round from the last, radius
       // going as sqrt(index). It fills outward evenly with no seam and no
-      // stacked pair, and the coefficient is small enough that neighbours
-      // OVERLAP — a clump, which is what a payload should look like, rather
-      // than a ring of separate collectables.
+      // stacked pair. Leave breathing room around the new leafy crowns;
+      // the handful stays centred on its box and inside normal magnet reach.
       setMilkVariant(f.mesh, i + this.cratesBroken);
       const a = i * 2.39996323;
-      const r = 0.3 * Math.sqrt(i);
+      const r = 0.46 * Math.sqrt(i);
       f.phase = 'idle';
       f.t = i * 0.7; // stagger the bob so the clump breathes, not pulses
       // A HAIR of stagger across the clump so it pops like a handful rather

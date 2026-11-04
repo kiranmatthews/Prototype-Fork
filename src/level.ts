@@ -270,6 +270,7 @@ import {
 } from "./unitySandMaterial";
 
 import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
+import { jungleFruitClusters } from "./levels/fruit-clusters";
 import { PickupVisualBatch } from "./pickupVisualBatch";
 import { pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
 
@@ -10726,7 +10727,7 @@ export class Level {
 
     this.updateEnemies(dt);
     this.updateProjectiles(dt);
-    // One upright milk form; independent deformation clocks supply variety.
+    // Complete fruit sculpts retain independent squash, rebound and idle clocks.
     for (const p of this.pickups) {
       if (!p.alive) continue;
       p.mesh.position.y =
@@ -13084,6 +13085,8 @@ export class Level {
     ): void => this.crate(gx(z) + off, gy(z) + up * 0.96, z, kind);
     const fruitAt = (z: number, off = 0, h = 1.25): void =>
       this.pickup(gx(z) + off, gy(z) + h, z);
+
+    for (const fruit of jungleFruitClusters(gx, gy)) this.pickup(...fruit.p);
 
     // A. the clearing: a crate line to learn the spin on, one arrow crate
     crateAt(-8, -1.5);
@@ -19685,7 +19688,7 @@ export class Level {
     this.removeProjectile(index);
   }
 
-  // Procedural hovering milk; collection rules retain their existing data IDs.
+  // Complete fruit asset; collection rules retain their existing data IDs.
   private pickup(x: number, y: number, z: number): void {
     // The legacy editor proxy is retained for capture; live contact uses the
     // character silhouette and MILK_SIZE in Player.

@@ -8858,3 +8858,35 @@ viewports, with both portraits, Modern readout and reload persistence; no consol
 errors. An existing broader HUD source-regex failure was reproduced on the
 unchanged base and excluded. See `docs/bone-head-hud/validation.md` for exact
 build, browser evidence, harness corrections and the ImageGen source/prompt.
+
+## 2026-11-05 — Wumpa fruit collection and loose handfuls
+
+Repurposed all six milk-drop slots as distinct rounded Wumpa-like sculpts with
+red shoulders, orange/golden bodies and restrained green bases. Soft scene-lit
+peach skin, filtered pores and mottling replace the liquid finish. Each fruit
+includes a curved stalk and two or three folded, veined leaf volumes in its
+deforming mesh. Complete assets use 4,400–4,952 triangles and retain their full
+geometry at every viewing distance. Existing pickup, pooling, attraction,
+squash/rebound and HUD-credit behavior remains compatible.
+
+Restored four open six-fruit clusters in Jungle Ruins and five in Banana Bay
+(54 fruit), with supported ground and clearance from crates. Crate handfuls
+also leave room for leafy crowns. No movement tuning or shared level-pack
+replacement. [Asset notes and evidence](FRUIT_ASSETS.md).
+
+Prompt to first interactive asset preview: approximately 7 minutes. Prompt to
+validated playable result: approximately 37 minutes, excluding 9 minutes
+48 seconds of reboot/reconstruction (the shared 305-second incident allowance
+plus 283 seconds to the recovered source checkpoint). Wall-clock interval:
+12:27:12–13:13:52 UTC on 4 November; Auckland date is 5 November. No interrupted
+pre-reboot check is counted as passing.
+
+Milk geometry/material/morph/batching checks, native Player interactions, all
+54 cluster placements/lifecycles, required `check:levels` and production build
+pass. Real-browser review covers three lighting conditions and front/back/top
+at native resolution, then Jungle lite/full 720p and Banana Bay full native
+2560 × 1440. Three ordinary-input cluster walks each collect six fruit for six
+credits with zero deaths. Crate release, trial hide/restore and supported
+respawn pass with clean warning/error consoles. No full suite or new whole-game
+playthrough was run. The validated local commits and evidence are handed to
+the active release coordinator for publication.

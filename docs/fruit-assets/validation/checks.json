@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "ca93c1bf18b1f2d4c01ecc2838036a1957e717fe",
+  "checks": [
+    {
+      "check": "milk",
+      "exitCode": 0,
+      "seconds": 54.19,
+      "sourceCommit": "2ee9aba9fcc8cc24d1d54b79e10f430e086ebf5a"
+    },
+    {
+      "check": "collection",
+      "exitCode": 0,
+      "seconds": 14.58,
+      "sourceCommit": "2ee9aba9fcc8cc24d1d54b79e10f430e086ebf5a"
+    },
+    {
+      "check": "clusters",
+      "exitCode": 0,
+      "seconds": 14.37,
+      "sourceCommit": "ca93c1bf18b1f2d4c01ecc2838036a1957e717fe"
+    },
+    {
+      "check": "levels",
+      "exitCode": 0,
+      "seconds": 287.0,
+      "sourceCommit": "ca93c1bf18b1f2d4c01ecc2838036a1957e717fe"
+    },
+    {
+      "check": "build",
+      "exitCode": 0,
+      "seconds": 64.45,
+      "sourceCommit": "ca93c1bf18b1f2d4c01ecc2838036a1957e717fe"
+    }
+  ]
+}
