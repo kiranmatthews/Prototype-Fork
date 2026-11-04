@@ -1,0 +1,23 @@
+{
+  "view": "metal",
+  "assetsReady": true,
+  "recording": false,
+  "resolution": "MAX/native",
+  "triangles": 7661,
+  "shellDraws": 1,
+  "shared": true,
+  "effects": {
+    "shards": 0,
+    "bursts": 0,
+    "drawCalls": 0,
+    "limit": 232
+  },
+  "debrisCheck": {
+    "minimumY": -1.017,
+    "finite": true,
+    "cleanedUp": true
+  },
+  "emitMilliseconds": 0.8,
+  "fuse": null,
+  "paused": true
+}

@@ -243,7 +243,7 @@ import {
 } from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
 import { createCrateArt, setCrateArtState, updateCrateArt, pulseCrateArt, type CrateArt, type CrateArtKind } from "./crateArt";
-import { CrateEffects, createCheckpointMarker, updateCheckpointMarker, type CheckpointMarker } from "./crateEffects";
+import { CrateEffects } from "./crateEffects";
 import { CRATE_SIZE, CRATE_SCALE, LEGACY_CRATE_SIZE, RACE_CRATE_SIZE, RACE_CRATE_HOVER, enlargedCrateLayout, migrateCrateLayout } from "./crateDimensions";
 import { surfaceBoundaryEdges, surfaceRidgeEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
 import {
@@ -747,7 +747,6 @@ export interface CheckpointSnapshot {
 export interface Checkpoint extends CheckpointSnapshot {
   mesh: THREE.Mesh;
   art?: CrateArt;
-  marker?: CheckpointMarker;
   box: THREE.Box3;
   active: boolean;
 }
@@ -10743,13 +10742,9 @@ export class Level {
         Math.sin(this.time * 3 + p.mesh.position.z * 0.7) * 0.12;
       updateMilkMotion(p.mesh, MILK_IDLE_VELOCITY, dt);
     }
-    // The box stays aligned with its real collider; only its small seal turns.
+    // The intact checkpoint stays aligned with its real collider.
     for (const c of this.checkpoints) {
       if (c.art && !c.active) updateCrateArt(c.art, dt, this.time);
-      if (c.marker) {
-        c.marker.active = c.active && c === this.activeCheckpoint && !this.runMode;
-        updateCheckpointMarker(c.marker, dt);
-      }
     }
     this.settleCrates(dt);
     this.refreshCartonTops();
@@ -11083,8 +11078,7 @@ export class Level {
     if (crate.art) {
       crate.mesh.visible = false;
       const at = crate.box.getCenter(new THREE.Vector3());
-      this.crateEffects.emit(crate.art.kind, at, crate.art.size, crate.mesh.userData.groundBaseY ?? crate.box.min.y);
-      puffs.burst('crateSmash', at.x, at.y, at.z, { surface: crate.metal || crate.metalBounce ? 'metal' : 'wood', groundY: crate.box.min.y, strength: .75 });
+      this.crateEffects.emit(crate.art.kind, at, crate.art.size, crate.mesh.userData.groundBaseY ?? crate.box.min.y, false, crate.art.shell.material as THREE.MeshStandardMaterial);
     } else this.pops.push({ obj: crate.mesh, t: 0.12 + (crate.carton ? CONST.fixedStep : 0) });
     if(force&&(crate.metal||crate.metalBounce||crate.bang||crate.nitroBang)){
       this.playCrateSound(crate,'crunch',.9,.65);const p=crate.mesh.position;
@@ -11240,8 +11234,8 @@ export class Level {
     // Strength 1 on purpose: the studio previews at 1, so the numbers that
     // were dialled by eye are the numbers that play. Anything above it would
     // quietly inflate the throw and the count past what was approved.
-    puffs.burst(c.tnt || c.concealed ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
-    if (c.art) this.crateEffects.emit(c.art.kind, center, c.art.size, c.mesh.userData.groundBaseY ?? c.box.min.y, true);
+    if (!c.art) puffs.burst(c.tnt || c.concealed ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
+    if (c.art) this.crateEffects.emit(c.art.kind, center, c.art.size, c.mesh.userData.groundBaseY ?? c.box.min.y, true, c.art.shell.material as THREE.MeshStandardMaterial);
     // It counts. The player drains this list every step and tallies it the
     // same way it tallies blast debris (crateReward pays nothing for an
     // explosive, so this is a count and a score, not a prize).
@@ -11386,12 +11380,9 @@ export class Level {
     Object.assign(cp, this.bankCheckpointSnapshot(cp.spawnPos, cratesBroken, fruit, masks, points));
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
-    if (cp.art) {
-      cp.mesh.visible = false;
-      this.crateEffects.emit('checkpoint', cp.mesh.position, cp.art.size, cp.box.min.y);
-      puffs.burst('crateSmash', cp.mesh.position.x, cp.mesh.position.y, cp.mesh.position.z, { surface: 'wood', groundY: cp.box.min.y, strength: .65 });
-      if (cp.marker) { cp.marker.active = true; cp.marker.age = 0; updateCheckpointMarker(cp.marker, 0); }
-    } else this.pops.push({ obj: cp.mesh, t: 0.12 });
+    // Preserve the original quiet scale-pop. Checkpoints do not explode,
+    // shed debris, or leave a floating marker in the world.
+    this.pops.push({ obj: cp.mesh, t: 0.12 });
     sfx.play("lifeGet", 0.8);
   }
 
@@ -11643,7 +11634,6 @@ export class Level {
     for (const cp of this.checkpoints) {
       cp.mesh.scale.setScalar(1);
       if (cp.art) { cp.art.pulse = 0; updateCrateArt(cp.art, 0, 0); }
-      if (cp.marker) { cp.marker.active = !hard && cp === this.activeCheckpoint; updateCheckpointMarker(cp.marker, 0); }
       if (hard) {
         cp.active = false;
         cp.mesh.visible = true;
@@ -16550,7 +16540,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
@@ -19785,7 +19775,6 @@ export class Level {
     );
     const art = createCrateArt('checkpoint', size);
     (mesh.material as THREE.Material).visible = false; mesh.add(art.root);
-    const marker = createCheckpointMarker(size); marker.root.position.set(x, gy, z); this.root.add(marker.root);
     mesh.position.set(x, gy + size / 2, z);
     mesh.userData.crateLayoutRevision = currentLayout ? 1 : 0;
     this.root.add(mesh);
@@ -19796,7 +19785,6 @@ export class Level {
     this.checkpoints.push({
       mesh,
       art,
-      marker,
       box,
       active: false,
       spawnPos: new THREE.Vector3(x, gy + 0.1, z),

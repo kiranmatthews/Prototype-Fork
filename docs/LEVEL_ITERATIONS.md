@@ -9270,3 +9270,40 @@ audit suite or separate publication workflow was run.
   immutable delivery; the previous published snapshot is intact. The review tab
   and heavy lease are closed. No game/D/level-pack changes; coordinator handoff
   only. The whole-game prompt-to-final interval remains open.
+
+
+## 2026-11-05 — Corrected sculpted crate family and separate Tripo steel
+
+The preceding procedural crate iteration was rejected by the user as a visual
+downgrade. Its technical results are historical, not art acceptance. This
+replacement uses ImageGen references and three Tripo web Smart Mesh components:
+a sculpted timber crate, crimped paper stick, and an independent Crash 4-inspired
+steel crate. All final assembled props stay below 30,000 triangles. Metal has
+its own panels, riveted gussets and PBR maps, including corrected underside
+fasteners. The complete authored meshes remain at all distances and in
+reflections. Existing live art remains until the coordinator publishes this
+validated replacement. Tripo consumed 395 existing plan credits.
+
+Fourteen variants share consistent shape and surface paint. TNT/Nitro are
+wrapped nine-stick bundles with no lettering; only TNT has the animated thick
+braid. Nitro's green paper glows. Wood and steel break into their actual
+painted surface pieces with closed fresh-cut interiors and contact on real
+world geometry. Explosions consume the paper and release fluttering canvas.
+Checkpoint restores the original quiet 0.12-second scale-pop, no explosion,
+no debris and no residual 3D symbol; banking/reset behavior remains intact.
+
+The corrected end-to-end playable review finished around 22:21 UTC on
+4 November (11:21 NZDT on 5 November), about 9h46 after the original prompt
+recorded above. This elapsed time includes the rejected pass, generation,
+authoring, shared-capacity waits and validation; it is not continuous active
+authoring time. The corrective-only active duration was not separately tracked.
+
+Actual GLB budget/exterior checks, focused crate and explosive behavior checks,
+all-side native inspection, complete TNT/Nitro motion review, and rendered
+fragment floor-contact/cleanup checks pass. Real Player/Level browser review
+covers wood spin/stomp, five-hit progression, metal resistance/bounce, switch
+and outline activation, fuse detonation, checkpoint banking, pit respawn and
+reset. Full render at 3024x1612 native and 900x480 CRT has no console errors or
+warnings. No level pack, movement tuning, player, main or package changes.
+Production build/typecheck and release asset preparation pass. Evidence and
+asset provenance: `docs/crate-art-rebuild/VALIDATION.md` and `AUTHORING.md`.

@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "exactExteriorPreserved": true,
+  "allSixSides": true,
+  "closedFragments": true,
+  "wood": 8052,
+  "braced": 12804,
+  "fracture": 24864,
+  "bracedFracture": 29616,
+  "stick": 1970,
+  "metal": 7661,
+  "steelFracture": 19812,
+  "metalPbr": true
+}

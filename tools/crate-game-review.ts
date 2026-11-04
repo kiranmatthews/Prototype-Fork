@@ -1,10 +1,22 @@
 // Session-only test controls. No level pack or browser saves are written.
 import * as THREE from 'three';
 const g: any = await new Promise(resolve => { const ready = () => { const game = (window as any).__game; if (game) resolve(game); else requestAnimationFrame(ready); }; ready(); });
+const startup = document.createElement('pre');
+startup.style.cssText = 'position:fixed;z-index:2147483647;bottom:0;left:10px;color:white;background:#102430;padding:8px';
+startup.dataset.testid = 'crate-review-loading'; document.body.append(startup);
+// __game is exposed before presentation warm-up finishes. Let that covered
+// startup finish with its original scene and camera before adding the fixture.
+await new Promise<void>(resolve => { const ready = () => {
+  if (!document.body.classList.contains('game-startup-loading') && !g.gameFlow.blocksGameplay) resolve();
+  else { const loading = g.getLoadingDiagnostics(); startup.textContent = JSON.stringify({phase:loading.phase,pending:loading.pending,failed:loading.failed}); requestAnimationFrame(ready); }
+}; ready(); });
+startup.remove();
 g.campaign.startEphemeral(); g.gameFlow.hide();
 const level = g.getLevel(), player = g.player, spawn = level.spawnPos.clone();
 // The empty apron behind spawn is clear of the stock walls and grind rails.
 spawn.z += 45;
+level.slab('Crate review apron', spawn.z + 8, spawn.z - 30, spawn.y, 32,
+  new THREE.MeshStandardMaterial({ color: 0x566978, roughness: .9 }), false, spawn.x);
 const normalFov = g.camera.fov;
 const kinds = ['wood', 'mystery', 'multihit', 'bouncy', 'metalbounce', 'metal', 'tnt', 'nitro', 'mask', 'life', 'bang', 'nitrobang', 'empty'];
 const crates: any[] = [];
@@ -60,10 +72,11 @@ function report() {
   panel.inert = false; panel.removeAttribute('aria-hidden'); const c = current();
   status.textContent = JSON.stringify({ kind: select.selectedOptions[0].textContent, alive: c.alive ?? !c.active, hits: c.hitsRemaining,
     marks: c.art?.labelKey, collider: c.box.getSize(new THREE.Vector3()).toArray(), position: player.pos.toArray().map((n: number) => +n.toFixed(2)),
-    player: player.state, cratesBroken: player.cratesBroken, deaths: player.totalDeaths, checkpoint: checkpoint.active, checkpointMarker: checkpoint.marker?.root.visible,
+    player: player.state, cratesBroken: player.cratesBroken, deaths: player.totalDeaths, checkpoint: checkpoint.active, checkpointVisible: checkpoint.mesh.visible,
     outline: outline.pending, usedSwitch: crates[10].bangUsed, effects: level.crateEffects.diagnostics, fuse: crates[6].fuse,
     resolution: g.renderQualitySettings.regularResolution, crt: g.crtGuestSettings.enabled,
-    canvas: [g.renderer.domElement.width, g.renderer.domElement.height], frozen }, null, 2);
+    canvas: [g.renderer.domElement.width, g.renderer.domElement.height], frozen,
+    loading: g.getLoadingDiagnostics() }, null, 2);
   requestAnimationFrame(report);
 }
 place(); report();

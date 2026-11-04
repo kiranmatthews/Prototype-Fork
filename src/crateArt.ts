@@ -1,5 +1,11 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { prepareCrateSculpt, currentCrateSculpt, crateSculptMaterial, crateSculptGeometry } from './crateSculpt';
+import { isMetalCrate, metalCrateTemplate, currentMetalCrate, prepareMetalCrate } from './crateMetal';
+import { createCrateFuse, kickCrateFuse, updateCrateFuse, type CrateFuse } from './crateFuse';
+import { rooReady } from './roofont';
+import { prepareCrateFracture } from './crateFracture';
+import { prepareCrateExplosives, currentExplosiveTemplate, createExplosiveMaterial, updateExplosiveArt, explosiveFallbackGeometry, type ExplosiveArt } from './crateExplosive';
 
 /** One authored kit for the whole family. All six faces retain their geometry
  * at every distance. The invisible owner cube remains the gameplay collider. */
@@ -38,20 +44,25 @@ export interface CrateArt {
   shell: THREE.Mesh;
   marks: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   fuse?: THREE.Group;
-  ember?: THREE.Mesh;
-  seal?: THREE.Group;
+  fuseFX?: CrateFuse;
+  explosive?: ExplosiveArt;
   state: CrateArtState;
   labelKey: string;
   pulse: number;
   pulseStrength: number;
   seed: number;
+  sculpted: boolean;
+  ready: Promise<void>;
 }
 type Template = { shell: THREE.BufferGeometry; marks: THREE.BufferGeometry; material: THREE.MeshStandardMaterial };
 const templates = new Map<CrateArtKind, Template>();
 const labels = new Map<string, THREE.MeshStandardMaterial>();
 const shardTemplates = new Map<string, THREE.BufferGeometry>();
-let fuseTemplate: THREE.Group | undefined;
-let sealTemplate: THREE.Group | undefined;
+let lifePortrait: HTMLImageElement | undefined;
+const lifePortraitReady = typeof Image === 'undefined' ? Promise.resolve() : new Promise<void>(resolve => {
+  const img = new Image(); img.onload = () => { lifePortrait = img; resolve(); }; img.onerror = () => resolve();
+  img.src = `${import.meta.env.BASE_URL}roo.png`;
+});
 function shared<T extends THREE.BufferGeometry | THREE.Material | THREE.Texture>(value: T): T {
   value.userData.shared = true;
   value.userData.levelDepthFade = false;
@@ -237,14 +248,14 @@ function template(kind: CrateArtKind): Template {
 }
 
 function icon(c: CanvasRenderingContext2D, kind: CrateArtKind, value: string, top: boolean): void {
+  if (kind === 'tnt' || kind === 'nitro') return; // No lettering on either explosive bundle.
   const p = PALETTES[kind];
   c.fillStyle = p.ink; c.strokeStyle = p.shadow; c.lineJoin = 'round'; c.lineWidth = 13;
   const text = (s: string, size: number, y = 139) => {
-    c.font = `900 ${size}px Arial Black, Arial, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = `400 ${size}px Roo, Arial Black, Arial, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
     c.strokeText(s, 128, y); c.fillText(s, 128, y);
   };
   if (top) {
-    if (kind === 'tnt' || kind === 'nitro') { text('!', 174); return; }
     if (kind === 'checkpoint') { text('C', 174); return; }
     if (kind === 'bouncy' || kind === 'metalbounce') {
       c.strokeStyle = p.ink; c.lineWidth = 17;
@@ -258,6 +269,7 @@ function icon(c: CanvasRenderingContext2D, kind: CrateArtKind, value: string, to
   if (value === 'speed') { text('»', 205); return; }
   if (value === 'balance') { text('=', 182); return; }
   if (kind === 'life') {
+    if (lifePortrait) { c.drawImage(lifePortrait, 9, 10, 238, 238); return; }
     c.beginPath(); c.moveTo(128, 214); c.bezierCurveTo(75, 174, 20, 135, 35, 77);
     c.bezierCurveTo(48, 24, 108, 28, 128, 73); c.bezierCurveTo(148, 28, 210, 24, 222, 77);
     c.bezierCurveTo(237, 135, 181, 174, 128, 214); c.closePath(); c.stroke(); c.fill();
@@ -282,9 +294,7 @@ function icon(c: CanvasRenderingContext2D, kind: CrateArtKind, value: string, to
       c.strokeStyle = p.shadow; c.lineWidth = 4; c.beginPath(); c.moveTo(23, 19); c.lineTo(42, 39); c.lineTo(35, 52); c.lineTo(55, 92); c.stroke();
       if (hits < 2) { c.beginPath(); c.moveTo(220, 241); c.lineTo(206, 211); c.lineTo(215, 198); c.lineTo(198, 165); c.stroke(); }
     }
-  } else if (kind === 'tnt') text(value === 'tnt' ? 'TNT' : value, value === 'tnt' ? 91 : 180);
-  else if (kind === 'nitro') { text('NITRO', 67); }
-  else if (kind === 'nitrobang') { text('!', 164, 115); c.fillStyle = p.ink; c.fillRect(59, 208, 138, 9); }
+  } else if (kind === 'nitrobang') { text('!', 164, 115); c.fillStyle = p.ink; c.fillRect(59, 208, 138, 9); }
   else if (kind === 'checkpoint') text('C', 198);
   else if (kind === 'bang') text('!', 190);
   else if (kind === 'mystery') text('?', 196);
@@ -293,6 +303,8 @@ function labelMaterial(kind: CrateArtKind, value: string): THREE.MeshStandardMat
   const key = `${kind}:${value}`, cached = labels.get(key); if (cached) return cached;
   const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 256;
   const c = canvas.getContext('2d')!;
+  const paint = () => {
+  c.clearRect(0, 0, 512, 256);
   for (let top = 0; top < 2; top++) {
     c.save(); c.translate(top * 256, 0); icon(c, kind, value, !!top);
     // Subtle missing paint follows fixed little strokes, never temporal noise.
@@ -300,7 +312,10 @@ function labelMaterial(kind: CrateArtKind, value: string): THREE.MeshStandardMat
     const r = rand(501); for (let i = 0; i < 25; i++) { const x = r() * 256, y = r() * 256; c.fillRect(x, y, 1 + r() * 3, 1 + r() * 4); }
     c.restore();
   }
+  };
+  paint();
   const map = shared(new THREE.CanvasTexture(canvas)); map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 4;
+  void Promise.all([rooReady, lifePortraitReady]).then(() => { paint(); map.needsUpdate = true; });
   const material = shared(new THREE.MeshStandardMaterial({ map, alphaTest: .35, roughness: .83, metalness: 0,
     polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }));
   labels.set(key, material); return material;
@@ -311,50 +326,66 @@ function labelValue(kind: CrateArtKind, s: CrateArtState): string {
   if (s.boost) return s.boost;
   if (s.run) return 'blank';
   if (kind === 'multihit') return String(s.hits ?? 5);
-  if (kind === 'tnt' && s.fuse !== undefined) return String(Math.max(1, Math.ceil(s.fuse - 1e-9)));
   return kind;
 }
 export function setCrateArtState(art: CrateArt, state: CrateArtState): void {
   art.state = state; art.root.visible = !state.pending;
+  if (art.kind === 'tnt' || art.kind === 'nitro') { art.marks.visible = false; art.labelKey = 'blank'; return; }
   const key = labelValue(art.kind, state);
   art.marks.visible = key !== 'blank' && (!['wood', 'empty', 'metal'].includes(art.kind) || !!state.timeSecs || !!state.boost);
   if (art.labelKey !== key) { art.labelKey = key; art.marks.material = labelMaterial(art.kind, key); }
+  if (art.sculpted) {
+    const material = crateSculptMaterial(art.kind, key, art.marks.material.map);
+    if (material) art.shell.material = material;
+  }
 }
 
 export function createCrateArt(kind: CrateArtKind, size = 1): CrateArt {
-  const t = template(kind), root = new THREE.Group(); root.name = `Crafted ${kind} crate`;
+  if (kind === 'tnt' || kind === 'nitro') {
+    const nitro = kind === 'nitro', root = new THREE.Group(); root.scale.setScalar(size);
+    root.name = nitro ? 'Glowing Nitro stick bundle · no fuse' : 'TNT stick bundle with animated braid';
+    root.userData.crateArt = true; root.userData.editorGhost = true;
+    const asset = currentExplosiveTemplate(), explosive = createExplosiveMaterial(nitro);
+    const shell = new THREE.Mesh(asset?.geometry ?? explosiveFallbackGeometry(), explosive?.material ?? new THREE.MeshStandardMaterial({ color: nitro ? 0x79df16 : 0xc93216, roughness: .82 }));
+    shell.castShadow = shell.receiveShadow = true; root.add(shell);
+    const marks = new THREE.Mesh(shared(new THREE.BufferGeometry()), shared(new THREE.MeshStandardMaterial())); marks.visible = false;
+    const art: CrateArt = { kind, size, root, shell, marks, state: {}, labelKey: 'blank', pulse: 0, pulseStrength: 0, seed: 0, sculpted: false, explosive, ready: Promise.resolve() };
+    if (!nitro) { art.fuseFX = createCrateFuse(); art.fuse = art.fuseFX.root; root.add(art.fuse); }
+    if (!asset && typeof window !== 'undefined') art.ready = prepareCrateExplosives().then(loaded => {
+      shell.material.dispose(); shell.geometry = loaded.geometry; art.explosive = createExplosiveMaterial(nitro)!;
+      shell.material = art.explosive.material;
+    }).catch(error => console.warn('Explosive sculpt could not load; retaining playable stick bundle', error));
+    art.ready = art.ready.then(() => prepareCrateFracture(kind));
+    return art;
+  }
+  const t = template(kind), metal = isMetalCrate(kind), sculpt = currentCrateSculpt();
+  const root = new THREE.Group(); root.name = `Crafted ${kind} crate`;
   root.userData.crateArt = true; root.userData.editorGhost = true;
-  const shell = new THREE.Mesh(t.shell, t.material); shell.name = 'Six-sided carved timber shell';
+  const shell = new THREE.Mesh(metal ? metalCrateTemplate().geometry : crateSculptGeometry(kind) ?? t.shell,
+    metal ? metalCrateTemplate().material : sculpt?.material ?? t.material); shell.name = 'Six-sided sculpted shell';
   shell.castShadow = shell.receiveShadow = true;
-  const marks = new THREE.Mesh(t.marks, labelMaterial(kind, kind === 'multihit' ? '5' : kind));
+  const marks = new THREE.Mesh(metal || sculpt ? shared(new THREE.BufferGeometry()) : t.marks, labelMaterial(kind, kind === 'multihit' ? '5' : kind));
   marks.name = 'Painted gameplay marks · four sides and lid seals'; marks.receiveShadow = true;
   root.add(shell, marks); root.scale.setScalar(size);
-  const art: CrateArt = { kind, size, root, shell, marks, state: {}, labelKey: '', pulse: 0, pulseStrength: 0, seed: 0 };
-  if (kind === 'tnt') {
-    if (!fuseTemplate) {
-      fuseTemplate = new THREE.Group(); fuseTemplate.position.set(.19, .48, -.13);
-      const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(.02, .075, 0), new THREE.Vector3(.08, .15, -.015), new THREE.Vector3(.15, .17, 0)]);
-      const rope = new THREE.Mesh(shared(new THREE.TubeGeometry(curve, 8, .016, 5, false)), shared(new THREE.MeshStandardMaterial({ color: 0xcba368, roughness: 1 })));
-      const ember = new THREE.Mesh(shared(new THREE.IcosahedronGeometry(.025)), shared(new THREE.MeshBasicMaterial({ color: 0xffe6a0 })));
-      ember.name = 'Fuse ember'; ember.position.copy(curve.getPoint(1)); ember.visible = false; fuseTemplate.add(rope, ember);
-    }
-    const fuse = fuseTemplate.clone(true), ember = fuse.getObjectByName('Fuse ember') as THREE.Mesh;
-    root.add(fuse);
-    art.fuse = fuse; art.ember = ember;
-  }
-  if (kind === 'checkpoint') {
-    if (!sealTemplate) {
-      sealTemplate = new THREE.Group(); sealTemplate.name = 'Checkpoint compass seal';
-      const rim = new THREE.Mesh(shared(new THREE.TorusGeometry(.095, .018, 5, 12)), shared(new THREE.MeshStandardMaterial({ color: 0x367d86, roughness: .36, metalness: .6 })));
-      rim.rotation.x = Math.PI / 2;
-      const gem = new THREE.Mesh(shared(new THREE.OctahedronGeometry(.063)), shared(new THREE.MeshStandardMaterial({ color: 0xffdd78, emissive: 0x9b4b10, emissiveIntensity: .3, roughness: .3, metalness: .2 })));
-      gem.position.y = .018; sealTemplate.add(rim, gem); sealTemplate.position.y = .52;
-    }
-    const seal = sealTemplate.clone(true); root.add(seal); art.seal = seal;
-  }
-  setCrateArtState(art, kind === 'multihit' ? { hits: 5 } : {}); return art;
+  const art: CrateArt = { kind, size, root, shell, marks, state: {}, labelKey: '', pulse: 0, pulseStrength: 0, seed: 0,
+    sculpted: metal || !!sculpt, ready: Promise.resolve() };
+  setCrateArtState(art, kind === 'multihit' ? { hits: 5 } : {});
+  if (!metal && !sculpt && typeof window !== 'undefined') art.ready = prepareCrateSculpt().then(asset => {
+    art.shell.geometry = crateSculptGeometry(kind) ?? asset.geometry; art.sculpted = true;
+    art.marks.geometry = shared(new THREE.BufferGeometry());
+    setCrateArtState(art, art.state);
+  }).catch(error => console.warn('Crate sculpt could not load; retaining playable fallback', error));
+  if (metal && !currentMetalCrate() && typeof window !== 'undefined') art.ready = prepareMetalCrate().then(asset => {
+    art.shell.geometry = asset.geometry;
+    setCrateArtState(art, art.state);
+  }).catch(error => console.warn('Metal sculpt could not load; retaining playable fallback', error));
+  art.ready = Promise.all([art.ready, rooReady, lifePortraitReady]).then(() => prepareCrateFracture(kind));
+  return art;
 }
-export function pulseCrateArt(art: CrateArt, strength = 1): void { art.pulse = .38; art.pulseStrength = strength; }
+export function pulseCrateArt(art: CrateArt, strength = 1): void {
+  art.pulse = .38; art.pulseStrength = strength;
+  if (art.fuseFX) kickCrateFuse(art.fuseFX, strength);
+}
 export function updateCrateArt(art: CrateArt, dt: number, time: number): void {
   art.pulse = Math.max(0, art.pulse - dt);
   const age = .38 - art.pulse;
@@ -368,14 +399,13 @@ export function updateCrateArt(art: CrateArt, dt: number, time: number): void {
   if (art.kind === 'tnt' && art.state.fuse !== undefined) {
     const urgency = 3 - art.state.fuse, beat = Math.abs(Math.sin(time * (7 + urgency * 5)));
     sy += beat * .035; sx -= beat * .016; yaw = Math.sin(time * 41) * urgency * .004;
-    if (art.fuse) art.fuse.scale.setScalar(.18 + .82 * Math.max(0, art.state.fuse / 3));
-    if (art.ember) { art.ember.visible = true; art.ember.scale.setScalar(1 + beat * .8); }
-  } else { art.fuse?.scale.setScalar(1); if (art.ember) art.ember.visible = false; }
+  }
+  if (art.fuseFX) updateCrateFuse(art.fuseFX, art.state.fuse, time, dt);
+  if (art.explosive) updateExplosiveArt(art.explosive, art.state.fuse, time + art.seed);
   if (art.state.used) sy *= .91;
   art.root.scale.set(art.size * sx, art.size * sy, art.size * sx);
   art.root.position.y = (sy - 1) * art.size * .5;
   art.root.rotation.set(0, yaw, roll);
-  if (art.seal) { art.seal.rotation.y = time * .8; art.seal.position.y = .52 + Math.sin(time * 2.4) * .008; }
 }
 
 /** Source-sized splinters reuse the intact palette, with pale jagged cut ends. */
@@ -397,6 +427,13 @@ export function crateArtPalette(kind: CrateArtKind): { paint: THREE.Color; dust:
   return { paint: new THREE.Color(PALETTES[kind].edge), dust: new THREE.Color(PALETTES[kind].metal ? '#9bb7bb' : '#dfb77e'), metal: !!PALETTES[kind].metal };
 }
 export function crateArtStats(kind: CrateArtKind): { triangles: number; shellDraws: number; shared: boolean } {
+  if (kind === 'tnt' || kind === 'nitro') {
+    const geometry = currentExplosiveTemplate()?.geometry ?? explosiveFallbackGeometry();
+    return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3 + (kind === 'tnt' ? 2002 : 0), shellDraws: kind === 'tnt' ? 3 : 1, shared: true };
+  }
+  const authored = isMetalCrate(kind) ? metalCrateTemplate() : currentCrateSculpt();
+  if (authored) { const geometry = isMetalCrate(kind) ? authored.geometry : crateSculptGeometry(kind)!;
+    return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3, shellDraws: 1, shared: true }; }
   const t = template(kind);
   return { triangles: (t.shell.getAttribute('position').count + (t.marks.getAttribute('position')?.count ?? 0)) / 3,
     shellDraws: ['wood', 'empty', 'metal'].includes(kind) ? 1 : 2, shared: t.shell.userData.shared === true };

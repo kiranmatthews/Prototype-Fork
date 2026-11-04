@@ -1,6 +1,8 @@
 import * as THREE from 'three';
-import { crateArtPalette, crateShardAsset, type CrateArtKind } from './crateArt';
+import { crateShardAsset, type CrateArtKind } from './crateArt';
 import { solidContact, type SolidQuery, type WorldSolids } from './worldSolids';
+import { CrateFracturePool } from './crateFracture';
+import { CrateVfx } from './crateVfx';
 
 export interface CrateDebrisWorld {
   worldSolids?: WorldSolids;
@@ -14,27 +16,8 @@ type Shard = {
   rotation: THREE.Quaternion; angular: THREE.Vector3; size: number;
   age: number; lifetime: number; settled: boolean; bounces: number;
 };
-type Burst = { root: THREE.Group; flash: THREE.Sprite; ring: THREE.Mesh; age: number; size: number; explosion: boolean };
-const MAX_SHARDS = 192;
-const MAX_BURSTS = 12;
+const MAX_SHARDS = 64;
 const DOWN = new THREE.Vector3(0, -1, 0);
-let flashTexture: THREE.CanvasTexture | undefined;
-function impactTexture(): THREE.CanvasTexture {
-  if (flashTexture) return flashTexture;
-  const canvas = document.createElement('canvas'); canvas.width = canvas.height = 512;
-  const c = canvas.getContext('2d')!;
-  c.scale(4, 4);
-  c.fillStyle = '#ffffff'; c.beginPath();
-  for (let i = 0; i < 24; i++) {
-    const a = i / 24 * Math.PI * 2, radius = i % 2 ? 17 : 50 + Math.sin(i * 3.1) * 10;
-    const x = 64 + Math.cos(a) * radius, y = 64 + Math.sin(a) * radius;
-    if (i === 0) c.moveTo(x, y); else c.lineTo(x, y);
-  }
-  c.closePath(); c.fill();
-  flashTexture = new THREE.CanvasTexture(canvas); flashTexture.colorSpace = THREE.SRGBColorSpace;
-  flashTexture.userData.shared = true; return flashTexture;
-}
-
 /** A bounded, level-owned cosmetic pool. Shards are real volumes, share the
  * crate material, tumble independently, collide, settle, and expire. They
  * never enter gameplay collision or consume gameplay randomness. */
@@ -42,7 +25,6 @@ export class CrateEffects {
   readonly root = new THREE.Group();
   private batches = new Map<string, Batch>();
   private shards: Shard[] = [];
-  private bursts: Burst[] = [];
   private seed = 0x561c7109;
   private matrix = new THREE.Matrix4();
   private scale = new THREE.Vector3();
@@ -59,7 +41,9 @@ export class CrateEffects {
   private ray = new THREE.Raycaster();
   private query: SolidQuery = { low: 0, high: 0, radius: .07, supportRadius: normal => this.supportRadius(normal) };
   private disposed = false;
-  constructor() { this.root.name = 'Crate splinters and impact accents'; this.root.userData.editorGhost = true; }
+  private fracture = new CrateFracturePool();
+  private vfx = new CrateVfx();
+  constructor() { this.root.name = 'Crate splinters and impact accents'; this.root.userData.editorGhost = true; this.root.add(this.fracture.root, this.vfx.root); }
   private roll(): number { this.seed = (Math.imul(this.seed, 1664525) + 1013904223) >>> 0; return this.seed / 4294967296; }
   private batch(kind: CrateArtKind, variant: number): Batch {
     const key = `${kind}:${variant}`; let batch = this.batches.get(key);
@@ -78,9 +62,10 @@ export class CrateEffects {
     }
     return batch;
   }
-  emit(kind: CrateArtKind, center: THREE.Vector3, size: number, groundY: number, explosion = false): void {
-    if (this.disposed) return;
-    const count = explosion ? 22 : 15;
+  emit(kind: CrateArtKind, center: THREE.Vector3, size: number, groundY: number, explosion = false, surface?: THREE.MeshStandardMaterial): void {
+    if (this.disposed || kind === 'checkpoint') return;
+    const authored = surface && this.fracture.emit(kind, center, size, surface, explosion);
+    const count = authored ? 0 : explosion ? 22 : 15;
     while (this.shards.length + count > MAX_SHARDS) this.retire(this.shards[0]);
     for (let i = 0; i < count; i++) {
       const variant = i >= count - 3 ? 4 : i < 9 ? i % 3 : 3, angle = i / count * Math.PI * 2 + this.roll() * .35;
@@ -96,28 +81,12 @@ export class CrateEffects {
       };
       this.shards.push(shard); batch.bodies.push(shard);
     }
-    if (this.bursts.length === MAX_BURSTS) this.removeBurst(this.bursts[0]);
-    const root = new THREE.Group(); root.position.copy(center);
-    const flash = new THREE.Sprite(new THREE.SpriteMaterial({ map: impactTexture(), color: kind === 'nitro' ? 0xeeff91 : 0xffe8aa,
-      transparent: true, opacity: .95, depthWrite: false, toneMapped: false }));
-    flash.scale.setScalar(size * (explosion ? 2.3 : 1.5)); root.add(flash);
-    const ring = new THREE.Mesh(new THREE.RingGeometry(.84, 1, 96), new THREE.MeshBasicMaterial({
-      color: kind === 'nitro' ? 0xd5ef64 : kind === 'checkpoint' ? 0x75e5d6 : 0xffc45e,
-      side: THREE.DoubleSide, transparent: true, opacity: .85, depthWrite: false, toneMapped: false,
-    }));
-    ring.rotation.x = -Math.PI / 2; ring.position.y = groundY - center.y + .035;
-    ring.scale.setScalar(size * .4); root.add(ring); this.root.add(root);
-    this.bursts.push({ root, flash, ring, age: 0, size, explosion });
+    this.vfx.emit(kind, center, size, groundY, explosion);
     this.writeInstances();
   }
   private retire(shard: Shard): void {
     this.shards.splice(this.shards.indexOf(shard), 1);
     const list = shard.batch.bodies; list.splice(list.indexOf(shard), 1);
-  }
-  private removeBurst(burst: Burst): void {
-    burst.root.removeFromParent(); burst.flash.material.dispose();
-    burst.ring.geometry.dispose(); (burst.ring.material as THREE.Material).dispose();
-    this.bursts.splice(this.bursts.indexOf(burst), 1);
   }
   private supportRadius(normal: THREE.Vector3): number {
     const shard = this.collisionShard; if (!shard) return .07;
@@ -126,7 +95,9 @@ export class CrateEffects {
     return Math.max(.006, (Math.abs(n.x) * h.x + Math.abs(n.y) * h.y + Math.abs(n.z) * h.z - n.dot(shard.batch.center)) * shard.size);
   }
   update(dt: number, world: CrateDebrisWorld): void {
-    if (this.disposed || !this.shards.length && !this.bursts.length) return;
+    if (this.disposed) return;
+    this.fracture.update(dt, world); this.vfx.update(dt);
+    if (!this.shards.length) return;
     const step = Math.min(Math.max(dt, 0), .05);
     for (const shard of this.shards.slice()) {
       shard.age += step;
@@ -172,16 +143,6 @@ export class CrateEffects {
       }
       if (collided && shard.bounces >= 2 && shard.velocity.lengthSq() < 2) { shard.settled = true; shard.velocity.setScalar(0); }
     }
-    for (const burst of this.bursts.slice()) {
-      burst.age += step; const t = burst.age;
-      burst.flash.visible = t < .14;
-      burst.flash.scale.setScalar(burst.size * (1.1 + t * (burst.explosion ? 16 : 9)));
-      burst.flash.material.opacity = Math.max(0, 1 - t / .14);
-      burst.flash.material.rotation = t * 2;
-      const radius = burst.size * (.45 + Math.pow(Math.min(1, t / .45), .6) * (burst.explosion ? 2.3 : 1.15));
-      burst.ring.scale.setScalar(radius); (burst.ring.material as THREE.MeshBasicMaterial).opacity = Math.max(0, 1 - t / .5) * .8;
-      if (t >= .5) this.removeBurst(burst);
-    }
     this.writeInstances();
   }
   private writeInstances(): void {
@@ -196,41 +157,16 @@ export class CrateEffects {
     }
   }
   clear(): void {
+    this.fracture.clear(); this.vfx.clear();
     this.shards.length = 0;
     for (const batch of this.batches.values()) { batch.bodies.length = 0; batch.mesh.count = 0; batch.mesh.visible = false; }
-    for (const burst of this.bursts.slice()) this.removeBurst(burst);
   }
   dispose(): void {
-    this.clear(); this.disposed = true; this.root.removeFromParent();
+    this.clear(); this.fracture.dispose(); this.vfx.dispose(); this.disposed = true; this.root.removeFromParent();
     for (const batch of this.batches.values()) batch.mesh.dispose();
     this.root.clear(); this.batches.clear();
   }
   get diagnostics(): { shards: number; bursts: number; drawCalls: number; limit: number } {
-    return { shards: this.shards.length, bursts: this.bursts.length, drawCalls: [...this.batches.values()].filter(b => b.bodies.length).length + this.bursts.length * 2, limit: MAX_SHARDS };
+    return { shards: this.shards.length + this.fracture.diagnostics.shards, bursts: this.vfx.diagnostics.bursts, drawCalls: [...this.batches.values()].filter(b => b.bodies.length).length + this.vfx.diagnostics.draws + this.fracture.diagnostics.draws, limit: MAX_SHARDS + 168 };
   }
-}
-
-export interface CheckpointMarker { root: THREE.Group; seal: THREE.Group; ring: THREE.Mesh; age: number; active: boolean }
-/** Saved-state art is separate from the consumed crate and its collider. */
-export function createCheckpointMarker(size: number): CheckpointMarker {
-  const root = new THREE.Group(); root.name = 'Banked checkpoint compass'; root.userData.editorGhost = true; root.visible = false;
-  const palette = crateArtPalette('checkpoint');
-  const mat = new THREE.MeshStandardMaterial({ color: palette.paint, metalness: .45, roughness: .38 });
-  const seal = new THREE.Group();
-  const rim = new THREE.Mesh(new THREE.TorusGeometry(size * .23, size * .035, 6, 24), mat);
-  const gem = new THREE.Mesh(new THREE.OctahedronGeometry(size * .14), new THREE.MeshStandardMaterial({ color: 0x7df2db, emissive: 0x1c6c61, emissiveIntensity: .6, roughness: .3, metalness: .2 }));
-  gem.scale.set(.66, 1.2, .5); seal.add(rim, gem); seal.position.y = size * .66;
-  const ring = new THREE.Mesh(new THREE.RingGeometry(size * .36, size * .43, 64), new THREE.MeshBasicMaterial({ color: 0x8de7cb, side: THREE.DoubleSide, transparent: true, opacity: .4, depthWrite: false }));
-  ring.rotation.x = -Math.PI / 2; ring.position.y = .025; root.add(seal, ring);
-  root.userData.size = size;
-  return { root, seal, ring, age: 0, active: false };
-}
-export function updateCheckpointMarker(marker: CheckpointMarker, dt: number): void {
-  marker.root.visible = marker.active; if (!marker.active) { marker.age = 0; return; }
-  marker.age += dt; const s = Number(marker.root.userData.size), t = marker.age;
-  const appear = 1 - Math.exp(-t * 7) * Math.cos(t * 13);
-  marker.seal.scale.setScalar(Math.max(.01, appear));
-  marker.seal.position.y = s * (.65 + Math.sin(t * 2) * .035);
-  marker.seal.rotation.y = t * .8;
-  marker.ring.scale.setScalar(1 + Math.sin(t * 2) * .05);
 }
