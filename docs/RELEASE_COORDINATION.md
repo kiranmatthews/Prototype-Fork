@@ -63,10 +63,15 @@ branch/worktree, owned files, dependencies, validation evidence and exclusions.
 The coordinator records integrated/published SHAs in the state file. Updating a
 handoff must not erase a previous unpublished SHA; list the new increment after it.
 
-New work belongs in a task worktree. The original checkout contains old mixed
-work and must not be reset, stashed or committed wholesale. Each worktree has its
+New work belongs in a durable task worktree, such as `~/.codex/worktrees` or
+the ignored shared `.release-queue/worktrees`; keep active work and evidence out
+of `/private/tmp`, where the November restart left temporary checkouts missing.
+The original checkout contains old mixed work and must not be reset, stashed or
+committed wholesale. Each worktree has its
 own build output: `npm run build` prunes and rewrites `dist`, so simultaneous
-builds in one directory are unsafe. Shared files require ownership coordination,
+builds in one directory are unsafe. If worktrees share `node_modules`, give each
+Vite server a worktree-local `cacheDir`; concurrent servers can otherwise replace
+one another's dependency cache. Shared files require ownership coordination,
 especially `src/main.ts`, `src/level.ts`, `src/player.ts`, `src/audio.ts`,
 `package.json`, `public/levels.json`, and the iteration log.
 
