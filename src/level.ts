@@ -64,8 +64,8 @@ import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { isPublishedStockLevel } from './stockLevelArchive';
 import { FLATS_LEVEL } from './levels/flats';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
-import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
-import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
+import { updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
+import { setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
 import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
 import {KITE_BONUS_TILT,kiteBonusFrame,type KiteBonusFrame} from './kiteBonus';
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
@@ -242,6 +242,8 @@ import {
   woodPathProfileForComponent,
 } from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
+import { createCrateArt, setCrateArtState, updateCrateArt, pulseCrateArt, type CrateArt, type CrateArtKind } from "./crateArt";
+import { CrateEffects, createCheckpointMarker, updateCheckpointMarker, type CheckpointMarker } from "./crateEffects";
 import { CRATE_SIZE, CRATE_SCALE, LEGACY_CRATE_SIZE, RACE_CRATE_SIZE, RACE_CRATE_HOVER, enlargedCrateLayout, migrateCrateLayout } from "./crateDimensions";
 import { surfaceBoundaryEdges, surfaceRidgeEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
 import {
@@ -276,6 +278,7 @@ import { pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton
 
 export interface Crate {
   mesh: THREE.Mesh;
+  art?: CrateArt;
   explosiveBundle?: ExplosiveBundle; // TNT/Nitro visual; the original cube owns contacts
   woodCrate?: WoodCrate; // shared Meshy art; the original cube still owns contact
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
@@ -743,6 +746,8 @@ export interface CheckpointSnapshot {
 
 export interface Checkpoint extends CheckpointSnapshot {
   mesh: THREE.Mesh;
+  art?: CrateArt;
+  marker?: CheckpointMarker;
   box: THREE.Box3;
   active: boolean;
 }
@@ -4680,6 +4685,7 @@ export class Level {
   private chaseLightning?:BoulderLightning;
   private root = new THREE.Group(); // everything the level owns, for disposal
   readonly discardedBoards = new DiscardedBoards();
+  readonly crateEffects = new CrateEffects();
   readonly breakableScenery = new BreakableScenery();
   readonly sourceProps = new SourceBouncyProps();
   private pops: { obj: THREE.Object3D; t: number }[] = [];
@@ -5583,7 +5589,7 @@ export class Level {
       entry = { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL };
     this.scene = scene;
     scene.add(this.root);
-    this.root.add(this.discardedBoards.root, this.breakableScenery.root);
+    this.root.add(this.discardedBoards.root, this.breakableScenery.root, this.crateEffects.root);
     this.discardedBoards.onImpact = (broken, speed) => sfx.play(broken ? 'crateBreak1' : 'crateBounce',
       Math.min(broken ? .4 : .28, .07 + speed * .012), broken ? 1.15 : 1.3);
     this.breakableScenery.onBreak = kind => sfx.play(kind === 'glass' ? 'crateBreak2' : 'crateBreak1', .4, kind === 'glass' ? 1.65 : 1.15);
@@ -9053,6 +9059,7 @@ export class Level {
     this.campaignWorldMap = null;
     this.tropicalPlants?.dispose();
     this.tropicalPlants = null;
+    this.crateEffects.dispose();
     this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
     for (const enemy of this.enemies) enemy.visual.dispose();
     this.blockworksSurfaces?.dispose();this.blockworksSurfaces=null;
@@ -10120,6 +10127,7 @@ export class Level {
     this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
     this.jungleTime.value += Math.max(0, Math.min(dt, 0.1));
     this.discardedBoards.update(dt, this);
+    this.crateEffects.update(dt, this);
     this.updateCampaignMapPresentation(dt);
     this.updateCampaignPortalAnimation();
     this.updateVfx(dt);
@@ -10735,9 +10743,13 @@ export class Level {
         Math.sin(this.time * 3 + p.mesh.position.z * 0.7) * 0.12;
       updateMilkMotion(p.mesh, MILK_IDLE_VELOCITY, dt);
     }
-    // Unbroken checkpoint boxes idle-spin so they read as special.
+    // The box stays aligned with its real collider; only its small seal turns.
     for (const c of this.checkpoints) {
-      if (!c.active) c.mesh.rotation.y += dt * 1.2;
+      if (c.art && !c.active) updateCrateArt(c.art, dt, this.time);
+      if (c.marker) {
+        c.marker.active = c.active && c === this.activeCheckpoint && !this.runMode;
+        updateCheckpointMarker(c.marker, dt);
+      }
     }
     this.settleCrates(dt);
     this.refreshCartonTops();
@@ -10747,7 +10759,7 @@ export class Level {
     // collision box stays authoritative and full-sized; this is presentation
     // only, so stacked crates never inherit a moving support plane.
     for (const c of this.crates) {
-      if (!c.alive || !c.multiHit || !c.hitPulse || c.hitPulse <= 0) continue;
+      if (c.art || !c.alive || !c.multiHit || !c.hitPulse || c.hitPulse <= 0) continue;
       c.hitPulse = Math.max(0, c.hitPulse - dt);
       const hit = Math.sin((c.hitPulse / 0.14) * Math.PI);
       c.mesh.scale.set(1 + hit * 0.08, 1 - hit * 0.18, 1 + hit * 0.08);
@@ -10758,7 +10770,7 @@ export class Level {
     for (const thorn of this.thornClusters) thorn.update(this.time);
     for (const c of this.crates) {
       if (!c.nitro || c.concealed) continue;
-      c.mesh.position.y = (c.mesh.userData.baseY as number) + (c.explosiveBundle ? 0 :
+      c.mesh.position.y = (c.mesh.userData.baseY as number) + (c.explosiveBundle || c.art ? 0 :
         Math.sin(this.time * 4 + c.mesh.position.z) * 0.12);
     }
     // Lit TNT keeps the 3/2/1 audio; bundles use that clock for rope burn and colour beats.
@@ -10768,16 +10780,22 @@ export class Level {
       const digit = Math.max(1, Math.ceil(c.fuse - 1e-9));
       if (c.mesh.userData.digit !== digit) {
         c.mesh.userData.digit = digit;
-        if (!c.explosiveBundle) (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture(String(digit));
+        if (c.art) this.syncCrateArt(c);
+        else if (!c.explosiveBundle) (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture(String(digit));
         sfx.play(digit % 2 === 0 ? "tntCount2" : "tntCount", 0.7);
       }
       const urgency = 6 + (CONST.tntFuse - c.fuse) * 6;
-      c.mesh.scale.setScalar(c.explosiveBundle ? 1 : 1 + Math.abs(Math.sin(this.time * urgency)) * 0.06);
+      c.mesh.scale.setScalar(c.explosiveBundle || c.art ? 1 : 1 + Math.abs(Math.sin(this.time * urgency)) * 0.06);
       if (c.fuse <= 1e-9) this.detonate(c);
     }
 
     for (const c of this.crates) if (c.explosiveBundle && c.alive)
       updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, !!c.pending);
+
+    for (const c of this.crates) if (c.art && c.alive) {
+      c.art.state.fuse = c.fuse;
+      updateCrateArt(c.art, dt, this.time);
+    }
 
     // Expanding blasts: chain explosives, break crates, kill enemies.
     for (const ex of this.explosions) {
@@ -11062,7 +11080,12 @@ export class Level {
     }
     // Keep the body at full size for the impact render interval, allowing
     // the gable and interpolated feet to reach the lid together before pop.
-    this.pops.push({ obj: crate.mesh, t: 0.12 + (crate.carton ? CONST.fixedStep : 0) });
+    if (crate.art) {
+      crate.mesh.visible = false;
+      const at = crate.box.getCenter(new THREE.Vector3());
+      this.crateEffects.emit(crate.art.kind, at, crate.art.size, crate.mesh.userData.groundBaseY ?? crate.box.min.y);
+      puffs.burst('crateSmash', at.x, at.y, at.z, { surface: crate.metal || crate.metalBounce ? 'metal' : 'wood', groundY: crate.box.min.y, strength: .75 });
+    } else this.pops.push({ obj: crate.mesh, t: 0.12 + (crate.carton ? CONST.fixedStep : 0) });
     if(force&&(crate.metal||crate.metalBounce||crate.bang||crate.nitroBang)){
       this.playCrateSound(crate,'crunch',.9,.65);const p=crate.mesh.position;
       puffs.burst('dustLandHeavy',p.x,p.y+.3,p.z,{surface:'metal',strength:1.4,count:8});
@@ -11092,8 +11115,19 @@ export class Level {
     const remaining = Math.max(0, (crate.hitsRemaining ?? 5) - 1);
     crate.hitsRemaining = remaining;
     crate.hitPulse = 0.14;
+    if (crate.art) { this.syncCrateArt(crate); pulseCrateArt(crate.art); }
     if (crate.woodCrate) setWoodCrateState(crate.woodCrate, remaining, !!crate.pending, crate.ttOrigMap !== undefined);
     return remaining;
+  }
+
+  private syncCrateArt(c: Crate): void {
+    if (c.art) setCrateArtState(c.art, { pending: c.pending, used: c.bangUsed,
+      hits: c.hitsRemaining, fuse: c.fuse, timeSecs: c.timeSecs, boost: c.boost, run: c.ttOrigMap !== undefined });
+  }
+
+  /** Presentation-only contact response; never moves the collision cube. */
+  bounceCrateArt(c: Crate, strength = 1): void {
+    if (c.art && c.alive && !c.pending) pulseCrateArt(c.art, strength);
   }
 
   // Repaint a crate's face in place (both '!' switches when they go spent).
@@ -11103,6 +11137,7 @@ export class Level {
     map: THREE.CanvasTexture,
     shade: number,
   ): void {
+    this.syncCrateArt(crate);
     const face = crate.pending && crate.realMat ? crate.realMat : crate.mesh.material;
     const mats = Array.isArray(face) ? face : [face];
     for (const m of mats as THREE.MeshLambertMaterial[]) {
@@ -11126,6 +11161,7 @@ export class Level {
     if (!crate.alive || crate.bangUsed || crate.pending) return;
     if (!crate.bang && !crate.nitroBang) return;
     crate.bangUsed = true;
+    this.bounceCrateArt(crate, .7);
     this.setCrateFace(crate, this.metalPlainTexture(), 0.8);
     if (crate.nitroBang) {
       for (const c of this.crates) if (c.alive && c.nitro) this.detonate(c, true);
@@ -11158,6 +11194,7 @@ export class Level {
   private setCratePending(c: Crate, pending: boolean): void {
     if (c.pending !== pending) this.cartonStacksDirty = true;
     c.pending = pending;
+    this.syncCrateArt(c);
     if (!c.wasOutline) return;
     if (c.realMat && c.ghostMat)
       c.mesh.material = pending ? c.ghostMat : c.realMat;
@@ -11169,6 +11206,8 @@ export class Level {
   lightFuse(c: Crate): void {
     if (c.alive && c.tnt && !c.pending && c.fuse === undefined) {
       c.fuse = CONST.tntFuse;
+      this.syncCrateArt(c); this.bounceCrateArt(c, .65);
+      if (c.art) updateCrateArt(c.art, 0, this.time);
       if(this.skateRace)c.raceOwner=this.raceActorId;
       if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time);
     }
@@ -11202,6 +11241,7 @@ export class Level {
     // were dialled by eye are the numbers that play. Anything above it would
     // quietly inflate the throw and the count past what was approved.
     puffs.burst(c.tnt || c.concealed ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
+    if (c.art) this.crateEffects.emit(c.art.kind, center, c.art.size, c.mesh.userData.groundBaseY ?? c.box.min.y, true);
     // It counts. The player drains this list every step and tallies it the
     // same way it tallies blast debris (crateReward pays nothing for an
     // explosive, so this is a count and a score, not a prize).
@@ -11215,6 +11255,7 @@ export class Level {
     c.mesh.position.copy(position);c.mesh.userData.baseY=position.y;c.mesh.scale.setScalar(1);c.mesh.visible=true;
     const size=c.box.getSize(new THREE.Vector3());c.box.setFromCenterAndSize(position,size);
     this.pops=this.pops.filter(p=>p.obj!==c.mesh);
+    this.syncCrateArt(c); if (c.art) { c.art.pulse = 0; updateCrateArt(c.art, 0, this.time); }
     this.crateRailsDirty=this.cartonStacksDirty=true;
   }
 
@@ -11345,7 +11386,12 @@ export class Level {
     Object.assign(cp, this.bankCheckpointSnapshot(cp.spawnPos, cratesBroken, fruit, masks, points));
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
-    this.pops.push({ obj: cp.mesh, t: 0.12 }); // break it like a crate
+    if (cp.art) {
+      cp.mesh.visible = false;
+      this.crateEffects.emit('checkpoint', cp.mesh.position, cp.art.size, cp.box.min.y);
+      puffs.burst('crateSmash', cp.mesh.position.x, cp.mesh.position.y, cp.mesh.position.z, { surface: 'wood', groundY: cp.box.min.y, strength: .65 });
+      if (cp.marker) { cp.marker.active = true; cp.marker.age = 0; updateCheckpointMarker(cp.marker, 0); }
+    } else this.pops.push({ obj: cp.mesh, t: 0.12 });
     sfx.play("lifeGet", 0.8);
   }
 
@@ -11406,6 +11452,7 @@ export class Level {
   }
 
   private restoreTntFace(c: Crate): void {
+    this.syncCrateArt(c);
     if (c.explosiveBundle) {
       c.mesh.userData.digit = undefined;
       updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, !!c.pending);
@@ -11421,6 +11468,7 @@ export class Level {
   private restoreMultiHitFace(c: Crate): void {
     if (!c.multiHit) return;
     c.hitPulse = 0;
+    if (c.art) { c.art.pulse = 0; this.syncCrateArt(c); updateCrateArt(c.art, 0, this.time); }
     c.mesh.scale.setScalar(1);
     if (c.woodCrate) setWoodCrateState(c.woodCrate, c.hitsRemaining ?? 5, !!c.pending, c.ttOrigMap !== undefined);
   }
@@ -11438,6 +11486,7 @@ export class Level {
     this.boss?.reset(hard);
     this.cancelBonusEntry();
     this.discardedBoards.clear(); // no debris from the previous life/run
+    this.crateEffects.clear();
     this.breakableScenery.reset(hard);
     this.sourceProps.reset(hard);
     // Hard reset restores the committed crystal baseline and clears any
@@ -11518,6 +11567,9 @@ export class Level {
       }
     }
 
+    for (const c of this.crates) if (c.art) {
+      c.art.pulse = 0; this.syncCrateArt(c); updateCrateArt(c.art, 0, this.time);
+    }
     this.syncOutlinedSurfaces();
 
     // the settle gate is a live COUNT — force the next scan so a restored
@@ -11590,6 +11642,8 @@ export class Level {
 
     for (const cp of this.checkpoints) {
       cp.mesh.scale.setScalar(1);
+      if (cp.art) { cp.art.pulse = 0; updateCrateArt(cp.art, 0, 0); }
+      if (cp.marker) { cp.marker.active = !hard && cp === this.activeCheckpoint; updateCheckpointMarker(cp.marker, 0); }
       if (hard) {
         cp.active = false;
         cp.mesh.visible = true;
@@ -17571,15 +17625,10 @@ export class Level {
     // pointing at the player who is already standing on it, and the one on the
     // bottom is never seen at all. BoxGeometry group order is +X, -X, +Y, -Y,
     // +Z, -Z, so indices 2 and 3 are the two that lose it.
-    const woodCrate = !kind || kind === 'multihit' ? createWoodCrate(size, kind === 'multihit') : undefined;
-    const explosiveBundle = !concealed && (kind === 'tnt' || kind === 'nitro') ? createExplosiveBundle(kind === 'nitro',size) : undefined;
+    const art = !concealed ? createCrateArt((kind ?? 'wood') as CrateArtKind, size) : undefined;
     let mat: THREE.Material | THREE.Material[];
     if (concealed) {
       mat = new THREE.MeshBasicMaterial({ color: 0xd79a42, wireframe: true });
-    } else if (woodCrate) {
-      mat = woodCrate.body.material;
-    } else if (explosiveBundle) {
-      mat = explosiveBundle.body.material;
     } else if (kind === "bouncy" || kind === "metalbounce") {
       const wood = kind === "bouncy";
       const side = new THREE.MeshLambertMaterial({
@@ -17691,7 +17740,11 @@ export class Level {
     if (concealed) base = groundBase = deckY;
     // Item boxes hover clear of steep road faces and are collected on contact.
     if(raceItem)base+=RACE_CRATE_HOVER;
-    const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    if (art) {
+      for (const material of Array.isArray(mat) ? mat : [mat]) material.visible = false;
+      mesh.add(art.root); art.seed = Math.abs(x * .37 + z * .19) % 2.7;
+    }
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.crateLayoutRevision = opts?.currentLayout ? 1 : 0;
     mesh.userData.baseY = mesh.position.y;
@@ -17708,8 +17761,7 @@ export class Level {
     );
     const entry: Crate = {
       mesh,
-      woodCrate,
-      explosiveBundle,
+      art,
       box,
       alive: true,
       empty: kind === "empty",
@@ -17749,8 +17801,7 @@ export class Level {
       );
       mesh.add(edges);
       entry.ghostEdges = edges;
-      if (woodCrate) setWoodCrateState(woodCrate, woodCrate.hitsRemaining, true);
-      if (explosiveBundle) updateExplosiveBundle(explosiveBundle,undefined,this.time,true);
+      this.syncCrateArt(entry);
     }
     this.crates.push(entry);
     this.cartonStacksDirty = true;
@@ -17941,7 +17992,7 @@ export class Level {
    */
   static crateMesh(size = 1): THREE.Group {
     const g = new THREE.Group();
-    g.add(createWoodCrate(size).body);
+    g.add(createCrateArt('wood', size).root);
     return g;
   }
 
@@ -18872,6 +18923,7 @@ export class Level {
         c.boost = undefined;
       }
       if (c.woodCrate) setWoodCrateState(c.woodCrate, c.hitsRemaining ?? 5, !!c.pending, on);
+      this.syncCrateArt(c);
       i++;
     }
   }
@@ -19731,6 +19783,9 @@ export class Level {
         map: this.cpTexture(),
       }),
     );
+    const art = createCrateArt('checkpoint', size);
+    (mesh.material as THREE.Material).visible = false; mesh.add(art.root);
+    const marker = createCheckpointMarker(size); marker.root.position.set(x, gy, z); this.root.add(marker.root);
     mesh.position.set(x, gy + size / 2, z);
     mesh.userData.crateLayoutRevision = currentLayout ? 1 : 0;
     this.root.add(mesh);
@@ -19740,6 +19795,8 @@ export class Level {
     );
     this.checkpoints.push({
       mesh,
+      art,
+      marker,
       box,
       active: false,
       spawnPos: new THREE.Vector3(x, gy + 0.1, z),

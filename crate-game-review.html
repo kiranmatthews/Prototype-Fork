@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <!-- Add to Home Screen = true fullscreen: in-tab Safari always owns the
+         status bar / Dynamic Island strip in portrait, but the home-screen app
+         renders behind it (black-translucent) with safe-area insets set. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BONEMAN" />
+    <meta name="theme-color" content="#1a1c24" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="roo.png" />
+    <link rel="icon" href="data:," />
+    <title>BONEMAN</title>
+    <style>
+      /* touch-action: manipulation kills iOS double-tap-to-zoom everywhere
+         while leaving panel scrolling alone (game surfaces opt into 'none') */
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1c24; overscroll-behavior: none; touch-action: manipulation; }
+      /* This is a GAME, not a document. On iOS a long thumb-press anywhere
+         starts a text selection and raises the Copy / Look Up / Translate /
+         Search Web callout over the top of play, and a tap leaves a grey
+         highlight box behind. Nothing here is meant to be selected, so the
+         whole page opts out — set here rather than in a JS-injected sheet so
+         it holds from the very first frame, before the HUD or the touch pad
+         exist. The controls repeat it locally; this is what covers the rest. */
+      * {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Typing still needs a caret and a selection: the level-name field, the
+         passcode and sync-token boxes, every numeric prop in the editor. */
+      input, textarea, select, [contenteditable="true"] {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      /* sized by main.ts resize(): --vh carries the REAL device height. iOS
+         standalone underreports the viewport by the home-indicator strip and
+         never paints it (the black bar) — so the page deliberately sizes past
+         the viewport to the physical screen edge. */
+      html, body, #app { height: var(--vh, 100%); }
+      #app { width: 100%; }
+      /* image-rendering is set live from main.ts's resize(): pixelated only
+         when renderScale drops below 0.7, smooth linear upscale otherwise. */
+      #app canvas { width: 100% !important; height: 100% !important; display: block; }
+      /* This status exists before JavaScript/graphics can load. The first game
+         frame replaces it; game artwork and menus keep their pre-CRT owners. */
+      #game-startup {
+        position: fixed; inset: 0; z-index: 2147483647; box-sizing: border-box;
+        display: grid; place-content: center; justify-items: center; gap: 16px;
+        padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right))
+          max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+        background: #1a1c24; color: #edf0f4; text-align: center;
+        font: 16px/1.5 system-ui, sans-serif;
+      }
+      #game-startup[hidden] { display: none; }
+      #game-startup p { margin: 0; max-width: 30ch; }
+      #game-startup .startup-spinner {
+        width: 24px; height: 24px; border: 2px solid #454d5a; border-top-color: #b6e5ec;
+        border-radius: 50%; animation: startup-spin 1s linear infinite;
+      }
+      #game-startup a {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-height: 44px; padding: 0 16px; color: #b6e5ec; text-underline-offset: 4px;
+      }
+      #game-startup a:focus-visible { outline: 2px solid #b6e5ec; outline-offset: 4px; border-radius: 4px; }
+      #game-startup[data-failed] .startup-spinner { display: none; }
+      @keyframes startup-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { #game-startup .startup-spinner { animation: none; } }
+
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="game-startup" aria-label="Game startup">
+      <div class="startup-spinner" aria-hidden="true"></div>
+      <p id="game-startup-status" role="status">Loading game…</p>
+      <noscript>
+        <style>#game-startup-status, #game-startup .startup-spinner { display: none; }</style>
+        <p>Enable JavaScript to play, then reload the game.</p>
+      </noscript>
+      <a href="" id="game-startup-reload">Reload game</a>
+    </div>
+    <script type="module" src="/src/bootstrap.ts"></script>
+    <script type="module" src="/tools/crate-game-review.ts"></script>
+  </body>
+</html>

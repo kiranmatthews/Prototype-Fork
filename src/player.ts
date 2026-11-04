@@ -13807,6 +13807,7 @@ export class Player {
               this.grounded = false;
               this.bounceRefresh();
               this.score(CONST.ptsBouncy, 'Boing');
+              level.bounceCrateArt(c);
               sfx.play('bouncyBounce', 0.9, 0.8);
             }
           } else if (crateStompContacts.has(c)) {
@@ -13822,6 +13823,7 @@ export class Player {
             this.charging = false;
             this.chargeTimer = 0;
             this.score(CONST.ptsBouncy * (perfect ? 2 : 1), perfect ? 'Perfect Boing' : 'Boing');
+            level.bounceCrateArt(c, perfect ? 1.2 : 1);
             sfx.play('bouncyBounce', 0.9, perfect ? 1.3 : 1);
             if (perfect) this.emitSparks(6, 0xfff3d0, 1.4);
           } else if (crateBonkContacts.has(c)) {
@@ -14842,7 +14844,7 @@ export class Player {
     // crate's own centre, its flat ring on the deck under it, and the haze it
     // leaves behind — all three are children of the one preset, fired off one
     // seed so the whole cloud replays identically.
-    if (wasAlive)
+    if (wasAlive && !c.art)
       puffs.burst('crateSmash', PUFF_C.x, PUFF_C.y, PUFF_C.z, {
         surface: 'wood',
         groundY: crateFloor,
