@@ -12754,23 +12754,16 @@ export class Level {
     const matFinish = new THREE.MeshLambertMaterial({ color: 0xa9b072 });
 
     // ---- THE SPINE ---------------------------------------------------------
-    // straight() is how much WIND is allowed at this z: 1 out in the jungle, 0
-    // where a built structure takes over. Because it multiplies both the drift
-    // and the roll, a strip that ends inside a straight zone ends at exactly
-    // x 0, y 0 — which is how the corridors meet the temple and the finish
-    // landing flush without a single hand-tuned offset.
+    // The forward corridor and its control spine share one straight X axis.
+    // The old gentle sideways wave also steered held-forward input sideways
+    // against the axis-aligned logs/crate faces, creeping into the undergrowth.
+    // Keep the rolling height profile, cuts and temple transitions unchanged.
     const straight = (z: number): number =>
       1 -
       THREE.MathUtils.smoothstep(-z, 276, 300) + // into the temple
       THREE.MathUtils.smoothstep(-z, 486, 510) - // back out of it
       THREE.MathUtils.smoothstep(-z, 640, 664); // into the finish landing
-    // Two beats each, long against short, so the path never repeats visibly.
-    // Peak drift ~8u sideways over ~150u of course (about 8 degrees off axis)
-    // and ~3u of roll (about 3.5 degrees) — gentle enough that it reads as
-    // terrain rather than as a slalom, steep enough to see from the deck.
-    const gx = (z: number): number =>
-      (Math.sin(z * 0.021) * 5.4 + Math.sin(z * 0.0083 + 1.7) * 3.1) *
-      straight(z);
+    const gx = (_z: number): number => 0;
     // Hollows in the jungle floor: shallow dished bowls you run down into and
     // back out of. They live in the SPINE rather than in jungle()'s own `dips`
     // option, because a dip that only moves the walking surface leaves the
@@ -13034,6 +13027,10 @@ export class Level {
         });
       }
       this.rails.push(new Rail(pts, false)); // the trunk is the visual
+      // Sit on an actual rail node so the grind collects it without a side
+      // jump; using gy alone would put it below the carved-log riding line.
+      const crystalSeat = pts[N / 2];
+      this.crystal(crystalSeat.x, crystalSeat.y, crystalSeat.z);
       // the stump it fell from, and the root plate at the far side
       this.jungleAsset({t:"decor",dkind:"junglepalmtree",p:[gx(-168)-9,gy(-168),-168],s:[13,16,13]});
 
@@ -13136,7 +13133,7 @@ export class Level {
     crateAt(-290, 2);
 
     // D. the temple: a hopper guarding the mouth, crates on the courses, a
-    //    sentry holding the terrace, and the crystal off the racing line
+    //    sentry holding the terrace
     this.enemy(-4, 4, 0, -314, 3.4, "x", "hopper");
     this.crate(-2.6, 2.3, -330);
     this.crate(2.6, 4.6, -342);
@@ -13151,7 +13148,6 @@ export class Level {
     this.crate(-3.4, 11.5, -414);
     this.crate(3.4, 11.5, -414);
     this.crate(0, 11.5, -428, "tnt");
-    this.crystal(5.6, 11.5, -430);
     this.checkpoint(11.5, -396, 0);
     // The broad level terrace leaves room to read and dodge the long peck.
     this.enemy(-2.2, 2.2, 11.5, -439, 1.45, "x", "moa");
@@ -13184,11 +13180,9 @@ export class Level {
     crateAt(-668, 0, "mystery");
 
     // ---- CAMERA LANE -------------------------------------------------------
-    // The spine again. Without it the frame would keep facing down -z while
-    // the path bent out from under it; with it, screen-up is always "onward"
-    // and the corridor stays centred through every bend. Height is authored
-    // too, so the climb tilts the frame up instead of losing the player behind
-    // the courses.
+    // Share the ground centreline: screen-up stays straight along the main
+    // corridor. Height still follows the hollows and temple climb, and the
+    // finale appends its own ordered turn into the side-view ascent.
     const laneY = (z: number): number => {
       if (z > -300 || z < -486) return gy(z);
       if (z > -324) return 0; // temple approach

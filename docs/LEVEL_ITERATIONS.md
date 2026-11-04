@@ -8800,3 +8800,38 @@ Balance, accurate HUD speed and all eighteen spring housings; consoles are clean
 No full suite was run. Coordinator integration to validated production preview:
 approximately 13 minutes. Matching deployment and public verification are
 recorded separately in the local release ledger after publication.
+
+## 2026-11-05 — Jungle Ruins crystal, finish foliage and forward alignment
+
+Moved the single crystal from the temple terrace to the centre node of the
+existing ravine grind. Added six rooted pockets of full 3D thickets, ferns and
+broadleaf groundcover behind the summit podium, between the sanctuary and the
+painted forest. The foliage remains outside the playable slab and collision.
+
+The old main-corridor spine deliberately curved sideways even where log and
+crate faces ran across world X. Holding forward into those faces slid the player
+along them toward the bush (reproduced at the log near Z -592). Straightened the
+main corridor's shared X centreline, including its terrain, bank dressing and
+control nodes. Vertical hollows, pits, temple climb and side-view finale remain.
+No shared movement/camera behavior, tuning, skies or other levels were edited.
+
+Approximately 15 minutes from prompt to the first rendered local change, and
+20 minutes through the first passing crystal-collection regression. The focused
+production-Player check confirms zero lateral movement at both blocked-forward
+cases, crystal collection while grinding, and a supported far-bank landing with
+zero deaths; native editor capture retains the placement. The existing finale
+pilot still clears all four aqueduct gaps, twelve climbing ledges, checkpoints,
+pit recovery and the finish without route deaths. Required level checks pass.
+
+Full-render browser input testing also collects the crystal on the rail and
+lands on the far bank (1,248 fixed steps, zero deaths). Both the side-view
+sanctuary and the +X-facing completion shot were reviewed at normal and
+MAX/native presentation; the finished planting wraps the rear and far edges
+without blocking the podium. The browser reaches Course Clear with a clean
+warning/error console. Local review evidence is in the chat's
+`jungle-ruins-flow` artifact folder; the input-only regression is
+`tools/test-jungle-forward-flow.mjs`. Publication goes through the release
+coordinator reactivated by the user during this task.
+The final six-pocket version passes the focused regression, `check:levels`,
+production build/type-check and `check:release` (814,174,482 bytes). No full
+suite was run.

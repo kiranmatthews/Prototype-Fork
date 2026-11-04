@@ -217,5 +217,25 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     if(i%2===0)prop('junglebackdrop',[x,y-7,RUINS_CLIMB_Z-46],[46,33,35],'Deep forest behind the terraces',i*53,265,'#96b5a2');
     if(i%4===0)prop('treehouserepairgrove',[x+18,y-6,RUINS_CLIMB_Z-64],[84,35.08,.02],'Painted canopy beyond the summit',0,265,'#b1c8b5');
   }
+  // A real understory masks the painted forest's lower edge behind the finish.
+  // Root each pocket on its own eroded rock, behind the podium/temple footprint
+  // and well in front of the matte. No new collision or camera obstruction.
+  const summitPockets = [
+    [166, RUINS_CLIMB_Z - 10, 0], [178, RUINS_CLIMB_Z - 10.8, 0],
+    [190, RUINS_CLIMB_Z - 10, 0], [202, RUINS_CLIMB_Z - 10.8, 0],
+    // The results lens faces along +X. Wrap the far end as well as the back.
+    [202, RUINS_CLIMB_Z - 1, 90], [202, RUINS_CLIMB_Z + 11, 90],
+  ];
+  for (const [i, [x, z, yaw]] of summitPockets.entries()) {
+    const rootY = 26.2;
+    prop('trialsv2cavewalla', [x, 19, z], [14, (rootY + .18 - 19) / ROCK_CROWN.trialsv2cavewalla, 6],
+      'Summit understory · rooted rock pocket', yaw, 265, '#dce3c8');
+    prop('trialsv3thicket', [x, rootY, z], [14, 5.6 + (i % 2) * .7, 5],
+      'Summit understory · layered foliage before the matte', yaw, 265);
+    prop(i % 2 ? 'trialsv2ferna' : 'trialsv2fernb', [x, rootY, z], [7, 3.6, 5],
+      'Summit understory · fern layer', yaw, 265);
+    prop('trialsv2groundcovera', [x, rootY -.04, z], [9, 1.5, 5],
+      'Summit understory · low broadleaf carpet', yaw, 265);
+  }
   return { components: C, groups };
 }
