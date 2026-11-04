@@ -17,6 +17,7 @@ export function buildMilkGeometry(variant = 0): THREE.BufferGeometry {
 /** Relative shape/normal targets share GPU storage; weights belong to each orb. */
 function addLiquidMorphs(geometry: THREE.BufferGeometry): void {
   const base = geometry.getAttribute('position'), normals = geometry.getAttribute('normal');
+  const flex = geometry.getAttribute('fruitFlex');
   const positions: THREE.BufferAttribute[] = [], normalTargets: THREE.BufferAttribute[] = [];
   for (let mode = 0; mode < 6; mode++) {
     const deformed = geometry.clone(), p = deformed.getAttribute('position');
@@ -29,9 +30,24 @@ function addLiquidMorphs(geometry: THREE.BufferGeometry): void {
       else if (mode === 2) p.setXYZ(i, x + .20 * tail, y, z);
       else if (mode === 3) p.setXYZ(i, x, y, z + .20 * tail);
       else p.setXYZ(i, x * (1 + wave), y, z * (1 + wave));
+      // The fruit has weight; leaf tips yield after it. Their roots and the
+      // recessed stalk base stay attached. This is visual deformation only.
+      const bend=flex.getX(i);
+      if(mode===2) p.setXYZ(i,p.getX(i)+bend*.065,p.getY(i)-bend*.018,p.getZ(i));
+      else if(mode===3) p.setXYZ(i,p.getX(i),p.getY(i)-bend*.018,p.getZ(i)+bend*.065);
+      else if(mode===4||mode===5){
+        const flutter=bend*.025*Math.sin((mode===4?x:z)*12+y*5);
+        p.setY(i,p.getY(i)+flutter);
+      }
     }
     deformed.computeVertexNormals();
     const n = deformed.getAttribute('normal');
+    // Keep the bark's UV seam smooth after deformation; cut ends retain their
+    // separate flat normals so the wooden rim stays crisp.
+    for(const [a,b] of geometry.userData.fruitNormalSeams as number[][]){
+      const average=new THREE.Vector3().fromBufferAttribute(n,a).add(new THREE.Vector3().fromBufferAttribute(n,b)).normalize();
+      n.setXYZ(a,average.x,average.y,average.z);n.setXYZ(b,average.x,average.y,average.z);
+    }
     const dp = new Float32Array(p.count * 3), dn = new Float32Array(p.count * 3);
     for (let i = 0; i < p.count; i++) {
       dp.set([p.getX(i)-base.getX(i),p.getY(i)-base.getY(i),p.getZ(i)-base.getZ(i)],i*3);
@@ -68,7 +84,7 @@ export function setMilkVariant(root:THREE.Object3D,variant:number):void {
 export function milkBlob(size = 1, variant = nextVariant++): THREE.Group {
   const group = new THREE.Group(), mesh = new THREE.Mesh(shapes[0], material);
   mesh.userData.milkBlob = true;
-  mesh.castShadow = true; mesh.receiveShadow = false;
+  mesh.castShadow = true; mesh.receiveShadow = true;
   mesh.customDepthMaterial = depth;
   group.add(mesh); group.scale.setScalar(size);
   motions.set(mesh, new LiquidMotion(mesh));

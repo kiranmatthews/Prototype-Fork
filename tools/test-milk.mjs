@@ -41,6 +41,29 @@ try {
     assert.equal(g.morphAttributes.normal.length,6);
     const parts=new Set(g.getAttribute('fruitPart').array);
     assert.deepEqual([...parts],[0,1,2],'missing fruit skin, leaves or stalk');
+    const tissue=g.getAttribute('fruitPart'),flex=g.getAttribute('fruitFlex'),uv=g.getAttribute('uv');
+    let roots=0,tips=0;
+    for(let j=0;j<p.count;j++){
+      assert.ok(flex.getX(j)>=0&&flex.getX(j)<=1,'invalid tissue flex weight');
+      if(tissue.getX(j)===0)assert.equal(flex.getX(j),0,'leaf flutter deforms the fruit body');
+      if(tissue.getX(j)===1&&uv.getX(j)===0){assert.equal(flex.getX(j),0,'leaf root detached during flex');roots++;}
+      if(tissue.getX(j)===1&&uv.getX(j)===1){assert.equal(flex.getX(j),1,'leaf tip cannot flex');tips++;}
+    }
+    assert.ok(roots>=2&&tips===roots,'incomplete articulated crown');
+    // Weld position keys only for this topology check: bark UV seams and flat
+    // end normals deliberately use duplicate vertices in the render mesh.
+    const woodEdges=new Map(),positionKey=id=>[p.getX(id),p.getY(id),p.getZ(id)].map(v=>v.toFixed(6)).join(',');
+    for(let j=0;j<g.index.count;j+=3){
+      const ids=[0,1,2].map(k=>g.index.getX(j+k));if(tissue.getX(ids[0])!==2)continue;
+      for(let k=0;k<3;k++){
+        const a=positionKey(ids[k]),b=positionKey(ids[(k+1)%3]),key=[a,b].sort().join('|');
+        const edge=woodEdges.get(key)??{count:0,winding:0};edge.count++;edge.winding+=a<b?1:-1;woodEdges.set(key,edge);
+      }
+    }
+    assert.ok([...woodEdges.values()].every(e=>e.count===2&&e.winding===0),'stalk has an open cut rim or bark seam');
+    for(const [a,b] of g.userData.fruitNormalSeams)for(const normal of [n,...g.morphAttributes.normal]){
+      assert.ok(new THREE.Vector3().fromBufferAttribute(normal,a).distanceTo(new THREE.Vector3().fromBufferAttribute(normal,b))<1e-6,'bark seam splits in motion');
+    }
     g.dispose();
   }
   assert.equal(shapes.size, 6, 'variants must have distinct resting sculpts');
@@ -96,5 +119,5 @@ try {
   });
   for(const sample of samples)sample.forEach((value,i)=>assert.ok(Math.abs(value-samples[0][i])<1e-6,'liquid timing depends on frame rate'));
   console.log('Triangle counts:',triangles.join(', '));
-  console.log('PASS six shared complete fruit sculpts, closed fruit/leaf topology, PBR peach skin and clones, independent motion, attached morph normals, pool variant switching, flight handoff and settling.');
+  console.log('PASS six shared complete fruit sculpts, closed fruit/leaf/stalk topology, rooted crown flex, PBR peach skin and clones, independent motion, attached morph normals, pool variant switching, flight handoff and settling.');
 } finally { await server.close(); }
