@@ -1,18 +1,29 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'vite';
 import * as THREE from 'three';
-const server = await createServer({ logLevel: 'silent', server: { middlewareMode: true } });
+const server = await createServer({configFile:false,appType:'custom',logLevel:'silent',optimizeDeps:{noDiscovery:true},server:{middlewareMode:true,hmr:false,ws:false,watch:null}});
 try {
   const { milkBlob, buildMilkGeometry, MILK_VARIANTS, MILK_SIZE, MilkMaterial, setMilkVariant, updateMilkMotion, resetMilkMotion, kickMilkMotion, copyMilkMotion } = await server.ssrLoadModule('/src/milk.ts');
-  const shapes = new Set();
+  const {fruitSkinColor}=await server.ssrLoadModule('/src/fruitAssets.ts');
+  const shapes = new Set(),triangles=[];
+  for(let i=0;i<MILK_VARIANTS.length;i++){
+    const bottom=fruitSkinColor(-.43,0,0,i),middle=fruitSkinColor(-.15,0,0,i),top=fruitSkinColor(.34,0,0,i);
+    assert.ok(bottom.g>bottom.r && bottom.g>bottom.b*3,'base must be green');
+    assert.ok(middle.r>middle.g && middle.g>middle.b*4,'body must be golden yellow');
+    assert.ok(top.r>top.g*3 && top.r>top.b*4,'shoulders must be red');
+  }
+
   for (let i = 0; i < MILK_VARIANTS.length; i++) {
     const g = buildMilkGeometry(i), p = g.getAttribute('position'), n = g.getAttribute('normal');
-    assert.ok(g.index && g.index.count / 3 < 5000, 'pickup triangle budget');
+    assert.ok(g.index && g.index.count / 3 < 5000, 'pickup triangle budget');triangles.push(g.index.count/3);
     shapes.add(Array.from(p.array).map(x => x.toFixed(4)).join(','));
-    const edges = new Map();
+    const edges = new Map(), volumes=[0,0];
     for (let j = 0; j < g.index.count; j += 3) {
       const ids = [0, 1, 2].map(k => g.index.getX(j + k));
-      if (g.getAttribute('fruitPart').getX(ids[0]) > 1.5) continue;
+      const part=g.getAttribute('fruitPart').getX(ids[0]);
+      if (part > 1.5) continue;
+      const pa=new THREE.Vector3().fromBufferAttribute(p,ids[0]),pb=new THREE.Vector3().fromBufferAttribute(p,ids[1]),pc=new THREE.Vector3().fromBufferAttribute(p,ids[2]);
+      volumes[part]+=pa.dot(pb.cross(pc))/6;
       for (let k = 0; k < 3; k++) {
         const a = ids[k], b = ids[(k + 1) % 3], key = [Math.min(a, b), Math.max(a, b)].join(':');
         const old = edges.get(key) ?? { count: 0, winding: 0 };
@@ -20,6 +31,7 @@ try {
       }
     }
     assert.ok([...edges.values()].every(e => e.count === 2 && e.winding === 0), 'fruit body and leaf volumes must be closed');
+    assert.ok(volumes.every(v=>v>0),'fruit or leaves have inward-facing winding');
     for (let j = 0; j < p.count; j++) {
       assert.ok(Number.isFinite(p.getX(j) + p.getY(j) + p.getZ(j)));
       assert.ok(Math.abs(new THREE.Vector3().fromBufferAttribute(n, j).length() - 1) < 1e-5);
@@ -66,6 +78,7 @@ try {
   assert.ok(tip.x<-.95,'liquid tip does not trail the flight direction');
   assert.notDeepEqual(a.children[0].morphTargetInfluences,b.children[0].morphTargetInfluences,'one pickup animated its peer');
   copyMilkMotion(a,b);assert.deepEqual(a.children[0].morphTargetInfluences,b.children[0].morphTargetInfluences,'handoff popped the shape');
+  assert.equal(a.children[0].geometry,b.children[0].geometry,'handoff changed the sculpt');
   for(let i=0;i<300;i++)updateMilkMotion(a,zero,1/60);
   assert.ok(a.children[0].quaternion.angleTo(new THREE.Quaternion())<.001,'drop failed to return upright');
   assert.ok(a.children[0].morphTargetInfluences[0]<.1,'liquid never settled');
@@ -82,5 +95,6 @@ try {
     return orb.children[0].morphTargetInfluences;
   });
   for(const sample of samples)sample.forEach((value,i)=>assert.ok(Math.abs(value-samples[0][i])<1e-6,'liquid timing depends on frame rate'));
+  console.log('Triangle counts:',triangles.join(', '));
   console.log('PASS six shared complete fruit sculpts, closed fruit/leaf topology, PBR peach skin and clones, independent motion, attached morph normals, pool variant switching, flight handoff and settling.');
 } finally { await server.close(); }

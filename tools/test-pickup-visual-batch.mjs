@@ -32,7 +32,7 @@ try{
     assert.equal(row.body.visible,false,'native body would draw twice');
     cell.mesh.getMatrixAt(i,matrix);matrix.premultiply(cell.mesh.matrixWorld);cell.mesh.getMorphAt(i,reconstructed);
     for(let weight=0;weight<6;weight++)assert.ok(Math.abs(reconstructed.morphTargetInfluences[weight]-row.body.morphTargetInfluences[weight])<1e-7,'morph weight changed');
-    for(const vertex of [0,57,151,389,600]){
+    for(const vertex of [0,57,151,389,600,Math.floor(row.body.geometry.getAttribute('position').count*.8),row.body.geometry.getAttribute('position').count-1]){
      row.body.getVertexPosition(vertex,a).applyMatrix4(row.body.matrixWorld);
      reconstructed.getVertexPosition(vertex,b).applyMatrix4(matrix);
      assert.ok(a.distanceTo(b)<.00001,'deformed world-space vertex changed');

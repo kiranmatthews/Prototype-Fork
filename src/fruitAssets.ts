@@ -22,7 +22,7 @@ const smooth = THREE.MathUtils.smoothstep;
 /** Linear-light vertex colour; the broad gradient stays legible at game scale. */
 export function fruitSkinColor(y: number, x = 0, z = 0, variant = 0, out = new THREE.Color()): THREE.Color {
   const spec = FRUIT_VARIANTS[variant];
-  const h = y + spec.blush + .025 * Math.sin(x * 9 + z * 5 + variant);
+  const h = y - spec.blush + .025 * Math.sin(x * 9 + z * 5 + variant);
   out.copy(green).lerp(gold, smooth(h, -.42, -.23));
   out.lerp(orange, smooth(h, -.16, .13));
   out.lerp(red, smooth(h, -.015, .25));
@@ -44,7 +44,7 @@ function attributes(g: THREE.BufferGeometry, part: number, tint: (x:number,y:num
 
 function body(variant: number): THREE.BufferGeometry {
   const spec = FRUIT_VARIANTS[variant];
-  const sphere = new THREE.SphereGeometry(1,40,28);
+  const sphere = new THREE.SphereGeometry(1,48,32);
   sphere.deleteAttribute('normal');sphere.deleteAttribute('uv');
   const g = mergeVertices(sphere);sphere.dispose();
   const p = g.getAttribute('position');
@@ -67,7 +67,7 @@ function body(variant: number): THREE.BufferGeometry {
  * read in silhouette; fine veins belong to the material, not floating tubes. */
 function leaf(variant: number, index: number): THREE.BufferGeometry {
   const spec=FRUIT_VARIANTS[variant], p:number[]=[],uv:number[]=[],tri:number[]=[];
-  const rows=18,sides=12,length=(index===2?.29:.43)*(1+.06*Math.sin(variant+index));
+  const rows=24,sides=12,length=(index===2?.29:.43)*(1+.06*Math.sin(variant+index));
   const width=index===2?.092:.132;
   const yaw=spec.crown + (index===0?-.12:index===1?Math.PI+.43:1.85);
   const cy=Math.cos(yaw),sy=Math.sin(yaw),socket=.305+.395*(spec.height-1);

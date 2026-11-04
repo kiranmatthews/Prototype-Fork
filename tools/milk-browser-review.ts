@@ -43,7 +43,7 @@ function frame(now:number){
  models.forEach((m,i)=>{
   const {blob,label}=m,x=portrait?(i%2-.5)*1.5:(i%3-1)*1.75,y=portrait?1.4-Math.floor(i/2)*1.45:.9-Math.floor(i/3)*1.6;
   blob.visible=!hero||i===0;label.style.display=hero?'none':'';
-  blob.scale.setScalar(hero?3.5:1);
+  blob.scale.setScalar(hero?2.6:1);
   blob.position.set(hero?0:x,hero?-.06:y,0);velocity.set(0,0,0);
   blob.rotation.set(view==='top'?.95:0,(view==='back'?Math.PI:0)+(turn?elapsed*.22+i*.16:0),0);
   const age=Math.max(0,elapsed-i*.12),cycle=Math.floor(age/3),u=age%3;

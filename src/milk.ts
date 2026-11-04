@@ -156,5 +156,8 @@ export function resetMilkMotion(root:THREE.Object3D):void {
 export function copyMilkMotion(source:THREE.Object3D,target:THREE.Object3D):void {
   const from=milkMesh(source),to=milkMesh(target);
   const state=from&&motions.get(from),destination=to&&motions.get(to);
-  if(state&&destination)destination.copyFrom(state);
+  if(state&&destination){
+    setMilkVariant(target,from!.geometry.userData.fruitVariant);
+    destination.copyFrom(state);
+  }
 }
