@@ -72,6 +72,11 @@ def inventory(source, particles, groups, parse, walk):
 
     roots = {item['particle'] for group in groups for item in group['items']}
     edges = {p['id']: {int(f['base']) for f in p['fields'] if f['field'] == 'next-launcher'} for p in particles}
+    callback_edges = {c['name']: {i for i in c['directParticleReferences'] if isinstance(i, int)} for c in callbacks}
+    for particle in particles:
+        for field in particle['fields']:
+            if field['field'] in ('func', 'birth-func') and isinstance(field.get('value'), str):
+                edges[particle['id']].update(callback_edges.get(field['value'], set()))
 
     def reachable(roots):
         seen = set(roots)

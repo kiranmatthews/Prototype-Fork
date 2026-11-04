@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {assetURL, type ModelDefinition, type RenderingMode} from './types';
+import {gouraudMaterial} from './gouraudMaterial';
+import {compactGeometry} from './compactGeometry';
 
 const loader = new GLTFLoader();
 const imagePixels = new WeakMap<object, ImageData>();
@@ -37,7 +39,7 @@ function sample(texture: THREE.Texture, uv: THREE.Vector2, result: THREE.Color):
  * joint weights, normals, morphs and animation tracks are retained. */
 function gouraud(mesh: THREE.Mesh): void {
   const source = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[];
-  let geometry = mesh.geometry.clone();
+  let geometry = compactGeometry(mesh.geometry);
   // A GLTF multi-material mesh may share a vertex between distinct textures.
   // Expanding its indices preserves every triangle and gives each its own ink.
   if (source.length > 1 && geometry.index) {
@@ -63,11 +65,7 @@ function gouraud(mesh: THREE.Mesh): void {
     for (let i = group.start; i < group.start + group.count; i++) paint(i, source[group.materialIndex ?? 0]);
   }
   geometry.setAttribute('color', new THREE.BufferAttribute(color, 4));
-  const materials = source.map(material => new THREE.MeshLambertMaterial({
-    name: `${material.name} · Gouraud`, color: material.color, vertexColors: true,
-    side: material.side, transparent: material.transparent, opacity: material.opacity,
-    alphaTest: material.alphaTest, depthWrite: material.depthWrite, blending: material.blending,
-  }));
+  const materials = source.map(gouraudMaterial);
   mesh.material = Array.isArray(mesh.material) ? materials : materials[0];
 }
 
@@ -144,6 +142,11 @@ export class ModelExhibit {
   get time(): number {return this.elapsed;}
   get duration(): number {return this.actions[0]?.getClip().duration ?? 0;}
   get clipName(): string {return this.actions[0]?.getClip().name ?? '';}
+  get inspectionSize(): THREE.Vector3 {
+    const size = this.dimensions.clone().multiplyScalar(this.scale);
+    if (this.view === 'compare') size.x += Math.abs(this.original.position.x - this.alternative.position.x);
+    return size;
+  }
   setClip(name: string): void {
     const clip = this.clips.find(candidate => candidate.name === name); if (!clip) return;
     for (const action of this.actions) action.stop();
@@ -152,12 +155,13 @@ export class ModelExhibit {
   }
   setNativeScale(native: boolean): void {
     for (const group of [this.original, this.alternative]) group.scale.setScalar(native ? 1 : this.displayScale);
+    const separation = Math.max(2.6, this.dimensions.x * this.scale * .5 + .6);
+    this.original.position.x = this.view === 'compare' ? -separation : 0;
+    this.alternative.position.x = this.view === 'compare' ? separation : 0;
   }
   setRendering(mode: RenderingMode): void {
     this.view = mode;
     this.original.visible = mode !== 'gouraud'; this.alternative.visible = mode !== 'original';
-    this.original.position.x = mode === 'compare' ? -2.6 : 0;
-    this.alternative.position.x = mode === 'compare' ? 2.6 : 0;
     this.setNativeScale(false);
   }
   seek(time: number): void {

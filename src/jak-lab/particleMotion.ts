@@ -1,5 +1,5 @@
 import {Euler, Quaternion, Vector3} from 'three';
-import type {EffectDefinition, EffectItem, ParticleDefinition, ParticleField} from './types';
+import type {ContactCallback, EffectDefinition, EffectItem, ParticleDefinition, ParticleField} from './types';
 
 const ANGLE = Math.PI * 2 / 65536;
 export const PARTICLE_STEP = 1 / 60;
@@ -14,13 +14,28 @@ export interface LabParticle {
 }
 interface LaunchState {
   item: EffectItem; active: boolean; launched: boolean; credit: number;
-  parent: LabParticle | null; offset: number; spawnTime: number;
+  parent: LabParticle | null; offset: number; spawnTime: number; origin: Vector3 | null; direct: boolean;
 }
 const KNOWN_CALLBACKS = new Set(['sparticle-track-root', 'sparticle-track-root-prim',
-  'part-tracker-track-root', 'eco-fadeout', 'eco-track-root-prim-fadeout']);
+  'part-tracker-track-root', 'eco-fadeout', 'eco-track-root-prim-fadeout', 'sparticle-track-root-money',
+  'bird-bob-func', 'tra-bird-bob-func', 'snow-bird-bob-func',
+  'sparticle-seagull-moon', 'tra-sparticle-seagull-moon', 'sparticle-snow-birds-moon',
+  'part-tracker-track-target-joint']);
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
-  'birth-func-copy-rot-color', 'birth-func-copy-omega-to-z']);
-const ZERO = new Vector3();
+  'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
+  'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
+  'birth-func-target-orient', 'birth-func-vector-orient', 'birth-func-random-rot']);
+const UP = new Vector3(0, 1, 0);
+const signed16 = (value: number) => (Math.trunc(value) << 16) >> 16;
+
+/** Explicit inspection inputs. Defaults are a stationary origin and flat water;
+ * they are not inferred game object states. Source pointers become typed data. */
+export interface ParticleHost {
+  root: Vector3; primitive: Vector3; fadeOut: boolean; hudMoney: boolean;
+  targetYaw: number | null; targetNormal: Vector3; vectorNormal: Vector3 | null;
+  targetJoints: Map<number, Vector3>; particleQuaternion: Quaternion;
+  oceanHeight: (position: Vector3) => number;
+}
 
 /** Source numeric field rules and launch graph. Units remain GOAL units until
  * rendering: 4096 units/metre, 65536/turn, 300 ticks/second. Context-dependent
@@ -30,22 +45,34 @@ export class ParticleMotion {
   readonly issues = new Set<string>();
   readonly textureIds = new Set<string>();
   readonly referencedParticleIds = new Set<number>();
+  readonly host: ParticleHost = {root: new Vector3(), primitive: new Vector3(), fadeOut: false, hudMoney: false,
+    targetYaw: 0, targetNormal: UP.clone(), vectorNormal: null, targetJoints: new Map(),
+    particleQuaternion: new Quaternion(), oceanHeight: () => 0};
+  readonly hostInputs = new Set<string>();
+  readonly soundEvents: {name: string; position: Vector3 | null}[] = [];
   clock = 0;
   dropped = 0;
+  queueDrops = 0;
   hour = 12;
   cameraDistance = 0; // GOAL units; zero disables distance attenuation in the lab.
   private readonly states: LaunchState[];
   private randomState: number;
+  private soundRandomState: number;
+  private copyToggle = 0;
+  private readonly directCredits = new Map<number, number>();
+  private readonly queuedLaunches: {particle: number; is3d: boolean; position: Vector3}[] = [];
   private nextId = 0;
   private carry = 0;
   private readonly vector = new Vector3();
   private readonly turn = new Quaternion();
 
   constructor(readonly group: EffectDefinition, readonly definitions: Map<number, ParticleDefinition>,
-    readonly capacity = 12000, readonly seed = 1) {
+    readonly capacity = 12000, readonly seed = 1, readonly callbackPrograms: Record<string, ContactCallback> = {}) {
     this.randomState = seed || 1;
+    this.soundRandomState = (seed ^ 0x9e3779b9) || 1;
     this.states = group.items.map(item => ({item, active: !item.flags?.includes('start-dead'),
-      launched: false, credit: 0, parent: null, offset: item.offset ?? 0, spawnTime: -30000}));
+      launched: false, credit: 0, parent: null, offset: item.offset ?? 0, spawnTime: -30000,
+      origin: null, direct: !!group.directLaunch}));
     const seen = this.referencedParticleIds;
     const visit = (id: number) => {
       if (seen.has(id)) return; seen.add(id);
@@ -53,8 +80,24 @@ export class ParticleMotion {
       if (!definition) {this.issues.add(`Empty source launcher ${id}`); return;}
       for (const field of definition.fields) {
         if (field.field === 'texture') this.textureIds.add(String(field.value));
-        if (field.field === 'func' && !KNOWN_CALLBACKS.has(String(field.value))) this.issues.add(`Host callback: ${field.value}`);
+        if (field.field === 'func') {
+          const name = String(field.value), program = callbackPrograms[name];
+          if (program) {
+            for (const action of program.actions) if (action.op === 'launch') visit(action.particle);
+          } else if (!KNOWN_CALLBACKS.has(name) && field.op === 'value') this.issues.add(`Host callback: ${name}`);
+          if (name.includes('track-root') || name.endsWith('bird-bob-func')) this.hostInputs.add('root');
+          if (name.includes('track-root-prim')) this.hostInputs.add('primitive');
+          if (name.includes('fadeout')) this.hostInputs.add('fade-out');
+          if (name === 'part-tracker-track-target-joint') this.hostInputs.add('target joint transforms');
+        }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
+        if (field.field === 'birth-func') {
+          const name = String(field.value);
+          if (name.includes('target')) this.hostInputs.add('target yaw/normal');
+          if (name === 'birth-func-vector-orient') this.hostInputs.add('userdata normal vector');
+          if (name === 'birth-func-set-quat') this.hostInputs.add('particle quaternion');
+          if (name === 'birth-func-ocean-height') this.hostInputs.add('ocean height');
+        }
         if (field.field === 'flags' && (field.value as string[]).includes('aux-list')) this.issues.add('Sprite auxiliary geometry');
         if (field.field === 'flags' && (field.value as string[]).includes('bit12')) this.issues.add('Time-of-day host colour');
         if (field.field === 'next-launcher') visit(field.base ?? 0);
@@ -63,10 +106,11 @@ export class ParticleMotion {
     group.items.forEach(item => visit(item.particle));
     if (group.flags?.includes('screen-space')) this.issues.add('Screen-space host layout');
   }
-  private random(): number {
-    let value = this.randomState;
+  private random(sound = false): number {
+    let value = sound ? this.soundRandomState : this.randomState;
     value ^= value << 13; value ^= value >>> 17; value ^= value << 5;
-    this.randomState = value >>> 0; return this.randomState / 4294967296;
+    if (sound) this.soundRandomState = value >>> 0; else this.randomState = value >>> 0;
+    return (value >>> 0) / 4294967296;
   }
   private evaluate(field: ParticleField, values: Values): number {
     if (field.op === 'copy') return values[String(field.value)] ?? 0;
@@ -104,8 +148,12 @@ export class ParticleMotion {
     const definition = this.definitions.get(state.item.particle); if (!definition) return;
     const num = definition.fields.find(field => field.field === 'num');
     if (!num) return;
+    // Without a launch-state, native accumulation belongs to the launcher,
+    // shared by every call site and both particle systems.
+    if (state.direct) state.credit = this.directCredits.get(definition.id) ?? 0;
     state.credit += this.evaluate(num, {}) * rate;
     this.launchCredit(state, definition);
+    if (state.direct) this.directCredits.set(definition.id, state.credit);
   }
   private launchCredit(state: LaunchState, definition: ParticleDefinition): void {
     while (state.credit >= 1) {
@@ -139,7 +187,7 @@ export class ParticleMotion {
         this.vector.set(Math.cos((v.x ?? 0) * ANGLE), 0, -Math.sin((v.x ?? 0) * ANGLE));
         p.orbit.setFromAxisAngle(this.vector, (v.y ?? 0) * ANGLE);
       }
-      p.position.add(p.parent?.position ?? ZERO);
+      p.position.add(p.parent?.position ?? state.origin ?? this.host.root);
       this.birth(p);
       if (state.item.binding) {
         const child = this.states.find(candidate => candidate.item.particle === state.item.binding && !candidate.active);
@@ -153,13 +201,88 @@ export class ParticleMotion {
     if (p.birth === 'birth-func-random-next-time') v['next-time'] = Math.trunc(this.random() * (v.userdata ?? 0));
     if (p.birth === 'birth-func-y->userdata') v.userdata = (v.userdata ?? 0) + p.position.y;
     if (p.birth === 'birth-func-copy-rot-color' && p.parent) {
-      p.orientation.premultiply(new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), (p.parent.values['rot-z'] ?? 0) * ANGLE));
-      for (const channel of ['r', 'g', 'b']) v[channel] = p.parent.values[channel];
+      p.orientation.premultiply(this.turn.setFromAxisAngle(UP, (p.parent.values['rot-z'] ?? 0) * ANGLE));
+      for (const channel of ['r', 'g', 'b']) v[channel] = p.parent.values[channel] ?? 0;
+    }
+    if (p.birth === 'birth-func-copy2-rot-color' && p.parent) {
+      const parent = p.parent.values;
+      const roll = signed16(16384 + (this.copyToggle++ & 1 ? -1 : 1) * (parent['scale-x'] ?? 0));
+      p.orientation.setFromEuler(new Euler(0, (parent['rot-z'] ?? 0) * ANGLE, roll * ANGLE, 'YXZ'));
+      for (const channel of ['r', 'g', 'b']) v[channel] = parent[channel] ?? 0;
     }
     if (p.birth === 'birth-func-copy-omega-to-z' && p.parent) {
       v['rot-z'] = -16384 + (v.omega ?? 0);
-      v['next-time'] = p.parent.values['next-time']; v['scale-x'] = 163.85638 * v['next-time'];
+      v['next-time'] = p.parent.values['next-time'] ?? 0; v['scale-x'] = 163.85638 * v['next-time'];
     }
+    if (p.birth === 'birth-func-ocean-height') p.position.y = this.host.oceanHeight(p.position) + (v.userdata ?? 0);
+    if (p.birth === 'birth-func-set-quat') p.orientation.copy(this.host.particleQuaternion).normalize();
+    if (p.birth === 'birth-func-copy-target-y-rot' && this.host.targetYaw !== null)
+      this.rotateMotion(p, this.host.targetYaw - 16384);
+    if (p.birth === 'birth-func-target-orient' && this.host.targetYaw !== null) {
+      this.normalOrientation(p.orientation, this.host.targetNormal);
+      p.orientation.multiply(this.turn.setFromAxisAngle(UP, (32768 + (v.userdata ?? 0) + this.host.targetYaw) * ANGLE)).normalize();
+    }
+    if (p.birth === 'birth-func-vector-orient') {
+      if (this.host.vectorNormal) this.normalOrientation(p.orientation, this.host.vectorNormal);
+      else if (v.userdata) this.issues.add('Unresolved userdata normal pointer');
+    }
+    if (p.birth === 'birth-func-random-rot') {
+      const angle = (v.userdata ?? 0) + this.random() * 65536;
+      this.rotateMotion(p, angle);
+      p.position.add(this.vector.set(116940.8, 0, 0).applyAxisAngle(UP, angle * ANGLE));
+      p.orientation.premultiply(this.turn.setFromAxisAngle(UP, (16384 + angle) * ANGLE)).normalize();
+    }
+    if (['birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z'].includes(p.birth) && !p.parent)
+      this.issues.add(`Missing source parent binding: ${p.birth}`);
+  }
+  private normalOrientation(out: Quaternion, normal: Vector3): void {
+    this.vector.set(normal.z, 0, -normal.x);
+    // A flat normal has no rotation axis. Keep the source identity in that case.
+    if (this.vector.lengthSq() < 1e-16) {
+      out.setFromAxisAngle(new Vector3(1, 0, 0), normal.y < 0 ? Math.PI : 0); return;
+    }
+    out.setFromAxisAngle(this.vector.normalize(), Math.acos(Math.max(-1, Math.min(1, normal.y))));
+  }
+  private rotateMotion(p: LabParticle, angle: number): void {
+    for (const prefix of ['vel', 'accel']) {
+      const v = p.values;
+      this.vector.set(v[`${prefix}-x`] ?? 0, v[`${prefix}-y`] ?? 0, v[`${prefix}-z`] ?? 0).applyAxisAngle(UP, angle * ANGLE);
+      [v[`${prefix}-x`], v[`${prefix}-y`], v[`${prefix}-z`]] = this.vector.toArray();
+    }
+  }
+  private callback(p: LabParticle): void {
+    const v = p.values, name = p.callback, program = this.callbackPrograms[name];
+    if (program) {
+      const below = p.position.y < (v.userdata ?? 0);
+      if ((program.comparison === 'below' ? !below : below) || program.descending && (v['vel-y'] ?? 0) >= 0) return;
+      for (const action of program.actions) {
+        // Native callbacks run against scratchpad CPU info: killing writes zero
+        // to the timer. This frame still integrates; next frame retires it.
+        if (action.op === 'kill') v.timer = 0;
+        else if (action.op === 'launch') {
+          const position = p.position.clone();
+          if (action.height === 'surface') position.y = v.userdata ?? 0;
+          // The pinned source queue holds 32 entries, across 2D and 3D.
+          if (this.queuedLaunches.length < 32) this.queuedLaunches.push({particle: action.particle, is3d: action.is3d, position});
+          else this.queueDrops++;
+        } else if (action.chance === undefined || this.random(true) < action.chance) {
+          const position = action.height ? p.position.clone() : null;
+          if (position && action.height === 'surface') position.y = v.userdata ?? 0;
+          this.soundEvents.push({name: action.name, position});
+        }
+      }
+    } else if (name === 'sparticle-track-root' || name === 'part-tracker-track-root') p.position.copy(this.host.root);
+    else if (name === 'sparticle-track-root-prim' || name === 'eco-track-root-prim-fadeout') p.position.copy(this.host.primitive);
+    else if (name === 'sparticle-track-root-money' && !this.host.hudMoney) p.position.copy(this.host.root).addScaledVector(UP, 2048);
+    else if (name === 'bird-bob-func' || name === 'tra-bird-bob-func' || name === 'snow-bird-bob-func')
+      p.position.y = this.host.root.y - 2048 * Math.sin(218.45334 * (this.clock % 300) * ANGLE);
+    else if (name === 'sparticle-seagull-moon' || name === 'tra-sparticle-seagull-moon' || name === 'sparticle-snow-birds-moon')
+      v['rot-z'] = signed16(-16384 + (v.omega ?? 0));
+    else if (name === 'part-tracker-track-target-joint' && this.host.targetYaw !== null) {
+      const joint = Math.trunc(v.userdata ?? 0), position = this.host.targetJoints.get(joint);
+      if (position) p.position.copy(position); else this.issues.add(`Missing target joint transform: ${joint}`);
+    }
+    if ((name === 'eco-fadeout' || name === 'eco-track-root-prim-fadeout') && !this.host.fadeOut) v['next-time'] = STEP_TICKS * 2;
   }
   private retire(particle: LabParticle): void {
     particle.alive = false;
@@ -167,6 +290,7 @@ export class ParticleMotion {
   }
   private step(): void {
     const previous = this.clock; this.clock += STEP_TICKS;
+    this.soundEvents.length = 0;
     // Source group launchers run in reverse order. A newly bound child can
     // therefore emit no earlier than the next group pass.
     for (let index = this.states.length - 1; index >= 0; index--) {
@@ -203,8 +327,7 @@ export class ParticleMotion {
       if ((v.timer ?? 0) === 0) {this.retire(p); continue;}
       if (v.timer !== -1) v.timer = Math.max(0, v.timer - STEP_TICKS);
       p.age += STEP_TICKS;
-      if (p.callback.includes('track-root')) p.position.copy(ZERO);
-      if (p.callback === 'eco-fadeout' || p.callback === 'eco-track-root-prim-fadeout') v['next-time'] = 10;
+      this.callback(p);
       if (v['next-launcher']) {
         v['next-time'] = (v['next-time'] ?? 0) - STEP_TICKS;
         if (v['next-time'] <= 0) {
@@ -256,6 +379,13 @@ export class ParticleMotion {
     }
     for (let index = this.particles.length - 1; index >= 0; index--)
       if (!this.particles[index].alive) this.particles.splice(index, 1);
+    // process-particles clears the native launch queue after all particle
+    // systems update. Secondary splashes are born here, never stepped twice.
+    for (const launch of this.queuedLaunches) this.spawn({
+      item: {particle: launch.particle, flags: launch.is3d ? ['is-3d'] : []}, active: true,
+      launched: false, credit: 0, parent: null, origin: launch.position, direct: true, offset: 0, spawnTime: this.clock,
+    });
+    this.queuedLaunches.length = 0;
   }
   update(dt: number): void {
     this.carry += dt;
@@ -267,7 +397,9 @@ export class ParticleMotion {
     for (const state of this.states) state.launched = false;
   }
   reset(): void {
-    this.particles.length = 0; this.clock = this.carry = this.nextId = this.dropped = 0; this.randomState = this.seed || 1;
+    this.particles.length = 0; this.clock = this.carry = this.nextId = this.dropped = this.queueDrops = 0; this.randomState = this.seed || 1;
+    this.soundRandomState = (this.seed ^ 0x9e3779b9) || 1; this.copyToggle = 0;
+    this.directCredits.clear(); this.queuedLaunches.length = 0; this.soundEvents.length = 0;
     for (const state of this.states) {
       state.active = !state.item.flags?.includes('start-dead'); state.launched = false; state.credit = 0; state.parent = null;
       state.offset = state.item.offset ?? 0; state.spawnTime = -30000;

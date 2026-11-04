@@ -15,6 +15,7 @@ import re
 import struct
 
 from source_inventory import inventory
+from compile_callbacks import compile_callbacks
 
 
 class Form(list):
@@ -270,6 +271,7 @@ def build_catalogue(project: Path):
     referenced_textures = {f['value'] for p in particles for f in p['fields'] if f['field'] == 'texture'}
     exported_textures = {t['id'] for t in textures}
     source_inventory = inventory(source, particles, groups, parse, walk)
+    callback_programs, callback_failures = compile_callbacks(source_inventory['callbackDefinitions'])
     coverage = {'sourceFiles': len(definitions), 'particleDefinitions': len(particles),
                 'effectGroups': len(groups), 'groupTableEntries': len(table),
                 'artGroups': len(art_groups), 'exportedModels': len(models),
@@ -281,13 +283,14 @@ def build_catalogue(project: Path):
                 'duplicateParticleIds': duplicate_parts, 'duplicateGroupIds': duplicate_groups,
                 'tableGroupsWithoutDefinitions': [g for g in table if g['name'] not in defined],
                 'fields': dict(fields.most_common()), 'callbacks': dict(callbacks.most_common()),
+                'compiledContactCallbacks': len(callback_programs), 'unsupportedContactCallbacks': callback_failures,
                 'sourceAudit': source_inventory['coverage']}
     return {'schemaVersion': 1, 'game': 'Jak and Daxter: The Precursor Legacy',
             'sourceVersion': 'OpenGOAL v0.3.9 / supplied SCUS-97124 NTSC-v1 data',
             'coverage': coverage, 'sourceFiles': definitions, 'groupTable': table,
             'particles': particles, 'groups': groups, 'artGroups': art_groups,
             'jointGeometries': geometry, 'models': models, 'textures': textures,
-            'sourceInventory': source_inventory}
+            'sourceInventory': source_inventory, 'callbackPrograms': callback_programs}
 
 
 def main():

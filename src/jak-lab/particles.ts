@@ -164,7 +164,7 @@ export class ParticleExhibit {
   private mode: RenderingMode = 'compare';
   private nextDirectLaunch = 300;
   private constructor(readonly definition: EffectDefinition, catalogue: Catalogue) {
-    this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1);
+    this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1,catalogue.callbackPrograms);
     this.issues=this.motion.issues;
     const patches=catalogue.sourceInventory?.runtimeParticlePatches.filter(patch=>patch.particles.some(id=>
       typeof id==='number'&&this.motion.referencedParticleIds.has(id)))??[];
@@ -223,7 +223,7 @@ export class ParticleExhibit {
   }
   restart():void {this.nextDirectLaunch=300;this.motion.reset();this.update(1/60);}
   get diagnostics(){return {view:this.mode,particles:this.motion.particles.length,ticks:this.motion.clock,
-    dropped:this.motion.dropped,batches:this.batches.size,issues:[...this.issues]};}
+    dropped:this.motion.dropped,sourceQueueDrops:this.motion.queueDrops,batches:this.batches.size,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
   dispose():void {
     for(const batch of this.batches.values())batch.dispose();
     for(const texture of this.textures.values())texture.dispose();

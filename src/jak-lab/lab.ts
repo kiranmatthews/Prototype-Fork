@@ -18,6 +18,14 @@ host.innerHTML=`
 const element=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const canvas=host.querySelector<HTMLCanvasElement>('canvas.world')!;
 const loading=element('loading');
+const hostControls=document.createElement('details');hostControls.id='effect-host';hostControls.hidden=true;
+hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Inspection inputs for callbacks: a stationary origin and flat water by default.</p>
+  <label class="field" id="host-root-field">HOST HEIGHT (m)<input id="host-root" type="range" min="-10" max="40" step=".1" value="0" aria-label="Effect host height"></label>
+  <label class="field" id="host-heading-field">HEADING<input id="host-heading" type="range" min="0" max="360" step="1" value="0" aria-label="Effect heading"></label>
+  <label class="field" id="host-slope-field">SURFACE SLOPE<input id="host-slope" type="range" min="-70" max="70" step="1" value="0" aria-label="Effect surface slope"></label>
+  <label class="field" id="host-water-field">WATER HEIGHT (m)<input id="host-water" type="range" min="-10" max="10" step=".1" value="0" aria-label="Effect water height"></label>
+  <label class="check" id="host-fade-field"><input id="host-fade" type="checkbox">Fade out eco</label>`;
+element('status').before(hostControls);
 
 async function boot():Promise<void> {
   const catalogueURL=new URL(new URL(location.href).searchParams.get('catalogue')??
@@ -45,7 +53,8 @@ async function boot():Promise<void> {
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
   renderer.setPixelRatio(devicePixelRatio);renderer.setSize(innerWidth,innerHeight);
   renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
-  const scene=new THREE.Scene();scene.background=new THREE.Color('#101e2a');scene.fog=new THREE.Fog('#101e2a',38,125);
+  const scene=new THREE.Scene();scene.background=new THREE.Color('#101e2a');
+  const galleryFog=new THREE.Fog('#101e2a',38,125);scene.fog=galleryFog;
   const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.05,400);
   scene.add(new THREE.HemisphereLight(0xc0edf1,0x3e2920,2.1));
   const key=new THREE.DirectionalLight(0xffe6ba,2.6);key.position.set(-10,18,10);scene.add(key);
@@ -80,8 +89,19 @@ async function boot():Promise<void> {
     sprite.position.copy(locations.get(exhibit.id)!).add(new THREE.Vector3(0,5.8,0));scene.add(sprite);return sprite;
   }
   function focus():void {
-    const point=locations.get(selected.id)!;camera.position.copy(point).add(new THREE.Vector3(9,6.8,12));
-    controls.target.copy(point).add(new THREE.Vector3(0,2.0,0));camera.lookAt(controls.target);
+    const point=locations.get(selected.id)!,view=loaded.get(selected.id);
+    const size=view instanceof ModelExhibit?view.inspectionSize:new THREE.Vector3(8,4,6);
+    const radius=Math.max(2,size.length()*.5);
+    // Reserve the central viewport for the exhibit; the two fixed panels cover
+    // its sides. Native-size backgrounds also need a larger far plane and orbit.
+    const halfFov=Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov)*.5)*Math.min(1,camera.aspect*(innerWidth>780?.5:1)));
+    const distance=radius/Math.sin(halfFov)*1.1;
+    controls.target.copy(point).add(new THREE.Vector3(0,Math.max(.4,size.y*.5),0));
+    camera.position.copy(controls.target).add(new THREE.Vector3(9,6.8,12).normalize().multiplyScalar(distance));
+    camera.far=Math.max(400,distance+radius*3);camera.updateProjectionMatrix();
+    controls.maxDistance=Math.max(65,distance*4);
+    scene.fog=nativeScale.checked?null:galleryFog;
+    camera.lookAt(controls.target);
     exploring=false;controls.enabled=true;element('explore').setAttribute('aria-pressed','false');controls.update();
   }
   function inspect():void {
@@ -89,6 +109,20 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
+    hostControls.hidden=!(view instanceof ParticleExhibit&&view.motion.hostInputs.size);
+    if(view instanceof ParticleExhibit) {
+      const inputs=view.motion.hostInputs,h=view.motion.host;
+      element('host-root-field').hidden=!inputs.has('root')&&!inputs.has('primitive');
+      element('host-heading-field').hidden=!inputs.has('target yaw/normal');
+      element('host-slope-field').hidden=!inputs.has('target yaw/normal')&&!inputs.has('userdata normal vector');
+      element('host-water-field').hidden=!inputs.has('ocean height');
+      element('host-fade-field').hidden=!inputs.has('fade-out');
+      element<HTMLInputElement>('host-root').value=String(h.root.y/4096);
+      element<HTMLInputElement>('host-heading').value=String((h.targetYaw??0)*360/65536);
+      element<HTMLInputElement>('host-slope').value=String(Math.atan2(h.targetNormal.z,h.targetNormal.y)*180/Math.PI);
+      element<HTMLInputElement>('host-water').value=String(h.oceanHeight(new THREE.Vector3())/4096);
+      element<HTMLInputElement>('host-fade').checked=h.fadeOut;
+    }
     animationSelect.replaceChildren();
     element('animation-field').hidden=!(view instanceof ModelExhibit&&view.clips.length);
     element('timeline-field').hidden=!(view instanceof ModelExhibit&&view.clips.length);
@@ -150,7 +184,7 @@ async function boot():Promise<void> {
         pending.delete(id);
         if(!wanted.has(id)){view.dispose();return;}
         view.root.position.copy(locations.get(id)!).setY(.16);view.setRendering(mode);scene.add(view.root);loaded.set(id,view);
-        if(id===selected.id){view.setNativeScale(nativeScale.checked);inspect();}
+        if(id===selected.id){view.setNativeScale(nativeScale.checked);inspect();if(!exploring)focus();}
       }).catch(error=>{pending.delete(id);errors.set(id,String(error));if(id===selected.id)inspect();console.error('Exhibit load failed',id,error);});
     }
   }
@@ -159,12 +193,24 @@ async function boot():Promise<void> {
   for(const button of host.querySelectorAll<HTMLButtonElement>('[data-mode]'))button.onclick=()=>{
     mode=button.dataset.mode as RenderingMode;
     for(const candidate of host.querySelectorAll('[data-mode]'))candidate.setAttribute('aria-pressed',String((candidate as HTMLElement).dataset.mode===mode));
-    for(const view of loaded.values())view.setRendering(mode);loaded.get(selected.id)?.setNativeScale(nativeScale.checked);
+    for(const view of loaded.values())view.setRendering(mode);loaded.get(selected.id)?.setNativeScale(nativeScale.checked);focus();
   };
   element('pause').onclick=()=>{paused=!paused;element('pause').textContent=paused?'Play':'Pause';element('pause').setAttribute('aria-pressed',String(paused));};
   element('restart').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(0);else view?.restart();};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
-  nativeScale.onchange=()=>loaded.get(selected.id)?.setNativeScale(nativeScale.checked);
+  for(const id of ['host-root','host-heading','host-slope','host-water','host-fade'])element<HTMLInputElement>(id).oninput=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit))return;
+    const h=view.motion.host;
+    h.root.y=h.primitive.y=Number(element<HTMLInputElement>('host-root').value)*4096;
+    h.targetYaw=Number(element<HTMLInputElement>('host-heading').value)*65536/360;
+    const slope=Number(element<HTMLInputElement>('host-slope').value)*Math.PI/180;
+    h.targetNormal.set(0,Math.cos(slope),Math.sin(slope));
+    if(view.motion.hostInputs.has('userdata normal vector'))h.vectorNormal=h.targetNormal.clone();
+    const water=Number(element<HTMLInputElement>('host-water').value)*4096;h.oceanHeight=()=>water;
+    h.fadeOut=element<HTMLInputElement>('host-fade').checked;
+    if(id!=='host-fade')view.restart();
+  };
+  nativeScale.onchange=()=>{loaded.get(selected.id)?.setNativeScale(nativeScale.checked);focus();};
   animationSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.setClip(animationSelect.value);};
   element<HTMLInputElement>('timeline').oninput=event=>{
     const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(Number((event.target as HTMLInputElement).value)*view.duration);

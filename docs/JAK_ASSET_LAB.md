@@ -23,29 +23,38 @@ particle definitions in 104 files and 675 named effect groups. All 79 referenced
 birth/update callbacks have source definitions. The audit additionally found 98
 direct launch sites, 70 direct particle roots, 394 runtime particle patch sites
 and 350 procedural draw/render candidates requiring review. The named group
-graphs reach 2,344 particle definitions; another 171 are outside those graphs.
+graphs, including callback-launched children, reach 2,369 particle definitions;
+another 146 are outside those graphs.
 Following direct launch roots reduces the unresolved set to 87. Those 87 are
 not automatically classified as unused: computed IDs, host launch paths and
 unused source variants still need distinguishing.
 
-The initial official full export completed with 605 highest-detail GLBs,
+The restored official full export completed with 605 highest-detail GLBs,
 including 24 backgrounds, and 4,002 source PNGs. All 458 expected highest-detail
-joint geometries were present. **Those exports were lost in the restart** and
-must be restored and revalidated. The source code and supplied ISO survived.
-Recovered tools, future raw exports and generated manifests now belong in the
-ignored, durable `.jak-lab-data/` folder, not `/private/tmp`.
+joint geometries are present, with no missing joint geometries. Recovery is
+complete. Tools, raw exports, packed assets, manifests and browser evidence are
+now in the ignored, durable `.jak-lab-data/` folder, not `/private/tmp`.
 
 The lab supports walking/flying between exhibits, search by area/type/name,
 original/Gouraud/both views, matched animation playback, scrubbing, pause,
 restart, source scale and normal/native render resolution. Direct launchers
 are included separately and explicitly repeat once per second for inspection;
 that frequency is a lab control, not a reconstructed host object's update rate.
+The current catalogue contains 1,350 exhibits: 605 models/scenes, 675 named
+particle groups and 70 direct launcher exhibits. Relevant effects expose root
+height, heading, surface slope, water level and fade controls. These are explicit
+inspection inputs until the actual host object's states have been ported.
 
 ## Fidelity and delivery
 
 Models retain the complete source geometry, skin weights, morphs and animation
 keys. Gouraud models sample source textures into vertex colors and use vertex
-lighting. No camera-dependent LOD or mesh decimation is used. Streaming disposes
+lighting, including the albedo multiplication before interpolation. The custom
+material is necessary because Three r166's stock Lambert material calculates
+lighting per fragment. Skinning, morphs, two-sided lighting and source alpha
+settings remain supported. Per-draw vertex compaction avoids multiplying large
+background buffers for every material while preserving every triangle and
+attribute value. No camera-dependent LOD or mesh decimation is used. Streaming disposes
 complete exhibits outside the nearby set. Original GLBs remain the authoritative
 export, with hashes recorded alongside the packed assets.
 
@@ -57,12 +66,20 @@ scene/material metadata and original image bytes. It verifies gzip round trips
 as well. It adds correct bounds to POSITION accessors. Sparse/compressed source
 layouts without an explicit implementation fail instead of being approximated.
 
-One retained original Jak GLB has been checked through this path: 14,524,956
-source bytes become 1,211,786 stored asset bytes, including its 21 source images,
-with identical semantic fingerprints. This is a pilot, not a whole-catalogue
-size result. Measure the full pack before promising it fits the shared Pages
-budget. If necessary, the standalone frontend can read a separately hosted
-catalogue/assets origin through `?catalogue=<URL>` with that host's CORS support.
+The complete 605-model pack passed semantic and gzip verification. Its size is:
+
+| Content | Bytes |
+| --- | ---: |
+| Raw source models | 3,665,798,144 |
+| Unique packed model files | 143,019,250 |
+| Unique original image files | 79,944,784 |
+| Catalogue | 8,716,870 |
+| Packed assets and catalogue | **231,680,904** |
+
+The standalone frontend adds approximately 653 KB before HTTP compression.
+This needs a separate delivery origin rather than the main game's remaining
+Pages allowance. The release coordinator owns hosting and deployment setup.
+The frontend accepts `?catalogue=<URL>` with that host's CORS support.
 Never put the ISO, extraction installation or unfiltered archives in a public
 asset directory. The complete asset scope must not be reduced to fit a budget.
 
@@ -75,9 +92,25 @@ distance attenuation and source alpha/depth modes. The original and Gouraud
 sprite renderers consume the same simulated particle state. RNG is a local
 seeded generator, not the game's global VU RNG stream.
 
+All 20 source height-contact callbacks compile to checked, ordered descriptors.
+They retain the exact strict/inclusive height tests, descending requirements,
+contact/current launch positions, 2D/3D system selection and sound-event chance
+draws. Secondary launches enter the native 32-entry shared queue after all
+particle updates; callback kills retire the particle on the following step.
+Fractional launch credit remains attached to the source launcher. Sound events
+are recorded but are not yet connected to playback.
+
+The runtime implements all 11 referenced birth callback names, plus 33 update
+callback names (including the 20 contact callbacks). Parent-relative births,
+root/primitive following, bird motion, eco fade and target/surface orientation
+have focused checks. Some implementations require typed host data such as a
+joint, parent particle, normal or HUD money value. The inspector reports missing
+inputs. The other 35 callback names, mostly HUD behavior and sun tracking, remain
+unported; name coverage does not prove complete host reconstruction.
+
 **Unfinished fidelity requirements:**
 
-- Restore and verify the complete export; inspect every source model and its
+- Inspect every source model and its
   Gouraud counterpart, all animations/material classes, and large scenes.
 - Port and exercise host-dependent callbacks, runtime particle patches, dynamic
   texture assignments, screen-space HUD effects and auxiliary sprite geometry.
@@ -94,8 +127,8 @@ seeded generator, not the game's global VU RNG stream.
   inferred universally from it.
 - Verify blended-particle sorting, source color/alpha conventions and Gouraud
   visual fidelity across the catalogue at native and normal resolution.
-- Finish standalone packaging, production build, full catalogue checks and
-  browser review with no errors; measure final hosted bytes and hand off a
+- Finish standalone packaging, full catalogue visual checks and
+  browser review with no errors; verify final hosted behavior and hand off a
   coherent READY increment to the coordinator.
 
 ## Reproduce locally
@@ -133,15 +166,22 @@ exposes the supplied archive or arbitrary workspace files.
 The independent frontend build is
 `npx vite build --config tools/jak-lab/vite.config.ts`, writing only to
 `.jak-lab-data/site`. It does not copy the main game's `public/` assets. Keep
-generated data and delivery packages out of Git. The normal repository build
-and the standalone build remain pending the coordinator's resource capacity.
+generated data and delivery packages out of Git. Both the normal repository
+build and standalone frontend build pass. The latter includes the current
+vertex-lighting, buffer-compaction and native-scene framing changes.
 
 Focused checks currently pass:
 
 ```sh
 python3 -m unittest discover -s tools/jak-lab -p 'test_*.py' -v
 node tools/jak-lab/test-particle-motion.mjs
+node tools/jak-lab/test-model-geometry.mjs
 npx tsc --noEmit
+
+# Run this whole-catalogue simulation through the shared heavy-job guard.
+node tools/jak-lab/audit_particles.mjs \
+  --catalogue .jak-lab-data/export/catalogue.json --seconds 3 \
+  --output .jak-lab-data/export/particle-audit.json
 ```
 
 The packing tests exercise interleaved buffers, index remapping, exact draw
@@ -150,20 +190,40 @@ geometry, corrupt-content detection and explicit unsupported-layout failure.
 Source inventory tests cover direct launches, runtime patches, callback lookup,
 graph reachability and reporting malformed source. Pure particle checks cover
 coordinate order, relaunch aliases/quaternions, blending/depth flags, scheduling,
-hour/distance gates and fixed-step replay. These are focused implementation
-checks; complete browser/source fidelity is still required.
+hour/distance gates, contact/birth callbacks, queue limits and fixed-step replay.
+Ten Python tests, both focused Node checks, TypeScript and diff checks pass.
+
+The whole-particle audit exercises all 745 group/direct exhibits for three
+seconds each: 30,363,635 particle-state samples, no non-finite values or invalid
+quaternions, and 2,428 definitions reached through their source graphs. It also
+records 29 zero-emission exhibits and two held emitters with capacity drops.
+Some have zero source rates until a host updates them; the robot-boss splash is
+normally enabled for only four animation frames. These remain fidelity work,
+not audit successes. The report is `.jak-lab-data/export/particle-audit.json`.
+
+Packed browser checks cover Jak's skinned run with matched playback/scrubbing,
+the buzzer, and the entire Fire Canyon background. Native-scale background
+copies are separated and framed without gallery fog or a clipped far plane.
+The latest normal/native passes have no console warnings or errors. Earlier
+effect checks cover fountain contact/ripple launches and eco root-height/fade
+controls in both renderers. Evidence is in `.jak-lab-data/evidence/`, including
+`packed-browser-review.json`, `fire-canyon-packed-native.jpg`, and
+`jak-packed-gouraud-{native,720p}.jpg`. These samples do not replace the remaining
+whole-catalogue visual/source audit.
 
 ## Recovery checkpoint — 5 November 2026 NZDT
 
 The restarted host cleared the temporary installation and full exports; all lab
 source files survived. The common restart downtime allowance is 5m05s. Additional
 reconstruction and capacity-deferred validation are recorded separately in the
-shared WORKING handoff. The original prompt-to-validated-playable interval is
+shared WORKING handoff. Full extraction, packing, builds and the browser checks
+above have now completed. The original prompt-to-validated-playable interval is
 still open; this checkpoint does not claim a completed whole-game brief.
 
 The initial browser pass found an unused source vertex referencing another
 skeleton in a shared export buffer. Bounds now use only drawn vertices, and the
-packer removes unreachable records. Earlier TypeScript checks passed and the
-post-recovery focused checks pass. New full-render sessions and builds have not
-run while capacity is deferred. The previously validated jump playtest was
-restored independently; its evidence is not lab validation.
+packer removes unreachable records. Shared-accessor row caching also eliminated
+repeated decoding of the same 817,914-vertex background data across hundreds of
+draws; full packing then completed with exact verification. The previously
+validated jump playtest was restored independently; its evidence is not lab
+validation. No lab or animation changes have been integrated or published.

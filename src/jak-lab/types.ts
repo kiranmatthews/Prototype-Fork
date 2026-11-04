@@ -26,6 +26,13 @@ export interface ModelDefinition {
   animations: {name: string; channels: number}[];
 }
 export interface TextureDefinition {id: string; path: string; bytes: number; sha256: string}
+export type ContactAction = {op: 'kill'} |
+  {op: 'launch'; particle: number; is3d: boolean; height: 'surface' | 'particle'} |
+  {op: 'sound'; name: string; chance?: number; height?: 'surface' | 'particle'};
+export interface ContactCallback {
+  kind: 'height-contact'; comparison: 'below' | 'at-or-above'; descending: boolean;
+  actions: ContactAction[]; source: Provenance; formSha256: string;
+}
 export interface Catalogue {
   schemaVersion: number; game: string; sourceVersion: string;
   coverage: {
@@ -36,6 +43,7 @@ export interface Catalogue {
   };
   particles: ParticleDefinition[]; groups: EffectDefinition[];
   models: ModelDefinition[]; textures: TextureDefinition[];
+  callbackPrograms?: Record<string, ContactCallback>;
   sourceInventory?: {
     runtimeParticlePatches: {particles: unknown[]; source: Provenance}[];
     standaloneParticles: {particle: number; source: Provenance; alsoInGroupGraph: boolean;

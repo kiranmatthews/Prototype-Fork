@@ -51,6 +51,9 @@ class GLB:
         self.directory = directory.resolve()
         self.buffers = [self.uri(b['uri']) if 'uri' in b else binary
                         for b in self.doc.get('buffers', [])]
+        # Exported backgrounds share a vertex accessor across hundreds of
+        # material draws. Decode its immutable rows once, not once per draw.
+        self._rows = {}
         if {'KHR_draco_mesh_compression', 'EXT_meshopt_compression'} & set(self.doc.get('extensionsUsed', [])):
             raise ValueError('Compressed source geometry requires explicit decoding')
 
@@ -68,12 +71,14 @@ class GLB:
     def view(self, index):
         view = self.doc['bufferViews'][index]
         start = view.get('byteOffset', 0)
-        data = self.buffers[view['buffer']][start:start + view['byteLength']]
+        data = memoryview(self.buffers[view['buffer']])[start:start + view['byteLength']]
         if len(data) != view['byteLength']:
             raise ValueError('Buffer view exceeds buffer')
         return data
 
     def rows(self, index):
+        if index in self._rows:
+            return self._rows[index]
         accessor = self.doc['accessors'][index]
         if 'sparse' in accessor:
             raise ValueError('Sparse source accessor needs an explicit lossless expansion')
@@ -83,13 +88,16 @@ class GLB:
             columns = int(accessor['type'][-1])
             row_size = columns * ((columns * size + 3) // 4 * 4)
         if 'bufferView' not in accessor:
-            return [bytes(row_size)] * accessor['count']
+            rows = [bytes(row_size)] * accessor['count']
+            self._rows[index] = rows
+            return rows
         view = self.doc['bufferViews'][accessor['bufferView']]
         stride, start = view.get('byteStride', row_size), accessor.get('byteOffset', 0)
         data = self.view(accessor['bufferView'])
-        rows = [data[start + i * stride:start + i * stride + row_size] for i in range(accessor['count'])]
+        rows = [data[start + i * stride:start + i * stride + row_size].tobytes() for i in range(accessor['count'])]
         if any(len(row) != row_size for row in rows):
             raise ValueError('Accessor exceeds buffer view')
+        self._rows[index] = rows
         return rows
 
     def indices(self, primitive):
@@ -102,7 +110,7 @@ class GLB:
                 for row in self.rows(primitive['indices'])]
 
     def image(self, image):
-        return self.uri(image['uri']) if 'uri' in image else self.view(image['bufferView'])
+        return self.uri(image['uri']) if 'uri' in image else self.view(image['bufferView']).tobytes()
 
 
 def semantic_fingerprint(source):
