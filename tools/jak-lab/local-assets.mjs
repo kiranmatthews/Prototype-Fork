@@ -15,7 +15,8 @@ export function localJakLab(directory = process.env.JAK_LAB_DIR) {
           const document = JSON.parse(text);
           const exported = path.join(root, document.assetDirectory === 'assets'
             ? 'assets' : 'opengoal/decompiler_out/jak1');
-          return {text, exported, allowed: new Map((document.assets ?? [...document.models, ...document.textures])
+          return {text, exported, allowed: new Map((document.assets ??
+            [...document.models, ...document.textures, ...(document.meshDeaths?.models ?? [])])
             .map(asset => [asset.path, asset.sha256]))};
         });
       server.middlewares.use('/__jak-lab', async (req, res) => {

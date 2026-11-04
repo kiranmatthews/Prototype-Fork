@@ -8991,3 +8991,29 @@ Details: [Jak asset lab](JAK_ASSET_LAB.md).
   handoff only; no integration/publication, game-runtime, D or level-pack edits.
 
 Details: [Jak asset lab](JAK_ASSET_LAB.md).
+
+
+### 5 November 2026 — source mesh-disappearance exhibits (whole-game lab)
+
+Approximately 45 minutes source-to-validated playable for this increment
+(06:57–07:42 NZDT); the full whole-game brief remains open. Recovered exact
+merc emission streams from 360 officially disassembled art groups, with every
+raw object verified against the supplied disc archives. All 581 foreground
+models match their complete source vertex domains; retained 58,972 fragment
+copies and 168 emission vertices absent from rendered triangles. Added 44
+original/Gouraud disappearance exhibits, 48 compatible animation markers, five
+source profiles, skinned/morphed emission and the source 41–43 particle chain.
+Original model/image bytes remain unchanged; 418 compressed sidecars add
+3,969,540 bytes. Fixed one-shot end/restart/scrub state and framed the starting
+animated pose; Focus captions no longer obscure the inspected geometry.
+
+Ten focused Python tests, all model/profile stream selections, skin/morph/world
+sampling and replay regressions pass. Three real lifecycles cover 633,207 finite
+particle samples without drops or leftover particles. Normal build and final
+lab TypeScript/standalone build pass. Representative browser review covers
+puppy, snake, Jak and button at 720p/native, mode/scale switching, mesh overlap,
+completion/restart and off state with no console errors. This does not claim a
+complete visual audit of all models/markers. Local commit and coordinator
+handoff only; no game runtime, level pack, D animation, hosting or publication
+changes. Gameplay host movement/audio, unresolved definitions/callbacks,
+procedural renderers and the wider whole-game fidelity audit remain unfinished.

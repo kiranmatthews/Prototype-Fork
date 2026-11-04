@@ -51,6 +51,10 @@ const sceneParts=document.createElement('details');sceneParts.id='scene-parts';s
 sceneParts.innerHTML=`<summary>Scene parts</summary><label class="field">FIND A PROP OR PLANT<input type="search" id="part-search" aria-label="Search scene parts" placeholder="Name or source tree…"></label><label class="field">SOURCE PART<select id="scene-part" size="6" aria-label="Scene part"></select></label><button id="part-close">Close view</button><p class="muted" id="part-note"></p>`;
 element('animation-field').before(sceneParts);
 const partSelect=element<HTMLSelectElement>('scene-part'),partSearch=element<HTMLInputElement>('part-search');
+const deathControls=document.createElement('div');deathControls.hidden=true;
+deathControls.innerHTML=`<label class="field">MODEL DISAPPEARANCE<select id="mesh-death-replay" aria-label="Model disappearance"></select></label><p class="muted" id="mesh-death-note"></p>`;
+element('animation-field').before(deathControls);
+const deathSelect=element<HTMLSelectElement>('mesh-death-replay');
 
 async function boot():Promise<void> {
   const catalogueURL=new URL(new URL(location.href).searchParams.get('catalogue')??
@@ -71,7 +75,13 @@ async function boot():Promise<void> {
         source:launch.source,items:[{particle:entry.particle,flags:['launch-asap',...(is3d?['is-3d']:[])]}],
         directLaunch:{particle:entry.particle,function:launch.source.function}};
     }));
-  const exhibits:Exhibit[]=[...catalogue.models.map(model=>({id:'model:'+model.id,name:pretty(model.name),area:model.area,kind:model.background?'scene' as const:'object' as const,model})),
+  const deathExhibits:Exhibit[]=(catalogue.meshDeaths?.models??[]).flatMap(death=>{
+    const model=catalogue.models.find(model=>model.id===death.model);
+    if(!model||(!death.events.length&&!['sunken/generic-button-lod0','common/eichar-lod0'].includes(model.id)))return [];
+    return [{id:'death:'+model.id,name:`${pretty(model.name)} · ${death.events.length?'death':'warp disappearance'}`,
+      area:model.area,kind:'effect',model,death}];
+  });
+  const exhibits:Exhibit[]=[...catalogue.models.map(model=>({id:'model:'+model.id,name:pretty(model.name),area:model.area,kind:model.background?'scene' as const:'object' as const,model})),...deathExhibits,
     ...[...catalogue.groups,...directEffects,...sourceAssemblyDefinitions].map(effect=>({id:'effect:'+effect.id,name:pretty(effect.name),area:effect.source.file.startsWith('levels/')?effect.source.file.split('/')[1]:'engine',kind:'effect' as const,effect}))]
     .sort((a,b)=>(a.area===b.area?0:a.area==='common'?-1:b.area==='common'?1:a.area.localeCompare(b.area))||a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name));
   const locations=new Map(exhibits.map((exhibit,index)=>[exhibit.id,new THREE.Vector3((index%8-3.5)*16,0,-Math.floor(index/8)*17)]));
@@ -110,7 +120,7 @@ async function boot():Promise<void> {
     const context=sheet.getContext('2d')!;context.fillStyle='#10212bea';context.fillRect(0,0,768,128);
     context.fillStyle=exhibit.kind==='effect'?'#90dec5':'#e3c38c';context.font='20px Arial';context.fillText((areaNames[exhibit.area]??pretty(exhibit.area)).toUpperCase(),20,32);
     context.fillStyle='#eef0df';context.font='30px Arial';context.fillText(exhibit.name,20,77,720);
-    context.fillStyle='#789caa';context.font='15px monospace';context.fillText(exhibit.kind==='effect'?`EFFECT ${exhibit.effect!.id}`:exhibit.model!.name,20,108,720);
+    context.fillStyle='#789caa';context.font='15px monospace';context.fillText(exhibit.death?'MESH DISAPPEARANCE':exhibit.kind==='effect'?`EFFECT ${exhibit.effect!.id}`:exhibit.model!.name,20,108,720);
     const texture=new THREE.CanvasTexture(sheet);texture.colorSpace=THREE.SRGBColorSpace;
     const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,depthWrite:false}));sprite.scale.set(10.5,1.75,1);
     sprite.position.copy(locations.get(exhibit.id)!).add(new THREE.Vector3(0,5.8,0));scene.add(sprite);return sprite;
@@ -120,7 +130,7 @@ async function boot():Promise<void> {
     const size=view?view.inspectionSize:new THREE.Vector3(8,4,6);
     const caption=labels.get(selected.id);if(caption){
       caption.position.y=point.y+size.y+1.5;
-      caption.visible=!(view instanceof ModelExhibit&&view.partSelection?.current);
+      caption.visible=false; // The fixed inspector already names the focused exhibit.
     }
     const radius=Math.max(2,size.length()*.5);
     // Reserve the central viewport for the exhibit; the two fixed panels cover
@@ -140,6 +150,15 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
+    deathControls.hidden=!(view instanceof ModelExhibit&&view.deathPlayback);
+    deathSelect.replaceChildren();
+    if(view instanceof ModelExhibit&&view.deathPlayback) {
+      const death=view.deathPlayback;
+      death.reference.events.forEach((event,index)=>deathSelect.add(new Option(`${pretty(event.clip)} · ${event.seconds.toFixed(3)} s marker`,`event:${index}`)));
+      for(const profile of death.profiles)deathSelect.add(new Option(`Inspect ${pretty(profile.id)}`,profile.id));
+      deathSelect.add(new Option('Animation only','off'));deathSelect.value=view.deathReplay;
+      element('mesh-death-note').textContent='Source animation markers and complete transformed vertex stream, including fragment copies. Inspection profiles start immediately. 60 Hz, normal frame load, base palette at noon. Gameplay movement and audio are not replayed.';
+    }
     assemblyControls.hidden=!(view instanceof ParticleExhibit&&view.assembly);
     if(view instanceof ParticleExhibit&&view.assembly) {
       const a=view.assembly;
@@ -195,12 +214,18 @@ async function boot():Promise<void> {
       element<HTMLInputElement>('host-racer-entering').checked=h.racerHudOffset>=10;
     }
     animationSelect.replaceChildren();
-    element('animation-field').hidden=!(view instanceof ModelExhibit&&view.clips.length);
-    element('timeline-field').hidden=!(view instanceof ModelExhibit&&view.clips.length);
+    element('animation-field').hidden=!(view instanceof ModelExhibit&&view.clips.length&&!view.deathPlayback);
+    element('timeline-field').hidden=!(view instanceof ModelExhibit&&(view.clips.length||view.deathPlayback));
     if(view instanceof ModelExhibit) {
       for(const clip of view.clips)animationSelect.add(new Option(clip.name,clip.name));animationSelect.value=view.clipName;
       status.classList.remove('pending');status.textContent='Original geometry and animation. Gouraud uses vertex colour and vertex lighting, with the original opacity masks.';
       element('provenance').textContent=`${selected.model!.path}\n${view.dimensions.toArray().map(v=>v.toFixed(2)).join(' × ')} m · ${view.clips.length} source animations`;
+      if(view.deathPlayback) {
+        const death=view.deathPlayback;
+        element('selected-kind').textContent='Source mesh disappearance';
+        status.textContent='Original and Gouraud share the source animation, vertex emission, death texture profile and particle lifecycle.';
+        element('provenance').textContent+=`\n${death.reference.sourceAssembly}\n${death.reference.sourceVertices.toLocaleString()} input vertices + ${death.reference.crossCopies.toLocaleString()} fragment copies\n${death.reference.unreferencedVertices} emission vertices outside the triangle stream`;
+      }
       const part=view.partSelection?.current;
       if(part) {
         element('selected-kind').textContent=part.kind==='wind-draw'?'Source wind draw':part.kind==='shrub'?'Detail placements':'Prop placements';
@@ -287,7 +312,7 @@ async function boot():Promise<void> {
       if(!labels.has(id))labels.set(id,label(exhibit));
       if(loaded.has(id)||pending.has(id)||errors.has(id)||pending.size>=2)continue;
       pending.add(id);
-      const promise=exhibit.model?ModelExhibit.load(exhibit.model):ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
+      const promise=exhibit.model?ModelExhibit.load(exhibit.model,exhibit.death?{catalogue,reference:exhibit.death}:undefined):ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
       void promise.then(view=>{
         pending.delete(id);
         if(!wanted.has(id)){view.dispose();return;}
@@ -314,6 +339,7 @@ async function boot():Promise<void> {
   element('restart').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(0);else view?.restart();};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
+  deathSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit){view.setDeathReplay(deathSelect.value);inspect();if(!exploring)focus();}};
   partSearch.oninput=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit&&view.partSelection)renderPartOptions(view);};
   partSelect.onchange=()=>{
     const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit))return;
@@ -424,7 +450,10 @@ async function boot():Promise<void> {
     // Large source sprites/scenes can extend beyond their gallery plinths.
     // Focus is an isolated inspection; Explore restores nearby full exhibits.
     for(const [id,view] of loaded)view.root.visible=exploring||id===selected.id;
-    for(const [id,caption] of labels)if(id!==selected.id)caption.visible=exploring;
+    for(const [id,caption] of labels) {
+      const view=loaded.get(id);
+      caption.visible=exploring&&!(view instanceof ModelExhibit&&view.partSelection?.current);
+    }
     if(!paused)for(const view of loaded.values()) {
       if(view instanceof ParticleExhibit)view.setInspectionCamera(camera.position);
       view.update(dt*speed);
@@ -434,6 +463,10 @@ async function boot():Promise<void> {
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
         view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
+      if(view instanceof ModelExhibit&&view.deathPlayback) {
+        const death=view.deathPlayback;
+        element('statistics').textContent+=`\nDEATH  ${death.phase}${death.profileId?' · '+death.profileId:''}\nPARTICLES  ${death.motion.particles.length} · EMITTED ${death.launched}\nCAPACITY DROPS  ${death.motion.dropped}`;
+      }
       if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('racer speed')||view.motion.hostInputs.has('racer heat'))) {
         const h=view.motion.host;
         element('statistics').textContent+=`\nZOOMER  ${(h.racerSpeed/4096).toFixed(1)} m/s · ${(h.racerHeat*100).toFixed(0)}% heat`;
@@ -443,7 +476,8 @@ async function boot():Promise<void> {
         element('statistics').textContent+=`\nSOURCE CALLS / FRAME  ${view.assembly.calls}\nEMITTER  ${view.assembly.enabled?'on':'off'}`;
       if(view instanceof ParticleExhibit&&(view.motion.hostInputs.has('particle lighting')||view.motion.hostInputs.has('time of day')))
         element('statistics').textContent+=`\nHOUR  ${view.motion.hour.toFixed(2)}\nPARTICLE RGB  ${view.motion.host.particleColor.toArray().map(v=>v.toFixed(4)).join(' / ')}`;
-      if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String((view.time%view.duration)/view.duration);
+      if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String(
+        view.deathPlayback?.active?Math.min(1,view.time/view.duration):(view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }
     particlePass.render(renderer,scene,camera,[...loaded.values()].some(view=>view.root.visible&&view instanceof ParticleExhibit&&view.distortions>0));

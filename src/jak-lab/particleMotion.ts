@@ -205,6 +205,28 @@ export class ParticleMotion {
     // fallback to 11 instead; keep those two source rules distinct.
     if (!relaunch) p.values['rot-x'] = Math.max(3, Math.min(11, Math.trunc(p.values['rot-x'] ?? 0)));
   }
+  /** sp-launch-particles-death: one unkeyed sprite per transformed vertex.
+   * This bypasses ordinary emission count, cone, texture and birth callbacks. */
+  emitDeath(id:number, position:Vector3, texture:string):LabParticle|null {
+    const definition=this.definitions.get(id);if(!definition)return null;
+    if(this.particles.length>=this.capacity){this.dropped++;return null;}
+    const particle:LabParticle={id:++this.nextId,definitionId:id,alive:true,texture,values:{},flags:new Set(),
+      position:new Vector3(),orientation:new Quaternion(),orbit:new Quaternion(),radius:0,
+      parent:null,child:null,is3d:false,callback:'',birth:'',age:0,blend:'additive',depthWrite:false,controlled:false};
+    const fields=definition.fields.filter(field=>!['num','texture','anim','anim-speed','birth-func','joint/refpoint','sound'].includes(field.field)&&
+      !/^(launchrot|conerot|rotate-y)/.test(field.field));
+    this.assign(particle,{...definition,fields});
+    const v=particle.values;
+    v['rot-y']=0;v['rot-z']=signed16(v['rot-z']??0);
+    particle.position.set(v.x??0,v.y??0,v.z??0).add(position);
+    RGB.forEach((channel,i)=>{
+      v[channel]=Math.fround(Math.min(255,v[channel]??0)*this.host.particleColor.getComponent(i));
+      v[`fade-${channel}`]=Math.fround((v[`fade-${channel}`]??0)*this.host.particleColor.getComponent(i));
+    });
+    particle.blend='additive';particle.depthWrite=false;
+    v['cache-alpha']=v.a??0;v.a=0;particle.flags.add('ready-to-launch');
+    this.particles.push(particle);return particle;
+  }
   private spawn(state: LaunchState, rate = 1): void {
     const definition = state.definitionOverride ?? this.definitions.get(state.item.particle); if (!definition) return;
     const num = definition.fields.find(field => field.field === 'num');
@@ -441,6 +463,7 @@ export class ParticleMotion {
       if (!p.alive) continue;
       if ((v.timer ?? 0) === 0) {this.retire(p); continue;}
       if (v.timer !== -1) v.timer = Math.max(0, v.timer - STEP_TICKS);
+      if(p.flags.delete('ready-to-launch'))v.a=v['cache-alpha']??0;
       p.age += STEP_TICKS;
       this.callback(p);
       if (v['next-launcher']) {

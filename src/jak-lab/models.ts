@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
-import {assetURL, type ModelDefinition, type RenderingMode} from './types';
+import {assetURL, type Catalogue, type MeshDeathReference, type ModelDefinition, type RenderingMode} from './types';
 import {gouraudMaterial} from './gouraudMaterial';
 import {compactGeometry} from './compactGeometry';
 import {BackgroundPartSelection} from './backgroundParts';
 import {preciseBounds} from './modelBounds';
+import {ModelDeathPlayback} from './modelDeath';
 
 const loader = new GLTFLoader();
 const imagePixels = new WeakMap<object, ImageData>();
@@ -86,6 +87,8 @@ export class ModelExhibit {
   private readonly derived: THREE.Object3D;
   private readonly sourcePosition: THREE.Vector3;
   readonly partSelection: BackgroundPartSelection | null;
+  deathPlayback:ModelDeathPlayback|null=null;
+  deathReplay='';
   private nativeScale=false;
 
   private constructor(source: THREE.Object3D, clips: THREE.AnimationClip[], readonly definition: ModelDefinition) {
@@ -106,7 +109,7 @@ export class ModelExhibit {
     if (clips.length) this.setClip(clips.find(clip => /idle|stance|loop/i.test(clip.name))?.name ?? clips[0].name);
     this.setRendering('compare');
   }
-  static async load(definition: ModelDefinition): Promise<ModelExhibit> {
+  static async load(definition: ModelDefinition,death?:{catalogue:Catalogue;reference:MeshDeathReference}): Promise<ModelExhibit> {
     const url=assetURL(definition.path);
     let asset;
     if(definition.encoding==='gzip') {
@@ -122,14 +125,21 @@ export class ModelExhibit {
       const index=asset.parser.associations.get(node)?.nodes;
       if(index!==undefined)node.userData.jakSourceNode=index;
     });
-    return new ModelExhibit(asset.scene, asset.animations, definition);
+    const exhibit=new ModelExhibit(asset.scene, asset.animations, definition);
+    if(death)try {
+      exhibit.deathPlayback=await ModelDeathPlayback.load(death.reference,death.catalogue,exhibit.source,exhibit.derived,
+        exhibit.original,exhibit.alternative);
+      exhibit.setDeathReplay(death.reference.events.length?'event:0':definition.name==='generic-button-lod0'?'death-warp-out':'death-warp-in');
+    } catch(error){exhibit.dispose();throw error;}
+    return exhibit;
   }
   get scale(): number {return this.original.scale.x;}
   get time(): number {return this.elapsed;}
-  get duration(): number {return this.actions[0]?.getClip().duration ?? 0;}
+  get duration(): number {return this.deathPlayback?.active?this.deathPlayback.duration:this.actions[0]?.getClip().duration ?? 0;}
   get clipName(): string {return this.actions[0]?.getClip().name ?? '';}
   get inspectionSize(): THREE.Vector3 {
     const size = this.dimensions.clone().multiplyScalar(this.scale);
+    if(this.deathPlayback)size.addScaledVector(new THREE.Vector3(2,4,2),this.scale);
     if (this.view === 'compare') size.x += Math.abs(this.original.position.x - this.alternative.position.x);
     return size;
   }
@@ -138,6 +148,22 @@ export class ModelExhibit {
     for (const action of this.actions) action.stop();
     this.actions = this.mixers.map(mixer => mixer.clipAction(clip).reset().play());
     this.seek(0);
+  }
+  setDeathReplay(value:string):void {
+    const death=this.deathPlayback;if(!death)return;
+    death.configure('');this.deathReplay=value;
+    const event=value.startsWith('event:')?death.reference.events[Number(value.slice(6))]:undefined;
+    if(event)this.setClip(event.clip);
+    for(const action of this.actions){action.setLoop(event?THREE.LoopOnce:THREE.LoopRepeat,event?1:Infinity);action.clampWhenFinished=!!event;action.reset().play();}
+    // The snake's straight bind pose extends tens of metres away from its
+    // coiled animation. Frame the actual starting pose, preserving every vertex
+    // and the clip's subsequent movement in both inspection modes.
+    this.source.position.copy(this.sourcePosition);this.sampleAnimation(0);
+    const bounds=preciseBounds(this.source),center=bounds.getCenter(new THREE.Vector3());
+    bounds.getSize(this.dimensions);this.displayScale=Math.min(2,3.8/Math.max(...this.dimensions.toArray()));
+    this.source.position.sub(new THREE.Vector3(center.x,bounds.min.y,center.z));
+    this.derived.position.copy(this.source.position);this.setNativeScale(this.nativeScale);
+    death.configure(event?.effect??value,event?.seconds??0);this.seek(0);
   }
   setNativeScale(native: boolean): void {
     this.nativeScale=native;
@@ -177,15 +203,26 @@ export class ModelExhibit {
     this.setNativeScale(false);
   }
   seek(time: number): void {
+    if(this.deathPlayback?.active){
+      for(const action of this.actions)action.reset().play();
+      this.deathPlayback.seek(time,value=>this.sampleAnimation(value));return;
+    }
+    this.sampleAnimation(time);
+  }
+  private sampleAnimation(time:number):void {
     this.elapsed = time;
     for (const mixer of this.mixers) mixer.setTime(time);
     // Keep both render modes in the same exact source pose.
     this.root.updateMatrixWorld(true);
   }
-  update(dt: number): void {this.seek(this.elapsed + dt);}
+  update(dt: number): void {
+    if(this.deathPlayback?.active)this.deathPlayback.update(dt,value=>this.sampleAnimation(value));
+    else this.sampleAnimation(this.elapsed+dt);
+  }
   get diagnostics() {return {view: this.view, scale: this.scale, clip: this.clipName, seconds: this.elapsed,
     sceneParts:this.partSelection?.parts.length??0,selectedPart:this.partSelection?.current?.id??null};}
   dispose(): void {
+    this.deathPlayback?.dispose();
     for (const mixer of this.mixers) {mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot());}
     const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>(), textures = new Set<THREE.Texture>();
     for (const root of [this.source, this.derived]) root.traverse(node => {

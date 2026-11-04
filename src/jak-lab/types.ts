@@ -59,6 +59,21 @@ export interface ParticleLightingLibrary {
   }[]}[];
   contexts: ParticleLightingContext[];
 }
+export interface MeshDeathProfile {
+  id:string; vertexSkip:number; frames:number; overlap:number; particle:number;
+  sound:string|null; source:Provenance;
+}
+export interface MeshDeathReference {
+  model:string; path:string; bytes:number; sha256:string; decodedBytes:number; decodedSha256:string;
+  sourceAssembly:string; sourceAssemblySha256:string; sourceModelSha256:string;
+  sourceVertexStart:number; sourceVertices:number; unreferencedVertices:number; crossCopies:number;
+  events:{clip:string; effect:string; artistFrame:number; seconds:number; assemblyLine:number}[];
+}
+export interface MeshDeathData {
+  version:number; meshNode:number; sourceVertices:number; crossCopies:number;
+  positions:number[]; joints:number[]; weights:number[]; morphPositions:number[][];
+  effects:{start:number; count:number; copies:number[]}[][];
+}
 export interface Catalogue {
   schemaVersion: number; game: string; sourceVersion: string;
   coverage: {
@@ -71,6 +86,7 @@ export interface Catalogue {
   models: ModelDefinition[]; textures: TextureDefinition[];
   callbackPrograms?: Record<string, ContactCallback>;
   particleLighting?: ParticleLightingLibrary | null;
+  meshDeaths?: {profiles:MeshDeathProfile[]; texture:string; models:MeshDeathReference[]};
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];
     runtimeParticlePatches: {particles: unknown[]; source: Provenance}[];
@@ -83,6 +99,7 @@ export type Exhibit = {
   id: string; name: string; area: string;
   kind: 'object' | 'effect' | 'scene';
   model?: ModelDefinition; effect?: EffectDefinition;
+  death?:MeshDeathReference;
 };
 let assetBase = '/__jak-lab/asset/';
 export function configureAssetBase(catalogueURL: URL): void {

@@ -261,6 +261,27 @@ def pack(source, image_sink):
             struct.pack('<II', len(blob), 0x004e4942) + blob)
 
 
+def supplemental_assets(catalogue, exported, assets):
+    """Copy verified emission data without altering model/image geometry."""
+    files = {}
+    for reference in catalogue.get('meshDeaths', {}).get('models', []):
+        path = reference['path']
+        if not re.fullmatch(r'death/[0-9a-f]{64}\.json\.gz', path):
+            raise ValueError('Invalid model-death asset path')
+        source = (exported / path) if exported is not None else (assets / path)
+        data = source.read_bytes()
+        if len(data) != reference['bytes'] or sha(data) != reference['sha256']:
+            raise ValueError('Model-death source changed: ' + reference['model'])
+        decoded = gzip.decompress(data)
+        if len(decoded) != reference['decodedBytes'] or sha(decoded) != reference['decodedSha256']:
+            raise ValueError('Model-death transport mismatch')
+        (assets / path).parent.mkdir(parents=True, exist_ok=True)
+        if source.resolve() != (assets / path).resolve():
+            (assets / path).write_bytes(data)
+        files[path] = {'path': path, 'bytes': len(data), 'sha256': sha(data)}
+    return files
+
+
 def pack_catalogue(catalogue_file, exported, output):
     catalogue = json.loads(catalogue_file.read_text())
     assets = output / 'assets'
@@ -312,10 +333,12 @@ def pack_catalogue(catalogue_file, exported, output):
         if sha(data) != texture['sha256']:
             raise ValueError('Source texture changed: ' + texture['id'])
         texture.update(sourcePath=texture['path'], path=image_sink(data, 'png'))
+    files.update(supplemental_assets(catalogue, exported, assets))
     catalogue.update(assetDirectory='assets', assets=sorted(files.values(), key=lambda v: v['path']))
     summary = {'models': len(report), 'sourceModelBytes': sum(r['sourceBytes'] for r in report),
                'uniqueModelBytes': sum(f['bytes'] for f in files.values() if f['path'].startswith('models/')),
                'uniqueImageBytes': sum(f['bytes'] for f in files.values() if f['path'].startswith('images/')),
+               'uniqueEmissionBytes': sum(f['bytes'] for f in files.values() if f['path'].startswith('death/')),
                'totalAssetBytes': sum(f['bytes'] for f in files.values()),
                'allDrawStreamsAnimationsSkinsAndImagesVerified': True}
     pending = output / 'catalogue.pending.json'
@@ -332,7 +355,7 @@ def pack_catalogue(catalogue_file, exported, output):
     print(json.dumps(summary, indent=2), flush=True)
 
 
-def refresh_metadata(catalogue_file, output):
+def refresh_metadata(catalogue_file, output, exported=None):
     """Reuse verified packed bytes when only source-analysis metadata changes.
 
     Compare every source asset identity, report entry and stored-file hash before
@@ -374,7 +397,10 @@ def refresh_metadata(catalogue_file, output):
         data = path.read_bytes()
         if len(data) != asset['bytes'] or sha(data) != asset['sha256']:
             raise ValueError('Stored packed asset changed: ' + asset['path'])
-    current.update(assetDirectory='assets', assets=previous['assets'])
+    emission = supplemental_assets(current, exported, assets)
+    files = {a['path']: a for a in previous['assets'] if not a['path'].startswith('death/')}
+    files.update(emission)
+    current.update(assetDirectory='assets', assets=sorted(files.values(), key=lambda v: v['path']))
     pending = output / 'catalogue.pending.json'
     pending.write_text(json.dumps(current, separators=(',', ':')) + '\n')
     report['metadataRefresh'] = {'sourceCatalogueSha256': sha(catalogue_file.read_bytes()),
@@ -382,6 +408,8 @@ def refresh_metadata(catalogue_file, output):
                                  'storedAssetHashesVerified': len(previous['assets'])}
     pending.replace(previous_file)
     summary = report['summary']
+    summary['uniqueEmissionBytes'] = sum(a['bytes'] for a in emission.values())
+    summary['totalAssetBytes'] = sum(a['bytes'] for a in files.values())
     summary['catalogueBytes'] = previous_file.stat().st_size
     summary['assetAndCatalogueBytes'] = summary['totalAssetBytes'] + summary['catalogueBytes']
     (output / 'packing-report.json').write_text(json.dumps(report, indent=2) + '\n')
@@ -396,7 +424,7 @@ def main():
     parser.add_argument('--refresh-metadata', action='store_true', help='Reuse an exact verified asset pack')
     args = parser.parse_args()
     if args.refresh_metadata:
-        refresh_metadata(args.catalogue, args.output)
+        refresh_metadata(args.catalogue, args.output, args.exported)
     else:
         if args.exported is None:
             parser.error('--exported is required for a full pack')

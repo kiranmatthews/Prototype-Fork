@@ -26,9 +26,11 @@ particle patch sites and hundreds of procedural draw/render candidates requiring
 review. The named group
 graphs, including callback-launched children, reach 2,369 particle definitions;
 another 146 are outside those graphs.
-Following direct launch roots reduces the unresolved set to 56. Those 56 are
-not automatically classified as unused: computed IDs, host launch paths and
-unused source variants still need distinguishing.
+Following direct launch roots leaves 56 definitions outside those graphs.
+The mesh-disappearance path now accounts for three of those (41–43), leaving
+53 to distinguish between computed/host launch paths and unused source variants.
+The inventory's group/direct-only coverage remains explicitly scoped to those
+two launcher families.
 
 The restored official full export completed with 605 highest-detail GLBs,
 including 24 backgrounds, and 4,002 source PNGs. All 458 expected highest-detail
@@ -41,8 +43,9 @@ original/Gouraud/both views, matched animation playback, scrubbing, pause,
 restart, source scale and normal/native render resolution. Direct launchers
 are included separately and explicitly repeat once per second for inspection;
 that frequency is a lab control, not a reconstructed host object's update rate.
-The current catalogue contains 1,380 exhibits: 605 models/scenes, 675 named
-particle groups, 98 direct launcher exhibits and two source draw assemblies.
+The current catalogue contains 1,424 exhibits: 605 models/scenes, 675 named
+particle groups, 98 direct launcher exhibits, two source draw assemblies and
+44 mesh-disappearance exhibits.
 Three explicitly empty direct definitions stay in the source audit without
 blank visual exhibits; 25 referenced IDs have no source definition and remain
 flagged for review. Relevant effects expose root height, heading, surface slope, water level and fade controls. These are explicit
@@ -691,3 +694,94 @@ production,delivery}.json`, the validation/final-build logs and corresponding
 PNG captures. Test tabs and guarded servers are closed; the user's jump tab is
 preserved. Local only, with no shared game runtime or level-pack edits and no
 publication. The whole-game objective remains incomplete.
+
+
+## Source mesh-disappearance effects
+
+The lab now includes 44 disappearance exhibits: 42 source models with 48
+compatible animation markers, plus inspection entries for Jak and the Sunken
+City button warp profiles. Five `death-info` definitions retain their exact
+vertex skip, timer, mesh overlap, particle ID and sound name. The puppy's actual
+animation requests `death-default`; the separately authored
+`death-beach-puppy` profile is available without substituting it for that marker.
+
+`extract_art_data.py` runs the official extractor on all 360 art groups in its
+NTSC-v1 extraction configuration, with level/text/image processing disabled.
+Every dumped object was matched byte-for-byte to the supplied disc archives;
+its manifest retains archive paths, object offsets and raw/assembly hashes.
+`merc_death.py` resolves linked assembly labels and unpacks the merc input
+vertices and alternating fragment buffers. Same-fragment copies alias existing
+positions; cross-fragment copies append additional emission vertices. Each
+complete input domain matches exactly one region of its source GLB, including
+vertices not referenced by any triangle. All 581 foreground models match:
+669,831 input vertices, 58,972 cross-fragment copies and 168 input vertices
+absent from the rendered triangle stream. Their exact source skin weights and
+morph positions are retained. All 360 assembly hashes still match the final
+extraction after decoding.
+
+`attach_merc_death.py` filters art-group effect markers to clips actually present
+on each model and writes 418 unique, content-addressed gzip sidecars (3,969,540
+bytes). The packer verifies both compressed and decoded hashes and lengths.
+Both raw and packed local-serving allowlists include these declared sidecars;
+focused checks retain undeclared-file and resolved-symlink containment.
+The existing 605 model files and 4,002 source images are unchanged. The raw
+catalogue now includes `meshDeaths`; all its other sections exactly match the
+previous lighting catalogue. Reproduction, using the same guarded heavy-job
+workflow as the other extraction steps:
+
+```sh
+python3 tools/jak-lab/extract_art_data.py --installation .jak-lab-data/installation --game-data .jak-lab-data/export/iso-data/jak1 --output .jak-lab-data/mesh-death-source
+python3 tools/jak-lab/merc_death.py --assembly-directory .jak-lab-data/mesh-death-source/opengoal/decompiler_out/jak1 --source-models .jak-lab-data/export/opengoal/decompiler_out/jak1/levels --catalogue .jak-lab-data/export/catalogue.json --output .jak-lab-data/mesh-death-source/all-topology
+python3 tools/jak-lab/attach_merc_death.py --catalogue .jak-lab-data/export/catalogue.json --topology .jak-lab-data/mesh-death-source/all-topology --project .jak-lab-data/export/opengoal --asset-output .jak-lab-data/export/opengoal/decompiler_out/jak1 --output .jak-lab-data/export/catalogue.death.json
+python3 tools/jak-lab/pack_assets.py --catalogue .jak-lab-data/export/catalogue.death.json --exported .jak-lab-data/export/opengoal/decompiler_out/jak1 --output .jak-lab-data/export/packed --refresh-metadata
+```
+
+The runtime samples the complete animated source vertex stream, including
+morphing, and sends the same particles to the original and texture-free Gouraud
+sprite batches. It ports the dedicated death launcher: one unkeyed additive
+sprite per selected vertex, source RGB clamp/tint, no ordinary birth/cone/count
+processing, and cached alpha restored on the next particle update. Emission
+keeps the source per-effect offset, fragment residual and appended-copy order.
+The original `falls-particle` texture and 41 → 42 → 43 lifecycle are retained.
+Source markers, overlap and timers run at 60 Hz with normal frame load. The
+inspection uses the area's base noon palette; world movement, collision,
+gameplay host transitions, sound playback and the original global random stream
+are not reconstructed by these cards. Manual profile choices are labeled
+inspection controls, not claimed as original gameplay sequences.
+
+Replay is one-shot, with a bounded settling tail and a timeline that remains
+at the end. Restart/backward scrub reset the pose, RNG, emission and mesh
+visibility; Animation only clears disappearance state. The initial animated
+pose determines framing, so the snake's long straight bind pose no longer
+moves its coiled animation out of the view. Focus hides the redundant gallery
+caption; Explore restores labels and nearby complete exhibits.
+
+Validation includes ten focused Python tests, all 581 streams across all five
+profiles and source ages (7,667,361 selected vertices), and an independent
+skinned/morphed/world-transform fixture. The fixture checks delayed alpha,
+trigger/overlap boundaries, end/restart, deterministic backward scrub and off
+reset. Puppy, snake and button lifecycles cover 633,207 finite particle samples,
+all three stages and zero capacity drops; all particles expire. The native
+translated merc renderer, exporter and structure code used for the port are
+Git-blob verified against pinned OpenGOAL commit
+`b6c8430c0b0a5cb139b939bcf0ffd25285b896c7`; their provenance records remain beside
+the local evidence.
+
+Browser checks cover puppy/snake animation overlap and disappearance, Jak/button
+inspection warps, original/Gouraud/both, source scale, normal 720p and native
+2560×1440 rendering, one-shot completion, restart, backward scrub and disabling
+the effect. These are representative visual checks, not a visual audit of all
+581 models or all 48 markers. Console warnings/errors are empty. The normal
+build passes; final lab-only UI changes pass root TypeScript and the independent
+production build without changing the normal game bundle inputs. No full suite
+or publication. Evidence is in `.jak-lab-data/evidence/mesh-death-*`, including
+browser snapshots, PNGs, numerical checks, build logs and the delivery manifest.
+
+The packed catalogue is 9,310,863 bytes; assets plus catalogue total 236,244,437
+bytes. The final frontend is 695,691 bytes, for 236,940,128 bytes before hosting
+metadata. The previous raw catalogue is retained as
+`catalogue.before-mesh-death.json`. This is a validated local increment; the
+whole-game objective and final delivery remain open. Remaining work includes
+53 definitions outside the resolved group/direct/death paths, unresolved host
+launches, 30 callbacks, dynamic texture/lighting state, full source assemblies,
+procedural renderers, individual prop-instance recovery and broad visual review.
