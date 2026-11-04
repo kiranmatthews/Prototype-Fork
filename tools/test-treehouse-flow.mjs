@@ -56,18 +56,20 @@ await withBlockworksRuntime(async r=>{
     const d=l.laneDirAt(36.35,-7.2,z);assert.ok(d&&Math.abs(d.x)<1e-5&&d.z<-.999,'straight input/camera lane');
   }
   place([36.35,-7.15,start[2]+.2]);
-  let grindFrames=0,minY=Infinity;
+  let grindFrames=0,minY=Infinity,collectedOnRope=false;
   r.until(()=>p.pos.z<far-3,()=>{
     minY=Math.min(minY,p.pos.y);
     if(p.state==='grind'){
       assert.equal(p.grindRail,l.ropes[0].rail,'the actual rope carries the crossing');
       grindFrames++;
+      collectedOnRope ||= p.hasCrystal;
     }
     return {...r.worldDirectionInput([0,0,-1]),jumpHeld:p.pos.z>near+1.1&&p.pos.z<near+5,
       grindHeld:p.state==='air'||p.state==='grind',grindPressed:p.state==='air',
       ...(p.state==='grind'?{moveX:THREE.MathUtils.clamp(-p.balance*3-p.balanceVel*.55,-1,1)}:{})};
   },{maxFrames:1500,label:'straight approach and final rope grind'});
   assert.ok(grindFrames>60);assert.equal(p.totalDeaths,0);assert.ok(p.pos.y>-8);
+  assert.ok(collectedOnRope,'the crystal is collected during the rope grind');
   report.runway={straightMetres:start[2]-near,ropeLength:rope.len};report.rope={grindFrames,minY,landing:p.pos.toArray()};
   assert.equal(source.components.filter(c=>c.nm?.startsWith('Exit matte ·')).length,8);
 },{modulePath:'/src/levels/treehouse-trail.ts',levelId:'treehouse-trail',source:m=>m.TREEHOUSE_TRAIL_LEVEL,

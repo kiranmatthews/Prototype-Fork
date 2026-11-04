@@ -9122,3 +9122,37 @@ Details: [Jak asset lab](JAK_ASSET_LAB.md).
   level-pack changes. The review tab and heavy lease are closed; the user's
   port-5193 preview and port-5188 jump playtest remain running. The coordinator
   owns Labs integration and publication.
+
+## 2026-11-05 — Treehouse Trails rope crystal, forward alignment and route rewards
+
+Moved the crystal onto the final rope, with collection during a real grind and
+a supported far-bank landing. Added sixteen rooted, non-solid foliage volumes
+behind the finish podium and ahead of the grove matte, fitting the outer roots
+to the raised soil banks. Reused the existing complete 3D foliage assets.
+
+The two level-specific camera compositions are now presentation-only. Their
+held-input yaw previously latched through a bend. A denser ordered trail spine
+keeps bend tangents out of long straight sections; an opening direction zone
+preserves the established staircase/clearing controls. Movement, camera runtime,
+tuning, sky, other levels and the published editor pack are unchanged.
+
+Added twenty-seven varied crates, seventy-seven loose singles and eleven
+six-fruit handfuls (143 loose pickups), from the clearing through the descent,
+coast, village, six stones, cavern, halfpipe and rope approach to the finish.
+Crates occupy supported side positions with clear jump lips, stones, rope
+landing and finish pad. Existing fruit and crate artwork/mechanics are reused.
+
+Approximately 28 minutes from the resumed crate/fruit follow-up at 20:14 UTC
+to the first playable browser review around 20:42 UTC. The earlier inactive
+session gap is excluded; final visual review completed around 20:55 UTC.
+
+Focused native checks cover zero continuing lateral drift, the village bend,
+all seventeen established stair-control cases, actual ground/spacing for every
+pickup and crate, collection, spin breaks, reset/time-trial/editor retention,
+six stepping stones, the enclosed halfpipe, straight runway and rope crystal.
+Browser input pilots repeat the bend and rope crossing, including full rendering;
+real controls activate a checkpoint, recover from a pit and reach Course Clear.
+Normal and MAX/native visual review passes with no browser warnings/errors.
+Required level checks, production build and release-size checks pass; the
+package is 814,314,594 bytes. Evidence is recorded with the immutable release
+handoff. No full audit suite was run.

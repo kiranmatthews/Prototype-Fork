@@ -8,6 +8,7 @@ import type { CustomComponent, CustomLevelData } from "../level";
 import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_CLEARING_ROUTE, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_BALCONY_SPAWN } from "./treehouse-opening";
 import { TREEHOUSE_TRIALS_ART_COMPONENTS } from "./treehouse-trials-art";
 import { TREEHOUSE_TRIALS_SCENES_V2, TREEHOUSE_TRIALS_SCENE_GROUPS_V2, TREEHOUSE_TRIALS_PIPE_V2, TREEHOUSE_TRIALS_CAVE_EXTENSION_V2 } from "./treehouse-trials-scenes-v2";
+import {TREEHOUSE_TRAIL_REWARDS} from './treehouse-trail-rewards';
 
 type Point = [number, number, number];
 const components: CustomComponent[] = [];
@@ -245,7 +246,7 @@ scenery("treehousecavearch", [X, -13.4, -360], [30, 26.3, 9], "High river cavern
 // supported space on both sides and a lower safety plane beneath all geometry.
 ground([[X, -7.2, -374], [X, -7.2, -385], [X, -7.2, -414]], "Bright simple jungle cave exit", GROUP.trail, 34);
 scenery("treehousecavearch", [X, -8.5, -379], [27, 18.5, 7], "Natural cave exit into warm jungle", GROUP.cave, 4);
-add({ t: "crystal", p: [X + 2.6, -5.7, -396], nm: "Treehouse Trials crystal", grp: GROUP.rewards });
+add({ t: "crystal", p: [X + 1.35, -5.88, -362], nm: "Treehouse Trials crystal on the rope rail", grp: GROUP.rewards });
 add({ t: "gate", p: [X, -7.2, -402], yaw: 0, nm: "Sunlit jungle trail finish", grp: GROUP.rewards });
 add({ t: "clock", p: [26, 0, 6], nm: "Trial start at the bush trail", grp: GROUP.rewards });
 
@@ -261,6 +262,7 @@ for (const z of [-260, -277, -295, -316, -337, -355, -377]) for (const side of [
 
 // Extend the forest after the river, translating complete downstream
 // assemblies rather than changing their shape, supports or native mechanics.
+components.push(...TREEHOUSE_TRAIL_REWARDS.map(c=>({...c,p:[...c.p] as Point})));
 for (const component of components) if (component.p[2] <= -248)
   component.p[2] -= TREEHOUSE_TRIALS_CAVE_EXTENSION_V2;
 

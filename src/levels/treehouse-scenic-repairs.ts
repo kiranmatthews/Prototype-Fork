@@ -161,5 +161,19 @@ export function repairTreehouseWorld(input:readonly CustomComponent[]):CustomCom
       s:[width*1.2,width*1.2*1.043/5,width*1.2*2.581/5],yaw:yaw+37,
       nm:'Exit matte · low foreground leaf cluster',grp:17});
   }
+  // Rooted volumes between the finish pad (-432) and the painted grove
+  // (-455). Overlapping heights hide the matte's foot in the finish view.
+  for(const [dx,z,width,yaw] of [[-11,-442,6.6,24],[-5.7,-445,6.2,-31],
+    [.1,-447,6.8,17],[6.1,-446,6.1,-26],[11.8,-441,5.5,48]] as const){
+    const plant=(dkind:NonNullable<CustomComponent['dkind']>,x:number,y:number,zz:number,s:P,turn:number,name:string)=>
+      C.push({t:'decor',dkind,p:treehouseTrialPoint([35+x,y,zz]),s,yaw:turn,
+        solid:false,scenerySolid:false,nm:'Finish understory · '+name,grp:17});
+    plant('trialsv3thicket',dx,-7.1,z,[width,width*.49,width*.63],yaw,'broad rooted foliage behind podium');
+    plant('trialsv2fernb',dx-.8,-7.18,z+1.7,[3.8,2.328,3.745],yaw+41,'fern overlapping the thicket roots');
+    plant('trialsv2groundcovera',dx+.6,-7.2,z+2.3,[4.4,.918,2.271],yaw-27,'low leaf skirt at the scenery foot');
+  }
+  C.push({t:'decor',dkind:'trialsv3thicket',p:treehouseTrialPoint([40.8,-7,-451]),
+    s:[9.2,4.8,4.8],yaw:-18,solid:false,scenerySolid:false,
+    nm:'Finish understory · taller rear clump over the distant soil edge',grp:17});
   return C;
 }

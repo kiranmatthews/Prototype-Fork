@@ -42,6 +42,12 @@ export function encloseTreehouseWorld(input:readonly CustomComponent[]):CustomCo
   const bendCenter=treehouseTrialZ(-375.35);
   const bendRelief=(z:number)=>11*Math.exp(-Math.pow((z-bendCenter)/17,4));
   const C:CustomComponent[]=input.map((c):CustomComponent=>{
+    if(c.t==='decor'&&c.nm?.startsWith('Finish understory ·')){
+      const z=sourceZ(c.p[2]),dx=c.p[0]-35-treehouseTrialOffset(z);
+      // The outside pockets rise with the visible bank; keep their crowns
+      // above it while burying their roots a little beneath the soil.
+      if(Math.abs(dx)>=8)return {...c,p:[c.p[0],bankHeight(z,Math.abs(dx),Math.sign(dx))-.2,c.p[2]]};
+    }
     if(c.t==='decor'&&c.nm==='Halfpipe · fern fronds overhanging the outer deck'){
       const cx=35+treehouseTrialOffset(sourceZ(c.p[2])),side=Math.sign(c.p[0]-cx)||1;
       return {...c,p:[c.p[0]+side*2.1,c.p[1],c.p[2]]};
@@ -177,7 +183,10 @@ export function encloseTreehouseWorld(input:readonly CustomComponent[]):CustomCo
   }
   // A close, elevated descent composition sees over the previous ramp.
   // Its ten-metre feather ends before the first bend; gameplay keeps -Z.
-  C.push({t:'camnode',cameraView:true,p:[35,-7,-96],s:[26,48,94],radius:10,yaw:0,
+  // These views frame the scene; the ordered trail owns held-forward input.
+  // A view input frame otherwise stays latched to the yaw at the last press,
+  // carrying the village bend's leftward heading into the straight corridor.
+  C.push({t:'camnode',cameraView:true,cameraPresentationOnly:true,p:[35,-7,-96],s:[26,48,94],radius:10,yaw:0,
     cameraPosition:[35,2,-87],cameraTarget:[35,-3.8,-96],cameraFov:42,
     cameraFollowDistance:10.7061,cameraFollowTargetHeight:3.2,
     nm:'Downhill canopy corridor · gently elevated continuous follow',grp:7});

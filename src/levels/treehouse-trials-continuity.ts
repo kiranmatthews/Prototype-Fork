@@ -68,8 +68,13 @@ export function densifyTreehouseRoute(nodes:readonly Point[]):Point[]{
       const z=-(join.near+(join.far-join.near)*n/4);
       if(z<a[2]&&z>b[2])zs.push(z);
     }
+    // laneDirAt blends adjacent headings across each whole segment. Keep
+    // straight segments short too: a distant bend must not steer the player
+    // sideways for half of an otherwise straight forest stretch.
+    const divisions=Math.ceil(Math.abs(treehouseTrialZ(b[2])-treehouseTrialZ(a[2]))/3);
+    for(let n=1;n<divisions;n++)zs.push(a[2]+(b[2]-a[2])*n/divisions);
     if(i===nodes.length-1)zs.push(b[2]);
-    for(const z of [...new Set(zs)].sort((a,b)=>b-a)){
+    for(const z of [...new Set(zs.map(r))].sort((a,b)=>b-a)){
       const t=(z-a[2])/(b[2]-a[2]);
       result.push([r(a[0]+(b[0]-a[0])*t),r(a[1]+(b[1]-a[1])*t),z]);
     }
@@ -325,8 +330,13 @@ export function treehouseTrialContinuity(components:readonly CustomComponent[]):
     if(c.nm==='Framing jungle tree'&&c.p[2]>shoreZ(c.p[0])-3)c={...c,p:[c.p[0],c.p[1],shoreZ(c.p[0])-4]};
     result.push(stretchComponent(c));
   }
-  const opening:CustomComponent={t:'camnode',cameraView:true,p:[-3,5,12],s:[82,60,92],radius:18,
+  const opening:CustomComponent={t:'camnode',cameraView:true,cameraPresentationOnly:true,p:[-3,5,12],s:[82,60,92],radius:18,
     cameraPosition:[-1,8.5,36],cameraTarget:[-1,5.5,-5],cameraFov:49,cameraFollowDistance:14.5,
     cameraFollowTargetHeight:4.3,nm:'Original opening framing · gentle hand-off to the continuous follow rig',grp:7};
-  return [...result,...openingCoast(),...joinPlanting(),...landscapeSkirts(),opening];
+  // Keep the established screen-up/down stair and clearing controls. The
+  // normal-corridor zone ends where the straight forest descent begins, so
+  // its -Z frame hands over to the trail spine without a direction change.
+  const openingInput:CustomComponent={t:'zone',dir:'S',p:[0,0,10],s:[120,40,140],
+    nm:'Opening stairs and clearing · original screen-aligned controls',grp:7};
+  return [...result,...openingCoast(),...joinPlanting(),...landscapeSkirts(),opening,openingInput];
 }
