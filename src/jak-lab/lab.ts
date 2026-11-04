@@ -79,6 +79,7 @@ const deathSelect=element<HTMLSelectElement>('mesh-death-replay');
 
 async function boot():Promise<void> {
   const catalogueURL=new URL(new URL(location.href).searchParams.get('catalogue')??
+    import.meta.env.VITE_JAK_LAB_CATALOGUE_URL??
     (import.meta.env.DEV?'/__jak-lab/catalogue.json':'./catalogue.json'),location.href);
   const response=await fetch(catalogueURL);
   if(!response.ok)throw new Error('Local assets are not connected. Export the supplied game with tools/jak-lab/extract_assets.py, build its catalogue, then start Vite with JAK_LAB_DIR.');

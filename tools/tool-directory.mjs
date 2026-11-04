@@ -10,6 +10,7 @@ const descriptions = {
   'skate-pose-review.html': ['Skate pose contact sheet', 'Looping, labelled skate captures with transport, views, filters and editable animation studies.', 'Labs & studios'],
   'spin-lab.html': ['Spin smear lab', 'Character spin smears, orbital rings, colours, mesh shape and animation preview.', 'Labs & studios'],
   'milk-review.html': ['Fruit / milk pickup lab', 'Pickup model, appearance and motion review.', 'Labs & studios'],
+  'jak-lab.html': ['Jak & Daxter effects lab', 'Browse the effects preview by category, including particle, HUD and disappearance effects.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
   'reset-local-data.html': ['Reset local game data', 'Review local settings and saves, choose what to reset, confirm and undo.', 'Maintenance'],
   'public/update-game.html': ['Update game', 'Load the latest published build while retaining saves and settings.', 'Maintenance'],
