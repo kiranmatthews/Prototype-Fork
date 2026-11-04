@@ -44,6 +44,9 @@ The current catalogue contains 1,350 exhibits: 605 models/scenes, 675 named
 particle groups and 70 direct launcher exhibits. Relevant effects expose root
 height, heading, surface slope, water level and fade controls. These are explicit
 inspection inputs until the actual host object's states have been ported.
+The 24 level scenes also expose 2,936 named source parts through a searchable
+Scene parts inspector; these remain inside their parent scene, not duplicate
+asset downloads or guessed standalone objects.
 
 ## Fidelity and delivery
 
@@ -76,7 +79,7 @@ The complete 605-model pack passed semantic and gzip verification. Its size is:
 | Catalogue | 8,816,274 |
 | Packed assets and catalogue | **231,780,308** |
 
-The standalone frontend adds approximately 662 KB before HTTP compression.
+The standalone frontend adds approximately 671 KB before HTTP compression.
 This needs a separate delivery origin rather than the main game's remaining
 Pages allowance. The release coordinator owns hosting and deployment setup.
 The frontend accepts `?catalogue=<URL>` with that host's CORS support.
@@ -117,10 +120,10 @@ unported; name coverage does not prove complete host reconstruction.
   has both renderers; two declared emitters still need host activation tracing.
   The inspector reports known gaps instead of presenting them as faithful ports.
 - Trace the remaining 87 particle definitions and computed launch references.
-- Inventory and expose the static TIE/shrub prototypes within backgrounds, not
-  just joint geometry. The pinned exporter groups static prototypes by node;
-  some groups include all level instances. Individual-instance reconstruction
-  needs explicit source evidence, not arbitrary connected-component splitting.
+- Static TIE/shrub prototype nodes are inventoried and inspectable. Some contain
+  all level placements. Reconstruct individual instances from source metadata,
+  not arbitrary connected-component splitting. Restore wind animation beyond
+  the static wind-draw placement matrices retained by the exporter.
 - Audit procedural renderers, texture animation, weather/time-of-day variants
   and host object states; a named-group count is not whole-game completeness.
 - Verify source group duration/linger lifecycle and host placement. The raw
@@ -128,6 +131,8 @@ unported; name coverage does not prove complete host reconstruction.
   inferred universally from it.
 - Verify blended-particle sorting, source color/alpha conventions and Gouraud
   visual fidelity across the catalogue at native and normal resolution.
+  Close vegetation inspection shows that sampling cutout alpha only at vertices
+  can change its visible silhouette; that material limitation remains to fix.
 - Finish standalone packaging, full catalogue visual checks and
   browser review with no errors; verify final hosted behavior and hand off a
   coherent READY increment to the coordinator.
@@ -177,6 +182,7 @@ Focused checks currently pass:
 python3 -m unittest discover -s tools/jak-lab -p 'test_*.py' -v
 node tools/jak-lab/test-particle-motion.mjs
 node tools/jak-lab/test-model-geometry.mjs
+node tools/jak-lab/test-background-parts.mjs
 node tools/jak-lab/test-distortion.mjs
 npx tsc --noEmit
 
@@ -330,7 +336,8 @@ of the original host camera and scene is still separate fidelity work.
 
 The complete particle audit observes 644,749 auxiliary samples and 134 of 136
 declared auxiliary emitters, with no auxiliary-capacity drops. Definition 1730
-starts disabled in the steam-cap plume; definition 1433 has no literal launch
+starts disabled in the steam-cap plume; its inspected host update spawns the
+plume but contains no activation for that item. Definition 1433 has no literal launch
 path found yet. Neither is silently labeled unused. Observed auxiliary IDs also
 include continuation definitions that inherit the callback.
 
@@ -350,3 +357,62 @@ placement keeps the bounded particles above their pedestal and separates the
 comparison copies at native scale. No console warnings/errors. Images and the
 combined report are under `.jak-lab-data/evidence/distortion-*`. These checked
 examples do not claim whole-catalogue visual verification.
+
+## Background props and vegetation — source part inspection
+
+The pinned
+[background exporter](https://github.com/open-goal/jak-project/blob/b6c8430c0b0a5cb139b939bcf0ffd25285b896c7/decompiler/level_extractor/fr3_to_gltf.cpp)
+groups TIE draw ranges by prototype index and shrub draws by prototype index.
+Each exported child node contains that prototype's complete level placements.
+Wind children instead identify draw/instance-group pairs and retain their
+original placement matrices. These boundaries are authoritative; disconnected
+mesh components are not being guessed to be separate objects. The fetched
+exporter matched Git blob `acf73dc5de073a679967f0119b3ed126747e1b44` and SHA-256
+`744b4d5255dfff32f61ed65e3053715864239b81e9049487bd8abfe67a420f21`.
+
+A JSON-header audit across all 24 raw background GLBs finds **2,936 parts**:
+1,175 TIE prototype groups, 299 shrub/detail groups and 1,462 wind draw groups.
+Shrub groups include plants, rocks and other details; they are not all vegetation.
+The report preserves source node IDs, tree names, triangle counts and matrix
+presence at `.jak-lab-data/export/background-parts.json`. Reproduce with:
+
+```sh
+python3 tools/jak-lab/inventory_backgrounds.py \
+  --catalogue .jak-lab-data/export/catalogue.json \
+  --exported .jak-lab-data/export/opengoal/decompiler_out/jak1 \
+  --output .jak-lab-data/export/background-parts.json
+```
+
+Open any level scene and expand **Scene parts**. Search the original source name,
+select a prop/detail/wind draw, and switch Original/Gouraud/Both as usual.
+Selection changes visibility in both hierarchies, without replacing geometry,
+transforming individual placements, changing material groups or decoding another
+asset. Complete level scene restores every original visibility value. Node IDs
+are retained before Three sanitizes names; `?exhibit=model:beach/beach-background&part=node:54`
+reopens the Sentinel Beach eco-valve prototype directly.
+
+Repeated props may be spread over hundreds of metres. **Close view** frames the
+first actual source triangle; double-clicking another rendered surface moves the
+camera there. This is camera inspection, not instance extraction. Focus exhibit
+restores the fitted view. Close inspection adjusts the camera's near plane and
+minimum orbit distance to the display scale. Source bounds ignore the gallery's
+placement/scale and measure only visible, referenced vertices; wind matrices and
+skinned bind transforms remain included.
+
+Focused checks verify source identities with duplicate display names, complete
+multi-mesh placements, mirrored isolation/restoration, preserved hidden nodes,
+unchanged matrices/geometry, unknown-selection rejection, bounds under a scaled
+and rotated gallery parent, wind matrices and articulated skin bounds. Existing
+exact geometry-compaction checks, TypeScript, the required normal build and the
+final standalone build pass. No full-suite run or generated-asset changes.
+
+Browser checks find the same 295 source parts in Sentinel Beach as the header
+audit. They exercise the eco valve (node 54, 840 triangles), idol dome (67, 864),
+wind draw (76, 80) and exotic plant (328, 740), direct links, filtering, separate
+render modes, close views, normal/native resolution and native world scale.
+Restoring the complete scene gives its original 501.86 × 171.85 × 520.66 m bounds.
+Console warnings/errors are empty. Evidence is
+`.jak-lab-data/evidence/background-parts-browser-review.json` and the
+`background-part*` / `background-plant*` images. The close plant view revealed the
+Gouraud cutout-alpha limitation noted above; individual-instance recovery and
+full scene/material fidelity remain unfinished.

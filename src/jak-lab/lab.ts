@@ -30,6 +30,10 @@ element('status').before(hostControls);
 const replayField=document.createElement('div');replayField.hidden=true;
 replayField.innerHTML=`<label class="field">EMISSION PLAYBACK<select id="host-replay" aria-label="Emission playback"></select></label><p class="source" id="host-replay-note"></p>`;
 hostControls.before(replayField);
+const sceneParts=document.createElement('details');sceneParts.id='scene-parts';sceneParts.hidden=true;
+sceneParts.innerHTML=`<summary>Scene parts</summary><label class="field">FIND A PROP OR PLANT<input type="search" id="part-search" aria-label="Search scene parts" placeholder="Name or source tree…"></label><label class="field">SOURCE PART<select id="scene-part" size="6" aria-label="Scene part"></select></label><button id="part-close">Close view</button><p class="muted" id="part-note"></p>`;
+element('animation-field').before(sceneParts);
+const partSelect=element<HTMLSelectElement>('scene-part'),partSearch=element<HTMLInputElement>('part-search');
 
 async function boot():Promise<void> {
   const catalogueURL=new URL(new URL(location.href).searchParams.get('catalogue')??
@@ -97,7 +101,10 @@ async function boot():Promise<void> {
   function focus():void {
     const point=locations.get(selected.id)!,view=loaded.get(selected.id);
     const size=view?view.inspectionSize:new THREE.Vector3(8,4,6);
-    const caption=labels.get(selected.id);if(caption)caption.position.y=point.y+size.y+1.5;
+    const caption=labels.get(selected.id);if(caption){
+      caption.position.y=point.y+size.y+1.5;
+      caption.visible=!(view instanceof ModelExhibit&&view.partSelection?.current);
+    }
     const radius=Math.max(2,size.length()*.5);
     // Reserve the central viewport for the exhibit; the two fixed panels cover
     // its sides. Native-size backgrounds also need a larger far plane and orbit.
@@ -105,8 +112,8 @@ async function boot():Promise<void> {
     const distance=radius/Math.sin(halfFov)*1.1;
     controls.target.copy(point).add(new THREE.Vector3(0,Math.max(.4,size.y*.5),0));
     camera.position.copy(controls.target).add(new THREE.Vector3(9,6.8,12).normalize().multiplyScalar(distance));
-    camera.far=Math.max(400,distance+radius*3);camera.updateProjectionMatrix();
-    controls.maxDistance=Math.max(65,distance*4);
+    camera.near=.05;camera.far=Math.max(400,distance+radius*3);camera.updateProjectionMatrix();
+    controls.minDistance=2;controls.maxDistance=Math.max(65,distance*4);
     scene.fog=nativeScale.checked?null:galleryFog;
     camera.lookAt(controls.target);
     exploring=false;controls.enabled=true;element('explore').setAttribute('aria-pressed','false');controls.update();
@@ -116,6 +123,8 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
+    sceneParts.hidden=!(view instanceof ModelExhibit&&view.partSelection?.parts.length);
+    if(view instanceof ModelExhibit&&view.partSelection)renderPartOptions(view);
     replayField.hidden=!(view instanceof ParticleExhibit&&view.replays.length);
     replaySelect.replaceChildren(new Option('Held emitter (inspection)','-1'));
     if(view instanceof ParticleExhibit) {
@@ -148,6 +157,12 @@ async function boot():Promise<void> {
       for(const clip of view.clips)animationSelect.add(new Option(clip.name,clip.name));animationSelect.value=view.clipName;
       status.classList.remove('pending');status.textContent='Original geometry and animation. Gouraud uses sampled vertex colour and vertex lighting; no diffuse textures.';
       element('provenance').textContent=`${selected.model!.path}\n${view.dimensions.toArray().map(v=>v.toFixed(2)).join(' × ')} m · ${view.clips.length} source animations`;
+      const part=view.partSelection?.current;
+      if(part) {
+        element('selected-kind').textContent=part.kind==='wind-draw'?'Source wind draw':part.kind==='shrub'?'Detail placements':'Prop placements';
+        element('selected-name').textContent=part.name;
+        element('provenance').textContent+=`\n${part.tree} · ${part.id}\n${part.meshes} draws · ${part.triangles.toLocaleString()} triangles`;
+      }
     } else if(view instanceof ParticleExhibit) {
       status.classList.toggle('pending',view.issues.size>0);
       status.textContent=view.issues.size?`Source graph loaded. Fidelity work remaining:\n${[...view.issues].join('\n')}`:
@@ -161,9 +176,31 @@ async function boot():Promise<void> {
     }
     loading.textContent=view?'':errors.get(selected.id)??`Loading ${selected.name}…`;
   }
-  function select(exhibit:Exhibit):void {
+  function select(exhibit:Exhibit,preservePart=false):void {
+    if(selected.id!==exhibit.id){partSearch.value='';sceneParts.open=false;}
     selected=exhibit;nativeScale.checked=false;focus();inspect();renderResults();tick=1;
-    const url=new URL(location.href);url.searchParams.set('exhibit',selected.id);history.replaceState(null,'',url);
+    const url=new URL(location.href);url.searchParams.set('exhibit',selected.id);
+    if(!preservePart) {
+      const view=loaded.get(exhibit.id),part=view instanceof ModelExhibit?view.partSelection?.current:null;
+      if(part)url.searchParams.set('part',part.id);else url.searchParams.delete('part');
+    }
+    history.replaceState(null,'',url);
+  }
+  function renderPartOptions(view:ModelExhibit):void {
+    const selection=view.partSelection!;
+    const query=partSearch.value.trim().toLowerCase(),current=selection.current;
+    const matches=selection.parts.filter(part=>`${part.name} ${part.tree} ${part.kind}`.toLowerCase().includes(query));
+    partSelect.replaceChildren(new Option('Complete level scene',''));
+    const choices=current&&!matches.includes(current)?[current,...matches]:matches;
+    for(const part of choices)partSelect.add(new Option(
+      `${part.kind==='shrub'?'Detail':part.kind==='wind-draw'?'Wind draw':'Prop'} · ${part.name} · ${part.tree}`,part.id));
+    partSelect.value=current?.id??'';
+    element<HTMLButtonElement>('part-close').disabled=!current;
+    sceneParts.querySelector('summary')!.textContent=`Scene parts · ${selection.parts.length.toLocaleString()}`;
+    element('part-note').textContent=current?
+      current.kind==='wind-draw'?'One source wind draw, with its original placement. A draw may be only part of an object. Double-click a surface for a close view.':
+        'All source placements of this named prop are shown together. Close view starts at the first source surface. Double-click another surface to inspect it; Focus exhibit restores the full view.':
+      `${matches.length.toLocaleString()} matching parts. Choose one to isolate it; return to Complete level scene to restore the background.`;
   }
   function renderResults():void {
     const count=6,pages=Math.max(1,Math.ceil(filtered.length/count));page=Math.min(page,pages-1);
@@ -203,7 +240,13 @@ async function boot():Promise<void> {
         if(!wanted.has(id)){view.dispose();return;}
         view.root.position.copy(locations.get(id)!).setY(.16);view.setRendering(mode);scene.add(view.root);loaded.set(id,view);
         const caption=labels.get(id);if(caption)caption.position.y=view.inspectionSize.y+1.5;
-        if(id===selected.id){view.setNativeScale(nativeScale.checked);inspect();if(!exploring)focus();}
+        if(id===selected.id){
+          const requestedPart=new URL(location.href).searchParams.get('part');
+          if(view instanceof ModelExhibit&&view.partSelection?.parts.some(part=>part.id===requestedPart)) {
+            view.setPart(requestedPart!);sceneParts.open=true;
+          }
+          view.setNativeScale(nativeScale.checked);inspect();if(!exploring)focus();
+        }
       }).catch(error=>{pending.delete(id);errors.set(id,String(error));if(id===selected.id)inspect();console.error('Exhibit load failed',id,error);});
     }
   }
@@ -218,6 +261,25 @@ async function boot():Promise<void> {
   element('restart').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(0);else view?.restart();};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
+  partSearch.oninput=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit&&view.partSelection)renderPartOptions(view);};
+  partSelect.onchange=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit))return;
+    view.setPart(partSelect.value);view.setNativeScale(nativeScale.checked);inspect();focus();
+    const url=new URL(location.href);if(partSelect.value)url.searchParams.set('part',partSelect.value);else url.searchParams.delete('part');
+    history.replaceState(null,'',url);
+  };
+  function closeToSurface(point:THREE.Vector3,view:ModelExhibit):void {
+    const direction=camera.position.clone().sub(controls.target).normalize();
+    const distance=Math.max(.03,Math.min(camera.position.distanceTo(point)*.2,8*view.scale));
+    controls.target.copy(point);camera.position.copy(point).addScaledVector(direction,distance);
+    camera.near=Math.min(.05,view.scale*.01);camera.updateProjectionMatrix();
+    controls.minDistance=Math.max(.001,view.scale*.2);
+    controls.enabled=true;exploring=false;element('explore').setAttribute('aria-pressed','false');controls.update();
+  }
+  element('part-close').onclick=()=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit))return;
+    const point=view.partSurfacePoint();if(point)closeToSurface(point,view);
+  };
   for(const id of ['host-root','host-heading','host-slope','host-water','host-fade'])element<HTMLInputElement>(id).oninput=()=>{
     const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit))return;
     const h=view.motion.host;
@@ -257,8 +319,18 @@ async function boot():Promise<void> {
       rotation.x=THREE.MathUtils.clamp(rotation.x-(event.clientY-lastY)*.004,-1.48,1.48);camera.quaternion.setFromEuler(rotation);}
     lastX=event.clientX;lastY=event.clientY;
   });
+  canvas.addEventListener('dblclick',event=>{
+    const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit)||!view.partSelection?.current)return;
+    const rect=canvas.getBoundingClientRect(),ray=new THREE.Raycaster(),meshes:THREE.Mesh[]=[];
+    ray.setFromCamera(new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1,1-(event.clientY-rect.top)/rect.height*2),camera);
+    view.root.traverseVisible(node=>{if(node instanceof THREE.Mesh)meshes.push(node);});
+    const hit=ray.intersectObjects(meshes,false)[0];if(!hit)return;
+    // Inspect an actual rendered surface without inventing instance boundaries
+    // or removing any of the other source placements.
+    closeToSurface(hit.point,view);
+  });
   const clock=new THREE.Clock(),movement=new THREE.Vector3(),right=new THREE.Vector3(),forward=new THREE.Vector3();
-  const requested=new URL(location.href).searchParams.get('exhibit');select(exhibits.find(exhibit=>exhibit.id===requested)??selected);
+  const requested=new URL(location.href).searchParams.get('exhibit');select(exhibits.find(exhibit=>exhibit.id===requested)??selected,true);
   renderResults();resize();
   renderer.setAnimationLoop(()=>{
     const dt=Math.min(.05,clock.getDelta());frameTime+=(dt-frameTime)*.04;

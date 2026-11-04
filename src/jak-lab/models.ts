@@ -4,6 +4,8 @@ import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {assetURL, type ModelDefinition, type RenderingMode} from './types';
 import {gouraudMaterial} from './gouraudMaterial';
 import {compactGeometry} from './compactGeometry';
+import {BackgroundPartSelection} from './backgroundParts';
+import {preciseBounds} from './modelBounds';
 
 const loader = new GLTFLoader();
 const imagePixels = new WeakMap<object, ImageData>();
@@ -69,33 +71,6 @@ function gouraud(mesh: THREE.Mesh): void {
   mesh.material = Array.isArray(mesh.material) ? materials : materials[0];
 }
 
-/** OpenGOAL exports shared vertex buffers containing unrelated unused vertices.
- * Measure the actually referenced vertices, including their bind transforms. */
-function preciseBounds(root: THREE.Object3D): THREE.Box3 {
-  root.updateMatrixWorld(true);
-  const box = new THREE.Box3(), point = new THREE.Vector3();
-  root.traverse(node => {
-    if (!(node instanceof THREE.Mesh)) return;
-    if (node instanceof THREE.SkinnedMesh) node.skeleton.update();
-    const geometry = node.geometry;
-    const local = new THREE.Box3();
-    const indices = geometry.index ? new Set(Array.from(geometry.index.array as ArrayLike<number>)) :
-      Array.from({length: geometry.getAttribute('position').count}, (_, i) => i);
-    for (const index of indices) {
-      node.getVertexPosition(index, point); local.expandByPoint(point); point.applyMatrix4(node.matrixWorld);
-      if (point.toArray().every(Number.isFinite)) box.expandByPoint(point);
-    }
-    // WebGLRenderer also uses the sphere for transparent sorting, even with
-    // frustum culling disabled. Never let it evaluate unrelated skin vertices.
-    if (node instanceof THREE.SkinnedMesh) {
-      node.boundingBox = local; node.boundingSphere = local.getBoundingSphere(new THREE.Sphere());
-    }
-    node.frustumCulled = false;
-  });
-  if (box.isEmpty()) throw new Error('Export has no finite referenced geometry');
-  return box;
-}
-
 export class ModelExhibit {
   readonly root = new THREE.Group();
   readonly original = new THREE.Group();
@@ -109,14 +84,19 @@ export class ModelExhibit {
   private elapsed = 0;
   private readonly source: THREE.Object3D;
   private readonly derived: THREE.Object3D;
+  private readonly sourcePosition: THREE.Vector3;
+  readonly partSelection: BackgroundPartSelection | null;
+  private nativeScale=false;
 
   private constructor(source: THREE.Object3D, clips: THREE.AnimationClip[], readonly definition: ModelDefinition) {
     this.source = source;
+    this.sourcePosition=source.position.clone();
     const bounds = preciseBounds(source), center = bounds.getCenter(new THREE.Vector3());
     this.dimensions = bounds.getSize(new THREE.Vector3());
     this.displayScale = Math.min(2, 3.8 / Math.max(...this.dimensions.toArray()));
     const derived = this.derived = clone(source);
     derived.traverse(node => {if (node instanceof THREE.Mesh) gouraud(node);});
+    this.partSelection=definition.background?new BackgroundPartSelection(source,derived):null;
     source.position.sub(new THREE.Vector3(center.x, bounds.min.y, center.z));
     derived.position.copy(source.position);
     this.original.add(source); this.alternative.add(derived);
@@ -136,6 +116,12 @@ export class ModelExhibit {
       if(data.byteLength!==definition.decodedBytes)throw new Error('Incomplete model transfer');
       asset=await loader.parseAsync(data,new URL('./',new URL(url,location.href)).href);
     } else asset=await loader.loadAsync(url);
+    // Keep the authoritative GLTF node IDs; Three sanitizes and uniquifies
+    // display names, which are not stable identifiers for source prototypes.
+    asset.scene.traverse(node=>{
+      const index=asset.parser.associations.get(node)?.nodes;
+      if(index!==undefined)node.userData.jakSourceNode=index;
+    });
     return new ModelExhibit(asset.scene, asset.animations, definition);
   }
   get scale(): number {return this.original.scale.x;}
@@ -154,10 +140,36 @@ export class ModelExhibit {
     this.seek(0);
   }
   setNativeScale(native: boolean): void {
+    this.nativeScale=native;
     for (const group of [this.original, this.alternative]) group.scale.setScalar(native ? 1 : this.displayScale);
     const separation = Math.max(2.6, this.dimensions.x * this.scale * .5 + .6);
     this.original.position.x = this.view === 'compare' ? -separation : 0;
     this.alternative.position.x = this.view === 'compare' ? separation : 0;
+  }
+  setPart(id:string):void {
+    if(!this.partSelection)return;
+    this.partSelection.select(id);
+    this.source.position.copy(this.sourcePosition);
+    const bounds=preciseBounds(this.source),center=bounds.getCenter(new THREE.Vector3());
+    bounds.getSize(this.dimensions);
+    this.displayScale=Math.min(2,3.8/Math.max(...this.dimensions.toArray()));
+    this.source.position.sub(new THREE.Vector3(center.x,bounds.min.y,center.z));
+    this.derived.position.copy(this.source.position);
+    this.setNativeScale(this.nativeScale);
+  }
+  partSurfacePoint():THREE.Vector3|null {
+    if(!this.partSelection?.current)return null;
+    this.root.updateWorldMatrix(true,true);
+    let point:THREE.Vector3|null=null;
+    this.root.traverseVisible(node=>{
+      if(point||!(node instanceof THREE.Mesh))return;
+      const g=node.geometry,total=g.index?.count??g.getAttribute('position')?.count??0,start=g.drawRange.start;
+      if(total-start<3||g.drawRange.count<3)return;
+      point=new THREE.Vector3();
+      for(let i=0;i<3;i++)point.add(node.getVertexPosition(g.index?g.index.getX(start+i):start+i,new THREE.Vector3()));
+      point.multiplyScalar(1/3).applyMatrix4(node.matrixWorld);
+    });
+    return point;
   }
   setRendering(mode: RenderingMode): void {
     this.view = mode;
@@ -171,7 +183,8 @@ export class ModelExhibit {
     this.root.updateMatrixWorld(true);
   }
   update(dt: number): void {this.seek(this.elapsed + dt);}
-  get diagnostics() {return {view: this.view, scale: this.scale, clip: this.clipName, seconds: this.elapsed};}
+  get diagnostics() {return {view: this.view, scale: this.scale, clip: this.clipName, seconds: this.elapsed,
+    sceneParts:this.partSelection?.parts.length??0,selectedPart:this.partSelection?.current?.id??null};}
   dispose(): void {
     for (const mixer of this.mixers) {mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot());}
     const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>(), textures = new Set<THREE.Texture>();
