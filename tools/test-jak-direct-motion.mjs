@@ -54,10 +54,14 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
       maxSpeed=Math.max(maxSpeed,p.walkVelocity.length());
       if(name==='full'&&!p.grounded&&p.footStudyFrame===20) {
         p.group.updateWorldMatrix(true,true);
+        // D now has deliberate joint follow-through. Verify that the rendered
+        // hierarchy matches that composed pose, without a second legacy layer.
+        isolated.applyPose(runtime.lastSampledPose);isolated.root.updateMatrixWorld(true);
         for(const [j,c,s,t] of segments) {
           const point=id=>p.riderG.worldToLocal(binding.joints.get(id).getWorldPosition(new THREE.Vector3()));
-          const got=point(c).sub(point(j)).normalize(),ref=bank.clips.jump.samples[20];
-          const want=new THREE.Vector3().fromArray(ref[t].p).sub(new THREE.Vector3().fromArray(ref[s].p)).normalize();
+          const got=point(c).sub(point(j)).normalize();
+          const want=isolated.joints.get(c).getWorldPosition(new THREE.Vector3())
+            .sub(isolated.joints.get(j).getWorldPosition(new THREE.Vector3())).normalize();
           liveApexDirectionError=Math.max(liveApexDirectionError,got.angleTo(want));
         }
       }

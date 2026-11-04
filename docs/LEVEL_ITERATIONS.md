@@ -8680,3 +8680,28 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   No integration or publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## D — rubbery roll and double jump
+
+- Completed 4 November 2026 NZDT, approximately 28 minutes prompt-to-validated
+  playable (22:38–23:06 NZDT). Local A/B/C/D comparison only.
+- Added shared editable D elasticity profiles: independent segment compression,
+  stretch and finite recoil preserve the original source deformation. The roll
+  now visibly tucks and extends; second-boost limb stretch arrives before the
+  slower body rotation blend completes. No whole-skeleton scale or physics edit.
+- Added airborne/landing joint follow-through. It preserves rotation when a
+  roll is interrupted by a double jump and smooths the source landing's internal
+  splice, then gives exact ownership back to phase-matched native locomotion.
+- New 1,440-frame before/after regression verifies exact physics parity and
+  finite segment deformation. Peak roll joint steps fall from 62.1° to 27.4°;
+  short-landing steps fall from 83.6° to 30.0°. Existing double-jump, height,
+  precision-hop, idle/recovery, source retarget and skating checks pass. Twelve
+  A/D head peaks remain within 0.050 m. Runtime, elasticity, strict review types,
+  build and release size pass (803,514,472 bytes). No full-suite run.
+- Full browser review at normal/native resolution: running roll into double,
+  upright double and running rebound. No console warnings/errors. Original
+  720p/2× settings restored; D ready in live play. Evidence: `d-rubber-motion/`
+  outside Git. A/B/C, jump/skate gesture, physical arcs and level data unchanged.
+  No integration or publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

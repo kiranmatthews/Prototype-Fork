@@ -592,3 +592,52 @@ play. Evidence is external in `d-precision-jumps/` beside the source bank.
 Approximately 15 minutes prompt-to-validated playable (21:34–21:49 NZDT), followed
 by local commit/handoff. No integration or publication; A/B/C and level data
 are unchanged.
+
+## D — rubbery roll, double jump and recovery, 4 November 2026 NZDT
+
+The roll and second jump now use shared, editable `jak-flip` and
+`jak-double-jump` elasticity profiles. Finite compression, extension and recoil
+beats multiply the original segment lengths rather than replacing them. Torso,
+upper arms, forearms, thighs and shins deform independently, with the existing
+volume compensation; the whole rider and skeleton are never scaled. The source
+double jump already stretches the torso, so the extra accent is stronger in the
+limbs. Uninterrupted rolls now compress the shins to about 0.82 and extend them
+to 1.15, compared with the previous almost rigid 0.97–1.00.
+
+A critically damped pose spring carries joint momentum through D's airborne
+motion and landing recovery. The body follows quickly while distal segments
+trail slightly. Roll entry and fall blends are 0.10 seconds; an interrupted roll
+has a 0.18-second moving transition into double jump. Limb stretch blends over
+0.06 seconds independently of that rotation, keeping the second impulse visible.
+Upright double transitions retain 0.10 seconds. The upright first-jump root
+gather has a small presentation adjustment to retain A's visible head reach.
+The spring also smooths a sharp internal splice in the source landing, then
+fades out over the final 30% to hand off exactly to the existing run/idle phase.
+Skating, ledges and steady locomotion retain their existing presentation owners.
+
+The new six-case regression records 1,440 real-controller/rendered-pose frames
+and compares every physical sample with the pre-change baseline: all match
+exactly. The worst measured roll joint step fell from 62.1 to 27.4 degrees per
+frame; the short landing's 83.6-degree step fell to 30.0. The interrupted roll
+keeps rotating on the first double-jump frame rather than freezing. All segment
+values remain finite and the whole-rider scale remains one.
+
+The 3,600-frame double-jump regression passes, with at least 0.420 m of rendered
+head rise in the first three boost frames. The 6,620-frame height/recovery
+regression keeps all twelve A/D head peaks within 0.050 m and the final landing
+handoffs have no measurable head discontinuity. Precision hops (4,840 frames),
+native idle/recovery (3,360 frames), pure-source retargeting (1,026 samples),
+jump/skate gesture, D skating parity, animation runtime, shared elasticity,
+strict review types, production build and release-size check pass. Production
+output is 803,514,472 bytes; the local review and extracted assets stay excluded.
+No full-suite run.
+
+Full-render browser review covers the running roll/double jump, upright boost
+and running rebound in side/front/oblique views, at normal 720p and native
+resolution. Console warnings/errors are empty. Original 720p/2× settings were
+restored, with D in live play and real-time speed. Evidence is external in
+`d-rubber-motion/` beside the source bank. Approximately 28 minutes from prompt
+to validated playable (22:38–23:06 NZDT), followed by local commit/handoff.
+The user allowed slight D tuning changes, but the animation changes needed no
+physics retune. A/B/C, precision-hop selection, skating and level data remain
+unchanged. Local comparison only; no integration or publication.

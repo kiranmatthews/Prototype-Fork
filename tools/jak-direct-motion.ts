@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { createProceduralMotionContext, sampleComposedClip, withCharacterElasticity } from '../src/animation';
+import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS, createProceduralMotionContext, sampleComposedClip, withCharacterElasticity } from '../src/animation';
 import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefinition, QuaternionTuple, Vec3Tuple } from '../src/animation';
 import type { OnFootJumpStudy } from '../src/onFootJumpStudy';
 
@@ -180,6 +180,19 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':id==='player.climb'?'climb':ledge?'hands':'feet';
     const locomotion=['player.run','player.walk','player.jak-run-land','player.jak-run-land-weak'].includes(id);
     const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1),locomotion));
+    const elasticProfile=id==='player.jak-flip'?'jak-flip':id==='player.double-jump'?'jak-double-jump':null;
+    if(elasticProfile) {
+      const amplitudes=characterElasticityAmplitudes(elasticProfile);
+      const beats=id==='player.jak-flip'?[[0,0],[.10,.65],[.26,-.9],[.58,-.65],[.76,.9],[.91,-.15],[1,0]]
+        :[[0,0],[5/40,-.28],[9/40,1],[14/40,-.65],[22/40,.25],[34/40,0],[1,0]];
+      for(let i=0;i<poses.length;i++) {
+        const phase=i/Math.max(1,poses.length-1);
+        const index=Math.max(1,beats.findIndex(b=>b[0]>=phase));
+        const [from,to]=[beats[index-1],beats[index]];
+        const pulse=THREE.MathUtils.lerp(from[1],to[1],THREE.MathUtils.smoothstep(phase,from[0],to[0]));
+        for(const [control,part] of ELASTIC_LENGTH_CONTROLS)poses[i].lengths[control]*=1+amplitudes[part]*pulse;
+      }
+    }
     for(const target of Object.keys(poses[0].locals))tracks.push({id:`${id}:${target}:source`,kind:'quaternion',target,
       keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.locals[target],interpolation:'linear'}))});
     tracks.push({id:`${id}:root:source`,kind:'position',target:'root',keys:poses.map((pose,i)=>({id:`${id}:root:p${i}`,time:Math.min(reference.duration,i/60),value:pose.root,interpolation:'linear'}))});
@@ -200,6 +213,7 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
         ...(startFrame?{jakSourceStartFrame:startFrame}:{}),
         referenceStudy:'Direct local source sample retarget; source data excluded from Git and production'},
     },rig);
+    if(elasticProfile)clip.metadata={...clip.metadata,elasticityProfile:elasticProfile};
     if(id==='player.run') {
       clip.name='D · Bone Man / Jak run (50/50)';
       clip.metadata={...clip.metadata,jakNativeRunClip:nativeRun.id,jakNativeRunWeight:.5,

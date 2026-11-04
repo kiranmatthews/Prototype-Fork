@@ -1,5 +1,6 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { MathUtils } from 'three';
+import { JakAirPoseSpring } from './jakAirMotion';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
@@ -307,6 +308,7 @@ export class CharacterAnimationRuntime {
   private runStopSettleElapsed = 0;
   private transient: RuntimeTransient | null = null;
   private lastSampledPose: PoseBuffer | null = null;
+  private readonly jakAirSpring = new JakAirPoseSpring();
   private transitionBlendWeight: number | null = null;
   private switchOutgoingPose: PoseBuffer | null = null;
   private bailOutgoingPose: PoseBuffer | null = null;
@@ -639,6 +641,7 @@ export class CharacterAnimationRuntime {
 
     const previousClipId = this.currentClipId;
     const switched = previousClipId !== clip.id || this.restartPending;
+    if (this.restartPending) this.jakAirSpring.reset();
     if (switched) {
       const idle = this.findPlayableClip('player.idle');
       const locomotionSwitch = this.manualClipId === null && !this.restartPending &&
@@ -651,7 +654,7 @@ export class CharacterAnimationRuntime {
         clip.id === 'player.double-jump' && previousClip?.metadata?.jakDirect;
       // Upright hops need less rotation to unwind; finish that shorter blend
       // before the second apex so its upward accent stays visible.
-      const directDoubleBlend = previousClipId === 'player.jak-flip' ? .14 : .10;
+      const directDoubleBlend = previousClipId === 'player.jak-flip' ? .18 : .10;
       // A steady outgoing loop keeps moving as it fades. If input reverses
       // during a fade, start from the last fully mixed pose instead: restarting
       // a raw source there would pop the entire skeleton back to that source.
@@ -685,7 +688,8 @@ export class CharacterAnimationRuntime {
         ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? directDoubleBlend : clip.id === LAND_CLIP_ID ? .02
-            : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14 : .05 : 0)
+            : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14
+            : clip.id==='player.jak-flip'||clip.id==='player.fall' ? .10 : .05 : 0)
           : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
       // Bail's visible get-up is a moving procedural pose under its editable
@@ -910,14 +914,17 @@ export class CharacterAnimationRuntime {
         : outgoing
         ? this.samplePoseAt(outgoing.clip, clipTimeAt(outgoing.clip, outgoing.playbackSeconds, { offset: outgoing.offset }), outgoing.motion, true)
         : this.switchOutgoingPose;
-      pose = blendPoses(
-        withControlDefaults(
-          canonicalizePose(outgoingPose, this.binding),
-          this.controlDefaults,
-        ),
-        withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
-        weight,
-      );
+      const outgoingTarget = withControlDefaults(canonicalizePose(outgoingPose, this.binding), this.controlDefaults);
+      const incomingTarget = withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults);
+      pose = blendPoses(outgoingTarget, incomingTarget, weight);
+      if (clip.metadata?.jakDirect && clip.id === 'player.double-jump') {
+        // The limbs stretch with the new impulse while the body's rotation
+        // finishes its slower unwind. A long pose fade must not hide the pop.
+        const elasticWeight = smoothstep01(this.switchBlendElapsed / .06);
+        for (const [id, value] of Object.entries(incomingTarget.scalars))
+          if (/^deform\.(arm|leg)\..*\.length$/.test(id))
+            pose.scalars[id] = MathUtils.lerp(outgoingTarget.scalars[id], value, elasticWeight);
+      }
       this.transitionBlendWeight = weight;
       if (weight >= 1) {
         this.switchOutgoingPose = null;
@@ -964,6 +971,15 @@ export class CharacterAnimationRuntime {
       pose = {joints:Object.fromEntries(Object.entries(pose.joints).filter(([id])=>owned.has(id))),
         scalars:Object.fromEntries(Object.entries(pose.scalars).filter(([id])=>id.startsWith('deform.arm.')||id==='deform.torso.length'))};
     }
+    const directLandingSpring = clip.metadata?.jakDirect && this.transient?.kind === 'landing';
+    if (this.manualClipId === null && clip.metadata?.jakDirect && (directLandingSpring || !motion.grounded &&
+        ['player.jump','player.double-jump','player.jak-flip','player.fall'].includes(clip.id))) {
+      const filtered = this.jakAirSpring.sample(pose, dt, this.lastSampledPose);
+      // Retain momentum through the source landing's internal clip splice,
+      // then return exact ownership to the phase-matched locomotion target.
+      const phase = (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
+      pose = directLandingSpring ? blendPoses(pose, filtered, 1 - smoothstep01((phase - .70) / .30)) : filtered;
+    } else this.jakAirSpring.reset();
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
     // from the fully composed joint pose, and limbs never inherit parent scale.
@@ -1072,7 +1088,7 @@ export class CharacterAnimationRuntime {
       const frame = motion.inputs?.jakFrame ?? 0;
       const gather = smoothstep01((frame - 2) / 9) * (1 - smoothstep01((frame - 29) / 11));
       const root = pose.joints.root?.position;
-      if (root) root[1] -= .33 * gather;
+      if (root) root[1] -= .37 * gather;
     }
     const nativeRunId = clip.metadata?.jakNativeRunClip;
     const nativeRun = typeof nativeRunId === 'string' ? this.findPlayableClip(nativeRunId) : null;
@@ -1340,6 +1356,7 @@ export class CharacterAnimationRuntime {
     this.proceduralDriverCount = 0;
     this.motionContext = null;
     this.lastSampledPose = null;
+    this.jakAirSpring.reset();
     this.transitionBlendWeight = null;
     this.switchOutgoingPose = null;
     this.bailOutgoingPose = null;
