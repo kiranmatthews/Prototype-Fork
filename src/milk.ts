@@ -1,68 +1,16 @@
 import * as THREE from 'three';
-import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { buildFruitGeometry, FRUIT_VARIANTS, FruitMaterial } from './fruitAssets';
 
+// Preserve the established pickup, pool and editor contract.
 export const MILK_SIZE = 0.7;
-export const MILK_VARIANTS = ['Pulse 01', 'Pulse 02', 'Pulse 03', 'Pulse 04', 'Pulse 05', 'Pulse 06'] as const;
-const optics = /* glsl */ `
-vec3 n = normalize(vMilkNormal);
-vec3 eye = normalize(vMilkEye);
-float wrap = clamp((dot(n, normalize(vec3(-0.45, 0.65, 0.6))) + 0.55) / 1.55, 0.0, 1.0);
-float edge = pow(1.0 - max(dot(n, eye), 0.0), 3.0);
-// Juicy orange fruit: burnt-orange shade and a golden sunlit body.
-vec3 body = mix(vec3(0.34, 0.035, 0.006), vec3(1.0, 0.30, 0.012), wrap);
-vec3 reflection = reflect(-eye, n);
-float key = max(dot(reflection, normalize(vec3(-0.48, 0.65, 0.65))), 0.0);
-float fill = max(dot(reflection, normalize(vec3(0.8, 0.15, 0.6))), 0.0);
-float wet = 0.28 * pow(key, 10.0) + 0.52 * pow(key, 48.0) + 0.16 * pow(fill, 22.0);
-vec3 outgoingLight = body * diffuseColor.rgb + vec3(1.0, 0.75, 0.32) * wet + vec3(0.15, 0.055, 0.005) * edge;
-`;
+export const MILK_VARIANTS = FRUIT_VARIANTS.map(v => v.name);
+export class MilkMaterial extends FruitMaterial {}
 
-/** Texture-free orange body and broad juicy reflections; native fog/fades retained. */
-export class MilkMaterial extends THREE.MeshBasicMaterial {
-  constructor() {
-    super({ color: 0xffffff, toneMapped: false });
-    this.name = 'juicy orange fruit';
-    // This material serves every level and HUD flight. Scenery-only depth
-    // blackening must never turn low-altitude pickups into silhouettes.
-    this.userData.levelDepthFade = false;
-    this.onBeforeCompile = shader => {
-      shader.vertexShader = 'varying vec3 vMilkNormal;\nvarying vec3 vMilkEye;\n' + shader.vertexShader
-        .replace('#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )', '#if 1')
-        .replace('#include <project_vertex>', '#include <project_vertex>\n#ifdef USE_INSTANCING\nvMilkNormal = transformedNormal;\n#else\nvMilkNormal = normalMatrix * objectNormal;\n#endif\nvMilkEye = -mvPosition.xyz;');
-      shader.fragmentShader = 'varying vec3 vMilkNormal;\nvarying vec3 vMilkEye;\n' + shader.fragmentShader
-        .replace('vec3 outgoingLight = reflectedLight.indirectDiffuse;', optics);
-    };
-  }
-  customProgramCacheKey(): string { return 'orange-fruit-motion-v2'; }
-}
-
-/** Closed, smooth radial surfaces, normalized inside a one-unit pickup envelope. */
-export function buildMilkGeometry(_variant = 0): THREE.BufferGeometry {
-  const sphere = new THREE.SphereGeometry(1, 32, 24);
-  sphere.deleteAttribute('normal'); sphere.deleteAttribute('uv');
-  const geometry = mergeVertices(sphere); sphere.dispose();
-  const position = geometry.getAttribute('position');
-  // One upright, rotationally symmetric teardrop: a broad rounded reservoir
-  // tapering continuously to a softly rounded tip, without a neck or a curl.
-  for (let i = 0; i < position.count; i++) {
-    const x=position.getX(i),y=position.getY(i),z=position.getZ(i);
-    const taper=.74-.38*y;
-    position.setXYZ(i,x*taper,y,z*taper);
-  }
-  geometry.computeBoundingBox();
-  const box = geometry.boundingBox!, center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
-  geometry.translate(-center.x, -center.y, -center.z);
-  // Leave room for shader stretch so even the wobble fits the pickup envelope.
-  const scale = .97 / Math.max(size.x, size.y, size.z);
-  geometry.scale(scale, scale, scale); geometry.computeVertexNormals();
-  geometry.computeBoundingBox(); geometry.boundingBox!.expandByScalar(.016);
-  geometry.computeBoundingSphere(); geometry.boundingSphere!.radius *= 1.03;
+export function buildMilkGeometry(variant = 0): THREE.BufferGeometry {
+  const geometry=buildFruitGeometry(variant);
   addLiquidMorphs(geometry);
-  // Motion can extend beyond the resting pickup envelope. Keep visual culling
-  // conservative; gameplay contact remains the original 0.7 m volume.
+  // Conservative full-motion culling. No camera-distance geometry swaps.
   geometry.boundingSphere!.set(new THREE.Vector3(), 1.25);
-  geometry.name = 'upright orange fruit drop';
-  geometry.userData.shared = true;
   return geometry;
 }
 
@@ -75,11 +23,11 @@ function addLiquidMorphs(geometry: THREE.BufferGeometry): void {
     for (let i = 0; i < p.count; i++) {
       const x = base.getX(i), y = base.getY(i), z = base.getZ(i);
       const tail = (y + .5) * (y + .5) - .25;
-      const wave = .12 * (mode === 4 ? Math.sin(y * 12) : Math.cos(y * 12));
-      if (mode === 0) p.setXYZ(i, x * .76, y * 1.7, z * .76);
-      else if (mode === 1) p.setXYZ(i, x * 1.26, y * .63, z * 1.26);
-      else if (mode === 2) p.setXYZ(i, x + .4 * tail, y, z);
-      else if (mode === 3) p.setXYZ(i, x, y, z + .4 * tail);
+      const wave = .055 * (mode === 4 ? Math.sin(y * 12) : Math.cos(y * 12));
+      if (mode === 0) p.setXYZ(i, x * .88, y * 1.32, z * .88);
+      else if (mode === 1) p.setXYZ(i, x * 1.16, y * .78, z * 1.16);
+      else if (mode === 2) p.setXYZ(i, x + .20 * tail, y, z);
+      else if (mode === 3) p.setXYZ(i, x, y, z + .20 * tail);
       else p.setXYZ(i, x * (1 + wave), y, z * (1 + wave));
     }
     deformed.computeVertexNormals();
@@ -97,22 +45,28 @@ function addLiquidMorphs(geometry: THREE.BufferGeometry): void {
   geometry.morphAttributes.normal = normalTargets;
 }
 
-const shape = buildMilkGeometry();
+const shapes = MILK_VARIANTS.map((_, i) => buildMilkGeometry(i));
 const material = new MilkMaterial(); material.userData.shared = true;
 const depth = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
 depth.userData.shared = true;
 let nextVariant = 0;
 
-/** Retained API name for pickup handoffs; variants now select timing only. */
+/** Shared sculpt/material resources; each owner retains independent motion. */
 export function setMilkVariant(root:THREE.Object3D,variant:number):void {
   const id=((Math.trunc(variant)%MILK_VARIANTS.length)+MILK_VARIANTS.length)%MILK_VARIANTS.length;
-  const mesh=milkMesh(root);if(mesh)motions.get(mesh)?.setPhase(id);
+  const mesh=milkMesh(root);
+  if(mesh){
+    if(mesh.geometry!==shapes[id]){
+      mesh.geometry=shapes[id];mesh.updateMorphTargets();
+    }
+    motions.get(mesh)?.setPhase(id);
+  }
   root.userData.milkVariant=id;
 }
 
 /** One shared-geometry blob; spin/bob the group using the existing pickup motion. */
 export function milkBlob(size = 1, variant = nextVariant++): THREE.Group {
-  const group = new THREE.Group(), mesh = new THREE.Mesh(shape, material);
+  const group = new THREE.Group(), mesh = new THREE.Mesh(shapes[0], material);
   mesh.userData.milkBlob = true;
   mesh.castShadow = true; mesh.receiveShadow = false;
   mesh.customDepthMaterial = depth;
@@ -120,7 +74,8 @@ export function milkBlob(size = 1, variant = nextVariant++): THREE.Group {
   motions.set(mesh, new LiquidMotion(mesh));
   meshCache.set(group, mesh);
   setMilkVariant(group, variant);
-  group.name = 'hovering orange fruit';
+  group.name = 'hovering Wumpa fruit';
+  mesh.userData.noWaterShore = true;
   return group;
 }
 

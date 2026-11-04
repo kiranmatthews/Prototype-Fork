@@ -1,4 +1,5 @@
 import type { CustomComponent } from '../level';
+import { looseFruitCluster } from './fruit-clusters';
 import { beachfrontPointAtDistance, beachfrontSandHeight } from '../beachfrontCourse';
 import { bayBoardwalk, bayPalm, bayProp, type BayPoint as P } from './banana-bay-theme';
 
@@ -61,6 +62,8 @@ export function createBananaBayCoast():CustomComponent[] {
     stack(d,-1.65,['wood','mystery'],`${nm} / seaward consignment`);
     stack(d+2,1.65,['wood','wood'],`${nm} / landward consignment`);
   };
+  for(const d of [16,86,233,451,674]) c.push(...looseFruitCluster(
+    (side,forward)=>point(d-forward,side),`Banana Bay ${d}`,72));
   // A readable first encounter: mask, solitary crab, then a modest cargo stack.
   stack(30,0,['wood','wood'],'Arrival cargo');crate(40,0,'mask','Protection before the first patrol');
   enemy(49,'grunt',2.1,1.3,'First crab / open sand with room to jump or spin');

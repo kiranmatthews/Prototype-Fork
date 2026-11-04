@@ -5,37 +5,33 @@ const server = await createServer({ logLevel: 'silent', server: { middlewareMode
 try {
   const { milkBlob, buildMilkGeometry, MILK_VARIANTS, MILK_SIZE, MilkMaterial, setMilkVariant, updateMilkMotion, resetMilkMotion, kickMilkMotion, copyMilkMotion } = await server.ssrLoadModule('/src/milk.ts');
   const shapes = new Set();
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < MILK_VARIANTS.length; i++) {
     const g = buildMilkGeometry(i), p = g.getAttribute('position'), n = g.getAttribute('normal');
-    assert.ok(g.index && g.index.count / 3 < 1600, 'pickup triangle budget');
+    assert.ok(g.index && g.index.count / 3 < 5000, 'pickup triangle budget');
     shapes.add(Array.from(p.array).map(x => x.toFixed(4)).join(','));
     const edges = new Map();
     for (let j = 0; j < g.index.count; j += 3) {
       const ids = [0, 1, 2].map(k => g.index.getX(j + k));
+      if (g.getAttribute('fruitPart').getX(ids[0]) > 1.5) continue;
       for (let k = 0; k < 3; k++) {
         const a = ids[k], b = ids[(k + 1) % 3], key = [Math.min(a, b), Math.max(a, b)].join(':');
         const old = edges.get(key) ?? { count: 0, winding: 0 };
         old.count++; old.winding += a < b ? 1 : -1; edges.set(key, old);
       }
     }
-    assert.ok([...edges.values()].every(e => e.count === 2 && e.winding === 0), 'milk shell must be closed');
+    assert.ok([...edges.values()].every(e => e.count === 2 && e.winding === 0), 'fruit body and leaf volumes must be closed');
     for (let j = 0; j < p.count; j++) {
       assert.ok(Number.isFinite(p.getX(j) + p.getY(j) + p.getZ(j)));
       assert.ok(Math.abs(new THREE.Vector3().fromBufferAttribute(n, j).length() - 1) < 1e-5);
-      for (const value of [p.getX(j), p.getY(j), p.getZ(j)]) assert.ok(Math.abs(value) * 1.025 < .5, 'wobble exceeds pickup envelope');
+      for (const value of [p.getX(j), p.getY(j), p.getZ(j)]) assert.ok(Math.abs(value) < .55, 'wobble exceeds pickup envelope');
     }
-    const size = g.boundingBox.getSize(new THREE.Vector3());
-    const tipX = [], bulbX = [];
-    for (let j = 0; j < p.count; j++) {
-      const height = (p.getY(j) - g.boundingBox.min.y) / size.y;
-      if (height > .85) tipX.push(p.getX(j));
-      if (height > .2 && height < .6) bulbX.push(p.getX(j));
-    }
-    assert.ok(Math.max(...tipX) - Math.min(...tipX) <
-      .65 * (Math.max(...bulbX) - Math.min(...bulbX)), 'milk lost its narrow pulled droplet tip');
+    assert.equal(g.morphAttributes.position.length,6);
+    assert.equal(g.morphAttributes.normal.length,6);
+    const parts=new Set(g.getAttribute('fruitPart').array);
+    assert.deepEqual([...parts],[0,1,2],'missing fruit skin, leaves or stalk');
     g.dispose();
   }
-  assert.equal(shapes.size, 1, 'milk uses one upright resting surface');
+  assert.equal(shapes.size, 6, 'variants must have distinct resting sculpts');
   assert.equal(MILK_VARIANTS.length,6);
   const a = milkBlob(MILK_SIZE, 2), b = milkBlob(MILK_SIZE, 2);
   assert.equal(a.children[0].geometry, b.children[0].geometry, 'instances duplicate geometry');
@@ -43,15 +39,18 @@ try {
   assert.equal(a.children[0].geometry.userData.shared, true);
   assert.equal(a.children[0].customDepthMaterial.userData.shared, true);
   setMilkVariant(a, 4); assert.equal(a.userData.milkVariant, 4);
-  assert.equal(a.children[0].geometry, b.children[0].geometry,'timing variety duplicated the base geometry');
+  assert.notEqual(a.children[0].geometry, b.children[0].geometry,'variant did not select its sculpt');
+  assert.equal(a.children[0].geometry,milkBlob(1,4).children[0].geometry,'variant was not shared');
   const material = new MilkMaterial(), copy = material.clone();
   assert.ok(copy instanceof MilkMaterial); assert.equal(copy.transparent, false); assert.equal(copy.depthWrite, true);
   copy.opacity = .3; assert.equal(material.opacity, 1);
   for (const m of [material, copy]) {
-    const shader = { vertexShader: THREE.ShaderLib.basic.vertexShader, fragmentShader: THREE.ShaderLib.basic.fragmentShader, uniforms: {} };
+    const shader = { vertexShader: THREE.ShaderLib.physical.vertexShader, fragmentShader: THREE.ShaderLib.physical.fragmentShader, uniforms: {} };
     m.onBeforeCompile(shader, null);
-    assert.match(shader.vertexShader, /normalMatrix \* objectNormal/);
-    assert.match(shader.fragmentShader, /vec3 outgoingLight = body/);
+    assert.match(shader.vertexShader, /vFruitPosition=position/);
+    assert.match(shader.fragmentShader, /material.sheenColor\*=fruitSkin/);
+    assert.match(shader.fragmentShader, /roughnessFactor=mix/);
+    assert.match(shader.fragmentShader, /grainFade/);
     assert.doesNotMatch(shader.fragmentShader, /vec3 outgoingLight = reflectedLight.indirectDiffuse/);
   }
   // Independent timing, no idle slant, elastic release and direction response.
@@ -83,5 +82,5 @@ try {
     return orb.children[0].morphTargetInfluences;
   });
   for(const sample of samples)sample.forEach((value,i)=>assert.ok(Math.abs(value-samples[0][i])<1e-6,'liquid timing depends on frame rate'));
-  console.log('PASS one shared upright milk drop, closed topology, independent idle pulses, morph normals, release squash, flight stretch/trailing, handoff and settling.');
+  console.log('PASS six shared complete fruit sculpts, closed fruit/leaf topology, PBR peach skin and clones, independent motion, attached morph normals, pool variant switching, flight handoff and settling.');
 } finally { await server.close(); }

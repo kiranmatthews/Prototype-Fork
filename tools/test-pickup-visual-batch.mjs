@@ -11,7 +11,7 @@ try{
  const {PickupVisualBatch}=await server.ssrLoadModule('/src/pickupVisualBatch.ts');
  const root=new THREE.Group();root.position.set(7,-3,11);root.rotation.y=.22;root.scale.set(1.1,.9,1.3);
  const positions=[[-72,-5,203],[-70,-5,202],[-69,-5,201],[-68,-5,200],[1002,2,-180],[1004,2,-179],[1006,2,-178],[40,4,200]];
- const pickups=positions.map((p,i)=>{const mesh=milkBlob(MILK_SIZE,i);mesh.position.set(...p);root.add(mesh);return{mesh,alive:true,box:new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(...p),new THREE.Vector3(1.2,1.5,1.2))};});
+ const pickups=positions.map((p,i)=>{const mesh=milkBlob(MILK_SIZE,i<4?0:i<7?3:5);mesh.position.set(...p);root.add(mesh);return{mesh,alive:true,box:new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(...p),new THREE.Vector3(1.2,1.5,1.2))};});
  const originalBoxes=pickups.map(p=>p.box.clone()),native=pickups.map(p=>p.mesh.children[0]);
  const originalMotion=()=>native.map(mesh=>[mesh.quaternion.toArray(),mesh.morphTargetInfluences.slice()]);
  const resources=new Map();for(const resource of [native[0].geometry,native[0].material,native[0].customDepthMaterial]){resources.set(resource,0);resource.addEventListener('dispose',()=>resources.set(resource,resources.get(resource)+1));}
@@ -23,7 +23,7 @@ try{
   const before=originalMotion();batch.sync();assert.deepEqual(originalMotion(),before,'presentation changed motion state');
   assert.deepEqual(pickups.map(p=>p.box),originalBoxes,'pickup contact bounds changed');
   for(const [ci,cell]of batch.cells.entries()){
-   assert.equal(cell.mesh.geometry,native[0].geometry);assert.equal(cell.mesh.material,native[0].material);
+   assert.equal(cell.mesh.geometry,cell.rows[0].body.geometry);assert.equal(cell.mesh.material,native[0].material);
    assert.equal(cell.mesh.morphTexture,tableOwners[ci]);assert.equal(tableOwners[ci].image.data.length,capacities[ci]);
    const active=cell.rows.filter(r=>r.pickup.alive&&r.pickup.mesh.visible);assert.equal(cell.mesh.count,active.length);
    assert.equal(cell.mesh.visible,active.length>0);
@@ -62,7 +62,7 @@ try{
  const api=await server.ssrLoadModule('/src/level.ts');
  for(const editing of [false,true])for(const crown of [false,true]){
   api.setEditorBuild(editing);
-  const fruit=[{t:'wumpa',p:[-1,1,2]},{t:'wumpa',p:[-2,1,3]}];
+  const fruit=Array.from({length:12},(_,i)=>({t:'wumpa',p:[1+i%3,1,2+Math.floor(i/3)]}));
   const data={v:1,name:'Pickup presentation ownership',spawn:[0,1,0],killY:-20,
    ...(crown?{atmosphere:{profile:'drowned-crown'}}:{}),components:[{t:'platform',p:[0,-.5,0],s:[10,1,10]},...fruit,{t:'gate',p:[0,0,-3]}]};
   const level=new api.Level(new THREE.Scene(),{id:'pickup-batch-fixture',name:data.name,data});
@@ -72,7 +72,7 @@ try{
   if(level.pickupVisualBatch){
    level.pickups[0].alive=false;level.pickups[0].mesh.visible=false;
    level.updateSceneryView(new THREE.PerspectiveCamera());
-   assert.equal(level.pickupVisualBatch.diagnostics.visible,1,'current-view preparation missed collection');
+   assert.equal(level.pickupVisualBatch.diagnostics.visible,11,'current-view preparation missed collection');
   }
   level.dispose();assert.equal(level.pickupVisualBatch,null);
  }

@@ -6,7 +6,8 @@ await withSkateRuntime(async({THREE,server,Level,Player})=>{
   const {milkBlob,MilkMaterial}=await server.ssrLoadModule('/src/milk.ts');
   const {addJungleDepthFade}=await server.ssrLoadModule('/src/jungleGround.ts');
   const shaderFor=material=>{
-    const shader={vertexShader:THREE.ShaderLib.basic.vertexShader,fragmentShader:THREE.ShaderLib.basic.fragmentShader,uniforms:{}};
+    const lib=material.isMeshPhysicalMaterial?THREE.ShaderLib.physical:THREE.ShaderLib.basic;
+    const shader={vertexShader:lib.vertexShader,fragmentShader:lib.fragmentShader,uniforms:{}};
     material.onBeforeCompile(shader,null);return shader;
   };
   const before=milkBlob().children[0].material,baseline=shaderFor(before);
@@ -28,7 +29,7 @@ await withSkateRuntime(async({THREE,server,Level,Player})=>{
     addJungleDepthFade(m);
     const shader=shaderFor(m);
     assert.doesNotMatch(shader.fragmentShader,/vJungleDepthY/);
-    assert.match(shader.fragmentShader,/vec3 outgoingLight = body/);
+    assert.match(shader.fragmentShader,/material.sheenColor\*=fruitSkin/);
   }
   const scenery=new THREE.MeshBasicMaterial();addJungleDepthFade(scenery);
   assert.match(shaderFor(scenery).fragmentShader,/smoothstep\(-10.0, -4.2, vJungleDepthY\)/,'pit scenery lost its depth fade');
