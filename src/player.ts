@@ -954,6 +954,7 @@ export class Player {
   private deckPose = 0; // 0..1: the deck is under the feet; articulated knees + sole planting own the stance
   private skateMountT = -1; // one-shot presentation when on-foot movement becomes skating
   private readonly skateTravelMotion = new SkateTravelMotion();
+  private skateHandoffSmear = false;
   private skateTravelRotations: Array<{node:THREE.Object3D;rotation:THREE.Quaternion}> = [];
   private competitionFinishT = -1;
   private readonly competitionFinishFrom = new THREE.Vector3();
@@ -4142,6 +4143,7 @@ export class Player {
     this.deckPose = 0;
     this.skateMountT = -1;
     this.skateTravelMotion.reset();
+    this.skateHandoffSmear=false;
     this.wallChargePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
@@ -18847,11 +18849,12 @@ export class Player {
         this.lipStallT<=0&&this.revertPoseT<=0&&!this.spinning&&!this.onTransition,
       preparing:this.charging&&Math.hypot(input.moveX,input.moveY)>.25&&!this.boardMountBlocked,
       holdProgress:this.skateCharge/Math.max(.001,TUNING.skateHoldTime),charging:this.charging,
+      charge:this.charging?Math.min(1,this.chargeTimer/Math.max(.001,TUNING.jumpChargeTime)):0,
       braking:input.grabHeld||this.brakeT>.05,
-      speed:this.speed,topSpeed:TUNING.maxSpeed,heading:Math.atan2(this.axisF.x,this.axisF.z),time:this.runTime,stance:this.stance,
+      speed:this.speed,topSpeed:TUNING.maxSpeed,heading:Math.atan2(this.axisF.x,this.axisF.z),time:this.runTime,
     });
-    const visualStance=skateTravel?.exiting?skateTravel.footForward:this.stance;
-    const mountPose = sampleSkateMount(skateTravel ? -1 : dismountT >= 0
+    const visualStance=this.stance;
+    const mountPose = sampleSkateMount(dismountT >= 0
       ? dismountT / SKATE_DISMOUNT_DURATION * SKATE_MOUNT_DURATION : this.skateMountT);
     const characterShape = characterProportionSettings.value;
     this.upperLegLengthR = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
@@ -19196,7 +19199,7 @@ export class Player {
       this.slideTimer <= 0 &&
       !this.crawling &&
       this.freeSkate;
-    this.skatePose += ((skateTravel?.transfer ? skateTravel.stance : onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
+    this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
     // Standing on-foot charge (jump crouch at a standstill): the running-charge
     // knee fold below swings the shoes forward through the floor and the crouch
@@ -19227,7 +19230,7 @@ export class Player {
       onBoard ||
       this.state === 'grind' ||
       (this.state === 'air' && this.airFromSkate && !this.slamActive);
-    this.sidePose += ((skateTravel?.transfer ? skateTravel.stance : sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
+    this.sidePose += ((sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
     // Deck-stand: any time the board is glued under the feet — rolling, plain
     // skate airs, every grind (boardslides included) — conventional knee flex
     // and the measured sole solver keep the feet on the grip.
@@ -19880,10 +19883,11 @@ export class Player {
     // its own low ring instance; board air, grinds, grabs and wallrides remain
     // halo-free. Gameplay timing, reach, scoring and audio stay in updateSpin.
     if (this.spinEffects) {
+      const handoff=skateTravel?.smear===true;
       const active =
-        this.spinning && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
+        (this.spinning||handoff) && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
       const bodyVisible = this.bodyGroup.visible;
-      const boardAttached = this.boardG?.visible ?? false;
+      const boardAttached = !handoff&&(this.boardG?.visible ?? false);
       const groundedSkate = groundedSkateSpinEligible({
         active,
         movementState: this.state,
@@ -19900,9 +19904,10 @@ export class Player {
         groundedSkate,
         bodyVisible,
         preserveRider: this.state === 'hang',
-        characterBounds: this.spinStanceBounds,
-        reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
+        characterBounds: handoff?undefined:this.spinStanceBounds,
+        reset: this.bailing || this.state === 'dead' || this.state === 'gameover' || handoff!==this.skateHandoffSmear,
       });
+      this.skateHandoffSmear=handoff;
       if (this.spinEffects.sculptureVisible) this.bodyGroup.visible = false;
     }
     // Perfect-grind bloom: pink, body-enveloping, fading out over the last
@@ -20406,18 +20411,22 @@ export class Player {
       for(const node of [this.spineG,this.headM,this.armR,this.armL,this.elbowR,this.elbowL,this.wristR,this.wristL])
         if(node)this.skateTravelRotations.push({node,rotation:node.quaternion.clone()});
       if(Object.keys(skateTravel.deformations).length)this.playerAnimationBridge.modulateDeformations(skateTravel.deformations);
-      const carryingHand=this.stance>0?this.gloveRight:this.gloveLeft;
-      if(carryingHand&&skateTravel.grip>0)setCartoonGlovePose(carryingHand,
-        blendCartoonGlovePose(CARTOON_GLOVE_POSES.relaxed,CARTOON_GLOVE_POSES.grab,skateTravel.grip));
       if(this.spineG){
         this.spineG.rotation.z+=visualStance*skateTravel.chestPitch;
         this.spineG.rotation.x+=visualStance*skateTravel.chestRoll;
       }
       if(this.headM){this.headM.rotation.z-=visualStance*skateTravel.chestPitch*.45;this.headM.rotation.x-=visualStance*skateTravel.chestRoll*.6;}
       for(const [arm,elbow,wrist,side] of [[this.armR,this.elbowR,this.wristR,1],[this.armL,this.elbowL,this.wristL,-1]] as const){
-        if(arm){arm.rotation.z+=side*skateTravel.arms;arm.rotation.x+=(side===visualStance?-.32:.20)*skateTravel.push+skateTravel.steer*.14;}
-        if(elbow)elbow.rotation.x-=.18*skateTravel.arms;
-        if(wrist)wrist.rotation.x+=side*.12*skateTravel.bounce;
+        // Grounded travel has low, bent balance arms. The on-foot jump's
+        // high charge wind-up used to leave one hand waving beside the head.
+        const rear=side===visualStance;
+        const swing=Math.cos(2*Math.PI*(skateTravel.pushPhase-.25))*.32*skateTravel.push;
+        if(arm){
+          arm.rotation.x=-.12-.22*this.chargePose+(rear?1:-1)*swing+skateTravel.steer*.12;
+          arm.rotation.z=side*(.42+.08*this.chargePose)+skateTravel.steer*.10;
+        }
+        if(elbow)elbow.rotation.x=-.42-.16*this.chargePose;
+        if(wrist)wrist.rotation.x=side*.12*skateTravel.bounce;
       }
     }
     const iceSkate = this.iceSkateMotion.step(dt, {
@@ -20504,7 +20513,6 @@ export class Player {
       // in front of both shoulders instead of across a side-on torso.
       if (this.upperG) this.upperG.rotation.y = -(this.bodyGroup.rotation.y - this.visualYaw);
     }
-    if(skateTravel?.transfer)this.skateAnimation?.captureTravelPose();
     this.plantOnDeck(underW, this.skateMountT >= 0);
     let skateContactOwned = false;
     if (this.boardG && this.riderG) {
@@ -20523,7 +20531,7 @@ export class Player {
       this.skateAnimation ??= new SkateAnimation(this.group, this.bodyGroup, this.riderG, this.boardG);
       skateContactOwned = this.skateAnimation.apply({
         dt, time: this.runTime,
-        active: (this.boardG.visible || !!skateTravel?.transfer) && !this.isBailing && !this.slamActive && this.starPose < .01 &&
+        active: this.boardG.visible && !this.isBailing && !this.slamActive && this.starPose < .01 &&
           this.slidePose < .001 && this.ledgePose < .001 &&
           this.competitionFinishT < 0 && !this.resultsPose && this.worldMapBaseScale === null &&
           (this.state === 'ride' || this.state === 'air' || this.state === 'grind'),
@@ -20567,13 +20575,11 @@ export class Player {
     if(this.specialFlip&&this.flipT>0)this.applyBackflipPose(1-this.flipT/this.flipDuration);
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
-    if(!skateTravel?.transfer)this.seatOnFoot();
-    if(skateTravel&&this.skateAnimation){
-      this.skateAnimation.applyTravel(skateTravel, {
-        mounted:this.freeSkate||this.state==='grind', grounded:this.grounded,
-        yaw:this.visualYaw,stance:visualStance,carryStance:this.stance,dt,
-      });
-    }else if(this.boardG)delete this.boardG.userData.skateTravel;
+    this.seatOnFoot();
+    if(this.boardG){
+      if(skateTravel)this.boardG.userData.skateTravel={...skateTravel,deformations:undefined,boardVisible:this.boardG.visible};
+      else delete this.boardG.userData.skateTravel;
+    }
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
       const turn=THREE.MathUtils.lerp(launchTurn,launchTurn*launchTurn*(3-2*launchTurn),
