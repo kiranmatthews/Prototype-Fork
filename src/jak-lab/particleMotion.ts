@@ -31,6 +31,11 @@ KNOWN_CALLBACKS.add('sparticle-track-sun');
 const FUEL_CELL_CALLBACKS = ['fuel-cell-hud-orbit-callback', 'fuel-cell-hud-center-callback',
   'fuel-cell-hud-starburst-3-callback', 'fuel-cell-hud-starburst-4-callback'];
 for(const name of FUEL_CELL_CALLBACKS)KNOWN_CALLBACKS.add(name);
+const HEALTH_CALLBACKS=['part-hud-health-01-func','part-hud-health-02-func','part-hud-health-03-func'];
+const ECO_CALLBACKS=['part-hud-eco-timer-01-func','part-hud-eco-timer-02-func','part-hud-eco-timer-03-func'];
+const SCREEN_HUD_CALLBACKS=[...HEALTH_CALLBACKS,...ECO_CALLBACKS,'part-hud-buzzer-func',
+  'part-hud-eco-timer-backing-func','part-hud-eco-timer-func'];
+for(const name of SCREEN_HUD_CALLBACKS)KNOWN_CALLBACKS.add(name);
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
   'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
@@ -73,6 +78,11 @@ export interface ParticleHost {
     joints: Map<number, Vector3>; iconScale: number; centerScale: number;
     starburst3: readonly number[]; starburst4: readonly number[];
     setIconScale: (scale: number) => void;
+  };
+  hud?: {
+    health:number|null;frame:number;healthScale:number;buzzerScale:number;
+    ecoFraction:number;ecoType:'blue'|'yellow'|'red'|'green';
+    ecoScale:number;ecoBackingScale:number;ecoTimerScale:number;
   };
 }
 
@@ -142,6 +152,7 @@ export class ParticleMotion {
           if (name === 'part-hud-racer-heat-func' || RACER_HEAT_SLICES.includes(name)) this.hostInputs.add('racer heat');
           if (name === 'sparticle-track-sun') {this.hostInputs.add('sun');this.hostInputs.add('time of day');}
           if (FUEL_CELL_CALLBACKS.includes(name)) this.hostInputs.add('fuel-cell HUD');
+          if (SCREEN_HUD_CALLBACKS.includes(name)) this.hostInputs.add('screen HUD');
         }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
         if (field.field === 'birth-func') {
@@ -394,6 +405,38 @@ export class ParticleMotion {
       if(v.a!==0)v.a=Math.fround(128*this.host.sunFade);
       if(part===0||part===1||part===2)RGB.forEach((channel,i)=>
         v[channel]=Math.fround(this.host.sunColor.getComponent(i)/(part===0?1:4)));
+    }
+    else if (SCREEN_HUD_CALLBACKS.includes(name)) {
+      const h=this.host.hud,f=Math.fround;
+      if(!h){this.issues.add('Missing screen HUD host');return;}
+      if(HEALTH_CALLBACKS.includes(name)) {
+        const piece=HEALTH_CALLBACKS.indexOf(name)+1;
+        v['scale-x']=v['scale-y']=f(h.healthScale);
+        if(h.health!==null&&h.health<piece)v.a=32;
+        else {
+          v.a=128;
+          if(piece===1) {
+            const value=h.health===1?!(h.frame&8)?f(128+f(f(18.142857)*(h.frame&7))):
+              f(255-f(f(18.142857)*(h.frame&7))):128;
+            v.r=v.g=v.b=value;
+          }
+        }
+      } else if(ECO_CALLBACKS.includes(name)) {
+        const part=ECO_CALLBACKS.indexOf(name),fraction=f(h.ecoFraction);
+        let angle:number;
+        if(fraction<=0)angle=f(-16566.045);
+        else if(part===0)angle=fraction>1?f(910.2222):f(f(182.04445)*f(5+f(263*f(1-fraction))));
+        else if(part===1)angle=fraction>f(.6666667)?f(17294.223):f(f(182.04445)*f(95+f(173*f(1-f(1.5*fraction)))));
+        else angle=fraction>f(.33333334)?f(33678.223):f(f(182.04445)*f(185+f(83*f(1-f(3*fraction)))));
+        v['rot-z']=angle;
+        const rgb=h.ecoType==='yellow'?[128,96,0]:h.ecoType==='red'?[128,32,0]:h.ecoType==='green'?[0,128,32]:[0,64,128];
+        if(fraction>0&&fraction<f(.2)&&!(h.frame&4))rgb[1]*=2;
+        [v.r,v.g,v.b]=rgb;
+        v['scale-x']=v['scale-y']=f(h.ecoScale);
+      } else {
+        v['scale-x']=v['scale-y']=f(name==='part-hud-buzzer-func'?h.buzzerScale:
+          name==='part-hud-eco-timer-backing-func'?h.ecoBackingScale:h.ecoTimerScale);
+      }
     }
     else if (FUEL_CELL_CALLBACKS.includes(name)) {
       const hud=this.host.fuelCell;

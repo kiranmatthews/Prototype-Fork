@@ -3,9 +3,16 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {ModelExhibit} from './models';
 import {ParticleExhibit} from './particles';
 import {FuelCellHudExhibit} from './fuelCellHudExhibit';
+import {ScreenHudExhibit} from './screenHudExhibit';
+import {screenHudDefinitions,screenHudDefinition} from './screenHud';
 import {ParticleRenderPass} from './distortion';
 import {sourceAssemblyDefinitions} from './sourceAssemblies';
 import type {Catalogue, EffectDefinition, Exhibit, RenderingMode} from './types';
+
+type LabView=ModelExhibit|ParticleExhibit|FuelCellHudExhibit|ScreenHudExhibit;
+function isHud(view:LabView|undefined):view is FuelCellHudExhibit|ScreenHudExhibit {
+  return view instanceof FuelCellHudExhibit||view instanceof ScreenHudExhibit;
+}
 import {configureAssetBase} from './types';
 import './lab.css';
 
@@ -40,12 +47,16 @@ hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Adjust 
   <p class="muted" id="host-racer-note">Source needle and heat behavior, shown as isolated HUD layers. Full HUD placement is still pending.</p>`;
 element('status').before(hostControls);
 const hudControls=document.createElement('details');hudControls.hidden=true;
-hudControls.innerHTML=`<summary>Power-cell HUD</summary>
+hudControls.innerHTML=`<summary id="hud-summary">Power-cell HUD</summary>
   <label class="field">SOURCE DISPLAY<select id="hud-format" aria-label="HUD display format"><option value="4:3">4:3 · NTSC</option><option value="16:9">16:9 · NTSC</option></select></label>
   <label class="check"><input type="checkbox" id="hud-full-frame">Show full HUD frame</label>
   <label class="check"><input type="checkbox" id="hud-hold" checked>Hold visible</label>
+  <label class="field" id="hud-health-field">HEALTH<select id="hud-health" aria-label="Health"><option value="3">3 · full</option><option value="2">2</option><option value="1">1 · low health</option><option value="0.5">½</option><option value="0">0</option><option value="none">No target</option></select></label>
+  <label class="field" id="hud-eco-type-field">ECO TYPE<select id="hud-eco-type" aria-label="Eco type"><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="red">Red</option><option value="green">Green</option></select></label>
+  <label class="field" id="hud-eco-charge-field">STARTING ECO (%)<input id="hud-eco-charge" aria-label="Starting eco (%)" type="number" min="0" max="120" step="1" value="100"></label>
+  <label class="check" id="hud-eco-drain-field"><input type="checkbox" id="hud-eco-drain">Drain eco at source rate</label>
   <div class="row"><button id="hud-show">Show HUD</button><button id="hud-hide">Hide HUD</button></div>
-  <p class="muted">Restart replays the arrival. Turn off Hold visible to see the original timed departure. The close view crops the same screen without moving its layers. Pickup counts and tally sounds are not replayed.</p>`;
+  <p class="muted" id="hud-note"></p>`;
 hostControls.before(hudControls);
 const hudAssemblyLink=document.createElement('button');hudAssemblyLink.hidden=true;
 hudAssemblyLink.textContent='View power-cell HUD';hudControls.before(hudAssemblyLink);
@@ -95,7 +106,7 @@ async function boot():Promise<void> {
       area:model.area,kind:'effect',model,death}];
   });
   const exhibits:Exhibit[]=[...catalogue.models.map(model=>({id:'model:'+model.id,name:pretty(model.name),area:model.area,kind:model.background?'scene' as const:'object' as const,model})),...deathExhibits,
-    ...[...catalogue.groups,...directEffects,...sourceAssemblyDefinitions].map(effect=>({id:'effect:'+effect.id,name:pretty(effect.name),area:effect.source.file.startsWith('levels/')?effect.source.file.split('/')[1]:'engine',kind:'effect' as const,effect}))]
+    ...[...catalogue.groups,...directEffects,...sourceAssemblyDefinitions,...screenHudDefinitions(catalogue)].map(effect=>({id:'effect:'+effect.id,name:pretty(effect.name),area:effect.source.file.startsWith('levels/')?effect.source.file.split('/')[1]:'engine',kind:'effect' as const,effect}))]
     .sort((a,b)=>(a.area===b.area?0:a.area==='common'?-1:b.area==='common'?1:a.area.localeCompare(b.area))||a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name));
   const locations=new Map(exhibits.map((exhibit,index)=>[exhibit.id,new THREE.Vector3((index%8-3.5)*16,0,-Math.floor(index/8)*17)]));
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
@@ -120,7 +131,7 @@ async function boot():Promise<void> {
     trim.setMatrixAt(index,matrix.compose(point.clone().setY(.14),rotation,new THREE.Vector3(1,1,1)));
   });scene.add(pedestal,trim);
   const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=65;controls.maxPolarAngle=Math.PI*.49;
-  const loaded=new Map<string,ModelExhibit|ParticleExhibit|FuelCellHudExhibit>(),pending=new Set<string>(),errors=new Map<string,string>(),labels=new Map<string,THREE.Sprite>();
+  const loaded=new Map<string,LabView>(),pending=new Set<string>(),errors=new Map<string,string>(),labels=new Map<string,THREE.Sprite>();
   let selected=exhibits.find(exhibit=>exhibit.model?.id==='common/fuel-cell-lod0')??exhibits[0];
   let mode:RenderingMode='compare',paused=false,speed=1,exploring=false,page=0,filtered=exhibits,wanted=new Set<string>();
   let tick=0,statsTick=0,frameTime=0;
@@ -151,7 +162,7 @@ async function boot():Promise<void> {
     const halfFov=Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov)*.5)*Math.min(1,camera.aspect*(innerWidth>780?.5:1)));
     const distance=radius/Math.sin(halfFov)*1.1;
     controls.target.copy(point).add(new THREE.Vector3(0,Math.max(.4,size.y*.5),0));
-    camera.position.copy(controls.target).add((view instanceof FuelCellHudExhibit?
+    camera.position.copy(controls.target).add((isHud(view)?
       new THREE.Vector3(0,0,1):new THREE.Vector3(9,6.8,12).normalize()).multiplyScalar(distance));
     camera.near=.05;camera.far=Math.max(400,distance+radius*3);camera.updateProjectionMatrix();
     controls.minDistance=2;controls.maxDistance=Math.max(65,distance*4);
@@ -164,13 +175,29 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
-    hudControls.hidden=!(view instanceof FuelCellHudExhibit);
+    hudControls.hidden=!isHud(view);
     hudAssemblyLink.hidden=!(view instanceof ModelExhibit&&selected.model?.name===catalogue.fuelCellHud?.model);
-    element<HTMLInputElement>('native-scale').disabled=view instanceof FuelCellHudExhibit;
-    if(view instanceof FuelCellHudExhibit) {
+    hudAssemblyLink.textContent='View power-cell HUD';
+    if(view instanceof ScreenHudExhibit&&!selected.effect?.screenHud&&view.hud.profile.layers.length>1) {
+      hudAssemblyLink.hidden=false;hudAssemblyLink.textContent='View full HUD assembly';
+    }
+    element<HTMLInputElement>('native-scale').disabled=isHud(view);
+    if(isHud(view)) {
       element<HTMLSelectElement>('hud-format').value=view.hud.profile.id;
       element<HTMLInputElement>('hud-full-frame').checked=view.fullFrame;
       element<HTMLInputElement>('hud-hold').checked=view.hud.hold;
+      const kind=view instanceof ScreenHudExhibit?view.hud.definition.id:'fuel-cell';
+      element('hud-summary').textContent=view instanceof ScreenHudExhibit?view.hud.definition.name:'Power-cell HUD';
+      element('hud-health-field').hidden=kind!=='health';
+      for(const id of ['hud-eco-type-field','hud-eco-charge-field','hud-eco-drain-field'])element(id).hidden=kind!=='power';
+      element('hud-note').textContent='Restart replays the arrival. Turn off Hold visible to see the original timed departure. The close view crops the same screen without moving its layers. Tally text and sounds are not replayed.'+
+        (kind==='power'?' A full eco charge lasts 20 source seconds. A changing charge keeps the HUD visible; Hide also stops the drain.':'');
+      if(view instanceof ScreenHudExhibit) {
+        element<HTMLSelectElement>('hud-health').value=view.hud.health===null?'none':String(view.hud.health);
+        element<HTMLSelectElement>('hud-eco-type').value=view.hud.ecoType;
+        element<HTMLInputElement>('hud-eco-charge').value=String(Math.round(view.hud.charge*100));
+        element<HTMLInputElement>('hud-eco-drain').checked=view.hud.drain;
+      }
     }
     deathControls.hidden=!(view instanceof ModelExhibit&&view.deathPlayback);
     deathSelect.replaceChildren();
@@ -266,6 +293,13 @@ async function boot():Promise<void> {
         element('selected-name').textContent=part.name;
         element('provenance').textContent+=`\n${part.tree} · ${part.id}\n${part.meshes} draws · ${part.triangles.toLocaleString()} triangles`;
       }
+    } else if(view instanceof ScreenHudExhibit) {
+      element('selected-kind').textContent=selected.effect?.screenHud?'Source HUD assembly':'Source HUD layer';
+      status.classList.toggle('pending',view.issues.size>0);
+      status.textContent=view.issues.size?[...view.issues].join('\n'):
+        'Original source placement, dimensions, callbacks and entry/exit timing. Both views share one simulation; Gouraud interpolates the source sprite colours across a texture-free mesh.';
+      element('provenance').textContent=`${view.hud.definition.source.file}:${view.hud.definition.source.line}\n`+
+        view.hud.layers.map(layer=>layer.motion.group.name).join('\n');
     } else if(view instanceof FuelCellHudExhibit) {
       element('selected-kind').textContent='Animated HUD assembly';
       status.classList.toggle('pending',view.issues.size>0);
@@ -366,6 +400,7 @@ async function boot():Promise<void> {
       pending.add(id);
       const promise=exhibit.model?ModelExhibit.load(exhibit.model,exhibit.death?{catalogue,reference:exhibit.death}:undefined):
         exhibit.effect?.name===catalogue.fuelCellHud?.group?FuelCellHudExhibit.load(exhibit.effect!,catalogue):
+          screenHudDefinition(exhibit.effect!,catalogue)?ScreenHudExhibit.load(exhibit.effect!,catalogue):
           ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
       void promise.then(view=>{
         pending.delete(id);
@@ -391,17 +426,28 @@ async function boot():Promise<void> {
   };
   element('pause').onclick=()=>{paused=!paused;element('pause').textContent=paused?'Play':'Pause';element('pause').setAttribute('aria-pressed',String(paused));};
   element('restart').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(0);else view?.restart();};
-  hudAssemblyLink.onclick=()=>{const exhibit=exhibits.find(exhibit=>exhibit.effect?.name===catalogue.fuelCellHud?.group);if(exhibit)select(exhibit);};
-  element('hud-format').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit){
+  hudAssemblyLink.onclick=()=>{const view=loaded.get(selected.id);const exhibit=exhibits.find(exhibit=>view instanceof ScreenHudExhibit?
+    exhibit.effect?.screenHud===view.hud.definition.id:exhibit.effect?.name===catalogue.fuelCellHud?.group);if(exhibit)select(exhibit);};
+  element('hud-format').onchange=()=>{const view=loaded.get(selected.id);if(isHud(view)){
     view.setFormat(element<HTMLSelectElement>('hud-format').value);inspect();if(!exploring)focus();
   }};
-  element('hud-full-frame').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit){
+  element('hud-full-frame').onchange=()=>{const view=loaded.get(selected.id);if(isHud(view)){
     view.setFullFrame(element<HTMLInputElement>('hud-full-frame').checked);if(!exploring)focus();
   }};
-  element('hud-hold').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit)
+  element('hud-hold').onchange=()=>{const view=loaded.get(selected.id);if(isHud(view))
     view.hud.hold=element<HTMLInputElement>('hud-hold').checked;};
-  element('hud-show').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit)view.hud.show();};
-  element('hud-hide').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit){view.hud.hide();inspect();}};
+  element('hud-show').onclick=()=>{const view=loaded.get(selected.id);if(isHud(view))view.hud.show();};
+  element('hud-hide').onclick=()=>{const view=loaded.get(selected.id);if(isHud(view)){view.hud.hide();inspect();}};
+  element('hud-health').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit){
+    const value=element<HTMLSelectElement>('hud-health').value;view.hud.health=value==='none'?null:Number(value);view.update(1/60);
+  }};
+  element('hud-eco-type').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit){
+    view.hud.ecoType=element<HTMLSelectElement>('hud-eco-type').value as typeof view.hud.ecoType;view.update(1/60);
+  }};
+  element('hud-eco-charge').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit){
+    const value=Number(element<HTMLInputElement>('hud-eco-charge').value);if(Number.isFinite(value))view.hud.setCharge(Math.max(0,Math.min(120,value))/100);view.update(1/60);
+  }};
+  element('hud-eco-drain').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ScreenHudExhibit)view.hud.drain=element<HTMLInputElement>('hud-eco-drain').checked;};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
   deathSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit){view.setDeathReplay(deathSelect.value);inspect();if(!exploring)focus();}};
@@ -539,7 +585,10 @@ async function boot():Promise<void> {
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
         view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:
-        view instanceof FuelCellHudExhibit?`HUD  ${view.hud.phase}\nFORMAT  ${view.hud.profile.id} · NTSC\nOFFSET  ${view.hud.offset}\nPARTICLES  ${view.motion.particles.length}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}`:'';
+        isHud(view)?`HUD  ${view.hud.phase}\nFORMAT  ${view.hud.profile.id} · NTSC\nOFFSET  ${view.hud.offset}\nPARTICLES  ${view.particles}\nSOURCE CLOCK  ${view.clock} / 300 Hz\nCAPACITY DROPS  ${view.dropped}`:'';
+      if(view instanceof ScreenHudExhibit)element('statistics').textContent+=view.hud.definition.id==='health'?
+        `\nHEALTH  ${view.hud.health??'no target'}`:view.hud.definition.id==='power'?
+          `\nECO  ${view.hud.ecoType} · ${(view.hud.fraction*100).toFixed(1)}% · ${(view.hud.remaining/300).toFixed(2)} s`:'';
       if(view instanceof ModelExhibit&&view.deathPlayback) {
         const death=view.deathPlayback;
         element('statistics').textContent+=`\nDEATH  ${death.phase}${death.profileId?' · '+death.profileId:''}\nPARTICLES  ${death.motion.particles.length} · EMITTED ${death.launched}\nCAPACITY DROPS  ${death.motion.dropped}`;
@@ -566,7 +615,7 @@ async function boot():Promise<void> {
         view.deathPlayback?.active?Math.min(1,view.time/view.duration):(view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }
-    for(const view of loaded.values())if(view instanceof FuelCellHudExhibit)view.render(renderer);
+    for(const view of loaded.values())if(isHud(view))view.render(renderer);
     particlePass.render(renderer,scene,camera,[...loaded.values()].some(view=>view.root.visible&&view instanceof ParticleExhibit&&view.distortions>0));
   });
   // Read-only diagnostic surface for whole-catalogue validation and inspection.

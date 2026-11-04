@@ -19,6 +19,7 @@ export interface EffectDefinition {
   duration?: number; 'linger-duration'?: number; flags?: string[];
   directLaunch?: {particle: number; function: string | null};
   sourceAssembly?: SourceAssemblyKind;
+  screenHud?: ScreenHudKind;
 }
 export type SourceAssemblyKind='eco-beam'|'sage-cage';
 export interface ModelDefinition {
@@ -79,6 +80,21 @@ export interface FuelCellHudLibrary {
   callbacks: {name: string; source: Provenance; formSha256: string}[];
   sources: {file: string; sha256: string}[];
 }
+export type ScreenHudKind='health'|'power'|'buzzers';
+export interface ScreenHudProfile {
+  id:'4:3'|'16:9';
+  layers:{group:string;position:[number,number,number];source:Provenance}[];
+  scales:Record<string,number>;source:Provenance;
+}
+export interface ScreenHudDefinition {
+  id:ScreenHudKind;name:string;xSign:number;ySign:number;
+  profiles:ScreenHudProfile[];source:Provenance;
+}
+export interface ScreenHudLibrary {
+  entries:ScreenHudDefinition[];ecoFullTicks:number;
+  callbacks:{name:string;source:Provenance;formSha256:string}[];
+  sources:{file:string;sha256:string}[];
+}
 export interface MeshDeathProfile {
   id:string; vertexSkip:number; frames:number; overlap:number; particle:number;
   sound:string|null; source:Provenance;
@@ -108,6 +124,7 @@ export interface Catalogue {
   particleLighting?: ParticleLightingLibrary | null;
   sunParticles?: SunParticleLibrary | null;
   fuelCellHud?: FuelCellHudLibrary | null;
+  screenHud?: ScreenHudLibrary | null;
   meshDeaths?: {profiles:MeshDeathProfile[]; texture:string; models:MeshDeathReference[]};
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];

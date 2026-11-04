@@ -9063,3 +9063,28 @@ Details: [Jak asset lab](JAK_ASSET_LAB.md).
   prompt-to-final-playable interval remains open; this is a local progress
   increment, not a completed whole-game brief. No game/D/level-pack changes,
   source-asset changes, integration or publication.
+
+## Jak archive — health, eco-timer and scout-fly HUDs, 5 November 2026 NZDT
+
+- Added complete health/eco HUD cards and source placement for their individual
+  layers and the scout-fly orbit. The archive now has 1,426 exhibits. Original
+  and Gouraud share projection, callbacks, layer depth and source lifecycle.
+  Existing power-cell animation and all original assets remain intact.
+- Ported nine callbacks, health thresholds/flash, eco colours/slice boundaries,
+  source 20-second charge drain, tally visibility, entry/departure and hidden
+  cleanup. Controls expose inspection values and both NTSC formats. Numeric
+  tally text/audio and the complete gameplay HUD remain unfinished.
+- Two Python fixtures, actual-source/mutation checks, 5,330 independent GOAL
+  comparisons, 5,874 host frames and 11,998 finite particle samples pass. Existing
+  particle-motion and power-cell regressions pass. Required normal build and
+  final lab TypeScript/standalone build pass; no full suite.
+- Twenty-eight real-browser observations cover native/720p, both renderers,
+  source screen formats, state boundaries, a two-second remaining eco drain,
+  cleanup/restart, individual-to-assembly navigation and power-cell regression.
+  No console warnings/errors. Evidence: ignored `screen-hud-*` reports and
+  health/eco/scout-fly HUD captures; final runtime `jak-lab-wCMhO-6_.js`.
+- Approximately 22 minutes from the first recorded source edit to validated
+  playable (08:59–09:21 NZDT). The full goal's prompt-to-final-playable interval
+  remains open. Local commit and coordinator handoff only; no game runtime,
+  D animation, level-pack, hosting or publication changes. The browser-check
+  lease is released; a lightweight port-5193 server remains for user testing.

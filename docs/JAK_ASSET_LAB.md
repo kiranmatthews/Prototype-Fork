@@ -43,9 +43,9 @@ original/Gouraud/both views, matched animation playback, scrubbing, pause,
 restart, source scale and normal/native render resolution. Direct launchers
 are included separately and explicitly repeat once per second for inspection;
 that frequency is a lab control, not a reconstructed host object's update rate.
-The current catalogue contains 1,424 exhibits: 605 models/scenes, 675 named
-particle groups, 98 direct launcher exhibits, two source draw assemblies and
-44 mesh-disappearance exhibits.
+The current catalogue contains 1,426 exhibits: 605 models/scenes, 675 named
+particle groups, 98 direct launcher exhibits, two source draw assemblies,
+two complete screen-HUD assemblies and 44 mesh-disappearance exhibits.
 Three explicitly empty direct definitions stay in the source audit without
 blank visual exhibits; 25 referenced IDs have no source definition and remain
 flagged for review. Relevant effects expose root height, heading, surface slope, water level and fade controls. These are explicit
@@ -86,10 +86,10 @@ The complete 605-model pack passed semantic and gzip verification. Its size is:
 | Unique packed model files | 143,019,250 |
 | Unique original image files | 79,944,784 |
 | Mesh-disappearance emission streams | 3,969,540 |
-| Catalogue | 9,334,700 |
-| Packed assets and catalogue | **236,268,274** |
+| Catalogue | 9,340,163 |
+| Packed assets and catalogue | **236,273,737** |
 
-The standalone frontend adds 718,683 bytes before HTTP compression.
+The standalone frontend adds 729,976 bytes before HTTP compression.
 This needs a separate delivery origin rather than the main game's remaining
 Pages allowance. The release coordinator owns hosting and deployment setup.
 The frontend accepts `?catalogue=<URL>` with that host's CORS support.
@@ -113,7 +113,7 @@ particle updates; callback kills retire the particle on the following step.
 Fractional launch credit remains attached to the source launcher. Sound events
 are recorded but are not yet connected to playback.
 
-The runtime implements all 11 referenced birth callback names, plus 43 update
+The runtime implements all 11 referenced birth callback names, plus 52 update
 callback names (including the 20 contact callbacks). Parent-relative births,
 root/primitive following, bird motion, eco fade and target/surface orientation
 have focused checks. Some implementations require typed host data such as a
@@ -122,7 +122,9 @@ inputs. Five Zoomer speed/heat callbacks now use explicit inspection inputs.
 Sun tracking now uses the source orbits, colour selectors and host lifecycle.
 The four power-cell HUD callbacks use the actual animated source joints and
 screen-space host, including arrival, timeout and cleanup.
-The other 25 callback names, mostly HUD behavior, remain
+Nine health, eco-timer and scout-fly callbacks now use source screen placement,
+live inspection values and the original host lifecycle.
+The other 16 callback names, all HUD behavior, remain
 unported; name coverage does not prove complete host reconstruction.
 
 **Unfinished fidelity requirements:**
@@ -919,3 +921,73 @@ game goal remains open: 25 update callbacks, 53 unresolved definitions, source
 host assemblies, dynamic texture/lighting state, procedural rendering,
 individual scene instances and the broad visual audit still require work.
 Final hosted verification belongs to the coordinator. No integration or publication.
+
+## Health, eco timer and scout-fly HUDs — 5 November 2026 NZDT
+
+The three health layers and the eco timer's backing, three rotating slices and
+frame now have complete source-screen assemblies. Two new cards expose these
+composites, bringing the catalogue to 1,426 exhibits. Their existing group cards
+retain the individual layers at their authored positions and link to the full
+assembly. The scout-fly HUD uses its invisible anchor and orbiting child. The
+power-cell HUD shares the same compositor and retains its source animation rig.
+
+The extractor records the actual per-layer launch origins, independent depth
+values and 4:3/16:9 NTSC scale tables, with seven source hashes and ten callback
+or helper form hashes. Both renderers receive the same source projection and
+simulation. Close inspection crops the screen without moving its layers. The
+Gouraud version uses the existing texture-free adaptive vertex-colour mesh; its
+interpolated edges remain visually distinct from the original sprite sampling.
+No original model, animation, image or emission asset bytes changed.
+
+Nine callbacks restore health thresholds and the low-health brightness cycle,
+four eco colours, piecewise slice rotation, the low-charge flash and source icon
+dimensions. Health tally changes use the source integer conversion and preserve
+the previous tally when no target exists. The inspection controls expose health,
+eco colour and starting charge, including the source overcharge branch. Optional
+draining uses the original 6,000-tick / 20-second duration. A changing charge keeps
+the HUD visible; after it reaches zero, the two-second timeout and departure run.
+Explicit Hide stops the inspection drain and uses the faster source exit.
+Hidden particles are removed and show/restart recreates the persistent layers.
+
+These exhibits port particle hosts, not the entire game HUD. Tally text/audio,
+PAL placement, first-person/progress HUDs, pickup events and the full gameplay
+fact/state owner still require work. Timer controls use non-negative live values;
+expired unsigned-timer underflow is not claimed as reconstructed behavior.
+
+Validation:
+
+- Two Python fixtures plus actual-source extraction and mutation rejection.
+  Independent evaluation of the pinned GOAL bodies covers 1,298 input contexts
+  and supplies 5,330 exact callback comparisons, including float32 operations,
+  short-circuit conditions and assignments through nested lexical scopes.
+- Host checks cover 5,874 counted frames and 11,998 finite particle samples:
+  both formats, per-layer positions/depth, health and eco boundaries, stable
+  particle identity, scout-fly orbit, source entry/timeout/exits, cleanup/show,
+  full twenty-second drain, restart, frame-rate independence and immutability.
+  Individual and assembled layer states agree. Power-cell regression also
+  passes its 800 comparisons, 2,092 frames, 41,530 samples and 120 rig samples.
+- Existing particle-motion tests pass. Required normal build passes with 1,750
+  files / 765.2 MiB, offline version `97ea612fc265977f5078`. The final lab-only
+  tally correction passes root TypeScript and the independent production build.
+  No full suite or unrelated level audit was run.
+- Twenty-eight browser observations cover original/Gouraud/both, normal
+  1280×720 and native 2560×1440, close/full screen, both formats, health states,
+  four eco colours, empty/partial/full/overcharge, the scout-fly orbit and the
+  existing power-cell assembly. A ten-percent charge drains for two source
+  seconds, times out and cleans up; explicit hide also stops the drain. Restart
+  and the health-layer assembly link work. Console warnings/errors are empty.
+  Final runtime: `jak-lab-wCMhO-6_.js`.
+
+Evidence is `.jak-lab-data/evidence/screen-hud-{oracle,checks,browser,delivery}.json`,
+the power-cell regression report, normal build log and health/eco/scout-fly HUD
+PNGs. The validated raw catalogue replaces only `screenHud`, preserving
+`catalogue.before-screen-hud.json`. Packed asset identities were rechecked during
+metadata refresh. Packed assets are 226,933,574 bytes, catalogue 9,340,163 bytes
+and frontend 729,976 bytes: 237,003,713 bytes before hosting metadata.
+
+The whole-game goal remains open: sixteen update callback names, 53 unresolved
+particle definitions, host assemblies, procedural rendering, dynamic texture
+and lighting state, individual scene instances and broad visual review remain.
+The release coordinator owns final integration and hosted validation. The
+completed review tab and guarded job are closed; a lightweight local static
+server keeps port 5193 available for the user's testing without a heavy lease.
