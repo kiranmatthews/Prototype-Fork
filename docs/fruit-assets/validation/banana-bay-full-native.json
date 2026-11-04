@@ -1,0 +1,36 @@
+{
+ "level": "Beachside Run",
+ "action": "inspect",
+ "frames": 0,
+ "position": [
+  -2.733,
+  0.407,
+  7.865
+ ],
+ "grounded": true,
+ "cluster": 6,
+ "remaining": 6,
+ "visible": 6,
+ "fruit": 0,
+ "delta": 0,
+ "flights": [],
+ "variants": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  0
+ ],
+ "material": "Wumpa / peach skin, leaf and stalk",
+ "quality": {
+  "viewportWidth": 1280,
+  "viewportHeight": 720,
+  "inputWidth": 1280,
+  "inputHeight": 720,
+  "outputWidth": 1280,
+  "outputHeight": 720
+ },
+ "trial": false,
+ "result": null
+}

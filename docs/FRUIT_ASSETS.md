@@ -22,6 +22,8 @@ The interactive collection at `milk-review.html` provides studio/shade/sunset li
 
 ## Validation
 
-Asset-only checks: `node tools/test-milk.mjs`. Runtime checks: `npm run check:milk`, `node tools/test-character-interactions.mjs`, and the cluster placement check. Level-data changes require `npm run check:levels`, followed by `npm run build`. Full/native browser validation and final results are recorded in the iteration log and release handoff.
+Passed: `npm run check:milk`, `node tools/test-character-interactions.mjs`, `node tools/test-fruit-clusters.mjs`, `npm run check:levels` and `npm run build`. The native placement fixture checks all 54 new fruits against actual ground, crates, neighbouring crowns, trial hiding, soft respawn and editor capture.
+
+Real-browser review covers studio/shade/sunset, front/back/top, idle/release/flight, Jungle lite and full 720p, and Banana Bay full MAX/native (2560 × 1440 drawing buffer). Three ordinary-input walks each collected a complete six-fruit cluster with exactly six credits and zero deaths. Crate release, trial hiding/restoration and supported respawn also pass; all four browser warning/error logs are empty. See [saved evidence](fruit-assets/validation/README.md). The local-only `fruit-runtime-review.html` provides repeatable visible controls without adding cheats or test controls to the shipped game.
 
 The pre-crash source was recovered into a durable worktree on 5 November 2026. No lost or interrupted test is reported as passing.
