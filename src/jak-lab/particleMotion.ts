@@ -28,6 +28,9 @@ const KNOWN_CALLBACKS = new Set(['sparticle-track-root', 'sparticle-track-root-p
   'sparticle-seagull-moon', 'tra-sparticle-seagull-moon', 'sparticle-snow-birds-moon',
   'part-tracker-track-target-joint', 'part-hud-racer-speed-func', 'part-hud-racer-heat-func', ...RACER_HEAT_SLICES]);
 KNOWN_CALLBACKS.add('sparticle-track-sun');
+const FUEL_CELL_CALLBACKS = ['fuel-cell-hud-orbit-callback', 'fuel-cell-hud-center-callback',
+  'fuel-cell-hud-starburst-3-callback', 'fuel-cell-hud-starburst-4-callback'];
+for(const name of FUEL_CELL_CALLBACKS)KNOWN_CALLBACKS.add(name);
 const KNOWN_BIRTH = new Set(['birth-func-random-next-time', 'birth-func-y->userdata',
   'birth-func-copy-rot-color', 'birth-func-copy2-rot-color', 'birth-func-copy-omega-to-z',
   'birth-func-ocean-height', 'birth-func-set-quat', 'birth-func-copy-target-y-rot',
@@ -66,6 +69,11 @@ export interface ParticleHost {
   particleColor: Vector3;
   /** Camera in GOAL units; sky upload positions in metres, before ×4096. */
   camera: Vector3; suns: Vector3[]; sunColor: Vector3; sunFade: number;
+  fuelCell?: {
+    joints: Map<number, Vector3>; iconScale: number; centerScale: number;
+    starburst3: readonly number[]; starburst4: readonly number[];
+    setIconScale: (scale: number) => void;
+  };
 }
 
 /** Source numeric field rules and launch graph. Units remain GOAL units until
@@ -133,6 +141,7 @@ export class ParticleMotion {
           if (name === 'part-hud-racer-speed-func') this.hostInputs.add('racer speed');
           if (name === 'part-hud-racer-heat-func' || RACER_HEAT_SLICES.includes(name)) this.hostInputs.add('racer heat');
           if (name === 'sparticle-track-sun') {this.hostInputs.add('sun');this.hostInputs.add('time of day');}
+          if (FUEL_CELL_CALLBACKS.includes(name)) this.hostInputs.add('fuel-cell HUD');
         }
         if (field.field === 'birth-func' && !KNOWN_BIRTH.has(String(field.value))) this.issues.add(`Birth callback: ${field.value}`);
         if (field.field === 'birth-func') {
@@ -385,6 +394,22 @@ export class ParticleMotion {
       if(v.a!==0)v.a=Math.fround(128*this.host.sunFade);
       if(part===0||part===1||part===2)RGB.forEach((channel,i)=>
         v[channel]=Math.fround(this.host.sunColor.getComponent(i)/(part===0?1:4)));
+    }
+    else if (FUEL_CELL_CALLBACKS.includes(name)) {
+      const hud=this.host.fuelCell;
+      if(!hud){this.issues.add('Missing fuel-cell HUD host');return;}
+      if(name==='fuel-cell-hud-orbit-callback') {
+        const index=Math.trunc(v.userdata??0),joint=hud.joints.get(index),center=hud.joints.get(3);
+        if(!joint||!center){this.issues.add(`Missing fuel-cell HUD joint ${index}`);return;}
+        p.position.set(Math.fround(60*Math.fround(joint.x-center.x)),
+          Math.fround(60*Math.fround(joint.y-center.y)),Math.fround(1024*Math.fround(joint.z-center.z)));
+      } else if(name==='fuel-cell-hud-center-callback') {
+        hud.setIconScale(hud.iconScale);
+        v['scale-x']=v['scale-y']=Math.fround(hud.centerScale);
+      } else {
+        const size=name==='fuel-cell-hud-starburst-3-callback'?hud.starburst3:hud.starburst4;
+        v['scale-x']=Math.fround(size[0]);v['scale-y']=Math.fround(size[1]);
+      }
     }
     else if (name === 'sparticle-track-root-prim' || name === 'eco-track-root-prim-fadeout') p.position.copy(this.host.primitive);
     else if (name === 'sparticle-track-root-money' && !this.host.hudMoney) p.position.copy(this.host.root).addScaledVector(UP, 2048);

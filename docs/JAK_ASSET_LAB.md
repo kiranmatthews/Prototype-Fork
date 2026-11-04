@@ -85,10 +85,11 @@ The complete 605-model pack passed semantic and gzip verification. Its size is:
 | Raw source models | 3,665,798,144 |
 | Unique packed model files | 143,019,250 |
 | Unique original image files | 79,944,784 |
-| Catalogue | 8,816,274 |
-| Packed assets and catalogue | **231,780,308** |
+| Mesh-disappearance emission streams | 3,969,540 |
+| Catalogue | 9,334,700 |
+| Packed assets and catalogue | **236,268,274** |
 
-The standalone frontend adds approximately 675 KB before HTTP compression.
+The standalone frontend adds 718,683 bytes before HTTP compression.
 This needs a separate delivery origin rather than the main game's remaining
 Pages allowance. The release coordinator owns hosting and deployment setup.
 The frontend accepts `?catalogue=<URL>` with that host's CORS support.
@@ -112,14 +113,16 @@ particle updates; callback kills retire the particle on the following step.
 Fractional launch credit remains attached to the source launcher. Sound events
 are recorded but are not yet connected to playback.
 
-The runtime implements all 11 referenced birth callback names, plus 39 update
+The runtime implements all 11 referenced birth callback names, plus 43 update
 callback names (including the 20 contact callbacks). Parent-relative births,
 root/primitive following, bird motion, eco fade and target/surface orientation
 have focused checks. Some implementations require typed host data such as a
 joint, parent particle, normal or HUD money value. The inspector reports missing
 inputs. Five Zoomer speed/heat callbacks now use explicit inspection inputs.
 Sun tracking now uses the source orbits, colour selectors and host lifecycle.
-The other 29 callback names, mostly HUD behavior, remain
+The four power-cell HUD callbacks use the actual animated source joints and
+screen-space host, including arrival, timeout and cleanup.
+The other 25 callback names, mostly HUD behavior, remain
 unported; name coverage does not prove complete host reconstruction.
 
 **Unfinished fidelity requirements:**
@@ -130,7 +133,7 @@ unported; name coverage does not prove complete host reconstruction.
   texture assignments and screen-space HUD effects. Auxiliary distortion now
   has both renderers; two declared emitters still need host activation tracing.
   The inspector reports known gaps instead of presenting them as faithful ports.
-- Trace the remaining 87 particle definitions and computed launch references.
+- Trace the remaining 53 particle definitions and computed launch references.
 - Static TIE/shrub prototype nodes are inventoried and inspectable. Some contain
   all level placements. Reconstruct individual instances from source metadata,
   not arbitrary connected-component splitting. Restore wind animation beyond
@@ -849,3 +852,70 @@ after validation. This is a local progress increment, not completion of the
 whole-game fidelity audit. All 1,424 exhibits remain; the remaining 29 callbacks,
 53 unresolved definitions, scene/host reconstruction and broad visual audit are
 still open. No integration or publication.
+
+
+## Assembled power-cell HUD — 5 November 2026 NZDT
+
+Group 80 now runs as a complete animated HUD effect in the Original/Gouraud
+comparison. It uses the exported `fuelcell-naked-idle` motion and stable source
+joint IDs 3–7 and 9, rather than placing the orbit particles at guessed offsets.
+Four callbacks retain the source float32 joint deltas, centre scale, and two
+starburst dimensions. Both views share one simulation and preserve the original
+textures, sprite geometry, blending, depth, rotation and particle lifetimes;
+Gouraud uses the existing adaptive mesh with interpolated vertex colours.
+
+The `fuelcell-naked` asset is an animation driver, not the visible world power
+cell. Its four mesh vertices occupy an extent of about 1e-12 metres; all ten
+nodes and the 21-track idle remain intact. The visible HUD is its centre, joint
+orbits and flare particles. The otherwise blank rig card now explains this and
+links directly to the assembled effect. The separate visible `fuel-cell-lod0`
+model still loads and animates in both renderers. No substitute geometry was
+introduced, and no original asset bytes changed.
+
+The host retains the source initial yaw and half-degree-per-frame turn, updates
+joint animation even while hidden, and supplies the user HVDF screen origin.
+The composite applies the original screen-coordinate and depth projection,
+independently of the gallery camera. A close inspection crop and full screen
+frame expose the same source placement. Both source NTSC formats, 4:3 and 16:9,
+have their authored icon/centre/starburst scales. PAL positioning is not ported.
+The offscreen targets follow the selected render resolution; the full source
+rig/geometry and particle meshes remain present at every viewing distance.
+
+Restart replays the nine-frame arrival. Hold visible is an explicit inspection
+condition; turning it off restores the two-second timeout and five-pixel-per-
+frame departure. Hide uses the source ten-pixel departure. Hidden state removes
+the keyed particles; show/restart rebuilds the eight permanent layers without
+accumulation. Pickup-count text, tally audio and progress-menu variants are not
+replayed by this exhibit. This does not claim a complete game HUD reconstruction.
+
+Validation:
+
+- Two Python fixtures plus actual-source binding and mutation-rejection checks.
+  An independent evaluator of the four pinned GOAL callback bodies supplies
+  800 exact numerical comparisons across random joints and both formats.
+- 2,092 host frames, 41,530 finite particle samples and 120 samples of the actual
+  source rig. Checks cover joint mapping, projection-independent cspace,
+  permanent layer identity, bounded transients, arrival/both exits, exact timeout,
+  hidden animation, cleanup/reactivation, restart and immutable source data.
+- Existing particle-motion checks pass. The normal build passes with 1,750 files,
+  765.2 MiB, offline version `e2563cac673633ac6854`. Final lab-only description/link
+  changes pass root TypeScript and the independent production build. No full
+  suite or repeated unrelated build was run.
+- Sixteen browser observations cover Original/Gouraud/Both, native 2560×1440 and
+  normal 1280×720, both display formats, close/full frame, timed and explicit hide,
+  zero particles when hidden, show, restart and the rig-to-assembly link. The
+  ordinary world power-cell model also renders and animates. Console warnings
+  and errors are empty. The final page serves `jak-lab-BwtmKWXw.js`.
+
+Evidence is `.jak-lab-data/evidence/hud-{callback-oracle,checks,browser,delivery}.json`,
+`hud-normal-build.log` and the `hud-*.png` captures. The packed catalogue is
+9,334,700 bytes. Unchanged packed assets total 226,933,574 bytes; the final
+frontend is 718,683 bytes, for 236,986,957 bytes before hosting metadata. The raw
+catalogue was promoted after validation, retaining `catalogue.before-hud.json`;
+its only new section is `fuelCellHud`. Source provenance includes eleven hashes.
+
+This improves one existing exhibit; the catalogue remains at 1,424. The whole-
+game goal remains open: 25 update callbacks, 53 unresolved definitions, source
+host assemblies, dynamic texture/lighting state, procedural rendering,
+individual scene instances and the broad visual audit still require work.
+Final hosted verification belongs to the coordinator. No integration or publication.

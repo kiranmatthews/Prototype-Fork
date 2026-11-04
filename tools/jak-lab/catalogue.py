@@ -18,6 +18,7 @@ from source_inventory import inventory
 from compile_callbacks import compile_callbacks
 from particle_lighting import extract_particle_lighting
 from sun_particles import extract_sun_particles
+from fuel_cell_hud import extract_fuel_cell_hud
 
 
 class Form(list):
@@ -294,7 +295,8 @@ def build_catalogue(project: Path):
             'jointGeometries': geometry, 'models': models, 'textures': textures,
             'sourceInventory': source_inventory, 'callbackPrograms': callback_programs,
             'particleLighting': extract_particle_lighting(source, parse, walk),
-            'sunParticles': extract_sun_particles(source, parse, walk)}
+            'sunParticles': extract_sun_particles(source, parse, walk),
+            'fuelCellHud': extract_fuel_cell_hud(source, parse, walk)}
 
 
 def refresh_inventory(previous_file: Path, project: Path):
@@ -311,7 +313,8 @@ def refresh_inventory(previous_file: Path, project: Path):
     callbacks, failures = compile_callbacks(updated['callbackDefinitions'])
     catalogue.update(sourceInventory=updated, callbackPrograms=callbacks,
                      particleLighting=extract_particle_lighting(source, parse, walk),
-                     sunParticles=extract_sun_particles(source, parse, walk))
+                     sunParticles=extract_sun_particles(source, parse, walk),
+                     fuelCellHud=extract_fuel_cell_hud(source, parse, walk))
     catalogue['coverage'].update(sourceAudit=updated['coverage'],
                                  compiledContactCallbacks=len(callbacks), unsupportedContactCallbacks=failures)
     return catalogue

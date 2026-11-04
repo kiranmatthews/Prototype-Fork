@@ -9040,3 +9040,26 @@ procedural renderers and the wider whole-game fidelity audit remain unfinished.
   or level pack; local commit/handoff only.
 
 Details: [Jak asset lab](JAK_ASSET_LAB.md).
+
+
+## Jak archive — assembled power-cell HUD, 5 November 2026 NZDT
+
+- Replaced group 80's isolated particle view with its animated source-joint HUD
+  assembly, paired Original/Gouraud screens, authored 4:3/16:9 NTSC dimensions,
+  screen projection and arrival/timeout/hide/show lifecycle. Kept all source
+  geometry, motion and assets; the catalogue remains at 1,424 exhibits.
+- Verified that `fuelcell-naked` is an effectively invisible animation driver.
+  Its card explains the role and opens the visible assembled HUD. The separate
+  world power-cell model still animates and renders normally.
+- Two Python fixtures plus actual source/mutation checks, 800 independent GOAL
+  callback comparisons, 2,092 host frames, 41,530 finite particle samples and 120
+  actual source-joint samples pass. Existing particle-motion checks, normal build,
+  final root types and standalone build pass. No full-suite run.
+- Sixteen real-browser observations cover native/720p, both renderers and display
+  formats, source placement, timed/explicit cleanup, reactivation, restart and
+  the rig link. No console warnings/errors. Evidence: ignored `hud-*` files.
+- Approximately 21 minutes from first recorded source edit to validated playable
+  (08:32–08:53 NZDT), including the intervening D verification. The whole-game
+  prompt-to-final-playable interval remains open; this is a local progress
+  increment, not a completed whole-game brief. No game/D/level-pack changes,
+  source-asset changes, integration or publication.

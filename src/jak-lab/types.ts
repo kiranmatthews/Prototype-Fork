@@ -69,6 +69,16 @@ export interface SunParticleLibrary {
   orbits: SunOrbit[];
   hosts: {group: string; orbit: number; hours: SunHours; source: Provenance}[];
 }
+export interface FuelCellHudProfile {
+  id: '4:3' | '16:9'; iconScale: number; centerScale: number; iconY: number;
+  starburst3: [number, number]; starburst4: [number, number]; source: Provenance;
+}
+export interface FuelCellHudLibrary {
+  group: string; model: string; clip: string; yawStart: number; yawPerFrame: number;
+  profiles: FuelCellHudProfile[];
+  callbacks: {name: string; source: Provenance; formSha256: string}[];
+  sources: {file: string; sha256: string}[];
+}
 export interface MeshDeathProfile {
   id:string; vertexSkip:number; frames:number; overlap:number; particle:number;
   sound:string|null; source:Provenance;
@@ -97,6 +107,7 @@ export interface Catalogue {
   callbackPrograms?: Record<string, ContactCallback>;
   particleLighting?: ParticleLightingLibrary | null;
   sunParticles?: SunParticleLibrary | null;
+  fuelCellHud?: FuelCellHudLibrary | null;
   meshDeaths?: {profiles:MeshDeathProfile[]; texture:string; models:MeshDeathReference[]};
   sourceInventory?: {
     partTrackerLaunches?: {replay?: HostReplay}[];

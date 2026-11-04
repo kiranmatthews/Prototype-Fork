@@ -40,7 +40,7 @@ function sample(texture: THREE.Texture, uv: THREE.Vector2, result: THREE.Color):
 
 /** Vertex colour + vertex lighting, with original fragment opacity masks;
  * all authored triangles, weights, normals, morphs and tracks are retained. */
-function gouraud(mesh: THREE.Mesh): void {
+export function gouraud(mesh: THREE.Mesh): void {
   const source = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[];
   let geometry = compactGeometry(mesh.geometry);
   // A GLTF multi-material mesh may share a vertex between distinct textures.
@@ -70,6 +70,25 @@ function gouraud(mesh: THREE.Mesh): void {
   geometry.setAttribute('color', new THREE.BufferAttribute(color, 4));
   const materials = source.map(gouraudMaterial);
   mesh.material = Array.isArray(mesh.material) ? materials : materials[0];
+}
+
+/** The unmodified asset and stable GLTF node IDs are also needed by HUD hosts.
+ * Gallery centring/scaling belongs to ModelExhibit, never the source skeleton. */
+export async function loadSourceModel(definition: ModelDefinition) {
+  const url=assetURL(definition.path);
+  let asset;
+  if(definition.encoding==='gzip') {
+    const response=await fetch(url);
+    if(!response.ok||!response.body)throw new Error(`Model transfer failed (${response.status})`);
+    const data=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+    if(data.byteLength!==definition.decodedBytes)throw new Error('Incomplete model transfer');
+    asset=await loader.parseAsync(data,new URL('./',new URL(url,location.href)).href);
+  } else asset=await loader.loadAsync(url);
+  asset.scene.traverse(node=>{
+    const index=asset.parser.associations.get(node)?.nodes;
+    if(index!==undefined)node.userData.jakSourceNode=index;
+  });
+  return asset;
 }
 
 export class ModelExhibit {
@@ -110,21 +129,7 @@ export class ModelExhibit {
     this.setRendering('compare');
   }
   static async load(definition: ModelDefinition,death?:{catalogue:Catalogue;reference:MeshDeathReference}): Promise<ModelExhibit> {
-    const url=assetURL(definition.path);
-    let asset;
-    if(definition.encoding==='gzip') {
-      const response=await fetch(url);
-      if(!response.ok||!response.body)throw new Error(`Model transfer failed (${response.status})`);
-      const data=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
-      if(data.byteLength!==definition.decodedBytes)throw new Error('Incomplete model transfer');
-      asset=await loader.parseAsync(data,new URL('./',new URL(url,location.href)).href);
-    } else asset=await loader.loadAsync(url);
-    // Keep the authoritative GLTF node IDs; Three sanitizes and uniquifies
-    // display names, which are not stable identifiers for source prototypes.
-    asset.scene.traverse(node=>{
-      const index=asset.parser.associations.get(node)?.nodes;
-      if(index!==undefined)node.userData.jakSourceNode=index;
-    });
+    const asset=await loadSourceModel(definition);
     const exhibit=new ModelExhibit(asset.scene, asset.animations, definition);
     if(death)try {
       exhibit.deathPlayback=await ModelDeathPlayback.load(death.reference,death.catalogue,exhibit.source,exhibit.derived,

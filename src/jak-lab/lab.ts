@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {ModelExhibit} from './models';
 import {ParticleExhibit} from './particles';
+import {FuelCellHudExhibit} from './fuelCellHudExhibit';
 import {ParticleRenderPass} from './distortion';
 import {sourceAssemblyDefinitions} from './sourceAssemblies';
 import type {Catalogue, EffectDefinition, Exhibit, RenderingMode} from './types';
@@ -38,6 +39,16 @@ hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Adjust 
   <label class="check" id="host-racer-entering-field"><input id="host-racer-entering" type="checkbox">HUD entering (instant needle)</label>
   <p class="muted" id="host-racer-note">Source needle and heat behavior, shown as isolated HUD layers. Full HUD placement is still pending.</p>`;
 element('status').before(hostControls);
+const hudControls=document.createElement('details');hudControls.hidden=true;
+hudControls.innerHTML=`<summary>Power-cell HUD</summary>
+  <label class="field">SOURCE DISPLAY<select id="hud-format" aria-label="HUD display format"><option value="4:3">4:3 · NTSC</option><option value="16:9">16:9 · NTSC</option></select></label>
+  <label class="check"><input type="checkbox" id="hud-full-frame">Show full HUD frame</label>
+  <label class="check"><input type="checkbox" id="hud-hold" checked>Hold visible</label>
+  <div class="row"><button id="hud-show">Show HUD</button><button id="hud-hide">Hide HUD</button></div>
+  <p class="muted">Restart replays the arrival. Turn off Hold visible to see the original timed departure. The close view crops the same screen without moving its layers. Pickup counts and tally sounds are not replayed.</p>`;
+hostControls.before(hudControls);
+const hudAssemblyLink=document.createElement('button');hudAssemblyLink.hidden=true;
+hudAssemblyLink.textContent='View power-cell HUD';hudControls.before(hudAssemblyLink);
 const assemblyControls=document.createElement('details');assemblyControls.id='source-assembly';assemblyControls.hidden=true;
 assemblyControls.innerHTML=`<summary>Source assembly</summary>
   <label class="check"><input id="assembly-enabled" type="checkbox" checked>Emitter on</label>
@@ -109,7 +120,7 @@ async function boot():Promise<void> {
     trim.setMatrixAt(index,matrix.compose(point.clone().setY(.14),rotation,new THREE.Vector3(1,1,1)));
   });scene.add(pedestal,trim);
   const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=65;controls.maxPolarAngle=Math.PI*.49;
-  const loaded=new Map<string,ModelExhibit|ParticleExhibit>(),pending=new Set<string>(),errors=new Map<string,string>(),labels=new Map<string,THREE.Sprite>();
+  const loaded=new Map<string,ModelExhibit|ParticleExhibit|FuelCellHudExhibit>(),pending=new Set<string>(),errors=new Map<string,string>(),labels=new Map<string,THREE.Sprite>();
   let selected=exhibits.find(exhibit=>exhibit.model?.id==='common/fuel-cell-lod0')??exhibits[0];
   let mode:RenderingMode='compare',paused=false,speed=1,exploring=false,page=0,filtered=exhibits,wanted=new Set<string>();
   let tick=0,statsTick=0,frameTime=0;
@@ -140,7 +151,8 @@ async function boot():Promise<void> {
     const halfFov=Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov)*.5)*Math.min(1,camera.aspect*(innerWidth>780?.5:1)));
     const distance=radius/Math.sin(halfFov)*1.1;
     controls.target.copy(point).add(new THREE.Vector3(0,Math.max(.4,size.y*.5),0));
-    camera.position.copy(controls.target).add(new THREE.Vector3(9,6.8,12).normalize().multiplyScalar(distance));
+    camera.position.copy(controls.target).add((view instanceof FuelCellHudExhibit?
+      new THREE.Vector3(0,0,1):new THREE.Vector3(9,6.8,12).normalize()).multiplyScalar(distance));
     camera.near=.05;camera.far=Math.max(400,distance+radius*3);camera.updateProjectionMatrix();
     controls.minDistance=2;controls.maxDistance=Math.max(65,distance*4);
     scene.fog=nativeScale.checked?null:galleryFog;
@@ -152,6 +164,14 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
+    hudControls.hidden=!(view instanceof FuelCellHudExhibit);
+    hudAssemblyLink.hidden=!(view instanceof ModelExhibit&&selected.model?.name===catalogue.fuelCellHud?.model);
+    element<HTMLInputElement>('native-scale').disabled=view instanceof FuelCellHudExhibit;
+    if(view instanceof FuelCellHudExhibit) {
+      element<HTMLSelectElement>('hud-format').value=view.hud.profile.id;
+      element<HTMLInputElement>('hud-full-frame').checked=view.fullFrame;
+      element<HTMLInputElement>('hud-hold').checked=view.hud.hold;
+    }
     deathControls.hidden=!(view instanceof ModelExhibit&&view.deathPlayback);
     deathSelect.replaceChildren();
     if(view instanceof ModelExhibit&&view.deathPlayback) {
@@ -229,6 +249,10 @@ async function boot():Promise<void> {
     if(view instanceof ModelExhibit) {
       for(const clip of view.clips)animationSelect.add(new Option(clip.name,clip.name));animationSelect.value=view.clipName;
       status.classList.remove('pending');status.textContent='Original geometry and animation. Gouraud uses vertex colour and vertex lighting, with the original opacity masks.';
+      if(!hudAssemblyLink.hidden) {
+        element('selected-kind').textContent='HUD animation rig';
+        status.textContent='This source rig has effectively invisible geometry. Its animated joints position the power-cell HUD particles; open the assembled HUD to see the visible effect.';
+      }
       element('provenance').textContent=`${selected.model!.path}\n${view.dimensions.toArray().map(v=>v.toFixed(2)).join(' × ')} m · ${view.clips.length} source animations`;
       if(view.deathPlayback) {
         const death=view.deathPlayback;
@@ -242,6 +266,13 @@ async function boot():Promise<void> {
         element('selected-name').textContent=part.name;
         element('provenance').textContent+=`\n${part.tree} · ${part.id}\n${part.meshes} draws · ${part.triangles.toLocaleString()} triangles`;
       }
+    } else if(view instanceof FuelCellHudExhibit) {
+      element('selected-kind').textContent='Animated HUD assembly';
+      status.classList.toggle('pending',view.issues.size>0);
+      status.textContent=view.issues.size?[...view.issues].join('\n'):
+        'Source animated joints drive the orbiting glows, centre and flare layers in both views. The original screen projection is independent of the gallery camera.';
+      element('provenance').textContent=`${selected.effect!.source.file}:${selected.effect!.source.line}\n`+
+        `${catalogue.fuelCellHud!.model} · ${catalogue.fuelCellHud!.clip}\nGroup ${selected.effect!.id} · ${selected.effect!.items.length} launch bindings · source HUD states`;
     } else if(view instanceof ParticleExhibit) {
       status.classList.toggle('pending',view.issues.size>0);
       status.textContent=view.issues.size?`Source graph loaded. Fidelity work remaining:\n${[...view.issues].join('\n')}`:view.sun?
@@ -333,7 +364,9 @@ async function boot():Promise<void> {
       if(!labels.has(id))labels.set(id,label(exhibit));
       if(loaded.has(id)||pending.has(id)||errors.has(id)||pending.size>=2)continue;
       pending.add(id);
-      const promise=exhibit.model?ModelExhibit.load(exhibit.model,exhibit.death?{catalogue,reference:exhibit.death}:undefined):ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
+      const promise=exhibit.model?ModelExhibit.load(exhibit.model,exhibit.death?{catalogue,reference:exhibit.death}:undefined):
+        exhibit.effect?.name===catalogue.fuelCellHud?.group?FuelCellHudExhibit.load(exhibit.effect!,catalogue):
+          ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
       void promise.then(view=>{
         pending.delete(id);
         if(!wanted.has(id)){view.dispose();return;}
@@ -358,6 +391,17 @@ async function boot():Promise<void> {
   };
   element('pause').onclick=()=>{paused=!paused;element('pause').textContent=paused?'Play':'Pause';element('pause').setAttribute('aria-pressed',String(paused));};
   element('restart').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(0);else view?.restart();};
+  hudAssemblyLink.onclick=()=>{const exhibit=exhibits.find(exhibit=>exhibit.effect?.name===catalogue.fuelCellHud?.group);if(exhibit)select(exhibit);};
+  element('hud-format').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit){
+    view.setFormat(element<HTMLSelectElement>('hud-format').value);inspect();if(!exploring)focus();
+  }};
+  element('hud-full-frame').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit){
+    view.setFullFrame(element<HTMLInputElement>('hud-full-frame').checked);if(!exploring)focus();
+  }};
+  element('hud-hold').onchange=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit)
+    view.hud.hold=element<HTMLInputElement>('hud-hold').checked;};
+  element('hud-show').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit)view.hud.show();};
+  element('hud-hide').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof FuelCellHudExhibit){view.hud.hide();inspect();}};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
   deathSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit){view.setDeathReplay(deathSelect.value);inspect();if(!exploring)focus();}};
@@ -494,7 +538,8 @@ async function boot():Promise<void> {
     if(statsTick>.25){statsTick=0;
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
-        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
+        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:
+        view instanceof FuelCellHudExhibit?`HUD  ${view.hud.phase}\nFORMAT  ${view.hud.profile.id} · NTSC\nOFFSET  ${view.hud.offset}\nPARTICLES  ${view.motion.particles.length}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}`:'';
       if(view instanceof ModelExhibit&&view.deathPlayback) {
         const death=view.deathPlayback;
         element('statistics').textContent+=`\nDEATH  ${death.phase}${death.profileId?' · '+death.profileId:''}\nPARTICLES  ${death.motion.particles.length} · EMITTED ${death.launched}\nCAPACITY DROPS  ${death.motion.dropped}`;
@@ -521,6 +566,7 @@ async function boot():Promise<void> {
         view.deathPlayback?.active?Math.min(1,view.time/view.duration):(view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }
+    for(const view of loaded.values())if(view instanceof FuelCellHudExhibit)view.render(renderer);
     particlePass.render(renderer,scene,camera,[...loaded.values()].some(view=>view.root.visible&&view instanceof ParticleExhibit&&view.distortions>0));
   });
   // Read-only diagnostic surface for whole-catalogue validation and inspection.
