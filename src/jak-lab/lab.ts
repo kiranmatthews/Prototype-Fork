@@ -26,6 +26,9 @@ hostControls.innerHTML=`<summary>Effect inputs</summary><p class="muted">Inspect
   <label class="field" id="host-water-field">WATER HEIGHT (m)<input id="host-water" type="range" min="-10" max="10" step=".1" value="0" aria-label="Effect water height"></label>
   <label class="check" id="host-fade-field"><input id="host-fade" type="checkbox">Fade out eco</label>`;
 element('status').before(hostControls);
+const replayField=document.createElement('div');replayField.hidden=true;
+replayField.innerHTML=`<label class="field">EMISSION PLAYBACK<select id="host-replay" aria-label="Emission playback"></select></label><p class="source" id="host-replay-note"></p>`;
+hostControls.before(replayField);
 
 async function boot():Promise<void> {
   const catalogueURL=new URL(new URL(location.href).searchParams.get('catalogue')??
@@ -77,6 +80,7 @@ async function boot():Promise<void> {
   let tick=0,statsTick=0,frameTime=0;
   const areaSelect=element<HTMLSelectElement>('area'),kindSelect=element<HTMLSelectElement>('kind'),search=element<HTMLInputElement>('search');
   const animationSelect=element<HTMLSelectElement>('animation'),nativeScale=element<HTMLInputElement>('native-scale');
+  const replaySelect=element<HTMLSelectElement>('host-replay');
   for(const area of [...new Set(exhibits.map(exhibit=>exhibit.area))].sort())areaSelect.add(new Option(areaNames[area]??pretty(area),area));
   function label(exhibit:Exhibit):THREE.Sprite {
     const sheet=document.createElement('canvas');sheet.width=768;sheet.height=128;
@@ -109,6 +113,17 @@ async function boot():Promise<void> {
     element('selected-name').textContent=selected.name;
     element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
     const view=loaded.get(selected.id),status=element('status');
+    replayField.hidden=!(view instanceof ParticleExhibit&&view.replays.length);
+    replaySelect.replaceChildren(new Option('Held emitter (inspection)','-1'));
+    if(view instanceof ParticleExhibit) {
+      view.replays.forEach((replay,index)=>replaySelect.add(new Option(
+        `Source burst · ${Number((replay.duration/300).toFixed(3))} s`,String(index))));
+      replaySelect.value=String(view.motion.replay?view.replays.indexOf(view.motion.replay):-1);
+      const replay=view.motion.replay;
+      element('host-replay-note').textContent=replay?
+        `${replay.source.function??'Source tracker'} · ${replay.linger/300} s linger, then cleanup.\n${replay.source.file}:${replay.source.line}\nLaunch position is placed at the exhibit origin.`:
+        'Held playback is an inspection control. Select a source burst to replay its emission and linger timing.';
+    }
     hostControls.hidden=!(view instanceof ParticleExhibit&&view.motion.hostInputs.size);
     if(view instanceof ParticleExhibit) {
       const inputs=view.motion.hostInputs,h=view.motion.host;
@@ -198,6 +213,7 @@ async function boot():Promise<void> {
   element('pause').onclick=()=>{paused=!paused;element('pause').textContent=paused?'Play':'Pause';element('pause').setAttribute('aria-pressed',String(paused));};
   element('restart').onclick=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(0);else view?.restart();};
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
+  replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
   for(const id of ['host-root','host-heading','host-slope','host-water','host-fade'])element<HTMLInputElement>(id).oninput=()=>{
     const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit))return;
     const h=view.motion.host;
@@ -254,7 +270,7 @@ async function boot():Promise<void> {
     if(statsTick>.25){statsTick=0;
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
-        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
+        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nEMISSION  ${view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
       if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String((view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }

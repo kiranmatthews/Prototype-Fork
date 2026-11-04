@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 import hashlib
+from host_replays import tracker_launch
 
 
 def inventory(source, particles, groups, parse, walk):
@@ -13,6 +14,8 @@ def inventory(source, particles, groups, parse, walk):
     callbacks, launches, patches, group_uses, renderers, failures = [], [], [], [], [], []
     source_files, direct_ids = [], set()
     group_names = {g['name'] for g in groups}
+    group_lookup = {g['name']: g for g in groups}
+    tracker_launches = []
 
     def particle_references(form):
         return [f[2] for f in walk([form]) if len(f) >= 3 and f[:2] == ['->', '*part-id-table*']]
@@ -24,6 +27,8 @@ def inventory(source, particles, groups, parse, walk):
             args = form[2]
             owner = args[0][1] if isinstance(args, list) and args and isinstance(args[0], list) else args
             return f'{form[1]}:{owner}'
+        if form[0] == 'defstate':
+            return f'state:{form[1]}:{form[2][0]}'
         return None
 
     for path in sorted(source.rglob('*.gc')):
@@ -40,7 +45,7 @@ def inventory(source, particles, groups, parse, walk):
             if not isinstance(form, list) or not form:
                 return
             head = form[0]
-            if isinstance(head, str) and head in ('defun', 'defun-debug', 'defbehavior', 'defmethod'):
+            if isinstance(head, str) and head in ('defun', 'defun-debug', 'defbehavior', 'defmethod', 'defstate'):
                 context = function_name(form)
                 if context in callback_names:
                     callbacks.append({'name': context, 'source': {'file': relative, 'line': form.line},
@@ -50,6 +55,9 @@ def inventory(source, particles, groups, parse, walk):
                 if any(word in context.lower() for word in ('draw', 'render')):
                     renderers.append({'name': context, 'source': {'file': relative, 'line': form.line}})
             provenance = {'file': relative, 'line': form.line, 'function': context}
+            tracker = tracker_launch(form, provenance, group_lookup)
+            if tracker is not None:
+                tracker_launches.append(tracker)
             if head in ('launch-particles', 'sp-launch-particles', 'sp-launch-particles-var',
                         'sp-launch-particles-death', 'sp-queue-launch'):
                 references = particle_references(form)
@@ -101,6 +109,7 @@ def inventory(source, particles, groups, parse, walk):
         'sourceFiles': source_files, 'parseFailures': failures,
         'callbackDefinitions': callbacks, 'missingCallbackDefinitions': sorted(callback_names - {c['name'] for c in callbacks}),
         'directLaunches': launches, 'runtimeParticlePatches': patches, 'groupUses': group_uses,
+        'partTrackerLaunches': tracker_launches,
         'proceduralRendererCandidates': renderers, 'standaloneParticles': standalones,
         'coverage': {
             'scannedSourceFiles': len(source_files), 'parseFailures': len(failures),
@@ -110,5 +119,8 @@ def inventory(source, particles, groups, parse, walk):
             'particlesOutsideGroupAndDirectGraphs': sorted(definitions.keys() - all_reached),
             'undefinedDirectParticleReferences': sorted(direct_ids - definitions.keys()),
             'proceduralRendererCandidates': len(renderers),
+            'partTrackerLaunchSites': len(tracker_launches),
+            'partTrackerReplaySites': sum('replay' in item for item in tracker_launches),
+            'partTrackerReplayGroups': len({item['group'] for item in tracker_launches if 'replay' in item}),
         },
     }

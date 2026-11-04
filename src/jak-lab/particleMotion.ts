@@ -1,5 +1,5 @@
 import {Euler, Quaternion, Vector3} from 'three';
-import type {ContactCallback, EffectDefinition, EffectItem, ParticleDefinition, ParticleField} from './types';
+import type {ContactCallback, EffectDefinition, EffectItem, HostReplay, ParticleDefinition, ParticleField} from './types';
 
 const ANGLE = Math.PI * 2 / 65536;
 export const PARTICLE_STEP = 1 / 60;
@@ -11,6 +11,7 @@ export interface LabParticle {
   parent: LabParticle | null; child: LaunchState | null; is3d: boolean;
   callback: string; birth: string; age: number;
   blend: 'normal' | 'additive' | 'subtractive'; depthWrite: boolean;
+  controlled: boolean;
 }
 interface LaunchState {
   item: EffectItem; active: boolean; launched: boolean; credit: number;
@@ -55,6 +56,7 @@ export class ParticleMotion {
   queueDrops = 0;
   hour = 12;
   cameraDistance = 0; // GOAL units; zero disables distance attenuation in the lab.
+  replay: HostReplay | null = null;
   private readonly states: LaunchState[];
   private randomState: number;
   private soundRandomState: number;
@@ -162,7 +164,7 @@ export class ParticleMotion {
       const p: LabParticle = {id: ++this.nextId, alive: true, texture: '', values: {}, flags: new Set(),
         position: new Vector3(), orientation: new Quaternion(), orbit: new Quaternion(), radius: 0,
         parent: state.parent, child: null, is3d: state.item.flags?.includes('is-3d') ?? false,
-        callback: '', birth: '', age: 0, blend: 'normal', depthWrite: false};
+        callback: '', birth: '', age: 0, blend: 'normal', depthWrite: false, controlled: !state.direct};
       this.assign(p, definition);
       const v = p.values;
       p.position.set(v.x ?? 0, v.y ?? 0, v.z ?? 0);
@@ -288,12 +290,31 @@ export class ParticleMotion {
     particle.alive = false;
     if (particle.child) {particle.child.active = false; particle.child.parent = null; particle.child.launched = false;}
   }
+  get replayPhase(): 'held' | 'emitting' | 'lingering' | 'finished' {
+    if (!this.replay) return 'held';
+    const hostTime = Math.max(0, this.clock - STEP_TICKS);
+    if (hostTime < this.replay.duration) return 'emitting';
+    return hostTime < this.replayCleanupTime ? 'lingering' : 'finished';
+  }
+  private get replayCleanupTime(): number {
+    if (!this.replay) return Infinity;
+    // The source while/suspend loops observe time in fixed-frame increments.
+    // After linger, notify is followed by one final suspend before deactivation.
+    return Math.ceil(Math.max(0, this.replay.duration) / STEP_TICKS) * STEP_TICKS +
+      Math.ceil(Math.max(0, this.replay.linger) / STEP_TICKS) * STEP_TICKS + STEP_TICKS;
+  }
   private step(): void {
     const previous = this.clock; this.clock += STEP_TICKS;
     this.soundEvents.length = 0;
+    if (this.replay && previous >= this.replayCleanupTime) {
+      // kill-and-free-particles matches the launch-control key. Unkeyed
+      // secondary callback splashes belong to the shared particle system.
+      for (const particle of this.particles) if (particle.controlled) this.retire(particle);
+    }
     // Source group launchers run in reverse order. A newly bound child can
     // therefore emit no earlier than the next group pass.
     for (let index = this.states.length - 1; index >= 0; index--) {
+      if (this.replay && previous >= this.replay.duration) break;
       const state = this.states[index]; if (!state.active) continue;
       const item = state.item;
       const falloff = item['falloff-to'] ? Math.max(0, 1 - this.cameraDistance / item['falloff-to']) : 1;

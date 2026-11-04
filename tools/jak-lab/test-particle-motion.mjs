@@ -149,3 +149,33 @@ console.log('PASS callback asset reachability, source contact boundaries, delaye
   motion.reset();assert.equal(motion.queueDrops,0);
 }
 console.log('PASS original 32-entry shared secondary launch queue');
+
+const replay=(duration,linger)=>({kind:'part-tracker',group:'fixture',duration,linger,
+  source:{file:'fixture.gc',line:1,function:'state:die:fixture'},formSha256:'fixture'});
+{
+  const motion=run([definition(1,[numeric('timer',-1)])],[{particle:1}]);
+  motion.replay=replay(10,10);
+  motion.update(1/60);motion.update(1/60);
+  assert.equal(motion.particles.length,2);assert.equal(motion.replayPhase,'emitting');
+  motion.update(1/60);
+  assert.equal(motion.particles.length,2);assert.equal(motion.replayPhase,'lingering');
+  motion.update(2/60);assert.equal(motion.particles.length,2,'notify suspend must preserve keyed particles');
+  motion.update(1/60);assert.equal(motion.particles.length,0);assert.equal(motion.replayPhase,'finished');
+  motion.reset();motion.update(2/60);assert.equal(motion.particles.length,2,'restart retains the selected source replay');
+}
+{
+  const motion=run([definition(1,[numeric('timer',-1)])],[{particle:1}]);
+  motion.replay=replay(6,6);motion.update(2/60);assert.equal(motion.particles.length,2);
+  motion.update(3/60);assert.equal(motion.particles.length,2,'each source suspend phase rounds independently');
+  motion.update(1/60);assert.equal(motion.particles.length,0);
+  motion.replay=replay(0,0);motion.reset();motion.update(1/60);assert.equal(motion.particles.length,0,'zero-duration tracker never spawns');
+}
+{
+  const motion=withCallbacks([
+    definition(1,[numeric('y',-1),value('func','surface')]),definition(2,[numeric('timer',-1)])
+  ],{surface:contact([{op:'kill'},{op:'launch',particle:2,is3d:false,height:'surface'}])});
+  motion.replay=replay(5,0);motion.update(3/60);
+  assert.equal(motion.replayPhase,'finished');assert.equal(motion.particles.length,1);
+  assert.equal(motion.particles[0].controlled,false,'unkeyed callback children must survive tracker cleanup');
+}
+console.log('PASS source tracker emission, independent linger/notify suspension, restart, zero-duration and keyed cleanup');

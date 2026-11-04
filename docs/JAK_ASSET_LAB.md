@@ -22,7 +22,7 @@ locations. Current evidence is 533 parsed files, zero parse failures, 2,515
 particle definitions in 104 files and 675 named effect groups. All 79 referenced
 birth/update callbacks have source definitions. The audit additionally found 98
 direct launch sites, 70 direct particle roots, 394 runtime particle patch sites
-and 350 procedural draw/render candidates requiring review. The named group
+and hundreds of procedural draw/render candidates requiring review. The named group
 graphs, including callback-launched children, reach 2,369 particle definitions;
 another 146 are outside those graphs.
 Following direct launch roots reduces the unresolved set to 87. Those 87 are
@@ -227,3 +227,61 @@ repeated decoding of the same 817,914-vertex background data across hundreds of
 draws; full packing then completed with exact verification. The previously
 validated jump playtest was restored independently; its evidence is not lab
 validation. No lab or animation changes have been integrated or published.
+
+## Source tracker timing — next local increment
+
+The next increment adds explicit `part-tracker` replay timing from the source
+initializer and process loop. State bodies now retain their owner/context in
+the inventory, increasing recorded group uses from 290 to 399. The latest scan
+contains 113 tracker launch sites: 82 have known timing without custom callback,
+userdata or tracked-target dependencies. They cover 64 groups and 65 distinct
+duration/linger combinations. The remaining 31 sites retain their source forms
+and reasons instead of receiving guessed replay behavior. The latest procedural
+candidate count is 338 (the previous generated catalogue had 335); these are
+review candidates, not a count of completed effects.
+
+The inspector can choose held emission or a source burst. Source mode emits for
+the initializer's positive duration override, otherwise the group's duration;
+then it runs the source linger and final notify/suspend interval. Cleanup kills
+only particles owned by the launch control. Unkeyed callback splashes remain in
+the shared simulation. Each suspended phase rounds independently to fixed
+frames. Launch placement is normalized to the exhibit origin; this does not
+claim reconstruction of the full host scene or later external state changes.
+
+Eighteen focused Python tests, the particle lifecycle regression and TypeScript
+pass. The new whole-source replay audit is ready, but **packed metadata refresh,
+full replay audit, final build and browser review are pending shared capacity**.
+The guard returned exit 75; that command did not start. The previously validated
+231,680,904-byte pack and built frontend remain unchanged. The updated source
+analysis is prepared separately at `.jak-lab-data/export/catalogue.next.json`.
+
+Source analysis can now be refreshed without re-reading multi-GB model files,
+but only when all 533 source-file hashes match the previous inventory:
+
+```sh
+python3 tools/jak-lab/catalogue.py \
+  --project .jak-lab-data/export/opengoal \
+  --refresh-inventory-from .jak-lab-data/export/catalogue.json \
+  --output .jak-lab-data/export/catalogue.next.json
+```
+
+The packer also supports a metadata-only refresh. It checks every source asset
+identity against the verified pack, every prior semantic report entry, and every
+stored asset's bytes/hash before atomically replacing the catalogue. Changed
+assets fail and require full packing. The following checks remain to run through
+the shared resource guard, followed by the standalone build and browser review:
+
+```sh
+python3 tools/jak-lab/pack_assets.py \
+  --catalogue .jak-lab-data/export/catalogue.next.json \
+  --output .jak-lab-data/export/packed --refresh-metadata
+
+node tools/jak-lab/audit_host_replays.mjs \
+  --catalogue .jak-lab-data/export/catalogue.next.json \
+  --output .jak-lab-data/export/host-replay-audit.json
+```
+
+After those checks pass, promote `catalogue.next.json` to the raw catalogue and
+refresh the delivery byte/hash evidence. The remaining 87 unassigned definitions
+include 69 with declared birth counts and 18 continuation-only definitions;
+tracing their computed/unused host paths is still required.

@@ -293,12 +293,32 @@ def build_catalogue(project: Path):
             'sourceInventory': source_inventory, 'callbackPrograms': callback_programs}
 
 
+def refresh_inventory(previous_file: Path, project: Path):
+    """Re-run source analysis without reading unchanged multi-GB model files.
+
+    This only accepts the exact already-catalogued source tree. New/changed
+    source definitions require a complete catalogue rebuild.
+    """
+    catalogue = json.loads(previous_file.read_text())
+    source = project / 'goal_src/jak1'
+    updated = inventory(source, catalogue['particles'], catalogue['groups'], parse, walk)
+    if updated['sourceFiles'] != catalogue['sourceInventory']['sourceFiles']:
+        raise ValueError('Source tree changed; rebuild the complete catalogue')
+    callbacks, failures = compile_callbacks(updated['callbackDefinitions'])
+    catalogue.update(sourceInventory=updated, callbackPrograms=callbacks)
+    catalogue['coverage'].update(sourceAudit=updated['coverage'],
+                                 compiledContactCallbacks=len(callbacks), unsupportedContactCallbacks=failures)
+    return catalogue
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--refresh-inventory-from', type=Path,
+                        help='Re-analyse an identical source tree, preserving existing asset metadata')
     args = parser.parse_args()
-    catalogue = build_catalogue(args.project.resolve())
+    catalogue = refresh_inventory(args.refresh_inventory_from, args.project.resolve()) if args.refresh_inventory_from else build_catalogue(args.project.resolve())
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(catalogue, separators=(',', ':')) + '\n')
     print(json.dumps(catalogue['coverage'], indent=2))

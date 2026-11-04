@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {ParticleMotion, type LabParticle} from './particleMotion';
-import {assetURL, type Catalogue, type EffectDefinition, type RenderingMode} from './types';
+import {assetURL, type Catalogue, type EffectDefinition, type HostReplay, type RenderingMode} from './types';
 
 const vertexShader = /* glsl */`
   attribute vec4 profile;
@@ -156,6 +156,7 @@ export class ParticleExhibit {
   readonly root = new THREE.Group();
   readonly motion: ParticleMotion;
   readonly issues: Set<string>;
+  readonly replays: HostReplay[];
   readonly original = new THREE.Group();
   readonly alternative = new THREE.Group();
   private readonly batches = new Map<string,SpriteBatch>();
@@ -166,6 +167,12 @@ export class ParticleExhibit {
   private constructor(readonly definition: EffectDefinition, catalogue: Catalogue) {
     this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1,catalogue.callbackPrograms);
     this.issues=this.motion.issues;
+    const timings=new Set<string>();
+    this.replays=(catalogue.sourceInventory?.partTrackerLaunches??[]).flatMap(entry=>{
+      const replay=entry.replay;if(!replay||replay.group!==definition.name)return [];
+      const key=`${replay.duration}/${replay.linger}`;
+      if(timings.has(key))return [];timings.add(key);return [replay];
+    });
     const patches=catalogue.sourceInventory?.runtimeParticlePatches.filter(patch=>patch.particles.some(id=>
       typeof id==='number'&&this.motion.referencedParticleIds.has(id)))??[];
     if(patches.length)this.issues.add(`Host emission changes: ${patches.length} source sites`);
@@ -196,6 +203,7 @@ export class ParticleExhibit {
     }
   }
   get scale(): number{return this.original.scale.x;}
+  setReplay(index: number): void {this.motion.replay=this.replays[index]??null;this.restart();}
   setRendering(mode:RenderingMode):void {
     this.mode=mode;this.original.visible=mode!=='gouraud';this.alternative.visible=mode!=='original';
     this.original.position.x=mode==='compare'?-2.6:0;this.alternative.position.x=mode==='compare'?2.6:0;
@@ -223,7 +231,8 @@ export class ParticleExhibit {
   }
   restart():void {this.nextDirectLaunch=300;this.motion.reset();this.update(1/60);}
   get diagnostics(){return {view:this.mode,particles:this.motion.particles.length,ticks:this.motion.clock,
-    dropped:this.motion.dropped,sourceQueueDrops:this.motion.queueDrops,batches:this.batches.size,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
+    dropped:this.motion.dropped,sourceQueueDrops:this.motion.queueDrops,batches:this.batches.size,
+    replay:this.motion.replayPhase,replaySource:this.motion.replay?.source,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
   dispose():void {
     for(const batch of this.batches.values())batch.dispose();
     for(const texture of this.textures.values())texture.dispose();

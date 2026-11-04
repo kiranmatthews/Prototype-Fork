@@ -1,9 +1,13 @@
 import base64
 import json
 import struct
+import io
+import tempfile
 import unittest
+from contextlib import redirect_stdout
+from pathlib import Path
 
-from pack_assets import GLB, pack, semantic_fingerprint
+from pack_assets import GLB, pack, pack_catalogue, refresh_metadata, semantic_fingerprint, sha
 
 
 def fixture(unindexed=False):
@@ -106,6 +110,46 @@ class PackTests(unittest.TestCase):
         source.doc['accessors'][0]['sparse'] = {'count': 1}
         with self.assertRaisesRegex(ValueError, 'Sparse'):
             self.roundtrip(source)
+
+    def metadata_fixture(self, root):
+        raw, png = fixture(), b'exact-source-texture'
+        (root / 'source.glb').write_bytes(raw)
+        (root / 'source.png').write_bytes(png)
+        document = {'models': [{'id': 'fixture', 'path': 'source.glb', 'sha256': sha(raw), 'bytes': len(raw)}],
+                    'textures': [{'id': 'texture', 'path': 'source.png', 'sha256': sha(png), 'bytes': len(png)}]}
+        catalogue = root / 'source.json'
+        catalogue.write_text(json.dumps(document))
+        output = root / 'packed'
+        with redirect_stdout(io.StringIO()):
+            pack_catalogue(catalogue, root, output)
+        return catalogue, document, output
+
+    def test_metadata_refresh_preserves_verified_packed_bytes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            catalogue, document, output = self.metadata_fixture(Path(tmp))
+            before = {str(p.relative_to(output)): p.read_bytes() for p in (output / 'assets').rglob('*') if p.is_file()}
+            document['sourceInventory'] = {'partTrackerLaunches': [{'replay': {'duration': 5}}]}
+            catalogue.write_text(json.dumps(document))
+            with redirect_stdout(io.StringIO()):
+                refresh_metadata(catalogue, output)
+            current = json.loads((output / 'catalogue.json').read_text())
+            self.assertEqual(current['sourceInventory'], document['sourceInventory'])
+            self.assertEqual(current['models'][0]['encoding'], 'gzip')
+            self.assertEqual(before, {str(p.relative_to(output)): p.read_bytes() for p in (output / 'assets').rglob('*') if p.is_file()})
+
+    def test_metadata_refresh_rejects_source_or_stored_asset_change_atomically(self):
+        for corrupt_stored in (False, True):
+            with tempfile.TemporaryDirectory() as tmp:
+                catalogue, document, output = self.metadata_fixture(Path(tmp))
+                before = (output / 'catalogue.json').read_bytes()
+                if corrupt_stored:
+                    next((output / 'assets/models').glob('*')).write_bytes(b'corrupt')
+                else:
+                    document['models'][0]['sha256'] = 'changed'
+                    catalogue.write_text(json.dumps(document))
+                with self.assertRaisesRegex(ValueError, 'changed'):
+                    refresh_metadata(catalogue, output)
+                self.assertEqual((output / 'catalogue.json').read_bytes(), before)
 
 
 if __name__ == '__main__':

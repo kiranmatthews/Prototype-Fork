@@ -33,6 +33,10 @@ export interface ContactCallback {
   kind: 'height-contact'; comparison: 'below' | 'at-or-above'; descending: boolean;
   actions: ContactAction[]; source: Provenance; formSha256: string;
 }
+export interface HostReplay {
+  kind: 'part-tracker'; group: string; duration: number; linger: number;
+  source: Provenance & {function: string | null}; formSha256: string;
+}
 export interface Catalogue {
   schemaVersion: number; game: string; sourceVersion: string;
   coverage: {
@@ -45,6 +49,7 @@ export interface Catalogue {
   models: ModelDefinition[]; textures: TextureDefinition[];
   callbackPrograms?: Record<string, ContactCallback>;
   sourceInventory?: {
+    partTrackerLaunches?: {replay?: HostReplay}[];
     runtimeParticlePatches: {particles: unknown[]; source: Provenance}[];
     standaloneParticles: {particle: number; source: Provenance; alsoInGroupGraph: boolean;
       launches: {source: Provenance & {function: string | null}; is3d: boolean}[]}[];

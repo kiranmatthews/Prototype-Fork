@@ -332,13 +332,75 @@ def pack_catalogue(catalogue_file, exported, output):
     print(json.dumps(summary, indent=2), flush=True)
 
 
+def refresh_metadata(catalogue_file, output):
+    """Reuse verified packed bytes when only source-analysis metadata changes.
+
+    Compare every source asset identity, report entry and stored-file hash before
+    replacing the catalogue. A changed model or image requires normal packing.
+    """
+    current = json.loads(catalogue_file.read_text())
+    previous_file = output / 'catalogue.json'
+    previous = json.loads(previous_file.read_text())
+    report = json.loads((output / 'packing-report.json').read_text())
+    if not report['summary'].get('allDrawStreamsAnimationsSkinsAndImagesVerified'):
+        raise ValueError('No complete prior semantic verification')
+    old_models = {model['id']: model for model in previous['models']}
+    old_textures = {texture['id']: texture for texture in previous['textures']}
+    if set(old_models) != {model['id'] for model in current['models']} or \
+            set(old_textures) != {texture['id'] for texture in current['textures']} or \
+            set(old_models) != {model['id'] for model in report['models']}:
+        raise ValueError('Asset set changed; repack the complete catalogue')
+    signatures = {model['id']: model['semanticSha256'] for model in report['models']}
+    for model in current['models']:
+        old = old_models[model['id']]
+        if (model['path'], model['sha256'], model['bytes']) != \
+                (old['sourcePath'], old['sourceSha256'], old['sourceBytes']) or \
+                signatures[model['id']] != old['semanticSha256']:
+            raise ValueError('Source model changed: ' + model['id'])
+        for key in ('path', 'sha256', 'bytes', 'sourcePath', 'sourceSha256', 'sourceBytes',
+                    'semanticSha256', 'encoding', 'decodedBytes', 'decodedSha256'):
+            model[key] = old[key]
+    for texture in current['textures']:
+        old = old_textures[texture['id']]
+        if (texture['path'], texture['sha256'], texture['bytes']) != \
+                (old['sourcePath'], old['sha256'], old['bytes']):
+            raise ValueError('Source texture changed: ' + texture['id'])
+        texture.update(sourcePath=texture['path'], path=old['path'])
+    assets = (output / 'assets').resolve()
+    for asset in previous['assets']:
+        path = (assets / asset['path']).resolve()
+        if not path.is_relative_to(assets):
+            raise ValueError('Packed asset is outside asset directory')
+        data = path.read_bytes()
+        if len(data) != asset['bytes'] or sha(data) != asset['sha256']:
+            raise ValueError('Stored packed asset changed: ' + asset['path'])
+    current.update(assetDirectory='assets', assets=previous['assets'])
+    pending = output / 'catalogue.pending.json'
+    pending.write_text(json.dumps(current, separators=(',', ':')) + '\n')
+    report['metadataRefresh'] = {'sourceCatalogueSha256': sha(catalogue_file.read_bytes()),
+                                 'previousCatalogueSha256': sha(previous_file.read_bytes()),
+                                 'storedAssetHashesVerified': len(previous['assets'])}
+    pending.replace(previous_file)
+    summary = report['summary']
+    summary['catalogueBytes'] = previous_file.stat().st_size
+    summary['assetAndCatalogueBytes'] = summary['totalAssetBytes'] + summary['catalogueBytes']
+    (output / 'packing-report.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(summary, indent=2), flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--catalogue', type=Path, required=True)
-    parser.add_argument('--exported', type=Path, required=True)
+    parser.add_argument('--exported', type=Path)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--refresh-metadata', action='store_true', help='Reuse an exact verified asset pack')
     args = parser.parse_args()
-    pack_catalogue(args.catalogue, args.exported, args.output)
+    if args.refresh_metadata:
+        refresh_metadata(args.catalogue, args.output)
+    else:
+        if args.exported is None:
+            parser.error('--exported is required for a full pack')
+        pack_catalogue(args.catalogue, args.exported, args.output)
 
 
 if __name__ == '__main__':
