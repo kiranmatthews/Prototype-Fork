@@ -215,6 +215,7 @@ export interface GameHudSurfaceDiagnostics {
   primitives: number;
   lastCanvasMs: number;
   lifeFaceReady: boolean;
+  lifeFaceUrl: string;
   rooFontReady: boolean;
   rooAtlasReady: boolean;
   disposed: boolean;
@@ -309,6 +310,7 @@ export class GameHudSurface {
   private readonly fontFamily: string;
   private readonly iconFallbacks: boolean;
   private lifeFace: HTMLImageElement | null = null;
+  private lifeFaceUrl = '';
   private lifeFaceReady = false;
   private rooFontReady = false;
   private readonly rooAtlas = new RooAtlasPainter();
@@ -372,8 +374,8 @@ export class GameHudSurface {
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.camera.position.z = 0.5;
 
-    this.loadLifeFace(
-      options.lifeFaceUrl ?? `${import.meta.env.BASE_URL}roo.png`,
+    this.setLifeFaceUrl(
+      options.lifeFaceUrl ?? `${import.meta.env.BASE_URL}bone-head.png`,
     );
     if (document.fonts) {
       void document.fonts
@@ -407,6 +409,7 @@ export class GameHudSurface {
       primitives: this.primitiveCount,
       lastCanvasMs: this.lastCanvasMs,
       lifeFaceReady: this.lifeFaceReady,
+      lifeFaceUrl: this.lifeFaceUrl,
       rooFontReady: this.rooFontReady,
       rooAtlasReady: this.rooAtlas.ready,
       disposed: this.disposed,
@@ -1804,20 +1807,30 @@ export class GameHudSurface {
     this.textureReallocations++;
   }
 
-  private loadLifeFace(url: string): void {
+  /** Keep the pre-CRT portrait in step with the live character selection. */
+  setLifeFaceUrl(url: string): void {
+    this.assertLive();
+    if (url === this.lifeFaceUrl) return;
     if (!url || typeof Image === "undefined") return;
+    if (this.lifeFace) {
+      this.lifeFace.onload = null;
+      this.lifeFace.onerror = null;
+    }
+    this.lifeFaceUrl = url;
+    this.lifeFaceReady = false;
     const image = new Image();
     image.decoding = "async";
     image.onload = () => {
-      if (this.disposed) return;
+      if (this.disposed || this.lifeFace !== image) return;
       this.lifeFaceReady = image.naturalWidth > 0 && image.naturalHeight > 0;
     };
     image.onerror = () => {
+      if (this.disposed || this.lifeFace !== image) return;
       this.lifeFaceReady = false;
     };
+    this.lifeFace = image;
     trackPresentationImage(image, url);
     image.src = url;
-    this.lifeFace = image;
   }
 
   private mark(): void {

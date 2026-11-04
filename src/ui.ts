@@ -6,6 +6,7 @@ import { DebugSidePanelGroup, type DebugSidePanel } from './debugSidePanels';
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import * as THREE from "three";
+import type { CharacterHeadStyle } from './player';
 import { BonusPayout } from "./bonusPayout";
 import { BonusTitleAnimation } from "./bonusTitle";
 import {BonusTransferHud} from './bonusTransferHud';
@@ -58,7 +59,10 @@ import {
 // same as the sky paintings, or they 404 on the project-path GitHub Pages build.
 // Baked from the 1024px originals in art/ by tools/bake-hudicons.mjs.
 const art = (f: string): string => `url("${import.meta.env.BASE_URL}${f}")`;
-const LIFE_FACE_URL = art("roo.png");
+const LIFE_FACE_FILES: Record<CharacterHeadStyle, string> = {
+  skull: 'bone-head.png',
+  alternate: 'roo.png',
+};
 
 // Scratch for the 3D icon pass, so a per-frame draw allocates nothing.
 const ICON_SIZE = new THREE.Vector2();
@@ -101,6 +105,7 @@ export interface HudState {
   fruit: number;
   fruitCollectionRevision: number;
   lives: number;
+  characterHeadStyle?: CharacterHeadStyle;
   deaths: number;
   endlessDeaths: boolean;
   cratesBroken: number;
@@ -131,6 +136,7 @@ export class UI {
   private relicRowEl!: HTMLElement;
   private livesRowEl!: HTMLElement;
   private lifeFaceEl!: HTMLElement;
+  private lifeFaceStyle: CharacterHeadStyle | null = null;
   private runRowsHidden = false;
   private endlessDeaths = false;
   private lifeCheatEnabled = true;
@@ -755,6 +761,7 @@ export class UI {
     const livesRow = div("hud-counter hud-reveal hud-life-row");
     const lifeFaceWrap = div("hud-life-face-wrap");
     this.lifeFaceEl = div("hud-icon hud-icon-face");
+    this.lifeFaceEl.setAttribute('role', 'img');
     lifeFaceWrap.appendChild(this.lifeFaceEl);
     this.livesEl = div("hud-num hud-lives");
     livesRow.appendChild(this.livesEl);
@@ -941,6 +948,7 @@ export class UI {
     );
 
     this.gameHudSurface = new GameHudSurface({
+      lifeFaceUrl: `${import.meta.env.BASE_URL}${LIFE_FACE_FILES.skull}`,
       cropToElements:true,
       elements: {
         viewport: document.getElementById("app") ?? undefined,
@@ -1469,6 +1477,15 @@ export class UI {
   }
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
+    const headStyle = s.characterHeadStyle ?? 'skull';
+    if (headStyle !== this.lifeFaceStyle) {
+      const portrait = LIFE_FACE_FILES[headStyle];
+      this.lifeFaceEl.style.backgroundImage = art(portrait);
+      this.lifeFaceEl.dataset.headStyle = headStyle;
+      this.lifeFaceEl.setAttribute('aria-label', headStyle === 'skull' ? 'Bone Head' : 'BoolieRoo');
+      this.gameHudSurface.setLifeFaceUrl(`${import.meta.env.BASE_URL}${portrait}`);
+      this.lifeFaceStyle = headStyle;
+    }
     this.raceHud.update(s.race);
     if(performance.now()-this.bonusRevealStartedAt>500)this.gameHudLayer.classList.remove('hud-bonus-entering');
     if(s.bonusMode)s={...s,endlessDeaths:false};
@@ -2435,7 +2452,7 @@ export class UI {
         position: relative; flex: 0 0 auto;
         width: clamp(68px, 10.7vh, 111px);
         height: clamp(68px, 10.7vh, 111px);
-        transform: translateY(-14%);
+        transform: translateY(-4%);
       }
       .hud-life-face-wrap .hud-icon-face { width: 100%; height: 100%; }
       .hud-bonus-title {
@@ -2533,7 +2550,7 @@ export class UI {
         .hud-box-current, .hud-box-total { min-width: 0; }
       }
       .hud-icon-face {
-        background-image: ${LIFE_FACE_URL};
+        background-image: ${art(LIFE_FACE_FILES.skull)};
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;

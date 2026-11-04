@@ -5095,6 +5095,7 @@ function currentHudState(): HudState {
     fruit: player.fruit,
     fruitCollectionRevision: player.fruitCollectionRevision,
     lives: Math.max(0, player.lives),
+    characterHeadStyle: player.characterHeadStyle,
     deaths: player.totalDeaths,
     endlessDeaths: player.endlessDeaths,
     cratesBroken:

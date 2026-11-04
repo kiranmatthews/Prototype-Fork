@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Bone Head HUD reference</title></head><body style="margin:0;background:#27343f"><script type="module">
+import * as THREE from 'three';
+import {createMeshyHead,meshyHeadTextureDiagnostics} from '/src/character/meshyHead.ts';
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setSize(768,768);renderer.setPixelRatio(1);document.body.append(renderer.domElement);
+const scene=new THREE.Scene();
+const head=createMeshyHead().mesh;scene.add(head);
+const camera=new THREE.PerspectiveCamera(32,1,.01,10);
+camera.position.set(.18,.23,1.05);camera.lookAt(0,.2,0);
+scene.add(new THREE.HemisphereLight(0xd8edff,0x735742,2));
+const key=new THREE.DirectionalLight(0xffe6c9,3);key.position.set(-1,2,3);scene.add(key);
+const rim=new THREE.DirectionalLight(0xc4eaff,2);rim.position.set(2,1,-1);scene.add(rim);
+function frame(){renderer.render(scene,camera);window.referenceReady=meshyHeadTextureDiagnostics().state==='ready';requestAnimationFrame(frame);}frame();
+</script></body></html>
