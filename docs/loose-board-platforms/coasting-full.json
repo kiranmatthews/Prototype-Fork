@@ -1,0 +1,28 @@
+{
+ "scenario": "Coasting on ferry",
+ "seconds": 48.7,
+ "settled": true,
+ "supportDriftMetres": 0,
+ "boardWorld": [
+  3.24,
+  7.01,
+  -109.42
+ ],
+ "platformWorld": [
+  3.16,
+  6.4,
+  -107.82
+ ],
+ "playerGrounded": true,
+ "counts": {
+  "thrown": 1,
+  "snapped": 0,
+  "folded": 0,
+  "active": 0,
+  "settledPieces": 1,
+  "batches": 8,
+  "lost": 0,
+  "poofed": 0
+ },
+ "records": []
+}

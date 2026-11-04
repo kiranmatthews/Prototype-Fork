@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "staticColliderCountPreserved": true,
+  "seconds": 30,
+  "movers": 29,
+  "maxError": 4.092445348925568e-10,
+  "pile": {
+    "thrown": 30,
+    "snapped": 0,
+    "folded": 0,
+    "active": 0,
+    "settledPieces": 30,
+    "batches": 240,
+    "lost": 0,
+    "poofed": 0
+  }
+}

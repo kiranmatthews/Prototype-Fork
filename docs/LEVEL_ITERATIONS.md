@@ -8549,3 +8549,25 @@ job has been submitted. The prepared target is Smart Topology at 15,000
 triangles, with the user's 30,000-triangle absolute ceiling preserved.
 
 Evidence and remaining character work: [Tribal Run rebuild](tribal-run-rebuild/README.md).
+
+
+## 2026-11-04 — Loose skateboards inherit moving platform motion
+
+Brief: loose boards should remain on Tribal Run moving platforms while
+coasting and after settling. Prompt to browser-reviewed fix: approximately
+**15 minutes** (23:50–00:05 UTC).
+
+Boards retain their support transform, inherit translation and rotation once
+per physics step, and preserve platform travel momentum when they roll off.
+Sleeping instances use support-local coordinates; hit tests, broken pieces,
+disappearing support and reset cleanup stay consistent. Static sleeping piles
+continue to make zero collision queries. No level data or tuning was changed.
+
+The failing-before/passing-after regression covers carry, coasting, rotation,
+handoff, support removal, breakage and 30/60/120 Hz departure. All 29 authored
+Tribal Run movers carry actual board assemblies for 30 seconds without
+measurable drift. Existing 120-board batching/lifecycle and 61 trajectory
+checks pass. Lite and full-render MAX/native browser checks pass, together
+with production build and release-size validation. No full suite was run.
+
+Evidence: [Loose board support](loose-board-platforms/README.md).

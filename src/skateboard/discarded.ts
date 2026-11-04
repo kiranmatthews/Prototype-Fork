@@ -26,11 +26,15 @@ export interface DiscardedBoard {
     broken: boolean;
     lastSpin: object | null;
     slots: BatchSlot[];
-    /** World-space linear/angular velocity is measured at the centre of mass. */
+    /** Linear/angular velocity is measured at the centre of mass. */
     center: THREE.Vector3;
     halfSize: THREE.Vector3;
     inverseInertia: THREE.Vector3;
     supported: boolean;
+    /** While supported, velocity is relative to this surface. */
+    support: THREE.Mesh | null;
+    supportMatrix: THREE.Matrix4;
+    supportVelocity: THREE.Vector3;
     quietTime: number;
     contactTime: number;
     airTime: number;
@@ -43,6 +47,7 @@ type Batch = {
     slots: BatchSlot[];
 };
 type BatchSlot = { batch: Batch; index: number; name: string };
+type SleepingSupport = { matrix: THREE.Matrix4; boards: Set<DiscardedBoard>; moving: boolean };
 const DOWN = new THREE.Vector3(0, -1, 0);
 const UP = new THREE.Vector3(0, 1, 0);
 const GRAVITY = 24;
@@ -59,6 +64,7 @@ export class DiscardedBoards {
     private active = new Set<DiscardedBoard>();
     private bodies = new Set<DiscardedBoard>();
     private batches = new Map<string, Batch>();
+    private sleepingSupports = new Map<THREE.Mesh, SleepingSupport>();
     private fractures = new BoardFractures();
     private interpolation = new RenderInterpolator();
     private ray = new THREE.Raycaster();
@@ -95,6 +101,10 @@ export class DiscardedBoards {
     private rotation = new THREE.Quaternion();
     private inverseRotation = new THREE.Quaternion();
     private matrix = new THREE.Matrix4();
+    private carryMatrix = new THREE.Matrix4();
+    private carryRotation = new THREE.Quaternion();
+    private carryPoint = new THREE.Vector3();
+    private floorMesh: THREE.Mesh | null = null;
     private seed = 0x61c88647;
     private disposed = false;
     private thrown = 0;
@@ -133,7 +143,8 @@ export class DiscardedBoards {
     private addBody(root: THREE.Group, external: boolean, breakStyle: DiscardedBoard['breakStyle'], broken = false, lastSpin: object | null = null): DiscardedBoard {
         const board: DiscardedBoard = { root, external, stepped: false, breakStyle, velocity: new THREE.Vector3(), angular: new THREE.Vector3(), remaining: 30, rest: false, bounds: this.localBounds(root), broken, lastSpin, slots: [],
             center: new THREE.Vector3(), halfSize: new THREE.Vector3(), inverseInertia: new THREE.Vector3(),
-            supported: false, quietTime: 0, contactTime: 0, airTime: 1, impactCooldown: 0 };
+            supported: false, support: null, supportMatrix: new THREE.Matrix4(), supportVelocity: new THREE.Vector3(),
+            quietTime: 0, contactTime: 0, airTime: 1, impactCooldown: 0 };
         this.measureBody(board);
         this.active.add(board);
         this.bodies.add(board);
@@ -148,6 +159,9 @@ export class DiscardedBoards {
         const worldBounds = new THREE.Box3();
         for (const board of [...this.bodies]) {
             if (board.lastSpin === token) continue;
+            // A sleeping batch is a child of its platform. Refresh the retained
+            // hit-test pose too, including motion since the last debris tick.
+            if (board.rest) this.carrySupport(board, 0);
             board.root.updateWorldMatrix(true, false);
             worldBounds.copy(board.bounds).applyMatrix4(board.root.matrixWorld);
             if (!box.intersectsBox(worldBounds)) continue;
@@ -169,6 +183,11 @@ export class DiscardedBoards {
     }
 
     private removeSlots(board: DiscardedBoard): void {
+        if (board.support) {
+            const sleeping = this.sleepingSupports.get(board.support);
+            sleeping?.boards.delete(board);
+            if (sleeping?.boards.size === 0) this.sleepingSupports.delete(board.support);
+        }
         const matrix = new THREE.Matrix4();
         for (const slot of board.slots) {
             const batch = slot.batch;
@@ -192,6 +211,9 @@ export class DiscardedBoards {
     }
 
     private wake(board: DiscardedBoard): void {
+        // A disappearing/falling support can move after the last pile tick.
+        // Recover the instance hierarchy at its latest rendered world pose.
+        this.carrySupport(board, 0);
         this.root.add(board.root);
         board.root.updateWorldMatrix(true, false);
         const inverse = board.root.matrixWorld.clone().invert();
@@ -217,6 +239,7 @@ export class DiscardedBoards {
 
     private retire(board: DiscardedBoard): void {
         if (board.slots.length) this.removeSlots(board);
+        this.leaveSupport(board);
         board.root.visible = false;
         board.velocity.set(0, 0, 0); board.angular.set(0, 0, 0);
         board.root.clear();
@@ -231,6 +254,22 @@ export class DiscardedBoards {
     }
     /** Continue released boards even if their original player dies or leaves P2. */
     update(dt: number, world: BoardDebrisWorld): void {
+        // One transform/membership check per occupied surface, not per board.
+        // Static piles retain zero raycasts or integration. Moving batches ride
+        // the platform's own render interpolation without extra draw calls.
+        for (const [mesh, sleeping] of this.sleepingSupports) {
+            if (!this.supportAvailable(mesh, world)) {
+                for (const board of [...sleeping.boards]) {
+                    this.wake(board);
+                    this.leaveSupport(board);
+                }
+            } else {
+                const moved = !sleeping.matrix.equals(mesh.matrixWorld);
+                if (moved || sleeping.moving) for (const board of sleeping.boards) this.carrySupport(board, dt);
+                sleeping.matrix.copy(mesh.matrixWorld);
+                sleeping.moving = moved;
+            }
+        }
         // A reusable snapshot keeps new fragments out of the current iteration.
         // Once asleep, a pile incurs no queries, integration or pose allocations.
         this.frameBodies.length = 0;
@@ -252,11 +291,46 @@ export class DiscardedBoards {
         board.stepped = true;
         board.remaining -= dt;
         if (board.rest || dt <= 0) return;
+        if (board.support && !this.supportAvailable(board.support, world)) this.leaveSupport(board);
+        // Apply the full support transform once per caller step, before the
+        // bounded physics substeps. This also handles orbiting/rotating decks.
+        this.carrySupport(board, dt);
         // The game uses 60 Hz. Bound the same solver for larger caller steps,
         // rather than allowing a slow frame to tunnel through a thin platform.
         const steps = Math.min(8, Math.ceil(dt * 60));
         const h = Math.min(dt, 8 / 60) / steps;
         for (let i = 0; i < steps && !board.rest; i++) this.integrate(board, h, world);
+    }
+
+    private supportAvailable(mesh: THREE.Mesh, world: BoardDebrisWorld): boolean {
+        const crumble = world.crumbles[mesh.userData.crumbleId];
+        return world.groundMeshes.includes(mesh) && crumble?.state !== 'fall' && crumble?.state !== 'gone';
+    }
+    private carrySupport(board: DiscardedBoard, dt: number): void {
+        const support = board.support;
+        if (!support) return;
+        if (board.supportMatrix.equals(support.matrixWorld)) {
+            if (dt > 0) board.supportVelocity.set(0, 0, 0);
+            return;
+        }
+        this.carryMatrix.copy(board.supportMatrix).invert().premultiply(support.matrixWorld);
+        this.carryPoint.copy(board.center).multiply(board.root.scale).applyQuaternion(board.root.quaternion).add(board.root.position);
+        if (dt > 0) board.supportVelocity.copy(this.carryPoint).applyMatrix4(this.carryMatrix).sub(this.carryPoint).multiplyScalar(1 / dt);
+        board.root.position.applyMatrix4(this.carryMatrix);
+        this.carryRotation.setFromRotationMatrix(this.matrix.extractRotation(this.carryMatrix));
+        board.root.quaternion.premultiply(this.carryRotation).normalize();
+        board.velocity.applyQuaternion(this.carryRotation);
+        board.angular.applyQuaternion(this.carryRotation);
+        board.supportMatrix.copy(support.matrixWorld);
+        // The broadphase may have been prepared by another player's discard
+        // before this board was transported into its new region.
+        this.preparedEpoch = -1;
+    }
+    private leaveSupport(board: DiscardedBoard): void {
+        board.velocity.add(board.supportVelocity);
+        board.supportVelocity.set(0, 0, 0);
+        board.support = null;
+        board.supported = false;
     }
 
     private measureBody(board: DiscardedBoard): void {
@@ -343,6 +417,7 @@ export class DiscardedBoards {
                 this.center.copy(this.hardResolved);
                 this.placeRoot(board);
                 this.hardSurfaceVelocity.copy(this.hardContact.surfaceDelta).multiplyScalar(1 / Math.max(dt, 1e-6));
+                this.hardSurfaceVelocity.sub(board.supportVelocity);
                 velocity.sub(this.hardSurfaceVelocity);
                 const inward = velocity.dot(this.hardContact.normal);
                 if (inward < 0) velocity.addScaledVector(this.hardContact.normal, -inward * 1.35);
@@ -353,13 +428,13 @@ export class DiscardedBoards {
         } else if (this.collideWalls(board)) return;
         const floor = this.findFloor(board, world);
         if (floor === null) {
-            board.supported = false; board.quietTime = board.contactTime = 0;
+            this.leaveSupport(board); board.quietTime = board.contactTime = 0;
             board.airTime += dt; return;
         }
         const radius = this.supportRadius(board, this.normal);
         const distance = (this.center.y - floor) * this.normal.y;
         if (distance > radius + CONTACT_SKIN + (board.supported ? .025 : 0)) {
-            board.supported = false; board.quietTime = board.contactTime = 0;
+            this.leaveSupport(board); board.quietTime = board.contactTime = 0;
             board.airTime += dt; return;
         }
         // Resolve along the real surface normal, including ramps. The ray's
@@ -397,6 +472,15 @@ export class DiscardedBoards {
         board.airTime = 0;
         if (board.supported) this.slide(board, dt, radius);
         this.placeRoot(board);
+        if (board.support !== this.floorMesh) {
+            const supported = board.supported;
+            this.leaveSupport(board);
+            board.supported = supported;
+            if (supported && this.floorMesh) {
+                board.support = this.floorMesh;
+                board.supportMatrix.copy(this.floorMesh.matrixWorld);
+            }
+        } else if (!board.supported) this.leaveSupport(board);
         if (board.quietTime >= .2) {
             velocity.set(0, 0, 0); angular.set(0, 0, 0); board.rest = true;
             this.sleep(board);
@@ -433,6 +517,7 @@ export class DiscardedBoards {
         else board.quietTime = 0;
     }
     private findFloor(board: DiscardedBoard, world: BoardDebrisWorld): number | null {
+        this.floorMesh = null;
         this.point.copy(this.center);
         // Do not see through ceilings. A floor must be below the previous
         // centre of mass, not anywhere in a 2.5 m column above the board.
@@ -458,6 +543,7 @@ export class DiscardedBoards {
             // Also reject the back/underside of double-sided ramp meshes.
             if (this.direction.copy(this.previous).sub(hit.point).dot(this.normal) < -.06) continue;
             floor = hit.point.y;
+            this.floorMesh = hit.object as THREE.Mesh;
             break;
         }
         // Some authored barriers have a solid box without a ground-ray mesh.
@@ -466,7 +552,7 @@ export class DiscardedBoards {
             const p = this.point, top = wall.max.y;
             if (p.x < wall.min.x || p.x > wall.max.x || p.z < wall.min.z || p.z > wall.max.z ||
                 top > Math.min(p.y, this.previous.y + .05) || top < p.y - this.ray.far || floor !== null && top <= floor) continue;
-            floor = top; this.normal.copy(UP);
+            floor = top; this.floorMesh = null; this.normal.copy(UP);
         }
         return floor;
     }
@@ -560,6 +646,7 @@ export class DiscardedBoards {
         return false;
     }
     private breakBoard(board: DiscardedBoard, impact: number): void {
+        this.leaveSupport(board);
         const style = board.breakStyle;
         board.breakStyle = 'none';
         board.broken = true;
@@ -618,19 +705,33 @@ export class DiscardedBoards {
     }
     private sleep(board: DiscardedBoard): void {
         board.root.updateWorldMatrix(true, true);
-        const inverse = this.root.matrixWorld.clone().invert();
+        const parent = board.support ?? this.root;
+        parent.updateWorldMatrix(true, false);
+        const inverse = parent.matrixWorld.clone().invert();
+        if (board.support) {
+            let sleeping = this.sleepingSupports.get(board.support);
+            if (!sleeping) {
+                sleeping = { matrix: board.support.matrixWorld.clone(), boards: new Set(), moving: false };
+                this.sleepingSupports.set(board.support, sleeping);
+            }
+            sleeping.boards.add(board);
+        }
         const cell = `${Math.floor(board.root.position.x / 32)},${Math.floor(board.root.position.z / 32)}`;
         board.root.traverseVisible(object => {
             const source = object as THREE.Mesh;
             if (!source.isMesh || !source.geometry)
                 return;
             const materials = Array.isArray(source.material) ? source.material : [source.material];
-            const key = `${cell}:${source.geometry.id}:${materials.map(m => m.id).join(',')}`;
+            const key = `${parent.id}:${cell}:${source.geometry.id}:${materials.map(m => m.id).join(',')}`;
             let batch = this.batches.get(key);
             if (!batch || batch.mesh.count >= batch.capacity) {
                 const capacity = batch ? batch.capacity * 2 : 16;
                 const mesh = new THREE.InstancedMesh(source.geometry, source.material, capacity);
                 mesh.name = 'resting-board-pieces';
+                // Batches may now live under a physical platform component;
+                // they must not inherit its scenery-collider classification.
+                mesh.userData.editorGhost = true;
+                mesh.userData.solidSurface = 'none';
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
                 mesh.raycast = () => { };
@@ -643,7 +744,7 @@ export class DiscardedBoards {
                 if (batch) { batch.mesh = mesh; batch.capacity = capacity; }
                 else batch = { mesh, capacity, key, slots: [] };
                 this.batches.set(key, batch);
-                this.root.add(mesh);
+                parent.add(mesh);
             }
             const slot: BatchSlot = { batch, index: batch.mesh.count, name: source.name };
             batch.slots.push(slot);
@@ -684,15 +785,20 @@ export class DiscardedBoards {
             body.slots = [];
             body.rest = true;
             body.external = false;
+            body.support = null;
+            body.supportVelocity.set(0, 0, 0);
         }
         this.active.clear();
         this.bodies.clear();
+        this.sleepingSupports.clear();
         this.frameBodies.length = this.frameRoots.length = this.hits.length = 0;
         this.dirtyBatches.clear(); this.soundCooldown = 0;
         this.surfaceBounds = new WeakMap(); this.candidates.length = this.wallCandidates.length = 0; this.preparedEpoch = -1;
         this.settled = 0;
-        for (const { mesh } of this.batches.values())
+        for (const { mesh } of this.batches.values()) {
+            mesh.removeFromParent();
             mesh.dispose();
+        }
         this.batches.clear();
         this.root.clear();
         this.thrown = this.snapped = this.folded = this.poofed = this.lost = 0;

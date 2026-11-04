@@ -1,0 +1,15 @@
+{
+  "failures": [],
+  "trajectories": 61,
+  "sleepingCollisionQueries": 0,
+  "sleepingPile": {
+    "thrown": 40,
+    "snapped": 0,
+    "folded": 0,
+    "active": 0,
+    "settledPieces": 40,
+    "batches": 4,
+    "lost": 0,
+    "poofed": 0
+  }
+}

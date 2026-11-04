@@ -1,0 +1,52 @@
+{
+  "pass": true,
+  "rows": [
+    {
+      "scenario": "x",
+      "maxError": 5.329070518200751e-15,
+      "active": 0
+    },
+    {
+      "scenario": "y",
+      "maxError": 1.7763568394002505e-15,
+      "active": 0
+    },
+    {
+      "scenario": "z",
+      "maxError": 5.551115123125783e-15,
+      "active": 0
+    },
+    {
+      "scenario": "orbit-spin",
+      "maxError": 4.596966884443874e-14,
+      "active": 0
+    },
+    {
+      "scenario": "coasting",
+      "maxCoastError": 0.05000000000000071
+    },
+    {
+      "scenario": "single-step",
+      "x": 1.5
+    },
+    {
+      "scenario": "roll off with momentum",
+      "hz": 30,
+      "velocityX": 2.9999999999999893
+    },
+    {
+      "scenario": "roll off with momentum",
+      "hz": 60,
+      "velocityX": 2.9999999999999893
+    },
+    {
+      "scenario": "roll off with momentum",
+      "hz": 120,
+      "velocityX": 2.9999999999999893
+    },
+    {
+      "scenario": "removed support",
+      "fall": 0.8000000000000007
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+ "scenario": "Orbiting drum",
+ "seconds": 67.2,
+ "settled": true,
+ "supportDriftMetres": 0,
+ "boardWorld": [
+  -52.74,
+  -3.82,
+  -420.16
+ ],
+ "platformWorld": [
+  -52.96,
+  -4.42,
+  -420.72
+ ],
+ "playerGrounded": true,
+ "counts": {
+  "thrown": 1,
+  "snapped": 0,
+  "folded": 0,
+  "active": 0,
+  "settledPieces": 1,
+  "batches": 8,
+  "lost": 0,
+  "poofed": 0
+ },
+ "records": []
+}
