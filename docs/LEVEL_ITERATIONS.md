@@ -8601,3 +8601,30 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   heights, board motion, A/B/C and source assets remain unchanged. No publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## Direct Jak D — idle pose and recovery handoff
+
+- Completed 4 November 2026 NZDT, approximately 12 minutes prompt-to-validated
+  playable (04:59–05:11 UTC). Local A/B/C/D comparison only.
+- Verified `stance-loop` is Jak's normal grounded idle. Removed the additional
+  Bone Man neutral-arm layer from D's direct-source idle and its recoveries;
+  it distorted the stance by 19 degrees and snapped the hands up to 0.1794 m
+  when landing/climb finished. Original source keys and motion timing retained.
+- Added Idle / Idle and stops review sequences. Settled now waits for the actual
+  end of a jump's landing and transition instead of pausing mid-recovery.
+- Checks: seven idle/recovery cases over 2,940 native frames, including walk/run
+  stops, three landing types and ledge get-up. Idle handoffs show angular error
+  below 6e-8 radians and joint steps below 0.00056 m. Source arm directions match
+  within 0.00118 radians. Native idle/charge recovery, runtime routing, 1,360-frame
+  locomotion parity and 6,620-frame movement/height/recovery regressions pass.
+  A/D head peaks still match within 0.0151 m. Strict types, build and release-size
+  checks pass (803,510,988 bytes).
+- Browser: source stance comparison, full rendering, normal/native resolution,
+  front/side/oblique idle, running/walking stops and full landing-to-idle. Original
+  render settings restored; no console errors or warnings. Evidence: external
+  `d-idle-continuity/`. Physics,
+  jump/skate controls, board presentation, A/B/C and level data unchanged.
+  No publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

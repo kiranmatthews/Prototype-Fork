@@ -460,3 +460,48 @@ capture. No console errors or warnings were recorded in the final browser pass.
 Original render settings are restored. This is a local A/B/C/D follow-up;
 no integration or publication. Approximately 23 minutes prompt-to-validated
 playable (03:54–04:17 UTC), followed by the local commit and handoff.
+
+
+## D — source idle and recovery continuity, 4 November 2026 NZDT
+
+Confirmed the idle against the locally available OpenGOAL v0.3.9 controller:
+`target.gc` lines 356–373 use `eichar-stance-loop` for normal grounded stance.
+D was already sampling that clip. Its final appearance layer additionally
+applied Bone Man's default 19-degree neutral-arm offset, distorting both source
+arm directions. D's source landing/climb recovery did not carry that offset,
+so changing to idle switched it on in one frame: about 19 degrees of visible
+hand rotation and up to 0.1794 m of hand displacement.
+
+When the idle is direct-source motion, the runtime now leaves resting shoulder
+angles under the authored pose's control. The existing moving recovery and
+phase-matched handoff remain intact. Native Bone Man idle, its editable rest
+angle, other variants, motion clocks, source keyframes, physics, skating and
+independent segment elasticity are unchanged.
+
+Watch motion adds Idle and Idle and stops. The latter runs, brakes, settles,
+walks and settles again. A jump's Settled pause now waits for actual locomotion
+ownership and the completed blend; the former fixed 40-frame pause could stop
+partway through the longer flip landing and mislabel that pose as settled.
+
+`tools/test-jak-idle.mjs /path/to/motion.json` exercises 2,940 real-controller
+frames across seven cases: idle, run stop, walk stop, tap landing, flip landing,
+double-jump landing and ledge get-up. It measures final hierarchy rotations,
+hand/foot positions and source arm directions after the appearance layer.
+Angular discontinuity at all idle handoffs is below 6e-8 radians; the maximum
+joint displacement is 0.00056 m during walk coasting. Steady idle arm directions
+match the sampled source within 0.00118 radians (0.068 degrees, including source
+frame rounding). `--measure` records pre-fix evidence without enforcing the
+continuity limits.
+
+Existing native idle/charge recovery, runtime routing and 1,360-frame locomotion
+parity checks pass. The 6,620-frame D polish regression keeps all twelve A/D head
+peaks within 0.0151 m and landing-to-locomotion head displacement at numerical
+zero. Strict review types, production build and release-size checks pass
+(803,510,988 bytes). No source assets or local review entry ship in release.
+
+Browser review covers the original stance alongside Bone Man, completed flip
+landing into idle, run/walk stops, front/side/oblique views, full rendering and
+normal/native resolution. Original 720p/2× settings restored; D left in live
+play. No console errors or warnings. Evidence is external in `d-idle-continuity/`, beside the source bank.
+Approximately 12 minutes prompt-to-validated playable (04:59–05:11 UTC).
+Local A/B/C/D comparison only; no integration or publication.

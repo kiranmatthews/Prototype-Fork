@@ -924,7 +924,11 @@ export class CharacterAnimationRuntime {
     } else {
       this.transitionBlendWeight = null;
     }
-    const incomingRestWeight = clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
+    // Direct source poses already contain the resting shoulder angles. The
+    // native neutral-arm layer would add another 19 degrees to D's idle, and
+    // switch it on in one frame after a source landing/climb has fully settled.
+    const sourceOwnsIdleArms = this.findPlayableClip('player.idle')?.metadata?.jakDirect;
+    const incomingRestWeight = sourceOwnsIdleArms ? 0 : clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
     this.upperArmRestWeight = this.transitionBlendWeight === null ? incomingRestWeight
       : this.switchOutgoingUpperArmRestWeight * (1 - this.transitionBlendWeight) + incomingRestWeight * this.transitionBlendWeight;
     this.player.setCharacterUpperArmRestAngleWeight(this.upperArmRestWeight);

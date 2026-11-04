@@ -194,6 +194,14 @@ p.step = (dt: number, input: any, level: Level) => {
   }
   if(mode==='Play ledges')p.camDir.set(-Math.sin(angle),0,-Math.cos(angle));
   if (!reviewLevel || frozen || slow && ++skips % 3 !== 0) return;
+  if (mode === 'Idle' || mode === 'Idle and stops') {
+    p.camDir.set(0,0,-1);
+    const demo={moveX:0,moveY:mode==='Idle and stops'?(frame>=90&&frame<180?1:frame>=300&&frame<390?.3:0):0,
+      jumpHeld:false,jumpPressed:false,jumpReleased:false};
+    nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Settled'&&frame===(mode==='Idle'?120:470))frozen=true;
+    if(mode==='Idle and stops'&&frame>540)resetInspector();return;
+  }
   if (mode==='Play ledges') {
     nativeStep(dt,input,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');return;
   }
@@ -245,7 +253,9 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt === 'Second boost' && doubleFrame > 0 && frame === doubleFrame + 6 ||
       stopAt === 'Catch' && landFrame && frame === landFrame + 5 ||
       stopAt === 'Rebound' && landFrame && frame === landFrame + 11 ||
-      stopAt === 'Settled' && landFrame && frame === landFrame + 40)) frozen = true;
+      stopAt === 'Settled' && landFrame && frame >= landFrame + 40 &&
+        ['player.idle','player.run'].includes(runtime.activeClipId ?? '') &&
+        runtime.diagnostics.transitionBlendWeight === null)) frozen = true;
   if (frame > (mode === 'Run and stop' ? 750 : 300)) resetInspector();
 };
 const nativeRender = g.renderer.render.bind(g.renderer);
@@ -344,7 +354,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
   'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
