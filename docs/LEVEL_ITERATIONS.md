@@ -8549,3 +8549,30 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   local playtest. No level geometry, shared level pack or production entry edits.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## Direct Jak D — Bone Man locomotion continuity
+
+- Completed 4 November 2026 NZDT, approximately 22 minutes prompt-to-validated
+  playable (03:09–03:31 UTC). Local A/B/C/D comparison only.
+- D now inherits native walk/run cadence and blending, keeps the run cycle
+  continuous through direction reversals, and phase-matches starts/restarts.
+  Physical movement and facing are unchanged.
+- Replaced the long Jak pacing-to-idle sequence with Bone Man's momentum-driven
+  brake and finite settle. Landing/climb recovery keeps the running stride
+  through a reversal while preserving the source rebound.
+- Added Reverse and restart inspection, Turn/Restart pause points, and visible
+  gait-speed/walk-blend diagnostics. Source overlay labels native transitions.
+- Checks: 1,360 new native comparison frames; all 463 gait frames match original
+  normalized cadence, including nine reversal frames below 3 m/s. Native motion,
+  facing and clip selection match exactly. Maximum transition head step 0.0291 m.
+  Existing 6,620-frame polish, 1,108 source poses, direct jump/mount checks,
+  1,344-frame board parity, runtime routing, strict types, build and release size
+  passed. A/D skull peaks remain within 0.0151 m; landing handoffs stay continuous.
+- Browser: lite/full, 720p/native, side/oblique reversal and restart, A/D switch.
+  Chrome completed review after the in-app automation transport disconnected.
+  No game JavaScript errors; two startup audio-gesture warnings and favicon 404
+  recorded. Evidence: external d-locomotion-continuity/. Render settings restored
+  and Chrome test tab closed. Release output 803,509,782 bytes. No publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { withCharacterElasticity } from '../src/animation';
+import { LOCOMOTION_PHASE_MATCHED_IDLE, withCharacterElasticity } from '../src/animation';
 import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefinition, QuaternionTuple, Vec3Tuple } from '../src/animation';
 import type { OnFootJumpStudy } from '../src/onFootJumpStudy';
 
@@ -125,7 +125,9 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
   };
   const specs:[string,string,boolean][]=[
     ['player.idle','stance-loop',true],['player.run','run',true],['player.walk','walk',true],
-    ['player.run-stop','run-to-stance',false],['player.jump','jump',false],
+    // Keep Bone Man's momentum-driven brake and finite settle. Jak's eight
+    // second pacing sequence fights this controller's short coast/restart.
+    ['player.jump','jump',false],
     ['player.double-jump','jump',false],['player.fall','jump-loop',true],
     ['player.land','jump-land',false],['player.jak-run-land','run-squash',false],
     ['player.jak-run-land-weak','run-squash-weak',false],['player.jak-jump-forward','jump-forward',false],
@@ -139,22 +141,18 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     ['player.climb','edge-grab-to-jump',false],['player.jak-ledge-off','edge-grab-off',false],
   ];
   for(const [id,name,loop] of specs) {
-    const stopLead=id==='player.run-stop'?bank.clips['run-to-stance-loop']:null;
     const source=bank.clips[name];
     if(!source)throw new Error(`Missing ${name}; rerun tools/extract-jak-motion.mjs on the local GLB`);
     const shortTail=id==='player.jak-short-land'?bank.clips['jump-land']:null;
     const startFrame=id==='player.jak-soft-land'?50:0;
-    const reference=stopLead?{
-      ...source,duration:stopLead.frames/60*3+source.duration,
-      samples:[...Array.from({length:3},()=>stopLead.samples.slice(0,stopLead.frames)).flat(),...source.samples],
-    }:shortTail?{...source,duration:(source.frames+shortTail.frames-50)/60,
+    const reference=shortTail?{...source,duration:(source.frames+shortTail.frames-50)/60,
       samples:[...source.samples.slice(0,source.frames),...shortTail.samples.slice(50)]}
     :startFrame?{...source,duration:source.duration-startFrame/60,samples:source.samples.slice(startFrame)}:source;
     const original=suite.clips.find(c=>c.id===id)??suite.clips.find(c=>c.id==='player.land')!;
     const tracks:AnimationTrack[]=[];
     const ledge=name.includes('edge-grab');
     const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':id==='player.climb'?'climb':ledge?'hands':'feet';
-    const locomotion=['player.run','player.walk','player.run-stop','player.jak-run-land','player.jak-run-land-weak'].includes(id);
+    const locomotion=['player.run','player.walk','player.jak-run-land','player.jak-run-land-weak'].includes(id);
     const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1),locomotion));
     for(const target of Object.keys(poses[0].locals))tracks.push({id:`${id}:${target}:source`,kind:'quaternion',target,
       keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.locals[target],interpolation:'linear'}))});
@@ -163,12 +161,16 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
       keys:poses.map((pose,i)=>({id:`${id}:${target}:p${i}`,time:Math.min(reference.duration,i/60),value:pose.translations[target],interpolation:'linear'}))});
     for(const target of Object.keys(poses[0].lengths))tracks.push({id:`${id}:${target}:source`,kind:'scalar',target,
       keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.lengths[target],interpolation:'linear'}))});
+    // Transfer Bone Man's cycle cadence, not raw foot velocity. Its animation
+    // intent keeps strides alive as physical momentum crosses zero in a turn.
+    const playbackSpeed=id==='player.run'||id==='player.walk'
+      ? original.playbackSpeed*reference.duration/(original.range.end-original.range.start) : 1;
     const clip:AnimationClip=withCharacterElasticity({...original,id,name:`D · Jak ${name} (direct retarget)`,duration:reference.duration,
-      playbackSpeed:1,range:{start:0,end:reference.duration},loop:{...original.loop,mode:loop?'loop':'once'},
+      playbackSpeed,range:{start:0,end:reference.duration},loop:{...original.loop,mode:loop?'loop':'once'},
       tracks,proceduralDrivers:[],contacts:[],events:[],markers:[],
       metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,jakRootMode:rootMode,
         ...(ledge?{jakLedge:true}:{}),
-        ...(stopLead?{jakSourceLeadClip:'run-to-stance-loop',jakSourceLeadFrames:stopLead.frames,jakSourceLeadRepeats:3}:{}),
+        ...(id==='player.idle'?{locomotionTransition:LOCOMOTION_PHASE_MATCHED_IDLE}:{}),
         ...(shortTail?{jakSourceTailClip:'jump-land',jakSourceTailAt:source.frames,jakSourceTailFrame:50}:{}),
         ...(startFrame?{jakSourceStartFrame:startFrame}:{}),
         referenceStudy:'Direct local source sample retarget; source data excluded from Git and production'},

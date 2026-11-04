@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Level } from '../src/level';
-import { RigBinding, createPlayerStarterAnimationSuite } from '../src/animation';
+import { LOCOMOTION_WALK_BLEND_INPUT, RigBinding, createPlayerStarterAnimationSuite } from '../src/animation';
 import type { AnimationClip } from '../src/animation';
 import previousClips from './fixtures/pre-reference-jump-clips.json';
 import { sfx } from '../src/audio';
@@ -80,10 +80,8 @@ function updateSource() {
   if (!sourceModel.visible) return false;
   const clip = runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId);
   let name = clip?.metadata?.jakSourceClip as string | undefined, time = runtime.diagnostics.timelineTime ?? 0;
-  if (clip?.metadata?.jakSourceLeadClip) {
-    const cycle = Number(clip.metadata.jakSourceLeadFrames) / 60, lead = cycle * Number(clip.metadata.jakSourceLeadRepeats);
-    if (time < lead) {name = String(clip.metadata.jakSourceLeadClip); time %= cycle;} else time -= lead;
-  }
+  sourceNote.textContent = name ? 'Bone Man left · original Jak right · same source frame'
+    : 'Bone Man left · native movement transition · Jak at rest';
   if (clip?.metadata?.jakSourceTailClip && time * 60 >= Number(clip.metadata.jakSourceTailAt)) {
     name = String(clip.metadata.jakSourceTailClip);
     time += (Number(clip.metadata.jakSourceTailFrame) - Number(clip.metadata.jakSourceTailAt)) / 60;
@@ -98,7 +96,8 @@ function updateSource() {
   if (name) set(name,1); else set('stance-loop',1);
   const speed = p.walkVelocity.length();
   if (name === 'jump' || name === 'run') {
-    const weight = name === 'jump' ? THREE.MathUtils.clamp((speed - 2.5) / 5,0,1) : 1 - THREE.MathUtils.clamp((speed - 4) / 5,0,1);
+    const weight = name === 'jump' ? THREE.MathUtils.clamp((speed - 2.5) / 5,0,1)
+      : runtime.diagnostics.motionContext?.inputs?.[LOCOMOTION_WALK_BLEND_INPUT] ?? 0;
     set(name,1-weight); set(name === 'jump' ? 'jump-forward' : 'walk',weight);
   }
   sourceMixer.update(0);
@@ -209,9 +208,20 @@ p.step = (dt: number, input: any, level: Level) => {
     if(frame>400)resetInspector();return;
   }
   if (mode === 'Walk, run and turn') {
+    p.camDir.set(0,0,-1);
     const demo = {moveX:frame>=210&&frame<285?-1:0,moveY:frame<90?.3:frame<210?1:0,
       jumpHeld:false,jumpPressed:false,jumpReleased:false};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(frame>480)resetInspector();return;
+  }
+  if (mode === 'Reverse and restart') {
+    p.camDir.set(0,0,-1);
+    const demo = {moveX:frame>=300&&frame<360?1:0,
+      moveY:frame<90?1:frame<180?-1:frame<200?0:frame<260?1:0,
+      jumpHeld:false,jumpPressed:false,jumpReleased:false};
+    nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Turn'&&p.walkTurnaround&&p.walkVelocity.length()<3 ||
+      stopAt==='Restart'&&frame===205 || stopAt==='Settled'&&frame===430)frozen=true;
     if(frame>480)resetInspector();return;
   }
   const running = mode === 'Running jump' || mode === 'Run and stop';
@@ -274,7 +284,7 @@ instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in
 const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. Air physics changes on your next foot jump.';
 panel.append(instructions, continuity);
 const directHint = document.createElement('p');
-directHint.textContent = 'D pairs Jak’s motion with our walk, run, turns and inertia. Wider ledge grips, a gentler pull-up, and a forward jump flip. Release to jump; hold while running to skate.';
+directHint.textContent = 'D pairs Jak’s poses with Bone Man’s walk/run cadence, continuous strides through turns, and responsive braking/restarts. Release to jump; hold while running to skate.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
 const flipLabel=document.createElement('label'),flipBox=document.createElement('input');
@@ -331,7 +341,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Run and stop','Walk, run and turn',
+const motionSelect=select('Motion',['Tap jump','Full jump','Double jump','Running jump','Run and stop','Walk, run and turn','Reverse and restart',
   'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -345,7 +355,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Catch','Rebound','Settled','Pull-up','Release'],value=>{stopAt=value;resetInspector();});
+select('Pause at',['None','Charge','Reach','Apex','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -373,6 +383,8 @@ function report() {
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
     footSpeed:+p.walkVelocity.length().toFixed(3),turning:p.walkTurnaround,
+    gaitSpeed:+(d.motionContext?.normalizedSpeed ?? 0).toFixed(3),
+    walkBlend:+(d.motionContext?.inputs?.[LOCOMOTION_WALK_BLEND_INPUT] ?? 0).toFixed(3),
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
     jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
     cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),

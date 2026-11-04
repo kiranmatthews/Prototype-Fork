@@ -24,9 +24,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,Player})=>{
     ['hipRight','kneeRight','Rthigh','Rknee'],['kneeRight','ankleRight','Rknee','Rankle']];
   let maxDirectionError=0,samples=0;
   for(const clip of suite.clips.filter(c=>c.metadata?.jakDirect)) {
-    const ref=bank.clips[clip.metadata.jakSourceClip], lead=clip.id==='player.run-stop'?bank.clips['run-to-stance-loop']:null;
-    const sourceFrames=lead?[...Array.from({length:3},()=>lead.samples.slice(0,lead.frames)).flat(),...ref.samples]
-      :clip.id==='player.jak-short-land'?[...ref.samples.slice(0,ref.frames),...bank.clips['jump-land'].samples.slice(50)]
+    const ref=bank.clips[clip.metadata.jakSourceClip];
+    const sourceFrames=clip.id==='player.jak-short-land'?[...ref.samples.slice(0,ref.frames),...bank.clips['jump-land'].samples.slice(50)]
       :clip.id==='player.jak-soft-land'?ref.samples.slice(50):ref.samples;
     for(let frame=0;frame<sourceFrames.length;frame++) {
       const pose=a.sampleComposedClip(clip,Math.min(clip.duration,frame/60),a.createProceduralMotionContext());

@@ -644,7 +644,8 @@ export class CharacterAnimationRuntime {
       const locomotionSwitch = this.manualClipId === null && !this.restartPending &&
         idle?.metadata?.locomotionTransition === LOCOMOTION_PHASE_MATCHED_IDLE &&
         ((clip.id === 'player.idle' && (previousClipId === 'player.run' || previousClipId === PLAYER_WALK_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID)) ||
-          (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)));
+          (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)) ||
+          (clip.metadata?.jakDirect && previousClipId === RUN_STOP_CLIP_ID && clip.id === 'player.run'));
       const previousClip = previousClipId ? this.findPlayableClip(previousClipId) : null;
       // A steady outgoing loop keeps moving as it fades. If input reverses
       // during a fade, start from the last fully mixed pose instead: restarting
@@ -695,10 +696,7 @@ export class CharacterAnimationRuntime {
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
-      const directOffset = clip.metadata?.jakDirect && clip.id === RUN_STOP_CLIP_ID && previousClipId === 'player.run'
-        ? ((50 + (5 / 6) * ((this.timelineTime ?? 0) * 60 - 25)) % 50) / 60
-        : null;
-      this.playbackOffset = directOffset ?? idleHandoffOffset ?? runHandoffOffset ?? matchedOffset ?? 0;
+      this.playbackOffset = idleHandoffOffset ?? runHandoffOffset ?? matchedOffset ?? 0;
       this.pendingRunHandoffOffset = null;
       this.pendingIdleHandoffOffset = null;
       this.restartPending = false;
@@ -1003,7 +1001,7 @@ export class CharacterAnimationRuntime {
     const runTime = clipTimeAt(run, state.runClock, {offset: state.runOffset});
     const idleTime = clipTimeAt(idle, state.idleClock, {offset: state.idleOffset});
     const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
-    const moving = smoothstep01((motion.inputs?.footSpeed ?? 0) / .8);
+    const moving = smoothstep01(motion.normalizedSpeed * TUNING.walkSpeed / .8);
     const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)),
       canonical(this.samplePoseAt(run, runTime, motion, true)), moving);
     const source = canonical(pose);
@@ -1028,14 +1026,11 @@ export class CharacterAnimationRuntime {
       if (fall) return sampleComposedClip(fall, clipTimeAt(fall, ((motion.inputs?.jakFrame ?? 40) - 40) / 60), motion);
     }
     const pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
-    if (clip.metadata?.jakDirect) {
+    if (clip.metadata?.jakDirect && (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
       const speed = motion.inputs?.footSpeed ?? 0;
-      const alternateId = clip.id === 'player.run' ? PLAYER_WALK_CLIP_ID
-        : clip.id === 'player.jump' || clip.id === 'player.double-jump' ? 'player.jak-jump-forward' : null;
-      const alternate = alternateId ? this.findPlayableClip(alternateId) : null;
+      const alternate = this.findPlayableClip('player.jak-jump-forward');
       if (!alternate) return pose;
-      const weight = clip.id === 'player.run' ? 1 - MathUtils.clamp((speed - 4) / 5, 0, 1)
-        : MathUtils.clamp((speed - 2.5) / 5, 0, 1);
+      const weight = MathUtils.clamp((speed - 2.5) / 5, 0, 1);
       const other = sampleComposedClip(alternate, time, motion);
       return blendPoses(pose, other, weight);
     }
@@ -1192,16 +1187,9 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
-    if (this.manualClipId === null && clip.metadata?.jakDirect) {
-      const speed = motion.inputs?.footSpeed ?? 0;
-      if (clip.id === 'player.run') {
-        const runWeight = MathUtils.clamp((speed - 4) / 5, 0, 1);
-        return speed / (2.8 + (6.25 - 2.8) * runWeight);
-      }
-      if (clip.id === 'player.jak-run-land' || clip.id === 'player.jak-run-land-weak')
-        return this.playbackSeconds < .05 ? 1 : Math.max(5, speed) / 5;
-      return 1;
-    }
+    if (this.manualClipId === null && clip.metadata?.jakDirect &&
+        (clip.id === 'player.jak-run-land' || clip.id === 'player.jak-run-land-weak'))
+      return this.playbackSeconds < .05 ? 1 : Math.max(5, motion.normalizedSpeed * TUNING.walkSpeed) / 5;
     if (this.manualClipId === null && clip.id === CROUCH_CLIP_IDS.move) {
       // One complete left/right crawl cycle covers 1.8 m. Integrate distance
       // into the existing clock so analog speed changes never restart a pose;

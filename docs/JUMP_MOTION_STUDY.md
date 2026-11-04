@@ -48,7 +48,7 @@ Press **1 / 2 / 3 / 4** or click the four visible buttons:
 | A · Original | Previous catalogue 37 | Original | Original |
 | B · Animation | Revised jump family | Original | Local Jak placeholders |
 | C · Jak feel | Earlier gather, deeper body fold, shorter stretch | Experimental Jak fit | Local Jak placeholders |
-| D · Direct Jak | Extracted source curves retargeted to Bone Man | Source jump timing and flat-foot movement, existing input gesture | Local Jak placeholders |
+| D · Direct Jak | Extracted source curves retargeted to Bone Man, native locomotion transitions | Calibrated source jump timing, Bone Man walk/run behavior and existing input gesture | Local Jak placeholders |
 
 Switching does not respawn or reset velocity. An air-physics selection takes effect
 at the next ground jump; each in-flight arc retains the profile it launched
@@ -140,14 +140,15 @@ The twenty sampled source joints drive the main body; Bone Man retains its own
 proportions, procedural fingers and accessory motion.
 
 This includes stance, walk/run, jump and jump-forward, the second jump's restart,
-fall, full/short landing recovery, run-squash and weak run-squash, and the complete
-three-cycle run-to-stance lead-in followed by the source settle. Source jump
-frame 20 follows the physical apex; double jump restarts at frame 5. Running
-blends walk/run by speed and advances by distance (2.8/6.25 m stride lengths).
+fall, full/short landing recovery, run-squash and weak run-squash. Source jump
+frame 20 follows the physical apex; double jump restarts at frame 5. Following
+the locomotion-continuity pass below, walking/running use Bone Man's cadence,
+analog mixture and turn-aware presentation speed rather than raw foot velocity.
 Moving landings retain the source catch/rebound while blending the legs into
 a continuing, phase-matched walk/run cycle. The waist and root finish their
-bounce separately. Letting go of movement plays the source pacing sequence,
-then reaches idle. New input interrupts recovery.
+bounce separately. Letting go of movement uses Bone Man's momentum-driven
+brake and finite settle, with a phase-matched return to the Jak stance. New
+input interrupts recovery immediately and matches the incoming stride phase.
 
 **The user's explicit control preference is retained:** release to jump, hold
 while running to skate, and tap/release again in the air for double jump. The
@@ -164,8 +165,11 @@ the entire Jak engine.
 
 The page defaults to D when the local bank is available. **Watch motion → Show
 original Jak alongside (D)** plays the full original model beside Bone Man at
-the same source frame, including walk/run and jump-forward blends. **Run and
-stop** includes the landing and full pacing sequence. Use **Hide controls** for
+the same source frame, including walk/run and jump-forward blends. The overlay
+labels native transitions explicitly. **Run and stop** includes landing,
+braking and settling. **Reverse and restart** demonstrates a full reversal,
+an interrupted stop, a perpendicular turn and the return to idle; **Pause at
+→ Turn / Restart / Settled** isolates those moments. Use **Hide controls** for
 an unobstructed comparison, then **Show controls** to change the view. A/B/C
 remain available; selecting a variant does not teleport or reset velocity.
 
@@ -367,3 +371,50 @@ warning-free. Both console captures are retained with the evidence.
 
 This remains a local A/B/C/D comparison. A/B/C, level data, global tuning, source
 assets and production entrypoints are unchanged; no publication is authorized.
+
+## D — Bone Man locomotion continuity, 4 November 2026 NZDT
+
+The native controller was already restored, but D still sampled animation
+from raw foot velocity. During a committed reversal, that velocity crosses
+zero while Bone Man deliberately keeps his running gait alive. D therefore
+slowed/froze the source cycle and mixed in walking at precisely the wrong time.
+
+D now uses the shared walk/run blend and normalized cycle clock. Source run
+and walk poses retain their original keyframes, with playback rates derived
+from Bone Man's corresponding cycle lengths and saved speeds. Starts and stops
+use the existing whole-pose phase matching and moving outgoing fades. A quick
+restart during braking also matches the incoming D stride before its fade.
+The raw-speed special case is retained only for the jump-forward pose mixture.
+
+Bone Man's native run-stop animation replaces the 8.17-second source pacing
+sequence. Its brake phase follows remaining momentum; its final 0.25-second
+settle blends into the Jak idle at the same phase. Renewed movement interrupts
+it immediately. D's landing/climb recovery uses turn-aware presentation speed
+for the continuing strides, retaining the independent waist/root rebound.
+Jump physics, calibration, input gestures, ledge contacts and board clips are
+unchanged. The source overlay labels native transitions rather than pretending
+they are sampled Jak frames.
+
+Validation: the new `tools/test-jak-locomotion.mjs` compares 1,360 real-controller
+frames through analog walking, a 180-degree reversal, a perpendicular turn,
+coasting, interrupted braking and idle. Position, velocity, facing and selected
+clips match A exactly. All 463 consecutive gait frames match native normalized
+cadence within 3.34e-15; nine low-speed reversal frames keep full run weight.
+Maximum start/stop head-height step is 0.0291 m. The existing 6,620-frame polish
+check passes: twelve jump-height comparisons remain within 0.0151 m of A and
+landing handoffs have no measurable head-position discontinuity. All 1,108
+remaining direct-source poses preserve major limb directions; source-flight
+and board-mount checks pass. Campaign/park ollies retain exact motion parity
+over 1,344 frames. Runtime routing, strict review types, build and release-size
+checks pass (803,509,782 bytes); review HTML/source assets remain local.
+
+Browser review covered lite/full rendering, normal 720p and native resolution,
+side/oblique views, reversal/restart/settle and A-to-D switching. Original Chrome
+render settings were restored and its temporary test tab closed. The in-app
+browser automation connection disconnected during review, so Chrome completed
+the visual checks. No game JavaScript errors appeared; Chrome logged two
+startup audio-gesture warnings and an unrelated missing `favicon.ico` request.
+Evidence is external in `d-locomotion-continuity/`, beside the source bank.
+
+Approximately 22 minutes prompt-to-validated playable (03:09–03:31 UTC).
+Local comparison only; no integration or publication.
