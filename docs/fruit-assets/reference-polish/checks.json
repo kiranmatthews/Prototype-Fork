@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "37dedc7a0cb0788180551410934a757b6205035c",
+  "checks": [
+    {
+      "check": "milk",
+      "exitCode": 0,
+      "seconds": 89.65,
+      "sourceCommit": "37dedc7a0cb0788180551410934a757b6205035c"
+    },
+    {
+      "check": "interactions",
+      "exitCode": 0,
+      "seconds": 52.46,
+      "sourceCommit": "37dedc7a0cb0788180551410934a757b6205035c"
+    },
+    {
+      "check": "build",
+      "exitCode": 0,
+      "seconds": 1266.7,
+      "sourceCommit": "37dedc7a0cb0788180551410934a757b6205035c"
+    }
+  ]
+}

@@ -9156,3 +9156,39 @@ Normal and MAX/native visual review passes with no browser warnings/errors.
 Required level checks, production build and release-size checks pass; the
 package is 814,314,594 bytes. Evidence is recorded with the immutable release
 handoff. No full audit suite was run.
+
+## 2026-11-05 — Wumpa reference sculpt and surface revision
+
+Responded to the first pass being rejected as flat/basic by rebuilding all six
+fruit profiles around the supplied Crash 4 reference: taller uneven bodies,
+fuller shoulders, narrower bases, a shallow suture and a recessed crown socket.
+The red/orange/gold/green gradient follows each fruit's cheeks. Scene-lit peach
+skin now has a broad soft highlight, filtered pores, mottling and a gentle sheen.
+Individually posed leaves have folds, rolled edges, layered veins and thin-leaf
+backlighting. Curved tapered stalks have bark, cut end grain and sealed rims;
+leaf tips and stalks have rooted secondary flex during the existing morphs.
+
+Complete variants use 4,352 or 4,904 triangles at all distances. This refinement
+preserves the previously restored 54 loose fruits in Jungle Ruins and Banana Bay.
+The collection gallery now supports individual variant inspection and drag orbit.
+Runtime source checkpoint: `37dedc7a0cb0788180551410934a757b6205035c`.
+
+Prompt to revised interactive preview: approximately five minutes. Prompt to
+completed normal/native gameplay review: approximately 24 minutes, from about
+20:06 to 20:30 UTC on 4 November (5 November in Auckland). These are wall-clock
+intervals for this follow-up, separate from the earlier reboot-affected brief.
+
+Focused milk geometry/material/morph/batching/depth checks and real Player
+interaction regressions pass. Gallery review covers all six fruits, several
+angles, studio/shade/sunset and idle/release/flight. Jungle lite, Jungle full
+720p and Banana Bay full native walks each collect six fruits for six credits
+with zero deaths. Crate collection also passes, and all four browser warning/
+error logs are empty. No level data changed and no whole-game suite was run.
+[Revision evidence and build result](fruit-assets/reference-polish/README.md)
+records the exact source and check durations. The coordinator owns publication;
+these checks do not claim user art approval.
+
+The complete production build/typecheck/release preparation passes. Final local
+validation completed around 20:54 UTC, approximately 48 wall-clock minutes after
+the follow-up prompt; 21 minutes 7 seconds was the production build. The heavy
+lease was released for the next queued validation job.
