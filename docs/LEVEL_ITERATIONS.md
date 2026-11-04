@@ -9192,3 +9192,33 @@ The complete production build/typecheck/release preparation passes. Final local
 validation completed around 20:54 UTC, approximately 48 wall-clock minutes after
 the follow-up prompt; 21 minutes 7 seconds was the production build. The heavy
 lease was released for the next queued validation job.
+
+## 2026-11-05 — Fuller Long mango proportions
+
+Corrected the user's stretched-looking Long mango by making its body about
+16.3% wider and 6.7% shorter, reducing the lean and strengthening the shoulders.
+Its body height/width ratio changes from 1.352 to 1.084. The leaf crown is more
+compact; two folds were lifted to clear the fuller cheeks. The other five
+complete meshes are byte-identical, and the mango retains all 4,904 triangles
+at every distance. Materials, motion settings and loose-cluster data are unchanged.
+
+Source checkpoints: `4ad77b7d` and `8124fbc5`. The existing geometry/morph/pooling
+check passes, as does a local leaf-clearance diagnostic. Browser review covers
+front/quarter/back/crown, release and flight, normal and native resolution. Jungle
+lite and full 720p walks each collect all six fruits for six credits with zero
+deaths; the full native scene is reviewed at 2560 × 1440 with a clean console.
+An initial wrong harness level ID opened a skate competition; the expected-cluster
+diagnostic and correction are documented in the evidence rather than counted as
+a successful check.
+
+Prompt to first revised shaded preview: approximately 30 minutes (10:03–10:34
+Auckland), including approximately 27 minutes queued for shared render/build
+capacity. Source authoring and fit corrections continued during the early part
+of that queue; idle waiting is not authoring. Full gameplay review finished
+around 10:37. [Evidence and build result](fruit-assets/mango-proportions/README.md)
+records exact source/check provenance. No level or whole-game audit was repeated.
+
+The complete production build passes in 125.53 seconds. Final local validation
+completed around 10:40 Auckland, approximately 36 minutes after the request,
+including the shared-capacity wait. The review server/browser are closed and the
+guard lease released. Publication is handed to the active release coordinator.

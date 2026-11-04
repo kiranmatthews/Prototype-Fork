@@ -1,0 +1,8 @@
+[
+  {
+    "level": "error",
+    "message": "Error: Expected six cluster members; found 0\n    at selectCluster (http://127.0.0.1:5207/tools/fruit-runtime-review.ts:52:36)\n    at http://127.0.0.1:5207/tools/fruit-runtime-review.ts:137:1",
+    "timestamp": "2026-11-04T21:34:45.793Z",
+    "url": "http://127.0.0.1:5207/tools/fruit-runtime-review.ts"
+  }
+]

@@ -33,3 +33,12 @@ The pre-crash source was recovered into a durable worktree on 5 November 2026. N
 The first pass was rejected as flat and basic. The follow-up rebuild gives the variants fuller shoulders, narrower and uneven bases, a deeper stem socket and a shallow suture. Ripeness follows the cheeks instead of forming uniform horizontal bands. New crowns are individually posed; all their geometry remains present during release, attraction and HUD flight. The gallery uses a stronger studio key and broad fill so the surface response can be judged, and runtime review still uses the game lighting. [Revision evidence](fruit-assets/reference-polish/README.md) includes fresh normal/native browser review and focused source checks; the earlier validation folder remains as the first-pass record.
 
 The revised runtime is `37dedc7a0cb0788180551410934a757b6205035c`. Fresh `check:milk`, Player interaction checks and the complete production build pass. Browser walks in Jungle lite, Jungle full 720p and Banana Bay full native each collect six fruits for six credits with zero deaths; crate collection also works. All four warning/error logs are empty. The unchanged level data and cluster placements retain their original native placement validation. Release integration and public deployment verification belong to the active coordinator.
+
+## Long mango proportion correction
+
+The user subsequently found Long mango too stretched. Its body now has fuller
+shoulders, less lean and a height/width ratio of 1.084 instead of 1.352. The crown
+is shorter and broader, with the folds fitted clear of the wider cheeks. The
+other five complete geometries are byte-identical. [Correction and evidence](fruit-assets/mango-proportions/README.md)
+includes current close-ups and the updated collection view; the earlier
+reference-polish images retain the previous, narrower mango.

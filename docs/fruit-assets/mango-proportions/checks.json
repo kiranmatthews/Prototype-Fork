@@ -5,6 +5,12 @@
       "check": "fruit-geometry-and-motion",
       "exitCode": 0,
       "seconds": 1.42
+    },
+    {
+      "check": "build",
+      "exitCode": 0,
+      "seconds": 125.53
     }
-  ]
+  ],
+  "sourceCommit": "8124fbc5977f25bb1ae67fad526fcb8680d992ab"
 }

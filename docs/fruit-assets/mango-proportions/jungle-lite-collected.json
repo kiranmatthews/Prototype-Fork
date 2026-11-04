@@ -1,0 +1,47 @@
+{
+ "level": "Jungle Ruins",
+ "action": "walk",
+ "frames": 0,
+ "position": [
+  -0.045,
+  1.774,
+  0.82
+ ],
+ "grounded": true,
+ "cluster": 6,
+ "remaining": 0,
+ "visible": 0,
+ "fruit": 6,
+ "delta": 6,
+ "flights": [],
+ "variants": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "material": "Wumpa / peach skin, leaf and stalk",
+ "quality": {
+  "viewportWidth": 1280,
+  "viewportHeight": 720,
+  "inputWidth": 1280,
+  "inputHeight": 720,
+  "outputWidth": 1280,
+  "outputHeight": 720
+ },
+ "trial": false,
+ "result": {
+  "action": "walk",
+  "fruitDelta": 6,
+  "collected": 6,
+  "crateBroken": null,
+  "deaths": 0,
+  "position": [
+   -0.045,
+   1.774,
+   0.82
+  ]
+ }
+}
