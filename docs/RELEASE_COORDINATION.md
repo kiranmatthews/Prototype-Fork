@@ -8,12 +8,15 @@ immutable handoff, and continue independent work. The coordinator integrates
 and publishes ready increments. Reuse valid evidence and keep reviews bounded;
 do not block unrelated authoring on GitHub or coordinator review.
 
-The reactivation audit uses `origin/main` at
-`fcde2825a9ce41db0e88b7e9b90d5da3a691daf4`; its Pages run `41758018856` succeeded.
-The previous READY gameplay backlog is already published. Local audit results
-are in `.release-queue/reactivation-20261105-*.json`; current dispositions and
-handoffs are in the shared inbox. Preserve the dirty primary checkout and base
-new integration work on current `origin/main` in a separate worktree.
+The previous batch is published through `28dc012efe798234a90ab861f569e3e6e3391e55`
+(Pages run `41842864086`). The user is restarting feature chats and giving
+feedback. The coordinator owns release scheduling and technical integration;
+the user and feature owners own scope, feedback and authoring duration. There
+is no coordinator-imposed authoring timer or additional quality audit. Reuse
+valid focused checks, batch compatible READY increments and publish one release
+at a time. Current dispositions and handoffs are in the shared inbox. Preserve
+the dirty primary checkout and base new integration work on current
+`origin/main` in a separate worktree.
 
 Explicit publication holds:
 
@@ -27,12 +30,14 @@ publication of its complete validated seven-commit chain through `08dcece8`.
 Historical LOCAL_ONLY handoff text is superseded by that direct authorization.
 
 The separate **Locate OpenGOAL character animations (3)** particle-harvesting
-fork (`01a1a66e-202a-79d1-93bc-f6516ab3cf5b`) is publishable when complete. Keep
-its scoped particle lab separate from unfinished animation dependencies.
+fork (`01a1a66e-202a-79d1-93bc-f6516ab3cf5b`) has user authorization to publish
+its validated effects-only preview in Labs while broader effect fidelity work
+continues. Keep its scoped particle lab separate from unfinished animation
+dependencies; do not merge its inherited held animation ancestry.
 
-Coordinate through 9am Pacific/Auckland on 5 November 2026
-(`2026-11-04T20:00:00Z`) or until account usage remaining reaches zero, whichever
-comes first. Do not spend reset credits or purchase usage.
+The earlier assignment ended at 9am Pacific/Auckland on 5 November 2026
+(`2026-11-04T20:00:00Z`). The user's subsequent restart reactivated release
+coordination without that cutoff. Do not spend reset credits or purchase usage.
 
 Do not reject unrelated work merely because a held branch also edits a shared
 runtime file. Apply only declared ready commits and their allowed dependencies.
