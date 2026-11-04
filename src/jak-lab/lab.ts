@@ -4,10 +4,11 @@ import {ModelExhibit} from './models';
 import {ParticleExhibit} from './particles';
 import {FuelCellHudExhibit} from './fuelCellHudExhibit';
 import {ScreenHudExhibit} from './screenHudExhibit';
-import {screenHudDefinitions,screenHudDefinition} from './screenHud';
+import {screenHudDefinition} from './screenHud';
 import {ParticleRenderPass} from './distortion';
-import {sourceAssemblyDefinitions} from './sourceAssemblies';
-import type {Catalogue, EffectDefinition, Exhibit, RenderingMode} from './types';
+import {effectExhibits} from './exhibits';
+import {effectCategories,categoryLabel,type EffectCategory} from './effectCategories';
+import type {Catalogue, Exhibit, RenderingMode} from './types';
 
 type LabView=ModelExhibit|ParticleExhibit|FuelCellHudExhibit|ScreenHudExhibit;
 function isHud(view:LabView|undefined):view is FuelCellHudExhibit|ScreenHudExhibit {
@@ -18,13 +19,13 @@ import './lab.css';
 
 const host=document.querySelector<HTMLDivElement>('#lab')!;
 host.innerHTML=`
-  <canvas class="world" aria-label="Explorable Jak and Daxter archive" tabindex="0"></canvas>
-  <header class="topbar"><div class="brand"><span class="sigil">◈</span><div><h1>JAK & DAXTER / THE ARCHIVE</h1><small>Whole-game inspection lab</small></div></div><div class="coverage" id="coverage">Reading the source catalogue…</div></header>
-  <aside class="panel catalogue" aria-label="Archive catalogue"><p class="eyebrow">Explore the collection</p><h2>Every corner of Jak’s world</h2><input type="search" id="search" placeholder="Find an object or effect…" aria-label="Search archive"><div class="row"><select id="area" aria-label="Area"><option value="">All areas</option></select><select id="kind" aria-label="Exhibit type"><option value="">All exhibits</option><option value="object">Objects & items</option><option value="effect">Particle effects</option><option value="scene">Level scenes</option></select></div><p id="matches" class="muted"></p><div class="results" id="results"></div><div class="pager"><button id="previous" aria-label="Previous catalogue page">←</button><span id="page"></span><button id="next" aria-label="Next catalogue page">→</button></div></aside>
+  <canvas class="world" aria-label="Explorable Jak and Daxter effects lab" tabindex="0"></canvas>
+  <header class="topbar"><div class="brand"><span class="sigil">◈</span><div><h1>JAK & DAXTER / EFFECTS LAB</h1><small>Effects from across the whole game</small></div></div><div class="coverage" id="coverage">Reading the source catalogue…</div></header>
+  <aside class="panel catalogue" aria-label="Archive catalogue"><p class="eyebrow">Explore the collection</p><h2>Explore Jak’s effects</h2><input type="search" id="search" placeholder="Find an effect…" aria-label="Search effects"><div class="row"><select id="area" aria-label="Area"><option value="">All areas</option></select><select id="kind" aria-label="Effect category"><option value="">All categories</option></select></div><p id="matches" class="muted"></p><div class="results" id="results"></div><div class="pager"><button id="previous" aria-label="Previous catalogue page">←</button><span id="page"></span><button id="next" aria-label="Next catalogue page">→</button></div></aside>
   <div class="camera-tools"><button id="explore" aria-pressed="false">Explore</button><button id="focus">Focus exhibit</button><button class="toggle-panels" id="panels">Details</button></div>
-  <aside class="panel inspection" aria-label="Exhibit inspection"><p class="eyebrow" id="selected-kind">Original / Gouraud</p><h2 id="selected-name">Loading…</h2><p class="muted" id="selected-area"></p><div class="mode-switch"><button data-mode="original">Original</button><button data-mode="gouraud">Gouraud</button><button data-mode="compare" aria-pressed="true">Both</button></div><div class="inspection-content"><div class="row"><button id="pause" aria-pressed="false">Pause</button><button id="restart">Restart</button><select id="speed" aria-label="Playback speed"><option value=".25">¼ speed</option><option value=".5">½ speed</option><option value="1" selected>1× speed</option><option value="2">2× speed</option></select></div><label class="field" id="animation-field">SOURCE ANIMATION<select id="animation" aria-label="Source animation"></select></label><label class="field" id="timeline-field">ANIMATION TIME<input id="timeline" type="range" min="0" max="1" step=".001" value="0" aria-label="Animation time"></label><label class="check"><input type="checkbox" id="native-scale">Show at original world scale</label><label class="field">RENDER RESOLUTION<select id="resolution" aria-label="Render resolution"><option value="720">720p</option><option value="native" selected>MAX / native</option></select></label><div class="status" id="status"></div><div class="statline" id="statistics"></div><div class="source" id="provenance"></div></div></aside>
+  <aside class="panel inspection" aria-label="Exhibit inspection"><p class="eyebrow" id="selected-kind">Original / Gouraud</p><h2 id="selected-name">Loading…</h2><p class="muted" id="selected-area"></p><div class="mode-switch"><button data-mode="original">Original</button><button data-mode="gouraud">Gouraud</button><button data-mode="compare" aria-pressed="true">Both</button></div><div class="inspection-content"><div class="row"><button id="pause" aria-pressed="false">Pause</button><button id="restart">Restart</button><select id="speed" aria-label="Playback speed"><option value=".25">¼ speed</option><option value=".5">½ speed</option><option value="1" selected>1× speed</option><option value="2">2× speed</option></select></div><label class="field" id="timeline-field">EFFECT TIME<input id="timeline" type="range" min="0" max="1" step=".001" value="0" aria-label="Effect time"></label><label class="check"><input type="checkbox" id="native-scale">Show at original world scale</label><label class="field">RENDER RESOLUTION<select id="resolution" aria-label="Render resolution"><option value="720">720p</option><option value="native" selected>MAX / native</option></select></label><div class="status" id="status"></div><div class="statline" id="statistics"></div><div class="source" id="provenance"></div></div></aside>
   <div class="loading" role="status" id="loading">Opening the local source archive…</div>
-  <footer class="footer"><span><kbd>W A S D</kbd> move · <kbd>Q E</kbd> down / up · <kbd>Shift</kbd> faster · drag to look / orbit</span><div class="legend"><span>Original assets</span><span>Gouraud variants</span></div><span id="render-stats"></span></footer>`;
+  <footer class="footer"><span><kbd>W A S D</kbd> move · <kbd>Q E</kbd> down / up · <kbd>Shift</kbd> faster · drag to look / orbit</span><div class="legend"><span>Original effects</span><span>Gouraud variants</span></div><span id="render-stats"></span></footer>`;
 const element=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const canvas=host.querySelector<HTMLCanvasElement>('canvas.world')!;
 const loading=element('loading');
@@ -71,13 +72,9 @@ hostControls.before(assemblyControls);
 const replayField=document.createElement('div');replayField.hidden=true;
 replayField.innerHTML=`<label class="field">EMISSION PLAYBACK<select id="host-replay" aria-label="Emission playback"></select></label><p class="source" id="host-replay-note"></p>`;
 hostControls.before(replayField);
-const sceneParts=document.createElement('details');sceneParts.id='scene-parts';sceneParts.hidden=true;
-sceneParts.innerHTML=`<summary>Scene parts</summary><label class="field">FIND A PROP OR PLANT<input type="search" id="part-search" aria-label="Search scene parts" placeholder="Name or source tree…"></label><label class="field">SOURCE PART<select id="scene-part" size="6" aria-label="Scene part"></select></label><button id="part-close">Close view</button><p class="muted" id="part-note"></p>`;
-element('animation-field').before(sceneParts);
-const partSelect=element<HTMLSelectElement>('scene-part'),partSearch=element<HTMLInputElement>('part-search');
 const deathControls=document.createElement('div');deathControls.hidden=true;
 deathControls.innerHTML=`<label class="field">MODEL DISAPPEARANCE<select id="mesh-death-replay" aria-label="Model disappearance"></select></label><p class="muted" id="mesh-death-note"></p>`;
-element('animation-field').before(deathControls);
+element('timeline-field').before(deathControls);
 const deathSelect=element<HTMLSelectElement>('mesh-death-replay');
 
 async function boot():Promise<void> {
@@ -88,26 +85,11 @@ async function boot():Promise<void> {
   const catalogue=await response.json() as Catalogue;
   configureAssetBase(catalogueURL);
   if(catalogue.schemaVersion!==1)throw new Error('Unsupported source catalogue version');
-  const c=catalogue.coverage;
-  element('coverage').textContent=`${c.effectGroups} effect groups · ${c.expectedJointGeometries} joint geometries · ${c.exportedTextures.toLocaleString()} source textures`;
-  const areaNames:Record<string,string>={common:'Shared objects',beach:'Sentinel Beach',citadel:'Gol & Maia’s Citadel',darkcave:'Dark Eco Plant',demo:'Demo scenes',finalboss:'Final battle',firecanyon:'Fire Canyon',intro:'Opening scenes',jungle:'Forbidden Jungle',jungleb:'Jungle temple',lavatube:'Lava Tube',maincave:'Spider Cave',misty:'Misty Island',ogre:'Mountain Pass boss',robocave:'Spider Cave machinery',rolling:'Precursor Basin',snow:'Snowy Mountain',sunken:'Lost Precursor City',sunkenb:'Precursor City chambers',swamp:'Boggy Swamp',title:'Title scene',training:'Geyser Rock',village1:'Sandover Village',village2:'Rock Village',village3:'Volcanic Crater',racer_common:'Zoomer',flut_common:'Flut Flut',engine:'Shared effects'};
+  const areaNames:Record<string,string>={common:'Shared effects',beach:'Sentinel Beach',citadel:'Gol & Maia’s Citadel',darkcave:'Dark Eco Plant',demo:'Demo scenes',finalboss:'Final battle',firecanyon:'Fire Canyon',intro:'Opening scenes',jungle:'Forbidden Jungle',jungleb:'Jungle temple',lavatube:'Lava Tube',maincave:'Spider Cave',misty:'Misty Island',ogre:'Mountain Pass boss',robocave:'Spider Cave machinery',rolling:'Precursor Basin',snow:'Snowy Mountain',sunken:'Lost Precursor City',sunkenb:'Precursor City chambers',swamp:'Boggy Swamp',title:'Title scene',training:'Geyser Rock',village1:'Sandover Village',village2:'Rock Village',village3:'Volcanic Crater',racer_common:'Zoomer',flut_common:'Flut Flut',engine:'Engine & HUD'};
   const pretty=(name:string)=>name.replace(/^group-/,'').replace(/-lod0$/,'').replace(/-/g,' ');
-  const directEffects:EffectDefinition[]=(catalogue.sourceInventory?.standaloneParticles??[]).flatMap(entry=>
-    [...new Set(entry.launches.map(launch=>launch.is3d))].map(is3d=>{
-      const launch=entry.launches.find(candidate=>candidate.is3d===is3d)!;
-      return {id:10000+entry.particle*2+Number(is3d),name:`${launch.source.function??'direct-launch'} / particle ${entry.particle}${is3d?' / 3D':''}`,
-        source:launch.source,items:[{particle:entry.particle,flags:['launch-asap',...(is3d?['is-3d']:[])]}],
-        directLaunch:{particle:entry.particle,function:launch.source.function}};
-    }));
-  const deathExhibits:Exhibit[]=(catalogue.meshDeaths?.models??[]).flatMap(death=>{
-    const model=catalogue.models.find(model=>model.id===death.model);
-    if(!model||(!death.events.length&&!['sunken/generic-button-lod0','common/eichar-lod0'].includes(model.id)))return [];
-    return [{id:'death:'+model.id,name:`${pretty(model.name)} · ${death.events.length?'death':'warp disappearance'}`,
-      area:model.area,kind:'effect',model,death}];
-  });
-  const exhibits:Exhibit[]=[...catalogue.models.map(model=>({id:'model:'+model.id,name:pretty(model.name),area:model.area,kind:model.background?'scene' as const:'object' as const,model})),...deathExhibits,
-    ...[...catalogue.groups,...directEffects,...sourceAssemblyDefinitions,...screenHudDefinitions(catalogue)].map(effect=>({id:'effect:'+effect.id,name:pretty(effect.name),area:effect.source.file.startsWith('levels/')?effect.source.file.split('/')[1]:'engine',kind:'effect' as const,effect}))]
-    .sort((a,b)=>(a.area===b.area?0:a.area==='common'?-1:b.area==='common'?1:a.area.localeCompare(b.area))||a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name));
+  const exhibits=effectExhibits(catalogue);
+  if(!exhibits.length)throw new Error('The effects catalogue is empty');
+  element('coverage').textContent=`${exhibits.length.toLocaleString()} effects · Original + Gouraud`;
   const locations=new Map(exhibits.map((exhibit,index)=>[exhibit.id,new THREE.Vector3((index%8-3.5)*16,0,-Math.floor(index/8)*17)]));
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
   renderer.setPixelRatio(devicePixelRatio);renderer.setSize(innerWidth,innerHeight);
@@ -132,19 +114,19 @@ async function boot():Promise<void> {
   });scene.add(pedestal,trim);
   const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=65;controls.maxPolarAngle=Math.PI*.49;
   const loaded=new Map<string,LabView>(),pending=new Set<string>(),errors=new Map<string,string>(),labels=new Map<string,THREE.Sprite>();
-  let selected=exhibits.find(exhibit=>exhibit.model?.id==='common/fuel-cell-lod0')??exhibits[0];
+  let selected=exhibits.find(exhibit=>exhibit.id==='effect:58')??exhibits[0];
   let mode:RenderingMode='compare',paused=false,speed=1,exploring=false,page=0,filtered=exhibits,wanted=new Set<string>();
   let tick=0,statsTick=0,frameTime=0;
   const areaSelect=element<HTMLSelectElement>('area'),kindSelect=element<HTMLSelectElement>('kind'),search=element<HTMLInputElement>('search');
-  const animationSelect=element<HTMLSelectElement>('animation'),nativeScale=element<HTMLInputElement>('native-scale');
+  const nativeScale=element<HTMLInputElement>('native-scale');
   const replaySelect=element<HTMLSelectElement>('host-replay');
   for(const area of [...new Set(exhibits.map(exhibit=>exhibit.area))].sort())areaSelect.add(new Option(areaNames[area]??pretty(area),area));
   function label(exhibit:Exhibit):THREE.Sprite {
     const sheet=document.createElement('canvas');sheet.width=768;sheet.height=128;
     const context=sheet.getContext('2d')!;context.fillStyle='#10212bea';context.fillRect(0,0,768,128);
-    context.fillStyle=exhibit.kind==='effect'?'#90dec5':'#e3c38c';context.font='20px Arial';context.fillText((areaNames[exhibit.area]??pretty(exhibit.area)).toUpperCase(),20,32);
+    context.fillStyle='#90dec5';context.font='20px Arial';context.fillText((areaNames[exhibit.area]??pretty(exhibit.area)).toUpperCase(),20,32);
     context.fillStyle='#eef0df';context.font='30px Arial';context.fillText(exhibit.name,20,77,720);
-    context.fillStyle='#789caa';context.font='15px monospace';context.fillText(exhibit.death?'MESH DISAPPEARANCE':exhibit.kind==='effect'?`EFFECT ${exhibit.effect!.id}`:exhibit.model!.name,20,108,720);
+    context.fillStyle='#789caa';context.font='15px monospace';context.fillText(exhibit.death?'MESH DISAPPEARANCE':`EFFECT ${exhibit.effect!.id}`,20,108,720);
     const texture=new THREE.CanvasTexture(sheet);texture.colorSpace=THREE.SRGBColorSpace;
     const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,depthWrite:false}));sprite.scale.set(10.5,1.75,1);
     sprite.position.copy(locations.get(exhibit.id)!).add(new THREE.Vector3(0,5.8,0));scene.add(sprite);return sprite;
@@ -158,7 +140,7 @@ async function boot():Promise<void> {
     }
     const radius=Math.max(2,size.length()*.5);
     // Reserve the central viewport for the exhibit; the two fixed panels cover
-    // its sides. Native-size backgrounds also need a larger far plane and orbit.
+    // its sides. Native-size effects also need a larger far plane and orbit.
     const halfFov=Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov)*.5)*Math.min(1,camera.aspect*(innerWidth>780?.5:1)));
     const distance=radius/Math.sin(halfFov)*1.1;
     controls.target.copy(point).add(new THREE.Vector3(0,Math.max(.4,size.y*.5),0));
@@ -171,12 +153,12 @@ async function boot():Promise<void> {
     exploring=false;controls.enabled=true;element('explore').setAttribute('aria-pressed','false');controls.update();
   }
   function inspect():void {
-    element('selected-kind').textContent=selected.kind==='effect'?'Particle effect':selected.kind==='scene'?'Complete level scene':'Object / item';
+    element('selected-kind').textContent='Particle effect';
     element('selected-name').textContent=selected.name;
-    element('selected-area').textContent=areaNames[selected.area]??pretty(selected.area);
+    element('selected-area').textContent=`${areaNames[selected.area]??pretty(selected.area)} · ${(selected.categories??[]).map(categoryLabel).join(' / ')}`;
     const view=loaded.get(selected.id),status=element('status');
     hudControls.hidden=!isHud(view);
-    hudAssemblyLink.hidden=!(view instanceof ModelExhibit&&selected.model?.name===catalogue.fuelCellHud?.model);
+    hudAssemblyLink.hidden=true;
     hudAssemblyLink.textContent='View power-cell HUD';
     if(view instanceof ScreenHudExhibit&&!selected.effect?.screenHud&&view.hud.profile.layers.length>1) {
       hudAssemblyLink.hidden=false;hudAssemblyLink.textContent='View full HUD assembly';
@@ -205,7 +187,7 @@ async function boot():Promise<void> {
       const death=view.deathPlayback;
       death.reference.events.forEach((event,index)=>deathSelect.add(new Option(`${pretty(event.clip)} · ${event.seconds.toFixed(3)} s marker`,`event:${index}`)));
       for(const profile of death.profiles)deathSelect.add(new Option(`Inspect ${pretty(profile.id)}`,profile.id));
-      deathSelect.add(new Option('Animation only','off'));deathSelect.value=view.deathReplay;
+      deathSelect.value=view.deathReplay;
       element('mesh-death-note').textContent='Source animation markers and complete transformed vertex stream, including fragment copies. Inspection profiles start immediately. 60 Hz, normal frame load, base palette at noon. Gameplay movement and audio are not replayed.';
     }
     assemblyControls.hidden=!(view instanceof ParticleExhibit&&view.assembly);
@@ -219,8 +201,6 @@ async function boot():Promise<void> {
       element('assembly-length-field').hidden=element('assembly-slope-field').hidden=a.kind!=='eco-beam';
       element('assembly-note').textContent=a.note;
     }
-    sceneParts.hidden=!(view instanceof ModelExhibit&&view.partSelection?.parts.length);
-    if(view instanceof ModelExhibit&&view.partSelection)renderPartOptions(view);
     replayField.hidden=!(view instanceof ParticleExhibit&&view.replays.length);
     replaySelect.replaceChildren(new Option('Held emitter (inspection)','-1'));
     if(view instanceof ParticleExhibit) {
@@ -270,28 +250,15 @@ async function boot():Promise<void> {
       element<HTMLInputElement>('host-racer-heat').value=String(h.racerHeat*100);
       element<HTMLInputElement>('host-racer-entering').checked=h.racerHudOffset>=10;
     }
-    animationSelect.replaceChildren();
-    element('animation-field').hidden=!(view instanceof ModelExhibit&&view.clips.length&&!view.deathPlayback);
-    element('timeline-field').hidden=!(view instanceof ModelExhibit&&(view.clips.length||view.deathPlayback));
+    element('timeline-field').hidden=!(view instanceof ModelExhibit);
     if(view instanceof ModelExhibit) {
-      for(const clip of view.clips)animationSelect.add(new Option(clip.name,clip.name));animationSelect.value=view.clipName;
       status.classList.remove('pending');status.textContent='Original geometry and animation. Gouraud uses vertex colour and vertex lighting, with the original opacity masks.';
-      if(!hudAssemblyLink.hidden) {
-        element('selected-kind').textContent='HUD animation rig';
-        status.textContent='This source rig has effectively invisible geometry. Its animated joints position the power-cell HUD particles; open the assembled HUD to see the visible effect.';
-      }
       element('provenance').textContent=`${selected.model!.path}\n${view.dimensions.toArray().map(v=>v.toFixed(2)).join(' × ')} m · ${view.clips.length} source animations`;
       if(view.deathPlayback) {
         const death=view.deathPlayback;
         element('selected-kind').textContent='Source mesh disappearance';
         status.textContent='Original and Gouraud share the source animation, vertex emission, death texture profile and particle lifecycle.';
         element('provenance').textContent+=`\n${death.reference.sourceAssembly}\n${death.reference.sourceVertices.toLocaleString()} input vertices + ${death.reference.crossCopies.toLocaleString()} fragment copies\n${death.reference.unreferencedVertices} emission vertices outside the triangle stream`;
-      }
-      const part=view.partSelection?.current;
-      if(part) {
-        element('selected-kind').textContent=part.kind==='wind-draw'?'Source wind draw':part.kind==='shrub'?'Detail placements':'Prop placements';
-        element('selected-name').textContent=part.name;
-        element('provenance').textContent+=`\n${part.tree} · ${part.id}\n${part.meshes} draws · ${part.triangles.toLocaleString()} triangles`;
       }
     } else if(view instanceof ScreenHudExhibit) {
       element('selected-kind').textContent=selected.effect?.screenHud?'Source HUD assembly':'Source HUD layer';
@@ -340,35 +307,14 @@ async function boot():Promise<void> {
     element('host-lighting-source').textContent=lit&&preset?
       `${preset.context.source.file}:${preset.context.source.line}\n${preset.selection.source.file}:${preset.selection.source.line}`:'';
   }
-  function select(exhibit:Exhibit,preservePart=false):void {
-    if(selected.id!==exhibit.id){partSearch.value='';sceneParts.open=false;}
+  function select(exhibit:Exhibit):void {
     selected=exhibit;nativeScale.checked=false;focus();inspect();renderResults();tick=1;
-    const url=new URL(location.href);url.searchParams.set('exhibit',selected.id);
-    if(!preservePart) {
-      const view=loaded.get(exhibit.id),part=view instanceof ModelExhibit?view.partSelection?.current:null;
-      if(part)url.searchParams.set('part',part.id);else url.searchParams.delete('part');
-    }
+    const url=new URL(location.href);url.searchParams.set('exhibit',selected.id);url.searchParams.delete('part');
     history.replaceState(null,'',url);
   }
-  function renderPartOptions(view:ModelExhibit):void {
-    const selection=view.partSelection!;
-    const query=partSearch.value.trim().toLowerCase(),current=selection.current;
-    const matches=selection.parts.filter(part=>`${part.name} ${part.tree} ${part.kind}`.toLowerCase().includes(query));
-    partSelect.replaceChildren(new Option('Complete level scene',''));
-    const choices=current&&!matches.includes(current)?[current,...matches]:matches;
-    for(const part of choices)partSelect.add(new Option(
-      `${part.kind==='shrub'?'Detail':part.kind==='wind-draw'?'Wind draw':'Prop'} · ${part.name} · ${part.tree}`,part.id));
-    partSelect.value=current?.id??'';
-    element<HTMLButtonElement>('part-close').disabled=!current;
-    sceneParts.querySelector('summary')!.textContent=`Scene parts · ${selection.parts.length.toLocaleString()}`;
-    element('part-note').textContent=current?
-      current.kind==='wind-draw'?'One source wind draw, with its original placement. A draw may be only part of an object. Double-click a surface for a close view.':
-        'All source placements of this named prop are shown together. Close view starts at the first source surface. Double-click another surface to inspect it; Focus exhibit restores the full view.':
-      `${matches.length.toLocaleString()} matching parts. Choose one to isolate it; return to Complete level scene to restore the background.`;
-  }
   function renderResults():void {
-    const count=6,pages=Math.max(1,Math.ceil(filtered.length/count));page=Math.min(page,pages-1);
-    element('matches').textContent=`${filtered.length.toLocaleString()} exhibits · ${exhibits.length.toLocaleString()} total`;
+    const count=innerHeight<660?4:5,pages=Math.max(1,Math.ceil(filtered.length/count));page=Math.min(page,pages-1);
+    element('matches').textContent=`${filtered.length.toLocaleString()} effects · ${exhibits.length.toLocaleString()} total`;
     element('page').textContent=`${page+1} / ${pages}`;
     element<HTMLButtonElement>('previous').disabled=page===0;element<HTMLButtonElement>('next').disabled=page===pages-1;
     const results=element('results');results.replaceChildren();
@@ -377,14 +323,14 @@ async function boot():Promise<void> {
       button.setAttribute('aria-pressed',String(exhibit.id===selected.id));
       const index=document.createElement('span');index.className='index';index.textContent=String(exhibits.indexOf(exhibit)+1).padStart(3,'0');
       const copy=document.createElement('span'),title=document.createElement('strong'),area=document.createElement('small');
-      title.textContent=exhibit.name;area.textContent=`${exhibit.kind} · ${areaNames[exhibit.area]??pretty(exhibit.area)}`;
+      title.textContent=exhibit.name;area.textContent=`${categoryLabel(exhibit.categories![0])} · ${areaNames[exhibit.area]??pretty(exhibit.area)}`;
       copy.append(title,area);button.append(index,copy);button.onclick=()=>select(exhibit);results.append(button);
     });
   }
   function filter():void {
     const query=search.value.toLowerCase();
-    filtered=exhibits.filter(exhibit=>(!areaSelect.value||exhibit.area===areaSelect.value)&&(!kindSelect.value||exhibit.kind===kindSelect.value)&&
-      `${exhibit.name} ${exhibit.id} ${areaNames[exhibit.area]??''}`.toLowerCase().includes(query));
+    filtered=exhibits.filter(exhibit=>(!areaSelect.value||exhibit.area===areaSelect.value)&&(!kindSelect.value||exhibit.categories?.includes(kindSelect.value as EffectCategory))&&
+      `${exhibit.name} ${exhibit.id} ${areaNames[exhibit.area]??''} ${(exhibit.categories??[]).map(categoryLabel).join(' ')}`.toLowerCase().includes(query));
     page=0;renderResults();
   }
   async function stream():Promise<void> {
@@ -398,7 +344,7 @@ async function boot():Promise<void> {
       if(!labels.has(id))labels.set(id,label(exhibit));
       if(loaded.has(id)||pending.has(id)||errors.has(id)||pending.size>=2)continue;
       pending.add(id);
-      const promise=exhibit.model?ModelExhibit.load(exhibit.model,exhibit.death?{catalogue,reference:exhibit.death}:undefined):
+      const promise=exhibit.model&&exhibit.death?ModelExhibit.load(exhibit.model,{catalogue,reference:exhibit.death}):
         exhibit.effect?.name===catalogue.fuelCellHud?.group?FuelCellHudExhibit.load(exhibit.effect!,catalogue):
           screenHudDefinition(exhibit.effect!,catalogue)?ScreenHudExhibit.load(exhibit.effect!,catalogue):
           ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
@@ -408,16 +354,23 @@ async function boot():Promise<void> {
         view.root.position.copy(locations.get(id)!).setY(.16);view.setRendering(mode);scene.add(view.root);loaded.set(id,view);
         const caption=labels.get(id);if(caption)caption.position.y=view.inspectionSize.y+1.5;
         if(id===selected.id){
-          const requestedPart=new URL(location.href).searchParams.get('part');
-          if(view instanceof ModelExhibit&&view.partSelection?.parts.some(part=>part.id===requestedPart)) {
-            view.setPart(requestedPart!);sceneParts.open=true;
-          }
           view.setNativeScale(nativeScale.checked);inspect();if(!exploring)focus();
         }
       }).catch(error=>{pending.delete(id);errors.set(id,String(error));if(id===selected.id)inspect();console.error('Exhibit load failed',id,error);});
     }
   }
-  search.oninput=filter;areaSelect.onchange=filter;kindSelect.onchange=filter;
+  function updateCategories():void {
+    const value=kindSelect.value;
+    kindSelect.replaceChildren(new Option('All categories',''));
+    const local=exhibits.filter(exhibit=>!areaSelect.value||exhibit.area===areaSelect.value);
+    for(const category of effectCategories) {
+      const count=local.filter(exhibit=>exhibit.categories?.includes(category.id)).length;
+      if(count||value===category.id)kindSelect.add(new Option(`${category.label} (${count})`,category.id));
+    }
+    kindSelect.value=value;
+  }
+  updateCategories();
+  search.oninput=filter;areaSelect.onchange=()=>{updateCategories();filter();};kindSelect.onchange=filter;
   element('previous').onclick=()=>{page--;renderResults();};element('next').onclick=()=>{page++;renderResults();};
   for(const button of host.querySelectorAll<HTMLButtonElement>('[data-mode]'))button.onclick=()=>{
     mode=button.dataset.mode as RenderingMode;
@@ -451,25 +404,6 @@ async function boot():Promise<void> {
   element<HTMLSelectElement>('speed').onchange=event=>{speed=Number((event.target as HTMLSelectElement).value);};
   replaySelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ParticleExhibit){view.setReplay(Number(replaySelect.value));inspect();}};
   deathSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit){view.setDeathReplay(deathSelect.value);inspect();if(!exploring)focus();}};
-  partSearch.oninput=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit&&view.partSelection)renderPartOptions(view);};
-  partSelect.onchange=()=>{
-    const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit))return;
-    view.setPart(partSelect.value);view.setNativeScale(nativeScale.checked);inspect();focus();
-    const url=new URL(location.href);if(partSelect.value)url.searchParams.set('part',partSelect.value);else url.searchParams.delete('part');
-    history.replaceState(null,'',url);
-  };
-  function closeToSurface(point:THREE.Vector3,view:ModelExhibit):void {
-    const direction=camera.position.clone().sub(controls.target).normalize();
-    const distance=Math.max(.03,Math.min(camera.position.distanceTo(point)*.2,8*view.scale));
-    controls.target.copy(point);camera.position.copy(point).addScaledVector(direction,distance);
-    camera.near=Math.min(.05,view.scale*.01);camera.updateProjectionMatrix();
-    controls.minDistance=Math.max(.001,view.scale*.2);
-    controls.enabled=true;exploring=false;element('explore').setAttribute('aria-pressed','false');controls.update();
-  }
-  element('part-close').onclick=()=>{
-    const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit))return;
-    const point=view.partSurfacePoint();if(point)closeToSurface(point,view);
-  };
   for(const id of ['host-root','host-heading','host-slope','host-water','host-fade'])element<HTMLInputElement>(id).oninput=()=>{
     const view=loaded.get(selected.id);if(!(view instanceof ParticleExhibit))return;
     const h=view.motion.host;
@@ -521,7 +455,6 @@ async function boot():Promise<void> {
     if(id==='assembly-length')focus();
   };
   nativeScale.onchange=()=>{loaded.get(selected.id)?.setNativeScale(nativeScale.checked);focus();};
-  animationSelect.onchange=()=>{const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.setClip(animationSelect.value);};
   element<HTMLInputElement>('timeline').oninput=event=>{
     const view=loaded.get(selected.id);if(view instanceof ModelExhibit)view.seek(Number((event.target as HTMLInputElement).value)*view.duration);
     if(!paused)element('pause').click();
@@ -530,6 +463,7 @@ async function boot():Promise<void> {
     const native=element<HTMLSelectElement>('resolution').value==='native';
     renderer.setPixelRatio(native?devicePixelRatio:Math.min(1,720/innerHeight));renderer.setSize(innerWidth,innerHeight);
     camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+    renderResults();
   }
   element<HTMLSelectElement>('resolution').onchange=resize;addEventListener('resize',resize);
   element('focus').onclick=focus;
@@ -547,18 +481,8 @@ async function boot():Promise<void> {
       rotation.x=THREE.MathUtils.clamp(rotation.x-(event.clientY-lastY)*.004,-1.48,1.48);camera.quaternion.setFromEuler(rotation);}
     lastX=event.clientX;lastY=event.clientY;
   });
-  canvas.addEventListener('dblclick',event=>{
-    const view=loaded.get(selected.id);if(!(view instanceof ModelExhibit)||!view.partSelection?.current)return;
-    const rect=canvas.getBoundingClientRect(),ray=new THREE.Raycaster(),meshes:THREE.Mesh[]=[];
-    ray.setFromCamera(new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1,1-(event.clientY-rect.top)/rect.height*2),camera);
-    view.root.traverseVisible(node=>{if(node instanceof THREE.Mesh)meshes.push(node);});
-    const hit=ray.intersectObjects(meshes,false)[0];if(!hit)return;
-    // Inspect an actual rendered surface without inventing instance boundaries
-    // or removing any of the other source placements.
-    closeToSurface(hit.point,view);
-  });
   const clock=new THREE.Clock(),movement=new THREE.Vector3(),right=new THREE.Vector3(),forward=new THREE.Vector3();
-  const requested=new URL(location.href).searchParams.get('exhibit');select(exhibits.find(exhibit=>exhibit.id===requested)??selected,true);
+  const requested=new URL(location.href).searchParams.get('exhibit');select(exhibits.find(exhibit=>exhibit.id===requested)??selected);
   renderResults();resize();
   renderer.setAnimationLoop(()=>{
     const dt=Math.min(.05,clock.getDelta());frameTime+=(dt-frameTime)*.04;
@@ -572,10 +496,7 @@ async function boot():Promise<void> {
     // Large source sprites/scenes can extend beyond their gallery plinths.
     // Focus is an isolated inspection; Explore restores nearby full exhibits.
     for(const [id,view] of loaded)view.root.visible=exploring||id===selected.id;
-    for(const [id,caption] of labels) {
-      const view=loaded.get(id);
-      caption.visible=exploring&&!(view instanceof ModelExhibit&&view.partSelection?.current);
-    }
+    for(const caption of labels.values())caption.visible=exploring;
     if(!paused)for(const view of loaded.values()) {
       if(view instanceof ParticleExhibit)view.setInspectionCamera(camera.position);
       view.update(dt*speed);
@@ -583,7 +504,7 @@ async function boot():Promise<void> {
     tick+=dt;statsTick+=dt;if(tick>.3){tick=0;void stream();}
     if(statsTick>.25){statsTick=0;
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
-        `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
+        `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nEFFECT  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
         view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.assembly?(view.assembly.enabled?'source draw':'off'):view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:
         isHud(view)?`HUD  ${view.hud.phase}\nFORMAT  ${view.hud.profile.id} · NTSC\nOFFSET  ${view.hud.offset}\nPARTICLES  ${view.particles}\nSOURCE CLOCK  ${view.clock} / 300 Hz\nCAPACITY DROPS  ${view.dropped}`:'';
       if(view instanceof ScreenHudExhibit)element('statistics').textContent+=view.hud.definition.id==='health'?

@@ -9088,3 +9088,28 @@ Details: [Jak asset lab](JAK_ASSET_LAB.md).
   remains open. Local commit and coordinator handoff only; no game runtime,
   D animation, level-pack, hosting or publication changes. The browser-check
   lease is released; a lightweight port-5193 server remains for user testing.
+
+## Jak effects lab — effects-only scope and categories, 5 November 2026 NZDT
+
+- Applied the user's revised scope: removed all 605 standalone model/scenery
+  cards and the scene-part browser, keeping 821 effect examples and the browsing
+  UI. Search, area filters, pagination, Explore/Focus, playback and
+  Original/Gouraud comparison remain available. Old model links select an effect.
+- Added 15 source-informed categories with overlapping memberships, readable
+  full-width filters and counts within the selected area. All 821 examples are
+  categorized. Disappearance effects remain inspectable; their 44 source meshes
+  and the animated HUD driver are private dependencies without standalone cards.
+- Physically removed unrelated source/packed models, textures, emission streams
+  and generated research assets. The pack now has 453 files, 5,466,613 asset bytes
+  and a 6,451,672-byte catalogue. Retained model draw streams, skinning, animation
+  and images keep their verified bytes and full geometry. Future packing enforces
+  effects-only scope and refuses missing dependency metadata.
+- Five pruning/scope fixtures, six existing packing fixtures, the 821-example
+  category/index check and every retained asset's hash/reference check pass.
+  Final build and native/720p browser validation are pending shared capacity.
+- First recorded source edit: 09:27:34 NZDT. Prompt-to-validated-playable timing
+  will be completed with the browser pass; shared capacity waits are recorded
+  separately. This is the user-authorized effects-only preview for publication
+  in Labs, while the broader effect-fidelity goal continues. No game runtime,
+  D animation or level-pack changes; the coordinator owns Labs integration and
+  publication.

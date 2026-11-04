@@ -136,7 +136,9 @@ export interface Catalogue {
 export type RenderingMode = 'original' | 'gouraud' | 'compare';
 export type Exhibit = {
   id: string; name: string; area: string;
-  kind: 'object' | 'effect' | 'scene';
+  kind: 'effect';
+  category: 'particle' | 'assembly' | 'disappearance';
+  categories?: import('./effectCategories').EffectCategory[];
   model?: ModelDefinition; effect?: EffectDefinition;
   death?:MeshDeathReference;
 };

@@ -10,3 +10,7 @@ canvas.world{position:absolute;inset:0;width:100%;height:100%;outline:none}
 @media(max-width:1100px){.panel{width:236px;padding:12px}.inspection{width:236px}.result strong{max-width:140px}.topbar{padding:12px 18px}.brand h1{font-size:16px}.coverage{font-size:10px}.footer{font-size:10px;gap:8px;padding:10px 16px}.camera-tools{top:82px}.camera-tools button{padding:6px;font-size:10px}}
 @media(max-height:700px){.panel{top:82px;bottom:62px;gap:8px}.panel h2{font-size:17px}.result{min-height:35px;max-height:48px}.result small{margin-top:1px}.field{gap:4px}.inspection-content{gap:9px}.footer{min-height:48px}.topbar{min-height:66px;padding-top:10px;padding-bottom:10px}}
 @media(max-width:780px){.coverage{display:none}.panel{width:240px;top:84px;bottom:74px}.inspection{display:none}.camera-tools{left:auto;right:12px;transform:none;top:18px}.camera-tools button{min-height:38px}.toggle-panels{display:block!important}.footer .legend{display:none}.footer{font-size:10px}.brand{gap:8px}.brand h1{font-size:13px}.sigil{width:31px;height:31px;font-size:20px}.catalogue.hidden{display:none}.inspection.shown{display:flex}.brand small{font-size:8px}}
+
+/* Keep category names readable while retaining fixed catalogue pagination. */
+.catalogue .row{flex-direction:column;align-items:stretch}.catalogue .row>*{flex:none}
+.result>span:last-child{min-width:0}.result small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

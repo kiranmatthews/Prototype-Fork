@@ -4,7 +4,6 @@ import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {assetURL, type Catalogue, type MeshDeathReference, type ModelDefinition, type RenderingMode} from './types';
 import {gouraudMaterial} from './gouraudMaterial';
 import {compactGeometry} from './compactGeometry';
-import {BackgroundPartSelection} from './backgroundParts';
 import {preciseBounds} from './modelBounds';
 import {ModelDeathPlayback} from './modelDeath';
 
@@ -105,7 +104,6 @@ export class ModelExhibit {
   private readonly source: THREE.Object3D;
   private readonly derived: THREE.Object3D;
   private readonly sourcePosition: THREE.Vector3;
-  readonly partSelection: BackgroundPartSelection | null;
   deathPlayback:ModelDeathPlayback|null=null;
   deathReplay='';
   private nativeScale=false;
@@ -118,7 +116,6 @@ export class ModelExhibit {
     this.displayScale = Math.min(2, 3.8 / Math.max(...this.dimensions.toArray()));
     const derived = this.derived = clone(source);
     derived.traverse(node => {if (node instanceof THREE.Mesh) gouraud(node);});
-    this.partSelection=definition.background?new BackgroundPartSelection(source,derived):null;
     source.position.sub(new THREE.Vector3(center.x, bounds.min.y, center.z));
     derived.position.copy(source.position);
     this.original.add(source); this.alternative.add(derived);
@@ -128,10 +125,10 @@ export class ModelExhibit {
     if (clips.length) this.setClip(clips.find(clip => /idle|stance|loop/i.test(clip.name))?.name ?? clips[0].name);
     this.setRendering('compare');
   }
-  static async load(definition: ModelDefinition,death?:{catalogue:Catalogue;reference:MeshDeathReference}): Promise<ModelExhibit> {
+  static async load(definition: ModelDefinition,death:{catalogue:Catalogue;reference:MeshDeathReference}): Promise<ModelExhibit> {
     const asset=await loadSourceModel(definition);
     const exhibit=new ModelExhibit(asset.scene, asset.animations, definition);
-    if(death)try {
+    try {
       exhibit.deathPlayback=await ModelDeathPlayback.load(death.reference,death.catalogue,exhibit.source,exhibit.derived,
         exhibit.original,exhibit.alternative);
       exhibit.setDeathReplay(death.reference.events.length?'event:0':definition.name==='generic-button-lod0'?'death-warp-out':'death-warp-in');
@@ -177,31 +174,6 @@ export class ModelExhibit {
     this.original.position.x = this.view === 'compare' ? -separation : 0;
     this.alternative.position.x = this.view === 'compare' ? separation : 0;
   }
-  setPart(id:string):void {
-    if(!this.partSelection)return;
-    this.partSelection.select(id);
-    this.source.position.copy(this.sourcePosition);
-    const bounds=preciseBounds(this.source),center=bounds.getCenter(new THREE.Vector3());
-    bounds.getSize(this.dimensions);
-    this.displayScale=Math.min(2,3.8/Math.max(...this.dimensions.toArray()));
-    this.source.position.sub(new THREE.Vector3(center.x,bounds.min.y,center.z));
-    this.derived.position.copy(this.source.position);
-    this.setNativeScale(this.nativeScale);
-  }
-  partSurfacePoint():THREE.Vector3|null {
-    if(!this.partSelection?.current)return null;
-    this.root.updateWorldMatrix(true,true);
-    let point:THREE.Vector3|null=null;
-    this.root.traverseVisible(node=>{
-      if(point||!(node instanceof THREE.Mesh))return;
-      const g=node.geometry,total=g.index?.count??g.getAttribute('position')?.count??0,start=g.drawRange.start;
-      if(total-start<3||g.drawRange.count<3)return;
-      point=new THREE.Vector3();
-      for(let i=0;i<3;i++)point.add(node.getVertexPosition(g.index?g.index.getX(start+i):start+i,new THREE.Vector3()));
-      point.multiplyScalar(1/3).applyMatrix4(node.matrixWorld);
-    });
-    return point;
-  }
   setRendering(mode: RenderingMode): void {
     this.view = mode;
     this.original.visible = mode !== 'gouraud'; this.alternative.visible = mode !== 'original';
@@ -224,8 +196,7 @@ export class ModelExhibit {
     if(this.deathPlayback?.active)this.deathPlayback.update(dt,value=>this.sampleAnimation(value));
     else this.sampleAnimation(this.elapsed+dt);
   }
-  get diagnostics() {return {view: this.view, scale: this.scale, clip: this.clipName, seconds: this.elapsed,
-    sceneParts:this.partSelection?.parts.length??0,selectedPart:this.partSelection?.current?.id??null};}
+  get diagnostics() {return {view: this.view, scale: this.scale, clip: this.clipName, seconds: this.elapsed};}
   dispose(): void {
     this.deathPlayback?.dispose();
     for (const mixer of this.mixers) {mixer.stopAllAction(); mixer.uncacheRoot(mixer.getRoot());}

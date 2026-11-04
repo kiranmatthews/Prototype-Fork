@@ -1,62 +1,59 @@
-# Whole-game Jak inspection lab
+# Whole-game Jak effects lab
 
-The objective is the complete game's novel particle effects, objects and items,
-inspectable in an explorable lab with originals and a Gouraud alternative for
-each. **In progress; not ready for publication.** Source counts are coverage
-evidence, not proof of visual fidelity or complete host behavior.
+The lab contains particle effects and objects assembled from effects, with
+Original/Gouraud comparison. The user's 5 November scope correction excludes
+standalone models, characters, props, vegetation and level scenes. The browsing
+UI stays: search, area/category filters, pagination, Explore/Focus, playback,
+source scale and normal/native resolution.
+
+**Effects-only preview.** The user has requested publication in Labs when this
+increment is validated. The wider whole-game effect-fidelity goal continues;
+source counts alone do not prove complete visual or host-state reconstruction.
+The release coordinator owns Labs integration and publication. All held D/jump
+animation commits remain excluded from delivery.
 
 This is an independent Three.js entry point at `jak-lab.html`. It imports no game
-player/runtime code and has its own Vite configuration. The held jump-animation
-experiment is not a delivery dependency. Its Git ancestor must not be merged as
-part of the lab; integrate only the lab's scoped commits when they are ready.
+player/runtime code and has its own Vite configuration. Integrate the scoped lab
+commits only; never merge their held animation ancestor.
 
-## Current evidence
+## Current scope and evidence
 
-The pinned source is the official OpenGOAL v0.3.9 release, and the game data is the
-user-supplied USA SCUS-97124 NTSC-v1 disc. The restored macOS ARM release archive
-matches the release's SHA-256:
+There are 821 effect examples: 675 named particle groups, 98 direct launchers,
+two source draw assemblies, two composite screen HUDs and 44 disappearance
+examples. All 605 standalone model/scenery cards and the scene-part browser are
+removed. Legacy `model:` links select a valid effect. Categories describe effect
+purpose, support multiple memberships and expose counts within the chosen area.
+All examples have at least one of 15 categories; none is left under Other.
+An eco explosion can therefore appear in both Eco & energy and Hits, explosions
+& debris. The complete source names remain searchable.
+
+Only 45 full source models remain as private dependencies: the 44 disappearance
+examples and the animated power-cell HUD driver. Their geometry, skinning,
+animations and images are intact; none has a standalone browsing card. The
+exported source cache and packed asset directory have been physically pruned,
+including unrelated object/scenery textures and unused emission data. The
+source disc/recovery installation is not a published or browsable asset pack.
+
+The pinned source is official OpenGOAL v0.3.9 and the user-supplied USA
+SCUS-97124 NTSC-v1 disc. Release archive SHA-256:
 `613d7b2b2171fd1840c71b2928e1352ee1b5f2ec8df5a4ec76c1bfe91b926d42`.
+The source scan covers 533 parsed files, zero parse failures, 2,515 particle
+definitions and 675 named groups. All 79 referenced birth/update callbacks have
+source definitions. The inventory records 97 direct launch sites, 126 referenced
+direct IDs (101 defined), 393 runtime patch sites and procedural render candidates.
+Group/direct/mesh-disappearance paths leave 53 definitions to trace or classify.
+The earlier full-export inventory is historical recovery evidence, not a
+requirement to restore static assets to the effects-only lab.
 
-The source inventory scans every Jak 1 `.gc` file, preserving file hashes and line
-locations. Current evidence is 533 parsed files, zero parse failures, 2,515
-particle definitions in 104 files and 675 named effect groups. All 79 referenced
-birth/update callbacks have source definitions. The audit additionally found 97
-direct launch sites, 126 referenced direct particle IDs (101 defined), 393 runtime
-particle patch sites and hundreds of procedural draw/render candidates requiring
-review. The named group
-graphs, including callback-launched children, reach 2,369 particle definitions;
-another 146 are outside those graphs.
-Following direct launch roots leaves 56 definitions outside those graphs.
-The mesh-disappearance path now accounts for three of those (41–43), leaving
-53 to distinguish between computed/host launch paths and unused source variants.
-The inventory's group/direct-only coverage remains explicitly scoped to those
-two launcher families.
-
-The restored official full export completed with 605 highest-detail GLBs,
-including 24 backgrounds, and 4,002 source PNGs. All 458 expected highest-detail
-joint geometries are present, with no missing joint geometries. Recovery is
-complete. Tools, raw exports, packed assets, manifests and browser evidence are
-now in the ignored, durable `.jak-lab-data/` folder, not `/private/tmp`.
-
-The lab supports walking/flying between exhibits, search by area/type/name,
-original/Gouraud/both views, matched animation playback, scrubbing, pause,
-restart, source scale and normal/native render resolution. Direct launchers
-are included separately and explicitly repeat once per second for inspection;
-that frequency is a lab control, not a reconstructed host object's update rate.
-The current catalogue contains 1,426 exhibits: 605 models/scenes, 675 named
-particle groups, 98 direct launcher exhibits, two source draw assemblies,
-two complete screen-HUD assemblies and 44 mesh-disappearance exhibits.
-Three explicitly empty direct definitions stay in the source audit without
-blank visual exhibits; 25 referenced IDs have no source definition and remain
-flagged for review. Relevant effects expose root height, heading, surface slope, water level and fade controls. These are explicit
-inspection inputs until the actual host object's states have been ported.
-The 24 level scenes also expose 2,936 named source parts through a searchable
-Scene parts inspector; these remain inside their parent scene, not duplicate
-asset downloads or guessed standalone objects.
+Three explicitly empty direct definitions remain in the source audit without
+blank exhibits; 25 referenced IDs lack source definitions and remain flagged.
+Direct launchers repeat once per second for inspection, not as a claim about
+the source host's update rate. Height, heading, slope, water and fade controls
+are inspection inputs until their owning gameplay state is reconstructed.
 
 ## Fidelity and delivery
 
-Models retain the complete source geometry, skin weights, morphs and animation
+Effect-dependent models retain the complete source geometry, skin weights, morphs and animation
 keys. Gouraud models sample source textures into vertex colors and use vertex
 lighting, including the albedo multiplication before interpolation. The custom
 material is necessary because Three r166's stock Lambert material calculates
@@ -78,23 +75,27 @@ scene/material metadata and original image bytes. It verifies gzip round trips
 as well. It adds correct bounds to POSITION accessors. Sparse/compressed source
 layouts without an explicit implementation fail instead of being approximated.
 
-The complete 605-model pack passed semantic and gzip verification. Its size is:
+The retained effect assets are an exact verified subset of the earlier lossless
+pack. Pruning rechecks every previous stored asset hash, the retained source
+identities and semantic fingerprints, decoded model hashes and every external
+GLB image reference before changing the catalogue. It then removes only
+excluded packer-owned files. The packer enforces effects-only scope on future
+builds and refuses to infer model dependencies without disappearance metadata.
 
 | Content | Bytes |
 | --- | ---: |
-| Raw source models | 3,665,798,144 |
-| Unique packed model files | 143,019,250 |
-| Unique original image files | 79,944,784 |
-| Mesh-disappearance emission streams | 3,969,540 |
-| Catalogue | 9,340,163 |
-| Packed assets and catalogue | **236,273,737** |
+| Raw models required by effects | 156,547,532 |
+| Unique packed model dependencies | 3,459,656 |
+| Unique original effect/model images | 1,507,856 |
+| Mesh-disappearance emission streams | 499,101 |
+| Catalogue | 6,451,672 |
+| Packed assets and catalogue | **11,918,285** |
 
-The standalone frontend adds 729,976 bytes before HTTP compression.
-This needs a separate delivery origin rather than the main game's remaining
-Pages allowance. The release coordinator owns hosting and deployment setup.
-The frontend accepts `?catalogue=<URL>` with that host's CORS support.
-Never put the ISO, extraction installation or unfiltered archives in a public
-asset directory. The complete asset scope must not be reduced to fit a budget.
+The release coordinator confirmed that this pruned footprint fits the current
+main-site budget and will add the preview to Labs through the normal build.
+A separate origin is no longer required. The frontend also accepts
+`?catalogue=<URL>` when an external host supplies CORS support. Never publish the
+ISO, extraction installation or unfiltered archives.
 
 Particle simulation preserves source units, field types/random rules, launch
 bindings, 300 Hz clocks at 60 Hz steps, relaunch fields, orbital motion and 2D/3D
@@ -129,17 +130,13 @@ unported; name coverage does not prove complete host reconstruction.
 
 **Unfinished fidelity requirements:**
 
-- Inspect every source model and its
-  Gouraud counterpart, all animations/material classes, and large scenes.
+- Inspect every effect and its Gouraud counterpart, including required source
+  animation, material classes and host-dependent variants.
 - Port and exercise host-dependent callbacks, runtime particle patches, dynamic
   texture assignments and screen-space HUD effects. Auxiliary distortion now
   has both renderers; two declared emitters still need host activation tracing.
   The inspector reports known gaps instead of presenting them as faithful ports.
 - Trace the remaining 53 particle definitions and computed launch references.
-- Static TIE/shrub prototype nodes are inventoried and inspectable. Some contain
-  all level placements. Reconstruct individual instances from source metadata,
-  not arbitrary connected-component splitting. Restore wind animation beyond
-  the static wind-draw placement matrices retained by the exporter.
 - Audit procedural renderers, texture animation, weather/time-of-day variants
   and host object states; a named-group count is not whole-game completeness.
 - Verify source group duration/linger lifecycle and host placement. The raw
@@ -172,6 +169,14 @@ python3 tools/jak-lab/catalogue.py \
   --project .jak-lab-data/export/opengoal \
   --output .jak-lab-data/export/catalogue.json
 
+# Attach source disappearance metadata using the mesh-disappearance commands
+# documented below, producing catalogue.death.json, before selecting scope.
+python3 tools/jak-lab/effects_scope.py \
+  --catalogue .jak-lab-data/export/catalogue.death.json \
+  --output .jak-lab-data/export/catalogue.json \
+  --prune-source-cache .jak-lab-data/export/opengoal/decompiler_out/jak1 \
+  --report .jak-lab-data/evidence/effects-source-prune.json
+
 python3 tools/jak-lab/pack_assets.py \
   --catalogue .jak-lab-data/export/catalogue.json \
   --exported .jak-lab-data/export/opengoal/decompiler_out/jak1 \
@@ -190,7 +195,7 @@ The independent frontend build is
 `.jak-lab-data/site`. It does not copy the main game's `public/` assets. Keep
 generated data and delivery packages out of Git. Both the normal repository
 build and standalone frontend build pass. The latter includes the current
-vertex-lighting, buffer-compaction and native-scene framing changes.
+effects-only index, category filters and full effect-dependent geometry.
 
 Focused checks currently pass:
 
@@ -198,7 +203,8 @@ Focused checks currently pass:
 python3 -m unittest discover -s tools/jak-lab -p 'test_*.py' -v
 node tools/jak-lab/test-particle-motion.mjs
 node tools/jak-lab/test-model-geometry.mjs
-node tools/jak-lab/test-background-parts.mjs
+node tools/jak-lab/test-effects-index.mjs --catalogue .jak-lab-data/export/catalogue.json
+python3 -m unittest discover -s tools/jak-lab -p 'test_effects_scope.py' -v
 node tools/jak-lab/test-distortion.mjs
 node tools/jak-lab/test-racer-hud.mjs --catalogue .jak-lab-data/export/catalogue.json
 npx tsc --noEmit
@@ -237,6 +243,11 @@ controls in both renderers. Evidence is in `.jak-lab-data/evidence/`, including
 `packed-browser-review.json`, `fire-canyon-packed-native.jpg`, and
 `jak-packed-gouraud-{native,720p}.jpg`. These samples do not replace the remaining
 whole-catalogue visual/source audit.
+
+## Historical implementation record
+
+The following entries describe earlier increments. Counts and model/scene scope
+are historical; the effects-only scope above supersedes them.
 
 ## Recovery checkpoint — 5 November 2026 NZDT
 
@@ -374,65 +385,6 @@ placement keeps the bounded particles above their pedestal and separates the
 comparison copies at native scale. No console warnings/errors. Images and the
 combined report are under `.jak-lab-data/evidence/distortion-*`. These checked
 examples do not claim whole-catalogue visual verification.
-
-## Background props and vegetation — source part inspection
-
-The pinned
-[background exporter](https://github.com/open-goal/jak-project/blob/b6c8430c0b0a5cb139b939bcf0ffd25285b896c7/decompiler/level_extractor/fr3_to_gltf.cpp)
-groups TIE draw ranges by prototype index and shrub draws by prototype index.
-Each exported child node contains that prototype's complete level placements.
-Wind children instead identify draw/instance-group pairs and retain their
-original placement matrices. These boundaries are authoritative; disconnected
-mesh components are not being guessed to be separate objects. The fetched
-exporter matched Git blob `acf73dc5de073a679967f0119b3ed126747e1b44` and SHA-256
-`744b4d5255dfff32f61ed65e3053715864239b81e9049487bd8abfe67a420f21`.
-
-A JSON-header audit across all 24 raw background GLBs finds **2,936 parts**:
-1,175 TIE prototype groups, 299 shrub/detail groups and 1,462 wind draw groups.
-Shrub groups include plants, rocks and other details; they are not all vegetation.
-The report preserves source node IDs, tree names, triangle counts and matrix
-presence at `.jak-lab-data/export/background-parts.json`. Reproduce with:
-
-```sh
-python3 tools/jak-lab/inventory_backgrounds.py \
-  --catalogue .jak-lab-data/export/catalogue.json \
-  --exported .jak-lab-data/export/opengoal/decompiler_out/jak1 \
-  --output .jak-lab-data/export/background-parts.json
-```
-
-Open any level scene and expand **Scene parts**. Search the original source name,
-select a prop/detail/wind draw, and switch Original/Gouraud/Both as usual.
-Selection changes visibility in both hierarchies, without replacing geometry,
-transforming individual placements, changing material groups or decoding another
-asset. Complete level scene restores every original visibility value. Node IDs
-are retained before Three sanitizes names; `?exhibit=model:beach/beach-background&part=node:54`
-reopens the Sentinel Beach eco-valve prototype directly.
-
-Repeated props may be spread over hundreds of metres. **Close view** frames the
-first actual source triangle; double-clicking another rendered surface moves the
-camera there. This is camera inspection, not instance extraction. Focus exhibit
-restores the fitted view. Close inspection adjusts the camera's near plane and
-minimum orbit distance to the display scale. Source bounds ignore the gallery's
-placement/scale and measure only visible, referenced vertices; wind matrices and
-skinned bind transforms remain included.
-
-Focused checks verify source identities with duplicate display names, complete
-multi-mesh placements, mirrored isolation/restoration, preserved hidden nodes,
-unchanged matrices/geometry, unknown-selection rejection, bounds under a scaled
-and rotated gallery parent, wind matrices and articulated skin bounds. Existing
-exact geometry-compaction checks, TypeScript, the required normal build and the
-final standalone build pass. No full-suite run or generated-asset changes.
-
-Browser checks find the same 295 source parts in Sentinel Beach as the header
-audit. They exercise the eco valve (node 54, 840 triangles), idol dome (67, 864),
-wind draw (76, 80) and exotic plant (328, 740), direct links, filtering, separate
-render modes, close views, normal/native resolution and native world scale.
-Restoring the complete scene gives its original 501.86 × 171.85 × 520.66 m bounds.
-Console warnings/errors are empty. Evidence is
-`.jak-lab-data/evidence/background-parts-browser-review.json` and the
-`background-part*` / `background-plant*` images. Those plant images predate the
-opacity correction below. Individual-instance recovery and full scene/material
-fidelity remain unfinished.
 
 ## Gouraud opacity coverage
 
@@ -987,7 +939,7 @@ and frontend 729,976 bytes: 237,003,713 bytes before hosting metadata.
 
 The whole-game goal remains open: sixteen update callback names, 53 unresolved
 particle definitions, host assemblies, procedural rendering, dynamic texture
-and lighting state, individual scene instances and broad visual review remain.
+and lighting state, effect composition and broad visual review remain.
 The release coordinator owns final integration and hosted validation. The
 completed review tab and guarded job are closed; a lightweight local static
 server keeps port 5193 available for the user's testing without a heavy lease.

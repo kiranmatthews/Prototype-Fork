@@ -284,6 +284,9 @@ def supplemental_assets(catalogue, exported, assets):
 
 def pack_catalogue(catalogue_file, exported, output):
     catalogue = json.loads(catalogue_file.read_text())
+    if catalogue.get('game') == 'Jak and Daxter: The Precursor Legacy':
+        from effects_scope import effects_only
+        catalogue = effects_only(catalogue)
     assets = output / 'assets'
     (assets / 'models').mkdir(parents=True, exist_ok=True)
     (assets / 'images').mkdir(exist_ok=True)
@@ -362,6 +365,9 @@ def refresh_metadata(catalogue_file, output, exported=None):
     replacing the catalogue. A changed model or image requires normal packing.
     """
     current = json.loads(catalogue_file.read_text())
+    if current.get('game') == 'Jak and Daxter: The Precursor Legacy':
+        from effects_scope import effects_only
+        current = effects_only(current)
     previous_file = output / 'catalogue.json'
     previous = json.loads(previous_file.read_text())
     report = json.loads((output / 'packing-report.json').read_text())
