@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { ConvexHull } from 'three/examples/jsm/math/ConvexHull.js';
-import { currentCrateSculpt, crateSculptFragments, type CrateFragment } from './crateSculpt';
+import { crateSculptFragments, type CrateFragment } from './crateSculpt';
 import { solidContact, type SolidQuery } from './worldSolids';
 import type { CrateArtKind } from './crateArt';
 import type { CrateDebrisWorld } from './crateEffects';
@@ -45,7 +45,7 @@ function sourceFragments(kind: CrateArtKind): CrateFragment[] | undefined {
 function geometry(kind: CrateArtKind): THREE.BufferGeometry | undefined {
   const explosive = kind === 'tnt' || kind === 'nitro';
   const fragments = sourceFragments(kind); if (!fragments) return undefined;
-  const key = explosive ? 'bundle' : isMetalCrate(kind) ? 'steel' : kind === 'wood' || kind === 'empty' ? 'braced' : 'plain';
+  const key = explosive ? 'bundle' : isMetalCrate(kind) ? 'steel' : kind === 'multihit' ? 'multihit' : kind === 'wood' || kind === 'empty' ? 'braced' : 'plain';
   const cached = fractureGeometries.get(key); if (cached) return cached;
   const exterior: THREE.BufferGeometry[] = [], interior: THREE.BufferGeometry[] = [];
   fragments.forEach((fragment, index) => {
@@ -122,8 +122,11 @@ export class CrateFracturePool {
   emit(kind: CrateArtKind, center: THREE.Vector3, size: number, material: THREE.MeshStandardMaterial, explosion: boolean): boolean {
     const explosive = kind === 'tnt' || kind === 'nitro', metal = isMetalCrate(kind);
     const fragments = sourceFragments(kind), g = geometry(kind);
-    if ((!explosive && !metal && !currentCrateSculpt()) || !fragments || !g) return false;
-    while (this.assemblies.length >= 6) this.retire(this.assemblies[0]);
+    if (!fragments || !g) return false;
+    // The open cage has more pieces than the other shells. Retire complete
+    // older effects so simultaneous impacts keep the existing physics budget.
+    while (this.assemblies.length && (this.assemblies.length >= 6 || this.diagnostics.shards + fragments.length > 168))
+      this.retire(this.assemblies[0]);
     const root = new THREE.Group(); root.position.copy(center); root.scale.setScalar(size);
     root.name = `${kind} · ${fragments.length} matching surface fragments`;
     let surface = material;

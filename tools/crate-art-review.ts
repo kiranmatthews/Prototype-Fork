@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CRATE_ART_KINDS, createCrateArt, setCrateArtState, updateCrateArt, pulseCrateArt, crateArtStats } from '../src/crateArt';
 import { CrateEffects } from '../src/crateEffects';
 import { WorldSolids } from '../src/worldSolids';
+import { setLifePortraitStyle, lifePortraitStyle } from '../src/lifePortrait';
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0x15222d);
 const camera = new THREE.PerspectiveCamera(36, innerWidth / innerHeight, .05, 100);
 const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setPixelRatio(devicePixelRatio); renderer.setSize(innerWidth, innerHeight);
@@ -25,6 +26,7 @@ const controls = document.querySelector('#controls')!, status = document.querySe
 let reviewError = '';
 let debrisCheck: { minimumY: number; finite: boolean; cleanedUp: boolean } | undefined;
 let emitMilliseconds = 0;
+let burstPool: { peak: number; limit: number } | undefined;
 let selected = -1, native = true, frozen = false, time = 0, fuse: number | undefined, auto = false, slow = false;
 let checkpointPop = 0, assetsReady = false;
 let sixSides = false;
@@ -39,7 +41,7 @@ function button(name: string, action: () => void) { const b = document.createEle
   b.onclick = () => { try { action(); } catch (error) { reviewError=String(error); console.error(error); } }; controls.append(b); }
 function reset() {
   effects.clear(); checkpointPop = 0; fuse = undefined; frozen = false; time = 0;
-  debrisCheck = undefined; emitMilliseconds = 0; reviewError = '';
+  debrisCheck = undefined; burstPool = undefined; emitMilliseconds = 0; reviewError = '';
   for (const { art } of all) { art.pulse = 0; setCrateArtState(art, {}); updateCrateArt(art, 0, 0); }
 }
 function layout() {
@@ -113,12 +115,27 @@ button('Validate debris', () => {
   frozen = true;
 });
 button('TNT fuse', () => { selected = CRATE_ART_KINDS.indexOf('tnt'); select.value = String(selected); layout(); fuse = 3; });
+button('Validate burst pool', () => {
+  if (!assetsReady) return;
+  const art=choose(); reset(); let peak=0;
+  for(let i=0;i<12;i++) {
+    effects.emit(art.kind,new THREE.Vector3(),2,-1,false,art.shell.material as THREE.MeshStandardMaterial);
+    peak=Math.max(peak,effects.diagnostics.shards);
+    if(peak>effects.diagnostics.limit) throw new Error('Simultaneous fractures exceeded the debris limit');
+  }
+  burstPool={peak,limit:effects.diagnostics.limit}; effects.clear(); frozen=true;
+});
 for (const [name, remaining] of [['Fuse midway', 1.5], ['Fuse near end', .15]] as const)
   button(name, () => {
     selected = CRATE_ART_KINDS.indexOf('tnt'); select.value = String(selected); layout(); fuse = remaining; time = 3 - remaining;
     setCrateArtState(all[selected].art, { fuse }); updateCrateArt(all[selected].art, 0, time); frozen = true;
   });
-button('Five-hit', () => { selected = CRATE_ART_KINDS.indexOf('multihit'); select.value = String(selected); layout(); setCrateArtState(all[selected].art, { hits: 2 }); pulseCrateArt(all[selected].art); });
+for (const hits of [5,4,3,2,1,0]) button(`${hits} fruit`, () => {
+  if (selected !== CRATE_ART_KINDS.indexOf('multihit')) { selected = CRATE_ART_KINDS.indexOf('multihit'); select.value = String(selected); layout(); }
+  setCrateArtState(all[selected].art, { hits }); pulseCrateArt(all[selected].art);
+});
+button('Bone Man face', () => setLifePortraitStyle('skull'));
+button('Alternate face', () => setLifePortraitStyle('alternate'));
 button('Spent switch', () => { selected = CRATE_ART_KINDS.indexOf('bang'); select.value = String(selected); layout(); setCrateArtState(all[selected].art, { used: true }); pulseCrateArt(all[selected].art); });
 button('Checkpoint', () => { selected = CRATE_ART_KINDS.indexOf('checkpoint'); select.value = String(selected); layout(); hit(); });
 button('MAX / 480p', () => { native = !native; renderer.setPixelRatio(native ? devicePixelRatio : Math.min(1, 480 / innerHeight)); renderer.setSize(innerWidth, innerHeight); renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%'; });
@@ -188,7 +205,7 @@ function draw(now: number) {
     }
     holder.rotation.copy(rotation); renderer.setScissorTest(false); renderer.setViewport(0,0,innerWidth,innerHeight);
   } else renderer.render(scene, camera);
-  status.textContent = JSON.stringify({ view: selected < 0 ? 'family' : all[selected].art.kind, assetsReady, recording, ...(reviewError ? {error:reviewError}:{}), resolution: native ? 'MAX/native' : '480p', ...(selected >= 0 ? crateArtStats(all[selected].art.kind) : {}), effects: effects.diagnostics, ...(debrisCheck ? {debrisCheck}:{}), emitMilliseconds: +emitMilliseconds.toFixed(2), fuse: fuse === undefined ? null : +fuse.toFixed(2), paused: frozen }, null, 2);
+  status.textContent = JSON.stringify({ view: selected < 0 ? 'family' : all[selected].art.kind, head: lifePortraitStyle(), visibleFruit: selected >= 0 ? all[selected].art.contents?.count : undefined, assetsReady, recording, ...(reviewError ? {error:reviewError}:{}), resolution: native ? 'MAX/native' : '480p', ...(selected >= 0 ? crateArtStats(all[selected].art.kind) : {}), effects: effects.diagnostics, burstPool, ...(debrisCheck ? {debrisCheck}:{}), emitMilliseconds: +emitMilliseconds.toFixed(2), fuse: fuse === undefined ? null : +fuse.toFixed(2), paused: frozen }, null, 2);
   requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);

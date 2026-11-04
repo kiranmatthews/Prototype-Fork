@@ -9307,3 +9307,29 @@ reset. Full render at 3024x1612 native and 900x480 CRT has no console errors or
 warnings. No level pack, movement tuning, player, main or package changes.
 Production build/typecheck and release asset preparation pass. Evidence and
 asset provenance: `docs/crate-art-rebuild/VALIDATION.md` and `AUTHORING.md`.
+
+## 2026-11-05 — Neutral crate materials, open multihit cage and head-aware Life
+
+Removed the requested Life/Mask/Bounce/Metal Bounce/Bang body stains. Nitro Bang
+now carries the Nitro green across its entire steel frame, panels and rivets.
+Life uses the same selected-head artwork as the HUD, including Bone Man, and
+updates existing and new crates when the actual character head changes.
+
+The new multihit follows the Crash 3/4 open Wumpa cage: bowed timber posts,
+three vertical slats on each side, true gaps, and finished lid/underside. Two
+ImageGen references guide the manually authored simple frame and painted wood.
+Five full game fruit models show remaining hits. The complete prop is 28,120
+triangles in two draws; its 42 matching fracture pieces total 6,880 triangles.
+All authored geometry remains at every distance. No new Tripo credits were
+used; the separate Tripo metal model remains intact.
+
+Validated playable at about 23:08 UTC / 12:08 NZDT. Approximate follow-up elapsed
+time: 45 minutes from the preceding handoff; an exact receipt timer was not
+separately recorded. Focused asset, art, portrait and life/multihit gameplay
+checks pass, as does the production build. Six-side native review and actual
+Player/Level lite/full tests cover five-hit progression, spin break, soft/hard
+restore, both Life/HUD portraits, fragment contact and bounded simultaneous
+effects. Full rendering passes at 1512×806 MAX/native and 900×480 CRT with no
+game-console errors/warnings or failed assets. Evidence and authoring details:
+`docs/crate-art-followup/`. No level data, movement tuning or player/main edits.
+The new increment is handed to the active release coordinator for publication.

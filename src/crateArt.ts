@@ -4,8 +4,10 @@ import { prepareCrateSculpt, currentCrateSculpt, crateSculptMaterial, crateSculp
 import { isMetalCrate, metalCrateTemplate, currentMetalCrate, prepareMetalCrate } from './crateMetal';
 import { createCrateFuse, kickCrateFuse, updateCrateFuse, type CrateFuse } from './crateFuse';
 import { rooReady } from './roofont';
+import { LIFE_PORTRAITS, lifePortraitStyle, lifePortraitUrl, onLifePortraitChange, type LifePortraitStyle } from './lifePortrait';
 import { prepareCrateFracture } from './crateFracture';
 import { prepareCrateExplosives, currentExplosiveTemplate, createExplosiveMaterial, updateExplosiveArt, explosiveFallbackGeometry, type ExplosiveArt } from './crateExplosive';
+import { currentMultihitCrate, prepareMultihitCrate, createMultihitContents, updateMultihitContents, MULTIHIT_FRUIT_TRIANGLES } from './crateMultihit';
 
 /** One authored kit for the whole family. All six faces retain their geometry
  * at every distance. The invisible owner cube remains the gameplay collider. */
@@ -20,16 +22,16 @@ const PALETTES: Record<CrateArtKind, Palette> = {
   wood: { wood: '#a85a24', edge: '#e5a04c', ink: '#ffe5a0', shadow: '#462718' },
   empty: { wood: '#a85a24', edge: '#d88f3e', ink: '#efca83', shadow: '#462718' },
   mystery: { wood: '#bc6f22', edge: '#ecad4d', ink: '#fff0a4', shadow: '#63351b' },
-  life: { wood: '#238a86', edge: '#60bab0', ink: '#ffe8a5', shadow: '#184a4a' },
-  mask: { wood: '#7a437f', edge: '#ae72a5', ink: '#ffe2a3', shadow: '#382441' },
+  life: { wood: '#a85a24', edge: '#e5a04c', ink: '#ffe8a5', shadow: '#462718' },
+  mask: { wood: '#a85a24', edge: '#e5a04c', ink: '#ffe2a3', shadow: '#462718' },
   multihit: { wood: '#b55a22', edge: '#e99943', ink: '#ffe9ae', shadow: '#4e2f20' },
-  bouncy: { wood: '#508132', edge: '#a7c351', ink: '#fff0aa', shadow: '#263e21' },
-  metalbounce: { wood: '#356376', edge: '#77a4ae', ink: '#c3ed79', shadow: '#182e3b', metal: true },
+  bouncy: { wood: '#a85a24', edge: '#e5a04c', ink: '#fff0aa', shadow: '#462718' },
+  metalbounce: { wood: '#356376', edge: '#709ba6', ink: '#fff0aa', shadow: '#182e3b', metal: true },
   metal: { wood: '#356376', edge: '#709ba6', ink: '#b6d2ce', shadow: '#182e3b', metal: true },
   tnt: { wood: '#b63827', edge: '#ec6a3b', ink: '#ffe897', shadow: '#571f23' },
   nitro: { wood: '#729728', edge: '#c4d752', ink: '#fff1a7', shadow: '#263c23' },
-  bang: { wood: '#bc8a2c', edge: '#f1c960', ink: '#ffedaa', shadow: '#58411e', metal: true },
-  nitrobang: { wood: '#2e6754', edge: '#73a776', ink: '#fff1ae', shadow: '#18382f', metal: true },
+  bang: { wood: '#356376', edge: '#709ba6', ink: '#ffedaa', shadow: '#182e3b', metal: true },
+  nitrobang: { wood: '#72d91b', edge: '#72d91b', ink: '#fff1ae', shadow: '#18382f', metal: true },
   checkpoint: { wood: '#c96b23', edge: '#ffb451', ink: '#fff2bb', shadow: '#66331d' },
 };
 
@@ -46,6 +48,7 @@ export interface CrateArt {
   fuse?: THREE.Group;
   fuseFX?: CrateFuse;
   explosive?: ExplosiveArt;
+  contents?: THREE.InstancedMesh;
   state: CrateArtState;
   labelKey: string;
   pulse: number;
@@ -58,11 +61,15 @@ type Template = { shell: THREE.BufferGeometry; marks: THREE.BufferGeometry; mate
 const templates = new Map<CrateArtKind, Template>();
 const labels = new Map<string, THREE.MeshStandardMaterial>();
 const shardTemplates = new Map<string, THREE.BufferGeometry>();
-let lifePortrait: HTMLImageElement | undefined;
-const lifePortraitReady = typeof Image === 'undefined' ? Promise.resolve() : new Promise<void>(resolve => {
-  const img = new Image(); img.onload = () => { lifePortrait = img; resolve(); }; img.onerror = () => resolve();
-  img.src = `${import.meta.env.BASE_URL}roo.png`;
-});
+const lifePortraits = new Map<LifePortraitStyle, HTMLImageElement>();
+const lifePortraitRepaints = new Set<() => void>();
+onLifePortraitChange(() => { for (const repaint of lifePortraitRepaints) repaint(); });
+const lifePortraitReady = typeof Image === 'undefined' ? Promise.resolve() : Promise.all(
+  (Object.keys(LIFE_PORTRAITS) as LifePortraitStyle[]).map(style => new Promise<void>(resolve => {
+    const img = new Image(); img.onload = () => { lifePortraits.set(style, img); resolve(); }; img.onerror = () => resolve();
+    img.src = lifePortraitUrl(style);
+  })),
+).then(() => {});
 function shared<T extends THREE.BufferGeometry | THREE.Material | THREE.Texture>(value: T): T {
   value.userData.shared = true;
   value.userData.levelDepthFade = false;
@@ -269,7 +276,8 @@ function icon(c: CanvasRenderingContext2D, kind: CrateArtKind, value: string, to
   if (value === 'speed') { text('»', 205); return; }
   if (value === 'balance') { text('=', 182); return; }
   if (kind === 'life') {
-    if (lifePortrait) { c.drawImage(lifePortrait, 9, 10, 238, 238); return; }
+    const portrait = lifePortraits.get(lifePortraitStyle());
+    if (portrait) { c.drawImage(portrait, 9, 10, 238, 238); return; }
     c.beginPath(); c.moveTo(128, 214); c.bezierCurveTo(75, 174, 20, 135, 35, 77);
     c.bezierCurveTo(48, 24, 108, 28, 128, 73); c.bezierCurveTo(148, 28, 210, 24, 222, 77);
     c.bezierCurveTo(237, 135, 181, 174, 128, 214); c.closePath(); c.stroke(); c.fill();
@@ -287,13 +295,8 @@ function icon(c: CanvasRenderingContext2D, kind: CrateArtKind, value: string, to
     c.lineTo(91, 181); c.lineTo(91, 106); c.lineTo(36, 106); c.closePath(); c.stroke(); c.fill();
     c.fillRect(92, 201, 72, 16);
   } else if (kind === 'multihit') {
-    const hits = Number(value) || 0;
-    const dots = [[63, 67], [193, 67], [128, 128], [63, 190], [193, 190]];
-    dots.forEach(([x, y], i) => { c.beginPath(); c.arc(x, y, 24, 0, Math.PI * 2); c.fillStyle = i < hits ? p.ink : p.shadow; c.stroke(); c.fill(); });
-    if (hits < 4) {
-      c.strokeStyle = p.shadow; c.lineWidth = 4; c.beginPath(); c.moveTo(23, 19); c.lineTo(42, 39); c.lineTo(35, 52); c.lineTo(55, 92); c.stroke();
-      if (hits < 2) { c.beginPath(); c.moveTo(220, 241); c.lineTo(206, 211); c.lineTo(215, 198); c.lineTo(198, 165); c.stroke(); }
-    }
+    // The remaining fruit are visible through real cage slats.
+    return;
   } else if (kind === 'nitrobang') { text('!', 164, 115); c.fillStyle = p.ink; c.fillRect(59, 208, 138, 9); }
   else if (kind === 'checkpoint') text('C', 198);
   else if (kind === 'bang') text('!', 190);
@@ -315,7 +318,9 @@ function labelMaterial(kind: CrateArtKind, value: string): THREE.MeshStandardMat
   };
   paint();
   const map = shared(new THREE.CanvasTexture(canvas)); map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 4;
-  void Promise.all([rooReady, lifePortraitReady]).then(() => { paint(); map.needsUpdate = true; });
+  const repaint = () => { paint(); map.needsUpdate = true; };
+  if (kind === 'life') lifePortraitRepaints.add(repaint);
+  void Promise.all([rooReady, lifePortraitReady]).then(repaint);
   const material = shared(new THREE.MeshStandardMaterial({ map, alphaTest: .35, roughness: .83, metalness: 0,
     polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }));
   labels.set(key, material); return material;
@@ -325,14 +330,15 @@ function labelValue(kind: CrateArtKind, s: CrateArtState): string {
   if (s.timeSecs) return `${s.timeSecs}s`;
   if (s.boost) return s.boost;
   if (s.run) return 'blank';
-  if (kind === 'multihit') return String(s.hits ?? 5);
+  if (kind === 'multihit') return 'blank';
   return kind;
 }
 export function setCrateArtState(art: CrateArt, state: CrateArtState): void {
   art.state = state; art.root.visible = !state.pending;
+  if (art.contents) updateMultihitContents(art.contents, state.hits ?? 5, art.pulse, 0);
   if (art.kind === 'tnt' || art.kind === 'nitro') { art.marks.visible = false; art.labelKey = 'blank'; return; }
   const key = labelValue(art.kind, state);
-  art.marks.visible = key !== 'blank' && (!['wood', 'empty', 'metal'].includes(art.kind) || !!state.timeSecs || !!state.boost);
+  art.marks.visible = key !== 'blank' && (!['wood', 'empty', 'metal', 'multihit'].includes(art.kind) || !!state.timeSecs || !!state.boost);
   if (art.labelKey !== key) { art.labelKey = key; art.marks.material = labelMaterial(art.kind, key); }
   if (art.sculpted) {
     const material = crateSculptMaterial(art.kind, key, art.marks.material.map);
@@ -358,19 +364,20 @@ export function createCrateArt(kind: CrateArtKind, size = 1): CrateArt {
     art.ready = art.ready.then(() => prepareCrateFracture(kind));
     return art;
   }
-  const t = template(kind), metal = isMetalCrate(kind), sculpt = currentCrateSculpt();
+  const t = template(kind), metal = isMetalCrate(kind), sculpt = kind === 'multihit' ? currentMultihitCrate() : currentCrateSculpt();
   const root = new THREE.Group(); root.name = `Crafted ${kind} crate`;
   root.userData.crateArt = true; root.userData.editorGhost = true;
   const shell = new THREE.Mesh(metal ? metalCrateTemplate().geometry : crateSculptGeometry(kind) ?? t.shell,
     metal ? metalCrateTemplate().material : sculpt?.material ?? t.material); shell.name = 'Six-sided sculpted shell';
   shell.castShadow = shell.receiveShadow = true;
-  const marks = new THREE.Mesh(metal || sculpt ? shared(new THREE.BufferGeometry()) : t.marks, labelMaterial(kind, kind === 'multihit' ? '5' : kind));
+  const marks = new THREE.Mesh(metal || sculpt ? shared(new THREE.BufferGeometry()) : t.marks, labelMaterial(kind, kind === 'multihit' ? 'blank' : kind));
   marks.name = 'Painted gameplay marks · four sides and lid seals'; marks.receiveShadow = true;
   root.add(shell, marks); root.scale.setScalar(size);
   const art: CrateArt = { kind, size, root, shell, marks, state: {}, labelKey: '', pulse: 0, pulseStrength: 0, seed: 0,
     sculpted: metal || !!sculpt, ready: Promise.resolve() };
+  if (kind === 'multihit') { art.contents = createMultihitContents(); root.add(art.contents); }
   setCrateArtState(art, kind === 'multihit' ? { hits: 5 } : {});
-  if (!metal && !sculpt && typeof window !== 'undefined') art.ready = prepareCrateSculpt().then(asset => {
+  if (!metal && !sculpt && typeof window !== 'undefined') art.ready = (kind === 'multihit' ? prepareMultihitCrate() : prepareCrateSculpt()).then(asset => {
     art.shell.geometry = crateSculptGeometry(kind) ?? asset.geometry; art.sculpted = true;
     art.marks.geometry = shared(new THREE.BufferGeometry());
     setCrateArtState(art, art.state);
@@ -402,6 +409,7 @@ export function updateCrateArt(art: CrateArt, dt: number, time: number): void {
   }
   if (art.fuseFX) updateCrateFuse(art.fuseFX, art.state.fuse, time, dt);
   if (art.explosive) updateExplosiveArt(art.explosive, art.state.fuse, time + art.seed);
+  if (art.contents) updateMultihitContents(art.contents, art.state.hits ?? 5, art.pulse, time + art.seed);
   if (art.state.used) sy *= .91;
   art.root.scale.set(art.size * sx, art.size * sy, art.size * sx);
   art.root.position.y = (sy - 1) * art.size * .5;
@@ -431,10 +439,11 @@ export function crateArtStats(kind: CrateArtKind): { triangles: number; shellDra
     const geometry = currentExplosiveTemplate()?.geometry ?? explosiveFallbackGeometry();
     return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3 + (kind === 'tnt' ? 2002 : 0), shellDraws: kind === 'tnt' ? 3 : 1, shared: true };
   }
-  const authored = isMetalCrate(kind) ? metalCrateTemplate() : currentCrateSculpt();
+  const authored = isMetalCrate(kind) ? metalCrateTemplate() : kind === 'multihit' ? currentMultihitCrate() : currentCrateSculpt();
+  const contentsTriangles = kind === 'multihit' ? MULTIHIT_FRUIT_TRIANGLES * 5 : 0;
   if (authored) { const geometry = isMetalCrate(kind) ? authored.geometry : crateSculptGeometry(kind)!;
-    return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3, shellDraws: 1, shared: true }; }
+    return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3 + contentsTriangles, shellDraws: kind === 'multihit' ? 2 : 1, shared: true }; }
   const t = template(kind);
-  return { triangles: (t.shell.getAttribute('position').count + (t.marks.getAttribute('position')?.count ?? 0)) / 3,
-    shellDraws: ['wood', 'empty', 'metal'].includes(kind) ? 1 : 2, shared: t.shell.userData.shared === true };
+  return { triangles: (t.shell.getAttribute('position').count + (t.marks.getAttribute('position')?.count ?? 0)) / 3 + contentsTriangles,
+    shellDraws: kind === 'multihit' ? 2 : ['wood', 'empty', 'metal'].includes(kind) ? 1 : 2, shared: t.shell.userData.shared === true };
 }

@@ -1,0 +1,236 @@
+{
+  "native": {
+    "kind": "multihit",
+    "alive": true,
+    "hits": 5,
+    "marks": "blank",
+    "visibleFruit": 5,
+    "head": "skull",
+    "collider": [
+      1.152000000000001,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -12,
+      0.12,
+      0
+    ],
+    "player": "ride",
+    "cratesBroken": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1512,
+      806
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 659,
+        "maxFrameMs": 125,
+        "width": 2560,
+        "height": 1440,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 164
+    }
+  },
+  "softRestore": {
+    "before": 3,
+    "after": 5,
+    "fruit": 5
+  },
+  "normal": {
+    "kind": "multihit",
+    "alive": true,
+    "hits": 5,
+    "marks": "blank",
+    "visibleFruit": 5,
+    "head": "skull",
+    "collider": [
+      1.152000000000001,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -12,
+      0.12,
+      0
+    ],
+    "player": "ride",
+    "cratesBroken": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "resolution": 480,
+    "crt": true,
+    "canvas": [
+      900,
+      480
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 659,
+        "maxFrameMs": 125,
+        "width": 2560,
+        "height": 1440,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 164
+    }
+  },
+  "spinBreak": {
+    "kind": "multihit",
+    "alive": false,
+    "hits": 5,
+    "marks": "blank",
+    "visibleFruit": 5,
+    "head": "skull",
+    "collider": [
+      1.152000000000001,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -12,
+      0.12,
+      0
+    ],
+    "player": "ride",
+    "cratesBroken": 1,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "effects": {
+      "shards": 42,
+      "bursts": 1,
+      "drawCalls": 3,
+      "limit": 232
+    },
+    "resolution": 480,
+    "crt": true,
+    "canvas": [
+      900,
+      480
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 659,
+        "maxFrameMs": 125,
+        "width": 2560,
+        "height": 1440,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 164
+    }
+  },
+  "final": {
+    "kind": "multihit",
+    "alive": true,
+    "hits": 5,
+    "marks": "blank",
+    "visibleFruit": 5,
+    "head": "skull",
+    "collider": [
+      1.152000000000001,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -12,
+      0.12,
+      39
+    ],
+    "player": "ride",
+    "cratesBroken": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1512,
+      806
+    ],
+    "frozen": false,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 659,
+        "maxFrameMs": 125,
+        "width": 2560,
+        "height": 1440,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 164
+    }
+  },
+  "console": []
+}

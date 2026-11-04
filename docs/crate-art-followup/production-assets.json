@@ -1,0 +1,12 @@
+{
+  "multihit-cage.glb": {
+    "sourceTriangles": 6120,
+    "productionTriangles": 6120,
+    "imagesResolve": true
+  },
+  "multihit-fracture.glb": {
+    "sourceTriangles": 6880,
+    "productionTriangles": 6880,
+    "imagesResolve": true
+  }
+}

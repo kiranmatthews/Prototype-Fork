@@ -9027,6 +9027,7 @@ export class Level {
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
     for (const crate of this.crates) {
+      crate.art?.contents?.dispose();
       if (crate.woodCrate) disposeWoodCrate(crate.woodCrate);
       if (crate.explosiveBundle) disposeExplosiveBundle(crate.explosiveBundle);
     }

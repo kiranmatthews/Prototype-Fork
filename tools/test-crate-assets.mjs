@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { createServer } from 'vite';
 
 // Exercise exported geometry without a browser image decoder. Remove only
 // texture references from this in-memory test copy, retaining every vertex,
@@ -50,17 +51,19 @@ async function readAsset(name) {
   return { meshes, triangles, bounds, surfaceArea, bytes: bytes.length, hasPbr };
 }
 const wood = await readAsset('wood-sculpt'), broken = await readAsset('wood-fracture'), brace = await readAsset('wood-brace'), stick = await readAsset('explosive-stick'), metal = await readAsset('metal-sculpt'), steelPieces = await readAsset('metal-fracture');
+const cage = await readAsset('multihit-cage'), cagePieces = await readAsset('multihit-fracture');
 assert.equal(wood.triangles, 8052, 'approved intact geometry was changed');
 assert.equal(stick.triangles, 1970, 'approved stick geometry was changed');
 assert.equal(metal.triangles, 7661, 'Completed Tripo metal geometry was changed');
 assert.ok(metal.hasPbr, 'metal must retain its own normal/metalness/roughness maps');
-for (const asset of [wood, broken, metal, steelPieces]) {
+for (const asset of [wood, broken, metal, steelPieces, cage, cagePieces]) {
   assert.ok(asset.bounds.min.toArray().every(n => n >= -.56), 'fragment escaped the source minimum bounds');
   assert.ok(asset.bounds.max.toArray().every(n => n <= .56), 'fragment escaped the source maximum bounds');
 }
 assert.ok(Math.abs(broken.surfaceArea - wood.surfaceArea) < wood.surfaceArea * .001, 'fracture does not preserve the actual exterior surface');
 assert.ok(Math.abs(steelPieces.surfaceArea - metal.surfaceArea) < metal.surfaceArea * .001, 'steel fracture does not preserve the Tripo exterior');
-for (const [name, asset] of [['wood', wood], ['metal', metal]])
+assert.ok(Math.abs(cagePieces.surfaceArea - cage.surfaceArea) < cage.surfaceArea * .0001, 'cage fracture loses or duplicates the actual timber exterior');
+for (const [name, asset] of [['wood', wood], ['metal', metal], ['multihit', cage]])
   for (const axis of [new THREE.Vector3(1,0,0),new THREE.Vector3(-1,0,0),new THREE.Vector3(0,1,0),new THREE.Vector3(0,-1,0),new THREE.Vector3(0,0,1),new THREE.Vector3(0,0,-1)]) {
     const ray = new THREE.Raycaster(asset.bounds.getCenter(new THREE.Vector3()).addScaledVector(axis,3),axis.clone().negate());
     assert.ok(ray.intersectObjects(asset.meshes,false).length,`${name} has no outward face along ${axis.toArray()}`);
@@ -73,5 +76,24 @@ assert.equal(steelAuthoring.pieceCount,14);
 assert.ok(steelAuthoring.pieces.every(p => p.nonManifoldEdges === 0), 'steel fracture contains an open or non-manifold piece');
 assert.ok(wood.triangles + brace.triangles * 8 <= 15000, 'braced crate exceeds its complete authored budget');
 assert.ok(broken.triangles + brace.triangles * 8 <= 30000, 'broken braced assembly exceeds its budget');
+const cageAuthoring = JSON.parse(await readFile(new URL('../public/props/crate-family/multihit-authoring.json',import.meta.url),'utf8'));
+assert.equal(cageAuthoring.pieceCount,42);
+assert.ok(cageAuthoring.pieces.every(p => p.nonManifoldEdges === 0 && p.signedVolume > 0), 'cage has an open or inverted fragment');
+for (let side=0; side<4; side++) {
+  const rotation=new THREE.Matrix4().makeRotationY(side*Math.PI/2);
+  for (const y of [-.2,0,.2]) {
+    const origin=new THREE.Vector3(.105,y,3).applyMatrix4(rotation);
+    const direction=new THREE.Vector3(0,0,-1).transformDirection(rotation);
+    assert.equal(new THREE.Raycaster(origin,direction,0,2.8).intersectObjects(cage.meshes,false).length,0,'cage slat gaps must be open geometry on every side');
+  }
+}
+const server=await createServer({appType:'custom',logLevel:'silent',cacheDir:'.release-queue/crate-asset-test-cache',server:{middlewareMode:true}});
+let fruitTriangles;
+try {
+  const {buildFruitGeometry}=await server.ssrLoadModule('/src/fruitAssets.ts');
+  const fruit=buildFruitGeometry(3);fruitTriangles=(fruit.index?.count??fruit.getAttribute('position').count)/3;
+} finally {await server.close();}
+assert.ok(cage.triangles+fruitTriangles*5<=30000,'complete cage plus all five authored fruit exceeds the model budget');
 console.log(JSON.stringify({ pass:true, exactExteriorPreserved:true, allSixSides:true, closedFragments:true,
-  wood:wood.triangles,braced:wood.triangles+brace.triangles*8,fracture:broken.triangles,bracedFracture:broken.triangles+brace.triangles*8,stick:stick.triangles,metal:metal.triangles,steelFracture:steelPieces.triangles,metalPbr:metal.hasPbr },null,2));
+  wood:wood.triangles,braced:wood.triangles+brace.triangles*8,fracture:broken.triangles,bracedFracture:broken.triangles+brace.triangles*8,stick:stick.triangles,metal:metal.triangles,steelFracture:steelPieces.triangles,metalPbr:metal.hasPbr,
+  multihit:cage.triangles,multihitWithFruit:cage.triangles+fruitTriangles*5,multihitFracture:cagePieces.triangles,openSlatsAllSides:true },null,2));

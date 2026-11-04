@@ -1,0 +1,24 @@
+{
+  "view": "multihit",
+  "head": "skull",
+  "visibleFruit": 5,
+  "assetsReady": true,
+  "recording": false,
+  "resolution": "MAX/native",
+  "triangles": 28120,
+  "shellDraws": 2,
+  "shared": true,
+  "effects": {
+    "shards": 0,
+    "bursts": 0,
+    "drawCalls": 0,
+    "limit": 232
+  },
+  "burstPool": {
+    "peak": 168,
+    "limit": 232
+  },
+  "emitMilliseconds": 0,
+  "fuse": null,
+  "paused": true
+}

@@ -7,6 +7,7 @@ import { DebugSidePanelGroup, type DebugSidePanel } from './debugSidePanels';
 
 import * as THREE from "three";
 import type { CharacterHeadStyle } from './player';
+import { LIFE_PORTRAITS, lifePortraitUrl, setLifePortraitStyle } from './lifePortrait';
 import { BonusPayout } from "./bonusPayout";
 import { BonusTitleAnimation } from "./bonusTitle";
 import {BonusTransferHud} from './bonusTransferHud';
@@ -59,10 +60,6 @@ import {
 // same as the sky paintings, or they 404 on the project-path GitHub Pages build.
 // Baked from the 1024px originals in art/ by tools/bake-hudicons.mjs.
 const art = (f: string): string => `url("${import.meta.env.BASE_URL}${f}")`;
-const LIFE_FACE_FILES: Record<CharacterHeadStyle, string> = {
-  skull: 'bone-head.png',
-  alternate: 'roo.png',
-};
 
 // Scratch for the 3D icon pass, so a per-frame draw allocates nothing.
 const ICON_SIZE = new THREE.Vector2();
@@ -948,7 +945,7 @@ export class UI {
     );
 
     this.gameHudSurface = new GameHudSurface({
-      lifeFaceUrl: `${import.meta.env.BASE_URL}${LIFE_FACE_FILES.skull}`,
+      lifeFaceUrl: lifePortraitUrl('skull'),
       cropToElements:true,
       elements: {
         viewport: document.getElementById("app") ?? undefined,
@@ -1479,11 +1476,12 @@ export class UI {
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
     const headStyle = s.characterHeadStyle ?? 'skull';
     if (headStyle !== this.lifeFaceStyle) {
-      const portrait = LIFE_FACE_FILES[headStyle];
-      this.lifeFaceEl.style.backgroundImage = art(portrait);
+      const portrait = LIFE_PORTRAITS[headStyle];
+      setLifePortraitStyle(headStyle);
+      this.lifeFaceEl.style.backgroundImage = art(portrait.file);
       this.lifeFaceEl.dataset.headStyle = headStyle;
-      this.lifeFaceEl.setAttribute('aria-label', headStyle === 'skull' ? 'Bone Head' : 'BoolieRoo');
-      this.gameHudSurface.setLifeFaceUrl(`${import.meta.env.BASE_URL}${portrait}`);
+      this.lifeFaceEl.setAttribute('aria-label', portrait.label);
+      this.gameHudSurface.setLifeFaceUrl(lifePortraitUrl(headStyle));
       this.lifeFaceStyle = headStyle;
     }
     this.raceHud.update(s.race);
@@ -2550,7 +2548,7 @@ export class UI {
         .hud-box-current, .hud-box-total { min-width: 0; }
       }
       .hud-icon-face {
-        background-image: ${art(LIFE_FACE_FILES.skull)};
+        background-image: ${art(LIFE_PORTRAITS.skull.file)};
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;

@@ -1,0 +1,262 @@
+{
+  "authoring": "Modeled timber frame following the Crash 4 / ImageGen reference; own ImageGen albedo",
+  "sourceReference": "https://www.artstation.com/artwork/9mPL0a",
+  "intactTriangles": 6120,
+  "intactMembers": 30,
+  "pieceCount": 42,
+  "pieces": [
+    {
+      "name": "fragment_00",
+      "triangles": 412,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.01651862314657561
+    },
+    {
+      "name": "fragment_01",
+      "triangles": 412,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016521666850582047
+    },
+    {
+      "name": "fragment_02",
+      "triangles": 412,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016577534381231846
+    },
+    {
+      "name": "fragment_03",
+      "triangles": 412,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.01654644207166637
+    },
+    {
+      "name": "fragment_04",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016782623174890852
+    },
+    {
+      "name": "fragment_05",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.01682563385373983
+    },
+    {
+      "name": "fragment_06",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016751036944913977
+    },
+    {
+      "name": "fragment_07",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016789798824380038
+    },
+    {
+      "name": "fragment_08",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016782690220358328
+    },
+    {
+      "name": "fragment_09",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.01682541161378728
+    },
+    {
+      "name": "fragment_10",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.01675122755281574
+    },
+    {
+      "name": "fragment_11",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.016819392585174245
+    },
+    {
+      "name": "fragment_12",
+      "triangles": 108,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0011905837777247989
+    },
+    {
+      "name": "fragment_13",
+      "triangles": 124,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0019573936601854475
+    },
+    {
+      "name": "fragment_14",
+      "triangles": 110,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0011512145010430456
+    },
+    {
+      "name": "fragment_15",
+      "triangles": 130,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.001986023853060582
+    },
+    {
+      "name": "fragment_16",
+      "triangles": 124,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0015217355882716325
+    },
+    {
+      "name": "fragment_17",
+      "triangles": 116,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0016186918758480206
+    },
+    {
+      "name": "fragment_18",
+      "triangles": 132,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0019370528580946557
+    },
+    {
+      "name": "fragment_19",
+      "triangles": 100,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0011981941296045808
+    },
+    {
+      "name": "fragment_20",
+      "triangles": 124,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0018564027966144713
+    },
+    {
+      "name": "fragment_21",
+      "triangles": 108,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.001285520458822817
+    },
+    {
+      "name": "fragment_22",
+      "triangles": 140,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0021271581559810767
+    },
+    {
+      "name": "fragment_23",
+      "triangles": 92,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.001014193789304254
+    },
+    {
+      "name": "fragment_24",
+      "triangles": 140,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0021592412149599467
+    },
+    {
+      "name": "fragment_25",
+      "triangles": 92,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.000981187899304232
+    },
+    {
+      "name": "fragment_26",
+      "triangles": 124,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0017468028121693385
+    },
+    {
+      "name": "fragment_27",
+      "triangles": 108,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0013905536392382148
+    },
+    {
+      "name": "fragment_28",
+      "triangles": 124,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0016461772397220826
+    },
+    {
+      "name": "fragment_29",
+      "triangles": 108,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0015028128837841104
+    },
+    {
+      "name": "fragment_30",
+      "triangles": 114,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0014876484976290797
+    },
+    {
+      "name": "fragment_31",
+      "triangles": 126,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.001654035145163517
+    },
+    {
+      "name": "fragment_32",
+      "triangles": 108,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0011074103731938028
+    },
+    {
+      "name": "fragment_33",
+      "triangles": 140,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0020405865565739675
+    },
+    {
+      "name": "fragment_34",
+      "triangles": 92,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0009585978929054728
+    },
+    {
+      "name": "fragment_35",
+      "triangles": 140,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.0021818391285594097
+    },
+    {
+      "name": "fragment_36",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.009759288541973068
+    },
+    {
+      "name": "fragment_37",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.009783482808605857
+    },
+    {
+      "name": "fragment_38",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.00978421718081122
+    },
+    {
+      "name": "fragment_39",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.009760509142686427
+    },
+    {
+      "name": "fragment_40",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.009751017424897786
+    },
+    {
+      "name": "fragment_41",
+      "triangles": 172,
+      "nonManifoldEdges": 0,
+      "signedVolume": 0.009797840669685216
+    }
+  ],
+  "totalTriangles": 6880
+}

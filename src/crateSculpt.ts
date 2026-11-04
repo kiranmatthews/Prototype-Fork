@@ -5,6 +5,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import type { CrateArtKind } from './crateArt';
 import { cratePartGeometry, mergeCrateParts, readCrateFragments, type CrateFragment } from './crateFragmentAsset';
 import { isMetalCrate, metalCrateTemplate, currentMetalCrate } from './crateMetal';
+import { currentMultihitCrate } from './crateMultihit';
 
 /** Shared authored surfaces. The second asset partitions the exact same shell;
  * fracture is a state change, never a camera-distance geometry replacement. */
@@ -72,33 +73,34 @@ function withBraces(): void {
   bracedGeometry.computeBoundingBox(); bracedGeometry.computeBoundingSphere();
 }
 export function crateSculptGeometry(kind: CrateArtKind): THREE.BufferGeometry | undefined {
+  if (kind === 'multihit') return currentMultihitCrate()?.geometry;
   if (kind === 'wood' || kind === 'empty') { withBraces(); return bracedGeometry; }
   return loaded?.geometry;
 }
 export function crateSculptFragments(kind: CrateArtKind): CrateFragment[] | undefined {
+  if (kind === 'multihit') return currentMultihitCrate()?.fragments;
   if (kind === 'wood' || kind === 'empty') { withBraces(); return bracedFragments; }
   return loaded?.fragments;
 }
 
-/** Stain colours leave the carved shading intact. Warm bare corners unite the
- * reward types; the metal family uses its own cool steel surface. */
+/** Reward crates retain natural timber or bare steel. Nitro's switch is
+ * green over the entire steel shell, including the frame and fasteners. */
 const STAINS: Partial<Record<CrateArtKind, [string, number, number]>> = {
-  life: ['#128b91', .92, 0], mask: ['#713a8e', .9, 0],
-  bouncy: ['#578f22', .86, 0], multihit: ['#a54a16', .5, 0],
   checkpoint: ['#eeb43d', .65, .32],
-  bang: ['#cba330', .8, .15], nitrobang: ['#3b9075', .8, .15], metalbounce: ['#387d92', .65, 0],
+  nitrobang: ['#72d91b', 1, 1],
 };
 
 /** Decals are evaluated on the actual sculpt, so lettering follows its bows,
  * gaps and chips. The original local position also survives rigid fracture. */
 export function crateSculptMaterial(kind: CrateArtKind, label: string, decal: THREE.Texture | null): THREE.MeshStandardMaterial | undefined {
   const metal = isMetalCrate(kind);
-  if (!loaded && !metal) return undefined;
+  const source = metal ? metalCrateTemplate() : kind === 'multihit' ? currentMultihitCrate() : loaded;
+  if (!source) return undefined;
   const cacheKey = `${kind}:${label}:${metal && currentMetalCrate() ? 'tripo' : 'base'}`; const existing = materials.get(cacheKey); if (existing) return existing;
-  const material = shared((metal ? metalCrateTemplate().material : loaded!.material).clone());
+  const material = shared(source.material.clone());
   const [stainHex, strength, frameStrength] = STAINS[kind] ?? ['#ffffff', 0, 0];
   const stain = new THREE.Color(stainHex);
-  const hasMark = decal && label !== 'blank' && (!['wood', 'empty', 'metal'].includes(kind) || /^\d+s$/.test(label) || label === 'speed' || label === 'balance');
+  const hasMark = decal && label !== 'blank' && (!['wood', 'empty', 'metal', 'multihit'].includes(kind) || /^\d+s$/.test(label) || label === 'speed' || label === 'balance');
   material.name = `${kind} · sculpted painted surface · ${label}`;
   material.onBeforeCompile = shader => {
     shader.uniforms.crateStain = { value: stain };

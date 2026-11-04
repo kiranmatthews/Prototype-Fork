@@ -57,6 +57,8 @@ button('Time trial', () => { level.setTimeTrial(true); });
 button('Standard', () => { level.setTimeTrial(false); });
 button('MAX/native', () => { g.crtGuestSettings.setEnabled(false); g.renderQualitySettings.setRegularResolution(null); });
 button('480p/CRT', () => { g.renderQualitySettings.setRegularResolution(480); g.crtGuestSettings.setEnabled(true); });
+button('Bone Man head', () => { g.setCharacterHeadStyle('skull'); });
+button('Alternate head', () => { g.setCharacterHeadStyle('alternate'); });
 button('Hide panel', () => panel.open = false);
 const render = g.renderer.render.bind(g.renderer);
 g.renderer.render = (...args: any[]) => {
@@ -71,7 +73,7 @@ g.renderer.render = (...args: any[]) => {
 function report() {
   panel.inert = false; panel.removeAttribute('aria-hidden'); const c = current();
   status.textContent = JSON.stringify({ kind: select.selectedOptions[0].textContent, alive: c.alive ?? !c.active, hits: c.hitsRemaining,
-    marks: c.art?.labelKey, collider: c.box.getSize(new THREE.Vector3()).toArray(), position: player.pos.toArray().map((n: number) => +n.toFixed(2)),
+    marks: c.art?.labelKey, visibleFruit: c.art?.contents?.count, head: g.getCharacterHeadStyle(), collider: c.box.getSize(new THREE.Vector3()).toArray(), position: player.pos.toArray().map((n: number) => +n.toFixed(2)),
     player: player.state, cratesBroken: player.cratesBroken, deaths: player.totalDeaths, checkpoint: checkpoint.active, checkpointVisible: checkpoint.mesh.visible,
     outline: outline.pending, usedSwitch: crates[10].bangUsed, effects: level.crateEffects.diagnostics, fuse: crates[6].fuse,
     resolution: g.renderQualitySettings.regularResolution, crt: g.crtGuestSettings.enabled,

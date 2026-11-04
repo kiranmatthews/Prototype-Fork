@@ -28,11 +28,19 @@ try {
       assert.ok(ray.intersectObject(a.shell).length > 0, `${kind} has a missing/reversed face at ${axis.toArray()}`);
     }
     const stats = art.crateArtStats(kind);
-    const budget = explosive ? 27000 : 15000;
+    const budget = kind === 'multihit' ? 30000 : explosive ? 27000 : 15000;
     assert.ok(stats.triangles <= budget, `${kind} exceeds the authored budget`);
     let totalTriangles = 0;
-    a.root.traverse(node => { if (node.isMesh) totalTriangles += (node.geometry.index?.count ?? node.geometry.attributes.position?.count ?? 0) / 3; });
+    a.root.traverse(node => { if (node.isMesh) totalTriangles += (node.geometry.index?.count ?? node.geometry.attributes.position?.count ?? 0) / 3 * (node.isInstancedMesh ? node.count : 1); });
     assert.ok(totalTriangles <= budget, `${kind} accessories exceed the complete model budget`);
+    if (kind === 'multihit') {
+      for (const hits of [5,4,3,2,1,0,5]) {
+        art.setCrateArtState(a,{hits});
+        assert.equal(a.contents.count,hits,'visible fruit must follow remaining hits and restore');
+        assert.equal(a.marks.visible,false,'fruit replaces the old painted dots');
+      }
+      assert.equal(a.contents.geometry,b.contents.geometry,'full fruit geometry must be shared');
+    }
     const owner = new THREE.Group(); owner.position.set(2, 5, -7); owner.add(a.root);
     const pose = owner.matrix.clone(), geometry = a.shell.geometry;
     art.pulseCrateArt(a); for (let i = 0; i < 60; i++) art.updateCrateArt(a, 1 / 60, 1);
