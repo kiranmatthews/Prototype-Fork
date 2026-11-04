@@ -8628,3 +8628,31 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   No publication.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## D — native idle and A/D hybrid run
+
+- Completed 4 November 2026 NZDT, approximately 15 minutes prompt-to-validated
+  playable (05:59–06:14 UTC). Local A/B/C/D comparison only.
+- D now uses the exact A/B/C idle, including Bone Man's resting arm pose and
+  segment elasticity. The native arm layer fades in during source landing/climb
+  recovery. Retained D's recovery floor correction after finding a 1.9 cm shoe
+  penetration in the initial pass.
+- Run blends 50/50 native Bone Man and retargeted Jak motion. Full-cycle leg
+  matching aligns the native cycle by 7/64 of a stride. Rotations, root/waist
+  and segment elasticity mix, retaining native cadence, analog walking,
+  continuous reversal strides, braking and restarts. D is labeled Jak hybrid.
+- Checks: 3,360-frame idle/recovery comparison, 1,360-frame native locomotion
+  parity plus actual hybrid sampling, 6,620-frame jump-height/landing/climb
+  regression, 1,026 pure-source retarget frames, and 1,344-frame skating parity.
+  Rendered A/D idle poses match; idle handoff joint steps are below 0.00056 m.
+  All twelve A/D skull peaks remain within 0.0151 m. Native idle/charge recovery,
+  runtime routing, strict review types, build and release-size check pass
+  (803,511,584 bytes). No full-suite run.
+- Browser: full rendering at normal 720p and native resolution; identical A/D
+  idle, hybrid reversal stride, walk/run stops and flip landing into idle.
+  No console warnings/errors. Original 720p/2× settings restored, D in live play.
+  Evidence: external `d-hybrid-locomotion/`. Source assets, jump/skate gesture,
+  physics, A/B/C and level data retained. No integration or publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).

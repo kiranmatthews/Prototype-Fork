@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { LOCOMOTION_PHASE_MATCHED_IDLE, withCharacterElasticity } from '../src/animation';
+import { createProceduralMotionContext, sampleComposedClip, withCharacterElasticity } from '../src/animation';
 import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefinition, QuaternionTuple, Vec3Tuple } from '../src/animation';
 import type { OnFootJumpStudy } from '../src/onFootJumpStudy';
 
@@ -40,9 +40,34 @@ const v=(p:number[])=>new THREE.Vector3().fromArray(p);
 const q=(p:number[])=>new THREE.Quaternion().fromArray(p).normalize();
 const vector=(f:Frame,a:string,b:string)=>v(f[b].p).sub(v(f[a].p));
 
+// Align the complete stride, rather than one convenient frame: opposing
+// foot phases would cancel the knee lift when the two cycles are blended.
+function nativeRunPhase(native:AnimationClip, direct:AnimationClip):number {
+  const motion=createProceduralMotionContext({normalizedSpeed:1});
+  const count=64, legs=['hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight'];
+  const samples=(clip:AnimationClip)=>Array.from({length:count},(_,i)=>
+    sampleComposedClip(clip,clip.range.start+i/count*(clip.range.end-clip.range.start),motion));
+  const a=samples(native),d=samples(direct);
+  let best=Infinity,offset=0;
+  for(let shift=0;shift<count;shift++) {
+    let score=0;
+    for(let i=0;i<count;i++)for(const id of legs) {
+      const qa=q(a[(i+shift)%count].joints[id]?.quaternion??[0,0,0,1]);
+      const qd=q(d[i].joints[id]?.quaternion??[0,0,0,1]);
+      score+=(id.startsWith('hip')?2:1)*(1-Math.abs(qa.dot(qd)));
+    }
+    if(score<best){best=score;offset=shift/count;}
+  }
+  return offset;
+}
+
 export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinition, bank:JakMotionBank):AnimationSuiteDocument {
   if(bank.version!==1 || bank.fps!==60 || !bank.clips.jump)throw new Error('Unsupported local Jak motion bank');
   const suite=structuredClone(base);
+  const nativeRun=structuredClone(base.clips.find(clip=>clip.id==='player.run')!);
+  nativeRun.id='player.jak-native-run';
+  nativeRun.name='D · Bone Man run blend reference';
+  suite.clips.push(nativeRun);
   const neutral=bank.clips['stance-loop'].samples[0];
   const definitions=new Map(rig.joints.map(j=>[j.id,j]));
   const correction=new Map<string,THREE.Quaternion>();
@@ -124,7 +149,8 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     return {locals,lengths,translations,root};
   };
   const specs:[string,string,boolean][]=[
-    ['player.idle','stance-loop',true],['player.run','run',true],['player.walk','walk',true],
+    // Idle stays identical to A/B/C, including its native neutral-arm layer.
+    ['player.run','run',true],['player.walk','walk',true],
     // Keep Bone Man's momentum-driven brake and finite settle. Jak's eight
     // second pacing sequence fights this controller's short coast/restart.
     ['player.jump','jump',false],
@@ -170,11 +196,15 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
       tracks,proceduralDrivers:[],contacts:[],events:[],markers:[],
       metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,jakRootMode:rootMode,
         ...(ledge?{jakLedge:true}:{}),
-        ...(id==='player.idle'?{locomotionTransition:LOCOMOTION_PHASE_MATCHED_IDLE}:{}),
         ...(shortTail?{jakSourceTailClip:'jump-land',jakSourceTailAt:source.frames,jakSourceTailFrame:50}:{}),
         ...(startFrame?{jakSourceStartFrame:startFrame}:{}),
         referenceStudy:'Direct local source sample retarget; source data excluded from Git and production'},
     },rig);
+    if(id==='player.run') {
+      clip.name='D · Bone Man / Jak run (50/50)';
+      clip.metadata={...clip.metadata,jakNativeRunClip:nativeRun.id,jakNativeRunWeight:.5,
+        jakNativeRunPhase:nativeRunPhase(nativeRun,clip)};
+    }
     const index=suite.clips.findIndex(c=>c.id===id);if(index>=0)suite.clips[index]=clip;else suite.clips.push(clip);
   }
   return suite;

@@ -80,8 +80,9 @@ function updateSource() {
   if (!sourceModel.visible) return false;
   const clip = runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId);
   let name = clip?.metadata?.jakSourceClip as string | undefined, time = runtime.diagnostics.timelineTime ?? 0;
-  sourceNote.textContent = name ? 'Bone Man left · original Jak right · same source frame'
-    : 'Bone Man left · native movement transition · Jak at rest';
+  sourceNote.textContent = clip?.metadata?.jakNativeRunClip ? 'Bone Man left · 50/50 run · original Jak right'
+    : name ? 'Bone Man left · original Jak right · same source frame'
+    : 'Bone Man left · native idle / transition · Jak at rest';
   if (clip?.metadata?.jakSourceTailClip && time * 60 >= Number(clip.metadata.jakSourceTailAt)) {
     name = String(clip.metadata.jakSourceTailClip);
     time += (Number(clip.metadata.jakSourceTailFrame) - Number(clip.metadata.jakSourceTailAt)) / 60;
@@ -284,7 +285,7 @@ const button = (parent: HTMLElement, label: string, fn: () => void) => {
 const oldButton = button(versions, 'A · Original', () => chooseVersion('A'));
 const newButton = button(versions, 'B · Animation', () => chooseVersion('B'));
 const studyButton = button(versions, 'C · Jak feel', () => chooseVersion('C'));
-const directButton = button(versions, 'D · Direct Jak', () => chooseVersion('D'));
+const directButton = button(versions, 'D · Jak hybrid', () => chooseVersion('D'));
 directButton.disabled = !directSuite;
 if (!directSuite) directButton.title = 'Start the local server with the extracted Jak motion bank to enable D.';
 const controlsToggle = button(panel,'Hide controls',() => {
@@ -297,7 +298,7 @@ instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in
 const continuity = document.createElement('small'); continuity.textContent = '1 / 2 / 3 / 4 switches A / B / C / D. Air physics changes on your next foot jump.';
 panel.append(instructions, continuity);
 const directHint = document.createElement('p');
-directHint.textContent = 'D pairs Jak’s poses with Bone Man’s walk/run cadence, continuous strides through turns, and responsive braking/restarts. Release to jump; hold while running to skate.';
+directHint.textContent = 'D uses Bone Man’s idle, a 50/50 Bone Man + Jak run, and Jak’s jumps and ledges. Strides stay aligned through turns, braking and restarts. Release to jump; hold while running to skate.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
 const flipLabel=document.createElement('label'),flipBox=document.createElement('input');
@@ -387,7 +388,7 @@ function report() {
   instructions.textContent = 'WASD / arrows to move · Space to jump; tap again in air for double jump. Hold while running to skate.';
   playButton.setAttribute('aria-pressed', String(!inspect)); inspectButton.setAttribute('aria-pressed', String(inspect));
   const audio = before || !jakSounds ? 'Original sounds' : sfx.jumpAudioSource;
-  current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Direct Jak motion + our locomotion'} · ${audio}`;
+  current.textContent = `${variant} · ${variant === 'A' ? 'Original motion + physics' : variant === 'B' ? 'New motion · original physics' : variant === 'C' ? 'Jak motion + foot physics' : 'Native idle + 50/50 run + Jak jumps'} · ${audio}`;
   const d = runtime.diagnostics, scalars = runtime.lastSampledPose?.scalars;
   motionSelect.value=mode;
   viewSelect.value=angle===Math.PI?'Front':angle===Math.PI/2?'Side':angle===0?'Behind':'Oblique';

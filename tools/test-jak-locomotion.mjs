@@ -11,6 +11,35 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
   const base=a.createPlayerStarterAnimationSuite(binding.definition);
   const direct=createJakDirectSuite(base,binding.definition,bank);
   const runtime=createCharacterAnimationRuntime(p,base);
+  // The hybrid must retain a real stride from both sources, with matching
+  // feet, rather than averaging opposite phases into a nearly static pose.
+  runtime.setDocument(direct);
+  const run=direct.clips.find(c=>c.id==='player.run'),nativeRun=base.clips.find(c=>c.id==='player.run');
+  const motion=a.createProceduralMotionContext({normalizedSpeed:1,inputs:{[a.LOCOMOTION_WALK_BLEND_INPUT]:0}});
+  let fromNative=0,fromJak=0,alignedError=0,oppositeError=0,maxMidpointError=0;
+  for(let f=0;f<64;f++) {
+    const phase=f/64,time=phase*run.duration,nativePhase=(phase+run.metadata.jakNativeRunPhase)%1;
+    const hybrid=runtime.samplePoseAt(run,time,motion,true),jak=a.sampleComposedClip(run,time,motion);
+    const native=a.sampleComposedClip(nativeRun,nativePhase*nativeRun.duration,motion);
+    const opposite=a.sampleComposedClip(nativeRun,((nativePhase+.5)%1)*nativeRun.duration,motion);
+    for(const id of ['hipLeft','hipRight','kneeLeft','kneeRight','shoulderLeft','shoulderRight']) {
+      const qa=new THREE.Quaternion().fromArray(native.joints[id].quaternion);
+      const qd=new THREE.Quaternion().fromArray(jak.joints[id].quaternion);
+      const qh=new THREE.Quaternion().fromArray(hybrid.joints[id].quaternion);
+      fromNative+=qa.angleTo(qh);fromJak+=qd.angleTo(qh);
+      maxMidpointError=Math.max(maxMidpointError,Math.abs(qa.angleTo(qh)-qd.angleTo(qh)));
+      if(!id.startsWith('shoulder')) {
+        alignedError+=qa.angleTo(qd);
+        oppositeError+=new THREE.Quaternion().fromArray(opposite.joints[id].quaternion).angleTo(qd);
+      }
+    }
+    assert.ok(Object.values(hybrid.scalars).every(Number.isFinite),'hybrid lost segment elasticity');
+  }
+  assert.ok(fromNative/384>.1&&fromJak/384>.1,'hybrid lost one of its source cycles');
+  assert.ok(maxMidpointError<1e-5,'run is not the requested even blend');
+  assert.ok(alignedError<oppositeError*.8,'run phases oppose each other');
+  const hybrid={nativePhase:run.metadata.jakNativeRunPhase,fromNative:fromNative/384,fromJak:fromJak/384,
+    alignedError,oppositeError,maxMidpointError};
   const traces=[];
   for(const variant of ['A','D']) {
     p.enterLevel('jak-locomotion');p.respawn(level,true,true);p.freeSkate=false;
@@ -59,7 +88,7 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
   assert.ok(adapted.some(r=>r.recovery>0&&r.recovery<1),'stop never recovered into the idle pose');
   runtime.dispose();
   console.log('PASS D inherits native reversal gait, analog cadence, brake, quick restart and idle settle',
-    JSON.stringify({frames:adapted.length*2,runFrames,turnFrames,maxCadenceError,maxHandoffHeadStep,
+    JSON.stringify({hybrid,frames:adapted.length*2,runFrames,turnFrames,maxCadenceError,maxHandoffHeadStep,
       reversal:adapted.filter(r=>r.turn&&r.speed<3).map(({f,speed,normalized,walk,phase})=>({f,speed,normalized,walk,phase}))}));
 },{levelEntry:{id:'jak-locomotion',name:'Locomotion continuity',data:{v:1,name:'Locomotion continuity',
   spawn:[0,.02,0],killY:-30,components:[{t:'platform',p:[0,-.5,0],s:[500,1,500]},{t:'gate',p:[0,0,-200]}]}}});

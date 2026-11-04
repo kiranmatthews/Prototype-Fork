@@ -924,9 +924,8 @@ export class CharacterAnimationRuntime {
     } else {
       this.transitionBlendWeight = null;
     }
-    // Direct source poses already contain the resting shoulder angles. The
-    // native neutral-arm layer would add another 19 degrees to D's idle, and
-    // switch it on in one frame after a source landing/climb has fully settled.
+    // Source idles own their shoulder angles. Native idles also use the
+    // editable neutral-arm layer; recoveries fade that layer with the pose.
     const sourceOwnsIdleArms = this.findPlayableClip('player.idle')?.metadata?.jakDirect;
     const incomingRestWeight = sourceOwnsIdleArms ? 0 : clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
     this.upperArmRestWeight = this.transitionBlendWeight === null ? incomingRestWeight
@@ -1047,6 +1046,8 @@ export class CharacterAnimationRuntime {
       if (stride.joints[id]) result.joints[id] = stride.joints[id];
     for (const [id, value] of Object.entries(stride.scalars ?? {}))
       if (id.startsWith('deform.leg.')) result.scalars![id] = value;
+    this.recoveryIdleWeight = bodyWeight * (1 - moving);
+    this.recoveryIdleTimelineTime = idleTime;
     this.pendingRunHandoffOffset = runTime - run.range.start;
     this.pendingIdleHandoffOffset = idleTime - idle.range.start;
     return result;
@@ -1058,7 +1059,21 @@ export class CharacterAnimationRuntime {
       const fall = this.findPlayableClip('player.fall');
       if (fall) return sampleComposedClip(fall, clipTimeAt(fall, ((motion.inputs?.jakFrame ?? 40) - 40) / 60), motion);
     }
-    const pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    let pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    const nativeRunId = clip.metadata?.jakNativeRunClip;
+    const nativeRun = typeof nativeRunId === 'string' ? this.findPlayableClip(nativeRunId) : null;
+    if (nativeRun) {
+      const phase = normalizedPhase((time - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start)
+        + Number(clip.metadata?.jakNativeRunPhase ?? 0));
+      const nativePose = sampleComposedClip(nativeRun,
+        nativeRun.range.start + phase * (nativeRun.range.end - nativeRun.range.start), motion,
+        { evaluators: this.proceduralEvaluators });
+      // Blend independent segment elasticity as well as rotations/root motion.
+      // Unkeyed controls retain their rig defaults, rather than shrinking to 0.
+      pose = blendPoses(withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
+        withControlDefaults(canonicalizePose(nativePose, this.binding), this.controlDefaults),
+        MathUtils.clamp(Number(clip.metadata?.jakNativeRunWeight ?? .5), 0, 1));
+    }
     if (clip.metadata?.jakDirect && (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
       const speed = motion.inputs?.footSpeed ?? 0;
       const alternate = this.findPlayableClip('player.jak-jump-forward');

@@ -505,3 +505,52 @@ normal/native resolution. Original 720p/2× settings restored; D left in live
 play. No console errors or warnings. Evidence is external in `d-idle-continuity/`, beside the source bank.
 Approximately 12 minutes prompt-to-validated playable (04:59–05:11 UTC).
 Local A/B/C/D comparison only; no integration or publication.
+
+## D — native idle and hybrid run, 4 November 2026 NZDT
+
+D now retains the exact Bone Man idle from A/B/C, including its playback speed,
+elasticity and editable resting arm pose. The Jak stance remains the retargeting
+calibration reference, so changing idle does not alter jump or ledge keyframes.
+Source landing and climb recovery gradually restore the native arm-rest layer
+with the upper-body pose and hand off at the same idle phase. D's floor correction
+continues during this recovery even though its movement hint now names a native
+idle. This prevents a roughly 1.9 cm shoe penetration found in the first pass.
+
+The run is a 50/50 blend of A's Quaternius jog and D's retargeted Jak run. A
+whole-cycle comparison of hips, knees and ankles aligns their strides before
+mixing: the native cycle is offset by 7/64 of a cycle. Rotations, root/waist motion
+and independent segment elasticity all blend. Both sources keep the same native
+cadence, and the existing analog walk blend, reversal, braking and phase-matched
+restart continue to apply. The pure source tracks remain available for retarget
+verification; a local native reference clip supplies the other half at runtime.
+The review calls this option **D · Jak hybrid** and labels the source overlay
+accurately when viewing the mixed run or native idle.
+
+Checks cover eight idle cases / 3,360 controller frames, including the native A
+baseline, walk/run stops, tap/flip/double landings and ledge get-up. Steady rendered
+A/D idle joint positions match within floating-point precision; pose rotations
+differ by less than 6e-8 radians. Idle handoff joint steps remain below 0.00056 m.
+The 1,360-frame locomotion regression verifies exact A/D movement and turn parity,
+463 matching cadence frames, continuous strides through nine low-speed reversal
+frames, and the actual halfway blend. Matching stride phases halves the aggregate
+leg-angle mismatch compared with opposite phases. Start/stop head steps stay
+below 0.030 m.
+
+The existing 6,620-frame polish regression passes: twelve paired A/D skull peaks
+remain within 0.0151 m, landing handoffs have no measurable head discontinuity,
+and stationary/moving climb recovery remains smooth. Pure source retargeting
+passes across 1,026 frames; planted soles stay at least 0.006 m above the floor.
+The jump/skate gesture and 1,344-frame campaign/park skating parity pass, alongside
+native idle/charge recovery, runtime routing and strict review types.
+
+Browser review covers A/D front idle comparison, the hybrid stride during a
+reversal, walk/run stops and the complete flip landing into idle. Full rendering
+was checked at normal 720p and native resolution. No console warnings or errors;
+original 720p/2× settings restored and D left in live play. Evidence is external
+in `d-hybrid-locomotion/` beside the source bank. Jump physics, source jump/ledge
+motion, A/B/C and level data are unchanged. This remains a local comparison.
+
+Production build and release-size check pass (803,511,584 bytes); local review
+entry and source assets remain excluded. Approximately 15 minutes from prompt
+to validated playable (05:59–06:14 UTC), followed by local commit and handoff.
+No integration or publication.

@@ -18418,7 +18418,10 @@ export class Player {
     // on the exact frame the clip changes back to locomotion.
     const recoveryWeight = this.bailRiseAge < 0 ? 1 : THREE.MathUtils.smoothstep(this.bailRiseAge, .2, .65);
     const weight = walkWeight * recoveryWeight * (1 - THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5));
-    const directContact = this.directFootStudy && this.authoredClip(hint)?.metadata?.jakDirect;
+    // A source landing still reports the idle movement hint while its rebound
+    // blends into the native idle. Keep its floor correction through that mix.
+    const directContact = this.directFootStudy &&
+      (hint === 'player.idle' || this.authoredClip(hint)?.metadata?.jakDirect);
     if (weight <= 0.002 && !directContact) return;
 
     const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;

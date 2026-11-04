@@ -9,21 +9,24 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
   const {createJakDirectSuite,JAK_DIRECT_PHYSICS}=await server.ssrLoadModule('/tools/jak-direct-motion.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const binding=a.RigBinding.fromSculptRuntime(p.animationRig.root);
-  const suite=createJakDirectSuite(a.createPlayerStarterAnimationSuite(binding.definition),binding.definition,bank);
+  const base=a.createPlayerStarterAnimationSuite(binding.definition);
+  const suite=createJakDirectSuite(base,binding.definition,bank);
+  const idle=base.clips.find(c=>c.id==='player.idle');
+  assert.deepEqual(suite.clips.find(c=>c.id==='player.idle'),idle,'D must use the exact A/B/C idle');
   const runtime=createCharacterAnimationRuntime(p,suite),cases=[];
   const ids=['hips','spine','head','shoulderLeft','shoulderRight','elbowLeft','elbowRight','wristLeft','wristRight',
     'hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight'];
-  const segments=[['shoulderLeft','elbowLeft','Larm','Lforarm'],['elbowLeft','wristLeft','Lforarm','sk_lhand'],
-    ['shoulderRight','elbowRight','Rarm','Rforarm'],['elbowRight','wristRight','Rforarm','sk_rhand']];
-  for(const kind of ['idle','run-stop','walk-stop','tap-land','flip-land','double-land','climb-idle']) {
+  let nativeIdle;
+  for(const kind of ['native-idle','idle','run-stop','walk-stop','tap-land','flip-land','double-land','climb-idle']) {
     p.enterLevel('jak-idle');p.respawn(level,true,true);p.freeSkate=false;
-    p.onFootJumpStudy={...JAK_DIRECT_PHYSICS,flip:kind!=='tap-land'};runtime.restart();
+    p.onFootJumpStudy=kind==='native-idle'?null:{...JAK_DIRECT_PHYSICS,flip:kind!=='tap-land'};
+    runtime.setDocument(kind==='native-idle'?base:suite);runtime.restart();
     if(kind==='climb-idle') {
       p.pos.set(20,2.35,-1.1);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-1;
       p.walkVelocity.set(0,0,-4);p.lastVelZ=-4;p.rawInput=makeInput({moveY:1});
       assert.ok(p.tryLedgeGrab(level.walls.find(w=>Math.abs(w.max.y-3.35)<.01),level));
     }
-    const rows=[];let second=-1,maxSourceError=0,idleFrames=0;
+    const rows=[];let second=-1,maxNativePoseError=0,maxNativePointError=0,idleFrames=0;
     for(let f=0;f<420;f++) {
       const moving=kind==='run-stop'||kind==='walk-stop';
       const jumping=kind.endsWith('land'),hold=kind==='tap-land'?3:35;
@@ -33,7 +36,7 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
       if(second>=0&&f===second+1)input.jumpReleased=true;
       if(kind==='climb-idle'&&f===100)input.jumpPressed=true;
       p.camDir.set(0,0,-1);p.step(1/60,makeInput(input),level);level.update(1/60);p.commitRenderStep(level);
-      const d=runtime.diagnostics,point=id=>p.riderG.worldToLocal(binding.joints.get(id).getWorldPosition(new THREE.Vector3()));
+      const d=runtime.diagnostics;
       // Proportions contain nonuniform scale; normalize decomposed rotations
       // before measuring angular continuity in the final rendered hierarchy.
       const joints=Object.fromEntries(ids.map(id=>[id,{p:binding.joints.get(id).getWorldPosition(new THREE.Vector3()).toArray(),
@@ -42,11 +45,15 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
         rest:p.characterUpperArmRestAngleWeight,recovery:d.idleRecoveryWeight,joints};
       if(row.clip==='player.idle'&&row.blend===null&&f>200) {
         idleFrames++;
-        const source=bank.clips['stance-loop'],frame=Math.min(source.frames,Math.round(row.time*60)),ref=source.samples[frame];
-        for(const [j,c,s,t] of segments) {
-          const actual=point(c).sub(point(j)).normalize();
-          const expected=new THREE.Vector3().fromArray(ref[t].p).sub(new THREE.Vector3().fromArray(ref[s].p)).normalize();
-          maxSourceError=Math.max(maxSourceError,actual.angleTo(expected));
+        assert.equal(row.rest,1,'native resting arm angle was not restored');
+        const expected=a.sampleComposedClip(idle,row.time,d.motionContext);
+        for(const [id,joint] of Object.entries(expected.joints))if(joint.quaternion) {
+          maxNativePoseError=Math.max(maxNativePoseError,new THREE.Quaternion().fromArray(joint.quaternion)
+            .angleTo(new THREE.Quaternion().fromArray(runtime.lastSampledPose.joints[id].quaternion)));
+        }
+        if(kind==='idle')for(const id of ids) {
+          maxNativePointError=Math.max(maxNativePointError,new THREE.Vector3().fromArray(joints[id].p)
+            .distanceTo(new THREE.Vector3().fromArray(nativeIdle[f].joints[id].p)));
         }
       }
       rows.push(row);
@@ -65,11 +72,13 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
     }
     assert.ok(idleFrames>100,`${kind}: never settled into idle`);
     if(!measure) {
-      assert.ok(maxSourceError<.006,`${kind}: idle arms diverged from the source by ${maxSourceError} radians`);
+      assert.ok(maxNativePoseError<1e-6,`${kind}: idle differs from native by ${maxNativePoseError} radians`);
+      assert.ok(maxNativePointError<.002,`${kind}: rendered idle differs from A by ${maxNativePointError} metres`);
       assert.ok(maxHandoffAngle<.08,`${kind}: idle handoff snapped ${maxHandoffAngle} radians`);
       assert.ok(maxHandoffPoint<.04,`${kind}: idle handoff jumped ${maxHandoffPoint} metres`);
     }
-    cases.push({kind,idleFrames,maxSourceError,maxHandoffAngle,maxHandoffPoint,handoffs,
+    if(kind==='native-idle')nativeIdle=rows;
+    cases.push({kind,idleFrames,maxNativePoseError,maxNativePointError,maxHandoffAngle,maxHandoffPoint,handoffs,
       samples:rows.filter(r=>handoffs.some(h=>Math.abs(r.f-h.f)<=3))});
   }
   runtime.dispose();console.log(JSON.stringify({cases},null,2));
