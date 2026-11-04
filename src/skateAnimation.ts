@@ -209,25 +209,79 @@ export class SkateAnimation {
     return limb.socket.getWorldPosition(socket).distanceTo(target);
   }
 
-  /** Cancellable on-foot mount load. Preserve the current stride's sole
-   * targets while lowering the pelvis; no foot cycle or physics is replaced. */
-  applyMountLoad(weight:number,planted:boolean):void {
+  /** Cancellable on-foot mount load. Planted feet stay fixed; lifted stride
+   * feet gather toward the floor so a deep load cannot fold a heel into the hip. */
+  applyMountLoad(weight:number,groundNormal:THREE.Vector3):void {
     delete this.board.userData.skateMountLoad;
-    if(weight<=.001||!this.feet||!this.rider.parent)return;
-    const targets=this.feet.map(foot=>({position:foot.socket.getWorldPosition(new THREE.Vector3()),
-      rotation:foot.end.getWorldQuaternion(new THREE.Quaternion()),
-      pole:foot.mid.getWorldPosition(new THREE.Vector3())}));
+    if(weight<=.001||!this.feet||!this.hips||!this.rider.parent)return;
+    const targets=this.feet.map(foot=>{
+      const position=foot.socket.getWorldPosition(new THREE.Vector3());
+      const ankle=foot.end.getWorldPosition(new THREE.Vector3());
+      const root=foot.root.parent!;
+      const a=root.worldToLocal(foot.root.getWorldPosition(new THREE.Vector3()));
+      const b=root.worldToLocal(foot.mid.getWorldPosition(new THREE.Vector3()));
+      const c=root.worldToLocal(ankle.clone());
+      return {position,rotation:foot.end.getWorldQuaternion(new THREE.Quaternion()),
+        pole:foot.mid.getWorldPosition(new THREE.Vector3()),offset:ankle.sub(position),
+        reach:Math.max(a.distanceTo(c),.94*(a.distanceTo(b)+b.distanceTo(c)))};
+    });
     for(const foot of this.feet)for(const node of [foot.root,foot.mid,foot.end])
       this.mountLoadRotations.push({node,rotation:node.quaternion.clone()});
-    // The planted jump charge already supplies a squat. Add the larger
-    // visible load to moving strides, which the authored run otherwise hides.
-    const drop=(planted?.065:.20)*weight;
+    const sourceKnees=this.feet.map(foot=>foot.mid.getWorldPosition(new THREE.Vector3())
+      .sub(foot.root.getWorldPosition(new THREE.Vector3())).angleTo(foot.end.getWorldPosition(new THREE.Vector3())
+      .sub(foot.mid.getWorldPosition(new THREE.Vector3()))));
+    // Converge on a supported crouch height, not a fixed subtraction from
+    // the running bounce. Otherwise the run can lift the hips back up even
+    // while the hold meter is still loading. Scale the target with the legs.
+    const support=this.group.getWorldPosition(new THREE.Vector3());
+    const scaleY=this.rider.getWorldScale(new THREE.Vector3()).y;
+    const legHeight=Math.min(...this.feet.map(foot=>(foot.mid.position.length()*foot.root.scale.y+
+      foot.end.position.length()*foot.mid.scale.y)*scaleY));
+    const targetHeight=legHeight*.56+.04;
+    const hipHeight=this.hips.getWorldPosition(new THREE.Vector3()).sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y);
+    const drop=Math.max(0,hipHeight-targetHeight)*weight;
+    const plantedTargets=targets.map(target=>target.position.clone());
+    const plantedFeet=targets.map(target=>target.position.clone().sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y)<.035);
+    for(let i=0;i<targets.length;i++){
+      const target=targets[i];
+      const above=target.position.clone().sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y);
+      // A lifted running stride also draws underneath the hip. Lowering a
+      // fully extended forward shoe alone would ask for a longer leg.
+      const gather=THREE.MathUtils.smoothstep(above,.035,.18)*weight*.72;
+      const hip=this.feet[i].root.getWorldPosition(new THREE.Vector3());
+      const oldHeight=above;
+      target.position.x=THREE.MathUtils.lerp(target.position.x,hip.x,gather);
+      target.position.z=THREE.MathUtils.lerp(target.position.z,hip.z,gather);
+      const newHeight=target.position.clone().sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y);
+      target.position.y+=oldHeight-newHeight-Math.min(drop*1.65,Math.max(0,above-.035));
+      target.pole.y-=drop;
+    }
     const position=this.rider.getWorldPosition(new THREE.Vector3()).addScaledVector(Y,-drop);
     this.rider.position.copy(this.rider.parent.worldToLocal(position));
-    let error=0;
-    for(let i=0;i<2;i++)error=Math.max(error,this.solve(this.feet[i],targets[i].position,
-      targets[i].rotation,targets[i].pole,1,96));
-    this.board.userData.skateMountLoad={weight,drop,footError:error};
+    let error=0,reachCorrection=0;
+    for(let i=0;i<2;i++){
+      const target=targets[i],foot=this.feet[i];
+      if(!plantedFeet[i]){
+        // The unplanted shoe may gather, but never demand a longer leg than
+        // the source stride. Project in the actual affine parent frame.
+        const parent=foot.root.parent!;
+        const ankle=parent.worldToLocal(target.position.clone().add(target.offset)).sub(foot.root.position);
+        if(ankle.length()>target.reach){
+          ankle.setLength(target.reach).add(foot.root.position);
+          parent.localToWorld(ankle).sub(target.offset);
+          reachCorrection=Math.max(reachCorrection,target.position.distanceTo(ankle));
+          target.position.copy(ankle);
+        }
+      }
+      error=Math.max(error,this.solve(foot,target.position,target.rotation,target.pole,1,96));
+    }
+    const knees=this.feet.map(foot=>foot.mid.getWorldPosition(new THREE.Vector3())
+      .sub(foot.root.getWorldPosition(new THREE.Vector3())).angleTo(foot.end.getWorldPosition(new THREE.Vector3())
+      .sub(foot.mid.getWorldPosition(new THREE.Vector3()))));
+    let plantedFootError=0;
+    for(let i=0;i<2;i++)if(plantedFeet[i])plantedFootError=Math.max(plantedFootError,
+      this.feet[i].socket.getWorldPosition(new THREE.Vector3()).distanceTo(plantedTargets[i]));
+    this.board.userData.skateMountLoad={weight,drop,targetHeight,reachCorrection,footError:error,plantedFootError,sourceKnees,knees};
   }
 
   apply(p: SkatePoseInput): boolean {

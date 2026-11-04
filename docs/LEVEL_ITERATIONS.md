@@ -8797,3 +8797,32 @@ Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
   quality. No integration, push or publication is authorized or attempted.
 
 Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+## D — deeper rubbery mount (local authoring checkpoint)
+
+- 5 November 2026 NZDT, approximately 19 minutes prompt-to-local checkpoint
+  (10:41–11:00 NZDT), including shared validation-capacity waiting. D only;
+  live UI tuning, hold-to-skate/release-to-jump and A/B/C are unchanged.
+- The real hold meter loads earlier and converges on a much deeper supported
+  crouch. Torso and arm segments compress independently; planted soles remain
+  fixed, and lifted stride feet gather beneath the hips within their reach.
+  Committing produces a 0.40 m visual hop with exposed upward stretch and a
+  finite soft catch. Mount smear now ends after 0.10 s so it does not hide that
+  spring. Cancellation retains incoming compression speed and unwinds over
+  0.32 s; re-pressing continues from the current pose. No physical retuning.
+- The first 7,420-frame paired native check exposed an overfolded running leg.
+  Corrected the support height, lifted-foot gather and affine reach constraint.
+  Lite review of the corrected standing load retains soles within 0.8 mm;
+  14 unwind frames retain intended soles within 1.33 mm. Cancellation reaches
+  zero with the board hidden. Final spring and load captures are in external
+  `skate-mount-rubber/`; the console has no new warnings/errors.
+- Five modified TS modules transpile, test syntax and whitespace pass, and 726
+  pure envelope samples pass across three hold times and 30/60/120 fps.
+  **Validation incomplete:** the expanded 8,480-frame travel check, focused
+  contact/ollie checks, build and normal/native full-render review need a shared
+  slot. The helper returned 75 at 10:59 NZDT with both slots reserved. No heavy
+  job remains running. This checkpoint is WORKING, not READY or user accepted.
+- D is left in live play at local port 5189. Kick-push and carried-board grabs
+  remain removed. Nothing was integrated, pushed or published.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).

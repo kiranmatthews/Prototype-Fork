@@ -210,7 +210,7 @@ p.step = (dt: number, input: any, level: Level) => {
     const brake=!chargeStudy&&frame>=260&&frame<350&&remountFrame<0;
     const restart=remountFrame>=0&&frame<remountFrame+100;
     const demo={moveX:turn&&frame>=130&&frame<200?.65:0,
-      moveY:cancel&&frame>=54&&frame<100?0:brake?-1:frame<260||restart?1:0,
+      moveY:mode==='Skate standing mount'&&frame<30?0:cancel&&frame>=54&&frame<100?0:brake?-1:frame<260||restart?1:0,
       jumpHeld:chargeStudy?frame>=100&&frame<280:frame>=30&&frame<release||restart,
       jumpPressed:chargeStudy?frame===100:frame===30||frame===remountFrame,
       jumpReleased:chargeStudy?frame===280:frame===release||remountFrame>=0&&frame===remountFrame+100,
@@ -222,7 +222,8 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Cancel mount'&&travel?.phase==='cancel'&&frame>=57 ||
       stopAt==='Cancelled'&&cancel&&frame===80 ||
       stopAt==='Mount smear'&&travel?.phase==='mount'&&travel.smear&&travel.age>.08 ||
-      stopAt==='Mount hop'&&travel?.phase==='mount'&&travel.age>.25 ||
+      stopAt==='Mount hop'&&travel?.phase==='mount'&&!travel.smear&&travel.extension>.9 ||
+      stopAt==='Mount catch'&&travel?.phase==='mount'&&travel.settle>.9 ||
       stopAt==='Cruise'&&chargeStudy&&frame===85 ||
       stopAt==='Full charge'&&travel?.charge>.99&&frame>150 ||
       stopAt==='Dismount smear'&&travel?.phase==='dismount'&&travel.smear&&travel.age>.08 ||
@@ -393,7 +394,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
 };
 const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
   'Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges',
-  'Skate mount and stop','Skate cruise and charge','Skate cancel','Skate early ollie','Skate carve','Skate remount'],value=>{mode=value;resetInspector();});
+  'Skate mount and stop','Skate standing mount','Skate cruise and charge','Skate cancel','Skate early ollie','Skate carve','Skate remount'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -410,7 +411,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Preparation','Loaded preparation','Cancel mount','Cancelled','Mount smear','Mount hop','Cruise','Full charge','Dismount smear','Stowed'],value=>{stopAt=value;resetInspector();});
+  'Preparation','Loaded preparation','Cancel mount','Cancelled','Mount smear','Mount hop','Mount catch','Cruise','Full charge','Dismount smear','Stowed'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);

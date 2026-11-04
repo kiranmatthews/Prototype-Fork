@@ -7,7 +7,7 @@ const entry={id:'travel-test',name:'Board travel',data:{v:1,name:'Board travel',
   components:[{t:'platform',p:[0,-.5,0],s:[1000,1,1000]},{t:'gate',p:[0,0,-450]}]}};
 await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
   const {JAK_DIRECT_PHYSICS,createJakDirectSuite}=await server.ssrLoadModule('/tools/jak-direct-motion.ts');
-  const {SkateTravelMotion}=await server.ssrLoadModule('/src/skateTravelMotion.ts');
+  const {SkateTravelMotion,sampleSkateTravelMount,SKATE_TRAVEL}=await server.ssrLoadModule('/src/skateTravelMotion.ts');
   const a=await server.ssrLoadModule('/src/animation/index.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const binding=a.RigBinding.fromSculptRuntime(p.animationRig.root);
@@ -19,14 +19,14 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
   const knee=side=>joint('knee-'+side).sub(joint('hip-'+side)).angleTo(joint('ankle-'+side).sub(joint('knee-'+side)));
   const samples=[],errors=[];let frames=0;
   try{
-    for(const stance of [-1,1])for(const scenario of ['mount-stop','cancel','release-cancel','early-ollie','remount','carve','charge']){
+    for(const stance of [-1,1])for(const scenario of ['mount-stop','standing','cancel','release-cancel','early-ollie','remount','carve','charge']){
       for(const rider of [p,control]){
         rider.enterLevel('travel-test');rider.respawn(level,true);rider.freeSkate=scenario==='charge';rider.stance=stance;
         if(scenario==='charge')rider.speed=9;
       }
       runtime.restart();
       const phases=new Set();let hiddenFrames=0,smearFrames=0,remountStart=-1,mounts=0;
-      let maxLoadError=0,maxLoadDrop=0,maxPreparation=0,cancelSettled=false,maxLean=0,cruiseHip=0,chargeHip=0,chargeFeet=0;
+      let maxLoadError=0,maxLoadDrop=0,maxLoadKnee=0,maxPreparation=0,cancelSettled=false,maxLean=0,cruiseHip=0,chargeHip=0,chargeFeet=0;
       for(let frame=0;frame<530;frame++){
         const previous=p.boardG.userData.skateTravel;
         if(scenario==='remount'&&remountStart<0&&previous?.phase==='dismount')remountStart=frame;
@@ -34,7 +34,7 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
         const brake=!chargeStudy&&frame>=260&&frame<350&&remountStart<0;
         const remount=remountStart>=0&&frame<remountStart+100;
         const input=makeInput({moveX:scenario==='carve'&&frame>=130&&frame<200?.65:0,
-          moveY:scenario==='cancel'&&frame>=54&&frame<100?0:brake?-1:frame<260||remount?1:0,
+          moveY:scenario==='standing'&&frame<30?0:scenario==='cancel'&&frame>=54&&frame<100?0:brake?-1:frame<260||remount?1:0,
           jumpHeld:chargeStudy?frame>=100&&frame<280:frame>=30&&frame<release||remount,
           jumpPressed:chargeStudy?frame===100:frame===30||frame===remountStart,
           jumpReleased:chargeStudy?frame===280:frame===release||frame===remountStart+100&&remountStart>=0,
@@ -55,8 +55,11 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
         maxPreparation=Math.max(maxPreparation,pose.preparation);
         const load=board.userData.skateMountLoad;
         if(load){
+          maxLoadKnee=Math.max(maxLoadKnee,knee('left'),knee('right'));
+          if(load.knees.some((angle,i)=>angle>Math.max(2.2,load.sourceKnees[i]+.05)))errors.push({scenario,stance,frame,problem:'mount knee collapse',knees:[knee('left'),knee('right')]});
           maxLoadError=Math.max(maxLoadError,load.footError);maxLoadDrop=Math.max(maxLoadDrop,load.drop);
-          if(load.footError>.004)errors.push({scenario,stance,frame,problem:'preparation moved a sole',error:load.footError});
+          if(load.reachCorrection>.08)errors.push({scenario,stance,frame,problem:'excessive free-foot reach correction',distance:load.reachCorrection});
+          if(load.footError>.004||load.plantedFootError>.004)errors.push({scenario,stance,frame,problem:'preparation moved a sole',error:load.footError});
         }
         if(scenario==='cancel'&&frame===80){
           cancelSettled=pose.phase==='stowed'&&pose.preparation===0&&!board.visible&&!pose.smear;
@@ -71,13 +74,14 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
         }
       }
       samples.push({scenario,stance,phases:[...phases],hiddenFrames,smearFrames,mounts,
-        maxLoadError,maxLoadDrop,maxPreparation,cancelSettled,maxLean,cruiseHip,chargeHip,chargeFeet});
+        maxLoadError,maxLoadDrop,maxLoadKnee,maxPreparation,cancelSettled,maxLean,cruiseHip,chargeHip,chargeFeet});
       if(scenario==='cancel'||scenario==='release-cancel')assert.ok(!phases.has('mount')&&smearFrames===0,'cancel committed a board swap');
-      if(scenario==='cancel')assert.ok(phases.has('cancel')&&maxLoadDrop>.12,'cancel did not exercise the visible load');
+      if(scenario==='cancel')assert.ok(phases.has('cancel')&&maxLoadDrop>.28,'cancel did not exercise the visible load');
       if(scenario==='mount-stop'){
         for(const phase of ['prepare','mount','charge','dismount','stowed'])assert.ok(phases.has(phase),`missing ${phase}`);
-        assert.ok(maxLoadDrop>.15,'mount load was not visible');assert.ok(smearFrames>0&&smearFrames<30,'handoff cover is missing or persistent');
+        assert.ok(maxLoadDrop>.32,'mount load was not visible');assert.ok(smearFrames>0&&smearFrames<30,'handoff cover is missing or persistent');
       }
+      if(scenario==='standing')assert.ok(phases.has('prepare')&&phases.has('mount')&&maxLoadDrop>.15,'standing load/mount was not exercised');
       if(scenario==='carve')assert.ok(maxLean>.2,'turning never affected balance');
       if(scenario==='remount')assert.ok(mounts>=2,'remount was not exercised');
       if(chargeHip)assert.ok(cruiseHip-chargeHip>.12&&cruiseHip-chargeHip<.30,`charge depth ${cruiseHip-chargeHip}`);
@@ -91,7 +95,7 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
           preparing:time<1,holdProgress:time,charging:time<2,charge:time>1?1:0,braking:time>2.8&&time<3,
           heading:time>1&&time<2?.8*time:1.6,time});
         if(pose.smear)covered++;
-        assert.ok(Object.values(pose.deformations).every(v=>Number.isFinite(v)&&v>.9&&v<1.1));
+        assert.ok(Object.values(pose.deformations).every(v=>Number.isFinite(v)&&v>.82&&v<1.18));
       }
       assert.equal(pose.phase,'stowed');assert.equal(pose.smear,false);assert.equal(pose.weight,0);
       assert.ok(covered/fps<.85,'smear never settled');
@@ -106,13 +110,22 @@ await withSkateRuntime(async({server,THREE,Player,level,player:p,TUNING})=>{
         pose=motion.step(1/fps,{...base,preparing:true,holdProgress:frame/fps/hold,time:frame/fps});
       const loaded=pose.preparation;
       pose=motion.step(1/fps,{...base,preparing:false,holdProgress:0,time:1});
-      assert.ok(pose.preparation<=loaded&&pose.preparation>0&&!pose.smear);
+      assert.ok(Math.abs(pose.preparation-loaded)<4/fps&&pose.preparation>0&&!pose.smear);
       const reversing=pose.preparation;
       pose=motion.step(1/fps,{...base,preparing:true,holdProgress:0,time:1+1/fps});
       assert.equal(pose.preparation,reversing,'re-press restarted the mount pose');
       for(let frame=0;frame<fps/2;frame++)pose=motion.step(1/fps,{...base,preparing:false,holdProgress:0,time:2+frame/fps});
       assert.equal(pose.preparation,0);assert.equal(pose.phase,'stowed');assert.equal(pose.smear,false);
     }
+    let peakLift=0,visibleExtension=0;
+    for(let frame=0;frame<120;frame++){
+      const time=frame/120,pose=sampleSkateTravelMount(time);
+      assert.ok(Object.values(pose).every(Number.isFinite));
+      peakLift=Math.max(peakLift,pose.lift);
+      if(time>SKATE_TRAVEL.mountCover)visibleExtension=Math.max(visibleExtension,pose.extension);
+      if(time>=SKATE_TRAVEL.mount)assert.deepEqual(pose,{lift:0,tuck:0,settle:0,extension:0});
+    }
+    assert.ok(peakLift>.39&&visibleExtension>.98,'spring is too small or hidden behind the smear');
     const report={frames,samples,errors,errorCount:errors.length};
     console.log(JSON.stringify(report,null,2));
     if(process.env.SKATE_TRAVEL_REPORT)await writeFile(process.env.SKATE_TRAVEL_REPORT,JSON.stringify(report,null,2));
