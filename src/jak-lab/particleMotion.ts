@@ -7,6 +7,7 @@ const STEP_TICKS = 5;
 type Values = Record<string, number>;
 export interface LabParticle {
   id: number; alive: boolean; texture: string; values: Values; flags: Set<string>;
+  definitionId: number;
   position: Vector3; orientation: Quaternion; orbit: Quaternion; radius: number;
   parent: LabParticle | null; child: LaunchState | null; is3d: boolean;
   callback: string; birth: string; age: number;
@@ -43,6 +44,8 @@ export interface ParticleHost {
  * callbacks are reported explicitly until their host-object ports exist. */
 export class ParticleMotion {
   readonly particles: LabParticle[] = [];
+  /** Source callback list stores live sprite pointers, read after integration. */
+  readonly auxiliaryParticles: LabParticle[] = [];
   readonly issues = new Set<string>();
   readonly textureIds = new Set<string>();
   readonly referencedParticleIds = new Set<number>();
@@ -54,6 +57,7 @@ export class ParticleMotion {
   clock = 0;
   dropped = 0;
   queueDrops = 0;
+  auxiliaryDrops = 0;
   hour = 12;
   cameraDistance = 0; // GOAL units; zero disables distance attenuation in the lab.
   replay: HostReplay | null = null;
@@ -100,7 +104,7 @@ export class ParticleMotion {
           if (name === 'birth-func-set-quat') this.hostInputs.add('particle quaternion');
           if (name === 'birth-func-ocean-height') this.hostInputs.add('ocean height');
         }
-        if (field.field === 'flags' && (field.value as string[]).includes('aux-list')) this.issues.add('Sprite auxiliary geometry');
+        if (field.field === 'flags' && (field.value as string[]).includes('aux-list')) this.hostInputs.add('root');
         if (field.field === 'flags' && (field.value as string[]).includes('bit12')) this.issues.add('Time-of-day host colour');
         if (field.field === 'next-launcher') visit(field.base ?? 0);
       }
@@ -121,6 +125,7 @@ export class ParticleMotion {
     return Math.fround((field.base ?? 0) + random * (field.mult ?? 1));
   }
   private assign(particle: LabParticle, definition: ParticleDefinition, relaunch = false): void {
+    particle.definitionId = definition.id;
     if (relaunch) particle.values['next-launcher'] = 0;
     for (const field of definition.fields) {
       // Relaunch preserves all unspecified sprite/CPU fields. It does not rerun
@@ -146,6 +151,18 @@ export class ParticleMotion {
     return this.turn.setFromEuler(new Euler((values[`${prefix}-x`] ?? 0) * ANGLE,
       (values[`${prefix}-y`] ?? 0) * ANGLE, (values[`${prefix}-z`] ?? 0) * ANGLE, order));
   }
+  private setupAuxiliary(p: LabParticle, relaunch = false): void {
+    if (!p.flags.has('aux-list')) return;
+    if (p.is3d) {this.issues.add('Auxiliary sprite in a 3D particle system'); return;}
+    // sp-launch-particles-var and sp-relaunch-particle-2d replace the callback,
+    // suppress the ordinary quad, and prevent alpha-zero death. RGB is radii.
+    p.callback = 'add-to-sprite-aux-list';
+    p.values.a = p.values['fade-a'] = 0;
+    p.flags.delete('bit2');
+    // Initial launch clamps to [3,11]. A later invalid flag uses the draw-time
+    // fallback to 11 instead; keep those two source rules distinct.
+    if (!relaunch) p.values['rot-x'] = Math.max(3, Math.min(11, Math.trunc(p.values['rot-x'] ?? 0)));
+  }
   private spawn(state: LaunchState, rate = 1): void {
     const definition = this.definitions.get(state.item.particle); if (!definition) return;
     const num = definition.fields.find(field => field.field === 'num');
@@ -161,7 +178,7 @@ export class ParticleMotion {
     while (state.credit >= 1) {
       state.credit--;
       if (this.particles.length >= this.capacity) {this.dropped++; continue;}
-      const p: LabParticle = {id: ++this.nextId, alive: true, texture: '', values: {}, flags: new Set(),
+      const p: LabParticle = {id: ++this.nextId, definitionId: definition.id, alive: true, texture: '', values: {}, flags: new Set(),
         position: new Vector3(), orientation: new Quaternion(), orbit: new Quaternion(), radius: 0,
         parent: state.parent, child: null, is3d: state.item.flags?.includes('is-3d') ?? false,
         callback: '', birth: '', age: 0, blend: 'normal', depthWrite: false, controlled: !state.direct};
@@ -191,6 +208,7 @@ export class ParticleMotion {
       }
       p.position.add(p.parent?.position ?? state.origin ?? this.host.root);
       this.birth(p);
+      this.setupAuxiliary(p);
       if (state.item.binding) {
         const child = this.states.find(candidate => candidate.item.particle === state.item.binding && !candidate.active);
         if (child) {child.active = true; child.launched = false; child.parent = p; p.child = child;}
@@ -254,7 +272,11 @@ export class ParticleMotion {
   }
   private callback(p: LabParticle): void {
     const v = p.values, name = p.callback, program = this.callbackPrograms[name];
-    if (program) {
+    if (name === 'add-to-sprite-aux-list') {
+      if (this.auxiliaryParticles.length < 256) this.auxiliaryParticles.push(p);
+      else this.auxiliaryDrops++;
+      v.a = 0;
+    } else if (program) {
       const below = p.position.y < (v.userdata ?? 0);
       if ((program.comparison === 'below' ? !below : below) || program.descending && (v['vel-y'] ?? 0) >= 0) return;
       for (const action of program.actions) {
@@ -306,6 +328,7 @@ export class ParticleMotion {
   private step(): void {
     const previous = this.clock; this.clock += STEP_TICKS;
     this.soundEvents.length = 0;
+    this.auxiliaryParticles.length = 0;
     if (this.replay && previous >= this.replayCleanupTime) {
       // kill-and-free-particles matches the launch-control key. Unkeyed
       // secondary callback splashes belong to the shared particle system.
@@ -360,6 +383,7 @@ export class ParticleMotion {
             [v.x, v.y, v.z] = p.position.toArray();
             if (p.is3d) v['rot-x'] = v['rot-y'] = v['rot-z'] = 0;
             this.assign(p, next, true);
+            if (!p.is3d) this.setupAuxiliary(p, true);
             p.position.set(v.x, v.y, v.z);
             if (p.is3d) {
               const nextRotation = this.rotation(v, 'rot');
@@ -421,6 +445,7 @@ export class ParticleMotion {
     this.particles.length = 0; this.clock = this.carry = this.nextId = this.dropped = this.queueDrops = 0; this.randomState = this.seed || 1;
     this.soundRandomState = (this.seed ^ 0x9e3779b9) || 1; this.copyToggle = 0;
     this.directCredits.clear(); this.queuedLaunches.length = 0; this.soundEvents.length = 0;
+    this.auxiliaryParticles.length = 0; this.auxiliaryDrops = 0;
     for (const state of this.states) {
       state.active = !state.item.flags?.includes('start-dead'); state.launched = false; state.credit = 0; state.parent = null;
       state.offset = state.item.offset ?? 0; state.spawnTime = -30000;

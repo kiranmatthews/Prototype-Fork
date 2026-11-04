@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Jak distortion GPU checks</title>
+<style>body{margin:24px;background:#10212b;color:#e6eee9;font:14px system-ui}canvas{display:block;width:960px;height:540px;max-width:100%;margin:16px 0}button{padding:8px 14px;margin-right:8px}pre{white-space:pre-wrap}h1{font-size:20px}</style>
+<h1>Jak distortion · framebuffer and depth checks</h1>
+<button id="run">Run GPU checks</button><button id="original">Show Original warp</button><button id="gouraud">Show Gouraud warp</button>
+<p>Pink bar: foreground occlusion. Green bar: ordinary particle drawn after distortion.</p>
+<canvas aria-label="Distortion validation scene"></canvas><pre id="result">Ready</pre>
+<script type="module" src="./distortion-review.ts"></script>

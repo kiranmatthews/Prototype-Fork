@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {ParticleMotion, type LabParticle} from './particleMotion';
 import {assetURL, type Catalogue, type EffectDefinition, type HostReplay, type RenderingMode} from './types';
+import {DistortionBatch, PARTICLE_SPRITE_LAYER} from './distortion';
 
 const vertexShader = /* glsl */`
   attribute vec4 profile;
@@ -123,7 +124,7 @@ class SpriteBatch {
   constructor(readonly texture: THREE.Texture, blend: LabParticle['blend'], depthWrite: boolean) {
     this.original = new THREE.Mesh(originalGeometry(),material(texture,true,blend,depthWrite));
     this.gouraud = new THREE.Mesh(gouraudGeometry(texture),material(texture,false,blend,depthWrite));
-    for(const mesh of [this.original,this.gouraud]) {mesh.frustumCulled=false;mesh.renderOrder=2;}
+    for(const mesh of [this.original,this.gouraud]) {mesh.frustumCulled=false;mesh.renderOrder=2;mesh.layers.set(PARTICLE_SPRITE_LAYER);}
   }
   write(particles: LabParticle[]): void {
     if(particles.length>this.capacity) {
@@ -161,10 +162,12 @@ export class ParticleExhibit {
   readonly alternative = new THREE.Group();
   private readonly batches = new Map<string,SpriteBatch>();
   private readonly textures = new Map<string,THREE.Texture>();
+  private distortion: DistortionBatch | null = null;
   private readonly extent: number;
+  private readonly sourceRadius: number;
   private mode: RenderingMode = 'compare';
   private nextDirectLaunch = 300;
-  private constructor(readonly definition: EffectDefinition, catalogue: Catalogue) {
+  private constructor(readonly definition: EffectDefinition, catalogue: Catalogue, private readonly sceneTexture: THREE.IUniform) {
     this.motion = new ParticleMotion(definition,new Map(catalogue.particles.map(p=>[p.id,p])),12000,definition.id+1,catalogue.callbackPrograms);
     this.issues=this.motion.issues;
     const timings=new Set<string>();
@@ -177,15 +180,16 @@ export class ParticleExhibit {
       typeof id==='number'&&this.motion.referencedParticleIds.has(id)))??[];
     if(patches.length)this.issues.add(`Host emission changes: ${patches.length} source sites`);
     const bounds=definition.bounds;
-    this.extent=Math.min(1,3.5/Math.max(1,bounds?.[4]??1));
+    this.sourceRadius=Math.max(1,bounds?.[4]??1);
+    this.extent=Math.min(1,3.5/this.sourceRadius);
     const centre=bounds?new THREE.Vector3(bounds[1],bounds[2],bounds[3]):new THREE.Vector3();
     for(const group of [this.original,this.alternative]) {
-      const display=new THREE.Group();display.position.copy(centre).negate();group.add(display);
+      const display=new THREE.Group();display.position.copy(centre).negate();display.position.y+=this.sourceRadius;group.add(display);
     }
     this.root.add(this.original,this.alternative);this.setRendering('compare');
   }
-  static async load(definition: EffectDefinition,catalogue: Catalogue): Promise<ParticleExhibit> {
-    const exhibit=new ParticleExhibit(definition,catalogue);
+  static async load(definition: EffectDefinition,catalogue: Catalogue,sceneTexture: THREE.IUniform): Promise<ParticleExhibit> {
+    const exhibit=new ParticleExhibit(definition,catalogue,sceneTexture);
     const textures=new Map(catalogue.textures.map(texture=>[texture.id,texture]));
     const loader=new THREE.TextureLoader();
     // Bound image decoding bursts when an effect contains many sprite types.
@@ -203,14 +207,20 @@ export class ParticleExhibit {
     }
   }
   get scale(): number{return this.original.scale.x;}
+  get distortions(): number{return this.distortion?.count??0;}
+  get inspectionSize():THREE.Vector3 {
+    const radius=this.sourceRadius*this.scale;
+    return new THREE.Vector3(this.mode==='compare'?2*(Math.abs(this.original.position.x)+radius):2*radius,2*radius,2*radius);
+  }
   setReplay(index: number): void {this.motion.replay=this.replays[index]??null;this.restart();}
   setRendering(mode:RenderingMode):void {
     this.mode=mode;this.original.visible=mode!=='gouraud';this.alternative.visible=mode!=='original';
-    this.original.position.x=mode==='compare'?-2.6:0;this.alternative.position.x=mode==='compare'?2.6:0;
     this.setNativeScale(false);
   }
   setNativeScale(native:boolean):void {
     for(const group of [this.original,this.alternative])group.scale.setScalar(native?1:this.extent);
+    const offset=this.mode==='compare'?Math.max(2.6,this.sourceRadius*this.scale+.6):0;
+    this.original.position.x=-offset;this.alternative.position.x=offset;
   }
   update(dt:number):void {
     if(this.definition.directLaunch&&this.motion.clock>=this.nextDirectLaunch) {
@@ -219,6 +229,7 @@ export class ParticleExhibit {
     this.motion.update(dt);
     const grouped=new Map<string,LabParticle[]>();
     for(const particle of this.motion.particles) {
+      if(particle.callback==='add-to-sprite-aux-list')continue;
       const key=`${particle.texture}:${particle.blend}:${particle.depthWrite}`;
       if(!this.batches.has(key)) {
         const texture=this.textures.get(particle.texture);if(!texture)continue;
@@ -228,14 +239,21 @@ export class ParticleExhibit {
       let list=grouped.get(key);if(!list)grouped.set(key,list=[]);list.push(particle);
     }
     for(const [id,batch] of this.batches)batch.write(grouped.get(id)??[]);
+    if(this.motion.auxiliaryParticles.length&&!this.distortion) {
+      this.distortion=new DistortionBatch(this.sceneTexture);
+      this.original.children[0].add(this.distortion.original);this.alternative.children[0].add(this.distortion.gouraud);
+    }
+    this.distortion?.write(this.motion.auxiliaryParticles);
   }
   restart():void {this.nextDirectLaunch=300;this.motion.reset();this.update(1/60);}
   get diagnostics(){return {view:this.mode,particles:this.motion.particles.length,ticks:this.motion.clock,
     dropped:this.motion.dropped,sourceQueueDrops:this.motion.queueDrops,batches:this.batches.size,
+    distortions:this.distortions,auxiliaryDrops:this.motion.auxiliaryDrops,
     replay:this.motion.replayPhase,replaySource:this.motion.replay?.source,hostInputs:[...this.motion.hostInputs],issues:[...this.issues]};}
   dispose():void {
     for(const batch of this.batches.values())batch.dispose();
     for(const texture of this.textures.values())texture.dispose();
+    this.distortion?.dispose();
     this.batches.clear();this.textures.clear();this.root.removeFromParent();
   }
 }

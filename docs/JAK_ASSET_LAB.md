@@ -73,10 +73,10 @@ The complete 605-model pack passed semantic and gzip verification. Its size is:
 | Raw source models | 3,665,798,144 |
 | Unique packed model files | 143,019,250 |
 | Unique original image files | 79,944,784 |
-| Catalogue | 8,716,870 |
-| Packed assets and catalogue | **231,680,904** |
+| Catalogue | 8,816,274 |
+| Packed assets and catalogue | **231,780,308** |
 
-The standalone frontend adds approximately 653 KB before HTTP compression.
+The standalone frontend adds approximately 662 KB before HTTP compression.
 This needs a separate delivery origin rather than the main game's remaining
 Pages allowance. The release coordinator owns hosting and deployment setup.
 The frontend accepts `?catalogue=<URL>` with that host's CORS support.
@@ -113,7 +113,8 @@ unported; name coverage does not prove complete host reconstruction.
 - Inspect every source model and its
   Gouraud counterpart, all animations/material classes, and large scenes.
 - Port and exercise host-dependent callbacks, runtime particle patches, dynamic
-  texture assignments, screen-space HUD effects and auxiliary sprite geometry.
+  texture assignments and screen-space HUD effects. Auxiliary distortion now
+  has both renderers; two declared emitters still need host activation tracing.
   The inspector reports known gaps instead of presenting them as faithful ports.
 - Trace the remaining 87 particle definitions and computed launch references.
 - Inventory and expose the static TIE/shrub prototypes within backgrounds, not
@@ -176,6 +177,7 @@ Focused checks currently pass:
 python3 -m unittest discover -s tools/jak-lab -p 'test_*.py' -v
 node tools/jak-lab/test-particle-motion.mjs
 node tools/jak-lab/test-model-geometry.mjs
+node tools/jak-lab/test-distortion.mjs
 npx tsc --noEmit
 
 # Run this whole-catalogue simulation through the shared heavy-job guard.
@@ -191,11 +193,13 @@ Source inventory tests cover direct launches, runtime patches, callback lookup,
 graph reachability and reporting malformed source. Pure particle checks cover
 coordinate order, relaunch aliases/quaternions, blending/depth flags, scheduling,
 hour/distance gates, contact/birth callbacks, queue limits and fixed-step replay.
-Ten Python tests, both focused Node checks, TypeScript and diff checks pass.
+Eighteen Python tests, the focused Node checks, TypeScript and diff checks pass.
 
 The whole-particle audit exercises all 745 group/direct exhibits for three
-seconds each: 30,363,635 particle-state samples, no non-finite values or invalid
-quaternions, and 2,428 definitions reached through their source graphs. It also
+seconds each: 30,479,063 particle-state samples, no non-finite values or invalid
+quaternions, and 2,428 definitions reached through their source graphs. Actual
+simulation observes 2,320 current definitions, including continuation changes;
+graph reach is not the same as executing a definition. It also
 records 29 zero-emission exhibits and two held emitters with capacity drops.
 Some have zero source rates until a host updates them; the robot-boss splash is
 normally enabled for only four animation frames. These remain fidelity work,
@@ -228,9 +232,9 @@ draws; full packing then completed with exact verification. The previously
 validated jump playtest was restored independently; its evidence is not lab
 validation. No lab or animation changes have been integrated or published.
 
-## Source tracker timing — next local increment
+## Source tracker timing — verified local increment
 
-The next increment adds explicit `part-tracker` replay timing from the source
+The inspector supports explicit `part-tracker` replay timing from the source
 initializer and process loop. State bodies now retain their owner/context in
 the inventory, increasing recorded group uses from 290 to 399. The latest scan
 contains 113 tracker launch sites: 82 have known timing without custom callback,
@@ -249,11 +253,19 @@ frames. Launch placement is normalized to the exhibit origin; this does not
 claim reconstruction of the full host scene or later external state changes.
 
 Eighteen focused Python tests, the particle lifecycle regression and TypeScript
-pass. The new whole-source replay audit is ready, but **packed metadata refresh,
-full replay audit, final build and browser review are pending shared capacity**.
-The guard returned exit 75; that command did not start. The previously validated
-231,680,904-byte pack and built frontend remain unchanged. The updated source
-analysis is prepared separately at `.jak-lab-data/export/catalogue.next.json`.
+pass. The guarded packed-metadata refresh, full replay audit, builds and browser
+review have completed. The authoritative raw catalogue and packed catalogue now
+contain the same source replay metadata. Model and image bytes are unchanged.
+All 65 replay configurations across 64 groups pass 26,599 fixed frames and
+2,183,690 particle samples, with no non-finite states, zero-emission cases or
+capacity drops. This source-burst audit is separate from the held-emission audit.
+
+The browser review exercised crate group 71's five-tick burst and its twenty-tick
+Misty Island override, 1,500-tick linger, final cleanup and restart. The first
+frame contains 30 particles; cleanup reaches zero, and restart restores 30.
+Normal 720p and native 2560×1440 views have no console warnings/errors. Evidence:
+`.jak-lab-data/evidence/host-replay-browser.json` and the two `tracker-crate-*`
+images. The earlier capacity deferral is resolved, not an outstanding job.
 
 Source analysis can now be refreshed without re-reading multi-GB model files,
 but only when all 533 source-file hashes match the previous inventory:
@@ -268,8 +280,8 @@ python3 tools/jak-lab/catalogue.py \
 The packer also supports a metadata-only refresh. It checks every source asset
 identity against the verified pack, every prior semantic report entry, and every
 stored asset's bytes/hash before atomically replacing the catalogue. Changed
-assets fail and require full packing. The following checks remain to run through
-the shared resource guard, followed by the standalone build and browser review:
+assets fail and require full packing. For future source-only changes, run these
+through the shared resource guard before the standalone build/browser review:
 
 ```sh
 python3 tools/jak-lab/pack_assets.py \
@@ -282,6 +294,59 @@ node tools/jak-lab/audit_host_replays.mjs \
 ```
 
 After those checks pass, promote `catalogue.next.json` to the raw catalogue and
-refresh the delivery byte/hash evidence. The remaining 87 unassigned definitions
+refresh the delivery byte/hash evidence. This promotion is complete for the
+tracker increment. The remaining 87 unassigned definitions
 include 69 with declared birth counts and 18 continuation-only definitions;
 tracing their computed/unused host paths is still required.
+
+## Auxiliary distortion — source geometry and Gouraud alternative
+
+The auxiliary sprite list is a framebuffer-distortion pass, not an ordinary
+textured puff. Its port follows the local `sprite-distort.gc` and particle
+launcher sources plus the renderer pinned to OpenGOAL commit
+`b6c8430c0b0a5cb139b939bcf0ffd25285b896c7`:
+[Sprite3_Distort.cpp](https://github.com/open-goal/jak-project/blob/b6c8430c0b0a5cb139b939bcf0ffd25285b896c7/game/graphics/opengl_renderer/sprite/Sprite3_Distort.cpp).
+Six renderer/shader source hashes are recorded in the ignored
+`.jak-lab-data/native-source/distortion-provenance.json`.
+
+The source reuses `rot-x` for a 3–11 slice count and the RGB fields for outer,
+inner-geometry and inner-sampling radii. The lab preserves its continuous
+five-vertices-per-wedge triangle strip, including joins. Launch/relaunch installs
+the implicit auxiliary callback, clears alpha-death and zeros alpha/fade-alpha;
+the queued sprite remains a live reference to the post-integration values.
+Initial launch clamps slices, while relaunch retains the draw-time fallback.
+The source's 256-entry auxiliary capacity applies independently to each lab
+exhibit simulation; the mirrored comparison does not consume a second slot.
+
+Rendering retains the scene depth buffer and source order: scene, frozen
+framebuffer copy, auxiliary distorters, ordinary sprites. Original samples the
+frozen image per fragment. Gouraud samples it at the same mesh's vertices and
+interpolates their colors, with no framebuffer lookup in its fragment shader.
+The Gouraud variant is deliberately a color approximation of refraction, not
+pixel-identical distortion. A vertex displacement-strength mask leaves the
+outer ring/center untouched and makes a zero warp disappear exactly. The
+inspection camera adapts the source NTSC projection/radius cap; reconstruction
+of the original host camera and scene is still separate fidelity work.
+
+The complete particle audit observes 644,749 auxiliary samples and 134 of 136
+declared auxiliary emitters, with no auxiliary-capacity drops. Definition 1730
+starts disabled in the steam-cap plume; definition 1433 has no literal launch
+path found yet. Neither is silently labeled unused. Observed auxiliary IDs also
+include continuation definitions that inherit the callback.
+
+Focused checks cover initial/relaunch flags, alpha-zero lifetime, live sprite
+references, the source capacity, all slice topologies, shared comparison meshes,
+draw order, resizing and restoration after renderer exceptions. The dev-only
+`tools/jak-lab/distortion-review.html` fixture also compares actual GPU pixels at
+960×540, 1920×1080 and 640×360. Original zero-warp color differs by at most one
+byte (the source's 256/255 multiplier); Gouraud zero warp differs by zero bytes.
+Foreground depth and later-sprite errors are zero at all sizes. Actual warps
+change the framebuffer, and original/Gouraud visibly differ as intended.
+The report is `.jak-lab-data/evidence/distortion-gpu-checks.json`.
+
+Full-render checks cover Fire Canyon group 250 and sunken heatpipe group 332 in
+both views, normal/native resolution and original world scale. Inspection
+placement keeps the bounded particles above their pedestal and separates the
+comparison copies at native scale. No console warnings/errors. Images and the
+combined report are under `.jak-lab-data/evidence/distortion-*`. These checked
+examples do not claim whole-catalogue visual verification.

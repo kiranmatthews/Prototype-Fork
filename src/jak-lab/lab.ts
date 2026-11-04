@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {ModelExhibit} from './models';
 import {ParticleExhibit} from './particles';
+import {ParticleRenderPass} from './distortion';
 import type {Catalogue, EffectDefinition, Exhibit, RenderingMode} from './types';
 import {configureAssetBase} from './types';
 import './lab.css';
@@ -14,7 +15,7 @@ host.innerHTML=`
   <div class="camera-tools"><button id="explore" aria-pressed="false">Explore</button><button id="focus">Focus exhibit</button><button class="toggle-panels" id="panels">Details</button></div>
   <aside class="panel inspection" aria-label="Exhibit inspection"><p class="eyebrow" id="selected-kind">Original / Gouraud</p><h2 id="selected-name">Loading…</h2><p class="muted" id="selected-area"></p><div class="mode-switch"><button data-mode="original">Original</button><button data-mode="gouraud">Gouraud</button><button data-mode="compare" aria-pressed="true">Both</button></div><div class="inspection-content"><div class="row"><button id="pause" aria-pressed="false">Pause</button><button id="restart">Restart</button><select id="speed" aria-label="Playback speed"><option value=".25">¼ speed</option><option value=".5">½ speed</option><option value="1" selected>1× speed</option><option value="2">2× speed</option></select></div><label class="field" id="animation-field">SOURCE ANIMATION<select id="animation" aria-label="Source animation"></select></label><label class="field" id="timeline-field">ANIMATION TIME<input id="timeline" type="range" min="0" max="1" step=".001" value="0" aria-label="Animation time"></label><label class="check"><input type="checkbox" id="native-scale">Show at original world scale</label><label class="field">RENDER RESOLUTION<select id="resolution" aria-label="Render resolution"><option value="720">720p</option><option value="native" selected>MAX / native</option></select></label><div class="status" id="status"></div><div class="statline" id="statistics"></div><div class="source" id="provenance"></div></div></aside>
   <div class="loading" role="status" id="loading">Opening the local source archive…</div>
-  <footer class="footer"><span><kbd>W A S D</kbd> move · <kbd>Q E</kbd> down / up · <kbd>Shift</kbd> faster · drag to look / orbit</span><div class="legend"><span>Original assets</span><span>Texture-free Gouraud</span></div><span id="render-stats"></span></footer>`;
+  <footer class="footer"><span><kbd>W A S D</kbd> move · <kbd>Q E</kbd> down / up · <kbd>Shift</kbd> faster · drag to look / orbit</span><div class="legend"><span>Original assets</span><span>Gouraud variants</span></div><span id="render-stats"></span></footer>`;
 const element=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const canvas=host.querySelector<HTMLCanvasElement>('canvas.world')!;
 const loading=element('loading');
@@ -55,6 +56,7 @@ async function boot():Promise<void> {
   const locations=new Map(exhibits.map((exhibit,index)=>[exhibit.id,new THREE.Vector3((index%8-3.5)*16,0,-Math.floor(index/8)*17)]));
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
   renderer.setPixelRatio(devicePixelRatio);renderer.setSize(innerWidth,innerHeight);
+  const particlePass=new ParticleRenderPass();
   renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
   const scene=new THREE.Scene();scene.background=new THREE.Color('#101e2a');
   const galleryFog=new THREE.Fog('#101e2a',38,125);scene.fog=galleryFog;
@@ -94,7 +96,8 @@ async function boot():Promise<void> {
   }
   function focus():void {
     const point=locations.get(selected.id)!,view=loaded.get(selected.id);
-    const size=view instanceof ModelExhibit?view.inspectionSize:new THREE.Vector3(8,4,6);
+    const size=view?view.inspectionSize:new THREE.Vector3(8,4,6);
+    const caption=labels.get(selected.id);if(caption)caption.position.y=point.y+size.y+1.5;
     const radius=Math.max(2,size.length()*.5);
     // Reserve the central viewport for the exhibit; the two fixed panels cover
     // its sides. Native-size backgrounds also need a larger far plane and orbit.
@@ -148,7 +151,7 @@ async function boot():Promise<void> {
     } else if(view instanceof ParticleExhibit) {
       status.classList.toggle('pending',view.issues.size>0);
       status.textContent=view.issues.size?`Source graph loaded. Fidelity work remaining:\n${[...view.issues].join('\n')}`:
-        'Source emission graph. Original sprites and texture-free Gouraud meshes share one simulation. Visual verification pending.';
+        'Source emission graph. Original and Gouraud views share one simulation. Distortion samples the scene per pixel in Original and per vertex in Gouraud. Visual verification pending.';
       element('provenance').textContent=`${selected.effect!.source.file}:${selected.effect!.source.line}\n`+
         (selected.effect!.directLaunch?`Direct emitter ${selected.effect!.directLaunch!.particle} · launched once per second for inspection`:
           `Group ${selected.effect!.id} · ${selected.effect!.items.length} launch bindings`);
@@ -194,11 +197,12 @@ async function boot():Promise<void> {
       if(!labels.has(id))labels.set(id,label(exhibit));
       if(loaded.has(id)||pending.has(id)||errors.has(id)||pending.size>=2)continue;
       pending.add(id);
-      const promise=exhibit.model?ModelExhibit.load(exhibit.model):ParticleExhibit.load(exhibit.effect!,catalogue);
+      const promise=exhibit.model?ModelExhibit.load(exhibit.model):ParticleExhibit.load(exhibit.effect!,catalogue,particlePass.sceneTexture);
       void promise.then(view=>{
         pending.delete(id);
         if(!wanted.has(id)){view.dispose();return;}
         view.root.position.copy(locations.get(id)!).setY(.16);view.setRendering(mode);scene.add(view.root);loaded.set(id,view);
+        const caption=labels.get(id);if(caption)caption.position.y=view.inspectionSize.y+1.5;
         if(id===selected.id){view.setNativeScale(nativeScale.checked);inspect();if(!exploring)focus();}
       }).catch(error=>{pending.delete(id);errors.set(id,String(error));if(id===selected.id)inspect();console.error('Exhibit load failed',id,error);});
     }
@@ -270,11 +274,11 @@ async function boot():Promise<void> {
     if(statsTick>.25){statsTick=0;
       const view=loaded.get(selected.id);element('statistics').textContent=view instanceof ModelExhibit?
         `DISPLAY SCALE  ${view.scale.toFixed(3)}×\nANIMATION  ${view.time.toFixed(2)} s / ${view.duration.toFixed(2)} s`:
-        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nEMISSION  ${view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
+        view instanceof ParticleExhibit?`PARTICLES  ${view.motion.particles.length}\nDISTORTERS  ${view.distortions}\nAUXILIARY DROPS  ${view.motion.auxiliaryDrops}\nEMISSION  ${view.motion.replayPhase}\nSOURCE CLOCK  ${view.motion.clock} / 300 Hz\nCAPACITY DROPS  ${view.motion.dropped}\nDISPLAY SCALE  ${view.scale.toFixed(3)}×`:'';
       if(view instanceof ModelExhibit&&view.duration)element<HTMLInputElement>('timeline').value=String((view.time%view.duration)/view.duration);
       element('render-stats').textContent=`${Math.round(1/Math.max(.001,frameTime))} fps · ${renderer.domElement.width}×${renderer.domElement.height} · ${loaded.size} nearby`;
     }
-    renderer.render(scene,camera);
+    particlePass.render(renderer,scene,camera,[...loaded.values()].some(view=>view instanceof ParticleExhibit&&view.distortions>0));
   });
   // Read-only diagnostic surface for whole-catalogue validation and inspection.
   Object.defineProperty(window,'__jakLab',{value:{catalogue,exhibits,get selected(){return selected.id;},

@@ -19,15 +19,21 @@ const direct=(catalogue.sourceInventory?.standaloneParticles??[]).flatMap(entry=
   [...new Set(entry.launches.map(l=>l.is3d))].map(is3d=>({id:10000+entry.particle*2+Number(is3d),
     name:`direct-${entry.particle}${is3d?'-3d':''}`,source:entry.source,directLaunch:{particle:entry.particle},
     items:[{particle:entry.particle,flags:['launch-asap',...(is3d?['is-3d']:[])]}]})));
-const rows=[],seen=new Set(),callbacks=new Set(),births=new Set();let samples=0;
+const rows=[],seen=new Set(),callbacks=new Set(),births=new Set(),observed=new Set(),auxiliary=new Set();let samples=0,auxiliarySamples=0;
 for(const group of [...catalogue.groups,...direct]) {
   const motion=new ParticleMotion(group,definitions,12000,group.id+1,catalogue.callbackPrograms);
-  let peak=0,sounds=0;const emitted=new Set();
+  let peak=0,sounds=0,peakAuxiliary=0;const emitted=new Set();
   for(let frame=0;frame<Math.ceil(seconds*60);frame++) {
     if(group.directLaunch&&frame>0&&frame%60===0)motion.triggerDirect();
     motion.update(1/60);peak=Math.max(peak,motion.particles.length);sounds+=motion.soundEvents.length;
+    peakAuxiliary=Math.max(peakAuxiliary,motion.auxiliaryParticles.length);
+    for(const p of motion.auxiliaryParticles) {
+      auxiliarySamples++;auxiliary.add(p.definitionId);
+      assert.equal(p.values.a,0,`${group.name}: ordinary auxiliary quad was not suppressed`);
+      assert.equal(p.flags.has('bit2'),false,`${group.name}: auxiliary alpha death flag survived`);
+    }
     for(const p of motion.particles) {
-      samples++;emitted.add(p.texture);
+      samples++;emitted.add(p.texture);observed.add(p.definitionId);
       if(p.callback)callbacks.add(p.callback);if(p.birth)births.add(p.birth);
       assert.ok([...p.position.toArray(),...p.orientation.toArray(),...p.orbit.toArray(),p.radius,
         ...Object.values(p.values)].every(Number.isFinite),`${group.name}: particle ${p.id} has nonfinite state`);
@@ -37,6 +43,7 @@ for(const group of [...catalogue.groups,...direct]) {
   }
   for(const id of motion.referencedParticleIds)seen.add(id);
   rows.push({id:group.id,name:group.name,peakParticles:peak,remaining:motion.particles.length,dropped:motion.dropped,sourceQueueDrops:motion.queueDrops,
+    peakAuxiliary,auxiliaryDrops:motion.auxiliaryDrops,
     textureCount:emitted.size,soundEvents:sounds,hostInputs:[...motion.hostInputs],issues:[...motion.issues]});
 }
 const report={createdAt:new Date().toISOString(),secondsPerExhibit:seconds,groups:catalogue.groups.length,
@@ -44,6 +51,9 @@ const report={createdAt:new Date().toISOString(),secondsPerExhibit:seconds,group
   reachedDefinitions:[...seen].filter(id=>definitions.has(id)).length,
   compiledContactCallbacks:Object.keys(catalogue.callbackPrograms??{}).length,
   observedUpdateCallbacks:[...callbacks].sort(),observedBirthCallbacks:[...births].sort(),
+  observedDefinitions:observed.size,auxiliarySamples,observedAuxiliaryDefinitions:[...auxiliary].sort((a,b)=>a-b),
+  unobservedDeclaredAuxiliary:catalogue.particles.filter(p=>p.fields.some(f=>f.field==='flags'&&f.value?.includes('aux-list'))&&!auxiliary.has(p.id)).map(p=>p.id),
+  auxiliaryDropExhibits:rows.filter(r=>r.auxiliaryDrops).map(r=>({name:r.name,dropped:r.auxiliaryDrops})),
   zeroEmissionExhibits:rows.filter(r=>r.peakParticles===0).map(r=>r.name),
   capacityDropExhibits:rows.filter(r=>r.dropped>0).map(r=>({name:r.name,dropped:r.dropped})),
   nonfiniteStates:0,rows};
