@@ -1,0 +1,234 @@
+{
+  "url": "http://127.0.0.1:5187/crate-game-review.html?playtest&level=flats",
+  "tests": [
+    {
+      "test": "full native checkpoint intact",
+      "state": {
+        "kind": "checkpoint",
+        "alive": true,
+        "marks": "checkpoint",
+        "collider": [
+          1.1519999999999997,
+          1.1519999999999868,
+          1.151999999999994
+        ],
+        "position": [
+          4.5,
+          90.1,
+          68
+        ],
+        "player": "ride",
+        "cratesBroken": 0,
+        "deaths": 0,
+        "checkpoint": false,
+        "checkpointMarker": false,
+        "outline": true,
+        "usedSwitch": false,
+        "effects": {
+          "shards": 0,
+          "bursts": 0,
+          "drawCalls": 0,
+          "limit": 192
+        },
+        "resolution": "max",
+        "crt": false,
+        "canvas": [
+          3024,
+          1724
+        ],
+        "frozen": true
+      }
+    },
+    {
+      "test": "full CRT checkpoint intact",
+      "state": {
+        "kind": "checkpoint",
+        "alive": true,
+        "marks": "checkpoint",
+        "collider": [
+          1.1519999999999997,
+          1.1519999999999868,
+          1.151999999999994
+        ],
+        "position": [
+          4.5,
+          90.1,
+          68
+        ],
+        "player": "ride",
+        "cratesBroken": 0,
+        "deaths": 0,
+        "checkpoint": false,
+        "checkpointMarker": false,
+        "outline": true,
+        "usedSwitch": false,
+        "effects": {
+          "shards": 0,
+          "bursts": 0,
+          "drawCalls": 0,
+          "limit": 192
+        },
+        "resolution": 480,
+        "crt": true,
+        "canvas": [
+          842,
+          480
+        ],
+        "frozen": true
+      }
+    },
+    {
+      "test": "full native checkpoint activation",
+      "state": {
+        "kind": "checkpoint",
+        "alive": false,
+        "marks": "checkpoint",
+        "collider": [
+          1.1519999999999997,
+          1.1519999999999868,
+          1.151999999999994
+        ],
+        "position": [
+          4.5,
+          90.1,
+          68
+        ],
+        "player": "ride",
+        "cratesBroken": 1,
+        "deaths": 0,
+        "checkpoint": true,
+        "checkpointMarker": true,
+        "outline": true,
+        "usedSwitch": false,
+        "effects": {
+          "shards": 0,
+          "bursts": 0,
+          "drawCalls": 0,
+          "limit": 192
+        },
+        "resolution": "max",
+        "crt": false,
+        "canvas": [
+          3024,
+          1724
+        ],
+        "frozen": true
+      }
+    },
+    {
+      "test": "full native TNT detonation",
+      "state": {
+        "kind": "tnt",
+        "alive": false,
+        "marks": "tnt",
+        "collider": [
+          1.1519999999999997,
+          1.1519999999999868,
+          1.1519999999999868
+        ],
+        "position": [
+          -4.5,
+          90.1,
+          73.5
+        ],
+        "player": "ride",
+        "cratesBroken": 1,
+        "deaths": 0,
+        "checkpoint": false,
+        "checkpointMarker": false,
+        "outline": true,
+        "usedSwitch": false,
+        "effects": {
+          "shards": 0,
+          "bursts": 0,
+          "drawCalls": 0,
+          "limit": 192
+        },
+        "resolution": "max",
+        "crt": false,
+        "canvas": [
+          3024,
+          1724
+        ],
+        "frozen": true
+      }
+    },
+    {
+      "test": "full native Nitro-clear switch and finite chain debris",
+      "state": {
+        "kind": "nitrobang",
+        "alive": true,
+        "marks": "used",
+        "collider": [
+          1.1519999999999997,
+          1.1519999999999868,
+          1.151999999999994
+        ],
+        "position": [
+          -4.5,
+          90.1,
+          68
+        ],
+        "player": "ride",
+        "cratesBroken": 7,
+        "deaths": 0,
+        "checkpoint": false,
+        "checkpointMarker": false,
+        "outline": true,
+        "usedSwitch": false,
+        "effects": {
+          "shards": 0,
+          "bursts": 0,
+          "drawCalls": 0,
+          "limit": 192
+        },
+        "resolution": "max",
+        "crt": false,
+        "canvas": [
+          3024,
+          1724
+        ],
+        "frozen": true
+      }
+    },
+    {
+      "test": "full native keyboard move and spin",
+      "state": {
+        "kind": "wood",
+        "alive": false,
+        "marks": "wood",
+        "collider": [
+          1.152000000000001,
+          1.1519999999999868,
+          1.1519999999999868
+        ],
+        "position": [
+          -9,
+          90,
+          74.82
+        ],
+        "player": "ride",
+        "cratesBroken": 1,
+        "deaths": 0,
+        "checkpoint": false,
+        "checkpointMarker": false,
+        "outline": true,
+        "usedSwitch": false,
+        "effects": {
+          "shards": 0,
+          "bursts": 0,
+          "drawCalls": 0,
+          "limit": 192
+        },
+        "resolution": "max",
+        "crt": false,
+        "canvas": [
+          3024,
+          1724
+        ],
+        "frozen": false
+      }
+    }
+  ],
+  "consoleErrors": []
+}

@@ -5,7 +5,7 @@ import * as THREE from 'three';
 const noop = () => {};
 const ctx = new Proxy({ createLinearGradient: () => ({ addColorStop: noop }), measureText: text => ({ width: text.length * 8 }) }, { get: (target, key) => target[key] ?? noop });
 globalThis.document = { createElement: () => ({ width: 1, height: 1, getContext: () => ctx }) };
-const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
+const server = await createServer({ appType: 'custom', logLevel: 'silent', cacheDir: '.release-queue/crate-test-vite-cache', server: { middlewareMode: true } });
 try {
   const art = await server.ssrLoadModule('/src/crateArt.ts');
   const { CrateEffects, createCheckpointMarker, updateCheckpointMarker } = await server.ssrLoadModule('/src/crateEffects.ts');
@@ -27,6 +27,9 @@ try {
     }
     const stats = art.crateArtStats(kind);
     assert.ok(stats.triangles < 6000, `${kind} exceeds the authored budget`);
+    let totalTriangles = 0;
+    a.root.traverse(node => { if (node.isMesh) totalTriangles += (node.geometry.index?.count ?? node.geometry.attributes.position.count) / 3; });
+    assert.ok(totalTriangles < 6000, `${kind} accessories exceed the complete model budget`);
     const owner = new THREE.Group(); owner.position.set(2, 5, -7); owner.add(a.root);
     const pose = owner.matrix.clone(), geometry = a.shell.geometry;
     art.pulseCrateArt(a); for (let i = 0; i < 60; i++) art.updateCrateArt(a, 1 / 60, 1);
@@ -35,14 +38,23 @@ try {
     assert.ok(Math.abs(a.root.scale.y - 2) < 1e-9 || kind === 'nitro', 'pulse did not finitely settle');
     art.setCrateArtState(a, { pending: true }); assert.equal(a.root.visible, false);
     art.setCrateArtState(a, { timeSecs: 4 }); assert.equal(a.root.visible, true); assert.equal(a.labelKey, '4s'); assert.equal(a.marks.visible, true);
-    report.push({ kind, ...stats });
+    report.push({ kind, ...stats, totalTriangles });
   }
   const effects = new CrateEffects(), solids = new WorldSolids();
   const ground = new THREE.Mesh(new THREE.BoxGeometry(30, .3, 30)); ground.position.y = -.15; ground.updateMatrixWorld(true); solids.add(ground);
   const world = { worldSolids: solids, groundMeshes: [ground], killY: -20 };
   effects.emit('wood', new THREE.Vector3(0, .8, 0), 1.6, 0);
   let settled = 0;
-  for (let i = 0; i < 110; i++) { effects.update(1 / 60, world); settled = Math.max(settled, effects.shards.filter(s => s.settled).length); assert.ok(effects.shards.every(s => s.position.y >= -.05), 'debris tunneled through support'); }
+  const shardMatrix = new THREE.Matrix4(), shardScale = new THREE.Vector3(), shardBounds = new THREE.Box3();
+  for (let i = 0; i < 110; i++) {
+    effects.update(1 / 60, world); settled = Math.max(settled, effects.shards.filter(s => s.settled).length);
+    assert.ok(effects.shards.every(s => s.position.y >= -.05), 'debris tunneled through support');
+    for (const shard of effects.shards.filter(s => s.settled)) {
+      shardMatrix.compose(shard.position, shard.rotation, shardScale.setScalar(shard.size));
+      shardBounds.copy(shard.batch.mesh.geometry.boundingBox).applyMatrix4(shardMatrix);
+      assert.ok(shardBounds.min.y >= -.01, 'settled shard geometry penetrates the floor');
+    }
+  }
   assert.ok(settled > 0, 'debris never settled');
   for (let i = 0; i < 30; i++) effects.emit(i % 2 ? 'nitro' : 'tnt', new THREE.Vector3(0, 1, 0), 1.6, 0, true);
   assert.ok(effects.diagnostics.shards <= 192 && effects.diagnostics.bursts <= 12, 'chain blast exceeded the bounded pool');

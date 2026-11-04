@@ -50,6 +50,8 @@ type Template = { shell: THREE.BufferGeometry; marks: THREE.BufferGeometry; mate
 const templates = new Map<CrateArtKind, Template>();
 const labels = new Map<string, THREE.MeshStandardMaterial>();
 const shardTemplates = new Map<string, THREE.BufferGeometry>();
+let fuseTemplate: THREE.Group | undefined;
+let sealTemplate: THREE.Group | undefined;
 function shared<T extends THREE.BufferGeometry | THREE.Material | THREE.Texture>(value: T): T {
   value.userData.shared = true;
   value.userData.levelDepthFade = false;
@@ -329,19 +331,26 @@ export function createCrateArt(kind: CrateArtKind, size = 1): CrateArt {
   root.add(shell, marks); root.scale.setScalar(size);
   const art: CrateArt = { kind, size, root, shell, marks, state: {}, labelKey: '', pulse: 0, pulseStrength: 0, seed: 0 };
   if (kind === 'tnt') {
-    const fuse = new THREE.Group(); fuse.position.set(.19, .48, -.13);
-    const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(.02, .075, 0), new THREE.Vector3(.08, .15, -.015), new THREE.Vector3(.15, .17, 0)]);
-    const rope = new THREE.Mesh(shared(new THREE.TubeGeometry(curve, 8, .016, 5, false)), shared(new THREE.MeshStandardMaterial({ color: 0xcba368, roughness: 1 })));
-    const ember = new THREE.Mesh(shared(new THREE.IcosahedronGeometry(.025)), shared(new THREE.MeshBasicMaterial({ color: 0xffe6a0 })));
-    ember.position.copy(curve.getPoint(1)); ember.visible = false; fuse.add(rope, ember); root.add(fuse);
+    if (!fuseTemplate) {
+      fuseTemplate = new THREE.Group(); fuseTemplate.position.set(.19, .48, -.13);
+      const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(.02, .075, 0), new THREE.Vector3(.08, .15, -.015), new THREE.Vector3(.15, .17, 0)]);
+      const rope = new THREE.Mesh(shared(new THREE.TubeGeometry(curve, 8, .016, 5, false)), shared(new THREE.MeshStandardMaterial({ color: 0xcba368, roughness: 1 })));
+      const ember = new THREE.Mesh(shared(new THREE.IcosahedronGeometry(.025)), shared(new THREE.MeshBasicMaterial({ color: 0xffe6a0 })));
+      ember.name = 'Fuse ember'; ember.position.copy(curve.getPoint(1)); ember.visible = false; fuseTemplate.add(rope, ember);
+    }
+    const fuse = fuseTemplate.clone(true), ember = fuse.getObjectByName('Fuse ember') as THREE.Mesh;
+    root.add(fuse);
     art.fuse = fuse; art.ember = ember;
   }
   if (kind === 'checkpoint') {
-    const seal = new THREE.Group(); seal.name = 'Checkpoint compass seal';
-    const rim = new THREE.Mesh(shared(new THREE.TorusGeometry(.095, .018, 5, 12)), shared(new THREE.MeshStandardMaterial({ color: 0x367d86, roughness: .36, metalness: .6 })));
-    rim.rotation.x = Math.PI / 2;
-    const gem = new THREE.Mesh(shared(new THREE.OctahedronGeometry(.063)), shared(new THREE.MeshStandardMaterial({ color: 0xffdd78, emissive: 0x9b4b10, emissiveIntensity: .3, roughness: .3, metalness: .2 })));
-    gem.position.y = .018; seal.add(rim, gem); seal.position.y = .52; root.add(seal); art.seal = seal;
+    if (!sealTemplate) {
+      sealTemplate = new THREE.Group(); sealTemplate.name = 'Checkpoint compass seal';
+      const rim = new THREE.Mesh(shared(new THREE.TorusGeometry(.095, .018, 5, 12)), shared(new THREE.MeshStandardMaterial({ color: 0x367d86, roughness: .36, metalness: .6 })));
+      rim.rotation.x = Math.PI / 2;
+      const gem = new THREE.Mesh(shared(new THREE.OctahedronGeometry(.063)), shared(new THREE.MeshStandardMaterial({ color: 0xffdd78, emissive: 0x9b4b10, emissiveIntensity: .3, roughness: .3, metalness: .2 })));
+      gem.position.y = .018; sealTemplate.add(rim, gem); sealTemplate.position.y = .52;
+    }
+    const seal = sealTemplate.clone(true); root.add(seal); art.seal = seal;
   }
   setCrateArtState(art, kind === 'multihit' ? { hits: 5 } : {}); return art;
 }

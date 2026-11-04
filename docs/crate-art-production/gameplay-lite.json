@@ -1,0 +1,404 @@
+[
+  {
+    "test": "keyboard move and spin wood crate",
+    "state": {
+      "kind": "wood",
+      "alive": false,
+      "marks": "wood",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        -9,
+        90,
+        29.94
+      ],
+      "player": "ride",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": false
+    }
+  },
+  {
+    "test": "multihit first stomp",
+    "state": {
+      "kind": "multihit",
+      "alive": true,
+      "hits": 4,
+      "marks": "4",
+      "collider": [
+        1.152,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        0,
+        91.17,
+        30
+      ],
+      "player": "air",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  },
+  {
+    "test": "multihit fifth stomp",
+    "state": {
+      "kind": "multihit",
+      "alive": false,
+      "hits": 0,
+      "marks": "0",
+      "collider": [
+        1.152,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        0,
+        91.17,
+        30
+      ],
+      "player": "air",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  },
+  {
+    "test": "metal bounce stomp",
+    "state": {
+      "kind": "metalbounce",
+      "alive": true,
+      "marks": "metalbounce",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        9,
+        91.17,
+        30
+      ],
+      "player": "air",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  },
+  {
+    "test": "TNT timed detonation and debris retirement",
+    "state": {
+      "kind": "tnt",
+      "alive": false,
+      "marks": "1",
+      "collider": [
+        1.1519999999999997,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        9,
+        91.17,
+        30
+      ],
+      "player": "air",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  },
+  {
+    "test": "spent outline switch activates ghost",
+    "state": {
+      "kind": "bang",
+      "alive": true,
+      "marks": "used",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        -9,
+        90.1,
+        23
+      ],
+      "player": "ride",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": false,
+      "usedSwitch": true,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  },
+  {
+    "test": "checkpoint activation",
+    "state": {
+      "kind": "checkpoint",
+      "alive": false,
+      "marks": "checkpoint",
+      "collider": [
+        1.1519999999999997,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        -9,
+        90.1,
+        23
+      ],
+      "player": "ride",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": true,
+      "checkpointMarker": true,
+      "outline": false,
+      "usedSwitch": true,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  },
+  {
+    "test": "pit death returns to banked checkpoint",
+    "state": {
+      "kind": "checkpoint",
+      "alive": false,
+      "marks": "checkpoint",
+      "collider": [
+        1.1519999999999997,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        4.5,
+        90,
+        19
+      ],
+      "player": "ride",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": true,
+      "checkpointMarker": true,
+      "outline": false,
+      "usedSwitch": true,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": false
+    }
+  },
+  {
+    "test": "hard reset restores intact crates and clears effects",
+    "state": {
+      "kind": "checkpoint",
+      "alive": true,
+      "marks": "checkpoint",
+      "collider": [
+        1.1519999999999997,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        4.5,
+        90,
+        23
+      ],
+      "player": "ride",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": false
+    }
+  },
+  {
+    "test": "time-trial modeled shell and number",
+    "state": {
+      "kind": "mystery",
+      "alive": true,
+      "marks": "1s",
+      "collider": [
+        1.1519999999999997,
+        1.1519999999999868,
+        1.152000000000001
+      ],
+      "position": [
+        -4.5,
+        90,
+        34
+      ],
+      "player": "ride",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointMarker": false,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 192
+      },
+      "dimensions": {
+        "viewportWidth": 1512,
+        "viewportHeight": 862,
+        "inputWidth": 1263,
+        "inputHeight": 720,
+        "outputWidth": 1263,
+        "outputHeight": 720
+      },
+      "frozen": true
+    }
+  }
+]

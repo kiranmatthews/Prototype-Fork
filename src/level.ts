@@ -11381,7 +11381,6 @@ export class Level {
     masks = 0,
     points = 0,
   ): void {
-    if (cp.active) return;
     cp.active = true;
     Object.assign(cp, this.bankCheckpointSnapshot(cp.spawnPos, cratesBroken, fruit, masks, points));
     this.activeCheckpoint = cp;
