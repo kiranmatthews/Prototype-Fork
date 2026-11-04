@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
+  if(process.argv.includes('--direct-jak')){
+    const {JAK_DIRECT_PHYSICS}=await server.ssrLoadModule('/tools/jak-direct-motion.ts');
+    p.onFootJumpStudy=JAK_DIRECT_PHYSICS;
+  }
   const {Rail}=await server.ssrLoadModule('/src/rails.ts');
   const {DECK_TRICKS,GRAB_TRICKS,GRIND_TRICKS,sampleBackflip,skateContactBounce}=await server.ssrLoadModule('/src/skateTricks.ts');
   const v=(...xyz)=>new THREE.Vector3(...xyz),up=v(0,1,0);

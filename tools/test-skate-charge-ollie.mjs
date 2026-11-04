@@ -73,7 +73,13 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
         // the original shallow bounds for charge, level flight and landing.
         const leading=poseInfo.knees[stance>0?1:0],trailing=poseInfo.knees[stance>0?0:1];
         const raisedOllie=!p.grounded&&p.boardOllieAir&&noseTilt>.12;
-        if(raisedOllie ? leading>=2.1||trailing>=1.15||(leading+trailing)/2>=1.4
+        // D's grounded push deliberately bends one knee while the other
+        // shoe reaches the floor. Its reach and hip clearance replace the
+        // old two-shoes-on-deck silhouette bound; air/landing bounds stay.
+        const pushing=p.grounded&&(p.boardG.userData.skatePushContact?.weight??0)>.02;
+        const hipHeight=joint('hips').y-p.pos.y;
+        if(pushing ? Math.max(leading,trailing)>=2.55||Math.min(leading,trailing)>=1.35||hipHeight<.55
+          :raisedOllie ? leading>=2.1||trailing>=1.15||(leading+trailing)/2>=1.4
           : Math.max(leading,trailing)>=1.5||(leading+trailing)/2>=1.15)poseErrors.push({problem:'knee bend',...poseInfo});
         if(frame===59+hold)releaseFlex=c.bodyFlex;
         if(!p.grounded){

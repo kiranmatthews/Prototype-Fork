@@ -8731,3 +8731,38 @@ Details: [Jump motion study](JUMP_MOTION_STUDY.md).
   No integration or publication; level data and extracted assets unchanged.
 
 Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## D — continuous board carry, mounting and pickup
+
+- Completed 5 November 2026 NZDT, approximately two hours prompt-to-validated
+  playable (01:55–03:56 NZDT), including shared validation-capacity waits.
+  Those waits are not productive geometry-authoring time. Local A/B/C/D only.
+- Replaced the abrupt board handoff in D with visible back carry, cancellable
+  hand preparation during the existing hold, board placement, hop, foot catch
+  and initial pushes. Halting steps off, raises the deck into the hand and
+  returns it to carry. An interrupted pickup reverses from its displayed pose.
+  A spin is not needed to conceal the deck; its full geometry stays visible.
+- Added independently elastic chest/arms, real-heading turn lean and rear-foot
+  pushes during initial travel and acceleration. Existing jump/skate gestures,
+  all live UI tuning and movement physics are unchanged. The old skate contact
+  owner takes over for tricks, grabs, grinds and vert. Contact rest joints are
+  captured before the new boarding lean, preventing a later tail-grab offset.
+- Inspected pinned THUG walking/ground scripts and WalkComponent for reversible
+  transitions, preserved gait phase, speed scaling and board ownership. No
+  external code or assets copied. Research and Jak assets remain outside Git.
+- Validation: 6,360 exact paired movement frames across six scenarios in both
+  stances; visible deck every frame, locked hand error under 1 mm, transfer soles
+  under 4.1 mm, push sole under 1 mm. Reversal/settle checks at 30/60/120 Hz.
+  D ollie parity (1,344 frames), complete skate contacts in D and A (11,246 poses
+  each), live UI tuning (7,200), runtime, elasticity, strict review types, build
+  and release size pass (803,531,608 bytes). No full-suite run.
+- Full-render normal/native review covers preparation, placement, hop, push,
+  pickup, cancellation, early ollie and remount, with both stances and multiple
+  views. Long inspector takes now have sufficient floor and an off-path gate.
+  A/B/C/D switching preserves position/velocity; console is clean. Restored
+  observed 720p/1× rendering and hidden debug menus; D left in live play.
+- Updated worktree playtest: `http://127.0.0.1:5189/jump-review.html?playtest&level=codex-lab&nocrt`.
+  Existing port 5188 is preserved. Evidence: external `skate-travel/` directory.
+  No level-pack changes, integration or publication.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
