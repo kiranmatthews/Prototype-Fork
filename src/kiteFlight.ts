@@ -20,7 +20,7 @@ export class KiteFlight {
   private initialized=false;
   obstructionCount=0;
 
-  reset():void{this.initialized=false;this.height=this.lead=NaN;this.obstructionCount=0;}
+  reset():void{this.initialized=false;this.height=this.lead=NaN;this.obstructionCount=0;this.candidates.clear();}
 
   private floor(x:number,z:number,base:number,solids:WorldSolids|undefined,ahead:boolean,returnZ=z):number{
     if(!solids)return base;
@@ -61,7 +61,7 @@ export class KiteFlight {
     this.previous.copy(pos);
     const base=pos.y-lift*.95+KITE_FLIGHT.height+Math.sin(time*1.8)*.10;
     const baseLead=KITE_FLIGHT.lead*Math.max(1,1.6/Math.max(.35,aspect));
-    // Beach Street runs along -Z. Keep the full-width foil over the open street
+    // Beach Street runs along -Z. Keep the foil's centre over the open street
     // when the rider hugs a facade; the flexible lines may cross the scenery.
     const x=THREE.MathUtils.clamp(pos.x+1.2+steer*.35+wind*KITE_FLIGHT.windSway+Math.sin(time*1.4)*.10,
       KITE_FLIGHT.minX,KITE_FLIGHT.maxX);

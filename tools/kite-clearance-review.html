@@ -17,7 +17,7 @@ const presets={opening:{x:0,y:12,z:0,lift:0,wind:0},shop:{x:-6,y:12,z:-32,lift:0
 const place=()=>{fixture={...presets[document.querySelector('select').value]};held=true;document.querySelector('#wind').value=fixture.wind;p.respawn(g.getLevel(),true,false,{position:p.pos.clone().set(fixture.x,fixture.y+fixture.lift+.12,fixture.z)});p.snapRenderInterpolation();state.textContent='Held pose';};
 try{
  await new Promise((resolve,reject)=>{const start=Date.now(),timer=setInterval(()=>{g=frame.contentWindow?.__game;if(g&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}else if(Date.now()-start>180000){clearInterval(timer);reject(Error('Game did not load'));}},100);});
- p=g.player;oldStep=p.step;place();
+ p=g.player;oldStep=p.step;place();document.querySelector('#max').checked=g.renderQualitySettings.regularResolution===null;
  const flight=p.kiteVisual.flight,flightStep=flight.step,canopyScale=p.kiteVisual.sail.scale.x;
  flight.step=function(pos,time,steer,lift,wind,aspect,dt,solids){
   p.kiteVisual.sail.scale.setScalar(document.querySelector('#legacy').checked?1:canopyScale);

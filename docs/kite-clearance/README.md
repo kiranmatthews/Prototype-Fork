@@ -14,7 +14,7 @@ when the rider hugs the building frontage.
 canopy bounds. It anticipates the forward sweep, rises over roofs, and holds
 altitude until the resting tether distance has also passed the obstruction.
 An 80 cm planning margin and 15 cm contact margin protect the low wingtips.
-It resets on respawn/teleport. This changes presentation only: rider motion,
+It resets on respawn/teleport and releases cached scenery references. This changes presentation only: rider motion,
 collisions, scoring, jump/grab controls and camera settings are unchanged.
 The full original 7,873-triangle canopy and 1,912-triangle bar remain intact.
 The lines remain flexible visual connections and can cross scenery.
@@ -28,7 +28,7 @@ Validation:
   soft leaf or every possible trajectory can never overlap.
 - The same check covers moving and camera-culled scenery, inactive surfaces,
   invisible containment, a 900-frame roof approach/departure, and resets.
-  Maximum per-frame height change in that traversal is 0.136 m.
+  Maximum per-frame height change in that traversal is 0.503 m.
 - Forty complete-canopy projection cases cover wide, square and portrait
   cameras, both gust/steering extremes, and a 7 m jump. All remain in frame.
 - Existing kite art/bridle/flyaway, Indy contact/landing, tow-motion and
@@ -38,7 +38,7 @@ Validation:
   held presentation fixtures. `tools/kite-clearance-review.html` is local only.
 - The production build was also tested with normal start/jump input; its
   console had no warnings or errors.
-- `npm run build` and `npm run check:release` pass: 854,365,528 bytes of the
+- `npm run build` and `npm run check:release` pass: 854,365,552 bytes of the
   1,000,000,000-byte hosting budget.
 
 Evidence: `clearance-check.json`, `art-check.json`, `motion.json`,
