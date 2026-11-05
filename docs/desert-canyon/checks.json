@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-05",
+  "focused": {
+    "supportProbes": 2064,
+    "checkpoints": 8,
+    "routeFrames": 9303,
+    "finishFrames": 140,
+    "checkpointBankAndPitRecovery": true,
+    "routeMetres": 1391.9567480494804,
+    "materials": "shared mineral texture owners verified"
+  },
+  "build": "npm run build: passed",
+  "releaseBytes": 851961627,
+  "releaseLimitBytes": 1000000000,
+  "broaderLevelsCheck": "Existing tools/test-waterpark-decks.mjs:49 failure reproduced on untouched baseline 68e48cb3",
+  "browser": [
+    "Lite RUN COMPLETE confirmed",
+    "Full scene and existing foliage loaded without asset failures",
+    "MAX drawing buffer 1506 x 1706; all authored geometry retained"
+  ],
+  "scope": "Authored visual recreation; user accepted layout differences; no source-game files used",
+  "integratedMain": "283212d1deaf85e2fc6da3141e4f2030b306bac6"
+}

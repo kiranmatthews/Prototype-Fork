@@ -1,3 +1,4 @@
+import {createDesertMaterial} from './desertMaterials';
 import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
@@ -162,7 +163,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
+import { DESERT_CANYON_LEVEL, SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
 import { TRIBAL_RUN_TEXTURES } from './levels/tribal-run-textures';
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -1085,7 +1086,7 @@ export const TEX_KINDS = [
   'spaghetti-basalt','spaghetti-cavern',
   'skystream-marble',
   'cardboard',
-  'waterslide-fiberglass','rally-mud','rally-sponsors','rally-cloth','rally-lamp','rally-lamp-glow',
+  'desert-trail','desert-sandstone','waterslide-fiberglass','rally-mud','rally-sponsors','rally-cloth','rally-lamp','rally-lamp-glow',
   'waterslide-shallows',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
@@ -2615,6 +2616,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'spaghetti-rails-platforming', name: SPAGHETTI_RAILS_PLATFORMING_LEVEL.name, data: SPAGHETTI_RAILS_PLATFORMING_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "beachfront", name: "Beachside Run" },
+  { id: "bryce-canyon", name: DESERT_CANYON_LEVEL.name, data: DESERT_CANYON_LEVEL },
   ...UNITY_PORT_LEVELS,
   { id: 'drowned-crown', name: PIRATE_WRECK_LEVEL.name, data: PIRATE_WRECK_LEVEL },
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
@@ -6617,6 +6619,7 @@ export class Level {
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
     } else if(isCountryClubTexture(c.tex))material=createCountryClubSurface(c,this.surfaceTexture(c.tex!),this.surfaceTexture('country-sand'));
+    else if(c.tex==='desert-trail'||c.tex==='desert-sandstone'){material=createDesertMaterial(c.tex==='desert-trail'?'trail':'sandstone',!!c.colors);if(c.color)material.color.set(c.color);}
     else if(c.tex==='rally-mud')material=createRallyDirt(this.surfaceTexture('dirt'),c.color??'#a07c52',!!c.colors);
     else if(c.tex==='rally-cloth')material=createRallyCloth(this.standingWaterClock);
     else if(c.tex==='rally-lamp'||c.tex==='rally-lamp-glow')material=createRallyLamp(c.tex==='rally-lamp-glow');

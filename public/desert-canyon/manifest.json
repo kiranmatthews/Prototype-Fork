@@ -1,0 +1,114 @@
+{
+  "generator": "bamyazi/RockGenerator (MIT); unchanged noise.js and displacement.js; authored hoodoo profiles",
+  "geometryPolicy": "Native mesh at all distances and in reflections; no simplification",
+  "models": [
+    {
+      "name": "hoodoo-spire",
+      "triangles": 12928,
+      "vertices": 6567,
+      "size": [
+        13.6055,
+        35.9243,
+        11.3694
+      ],
+      "bytes": 368128,
+      "sha256": "2bff2859cd55d6ba9c5d80d8b76d52305ec727559757cb0794a890760ef8371b"
+    },
+    {
+      "name": "hoodoo-cap",
+      "triangles": 12928,
+      "vertices": 6567,
+      "size": [
+        12.6953,
+        25.7142,
+        11.2042
+      ],
+      "bytes": 368128,
+      "sha256": "9ce6e710412931efcf2ca40ab571533548ddf8e47a96a90dc0912a738b73b18d"
+    },
+    {
+      "name": "hoodoo-fluted",
+      "triangles": 22080,
+      "vertices": 11324,
+      "size": [
+        18.4477,
+        42.5426,
+        16.7859
+      ],
+      "bytes": 632360,
+      "sha256": "5abf9b71e5971d1a240e7d93dbbf6f22c8f8d026d7426ab5774322cb4e01f280"
+    },
+    {
+      "name": "hoodoo-needle",
+      "triangles": 12928,
+      "vertices": 6567,
+      "size": [
+        7.6497,
+        28.3638,
+        6.4246
+      ],
+      "bytes": 368128,
+      "sha256": "f9091ff313bf904e357839b3c89771c5e6deff477e8cdb694c670364c75ca96c"
+    },
+    {
+      "name": "hoodoo-buttress",
+      "triangles": 27600,
+      "vertices": 14155,
+      "size": [
+        27.5266,
+        32.5577,
+        21.045
+      ],
+      "bytes": 790048,
+      "sha256": "56db39233c40586d069249a51c108b27ff0aa72024c1e0f5724810ccc1eca721"
+    },
+    {
+      "name": "hoodoo-low",
+      "triangles": 7040,
+      "vertices": 3577,
+      "size": [
+        19.9613,
+        9.8054,
+        16.4784
+      ],
+      "bytes": 201228,
+      "sha256": "2c88ad7cbae612c96e5ee4aaf54cf5a1b8053021094263af7b0ac5a70be80e69"
+    },
+    {
+      "name": "hoodoo-twins",
+      "triangles": 16320,
+      "vertices": 8334,
+      "size": [
+        18.3701,
+        35.994,
+        10.9495
+      ],
+      "bytes": 466232,
+      "sha256": "313dbbc75d6e7a1dac8aaf02987e502513214e5ed9e143f1ac65bd38996eddb5"
+    },
+    {
+      "name": "hoodoo-fin",
+      "triangles": 27600,
+      "vertices": 14155,
+      "size": [
+        28.9329,
+        39.7237,
+        9.4631
+      ],
+      "bytes": 790044,
+      "sha256": "81eb8ee67fe8497d5ba89e62e65197aba740bbb64962707e5a08bac8a16ac6a0"
+    },
+    {
+      "name": "talus",
+      "triangles": 3360,
+      "vertices": 1717,
+      "size": [
+        9.6783,
+        3.639,
+        7.6568
+      ],
+      "bytes": 97308,
+      "sha256": "3e0e98c3f8c4b54f8ba8a41676bb2a1356f533bd9c1a05243112977a1ad38093"
+    }
+  ]
+}

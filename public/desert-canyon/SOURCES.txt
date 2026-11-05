@@ -1,0 +1,39 @@
+BRYCE CANYON — HOODOO RUN
+
+Procedural rocks
+https://github.com/bamyazi/RockGenerator
+Commit c2822e22c085afc43f875ad38aad701bcd0b89d3
+MIT, copyright 2026 Rock Generator Contributors.
+See ROCKGENERATOR-LICENSE.txt. Original noise.js and displacement.js are
+vendored verbatim. The hoodoo profiles, clustering, colours and trail are
+original authoring. No source-game geometry or textures are included.
+
+Mineral colour and relief: ambientCG Rock030, CC0 1.0
+https://ambientcg.com/view?id=Rock030
+https://docs.ambientcg.com/license/
+https://creativecommons.org/publicdomain/zero/1.0/
+rock-grain.jpg = Rock030_1K-JPG_Color.jpg
+rock-relief.jpg = Rock030_1K-JPG_Displacement.jpg
+Only these two maps from the 1K JPG distribution are used. Triplanar mineral
+mapping and sandstone colour treatment are authored for this course.
+
+Measured landscape geometry
+USGS 3DEP, USGS_LPC_UT_Southern_QL1_2018_LAS_2019
+US Government Public Domain; originating agency: US Geological Survey.
+https://registry.opendata.aws/usgs-lidar/
+https://www.usgs.gov/faqs/what-are-terms-uselicensing-map-services-and-data-national-map
+Elevation grid obtained from the independent Bryce Canyon Conservancy atlas:
+https://brycecanyon.co/landmarks.html
+https://brycecanyon.co/assets/landmark-collection/wall-street/model.json
+https://brycecanyon.co/assets/landmark-collection/wall-street/detailed.glb.gz
+The atlas describes an upper-envelope study of measured airborne returns,
+not a closed rock scan. Native 0.625m spacing, 263,169 vertices and 524,288
+triangles are retained. No atlas imagery or display material is copied.
+Vertex colours, scene rotation, translation and placement are modified.
+Survey elevation geometry is used as a scenic backdrop, not as game data or
+a survey-grade representation of the walking surface. Meshopt compression
+was verified lossless against all uncompressed buffers. See survey-manifest.json.
+
+All plant and tree assets come from the project's existing Country Club,
+Custard Creek, Treehouse and Carlisle libraries and retain their existing
+licences. Full authored geometry is used at all viewing distances.

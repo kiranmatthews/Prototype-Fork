@@ -1,0 +1,29 @@
+{
+  "source": "https://brycecanyon.co/assets/landmark-collection/wall-street/detailed.glb.gz",
+  "sourceData": "USGS_LPC_UT_Southern_QL1_2018_LAS_2019",
+  "sourceRights": "US Government Public Domain; geometry only",
+  "sourceGlbSha256": "7698ed64dfa6b9580b4e63ae6315403e5476913bea37e07a78e8e096ff8465c9",
+  "vertices": 263169,
+  "triangles": 524288,
+  "nativeSpacingMetres": 0.625,
+  "localBounds": {
+    "min": [
+      -160,
+      15.110107421875,
+      -160
+    ],
+    "max": [
+      160,
+      153.22998046875,
+      160
+    ]
+  },
+  "size": [
+    320,
+    138.119873046875,
+    320
+  ],
+  "bytes": 7893400,
+  "sha256": "16e2954c6f2e55e3a39fda5a9fdae4b93f981787a0be7ad434bfd6b58ced4172",
+  "verification": "All five buffers losslessly decoded and byte-compared; original positions, normals, UVs and index order retained. Only vertex color is authored."
+}

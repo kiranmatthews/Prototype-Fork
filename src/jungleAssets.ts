@@ -1,3 +1,5 @@
+import {DESERT_ASSETS} from './desertAssets';
+import {createDesertMaterial} from './desertMaterials';
 import {GROVE_ASSETS} from './groveAssets';
 import {ANCIENT_GATES_ASSETS} from './ancientGatesAssets';
 import { createNightworksVolcanoMaterial } from './nightworksMagma';
@@ -125,6 +127,7 @@ const ASSETS = {
   ...DROWNED_CROWN_ASSETS,
   ...HOLLOWWAKE_ASSETS,
   ...GROVE_ASSETS,
+  ...DESERT_ASSETS,
   ...ANCIENT_GATES_ASSETS,
   ...WATERSLIDE_ASSETS,
   ...MAP_MODULES,
@@ -612,6 +615,7 @@ export class JungleAssetKit {
       material.customProgramCacheKey=()=> 'caldera-backdrop-blend-v4';
       cache.set(kind,material);return material;
     }
+    if(kind.startsWith('desert')){const material=createDesertMaterial('sandstone');material.userData.jungleAsset=true;cache.set(kind,material);return material;}
     if (kind.startsWith("night")) {
       const material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x1b2d4b,emissiveIntensity:.3});
       material.name=spec.label;material.userData.jungleAsset=true;cache.set(kind,material);return material;

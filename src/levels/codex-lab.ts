@@ -1,3 +1,4 @@
+export { DESERT_CANYON_LEVEL } from './desert-canyon';
 export { SPAGHETTI_RAILS_LEVEL } from './spaghetti-rails';
 export { SPAGHETTI_RAILS_PLATFORMING_LEVEL } from './spaghetti-rails-platforming';
 export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';

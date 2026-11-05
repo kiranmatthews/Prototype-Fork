@@ -9604,3 +9604,42 @@ the wooden grip close-up confirms the hands remain on the rope grips.
 Production build/typecheck, whitespace and release-size checks pass
 (838,128,479 bytes). Art provenance, exact prompts, review fixtures and evidence
 are in `art/beach-kite/`. Direct publication belongs to this chat.
+
+## 2026-11-05 — Bryce Canyon · Hoodoo Run
+
+- Brief: recreate the desert descent and wooded free-ride basin at roughly
+  1:00–3:00 of Riders Republic video LPkhWoYYkCA, using open-source procedural
+  rocks and the existing vegetation library. After source-format research and
+  confirmation that no local game archives were available, the user accepted
+  layout differences and prioritised visual quality, lighting and performance.
+- Elapsed: approximately 90 minutes from the original brief to a validated full
+  traversal, including reference/source research and clarification. First draft
+  and final polish were not separately timed.
+- Authored a 1,392 m / 255 m descending course, eight checkpoints, a rim jump,
+  narrow rock passages, switchbacks, woodland, event furniture and a finish.
+  Kept native movement tuning. Checkpoint crates sit beside the riding line.
+- Used pinned MIT RockGenerator noise/crack displacement, authored hoodoo
+  profiles, nine native models (3,360–27,600 triangles each), CC0 ambientCG
+  mineral maps, and two full-resolution USGS elevation-study backdrops.
+  All foliage comes from existing libraries. No game files or game assets used.
+- Added shared triplanar sandstone/trail materials, warm directional lighting,
+  cool sky fill, atmospheric depth, instancing, batched event furniture and lazy
+  source geometry. Complete authored meshes remain at every viewing distance.
+- Source-owned built-in `bryce-canyon`; no duplicate snapshot added to the
+  nearly-full `public/levels.json` archive. Shared runtime edits are limited to
+  material/catalogue registration. Attribution and rebuild instructions are in
+  `docs/DESERT_CANYON.md` and `public/desert-canyon/SOURCES.txt`.
+- Validation: 2,064 support probes, all eight supported checkpoint positions,
+  9,303 fixed steps from rim to finish using ordinary input, an independent
+  finish approach, normal checkpoint banking, pit death/recovery, and shared
+  mineral texture retirement pass. Full and lite
+  browser presentation reviewed; lite finish reaches RUN COMPLETE. MAX uses a
+  1506×1706 drawing buffer in the observed 753×853 viewport. Settled scene samples
+  were about 16.7 ms median, with observed p95 samples around 18–22 ms on this
+  machine; these are local observations, not a hardware-wide performance claim.
+- `npm run build` passes. `npm run check:release`: 851,961,627 bytes / 1 GB after integration
+  with published main `283212d1`.
+  `npm run check:levels` reaches the existing waterpark texture-retirement
+  assertion at `tools/test-waterpark-decks.mjs:49`; the identical failure was
+  reproduced in an untouched `68e48cb3` checkout. Canyon import validation and
+  native rock loading pass independently.
