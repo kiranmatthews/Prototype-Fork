@@ -8943,3 +8943,23 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   original-fade comparison, working catalogue links and loaded source library.
   Evidence is external `skate-scribble/`; asset/prompt provenance is in
   `src/skateReferenceLab/assets/README.md`. No publication is authorized.
+
+## Skate scribbles — 32 source frames
+
+- 6 November 2026 NZDT: about five minutes prompt-to-playable, nine minutes
+  including validation. Expanded the effect from twelve to thirty-two source
+  drawings at the retained 60 fps: eight full-size redraws followed by twenty-four
+  smaller drawings, for a 0.533-second burst. Thin pen strokes and deck proportions
+  remain the target; no sprite shrinking or controller changes.
+- Generated a new transparent PNG atlas and measured fixed 384 × 128 pixel
+  windows/anchors for each drawing. All 32 source windows contain ink and have
+  distinct pixel hashes; no duplicated or interpolated frames. The same sprite
+  dimensions and pixel density apply throughout each burst.
+- Focused motion checks pass, including all 32 UV frames, finite disappearance,
+  constant sprite dimensions and 1,980 exact native-controller comparisons.
+  Production type-check/build and isolated local build pass. Browser review at
+  normal and MAX/native checks early/middle/final appearance frames, the full
+  dismount sequence and final hidden board. Console clear.
+- Evidence: external `skate-scribble-32/`, including atlas bounds/hashes, browser
+  state captures and build logs. The existing port 5199 playtest and `/labs`
+  links remain current. Local only; no publication is authorized.

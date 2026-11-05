@@ -59,8 +59,8 @@ and finite mount/dismount; short fades cover the source clips' carried endpoints
 
 ## Punk board scribbles
 
-The default board effect uses twelve independently drawn thin-ink PNG frames
-at **60 fps**, lasting 0.2 seconds. Four rapid full-size redraws have a long,
+The default board effect uses thirty-two independently drawn thin-ink PNG frames
+at **60 fps**, lasting 0.533 seconds. Eight rapid full-size redraws have a long,
 slim deck silhouette; subsequent drawings use fewer, shorter strokes with the
 same pen weight. A single fixed-size billboard swaps atlas cells, never scales
 down the artwork or fades it. Its long axis follows the board in the camera.

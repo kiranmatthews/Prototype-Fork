@@ -1,15 +1,45 @@
 import * as THREE from 'three';
 import {skateboardSettings} from '../skateboard/settings';
 
-export const SCRIBBLE_FRAMES = 12;
+export const SCRIBBLE_FRAMES = 32;
 export const SCRIBBLE_FPS = 60;
 const REVEAL_FRAME = 2;
-// Ink bounds measured from the final atlas. Compensate the small differences
-// in drawing placement, without cropping/rescaling any frame or changing ink weight.
-const FRAME_CENTERS = [
-  [.498698,.397949], [.501302,.402344], [.501302,.386230], [.498698,.396484],
-  [.497396,.489746], [.497396,.489746], [.496094,.494141], [.509115,.495605],
-  [.489583,.533203], [.5,.527344], [.490885,.528809], [.492188,.517090],
+// Thirty-two source drawings. Every sample uses the same 384 × 128 pixels.
+// Measured UV origins / ink anchors accommodate the hand-drawn row spacing,
+// keeping the ink centred without rescaling a drawing or changing pen weight.
+const FRAME_REGIONS = [
+  [0,0.86328125,0.5,0.5],
+  [0.25,0.864257813,0.497395833,0.5],
+  [0.5,0.865234375,0.498697917,0.5],
+  [0.75,0.865234375,0.48828125,0.49609375],
+  [0,0.723632813,0.49609375,0.5],
+  [0.25,0.7265625,0.5,0.49609375],
+  [0.5,0.720703125,0.493489583,0.5],
+  [0.75,0.717773438,0.497395833,0.5],
+  [0,0.588867188,0.497395833,0.5],
+  [0.25,0.5859375,0.498697917,0.49609375],
+  [0.5,0.583007813,0.498697917,0.5],
+  [0.75,0.580078125,0.498697917,0.5],
+  [0,0.455078125,0.501302083,0.50390625],
+  [0.25,0.456054688,0.497395833,0.5],
+  [0.5,0.455078125,0.5,0.49609375],
+  [0.75,0.455078125,0.498697917,0.50390625],
+  [0,0.33203125,0.490885417,0.5],
+  [0.25,0.3359375,0.4921875,0.5],
+  [0.5,0.331054688,0.497395833,0.5],
+  [0.75,0.331054688,0.493489583,0.5],
+  [0,0.21484375,0.498697917,0.49609375],
+  [0.25,0.21484375,0.502604167,0.5],
+  [0.5,0.21484375,0.498697917,0.49609375],
+  [0.75,0.21484375,0.5,0.5],
+  [0,0.099609375,0.489583333,0.50390625],
+  [0.25,0.098632813,0.493489583,0.5],
+  [0.5,0.09765625,0.5,0.49609375],
+  [0.75,0.09765625,0.498697917,0.5],
+  [0,0,0.5,0.42578125],
+  [0.25,0,0.498697917,0.44140625],
+  [0.5,0,0.5,0.44921875],
+  [0.75,0,0.501302083,0.44140625]
 ] as const;
 
 /** Simulation clock, so pause / frame step / slow motion also control the ink.
@@ -39,7 +69,7 @@ export class BoardScribbleSequence {
   }
 }
 
-/** Twelve independently drawn PNG frames on a fixed-size billboard. Only the
+/** Thirty-two independently drawn PNG frames on a fixed-size billboard. Only the
  * atlas cell changes: no scale tween, alpha fade, or resampled shrinking image. */
 export class BoardScribbleEffect {
   readonly sprite: THREE.Sprite;
@@ -56,7 +86,7 @@ export class BoardScribbleEffect {
     private readonly board: THREE.Object3D, private readonly clock: BoardScribbleSequence) {
     this.texture = texture.clone(); this.texture.needsUpdate = true;
     this.texture.colorSpace = THREE.SRGBColorSpace;
-    this.texture.repeat.set(1 / 4, 1 / 3);
+    this.texture.repeat.set(1 / 4, 1 / 8);
     this.texture.magFilter = this.texture.minFilter = THREE.LinearFilter;
     this.texture.generateMipmaps = false;
     const material = new THREE.SpriteMaterial({map:this.texture, transparent:false,
@@ -83,8 +113,8 @@ export class BoardScribbleEffect {
       if (newBurst) {
         this.board.getWorldScale(this.worldScale);
         const width = (s.deckNoseLength + s.deckTailLength) * scale * this.worldScale.z * 1.45;
-        // Same pixel density and quad dimensions for ALL twelve drawings.
-        this.sprite.scale.set(width, width * (1024 / 3) / (1536 / 4), 1);
+        // Same pixel density and quad dimensions for ALL thirty-two drawings.
+        this.sprite.scale.set(width, width / 3, 1);
       }
     }
     this.serial = this.clock.serial;
@@ -93,9 +123,9 @@ export class BoardScribbleEffect {
     this.root.localToWorld(this.a); this.root.localToWorld(this.b);
     this.a.applyMatrix4(camera.matrixWorldInverse); this.b.applyMatrix4(camera.matrixWorldInverse);
     this.sprite.material.rotation = Math.atan2(this.b.y - this.a.y, this.b.x - this.a.x);
-    const frame = this.clock.frame;
-    this.sprite.center.set(FRAME_CENTERS[frame][0], FRAME_CENTERS[frame][1]);
-    this.texture.offset.set((frame % 4) / 4, 1 - (Math.floor(frame / 4) + 1) / 3);
+    const frame = FRAME_REGIONS[this.clock.frame];
+    this.sprite.center.set(frame[2], frame[3]);
+    this.texture.offset.set(frame[0], frame[1]);
   }
   dispose(): void {this.sprite.removeFromParent(); this.sprite.material.dispose(); this.texture.dispose();}
 }
