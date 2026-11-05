@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><title>Kite component review</title>
+<style>body{margin:0;background:#647888;color:#fff;font:14px system-ui}header{position:absolute;z-index:2;top:12px;left:12px;background:#182b37dd;padding:12px;border-radius:8px;max-width:600px}button{margin:3px;padding:8px}pre{white-space:pre-wrap;max-width:560px}canvas{display:block}</style>
+<header><b>Kite component review · full native geometry</b><div id="buttons"></div><pre id="status">Loading…</pre><pre id="point">Click a surface to inspect an attachment position.</pre></header>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import {KiteTowVisual} from '/src/kiteTowVisual.ts';
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,innerWidth/innerHeight,.001,200),renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(devicePixelRatio);renderer.setSize(innerWidth,innerHeight);renderer.setClearColor('#647888');renderer.toneMapping=THREE.ACESFilmicToneMapping;document.body.append(renderer.domElement);
+scene.add(new THREE.HemisphereLight('#fff8e8','#454544',2.5));const sun=new THREE.DirectionalLight('#fff5de',3);sun.position.set(2,3,4);scene.add(sun);
+const control=new OrbitControls(camera,renderer.domElement);let model,kite,center=new THREE.Vector3(),span=1;
+const button=(name,fn)=>{const e=document.createElement('button');e.textContent=name;e.onclick=fn;document.querySelector('#buttons').append(e);};
+function view(x,y,z){camera.position.copy(center).add(new THREE.Vector3(x,y,z).multiplyScalar(span));control.target.copy(center);control.update();}
+async function load(file){if(model)scene.remove(model);const gltf=await new GLTFLoader().loadAsync('/beach-kite/'+file+'.glb');model=gltf.scene;scene.add(model);const b=new THREE.Box3().setFromObject(model);b.getCenter(center);span=b.getSize(new THREE.Vector3()).length();let triangles=0;model.traverse(o=>{if(o.isMesh)triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;});document.querySelector('#status').textContent=JSON.stringify({file,triangles,bounds:{min:b.min.toArray(),max:b.max.toArray()}},null,2);view(0,.2,1.8);}
+button('Canopy',()=>load('canopy'));button('Wooden bar',()=>load('control-bar'));button('Front',()=>view(0,0,1.8));button('Back',()=>view(0,0,-1.8));button('Side',()=>view(1.8,0,0));button('Above',()=>view(0,1.8,.01));button('Three quarter',()=>view(.9,.5,1.5));
+async function rig(){if(model)scene.remove(model);kite??=new KiteTowVisual();await kite.prepare();model=kite.root;scene.add(model);kite.pose(new THREE.Vector3(),0,0,0,0,null,null);model.visible=true;const bounds=new THREE.Box3().setFromObject(model);bounds.getCenter(center);span=bounds.getSize(new THREE.Vector3()).length();view(.35,.2,1.15);document.querySelector('#status').textContent='Assembled kite · four flying lines, two paired bridles, six measured attachment sites';}
+function focus(part){if(!kite)return;const bounds=new THREE.Box3().setFromObject(kite[part]);bounds.getCenter(center);span=bounds.getSize(new THREE.Vector3()).length();view(.2,.25,1.7);}
+button('Assembled rig',rig);button('Canopy close',()=>focus('sail'));button('Bar close',()=>focus('bar'));button('Steer left',()=>{kite?.pose(new THREE.Vector3(),1,-1,0,-.3,null,null);});button('Steer right',()=>{kite?.pose(new THREE.Vector3(),1,1,0,.3,null,null);});button('Jump',()=>{kite?.pose(new THREE.Vector3(0,3,0),1,0,3,0,null,null);});
+const ray=new THREE.Raycaster();renderer.domElement.addEventListener('click',e=>{ray.setFromCamera(new THREE.Vector2(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1),camera);const hit=ray.intersectObject(model,true)[0];if(hit)document.querySelector('#point').textContent=JSON.stringify({point:hit.point.toArray(),normal:hit.face.normal.toArray()},null,2);});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+renderer.setAnimationLoop(()=>{control.update();renderer.render(scene,camera);});load('canopy');
+</script>

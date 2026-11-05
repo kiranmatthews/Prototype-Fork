@@ -1,0 +1,82 @@
+{
+  "assets": [
+    {
+      "name": "canopy",
+      "triangles": 7873,
+      "budget": 8000,
+      "bytes": 1891840,
+      "sha256": "df6d648766af100622863fcd064b2f564a31b3e84a76eb3f17949122ffca957f"
+    },
+    {
+      "name": "control-bar",
+      "triangles": 1912,
+      "budget": 2000,
+      "bytes": 1496556,
+      "sha256": "5f0afc7ca2d52ea88875f62d92734e871744d7824344987c41cd870b95456fe3"
+    }
+  ],
+  "cases": [
+    {
+      "steer": 0,
+      "wind": 0,
+      "lift": 0,
+      "aspect": 1.6,
+      "linesClear": true
+    },
+    {
+      "steer": -1,
+      "wind": -0.45,
+      "lift": 0,
+      "aspect": 1.6,
+      "linesClear": true
+    },
+    {
+      "steer": 1,
+      "wind": 0.45,
+      "lift": 0,
+      "aspect": 1.6,
+      "linesClear": true
+    },
+    {
+      "steer": 1,
+      "wind": -0.4,
+      "lift": 4,
+      "aspect": 1.6,
+      "linesClear": true
+    },
+    {
+      "steer": -1,
+      "wind": 0.4,
+      "lift": 7,
+      "aspect": 0.6,
+      "linesClear": true
+    }
+  ],
+  "attachmentErrors": [
+    {
+      "name": "left steering",
+      "distanceMetres": 2.819223672559775e-9
+    },
+    {
+      "name": "left outer bridle",
+      "distanceMetres": 3.6253178789121133e-9
+    },
+    {
+      "name": "left inner bridle",
+      "distanceMetres": 1.8341241924580697e-9
+    },
+    {
+      "name": "right inner bridle",
+      "distanceMetres": 2.4064583024720037e-10
+    },
+    {
+      "name": "right outer bridle",
+      "distanceMetres": 3.26132543238367e-9
+    },
+    {
+      "name": "right steering",
+      "distanceMetres": 1.2664423451388135e-9
+    }
+  ],
+  "pass": true
+}

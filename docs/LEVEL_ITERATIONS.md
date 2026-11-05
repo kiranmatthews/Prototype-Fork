@@ -9573,3 +9573,34 @@ validated at 05:37 UTC, approximately 16 minutes after this follow-up began.
 Evidence: `docs/bonus-hud-continuity/`. Direct publication belongs to this chat.
 Production build/typecheck, whitespace and release-size checks pass
 (834,736,587 bytes).
+
+## 2026-11-05 — Weathered hot-rod kite and wooden control bar
+
+Beach Street now uses two separately generated Tripo Smart Mesh P2.0 components:
+a washed-charcoal fabric canopy with vintage gradient flames, worn yellow edging
+and stitched reinforcement, plus a chunky carved wooden control bar with rope
+grips. Each component received its own built-in imagegen Crash 4 aesthetic pass
+from the user's woodie-car reference before modeling. Used the user's signed-in
+Chrome session and 260 web-plan credits. Targets were 8,000 and 2,000 triangles;
+the exported models contain 7,873 and 1,912 respectively, with full geometry
+preserved at every distance.
+
+Manually built four flying lines, two paired leading-edge bridles, six reinforced
+attachment loops, bar-end leaders and center depower hardware. Attachments are
+measured against the exported canopy surface. The kite follows the existing wind,
+steering and jump poses, hand IK and flyaway behavior. Beach Street presentation
+waits for both assets; the ordinary-level path does not load them. No level data,
+movement tuning, sky settings or other scenery changes.
+
+First playable visual review at approximately 05:57 UTC / 18:57 NZDT, about
+27 minutes after this kite follow-up began. Component budgets, painted textures,
+surface anchors, line/bridle clearance and flyaway checks pass. The focused kite
+control regression also passes, including hand placement, charge/jump, flip,
+grind, death/respawn, bonus docking and ordinary-level isolation. Actual Chrome
+review passes in lite, full MAX/native (3024 × 1724) and normal 720p, with clean
+warning/error logs. Native charged jump and flyaway/reset were inspected, and
+the wooden grip close-up confirms the hands remain on the rope grips.
+
+Production build/typecheck, whitespace and release-size checks pass
+(838,128,479 bytes). Art provenance, exact prompts, review fixtures and evidence
+are in `art/beach-kite/`. Direct publication belongs to this chat.

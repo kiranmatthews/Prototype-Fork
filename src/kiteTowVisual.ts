@@ -1,17 +1,21 @@
 import * as THREE from 'three';
 import { solveTwoBoneIk } from './animation/ik';
+import { KITE_ATTACHMENT_SITES, kiteCanopyPoint, loadKiteArt } from './kiteArt';
 
 type Arm = {root: THREE.Object3D; mid: THREE.Object3D; end: THREE.Object3D; grip?: THREE.Object3D};
 const UP = new THREE.Vector3(0, 1, 0);
 
-/** Inflated, curved foil with five sewn cells, struts and four taut flying lines.
+/** Weathered flame canopy, wooden bar and a four-line SLE-style bridle layout.
  * Kept outside the character hierarchy so the sail never enlarges its hitbox. */
 export class KiteTowVisual {
   readonly root = new THREE.Group();
   readonly sail = new THREE.Group();
   readonly bar = new THREE.Group();
   private readonly lines: THREE.Mesh[] = [];
+  private readonly leaders: THREE.Mesh[] = [];
+  private readonly origins: THREE.Vector3[] = [];
   private readonly endpoints: THREE.Vector3[] = [];
+  private loading?: Promise<void>;
   private readonly a = new THREE.Vector3();
   private readonly b = new THREE.Vector3();
   private readonly delta = new THREE.Vector3();
@@ -20,6 +24,14 @@ export class KiteTowVisual {
   readonly gripErrors = [0, 0];
   flyingAway = false;
   deathAge = 0;
+
+  /** Destination loading waits for both parts before revealing Beach Street. */
+  prepare(): Promise<void> {
+    return this.loading ??= loadKiteArt().then(({canopy, bar}) => {
+      this.sail.add(canopy); this.bar.add(bar);
+      this.root.userData.kiteArtReady = true;
+    }).catch(error => {this.loading = undefined; throw error;});
+  }
 
   reset(): void { this.flyingAway = false; this.deathAge = 0; this.root.visible = false; }
   beginFlyaway(): void { this.flyingAway = true; this.deathAge = 0; this.root.visible = true; }
@@ -37,43 +49,76 @@ export class KiteTowVisual {
   constructor() {
     this.root.name = 'Beach Street towing kite';
     this.root.add(this.sail, this.bar);
-    const dark = new THREE.MeshStandardMaterial({color: '#163c4d', roughness: .68});
-    const lineMaterial = new THREE.MeshBasicMaterial({color: '#fff0c0'});
-    const cloth = ['#ee754b', '#fff0ce', '#238b9d', '#fff0ce', '#ee754b'];
-    const point = (u: number, v: number) => new THREE.Vector3(
-      5.1 * Math.sin(u * 1.12),
-      1.8 * Math.cos(u * 1.12) + .45 * Math.sin(v * Math.PI),
-      v * 2.7 + .6 * u * u,
-    );
-    for (let cell = 0; cell < 5; cell++) {
-      const vertices: number[] = [], indices: number[] = [];
-      for (let i = 0; i <= 8; i++) for (let j = 0; j <= 10; j++) {
-        vertices.push(...point(-1 + (cell + i / 8) * .4, j / 10).toArray());
-        if (i < 8 && j < 10) {const k = i * 11 + j; indices.push(k, k+11, k+1, k+1, k+11, k+12);}
-      }
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-      geometry.setIndex(indices); geometry.computeVertexNormals();
-      const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color: cloth[cell], side: THREE.DoubleSide, roughness: .78}));
-      mesh.name = `sewn canopy cell ${cell+1}`; this.sail.add(mesh);
-    }
-    const tube = (points: THREE.Vector3[], radius: number) => {
-      const mesh = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 40, radius, 8, false), dark);
-      this.sail.add(mesh);
+    const rope = new THREE.MeshStandardMaterial({color: '#bda47b', roughness: .98});
+    const webbing = new THREE.MeshStandardMaterial({color: '#66503a', roughness: .97});
+    const brass = new THREE.MeshStandardMaterial({color: '#aa8951', metalness: .5, roughness: .64});
+    const lineMaterial = new THREE.MeshBasicMaterial({color: '#e7d9b8'});
+    const front = new THREE.Vector3(0, 0, 1);
+    const ringGeometry = new THREE.TorusGeometry(.065, .018, 5, 12);
+    const lineGeometry = new THREE.CylinderGeometry(1, 1, 1, 5, 1, true);
+    const segment = (name: string, a: THREE.Vector3, b: THREE.Vector3, radius: number, parent: THREE.Group, material: THREE.Material = rope) => {
+      const mesh = new THREE.Mesh(lineGeometry, material); mesh.name = name;
+      mesh.position.copy(a).add(b).multiplyScalar(.5);
+      const delta = b.clone().sub(a);
+      mesh.scale.set(radius, delta.length(), radius);
+      mesh.quaternion.setFromUnitVectors(UP, delta.normalize()); parent.add(mesh);
+      return mesh;
     };
-    tube(Array.from({length: 33}, (_, i) => point(i/16-1, 0)), .12);
-    tube(Array.from({length: 33}, (_, i) => point(i/16-1, 1)), .045);
-    for (const u of [-1, -.6, -.2, .2, .6, 1]) tube(Array.from({length: 11}, (_, j) => point(u, j/10)), .055);
-    const barMesh = new THREE.Mesh(new THREE.CylinderGeometry(.045, .045, 1.16, 10), dark);
-    barMesh.rotation.z = Math.PI / 2; this.bar.add(barMesh);
-    for (const x of [-.5, .5]) {
-      const grip = new THREE.Mesh(new THREE.CylinderGeometry(.065, .065, .22, 10), new THREE.MeshStandardMaterial({color: x < 0 ? '#ef7547' : '#f9e4a2'}));
-      grip.rotation.z = Math.PI/2; grip.position.x = x; this.bar.add(grip);
+    const attachments = KITE_ATTACHMENT_SITES.map(site => {
+      const point = kiteCanopyPoint(site.point), normal = new THREE.Vector3(...site.normal);
+      const mount = new THREE.Group(); mount.name = site.name + ' reinforced attachment';
+      mount.position.copy(point); mount.quaternion.setFromUnitVectors(front, normal);
+      // The base intersects the measured cloth/tube face; the loop projects
+      // towards the rider, rather than leaving a line stuck into empty air.
+      const patch = new THREE.Mesh(new THREE.BoxGeometry(.20, .26, .025), webbing);
+      patch.position.z = .005; mount.add(patch);
+      const loop = new THREE.Mesh(ringGeometry, rope); loop.scale.y = 1.3;
+      loop.rotation.x = Math.PI / 2;
+      loop.position.set(0, -.035, .07); mount.add(loop); this.sail.add(mount);
+      const knot = new THREE.Vector3(0, -.035, .1545).applyQuaternion(mount.quaternion).add(point);
+      return knot;
+    });
+    const junctions = [new THREE.Vector3(-1.95, -.35, 4.6), new THREE.Vector3(1.9, -.35, 4.6)];
+    for (let side = 0; side < 2; side++) {
+      const junction = junctions[side];
+      for (const index of side === 0 ? [1, 2] : [3, 4])
+        segment(`front bridle ${side}:${index}`, attachments[index], junction, .016, this.sail);
+      const knot = new THREE.Mesh(new THREE.SphereGeometry(.042, 7, 5), rope);
+      knot.name = `front bridle junction ${side}`; knot.position.copy(junction); this.sail.add(knot);
     }
-    for (const [u, v] of [[-1, .05], [1, .05], [-.65, .9], [.65, .9]]) {
-      this.endpoints.push(point(u, v));
-      const line = new THREE.Mesh(new THREE.CylinderGeometry(.012, .012, 1, 5), lineMaterial);
-      line.frustumCulled = false; this.root.add(line); this.lines.push(line);
+    // Bar ends steer the wingtips. The central load lines feed the two short
+    // leading-edge bridles, through a distinct depower guide and lower loop.
+    const guide = new THREE.Mesh(new THREE.TorusGeometry(.064, .017, 6, 14), brass);
+    guide.name = 'center depower guide'; guide.position.set(0, .02, -.13); this.bar.add(guide);
+    const guideFoot = new THREE.Mesh(new THREE.BoxGeometry(.08, .04, .10), brass);
+    guideFoot.name = 'guide mounting foot'; guideFoot.position.set(0, -.045, -.09); this.bar.add(guideFoot);
+    const split = new THREE.Vector3(0, .17, -.72);
+    segment('central depower line', new THREE.Vector3(0, .02, -.13), split, .022, this.bar);
+    const swivel = new THREE.Mesh(new THREE.SphereGeometry(.043, 7, 5), brass);
+    swivel.name = 'front-line split swivel'; swivel.position.copy(split); this.bar.add(swivel);
+    const loopPoints = [[0,.02,-.13],[0,-.14,-.14],[0,-.29,.16],[0,-.38,.31],[0,-.36,.39],[0,-.25,.38],[0,-.14,-.14]]
+      .map(p => new THREE.Vector3(...p));
+    const lowerLoop = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(loopPoints), 16, .019, 5, false), rope);
+    lowerLoop.name = 'depower retention loop'; this.bar.add(lowerLoop);
+    const release = new THREE.Mesh(new THREE.CylinderGeometry(.04, .045, .12, 7), new THREE.MeshStandardMaterial({color: '#c25a35', roughness: .8}));
+    release.position.set(0, -.14, -.14); release.name = 'worn release collar'; this.bar.add(release);
+    for (const side of [-1, 1]) {
+      const loop = new THREE.Mesh(ringGeometry, rope); loop.scale.setScalar(.65);
+      loop.rotation.x = Math.PI / 2;
+      loop.position.set(side * .61, 0, -.115); loop.name = side < 0 ? 'left bar leader loop' : 'right bar leader loop'; this.bar.add(loop);
+    }
+    const origins = [new THREE.Vector3(-.61, 0, -.15), new THREE.Vector3(.61, 0, -.15),
+      new THREE.Vector3(-.024, .17, -.72), new THREE.Vector3(.024, .17, -.72)];
+    const endpoints = [attachments[0], attachments[5], ...junctions];
+    const names = ['left steering line', 'right steering line', 'left front load line', 'right front load line'];
+    for (let i = 0; i < 4; i++) {
+      this.origins.push(origins[i]); this.endpoints.push(endpoints[i]);
+      const line = new THREE.Mesh(lineGeometry, lineMaterial); line.name = names[i];
+      line.scale.set(.010, 1, .010); line.frustumCulled = false;
+      this.root.add(line); this.lines.push(line);
+      const leader = new THREE.Mesh(lineGeometry, rope); leader.name = names[i] + ' leader';
+      leader.scale.set(.022, 1, .022); leader.frustumCulled = false;
+      this.root.add(leader); this.leaders.push(leader);
     }
     this.root.visible = false;
   }
@@ -112,11 +157,14 @@ export class KiteTowVisual {
       this.gripErrors[i] = this.a.distanceTo(this.target);
     }
     for (let i = 0; i < this.lines.length; i++) {
-      this.a.set(i%2 ? .5 : -.5, 0, 0); this.bar.localToWorld(this.a); this.a.sub(pos);
+      this.a.copy(this.origins[i]); this.bar.localToWorld(this.a); this.a.sub(pos);
       this.b.copy(this.endpoints[i]); this.sail.localToWorld(this.b); this.b.sub(pos);
       const line = this.lines[i]; line.position.copy(this.a).add(this.b).multiplyScalar(.5);
       this.delta.copy(this.b).sub(this.a); line.scale.y = this.delta.length();
       line.quaternion.setFromUnitVectors(UP, this.delta.normalize());
+      const leader = this.leaders[i]; leader.scale.y = .42;
+      leader.position.copy(this.a).addScaledVector(this.delta, .21);
+      leader.quaternion.copy(line.quaternion);
     }
   }
 }

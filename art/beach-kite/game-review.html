@@ -1,0 +1,28 @@
+<!doctype html><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Beach kite in-level review</title><link rel="icon" href="data:,">
+<style>html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#101b22}#app canvas{display:block;width:100%!important;height:100%!important}#kite-review{position:fixed;bottom:8px;left:8px;z-index:999999;background:#142730e8;color:#fff;padding:10px;border-radius:8px;font:12px system-ui;max-width:700px}#kite-review button{margin:3px;padding:6px}#kite-review output{display:block;white-space:pre-wrap;max-height:82px;overflow:auto}</style>
+<div id="app"></div><script type="module" src="/src/main.ts"></script>
+<script type="module">
+import * as THREE from 'three';
+const g=window.__game;if(!g.launchReview)throw Error('Use ?playtest&level=coastal-street-run&launchReview');
+const panel=document.createElement('section');panel.id='kite-review';panel.innerHTML='<strong>BEACH STREET · KITE ART REVIEW</strong><div></div><output>Preparing…</output>';document.body.append(panel);
+const output=panel.querySelector('output');let queue=[],view='game',inspected=false;const savedPos=new THREE.Vector3(),savedRot=new THREE.Quaternion();
+const clear=()=>{g.input.moveX=g.input.moveY=0;for(const key of ['jumpHeld','jumpPressed','jumpReleased','spinPressed','grindHeld','grindPressed','grabHeld','grabPressed','transferPressed'])g.input[key]=false;};
+const run=steps=>{queue=steps;g.launchReview.rate=1;};
+const button=(name,fn)=>{const b=document.createElement('button');b.textContent=name;b.onclick=fn;panel.querySelector('div').append(b);};
+button('Reset spawn',()=>{queue=[];clear();g.player.respawn(g.getLevel(),true);g.launchReview.rate=1;setTimeout(()=>{g.launchReview.rate=0;},100);});
+button('Tow 90 frames',()=>run(Array.from({length:90},(_,i)=>({spinPressed:i===0}))));
+button('Steer left',()=>run(Array.from({length:24},()=>({moveX:-1}))));
+button('Steer right',()=>run(Array.from({length:24},()=>({moveX:1}))));
+button('Charge jump',()=>run([...Array.from({length:24},(_,i)=>({jumpPressed:i===0,jumpHeld:true})),{jumpReleased:true},...Array.from({length:18},()=>({}))]));
+button('Advance 60',()=>run(Array.from({length:60},()=>({}))));
+button('Flyaway',()=>{g.player.die('wall');run(Array.from({length:45},()=>({})));});
+button('Freeze',()=>{queue=[];clear();g.launchReview.rate=0;});
+button('Gameplay camera',()=>view='game');button('Bar camera',()=>view='bar');
+button('Native MAX',()=>g.renderQualitySettings.setRegularResolution(null));
+button('Normal 720',()=>g.renderQualitySettings.setRegularResolution(720));
+button('Hide review panel',()=>panel.style.display='none');
+g.launchReview.beforeStep=()=>{if(queue.length){clear();Object.assign(g.input,queue.shift());if(!queue.length)g.launchReview.rate=0;}};
+g.launchReview.restoreCamera=()=>{if(inspected){g.camera.position.copy(savedPos);g.camera.quaternion.copy(savedRot);inspected=false;}};
+g.launchReview.afterCamera=()=>{if(view==='game'||!g.player.kiteVisual)return;savedPos.copy(g.camera.position);savedRot.copy(g.camera.quaternion);inspected=true;const aim=g.player.kiteVisual.bar.getWorldPosition(new THREE.Vector3());g.camera.position.copy(aim).add(new THREE.Vector3(2,.9,2.1));g.camera.lookAt(aim);g.camera.updateMatrixWorld();};
+setInterval(()=>{const p=g.player,k=p.kiteVisual;output.textContent=JSON.stringify({loading:g.getLoadingDiagnostics().phase,pendingFrames:queue.length,drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],ready:k?.root.userData.kiteArtReady??false,state:p.state,position:p.pos.toArray().map(n=>+n.toFixed(2)),gripErrors:k?.gripErrors,flyaway:k?.flyingAway,resolution:g.renderQualitySettings.regularResolution,sizes:g.getRenderQualitySizes()},null,1);},500);
+</script>

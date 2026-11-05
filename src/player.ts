@@ -3688,7 +3688,9 @@ export class Player {
 
   /** Wait for asynchronous attachment work as well as the texture loader. */
   async preparePresentationAssets(): Promise<void> {
-    await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading]);
+    if (this.kiteTowing) this.kiteVisual ??= new KiteTowVisual();
+    await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading,
+      this.kiteTowing ? this.kiteVisual?.prepare() : undefined]);
     await this.spinEffects?.prepare();
   }
 

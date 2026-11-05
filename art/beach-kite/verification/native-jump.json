@@ -1,0 +1,29 @@
+{
+ "loading": null,
+ "pendingFrames": 0,
+ "drawingBuffer": [
+  3024,
+  1724
+ ],
+ "ready": true,
+ "state": "air",
+ "position": [
+  -5.85,
+  14.64,
+  -24.69
+ ],
+ "gripErrors": [
+  0.000005910539226312114,
+  6.84437472259134e-7
+ ],
+ "flyaway": false,
+ "resolution": "max",
+ "sizes": {
+  "viewportWidth": 1512,
+  "viewportHeight": 862,
+  "inputWidth": 1263,
+  "inputHeight": 720,
+  "outputWidth": 1263,
+  "outputHeight": 720
+ }
+}

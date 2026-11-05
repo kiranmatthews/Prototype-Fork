@@ -1,0 +1,49 @@
+{
+  "created": "2026-11-05",
+  "referencePipeline": "User woodie car -> built-in imagegen Crash 4 aesthetic pass -> Tripo web Smart Mesh P2.0 -> texture -> GLB export at 2k",
+  "credits": {
+    "account": "Tripo web plan",
+    "before": 22835,
+    "after": 22575,
+    "geometryPerComponent": 100,
+    "texturePerComponent": 30,
+    "total": 260
+  },
+  "assets": [
+    {
+      "name": "canopy",
+      "triangles": 7873,
+      "budget": 8000,
+      "bytes": 1891840,
+      "sha256": "df6d648766af100622863fcd064b2f564a31b3e84a76eb3f17949122ffca957f",
+      "model": "Smart Mesh P2.0",
+      "topology": "Triangle",
+      "tripoTask": "320b17fc-0389-4a04-a05d-10e2b2a31db9",
+      "tripoExport": "45fc76fa-5454-40ad-88fe-0f82d4aec320",
+      "imageReference": "canopy-reference.png",
+      "projectPath": "public/beach-kite/canopy.glb"
+    },
+    {
+      "name": "control-bar",
+      "triangles": 1912,
+      "budget": 2000,
+      "bytes": 1496556,
+      "sha256": "5f0afc7ca2d52ea88875f62d92734e871744d7824344987c41cd870b95456fe3",
+      "model": "Smart Mesh P2.0",
+      "topology": "Triangle",
+      "tripoTask": "f6dc4f64-1740-4aee-9956-62290510e646",
+      "tripoExport": "098068d0-313e-4f4b-8750-5321afdb3346",
+      "imageReference": "control-bar-reference.png",
+      "projectPath": "public/beach-kite/control-bar.glb"
+    }
+  ],
+  "manualParts": [
+    "four flying lines",
+    "four leading-edge bridle legs",
+    "six reinforced attachment loops",
+    "bar-end leader loops",
+    "center depower guide and mounting foot",
+    "front-line swivel",
+    "release collar and retention loop"
+  ]
+}
