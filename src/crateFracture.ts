@@ -16,7 +16,7 @@ type FragmentBody = {
   burnRate: number;
 };
 type Assembly = { root: THREE.Group; mesh: THREE.SkinnedMesh; bodies: FragmentBody[]; age: number; size: number;
-  motion?: { value: number }; ownedMaterial?: THREE.MeshStandardMaterial };
+  motion?: { value: number }; ownedMaterials: THREE.MeshStandardMaterial[] };
 const fractureGeometries = new Map<string, THREE.BufferGeometry>();
 const contactHulls = new WeakMap<CrateFragment, THREE.Vector3[]>();
 function contactHull(fragment: CrateFragment): THREE.Vector3[] {
@@ -77,8 +77,8 @@ export function prepareCrateFracture(kind: CrateArtKind): void {
 }
 function freshWood(): THREE.MeshStandardMaterial {
   if (cutMaterial) return cutMaterial;
-  cutMaterial = new THREE.MeshStandardMaterial({ color: 0xcca165, roughness: .96, flatShading: true });
-  cutMaterial.name = 'Fresh broken fibres inside the hollow crate'; cutMaterial.userData.shared = true;
+  cutMaterial = new THREE.MeshStandardMaterial({ color: 0xcf6427, roughness: .86, flatShading: true });
+  cutMaterial.name = 'Orange timber through the broken faces'; cutMaterial.userData.shared = true;
   cutMaterial.onBeforeCompile = shader => {
     shader.vertexShader = `varying vec3 vSplitLocal;\n${shader.vertexShader}`.replace('#include <begin_vertex>', '#include <begin_vertex>\nvSplitLocal = position;');
     shader.fragmentShader = `varying vec3 vSplitLocal;\n${shader.fragmentShader}`.replace('#include <color_fragment>', `#include <color_fragment>
@@ -95,6 +95,13 @@ function freshSteel(): THREE.MeshStandardMaterial {
   steelCutMaterial = new THREE.MeshStandardMaterial({ color: 0x77858e, roughness: .72, metalness: .25, flatShading: true });
   steelCutMaterial.name = 'Fresh torn steel edges'; steelCutMaterial.userData.shared = true;
   return steelCutMaterial;
+}
+function fadingMaterial(source: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+  const material = source.clone(); material.userData.shared = false;
+  material.onBeforeCompile = source.onBeforeCompile;
+  material.customProgramCacheKey = () => source.customProgramCacheKey();
+  material.transparent = true; material.depthWrite = true;
+  return material;
 }
 
 /** Rigid bones carry the exact surface pieces in two draws per break.
@@ -129,10 +136,9 @@ export class CrateFracturePool {
       this.retire(this.assemblies[0]);
     const root = new THREE.Group(); root.position.copy(center); root.scale.setScalar(size);
     root.name = `${kind} · ${fragments.length} matching surface fragments`;
-    let surface = material;
+    const surface = fadingMaterial(material);
     const motion = explosive ? { value: 0 } : undefined;
     if (motion) {
-      surface = material.clone(); surface.userData.shared = false;
       surface.onBeforeCompile = (shader, renderer) => {
         material.onBeforeCompile(shader, renderer);
         shader.uniforms.fractureAge = motion;
@@ -149,9 +155,10 @@ export class CrateFracturePool {
       };
       surface.customProgramCacheKey = () => `${material.customProgramCacheKey()}:torn-canvas-v1`;
     }
-    const mesh = new THREE.SkinnedMesh(g, [surface, metal ? freshSteel() : freshWood()]);
+    const inside = fadingMaterial(metal ? freshSteel() : freshWood());
+    const mesh = new THREE.SkinnedMesh(g, [surface, inside]);
     mesh.name = 'Rigid surface fragments and closed cut faces'; mesh.frustumCulled = false;
-    mesh.castShadow = mesh.receiveShadow = true; root.add(mesh);
+    mesh.castShadow = false; mesh.receiveShadow = true; root.add(mesh);
     const bones = fragments.map((fragment, i) => {
       const bone = new THREE.Bone(); bone.name = `Fracture ${i}`; bone.position.copy(fragment.center); mesh.add(bone); return bone;
     });
@@ -159,18 +166,20 @@ export class CrateFracturePool {
     // world matrix while bones retain their independent rigid transforms.
     root.updateMatrixWorld(true); const skeleton = new THREE.Skeleton(bones); mesh.bind(skeleton);
     const bodies = fragments.map((fragment, i): FragmentBody => {
-      const radial = fragment.center.clone(); radial.y *= .4; radial.normalize();
+      // Bottom pieces receive the same upward kick as the top pieces, so
+      // none are driven into the floor before their short fade completes.
+      const radial = fragment.center.clone(); radial.y = 0; radial.normalize();
       const heavy = (i < 8 ? .8 : 1) * (metal ? .72 : 1);
-      const power = (explosion ? 5.3 : 2.25) * heavy * (.85 + this.roll() * .45);
+      const power = (explosion ? 5.3 : 3.4) * heavy * (.85 + this.roll() * .45);
       return {
         bone: bones[i], source: fragment, position: center.clone().addScaledVector(fragment.center, size),
-        velocity: radial.multiplyScalar(power).add(new THREE.Vector3((this.roll() - .5) * .8, (explosion ? 5.5 : 3.6) * (.8 + this.roll() * .5), (this.roll() - .5) * .8)),
+        velocity: radial.multiplyScalar(power).add(new THREE.Vector3((this.roll() - .5) * .8, 5.5 * (.9 + this.roll() * .25), (this.roll() - .5) * .8)),
         rotation: new THREE.Quaternion(), angular: new THREE.Vector3((this.roll() - .5) * 12, (this.roll() - .5) * 10, (this.roll() - .5) * 12).multiplyScalar(heavy),
-        lifetime: (explosive ? (i < 18 ? .58 : 1.05) : metal ? 3.1 : explosion ? 3.2 : 4.1) + this.roll() * (explosive ? .3 : .8),
+        lifetime: .24 + this.roll() * .08,
         settled: false, bounces: 0, contactHull: contactHull(fragment), burnRate: explosive ? (i < 18 ? 5.2 : 2.3) : 0,
       };
     });
-    this.root.add(root); this.assemblies.push({ root, mesh, bodies, age: 0, size, motion, ownedMaterial: surface !== material ? surface : undefined });
+    this.root.add(root); this.assemblies.push({ root, mesh, bodies, age: 0, size, motion, ownedMaterials: [surface, inside] });
     return true;
   }
   private support(normal: THREE.Vector3): number {
@@ -188,6 +197,10 @@ export class CrateFracturePool {
     for (const assembly of this.assemblies.slice()) {
       assembly.age += step; let alive = false;
       if (assembly.motion) assembly.motion.value = assembly.age;
+      // A brief, readable outward kick, then an airborne fade. The source
+      // crate's shared material must never fade with its detached fragments.
+      const opacity = 1 - THREE.MathUtils.smoothstep(assembly.age, .10, .32);
+      for (const material of assembly.ownedMaterials) material.opacity = opacity;
       for (const body of assembly.bodies) {
         if (assembly.age >= body.lifetime || body.position.y < world.killY - 3) { body.bone.scale.setScalar(.00001); continue; }
         const combustion = Math.exp(-Math.max(0, assembly.age - .035) * body.burnRate);
@@ -249,15 +262,15 @@ export class CrateFracturePool {
         }
         body.bone.position.copy(body.position).sub(assembly.root.position).divideScalar(assembly.size);
         body.bone.quaternion.copy(body.rotation);
-        const fade = THREE.MathUtils.smoothstep(body.lifetime - assembly.age, 0, .45);
-        body.bone.scale.setScalar(Math.max(.00001, fade * combustion));
+        const fade = THREE.MathUtils.smoothstep(body.lifetime - assembly.age, 0, .10);
+        body.bone.scale.setScalar((.65 + .35 * fade) * combustion);
       }
       if (!alive) this.retire(assembly);
     }
   }
   private retire(assembly: Assembly): void {
     assembly.root.removeFromParent(); assembly.mesh.skeleton.dispose();
-    assembly.ownedMaterial?.dispose();
+    for (const material of assembly.ownedMaterials) material.dispose();
     this.assemblies.splice(this.assemblies.indexOf(assembly), 1);
   }
   clear(): void { for (const assembly of this.assemblies.slice()) this.retire(assembly); }

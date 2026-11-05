@@ -9403,3 +9403,26 @@ metal sides and lid. Existing crate-art checks pass. Evidence and lifecycle
 observations: `docs/spent-nitro-metal/`. No mesh, level-data, collision or
 explosion changes. Production build/typecheck and release-size validation pass
 (834,729,828 bytes). Direct release remains assigned to this chat by the user.
+
+## 2026-11-05 — Quick airborne crate smashes and orange cut faces
+
+Reviewed the [Crash 4 reference](https://www.youtube.com/watch?v=vKERSYS7SkU&t=193s)
+frame by frame around 3:14. Wooden fragments now last 240–320 ms instead of
+4.1–4.9 seconds; the same short lifetime applies to metal, cage and explosive
+fragments and the procedural fallback. An upward/outward kick and transparency
+fade clear them in flight. Regular smash dust is shorter too. TNT/Nitro retain
+both existing explosion layers; checkpoints remain quiet.
+
+Broken faces now use orange timber, with matching orange cut ends in the
+fallback atlas. Fade materials belong to each effect and are disposed with it;
+intact shared surfaces remain opaque. Complete authored geometry is unchanged.
+Native browser checks of seven fragment models show full clearance within
+0.35 seconds, with every inspected vertex above the floor. The focused crate-art
+test covers the airborne fade, no settled debris, pool bounds and shared-asset
+ownership. Actual Player/Level checks pass in lite/CRT and full 2560×1440 rendering,
+including reset, TNT/Nitro layers, spent Nitro Bang metal and quiet checkpoint.
+Consoles are clean. Playably validated at 04:23 UTC, approximately 24 minutes
+after this follow-up began, including the reference review. Evidence and motion:
+`docs/quick-crate-smashes/`. Direct release remains assigned to this chat.
+Production build/typecheck and the hosting-size check pass; no full suite was
+needed for this scoped visual change.

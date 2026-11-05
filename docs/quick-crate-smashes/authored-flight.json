@@ -1,0 +1,192 @@
+[
+  {
+    "view": "wood",
+    "head": "skull",
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 12804,
+    "shellDraws": 1,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9091,
+      "finite": true,
+      "fragmentsClearedAt": 0.3333333333333333,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 0.8,
+    "fuse": null,
+    "paused": true
+  },
+  {
+    "view": "mystery",
+    "head": "skull",
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 8052,
+    "shellDraws": 1,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9208,
+      "finite": true,
+      "fragmentsClearedAt": 0.3,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 0.2,
+    "fuse": null,
+    "paused": true
+  },
+  {
+    "view": "multihit",
+    "head": "skull",
+    "visibleFruit": 5,
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 27880,
+    "shellDraws": 2,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9966,
+      "finite": true,
+      "fragmentsClearedAt": 0.3333333333333333,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 0.3,
+    "fuse": null,
+    "paused": true
+  },
+  {
+    "view": "life",
+    "head": "skull",
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 8052,
+    "shellDraws": 1,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9802,
+      "finite": true,
+      "fragmentsClearedAt": 0.31666666666666665,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 0.2,
+    "fuse": null,
+    "paused": true
+  },
+  {
+    "view": "metal",
+    "head": "skull",
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 7661,
+    "shellDraws": 1,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9303,
+      "finite": true,
+      "fragmentsClearedAt": 0.31666666666666665,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 0.3,
+    "fuse": null,
+    "paused": true
+  },
+  {
+    "view": "tnt",
+    "head": "skull",
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 25390,
+    "shellDraws": 3,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9371,
+      "finite": true,
+      "fragmentsClearedAt": 0.3333333333333333,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 1.5,
+    "fuse": null,
+    "paused": true
+  },
+  {
+    "view": "nitro",
+    "head": "skull",
+    "sourceOpacity": 1,
+    "assetsReady": true,
+    "recording": false,
+    "resolution": "MAX/native",
+    "triangles": 23242,
+    "shellDraws": 1,
+    "shared": true,
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "debrisCheck": {
+      "minimumY": -0.9339,
+      "finite": true,
+      "fragmentsClearedAt": 0.3333333333333333,
+      "cleanedUp": true
+    },
+    "emitMilliseconds": 0.5,
+    "fuse": null,
+    "paused": true
+  }
+]

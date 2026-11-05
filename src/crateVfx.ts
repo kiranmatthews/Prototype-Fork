@@ -78,7 +78,7 @@ export class CrateVfx {
       const radius = size * (.24 + this.roll() * .18);
       const p = new THREE.Vector3(center.x + Math.cos(a) * radius, groundY + size * .28, center.z + Math.sin(a) * radius);
       add(0, p, new THREE.Vector3(Math.cos(a) * (explosion ? 3.0 : 1.4), .25 + this.roll() * .5, Math.sin(a) * (explosion ? 3.0 : 1.4)),
-        size * (.68 + this.roll() * .3), .48 + this.roll() * .25, i * .005, .5);
+        size * (.68 + this.roll() * .3), explosion ? .48 + this.roll() * .25 : .20 + this.roll() * .12, i * .005, .5);
     }
     for (let i = 0; i < (explosion ? 5 : 3); i++) {
       const a = i * 2.39996 + this.roll() * .3;

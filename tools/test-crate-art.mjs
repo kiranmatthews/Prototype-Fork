@@ -56,19 +56,23 @@ try {
   const effects = new CrateEffects(), solids = new WorldSolids();
   const ground = new THREE.Mesh(new THREE.BoxGeometry(30, .3, 30)); ground.position.y = -.15; ground.updateMatrixWorld(true); solids.add(ground);
   const world = { worldSolids: solids, groundMeshes: [ground], killY: -20 };
+  const sourceShard = art.crateShardAsset('wood', 0);
+  let sharedDisposed = false;
+  sourceShard.geometry.addEventListener('dispose', () => sharedDisposed = true);
+  sourceShard.material.addEventListener('dispose', () => sharedDisposed = true);
   effects.emit('wood', new THREE.Vector3(0, .8, 0), 1.6, 0);
+  assert.equal(sourceShard.geometry.userData.shared, true, 'per-instance fading changed shared geometry ownership');
+  assert.equal(sourceShard.material.transparent, false, 'fragment fading changed the source material');
   let settled = 0;
-  const shardMatrix = new THREE.Matrix4(), shardScale = new THREE.Vector3(), shardBounds = new THREE.Box3();
   for (let i = 0; i < 110; i++) {
     effects.update(1 / 60, world); settled = Math.max(settled, effects.shards.filter(s => s.settled).length);
     assert.ok(effects.shards.every(s => s.position.y >= -.05), 'debris tunneled through support');
-    for (const shard of effects.shards.filter(s => s.settled)) {
-      shardMatrix.compose(shard.position, shard.rotation, shardScale.setScalar(shard.size));
-      shardBounds.copy(shard.batch.mesh.geometry.boundingBox).applyMatrix4(shardMatrix);
-      assert.ok(shardBounds.min.y >= -.01, 'settled shard geometry penetrates the floor');
-    }
+    if (i === 5) assert.ok(effects.diagnostics.shards > 0, 'impact fragments disappeared before their initial burst');
+    if (i === 11) assert.ok([...effects.batches.values()].some(b => b.bodies.length && b.alpha.getX(0) > 0 && b.alpha.getX(0) < 1), 'airborne fragments never faded');
+    if (i >= 20) assert.equal(effects.diagnostics.shards, 0, 'fragments lingered beyond the short airborne burst');
+    if (i >= 23) assert.equal(effects.diagnostics.drawCalls, 0, 'ordinary smash dust lingered after the burst');
   }
-  assert.ok(settled > 0, 'debris never settled');
+  assert.equal(settled, 0, 'fragments landed and settled instead of disappearing in flight');
   for (let i = 0; i < 30; i++) effects.emit(i % 2 ? 'nitro' : 'tnt', new THREE.Vector3(0, 1, 0), 1.6, 0, true);
   assert.ok(effects.diagnostics.shards <= effects.diagnostics.limit && effects.diagnostics.bursts <= 12, 'chain blast exceeded the bounded pool');
   for (let i = 0; i < 200; i++) effects.update(1 / 60, world);
@@ -77,5 +81,6 @@ try {
   assert.equal(effects.diagnostics.shards, 0, 'checkpoint emitted debris');
   assert.equal(effects.diagnostics.bursts, 0, 'checkpoint emitted an explosion');
   effects.dispose(); solids.dispose();
+  assert.equal(sharedDisposed, false, 'disposing fragments destroyed their shared source asset');
   console.log(JSON.stringify({ pass: true, allSixFaces: true, settled, lifetimeAndPool: true, variants: report }, null, 2));
 } finally { await server.close(); }

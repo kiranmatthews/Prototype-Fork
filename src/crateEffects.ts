@@ -10,7 +10,7 @@ export interface CrateDebrisWorld {
   groundMeshes: THREE.Mesh[];
   killY: number;
 }
-type Batch = { mesh: THREE.InstancedMesh; bodies: Shard[]; halfSize: THREE.Vector3; center: THREE.Vector3; radius: number };
+type Batch = { mesh: THREE.InstancedMesh; alpha: THREE.InstancedBufferAttribute; bodies: Shard[]; halfSize: THREE.Vector3; center: THREE.Vector3; radius: number };
 type Shard = {
   batch: Batch; position: THREE.Vector3; velocity: THREE.Vector3;
   rotation: THREE.Quaternion; angular: THREE.Vector3; size: number;
@@ -19,7 +19,7 @@ type Shard = {
 const MAX_SHARDS = 64;
 const DOWN = new THREE.Vector3(0, -1, 0);
 /** A bounded, level-owned cosmetic pool. Shards are real volumes, share the
- * crate material, tumble independently, collide, settle, and expire. They
+ * crate material, tumble independently and fade during their initial flight. They
  * never enter gameplay collision or consume gameplay randomness. */
 export class CrateEffects {
   readonly root = new THREE.Group();
@@ -49,15 +49,27 @@ export class CrateEffects {
     const key = `${kind}:${variant}`; let batch = this.batches.get(key);
     if (!batch) {
       const asset = crateShardAsset(kind, variant);
-      const mesh = new THREE.InstancedMesh(asset.geometry, asset.material, MAX_SHARDS);
+      const geometry = asset.geometry.clone(), material = asset.material.clone();
+      geometry.userData = { ...asset.geometry.userData, shared: false };
+      const alpha = new THREE.InstancedBufferAttribute(new Float32Array(MAX_SHARDS), 1).setUsage(THREE.DynamicDrawUsage);
+      geometry.setAttribute('crateShardAlpha', alpha);
+      material.userData.shared = false; material.transparent = true; material.depthWrite = true;
+      material.onBeforeCompile = shader => {
+        shader.vertexShader = `attribute float crateShardAlpha; varying float vCrateShardAlpha;\n${shader.vertexShader}`
+          .replace('#include <begin_vertex>', '#include <begin_vertex>\nvCrateShardAlpha = crateShardAlpha;');
+        shader.fragmentShader = `varying float vCrateShardAlpha;\n${shader.fragmentShader}`
+          .replace('#include <color_fragment>', '#include <color_fragment>\ndiffuseColor.a *= vCrateShardAlpha;');
+      };
+      material.customProgramCacheKey = () => 'crate-splinter-airborne-fade-v1';
+      const mesh = new THREE.InstancedMesh(geometry, material, MAX_SHARDS);
       mesh.name = `${kind} splinters ${variant}`; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-      mesh.count = 0; mesh.visible = false; mesh.castShadow = true; mesh.receiveShadow = true;
+      mesh.count = 0; mesh.visible = false; mesh.castShadow = false; mesh.receiveShadow = true;
       // CPU pool bounds replace per-frame bounding-volume work; the pool is
       // already capped and inactive batches draw nothing.
       mesh.frustumCulled = false; this.root.add(mesh);
       asset.geometry.computeBoundingBox(); asset.geometry.computeBoundingSphere();
       const bounds = asset.geometry.boundingBox!;
-      batch = { mesh, bodies: [], halfSize: bounds.getSize(new THREE.Vector3()).multiplyScalar(.5), center: bounds.getCenter(new THREE.Vector3()), radius: asset.geometry.boundingSphere!.radius + asset.geometry.boundingSphere!.center.length() };
+      batch = { mesh, alpha, bodies: [], halfSize: bounds.getSize(new THREE.Vector3()).multiplyScalar(.5), center: bounds.getCenter(new THREE.Vector3()), radius: asset.geometry.boundingSphere!.radius + asset.geometry.boundingSphere!.center.length() };
       this.batches.set(key, batch);
     }
     return batch;
@@ -74,10 +86,10 @@ export class CrateEffects {
       const batch = this.batch(kind, variant);
       const shard: Shard = {
         batch, position: center.clone().add(new THREE.Vector3(Math.cos(angle) * radius, (this.roll() - .5) * size * .65, Math.sin(angle) * radius)),
-        velocity: new THREE.Vector3(Math.cos(angle) * (2 + this.roll() * 3) * power, (2.7 + this.roll() * 4.7) * power, Math.sin(angle) * (2 + this.roll() * 3) * power),
+        velocity: new THREE.Vector3(Math.cos(angle) * (2 + this.roll() * 3) * power, (4.6 + this.roll() * 2.8) * power, Math.sin(angle) * (2 + this.roll() * 3) * power),
         rotation: new THREE.Quaternion().setFromEuler(new THREE.Euler(this.roll() * 6, this.roll() * 6, this.roll() * 6)),
         angular: new THREE.Vector3((this.roll() - .5) * 16, (this.roll() - .5) * 11, (this.roll() - .5) * 16),
-        size, age: 0, lifetime: 2.05 + this.roll() * .65, settled: false, bounces: 0,
+        size, age: 0, lifetime: .24 + this.roll() * .08, settled: false, bounces: 0,
       };
       this.shards.push(shard); batch.bodies.push(shard);
     }
@@ -149,11 +161,12 @@ export class CrateEffects {
     for (const batch of this.batches.values()) {
       batch.mesh.count = batch.bodies.length; batch.mesh.visible = batch.bodies.length > 0;
       batch.bodies.forEach((shard, i) => {
-        const fade = Math.min(1, Math.max(0, (shard.lifetime - shard.age) / .32));
-        this.scale.setScalar(shard.size * fade); this.matrix.compose(shard.position, shard.rotation, this.scale);
+        const fade = THREE.MathUtils.smoothstep(shard.lifetime - shard.age, 0, .18);
+        batch.alpha.setX(i, fade);
+        this.scale.setScalar(shard.size * (.65 + .35 * fade)); this.matrix.compose(shard.position, shard.rotation, this.scale);
         batch.mesh.setMatrixAt(i, this.matrix);
       });
-      if (batch.bodies.length) batch.mesh.instanceMatrix.needsUpdate = true;
+      if (batch.bodies.length) { batch.mesh.instanceMatrix.needsUpdate = true; batch.alpha.needsUpdate = true; }
     }
   }
   clear(): void {
@@ -163,7 +176,7 @@ export class CrateEffects {
   }
   dispose(): void {
     this.clear(); this.fracture.dispose(); this.vfx.dispose(); this.disposed = true; this.root.removeFromParent();
-    for (const batch of this.batches.values()) batch.mesh.dispose();
+    for (const batch of this.batches.values()) { batch.mesh.dispose(); batch.mesh.geometry.dispose(); (batch.mesh.material as THREE.Material).dispose(); }
     this.root.clear(); this.batches.clear();
   }
   get diagnostics(): { shards: number; bursts: number; drawCalls: number; limit: number } {

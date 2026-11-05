@@ -92,7 +92,7 @@ function atlas(kind: CrateArtKind): THREE.CanvasTexture {
   for (let tile = 0; tile < 4; tile++) {
     c.save(); c.translate(tile % 2 * 256, Math.floor(tile / 2) * 256);
     const metal = tile === 2 || p.metal && tile < 2;
-    const base = tile === 2 ? '#426575' : tile === 3 ? '#e9bb76' : tile === 1 ? p.edge : p.wood;
+    const base = tile === 2 ? '#426575' : tile === 1 ? p.edge : p.wood;
     const gradient = c.createLinearGradient(0, 0, 256, 0);
     gradient.addColorStop(0, mix(base, '#201a23', .35));
     gradient.addColorStop(.15, base); gradient.addColorStop(.55, mix(base, '#fff1be', .11));
@@ -119,7 +119,7 @@ function atlas(kind: CrateArtKind): THREE.CanvasTexture {
       for (let i = 0; i < 9; i++) { const x = r() * 240 + 8, y = r() * 256; c.beginPath(); c.moveTo(x, y); c.lineTo(x + 3, y + 24); c.stroke(); }
     }
     // Chiselled highlights and a few long end cracks: texture follows each part.
-    c.fillStyle = metal ? '#adc4be' : tile === 3 ? '#f7d8a0' : '#f1be73';
+    c.fillStyle = metal ? '#adc4be' : tile === 3 ? p.edge : '#f1be73';
     for (let i = 0; i < 10; i++) {
       const left = i % 2 === 0, x = left ? 5 : 247, y = r() * 245;
       c.beginPath(); c.moveTo(x, y); c.lineTo(x + (left ? 5 : -5), y + 2); c.lineTo(x, y + 6 + r() * 13); c.fill();
@@ -416,7 +416,7 @@ export function updateCrateArt(art: CrateArt, dt: number, time: number): void {
   art.root.rotation.set(0, yaw, roll);
 }
 
-/** Source-sized splinters reuse the intact palette, with pale jagged cut ends. */
+/** Source-sized splinters use the same orange timber on faces and cut ends. */
 export function crateShardAsset(kind: CrateArtKind, variant: number): { geometry: THREE.BufferGeometry; material: THREE.MeshStandardMaterial } {
   const metal = !!PALETTES[kind].metal;
   const key = `${metal ? 'metal' : 'wood'}:${variant % 5}`;

@@ -25,7 +25,7 @@ const all = CRATE_ART_KINDS.map(kind => {
 });
 const controls = document.querySelector('#controls')!, status = document.querySelector('#status')!;
 let reviewError = '';
-let debrisCheck: { minimumY: number; finite: boolean; cleanedUp: boolean } | undefined;
+let debrisCheck: { minimumY: number; finite: boolean; cleanedUp: boolean; fragmentsClearedAt: number } | undefined;
 let emitMilliseconds = 0;
 let burstPool: { peak: number; limit: number } | undefined;
 let selected = -1, native = true, frozen = false, time = 0, fuse: number | undefined, auto = false, slow = false;
@@ -59,12 +59,12 @@ function layout() {
 }
 select.onchange = () => { selected = Number(select.value); layout(); };
 function choose() { if (selected < 0) { selected = 0; select.value = '0'; layout(); } return all[selected].art; }
-function hit(explode = false) {
+function hit(explode = false, fallback = false) {
   const art = choose(); reset(); sixSides = false; art.root.visible = false;
   if (art.kind === 'checkpoint') { art.root.visible = true; checkpointPop = .12; return; }
   const started = performance.now();
   if (art.kind === 'tnt' || art.kind === 'nitro') puffs.burst(art.kind === 'tnt' ? 'boomTnt' : 'boomNitro', 0, .2, 0, {});
-  effects.emit(art.kind, new THREE.Vector3(), 2, -1, explode || art.kind === 'tnt' || art.kind === 'nitro', art.shell.material as THREE.MeshStandardMaterial);
+  effects.emit(art.kind, new THREE.Vector3(), 2, -1, explode || art.kind === 'tnt' || art.kind === 'nitro', fallback ? undefined : art.shell.material as THREE.MeshStandardMaterial);
   emitMilliseconds = performance.now() - started;
 }
 function step(dt: number) {
@@ -91,17 +91,18 @@ button('Bounce', () => { reset(); pulseCrateArt(choose()); });
 button('Smash', () => hit());
 button('Fracture start', () => { hit(); frozen = true; });
 button('Impact frame', () => { hit(); step(.04); frozen = true; });
-button('Debris frame', () => { hit(); for (let i = 0; i < 18; i++) step(1 / 60); frozen = true; });
-for (const frames of [6, 12, 27]) button(`Burst ${frames / 60}s`, () => { hit(); for (let i = 0; i < frames; i++) step(1 / 60); frozen = true; });
+button('Debris frame', () => { hit(); for (let i = 0; i < 6; i++) step(1 / 60); frozen = true; });
+button('Fallback frame', () => { hit(false, true); for (let i = 0; i < 12; i++) step(1 / 60); frozen = true; });
+for (const frames of [6, 12, 18, 21, 27]) button(`Burst ${frames / 60}s`, () => { hit(); for (let i = 0; i < frames; i++) step(1 / 60); frozen = true; });
 button('Blast framing', () => { choose(); sixSides = false; camera.position.set(6.5, 4.2, 10); orbit.update(); });
-button('Settled frame', () => { hit(); for (let i = 0; i < 96; i++) step(1 / 60); frozen = true; });
+button('Cleared frame', () => { hit(); for (let i = 0; i < 90; i++) step(1 / 60); frozen = true; });
 button('Validate debris', () => {
   if (!assetsReady) return;
-  hit(); let minimumY = Infinity, finite = true;
+  hit(); let minimumY = Infinity, finite = true, fragmentsClearedAt = 0;
   const vertex = new THREE.Vector3();
-  for (let frame = 0; frame < 360; frame++) {
+  for (let frame = 0; frame < 90; frame++) {
     step(1 / 60);
-    if (frame < 70 || frame % 20) continue;
+    if (!fragmentsClearedAt && effects.diagnostics.shards === 0) fragmentsClearedAt = (frame + 1) / 60;
     effects.root.updateMatrixWorld(true);
     effects.root.traverse(node => {
       if (!(node as THREE.SkinnedMesh).isSkinnedMesh) return;
@@ -114,9 +115,9 @@ button('Validate debris', () => {
       }
     });
   }
-  debrisCheck = { minimumY: Number.isFinite(minimumY) ? +minimumY.toFixed(4) : 0, finite,
+  debrisCheck = { minimumY: Number.isFinite(minimumY) ? +minimumY.toFixed(4) : 0, finite, fragmentsClearedAt,
     cleanedUp: effects.diagnostics.shards === 0 && effects.diagnostics.drawCalls === 0 };
-  if (!finite || minimumY < -1.04 || !debrisCheck.cleanedUp) throw new Error(`Debris validation failed: ${JSON.stringify(debrisCheck)}`);
+  if (!finite || minimumY < -1.04 || fragmentsClearedAt > .35 || !debrisCheck.cleanedUp) throw new Error(`Debris validation failed: ${JSON.stringify(debrisCheck)}`);
   frozen = true;
 });
 button('TNT fuse', () => { selected = CRATE_ART_KINDS.indexOf('tnt'); select.value = String(selected); layout(); fuse = 3; });
@@ -210,7 +211,7 @@ function draw(now: number) {
     }
     holder.rotation.copy(rotation); renderer.setScissorTest(false); renderer.setViewport(0,0,innerWidth,innerHeight);
   } else renderer.render(scene, camera);
-  status.textContent = JSON.stringify({ view: selected < 0 ? 'family' : all[selected].art.kind, head: lifePortraitStyle(), visibleFruit: selected >= 0 ? all[selected].art.contents?.count : undefined, assetsReady, recording, ...(reviewError ? {error:reviewError}:{}), resolution: native ? 'MAX/native' : '480p', ...(selected >= 0 ? crateArtStats(all[selected].art.kind) : {}), effects: effects.diagnostics, gouraudPuffs: puffs.liveCount, burstPool, ...(debrisCheck ? {debrisCheck}:{}), emitMilliseconds: +emitMilliseconds.toFixed(2), fuse: fuse === undefined ? null : +fuse.toFixed(2), paused: frozen }, null, 2);
+  status.textContent = JSON.stringify({ view: selected < 0 ? 'family' : all[selected].art.kind, head: lifePortraitStyle(), visibleFruit: selected >= 0 ? all[selected].art.contents?.count : undefined, sourceOpacity: selected >= 0 ? (all[selected].art.shell.material as THREE.MeshStandardMaterial).opacity : undefined, assetsReady, recording, ...(reviewError ? {error:reviewError}:{}), resolution: native ? 'MAX/native' : '480p', ...(selected >= 0 ? crateArtStats(all[selected].art.kind) : {}), effects: effects.diagnostics, gouraudPuffs: puffs.liveCount, burstPool, ...(debrisCheck ? {debrisCheck}:{}), emitMilliseconds: +emitMilliseconds.toFixed(2), fuse: fuse === undefined ? null : +fuse.toFixed(2), paused: frozen }, null, 2);
   requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
