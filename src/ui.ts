@@ -29,6 +29,8 @@ import { debugLevelMenu } from './debugLevelMenu';
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH } from "./roo-type/typography";
 import { FRUIT_HUD_TURN_RATE, illustratedFruitHud } from "./illustratedFruitHud";
+import { illustratedCrateHud } from './illustratedCrateHud';
+import { CRATE_HUD_VIEW, createCrateHudCamera, crateHudScale } from './crateHudCamera';
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
   advanceComboCashInDisplay,
@@ -145,11 +147,11 @@ export class UI {
   private comboGemIcon!: HTMLElement;
   private crateIcon!: HTMLElement;
   private wumpaIcon!: HTMLElement;
-  // Every HUD icon lives in ONE scene with ONE camera; each is drawn into
-  // its own host element's rectangle, one slot visible at a time. See
-  // buildIcons/drawIcons.
+  // One scene and the game's renderer, drawing into each DOM host rectangle.
+  // The crate has a gentle perspective lens; fruit and relics stay orthographic.
   private iconScene: THREE.Scene | null = null;
   private iconCam: THREE.OrthographicCamera | null = null;
+  private crateIconCam: THREE.PerspectiveCamera | null = null;
   private iconSlots: {
     host: HTMLElement; // the DOM box this is drawn into
     revealHost: HTMLElement; // row whose in/out opacity this icon mirrors
@@ -158,6 +160,7 @@ export class UI {
     spin: THREE.Group; // turns
     unit: number; // art height in world units, for the fit
     unitWidth?: number;
+    perspective?: { halfHeight: number; radius: number };
     rate: number; // idle turn, rad/s
     on: boolean; // relics are off until earned; the counters are always on
   }[] = [];
@@ -1207,9 +1210,10 @@ export class UI {
     // Unit frustum: the camera spans 1.0 world unit vertically and the host's
     // aspect horizontally, so fitting art to a box is one scale factor.
     this.iconCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -500, 500);
+    this.crateIconCam = createCrateHudCamera();
     // Gems/crystals use their own cheap vertex-specular studio rig and ignore
-    // these lights, as does the illustrated fruit. The crate uses Lambert
-    // world shading and still needs the icon lighting rig.
+    // these lights, as do the illustrated fruit and crate. Keep the studio
+    // rig available for any standard materials on the other collectible art.
     //
     // Lit HOTTER than the world, deliberately. These icons have no drop
     // shadow to sit on any more — a CSS filter can't reach into the canvas —
@@ -1238,9 +1242,8 @@ export class UI {
       fill: number;
       relic: boolean;
     }[] = [
-      // Look down the cube's diagonal: its top/front corner sits at the
-      // centre before the idle spin. Positive X lean exposes the TOP face.
-      { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: Math.atan(1 / Math.SQRT2), yaw: Math.PI / 4, rate: 0.6, fill: 0.94, relic: false },
+      // A shallow lid and dominant front, with the original unhurried turn.
+      { host: this.crateIcon, revealHost: this.crateRowEl, make: illustratedCrateHud, lean: CRATE_HUD_VIEW.tilt, yaw: CRATE_HUD_VIEW.yaw, rate: CRATE_HUD_VIEW.turnRate, fill: CRATE_HUD_VIEW.fill, relic: false },
       { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: illustratedFruitHud, lean: 0, rate: FRUIT_HUD_TURN_RATE, fill: 0.86, relic: false },
       { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
@@ -1299,6 +1302,11 @@ export class UI {
         spin,
         unit: lean ? (size.y * Math.cos(lean) + sweepWidth * Math.abs(Math.sin(lean))) / fill : (size.y || 1) / fill,
         unitWidth: lean ? sweepWidth / fill : undefined,
+        // Include both the sculpt's unit cube and the temporary loading art.
+        perspective: index === 0 ? {
+          halfHeight: Math.max(size.y / 2, .506),
+          radius: Math.max(sweepWidth / 2, Math.SQRT2 * .506),
+        } : undefined,
         rate,
         on: !relic,
       });
@@ -1414,12 +1422,22 @@ export class UI {
       // in BOTH axes for any icon shape (the crystal's slot is far from
       // square) with one scale factor.
       const aspect = r.width / r.height;
-      cam.left = -aspect / 2;
-      cam.right = aspect / 2;
-      cam.updateProjectionMatrix();
-      slot.pivot.scale.setScalar(slot.unitWidth
-        ? Math.min(1 / slot.unit, aspect / slot.unitWidth)
-        : Math.min(1, aspect) / slot.unit);
+      let drawCamera: THREE.Camera = cam;
+      if (slot.perspective && this.crateIconCam) {
+        const perspective = this.crateIconCam;
+        perspective.aspect = aspect;
+        perspective.updateProjectionMatrix();
+        slot.pivot.scale.setScalar(crateHudScale(aspect, slot.perspective.halfHeight,
+          slot.perspective.radius, perspective.position.z));
+        drawCamera = perspective;
+      } else {
+        cam.left = -aspect / 2;
+        cam.right = aspect / 2;
+        cam.updateProjectionMatrix();
+        slot.pivot.scale.setScalar(slot.unitWidth
+          ? Math.min(1 / slot.unit, aspect / slot.unitWidth)
+          : Math.min(1, aspect) / slot.unit);
+      }
 
       // GL's origin is bottom-left, hence measuring down from the canvas bottom
       const vx = r.left * kx;
@@ -1429,7 +1447,7 @@ export class UI {
       renderer.setViewport(vx, vy, vw, vh);
       renderer.setScissor(vx, vy, vw, vh);
       renderer.clearDepth(); // sit on top of the world, not inside it
-      renderer.render(scene, cam);
+      renderer.render(scene, drawCamera);
     }
 
     if (drew) {

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Illustrated crate · HUD camera study</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#172127;color:#f3e7cf;font:15px/1.5 system-ui,sans-serif}main{max-width:1180px;margin:0 auto;padding:28px}h1{font-size:27px;margin:0 0 6px}p{margin:0 0 20px;color:#bdc6c6}.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}.card{border:1px solid #42504d;border-radius:16px;background:#243333;padding:18px}.card h2{font-size:17px;margin:0}.caption{font-size:13px;color:#bac6be}.stage{height:265px}.portrait{height:265px;display:flex;justify-content:center;align-items:center}.portrait img{width:190px;height:190px;object-fit:contain}#render{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}section{position:relative}label{display:flex;gap:10px;align-items:center}input{accent-color:#e8b35c;width:160px}button,a{color:#ffe3a7}button{border:1px solid #7b8d7c;background:#31423b;border-radius:7px;padding:8px 14px;cursor:pointer}.controls{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin:22px 0}output{font-variant-numeric:tabular-nums;min-width:43px}.strip{display:flex;align-items:center;gap:8px;min-height:100px}.small{width:80px;height:80px;flex:none}.head{width:80px;height:80px;object-fit:contain}.count{font:bold 35px Georgia;color:#f1c464;text-shadow:2px 3px #231911;margin-right:28px}.note{margin-top:14px;font-size:13px}body.light{background:#d7dfd0;color:#282c21}body.light .card{background:#dfe5d8;border-color:#8e9d8b}body.light p,body.light .caption{color:#4e5d50}@media(max-width:700px){main{padding:16px}.cards{grid-template-columns:1fr}.stage,.portrait{height:220px}.strip{flex-wrap:wrap}.count{margin-right:8px}}
+</style></head>
+<body><main><h1>Illustrated crate · HUD camera study</h1>
+<p>Shallower lid, front-led perspective, warm carved edges. Original slow rotation: one turn in 10.47 seconds.</p>
+<section id="preview"><div class="cards">
+<article class="card"><h2>Previous crate</h2><div class="caption">35.3° tilt · orthographic</div><div class="stage" id="before"></div></article>
+<article class="card"><h2>Illustrated 3D crate</h2><div class="caption" id="new-caption">17° tilt · 100 mm lens</div><div class="stage" id="after"></div></article>
+<article class="card"><h2>Bone Head reference</h2><div class="caption">Warm contour · clear planes · ivory highlights</div><div class="portrait"><img src="/bone-head.png" alt="Bone Head life portrait"></div></article>
+</div>
+<div class="controls">
+<button id="play">Pause rotation</button>
+<label>Tilt <input id="tilt" type="range" min="5" max="40" step="1" value="17"><output id="tilt-value">17°</output></label>
+<label>Lens <input id="lens" type="range" min="50" max="180" step="5" value="100"><output id="lens-value">100 mm</output></label>
+<button id="reset">Chosen view</button><button id="background">Light backdrop</button>
+</div>
+<div class="strip"><div class="small" id="small-crate"></div><span class="count">8/24</span><div class="small" id="small-fruit"></div><span class="count">32</span><img class="head" src="/bone-head.png" alt="Bone Head at HUD size"><span class="count">4</span></div>
+<canvas id="render"></canvas></section>
+<p class="note">Camera judged against <a href="https://playstation-doc.net/j/crash-ps4/screen.html">N. Sane’s official HUD example</a>, <a href="https://www.youtube.com/watch?v=bmnq7yedAzI&t=353s">original Crash 2</a> and <a href="https://www.youtube.com/watch?v=9AbkpJD54mU&t=383s">Crash 3 gameplay</a>. The lens values describe this prototype, not measured parameters from the original games. <a href="/?playtest">Open the game</a></p>
+</main><script type="module" src="./compare.ts"></script></body></html>

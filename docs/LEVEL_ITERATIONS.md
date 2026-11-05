@@ -9790,3 +9790,23 @@ checks pass. Browser review covers a real fruit pickup, inventory hide/reveal,
 light/dark backgrounds, multiple angles, HUD size, and full MAX/native render
 with CRT at 1920 × 1080; no browser warning/error logs. Evidence and final
 release-size result are in `docs/illustrated-fruit-hud/`.
+
+## 2026-11-06 — Illustrate the crate HUD and refine its Crash-style perspective
+
+Matched the live 3D crate to the Bone Head/fruit HUD treatment with warm ink
+contours, defined carved edges and broad timber shading. Compared the official
+N. Sane HUD example with original Crash 2 and Crash 3 Bonus footage. Replaced
+the 35.264° orthographic view with a shallow 17° tilt, 23° initial yaw and a
+100 mm perspective lens. The original 0.6 rad/s rotation remains. A stable
+full-turn perspective fit serves the normal counter, Bonus and reward flights.
+The complete 12,804-triangle world crate geometry is shared unchanged; HUD
+materials and the outline are private. No level or movement changes.
+
+Approximately 25 minutes from the camera follow-up to the reviewed playable
+full-render result; production and release checks followed. Build, release-size,
+HUD visibility and Bonus-transfer checks pass. A focused camera check projects
+194,535 points through Three.js across full turns, multiple lens/tilt choices
+and narrow icon slots. Browser review covers inventory transitions, light/dark
+backdrops, production Bonus and MAX/native rendering with CRT at 1920 × 1080;
+game console logs are clean. Evidence and the local comparison page are in
+`docs/illustrated-crate-hud/`.
