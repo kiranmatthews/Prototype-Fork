@@ -1,0 +1,527 @@
+{
+  "steps": [
+    {
+      "step": "initial",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 5,
+      "marks": "blank",
+      "visibleFruit": 5,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        0.12,
+        39
+      ],
+      "player": "ride",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "stomp-1",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 4,
+      "marks": "blank",
+      "visibleFruit": 4,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        1.29,
+        35
+      ],
+      "player": "air",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "stomp-2",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 3,
+      "marks": "blank",
+      "visibleFruit": 3,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        1.29,
+        35
+      ],
+      "player": "air",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "stomp-3",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 2,
+      "marks": "blank",
+      "visibleFruit": 2,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        1.29,
+        35
+      ],
+      "player": "air",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "stomp-4",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 1,
+      "marks": "blank",
+      "visibleFruit": 1,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        1.29,
+        35
+      ],
+      "player": "air",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "stomp-5",
+      "kind": "multihit",
+      "alive": false,
+      "hits": 0,
+      "marks": "blank",
+      "visibleFruit": 0,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        1.29,
+        35
+      ],
+      "player": "air",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 42,
+        "bursts": 1,
+        "drawCalls": 3,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "soft-restore",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 5,
+      "marks": "blank",
+      "visibleFruit": 5,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        0.12,
+        0
+      ],
+      "player": "ride",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "spin-smash",
+      "kind": "multihit",
+      "alive": false,
+      "hits": 5,
+      "marks": "blank",
+      "visibleFruit": 5,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        0.12,
+        0
+      ],
+      "player": "ride",
+      "cratesBroken": 1,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 42,
+        "bursts": 1,
+        "drawCalls": 3,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": true,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    },
+    {
+      "step": "hard-reset",
+      "kind": "multihit",
+      "alive": true,
+      "hits": 5,
+      "marks": "blank",
+      "visibleFruit": 5,
+      "head": "skull",
+      "collider": [
+        1.152000000000001,
+        1.1519999999999997,
+        1.152000000000001
+      ],
+      "position": [
+        -12,
+        0.12,
+        39
+      ],
+      "player": "ride",
+      "cratesBroken": 0,
+      "deaths": 0,
+      "checkpoint": false,
+      "checkpointVisible": true,
+      "outline": true,
+      "usedSwitch": false,
+      "effects": {
+        "shards": 0,
+        "bursts": 0,
+        "drawCalls": 0,
+        "limit": 232
+      },
+      "resolution": "max",
+      "crt": false,
+      "canvas": [
+        1280,
+        720
+      ],
+      "frozen": false,
+      "loading": {
+        "phase": null,
+        "animation": {
+          "active": false,
+          "resident": false,
+          "owner": "loading-worker",
+          "starts": 1,
+          "stops": 1,
+          "failure": null,
+          "frames": 745,
+          "maxFrameMs": 29.100000000000364,
+          "width": 1280,
+          "height": 720,
+          "title": null
+        },
+        "pending": [],
+        "failed": [],
+        "revision": 154
+      }
+    }
+  ],
+  "console": []
+}

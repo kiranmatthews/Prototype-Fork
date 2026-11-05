@@ -1,0 +1,22 @@
+{
+  "pass": true,
+  "completeTopology": true,
+  "smoothCheeks": true,
+  "minimumNormalDot": 0.9914586919376811,
+  "checkedWoodRays": 6903,
+  "exposedIntersections": 0,
+  "bounds": {
+    "min": [
+      -0.40868401527404785,
+      -0.39528998732566833,
+      -0.4087962210178375
+    ],
+    "max": [
+      0.40882793068885803,
+      0.40009769797325134,
+      0.40882793068885803
+    ]
+  },
+  "triangles": 27880,
+  "countsAndRebound": true
+}

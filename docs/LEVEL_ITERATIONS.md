@@ -9333,3 +9333,29 @@ effects. Full rendering passes at 1512×806 MAX/native and 900×480 CRT with no
 game-console errors/warnings or failed assets. Evidence and authoring details:
 `docs/crate-art-followup/`. No level data, movement tuning or player/main edits.
 The new increment is handed to the active release coordinator for publication.
+
+## 2026-11-05 — Inflated fruit packed against the multihit cage
+
+Rebuilt the contents as large, smooth fruit balloons filling the cage from all
+four sides. The Crash 4 Wumpa reference and a new ImageGen study guide broad
+oval cheeks, staggered packing, red/yellow/green skin and a waxy finish. Full
+fruit topology and compact crowns remain; the complete prop is 27,880 triangles
+in two draws at every distance. The lower fruit rests against the cage floor.
+The world pickups, cage, collider, rewards and fracture model are unchanged.
+
+Playable validation finished around 02:45 UTC / 15:45 NZDT, approximately 29
+minutes after the fruit-refinement request at 02:16 UTC. This includes the
+user's additional smooth-balloon direction and the resulting sculpt revision;
+the receipt time is approximate, not an active-authoring stopwatch.
+
+The focused smooth-surface/topology test passes, including 6,903 rays against
+the actual cage with no exposed timber intersections. Crate-art checks,
+production build and release-size checks pass. Real Player/Level browser
+checks cover five actual stomps, 5→0→5 visible contents, spin fracture and
+soft/hard restore. Native six-side review, full-render bonus lighting at
+2560×1440, 853×480 CRT and daylight Jungle at 2436×1706 pass with clean game
+consoles and no failed assets. Evidence: `docs/multihit-bulging-fruit/`.
+
+The user retired the release coordinator and assigned publication to this task.
+This follow-up uses its own isolated worktree and publishes directly after
+validation. No held animation work or unrelated dirty changes are included.
