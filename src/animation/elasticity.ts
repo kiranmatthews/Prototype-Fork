@@ -30,6 +30,7 @@ const PROFILES:Record<string,Amplitudes> = {
   slide:[.050,.025,.035,.020,.035], skate:[.020,.012,.020,.010,.015],
   teeter:[.060,.035,.080,0,0], // chest/arms rebound; planted legs keep their lengths
   grind:[.024,.020,.040,.015,.025], grab:[.030,0,0,.018,.020],
+  'kite-grab':[.045,.035,.055,.018,.020],
   hang:[0,0,0,.035,.050], climb:[0,0,0,.030,.050],
   rope:[.025,0,0,.035,.050], 'rope-climb':[.025,0,0,.040,.050],
   'rope-release':[.080,.070,.10,.070,.10], 'rope-release-charged':[.080,.070,.10,.070,.10],
@@ -126,6 +127,20 @@ export function skateUnderRailElasticity(weight:number,time:number,returning=fal
 export function skate900Elasticity(weight:number,stance:number):Record<string,number> {
   const t=Math.max(0,Math.min(1,weight)),reach=t*t*(3-2*t),side=stance>0?'right':'left';
   return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
+}
+
+/** One independently stretched hanging arm and a finite torso rebound.
+ * Final bar, board and sole solves retain their planted contacts. */
+export function kiteGrabElasticity(hang:number,pose:number,stance:number,returnAge:number):Record<string,number> {
+  const side=stance>0?'right':'left',grabSide=stance>0?'left':'right',profile=characterElasticityAmplitudes('kite-grab');
+  const settle=returnAge>0?Math.sin(returnAge*22)*Math.max(0,1-returnAge/.5):0;
+  return {
+    'deform.torso.length':1-profile[0]*pose+profile[0]*settle,
+    [`deform.arm.upper.${side}.length`]:1+.90*hang+profile[1]*settle,
+    [`deform.arm.lower.${side}.length`]:1+1.10*hang+profile[2]*settle,
+    [`deform.arm.upper.${grabSide}.length`]:1+.55*pose,
+    [`deform.arm.lower.${grabSide}.length`]:1+.65*pose,
+  };
 }
 
 /** Independent segment reach supports each conventional grab silhouette;

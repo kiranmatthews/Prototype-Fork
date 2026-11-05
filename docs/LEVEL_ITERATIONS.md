@@ -9643,3 +9643,33 @@ are in `art/beach-kite/`. Direct publication belongs to this chat.
   assertion at `tools/test-waterpark-decks.mjs:49`; the identical failure was
   reproduced in an untouched `68e48cb3` checkout. Canyon import validation and
   native rock loading pass independently.
+## 2026-11-05 — Kite-only hanging Indy, spring return and additive reward
+
+Circle / Q in the air now performs a dedicated kite Indy: one hand stays on
+the wooden bar while the other grabs between the feet. Left/right rotates the
+rider. Release rapidly reverses all stored rotation, visibly overshoots and
+settles; whole turns still require unwind time. Touching down or catching a
+rail before the return finishes causes a wipeout. A clean landing adds 3 m/s,
+stacking to 12 m/s and combining with kite charge/tension, rail and pad speed.
+The stack holds for five seconds after each success, then decays. Reset,
+death and final kite release clear it. Ordinary-level grabs remain unchanged.
+
+The custom pose uses independent arm/torso elasticity and the existing real
+grip/sole solvers. The bar clears the actual head bounds; the hanging hand
+remains anchored through rotation and rebound before the second hand returns.
+Failed grabs tether only the hand still holding the kite. Added a paged
+in-game instruction sheet using the existing controller/keyboard prompts.
+
+First playable implementation at 06:38 UTC / 19:38 NZDT, approximately 13
+minutes after the brief began at 06:25 UTC. Focused tests pass for 30/60/120 Hz
+unwinds, both directions, early landing risk, contact continuity, additive
+boost stacking/expiry, ordinary grab isolation and existing kite/skate controls.
+Chrome full-render review passes at MAX/native and normal 720p, including
+actual held → overshoot → settled → landed progression and the new guide.
+The clean landing awards the expected 3 m/s; browser warning/error logs are
+empty. Production build/typecheck and release-size validation pass.
+
+Source, focused test and evidence: `src/kiteGrab.ts`,
+`tools/test-kite-grab.mjs`, `docs/kite-indy/`. No new models, level-data,
+movement-tuning, sky or scenery changes. Direct publication belongs to this
+chat; the retired coordinator is not required.

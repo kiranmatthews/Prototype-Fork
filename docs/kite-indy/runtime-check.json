@@ -1,0 +1,199 @@
+{
+  "unwinds": [
+    {
+      "hz": 30,
+      "sign": -1,
+      "duration": 0.9799999999999998,
+      "crossed": true
+    },
+    {
+      "hz": 30,
+      "sign": 1,
+      "duration": 0.9799999999999998,
+      "crossed": true
+    },
+    {
+      "hz": 60,
+      "sign": -1,
+      "duration": 0.9799999999999996,
+      "crossed": true
+    },
+    {
+      "hz": 60,
+      "sign": 1,
+      "duration": 0.9799999999999996,
+      "crossed": true
+    },
+    {
+      "hz": 120,
+      "sign": -1,
+      "duration": 0.9800000000000008,
+      "crossed": true
+    },
+    {
+      "hz": 120,
+      "sign": 1,
+      "duration": 0.9800000000000008,
+      "crossed": true
+    }
+  ],
+  "held": {
+    "diagnostics": {
+      "started": true,
+      "released": false,
+      "releaseAge": -1,
+      "wind": -0.7815804398727564,
+      "windTarget": -0.8648935974342749,
+      "reserve": 0,
+      "charge": 0,
+      "scraping": false,
+      "scrapeSeconds": 0,
+      "brakeSeconds": 0,
+      "bursting": false,
+      "autoReleases": 0,
+      "poseMotion": 0.12848696148101363,
+      "grab": {
+        "phase": "held",
+        "angle": 0,
+        "pose": 1,
+        "hang": 1,
+        "heldTime": 0.19999999999999998,
+        "rotation": 0,
+        "returnAge": 0,
+        "returnDuration": 0,
+        "boost": 0,
+        "boostHold": 0
+      },
+      "gripErrors": [
+        2.631771362892428,
+        0.0001260882859678993
+      ],
+      "barHand": 1,
+      "dock": null,
+      "flyaway": false
+    },
+    "contact": {
+      "kind": "indy",
+      "hand": "socket-grip-right",
+      "target": [
+        -2.221999859667417,
+        2.7660962034854224,
+        -11.346416348506686
+      ],
+      "error": 0.0009789178171120913
+    },
+    "feet": {
+      "support": "wheels",
+      "local": [
+        0,
+        0,
+        0
+      ],
+      "world": [
+        -2.4061364336512074,
+        1.9788888888888871,
+        -11.467179132178327
+      ],
+      "footError": 0.0000026627111204801745,
+      "handError": 0.0009789178171120913,
+      "bounce": -0.07631500935424539,
+      "bodyFlex": 1.65,
+      "bodyHeight": 0.657123287334669,
+      "footSpan": 0.375,
+      "locomotionWeight": 1
+    }
+  },
+  "contacts": [
+    {
+      "stance": -1,
+      "angle": 0,
+      "barError": 0.00007594316180122441,
+      "boardError": 0.0009595589802643964,
+      "footError": 0.0000025765696988470635
+    },
+    {
+      "stance": -1,
+      "angle": 1.5707963267948966,
+      "barError": 0.003812019748801475,
+      "boardError": 0.0009611781401318362,
+      "footError": 0.000002556494894493038
+    },
+    {
+      "stance": -1,
+      "angle": 3.141592653589793,
+      "barError": 0.0014455937090325525,
+      "boardError": 0.0009797330612340963,
+      "footError": 0.000002551821445562104
+    },
+    {
+      "stance": -1,
+      "angle": 4.71238898038469,
+      "barError": 0.006133015453917822,
+      "boardError": 0.0009984937458931756,
+      "footError": 0.0000025507343670161375
+    },
+    {
+      "stance": -1,
+      "angle": 6.283185307179586,
+      "barError": 0.00006794754986898982,
+      "boardError": 0.0009838206837195823,
+      "footError": 0.000002550481567810955
+    },
+    {
+      "stance": 1,
+      "angle": 0,
+      "barError": 0.0006368330180866361,
+      "boardError": 0.0009761895066827074,
+      "footError": 0.0000025504231372538318
+    },
+    {
+      "stance": 1,
+      "angle": 1.5707963267948966,
+      "barError": 0.003683093339742549,
+      "boardError": 0.000961923060928114,
+      "footError": 0.000002550409190261973
+    },
+    {
+      "stance": 1,
+      "angle": 3.141592653589793,
+      "barError": 0.0005924909355800697,
+      "boardError": 0.0009867584508790773,
+      "footError": 0.0000025504059497475913
+    },
+    {
+      "stance": 1,
+      "angle": 4.71238898038469,
+      "barError": 0.005665917719503446,
+      "boardError": 0.0009582052184368765,
+      "footError": 0.0000025504051966875248
+    },
+    {
+      "stance": 1,
+      "angle": 6.283185307179586,
+      "barError": 0.0006247004178224471,
+      "boardError": 0.0009706322074402768,
+      "footError": 0.000002550405022114149
+    }
+  ],
+  "clean": {
+    "empty": {
+      "state": "ride",
+      "speed": 14.836921569516146,
+      "boost": 0
+    },
+    "earned": {
+      "state": "ride",
+      "speed": 17.836921569516146,
+      "boost": 3
+    }
+  },
+  "stacked": {
+    "speed": 59.98916666666667,
+    "boost": 12
+  },
+  "bursts": [
+    28.79449792293523,
+    34.29013440150388
+  ],
+  "pass": true
+}

@@ -8,7 +8,7 @@ import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { kiteGrabElasticity, skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip, launchSomersaultWindow, type LaunchClipId, type LaunchPresentation } from './animation/launchJump';
@@ -21,6 +21,7 @@ import * as THREE from 'three';
 import { KITE_TOW, KiteTowMotion } from './kiteTow';
 import {KiteScrape,kiteBoxSide,KITE_SCRAPE_SKIN} from './kiteScrape';
 import { KiteTowVisual } from './kiteTowVisual';
+import { KiteGrab, KITE_GRAB } from './kiteGrab';
 import { KiteBonusDock } from './kiteBonus';
 import { groundDriveCeiling, groundSpeedLimit, softGroundSpeed } from './softGround';
 import { meshContactNormal } from './meshContactNormal';
@@ -634,6 +635,9 @@ export class Player {
   vVel = 0;
   state: MoveState = 'ride';
   private readonly kiteMotion = new KiteTowMotion();
+  private readonly kiteGrab = new KiteGrab();
+  private kiteGrabBoost = 0;
+  private kiteGrabBoostHold = 0;
   private readonly kiteScrape = new KiteScrape();
   private readonly kiteContactBox = new THREE.Box3();
   private kiteVisual: KiteTowVisual | null = null;
@@ -655,7 +659,8 @@ export class Player {
     windTarget:this.kiteMotion.windTarget,reserve:this.kiteMotion.reserve,charge:this.kiteMotion.charge,
     scraping:this.kiteScraping,scrapeSeconds:this.kiteScrape.seconds,
     brakeSeconds:this.kiteMotion.brakeSeconds,bursting:this.kiteMotion.bursting,autoReleases:this.kiteMotion.autoReleases,poseMotion:this.kitePoseMotion,
-    gripErrors:this.kiteVisual?.gripErrors,dock:this.kiteDock?{elapsed:this.kiteDock.elapsed,
+    grab:{...this.kiteGrab.diagnostics,boost:this.kiteGrabBoost,boostHold:this.kiteGrabBoostHold},
+    gripErrors:this.kiteVisual?.gripErrors,barHand:this.kiteVisual?.hangingHand,dock:this.kiteDock?{elapsed:this.kiteDock.elapsed,
       errors:this.kiteDock.errors,normalErrors:this.kiteDock.normalErrors}:null,
     flyaway:this.kiteVisual?.flyingAway,fragments:this.breakApart?.tetherDiagnostics}; }
   get kiteTowing(): boolean { return !!this.runLevel?.kiteTow && !this.kiteReleased && (this.state === 'ride' || this.state === 'air' || this.state === 'grind'); }
@@ -3487,7 +3492,7 @@ export class Player {
     if (id === this.activeSpeedPadId) return;
     this.activeSpeedPadId = id;
     const sign = Math.sign(this.speed || 1);
-    this.speed = sign * Math.max(Math.abs(this.speed), hit?.speedPadSpeed ?? 48);
+    this.speed = sign * Math.max(Math.abs(this.speed), (hit?.speedPadSpeed ?? 48)+(this.kiteTowing?this.kiteGrabBoost:0));
     this.grindBoostT = Math.max(this.grindBoostT, hit?.speedPadHold ?? 3.9);
     this.speedPadCap = Math.max(this.speedPadCap, hit?.speedPadSpeed ?? 48);
     this.registerSkateBoost();
@@ -3580,6 +3585,7 @@ export class Player {
   ): void {
     this.fatalChaseBoulder=-1;
     this.kiteMotion.reset();
+    this.kiteGrab.reset();this.kiteGrabBoost=this.kiteGrabBoostHold=0;
     this.kiteScrape.reset();
     this.kiteVisual?.reset();
     this.checkpointTripCount=0;this.checkpointTripActive=false;
@@ -4325,6 +4331,10 @@ export class Player {
     }
     this.invulnTimer = this.uberTimer = this.masks = 0;
     this.freeSkate = this.skateOn = true;
+    this.kiteGrabBoostHold=Math.max(0,this.kiteGrabBoostHold-dt);
+    if(this.kiteGrabBoostHold===0)this.kiteGrabBoost=Math.max(0,this.kiteGrabBoost-KITE_GRAB.boostDecay*dt);
+    this.grindBoostT=Math.max(0,this.grindBoostT-dt);
+    if(this.grindBoostT===0)this.speedPadCap=0;
     this.airFromSkate = !this.grounded;
     this.airGrav = 'board';
     this.walkVelocity.set(0, 0, 0);
@@ -4332,7 +4342,7 @@ export class Player {
     const grinding = this.state === 'grind';
     const releases = this.kiteMotion.autoReleases;
     const motion = this.kiteMotion.step(dt, -this.pos.z, this.grounded || grinding,
-      this.manualing ? {...towInput,moveY:0} : towInput, TUNING);
+      this.manualing ? {...towInput,moveY:0} : towInput, TUNING, this.kiteGrabBoost);
     if(this.kiteMotion.autoReleases!==releases)sfx.play('woosh2',.7,1.3);
     this.speed = this.kiteMotion.speed;
     if (!grinding) {
@@ -4345,10 +4355,19 @@ export class Player {
         this.chargedJump(dt);
       }
     }
+    const grabStarted=this.kiteGrab.step(dt,{airborne:this.state==='air'&&!this.grounded,
+      pressed:towInput.grabPressed,held:towInput.grabHeld,steer:towInput.moveX,
+      canStart:this.flipT<=0&&!this.spinning&&!this.slamActive});
+    if(grabStarted){this.grabKind='indy';this.grabTrickName='Kite Indy';sfx.play('woosh2',.5,1.1);}
+    this.grabPhase=this.kiteGrab.phase==='held'?(this.kiteGrab.pose<1?'enter':'held')
+      :this.kiteGrab.phase==='return'?'exit':'none';
+    this.grabPose=this.kiteGrab.pose;this.grabSpinAngle=this.kiteGrab.angle;
+    if(this.kiteGrab.active){input={...input,spinPressed:false,spinHeld:false} as Input;this.queuedFlip=null;}
     this.railCand = nearestRail(level.grindRails, this.pos);
     this.railCandidateDist = this.railCand ? this.railCand.sample.distance : Infinity;
     if (!grinding && this.kiteMotion.started && this.grindRequested(input)) this.tryGrind(input.grindPressed, level);
     if (this.state === 'grind') {
+      if(this.kiteGrab.pending&&!this.landKiteGrab()){this.finishVisualStep(input,dt);return;}
       this.grindVel = this.kiteMotion.speed;
       this.balanceVel += this.kiteMotion.wind * .12 * dt;
       this.stepGrind(dt, input, level);
@@ -4376,6 +4395,7 @@ export class Player {
           this.lastTy = grade / Math.sqrt(1 + grade * grade);
           if (landed) {
             if (this.flipT > 0 && this.flipT <= dt + 1e-7) this.completeDeckTrick();
+            if(!this.landKiteGrab(this.flipT<=0)){this.finishVisualStep(input,dt);return;}
             // Keep the ordinary hybrid game's late-flip sketchy catch and lost trick.
             if (this.flipT > 0) { this.flipT = 0; this.sketchyT = .45; this.speed *= .85; this.kiteMotion.speed = this.speed; }
             this.emitDust(3);
@@ -4390,10 +4410,15 @@ export class Player {
         }
       }
     }
+    // Natural rail catches use the same unwind gate as a ground touchdown.
+    if(this.state==='grind'&&this.kiteGrab.pending&&!this.landKiteGrab()){this.finishVisualStep(input,dt);return;}
+    this.applySpeedPad();
+    this.kiteMotion.speed=Math.max(0,this.speed);
     if (!this.stepManualBalance(dt)) { this.finishVisualStep(input,dt); return; }
     if (!this.ttActive && !this.comboRun) {
       const pad=level.catchKiteBonus(this.prevPos,this.pos);
       if(pad){
+        this.kiteGrab.reset();this.grabPhase='none';this.grabPose=this.grabSpinAngle=0;
         if(this.manualing)this.endManual();this.manualArmed=0;this.manualArmT=0;
         this.kiteDock=new KiteBonusDock(pad,this.pos.clone());this.speed=this.vVel=0;this.state='ride';this.grounded=true;
       }
@@ -4420,6 +4445,24 @@ export class Player {
     this.blastCheck(level); this.updateFruit(dt, level);
     if (this.kiteVisual) this.kiteVisual.root.visible = this.kiteTowing || this.kiteVisual.flyingAway;
     this.group.position.copy(this.pos); this.refreshCharacterBounds();
+  }
+
+  /** The reward is additive to charge, stored kite tension and rail/pad speed. */
+  private landKiteGrab(clean=true):boolean {
+    const result=this.kiteGrab.land();
+    if(result.failed){this.die('balance');return false;}
+    this.grabPhase='none';this.grabPose=this.grabSpinAngle=0;
+    if(result.earned&&clean){
+      const turns=Math.floor((result.rotation+.02)/Math.PI);
+      this.score(450+turns*200,`${turns?`${turns*180}° `:''}Kite Indy`,'grab');
+      const old=this.kiteGrabBoost;
+      this.kiteGrabBoost=Math.min(KITE_GRAB.boostMax,old+KITE_GRAB.boost);
+      this.kiteGrabBoostHold=KITE_GRAB.boostHold;
+      this.speed+=this.kiteGrabBoost-old;this.kiteMotion.speed=this.speed;
+      if(this.state==='grind')this.grindVel=this.speed;
+      this.emitSparks(14,0xffe4a5,2.6);sfx.play('crystalGet',.55,1.35);
+    }
+    return true;
   }
 
   /** Hand the final promenade back to ordinary feet, after the last rewards. */
@@ -11254,6 +11297,7 @@ export class Player {
   }
 
   private cancelWipeoutActions(): void {
+    this.kiteGrab.reset();this.kiteGrabBoost=this.kiteGrabBoostHold=0;
     // A wipeout owns every gameplay layer until recovery. Centralising this
     // matters because ordinary bails, snapped boards, rail falls, and PvP all
     // enter through different call sites; none may resume a stale move later.
@@ -12463,7 +12507,7 @@ export class Player {
   // Pay it out. Must run AFTER exitGrind, which resets speed to the grind
   // velocity on its way off the rail and would otherwise eat this.
   private applyPerfectGrind(): void {
-    this.speed = TUNING.perfectGrindSpeed;
+    this.speed = this.kiteTowing?Math.max(this.speed,TUNING.perfectGrindSpeed+this.kiteGrabBoost):TUNING.perfectGrindSpeed;
     this.grindBoostT = TUNING.perfectGrindHold;
     this.registerSkateBoost();
     this.emitSparks(16, 0x8ce8ff, 3);
@@ -17474,8 +17518,10 @@ export class Player {
       this.breakApart.request('air', BAIL_TARGET, true, support, style ? { style, origin } : undefined);
       if (kiteDeath && this.kiteVisual) {
         this.kiteVisual.beginFlyaway();
-        const pieces = Math.floor(this.runTime * 10) % 3 === 0
-          ? ['wrist-left', 'wrist-right', 'shoulder-left'] : ['wrist-left', 'wrist-right'];
+        const pieces = this.kiteVisual.hangingHand!==null
+          ? [this.kiteVisual.hangingHand===0?'wrist-right':'wrist-left']
+          : Math.floor(this.runTime * 10) % 3 === 0
+            ? ['wrist-left', 'wrist-right', 'shoulder-left'] : ['wrist-left', 'wrist-right'];
         this.breakApart.tetherTo(this.kiteVisual.bar, pieces);
       }
       if (style && (this.freeSkate || this.airFromSkate) && !this.looseBoard) this.throwBoard(true);
@@ -17484,6 +17530,7 @@ export class Player {
     // but waiting for the blackout would leave forced SPECIAL (and uber audio)
     // live after the mask visual and player agency were already gone.
     this.uberTimer = 0;
+    this.kiteGrab.reset();this.kiteGrabBoost=this.kiteGrabBoostHold=0;
     this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.state = 'dead';
     if(!raceFall)this.runLevel?.lockTrialClock();
@@ -19714,7 +19761,7 @@ export class Player {
     // made the whole pose strobe between two frames once the grab was fully
     // reached — which on screen read as the skater flashing "transparent".
     const grabDelta = targetPose - this.grabPose;
-    this.grabPose += Math.sign(grabDelta) * Math.min(Math.abs(grabDelta), grabRate);
+    if(!this.kiteTowing)this.grabPose += Math.sign(grabDelta) * Math.min(Math.abs(grabDelta), grabRate);
     const targetSlide = this.sliding ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
     // Slope pitch + roll: on the ground, the body tilts to lie along the
@@ -20216,6 +20263,8 @@ export class Player {
       ? sampleSpineTransfer(this.spinePoseElapsed,this.spinePoseDuration) : null;
     if(vertPump>0||spineMotion)this.playerAnimationBridge.modulateDeformations(skateVertElasticity(vertPump,spineMotion));
     if(this.grabPose>0&&!this.specialGrab&&!this.specialFlip)this.playerAnimationBridge.modulateDeformations(skateGrabTweakElasticity(this.grabKind,this.grabPose,this.stance));
+    if(this.kiteTowing&&this.kiteGrab.hang>0)this.playerAnimationBridge.modulateDeformations(
+      kiteGrabElasticity(this.kiteGrab.hang,this.kiteGrab.pose,this.stance,this.kiteGrab.returnAge));
     if(revertMotion)this.playerAnimationBridge.modulateDeformations(skateRevertElasticity(revertMotion,this.revertPoseSign));
     const nineHundred=this.specialGrab?.id==='the-900'||this.nineHundredPose&&this.grabPose>.001;
     if(nineHundred && this.grabPose>0)
@@ -20260,7 +20309,7 @@ export class Player {
       this.bodyGroup.rotation.x += .12;
       // Hips retain the skating stance; the chest faces the tow so the bar is
       // in front of both shoulders instead of across a side-on torso.
-      if (this.upperG) this.upperG.rotation.y = -(this.bodyGroup.rotation.y - this.visualYaw);
+      if (this.upperG) this.upperG.rotation.y = -(this.bodyGroup.rotation.y - this.visualYaw - this.grabSpinAngle);
     }
     this.plantOnDeck(underW, this.skateMountT >= 0);
     let skateContactOwned = false;
@@ -20295,6 +20344,7 @@ export class Player {
         underReturning: this.state==='grind'&&!this.railUnder,
         mount: mountPose.tuck + .75 * mountPose.settle,
         manual: this.manualing, grab: this.specialGrab ? 'mute' : this.grabKind, grabWeight: this.grabPose,
+        kiteIndy:this.kiteTowing,
         nineHundred,
         revert:revertMotion,revertSign:this.revertPoseSign,
         grind: this.state === 'grind' ? this.grindStyle : null, rail: this.grindRail,
@@ -20339,12 +20389,12 @@ export class Player {
         this.grounded ? 0 : Math.max(0, this.pos.y - this.lastGroundY), this.kiteMotion.wind,
         this.armL && this.elbowL && this.wristL ? {root: this.armL, mid: this.elbowL, end: this.wristL, grip: this.gloveRight?.gripSocket} : null,
         this.armR && this.elbowR && this.wristR ? {root: this.armR, mid: this.elbowR, end: this.wristR, grip: this.gloveLeft?.gripSocket} : null,
-        this.cam?.aspect ?? 1.6);
+        this.cam?.aspect ?? 1.6, this.kiteGrab.hang, this.stance>0?0:1, this.headM??undefined);
       // Aim the actual eye socket down the course after all torso/neck layers.
       // Transform into the neck parent's coordinates so stretched segments
       // cannot bend the gaze sideways. Hands and deck contacts remain owned.
       const eye=this.headLookSocket??this.headM;
-      if(this.headM?.parent&&eye){
+      if(this.headM?.parent&&eye&&this.kiteGrab.hang<.01){
         this.headM.parent.updateWorldMatrix(true,true);
         this.kiteGazeParent.copy(this.headM.parent.matrixWorld).invert();
         eye.getWorldDirection(this.kiteGazeFrom).transformDirection(this.kiteGazeParent);

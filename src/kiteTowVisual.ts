@@ -22,6 +22,10 @@ export class KiteTowVisual {
   private readonly target = new THREE.Vector3();
   private readonly pole = new THREE.Vector3();
   readonly gripErrors = [0, 0];
+  hangingHand: number | null = null;
+  private hangingSide = -1;
+  private readonly handBase = [new THREE.Quaternion(), new THREE.Quaternion(), new THREE.Quaternion()];
+  private readonly headBounds = new THREE.Box3();
   flyingAway = false;
   deathAge = 0;
 
@@ -33,7 +37,7 @@ export class KiteTowVisual {
     }).catch(error => {this.loading = undefined; throw error;});
   }
 
-  reset(): void { this.flyingAway = false; this.deathAge = 0; this.root.visible = false; }
+  reset(): void { this.flyingAway = false; this.deathAge = 0; this.root.visible = false; this.hangingHand = null; }
   beginFlyaway(): void { this.flyingAway = true; this.deathAge = 0; this.root.visible = true; }
   stepFlyaway(dt:number): void {
     if (!this.flyingAway) return;
@@ -123,7 +127,7 @@ export class KiteTowVisual {
     this.root.visible = false;
   }
 
-  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null, aspect = 1.6): void {
+  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null, aspect = 1.6, hang = 0, barHand = 0, head?: THREE.Object3D): void {
     this.root.position.copy(pos);
     this.root.rotation.set(0, 0, 0);
     // The foil flies above and well ahead of the rider. Keep it at its wind
@@ -141,18 +145,35 @@ export class KiteTowVisual {
       this.bar.position.copy(this.a).add(this.b).multiplyScalar(.5).sub(pos);
       this.bar.position.y -= .12; this.bar.position.z -= .48;
     }
+    if(hang>0){
+      if(this.hangingHand===null)this.hangingSide=barHand===leftIndex?-1:1;
+      this.hangingHand=barHand;
+      // The held grip sits above the body, allowing the rider to turn under
+      // it without orbiting the bar or swapping hands halfway through a spin.
+      this.bar.position.x-=this.hangingSide*.34*hang;
+      let hangingY=this.bar.position.y+.75;
+      if(head){this.headBounds.setFromObject(head);hangingY=Math.max(hangingY,this.headBounds.max.y-pos.y+.18);}
+      this.bar.position.y=THREE.MathUtils.lerp(this.bar.position.y,hangingY,hang);
+      this.bar.position.z+=.40*hang;
+    }else this.hangingHand=null;
     this.bar.rotation.z = -.07 * steer - wind * .04;
     this.root.updateMatrixWorld(true);
     for (let i = 0; i < 2; i++) {
       const arm = arms[i]; if (!arm) continue;
+      const joints=[arm.root,arm.mid,arm.end];
+      for(let j=0;j<3;j++)this.handBase[j].copy(joints[j].quaternion);
       // The two shoulders define the two sides. Comparing each with the
       // player's origin could assign BOTH hands to the same end while leaning.
       arm.root.getWorldPosition(this.a);
-      const side = i === leftIndex ? -1 : 1;
+      const side = hang>0?(i===barHand?this.hangingSide:-this.hangingSide):(i === leftIndex ? -1 : 1);
       this.target.set(side * .34, 0, 0); this.bar.localToWorld(this.target);
       this.pole.copy(this.a).add(this.delta.set(side*.5, -.45, .05));
       for (let pass = 0; pass < 3; pass++) solveTwoBoneIk({root: arm.root, mid: arm.mid, end: arm.end,
         effector: arm.grip, target: this.target, pole: this.pole, accountForParentScale: true, tolerance: .002});
+      // SkateAnimation owns the trailing-hand Indy contact. Release that
+      // hand from the bar smoothly, then re-grip only as the unwind settles.
+      if(hang>0&&i!==barHand)for(let j=0;j<3;j++)joints[j].quaternion.slerp(this.handBase[j],hang);
+      arm.root.updateWorldMatrix(true,true);
       (arm.grip ?? arm.end).getWorldPosition(this.a);
       this.gripErrors[i] = this.a.distanceTo(this.target);
     }

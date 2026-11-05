@@ -23,6 +23,7 @@ export interface SkatePoseInput {
   underWeight?: number;
   underReturning?: boolean;
   manual: number; grab: GrabTrickKind; grabWeight: number;
+  kiteIndy?: boolean;
   grind: GrindStyle | null; rail: Rail | null; railT: number; railDir: number;
   crossDir: number; approachSide: number; crookedSide: number;
   darkslide: boolean; ollie: boolean; flip: DeckTrickKind | null;
@@ -251,6 +252,7 @@ export class SkateAnimation {
     const grab = GRAB_CONTACTS[grabKind];
     const gw = backflip ? backflip.grab : clamp(p.grabWeight, 0, 1);
     const indy=grabKind==='indy'&&gw>.001&&!p.nineHundred;
+    const kiteIndy=indy&&p.kiteIndy===true;
     const melon=grabKind==='melon'&&gw>.001&&!p.nineHundred;
     const nosegrab=grabKind==='nose'&&gw>.001&&!p.nineHundred;
     const tailgrab=grabKind==='tail'&&gw>.001&&!p.nineHundred;
@@ -293,7 +295,7 @@ export class SkateAnimation {
         this.spine.rotation.x+=.24*vertLoad+.16*(transfer?.tuck??0);
       }
     }
-    const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,method?1.10:stalefish?1.05:melon||mute?.95:endGrab?1.05:.65,stalefish?smooth(gw/.65):smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
+    const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,kiteIndy?1.65:method?1.10:stalefish?1.05:melon||mute?.95:endGrab?1.05:.65,stalefish?smooth(gw/.65):smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
       this.spine.rotation.x-=.50*smooth(gw);
@@ -365,7 +367,7 @@ export class SkateAnimation {
     if (!p.grind && !p.manual && !p.lip) this.boardP.copy(this.support).addScaledVector(this.darkExitOffset,dark);
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
-    this.boardP.addScaledVector(this.up, (backflip||tweak?0:.30*gw) + .18 * darkPop);
+    this.boardP.addScaledVector(this.up, (backflip||tweak?0:(kiteIndy?.5:.30)*gw) + .18 * darkPop);
     if(tweak)this.boardP.addScaledVector(grabForward,tweak.boardForward*tweakWeight).addScaledVector(this.up,tweak.boardLift*tweakWeight);
     if(footFlip){
       const centreY=surface(0,0)-s.deckThickness*scale*.5;
@@ -752,7 +754,7 @@ export class SkateAnimation {
       if(waistGrab&&this.spine&&this.waist){
         this.spineBefore??=this.spine.quaternion.clone();
         this.waistBefore??=this.waist.quaternion.clone();
-        const hinge=this.waistRest.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(tweak?tweak.waistPitch:mute?1.40:endGrab?.30:1.82,tweak?tweak.waistTwist*p.stance:0,endGrab?(parity*endDirection<0?1.185:1.38)*p.stance*parity*endDirection:(tweak?tweak.waistBank:mute?.62:-.58)*p.stance,'ZXY')));
+        const hinge=this.waistRest.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(kiteIndy?.45:tweak?tweak.waistPitch:mute?1.40:endGrab?.30:1.82,tweak?tweak.waistTwist*p.stance:0,endGrab?(parity*endDirection<0?1.185:1.38)*p.stance*parity*endDirection:(kiteIndy?-.32:tweak?tweak.waistBank:mute?.62:-.58)*p.stance,'ZXY')));
         const spineFold=tweak?this.spineRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,tweak.spinePitch)):mute?this.spineRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,.22)):this.spineRest;
         this.spine.quaternion.slerp(spineFold,smooth(gw));
         this.waist.quaternion.slerp(hinge,grabFold);

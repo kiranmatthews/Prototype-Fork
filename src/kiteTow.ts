@@ -33,7 +33,7 @@ export class KiteTowMotion {
     this.lateralScale=1;
   }
   private random(){this.seed=(Math.imul(this.seed,1664525)+1013904223)>>>0;return this.seed/0x100000000;}
-  step(dt:number,distance:number,grounded:boolean,input:KiteInput,tuning:KiteTuning){
+  step(dt:number,distance:number,grounded:boolean,input:KiteInput,tuning:KiteTuning,speedBonus=0){
     this.age+=dt;this.windAge+=dt;this.windTime-=dt;
     if(this.windTime<=0){
       const sign=(Math.sign(this.windTarget)||1)*(this.random()<.8?-1:1);
@@ -64,7 +64,7 @@ export class KiteTowMotion {
         ? Math.min(KITE_TOW.brakeFloor,this.speed+tuning.chargeDecay*KITE_TOW.accelerationScale*dt) : next;
       // The held kite keeps loading the spring even at the crawl floor.
       // Cap the complete kinetic budget so repeated pulls cannot run away.
-      const cap=kiteChargedSpeed(tuning.maxSpeed)*KITE_TOW.burstSpeedScale;
+      const cap=kiteChargedSpeed(tuning.maxSpeed)*KITE_TOW.burstSpeedScale+speedBonus;
       this.reserve=Math.min(Math.max(0,(cap*cap-this.speed*this.speed)*.5),this.reserve+KITE_TOW.tensionPower*dt);
       if(this.brakeSeconds>=KITE_TOW.brakeLimit-1e-7){
         this.brakeSeconds=KITE_TOW.brakeLimit;this.braking=false;
@@ -80,7 +80,7 @@ export class KiteTowMotion {
       this.reserve=Math.max(0,this.reserve-spent);this.speed=Math.sqrt(this.speed*this.speed+2*spent);
       if(this.brakeSeconds<1e-7){this.brakeSeconds=this.reserve=0;this.bursting=false;}
     }else if(!this.braking){
-      const target=this.charging&&grounded?kiteChargedSpeed(tuning.maxSpeed):kiteCruiseSpeed(distance,tuning.cruiseSpeed)+this.wind*1.6;
+      const target=(this.charging&&grounded?kiteChargedSpeed(tuning.maxSpeed):kiteCruiseSpeed(distance,tuning.cruiseSpeed)+this.wind*1.6)+speedBonus;
       const accel=(this.charging&&grounded?tuning.chargeBoost:tuning.chargeDecay)*KITE_TOW.accelerationScale;
       if(this.speed<target)this.speed=Math.min(target,this.speed+accel*dt);
       else if(!this.charging)this.speed=Math.max(target,this.speed-.65*dt);

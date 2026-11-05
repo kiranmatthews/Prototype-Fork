@@ -1,0 +1,71 @@
+{
+ "loading": null,
+ "pendingFrames": 0,
+ "drawingBuffer": [
+  3024,
+  1724
+ ],
+ "ready": true,
+ "state": "air",
+ "position": [
+  -5.24,
+  15.69,
+  -12.43
+ ],
+ "speed": 18.8183333333333,
+ "kite": {
+  "started": true,
+  "released": false,
+  "releaseAge": -1,
+  "wind": -0.8457377792595047,
+  "windTarget": -0.8648935974342749,
+  "reserve": 0,
+  "charge": 0,
+  "scraping": false,
+  "scrapeSeconds": 0,
+  "brakeSeconds": 0,
+  "bursting": false,
+  "autoReleases": 0,
+  "poseMotion": 0.19991189939557782,
+  "grab": {
+   "phase": "return",
+   "angle": -0.20669200954285213,
+   "pose": 0,
+   "hang": 1,
+   "heldTime": 0.39999999999999997,
+   "rotation": 1.5707963267948968,
+   "returnAge": 0.2833333333333333,
+   "returnDuration": 0.605,
+   "boost": 0,
+   "boostHold": 0
+  },
+  "gripErrors": [
+   2.0721285757492285,
+   0.0023110487532953337
+  ],
+  "barHand": 1,
+  "dock": null,
+  "flyaway": false
+ },
+ "contacts": {
+  "support": "wheels",
+  "local": [
+   0,
+   0,
+   0
+  ],
+  "world": [
+   -5.239562533669411,
+   15.686666678587589,
+   -12.425513888888865
+  ],
+  "footError": 0.0009438047906522795,
+  "handError": 0,
+  "bounce": 0,
+  "bodyFlex": 1.01432103653721,
+  "bodyHeight": 0.49956457612230126,
+  "footSpan": 0.375,
+  "locomotionWeight": 1
+ },
+ "resolution": "max"
+}

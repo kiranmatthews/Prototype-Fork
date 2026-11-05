@@ -1,0 +1,32 @@
+<!doctype html><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kite Indy review</title><link rel="icon" href="data:,">
+<style>html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#101b22}#app canvas{display:block;width:100%!important;height:100%!important}#kite-review{position:fixed;bottom:8px;left:8px;z-index:999999;background:#142730e8;color:#fff;padding:10px;border-radius:8px;font:12px system-ui;max-width:900px}#kite-review button{margin:3px;padding:6px}#kite-review output{display:block;white-space:pre-wrap;max-height:105px;overflow:auto}</style>
+<div id="app"></div><script type="module" src="/src/main.ts"></script>
+<script type="module">
+import * as THREE from 'three';
+const g=window.__game;if(!g.launchReview)throw Error('Use ?playtest&level=coastal-street-run&launchReview');
+const panel=document.createElement('section');panel.id='kite-review';panel.innerHTML='<strong>KITE INDY · ACTUAL GAME REVIEW</strong><div></div><output>Preparing…</output>';document.body.append(panel);
+const output=panel.querySelector('output');let queue=[],view='game',inspected=false;const savedPos=new THREE.Vector3(),savedRot=new THREE.Quaternion();
+const clear=()=>{g.input.moveX=g.input.moveY=0;for(const key of ['jumpHeld','jumpPressed','jumpReleased','spinPressed','grindHeld','grindPressed','grabHeld','grabPressed','transferPressed'])g.input[key]=false;};
+const run=steps=>{queue=steps;g.launchReview.rate=0;g.launchReview.advance=1/60;};
+const frames=(n,v={})=>Array.from({length:n},()=>({...v}));
+const button=(name,fn)=>{const b=document.createElement('button');b.textContent=name;b.onclick=fn;panel.querySelector('div').append(b);};
+const reset=()=>{queue=[];clear();g.player.respawn(g.getLevel(),true);g.player.kiteMotion.reset(17);};
+button('Reset',()=>{reset();run(frames(2));});
+button('Launch and jump',()=>{reset();run([{grabPressed:true},...frames(60),...frames(24,{jumpHeld:true}),{jumpReleased:true}]);});
+button('High drop',()=>{g.player.pos.y+=8;g.player.grounded=false;g.player.state='air';g.player.airFromSkate=true;g.player.vVel=4;run(frames(1));});
+button('Grab 12',()=>run([{grabPressed:true,grabHeld:true},...frames(11,{grabHeld:true})]));
+button('Rotate left 12',()=>run(frames(12,{grabHeld:true,moveX:-1})));
+button('Rotate right 12',()=>run(frames(12,{grabHeld:true,moveX:1})));
+button('Release',()=>run(frames(1)));
+button('Unwind 8',()=>run(frames(8)));
+button('Land',()=>run(frames(160)));
+button('Held landing',()=>run([{grabPressed:true,grabHeld:true},...frames(159,{grabHeld:true})]));
+button('Freeze',()=>{queue=[];clear();g.launchReview.rate=0;});
+button('Game camera',()=>view='game');button('Side camera',()=>view='side');button('Front camera',()=>view='front');
+button('Native MAX',()=>g.renderQualitySettings.setRegularResolution(null));button('Normal 720',()=>g.renderQualitySettings.setRegularResolution(720));
+button('Hide panel',()=>panel.style.display='none');
+g.launchReview.beforeStep=()=>{if(queue.length){clear();Object.assign(g.input,queue.shift());g.launchReview.advance=queue.length?1/60:0;}};
+g.launchReview.restoreCamera=()=>{if(inspected){g.camera.position.copy(savedPos);g.camera.quaternion.copy(savedRot);inspected=false;}};
+g.launchReview.afterCamera=()=>{if(view==='game')return;savedPos.copy(g.camera.position);savedRot.copy(g.camera.quaternion);inspected=true;const aim=g.player.pos.clone().add(new THREE.Vector3(0,1.1,0));g.camera.position.copy(aim).add(view==='side'?new THREE.Vector3(4.1,.65,1.5):new THREE.Vector3(0,.7,-4.6));g.camera.lookAt(aim);g.camera.updateMatrixWorld();};
+setInterval(()=>{const p=g.player,k=p.kiteVisual;output.textContent=JSON.stringify({loading:g.getLoadingDiagnostics().phase,pendingFrames:queue.length,drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],ready:k?.root.userData.kiteArtReady??false,state:p.state,position:p.pos.toArray().map(n=>+n.toFixed(2)),speed:p.speed,kite:p.kiteDiagnostics,indy:p.boardG?.userData.skateGrab,contacts:p.boardG?.userData.skateContact,resolution:g.renderQualitySettings.regularResolution},null,1);},500);
+</script>
