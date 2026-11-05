@@ -2452,7 +2452,7 @@ export class UI {
         position: relative; flex: 0 0 auto;
         width: clamp(68px, 10.7vh, 111px);
         height: clamp(68px, 10.7vh, 111px);
-        transform: translateY(-4%);
+        transform: translateY(4%);
       }
       .hud-life-face-wrap .hud-icon-face { width: 100%; height: 100%; }
       .hud-bonus-title {

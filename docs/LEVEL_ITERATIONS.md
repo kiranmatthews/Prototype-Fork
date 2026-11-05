@@ -9469,3 +9469,12 @@ assumption, not a runtime change. Focused SPECIAL and Modern life-HUD checks,
 production build/typecheck, release-size check and diff whitespace check pass.
 Only src/ui.ts, src/gameHudSurface.ts and this append-only iteration entry are
 owned by this change. Local captures/reports: .release-queue/evidence/special-ring/.
+
+Follow-up — lower the portrait/ring to meet the adjacent digits: changed the
+Classic portrait wrapper offset from -4% to +4% of its own height (about 6 px
+lower at 720p and 9 px at the large-size cap). The ring shares that wrapper
+and the Canvas path measures the same moved portrait. Modern’s below-portrait
+readout and Bonus retain their existing transform overrides. Approximately
+3 minutes prompt-to-verified playable. The complete 12-case review passed
+again beside 1/3 life counts, including compact, full and MAX rendering, with
+no console errors; the focused Modern life-HUD check also passed.
