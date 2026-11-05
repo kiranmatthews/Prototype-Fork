@@ -1,0 +1,11 @@
+{
+  "base": "78ac9389",
+  "checks": [
+    "90 reward receipts: conservation, flight latency/bounds, fruit rollover, Classic/Modern inventory and reduced motion",
+    "Bonus reward portraits: current head at construction, live switches, late old loads, DOM/pre-CRT totals and flights, shared crate/fruit slots and return cleanup",
+    "BONUS title loop, reduced motion, SVG/native glyph parity, stable atlas rasters and synchronous parent HUD restoration",
+    "Modern life count/caption and unchanged Classic format",
+    "Regular/bonus HUD visibility, fruit timer, earned-only relics and L2 toggle semantics"
+  ],
+  "fixtureRepair": "Existing test-bonus-hud harness now supplies the already-required inactive race HUD state; no race runtime behavior changed."
+}

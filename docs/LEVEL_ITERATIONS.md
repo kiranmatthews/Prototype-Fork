@@ -9543,3 +9543,33 @@ assertion with all task-owned source files loaded from untouched baseline
 The remaining level-check stages pass when run after that existing failure.
 The Beach Street regression also passes after integration with current main.
 Production build/typecheck and release-size validation pass: 834,736,437 bytes.
+
+
+## 2026-11-05 — Keep the current HUD throughout bonus levels
+
+The bonus reward painter still loaded `roo.png` directly. It now initializes
+from the active character portrait and receives the same head-selection update
+as the ordinary DOM and pre-CRT HUD. Bone Man therefore remains Bone Man in the
+bonus counter, banked total and flying life rewards; switching heads also stays
+consistent. Delayed loads from the previous head cannot replace the current face.
+
+Fruit and crates already share the ordinary HUD's live 3D slots throughout
+bonus entry, play, payout and return. Verified the same 12,804-triangle crate and
+4,904-triangle fruit instances, the positive 35.264-degree crate lean, existing
+45-degree base yaw and 0.6 rad/s spin. Keep future model/pose changes in these
+shared slots. No geometry, gameplay, level data or bonus layout change.
+
+Focused checks pass: 90 reward receipts plus actual reward-painter portrait
+selection and delayed-load cases in direct/pre-CRT paths; bonus title/native
+parity and parent restoration; Classic/Modern life HUD; contextual visibility.
+The existing bonus-HUD harness lacked the already-required inactive race-HUD
+state; supplying that fixture restores its parent-return regression coverage.
+
+Actual parent → bonus → reward animation → parent journeys pass in lite,
+2560×1440 MAX/native and 480p/CRT. The selected portrait, models and poses persist;
+reward overlays clear on return. Both character portraits checked, consoles
+clean, original settings restored and own test tabs/server closed. Playably
+validated at 05:37 UTC, approximately 16 minutes after this follow-up began.
+Evidence: `docs/bonus-hud-continuity/`. Direct publication belongs to this chat.
+Production build/typecheck, whitespace and release-size checks pass
+(834,736,587 bytes).

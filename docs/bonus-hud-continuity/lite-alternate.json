@@ -1,0 +1,59 @@
+{
+  "level": "bonus:beachfront",
+  "allowsBonus": true,
+  "bonusPad": false,
+  "bonus": true,
+  "transition": null,
+  "travel": null,
+  "head": "alternate",
+  "domPortrait": "url(\"/roo.png\")",
+  "domHead": "alternate",
+  "canvasPortrait": "/roo.png",
+  "canvasPortraitReady": true,
+  "rewardPortrait": "http://127.0.0.1:5187/roo.png",
+  "rewardPortraitReady": true,
+  "rewardActive": false,
+  "rewardFaces": 0,
+  "rewardModelSlots": [],
+  "slots": [
+    {
+      "kind": "crate",
+      "sameInstance": true,
+      "lean": 0.6154797086703873,
+      "spin": 38.25047816340015,
+      "rate": 0.6,
+      "triangles": 12804,
+      "names": [
+        "Six-sided sculpted shell",
+        "Painted gameplay marks · four sides and lid seals"
+      ],
+      "rect": {
+        "x": 519.76171875,
+        "y": 596.1784057617188,
+        "width": 72,
+        "height": 72
+      }
+    },
+    {
+      "kind": "fruit",
+      "sameInstance": true,
+      "lean": 0,
+      "spin": 37.46508000000269,
+      "rate": 0.6,
+      "triangles": 4904,
+      "names": [],
+      "rect": {
+        "x": 76.796875,
+        "y": 596.0841064453125,
+        "width": 72,
+        "height": 72
+      }
+    }
+  ],
+  "canvas": [
+    1280,
+    720
+  ],
+  "crt": false,
+  "composited": false
+}

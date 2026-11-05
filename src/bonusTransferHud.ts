@@ -2,6 +2,7 @@ import {RooAtlasPainter,layoutRooAtlas} from './roo-type/atlas';
 import {ROO_ATLAS_METRICS} from './roo-type/atlas-metrics';
 import {trackPresentationImage} from './presentationLoading';
 import {bonusTransferFlights,type BonusTransferFrame} from './bonusTransfer';
+import {lifePortraitStyle,lifePortraitUrl} from './lifePortrait';
 
 type Rect={x:number;y:number;width:number;height:number};
 export interface BonusIconDraw {slot:0|1;rect:Rect;alpha:number}
@@ -11,7 +12,8 @@ export class BonusTransferHud {
   readonly semantic=document.createElement('div');
   private context=this.canvas.getContext('2d')!;
   private painter=new RooAtlasPainter();
-  private face=new Image();
+  private face!:HTMLImageElement;
+  private faceUrl='';
   private frame:BonusTransferFrame|null=null;
   private sources:Record<'fruit'|'boxes'|'lives',Rect>={fruit:{x:0,y:0,width:0,height:0},boxes:{x:0,y:0,width:0,height:0},lives:{x:0,y:0,width:0,height:0}};
   private targets:typeof this.sources={...this.sources};
@@ -26,8 +28,15 @@ export class BonusTransferHud {
     this.semantic.className='bonus-transfer-status';this.semantic.setAttribute('role','status');
     this.semantic.style.cssText='position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';
     host.append(this.canvas,this.semantic);
-    this.face.decoding='async';const url=`${import.meta.env.BASE_URL}roo.png`;
-    trackPresentationImage(this.face,url);this.face.src=url;
+    this.setLifeFaceUrl(lifePortraitUrl(lifePortraitStyle()));
+  }
+  /** Reward totals and flying lives keep the same portrait as the live HUD. */
+  setLifeFaceUrl(url:string):void {
+    if(url===this.faceUrl)return;
+    this.faceUrl=url;
+    const image=new Image();image.decoding='async';
+    this.face=image;
+    trackPresentationImage(image,url);image.src=url;
   }
   get active(){return this.frame!==null;}
   update(frame:BonusTransferFrame|null,sources?:Record<'fruit'|'boxes'|'lives',DOMRect>){

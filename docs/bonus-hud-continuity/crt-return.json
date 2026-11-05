@@ -1,0 +1,59 @@
+{
+  "level": "beachfront",
+  "allowsBonus": true,
+  "bonusPad": true,
+  "bonus": false,
+  "transition": null,
+  "travel": null,
+  "head": "skull",
+  "domPortrait": "url(\"/bone-head.png\")",
+  "domHead": "skull",
+  "canvasPortrait": "/bone-head.png",
+  "canvasPortraitReady": true,
+  "rewardPortrait": "http://127.0.0.1:5187/bone-head.png",
+  "rewardPortraitReady": true,
+  "rewardActive": false,
+  "rewardFaces": 1,
+  "rewardModelSlots": [],
+  "slots": [
+    {
+      "kind": "crate",
+      "sameInstance": true,
+      "lean": 0.6154797086703873,
+      "spin": 156.58643816337747,
+      "rate": 0.6,
+      "triangles": 12804,
+      "names": [
+        "Six-sided sculpted shell",
+        "Painted gameplay marks · four sides and lid seals"
+      ],
+      "rect": {
+        "x": 20,
+        "y": 166.6816864013672,
+        "width": 44.682655334472656,
+        "height": 44.68266296386719
+      }
+    },
+    {
+      "kind": "fruit",
+      "sameInstance": true,
+      "lean": 0,
+      "spin": 155.8010399999801,
+      "rate": 0.6,
+      "triangles": 4904,
+      "names": [],
+      "rect": {
+        "x": 20,
+        "y": 53.51030349731445,
+        "width": 44.682655334472656,
+        "height": 44.68265914916992
+      }
+    }
+  ],
+  "canvas": [
+    853,
+    480
+  ],
+  "crt": true,
+  "composited": true
+}

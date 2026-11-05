@@ -1,0 +1,100 @@
+{
+  "level": "bonus:beachfront",
+  "allowsBonus": true,
+  "bonusPad": false,
+  "bonus": true,
+  "transition": null,
+  "travel": {
+    "alignment": {
+      "needed": true,
+      "phase": 1,
+      "progress": 1,
+      "airborne": false,
+      "offsetY": 1.0042103753008296e-16,
+      "verticalVelocity": 0,
+      "launchVelocity": 7.15584993317675,
+      "airborneSeconds": 0.36
+    },
+    "kind": "exit",
+    "receipt": {
+      "parent": {
+        "fruit": 0,
+        "lives": 4,
+        "boxes": 0,
+        "totalBoxes": 148,
+        "deaths": 0,
+        "modern": false
+      },
+      "bonus": {
+        "fruit": 26,
+        "lives": 3,
+        "boxes": 24,
+        "totalBoxes": 24
+      }
+    },
+    "elapsed": 2.5,
+    "phase": "rising",
+    "offsetY": 7,
+    "complete": true
+  },
+  "head": "skull",
+  "domPortrait": "url(\"/bone-head.png\")",
+  "domHead": "skull",
+  "canvasPortrait": "/bone-head.png",
+  "canvasPortraitReady": true,
+  "rewardPortrait": "http://127.0.0.1:5187/bone-head.png",
+  "rewardPortraitReady": true,
+  "rewardActive": true,
+  "rewardFaces": 2,
+  "rewardModelSlots": [
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+  ],
+  "slots": [
+    {
+      "kind": "crate",
+      "sameInstance": true,
+      "lean": 0.6154797086703873,
+      "spin": 49.014118163403715,
+      "rate": 0.6,
+      "triangles": 12804,
+      "names": [
+        "Six-sided sculpted shell",
+        "Painted gameplay marks · four sides and lid seals"
+      ],
+      "rect": {
+        "x": 507.5859375,
+        "y": 599.1602783203125,
+        "width": 72,
+        "height": 72
+      }
+    },
+    {
+      "kind": "fruit",
+      "sameInstance": true,
+      "lean": 0,
+      "spin": 48.228720000006255,
+      "rate": 0.6,
+      "triangles": 4904,
+      "names": [],
+      "rect": {
+        "x": 76.796875,
+        "y": 598.52099609375,
+        "width": 72,
+        "height": 72
+      }
+    }
+  ],
+  "canvas": [
+    1280,
+    720
+  ],
+  "crt": false,
+  "composited": false
+}

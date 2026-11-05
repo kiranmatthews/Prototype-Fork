@@ -1224,6 +1224,7 @@ export class UI {
     fill.position.set(-0.8, -0.2, 0.5);
     scene.add(fill);
 
+    // Normal play, Bonus and reward flights share these models and poses.
     // lean: tip toward the camera so a box reads as a box and a facet catches
     // the light, rather than turning as a flat silhouette.
     // rate: the idle turn. The counters are ambient decoration and stay slow;
@@ -1484,6 +1485,7 @@ export class UI {
       this.lifeFaceEl.dataset.headStyle = headStyle;
       this.lifeFaceEl.setAttribute('aria-label', portrait.label);
       this.gameHudSurface.setLifeFaceUrl(lifePortraitUrl(headStyle));
+      this.bonusTransferHud.setLifeFaceUrl(lifePortraitUrl(headStyle));
       this.lifeFaceStyle = headStyle;
     }
     this.raceHud.update(s.race);

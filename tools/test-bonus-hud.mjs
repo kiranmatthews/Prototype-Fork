@@ -109,7 +109,7 @@ try {
     const ui = new scope.Harness();
     for(const name of ['gameHudLayer','livesRowEl','livesEl','bonusTitleEl','wumpaRowEl','crateRowEl','relicRowEl','scorePlateEl'])ui[name]=element();
     Object.assign(ui,{setBonusTransfer(){},endCombo(){},refreshEditControls(){},bonusTitleAnimation:animation,levelRows:new Map(),prevHud:{points:0},
-      hudVisibility:new HudVisibilityState(),hudBonusExitTimer:7,bonusMode:true,runRowsHidden:false,endlessDeaths:false});
+      hudVisibility:new HudVisibilityState(),raceHud:{state:null},hudBonusExitTimer:7,bonusMode:true,runRowsHidden:false,endlessDeaths:false});
     ui.gameHudLayer.classList.add('hud-bonus');
     ui.setLevel('parent',destination,8,false);
     assert.equal(ui.gameHudLayer.classList.contains('hud-bonus'),false,`${destination} still uses the bonus bottom layout`);
