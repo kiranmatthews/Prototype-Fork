@@ -9449,3 +9449,23 @@ failure at line 278: it expects `fruitCollectionRevision++` immediately after
 `collectFruit` opens, but that unchanged function has an intervening statement
 on baseline `a9020b2a` as well. No fruit or player code is changed here.
 Production build/typecheck and release-size validation pass (834,730,843 bytes).
+
+
+## 2026-11-05 — Softer, bevelled character SPECIAL ring
+
+The empty portrait ring now has a translucent shaded band (12–18% alpha,
+previously 78%), fine opposing highlight/shadow rims and a light contact shadow.
+The charged gold arc has a rounded bevel across its width, directional lighting,
+and a softer ready glow. DOM and pre-CRT Canvas use the same visual treatment
+and responsive band dimensions; both fill clockwise from twelve o’clock.
+SPECIAL scoring, charge, readiness, portrait selection and life layout are unchanged.
+
+Prompt-to-verified playable: approximately 9 minutes from the styling follow-up.
+Chrome reviews covered 0%, 42% and 100% charge in lite/DOM at 1280×720 and
+390×844, normal full rendering at 1280×720, and MAX/native at 1920×1080.
+All captured consoles were clean. The MAX check was corrected to accept the
+existing direct HUD path when post-processing is inactive; this was a review
+assumption, not a runtime change. Focused SPECIAL and Modern life-HUD checks,
+production build/typecheck, release-size check and diff whitespace check pass.
+Only src/ui.ts, src/gameHudSurface.ts and this append-only iteration entry are
+owned by this change. Local captures/reports: .release-queue/evidence/special-ring/.

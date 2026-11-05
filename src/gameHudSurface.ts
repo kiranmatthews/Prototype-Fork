@@ -610,14 +610,33 @@ export class GameHudSurface {
       Math.min(face.width, face.height) / 2 + lineWidth * 0.72,
     );
     const start = -Math.PI / 2;
+    const edgeWidth = lineWidth * 0.12;
+    const diagonal = (stops: Array<[number, string]>): CanvasGradient => {
+      const gradient = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
+      for (const [offset, color] of stops) gradient.addColorStop(offset, color);
+      return gradient;
+    };
+    const stroke = (paint: CanvasGradient, band: number, radius: number, fraction = 1): void => {
+      ctx.strokeStyle = paint;
+      ctx.lineWidth = band;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, start, start + Math.PI * 2 * fraction);
+      ctx.stroke();
+    };
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.lineCap = "round";
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = "rgba(38, 20, 10, 0.78)";
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.stroke();
+    // A translucent body and opposing fine rims suggest depth without the
+    // opaque dark halo of the old empty track. Keep light from the upper left.
+    ctx.shadowColor = "rgba(25, 18, 10, 0.14)";
+    ctx.shadowBlur = 2 * sy;
+    ctx.shadowOffsetY = sy;
+    stroke(diagonal([[0, "rgba(204, 191, 157, 0.18)"], [0.5, "rgba(88, 75, 55, 0.12)"], [1, "rgba(34, 25, 17, 0.17)"]]), lineWidth, radius);
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+    stroke(diagonal([[0, "rgba(255, 249, 224, 0.34)"], [0.5, "rgba(255, 249, 224, 0.04)"], [1, "rgba(42, 27, 13, 0.16)"]]), edgeWidth, radius + (lineWidth - edgeWidth) / 2);
+    stroke(diagonal([[0, "rgba(42, 27, 13, 0.13)"], [0.5, "rgba(255, 249, 224, 0.02)"], [1, "rgba(255, 249, 224, 0.24)"]]), edgeWidth, radius - (lineWidth - edgeWidth) / 2);
 
     if (fraction <= 0.0001) {
       ctx.restore();
@@ -626,23 +645,26 @@ export class GameHudSurface {
     }
 
     if (ready) {
-      const pulse = 0.55 + 0.25 * Math.sin(time * 0.012);
+      const pulse = 0.35 + 0.12 * Math.sin(time * 0.012);
       ctx.shadowColor = `rgba(255, 184, 28, ${pulse})`;
-      ctx.shadowBlur = 18 * sy;
+      ctx.shadowBlur = 10 * sy;
     }
-    const gradient = ctx.createLinearGradient(
-      cx - radius,
-      cy + radius,
-      cx + radius,
-      cy - radius,
-    );
-    gradient.addColorStop(0, "#ff6d18");
-    gradient.addColorStop(0.7, "#ffc928");
-    gradient.addColorStop(1, ready ? "#fffbd0" : "#ffe36a");
-    ctx.strokeStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, start, start + Math.PI * 2 * fraction);
-    ctx.stroke();
+    stroke(diagonal([[0, ready ? "#fffbd0" : "#fff1a2"], [0.45, "#f9bf37"], [1, "#cc6a14"]]), lineWidth, radius, fraction);
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    // Shade across the band's thickness as well as around the circle, giving
+    // the gold a softly rounded cross-section at every meter value.
+    const outer = radius + lineWidth / 2;
+    const inner = outer - lineWidth;
+    const bevel = ctx.createRadialGradient(cx, cy, 0, cx, cy, outer);
+    bevel.addColorStop(inner / outer, "rgba(91, 38, 5, 0.4)");
+    bevel.addColorStop((inner + lineWidth * 0.17) / outer, "rgba(91, 38, 5, 0)");
+    bevel.addColorStop((inner + lineWidth * 0.6) / outer, "rgba(255, 249, 195, 0.52)");
+    bevel.addColorStop((outer - edgeWidth) / outer, "rgba(255, 249, 195, 0.18)");
+    bevel.addColorStop(1, "rgba(91, 38, 5, 0.35)");
+    stroke(bevel, lineWidth, radius, fraction);
+    stroke(diagonal([[0, "rgba(255, 253, 224, 0.85)"], [0.5, "rgba(255, 239, 169, 0.3)"], [1, "rgba(93, 44, 8, 0.55)"]]), edgeWidth, radius + (lineWidth - edgeWidth) / 2, fraction);
+    stroke(diagonal([[0, "rgba(93, 44, 8, 0.5)"], [0.5, "rgba(255, 239, 169, 0.08)"], [1, "rgba(255, 253, 224, 0.65)"]]), edgeWidth, radius - (lineWidth - edgeWidth) / 2, fraction);
     ctx.restore();
     this.mark();
   }

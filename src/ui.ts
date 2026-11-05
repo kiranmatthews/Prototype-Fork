@@ -830,8 +830,7 @@ export class UI {
     this.specialWrap.setAttribute("aria-valuemax", "100");
     const specialTrack = div("hud-special-track");
     this.specialFill = div("hud-special-fill");
-    specialTrack.appendChild(this.specialFill);
-    this.specialWrap.appendChild(specialTrack);
+    this.specialWrap.append(specialTrack, this.specialFill);
     lifeFaceWrap.insertBefore(this.specialWrap, this.lifeFaceEl);
 
     // bottom-center: THPS trick plate
@@ -2654,39 +2653,58 @@ export class UI {
 
       .hud-special {
         --special-turn: 0turn;
-        position: absolute; inset: -7px; z-index: 0;
+        --special-band: max(1px, 0.972222vh);
+        --special-edge: calc(var(--special-band) * 0.12);
+        --special-gold-light: #fff1a2;
+        position: absolute; inset: calc(var(--special-band) * -1.22); z-index: 0;
         border-radius: 50%; pointer-events: none;
-        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.78));
+        filter: drop-shadow(0 1px 2px rgba(25, 18, 10, 0.14));
       }
       .hud-special-track,
       .hud-special-fill {
         position: absolute; inset: 0; border-radius: 50%;
-        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
-        mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+        --special-hole: radial-gradient(farthest-side, transparent calc(100% - var(--special-band)), #000 calc(100% - var(--special-band) + 0.5px));
+        --special-outer-rim: linear-gradient(135deg, rgba(255,249,224,.34), rgba(255,249,224,.04) 50%, rgba(42,27,13,.16));
+        --special-inner-rim: linear-gradient(135deg, rgba(42,27,13,.13), rgba(255,249,224,.02) 50%, rgba(255,249,224,.24));
+        -webkit-mask: var(--special-hole);
+        mask: var(--special-hole);
       }
-      .hud-special-track { background: rgba(38, 20, 10, 0.78); }
+      .hud-special-track {
+        background: linear-gradient(135deg, rgba(204,191,157,.18), rgba(88,75,55,.12) 50%, rgba(34,25,17,.17));
+      }
+      .hud-special-track::before, .hud-special-fill::before,
+      .hud-special-track::after, .hud-special-fill::after {
+        content: ''; position: absolute; inset: 0; border-radius: 50%;
+        background: var(--special-outer-rim);
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--special-edge)), #000 100%);
+        mask: radial-gradient(farthest-side, transparent calc(100% - var(--special-edge)), #000 100%);
+      }
+      .hud-special-track::after, .hud-special-fill::after {
+        inset: calc(var(--special-band) - var(--special-edge));
+        background: var(--special-inner-rim);
+      }
       .hud-special-fill {
-        background: conic-gradient(
-          from -90deg,
-          #ff6d18 0turn,
-          #ffc928 var(--special-turn),
-          transparent var(--special-turn) 1turn
-        );
-        transition: background 0.08s linear;
+        --special-outer-rim: linear-gradient(135deg, rgba(255,253,224,.85), rgba(255,239,169,.3) 50%, rgba(93,44,8,.55));
+        --special-inner-rim: linear-gradient(135deg, rgba(93,44,8,.5), rgba(255,239,169,.08) 50%, rgba(255,253,224,.65));
+        background:
+          radial-gradient(farthest-side,
+            rgba(91,38,5,.4) calc(100% - var(--special-band)),
+            rgba(91,38,5,0) calc(100% - var(--special-band) * .83),
+            rgba(255,249,195,.52) calc(100% - var(--special-band) * .4),
+            rgba(255,249,195,.18) calc(100% - var(--special-edge)),
+            rgba(91,38,5,.35) 100%),
+          linear-gradient(135deg, var(--special-gold-light), #f9bf37 45%, #cc6a14);
+        -webkit-mask: var(--special-hole), conic-gradient(#000 0turn var(--special-turn), transparent var(--special-turn) 1turn);
+        mask: var(--special-hole), conic-gradient(#000 0turn var(--special-turn), transparent var(--special-turn) 1turn);
+        -webkit-mask-composite: source-in;
+        mask-composite: intersect;
       }
       .hud-special-ready {
+        --special-gold-light: #fffbd0;
         filter:
-          drop-shadow(0 3px 4px rgba(0, 0, 0, 0.78))
-          drop-shadow(0 0 10px rgba(255, 180, 31, 0.9));
+          drop-shadow(0 1px 2px rgba(25, 18, 10, 0.14))
+          drop-shadow(0 0 7px rgba(255, 180, 31, 0.47));
         animation: specialpulse 0.42s ease-in-out infinite alternate;
-      }
-      .hud-special-ready .hud-special-fill {
-        background: conic-gradient(
-          from -90deg,
-          #ff7a18 0turn,
-          #fffbd0 var(--special-turn),
-          transparent var(--special-turn) 1turn
-        );
       }
       @keyframes specialpulse { from { opacity: 0.86; } to { opacity: 1; } }
       @media (prefers-reduced-motion: reduce) {
