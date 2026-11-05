@@ -9506,3 +9506,40 @@ spin clears all four adjacent crates. Consoles clean. Playably validated at
 05:06 UTC, approximately 15 minutes after the follow-up began. Evidence:
 `docs/single-crate-landings/`. Direct publication remains assigned to this chat.
 Production build/typecheck and release-size validation pass (834,731,139 bytes).
+
+## 2026-11-05 — Beach Street side-scrape recovery and wall edge policy
+
+Kite-tow contact with the side of scenery now scrapes for 0.5 seconds before
+killing the player. Lateral steering stays live; clearing the wall resets the
+window immediately. The same timer spans neighbouring wall pieces and projecting
+piers. Head-on obstacles and moving freight retain their existing crash response.
+The existing grinding sample supplies a quieter, lower-pitched scrape loop with
+small sparks/dust; recovery, death, respawn, docking, kite release and pausing
+clear or silence it. Other movement modes keep their existing collision path.
+
+Disabled automatic grinding on Beach Street's 23 narrow water-side shoulders
+beneath the masonry, including the overlapping road slab's hidden right-hand
+seam. The other three edges of each road slab remain explicitly grindable and
+town-side shoulders keep their default edges. The explicit wall-top coping
+remains grindable across raised piers and slopes; E from alongside the wall
+now catches the top rather than the hidden seam.
+No assets, shared movement tuning, other level data or sky settings changed.
+
+Playably validated around 05:17 UTC / 18:17 NZDT, approximately 27 minutes after
+this follow-up began. `node tools/test-beach-scrape.mjs` exercises real Player/Level
+side contacts on both sides, exact 0.5-second timing at 60/120 Hz, a successful
+correction after 0.4 seconds, immediate head-on crashes, reset/ordinary-level
+isolation, absence of the lower grind edge and native wall-top grinding over piers.
+Actual browser input pilots pass in lite, full MAX/native and normal 480p/CRT
+rendering. Measured
+WebAudio output confirms the scrape loop plays during contact and stops on
+recovery/death/pause; the full-render console and asset diagnostics are clean.
+
+`npm run check:levels` reaches an existing Waterpark failure in
+`test-waterpark-decks.mjs:49` (material/texture retirement). Reproduced the same
+assertion with all task-owned source files loaded from untouched baseline
+`43cec62f`; the Beach Street tests and preceding level checks pass.
+
+The remaining level-check stages pass when run after that existing failure.
+The Beach Street regression also passes after integration with current main.
+Production build/typecheck and release-size validation pass: 834,736,437 bytes.

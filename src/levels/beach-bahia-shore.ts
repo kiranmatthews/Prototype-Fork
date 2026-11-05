@@ -28,7 +28,22 @@ export function dressBahiaShore(data:CustomLevelData,road:readonly Road[],height
     &&!c.nm?.startsWith('beach boundary ')
     &&!(c.nm==='Boundary rail teal finish'&&c.p[0]>0)
     &&!(c.grp===101&&c.p[0]>0&&(c.dkind==='baypost'||c.dkind==='baylamp'&&opening(-c.p[2],1))));
+  // This narrow shoulder ends inside the masonry: its ground-level rim is
+  // not an exposed grind. The separately authored wall coping stays usable.
+  for(const c of data.components)if(c.grp===1&&c.nm?.startsWith('water shoulder '))c.edgeGrinding=false;
   const put=(c:CustomComponent)=>data.components.push({...c,grp:105});
+  // The road overlaps that shoulder, leaving another hidden edge at x=6.
+  // Retain its other three edges explicitly, so only the beach-side seam
+  // loses its grind. Platforms include their authored .04m end overlap.
+  for(const c of data.components.filter(c=>c.grp===1&&c.p[0]===0&&(c.t==='platform'||c.t==='ramp'))){
+    const flat=c.t==='platform',length=flat?c.s![2]:c.len!,halfWidth=(flat?c.s![0]:c.w!)/2;
+    const nearY=flat?c.p[1]+c.s![1]/2:c.p[1]+(c.yaw===180?c.rise!:0);
+    const farY=flat?nearY:c.p[1]+(c.yaw===180?0:c.rise!);
+    c.edgeGrinding=false;
+    put({t:'rail',p:[0,nearY+.05,c.p[2]+length/2],pts:[
+      [halfWidth,0,0,0],[-halfWidth,0,0,0],[-halfWidth,-length,0,farY-nearY],[halfWidth,-length,0,farY-nearY]],
+      coping:true,invisible:true,solid:false,nm:`Bahia retained road edges: ${c.nm}`});
+  }
   // Include every grade break, so the sand's inner edge meets the existing
   // road exactly. Shared rows at patch ends have identical world positions.
   const stations=new Set<number>([-90,3130]);

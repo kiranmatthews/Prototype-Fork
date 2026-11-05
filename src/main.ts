@@ -5059,6 +5059,7 @@ function updateAudio(): void {
     0.85 + speedAbs / 120,
   );
   sfx.setLoop("grind", "grindLoop", !vehicleOwnsMovement && player.state === "grind", 0.55, 1);
+  sfx.setLoop('kite-scrape','grindLoop',!vehicleOwnsMovement && player.kiteScraping,.65,.78);
   // Wallride: the skating loop while stuck to a wall, pitched up a touch.
   sfx.setLoop("wallride", "wallrideLoop", !vehicleOwnsMovement && player.wallriding, 0.5, 1.15);
   // Triple-mask invincibility gets its theme music for the whole ride.

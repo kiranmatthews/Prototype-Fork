@@ -19,6 +19,7 @@ import { LAUNCH_JUMP, LAUNCH_CLIPS, launchRiseProgress, launchClip, isLaunchClip
 
 import * as THREE from 'three';
 import { KITE_TOW, KiteTowMotion } from './kiteTow';
+import {KiteScrape,kiteBoxSide,KITE_SCRAPE_SKIN} from './kiteScrape';
 import { KiteTowVisual } from './kiteTowVisual';
 import { KiteBonusDock } from './kiteBonus';
 import { groundDriveCeiling, groundSpeedLimit, softGroundSpeed } from './softGround';
@@ -633,6 +634,8 @@ export class Player {
   vVel = 0;
   state: MoveState = 'ride';
   private readonly kiteMotion = new KiteTowMotion();
+  private readonly kiteScrape = new KiteScrape();
+  private readonly kiteContactBox = new THREE.Box3();
   private kiteVisual: KiteTowVisual | null = null;
   private kiteDock: KiteBonusDock | null = null;
   private kiteReleaseT = -1;
@@ -647,8 +650,10 @@ export class Player {
   }
   get kiteReleased(): boolean { return this.kiteReleaseT >= 0; }
   get kiteBonusDocked(): boolean { return this.kiteDock !== null; }
+  get kiteScraping(): boolean { return this.kiteTowing && !this.kiteDock && this.kiteScrape.active; }
   get kiteDiagnostics() { return {started:this.kiteMotion.started,released:this.kiteReleased,releaseAge:this.kiteReleaseT,wind:this.kiteMotion.wind,
     windTarget:this.kiteMotion.windTarget,reserve:this.kiteMotion.reserve,charge:this.kiteMotion.charge,
+    scraping:this.kiteScraping,scrapeSeconds:this.kiteScrape.seconds,
     brakeSeconds:this.kiteMotion.brakeSeconds,bursting:this.kiteMotion.bursting,autoReleases:this.kiteMotion.autoReleases,poseMotion:this.kitePoseMotion,
     gripErrors:this.kiteVisual?.gripErrors,dock:this.kiteDock?{elapsed:this.kiteDock.elapsed,
       errors:this.kiteDock.errors,normalErrors:this.kiteDock.normalErrors}:null,
@@ -3575,6 +3580,7 @@ export class Player {
   ): void {
     this.fatalChaseBoulder=-1;
     this.kiteMotion.reset();
+    this.kiteScrape.reset();
     this.kiteVisual?.reset();
     this.checkpointTripCount=0;this.checkpointTripActive=false;
     if (hard) this.runTrickUses.clear();
@@ -4289,6 +4295,7 @@ export class Player {
   private stepKiteTow(dt: number, input: Input, level: Level): void {
     if (input.restartPressed) { this.respawn(level, true); return; }
     if (this.kiteDock) {
+      this.kiteScrape.reset();
       this.kiteDock.step(dt,this.pos);
       this.speed=this.vVel=0;this.grounded=true;this.state='ride';this.freeSkate=false;
       this.charging=true;this.chargeTimer=Math.min(TUNING.jumpChargeTime,this.kiteDock.elapsed*.5);
@@ -4394,7 +4401,7 @@ export class Player {
     this.syncReusablePrimitives(level);
     this.finishVisualStep(input, dt);
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
-      this.collide(level);
+      this.collide(level, false, dt);
       this.flushLevelCrateRewards(level);
       if (!this.bonusMode && !level.runMode && !this.gemSpawned && !this.gemEarned &&
           level.totalCrates > 0 && this.cratesBroken + this.bonusCrates >= level.totalCrates &&
@@ -4415,6 +4422,7 @@ export class Player {
 
   /** Hand the final promenade back to ordinary feet, after the last rewards. */
   private releaseKite(input: Input): void {
+    this.kiteScrape.reset();
     const carry = Math.min(Math.max(0, this.speed), TUNING.walkSpeed);
     this.cancelWipeoutActions();
     this.kiteReleaseT = 0; this.kiteFinishJump = false;
@@ -13337,7 +13345,7 @@ export class Player {
     }return false;
   }
 
-  private collide(level: Level, ledgeOnly = false): void {
+  private collide(level: Level, ledgeOnly = false, dt = CONST.fixedStep): void {
     if(!ledgeOnly&&this.checkpointTrip(level))return;
     if (!ledgeOnly && this.returnPortalCoolT <= 0) {
       const portal = level.returnPortalAt(
@@ -13447,10 +13455,43 @@ export class Player {
     const center = new THREE.Vector3(this.pos.x, this.pos.y + half.y, this.pos.z);
     this.playerBox.setFromCenterAndSize(center, new THREE.Vector3(half.x * 2, half.y * 2, half.z * 2));
     if (this.kiteTowing) {
-      // No mask, wallride or ledge catch can turn a kite crash into a stop.
-      const wall = level.walls.find(w => w.max.y > this.pos.y + .15 && this.playerBox.intersectsBox(w));
+      // Sideways scenery contact offers half a second of correction. Front
+      // faces and moving freight retain their immediate crash response.
       const load = level.crushers.find(c => this.playerBox.intersectsBox(c.box));
-      if (wall || load) { this.die(load ? 'crush' : 'wall'); return; }
+      if (load) { this.die('crush'); return; }
+      let scrapeSide=0;
+      for(const wall of level.walls){
+        this.kiteContactBox.copy(this.playerBox);
+        this.kiteContactBox.min.x-=KITE_SCRAPE_SKIN;
+        this.kiteContactBox.max.x+=KITE_SCRAPE_SKIN;
+        if(wall.max.y<=this.pos.y+.15||!this.kiteContactBox.intersectsBox(wall))continue;
+        const path=level.wallPathForBox(wall);
+        let side=0,shift=0;
+        if(path){
+          // Use the real swept face: broadphase slices have artificial Z
+          // ends that must never turn a continuous side scrape into a crash.
+          const contact=level.closestWallPath(path,this.pos.x,this.pos.z,level.wallPathSegmentForBox(wall));
+          const radius=(contact.cap?0:path.halfThickness)+Math.abs(contact.nx)*half.x+Math.abs(contact.nz)*half.z;
+          if(this.pos.y+.15>=contact.y+contact.height||this.pos.y+half.y*2<contact.y||
+            contact.distance>radius+KITE_SCRAPE_SKIN)continue;
+          if(Math.abs(contact.nx)>.99){side=Math.sign(contact.nx);shift=Math.max(0,radius-contact.distance+.02);}
+        }else{
+          side=kiteBoxSide(this.prevPos,this.pos,half,wall,this.kiteScrape.side||scrapeSide);
+          if(side)shift=Math.max(0,side<0?this.pos.x-(wall.min.x-half.x)+.02:wall.max.x+half.x-this.pos.x+.02);
+        }
+        if(!side){
+          if(this.playerBox.intersectsBox(wall)){this.die('wall');return;}
+          continue;
+        }
+        scrapeSide=side;
+        this.pos.x+=side*shift;
+        this.playerBox.min.x+=side*shift;this.playerBox.max.x+=side*shift;
+      }
+      const before=this.kiteScrape.seconds;
+      if(this.kiteScrape.step(scrapeSide,dt)){this.die('wall');return;}
+      if(scrapeSide&&(before===0||Math.floor(before*10)!==Math.floor(this.kiteScrape.seconds*10))){
+        this.emitSparks(2,0xffd3a1,1.2);this.emitDust(1);
+      }
     }
     this.feetBox.copy(this.playerBox);
     // On a rail the board and trucks hang BELOW the feet — reach down so
