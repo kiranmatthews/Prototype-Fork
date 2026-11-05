@@ -6,9 +6,15 @@ The user accepted layout differences after confirming no local game files
 were available, prioritising lighting, textures, beauty and performance.
 This is an authored approximation, not a recovered copy of Ubisoft's level.
 
-The 1,392 m route descends 255 m through a rim jump, close sandstone walls,
-switchback terraces, capstone towers and pine/scrub woodland. Eight checkpoints,
+The expanded 3,814 m route descends 439 m. It begins on a raised timber
+boardwalk with a 12 m jump and separate landing trestle, follows a 761 m upper-rim
+approach into the original sandstone descent, then continues for another
+1,661 m through capstone passages, wooded switchbacks, a dry-wash timber bridge
+and pine slalom. Thirteen checkpoints,
 a continuous camera lane and a finish gate use the existing movement model.
+The route is 2.74 times its original length; the finish now follows the complete
+lower valley. Route-distance measurements describe authored geometry, not a
+claim of matching bicycle speed or source-game coordinates.
 Ordinary road edges retain the game's default grinding behaviour.
 
 `src/levels/desert-canyon.ts` owns route, collision, terrain, foliage and event
@@ -42,7 +48,7 @@ See `public/desert-canyon/SOURCES.txt`, both manifests and
   omitting it reviews the game's normal CRT presentation.
 - Published play: `/?level=bryce-canyon&playtest&nocrt`.
 - To save a review PNG directly into `docs/desert-canyon`, run
-  `node tools/desert-canyon/capture-server.mjs`, add `&capture` to the local
+  `node tools/desert-canyon/capture-server.mjs start` (or `valley`), add `&capture` to the local
   review URL, then press **Save frame**. The loopback sink accepts one PNG.
 
 The course is a built-in source level. Its components are generated lazily on

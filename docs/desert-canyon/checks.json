@@ -1,23 +1,35 @@
 {
   "date": "2026-11-05",
   "focused": {
-    "supportProbes": 2064,
-    "checkpoints": 8,
-    "routeFrames": 9303,
-    "finishFrames": 140,
+    "supportProbes": 5673,
+    "checkpoints": 13,
+    "routeFrames": 29339,
+    "finishFrames": 139,
     "checkpointBankAndPitRecovery": true,
-    "routeMetres": 1391.9567480494804,
+    "routeMetres": 3814.342504254406,
+    "upperExtension": 760.9051413510311,
+    "lowerExtension": 1661.4806148538942,
+    "airborneGaps": [
+      "Boardwalk launch",
+      "Canyon rim jump"
+    ],
     "materials": "shared mineral texture owners verified"
   },
   "build": "npm run build: passed",
-  "releaseBytes": 851961627,
+  "releaseBytes": 851973526,
   "releaseLimitBytes": 1000000000,
-  "broaderLevelsCheck": "Existing tools/test-waterpark-decks.mjs:49 failure reproduced on untouched baseline 68e48cb3",
+  "broaderLevelsCheck": "Existing tools/test-waterpark-decks.mjs:49 failure reproduced on untouched baseline 68e48cb3; unchanged on this extension",
   "browser": [
-    "Lite RUN COMPLETE confirmed",
-    "Full scene and existing foliage loaded without asset failures",
-    "MAX drawing buffer 1506 x 1706; all authored geometry retained"
+    "Lite ordinary-input traversal cleared the opening timber jump and upper rim with zero deaths",
+    "Full-render final approach reached RUN COMPLETE at the relocated valley finish",
+    "Full scene, rock assets and existing foliage loaded with no asset failures or console warnings/errors",
+    "Normal 720 and MAX native views checked; MAX drawing buffer 2560 x 1440; all authored geometry retained",
+    "Local MAX settled samples: boardwalk median 20.2 ms / p95 22.2 ms; valley median 16.7 ms / p95 18.8 ms"
   ],
-  "scope": "Authored visual recreation; user accepted layout differences; no source-game files used",
-  "integratedMain": "283212d1deaf85e2fc6da3141e4f2030b306bac6"
+  "screenshots": [
+    "boardwalk-start.png",
+    "valley-extension.png"
+  ],
+  "scope": "Expanded visual recreation; user accepted layout differences; 761 m upper extension and 1661 m lower extension around the preserved original 1392 m canyon; no source-game files used",
+  "integratedMain": "ecffa0090fed06e425de69bcc3294e99b6c2a84d"
 }

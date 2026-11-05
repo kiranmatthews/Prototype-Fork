@@ -9698,3 +9698,40 @@ The original recording does not store random kite wind seeds, so its replayed
 positions cannot be asserted to match the recording exactly. The separate
 native reproduction identifies the invisible coping failure directly. Only
 `src/player.ts` runtime handling changes; no level, art, tuning or sky edits.
+
+## 2026-11-05 — Extend Bryce Canyon before and after the descent
+
+The first version compressed the reference too far and omitted its opening
+boardwalk. The route now measures 3,814 m, versus 1,392 m before: a 761 m upper
+approach and a 1,661 m lower valley surround the original canyon descent.
+Spawn is on a raised timber trestle with a shaped takeoff, a separate downhill
+landing, visible cross planks, posts, braces, handrails and an airborne fruit
+line. The lower extension adds capstone passages, wooded switchbacks, a dry-wash
+timber bridge, close pine canopy and a relocated finish. Thirteen checkpoints
+and the continuous camera lane cover the complete course.
+
+Approximately 40 minutes from this follow-up to a complete validated traversal;
+final visual and release checks followed. Used existing timber and vegetation
+assets, retained complete geometry and preserved the movement tuning. Source
+changes stay in the canyon level and its authoring/review tools.
+
+The longer terrain uses an exact segment-tree query during source generation
+and a continuous distant elevation profile to avoid artificial cliffs between
+bends. Suppressed automatic grind rails only at buried ground-tile seams inside
+the continuous landform; exposed trail and boardwalk edges retain their normal
+grinding policy. Profiling had identified rail-candidate scans as the dominant
+initialization cost. Removed one newly placed backdrop whose open underside
+was visible from the upper approach. Grounded the added rocks across their
+footprints so their downhill edges sit in the sloped terrain.
+
+Focused validation covers 5,673 support probes, all 13 checkpoints, both airborne
+jumps, clean boardwalk landing without a ledge catch/bail, continuous ordinary-input
+traversal, finish access, checkpoint banking and pit recovery. Browser traversal
+clears the new launch and upper rim with zero deaths. Full/MAX (2560×1440)
+review covers the takeoff and wooded bridge; assets load without failures.
+The new finish approach reaches RUN COMPLETE in the full-render browser.
+Local settled MAX samples were 20.2 ms median / 22.2 ms p95 at the boardwalk and
+16.7 ms median / 18.8 ms p95 in the valley; this is not a hardware-wide guarantee.
+`npm run check:levels` again reaches the known baseline waterpark texture-retirement
+assertion. Production build and final release-size results are recorded in
+`docs/desert-canyon/checks.json`.
