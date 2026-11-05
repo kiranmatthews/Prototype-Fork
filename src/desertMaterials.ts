@@ -14,7 +14,7 @@ function acquireDetail(){
 }
 export function createDesertMaterial(kind:'sandstone'|'trail',vertexColors=true):THREE.MeshStandardMaterial {
   const maps=acquireDetail();
-  const material=new THREE.MeshStandardMaterial({color:kind==='trail'?'#dbad78':'#ffffff',roughness:.94,metalness:0,vertexColors});
+  const material=new THREE.MeshStandardMaterial({color:kind==='trail'?'#ca955e':'#ffffff',roughness:.94,metalness:0,vertexColors});
   material.name=`Bryce ${kind}`;material.userData.desertMaterial=kind;
   let disposed=false;material.addEventListener('dispose',()=>{if(disposed)return;disposed=true;if(--maps.users===0){maps.colour.dispose();maps.relief.dispose();if(detail===maps)detail=undefined;}});
   material.onBeforeCompile=shader=>{
@@ -41,15 +41,17 @@ export function createDesertMaterial(kind:'sandstone'|'trail',vertexColors=true)
       float mineral=dot(desertMineral(dp*.22,dw),vec3(.333333));
       float fine=desertHeight(dp*1.8,dw);
       ${kind==='sandstone'?`
-        diffuseColor.rgb*=.80+mineral*.62;
+        diffuseColor.rgb*=.76+mineral*.70;
         diffuseColor.rgb*=.96+fine*.09;
         float sediment=sin(dp.y*.82+sin(dp.x*.065+dp.z*.08)*.35);
         diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(1.08,1.12,1.16),smoothstep(.6,.99,sediment)*.20);
       `:`
         float shoulder=smoothstep(3.5,9.0,abs(vDesertUv.x));
         float tread=exp(-pow((abs(vDesertUv.x+.28*sin(vDesertUv.y*.037))-.72)*7.0,2.0));
-        diffuseColor.rgb*=.88+mineral*.30+fine*.07-tread*.045;
-        diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(.88,.90,.81),shoulder*.34);
+        diffuseColor.rgb*=.79+mineral*.38+fine*.12-tread*.055;
+        float cliff=(1.0-smoothstep(.55,.90,normalize(vDesertNormal).y))*shoulder;
+        diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(1.18,.72,.44),cliff*.65);
+        diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(.91,.86,.77),shoulder*.19);
       `}
     `);
     shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',/* glsl */`#include <normal_fragment_maps>
@@ -59,6 +61,6 @@ export function createDesertMaterial(kind:'sandstone'|'trail',vertexColors=true)
       normal=normalize(abs(det)*normal-sign(det)*(dFdx(relief)*s0+dFdy(relief)*s1));
     `);
   };
-  material.customProgramCacheKey=()=>`bryce-mineral-v2:${kind}`;
+  material.customProgramCacheKey=()=>`bryce-mineral-v3:${kind}`;
   return material;
 }

@@ -37,3 +37,11 @@ was verified lossless against all uncompressed buffers. See survey-manifest.json
 All plant and tree assets come from the project's existing Country Club,
 Custard Creek, Treehouse and Carlisle libraries and retain their existing
 licences. Full authored geometry is used at all viewing distances.
+
+Canyon pine: derived from public/country-club-art/umbrella-pine.glb.
+The complete native mesh's trunk and leaf pieces are rearranged into tapered
+conifer branch whorls, with additional branches and duplicated leaf pieces.
+All original LOD0 triangles, original leaf UVs and the original atlas survive.
+The final 24,763-triangle mesh is retained at every viewing distance.
+See pine-manifest.json for source/output hashes and the reproducible authoring
+script tools/desert-canyon/shape-library-pine.py (Python with Pillow).

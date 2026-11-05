@@ -1,14 +1,16 @@
 {
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "focused": {
-    "supportProbes": 5673,
+    "supportProbes": 5766,
     "checkpoints": 13,
-    "routeFrames": 29339,
-    "finishFrames": 139,
+    "routeFrames": 29268,
+    "finishFrames": 136,
     "checkpointBankAndPitRecovery": true,
-    "routeMetres": 3814.342504254406,
-    "upperExtension": 760.9051413510311,
-    "lowerExtension": 1661.4806148538942,
+    "routeMetres": 3879.562497452749,
+    "upperExtension": 771.8510543215829,
+    "lowerExtension": 1715.754695081686,
+    "lowerDrop": 425,
+    "final300mDrop": 71.08282373341655,
     "airborneGaps": [
       "Boardwalk launch",
       "Canyon rim jump"
@@ -16,20 +18,25 @@
     "materials": "shared mineral texture owners verified"
   },
   "build": "npm run build: passed",
-  "releaseBytes": 851973526,
+  "releaseBytes": 854352098,
   "releaseLimitBytes": 1000000000,
-  "broaderLevelsCheck": "Existing tools/test-waterpark-decks.mjs:49 failure reproduced on untouched baseline 68e48cb3; unchanged on this extension",
+  "cameraChecks": [
+    "test-camera-rig.mjs passed",
+    "test-loop-camera.mjs passed, including authored gravity-track camera distance and pitch"
+  ],
+  "broaderLevelsCheck": "Existing tools/test-waterpark-decks.mjs:49 texture-retirement failure; previously reproduced on untouched baseline 68e48cb3",
   "browser": [
-    "Lite ordinary-input traversal cleared the opening timber jump and upper rim with zero deaths",
-    "Full-render final approach reached RUN COMPLETE at the relocated valley finish",
-    "Full scene, rock assets and existing foliage loaded with no asset failures or console warnings/errors",
-    "Normal 720 and MAX native views checked; MAX drawing buffer 2560 x 1440; all authored geometry retained",
-    "Local MAX settled samples: boardwalk median 20.2 ms / p95 22.2 ms; valley median 16.7 ms / p95 18.8 ms"
+    "Lite ordinary-input traversal cleared the opening timber jump and landing with zero deaths; fall recovery returned to supported spawn",
+    "Full-render final approach reached RUN COMPLETE at the relocated canyon finish",
+    "Opening boardwalk, creek bridge and lower rock chute reviewed at MAX native 2560 x 1440",
+    "Full native geometry retained; scene and foliage assets loaded with no failures or console warnings/errors",
+    "Local MAX settled presentation was capped around 33.3 ms median, with observed p95 34.2 ms at the opening and 34.7 ms at the chute; not a hardware-wide performance claim"
   ],
   "screenshots": [
-    "boardwalk-start.png",
-    "valley-extension.png"
+    "revised-boardwalk.png",
+    "revised-creek.png",
+    "revised-rock-chute.png"
   ],
-  "scope": "Expanded visual recreation; user accepted layout differences; 761 m upper extension and 1661 m lower extension around the preserved original 1392 m canyon; no source-game files used",
-  "integratedMain": "ecffa0090fed06e425de69bcc3294e99b6c2a84d"
+  "scope": "Reference-style revision: connected sandstone fins, pale caps, narrow trails, existing native foliage adapted into conifers, creek crossing and a sustained 425 m lower descent. No source-game files used.",
+  "integratedMain": "f4bedf1bf92dabdfbd0b54005c48869f49e5c9ec"
 }

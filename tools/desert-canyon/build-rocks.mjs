@@ -58,8 +58,8 @@ function pillar(seed,{height=28,radius=4,cap=.4,taper=.4,lean=.7,flutes=6,radial
     const displacement=-(horizontal+vertical)+noise.fbm(x*1.1,y*.8,z*1.1,3,2,.5)*.055;
     p.setXYZ(i,x+n.getX(i)*displacement,y+n.getY(i)*displacement*.45,z+n.getZ(i)*displacement);
     const sediment=noise.fbm(x*.11,y*.15,z*.11,3,2,.5);
-    const chalk=smooth(.77,.99,y/height)*.45+smooth(.23,.27,y/height)*(1-smooth(.29,.33,y/height))*.22;
-    const c=new THREE.Color('#c87948').lerp(new THREE.Color('#f3cf9a'),chalk+clamp(sediment+.3)*.22);
+    const chalk=smooth(.85,.97,y/height)*.68+smooth(.23,.27,y/height)*(1-smooth(.29,.33,y/height))*.24;
+    const c=new THREE.Color('#ca6b32').lerp(new THREE.Color('#eed0a9'),Math.min(.94,chalk+clamp(sediment+.3)*.16));
     c.multiplyScalar(.97+noise.noise3D(x*.3,y*.13,z*.3)*.08+clamp(n.getY(i))*.035);
     colors.push(c.r,c.g,c.b);
   }

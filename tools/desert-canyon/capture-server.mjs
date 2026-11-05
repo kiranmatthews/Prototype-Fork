@@ -2,9 +2,9 @@
 // loopback only; no URLs, filenames or filesystem paths accepted from clients.
 import http from 'node:http';
 import {mkdir,writeFile} from 'node:fs/promises';
-const names={overview:'native-overview.png',start:'boardwalk-start.png',valley:'valley-extension.png'};
+const names={overview:'native-overview.png',start:'boardwalk-start.png',valley:'valley-extension.png',chute:'revised-rock-chute.png',creek:'revised-creek.png',opening:'revised-boardwalk.png'};
 const name=names[process.argv[2]??'overview'];
-if(!name)throw new Error('Choose overview, start or valley');
+if(!name)throw new Error('Choose overview, start, valley, chute, creek or opening');
 const target=new URL('../../docs/desert-canyon/'+name,import.meta.url);
 const server=http.createServer(async(req,res)=>{
   if(req.headers.origin!=='http://127.0.0.1:5188'||req.url!=='/frame'){res.writeHead(403).end();return;}

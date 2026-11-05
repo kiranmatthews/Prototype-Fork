@@ -4649,7 +4649,7 @@ function updateCamera(dt: number): void {
     const forward = cameraViewDirection(level.cameraViews, subject.x, subject.y, subject.z, camControlDir);
     camControlDir.set(forward.x, 0, forward.z);
   }
-  loopCameraFraming.apply(camera, player.authoredSkateCamera ? null : player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap||player.authoredSkateCamera,player.loopFallPresentation);
+  loopCameraFraming.apply(camera, player.authoredSkateCamera ? null : player.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING), dt, framingSnap||player.authoredSkateCamera,player.loopFallPresentation);
   if(!player.authoredSkateCamera&&level.cameraAirLift===1&&player.vertAir&&loopCameraFraming.active)cameraOverlayHeroFraming.apply(camera,player.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming.reset();
   authoredSkateCamera.apply(camera, player.authoredSkateCamera ? {

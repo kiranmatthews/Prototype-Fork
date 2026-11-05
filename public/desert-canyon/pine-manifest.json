@@ -1,0 +1,13 @@
+{
+  "source": "public/country-club-art/umbrella-pine.glb",
+  "sourceSha256": "9c0dff3692d62a082c5d26ed7eaab8e85e4b5ecfbcc38071115990ee5c5114ba",
+  "output": "public/desert-canyon/canyon-pine.glb",
+  "outputSha256": "c66c1b579427d645ec8875be016349bb4cf34f685ec2a2cb793080184c2c19a7",
+  "trianglesRetained": 9153,
+  "branchTriangles": 1188,
+  "finalTriangles": 24763,
+  "verticesRetained": 15575,
+  "originalAtlasPreserved": true,
+  "distanceSubstitution": false,
+  "authoring": "Complete native trunk and leaf pieces rearranged into tapered branch whorls; leaf pieces duplicated for density; original UVs and atlas retained."
+}

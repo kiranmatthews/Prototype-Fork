@@ -12,6 +12,9 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   assert.ok(m.DESERT_LENGTH>3300,'Expanded descent must be substantially longer than the original 1,392 m');
   assert.ok(m.DESERT_CANYON_START>650&&m.DESERT_LENGTH-m.DESERT_CANYON_END>1200,'Both ends must gain meaningful distance');
   assert.equal(data.components.filter(c=>c.t==='woodpath').length,3,'Opening takeoff, landing and lower bridge must use actual timber decks');
+  const lowerDrop=m.desertPoint(m.DESERT_CANYON_END)[1]-m.desertPoint(m.DESERT_LENGTH)[1];
+  const finalDrop=m.desertPoint(m.DESERT_LENGTH-300)[1]-m.desertPoint(m.DESERT_LENGTH)[1];
+  assert.ok(lowerDrop>380&&finalDrop>50,'The lower canyon and final approach must remain a substantial descent');
   console.log('Canyon runtime constructed; probing authored support');
   const trail=level.groundMeshes.filter(o=>data.components[o.userData.editorIdx]?.grp===1).map(mesh=>({mesh,bounds:new THREE.Box3().setFromObject(mesh)}));
   const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);let probes=0;
@@ -46,7 +49,7 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
       const q=m.desertPoint(s),d=(q[0]-p.pos.x)**2+(q[2]-p.pos.z)**2;if(d<best){best=d;at=s;}
     }
     progress=at;const jumping=m.DESERT_GAPS.some(g=>at>g.chargeFrom&&at<g.releaseAt);
-    step(makeInput({...steer(at+12,.8),jumpHeld:jumping,jumpPressed:jumping&&!wasJumping,jumpReleased:!jumping&&wasJumping,grabHeld:p.speed>(at>m.DESERT_CANYON_START+95&&at<m.DESERT_CANYON_START+900?12:20)&&at>90}));wasJumping=jumping;
+    step(makeInput({...steer(at+12,.8),jumpHeld:jumping,jumpPressed:jumping&&!wasJumping,jumpReleased:!jumping&&wasJumping,grabHeld:p.speed>(at>m.DESERT_CANYON_START+95?12:20)&&at>90}));wasJumping=jumping;
     for(const gap of m.DESERT_GAPS)if(at>gap.from&&at<gap.to&&!p.grounded)airborneGaps.add(gap.name);
     assert.ok(!['dead','gameover'].includes(p.state),`Descent death at ${at}: ${p.pos.toArray()}`);
     stuck=Math.abs(progress-lastProgress)<1?stuck+1:0;lastProgress=progress;
@@ -75,7 +78,7 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   let releases=0;sa.uniforms.desertColour.value.addEventListener('dispose',()=>releases++);
   a.dispose();b.dispose();assert.equal(releases,0,'Live course retains the shared texture');
   level.dispose();assert.equal(releases,1,'Last material owner releases texture exactly once');
-  console.log(JSON.stringify({supportProbes:probes,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
+  console.log(JSON.stringify({supportProbes:probes,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
 },{levelEntry:{id:'bryce-canyon',name:data.name,data}});
 const manifest=JSON.parse(await readFile(new URL('../../public/desert-canyon/manifest.json',import.meta.url),'utf8'));
 assert.ok(manifest.models.every(r=>r.triangles<=30000));

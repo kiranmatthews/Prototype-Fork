@@ -9735,3 +9735,38 @@ Local settled MAX samples were 20.2 ms median / 22.2 ms p95 at the boardwalk and
 `npm run check:levels` again reaches the known baseline waterpark texture-retirement
 assertion. Production build and final release-size results are recorded in
 `docs/desert-canyon/checks.json`.
+
+## 2026-11-06 — Restore the Bryce reference character and steep finale
+
+The extension had become a broad, shallow sandy valley. Reworked its silhouette
+around the reference's close orange rock fins, warm pale caps, dark pine pockets
+and narrow descending trail. The complete route is now 3,880 m with 820 m of
+height loss; the lower 1,716 m drops 425 m instead of 104 m. Its last 300 m still
+descends 71 m. The opening timber jump remains, and a cut creek now passes below
+the lower bridge. Stronger rock relief, a cooler sky and higher sunlight give
+the walls and trail a clearer light/shadow separation.
+
+Approximately 45 minutes from follow-up to the validated playable revision;
+final release verification followed. Retained the original middle descent and
+existing movement tuning. The MIT RockGenerator displacement and native mesh
+budgets are unchanged. Reshaped the existing native pine's complete trunk and
+leaf pieces, preserving its atlas and all 9,153 source triangles; added branch
+supports and leaf copies produce a 24,763-triangle conifer. The new bake script
+and pine manifest record source/output hashes. Existing low shrubs and grasses
+form denser woodland pockets. No distance geometry substitutions were added.
+
+Found that the surface-follow camera discarded the level's authored rig on
+gravity-track slopes. The production wrapper now passes that rig through, with
+the former default as fallback. A focused integration regression checks authored
+distance and pitch, ordinary loop inversion/exit framing and unchanged controls.
+Updated the camera fixture's missing imports so it executes the current wrapper.
+
+Focused route validation passes 5,766 support probes, all 13 checkpoints, both
+airborne jumps, 29,268 frames of continuous ordinary-input traversal, finish
+access, checkpoint banking and pit recovery. Camera regressions, production
+build and the release-size check pass. Full-render browser play reaches RUN
+COMPLETE; MAX/native review covers the boardwalk, creek and final chute with
+empty warning/error logs and no failed assets. The existing broader levels
+check still stops at the baseline waterpark texture-retirement assertion.
+Evidence, exact route measurements and performance observations are recorded in
+`docs/desert-canyon/checks.json` and the three `revised-*.png` captures.

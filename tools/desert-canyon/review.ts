@@ -18,7 +18,7 @@ function teleport(s:number){
 buttons[0].onclick=()=>{running=false;teleport(Number(location.value));};
 buttons[1].onclick=()=>{teleport(Number(location.value));running=true;};
 buttons[2].onclick=()=>{running=false;g.launchReview.rate=0;g.input.moveX=g.input.moveY=0;};
-buttons[3].onclick=()=>{running=false;g.launchReview.rate=1;settleUntil=performance.now()+3000;g.player.pos.y=-280;g.player.state='air';g.player.grounded=false;};
+buttons[3].onclick=()=>{running=false;g.launchReview.rate=1;settleUntil=performance.now()+3000;g.player.pos.y=-680;g.player.state='air';g.player.grounded=false;};
 buttons[4].onclick=()=>{saveRequested=true;};
 (panel.querySelector('[aria-label="Canyon resolution"]') as HTMLSelectElement).onchange=e=>g.renderQualitySettings.setRegularResolution((e.target as HTMLSelectElement).value==='max'?null:720);
 g.launchReview.beforeStep=()=>{
@@ -34,12 +34,12 @@ g.launchReview.beforeStep=()=>{
   const distance=Math.hypot(dx,dz)||1;g.input.moveY=f/distance*.8;g.input.moveX=l/distance*.8;
   const jumping=DESERT_GAPS.some(gap=>at>gap.chargeFrom&&at<gap.releaseAt);
   g.input.jumpPressed=jumping&&!previousJump;g.input.jumpHeld=jumping;g.input.jumpReleased=!jumping&&previousJump;previousJump=jumping;
-  g.input.grindHeld=false;g.input.grabHeld=p.speed>(at>DESERT_CANYON_START+95&&at<DESERT_CANYON_START+900?12:20)&&at>90;
+  g.input.grindHeld=false;g.input.grabHeld=p.speed>(at>DESERT_CANYON_START+95?12:20)&&at>90;
 };
 g.launchReview.afterCamera=()=>{
   if((panel.querySelector('[aria-label="Canyon view"]') as HTMLSelectElement).value==='wide'){
-    const s=running?progress:Number(location.value),eye=desertPoint(s-16,-14),target=desertPoint(s+34);
-    g.camera.position.set(eye[0],eye[1]+17,eye[2]);g.camera.lookAt(target[0],target[1]+9,target[2]);g.camera.updateMatrixWorld();
+    const s=running?progress:Number(location.value),eye=desertPoint(s-22,-3),target=desertPoint(s+45);
+    g.camera.position.set(eye[0],eye[1]+22,eye[2]);g.camera.up.set(0,1,0);g.camera.lookAt(target[0],target[1]+10,target[2]);g.camera.updateMatrixWorld();
   }
 };
 function report(){
@@ -47,7 +47,7 @@ function report(){
   if(!running&&settleUntil&&performance.now()>settleUntil){g.launchReview.rate=0;settleUntil=0;}
   if(g.frameStats.frame!==lastFrame){lastFrame=g.frameStats.frame;timings.push(g.frameStats.rawDt*1000);if(timings.length>240)timings.shift();}
   const sorted=timings.slice().sort((a,b)=>a-b),performanceMs={median:+(sorted[Math.floor(sorted.length*.5)]||0).toFixed(1),p95:+(sorted[Math.floor(sorted.length*.95)]||0).toFixed(1),samples:sorted.length};
-  output.textContent=JSON.stringify({loading:g.getLoadingDiagnostics(),state:p.state,grounded:p.grounded,position:p.pos.toArray().map((x:number)=>+x.toFixed(2)),route:+progress.toFixed(1),running,assets,render:g.getRenderFrameStats(),resolution:g.getRenderQualitySizes(),drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],performanceMs,savedFrame});
+  output.textContent=JSON.stringify({loading:g.getLoadingDiagnostics(),state:p.state,grounded:p.grounded,position:p.pos.toArray().map((x:number)=>+x.toFixed(2)),route:+progress.toFixed(1),running,camera:{rig:l.cameraRig,chase:g.TUNING.chaseCam,authoredSkate:p.authoredSkateCamera,position:g.camera.position.toArray(),direction:g.camera.getWorldDirection(new THREE.Vector3()).toArray()},assets,render:g.getRenderFrameStats(),resolution:g.getRenderQualitySizes(),drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],performanceMs,savedFrame});
   if(saveRequested){
     saveRequested=false;
     g.renderer.domElement.toBlob((blob:Blob|null)=>{if(!blob)return;

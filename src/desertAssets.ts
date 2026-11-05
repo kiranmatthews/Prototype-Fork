@@ -1,6 +1,7 @@
 /** Seeded native RockGenerator bakes; never substitute distance meshes. */
 const rock=(file:string,label:string,size:readonly[number,number,number])=>({file:`../desert-canyon/${file}`,label:`Bryce · ${label}`,size,wind:false,normalStrength:0,doubleSided:false,cellSize:85});
 export const DESERT_ASSETS={
+  canyonpine:{file:'../desert-canyon/canyon-pine',label:'Bryce · reshaped existing native pine',size:[7.2,20,7] as const,wind:true,normalStrength:0,doubleSided:false,cellSize:65},
   desertsurveyrim:rock('survey-rim','measured Wall Street amphitheatre',[320,138.12,320]),
   deserthoodoospire:rock('hoodoo-spire','eroded sandstone spire',[9,35,8]),
   deserthoodoocap:rock('hoodoo-cap','undercut capstone',[9,25,7]),

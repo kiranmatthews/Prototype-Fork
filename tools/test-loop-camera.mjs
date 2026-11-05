@@ -19,6 +19,8 @@ try {
   globalThis.window.matchMedia??=()=>({matches:false});
   const {CarlisleSceneryCamera}=await server.ssrLoadModule('/src/carlisleSceneryCollision.ts');
   const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
+  const { LaunchCamera } = await server.ssrLoadModule('/src/launchCamera.ts');
+  const { CameraSightline } = await server.ssrLoadModule('/src/cameraSightline.ts');
  const {SkateChaseCamera,SkateChaseCameraOverlay}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
  const {ChiefCamera}=await server.ssrLoadModule('/src/boss/camera.ts');
   const { CameraHeroFraming } = await server.ssrLoadModule('/src/cameraHeroFraming.ts');
@@ -93,7 +95,7 @@ try {
   const end=main.indexOf('\ncamera.position\n  .copy(player.renderPosition)',begin);
   const code=ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const makeRig=new Function('deps',`
-    const {THREE,TUNING,BoulderChaseCamera,RaceFinishPresentation,CarlisleSceneryCamera,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+    const {THREE,TUNING,BoulderChaseCamera,RaceFinishPresentation,CarlisleSceneryCamera,LoopCameraFraming,LaunchCamera,CameraSightline,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
       CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level,player,camera}=deps;
     const current={id:'loop-camera-fixture'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
     const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor(),camF=new THREE.Vector3(0,0,1),camControlDir=new THREE.Vector3(0,0,1),prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
@@ -101,7 +103,7 @@ try {
     let cameraRenderSnapVersion=-1,camAnchorY=player.renderPosition.y,camBack=0,sideF=0,boulderF=0,camSpeedFovBoost=0,cam2SpeedFovBoost=0,camRoll=0;
     ${code}
     return {step:updateCamera,heading:camControlDir};`);
-  const deps={THREE,TUNING,BoulderChaseCamera,RaceFinishPresentation,CarlisleSceneryCamera,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+  const deps={THREE,TUNING,BoulderChaseCamera,RaceFinishPresentation,CarlisleSceneryCamera,LoopCameraFraming,LaunchCamera,CameraSightline,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
     CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor};
   const source={v:1,name:'Yawed close loop',spawn:[138,.03,-14],killY:-30,cameraAirLift:1,components:[
     {t:'platform',p:[138,-.5,-12],s:[12,1,24],edgeGrinding:false},
@@ -117,7 +119,7 @@ try {
     const camera=new THREE.PerspectiveCamera(TUNING.camFov,16/9,.1,500),oldCamera=camera.clone();
     const unchanged=new Proxy(p,{get:(target,key)=>(key==='loopPresentationFrame'||key==='loopFallPresentation')?null:Reflect.get(target,key,target)});
     const rig=makeRig({...deps,level:l,player:p,camera}),ordinary=makeRig({...deps,level:l,player:unchanged,camera:oldCamera});
-    let previous={},entered=false,detached=false,after=0,maxDistance=0,minY=Infinity,maxY=-Infinity,vertices=0;
+    let previous={},entered=false,detached=false,after=0,maxDistance=0,minY=Infinity,maxY=-Infinity,vertices=0,checkedAuthoredRig=false;
     const releaseBounds={minY:Infinity,maxY:-Infinity,samples:0};
     const quarters=new Set(),tuningBefore=JSON.stringify(TUNING),v=new THREE.Vector3();
     for(let frame=0;frame<1400;frame++) {
@@ -137,6 +139,16 @@ try {
         near(n.distanceTo(frameInfo.normal),0,'getter sampled physics rather than interpolated surface normal');
         maxDistance=Math.max(maxDistance,camera.position.distanceTo(p.renderPosition));
         near(camera.position.distanceTo(p.renderPosition),distance,'production loop widened the camera');
+        if(!checkedAuthoredRig){
+          // Descending gravity tracks share this overlay. Their authored
+          // landscape shot must survive transport into the surface frame.
+          l.cameraRig={camDist:8,camHeight:3.6,camPitch:9,camFov:70};
+          const authored=new THREE.PerspectiveCamera(70,16/9,.1,500);
+          makeRig({...deps,level:l,player:p,camera:authored}).step(CONST.fixedStep);
+          near(authored.position.distanceTo(p.renderPosition),Math.hypot(8,3.6),'surface camera ignored level follow distance');
+          near(authored.getWorldDirection(new THREE.Vector3()).dot(frameInfo.normal),-Math.sin(9*Math.PI/180),'surface camera ignored level pitch');
+          l.cameraRig=undefined;checkedAuthoredRig=true;
+        }
         quarters.add(Math.min(3,Math.floor(p.loopStatus.progress*4)));
       }
       if((p.loopStatus.active||after>0)&&frame%6===0) {
@@ -155,7 +167,7 @@ try {
       if(!coast)assert.equal(p.isBailing,false,'charged camera fixture did not keep a clean rider');
       if((!coast&&p.loopStatus.completed)||(coast&&detached)) {if(++after>25)break;}
     }
-    assert.ok(entered&&vertices>100,'fixture never rendered a mounted loop rider');
+    assert.ok(entered&&vertices>100&&checkedAuthoredRig,'fixture never rendered a mounted loop rider');
     assert.ok(minY>-1&&maxY<1,`actual close-loop rider left viewport: ${JSON.stringify({coast,minY,maxY,releaseBounds})}`);
     if(coast){assert.ok(detached&&p.isBailing&&p.loopFallPresentation);assert.equal(p.freeSkate,false);assert.equal(p.loopPresentationFrame,null,'failed loop retained contact presentation');assert.ok(camera.up.y>.85,'fall horizon did not level');}
     else {assert.equal(quarters.size,4,'charged fixture missed a quarter of the loop');assert.equal(p.loopStatus.completed,1);assert.ok(Math.abs(p.pos.x-118)<7,'yaw180 loop exited on the wrong world side');}

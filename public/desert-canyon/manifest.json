@@ -12,7 +12,7 @@
         11.3694
       ],
       "bytes": 368128,
-      "sha256": "2bff2859cd55d6ba9c5d80d8b76d52305ec727559757cb0794a890760ef8371b"
+      "sha256": "d59daa55a24fb496a23aaac5f5337b9f7939fbdf2fce52f932921907b7bfb148"
     },
     {
       "name": "hoodoo-cap",
@@ -24,7 +24,7 @@
         11.2042
       ],
       "bytes": 368128,
-      "sha256": "9ce6e710412931efcf2ca40ab571533548ddf8e47a96a90dc0912a738b73b18d"
+      "sha256": "8c6aade874495a06f5e549b36a3944be2e8d1d1dd050d5e32f01aa26a98013cc"
     },
     {
       "name": "hoodoo-fluted",
@@ -35,8 +35,8 @@
         42.5426,
         16.7859
       ],
-      "bytes": 632360,
-      "sha256": "5abf9b71e5971d1a240e7d93dbbf6f22c8f8d026d7426ab5774322cb4e01f280"
+      "bytes": 632356,
+      "sha256": "615fc528cc60c1daede51b03ae1a536d1f794c180f7edb701a213701562c2f1a"
     },
     {
       "name": "hoodoo-needle",
@@ -47,8 +47,8 @@
         28.3638,
         6.4246
       ],
-      "bytes": 368128,
-      "sha256": "f9091ff313bf904e357839b3c89771c5e6deff477e8cdb694c670364c75ca96c"
+      "bytes": 368132,
+      "sha256": "7f9e54114996bbfddab766e7c102d5bc212c9180bd295658bbe9cfa4bb02e9d1"
     },
     {
       "name": "hoodoo-buttress",
@@ -60,7 +60,7 @@
         21.045
       ],
       "bytes": 790048,
-      "sha256": "56db39233c40586d069249a51c108b27ff0aa72024c1e0f5724810ccc1eca721"
+      "sha256": "c2ac614306517ab96bb127341cccc55fd6f87087fae4048bb5b7f33bf2492450"
     },
     {
       "name": "hoodoo-low",
@@ -72,7 +72,7 @@
         16.4784
       ],
       "bytes": 201228,
-      "sha256": "2c88ad7cbae612c96e5ee4aaf54cf5a1b8053021094263af7b0ac5a70be80e69"
+      "sha256": "9dd393f4137c402252c16b6866d39e72f300b518189f72d0ad4f3e1b4ea3536f"
     },
     {
       "name": "hoodoo-twins",
@@ -83,8 +83,8 @@
         35.994,
         10.9495
       ],
-      "bytes": 466232,
-      "sha256": "313dbbc75d6e7a1dac8aaf02987e502513214e5ed9e143f1ac65bd38996eddb5"
+      "bytes": 466228,
+      "sha256": "7f302cbb9f111b4805f1c4e480ea4c42435141f363abd222999cd7d4fe61c925"
     },
     {
       "name": "hoodoo-fin",
@@ -95,8 +95,8 @@
         39.7237,
         9.4631
       ],
-      "bytes": 790044,
-      "sha256": "81eb8ee67fe8497d5ba89e62e65197aba740bbb64962707e5a08bac8a16ac6a0"
+      "bytes": 790040,
+      "sha256": "27ee43655da457215de4b050517ff85fb0df5f529b01b99e28d66b57de1e2728"
     },
     {
       "name": "talus",
@@ -108,7 +108,7 @@
         7.6568
       ],
       "bytes": 97308,
-      "sha256": "3e0e98c3f8c4b54f8ba8a41676bb2a1356f533bd9c1a05243112977a1ad38093"
+      "sha256": "f1ef8e3f4efdfd06e7371dc10ae70a42b4d48ab14e71219da40af945d5830f1d"
     }
   ]
 }
