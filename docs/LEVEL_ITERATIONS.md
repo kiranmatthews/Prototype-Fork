@@ -9377,3 +9377,13 @@ Full render at 2560×1440 and normal 480p/CRT have no game-console warnings,
 errors or failed assets. Complete motion and frame evidence:
 `docs/crate-explosion-layers/`. This chat publishes directly under the user's
 retirement of release coordination; unrelated and held work is excluded.
+
+## 2026-11-05 — Plain bounce-crate lids
+
+Removed the spring lid seal from wooden and metal bounce crates; the side
+arrows retain their existing artwork. This also clears the shared underside
+tile. Native six-face review and actual game lite/480p-CRT/full 2560×1440
+checks pass with clean consoles. Playably validated around 03:30 UTC,
+approximately four minutes after the follow-up began. Geometry and gameplay
+are unchanged. Evidence: `docs/bounce-crate-lids/`. Direct release remains
+assigned to this chat by the user.

@@ -264,11 +264,7 @@ function icon(c: CanvasRenderingContext2D, kind: CrateArtKind, value: string, to
   };
   if (top) {
     if (kind === 'checkpoint') { text('C', 174); return; }
-    if (kind === 'bouncy' || kind === 'metalbounce') {
-      c.strokeStyle = p.ink; c.lineWidth = 17;
-      for (const y of [73, 122, 171]) { c.beginPath(); c.ellipse(128, y, 70, 19, 0, 0, Math.PI * 2); c.stroke(); }
-      return;
-    }
+    if (kind === 'bouncy' || kind === 'metalbounce') return;
     c.lineWidth = 8; c.beginPath(); c.arc(128, 128, 89, 0, Math.PI * 2); c.stroke();
   }
   if (value === 'used') { text('✓', 170); return; }
