@@ -1,0 +1,267 @@
+{
+  "joins": [
+    {
+      "at": 100.02000000000001,
+      "from": "Market Flat",
+      "to": "Market Descent",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        11.867238888888888,
+        -103.31902777777779
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 299.98,
+      "from": "Market Descent",
+      "to": "Harbour Plaza",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        4.000000011920929,
+        -303.2790277777778
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 580.02,
+      "from": "Canal Low",
+      "to": "Canal Rise",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        4.237073412698414,
+        -583.3190277777778
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 649.98,
+      "from": "Canal Rise",
+      "to": "Canal Raised Plaza",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        9.000000011920928,
+        -653.2790277777779
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 800.02,
+      "from": "Canal Raised Plaza",
+      "to": "Canal Works Descent",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        8.867238888888886,
+        -803.3190277777778
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1040.02,
+      "from": "Cliff Approach",
+      "to": "Cliff Rise",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        5.474146825396778,
+        -1043.3190277777776
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1109.98,
+      "from": "Cliff Rise",
+      "to": "Cliff Top Plaza",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        15.000000011920928,
+        -1113.2790277777776
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1240.02,
+      "from": "Cliff Top Plaza",
+      "to": "Cliff Descent",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        14.795752136752158,
+        -1243.3190277777776
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1369.98,
+      "from": "Cliff Descent",
+      "to": "Surf Arcade Flat",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        7.000000011920929,
+        -1373.2790277777776
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1530.02,
+      "from": "Surf Arcade Flat",
+      "to": "Surf Arcade Descent",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        6.872345085470099,
+        -1533.3190277777776
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1659.98,
+      "from": "Surf Arcade Descent",
+      "to": "Low Arcade Plaza",
+      "frames": 19,
+      "position": [
+        -0.013671614767893369,
+        2.000000011920929,
+        -1663.2790277777776
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 1960.02,
+      "from": "Festival Low",
+      "to": "Festival Rise",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        2.3055105494971224,
+        -1963.0551054949713
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 2069.98,
+      "from": "Festival Rise",
+      "to": "Festival High Plaza",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        13.000000011920928,
+        -2073.0151054949715
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 2170.02,
+      "from": "Festival High Plaza",
+      "to": "Festival Descent",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        12.805584195774523,
+        -2173.0551054949715
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 2279.98,
+      "from": "Festival Descent",
+      "to": "Lighthouse Flat",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        6.000000011920929,
+        -2283.0151054949715
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 2400.02,
+      "from": "Lighthouse Flat",
+      "to": "Lighthouse Descent",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        5.940595170931113,
+        -2403.0551054949715
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 2579.98,
+      "from": "Lighthouse Descent",
+      "to": "Lighthouse Low",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        2.500000011920929,
+        -2583.0151054949715
+      ],
+      "state": "ride",
+      "deaths": 0
+    },
+    {
+      "at": 2819.98,
+      "from": "Finish Rise",
+      "to": "Finish Promenade",
+      "frames": 18,
+      "position": [
+        -0.013528794258011415,
+        7.000000011920929,
+        -2823.0151054949715
+      ],
+      "state": "ride",
+      "deaths": 0
+    }
+  ],
+  "fixtures": [
+    {
+      "name": "kite flush coping",
+      "state": "ride",
+      "deaths": 0,
+      "frames": 24
+    },
+    {
+      "name": "kite raised coping",
+      "state": "dead",
+      "deaths": 1,
+      "frames": 10
+    },
+    {
+      "name": "kite physical rail",
+      "state": "dead",
+      "deaths": 1,
+      "frames": 10
+    },
+    {
+      "name": "ordinary rail",
+      "state": "air",
+      "deaths": 0,
+      "frames": 10
+    }
+  ],
+  "retainedGrind": "native shoulder edge",
+  "wallTopGrind": true,
+  "pass": true
+}

@@ -1,0 +1,129 @@
+{
+  "deaths": [
+    {
+      "f": 177,
+      "time": 2.95,
+      "cause": "wall",
+      "p": [
+        0.006076974904089294,
+        10.541723888888898,
+        -136.45690277777754
+      ],
+      "prev": [
+        0.0062970362495365344,
+        10.553771666666677,
+        -136.1557083333331
+      ],
+      "state": "ride",
+      "speed": 18.071666666666523,
+      "ground": "ramp",
+      "kite": {
+        "started": true,
+        "released": false,
+        "releaseAge": -1,
+        "wind": -0.8607456795628168,
+        "windTarget": -0.8648935974342749,
+        "reserve": 0,
+        "charge": 0,
+        "scraping": false,
+        "scrapeSeconds": 0,
+        "brakeSeconds": 0,
+        "bursting": false,
+        "autoReleases": 0,
+        "poseMotion": 0.1814141996923715,
+        "grab": {
+          "phase": "idle",
+          "angle": 0,
+          "pose": 0,
+          "hang": 0,
+          "heldTime": 0,
+          "rotation": 0,
+          "returnAge": 0,
+          "returnDuration": 0,
+          "boost": 0,
+          "boostHold": 0
+        },
+        "gripErrors": [
+          3.9196646050967127e-7,
+          4.686398131847203e-7
+        ],
+        "barHand": null,
+        "dock": null,
+        "flyaway": false
+      },
+      "walls": [
+        {
+          "min": [
+            -1.3999999999999995,
+            10.48,
+            -139.1
+          ],
+          "max": [
+            6.8,
+            13.580000000000002,
+            -136.9
+          ]
+        }
+      ],
+      "nearRails": [],
+      "stack": [
+        "    at r.p.die (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/.release-queue/worktrees/beach-invisible-trip/tools/audit-beach-trip.mjs:15:20)",
+        "    at Player.collide (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:10971:18)",
+        "    at Player.stepKiteTow (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4237:12)",
+        "    at Player.stepSimulation (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4360:14)",
+        "    at Player.step (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:3997:10)"
+      ]
+    }
+  ],
+  "last": {
+    "frame": 178,
+    "time": 2.966666666666667,
+    "position": [
+      0.006076974904089294,
+      10.541723888888898,
+      -136.45690277777754
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "dead",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": true,
+    "deaths": 1,
+    "mover": null,
+    "ground": {
+      "name": "ramp",
+      "y": 10.541723888888898,
+      "normal": [
+        4.894673023214424e-18,
+        0.9992009587217896,
+        -0.039968038348871575
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0.4,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

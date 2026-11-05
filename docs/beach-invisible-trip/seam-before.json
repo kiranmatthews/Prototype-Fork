@@ -1,0 +1,88 @@
+{
+  "deaths": [
+    {
+      "f": 58,
+      "time": 0.9666666666666667,
+      "cause": "trip",
+      "p": [
+        -0.00613246478484708,
+        12.000000011920928,
+        -99.32000000000001
+      ],
+      "prev": [
+        -0.0062764055770590035,
+        12.000000011920928,
+        -99.02440277777775
+      ],
+      "state": "ride",
+      "speed": 19.360833333333286,
+      "ground": "platform",
+      "kite": {
+        "started": true,
+        "released": false,
+        "releaseAge": -1,
+        "wind": -0.7175736859673344,
+        "windTarget": -0.8648935974342749,
+        "reserve": 0,
+        "charge": 0,
+        "scraping": false,
+        "scrapeSeconds": 0,
+        "brakeSeconds": 0,
+        "bursting": false,
+        "autoReleases": 0,
+        "poseMotion": 0.2149781681101703,
+        "grab": {
+          "phase": "idle",
+          "angle": 0,
+          "pose": 0,
+          "hang": 0,
+          "heldTime": 0,
+          "rotation": 0,
+          "returnAge": 0,
+          "returnDuration": 0,
+          "boost": 0,
+          "boostHold": 0
+        },
+        "gripErrors": [
+          3.553089719897697e-07,
+          2.9971638036241796e-07
+        ],
+        "barHand": null,
+        "dock": null,
+        "flyaway": false
+      },
+      "walls": [],
+      "nearRails": [
+        {
+          "name": "Bahia retained road edges: Market Flat",
+          "point": [
+            -0.00613246478484708,
+            12.05,
+            -100.04
+          ],
+          "distance": 0.7199999999999989,
+          "coping": true,
+          "visible": true
+        },
+        {
+          "name": "Bahia retained road edges: Market Descent",
+          "point": [
+            -0.00613246478484708,
+            12.05,
+            -100
+          ],
+          "distance": 0.6799999999999926,
+          "coping": true,
+          "visible": true
+        }
+      ],
+      "stack": [
+        "    at r.p.die (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/.release-queue/worktrees/beach-invisible-trip/tools/audit-beach-trip.mjs:15:20)",
+        "    at Player.bail (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:9346:12)",
+        "    at Player.railBlock (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:13983:14)",
+        "    at Player.collide (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:11659:12)",
+        "    at Player.stepKiteTow (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4237:12)"
+      ]
+    }
+  ]
+}

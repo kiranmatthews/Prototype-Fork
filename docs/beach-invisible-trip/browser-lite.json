@@ -1,0 +1,19 @@
+{
+ "loading": null,
+ "remaining": 0,
+ "advanced": 61,
+ "drawingBuffer": [
+  1512,
+  862
+ ],
+ "position": [
+  -0.005076265979073785,
+  11.60032388888889,
+  -109.99190277777775
+ ],
+ "state": "ride",
+ "grounded": true,
+ "speed": 19.339166666666618,
+ "deaths": 0,
+ "ground": "ramp"
+}

@@ -1,0 +1,22 @@
+<!doctype html><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Beach road join review</title><link rel="icon" href="data:,">
+<style>html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#132731}#app canvas{display:block;width:100%!important;height:100%!important}#road-review{position:fixed;bottom:8px;left:8px;z-index:999999;background:#142730ed;color:white;padding:12px;border-radius:8px;font:12px system-ui;max-width:600px}button{padding:6px;margin:3px}output{display:block;white-space:pre-wrap;max-height:180px;overflow:auto}</style>
+<div id="app"></div><script type="module" src="/src/main.ts"></script>
+<script type="module">
+import * as THREE from 'three';
+const g=window.__game,review=g.launchReview;
+if(!review)throw Error('Use ?playtest&level=coastal-street-run&launchReview');
+const panel=document.createElement('section');panel.id='road-review';panel.innerHTML='<strong>BEACH STREET · ROAD JOIN REVIEW</strong><div></div><output>Loading…</output>';document.body.append(panel);
+let remaining=0,advanced=0,close=false;const output=panel.querySelector('output');
+const clear=()=>{g.input.moveX=g.input.moveY=0;for(const k of ['jumpHeld','jumpPressed','jumpReleased','spinHeld','spinPressed','grindHeld','grindPressed','grabHeld','grabPressed','transferHeld','transferPressed'])g.input[k]=false;};
+const run=n=>{remaining=n;review.rate=0;review.advance=1/60;};
+const button=(label,fn)=>{const b=document.createElement('button');b.textContent=label;b.onclick=fn;panel.querySelector('div').append(b);};
+button('Start before join',()=>{clear();advanced=0;g.player.respawn(g.getLevel(),true,false,{position:new THREE.Vector3(0,12.04,-90),heading:new THREE.Vector3(0,0,-1)});g.player.kiteMotion.reset(17);g.player.kiteMotion.started=true;g.player.kiteMotion.speed=20;run(1);});
+button('Drive 20 frames',()=>run(20));button('Drive 60 frames',()=>run(60));
+button('Close view',()=>close=!close);button('Native MAX',()=>g.renderQualitySettings.setRegularResolution(null));
+button('Normal 720',()=>g.renderQualitySettings.setRegularResolution(720));button('Hide panel',()=>panel.style.display='none');
+review.beforeStep=()=>{if(remaining){clear();g.input.moveX=THREE.MathUtils.clamp((-g.player.pos.x*5-g.player.kiteMotion.wind*4.2)/9,-1,1);remaining--;advanced++;review.advance=remaining?1/60:0;}};
+const savedP=new THREE.Vector3(),savedQ=new THREE.Quaternion();let overridden=false;
+review.restoreCamera=()=>{if(overridden){g.camera.position.copy(savedP);g.camera.quaternion.copy(savedQ);overridden=false;}};
+review.afterCamera=()=>{if(!close)return;savedP.copy(g.camera.position);savedQ.copy(g.camera.quaternion);overridden=true;g.camera.position.copy(g.player.pos).add(new THREE.Vector3(5,3,7));g.camera.lookAt(g.player.pos.clone().add(new THREE.Vector3(0,1,-2)));g.camera.updateMatrixWorld();};
+setInterval(()=>{const p=g.player;output.textContent=JSON.stringify({loading:g.getLoadingDiagnostics().phase,remaining,advanced,drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],position:p.pos.toArray(),state:p.state,grounded:p.grounded,speed:p.speed,deaths:p.totalDeaths,ground:p.groundHit?.name,rail:p.grindRail?.object.userData.sourceName},null,1);},250);
+</script>

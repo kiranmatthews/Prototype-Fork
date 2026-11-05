@@ -17282,9 +17282,11 @@ export class Player {
       // passes under/over freely; the rail is a grind target, not a barrier.
       if (this.vertLandGraceT > 0) continue;
       // Authored vert ramps keep the flush-coping rule. Park transitions
-      // also cross a coping already below the board without tripping.
+      // also cross a coping already below the board without tripping. Kite
+      // roads retain explicit edge grinds at slab joins; those flush lines
+      // are not physical hurdles across the otherwise continuous pavement.
       const authoredVert = this.groundHit?.vert === true && this.groundHit.skateCamera === true;
-      if (rail.coping && ((this.parkControls &&
+      if (rail.coping && ((this.kiteTowing && s.point.y <= this.pos.y + 0.2) || (this.parkControls &&
           (this.groundHit?.vert === true || s.point.y <= this.pos.y + 0.2)) ||
           (authoredVert && Math.abs(s.point.y - this.pos.y) <= 0.2))) continue;
       if (this.groundHit && this.groundHit.normal.y < TUNING.steepStand) continue;
@@ -17329,6 +17331,9 @@ export class Player {
         // the old near-side knockdown, whipped backward.
         const low = s.point.y < this.pos.y + Math.max(0, TUNING.tripMaxHeight);
         this.bail(false, signedEntrySpeed, low ? 'trip' : 'wall', spd * intoRail);
+        // Kite contact is fatal. Its collapse owns the state and velocity;
+        // the ordinary caught-truck launch must not revive it as an air state.
+        if ((this.state as MoveState) === 'dead') return;
         if (low) {
           this.state = 'air';
           this.grounded = false;

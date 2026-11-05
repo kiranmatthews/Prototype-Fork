@@ -1,0 +1,481 @@
+{
+  "deaths": [
+    {
+      "f": 4446,
+      "time": 74.1,
+      "cause": "wall",
+      "p": [
+        -6.28,
+        12.000000011920928,
+        -18.03041166375959
+      ],
+      "prev": [
+        -6.2700000000000005,
+        12.000000011920928,
+        -17.78387180720559
+      ],
+      "state": "ride",
+      "speed": 14.792391393240015,
+      "ground": "platform",
+      "kite": {
+        "started": true,
+        "released": false,
+        "releaseAge": -1,
+        "wind": -0.8797553792249925,
+        "windTarget": -0.880050977692008,
+        "reserve": 0,
+        "charge": 0,
+        "scraping": true,
+        "scrapeSeconds": 0.49999999999999994,
+        "brakeSeconds": 0,
+        "bursting": false,
+        "autoReleases": 0,
+        "poseMotion": 0.12672265990523615,
+        "grab": {
+          "phase": "idle",
+          "angle": 0,
+          "pose": 0,
+          "hang": 0,
+          "heldTime": 0,
+          "rotation": 0,
+          "returnAge": 0,
+          "returnDuration": 0,
+          "boost": 0,
+          "boostHold": 0
+        },
+        "gripErrors": [
+          4.678383541321156e-07,
+          1.055851300168478e-06
+        ],
+        "barHand": null,
+        "dock": null,
+        "flyaway": false
+      },
+      "walls": [
+        {
+          "min": [
+            -7.640000000000001,
+            12,
+            -100.04
+          ],
+          "max": [
+            -6.76,
+            12.850000000000001,
+            30.040000000000006
+          ]
+        }
+      ],
+      "nearRails": [
+        {
+          "name": "town boundary 1",
+          "point": [
+            -7.2,
+            13.22,
+            -18.030411663759594
+          ],
+          "distance": 0.9199999999999999,
+          "coping": false,
+          "visible": true
+        },
+        {
+          "name": "Bahia retained road edges: Market Flat",
+          "point": [
+            -6,
+            12.05,
+            -18.030411663759594
+          ],
+          "distance": 0.28000000000000025,
+          "coping": true,
+          "visible": true
+        }
+      ],
+      "stack": [
+        "    at r.p.die (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/.release-queue/worktrees/beach-invisible-trip/tools/audit-beach-trip.mjs:15:20)",
+        "    at Player.collide (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:10983:14)",
+        "    at Player.stepKiteTow (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4237:12)",
+        "    at Player.stepSimulation (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4360:14)",
+        "    at Player.step (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:3997:10)"
+      ]
+    },
+    {
+      "f": 5340,
+      "time": 89,
+      "cause": "wall",
+      "p": [
+        6.255,
+        12.000000011920928,
+        -44.983330930387964
+      ],
+      "prev": [
+        6.255,
+        12.000000011920928,
+        -44.690780832920765
+      ],
+      "state": "ride",
+      "speed": 17.553005848032065,
+      "ground": "platform",
+      "kite": {
+        "started": true,
+        "released": false,
+        "releaseAge": -1,
+        "wind": 0.8456286550200388,
+        "windTarget": 0.9408197594457306,
+        "reserve": 0,
+        "charge": 0,
+        "scraping": true,
+        "scrapeSeconds": 0.49999999999999994,
+        "brakeSeconds": 0,
+        "bursting": false,
+        "autoReleases": 0,
+        "poseMotion": 0.17000959747008848,
+        "grab": {
+          "phase": "idle",
+          "angle": 0,
+          "pose": 0,
+          "hang": 0,
+          "heldTime": 0,
+          "rotation": 0,
+          "returnAge": 0,
+          "returnDuration": 0,
+          "boost": 0,
+          "boostHold": 0
+        },
+        "gripErrors": [
+          4.678383541321156e-07,
+          1.055851300168478e-06
+        ],
+        "barHand": null,
+        "dock": null,
+        "flyaway": false,
+        "fragments": []
+      },
+      "walls": [
+        {
+          "min": [
+            6.735,
+            11.88,
+            -51.839999999999996
+          ],
+          "max": [
+            7.665,
+            12.980000000000002,
+            30.04
+          ]
+        }
+      ],
+      "nearRails": [
+        {
+          "name": "Bahia wall cap grind 1",
+          "point": [
+            7.4,
+            13.3025,
+            -44.983330930387964
+          ],
+          "distance": 1.1450000000000005,
+          "coping": true,
+          "visible": true
+        }
+      ],
+      "stack": [
+        "    at r.p.die (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/.release-queue/worktrees/beach-invisible-trip/tools/audit-beach-trip.mjs:15:20)",
+        "    at Player.collide (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:10983:14)",
+        "    at Player.stepKiteTow (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4237:12)",
+        "    at Player.stepSimulation (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4360:14)",
+        "    at Player.step (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:3997:10)"
+      ]
+    },
+    {
+      "f": 6052,
+      "time": 100.86666666666666,
+      "cause": "wall",
+      "p": [
+        -6.28,
+        12.000000011920928,
+        -16.419379981963885
+      ],
+      "prev": [
+        -6.2700000000000005,
+        12.000000011920928,
+        -16.174004493709887
+      ],
+      "state": "ride",
+      "speed": 14.722529295239827,
+      "ground": "platform",
+      "kite": {
+        "started": true,
+        "released": false,
+        "releaseAge": -1,
+        "wind": -0.9234191904751101,
+        "windTarget": -0.9207301879068837,
+        "reserve": 0,
+        "charge": 0,
+        "scraping": true,
+        "scrapeSeconds": 0.49999999999999994,
+        "brakeSeconds": 0,
+        "bursting": false,
+        "autoReleases": 0,
+        "poseMotion": 0.12596197403386492,
+        "grab": {
+          "phase": "idle",
+          "angle": 0,
+          "pose": 0,
+          "hang": 0,
+          "heldTime": 0,
+          "rotation": 0,
+          "returnAge": 0,
+          "returnDuration": 0,
+          "boost": 0,
+          "boostHold": 0
+        },
+        "gripErrors": [
+          4.678383541321156e-07,
+          1.055851300168478e-06
+        ],
+        "barHand": null,
+        "dock": null,
+        "flyaway": false,
+        "fragments": []
+      },
+      "walls": [
+        {
+          "min": [
+            -7.640000000000001,
+            12,
+            -100.04
+          ],
+          "max": [
+            -6.76,
+            12.850000000000001,
+            30.040000000000006
+          ]
+        }
+      ],
+      "nearRails": [
+        {
+          "name": "town boundary 1",
+          "point": [
+            -7.2,
+            13.22,
+            -16.419379981963885
+          ],
+          "distance": 0.9199999999999999,
+          "coping": false,
+          "visible": true
+        },
+        {
+          "name": "Bahia retained road edges: Market Flat",
+          "point": [
+            -6,
+            12.05,
+            -16.419379981963885
+          ],
+          "distance": 0.28000000000000025,
+          "coping": true,
+          "visible": true
+        }
+      ],
+      "stack": [
+        "    at r.p.die (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/.release-queue/worktrees/beach-invisible-trip/tools/audit-beach-trip.mjs:15:20)",
+        "    at Player.collide (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:10983:14)",
+        "    at Player.stepKiteTow (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4237:12)",
+        "    at Player.stepSimulation (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:4360:14)",
+        "    at Player.step (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:3997:10)"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "f": 0,
+      "p": [
+        0,
+        12.000000011920928,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 0,
+      "trip": false
+    },
+    {
+      "f": 4290,
+      "p": [
+        -0.38265054628713957,
+        12.132013900809817,
+        14.80711111111111
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 2.123333333333333,
+      "vy": 7.920833333333333,
+      "ground": "platform",
+      "deaths": 0,
+      "trip": false
+    },
+    {
+      "f": 4344,
+      "p": [
+        -2.006707385089317,
+        12.000000011920928,
+        7.121111111111115
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 14.723333333333311,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 0,
+      "trip": false
+    },
+    {
+      "f": 4446,
+      "p": [
+        -6.28,
+        12.000000011920928,
+        -18.03041166375959
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 1,
+      "trip": false
+    },
+    {
+      "f": 4579,
+      "p": [
+        0,
+        12.12,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "deaths": 1,
+      "trip": false
+    },
+    {
+      "f": 5086,
+      "p": [
+        -0.378273884732027,
+        12.128888900809818,
+        14.84211111111111
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 1.9133333333333333,
+      "vy": 7.733333333333333,
+      "ground": "platform",
+      "deaths": 1,
+      "trip": false
+    },
+    {
+      "f": 5139,
+      "p": [
+        -0.9130661535966361,
+        12.000000011920928,
+        7.587000000000001
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 14.27999999999998,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 1,
+      "trip": false
+    },
+    {
+      "f": 5340,
+      "p": [
+        6.255,
+        12.000000011920928,
+        -44.983330930387964
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 2,
+      "trip": false
+    },
+    {
+      "f": 5473,
+      "p": [
+        0,
+        12.12,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "deaths": 2,
+      "trip": false
+    },
+    {
+      "f": 5902,
+      "p": [
+        -0.4240121776493694,
+        12.132013900809817,
+        14.80711111111111
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 2.123333333333333,
+      "vy": 7.920833333333333,
+      "ground": "platform",
+      "deaths": 2,
+      "trip": false
+    },
+    {
+      "f": 5956,
+      "p": [
+        -2.17925139875676,
+        12.000000011920928,
+        7.121359930010447
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 14.708404199373366,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 2,
+      "trip": false
+    },
+    {
+      "f": 6052,
+      "p": [
+        -6.28,
+        12.000000011920928,
+        -16.419379981963885
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "ground": "platform",
+      "deaths": 3,
+      "trip": false
+    },
+    {
+      "f": 6185,
+      "p": [
+        0,
+        12.12,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vy": 0,
+      "deaths": 3,
+      "trip": false
+    }
+  ],
+  "note": "The original replay omits random kite wind seeds; these diagnostic positions are not an exact reconstruction of the recorded run."
+}

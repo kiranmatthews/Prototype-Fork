@@ -9673,3 +9673,28 @@ Source, focused test and evidence: `src/kiteGrab.ts`,
 `tools/test-kite-grab.mjs`, `docs/kite-indy/`. No new models, level-data,
 movement-tuning, sky or scenery changes. Direct publication belongs to this
 chat; the retired coordinator is not required.
+
+## 2026-11-05 — Beach Street invisible road-join trip
+
+Investigated the supplied 6,514-frame Coastal Street replay and reproduced an
+invisible collision at the first downhill transition. Explicit coping paths
+preserving road-edge grinding ran across the pavement at distance 100 m; the
+grounded rail blocker treated those flush targets as raised bars. A controlled
+native drive tripped at distance 99.32 m with no wall intersection.
+
+Kite travel now passes flush coping while retaining its grind target. Raised
+rails, wall-top grinding and the half-second scenery scrape window remain
+functional. Also stopped the ordinary trip launch from overwriting `dead`
+after a fatal kite rail hit, so collapse and respawn finish normally.
+
+First corrected native traversal at approximately 07:24 UTC / 20:24 NZDT,
+about nine minutes after investigation began. All 18 continuous road joins
+pass focused checks, along with retained grinds, real raised-rail collisions,
+respawn, ordinary skate rail trips and existing kite/scrape controls. Chrome
+lite and full MAX/native checks cross the first join at 19.34 m/s with zero
+deaths and no warning/error logs. Evidence: `docs/beach-invisible-trip/`.
+
+The original recording does not store random kite wind seeds, so its replayed
+positions cannot be asserted to match the recording exactly. The separate
+native reproduction identifies the invisible coping failure directly. Only
+`src/player.ts` runtime handling changes; no level, art, tuning or sky edits.
