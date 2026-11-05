@@ -6,6 +6,7 @@ import {solveTwoBoneIk} from '../animation/ik';
 import {skateboardSettings} from '../skateboard/settings';
 import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
 import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
+import {BoardScribbleSequence} from './boardScribble';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
@@ -16,6 +17,8 @@ const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC
  * writes position, speed, grounded, input, charge, or a controller state. */
 export class PlayableSkateMotion {
   enabled = true;
+  scribbles = true;
+  readonly boardScribble = new BoardScribbleSequence();
   style: keyof typeof rideNames = 'Relaxed';
   phase: Phase = 'foot';
   time = 0;
@@ -62,11 +65,18 @@ export class PlayableSkateMotion {
     this.clips = new Map(data.clips.map(c => [c.name, c]));
     this.opacity(1);
     player.exitAnimationPreview();
-    this.stop = player.setFinalPoseOverlay(context => this.update(context));
+    this.stop = player.setFinalPoseOverlay(context => {
+      this.update(context);
+      const active = this.enabled && this.scribbles;
+      const visible = this.retarget.board.visible && !(this.phase === 'dismount' && this.clip && this.time >= clipDuration(this.clip) - .16);
+      this.boardScribble.step(context.deltaSeconds, visible, active);
+      if (active) {this.opacity(1); this.retarget.board.visible = this.boardScribble.boardVisible;}
+    });
   }
 
   dispose(): void {this.stop(); this.opacity(1);}
   reset(): void {
+    this.boardScribble.reset();
     this.phase = 'foot'; this.time = 0; this.clip = null;
     this.sourceName='';this.previousFootSpeed=0;this.mountHold=false;this.visits.clear();
     this.lastPose = this.fromPose = null; this.fade = 1;

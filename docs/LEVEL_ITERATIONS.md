@@ -8912,3 +8912,34 @@ Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
   animation graph. Data and demo remain private/local.
 
 Details: [Skate playable study](SKATE_PLAYTEST.md).
+
+## Skate board scribbles and local lab directory
+
+- 6 November 2026 NZDT: about 12 minutes prompt-to-first-playable effect;
+  about 24 minutes including the wider-apex / thinner-stroke / 60 fps follow-ups
+  and focused validation. The accepted source-motion animations and native
+  movement remain unchanged. This entire increment is local only.
+- Added twelve independent transparent PNG scribble drawings. Four rapid
+  full-size redraws have a slim deck silhouette, followed by progressively
+  smaller drawings with consistent pen weight. The fixed-size billboard swaps
+  atlas cells at 60 fps for 0.2 seconds; no shrinking-image tween or alpha fade.
+  Appearance reveals under the ink, and disappearance keeps the last prop
+  attachment until the small marks clear. Added an effect comparison selector,
+  appearance/disappearance pause points and frame stepping.
+- Port 5198 had been reused by another checkout and was silently serving the
+  main game for a missing playtest URL. This study now owns loopback port 5199.
+  `/labs/` works on the same server, uses its current origin, and includes the
+  playable study, the approved 218-clip source viewer, Jump A/B/C/D, and four
+  previously omitted art reviews. The source viewer's HTML/main/style are
+  adopted from the approved Skate lab; private motion data remains external.
+- Validation: 1,980 controller-comparison frames, interruptions/remounts, all
+  twelve distinct UV frames, constant sprite dimensions, finite termination,
+  and one burst per equipment transition pass. The directory audit passes for
+  139 browser pages and 73 embedded tools. Production type-check/build and the
+  isolated local build pass; production output excludes both Skate entries,
+  the scribble PNG and private motion JSON. No level data changed.
+- Browser evidence at normal and MAX/native: real keyboard mount, complete
+  mount/push/jump/land/dismount, smaller drawings and final hidden board,
+  original-fade comparison, working catalogue links and loaded source library.
+  Evidence is external `skate-scribble/`; asset/prompt provenance is in
+  `src/skateReferenceLab/assets/README.md`. No publication is authorized.

@@ -1,17 +1,18 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bone Man · Skate playtest</title></head>
 <body><canvas id="viewport" aria-label="Playable Bone Man skate plaza" tabindex="0"></canvas>
-<header><b>BONE MAN / SKATE PLAYTEST</b><span>LOCAL EXPLORATION</span></header>
+<header><b>BONE MAN / SKATE PLAYTEST</b><span>LOCAL EXPLORATION · <a href="/labs/?q=skate">All labs ↗</a></span></header>
 <aside>
   <h1>Take it for a ride.</h1>
   <p>WASD / arrows to move. Hold <kbd>Space</kbd> + forward to mount and push. Release Space to jump. Hold <kbd>Q</kbd> to brake and step off.</p>
   <div class="row"><button id="reset">Reset · R</button><button id="pause">Pause</button><button id="step">Step frame</button></div>
   <label for="motion">Motion <select aria-label="Motion" id="motion"><option value="source">New Skate motions</option><option value="original">Original D skating</option></select></label>
+  <label for="ink">Board effect <select aria-label="Board effect" id="ink"><option value="on">Punk scribble</option><option value="off">Off · original fades</option></select></label>
   <label for="style">Riding style <select aria-label="Riding style" id="style"><option>Relaxed</option><option>Loose</option><option>Aggressive</option></select></label>
   <label for="view">View <select aria-label="View" id="view"><option value="three">¾ follow</option><option value="side">Side follow</option><option value="back">Behind</option><option value="front">Front</option></select></label>
   <label for="rate">Playback <select aria-label="Playback" id="rate"><option value="1">Realtime</option><option value="0.5">Half speed</option><option value="0.25">Quarter speed</option></select></label>
   <label for="quality">Quality <select aria-label="Quality" id="quality"><option value="native">MAX / native</option><option value="normal">Normal</option></select></label>
-  <label for="stop">Pause at <select aria-label="Pause at" id="stop"><option value="none">None</option><option value="mount">Mount</option><option value="push">Push</option><option value="ride">Ride</option><option value="air">Air</option><option value="land">Landing</option><option value="dismount">Dismount</option></select></label>
+  <label for="stop">Pause at <select aria-label="Pause at" id="stop"><option value="none">None</option><option value="board-in">Board appears</option><option value="board-out">Board disappears</option><option value="mount">Mount</option><option value="push">Push</option><option value="ride">Ride</option><option value="air">Air</option><option value="land">Landing</option><option value="dismount">Dismount</option></select></label>
   <div class="row"><button id="demo">Run control demo</button><button id="return">Take control</button></div>
   <p class="small">The demo performs the same inputs: mount, push, jump, land, brake and dismount. All movement uses the existing game controller.</p>
   <details><summary>Motion details</summary><pre id="diagnostics" data-testid="skate-status"></pre></details>

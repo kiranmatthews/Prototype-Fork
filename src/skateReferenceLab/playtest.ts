@@ -8,6 +8,7 @@ import {RigBinding, createPlayerStarterAnimationSuite} from '../animation';
 import {createCharacterAnimationRuntime} from '../characterAnimationRuntime';
 import {createJakDirectSuite, JAK_DIRECT_PHYSICS, type JakMotionBank} from '../../tools/jak-direct-motion';
 import {PlayableSkateMotion} from './playableMotion';
+import {BoardScribbleEffect} from './boardScribble';
 import type {MotionData} from './retarget';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -41,6 +42,9 @@ async function start() {
   const grid=new THREE.GridHelper(260,130,0x809375,0xaaba9d);grid.position.set(0,.006,-100);scene.add(grid);
   const p=new Player(scene);p.setCharacterHeadStyle('skull');p.setCharacterRenderBatching(false);
   const motion=new PlayableSkateMotion(p,data);
+  const ink = await new THREE.TextureLoader().loadAsync(new URL('./assets/board-scribble.png', import.meta.url).href);
+  const scribble = new BoardScribbleEffect(ink,p.group,motion.retarget.board,motion.boardScribble);
+  ink.dispose(); scene.add(scribble.sprite);
   const binding=RigBinding.fromSculptRuntime(p.animationRig.root);
   const runtime=createCharacterAnimationRuntime(p,createJakDirectSuite(createPlayerStarterAnimationSuite(binding.definition),binding.definition,jak));
   p.onFootJumpStudy={...JAK_DIRECT_PHYSICS,flip:true};p.endlessDeaths=true;
@@ -59,6 +63,7 @@ async function start() {
   $<HTMLButtonElement>('demo').onclick=()=>{reset();demoTime=0;previousDemoJump=false;paused=false;$('pause').textContent='Pause';canvas.focus();};
   $<HTMLButtonElement>('return').onclick=()=>{demoTime=-1;previousDemoJump=false;paused=false;$('pause').textContent='Pause';$<HTMLSelectElement>('stop').value='none';canvas.focus();};
   $<HTMLSelectElement>('motion').onchange=event=>{motion.enabled=(event.target as HTMLSelectElement).value==='source';canvas.focus();};
+  $<HTMLSelectElement>('ink').onchange=event=>{motion.scribbles=(event.target as HTMLSelectElement).value==='on';canvas.focus();};
   $<HTMLSelectElement>('style').onchange=event=>{motion.style=(event.target as HTMLSelectElement).value as typeof motion.style;canvas.focus();};
   $<HTMLSelectElement>('rate').onchange=event=>{rate=+(event.target as HTMLSelectElement).value;canvas.focus();};
   $<HTMLSelectElement>('quality').onchange=event=>{renderer.setPixelRatio((event.target as HTMLSelectElement).value==='native'?devicePixelRatio:Math.min(1,devicePixelRatio));resize();};
@@ -73,7 +78,10 @@ async function start() {
     });
     if(demoTime>=0){previousDemoJump=activeInput.jumpHeld;demoTime+=CONST.fixedStep;if(demoTime>11)demoTime=-1;}
     (p as any).rawInput=activeInput;p.camDir.set(0,0,-1);p.step(CONST.fixedStep,activeInput,level);level.update(CONST.fixedStep);activeInput.consumeEdges();
-    if($<HTMLSelectElement>('stop').value===motion.phase && motion.time>=.3){paused=true;$('pause').textContent='Resume';$<HTMLSelectElement>('stop').value='none';}
+    const stop = $<HTMLSelectElement>('stop').value, effect = motion.boardScribble;
+    if((stop===motion.phase && motion.time>=.3) || (effect.active && effect.frame===0 && stop===(effect.targetVisible?'board-in':'board-out'))) {
+      paused=true;$('pause').textContent='Resume';$<HTMLSelectElement>('stop').value='none';
+    }
     input.consumeEdges();
   }
   function render(now:number) {
@@ -86,9 +94,10 @@ async function start() {
     cameraTarget.copy(target);cameraTarget.x-=1.15;
     camera.position.copy(cameraTarget).add(offset);camera.lookAt(cameraTarget);
     sun.position.copy(p.pos).add(new THREE.Vector3(3,9,4));sun.target.position.copy(p.pos);
-    scene.updateMatrixWorld(true);renderer.render(scene,camera);
+    scene.updateMatrixWorld(true);camera.updateMatrixWorld();scribble.update(camera);renderer.render(scene,camera);
     if(now-reportAt>80){reportAt=now;$('phase').textContent=motion.enabled?motion.phase.replace(/-/g,' ').toUpperCase():'ORIGINAL D SKATING';
-      $('diagnostics').textContent=JSON.stringify({...motion.diagnostics,demoTime:+demoTime.toFixed(2),paused,nativeState:p.state},null,2);
+      $('diagnostics').textContent=JSON.stringify({...motion.diagnostics,demoTime:+demoTime.toFixed(2),paused,nativeState:p.state,
+        scribble:{active:motion.boardScribble.active,frame:motion.boardScribble.frame+1,appearances:motion.boardScribble.appearances,disappearances:motion.boardScribble.disappearances,quad:scribble.sprite.scale.toArray()}},null,2);
       $('hint').textContent=demoTime>=0?'Control demo running · Take control at any time':'WASD · Hold Space to mount · Release to jump · Q brake · R reset';}
     requestAnimationFrame(render);
   }

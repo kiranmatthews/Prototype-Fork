@@ -11,7 +11,12 @@ Run `npm run lab:skate-playtest` with these environment variables:
 - `JAK_REFERENCE_MOTION_DIR`: the existing private Jak study directory.
 - `JAK_REFERENCE_AUDIO_DIR`: its `audio` directory (enables the local data middleware).
 
-Open `http://127.0.0.1:5198/skate-playtest.html`. The server binds to loopback.
+Open `http://127.0.0.1:5199/skate-playtest.html`. The server binds to loopback.
+Port 5198 is occupied by a different checkout; use this dedicated port. The
+same server hosts `/labs/`, the adopted 218-clip `skate-reference-lab.html`,
+and `jump-review.html?playtest&level=codex-lab&nocrt&lite` with its private Jak
+middleware. `/labs` discovers every local HTML entry and always uses the
+current development origin instead of an obsolete saved port.
 The data file stays outside the repository and `public/`; this entry is absent
 from `tools/site-entries.mjs`. Its optional isolated build goes to the ignored
 `.skate-playtest-build/` directory and does not copy public assets.
@@ -51,6 +56,26 @@ finishes before high-speed coasting. Actual support loss/landing owns air/impact
 descending air blends toward the source catch pose. On-foot jumps and other
 actions can interrupt equipment handling. Board visibility is limited to skating
 and finite mount/dismount; short fades cover the source clips' carried endpoints.
+
+## Punk board scribbles
+
+The default board effect uses twelve independently drawn thin-ink PNG frames
+at **60 fps**, lasting 0.2 seconds. Four rapid full-size redraws have a long,
+slim deck silhouette; subsequent drawings use fewer, shorter strokes with the
+same pen weight. A single fixed-size billboard swaps atlas cells, never scales
+down the artwork or fades it. Its long axis follows the board in the camera.
+The appearance switches under the full-size ink; disappearance retains the
+prop's last attachment to the moving player until the smaller drawings clear.
+
+The Board effect selector restores the original fades for comparison. Pause
+at **Board appears** or **Board disappears**, then Step frame to inspect the
+sequence. Slow motion slows the simulation and ink together. Reset, brief
+gestures and remounts clear/restart the effect without retaining a carried board.
+Original D skating remains an unmodified comparison.
+
+Asset and final generation prompt: `src/skateReferenceLab/assets/README.md`.
+The PNG and the source-motion viewer are local entry dependencies only; the
+production build does not include either motion study or private source data.
 
 Ground/deck contacts use source contact weights and the actual authored deck
 surface, with shared two-bone IK and a pelvis translation. Brief carry contact

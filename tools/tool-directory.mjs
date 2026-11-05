@@ -8,6 +8,9 @@ const descriptions = {
   'crt-review.html': ['CRT test-pattern lab', 'Animated colour bars, checkerboards and glow with the complete CRT shader tuner.', 'Labs & studios'],
   'skateboard-lab.html': ['Skateboard shape lab', 'Gameplay and map boards: shape, curves, wheels, trucks, artwork, wear and plywood.', 'Labs & studios'],
   'skate-pose-review.html': ['Skate pose contact sheet', 'Looping, labelled skate captures with transport, views, filters and editable animation studies.', 'Labs & studios'],
+  'skate-playtest.html': ['Skate playable motion lab', 'Ride Bone Man with the new Skate motions. Mount, push, jump, land and dismount; punk scribble board effects, original D comparison, slow motion and frame stepping.', 'Labs & studios'],
+  'skate-reference-lab.html': ['Skate source-motion lab', 'Browse 218 Skate source clips retargeted to Bone Man: mounts, dismounts, pushes, stances, crouches, flips and landings.', 'Labs & studios'],
+  'jump-review.html': ['Jump A/B/C/D playtest', 'Compare Bone Man and Jak jumps, double jumps, forward rolls, hybrid run, ledge grabs and green eco effects.', 'Labs & studios'],
   'spin-lab.html': ['Spin smear lab', 'Character spin smears, orbital rings, colours, mesh shape and animation preview.', 'Labs & studios'],
   'milk-review.html': ['Fruit / milk pickup lab', 'Pickup model, appearance and motion review.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
@@ -26,13 +29,15 @@ function category(file) {
   if (/performance|frame-work|crash/.test(file)) return 'Performance & diagnostics';
   if (/menu|hud|save-grid|level-select|competition-review|touch-controls|trick-guide|milk-bottle/.test(file)) return 'UI & input reviews';
   if (/skin|idle|skate-charge|skate-pose|crouch|ice-skate|ice-walk|wallride-facing|grind-head|interaction/.test(file)) return 'Character & animation reviews';
-  if (file.startsWith('tools/') || /boardwalk-review|coastal-water|milk-review/.test(file)) return 'Art & asset reviews';
+  if (/^(tools|art)\//.test(file) || /boardwalk-review|coastal-water|milk-review/.test(file)) return 'Art & asset reviews';
   return 'Gameplay reviews';
 }
 
 // Review controls usually operate on the already-loaded world. Give their
 // bookmarks the same explicit fixtures used in the authoring documentation.
 function reviewQuery(file) {
+  if (file === 'skate-playtest.html' || file === 'skate-reference-lab.html') return '';
+  if (file === 'jump-review.html') return '?playtest&level=codex-lab&nocrt&lite';
   if (file.includes('/') && file !== 'tools/carton-game-review.html') return '';
   let level = 'codex-lab';
   if (/park-|competition|jungle-cup|cup-performance|trick-|grind-|balance-|spin-review|interaction|milk-bottle/.test(file)) level = 'jungle-cup';
@@ -62,7 +67,7 @@ async function htmlFiles(root, directory, recursive) {
 // Never import their modules here: many QA harnesses deliberately stage game state.
 export async function discoverToolPages(root) {
   const files = (await Promise.all([
-    htmlFiles(root, '', false), htmlFiles(root, 'tools', true), htmlFiles(root, 'public', true), htmlFiles(root, 'docs', true),
+    htmlFiles(root, '', false), htmlFiles(root, 'tools', true), htmlFiles(root, 'public', true), htmlFiles(root, 'docs', true), htmlFiles(root, 'art', true),
   ])).flat().sort();
   const published = new Set(Object.values(siteEntries));
   return Promise.all(files.map(async source => {
@@ -99,6 +104,8 @@ export function toolDirectory() {
       // New/deleted pages appear on the next directory load, without a hand-maintained list.
       const invalidate = file => {
         if (!file.endsWith('.html')) return;
+        const relative = path.relative(root, file).split(path.sep).join('/');
+        if (relative.includes('/') && !/^(tools|public|docs|art)\//.test(relative)) return;
         const mod = server.moduleGraph.getModuleById(id);
         if (mod) server.moduleGraph.invalidateModule(mod);
         server.ws.send({ type: 'full-reload' });

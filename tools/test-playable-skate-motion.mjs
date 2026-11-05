@@ -5,6 +5,30 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const data=JSON.parse(await readFile(process.argv[2] || '.skate-reference-data/motion.json','utf8'));
 await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const {PlayableSkateMotion}=await server.ssrLoadModule('/src/skateReferenceLab/playableMotion.ts');
+  const {BoardScribbleSequence,BoardScribbleEffect,SCRIBBLE_FRAMES,SCRIBBLE_FPS}=await server.ssrLoadModule('/src/skateReferenceLab/boardScribble.ts');
+  // A short deterministic effect check: every drawing is visited, the sprite
+  // never shrinks, and a held visibility state cannot retrigger the burst.
+  const clock=new BoardScribbleSequence(),root=new THREE.Group(),board=new THREE.Group();root.add(board);
+  const effect=new BoardScribbleEffect(new THREE.Texture(),root,board,clock);
+  const camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(4,2,7);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+  clock.step(1/60,true);effect.update(camera);
+  const quad=effect.sprite.scale.toArray(),cells=new Set();
+  assert.equal(clock.boardVisible,false,'board reveals before the first ink drawings');
+  for(let f=0;f<SCRIBBLE_FRAMES;f++){
+    if(f)clock.step(1/SCRIBBLE_FPS,true);
+    effect.update(camera);cells.add(effect.sprite.material.map.offset.toArray().join(','));
+    assert.deepEqual(effect.sprite.scale.toArray(),quad,'scribble is being scaled instead of redrawn');
+    assert.ok(effect.sprite.visible);
+    if(f>=2)assert.equal(clock.boardVisible,true);
+  }
+  assert.equal(cells.size,SCRIBBLE_FRAMES);
+  clock.step(1/20,true);effect.update(camera);assert.equal(effect.sprite.visible,false);
+  for(let f=0;f<120;f++)clock.step(1/60,true);
+  assert.equal(clock.appearances,1);
+  clock.step(1/60,false);assert.equal(clock.disappearances,1);assert.equal(clock.boardVisible,false);
+  clock.step(1/60,true);assert.equal(clock.appearances,2,'interrupted disappearance did not restart');
+  clock.step(1/60,true,false);assert.equal(clock.active,false);assert.equal(clock.boardVisible,true);
+  clock.reset();assert.equal(clock.active,false);effect.dispose();
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const {RigBinding,createPlayerStarterAnimationSuite}=await server.ssrLoadModule('/src/animation/index.ts');
   const p=new Player(scene),control=new Player(scene);
@@ -31,6 +55,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   for(const state of ['mount','push','air','land','dismount'])assert.ok(visits.has(state),`missing ${state}`);
   for(const [state,step] of Object.entries(stepByPhase))if(state!=='foot')assert.ok(step<.2,`${state} has a discontinuous head step: ${step}`);
   const primaryFrames=frames;
+  assert.equal(source.boardScribble.appearances,2,'equipment appearance burst retriggered or was missed');
+  assert.equal(source.boardScribble.disappearances,1,'equipment disappearance burst retriggered or was missed');
   const interrupted=new Set();
   for(const release of [8,36,70]){
     for(const rider of [p,control]){rider.enterLevel('skate-motion-test');rider.respawn(level,true);rider.freeSkate=false;}

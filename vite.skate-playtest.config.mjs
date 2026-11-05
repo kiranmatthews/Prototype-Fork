@@ -3,11 +3,12 @@ import {createReadStream, existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {localJakAudio} from './tools/local-jak-audio.mjs';
 import {ktxFormatPreferences} from './tools/ktx-format-preferences.mjs';
+import {toolDirectory} from './tools/tool-directory.mjs';
 
 // Opt-in local entry. Disc-derived motion is kept outside public/ and dist/.
 export default defineConfig({
   base: './',
-  plugins: [ktxFormatPreferences(), localJakAudio(), {
+  plugins: [ktxFormatPreferences(), localJakAudio(), toolDirectory(), {
     name: 'local-skate-reference',
     configureServer(server) {
       const file = resolve(process.env.SKATE_REFERENCE_DATA_ROOT || '.skate-reference-data', 'motion.json');
@@ -26,7 +27,8 @@ export default defineConfig({
     },
   }],
   resolve: {dedupe: ['three']},
-  server: {host: '127.0.0.1', port: 5198, strictPort: true},
+  server: {host: '127.0.0.1', port: 5199, strictPort: true,
+    watch: {ignored: ['**/dist/**', '**/.skate-playtest-build/**']}},
   build: {
     outDir: '.skate-playtest-build', copyPublicDir: false,
     rollupOptions: {input: 'skate-playtest.html'},
