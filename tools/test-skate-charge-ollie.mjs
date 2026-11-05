@@ -1,9 +1,7 @@
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
-const entry={id:'ollie-test',name:'Ollie test',data:{v:1,name:'Ollie test',spawn:[0,.02,0],killY:-30,
-  components:[{t:'platform',p:[0,-.5,0],s:[1000,1,1000]},{t:'gate',p:[0,0,-450]}]}};
-await withSkateRuntime(async ({server,THREE,Player,level,player:p})=>{
+await withSkateRuntime(async ({server,THREE,Level,Player})=>{
   const {SkateBodySpring,skateBodyFlexTarget}=await server.ssrLoadModule('/src/skateBodyMotion.ts');
   const a=await server.ssrLoadModule('/src/animation/index.ts');
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
@@ -28,8 +26,9 @@ await withSkateRuntime(async ({server,THREE,Player,level,player:p})=>{
     }
   }
   assert.ok(Math.max(...samples)-Math.min(...samples)<1e-10,'constant-target spring depends on frame rate');
-  const control=new Player(level.scene);
-  control.competitionMode=p.competitionMode;control.endlessDeaths=p.endlessDeaths;
+  const level=new Level(new THREE.Scene(),{id:'ollie-test',name:'Ollie test',data:{v:1,name:'Ollie test',spawn:[0,.02,0],killY:-30,
+    components:[{t:'platform',p:[0,-.5,0],s:[1000,1,1000]},{t:'gate',p:[0,0,-450]}]}});
+  const p=new Player(level.scene),control=new Player(level.scene);
   p.onFootJumpStudy=process.argv.includes('--direct-jak')?JAK_DIRECT_PHYSICS:JAK_JUMP_PHYSICS;
   const binding=a.RigBinding.fromSculptRuntime(p.animationRig.root);
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(binding.definition));
@@ -71,12 +70,10 @@ await withSkateRuntime(async ({server,THREE,Player,level,player:p})=>{
         previousHeight=c.bodyHeight;
         // S05 now deliberately lifts the leading knee with a steeper nose.
         // Keep the trailing leg open and reject a two-legged squat; retain
-        // the original shallow bounds for level flight and landing. D alone
-        // has a deeper, supported ground-charge pose.
+        // the original shallow bounds for charge, level flight and landing.
         const leading=poseInfo.knees[stance>0?1:0],trailing=poseInfo.knees[stance>0?0:1];
         const raisedOllie=!p.grounded&&p.boardOllieAir&&noseTilt>.12;
         if(raisedOllie ? leading>=2.1||trailing>=1.15||(leading+trailing)/2>=1.4
-          :p.grounded&&p.chargePose>.1&&process.argv.includes('--direct-jak')?Math.max(leading,trailing)>=1.65||(leading+trailing)/2>=1.5
           : Math.max(leading,trailing)>=1.5||(leading+trailing)/2>=1.15)poseErrors.push({problem:'knee bend',...poseInfo});
         if(frame===59+hold)releaseFlex=c.bodyFlex;
         if(!p.grounded){
@@ -96,5 +93,5 @@ await withSkateRuntime(async ({server,THREE,Player,level,player:p})=>{
     console.log(`Tap/full ollie in campaign/park, both stances; ${total} controller frames with exact motion parity; max knee ${(maxKnee*180/Math.PI).toFixed(1)}°, nose tilt ${(maxNoseTilt*180/Math.PI).toFixed(1)}°, sole ${(maxFoot*1000).toFixed(2)} mm, pelvis step ${(maxHeightStep*1000).toFixed(2)} mm; spring 30/60/120 fps.`);
     assert.equal(poseErrors.length,0,`pose continuity/contact failures: ${JSON.stringify(poseErrors.slice(0,8))}`);
     console.log('PASS spring, contact, charge/air/landing ownership and unchanged movement');
-  }finally{runtime.dispose();}
-},{levelEntry:entry});
+  }finally{runtime.dispose();level.dispose();}
+});

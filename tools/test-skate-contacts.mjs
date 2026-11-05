@@ -1,15 +1,7 @@
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
-// Contacts are posed in place; only the final revert needs supported ground.
-// Use a small fixture instead of allocating the complete Jungle Cup scenery.
-const entry={id:'skate-contact-test',name:'Skate contacts',data:{v:1,name:'Skate contacts',spawn:[0,.02,10],killY:-30,
-  components:[{t:'platform',p:[0,-.5,0],s:[100,1,100]},{t:'gate',p:[0,0,-45]}]}};
 await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
-  if(process.argv.includes('--direct-jak')){
-    const {JAK_DIRECT_PHYSICS}=await server.ssrLoadModule('/tools/jak-direct-motion.ts');
-    p.onFootJumpStudy=JAK_DIRECT_PHYSICS;
-  }
   const {Rail}=await server.ssrLoadModule('/src/rails.ts');
   const {DECK_TRICKS,GRAB_TRICKS,GRIND_TRICKS,sampleBackflip,skateContactBounce}=await server.ssrLoadModule('/src/skateTricks.ts');
   const v=(...xyz)=>new THREE.Vector3(...xyz),up=v(0,1,0);
@@ -52,8 +44,8 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
       assert.ok(Math.abs(current-previous)<.10,'charge transition snapped');previous=current;
       assert.ok(p.boardG.getWorldPosition(v()).distanceTo(board)<.001,'pose lift moved the board');
     }
-    assert.ok(height()>idleHeight*(process.argv.includes('--direct-jak')?.76:.8)&&height()<idleHeight-(process.argv.includes('--direct-jak')?.12:.035),'charge must load the legs without collapsing into a squat');
-    for(const side of ['left','right'])assert.ok(bend(side)>.55&&bend(side)<(process.argv.includes('--direct-jak')?1.5:1.15),'full-charge knees must stay within the supported charge pose');
+    assert.ok(height()>idleHeight*.8&&height()<idleHeight-.035,'charge must load the legs without collapsing into a squat');
+    for(const side of ['left','right'])assert.ok(bend(side)>.55&&bend(side)<1.15,'full-charge knees must stay in a natural, moderate bend');
     console.log(`Stance ${stance}: idle ${idleHeight.toFixed(3)} m, charge ${height().toFixed(3)} m; knees ${['left','right'].map(s=>(bend(s)*180/Math.PI).toFixed(1)).join('/')}°`);
     assert.ok(bend('left')+bend('right')>idleBend+.15,'charging needs visibly more knee bend');
     p.charging=false;p.chargeTimer=0;settle(100);
@@ -179,4 +171,4 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   reset();p.pos.set(0,.1,10);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.revertT=.4;p.speed=10;
   step(makeInput({transferPressed:true}));assert.ok(p.comboLabels.includes('Revert'));assert.ok(p.revertPoseT>0);assert.ok(Math.abs(p.deckYawOffset)>3);
   console.log(`PASS ${grinds} mirrored/sloped grind contacts, ${grabs} grab contacts/releases, 12 manuals, both Darkslides, 4 lip stalls, 16 complete flip cycles, Backflip definition and live revert. ${frames} pose frames; worst sole ${(maxFoot*1000).toFixed(2)} mm, palm ${(maxHand*1000).toFixed(2)} mm.`);
-},{levelEntry:entry});
+});

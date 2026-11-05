@@ -8854,3 +8854,25 @@ Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
   integrated, pushed or published; the publication hold remains explicit.
 
 Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+## D — rollback before the 3:58am board update (local)
+
+- 5 November 2026 NZDT, approximately six minutes request-to-restored and
+  checked playtest (16:50–16:56 NZDT). The user rejected the mount experiments
+  for triggering reliability and visual quality and requested the version
+  before the 3:58am update.
+- Restored every tracked runtime, asset and review/test tool exactly to
+  `d70a6f6d743cfd1b7b28906a85fb3a09037655d0` (12:45am NZDT), the parent of
+  the first board-handling commit at 3:56am. Removed all later carry, pickup,
+  placement, kick-push, swap-smear and mount-load experiments. Earlier D
+  jump/roll, run, idle, ledge and live-tuning changes remain.
+- The only differences from that target are audit documentation. Prior commits
+  and this iteration log remain intact; technical checks from the rejected
+  experiments do not establish user acceptance. No new animation changes.
+- Exact source comparison, production build/type-check, release-size check
+  (803,516,367 bytes) and whitespace pass. Reused the restored revision's
+  native-regression evidence rather than rerunning unchanged suites. Lite
+  and full/native browser smoke exercise the original hold-to-skate gesture;
+  no console warnings/errors. Restored normal 720p/1× and hidden debug panels.
+- D is left in live play at local port 5189. Evidence: external `skate-rollback/`.
+  The validation slot was released. Nothing was integrated, pushed or published.
