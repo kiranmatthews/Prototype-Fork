@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CRATE_ART_KINDS, createCrateArt, setCrateArtState, updateCrateArt, pulseCrateArt, crateArtStats } from '../src/crateArt';
 import { CrateEffects } from '../src/crateEffects';
+import { puffs } from '../src/puffs';
 import { WorldSolids } from '../src/worldSolids';
 import { setLifePortraitStyle, lifePortraitStyle } from '../src/lifePortrait';
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0x15222d);
@@ -16,7 +17,7 @@ const rim = new THREE.DirectionalLight(0x8ac9ed, 2); rim.position.set(5, 4, -5);
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({ color: 0x1b2e3c, roughness: .85 })); ground.rotation.x = -Math.PI / 2; ground.position.y = -1.02; ground.receiveShadow = true; scene.add(ground); ground.updateMatrixWorld(true);
 const solids = new WorldSolids(); solids.add(ground);
 const world = { worldSolids: solids, groundMeshes: [ground], killY: -20 };
-const effects = new CrateEffects(); scene.add(effects.root);
+const effects = new CrateEffects(); scene.add(effects.root); puffs.attach(scene);
 const all = CRATE_ART_KINDS.map(kind => {
   const art = createCrateArt(kind, 2), holder = new THREE.Group(); holder.add(art.root); scene.add(holder);
   const label = document.createElement('div'); label.className = 'label'; label.textContent = kind; document.body.append(label);
@@ -40,7 +41,7 @@ for (const [i, name] of ['Whole family', ...CRATE_ART_KINDS].entries()) { const 
 function button(name: string, action: () => void) { const b = document.createElement('button'); b.textContent = name;
   b.onclick = () => { try { action(); } catch (error) { reviewError=String(error); console.error(error); } }; controls.append(b); }
 function reset() {
-  effects.clear(); checkpointPop = 0; fuse = undefined; frozen = false; time = 0;
+  effects.clear(); puffs.clear(); checkpointPop = 0; fuse = undefined; frozen = false; time = 0;
   debrisCheck = undefined; burstPool = undefined; emitMilliseconds = 0; reviewError = '';
   for (const { art } of all) { art.pulse = 0; setCrateArtState(art, {}); updateCrateArt(art, 0, 0); }
 }
@@ -62,6 +63,7 @@ function hit(explode = false) {
   const art = choose(); reset(); sixSides = false; art.root.visible = false;
   if (art.kind === 'checkpoint') { art.root.visible = true; checkpointPop = .12; return; }
   const started = performance.now();
+  if (art.kind === 'tnt' || art.kind === 'nitro') puffs.burst(art.kind === 'tnt' ? 'boomTnt' : 'boomNitro', 0, .2, 0, {});
   effects.emit(art.kind, new THREE.Vector3(), 2, -1, explode || art.kind === 'tnt' || art.kind === 'nitro', art.shell.material as THREE.MeshStandardMaterial);
   emitMilliseconds = performance.now() - started;
 }
@@ -77,6 +79,7 @@ function step(dt: number) {
     }
   }
   effects.update(dt, world);
+  puffs.update(dt, camera);
 }
 button('Reset', () => { reset(); layout(); });
 button('Three-quarter', () => { choose(); sixSides = false; frozen = false; ground.visible = true; key.castShadow = true; camera.up.set(0, 1, 0); camera.position.set(4.3, 2.8, 6.5); orbit.update(); });
@@ -89,6 +92,8 @@ button('Smash', () => hit());
 button('Fracture start', () => { hit(); frozen = true; });
 button('Impact frame', () => { hit(); step(.04); frozen = true; });
 button('Debris frame', () => { hit(); for (let i = 0; i < 18; i++) step(1 / 60); frozen = true; });
+for (const frames of [6, 12, 27]) button(`Burst ${frames / 60}s`, () => { hit(); for (let i = 0; i < frames; i++) step(1 / 60); frozen = true; });
+button('Blast framing', () => { choose(); sixSides = false; camera.position.set(6.5, 4.2, 10); orbit.update(); });
 button('Settled frame', () => { hit(); for (let i = 0; i < 96; i++) step(1 / 60); frozen = true; });
 button('Validate debris', () => {
   if (!assetsReady) return;
@@ -205,7 +210,7 @@ function draw(now: number) {
     }
     holder.rotation.copy(rotation); renderer.setScissorTest(false); renderer.setViewport(0,0,innerWidth,innerHeight);
   } else renderer.render(scene, camera);
-  status.textContent = JSON.stringify({ view: selected < 0 ? 'family' : all[selected].art.kind, head: lifePortraitStyle(), visibleFruit: selected >= 0 ? all[selected].art.contents?.count : undefined, assetsReady, recording, ...(reviewError ? {error:reviewError}:{}), resolution: native ? 'MAX/native' : '480p', ...(selected >= 0 ? crateArtStats(all[selected].art.kind) : {}), effects: effects.diagnostics, burstPool, ...(debrisCheck ? {debrisCheck}:{}), emitMilliseconds: +emitMilliseconds.toFixed(2), fuse: fuse === undefined ? null : +fuse.toFixed(2), paused: frozen }, null, 2);
+  status.textContent = JSON.stringify({ view: selected < 0 ? 'family' : all[selected].art.kind, head: lifePortraitStyle(), visibleFruit: selected >= 0 ? all[selected].art.contents?.count : undefined, assetsReady, recording, ...(reviewError ? {error:reviewError}:{}), resolution: native ? 'MAX/native' : '480p', ...(selected >= 0 ? crateArtStats(all[selected].art.kind) : {}), effects: effects.diagnostics, gouraudPuffs: puffs.liveCount, burstPool, ...(debrisCheck ? {debrisCheck}:{}), emitMilliseconds: +emitMilliseconds.toFixed(2), fuse: fuse === undefined ? null : +fuse.toFixed(2), paused: frozen }, null, 2);
   requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);

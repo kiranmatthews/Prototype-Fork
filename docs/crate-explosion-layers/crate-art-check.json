@@ -1,0 +1,106 @@
+{
+  "pass": true,
+  "allSixFaces": true,
+  "settled": 15,
+  "lifetimeAndPool": true,
+  "variants": [
+    {
+      "kind": "wood",
+      "triangles": 3960,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 3960
+    },
+    {
+      "kind": "empty",
+      "triangles": 3960,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 3960
+    },
+    {
+      "kind": "mystery",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true,
+      "totalTriangles": 3480
+    },
+    {
+      "kind": "life",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true,
+      "totalTriangles": 3480
+    },
+    {
+      "kind": "mask",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true,
+      "totalTriangles": 3480
+    },
+    {
+      "kind": "multihit",
+      "triangles": 26680,
+      "shellDraws": 2,
+      "shared": true,
+      "totalTriangles": 26680
+    },
+    {
+      "kind": "bouncy",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true,
+      "totalTriangles": 3480
+    },
+    {
+      "kind": "metalbounce",
+      "triangles": 10920,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 10920
+    },
+    {
+      "kind": "metal",
+      "triangles": 10920,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 10920
+    },
+    {
+      "kind": "tnt",
+      "triangles": 2580,
+      "shellDraws": 3,
+      "shared": true,
+      "totalTriangles": 2576
+    },
+    {
+      "kind": "nitro",
+      "triangles": 432,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 432
+    },
+    {
+      "kind": "bang",
+      "triangles": 10920,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 10920
+    },
+    {
+      "kind": "nitrobang",
+      "triangles": 10920,
+      "shellDraws": 1,
+      "shared": true,
+      "totalTriangles": 10920
+    },
+    {
+      "kind": "checkpoint",
+      "triangles": 3480,
+      "shellDraws": 2,
+      "shared": true,
+      "totalTriangles": 3480
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { prepareCrateSculpt, currentCrateSculpt, crateSculptMaterial, crateSculptGeometry } from './crateSculpt';
 import { isMetalCrate, metalCrateTemplate, currentMetalCrate, prepareMetalCrate } from './crateMetal';
-import { createCrateFuse, kickCrateFuse, updateCrateFuse, type CrateFuse } from './crateFuse';
+import { createCrateFuse, kickCrateFuse, updateCrateFuse, CRATE_FUSE_TRIANGLES, type CrateFuse } from './crateFuse';
 import { rooReady } from './roofont';
 import { LIFE_PORTRAITS, lifePortraitStyle, lifePortraitUrl, onLifePortraitChange, type LifePortraitStyle } from './lifePortrait';
 import { prepareCrateFracture } from './crateFracture';
@@ -437,7 +437,7 @@ export function crateArtPalette(kind: CrateArtKind): { paint: THREE.Color; dust:
 export function crateArtStats(kind: CrateArtKind): { triangles: number; shellDraws: number; shared: boolean } {
   if (kind === 'tnt' || kind === 'nitro') {
     const geometry = currentExplosiveTemplate()?.geometry ?? explosiveFallbackGeometry();
-    return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3 + (kind === 'tnt' ? 2002 : 0), shellDraws: kind === 'tnt' ? 3 : 1, shared: true };
+    return { triangles: (geometry.index?.count ?? geometry.getAttribute('position').count) / 3 + (kind === 'tnt' ? CRATE_FUSE_TRIANGLES : 0), shellDraws: kind === 'tnt' ? 3 : 1, shared: true };
   }
   const authored = isMetalCrate(kind) ? metalCrateTemplate() : kind === 'multihit' ? currentMultihitCrate() : currentCrateSculpt();
   const contentsTriangles = kind === 'multihit' ? MULTIHIT_FRUIT_TRIANGLES * 5 : 0;

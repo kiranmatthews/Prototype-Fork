@@ -57,7 +57,9 @@ export class CrateVfx {
     };
     material.customProgramCacheKey = () => 'painted-crate-vfx-v1';
     this.mesh = new THREE.InstancedMesh(geometry, material, CAPACITY);
-    this.mesh.count = 0; this.mesh.frustumCulled = false; this.mesh.renderOrder = 4;
+    // Legacy Gouraud puff batches use 10. Paint stays in front of that cloud;
+    // depth testing still lets solid world geometry occlude both treatments.
+    this.mesh.count = 0; this.mesh.frustumCulled = false; this.mesh.renderOrder = 11;
     this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.mesh.setColorAt(0, new THREE.Color(0xffffff)); this.root.add(this.mesh);
   }

@@ -5,7 +5,7 @@ import { CONST } from './tuning';
 export interface CrateFuse {
   root: THREE.Group;
   tip: THREE.Group;
-  sparks: THREE.LineSegments;
+  sparks: THREE.InstancedMesh;
   fraction: { value: number };
   lit: { value: number };
   clock: { value: number };
@@ -14,6 +14,13 @@ export interface CrateFuse {
 }
 let braidGeometry: THREE.BufferGeometry | undefined;
 let glowMap: THREE.CanvasTexture | undefined;
+const SPARK_COUNT = 18;
+// Braid, collar, ember, two glow cards and the eight-sided spark volumes.
+export const CRATE_FUSE_TRIANGLES = 1728 + 192 + 80 + 4 + SPARK_COUNT * 8;
+let sparkGeometry: THREE.OctahedronGeometry | undefined;
+const sparkHead = new THREE.Vector3(), sparkTail = new THREE.Vector3();
+const sparkAxis = new THREE.Vector3(), sparkUp = new THREE.Vector3(0, 1, 0);
+const sparkPose = new THREE.Object3D(), sparkColor = new THREE.Color();
 function point(t: number, target = new THREE.Vector3()): THREE.Vector3 {
   return target.set(.34 * t * t, .468 + .68 * t - .30 * t * t, .055 * Math.sin(t * Math.PI));
 }
@@ -71,11 +78,21 @@ export function createCrateFuse(): CrateFuse {
   const mesh = new THREE.Mesh(braid(), rope); root.add(mesh);
   const collar = new THREE.Mesh(new THREE.TorusGeometry(.047, .011, 6, 16), new THREE.MeshStandardMaterial({ color: 0x6b3e20, roughness: .8 }));
   collar.rotation.x = Math.PI / 2; collar.position.y = .465; root.add(collar);
-  const tip = new THREE.Group(), ember = new THREE.Mesh(new THREE.IcosahedronGeometry(.041, 1), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 1.1, .12), toneMapped: false }));
+  const tip = new THREE.Group(), ember = new THREE.Mesh(new THREE.IcosahedronGeometry(.072, 1), new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 1.65, .28), toneMapped: false }));
+  ember.name = 'White-hot fuse ember';
   const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow(), color: 0xffbe45, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false }));
-  halo.scale.setScalar(.24); tip.add(ember, halo); tip.visible = false; root.add(tip);
-  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(10 * 6), 3).setUsage(THREE.DynamicDrawUsage));
-  const sparks = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0xffd66a, transparent: true, opacity: .9, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending }));
+  halo.scale.setScalar(.52);
+  const corona = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow(), color: 0xfff4c4, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false }));
+  corona.scale.setScalar(.23);
+  tip.add(ember, halo, corona); tip.visible = false; root.add(tip);
+  // Tapered volumes retain a visible width from every side, including at 480p.
+  // Share their eight-triangle geometry; each fuse updates one instanced draw.
+  if (!sparkGeometry) { sparkGeometry = new THREE.OctahedronGeometry(1, 0); sparkGeometry.userData.shared = true; }
+  const sparks = new THREE.InstancedMesh(sparkGeometry, new THREE.MeshBasicMaterial({ transparent: true, opacity: .95, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending }), SPARK_COUNT);
+  sparks.name = 'TNT fuse spark spray'; sparks.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  sparkPose.position.setScalar(0); sparkPose.quaternion.identity(); sparkPose.scale.setScalar(0); sparkPose.updateMatrix();
+  for (let i = 0; i < SPARK_COUNT; i++) { sparks.setMatrixAt(i, sparkPose.matrix); sparks.setColorAt(i, sparkColor.setRGB(3, 1.6, .25)); }
+  sparks.instanceColor!.setUsage(THREE.DynamicDrawUsage);
   sparks.visible = false; sparks.frustumCulled = false; root.add(sparks);
   return { root, tip, sparks, fraction, lit, clock, bend, velocity: 0 };
 }
@@ -88,17 +105,25 @@ export function updateCrateFuse(fuse: CrateFuse, remaining: number | undefined, 
   fuse.velocity += (-fuse.bend.value * 64 - fuse.velocity * 7) * step;
   fuse.bend.value += fuse.velocity * step;
   if (!active) return;
-  point(fuse.fraction.value, fuse.tip.position); fuse.tip.scale.setScalar(.86 + Math.sin(time * 67) * .12);
+  point(fuse.fraction.value, fuse.tip.position); fuse.tip.scale.setScalar(1 + Math.sin(time * 67) * .09 + Math.sin(time * 109) * .04);
   const t = fuse.fraction.value, weight = t * t;
   fuse.tip.position.x += weight * (.018 * Math.sin(time * 2.2 - t * 2) + fuse.bend.value * .13 + fuse.lit.value * .004 * Math.sin(time * 29 - t * 5));
   fuse.tip.position.z += weight * .016 * Math.sin(time * 1.8 - t * 2.6);
-  const p = fuse.sparks.geometry.getAttribute('position'), tip = fuse.tip.position;
-  for (let i = 0; i < 10; i++) {
-    const age = (time * 4 + i * .1) % 1, a = i * 2.39996, speed = .10 + (i % 3) * .028;
-    const x = Math.cos(a) * speed, z = Math.sin(a) * speed, y = .14 + (i % 2) * .04;
-    const tail = Math.max(0, age - .13);
-    p.setXYZ(i * 2, tip.x + x * age, tip.y + y * age - .14 * age * age, tip.z + z * age);
-    p.setXYZ(i * 2 + 1, tip.x + x * tail, tip.y + y * tail - .14 * tail * tail, tip.z + z * tail);
+  const tip = fuse.tip.position;
+  for (let i = 0; i < SPARK_COUNT; i++) {
+    const age = (time * 2.6 + i / SPARK_COUNT) % 1, a = i * 2.39996;
+    const speed = .24 + (i % 4) * .05, x = Math.cos(a) * speed, z = Math.sin(a) * speed, y = .32 + (i % 3) * .09;
+    const tail = Math.max(0, age - .22);
+    sparkHead.set(tip.x + x * age, tip.y + y * age - .34 * age * age, tip.z + z * age);
+    sparkTail.set(tip.x + x * tail, tip.y + y * tail - .34 * tail * tail, tip.z + z * tail);
+    sparkAxis.subVectors(sparkHead, sparkTail);
+    const length = sparkAxis.length(), fade = 1 - age * age;
+    sparkPose.position.copy(sparkHead).add(sparkTail).multiplyScalar(.5);
+    sparkPose.quaternion.setFromUnitVectors(sparkUp, length > 1e-6 ? sparkAxis.divideScalar(length) : sparkUp);
+    const width = (.012 + (i % 3) * .003) * fade;
+    sparkPose.scale.set(width, Math.max(.003, length * .5), width); sparkPose.updateMatrix();
+    fuse.sparks.setMatrixAt(i, sparkPose.matrix);
+    fuse.sparks.setColorAt(i, sparkColor.setRGB(3 * fade, (1.7 - age) * fade, .22 * fade));
   }
-  p.needsUpdate = true;
+  fuse.sparks.instanceMatrix.needsUpdate = true; fuse.sparks.instanceColor!.needsUpdate = true;
 }

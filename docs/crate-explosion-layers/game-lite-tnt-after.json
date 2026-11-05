@@ -1,0 +1,56 @@
+{
+  "kind": "tnt",
+  "alive": false,
+  "marks": "blank",
+  "head": "skull",
+  "collider": [
+    1.1519999999999997,
+    1.1520000000000001,
+    1.152000000000001
+  ],
+  "position": [
+    -3.93,
+    0.85,
+    51.5
+  ],
+  "player": "ride",
+  "cratesBroken": 1,
+  "deaths": 0,
+  "checkpoint": false,
+  "checkpointVisible": true,
+  "outline": true,
+  "usedSwitch": false,
+  "effects": {
+    "shards": 0,
+    "bursts": 0,
+    "drawCalls": 0,
+    "limit": 232
+  },
+  "gouraudPuffs": 0,
+  "resolution": 480,
+  "crt": true,
+  "canvas": [
+    1280,
+    720
+  ],
+  "frozen": true,
+  "loading": {
+    "phase": null,
+    "animation": {
+      "active": false,
+      "resident": false,
+      "owner": "loading-worker",
+      "starts": 1,
+      "stops": 1,
+      "failure": null,
+      "frames": 1238,
+      "maxFrameMs": 133.39999999999964,
+      "width": 1280,
+      "height": 720,
+      "title": null
+    },
+    "pending": [],
+    "failed": [],
+    "revision": 514
+  }
+}

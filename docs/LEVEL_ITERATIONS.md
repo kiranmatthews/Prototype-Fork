@@ -9359,3 +9359,21 @@ consoles and no failed assets. Evidence: `docs/multihit-bulging-fruit/`.
 The user retired the release coordinator and assigned publication to this task.
 This follow-up uses its own isolated worktree and publishes directly after
 validation. No held animation work or unrelated dirty changes are included.
+
+## 2026-11-05 — Larger TNT fuse sparks and layered legacy explosions
+
+Enlarged the burning TNT ember and glow, and replaced thin lines with 18
+animated tapered 3D sparks in one instanced draw. The complete loaded TNT
+remains 25,390 triangles (+146); Nitro remains 23,242 with no fuse. Restored
+the original Gouraud TNT and Nitro recipes behind the newer painted blasts,
+with original strength, timing and smoke children. Damage and rewards remain
+single-event; spark buffers and both particle layers have finite cleanup.
+
+Playable validation finished around 03:13 UTC / 16:13 NZDT, approximately
+17 minutes after this follow-up began at 02:56 UTC. Focused explosive, crate
+art and Nitro-switch tests pass. Native studio and actual Player/Level lite/full
+checks cover burn-down, both explosions, reset and quiet checkpoint activation.
+Full render at 2560×1440 and normal 480p/CRT have no game-console warnings,
+errors or failed assets. Complete motion and frame evidence:
+`docs/crate-explosion-layers/`. This chat publishes directly under the user's
+retirement of release coordination; unrelated and held work is excluded.

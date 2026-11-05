@@ -1,0 +1,2 @@
+PASS crafted explosives: cube bounds, independent 3-second fuses and volumetric sparks, pause/reset, TNT/Nitro Gouraud + painted layers, draw order, one damage event per crate, legacy-only fallback, finite cleanup, outline safety and countdown/idle pulses.
+Validated systemic end Nitro switch placement, tally/reset semantics, Level ownership, and capture exclusion.

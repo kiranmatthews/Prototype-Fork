@@ -9059,6 +9059,7 @@ export class Level {
     this.campaignWorldMap = null;
     this.tropicalPlants?.dispose();
     this.tropicalPlants = null;
+    for (const crate of this.crates) crate.art?.fuseFX?.sparks.dispose();
     this.crateEffects.dispose();
     this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
     for (const enemy of this.enemies) enemy.visual.dispose();
@@ -11235,7 +11236,8 @@ export class Level {
     // Strength 1 on purpose: the studio previews at 1, so the numbers that
     // were dialled by eye are the numbers that play. Anything above it would
     // quietly inflate the throw and the count past what was approved.
-    if (!c.art) puffs.burst(c.tnt || c.concealed ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
+    // Keep the original Gouraud fire/smoke behind the newer painted burst.
+    puffs.burst(c.tnt || c.concealed ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
     if (c.art) this.crateEffects.emit(c.art.kind, center, c.art.size, c.mesh.userData.groundBaseY ?? c.box.min.y, true, c.art.shell.material as THREE.MeshStandardMaterial);
     // It counts. The player drains this list every step and tallies it the
     // same way it tallies blast debris (crateReward pays nothing for an

@@ -1,5 +1,6 @@
 // Session-only test controls. No level pack or browser saves are written.
 import * as THREE from 'three';
+import { puffs } from '../src/puffs';
 const g: any = await new Promise(resolve => { const ready = () => { const game = (window as any).__game; if (game) resolve(game); else requestAnimationFrame(ready); }; ready(); });
 const startup = document.createElement('pre');
 startup.style.cssText = 'position:fixed;z-index:2147483647;bottom:0;left:10px;color:white;background:#102430;padding:8px';
@@ -75,7 +76,7 @@ function report() {
   status.textContent = JSON.stringify({ kind: select.selectedOptions[0].textContent, alive: c.alive ?? !c.active, hits: c.hitsRemaining,
     marks: c.art?.labelKey, visibleFruit: c.art?.contents?.count, head: g.getCharacterHeadStyle(), collider: c.box.getSize(new THREE.Vector3()).toArray(), position: player.pos.toArray().map((n: number) => +n.toFixed(2)),
     player: player.state, cratesBroken: player.cratesBroken, deaths: player.totalDeaths, checkpoint: checkpoint.active, checkpointVisible: checkpoint.mesh.visible,
-    outline: outline.pending, usedSwitch: crates[10].bangUsed, effects: level.crateEffects.diagnostics, fuse: crates[6].fuse,
+    outline: outline.pending, usedSwitch: crates[10].bangUsed, effects: level.crateEffects.diagnostics, gouraudPuffs: puffs.liveCount, fuse: crates[6].fuse,
     resolution: g.renderQualitySettings.regularResolution, crt: g.crtGuestSettings.enabled,
     canvas: [g.renderer.domElement.width, g.renderer.domElement.height], frozen,
     loading: g.getLoadingDiagnostics() }, null, 2);
