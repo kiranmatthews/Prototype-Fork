@@ -9810,3 +9810,22 @@ and narrow icon slots. Browser review covers inventory transitions, light/dark
 backdrops, production Bonus and MAX/native rendering with CRT at 1920 × 1080;
 game console logs are clean. Evidence and the local comparison page are in
 `docs/illustrated-crate-hud/`.
+
+## 2026-11-06 — Raise and enlarge the Beach Street kite, with roof clearance
+
+Moved the kite above the roof line, reduced its banking/lateral sweep and kept
+its centre over the open street. Enlarged the complete canopy 3× after the
+user's follow-up so the more distant kite reads close to its previous size.
+The presentation now anticipates scenery using the existing spatial index,
+raises the low wingtip above roof bounds and delays descent until shortening
+the tether can no longer pull it back through a roof. Strings may still cross
+scenery. Player physics, input, camera settings and authored geometry remain.
+
+Approximately 31 minutes prompt-to-reviewed playable, including the size
+follow-up; release verification followed. Build/release-size and focused
+clearance, world-solid, kite-art, grip/Indy and tow-motion checks pass. Across
+4,515 source-course envelope samples, overlap cases fall from 1,683 to zero;
+40 full-canopy framing cases and a 900-frame roof traverse also pass. Browser
+review covers full MAX/native rendering, held roof/jump poses and normal
+production start/jump input with a clean production console. Evidence and
+the limits of the envelope measurement are in `docs/kite-clearance/`.

@@ -175,6 +175,21 @@ export class WorldSolids {
     for(let x=x0;x<=x1;x++)for(let z=z0;z<=z1;z++)for(const surface of this.cells.get(`${x}:${z}`)??[])add(surface);
     for(const surface of this.large)add(surface);for(const surface of this.moving)add(surface);
   }
+  /** Read-only broad-phase bounds for presentation clearance. Reuse the native
+   * scenery index without adding colliders or touching the player solver. */
+  collectBoxSurfaces(box:THREE.Box3,result:Set<SolidSurface>):void{
+    result.clear();
+    if(!this.enabled)return;
+    const add=(surface:SolidSurface)=>{
+      if(surface.active?.()===false)return;
+      if(box.intersectsBox(surface.bounds))result.add(surface);
+    };
+    const s=this.size,x0=Math.floor(box.min.x/s),x1=Math.floor(box.max.x/s),z0=Math.floor(box.min.z/s),z1=Math.floor(box.max.z/s);
+    if((x1-x0+1)*(z1-z0+1)>4096){for(const surface of this.surfaces)if(!surface.dynamic)add(surface);}
+    else for(let x=x0;x<=x1;x++)for(let z=z0;z<=z1;z++)for(const surface of this.cells.get(`${x}:${z}`)??[])add(surface);
+    for(const surface of this.large)add(surface);
+    for(const surface of this.moving){this.readMatrix(surface);add(surface);}
+  }
   private closest():number{
     this.tri.getPlane(this.plane);
     const crossing=this.plane.intersectLine(this.segment,this.axisPoint);

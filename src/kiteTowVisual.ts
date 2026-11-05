@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { solveTwoBoneIk } from './animation/ik';
 import { KITE_ATTACHMENT_SITES, kiteCanopyPoint, loadKiteArt } from './kiteArt';
+import { KiteFlight, KITE_FLIGHT } from './kiteFlight';
+import type { WorldSolids } from './worldSolids';
 
 type Arm = {root: THREE.Object3D; mid: THREE.Object3D; end: THREE.Object3D; grip?: THREE.Object3D};
 const UP = new THREE.Vector3(0, 1, 0);
@@ -28,16 +30,18 @@ export class KiteTowVisual {
   private readonly headBounds = new THREE.Box3();
   flyingAway = false;
   deathAge = 0;
+  readonly flight = new KiteFlight();
 
   /** Destination loading waits for both parts before revealing Beach Street. */
   prepare(): Promise<void> {
     return this.loading ??= loadKiteArt().then(({canopy, bar}) => {
+      this.flight.canopyBounds.setFromObject(canopy);
       this.sail.add(canopy); this.bar.add(bar);
       this.root.userData.kiteArtReady = true;
     }).catch(error => {this.loading = undefined; throw error;});
   }
 
-  reset(): void { this.flyingAway = false; this.deathAge = 0; this.root.visible = false; this.hangingHand = null; }
+  reset(): void { this.flyingAway = false; this.deathAge = 0; this.root.visible = false; this.hangingHand = null; this.flight.reset(); }
   beginFlyaway(): void { this.flyingAway = true; this.deathAge = 0; this.root.visible = true; }
   stepFlyaway(dt:number): void {
     if (!this.flyingAway) return;
@@ -52,6 +56,7 @@ export class KiteTowVisual {
 
   constructor() {
     this.root.name = 'Beach Street towing kite';
+    this.sail.scale.setScalar(KITE_FLIGHT.canopyScale);
     this.root.add(this.sail, this.bar);
     const rope = new THREE.MeshStandardMaterial({color: '#bda47b', roughness: .98});
     const webbing = new THREE.MeshStandardMaterial({color: '#66503a', roughness: .97});
@@ -127,14 +132,12 @@ export class KiteTowVisual {
     this.root.visible = false;
   }
 
-  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null, aspect = 1.6, hang = 0, barHand = 0, head?: THREE.Object3D): void {
+  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null, aspect = 1.6, hang = 0, barHand = 0, head?: THREE.Object3D, dt = 1/60, solids?: WorldSolids): void {
     this.root.position.copy(pos);
     this.root.rotation.set(0, 0, 0);
-    // The foil flies above and well ahead of the rider. Keep it at its wind
-    // height through a jump, with extra line length in narrow views.
-    const setback = 28 * Math.max(1, 1.6 / Math.max(.35, aspect));
-    this.sail.position.set(1.2 + steer * .65 + wind * 4.8 + Math.sin(time * 1.4) * .15, 8.5 - lift * .75 + Math.sin(time*1.8)*.12, -setback);
-    this.sail.rotation.set(.38 + wind * .06, -.08 * steer, -.10 * steer - wind * .40);
+    this.flight.step(pos,time,steer,lift,wind,aspect,dt,solids);
+    this.sail.position.copy(this.flight.position);
+    this.sail.rotation.copy(this.flight.rotation);
     // Shoulder-relative bar placement works for the editable character's size.
     const arms = [left, right];
     this.bar.position.set(0, 1.3, -.55);

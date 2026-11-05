@@ -20394,7 +20394,7 @@ export class Player {
         this.grounded ? 0 : Math.max(0, this.pos.y - this.lastGroundY), this.kiteMotion.wind,
         this.armL && this.elbowL && this.wristL ? {root: this.armL, mid: this.elbowL, end: this.wristL, grip: this.gloveRight?.gripSocket} : null,
         this.armR && this.elbowR && this.wristR ? {root: this.armR, mid: this.elbowR, end: this.wristR, grip: this.gloveLeft?.gripSocket} : null,
-        this.cam?.aspect ?? 1.6, this.kiteGrab.hang, this.stance>0?0:1, this.headM??undefined);
+        this.cam?.aspect ?? 1.6, this.kiteGrab.hang, this.stance>0?0:1, this.headM??undefined, dt, this.runLevel?.worldSolids);
       // Aim the actual eye socket down the course after all torso/neck layers.
       // Transform into the neck parent's coordinates so stretched segments
       // cannot bend the gaze sideways. Hands and deck contacts remain owned.

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Kite clearance review</title>
+<style>
+html,body{margin:0;background:#15211d;color:#f4eddb;font:12px system-ui}header{display:flex;align-items:center;gap:10px;padding:8px;flex-wrap:wrap}button,input,select{font:inherit}input{width:55px}iframe{display:block;width:100vw;height:calc(100vh - 104px);border:0}pre{margin:0;padding:6px;white-space:pre-wrap;font:11px monospace}a{color:inherit}
+</style>
+<header><b>Kite clearance · local review fixture</b>
+<select aria-label="Scene"><option value="opening">Opening</option><option value="shop">Shop roofs / left gust</option><option value="rise">Cliff rise / left gust</option><option value="jump">High jump</option><option value="festival">Festival hill</option></select>
+<button id="place">Place</button><label>Wind <input id="wind" type="number" min="-1" max="1" step=".1" value="0"></label>
+<label><input id="legacy" type="checkbox">Previous placement</label><label><input id="max" type="checkbox">MAX resolution</label>
+<button id="live">Resume gameplay</button><a href="?full">Full render</a><span id="state">Loading…</span></header>
+<iframe id="game" title="Beach Street"></iframe><pre id="report"></pre>
+<script type="module">
+const frame=document.querySelector('#game'),state=document.querySelector('#state'),report=document.querySelector('#report');
+frame.src='../?playtest&level=coastal-street-run'+(location.search.includes('full')?'':'&lite');
+let g,p,held=true,fixture={x:0,y:12,z:0,lift:0,wind:0},oldStep;
+const presets={opening:{x:0,y:12,z:0,lift:0,wind:0},shop:{x:-6,y:12,z:-32,lift:0,wind:-.45},rise:{x:-6,y:5,z:-1030,lift:0,wind:-.45},jump:{x:-3,y:4,z:-414,lift:7,wind:.45},festival:{x:-6,y:3.5,z:-1975,lift:0,wind:-.45}};
+const place=()=>{fixture={...presets[document.querySelector('select').value]};held=true;document.querySelector('#wind').value=fixture.wind;p.respawn(g.getLevel(),true,false,{position:p.pos.clone().set(fixture.x,fixture.y+fixture.lift+.12,fixture.z)});p.snapRenderInterpolation();state.textContent='Held pose';};
+try{
+ await new Promise((resolve,reject)=>{const start=Date.now(),timer=setInterval(()=>{g=frame.contentWindow?.__game;if(g&&!g.gameFlow.blocksGameplay){clearInterval(timer);resolve();}else if(Date.now()-start>180000){clearInterval(timer);reject(Error('Game did not load'));}},100);});
+ p=g.player;oldStep=p.step;place();
+ const flight=p.kiteVisual.flight,flightStep=flight.step,canopyScale=p.kiteVisual.sail.scale.x;
+ flight.step=function(pos,time,steer,lift,wind,aspect,dt,solids){
+  p.kiteVisual.sail.scale.setScalar(document.querySelector('#legacy').checked?1:canopyScale);
+  if(!document.querySelector('#legacy').checked)return flightStep.call(this,pos,time,steer,lift,wind,aspect,dt,solids);
+  this.position.set(1.2+steer*.65+wind*4.8+Math.sin(time*1.4)*.15,8.5-lift*.75+Math.sin(time*1.8)*.12,-28*Math.max(1,1.6/Math.max(.35,aspect)));
+  this.rotation.set(.38+wind*.06,-.08*steer,-.10*steer-wind*.40);
+ };
+ p.step=function(dt,input,level){
+  if(!held)return oldStep.call(this,dt,input,level);
+  this.runLevel=level;this.pos.set(fixture.x,fixture.y+fixture.lift+.12,fixture.z);this.group.position.copy(this.pos);
+  this.state=fixture.lift?'air':'ride';this.grounded=!fixture.lift;this.lastGroundY=fixture.y;this.vVel=0;
+  this.freeSkate=this.skateOn=true;this.airFromSkate=!!fixture.lift;
+  this.kiteMotion.age+=dt;this.kiteMotion.wind=Number(document.querySelector('#wind').value);this.kiteMotion.lateral=0;
+  this.prepareStartPresentation(level,dt);this.refreshCharacterBounds();
+ };
+ document.querySelector('#place').onclick=place;
+ document.querySelector('#live').onclick=()=>{held=false;p.step=oldStep;flight.step=flightStep;state.textContent='Live gameplay';frame.contentWindow.focus();};
+ document.querySelector('#max').onchange=e=>g.renderQualitySettings.setRegularResolution(e.target.checked?null:360);
+ setInterval(()=>{
+  const k=p.kiteVisual,f=k?.flight;if(!k)return;
+  const ext={minX:Infinity,maxX:-Infinity,minY:Infinity,maxY:-Infinity},v=p.pos.clone();let vertices=0;
+  k.sail.updateWorldMatrix(true,true);k.sail.traverse(o=>{const a=o.geometry?.attributes.position;if(!a)return;for(let i=0;i<a.count;i++){v.fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld).project(g.camera);ext.minX=Math.min(ext.minX,v.x);ext.maxX=Math.max(ext.maxX,v.x);ext.minY=Math.min(ext.minY,v.y);ext.maxY=Math.max(ext.maxY,v.y);vertices++;}});
+  const b=f.canopyBounds.clone().applyMatrix4(k.sail.matrixWorld),candidates=new Set();g.getLevel().worldSolids.collectBoxSurfaces(b,candidates);
+  const intersections=[...candidates].filter(s=>!s.mesh.userData.editorGhost&&!(s.owner?.invisible)&&(Array.isArray(s.mesh.material)?s.mesh.material:[s.mesh.material]).some(m=>m.visible)).map(s=>s.name||s.mesh.name);
+  report.textContent=JSON.stringify({held,position:p.pos.toArray(),kite:k.sail.position.toArray(),wind:p.kiteMotion.wind,screen:ext,vertices,intersections,camera:{position:g.camera.position.toArray(),fov:g.camera.fov,aspect:g.camera.aspect},resolution:[g.renderer.domElement.width,g.renderer.domElement.height],stamp:frame.contentDocument.querySelector('.hud-build')?.textContent});
+ },500);
+}catch(e){state.textContent='Review failed';report.textContent=String(e.stack||e);}
+</script></html>
