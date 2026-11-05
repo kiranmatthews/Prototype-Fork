@@ -111,7 +111,7 @@ import {
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
 import { RUN_MOVE_INTENT_INPUT } from './animation/runStop';
 import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION, DEFAULT_SKATE_STANCE } from './skateMount';
-import { SkateTravelMotion, SKATE_TRAVEL, sampleSkateTravelMount } from './skateTravelMotion';
+import { SkateTravelMotion, SKATE_TRAVEL, travelEase } from './skateTravelMotion';
 import { TreehouseStairInput } from './treehouseStairGuide';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import {
@@ -954,7 +954,7 @@ export class Player {
   private deckPose = 0; // 0..1: the deck is under the feet; articulated knees + sole planting own the stance
   private skateMountT = -1; // one-shot presentation when on-foot movement becomes skating
   private readonly skateTravelMotion = new SkateTravelMotion();
-  private skateHandoffSmear = false;
+  private skateTravelFacing = 0;
   private skateTravelRotations: Array<{node:THREE.Object3D;rotation:THREE.Quaternion}> = [];
   private competitionFinishT = -1;
   private readonly competitionFinishFrom = new THREE.Vector3();
@@ -4143,7 +4143,6 @@ export class Player {
     this.deckPose = 0;
     this.skateMountT = -1;
     this.skateTravelMotion.reset();
-    this.skateHandoffSmear=false;
     this.wallChargePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
@@ -18851,12 +18850,10 @@ export class Player {
       holdProgress:this.skateCharge/Math.max(.001,TUNING.skateHoldTime),charging:this.charging,
       charge:this.charging?Math.min(1,this.chargeTimer/Math.max(.001,TUNING.jumpChargeTime)):0,
       braking:input.grabHeld||this.brakeT>.05,
-      heading:Math.atan2(this.axisF.x,this.axisF.z),time:this.runTime,
+      heading:Math.atan2(this.axisF.x,this.axisF.z),time:this.runTime,stance:this.stance,
     });
-    const visualStance=this.stance;
-    const mountPose = skateTravel?.phase==='mount' && skateTravel.weight && dismountT<0
-      ? sampleSkateTravelMount(this.skateMountT)
-      : sampleSkateMount(dismountT >= 0
+    const visualStance=skateTravel?.exiting?skateTravel.footForward:this.stance;
+    const mountPose = sampleSkateMount(skateTravel ? -1 : dismountT >= 0
         ? dismountT / SKATE_DISMOUNT_DURATION * SKATE_MOUNT_DURATION : this.skateMountT);
     const characterShape = characterProportionSettings.value;
     this.upperLegLengthR = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
@@ -19060,6 +19057,15 @@ export class Player {
     // switch faces the other (that's the whole difference — the board and
     // travel don't care). sidePose blends it in; the board counter-rotates
     // below so the deck stays along the line of travel.
+    let travelYaw=this.visualYaw;
+    if(skateTravel?.transfer){
+      const duration=skateTravel.exiting?SKATE_TRAVEL.dismount:SKATE_TRAVEL.mount;
+      const follow=1-Math.exp(-16*dt);
+      const settle=travelEase((skateTravel.age-duration+.18)/.18);
+      this.skateTravelFacing+=wrapAngle(this.visualYaw-this.skateTravelFacing)*(follow+(1-follow)*settle);
+      travelYaw=this.skateTravelFacing;
+      this.sidePose=skateTravel.stanceBlend;
+    }else this.skateTravelFacing=this.visualYaw;
     const sideYaw = visualStance * (Math.PI / 2) * this.sidePose;
     this.lipYawPose += ((this.lipStallT > 0 ? LIP_CONTACTS[this.lipStyle].yaw : 0) - this.lipYawPose) * (1 - Math.exp(-22 * dt));
     const appliedGrindYaw = this.grindYawPose + this.lipYawPose;
@@ -19073,7 +19079,7 @@ export class Player {
     const boardRoutedSpin =
       this.spinning && this.state === 'air' && this.flipT > 0;
     this.bodyGroup.rotation.y = this.state === 'hang' ? this.visualYaw :
-      this.visualYaw +
+      travelYaw +
       (boardRoutedSpin ? 0 : this.spinAngle) +
       this.grabSpinAngle + (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0) +
       appliedGrindYaw +
@@ -19201,7 +19207,7 @@ export class Player {
       this.slideTimer <= 0 &&
       !this.crawling &&
       this.freeSkate;
-    this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
+    this.skatePose += ((skateTravel?.transfer ? skateTravel.stanceBlend : onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
     // Standing on-foot charge (jump crouch at a standstill): the running-charge
     // knee fold below swings the shoes forward through the floor and the crouch
@@ -19232,7 +19238,7 @@ export class Player {
       onBoard ||
       this.state === 'grind' ||
       (this.state === 'air' && this.airFromSkate && !this.slamActive);
-    this.sidePose += ((sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
+    this.sidePose += ((skateTravel?.transfer ? skateTravel.stanceBlend : sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
     // Deck-stand: any time the board is glued under the feet — rolling, plain
     // skate airs, every grind (boardslides included) — conventional knee flex
     // and the measured sole solver keep the feet on the grip.
@@ -19885,11 +19891,10 @@ export class Player {
     // its own low ring instance; board air, grinds, grabs and wallrides remain
     // halo-free. Gameplay timing, reach, scoring and audio stay in updateSpin.
     if (this.spinEffects) {
-      const handoff=skateTravel?.smear===true;
       const active =
-        (this.spinning||handoff) && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
+        this.spinning && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
       const bodyVisible = this.bodyGroup.visible;
-      const boardAttached = !handoff&&(this.boardG?.visible ?? false);
+      const boardAttached = this.boardG?.visible ?? false;
       const groundedSkate = groundedSkateSpinEligible({
         active,
         movementState: this.state,
@@ -19906,10 +19911,9 @@ export class Player {
         groundedSkate,
         bodyVisible,
         preserveRider: this.state === 'hang',
-        characterBounds: handoff?undefined:this.spinStanceBounds,
-        reset: this.bailing || this.state === 'dead' || this.state === 'gameover' || handoff!==this.skateHandoffSmear,
+        characterBounds: this.spinStanceBounds,
+        reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
       });
-      this.skateHandoffSmear=handoff;
       if (this.spinEffects.sculptureVisible) this.bodyGroup.visible = false;
     }
     // Perfect-grind bloom: pink, body-enveloping, fading out over the last
@@ -20413,6 +20417,9 @@ export class Player {
       for(const node of [this.spineG,this.headM,this.armR,this.armL,this.elbowR,this.elbowL,this.wristR,this.wristL])
         if(node)this.skateTravelRotations.push({node,rotation:node.quaternion.clone()});
       if(Object.keys(skateTravel.deformations).length)this.playerAnimationBridge.modulateDeformations(skateTravel.deformations);
+      const travelHand=skateTravel.handForward>0?this.gloveRight:this.gloveLeft;
+      if(travelHand&&skateTravel.grip>0)setCartoonGlovePose(travelHand,
+        blendCartoonGlovePose(CARTOON_GLOVE_POSES.relaxed,CARTOON_GLOVE_POSES.grab,skateTravel.grip));
       if(this.spineG){
         this.spineG.rotation.x+=.44*skateTravel.preparation;
         this.spineG.rotation.z+=visualStance*skateTravel.chestPitch;
@@ -20423,15 +20430,19 @@ export class Player {
         // Grounded travel has low, bent balance arms. The on-foot jump's
         // high charge wind-up used to leave one hand waving beside the head.
         if(skateTravel.weight){
+          const rideBlend=skateTravel.transfer&&!skateTravel.exiting?travelEase(skateTravel.age/.22):1;
           if(arm){
-            arm.rotation.x=-.12-.22*this.chargePose-.60*skateTravel.extension+.20*skateTravel.settle+skateTravel.steer*.12;
-            arm.rotation.z=side*(.42+.08*this.chargePose)+skateTravel.steer*.10;
+            arm.rotation.x=THREE.MathUtils.lerp(.36,-.12-.22*this.chargePose-.60*skateTravel.extension+.20*skateTravel.settle,rideBlend)+skateTravel.steer*.12;
+            arm.rotation.z=side*THREE.MathUtils.lerp(.32,.42+.08*this.chargePose,rideBlend)+skateTravel.steer*.10;
           }
-          if(elbow)elbow.rotation.x=-.42-.16*this.chargePose-.18*skateTravel.extension;
+          if(elbow)elbow.rotation.x=THREE.MathUtils.lerp(-.75,-.42-.16*this.chargePose-.18*skateTravel.extension,rideBlend);
           if(wrist)wrist.rotation.x=side*.12*skateTravel.bounce;
         }else{
-          if(arm){arm.rotation.x+=.70*skateTravel.preparation;arm.rotation.z+=side*.10*skateTravel.preparation;}
-          if(elbow)elbow.rotation.x-=.42*skateTravel.preparation;
+          if(arm){
+            arm.rotation.x=THREE.MathUtils.lerp(arm.rotation.x,.36,skateTravel.preparation);
+            arm.rotation.z=THREE.MathUtils.lerp(arm.rotation.z,side*.32,skateTravel.preparation);
+          }
+          if(elbow)elbow.rotation.x=THREE.MathUtils.lerp(elbow.rotation.x,-.75,skateTravel.preparation);
         }
       }
     }
@@ -20519,6 +20530,8 @@ export class Player {
       // in front of both shoulders instead of across a side-on torso.
       if (this.upperG) this.upperG.rotation.y = -(this.bodyGroup.rotation.y - this.visualYaw);
     }
+    if(skateTravel?.exiting)this.seatOnFoot();
+    if(skateTravel?.transfer)this.skateAnimation?.captureTravelPose();
     this.plantOnDeck(underW, this.skateMountT >= 0);
     let skateContactOwned = false;
     if (this.boardG && this.riderG) {
@@ -20537,12 +20550,12 @@ export class Player {
       this.skateAnimation ??= new SkateAnimation(this.group, this.bodyGroup, this.riderG, this.boardG);
       skateContactOwned = this.skateAnimation.apply({
         dt, time: this.runTime,
-        active: this.boardG.visible && !this.isBailing && !this.slamActive && this.starPose < .01 &&
+        active: (this.boardG.visible || !!skateTravel?.transfer) && !this.isBailing && !this.slamActive && this.starPose < .01 &&
           this.slidePose < .001 && this.ledgePose < .001 &&
           this.competitionFinishT < 0 && !this.resultsPose && this.worldMapBaseScale === null &&
           (this.state === 'ride' || this.state === 'air' || this.state === 'grind'),
         grounded: this.grounded, stance: visualStance,
-        yaw: this.visualYaw + (boardRoutedSpin ? 0 : this.spinAngle) + this.grabSpinAngle + revertYaw +
+        yaw: travelYaw + (boardRoutedSpin ? 0 : this.spinAngle) + this.grabSpinAngle + revertYaw +
           (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0),
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
         verticalVelocity: this.vVel, launchVelocity: this.launchVy,
@@ -20581,8 +20594,12 @@ export class Player {
     if(this.specialFlip&&this.flipT>0)this.applyBackflipPose(1-this.flipT/this.flipDuration);
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
-    this.seatOnFoot();
-    this.skateAnimation?.applyMountLoad(skateTravel?.preparation??0,this.rideNormal);
+    if(!skateTravel?.transfer)this.seatOnFoot();
+    this.skateAnimation?.applyMountLoad(skateTravel?.transfer?0:skateTravel?.preparation??0,this.rideNormal);
+    if(skateTravel)this.skateAnimation?.applyTravel(skateTravel,{
+      mounted:this.freeSkate||this.state==='grind',grounded:this.grounded,
+      yaw:travelYaw,stance:visualStance,normal:this.rideNormal,
+    });
     if(this.boardG){
       if(skateTravel)this.boardG.userData.skateTravel={...skateTravel,deformations:undefined,boardVisible:this.boardG.visible};
       else delete this.boardG.userData.skateTravel;

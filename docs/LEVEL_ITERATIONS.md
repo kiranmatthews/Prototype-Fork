@@ -8826,3 +8826,31 @@ Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
   remain removed. Nothing was integrated, pushed or published.
 
 Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+## D — visible mount and dismount, without the spin cover (local)
+
+- 5 November 2026 NZDT, approximately 47 minutes prompt-to-validated playable
+  (15:52–16:39 NZDT). This supersedes the earlier spin-covered swaps. D only;
+  A/B/C, live UI tuning and hold-to-skate/release-to-jump remain unchanged.
+- Removed the equipment-triggered spin route. A short hand draw leads into a
+  deep supported load. Placement drops beside the shoes before the board
+  moves under a 0.30 m hop; staggered feet catch and settle in 0.64 s. Dismount
+  steps aside, tips the deck with the trailing shoe, catches it and stows it
+  in 0.86 s. No persistent back carry or kick-push. Reversal preserves the
+  displayed hand/deck pose; actual ollies and tricks interrupt immediately.
+- Independent editable segment compression/rebound and the 0.32 s cancellable
+  unwind remain. Lifted stride feet gather within measured reach. Native turn
+  changes ease through the equipment transition; physics never reads the pose.
+- Final checks pass: 8,480 exact paired travel frames, 1,344 paired D ollie
+  frames, 11,246 D contact poses, production build/type-check, release size
+  (803,535,769 bytes) and whitespace. Transfer soles stay within 3.05 mm;
+  full grips within 1 mm. No level changes or unrelated/full-suite audits.
+- Lite and full-render normal/native review covers load, placement, hop,
+  catch, both stances, step-off, pickup, stow and cancellation. Fourteen native
+  unwind frames have sole errors below 1.72 mm; final stow hides the deck.
+  No console warnings/errors. Restored 720p/1×, hidden debug panels, and D live
+  play at local port 5189. Evidence is external `skate-contact-mount/`.
+- This is ready for local user review, not user acceptance. Nothing is
+  integrated, pushed or published; the publication hold remains explicit.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).

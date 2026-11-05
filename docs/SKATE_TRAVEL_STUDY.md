@@ -1,83 +1,77 @@
-# D board travel study
+# D board mount and dismount study
 
-Local A/B/C/D exploration; do not integrate or publish this branch. D owns the
-new skate presentation. A/B/C, live UI tuning, hold-to-skate/release-to-jump
-controls and the physical movement model retain their existing behavior.
+Local A/B/C/D exploration. Do not integrate, push or publish. The user's latest
+request replaces the spin-covered swaps with better mount/dismount animation,
+without a persistent board on the back. A/B/C, live UI tuning and the native
+hold-to-skate/release-to-jump gesture remain authoritative.
 
-## Corrective direction — 5 November 2026
+## Current direction — 5 November 2026
 
-The user rejected the previous always-visible back carry, stretched-arm grab,
-board placement and pickup. Those routes have been removed. The prior contact
-checks passed but did not establish acceptable motion or silhouette quality.
-The user's spin-smear suggestion was misread in that implementation.
+The spin handoff route has been removed from the player; spin effects again
+respond only to the real attack. The equipment animation uses the pre-spin
+idea of placement and pickup, rebuilt as finite actions. The rejected back
+carry, long reaching arms and kick-push are not restored.
 
-The board is now stowed while on foot, including preparation and cancellation.
-A committed mount or grounded dismount uses the existing current-character
-spin smear briefly to cover the inventory swap. This is presentation
-only: it does not trigger a spin attack, change movement, add a boost, consume
-an input or alter spin cooldown/scoring. The normal mounting hop continues.
-There is no carried-board pose or hand-to-board reach.
+The actual hold meter drives a supported load and a short draw beside the
+pelvis. The hand reaches before the deck is shown. Cancelling reverses the draw
+and crouch; re-pressing continues from the current load. The board is stowed
+when the cancellation finishes. Releasing jump still launches immediately.
 
-The user then rejected the kick-push itself. It is removed entirely: ordinary
-cruise keeps both feet on the board. Low, bent balance arms and heading-driven
-turn lean remain.
+A committed mount drops the board beside the shoes, releases the grip before
+the arm would have to reach the floor, then moves the deck underneath the
+airborne feet. The body turns into its stance during a 0.30 m hop and absorbs
+the catch. The sequence lasts 0.64 s without delaying or changing the physical
+skate state. Feet transfer from the last displayed load pose, with a slight
+front/rear stagger. The board starts from its displayed position on a reversal.
 
-D's mount load now starts earlier in the real `skateHoldTime` meter and
-converges on a deep supported crouch height measured from Bone Man's legs.
-This suppresses the running bounce as the hold fills. The chest folds, the
-arms draw back, and independent torso/arm segments compress more strongly.
-Planted soles stay fixed; lifted stride feet gather down and underneath the
-hips, with reach constrained in their actual parent frame. The solver must
-not fold a heel into the hip or demand a longer leg during cancellation.
+Dismounting takes 0.86 s: weight moves toward the stepping foot, the trailing
+shoe tips the deck on its rear axle, then the board comes into the near hand
+and is stowed. The body keeps
+some knee bend through the step-off and blends into the current native stride.
+The same hand continues handling the deck if the player remounts mid-pickup.
+There is no persistent carry after the action, and no spin or replacement model
+covers it. The deck keeps its complete geometry and scale.
 
-Releasing direction unwinds over 0.32 seconds with the incoming compression
-velocity retained. Re-pressing starts from the current load, and releasing
-jump before commitment still invokes the normal release-to-jump behavior.
-No board appears during anticipation or cancellation.
+The contact layer measures the actual shoulder, soles and pelvis. Lifted stride
+feet gather toward supported positions so the load cannot fold heels into the
+hips. Torso/arm compression and rebound use the shared editable elasticity
+profiles. No whole-skeleton scaling, arm-length cheat or movement retune.
+Real ollies, tricks, grinds, bails and other owners can interrupt immediately.
 
-D alone uses a 0.40 m visual spring over 0.36 seconds and a 0.16 second soft
-catch. Independent torso and arm stretch is visible after the 0.10 second
-mount smear ends; the grounded dismount retains its 0.20 second cover. The
-board and physical movement keep their native path. A/B/C keep the original
-mount timing and pose. Kick-push and hand-fetch routes remain removed.
+## Review and validation
 
-A held full charge keeps both feet planted and visibly
-lowers the knees and torso. Shared elasticity profiles deform the torso and
-arms independently; planted leg lengths and whole-rider scale are unchanged.
-Tricks, grinds, vert, bails and separate loose boards keep their normal owners.
+Watch motion offers running/standing mount, cancel, early ollie, remount,
+cruise/charge and carving. Pause points expose draw/load, board placement,
+hop/catch, step-off, pickup, stow and stowed walking. Inspect both stances from
+front, side and oblique views, at normal and MAX/native resolution.
 
-## Review
+Final validation for this revision passes:
 
-Watch motion includes running and standing mounts, cruise/charge, cancellation, early ollie,
-carving and remount. Pause points expose preparation, mount smear, native hop,
-loaded preparation, cancelling/cancelled preparation, spring/catch, cruise, full charge,
-dismount smear and stowed walking.
-Review both stances from the front, side and oblique angles at normal and native
-resolution. Diagnostics expose the real spin presentation, knee angles, charge
-and foot contacts. The inspection floor/gate keep long takes in the review.
+- 8,480 paired native movement frames across eight scenarios and both stances,
+  with exact controller parity. Transfer soles stay within 3.05 mm and fully
+  gripping hands within 1 mm. Load soles stay within 1 mm in this matrix;
+  the running load no longer folds a heel into the hip. Cancellation, early
+  ollie, immediate remount, charge, carving and hidden stowing are covered.
+- 1,344 paired ollie/charge frames and the 11,246-pose D contact regression
+  pass, including grabs, grinds, manuals, lip stalls, flips and reverts.
+- Production build/type-check and release-size check pass (803,535,769 bytes).
+  No full-suite run. These checks do not authorize publication.
+- Lite, full-render normal 720p and MAX/native browser review covers standing
+  load, placement/hop/catch, both stances, step-off, pickup, stow and cancellation.
+  Fourteen cancellation frames unwind continuously; observed sole error stays
+  below 1.72 mm. Final stowed state has zero draw/grip and a hidden board.
+  The console has no warnings or errors. Normal 720p/1× settings are restored.
 
-Validation of the deeper mount is incomplete. The first 7,420-frame native
-pass exposed an overfolded lifted leg; the gather/reach corrections address
-that failure and require the expanded 8,480-frame rerun. The current pure
-envelope check passes 726 samples across three hold durations and 30/60/120 fps.
-Five modified TS modules transpile, the test parses, and whitespace checks pass.
-Lite review includes planted standing load, moving gather, exposed spring and
-finite cancellation. The corrected 14-frame unwind review has at most 1.33 mm
-sole-target error and 19.8 mm unplanted reach correction. The standing load
-keeps planted sole error below 0.8 mm; cancellation ends at zero with no board.
+The first passes drove fixes for running-knee overfold, unreachable tail-tap
+and pickup poses, a changing board side, a remount hand switch and a native
+turn snap. Visual review caught a diagonal deck path through the shins; the
+final placement goes beside the shoes before sliding under the hop. This is a
+validated local iteration for user review, not a claim of visual acceptance.
 
-The shared heavy-work helper returned 75 again at 21:59 UTC on 4 November
-(10:59 NZDT on 5 November), with both slots reserved. No heavy job is running
-for this chat. The native movement/contact/ollie rerun, production build and
-normal/native full-render review remain pending. This is a local authoring
-checkpoint, not validated or READY; older evidence cannot validate this revision.
-
-Current evidence belongs to `skate-mount-rubber/` under
+Current evidence directory: `skate-contact-mount/` under
 `/Users/kiki/.codex/visualizations/2026/11/02/01a19bb4-0de7-79a1-9881-c7c1b3dd3dec/`.
-Earlier `skate-travel/` and `skate-correction/` evidence describe earlier versions.
-
-The task worktree serves the review on port 5189. Existing port 5188 is preserved.
-Extracted Jak assets stay outside Git and the release. No level-pack changes.
+The task worktree serves port 5189. Extracted Jak assets remain outside Git and
+any release. No level-pack changes.
 
 ## Earlier source inspection
 

@@ -221,12 +221,14 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Loaded preparation'&&travel?.phase==='prepare'&&travel.preparation>.82 ||
       stopAt==='Cancel mount'&&travel?.phase==='cancel'&&frame>=57 ||
       stopAt==='Cancelled'&&cancel&&frame===80 ||
-      stopAt==='Mount smear'&&travel?.phase==='mount'&&travel.smear&&travel.age>.08 ||
-      stopAt==='Mount hop'&&travel?.phase==='mount'&&!travel.smear&&travel.extension>.9 ||
-      stopAt==='Mount catch'&&travel?.phase==='mount'&&travel.settle>.9 ||
+      stopAt==='Board placement'&&travel?.beat==='place'&&travel.age>.08 ||
+      stopAt==='Mount hop'&&travel?.beat==='hop'&&travel.age>.30 ||
+      stopAt==='Mount catch'&&travel?.beat==='catch'&&travel.settle>.9 ||
       stopAt==='Cruise'&&chargeStudy&&frame===85 ||
       stopAt==='Full charge'&&travel?.charge>.99&&frame>150 ||
-      stopAt==='Dismount smear'&&travel?.phase==='dismount'&&travel.smear&&travel.age>.08 ||
+      stopAt==='Step off'&&travel?.beat==='step-off'&&travel.age>.16 ||
+      stopAt==='Board pickup'&&travel?.beat==='pickup'&&travel.age>.52 ||
+      stopAt==='Board stow'&&travel?.beat==='stow'&&travel.age>.70 ||
       stopAt==='Stowed'&&frame>350&&travel?.phase==='stowed')frozen=true;
     if(frame>560)resetInspector();return;
   }
@@ -411,7 +413,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Preparation','Loaded preparation','Cancel mount','Cancelled','Mount smear','Mount hop','Mount catch','Cruise','Full charge','Dismount smear','Stowed'],value=>{stopAt=value;resetInspector();});
+  'Preparation','Loaded preparation','Cancel mount','Cancelled','Board placement','Mount hop','Mount catch','Cruise','Full charge','Step off','Board pickup','Board stow','Stowed'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -447,6 +449,7 @@ function report() {
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
     jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
     boardTravel:p.boardG?.userData.skateTravel,mountLoad:p.boardG?.userData.skateMountLoad,
+    transfer:p.boardG?.userData.skateTransfer,travelHand:p.boardG?.userData.skateTravelHand,
     boardContact:p.boardG?.userData.skateContact,spin:p.spinEffectDiagnostics,
     knees:Object.fromEntries(['left','right'].map(side=>{const at=(name:string)=>p.riderG.getObjectByName(name+'-'+side)!.getWorldPosition(new THREE.Vector3());return [side,at('knee').sub(at('hip')).angleTo(at('ankle').sub(at('knee')))];})),
     cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),

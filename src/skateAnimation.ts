@@ -7,7 +7,7 @@ import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
 import type { SpineTransferMotion } from './vertSkateMotion';
 import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion, sampleSkateRevert } from './skateBodyMotion';
-import { type SkateTravelPose } from './skateTravelMotion';
+import { travelEase, type SkateTravelPose } from './skateTravelMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -89,6 +89,23 @@ export class SkateAnimation {
   private q = new THREE.Quaternion();
   private matrix = new THREE.Matrix4();
   private mountLoadRotations:Array<{node:THREE.Object3D;rotation:THREE.Quaternion}>=[];
+  private nativeTravelFeet=[new THREE.Vector3(),new THREE.Vector3()];
+  private nativeTravelFootQ=[new THREE.Quaternion(),new THREE.Quaternion()];
+  private nativeTravelHip=new THREE.Vector3();
+  private lastTravelFeet=[new THREE.Vector3(),new THREE.Vector3()];
+  private lastTravelFootQ=[new THREE.Quaternion(),new THREE.Quaternion()];
+  private lastTravelHip=new THREE.Vector3();
+  private fromTravelFeet=[new THREE.Vector3(),new THREE.Vector3()];
+  private fromTravelFootQ=[new THREE.Quaternion(),new THREE.Quaternion()];
+  private fromTravelHip=new THREE.Vector3();
+  private travelSerial=-1;
+  private hasTravelPose=false;
+  private lastTravelBoard=new THREE.Vector3();
+  private lastTravelBoardQ=new THREE.Quaternion();
+  private fromTravelBoard=new THREE.Vector3();
+  private fromTravelBoardQ=new THREE.Quaternion();
+  private lastTravelRoute=0;
+  private fromTravelRoute=0;
 
   constructor(private group: THREE.Group, private body: THREE.Group,
     private rider: THREE.Group, private board: THREE.Group) {
@@ -115,7 +132,7 @@ export class SkateAnimation {
     this.head = rider.getObjectByName('head');
   }
 
-  reset(): void { this.impossibleActive=false; this.deckCaught=false; this.shoveDeckYaw=null; this.footFlipAir=false; this.key = ''; this.lastActive = false; this.coping=undefined;this.copingAge=1;this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
+  reset(): void { this.hasTravelPose=false;this.travelSerial=-1;this.impossibleActive=false; this.deckCaught=false; this.shoveDeckYaw=null; this.footFlipAir=false; this.key = ''; this.lastActive = false; this.coping=undefined;this.copingAge=1;this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -209,6 +226,181 @@ export class SkateAnimation {
     return limb.socket.getWorldPosition(socket).distanceTo(target);
   }
 
+  captureTravelPose():void {
+    if(!this.hips||!this.feet)return;
+    this.nativeTravelHip.copy(this.hips.getWorldPosition(new THREE.Vector3()));
+    this.feet.forEach((foot,i)=>{
+      this.nativeTravelFeet[i].copy(foot.socket.getWorldPosition(new THREE.Vector3()));
+      this.nativeTravelFootQ[i].copy(foot.end.getWorldQuaternion(new THREE.Quaternion()));
+    });
+  }
+
+  /** Finite equipment handling. The deck is in the near hand only during
+   * draw/place/catch/stow; there is no back attachment or locomotion carry. */
+  applyTravel(p:SkateTravelPose,context:{mounted:boolean;grounded:boolean;yaw:number;stance:number;normal:THREE.Vector3}):void {
+    if(!this.hips||!this.feet||!this.hands)return;
+    const origin=this.group.getWorldPosition(new THREE.Vector3());
+    const frame=this.group.getWorldQuaternion(new THREE.Quaternion()).multiply(new THREE.Quaternion().setFromAxisAngle(Y,context.yaw));
+    const up=context.normal.clone().normalize();
+    const forward=Z.clone().applyQuaternion(frame).addScaledVector(up,-Z.clone().applyQuaternion(frame).dot(up)).normalize();
+    const right=up.clone().cross(forward).normalize();
+    const groundQ=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(right,up,forward));
+    const front=context.stance>0?0:1;
+    if(p.serial!==this.travelSerial){
+      this.travelSerial=p.serial;
+      if(this.hasTravelPose){
+        this.fromTravelHip.copy(this.lastTravelHip);
+        this.fromTravelBoard.copy(this.lastTravelBoard);this.fromTravelBoardQ.copy(this.lastTravelBoardQ);
+        this.fromTravelRoute=this.lastTravelRoute;
+        this.feet.forEach((_,i)=>{this.fromTravelFeet[i].copy(this.lastTravelFeet[i]);this.fromTravelFootQ[i].copy(this.lastTravelFootQ[i]);});
+      }else{
+        this.fromTravelHip.copy(this.group.worldToLocal(this.hips.getWorldPosition(new THREE.Vector3())));
+        this.feet.forEach((foot,i)=>{
+          this.fromTravelFeet[i].copy(this.group.worldToLocal(foot.socket.getWorldPosition(new THREE.Vector3())));
+          this.fromTravelFootQ[i].copy(foot.end.getWorldQuaternion(new THREE.Quaternion()));
+        });
+      }
+    }
+    let footError=0,handError=0;
+    if(p.transfer&&context.grounded){
+      const mountedFeet=this.feet.map(foot=>foot.socket.getWorldPosition(new THREE.Vector3()));
+      const mountedQ=this.feet.map(foot=>foot.end.getWorldQuaternion(new THREE.Quaternion()));
+      const sourceHip=this.group.localToWorld(this.fromTravelHip.clone());
+      const targetHip=p.exiting?this.nativeTravelHip:this.hips.getWorldPosition(new THREE.Vector3());
+      const bodyBlend=travelEase((p.age-(p.exiting?.02:0))/(p.exiting?.38:.43));
+      const pelvis=sourceHip.lerp(targetHip,bodyBlend).addScaledVector(up,p.lift);
+      // Weight transfers toward the stepping foot, then returns to the walk.
+      if(p.exiting){
+        const exitShift=.52*(1-travelEase((p.age-.40)/.33));
+        const supportWeight=.6*travelEase(p.age/.25)+.4*travelEase((p.age-.09)/.25);
+        pelvis.addScaledVector(right,-context.stance*exitShift*supportWeight);
+        pelvis.addScaledVector(up,-.10*Math.sin(Math.PI*clamp(p.age/.86,0,1))**2);
+      }
+      const delta=pelvis.sub(this.hips.getWorldPosition(new THREE.Vector3()));
+      const root=this.rider.getWorldPosition(new THREE.Vector3()).add(delta);
+      this.rider.position.copy(this.rider.parent!.worldToLocal(root));
+      this.body.updateWorldMatrix(true,true);
+      this.feet.forEach((foot,i)=>{
+        for(const node of [foot.root,foot.mid,foot.end])this.mountLoadRotations.push({node,rotation:node.quaternion.clone()});
+        const source=this.group.localToWorld(this.fromTravelFeet[i].clone());
+        const u=p.exiting?clamp((p.age-(i===front?0:.09))/.25,0,1)
+          :clamp((p.age-(i===front?.06:.11))/(i===front?.37:.36),0,1);
+        const target=p.exiting?this.nativeTravelFeet[i].clone():mountedFeet[i].clone();
+        if(p.exiting){
+          // Both shoes clear the rail before pickup starts. The short offset
+          // fades into the current native stride instead of holding a pose.
+          target.addScaledVector(right,-context.stance*.52*(1-travelEase((p.age-.40)/.33)));
+        }
+        target.lerp(source,1-travelEase(u));
+        target.addScaledVector(up,p.exiting?.20*Math.sin(Math.PI*u)**2:p.lift+(i===front?0:.035*Math.sin(Math.PI*u)**2));
+        const rotation=this.fromTravelFootQ[i].clone().slerp(p.exiting?this.nativeTravelFootQ[i]:mountedQ[i],travelEase(u));
+        const kneeForward=Z.clone().applyQuaternion(this.body.getWorldQuaternion(new THREE.Quaternion()));
+        const pole=foot.root.getWorldPosition(new THREE.Vector3()).addScaledVector(kneeForward,.7);
+        footError=Math.max(footError,this.solve(foot,target,rotation,pole,1,128));
+      });
+    }
+    const handling=(p.draw>.001&&p.route<.9999)||p.exiting;
+    if(handling){
+      const s=(this.board.userData.settings??DEFAULT_SKATEBOARD_SETTINGS)as SkateboardSettingsValue;
+      const centerY=(s.boardToGroundDistance-s.deckThickness*.5)*s.overallScale;
+      const hand=this.hands[p.handForward>0?0:1];
+      const shoulder=hand.root.getWorldPosition(new THREE.Vector3());
+      const side=Math.sign(hand.root.position.x)||-p.handForward;
+      // The board travels beside the pelvis. Its grip stays inside the
+      // measured arm reach; the hand releases before the deck drops to ground.
+      const readyQ=groundQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,-.52))
+        .multiply(new THREE.Quaternion().setFromAxisAngle(Z,-side*.22));
+      const edge=new THREE.Vector3(-side*s.deckHalfWidth*s.overallScale,0,.10*s.overallScale).applyQuaternion(readyQ);
+      const ready=shoulder.clone().addScaledVector(right,side*.18*p.draw)
+        .addScaledVector(forward,-.18+.30*p.draw).addScaledVector(up,-.36).sub(edge);
+      ready.addScaledVector(up,Math.max(0,.64-ready.clone().sub(origin).dot(up)));
+      // The trailing shoe tips the deck on its rear axle before the catch.
+      // This supplies a visible cause for the board rising into the hand.
+      const pop=p.exiting?.28*travelEase((p.age-.12)/.16):0;
+      const placedQ=groundQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,-pop));
+      const pivot=new THREE.Vector3(0,s.wheelRadius*s.overallScale,s.rearTruckLocalZ*s.overallScale);
+      const placed=origin.clone().add(pivot.clone().applyQuaternion(groundQ)).sub(pivot.applyQuaternion(placedQ));
+      const ground=placed.add(new THREE.Vector3(0,centerY,0).applyQuaternion(placedQ));
+      let center:THREE.Vector3;
+      if(p.phase==='mount'&&this.hasTravelPose&&this.fromTravelRoute<.999){
+        const progress=clamp((p.route-this.fromTravelRoute)/(1-this.fromTravelRoute),0,1);
+        const start=this.group.localToWorld(this.fromTravelBoard.clone())
+          .add(new THREE.Vector3(0,centerY,0).applyQuaternion(this.fromTravelBoardQ));
+        if(this.fromTravelRoute<.3){
+          // Drop beside the shoes, then travel underneath their airborne arc.
+          // A straight diagonal through the middle cuts through the shins.
+          const drop=travelEase(p.age/.19),under=travelEase((p.age-.20)/.14);
+          const beside=ground.clone().addScaledVector(right,side*.64);
+          center=start.lerp(beside,drop).lerp(ground,under);
+          this.boardQ.copy(this.fromTravelBoardQ).slerp(groundQ,drop);
+        }else{center=start.lerp(ground,progress);this.boardQ.copy(this.fromTravelBoardQ).slerp(groundQ,progress);}
+      }else{center=ready.lerp(ground,p.route);this.boardQ.copy(readyQ).slerp(placedQ,p.route);}
+      this.boardP.copy(center).sub(new THREE.Vector3(0,centerY,0).applyQuaternion(this.boardQ));
+      this.boardMount.scale.set(1/this.body.scale.x,1/this.body.scale.y,1/this.body.scale.z);
+      this.board.scale.setScalar(1);
+      this.board.visible=p.draw>.30||p.route>.001;
+      this.putBoard();
+      const tailTap=p.exiting?travelEase(p.age/.10)*(1-travelEase((p.age-.20)/.12)):0;
+      if(tailTap>.001){
+        const foot=this.feet[1-front],z=s.rearTruckLocalZ*s.overallScale;
+        const y=(s.boardToGroundDistance+evaluateSkateboardSurfaceHeight(s,0,z/s.overallScale))*s.overallScale+.006;
+        const target=new THREE.Vector3(0,y,z).applyQuaternion(this.boardQ).add(this.boardP);
+        const rotation=this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y,context.stance*Math.PI/2));
+        const pole=foot.root.getWorldPosition(new THREE.Vector3()).addScaledVector(Z.clone().applyQuaternion(this.body.getWorldQuaternion(new THREE.Quaternion())),.7);
+        const blended=foot.socket.getWorldPosition(new THREE.Vector3()).lerp(target,tailTap);
+        const q=foot.end.getWorldQuaternion(new THREE.Quaternion()).slerp(rotation,tailTap);
+        const other=this.feet[front],otherTarget=other.socket.getWorldPosition(new THREE.Vector3()),otherQ=other.end.getWorldQuaternion(new THREE.Quaternion());
+        let lower=0;
+        for(const [leg,sole]of [[foot,blended],[other,otherTarget]]as const){
+          const parent=leg.root.parent!;
+          const a=parent.worldToLocal(leg.root.getWorldPosition(new THREE.Vector3()));
+          const b=parent.worldToLocal(leg.mid.getWorldPosition(new THREE.Vector3()));
+          const c=parent.worldToLocal(leg.end.getWorldPosition(new THREE.Vector3()));
+          const reach=.94*(a.distanceTo(b)+b.distanceTo(c));
+          const offset=leg.end.getWorldPosition(new THREE.Vector3()).sub(leg.socket.getWorldPosition(new THREE.Vector3()));
+          const d=parent.worldToLocal(sole.clone().add(offset)).sub(a);
+          const direction=parent.worldToLocal(up.clone()).sub(parent.worldToLocal(new THREE.Vector3()));
+          const aa=direction.lengthSq(),bb=2*d.dot(direction),cc=d.lengthSq()-reach*reach;
+          if(cc>0&&bb<0){
+            const discriminant=bb*bb-4*aa*cc;
+            if(discriminant>=0)lower=Math.max(lower,(-bb-Math.sqrt(discriminant))/(2*aa));
+          }
+        }
+        if(lower>0){
+          const position=this.rider.getWorldPosition(new THREE.Vector3()).addScaledVector(up,-lower);
+          this.rider.position.copy(this.rider.parent!.worldToLocal(position));
+        }
+        footError=Math.max(footError,this.solve(foot,blended,q,pole,1,128),
+          this.solve(other,otherTarget,otherQ,other.root.getWorldPosition(new THREE.Vector3()).addScaledVector(forward,.7),1,128));
+      }
+      if(p.grip>.001){
+        for(const node of [hand.root,hand.mid,hand.end])this.mountLoadRotations.push({node,rotation:node.quaternion.clone()});
+        const x=-side*s.deckHalfWidth*s.overallScale,z=.10*s.overallScale;
+        const target=new THREE.Vector3(x,centerY,z).applyQuaternion(this.boardQ).add(this.boardP);
+        const pole=hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(right,side*.65).addScaledVector(forward,-.25);
+        const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const across=X.clone().multiplyScalar(-side).applyQuaternion(this.boardQ),handY=Y.clone().applyQuaternion(this.boardQ);
+        const handX=handY.clone().cross(across).normalize();
+        const rotation=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX,handY,across)).multiply(relative.invert());
+        handError=this.solve(hand,target,rotation,pole,p.grip,128,this.body,true);
+        this.board.userData.skateTravelHand={hand:hand.socket.name,target:target.toArray(),shoulder:shoulder.toArray(),weight:p.grip,error:handError};
+      }else delete this.board.userData.skateTravelHand;
+    }else{
+      if(!context.mounted)this.board.visible=false;
+      delete this.board.userData.skateTravelHand;
+    }
+    this.board.userData.skateTransfer=p.transfer?{footError,handError,beat:p.beat}:null;
+    this.lastTravelHip.copy(this.group.worldToLocal(this.hips.getWorldPosition(new THREE.Vector3())));
+    this.feet.forEach((foot,i)=>{
+      this.lastTravelFeet[i].copy(this.group.worldToLocal(foot.socket.getWorldPosition(new THREE.Vector3())));
+      this.lastTravelFootQ[i].copy(foot.end.getWorldQuaternion(new THREE.Quaternion()));
+    });
+    this.hasTravelPose=true;
+    this.lastTravelBoard.copy(this.group.worldToLocal(this.board.getWorldPosition(new THREE.Vector3())));
+    this.lastTravelBoardQ.copy(this.board.getWorldQuaternion(new THREE.Quaternion()));
+    this.lastTravelRoute=p.route;
+  }
+
   /** Cancellable on-foot mount load. Planted feet stay fixed; lifted stride
    * feet gather toward the floor so a deep load cannot fold a heel into the hip. */
   applyMountLoad(weight:number,groundNormal:THREE.Vector3):void {
@@ -237,7 +429,7 @@ export class SkateAnimation {
     const scaleY=this.rider.getWorldScale(new THREE.Vector3()).y;
     const legHeight=Math.min(...this.feet.map(foot=>(foot.mid.position.length()*foot.root.scale.y+
       foot.end.position.length()*foot.mid.scale.y)*scaleY));
-    const targetHeight=legHeight*.56+.04;
+    const targetHeight=legHeight*.58+.04;
     const hipHeight=this.hips.getWorldPosition(new THREE.Vector3()).sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y);
     const drop=Math.max(0,hipHeight-targetHeight)*weight;
     const plantedTargets=targets.map(target=>target.position.clone());
@@ -247,13 +439,14 @@ export class SkateAnimation {
       const above=target.position.clone().sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y);
       // A lifted running stride also draws underneath the hip. Lowering a
       // fully extended forward shoe alone would ask for a longer leg.
-      const gather=THREE.MathUtils.smoothstep(above,.035,.18)*weight*.72;
+      const gather=THREE.MathUtils.smoothstep(above,.035,.18)*travelEase(weight/.72);
       const hip=this.feet[i].root.getWorldPosition(new THREE.Vector3());
       const oldHeight=above;
       target.position.x=THREE.MathUtils.lerp(target.position.x,hip.x,gather);
       target.position.z=THREE.MathUtils.lerp(target.position.z,hip.z,gather);
       const newHeight=target.position.clone().sub(support).dot(groundNormal)/Math.max(.1,groundNormal.y);
-      target.position.y+=oldHeight-newHeight-Math.min(drop*1.65,Math.max(0,above-.035));
+      target.position.y+=oldHeight-newHeight-Math.max(
+        Math.min(drop*1.65,Math.max(0,above-.035)),Math.max(0,above-.025)*gather);
       target.pole.y-=drop;
     }
     const position=this.rider.getWorldPosition(new THREE.Vector3()).addScaledVector(Y,-drop);
