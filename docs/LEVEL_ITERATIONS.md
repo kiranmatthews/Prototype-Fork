@@ -9770,3 +9770,23 @@ empty warning/error logs and no failed assets. The existing broader levels
 check still stops at the baseline waterpark texture-retirement assertion.
 Evidence, exact route measurements and performance observations are recorded in
 `docs/desert-canyon/checks.json` and the three `revised-*.png` captures.
+
+## 2026-11-06 — Polish the illustrated live 3D fruit HUD
+
+Selected live 3D rendering after comparing the original fruit, an individually
+painted 24-frame PNG sequence and the Bone Head portrait. Restored the original
+0.6 rad/s idle rotation (10.47 seconds per turn). The skin stays smooth, with
+a refined shoulder highlight, warm shadows, a clearer green crown, filtered
+leaf/bark detail and a brown outline weighted separately for body and crown.
+All authored geometry remains; world fruit, movement and level data are unchanged.
+The same HUD slot continues to serve normal play, Bonus and reward flights.
+Depth ordering keeps the outline from darkening the interior during fades.
+
+Approximately 19 minutes from the slow-rotation/polish follow-up to the
+reviewed in-game result; release checks followed. The earlier rejected PNG
+authoring experiment is retained locally for comparison and is not shipped.
+TypeScript/build and focused visibility, life-portrait and Bonus-transfer
+checks pass. Browser review covers a real fruit pickup, inventory hide/reveal,
+light/dark backgrounds, multiple angles, HUD size, and full MAX/native render
+with CRT at 1920 × 1080; no browser warning/error logs. Evidence and final
+release-size result are in `docs/illustrated-fruit-hud/`.

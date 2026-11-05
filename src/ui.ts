@@ -28,7 +28,7 @@ import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level"
 import { debugLevelMenu } from './debugLevelMenu';
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH } from "./roo-type/typography";
-import { milkBlob } from "./milk";
+import { FRUIT_HUD_TURN_RATE, illustratedFruitHud } from "./illustratedFruitHud";
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
   advanceComboCashInDisplay,
@@ -145,7 +145,7 @@ export class UI {
   private comboGemIcon!: HTMLElement;
   private crateIcon!: HTMLElement;
   private wumpaIcon!: HTMLElement;
-  // Every 3D HUD icon lives in ONE scene with ONE camera; each is drawn into
+  // Every HUD icon lives in ONE scene with ONE camera; each is drawn into
   // its own host element's rectangle, one slot visible at a time. See
   // buildIcons/drawIcons.
   private iconScene: THREE.Scene | null = null;
@@ -1186,9 +1186,9 @@ export class UI {
     this.trickPlate.classList.add("hud-trick-bail");
   }
 
-  // ---- HUD icons, as real spinning 3D ------------------------------------
+  // ---- HUD icons: illustrated live 3D fruit and spinning collectibles ----
   //
-  // The crate counter, the fruit counter and the three relics are all drawn
+  // The crate, the live illustrated fruit and the three relics are drawn
   // with the GAME's renderer in a second pass over each icon's own DOM
   // rectangle, not into canvases of their own. A second WebGL context is a
   // real risk on iOS Safari, which is stingy with them and would leave the
@@ -1208,7 +1208,7 @@ export class UI {
     // aspect horizontally, so fitting art to a box is one scale factor.
     this.iconCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -500, 500);
     // Gems/crystals use their own cheap vertex-specular studio rig and ignore
-    // these lights, as does the orange fruit. The crate uses Lambert
+    // these lights, as does the illustrated fruit. The crate uses Lambert
     // world shading and still needs the icon lighting rig.
     //
     // Lit HOTTER than the world, deliberately. These icons have no drop
@@ -1224,11 +1224,10 @@ export class UI {
     fill.position.set(-0.8, -0.2, 0.5);
     scene.add(fill);
 
-    // Normal play, Bonus and reward flights share these models and poses.
+    // Normal play, Bonus and reward flights share the same art and poses.
     // lean: tip toward the camera so a box reads as a box and a facet catches
     // the light, rather than turning as a flat silhouette.
-    // rate: the idle turn. The counters are ambient decoration and stay slow;
-    // a relic is a trophy and may show off.
+    // rate: the original idle turn, independent of the fruit's art treatment.
     const art: {
       host: HTMLElement;
       revealHost: HTMLElement;
@@ -1242,7 +1241,7 @@ export class UI {
       // Look down the cube's diagonal: its top/front corner sits at the
       // centre before the idle spin. Positive X lean exposes the TOP face.
       { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: Math.atan(1 / Math.SQRT2), yaw: Math.PI / 4, rate: 0.6, fill: 0.94, relic: false },
-      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => milkBlob(1), lean: 0, rate: 0.6, fill: 0.86, relic: false },
+      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: illustratedFruitHud, lean: 0, rate: FRUIT_HUD_TURN_RATE, fill: 0.86, relic: false },
       { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
@@ -1353,7 +1352,7 @@ export class UI {
   }
 
   /**
-   * Spin and draw the 3D HUD icons. Called from the frame loop after the world
+   * Animate and draw the HUD icons. Called from the frame loop after the world
    * is drawn, with the renderer the game already owns.
    */
   drawIcons(

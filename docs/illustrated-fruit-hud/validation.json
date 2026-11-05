@@ -1,0 +1,56 @@
+{
+  "reviewDate": "2026-11-06",
+  "timezone": "Pacific/Auckland",
+  "baselineCommit": "d1ee4f04920f3e02f3568adfd671dcd594563f7c",
+  "rotationRadiansPerSecond": 0.6,
+  "secondsPerTurn": 10.471975511965978,
+  "geometry": {
+    "surfaceVertices": 2495,
+    "surfaceTriangles": 4904,
+    "matchesOriginalPositionsAndIndicesExactly": true,
+    "outlineRetainsAllTriangles": true
+  },
+  "checks": {
+    "typescript": "pass",
+    "productionBuild": "pass",
+    "hudVisibility": "pass",
+    "modernLifeHud": "pass",
+    "bonusTransfer90Receipts": "pass",
+    "gitDiffCheck": "pass"
+  },
+  "release": {
+    "files": 2355,
+    "bytes": 854357179,
+    "budgetBytes": 1000000000,
+    "offlineVersion": "99d59c552672b04987a6"
+  },
+  "browser": {
+    "litePickup": "0 to 1 through normal movement in Haunted Hassle",
+    "inventoryHideReveal": "pass",
+    "fullRenderer": "Treehouse Trail, MAX/native at 1920x1080, CRT on",
+    "productionPreview": "Treehouse Trail, 1280x720, full renderer",
+    "productionBuildStamp": "Codex/sol fork \u00b7 build 11-05 11:30 UTC",
+    "warnings": [],
+    "errors": []
+  },
+  "visualReview": {
+    "anglesDegrees": [
+      30,
+      150,
+      285
+    ],
+    "sizes": [
+      "large",
+      "88px HUD",
+      "native game HUD"
+    ],
+    "backgrounds": [
+      "dark blue",
+      "light cream",
+      "gameplay"
+    ],
+    "smoothSkinRetained": true
+  },
+  "testHarnessNote": "Vite SSR harnesses report a sandbox WebSocket listen EPERM warning; all assertions pass. The actual game browser console is clean.",
+  "pngSequence": "retained in the local authoring archive; not used or shipped by the game"
+}
