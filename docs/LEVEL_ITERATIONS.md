@@ -9387,3 +9387,19 @@ checks pass with clean consoles. Playably validated around 03:30 UTC,
 approximately four minutes after the follow-up began. Geometry and gameplay
 are unchanged. Evidence: `docs/bounce-crate-lids/`. Direct release remains
 assigned to this chat by the user.
+
+## 2026-11-05 — Spent Nitro Bang becomes ordinary metal
+
+Activating a Nitro Bang now replaces its green painted surface and tick with
+the exact regular metal crate material. Its contact pulse settles at normal
+height. The authored switch identity remains intact so checkpoint snapshots
+and fresh runs restore the correct armed/spent state. Playably validated at
+approximately 03:50 UTC, about eight minutes after the follow-up began.
+
+Actual Player/Level spin and stomp activation, repeat hits, snapshots saved
+before/after activation and hard reset pass. Reviewed in lite mode, full
+2560×1440 rendering and 480p/CRT with clean consoles; the spent crate has plain
+metal sides and lid. Existing crate-art checks pass. Evidence and lifecycle
+observations: `docs/spent-nitro-metal/`. No mesh, level-data, collision or
+explosion changes. Production build/typecheck and release-size validation pass
+(834,729,828 bytes). Direct release remains assigned to this chat by the user.

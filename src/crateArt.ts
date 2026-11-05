@@ -333,11 +333,15 @@ export function setCrateArtState(art: CrateArt, state: CrateArtState): void {
   art.state = state; art.root.visible = !state.pending;
   if (art.contents) updateMultihitContents(art.contents, state.hits ?? 5, art.pulse, 0);
   if (art.kind === 'tnt' || art.kind === 'nitro') { art.marks.visible = false; art.labelKey = 'blank'; return; }
-  const key = labelValue(art.kind, state);
-  art.marks.visible = key !== 'blank' && (!['wood', 'empty', 'metal', 'multihit'].includes(art.kind) || !!state.timeSecs || !!state.boost);
-  if (art.labelKey !== key) { art.labelKey = key; art.marks.material = labelMaterial(art.kind, key); }
+  // Spent Nitro switches use the exact ordinary steel material. Keep their
+  // authored kind so checkpoint restoration can re-arm the green switch.
+  const spentNitro = art.kind === 'nitrobang' && !!state.used;
+  const kind = spentNitro ? 'metal' : art.kind;
+  const key = spentNitro ? 'metal' : labelValue(kind, state);
+  art.marks.visible = !spentNitro && key !== 'blank' && (!['wood', 'empty', 'metal', 'multihit'].includes(kind) || !!state.timeSecs || !!state.boost);
+  if (art.labelKey !== key) { art.labelKey = key; art.marks.material = labelMaterial(kind, key); }
   if (art.sculpted) {
-    const material = crateSculptMaterial(art.kind, key, art.marks.material.map);
+    const material = crateSculptMaterial(kind, key, art.marks.material.map);
     if (material) art.shell.material = material;
   }
 }
@@ -406,7 +410,7 @@ export function updateCrateArt(art: CrateArt, dt: number, time: number): void {
   if (art.fuseFX) updateCrateFuse(art.fuseFX, art.state.fuse, time, dt);
   if (art.explosive) updateExplosiveArt(art.explosive, art.state.fuse, time + art.seed);
   if (art.contents) updateMultihitContents(art.contents, art.state.hits ?? 5, art.pulse, time + art.seed);
-  if (art.state.used) sy *= .91;
+  if (art.state.used && art.kind !== 'nitrobang') sy *= .91;
   art.root.scale.set(art.size * sx, art.size * sy, art.size * sx);
   art.root.position.y = (sy - 1) * art.size * .5;
   art.root.rotation.set(0, yaw, roll);

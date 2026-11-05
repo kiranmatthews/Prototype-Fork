@@ -1,0 +1,393 @@
+{
+  "armed": {
+    "kind": "nitrobang",
+    "alive": true,
+    "marks": "nitrobang",
+    "head": "skull",
+    "collider": [
+      1.1519999999999997,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -4.5,
+      0.12,
+      44
+    ],
+    "player": "ride",
+    "cratesBroken": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "nitroSwitchUsed": false,
+    "nitroAlive": true,
+    "ordinaryMetalSurface": false,
+    "marksVisible": true,
+    "artScale": [
+      1.152,
+      1.152,
+      1.152
+    ],
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1280,
+      720
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 672,
+        "maxFrameMs": 25,
+        "width": 1280,
+        "height": 720,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 162
+    }
+  },
+  "spent": {
+    "kind": "nitrobang",
+    "alive": true,
+    "marks": "metal",
+    "head": "skull",
+    "collider": [
+      1.1519999999999997,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -4.5,
+      0.12,
+      44
+    ],
+    "player": "ride",
+    "cratesBroken": 1,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "nitroSwitchUsed": true,
+    "nitroAlive": false,
+    "ordinaryMetalSurface": true,
+    "marksVisible": false,
+    "artScale": [
+      1.152,
+      1.152,
+      1.152
+    ],
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1280,
+      720
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 672,
+        "maxFrameMs": 25,
+        "width": 1280,
+        "height": 720,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 162
+    }
+  },
+  "savedAfterActivation": {
+    "kind": "nitrobang",
+    "alive": true,
+    "marks": "metal",
+    "head": "skull",
+    "collider": [
+      1.1519999999999997,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      4.5,
+      0.22,
+      40
+    ],
+    "player": "ride",
+    "cratesBroken": 2,
+    "deaths": 0,
+    "checkpoint": true,
+    "checkpointVisible": false,
+    "outline": true,
+    "usedSwitch": false,
+    "nitroSwitchUsed": true,
+    "nitroAlive": false,
+    "ordinaryMetalSurface": true,
+    "marksVisible": false,
+    "artScale": [
+      1.152,
+      1.152,
+      1.152
+    ],
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1280,
+      720
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 672,
+        "maxFrameMs": 25,
+        "width": 1280,
+        "height": 720,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 162
+    }
+  },
+  "hardReset": {
+    "kind": "nitrobang",
+    "alive": true,
+    "marks": "nitrobang",
+    "head": "skull",
+    "collider": [
+      1.1519999999999997,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -4.5,
+      0.12,
+      44
+    ],
+    "player": "ride",
+    "cratesBroken": 0,
+    "deaths": 0,
+    "checkpoint": false,
+    "checkpointVisible": true,
+    "outline": true,
+    "usedSwitch": false,
+    "nitroSwitchUsed": false,
+    "nitroAlive": true,
+    "ordinaryMetalSurface": false,
+    "marksVisible": true,
+    "artScale": [
+      1.152,
+      1.152,
+      1.152
+    ],
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1280,
+      720
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 672,
+        "maxFrameMs": 25,
+        "width": 1280,
+        "height": 720,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 162
+    }
+  },
+  "stomp": {
+    "kind": "nitrobang",
+    "alive": true,
+    "marks": "metal",
+    "head": "skull",
+    "collider": [
+      1.1519999999999997,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      -4.5,
+      1.29,
+      40
+    ],
+    "player": "air",
+    "cratesBroken": 2,
+    "deaths": 0,
+    "checkpoint": true,
+    "checkpointVisible": false,
+    "outline": true,
+    "usedSwitch": false,
+    "nitroSwitchUsed": true,
+    "nitroAlive": false,
+    "ordinaryMetalSurface": true,
+    "marksVisible": false,
+    "artScale": [
+      1.152,
+      1.152,
+      1.152
+    ],
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1280,
+      720
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 672,
+        "maxFrameMs": 25,
+        "width": 1280,
+        "height": 720,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 162
+    }
+  },
+  "savedBeforeActivation": {
+    "kind": "nitrobang",
+    "alive": true,
+    "marks": "nitrobang",
+    "head": "skull",
+    "collider": [
+      1.1519999999999997,
+      1.1519999999999997,
+      1.152000000000001
+    ],
+    "position": [
+      4.5,
+      0.22,
+      40
+    ],
+    "player": "ride",
+    "cratesBroken": 1,
+    "deaths": 0,
+    "checkpoint": true,
+    "checkpointVisible": false,
+    "outline": true,
+    "usedSwitch": false,
+    "nitroSwitchUsed": false,
+    "nitroAlive": true,
+    "ordinaryMetalSurface": false,
+    "marksVisible": true,
+    "artScale": [
+      1.152,
+      1.152,
+      1.152
+    ],
+    "effects": {
+      "shards": 0,
+      "bursts": 0,
+      "drawCalls": 0,
+      "limit": 232
+    },
+    "gouraudPuffs": 0,
+    "resolution": "max",
+    "crt": false,
+    "canvas": [
+      1280,
+      720
+    ],
+    "frozen": true,
+    "loading": {
+      "phase": null,
+      "animation": {
+        "active": false,
+        "resident": false,
+        "owner": "loading-worker",
+        "starts": 1,
+        "stops": 1,
+        "failure": null,
+        "frames": 672,
+        "maxFrameMs": 25,
+        "width": 1280,
+        "height": 720,
+        "title": null
+      },
+      "pending": [],
+      "failed": [],
+      "revision": 162
+    }
+  },
+  "console": []
+}

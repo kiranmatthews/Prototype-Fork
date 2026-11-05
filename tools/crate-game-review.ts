@@ -51,6 +51,7 @@ button('Spin hit', () => { const c = current(); if (selected === 13) player.bank
 button('Stomp', () => { const c = current(); frozen = true; player.state = 'air'; player.grounded = false; player.spinTimer = 0; player.slamActive = false; player.freeSkate = false; player.speed = 0; player.prevPos.set(c.mesh.position.x, c.box.max.y + .14, c.mesh.position.z); player.pos.set(c.mesh.position.x, c.box.max.y - .06, c.mesh.position.z); player.vVel = -10; player.collide(level); });
 button('Light fuse', () => { selected = 6; select.value = '6'; level.lightFuse(crates[6]); });
 button('Save checkpoint', () => { selected = 13; select.value = '13'; player.bankCheckpoint(level, checkpoint); });
+button('Bank current state', () => player.bankCheckpoint(level, checkpoint));
 button('Soft restore', () => { level.reset(false); player.respawn(level, false); });
 button('Hard reset', () => { level.reset(true); frozen = false; place(); });
 button('Pit respawn', () => { frozen = false; inspecting = false; player.pos.y = level.killY - 5; player.state = 'air'; player.grounded = false; });
@@ -76,7 +77,9 @@ function report() {
   status.textContent = JSON.stringify({ kind: select.selectedOptions[0].textContent, alive: c.alive ?? !c.active, hits: c.hitsRemaining,
     marks: c.art?.labelKey, visibleFruit: c.art?.contents?.count, head: g.getCharacterHeadStyle(), collider: c.box.getSize(new THREE.Vector3()).toArray(), position: player.pos.toArray().map((n: number) => +n.toFixed(2)),
     player: player.state, cratesBroken: player.cratesBroken, deaths: player.totalDeaths, checkpoint: checkpoint.active, checkpointVisible: checkpoint.mesh.visible,
-    outline: outline.pending, usedSwitch: crates[10].bangUsed, effects: level.crateEffects.diagnostics, gouraudPuffs: puffs.liveCount, fuse: crates[6].fuse,
+    outline: outline.pending, usedSwitch: crates[10].bangUsed, nitroSwitchUsed: crates[11].bangUsed, nitroAlive: crates[7].alive,
+    ordinaryMetalSurface: c.art?.shell.material === crates[5].art?.shell.material, marksVisible: c.art?.marks.visible, artScale: c.art?.root.scale.toArray(),
+    effects: level.crateEffects.diagnostics, gouraudPuffs: puffs.liveCount, fuse: crates[6].fuse,
     resolution: g.renderQualitySettings.regularResolution, crt: g.crtGuestSettings.enabled,
     canvas: [g.renderer.domElement.width, g.renderer.domElement.height], frozen,
     loading: g.getLoadingDiagnostics() }, null, 2);
