@@ -34,3 +34,7 @@ desktop/test-results/
 !/public/props/carlisle-cone/cone-body.glb
 # Local Tripo CLI task history.
 .tripo/
+
+# Opt-in local Skate motion study; extracted source data never enters releases.
+.skate-reference-data
+.skate-playtest-build/

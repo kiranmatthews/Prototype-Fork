@@ -8876,3 +8876,39 @@ Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
   no console warnings/errors. Restored normal 720p/1× and hidden debug panels.
 - D is left in live play at local port 5189. Evidence: external `skate-rollback/`.
   The validation slot was released. Nothing was integrated, pushed or published.
+
+## Skate source motions — separate local playable demo
+
+- 6 November 2026 NZDT, approximately 45 minutes handoff-to-playable validation
+  (00:39–01:24 NZDT). The user approved the separate Skate reference lab and
+  explicitly handed its motions to Character Animation for gameplay integration.
+  Starts from rollback `48e60aa4`; rejected procedural mount experiments remain
+  removed. Nothing is integrated, pushed or published.
+- Added an opt-in local plaza at port 5198 using the actual Player controller,
+  the earlier D on-foot document, and approved extracted Skate mount/dismount,
+  push, stance, crouch/air and landing samples. Original D skating remains
+  selectable. Native input, physics and tuning are unchanged.
+- The final presentation callback shares the existing restore boundary. Finite
+  source clips crossfade from animation-space poses without double-applying
+  Character Lab proportions. A started push completes before cruising. Actual
+  support loss and landing own air/catch. Contacts fit Bone Man's proportions;
+  source limb extension and shared independent torso elasticity remain.
+  The board is only carried during finite equipment handling, with no spin
+  cover. Unsupported actions retain their ordinary pose owners.
+- Focused checks pass: 1,980 paired native-controller frames covering complete
+  sequences, early releases and remounts; exact position, speed, velocity,
+  grounded and movement-state agreement. Finite pose samples and transition
+  bounds pass. Overlay snapshot/preview/replacement/exception checks pass.
+  `npm run check:levels`, production build/type-check, isolated local build and
+  whitespace checks pass. Normal dist excludes this entry and private motion
+  JSON. No `check:all` or publication checks were run.
+- Browser review: normal and MAX/native, standing/running mount, complete push,
+  release during mount, air/landing, pickup, three styles and original-motion
+  comparison. Three consecutive real keyboard holds mounted successfully;
+  short taps retain the on-foot jump. The ordinary finish gate also triggers.
+  Console is clear. Evidence is external `skate-playable/`.
+- This is a first local gameplay assembly of the approved raw clips, ready for
+  user visual review, not acceptance of every transition or Skate's original
+  animation graph. Data and demo remain private/local.
+
+Details: [Skate playable study](SKATE_PLAYTEST.md).

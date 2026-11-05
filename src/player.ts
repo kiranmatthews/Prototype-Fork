@@ -3174,6 +3174,13 @@ export class Player {
 
   get vehicleVisualRoot():THREE.Group {return this.bodyGroup;}
 
+  /** Opt-in presentation after deck contacts; ordinary gameplay leaves it unset. */
+  setFinalPoseOverlay(overlay: PlayerAnimationOverlay | null): () => void {
+    const dispose = this.playerAnimationBridge.setFinalOverlay(overlay);
+    this.resetRenderInterpolation();
+    return () => {dispose(); this.resetRenderInterpolation();};
+  }
+
   private authoredClipSource:((id:string)=>AnimationClip|null)|null=null;
   /** Temporary presentations borrow the live document's clips without taking
    * over the ordinary gameplay animation clock or its overlay. */
@@ -20562,6 +20569,7 @@ export class Player {
     // the mask from the final head socket only after every post-pose correction.
     // Mask sockets live under the presentation mount, so sample them only after
     // both the authored head pose and the active Skull/BoolieRoo profile land.
+    this.playerAnimationBridge.applyFinalOverlay(dt);
     this.prepareMaskPresentation();
     if (this.maskMesh) {
       const uber = this.uberTimer > 0;
