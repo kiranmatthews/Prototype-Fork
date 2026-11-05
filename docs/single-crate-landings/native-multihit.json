@@ -1,0 +1,151 @@
+{
+  "case": "multihit",
+  "phase": "landed",
+  "crateSize": 1.152,
+  "crateSizeChange": 0,
+  "bodyWidth": 1,
+  "bodyDepth": 1,
+  "bodyHeight": 0.9358642897143924,
+  "alive": 4,
+  "total": 4,
+  "impact": {
+    "before": [
+      {
+        "position": [
+          -4.576,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      },
+      {
+        "position": [
+          -3.424,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      },
+      {
+        "position": [
+          -4.576,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      },
+      {
+        "position": [
+          -3.424,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      }
+    ],
+    "after": [
+      {
+        "position": [
+          -4.576,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "hits": 4,
+        "fuse": null
+      },
+      {
+        "position": [
+          -3.424,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      },
+      {
+        "position": [
+          -4.576,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      },
+      {
+        "position": [
+          -3.424,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "hits": 5,
+        "fuse": null
+      }
+    ],
+    "vVel": 14,
+    "feet": [
+      -4,
+      1.2919999999999998,
+      61
+    ],
+    "spin": false
+  },
+  "crates": [
+    {
+      "position": [
+        -4.576,
+        0.696,
+        60.424
+      ],
+      "alive": true,
+      "hits": 4,
+      "fuse": null
+    },
+    {
+      "position": [
+        -3.424,
+        0.696,
+        60.424
+      ],
+      "alive": true,
+      "hits": 5,
+      "fuse": null
+    },
+    {
+      "position": [
+        -4.576,
+        0.696,
+        61.576
+      ],
+      "alive": true,
+      "hits": 5,
+      "fuse": null
+    },
+    {
+      "position": [
+        -3.424,
+        0.696,
+        61.576
+      ],
+      "alive": true,
+      "hits": 5,
+      "fuse": null
+    }
+  ],
+  "canvas": [
+    2560,
+    1440
+  ],
+  "crt": false
+}

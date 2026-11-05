@@ -9450,7 +9450,6 @@ failure at line 278: it expects `fruitCollectionRevision++` immediately after
 on baseline `a9020b2a` as well. No fruit or player code is changed here.
 Production build/typecheck and release-size validation pass (834,730,843 bytes).
 
-
 ## 2026-11-05 — Softer, bevelled character SPECIAL ring
 
 The empty portrait ring now has a translucent shaded band (12–18% alpha,
@@ -9478,3 +9477,32 @@ readout and Bonus retain their existing transform overrides. Approximately
 3 minutes prompt-to-verified playable. The complete 12-case review passed
 again beside 1/3 life counts, including compact, full and MAX rendering, with
 no console errors; the focused Modern life-HUD check also passed.
+
+## 2026-11-05 — One crate per ordinary jump landing
+
+Crates retain their current 1.152 m size (0% change, within the requested +15%
+limit). Bone Man's baseline 1 × 1 m body footprint already fits a lid. Ordinary
+sole catches retain their 0.35 m edge margin, requiring 0.15 m of the sole on the
+lid. The defect was contact arbitration: the cached descending-face set included
+all overlapping lids, even after the first crate launched the player upward.
+
+Normal landings now select one highest lid, preferring the crate nearest the
+swept foot impact point and using spatial tie-breaking rather than authoring
+order. Once a bounce or solid-lid landing consumes that descent, the crate loop
+stops. Existing spin reach and explicit body-slam behavior remain intact; no
+character mesh, global body dimensions, movement tuning, crate art or level
+placement changed.
+
+The regression first reproduced four breaks at a shared corner on `43cec62f`.
+All 48 new actual-runtime checks pass: centred/seam/corner hits, reversed array
+order, swept diagonal impacts, terminal falls, next bounces, multihit, two-layer
+stacks, TNT, arrows, metal, switches and expanded spin. Existing hit-forgiveness,
+fast-landing (18 checks), and crate-jump parity checks also pass.
+
+Actual Player/Level browser checks at lite, 2560×1440 MAX/native and 480p/CRT
+confirm one break with three survivors, one multihit decrement, seven survivors
+in an eight-crate stack, and one additional break on the next drop. An active
+spin clears all four adjacent crates. Consoles clean. Playably validated at
+05:06 UTC, approximately 15 minutes after the follow-up began. Evidence:
+`docs/single-crate-landings/`. Direct publication remains assigned to this chat.
+Production build/typecheck and release-size validation pass (834,731,139 bytes).

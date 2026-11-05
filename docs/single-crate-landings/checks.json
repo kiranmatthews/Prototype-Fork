@@ -1,0 +1,17 @@
+{
+  "baseline": "43cec62f",
+  "baselineCornerBreaks": 4,
+  "expectedNormalBreaks": 1,
+  "checks": [
+    "PASS 48 one-crate landings: centres, seams, corners, array order, swept impact, fast falls, rebound, next bounce, multihit, stacks, TNT, arrows, metal, switches and expanded spin.",
+    "PASS crate attack forgiveness: spin X/Z margins, inactive/far/vertical misses, top-down edge stomps, typed hazards, arrow/multi-hit behavior, and highest stack lid.",
+    "PASS 18 terminal-speed crate contacts and misses; normal wood/arrow pops, solid metal and lethal nitro preserved.",
+    "crate jump parity ok"
+  ],
+  "crateSize": 1.152,
+  "crateSizeChange": 0,
+  "bodyFootprint": [
+    1,
+    1
+  ]
+}

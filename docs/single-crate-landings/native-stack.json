@@ -1,0 +1,247 @@
+{
+  "case": "stack",
+  "phase": "landed",
+  "crateSize": 1.152,
+  "crateSizeChange": 0,
+  "bodyWidth": 1,
+  "bodyDepth": 1,
+  "bodyHeight": 0.9358642897143924,
+  "alive": 7,
+  "total": 8,
+  "impact": {
+    "before": [
+      {
+        "position": [
+          3.424,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          3.424,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          3.424,
+          1.8479999999999999,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          1.8479999999999999,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          3.424,
+          1.8479999999999999,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          1.8479999999999999,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      }
+    ],
+    "after": [
+      {
+        "position": [
+          3.424,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          3.424,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          3.424,
+          1.8479999999999999,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          1.8479999999999999,
+          60.424
+        ],
+        "alive": false,
+        "fuse": null
+      },
+      {
+        "position": [
+          3.424,
+          1.8479999999999999,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          4.576,
+          1.8479999999999999,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      }
+    ],
+    "vVel": 14,
+    "feet": [
+      4,
+      2.444,
+      61
+    ],
+    "spin": false
+  },
+  "crates": [
+    {
+      "position": [
+        3.424,
+        0.696,
+        60.424
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        4.576,
+        0.696,
+        60.424
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        3.424,
+        0.696,
+        61.576
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        4.576,
+        0.696,
+        61.576
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        3.424,
+        1.8479999999999999,
+        60.424
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        4.576,
+        1.8479999999999999,
+        60.424
+      ],
+      "alive": false,
+      "fuse": null
+    },
+    {
+      "position": [
+        3.424,
+        1.8479999999999999,
+        61.576
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        4.576,
+        1.8479999999999999,
+        61.576
+      ],
+      "alive": true,
+      "fuse": null
+    }
+  ],
+  "canvas": [
+    2560,
+    1440
+  ],
+  "crt": false
+}

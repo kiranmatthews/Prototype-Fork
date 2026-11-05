@@ -302,7 +302,8 @@ const CRATE_SPIN_MARGIN = 0.35;
 // A low sweep stays well below the next 0.96 m crate layer, independently of
 // the Character Lab's head/limb proportions and the spin's visual smear.
 const CROUCH_SPIN_HEIGHT = 0.6;
-// The baseline sole extends 0.5 m from centre; leave at least 0.15 m on the lid.
+// The 1 m-wide baseline sole fits on a 1.152 m crate. Leave at least 0.15 m
+// of sole on an edge catch; overlapping lids still share ONE landing below.
 const CRATE_STOMP_MARGIN = 0.35;
 const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen draw
 const FRUIT_PREV = new THREE.Vector4(); // scratch: viewport to put back
@@ -13593,12 +13594,17 @@ export class Player {
     this.refreshCrateBounds();
     level.breakableScenery.touch(this.crateBodyBox, this.prevPos, this.pos);
     level.pressCartonTops(this.pos, CONST.playerHalf, this.vVel);
+    const singleCrateLanding = this.state === 'air' && this.vVel < 0 &&
+      !this.spinning && !this.slamActive;
     const {
       ordered: crateContacts,
       stomps: crateStompContacts,
       bonks: crateBonkContacts,
-    } = this.cratesInFaceContactOrder(level);
+    } = this.cratesInFaceContactOrder(level, singleCrateLanding);
     for (const c of crateContacts) {
+      // A bounce/solid lid has consumed this descent. Do not reuse its old
+      // swept contacts on the neighbouring lids or convert them to side hits.
+      if (singleCrateLanding && this.vVel >= 0) break;
       this.refreshCrateBounds();
       const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
       const crateTouch=crateStompContacts.has(c)||(solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box);
@@ -15523,7 +15529,7 @@ export class Player {
   }
 
   /** Snapshot and order crossed vertical faces before any crate mutates state. */
-  private cratesInFaceContactOrder(level: Level): {
+  private cratesInFaceContactOrder(level: Level, singleLanding: boolean): {
     ordered: readonly Crate[];
     stomps: ReadonlySet<Crate>;
     bonks: ReadonlySet<Crate>;
@@ -15534,7 +15540,7 @@ export class Player {
         stomps: NO_CRATE_CONTACTS,
         bonks: NO_CRATE_CONTACTS,
       };
-    const faces: { crate: Crate; index: number; face: number }[] = [];
+    const faces: { crate: Crate; index: number; face: number; distance: number }[] = [];
     for (let index = 0; index < level.crates.length; index++) {
       const c = level.crates[index];
       const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
@@ -15553,11 +15559,16 @@ export class Player {
         const crossed = descent > 0 && this.prevPos.y >= top - .05 && this.pos.y <= top + .05 &&
           x >= c.box.min.x - lidMargin && x <= c.box.max.x + lidMargin &&
           z >= c.box.min.z - lidMargin && z <= c.box.max.z + lidMargin;
-        if (crossed || this.playerBox.intersectsBox(c.box) && this.isStomping(c.box, lidMargin))
-          faces.push({ crate: c, index, face: c.box.max.y });
+        if (crossed || this.playerBox.intersectsBox(c.box) && this.isStomping(c.box, lidMargin)) {
+          // Choose under the feet at impact, not the later sampled position
+          // and not whichever crate the level happened to author first.
+          const dx = x - (c.box.min.x + c.box.max.x) / 2;
+          const dz = z - (c.box.min.z + c.box.max.z) / 2;
+          faces.push({ crate: c, index, face: c.box.max.y, distance: dx * dx + dz * dz });
+        }
       } else {
         if ((solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box) && this.isBonking(c.box,!solid))
-          faces.push({ crate: c, index, face: c.box.min.y });
+          faces.push({ crate: c, index, face: c.box.min.y, distance: 0 });
       }
     }
     if (faces.length === 0)
@@ -15568,7 +15579,8 @@ export class Player {
       };
     faces.sort((a, b) =>
       this.vVel < 0
-        ? b.face - a.face || a.index - b.index
+        ? b.face - a.face || a.distance - b.distance ||
+          a.crate.box.min.x - b.crate.box.min.x || a.crate.box.min.z - b.crate.box.min.z || a.index - b.index
         : a.face - b.face || a.index - b.index,
     );
     const faceSet = new Set(faces.map((entry) => entry.crate));
@@ -15577,7 +15589,7 @@ export class Player {
         ...faces.map((entry) => entry.crate),
         ...level.crates.filter((crate) => !faceSet.has(crate)),
       ],
-      stomps: this.vVel < 0 ? faceSet : NO_CRATE_CONTACTS,
+      stomps: this.vVel < 0 ? (singleLanding ? new Set([faces[0].crate]) : faceSet) : NO_CRATE_CONTACTS,
       bonks: this.vVel > 0 ? faceSet : NO_CRATE_CONTACTS,
     };
   }

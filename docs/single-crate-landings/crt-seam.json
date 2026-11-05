@@ -1,0 +1,139 @@
+{
+  "case": "wood",
+  "phase": "landed",
+  "crateSize": 1.152,
+  "crateSizeChange": 0,
+  "bodyWidth": 1,
+  "bodyDepth": 1,
+  "bodyHeight": 0.9358642897143924,
+  "alive": 3,
+  "total": 4,
+  "impact": {
+    "before": [
+      {
+        "position": [
+          -12.576,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          -11.424,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          -12.576,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          -11.424,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      }
+    ],
+    "after": [
+      {
+        "position": [
+          -12.576,
+          0.696,
+          60.424
+        ],
+        "alive": false,
+        "fuse": null
+      },
+      {
+        "position": [
+          -11.424,
+          0.696,
+          60.424
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          -12.576,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      },
+      {
+        "position": [
+          -11.424,
+          0.696,
+          61.576
+        ],
+        "alive": true,
+        "fuse": null
+      }
+    ],
+    "vVel": 14,
+    "feet": [
+      -12,
+      1.2919999999999998,
+      60.424
+    ],
+    "spin": false
+  },
+  "crates": [
+    {
+      "position": [
+        -12.576,
+        0.696,
+        60.424
+      ],
+      "alive": false,
+      "fuse": null
+    },
+    {
+      "position": [
+        -11.424,
+        0.696,
+        60.424
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        -12.576,
+        0.696,
+        61.576
+      ],
+      "alive": true,
+      "fuse": null
+    },
+    {
+      "position": [
+        -11.424,
+        0.696,
+        61.576
+      ],
+      "alive": true,
+      "fuse": null
+    }
+  ],
+  "canvas": [
+    853,
+    480
+  ],
+  "crt": true
+}
