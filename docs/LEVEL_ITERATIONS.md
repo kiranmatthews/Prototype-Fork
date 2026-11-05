@@ -9426,3 +9426,26 @@ after this follow-up began, including the reference review. Evidence and motion:
 `docs/quick-crate-smashes/`. Direct release remains assigned to this chat.
 Production build/typecheck and the hosting-size check pass; no full suite was
 needed for this scoped visual change.
+
+## 2026-11-05 — HUD crate camera matches the Crash 4 corner view
+
+Reviewed the visible crate HUD at [2:52 in the reference](https://www.youtube.com/watch?v=vKERSYS7SkU&t=172s).
+Corrected the inverted HUD crate lean: a 35.264° downward view and 45° starting
+yaw show the top and two sides, with their corner at the icon centre before
+its idle spin. Fitting now accounts for the entire tilted rotational envelope,
+so the steeper view stays inside the same HUD slot without clipping. Idle spin
+speed, complete crate geometry, materials, layout and other icon poses remain
+unchanged. The bonus transfer reuses this same icon.
+
+Playably validated at 04:41 UTC, approximately 8 minutes after the follow-up
+began. Actual game HUD checked in lite rendering, full 2560×1440 MAX/native,
+and normal 480p/CRT; normal size and enlarged corner inspection, plus animated
+spin. A 72-angle vertex sweep stays within the icon frame (max extents 0.4015
+horizontal and 0.4623 vertical in a ±0.5 frustum). Full-render console is clean;
+HUD-visibility checks pass. Evidence: `docs/hud-crate-angle/`.
+
+The existing `test-game-hud-pipeline.mjs` has a pre-existing unrelated regex
+failure at line 278: it expects `fruitCollectionRevision++` immediately after
+`collectFruit` opens, but that unchanged function has an intervening statement
+on baseline `a9020b2a` as well. No fruit or player code is changed here.
+Production build/typecheck and release-size validation pass (834,730,843 bytes).

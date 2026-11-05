@@ -1234,18 +1234,20 @@ export class UI {
       revealHost: HTMLElement;
       make: () => THREE.Group;
       lean: number;
+      yaw?: number;
       rate: number;
       fill: number;
       relic: boolean;
     }[] = [
-      // the crate shows its top face: you look DOWN on crates in this game
-      { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
+      // Look down the cube's diagonal: its top/front corner sits at the
+      // centre before the idle spin. Positive X lean exposes the TOP face.
+      { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: Math.atan(1 / Math.SQRT2), yaw: Math.PI / 4, rate: 0.6, fill: 0.94, relic: false },
       { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => milkBlob(1), lean: 0, rate: 0.6, fill: 0.86, relic: false },
       { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
     ];
-    for (const [index, { host, revealHost, make, lean, rate, fill, relic }] of art.entries()) {
+    for (const [index, { host, revealHost, make, lean, yaw = 0, rate, fill, relic }] of art.entries()) {
       const model = make();
       // Strip the world halo. It's a camera-facing additive sprite sized for a
       // pickup standing in a level; at HUD scale, over bright scenery, it reads
@@ -1279,6 +1281,7 @@ export class UI {
       }
       model.position.sub(c);
       const spin = new THREE.Group();
+      spin.rotation.y = yaw;
       spin.add(model);
       const pivot = new THREE.Group();
       pivot.rotation.x = lean;
@@ -1295,8 +1298,8 @@ export class UI {
         owner: `hud-icon-${index}`,
         pivot,
         spin,
-        unit: relic ? (size.y * Math.cos(lean) + sweepWidth * Math.abs(Math.sin(lean))) / fill : (size.y || 1) / fill,
-        unitWidth: relic ? sweepWidth / fill : undefined,
+        unit: lean ? (size.y * Math.cos(lean) + sweepWidth * Math.abs(Math.sin(lean))) / fill : (size.y || 1) / fill,
+        unitWidth: lean ? sweepWidth / fill : undefined,
         rate,
         on: !relic,
       });

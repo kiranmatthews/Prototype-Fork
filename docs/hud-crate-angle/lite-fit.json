@@ -1,0 +1,33 @@
+{
+  "pose": "corner",
+  "leanDeg": 35.264389682754654,
+  "yawDeg": 45,
+  "topFacesViewer": true,
+  "spinRate": 0,
+  "unit": 1.737226767931332,
+  "unitWidth": 1.5044825131628672,
+  "sweep": {
+    "samples": 72,
+    "vertices": 2765664,
+    "maxX": 0.4014419641090395,
+    "maxY": 0.46220581695437435,
+    "inside": true
+  },
+  "iconRect": {
+    "x": 34,
+    "y": 150.80435180664062,
+    "width": 77.0390625,
+    "height": 77.0390625,
+    "top": 150.80435180664062,
+    "right": 111.0390625,
+    "bottom": 227.84341430664062,
+    "left": 34
+  },
+  "resolution": 720,
+  "crt": false,
+  "canvas": [
+    1280,
+    720
+  ],
+  "composited": false
+}
