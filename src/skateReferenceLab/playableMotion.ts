@@ -17,8 +17,13 @@ const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC
  * writes position, speed, grounded, input, charge, or a controller state. */
 export class PlayableSkateMotion {
   enabled = true;
-  scribbles = true;
+  private useScribbles = true;
   readonly boardScribble = new BoardScribbleSequence();
+  private dismountInkPending = false;
+  private dismountInkTail = false;
+  private boardAlpha = 1;
+  private baselineBoardVisible = false;
+  private baselineBoardAlpha = 1;
   style: keyof typeof rideNames = 'Relaxed';
   phase: Phase = 'foot';
   time = 0;
@@ -66,17 +71,68 @@ export class PlayableSkateMotion {
     this.opacity(1);
     player.exitAnimationPreview();
     this.stop = player.setFinalPoseOverlay(context => {
+      const previousPhase = this.phase, previousTime = this.time;
+      const previousDuration = this.clip ? clipDuration(this.clip) : 0;
       this.update(context);
-      const active = this.enabled && this.scribbles;
-      const visible = this.retarget.board.visible && !(this.phase === 'dismount' && this.clip && this.time >= clipDuration(this.clip) - .16);
-      this.boardScribble.step(context.deltaSeconds, visible, active);
-      if (active) {this.opacity(1); this.retarget.board.visible = this.boardScribble.boardVisible;}
+      this.baselineBoardVisible = this.retarget.board.visible;
+      this.baselineBoardAlpha = this.boardAlpha;
+      this.updateScribble(context.deltaSeconds, previousPhase, previousTime, previousDuration);
+      this.applyBoardPresentation();
     });
   }
 
-  dispose(): void {this.stop(); this.opacity(1);}
+  get scribbles(): boolean {return this.useScribbles;}
+  set scribbles(value: boolean) {
+    this.useScribbles = value;
+    this.boardScribble.enabled = value && this.enabled;
+    // A/B also works while paused. It changes only the prop presentation;
+    // the source clock, pose and controller never advance or restart.
+    this.applyBoardPresentation();
+  }
+
+  private updateScribble(dt: number, previous: Phase, previousTime: number, previousDuration: number): void {
+    const p = this.p, ink = this.boardScribble;
+    ink.enabled = this.scribbles && this.enabled;
+    ink.step(dt);
+    const interrupted = !this.enabled || !p.grounded || p.isBailing || p.ragActive || p.bailing
+      || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding
+      || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
+    if (interrupted) {
+      ink.cancel(); this.dismountInkPending = this.dismountInkTail = false; return;
+    }
+    if (this.phase !== previous) {
+      if (this.phase === 'mount') {
+        ink.start(true); this.dismountInkPending = this.dismountInkTail = false;
+      } else if (this.phase === 'dismount') {
+        ink.cancel(); this.dismountInkPending = true; this.dismountInkTail = false;
+      } else if (previous === 'dismount' && this.phase === 'foot' && previousTime + dt + 1e-7 >= previousDuration) {
+        // Let a completed, ordinary dismount finish clearing its ink on foot.
+        this.dismountInkTail = true; this.dismountInkPending = false;
+      } else {
+        ink.cancel(); this.dismountInkPending = this.dismountInkTail = false;
+      }
+    }
+    if (this.phase === 'dismount' && this.dismountInkPending && this.clip && this.time >= clipDuration(this.clip) - .16) {
+      ink.start(false); this.dismountInkPending = false;
+    }
+    if (this.phase === 'foot' && !this.dismountInkTail) ink.cancel();
+  }
+
+  private applyBoardPresentation(): void {
+    this.opacity(this.baselineBoardAlpha);
+    this.retarget.board.visible = this.baselineBoardVisible;
+    const ink = this.boardScribble;
+    if (!ink.active) return;
+    if ((this.phase === 'mount' && ink.targetVisible) || (this.phase === 'dismount' && !ink.targetVisible)) {
+      this.opacity(1); this.retarget.board.visible = ink.boardVisible;
+    }
+  }
+
+  dispose(): void {this.boardScribble.cancel(); this.stop(); this.opacity(1);}
   reset(): void {
     this.boardScribble.reset();
+    this.dismountInkPending = this.dismountInkTail = this.baselineBoardVisible = false;
+    this.baselineBoardAlpha = 1;
     this.phase = 'foot'; this.time = 0; this.clip = null;
     this.sourceName='';this.previousFootSpeed=0;this.mountHold=false;this.visits.clear();
     this.lastPose = this.fromPose = null; this.fade = 1;
@@ -91,6 +147,7 @@ export class PlayableSkateMotion {
     });
   }
   private opacity(alpha: number): void {
+    this.boardAlpha = alpha;
     // The full board model can arrive after Player construction. Adopt each
     // arriving mesh once, without fading shared materials used by other riders.
     this.retarget.board.traverse(node=>{

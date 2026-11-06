@@ -11,23 +11,30 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const clock=new BoardScribbleSequence(),root=new THREE.Group(),board=new THREE.Group();root.add(board);
   const effect=new BoardScribbleEffect(new THREE.Texture(),root,board,clock);
   const camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(4,2,7);camera.lookAt(0,0,0);camera.updateMatrixWorld();
-  clock.step(1/60,true);effect.update(camera);
+  clock.start(true);effect.update(camera);
   const quad=effect.sprite.scale.toArray(),cells=new Set();
   assert.equal(clock.boardVisible,false,'board reveals before the first ink drawings');
   for(let f=0;f<SCRIBBLE_FRAMES;f++){
-    if(f)clock.step(1/SCRIBBLE_FPS,true);
+    if(f)clock.step(1/SCRIBBLE_FPS);
     effect.update(camera);cells.add(effect.sprite.material.map.offset.toArray().join(','));
     assert.deepEqual(effect.sprite.scale.toArray(),quad,'scribble is being scaled instead of redrawn');
     assert.ok(effect.sprite.visible);
     if(f>=2)assert.equal(clock.boardVisible,true);
   }
   assert.equal(cells.size,SCRIBBLE_FRAMES);
-  clock.step(1/20,true);effect.update(camera);assert.equal(effect.sprite.visible,false);
-  for(let f=0;f<120;f++)clock.step(1/60,true);
+  clock.step(1/20);effect.update(camera);assert.equal(effect.sprite.visible,false);
+  for(let f=0;f<120;f++)clock.step(1/60);
   assert.equal(clock.appearances,1);
-  clock.step(1/60,false);assert.equal(clock.disappearances,1);assert.equal(clock.boardVisible,false);
-  clock.step(1/60,true);assert.equal(clock.appearances,2,'interrupted disappearance did not restart');
-  clock.step(1/60,true,false);assert.equal(clock.active,false);assert.equal(clock.boardVisible,true);
+  clock.start(false);assert.equal(clock.disappearances,1);assert.equal(clock.boardVisible,false);
+  effect.update(camera);const disappearancePosition=effect.sprite.position.clone(),disappearanceScale=effect.sprite.scale.clone();
+  clock.enabled=false;effect.update(camera);board.position.set(5,3,-2);
+  clock.enabled=true;effect.update(camera);
+  assert.ok(effect.sprite.position.distanceTo(disappearancePosition)<1e-9,'A/B moved the disappearance ink to the idle board');
+  assert.ok(effect.sprite.scale.distanceTo(disappearanceScale)<1e-9,'A/B resized the active burst');
+  clock.start(true);assert.equal(clock.appearances,2,'new mount cue did not restart');
+  clock.enabled=false;assert.equal(clock.active,false);assert.equal(clock.boardVisible,true);
+  const elapsed=clock.elapsed;clock.enabled=true;assert.equal(clock.elapsed,elapsed,'A/B advanced the source clock');
+  clock.cancel();assert.equal(clock.active,false);
   clock.reset();assert.equal(clock.active,false);effect.dispose();
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
   const {RigBinding,createPlayerStarterAnimationSuite}=await server.ssrLoadModule('/src/animation/index.ts');

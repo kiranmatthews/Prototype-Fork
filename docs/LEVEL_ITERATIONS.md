@@ -8963,3 +8963,29 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
 - Evidence: external `skate-scribble-32/`, including atlas bounds/hashes, browser
   state captures and build logs. The existing port 5199 playtest and `/labs`
   links remain current. Local only; no publication is authorized.
+
+## Skate scribbles — pre-scribble comparison and explicit equipment cues
+
+- 6 November 2026 NZDT: about 18 minutes prompt-to-playable including focused
+  validation (14:18–14:36). Added A · Pre-scribble / B · Scribble comparison,
+  with 1 / 2 shortcuts that also switch at the same paused animation frame.
+  A restores the accepted `22cebbe2` board fades; both retain its source poses,
+  clip clocks, transitions, movement and native controls.
+- Replaced visibility-change detection with explicit normal mount/dismount
+  cues. Bails, death, jumps and other pose owners cancel active ink without
+  starting disappearance bursts. Only a naturally completed dismount keeps
+  its small-drawing tail on foot. Paused A/B preserves the captured attachment
+  and fixed sprite size. Added a local B-key native bail test action.
+- Validation: 660 frames compared against the actual pre-scribble source,
+  including every pose-node transform, source phase/time, controller values
+  and A's board visibility/opacity. Four paused switches, native bails during
+  mount/ride/dismount and recovery, 60 unrelated visibility changes, eight
+  other pose owners, death and reset pass. Existing 1,980 paired-controller
+  frames and 32-frame/fixed-quad checks also pass.
+- Production type-check/build, isolated local build and whitespace checks pass.
+  Production output excludes the Skate entries, PNG and private JSON. Browser
+  review at normal and MAX/native confirms paused keyboard/selector comparison,
+  immediate bail cancellation, one normal dismount burst and finite cleanup.
+  Console clear; evidence is external `skate-scribble-ab/`.
+- Existing local playtest remains at port 5199. No shared movement, level data,
+  source-motion retargeting or PNG art changed. Nothing pushed or published.

@@ -53,8 +53,8 @@ async function start() {
   const camera=new THREE.PerspectiveCamera(38,1,.03,200);
   const target=new THREE.Vector3(),offset=new THREE.Vector3(),cameraTarget=new THREE.Vector3();
   const views={three:[4.8,2.6,7.6],side:[8,1.9,0],back:[0,2.8,8.8],front:[0,2.2,-8.8]};
-  let paused=false,frameStep=false,rate=1,demoTime=-1,previousDemoJump=false,accumulator=0,last=0,reportAt=0;
-  const reset=()=>{p.enterLevel('skate-playtest');p.respawn(level,true);level.setRunModesEnabled(false);(p as any).freeSkate=false;motion.reset();runtime.restart();accumulator=0;paused=false;$('pause').textContent='Pause';};
+  let paused=false,frameStep=false,rate=1,demoTime=-1,previousDemoJump=false,accumulator=0,last=0,reportAt=0,bailRequested=false;
+  const reset=()=>{p.enterLevel('skate-playtest');p.respawn(level,true);level.setRunModesEnabled(false);(p as any).freeSkate=false;motion.reset();runtime.restart();accumulator=0;paused=false;bailRequested=false;$('pause').textContent='Pause';};
   reset();
   const resize=()=>{renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();};resize();addEventListener('resize',resize);
   $<HTMLButtonElement>('reset').onclick=()=>{demoTime=-1;reset();canvas.focus();};
@@ -62,14 +62,21 @@ async function start() {
   $<HTMLButtonElement>('step').onclick=()=>{paused=true;frameStep=true;$('pause').textContent='Resume';};
   $<HTMLButtonElement>('demo').onclick=()=>{reset();demoTime=0;previousDemoJump=false;paused=false;$('pause').textContent='Pause';canvas.focus();};
   $<HTMLButtonElement>('return').onclick=()=>{demoTime=-1;previousDemoJump=false;paused=false;$('pause').textContent='Pause';$<HTMLSelectElement>('stop').value='none';canvas.focus();};
-  $<HTMLSelectElement>('motion').onchange=event=>{motion.enabled=(event.target as HTMLSelectElement).value==='source';canvas.focus();};
-  $<HTMLSelectElement>('ink').onchange=event=>{motion.scribbles=(event.target as HTMLSelectElement).value==='on';canvas.focus();};
+  const version = (value: string) => {motion.scribbles=value==='on';$<HTMLSelectElement>('ink').value=value;canvas.focus();};
+  $<HTMLSelectElement>('motion').onchange=event=>{motion.enabled=(event.target as HTMLSelectElement).value==='source';version($<HTMLSelectElement>('ink').value);};
+  $<HTMLSelectElement>('ink').onchange=event=>version((event.target as HTMLSelectElement).value);
   $<HTMLSelectElement>('style').onchange=event=>{motion.style=(event.target as HTMLSelectElement).value as typeof motion.style;canvas.focus();};
   $<HTMLSelectElement>('rate').onchange=event=>{rate=+(event.target as HTMLSelectElement).value;canvas.focus();};
   $<HTMLSelectElement>('quality').onchange=event=>{renderer.setPixelRatio((event.target as HTMLSelectElement).value==='native'?devicePixelRatio:Math.min(1,devicePixelRatio));resize();};
-  addEventListener('keydown',event=>{if(event.code==='KeyR' && !(event.target as HTMLElement).closest('input,select')){demoTime=-1;reset();}});
+  addEventListener('keydown',event=>{
+    if(event.ctrlKey||event.metaKey||event.altKey||(event.target as HTMLElement).closest('input,select,textarea'))return;
+    if(event.code==='Digit1'||event.code==='Digit2'){event.preventDefault();version(event.code==='Digit1'?'off':'on');}
+    if(event.code==='KeyR'){demoTime=-1;reset();}
+    if(event.code==='KeyB'&&!event.repeat){bailRequested=true;demoTime=-1;paused=false;$('pause').textContent='Pause';}
+  });
   canvas.addEventListener('pointerdown',()=>canvas.focus());
   function tick() {
+    if(bailRequested){bailRequested=false;(p as any).bail(false,Math.abs(p.speed),'trip');}
     const activeInput=demoTime<0 ? input : Object.assign(Object.create(Object.getPrototypeOf(input)),input,{
       moveX:0,moveY:demoTime<4.8?1:0,jumpHeld:demoTime>.4&&demoTime<3.5,
       jumpPressed:demoTime>.4&&demoTime<3.5&&!previousDemoJump,
@@ -97,6 +104,7 @@ async function start() {
     scene.updateMatrixWorld(true);camera.updateMatrixWorld();scribble.update(camera);renderer.render(scene,camera);
     if(now-reportAt>80){reportAt=now;$('phase').textContent=motion.enabled?motion.phase.replace(/-/g,' ').toUpperCase():'ORIGINAL D SKATING';
       $('diagnostics').textContent=JSON.stringify({...motion.diagnostics,demoTime:+demoTime.toFixed(2),paused,nativeState:p.state,
+        comparison:motion.scribbles?'B · Scribble':'A · Pre-scribble',bailing:Boolean((p as any).isBailing),
         scribble:{active:motion.boardScribble.active,frame:motion.boardScribble.frame+1,appearances:motion.boardScribble.appearances,disappearances:motion.boardScribble.disappearances,quad:scribble.sprite.scale.toArray()}},null,2);
       $('hint').textContent=demoTime>=0?'Control demo running · Take control at any time':'WASD · Hold Space to mount · Release to jump · Q brake · R reset';}
     requestAnimationFrame(render);

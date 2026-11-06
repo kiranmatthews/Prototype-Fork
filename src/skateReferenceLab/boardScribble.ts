@@ -45,27 +45,33 @@ const FRAME_REGIONS = [
 /** Simulation clock, so pause / frame step / slow motion also control the ink.
  * Equipment switches under the full-size drawings, before the smaller drawings. */
 export class BoardScribbleSequence {
+  enabled = true;
   targetVisible = false;
-  active = false;
+  private playing = false;
   elapsed = 0;
   serial = 0;
   appearances = 0;
   disappearances = 0;
+  get active(): boolean {return this.enabled && this.playing;}
   get frame(): number {return Math.min(SCRIBBLE_FRAMES - 1, Math.floor(this.elapsed * SCRIBBLE_FPS + 1e-7));}
   get boardVisible(): boolean {return this.targetVisible && (!this.active || this.frame >= REVEAL_FRAME);}
-  step(dt: number, visible: boolean, enabled = true): void {
-    if (!enabled) {this.targetVisible = visible; this.active = false; return;}
-    if (visible !== this.targetVisible) {
-      this.targetVisible = visible; this.elapsed = 0; this.active = true; this.serial++;
-      if (visible) this.appearances++; else this.disappearances++;
-    } else if (this.active) {
+  // Only an explicit equipment cue starts a burst. Board visibility, bails,
+  // loose decks and other animation owners are deliberately not inputs.
+  start(visible: boolean): void {
+    this.targetVisible = visible; this.elapsed = 0; this.playing = true; this.serial++;
+    if (visible) this.appearances++; else this.disappearances++;
+  }
+  step(dt: number): void {
+    if (this.playing) {
       this.elapsed += dt;
-      if (this.elapsed + 1e-7 >= SCRIBBLE_FRAMES / SCRIBBLE_FPS) this.active = false;
+      if (this.elapsed + 1e-7 >= SCRIBBLE_FRAMES / SCRIBBLE_FPS) this.playing = false;
     }
   }
+  cancel(): void {this.playing = false;}
   reset(): void {
-    this.targetVisible = this.active = false;
-    this.elapsed = this.serial = this.appearances = this.disappearances = 0;
+    this.targetVisible = this.playing = false;
+    this.elapsed = this.appearances = this.disappearances = 0;
+    this.serial++;
   }
 }
 
@@ -98,7 +104,9 @@ export class BoardScribbleEffect {
 
   update(camera: THREE.Camera): void {
     this.sprite.visible = this.clock.active;
-    if (!this.clock.active) {this.serial = -1; return;}
+    // A/B hides the drawing without losing its captured prop attachment or
+    // changing its size when the same equipment cue is shown again.
+    if (!this.clock.active) return;
     const newBurst = this.serial !== this.clock.serial;
     this.board.updateWorldMatrix(true, false);
     // Follow the actual prop on appearance. On disappearance, retain its last

@@ -26,6 +26,10 @@ from `tools/site-entries.mjs`. Its optional isolated build goes to the ignored
 - WASD/arrows: native movement. Hold Space with forward movement to mount and
   accelerate; release Space to jump. Hold Q to brake and step off. R resets.
 - Motion selector: new extracted Skate presentation or original D skating.
+- Compare selector / **1** and **2**: **A · Pre-scribble** restores the accepted
+  Skate presentation and board fades from `22cebbe2`; **B · Scribble** adds ink
+  over the same mount/dismount. Switching also works while paused, without
+  advancing or restarting the source clip. **B** triggers a native test bail.
 - Riding style: relaxed, loose or aggressive source stance; Loose also selects
   the longer loose landing.
 - Run control demo performs real input through the same Player controller.
@@ -67,11 +71,17 @@ down the artwork or fades it. Its long axis follows the board in the camera.
 The appearance switches under the full-size ink; disappearance retains the
 prop's last attachment to the moving player until the smaller drawings clear.
 
-The Board effect selector restores the original fades for comparison. Pause
-at **Board appears** or **Board disappears**, then Step frame to inspect the
-sequence. Slow motion slows the simulation and ink together. Reset, brief
+Only a normal mount or dismount can start ink; arbitrary changes in board
+visibility cannot. Bails, death, jumps, grinds and other pose owners cancel any
+active ink immediately. A naturally completed dismount can finish its smaller
+drawings on foot. The source animations, transitions, timing and controller are
+unchanged in both comparisons.
+
+Pause at **Board appears** or **Board disappears**, then Step frame to inspect
+the sequence and press **1 / 2** to compare the same pose with its original
+board fade. Slow motion slows the simulation and ink together. Reset, brief
 gestures and remounts clear/restart the effect without retaining a carried board.
-Original D skating remains an unmodified comparison.
+Original D skating remains a separate unmodified motion comparison.
 
 Asset and final generation prompt: `src/skateReferenceLab/assets/README.md`.
 The PNG and the source-motion viewer are local entry dependencies only; the
@@ -95,3 +105,12 @@ the isolated local build pass; normal dist contains neither this entry nor
 private motion JSON. Real browser review covers normal/native rendering, three
 consecutive keyboard mounts, release-to-jump, the source sequence and comparison
 controls, with no console warnings/errors. Visual acceptance remains with the user.
+
+`tools/test-board-scribble-ownership.mjs <private-motion.json>` also replays 660
+frames against the actual accepted pre-scribble source at `22cebbe2`, comparing
+every animation node's position, rotation and scale, source timing, movement,
+and A's board visibility/opacity. It checks paused A/B, native bails during
+mount/ride/dismount and recovery, arbitrary visibility changes, eight other
+pose owners, death and reset. The temporary historical module is removed on
+exit; run this check separately from builds. Browser A/B and native bail review
+pass at normal and MAX/native resolution.
