@@ -1,4 +1,18 @@
 {
+  "bryce-canyon": {
+    "theme": "Dusty Road · painted sandstone and giant cacti",
+    "footprint": [36, 32],
+    "pieces": [
+      {"asset":"../desert-canyon/hoodoo-spire","p":[-6.4,0,-11.5],"size":[5.4,13,5.2],"extent":1,"yaw":18},
+      {"asset":"../desert-canyon/hoodoo-cap","p":[2.8,0,-9.5],"size":[6.8,10,6.2],"extent":1,"yaw":-24},
+      {"asset":"../desert-canyon/hoodoo-low","p":[-9,0,6.5],"size":[7.8,2.8,5.8],"extent":1,"yaw":40},
+      {"asset":"../desert-canyon/plants/saguaro","p":[8,0,-5.7],"extent":6.5,"yaw":-20},
+      {"asset":"../desert-canyon/plants/prickly-pear","p":[-7,0,-4.4],"extent":4.5,"yaw":24},
+      {"asset":"../desert-canyon/plants/barrel-cactus","p":[6.5,0,5.8],"extent":2.8,"yaw":-15},
+      {"asset":"../desert-canyon/plants/dry-bunchgrass","p":[2.5,0,-4.9],"extent":2,"yaw":55},
+      {"asset":"../desert-canyon/plants/dry-bunchgrass","p":[-4.5,0,6.5],"extent":1.6,"yaw":-30}
+    ]
+  },
   "treehouse-trail": {
     "theme": "The actual layered treehouse and ancient canopy",
     "pieces": [

@@ -1,0 +1,47 @@
+{
+  "sourceRevision": "4927c3bb",
+  "levelId": "bryce-canyon",
+  "name": "Dusty Road",
+  "bonusId": "bonus-bryce-canyon",
+  "bonusName": "Cactus Cache",
+  "campaignOrder": [
+    "Factory Fuss",
+    "Dusty Road",
+    "Nightmare Grove"
+  ],
+  "existingMapHubPositionsAndIndicesPreserved": 49,
+  "newMapHubIndex": 49,
+  "browser": {
+    "gem": [
+      "full render normal 720",
+      "full render native 2560x1440"
+    ],
+    "bonus": [
+      "lite normal 720",
+      "full render native 2560x1440"
+    ],
+    "warnings": [],
+    "errors": [],
+    "campaignMenu": "Factory Fuss → Dusty Road → Nightmare Grove; thumbnail present"
+  },
+  "tests": {
+    "replayAndPickup": "pass",
+    "collectibleSpecular": "pass",
+    "campaign": "pass",
+    "levelSelect": "pass",
+    "mapArchipelago": "pass",
+    "bonusInputJourney": "8/8 crates, zero deaths",
+    "bonusSessionFlow": "pass",
+    "typescript": "pass",
+    "checkLevels": "existing waterpark material/texture retirement assertion, tools/test-waterpark-decks.mjs:49",
+    "productionBuild": "pass"
+  },
+  "replayRecovery": {
+    "checkpoint": "Sunset promontory",
+    "checkpointSkips": 17,
+    "lastWarpFrame": 549,
+    "frames": 4328,
+    "sha256": "d2de6e92ab3fec1c877c79f7c4091f51cabca1fc89ee463139d7830d8e95ac6a"
+  },
+  "releaseBytes": 963276864
+}

@@ -1,6 +1,6 @@
 # Six-island campaign
 
-The menu map has five main islands and one secret island: **38 destinations, 27 existing courses and 11 planned slots**. Player-facing names come from `src/campaign.ts`; existing editor IDs and save keys remain stable. The M editor catalogue retains original authoring names except the requested Jungle Gate Run rename to The Ancient Gates.
+The menu map has five main islands and one secret island: **39 destinations, 34 existing courses and 5 planned slots**. Player-facing names come from `src/campaign.ts`; existing editor IDs and save keys remain stable. The M editor catalogue retains original authoring names except the requested Jungle Gate Run rename to The Ancient Gates.
 
 ## Island roster
 
@@ -33,6 +33,7 @@ An em dash in the source column means a genuine Coming Soon placeholder. It cann
 | | Unnamed Course 5 | — |
 | | Maynard Quay Boss | — |
 | Quagmire Caverns | Factory Fuss | Warehouse / Five Lines · `warehouse` |
+| | Dusty Road | Dusty Road · `bryce-canyon` |
 | | Nightmare Grove | No-Man’s Grove · `jungle-minefield` |
 | | Guptus Eruptus | Nightworks: After Hours · `nightworks-after-hours` |
 | | Torchlight Trouble | The Nightworks · `dark` |
@@ -41,11 +42,13 @@ An em dash in the source column means a genuine Coming Soon placeholder. It cann
 
 Country Club keeps its existing shared race runtime and race rewards. Factory Fuss currently uses the existing free-skate Warehouse, which does not offer a time-trial medal. Neither entry invents a new course or changes movement physics.
 
-## Map geography and Meshy scenery
+Dusty Road follows Factory Fuss and opens Nightmare Grove. Its Cactus Cache bonus has a high crate shelf, a switch-revealed bridge and a finite-bounce stack; the entrance is beside the desert-basin trail. The stable `bryce-canyon` ID preserves existing saves and links. Its map stop is appended to serialized point arrays, preserving every older hub index and position. The diorama reuses the canyon’s full-detail procedural hoodoos and Tripo cactus meshes.
+
+## Map geography and scenery
 
 The five main islands form a winding archipelago. Secret Island floats at Y=125 above its centre. The camera orbits offshore and faces island centre; keyboard, controller and touch directions follow the resulting screen view.
 
-All **27 built courses** have Meshy scenery at their entrances. All eight secret entrances retain sanctuary scenery; the other eight unbuilt main-game slots retain reserved entrances. Each hub sits within its scene, with different footprints, foreground planting and inland landmarks. The original hand-built miniature props have been removed. Assignments, stable save IDs and unlock rules remain intact.
+All **34 built courses** have authored scenery at their entrances. All eight secret entrances retain sanctuary scenery; unbuilt main-game slots retain reserved entrances. Each hub sits within its scene, with different footprints, foreground planting and inland landmarks. The original hand-built miniature props have been removed. Assignments, stable save IDs and unlock rules remain intact.
 
 `src/mapLandmarkLayouts.json` owns placements. `src/mapDioramas.ts` loads the full-detail geometry with no distance-based mesh replacement. The runtime manifest records 76 assets: 69 reused assets and seven new Meshy landmarks. Original LOD0 triangles, UVs and full-resolution colour, normal and material atlases are preserved. Only redundant lower-detail versions and unused animation channels are omitted from static map copies. The source GLBs remain unchanged. Normalized source kits use their authored proportions at placement.
 
@@ -68,13 +71,13 @@ The first three secret slots now load Sky Bridge, Temple of Embers and The Ancie
 
 Secret Island courses award **gems and medals only**. Crystals are suppressed even in older saved/editor level data, and old secret-course crystal ownership is removed from active progress and completion totals. Bonus rooms remain available. A normal clear unlocks time trials without requiring a crystal. The map card and Level Select show only the gem and medal sockets. Main-course crystal rules remain in effect.
 
-Each course contributes one medal regardless of tier; a bronze-to-gold upgrade does not count twice. Legacy relic ownership counts as gold. Crystal and retired combo-gem awards do not count as clear or coloured gems. No coloured-gem challenges are currently authored: the final requirement has explicit future metadata/ownership support and remains unsatisfied while that catalogue is empty.
+Each course contributes one medal regardless of tier; a bronze-to-gold upgrade does not count twice. Legacy relic ownership counts as gold. Crystal and retired combo-gem awards do not count as clear or coloured gems. Dusty Road’s hidden yellow gem stores discovery separately. The final campaign requirement remains unsatisfied until authored coloured gems are connected to the campaign catalogue.
 
 The final two conditions exclude the destination's own rewards and later locked slots. This avoids requiring a reward from an inaccessible course to unlock that same course. Planned main slots remain part of future “all” requirements, while the ordinary completion percentage counts only built courses.
 
 ## Menu and save behaviour
 
-- Local inspection: `?playtest&level=warproom` on localhost opens all six islands and 38 slots in an ephemeral session, including all eight secret slots. The 27 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Add `lockedProgression` to test normal discovery rules; published hosts never receive the local override.
+- Local inspection: `?playtest&level=warproom` on localhost opens all six islands and 39 slots in an ephemeral session, including all eight secret slots. The 34 built courses are playable; unfinished slots remain Coming Soon. It awards no progress and does not overwrite saved games. Add `lockedProgression` to test normal discovery rules; published hosts never receive the local override.
 - Level Stats / Level Select reveals only unlocked levels and islands. Locked names, previews, rows and island pages remain hidden; secret slots also require their individual medal/gem condition. Unlocked Coming Soon slots remain inspectable with keyboard, controller, mouse or touch, while the menu, host transition and map entry independently block unavailable gameplay.
 - The map's physical travel remains gated by progression. Unbuilt ordinary slots can be visited and do not strand existing courses later on that island. Unbuilt bosses keep the next island closed.
 - Old save progress follows stable keys. For example, `test-course` remains Uga Ambush; it is never transferred to the new Carlisle Coast placeholder. Already completed main courses remain selectable after the reorder.

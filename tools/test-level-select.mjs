@@ -73,10 +73,10 @@ try {
   ui.changeLevelSelectIsland(1);
  }
  assert.equal(ui.levelSelectIsland,'island-1');
- // Inspection exposes all 38 slots, including the otherwise locked finale.
+ // Inspection exposes the whole current roster, including the locked finale.
  const earnedSave=campaign.active;
  campaign.startEphemeral({unlockAll:true});ui.showMapSection('level-select');
- assert.equal(ui.levelSelectKeys().size,38);assert.equal(ui.levelSelectIslands().length,6);
+ assert.equal(ui.levelSelectKeys().size,39);assert.equal(ui.levelSelectIslands().length,6);
  ui.changeLevelSelectIsland(-1);assert.deepEqual(rowKeys(),islands[5].levelKeys);
  ui.updateLevelSelectChoice('secret-8',true);assert.match(ui.levelSelectDetail.textContent,/Unlocked · Coming soon/);
  assert.equal(ui.levelSelectPlay.disabled,true);

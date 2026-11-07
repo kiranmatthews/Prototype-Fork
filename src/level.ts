@@ -18529,7 +18529,7 @@ export class Level {
         shell.material=new CollectibleSpecularMaterial(tint,'jelly');shell.name=`${colour} jelly gem`;
       }else if((child as THREE.Sprite).isSprite){
         const material=(child as THREE.Sprite).material as THREE.SpriteMaterial;
-        material.color.setHex(tint);material.opacity=.22;
+        material.color.setHex(tint);material.opacity=.08;
       }
     }
     return group;

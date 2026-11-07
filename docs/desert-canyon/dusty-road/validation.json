@@ -1,0 +1,17 @@
+{
+  "protectedLayout": true,
+  "unchangedGroundCells": 116,
+  "skyAndLightingUnchanged": true,
+  "flagsAndSignsAbsent": true,
+  "yellowGemPosition": [
+    -115.897,
+    -724.8173,
+    -4623.5825
+  ],
+  "replaySha256": "d2de6e92ab3fec1c877c79f7c4091f51cabca1fc89ee463139d7830d8e95ac6a",
+  "gemWalkFrames": 57,
+  "gemSupported": true,
+  "collectedOnce": true,
+  "reloadAndResetRetainGem": true,
+  "clearAndComboRewardsUnaffected": true
+}

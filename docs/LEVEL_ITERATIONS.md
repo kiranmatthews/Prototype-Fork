@@ -9996,3 +9996,45 @@ not run the normal physics update which registers incoming terrain cells.
 Imagegen prompts and concept/runtime distinctions:
 `docs/desert-canyon/cartoon/prompts.json`. Replay and validation evidence:
 `docs/desert-canyon/cartoon/replay-endpoint.json` and `validation.json`.
+
+## 2026-11-08 — Dusty Road, Cactus Cache, and clearer lemon jelly
+
+Renamed the canyon to Dusty Road and inserted it immediately after Factory Fuss
+in Quagmire Caverns. The `bryce-canyon` ID remains stable. The new map stop is
+appended to the serialized hub list; every existing hub index and position is
+preserved. Untouched stock maps gain the new stop, while edited point sets stay
+intact. Added an actual canyon thumbnail and a diorama using the existing native
+hoodoos and cactus models.
+
+Added Cactus Cache, an eight-crate side-on bonus entered from a raised question
+pad beside the Desert Basin trail. Its three challenges use a high cache,
+a switch-revealed sandstone bridge, and a limited-bounce crate stack. Rounded
+stone shelves preserve the shared kit's tested landing intervals, with existing
+full-detail hoodoos and desert plants framing the golden-hour sky. The parent
+course's route, terrain, sky, lighting, checkpoints and movement remain intact.
+
+Recovered the new 4,328-frame replay against published revision 4927c3bb. Camera
+discontinuities identify seventeen omitted checkpoint skips, ending at Sunset
+Promontory at frame 549. The final supported feet position is
+[-115.89701357234914, -724.8173018513339, -4623.582498329764] on native terrain 57,
+with zero deaths. The yellow gem now floats above that stop. Its lemon-yellow
+shell has 32% face-on body opacity, denser grazing edges, sharp white facet
+reflections and a reduced aura; no refraction pass or extra mesh was added.
+
+Approximately 12 minutes from prompt to the first playable implementation;
+replay reconstruction, browser review, campaign migration checks and release
+validation followed. Focused checks pass the replay destination, actual-player
+pickup/persistence, all 116 unchanged terrain cells, collectible shader/geometry,
+campaign order/save migration, Level Select, map asset hashes, and bonus flow
+including failed retry, successful payout and parent restoration. The input-only
+bonus journey clears all eight crates with zero deaths in 2,613 simulation frames.
+Full-render and lite bonus previews, normal 720 and native 2560×1440 gem/bonus
+views have no browser warnings or errors. `check:levels` passes its earlier
+checks, then reaches the previously recorded unrelated waterpark assertion at
+`tools/test-waterpark-decks.mjs:49`.
+
+The production build and 963,276,864-byte release-size check pass. Browser Level
+Select shows Factory Fuss → Dusty Road → Nightmare Grove with the new thumbnail.
+
+Evidence: `docs/desert-canyon/dusty-road/` contains the endpoint, validation,
+bonus journey and full-resolution gem/bonus captures.

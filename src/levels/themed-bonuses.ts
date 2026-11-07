@@ -24,6 +24,7 @@ import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 import { SKYSTREAM_BONUS_LEVEL } from './skystream-bonus';
 import { CARLISLE_HARBOUR_BONUS } from './carlisle-harbour-bonus';
 import { MAYFIELD_BONUS_LEVEL } from './mayfield-bonus';
+import { DUSTY_ROAD_BONUS_COURSE } from './dusty-road-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -42,6 +43,8 @@ interface BonusRecipe {
 // parent has its own setting and order of decisions. Shared modules encode
 // tested reach and collision; they do not change the player's movement rules.
 export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
+  {parentId:'bryce-canyon',key:'bryce-canyon',name:'Bonus: Cactus Cache',theme:'desert',
+    patterns:['upper','bridge','finite'],color:'#ce9869',accent:'#e9c88a',tex:'desert-trail',sky:'bryce-golden-hour'},
   {parentId:'treehouse-trail',key:'treehouse-trail',name:'Bonus: Canopy Cache',theme:'treehouse',
     patterns:['upper','relay'],color:'#b09053',accent:'#e2cf90',tex:'plank',sky:'day',jungleAtmosphere:true},
   {parentId:'jungle',key:'jungle',name:'Bonus: Fern Reliquary',theme:'jungle',
@@ -75,6 +78,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
 ];
 
 export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe.parentId !== 'astra-chimeworks' && levelAllowsBonus(recipe.parentId)).map(recipe => {
+  if(recipe.parentId==='bryce-canyon')return {...DUSTY_ROAD_BONUS_COURSE,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   if (recipe.parentId === 'nightworks-after-hours') return {...createCalderaBonus(),parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});

@@ -2,18 +2,19 @@ import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {relative} from 'node:path';
+import {dirname,relative} from 'node:path';
 import {build} from 'esbuild';
 import {withSkateRuntime,makeInput} from '../jungle-cup-harness.mjs';
 
 const file=process.argv[2];
 assert.ok(file,'Provide the user replay JSON');
 const raw=await readFile(file,'utf8'),replay=JSON.parse(raw);
-// This take begins during the previous public review: sixteen L presses were
-// performed before the user moved. v2 omitted those debug input events; retain
-// the explicit reconstruction rather than pretending they were recorded.
+// v2 omitted debug checkpoint inputs. Supply the recovered stop count and
+// final warp frame explicitly; the original take defaults to frame 1145.
 const restoredWarps=Number(process.argv[3]??0);
 const sourceRef=process.argv[4];
+const restoredWarpFrame=Number(process.argv[5]??1145);
+const output=process.argv[6]??'docs/desert-canyon/cartoon/replay-endpoint.json';
 const historical=path=>execFileSync('git',['show',`${sourceRef}:${path}`],{maxBuffer:16e6});
 const bundle=await build({entryPoints:['src/levels/desert-canyon.ts'],bundle:true,format:'esm',platform:'node',write:false,
   plugins:sourceRef?[{name:'published-canyon',setup(build){build.onLoad({filter:/src\/(levels\/desert-(canyon|vista)|desertVistaCatalog)\.ts$/},args=>({contents:historical(relative(process.cwd(),args.path)).toString(),loader:'ts'}));}}]:[]});
@@ -27,16 +28,16 @@ await withSkateRuntime(async({level,player:p,server,CONST})=>{
   const input=makeInput(),samples=[];let finishFrame=null;
   try{
     for(let frame=0;frame<replay.frames;frame++){
-      if(frame===1145)for(let i=0;i<restoredWarps;i++)assert.ok(p.warpCheckpoint(level,1));
+      if(frame===restoredWarpFrame)for(let i=0;i<restoredWarps;i++)assert.ok(p.warpCheckpoint(level,1));
       assert.ok(take.feed(input,p.camDir));p.rawInput=input;
       p.step(CONST.fixedStep,input,level);level.update(CONST.fixedStep);p.flushLevelCrateRewards(level);p.commitRenderStep(level);
       if(p.state==='finished'&&finishFrame===null)finishFrame=frame;
       if(frame%600===0||frame>=replay.frames-120)samples.push({frame,position:p.pos.toArray(),state:p.state,grounded:p.grounded,ground:p.groundHit?.name,deaths:p.totalDeaths,lives:p.lives});
       input.consumeEdges();
     }
-    const result={replaySha256:createHash('sha256').update(raw).digest('hex'),sourceRef:sourceRef??'working tree',frames:replay.frames,restoredWarps,finishFrame,last:samples.at(-1),samples};
-    await mkdir('docs/desert-canyon/cartoon',{recursive:true});
-    await writeFile('docs/desert-canyon/cartoon/replay-endpoint.json',JSON.stringify(result,null,2)+'\n');
+    const result={replaySha256:createHash('sha256').update(raw).digest('hex'),sourceRef:sourceRef??'working tree',frames:replay.frames,restoredWarps,restoredWarpFrame,finishFrame,last:samples.at(-1),samples};
+    await mkdir(dirname(output),{recursive:true});
+    await writeFile(output,JSON.stringify(result,null,2)+'\n');
     console.log(JSON.stringify({...result,samples:undefined}));
   }finally{take.end();}
 },{levelEntry:{id:'bryce-canyon',name:data.name,data},prepareRuntime(){

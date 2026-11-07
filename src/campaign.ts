@@ -131,7 +131,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
   { id: 'island-4', name: 'Maynard Quay', subtitle: 'OUTER BANKS · CLUBS · HARBOURS', centre: [150,0,25],
     levelKeys: ['carlisle-coast','country-club','rooftop-relay','maynard-course-4','maynard-course-5','maynard-boss'] },
   { id: 'island-5', name: 'Quagmire Caverns', subtitle: 'FACTORIES · NIGHTMARES · FIRE', centre: [50,0,195],
-    levelKeys: ['warehouse','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'] },
+    levelKeys: ['warehouse','bryce-canyon','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'] },
   { id: 'hidden-shores', name: 'Secret Island', subtitle: 'BOSSES · MEDALS · CLEAR GEMS', centre: [20,125,15],
     levelKeys: ['secret-1','secret-2','secret-3','secret-4','secret-5','secret-6','secret-7','secret-8'] },
 ];
@@ -374,6 +374,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'maynard-course-5': {name:'Unnamed Course 5',placeholder:true},
   'maynard-boss': {name:'Maynard Quay Boss',placeholder:true,boss:true},
   warehouse: {name:'Factory Fuss',levelId:'warehouse',previewKey:'warehouse',bonus:false,timeTrial:false},
+  'bryce-canyon': {name:'Dusty Road',levelId:'bryce-canyon',previewKey:'bryce-canyon',bonus:true,relicTime:210},
   'jungle-minefield': {name:'Nightmare Grove',levelId:'jungle-minefield',previewKey:'jungle-minefield'},
   'nightworks-after-hours': {name:'Guptus Eruptus'},
   nightworks: {name:'Torchlight Trouble'},
@@ -391,6 +392,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
 
 /** Original coastal slots, retained for exact saved-map migration. */
 const LEGACY_MOTU_LEVEL_KEYS = ['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'];
+const LEGACY_QUAGMIRE_LEVEL_KEYS = ['warehouse','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'];
 const LEGACY_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly [number, number, number])[]> = {
   'island-1': [[-42,2,20],[-18,2,43],[22,3,39],[46,3.8,9],[24,2.4,-31],[-18,3,-39]],
   'island-2': [[-38,2.2,32],[-47,3,0],[-22,4.5,-34],[20,3,-36],[45,2,-8],[26,3,30]],
@@ -401,9 +403,14 @@ const LEGACY_ISLAND_PATHS: Record<CampaignIslandId, readonly (readonly [number, 
 };
 
 /** Progress winds screen-right when viewed from the offshore orbit camera. */
-export const CAMPAIGN_ISLAND_PATHS = Object.fromEntries(Object.entries(LEGACY_ISLAND_PATHS).map(([id, path]) =>
+const PRE_DUSTY_ISLAND_PATHS = Object.fromEntries(Object.entries(LEGACY_ISLAND_PATHS).map(([id, path]) =>
   [id, ['island-2', 'island-3', 'island-4', 'hidden-shores'].includes(id) ? [...path].reverse() : path],
 )) as typeof LEGACY_ISLAND_PATHS;
+export const CAMPAIGN_ISLAND_PATHS: typeof LEGACY_ISLAND_PATHS = {
+  ...PRE_DUSTY_ISLAND_PATHS,
+  // Add a stop along the existing trail; every older hub keeps its position.
+  'island-5': [PRE_DUSTY_ISLAND_PATHS['island-5'][0],[24,3.4,-39],...PRE_DUSTY_ISLAND_PATHS['island-5'].slice(1)],
+};
 
 let previous = '';
 export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = CAMPAIGN_ISLANDS.flatMap(island =>
@@ -428,26 +435,36 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = CAMPAIGN_ISLA
 /** Append only: keep every archived editor point and every old save key. */
 export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   ...LEGACY_CAMPAIGN_MAP_HUBS.map(legacy => CAMPAIGN_LEVELS.find(level => level.progressKey === legacy.progressKey) ?? legacy),
-  ...CAMPAIGN_LEVELS.filter(level => !LEGACY_CAMPAIGN_MAP_HUBS.some(legacy => legacy.progressKey === level.progressKey)),
+  ...CAMPAIGN_LEVELS.filter(level => level.progressKey !== 'bryce-canyon' && !LEGACY_CAMPAIGN_MAP_HUBS.some(legacy => legacy.progressKey === level.progressKey)),
+  CAMPAIGN_LEVELS.find(level => level.progressKey === 'bryce-canyon')!,
 ];
 
 /** Adopt the six-island layout only for untouched old authored map captures. */
 export function migrateCampaignMapPoints(points: number[][]): number[][] {
   if (points.length < 11 || points.length > CAMPAIGN_MAP_HUBS.length) return points;
+  const current=CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]})=>[x,z,0,y]);
+  // The new stop is append-only in serialized maps. Extend an exact stock
+  // prefix, while preserving complete current maps and all authored edits.
+  if(points.every((p,i)=>p.length===4&&p.every((v,a)=>v===current[i][a])))
+    return points.length===current.length?points:current;
   // Historical layouts use the old course-to-slot assignment. Reordering the
   // current roster must not change what counts as an untouched saved map.
   const archivedIndex = (island: CampaignIslandDefinition, key: string) =>
-    (island.id === 'island-1' ? LEGACY_MOTU_LEVEL_KEYS : island.levelKeys).indexOf(key);
+    (island.id === 'island-1' ? LEGACY_MOTU_LEVEL_KEYS : island.id === 'island-5' ? LEGACY_QUAGMIRE_LEVEL_KEYS : island.levelKeys).indexOf(key);
   // Exact original six-island captures adopt the new geography. Preserve every
   // genuinely edited point set, including a one-coordinate change.
   const archivedArchipelago = (groundSecret: boolean, paths = LEGACY_ISLAND_PATHS) => CAMPAIGN_MAP_HUBS.slice(0,points.length).map(hub => {
     const island = CAMPAIGN_ISLANDS.find(value => value.levelKeys.includes(hub.progressKey));
     if (!island) { const [x,y,z]=hub.mapPosition; return [x,z,0,y]; }
-    const [x,y,z] = paths[island.id][archivedIndex(island,hub.progressKey)];
+    const index=paths===CAMPAIGN_ISLAND_PATHS&&island.id==='island-5'
+      ? island.levelKeys.indexOf(hub.progressKey) : archivedIndex(island,hub.progressKey);
+    const point=paths[island.id][index];
+    if(!point){const [x,y,z]=hub.mapPosition;return [x,z,0,y];}
+    const [x,y,z] = point;
     const centre = groundSecret && island.id === 'hidden-shores' ? [310,0,210] : island.centre;
     return [centre[0]+x,centre[2]+z,0,centre[1]+y];
   });
-  if([archivedArchipelago(false),archivedArchipelago(true),archivedArchipelago(false,CAMPAIGN_ISLAND_PATHS)].some(version =>
+  if([archivedArchipelago(false),archivedArchipelago(true),archivedArchipelago(false,PRE_DUSTY_ISLAND_PATHS),archivedArchipelago(false,CAMPAIGN_ISLAND_PATHS)].some(version =>
     points.every((p,i)=>p.length===4&&p.every((v,a)=>v===version[i][a]))))
     return CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]})=>[x,z,0,y]);
   const straightCentres = [-95,150,395,640,885,1155];
@@ -455,7 +472,9 @@ export function migrateCampaignMapPoints(points: number[][]): number[][] {
     const islandIndex = CAMPAIGN_ISLANDS.findIndex(island => island.levelKeys.includes(hub.progressKey));
     if (islandIndex < 0) { const [x,y,z]=hub.mapPosition; return [x,z,0,y]; }
     const island=CAMPAIGN_ISLANDS[islandIndex], index=archivedIndex(island,hub.progressKey);
-    return [straightCentres[islandIndex]+(index-(island.levelKeys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][index]];
+    if(index<0){const [x,y,z]=hub.mapPosition;return [x,z,0,y];}
+    const count=island.id==='island-5'?LEGACY_QUAGMIRE_LEVEL_KEYS.length:island.levelKeys.length;
+    return [straightCentres[islandIndex]+(index-(count-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][index]];
   });
   if (points.every((point,index) => point.length===4 && point.every((value,axis)=>value===straight[index][axis])))
     return CAMPAIGN_MAP_HUBS.map(({mapPosition:[x,y,z]}) => [x,z,0,y]);

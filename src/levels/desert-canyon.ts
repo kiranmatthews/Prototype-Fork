@@ -6,9 +6,9 @@ import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
 import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
 
 type Point=[number,number,number];
-/** User replay 2026-11-07T10-17-59, reconstructed with its omitted sixteen
- * review checkpoint skips. This is the supported final feet position. */
-export const DESERT_YELLOW_GEM:Point=[300.0149,-909.0452,-4757.2115];
+/** User replay 2026-11-07T18-58-38, recovered from Sunset Promontory after
+ * seventeen checkpoint skips. Supported feet on native terrain cell 57. */
+export const DESERT_YELLOW_GEM:Point=[-115.8970,-724.8173,-4623.5825];
 const noise=new SimplexNoise(20261105);
 const clamp=(v:number,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const smooth=(a:number,b:number,x:number)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
@@ -158,6 +158,11 @@ export function desertGround(x:number,z:number):number{
   const vistaBlend=Math.max(smooth(-2250,-2420,z),z<-2100?smooth(300,500,Math.abs(x)):0);
   return mix(ground,vistaGround(),vistaBlend);
 }
+
+export const DESERT_BONUS_STATION=DESERT_VISTA_START+848;
+export const DESERT_BONUS_ENTRANCE:Point=(()=>{
+  const p=desertPoint(DESERT_BONUS_STATION,6.3);p[1]=desertGround(p[0],p[2])+.08;return p;
+})();
 
 function buildComponents():CustomComponent[]{
 let seed=71115;
@@ -413,16 +418,18 @@ for(let i=0;i<DESERT_CHECKPOINTS.length;i++){
 for(let s=0;s<=DESERT_LENGTH;s+=12)add({t:'camnode',p:desertPoint(s),radius:5,grp:51,nm:'Continuous descending camera lane'});
 add({t:'camnode',p:desertPoint(DESERT_LENGTH),radius:4,grp:51});
 const finish=desertPoint(DESERT_LENGTH-16);
-add({t:'gate',p:finish,yaw:desertYaw(DESERT_LENGTH-16),grp:50,nm:'Bryce Canyon finish'});
+add({t:'gate',p:finish,yaw:desertYaw(DESERT_LENGTH-16),grp:50,nm:'Dusty Road finish'});
 for(let s=115;s<DESERT_LENGTH-45;s+=57){const p=desertPoint(s);p[1]+=1;add({t:'wumpa',p,grp:50});}
 for(const s of [65,70,75,80]){const p=desertPoint(s);p[1]=352.6+Math.sin((s-65)/15*Math.PI)*1.6;add({t:'wumpa',p,grp:50,nm:'Boardwalk jump arc'});}
 add({t:'crystal',p:desertPoint(DESERT_LENGTH-30),grp:50,nm:'Canyon descent crystal'});
 add({t:'colouredgem',gemColour:'yellow',p:[...DESERT_YELLOW_GEM],grp:50,nm:'Yellow hidden gem · replay destination beyond the finish'});
+const bonusReturn=desertPoint(DESERT_BONUS_STATION+9);bonusReturn[1]+=.18;
+add({t:'bonusplatform',p:[...DESERT_BONUS_ENTRANCE],to:bonusReturn,grp:50,nm:'Cactus Cache · desert basin bonus pad'});
 return C;
 }
 
 export const DESERT_CANYON_LEVEL:CustomLevelData={
-  v:1,name:'Bryce Canyon · Hoodoo Run',spawn:desertPoint(6).map((n,i)=>i===1?n+.35:n) as Point,startWarpPad:false,
+  v:1,name:'Dusty Road',spawn:desertPoint(6).map((n,i)=>i===1?n+.35:n) as Point,startWarpPad:false,
   killY:-1700,sky:'bryce-golden-hour',jungleStyle:'painterly',hugeDropBail:false,
   keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.12,
   cameraRig:{camDist:8,camHeight:3.6,camPitch:9,camFov:70},

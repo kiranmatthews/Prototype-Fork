@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {createServer} from 'vite';
 import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import * as THREE from 'three';
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 try {
@@ -22,6 +23,13 @@ try {
  assert.deepEqual(c.validateCampaignMapGraph(),[]);
  assert.deepEqual(new Set(c.CAMPAIGN_MAP_EDGES.map(e=>e.fromDirection)),new Set(['right']));
  const manifest=JSON.parse(await readFile('public/map-landmarks/manifest.json','utf8'));
+ const rocks=JSON.parse(await readFile('public/desert-canyon/manifest.json','utf8'));
+ const plants=JSON.parse(await readFile('public/desert-canyon/plants/manifest.json','utf8'));
+ const native=new Map([
+  ...rocks.models.map(asset=>['../desert-canyon/'+asset.name,asset]),
+  ...plants.assets.map(asset=>['../desert-canyon/plants/'+asset.id,asset]),
+ ]);
+ const checkedNative=new Set();
  let triangles=0,pieces=0;
  for(const level of levels){
   const layout=d.MAP_SCENERY_LAYOUTS[level.progressKey];
@@ -31,8 +39,15 @@ try {
   assert.ok(layout.footprint[0]>=36&&layout.footprint[1]>=32);
   assert.ok(layout.pieces.some(p=>p.p[2]>4)&&layout.pieces.some(p=>p.p[2]<-8),'pad is not inside scenery');
   for(const piece of layout.pieces){
-    const asset=manifest[piece.asset];assert.ok(asset,'Missing Meshy '+piece.asset);
-    assert.ok(asset.originalUVsPreserved);assert.ok(asset.triangles>100);
+    const asset=manifest[piece.asset]??native.get(piece.asset);assert.ok(asset,'Missing source asset '+piece.asset);
+    if(native.has(piece.asset)){
+     if(!checkedNative.has(piece.asset)){
+      const bytes=await readFile('public/map-landmarks/'+piece.asset+'.glb');
+      assert.equal(createHash('sha256').update(bytes).digest('hex'),asset.sha256,'native scenery changed');
+      assert.ok(asset.triangles<=30000);checkedNative.add(piece.asset);
+     }
+    }else assert.ok(asset.originalUVsPreserved);
+    assert.ok(asset.triangles>100);
     assert.ok([...piece.p,piece.extent,piece.yaw,...(piece.size??[])].every(Number.isFinite));
     triangles+=asset.triangles;pieces++;
   }
@@ -45,7 +60,8 @@ try {
  // Exact prior map captures upgrade, while authored/custom maps are preserved.
  const oldCentres=[-95,150,395,640,885,1155];
  const oldMotu=['treehouse-trail','beachside-run','jungle','rumblewater-run','coastal','jungle-cup'];
- const old=c.CAMPAIGN_MAP_HUBS.map(h=>{const n=islands.findIndex(i=>i.levelKeys.includes(h.progressKey));if(n<0)return[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]];const i=(n===0?oldMotu:islands[n].levelKeys).indexOf(h.progressKey);return[oldCentres[n]+(i-(islands[n].levelKeys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][i]];});
+ const oldQuagmire=['warehouse','jungle-minefield','nightworks-after-hours','nightworks','quagmire-race','quagmire-boss'];
+ const old=c.CAMPAIGN_MAP_HUBS.filter(h=>h.progressKey!=='bryce-canyon').map(h=>{const n=islands.findIndex(i=>i.levelKeys.includes(h.progressKey));if(n<0)return[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]];const keys=n===0?oldMotu:n===4?oldQuagmire:islands[n].levelKeys;const i=keys.indexOf(h.progressKey);return[oldCentres[n]+(i-(keys.length-1)/2)*26,22,0,1.8+[0,.3,1.2,.6,.2,1.4,1,.4][i]];});
  const current=c.CAMPAIGN_MAP_HUBS.map(h=>[h.mapPosition[0],h.mapPosition[2],0,h.mapPosition[1]]);
  assert.deepEqual(c.migrateCampaignMapPoints(old),current);
  const previous=JSON.parse(await readFile(new URL('./fixtures/map-archipelago-before-horizontal.json',import.meta.url),'utf8'));

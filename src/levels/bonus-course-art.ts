@@ -1,6 +1,6 @@
 import type { CustomAtmosphereData, CustomComponent, DecorKind } from '../level';
 
-export type BonusArtTheme = 'treehouse' | 'jungle' | 'coast' | 'cloud' | 'slipstream' | 'nightworks' | 'beach' | 'street' | 'islands' | 'gate' | 'blockworks' | 'chimeworks' | 'waterpark' | 'afterhours' | 'terraces' | 'skyline' | 'junglecup' | 'waterparkcup' | 'primer' | 'switchyard' | 'gauntlet' | 'pirate' | 'boneyard' | 'reefchief';
+export type BonusArtTheme = 'desert' | 'treehouse' | 'jungle' | 'coast' | 'cloud' | 'slipstream' | 'nightworks' | 'beach' | 'street' | 'islands' | 'gate' | 'blockworks' | 'chimeworks' | 'waterpark' | 'afterhours' | 'terraces' | 'skyline' | 'junglecup' | 'waterparkcup' | 'primer' | 'switchyard' | 'gauntlet' | 'pirate' | 'boneyard' | 'reefchief';
 type P = [number, number, number];
 
 // Each bonus is a little place in its parent's world. All architecture belongs
@@ -468,6 +468,7 @@ export function bonusCourseArt(theme: BonusArtTheme, end: number): CustomCompone
 
 export function bonusArtAtmosphere(theme: BonusArtTheme): { atmosphere: CustomAtmosphereData; keepPlayFog: true } {
   const haze: Record<BonusArtTheme, string> = {
+    desert: '#d7b4a7',
     treehouse: '#9eae90', jungle: '#92a68e', coast: '#b2c5c2', cloud: '#d6e4df',
     slipstream: '#b9d7d6', nightworks: '#233c54', beach: '#c2d3c4', street: '#c4d2c7',
     islands: '#b4d4c7', gate: '#a5b08e', blockworks: '#b9c7c2', chimeworks: '#b7c6b4',

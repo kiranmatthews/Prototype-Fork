@@ -1,10 +1,12 @@
 import * as THREE from 'three';
-import {desertPoint,desertGround,DESERT_LENGTH,DESERT_CHECKPOINTS,DESERT_CHECKPOINT_NAMES,DESERT_GAPS,DESERT_CANYON_START,DESERT_VISTA_START,DESERT_YELLOW_GEM} from '../../src/levels/desert-canyon';
+import {desertPoint,desertGround,DESERT_LENGTH,DESERT_CHECKPOINTS,DESERT_CHECKPOINT_NAMES,DESERT_GAPS,DESERT_CANYON_START,DESERT_VISTA_START,DESERT_YELLOW_GEM,DESERT_BONUS_STATION} from '../../src/levels/desert-canyon';
 const g=(window as unknown as {__game:any}).__game;
 const panel=document.createElement('section');panel.setAttribute('aria-label','Canyon review');
 panel.style.cssText='position:fixed;bottom:8px;left:8px;right:8px;z-index:999999;background:#231b17e8;color:#f5e8d4;padding:9px 14px;border:1px solid #b69c70;border-radius:8px;font:12px system-ui;display:flex;align-items:center;gap:12px;flex-wrap:wrap';
 panel.innerHTML=`<b>BRYCE · REVIEW</b><label>Location <select aria-label="Canyon location"><option value="6">Spawn</option><option value="58">Boardwalk takeoff</option>${DESERT_CHECKPOINT_NAMES.map((name,i)=>`<option value="${DESERT_CHECKPOINTS[i]}">${name}</option>`).join('')}<option value="gem">Yellow gem approach</option></select></label><button>Go to location</button><button>Run traversal</button><button>Stop traversal</button><button>Test valley landing</button><button>Save frame</button><button>Free play</button><label>Resolution <select aria-label="Canyon resolution"><option value="720">Normal 720</option><option value="max">MAX native</option></select></label><label>View <select aria-label="Canyon view"><option value="game">Gameplay</option><option value="wide">Wide terrain</option><option value="overlook">Right valley</option></select></label><output style="flex-basis:100%;font:11px monospace"></output>`;
 document.body.append(panel);
+panel.querySelector('b')!.textContent='DUSTY ROAD · REVIEW';
+const bonusOption=document.createElement('option');bonusOption.value=String(DESERT_BONUS_STATION);bonusOption.textContent='Cactus Cache entrance';panel.querySelector('select')!.append(bonusOption);
 const location=panel.querySelector('[aria-label="Canyon location"]') as HTMLSelectElement;
 const output=panel.querySelector('output')!,buttons=panel.querySelectorAll('button');
 const gemArtButton=document.createElement('button');gemArtButton.textContent='Review yellow gem';panel.insertBefore(gemArtButton,output);

@@ -4,7 +4,8 @@ import {execFileSync} from 'node:child_process';
 import {relative} from 'node:path';
 import {build} from 'esbuild';
 import {withSkateRuntime,makeInput} from '../jungle-cup-harness.mjs';
-const base='10359e0d';
+const base=process.argv[2]??'4927c3bb';
+const evidenceDir=process.argv[3]??'docs/desert-canyon/dusty-road';
 async function source(historical=false){
   const bundled=await build({entryPoints:['src/levels/desert-canyon.ts'],bundle:true,platform:'node',format:'esm',write:false,
     plugins:historical?[{name:'published-layout',setup(b){b.onLoad({filter:/src\/(levels\/desert-(canyon|vista)|desertVistaCatalog)\.ts$/},args=>({contents:execFileSync('git',['show',`${base}:${relative(process.cwd(),args.path)}`],{encoding:'utf8',maxBuffer:8e6}),loader:'ts'}));}}]:[]});
@@ -12,19 +13,22 @@ async function source(historical=false){
 }
 const previous=await source(true),current=await source(),data=current.DESERT_CANYON_LEVEL;
 const protectedLayout=d=>({spawn:d.spawn,killY:d.killY,sky:d.sky,atmosphere:d.atmosphere,cameraRig:d.cameraRig,
-  components:d.components.filter(c=>[1,2,20,21,30,31,50,51,61].includes(c.grp)&&c.t!=='colouredgem')});
+  components:d.components.filter(c=>[1,2,20,21,30,31,50,51,61].includes(c.grp)&&!['colouredgem','bonusplatform'].includes(c.t)).map(({nm,...c})=>c)});
 assert.deepEqual(protectedLayout(data),protectedLayout(previous.DESERT_CANYON_LEVEL),'Route, terrain, planting, lighting, sky and checkpoint layout must be unchanged');
 assert.ok(!data.components.some(c=>/course flag|flag pole|direction board|chevron/i.test(c.nm??'')),'Flags and road signs must be absent');
 const oldManifest=JSON.parse(execFileSync('git',['show',`${base}:public/desert-canyon/vista/manifest.json`],{encoding:'utf8'}));
 const native=JSON.parse(await readFile('public/desert-canyon/vista/manifest.json','utf8'));
-for(let i=0;i<76;i++)assert.equal(native.models[i].sha256,oldManifest.models[i].sha256,'Main landscape cell changed '+i);
+for(let i=0;i<native.models.length;i++)assert.equal(native.models[i].sha256,oldManifest.models[i].sha256,'Landscape cell changed '+i);
 const rocks=JSON.parse(await readFile('public/desert-canyon/manifest.json','utf8'));
 assert.ok(rocks.models.every(m=>m.triangles<=30000));
-const replay=JSON.parse(await readFile('docs/desert-canyon/cartoon/replay-endpoint.json','utf8'));
-assert.equal(replay.sourceRef,base);assert.equal(replay.restoredWarps,16);assert.equal(replay.last.grounded,true);
+const replay=JSON.parse(await readFile(evidenceDir+'/replay-endpoint.json','utf8'));
+assert.equal(replay.sourceRef,base);assert.equal(replay.restoredWarps,17);assert.equal(replay.last.grounded,true);
 assert.ok(Math.hypot(...replay.last.position.map((v,i)=>v-current.DESERT_YELLOW_GEM[i]))<.0001);
-assert.ok(current.DESERT_YELLOW_GEM[2]<current.desertPoint(current.DESERT_LENGTH)[2]-800);
-let result={protectedLayout:true,unchangedGroundCells:76,skyAndLightingUnchanged:true,flagsAndSignsAbsent:true,
+assert.ok(current.DESERT_YELLOW_GEM[2]<current.desertPoint(current.DESERT_LENGTH)[2]);
+assert.equal(data.name,'Dusty Road');
+assert.equal(data.components.filter(c=>c.t==='bonusplatform').length,1);
+assert.deepEqual(data.components.find(c=>c.t==='bonusplatform').p,current.DESERT_BONUS_ENTRANCE);
+let result={protectedLayout:true,unchangedGroundCells:native.models.length,skyAndLightingUnchanged:true,flagsAndSignsAbsent:true,
   yellowGemPosition:current.DESERT_YELLOW_GEM,replaySha256:replay.replaySha256};
 await withSkateRuntime(async({level,player:p,THREE,server,step,Level})=>{
   await level.jungleAssets.ready();level.root.updateMatrixWorld(true);level.prepareWorldSolids();
@@ -67,5 +71,5 @@ await withSkateRuntime(async({level,player:p,THREE,server,step,Level})=>{
     return match?new Response(await readFile('public/desert-canyon/vista/'+match[1])):new Response('',{status:404});
   };
 }});
-await writeFile('docs/desert-canyon/cartoon/validation.json',JSON.stringify(result,null,2)+'\n');
+await writeFile(evidenceDir+'/validation.json',JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result));

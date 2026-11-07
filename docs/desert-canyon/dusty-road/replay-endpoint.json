@@ -1,0 +1,1687 @@
+{
+  "replaySha256": "d2de6e92ab3fec1c877c79f7c4091f51cabca1fc89ee463139d7830d8e95ac6a",
+  "sourceRef": "4927c3bb",
+  "frames": 4328,
+  "restoredWarps": 17,
+  "restoredWarpFrame": 549,
+  "finishFrame": null,
+  "last": {
+    "frame": 4327,
+    "position": [
+      -115.89701357234914,
+      -724.8173018513339,
+      -4623.582498329764
+    ],
+    "state": "ride",
+    "grounded": true,
+    "ground": "Canyon vista · native terrain 57",
+    "deaths": 0,
+    "lives": 4
+  },
+  "samples": [
+    {
+      "frame": 0,
+      "position": [
+        0,
+        349.8188666852445,
+        654.0027690769323
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "wood",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 600,
+      "position": [
+        -116.5481500433318,
+        -805.3273261331258,
+        -3750.936757792146
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Packed sandstone trail 3456",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 1200,
+      "position": [
+        -111.3017802709241,
+        -826.2800293552142,
+        -3974.2549404284323
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 15",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 1800,
+      "position": [
+        -106.14425109177571,
+        -821.6351471352259,
+        -4215.710781933364
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 56",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 2400,
+      "position": [
+        -103.64312909360439,
+        -786.5869849851957,
+        -4395.641043787925
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 56",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 3000,
+      "position": [
+        -112.177855207694,
+        -737.4584158794169,
+        -4485.235454607989
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 56",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 3600,
+      "position": [
+        -118.36139328942845,
+        -724.7604940843663,
+        -4574.121072521502
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4200,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4208,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4209,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4210,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4211,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4212,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4213,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4214,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4215,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4216,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4217,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4218,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4219,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4220,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4221,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4222,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4223,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4224,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4225,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4226,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4227,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4228,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4229,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4230,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4231,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4232,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4233,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4234,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4235,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4236,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4237,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4238,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4239,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4240,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4241,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4242,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4243,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4244,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4245,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4246,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4247,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4248,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4249,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4250,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4251,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4252,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4253,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4254,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4255,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4256,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4257,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4258,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4259,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4260,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4261,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4262,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4263,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4264,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4265,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4266,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4267,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4268,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4269,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4270,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4271,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4272,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4273,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4274,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4275,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4276,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4277,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4278,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4279,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4280,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4281,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4282,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4283,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4284,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4285,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4286,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4287,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4288,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4289,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4290,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4291,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4292,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4293,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4294,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4295,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4296,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4297,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4298,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4299,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4300,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4301,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4302,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4303,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4304,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4305,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4306,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4307,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4308,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4309,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4310,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4311,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4312,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4313,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4314,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4315,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4316,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4317,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4318,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4319,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4320,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4321,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4322,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4323,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4324,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4325,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4326,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    },
+    {
+      "frame": 4327,
+      "position": [
+        -115.89701357234914,
+        -724.8173018513339,
+        -4623.582498329764
+      ],
+      "state": "ride",
+      "grounded": true,
+      "ground": "Canyon vista · native terrain 57",
+      "deaths": 0,
+      "lives": 4
+    }
+  ]
+}

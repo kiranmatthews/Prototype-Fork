@@ -14,6 +14,7 @@ varying vec4 vCollectibleSweep;
 varying vec2 vCollectibleUv;
 varying float vCollectibleEdge;
 varying float vCollectibleEdgeDistance;
+varying float vCollectibleFresnel;
 float power8(float x) { x *= x; x *= x; return x * x; }
 float power16(float x) { x = power8(x); return x * x; }
 float power64(float x) { x = power16(x); x *= x; return x * x; }
@@ -24,6 +25,9 @@ void lightCollectible() {
   float rim = max(dot(n, vec3(0.8, -0.36, 0.48)), 0.0);
   vCollectibleUv = aFaceUv;
   vCollectibleEdgeDistance = aEdgeDistance;
+  vec3 eyeDirection = normalize(-(modelViewMatrix * vec4(position, 1.0)).xyz);
+  float grazing = 1.0 - abs(dot(n, eyeDirection));
+  vCollectibleFresnel = grazing * grazing * grazing;
   #if COLLECTIBLE_CRYSTAL
     vec2 radial = n.xz * inversesqrt(max(dot(n.xz, n.xz), 0.0001));
     vec2 side = tangent.xz * inversesqrt(max(dot(tangent.xz, tangent.xz), 0.0001));
@@ -51,11 +55,12 @@ void lightCollectible() {
     vCollectibleLight = diffuse * (0.018 + broad * 0.13 + rim * 0.025 + lowerFill * 0.12);
     vCollectibleEdge = power64(max(dot(n, normalize(vec3(0.68, -0.55, 0.49))), 0.0)) * 1.4;
     #if COLLECTIBLE_JELLY
-      // Saturated translucent candy keeps its colour through shaded cuts.
-      // A restrained white sweep reads as wet gloss instead of silver metal.
-      vCollectibleLight = diffuse * (0.82 + broad * 0.14 + rim * 0.04);
-      vCollectibleSweep.z *= 0.34;
-      vCollectibleEdge *= 0.30;
+      // Lemon jelly: clear body, denser edges, narrow wet reflections.
+      // Keep the other gems' strong facet flash without whitening the table.
+      vCollectibleLight = diffuse * (0.60 + broad * 0.24 + lowerFill * 0.10);
+      vCollectibleSweep.y = 0.14 + power16(facing) * 0.16;
+      vCollectibleSweep.z *= 0.94;
+      vCollectibleEdge *= 0.85;
     #endif
   #endif
 }
@@ -72,7 +77,8 @@ vec3 outgoingLight = vCollectibleLight + vec3(1.0, 0.98, 0.97) * flash
 float highlightCoverage = max(flash + edgeFlash, min(min(outgoingLight.r, outgoingLight.g), outgoingLight.b));
 diffuseColor.a = opacity * mix(0.86, 1.0, clamp(highlightCoverage, 0.0, 1.0));
 #if COLLECTIBLE_JELLY
-  diffuseColor.a = opacity * mix(0.76, 0.97, clamp(flash + edgeFlash, 0.0, 1.0));
+  float jellyBodyAlpha = mix(0.32, 0.68, vCollectibleFresnel);
+  diffuseColor.a = opacity * mix(jellyBodyAlpha, 0.96, clamp(flash + edgeFlash, 0.0, 1.0));
 #endif
 `;
 
@@ -87,13 +93,13 @@ export class CollectibleSpecularMaterial extends THREE.MeshBasicMaterial {
       shader.vertexShader = profileDefine + COLLECTIBLE_SPECULAR_VERTEX + shader.vertexShader.replace(
         "#include <begin_vertex>", "#include <begin_vertex>\nlightCollectible();",
       );
-      shader.fragmentShader = profileDefine + "varying vec3 vCollectibleLight;\nvarying vec4 vCollectibleSweep;\nvarying vec2 vCollectibleUv;\nvarying float vCollectibleEdge;\nvarying float vCollectibleEdgeDistance;\n" + shader.fragmentShader.replace(
+      shader.fragmentShader = profileDefine + "varying vec3 vCollectibleLight;\nvarying vec4 vCollectibleSweep;\nvarying vec2 vCollectibleUv;\nvarying float vCollectibleEdge;\nvarying float vCollectibleEdgeDistance;\nvarying float vCollectibleFresnel;\n" + shader.fragmentShader.replace(
         "vec3 outgoingLight = reflectedLight.indirectDiffuse;", COLLECTIBLE_SPECULAR_FRAGMENT,
       );
     };
   }
   customProgramCacheKey(): string {
-    return `collectible-facet-sweep-v4:${this.userData.collectibleProfile}`;
+    return `collectible-facet-sweep-v5:${this.userData.collectibleProfile}`;
   }
 }
 
