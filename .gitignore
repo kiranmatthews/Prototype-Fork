@@ -38,3 +38,4 @@ desktop/test-results/
 # Opt-in local Skate motion study; extracted source data never enters releases.
 .skate-reference-data
 .skate-playtest-build/
+.skate-playtest-cache/

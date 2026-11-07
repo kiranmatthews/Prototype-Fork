@@ -8,6 +8,9 @@ import {toolDirectory} from './tools/tool-directory.mjs';
 // Opt-in local entry. Disc-derived motion is kept outside public/ and dist/.
 export default defineConfig({
   base: './',
+  // Other worktrees and native test harnesses share node_modules. Keep their
+  // dependency optimiser from invalidating this running local review server.
+  cacheDir: '.skate-playtest-cache',
   plugins: [ktxFormatPreferences(), localJakAudio(), toolDirectory(), {
     name: 'local-skate-reference',
     configureServer(server) {
@@ -30,8 +33,9 @@ export default defineConfig({
   server: {host: '127.0.0.1', port: 5199, strictPort: true,
     watch: {ignored: ['**/dist/**', '**/.skate-playtest-build/**']}},
   build: {
+    target: 'es2022',
     outDir: '.skate-playtest-build', copyPublicDir: false,
-    rollupOptions: {input: 'skate-playtest.html'},
+    rollupOptions: {input: ['skate-playtest.html','jump-review.html']},
   },
   define: {
     __BUILD_TAG__: JSON.stringify(new Date().toISOString().slice(0, 16)),

@@ -8,7 +8,7 @@ import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
 import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
 import {BoardScribbleSequence, MOUNT_CLEAR_DURATION, SCRIBBLE_DURATION} from './boardScribble';
 import {TUNING} from '../tuning';
-import {groundBoard} from './boardGrounding';
+import {groundBoard,boardGroundClearance} from './boardGrounding';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
@@ -40,7 +40,12 @@ export class PlayableSkateMotion {
   readonly retarget: SkateRetargeter;
   private readonly nodes: THREE.Object3D[];
   private lastPose: Pose | null = null;
+  private previousPose: Pose | null = null;
   private fromPose: Pose | null = null;
+  private fromPreviousPose: Pose | null = null;
+  private previousDt = 1/60;
+  private transitionDt = 1/60;
+  private transitionAge = 0;
   private fade = 1;
   private wasMounted = false;
   private wasGrounded = true;
@@ -58,14 +63,14 @@ export class PlayableSkateMotion {
   private readonly boardSupport = new THREE.Plane();
   private readonly boardLift = new THREE.Vector3();
   private boardGroundLift = 0;
-  private readonly stop: () => void;
+  private stop: (() => void) | null = null;
   // These observations are private in the full game and intentionally exposed
   // only to this opt-in local study, as in jump-browser-review.ts.
   private readonly p: any;
   private readonly boardMaterials: {material: THREE.Material; opacity: number; transparent: boolean; depthWrite: boolean}[] = [];
   private readonly clonedBoardMeshes = new WeakSet<THREE.Mesh>();
 
-  constructor(player: Player, data: MotionData) {
+  constructor(player: Player, data: MotionData, private readonly options: {continuousTransitions?: boolean} = {}) {
     this.p = player;
     const rig = player.enterAnimationPreview();
     player.applyAnimationDeformations({});
@@ -81,9 +86,31 @@ export class PlayableSkateMotion {
     this.clips = new Map(data.clips.map(c => [c.name, c]));
     this.opacity(1);
     player.exitAnimationPreview();
-    this.stop = player.setFinalPoseOverlay(context => {
+    this.setActive(true);
+  }
+
+  /** A/B/C/D switches remove the overlay entirely. Rejoining on a moving board
+   * blends into riding without inventing a mount, pickup, or ink event. */
+  setActive(active: boolean): void {
+    if (active === Boolean(this.stop)) return;
+    if (!active) {
+      this.stop?.(); this.stop=null; this.reset();
+      // The bridge restore boundary also contains the foot animation document.
+      // Resolve that still-running document at dt=0 for a paused A/B switch.
+      if(this.p.rawInput)this.p.syncVisual(this.p.rawInput,0);
+      this.p.collapseRenderInterpolation();return;
+    }
+    this.reset();
+    this.wasMounted=Boolean(this.p.freeSkate||!this.p.grounded&&this.p.airFromSkate);
+    this.wasGrounded=this.p.grounded;
+    this.stop = this.p.setFinalPoseOverlay((context: PlayerAnimationOverlayContext) => {
       const previousPhase = this.phase;
+      const previousPose = this.lastPose;
       this.update(context);
+      if(context.deltaSeconds>1e-6){
+        this.previousPose=this.lastPose?previousPose:null;
+        this.previousDt=context.deltaSeconds;
+      }
       this.baselineBoardVisible = this.retarget.board.visible;
       this.baselineBoardAlpha = this.boardAlpha;
       this.updateScribble(context.deltaSeconds, previousPhase);
@@ -91,13 +118,24 @@ export class PlayableSkateMotion {
     });
   }
 
+  get active(): boolean {return Boolean(this.stop);}
+
+  /** Interpolating two clear, differently tilted decks can put a tip below
+   * ground between fixed ticks. Re-solve only the displayed prop/contacts;
+   * Player.restoreRenderPose restores the authoritative fixed pose afterward. */
+  constrainRenderPose(): void {
+    if(!this.active||!this.p.grounded||!['mount','dismount'].includes(this.phase))return;
+    this.boardSupport.setFromNormalAndCoplanarPoint(this.p.groundHit?.normal??new THREE.Vector3(0,1,0),this.p.pos);
+    if(boardGroundClearance(this.retarget.board,this.boardSupport)<.002)this.fitEquipmentGround();
+  }
+
   get scribbles(): boolean {return this.useScribbles;}
   set scribbles(value: boolean) {
     this.useScribbles = value;
-    this.boardScribble.enabled = value && this.enabled;
+    this.boardScribble.enabled = value && this.enabled && this.active;
     // A/B also works while paused. It changes only the prop presentation;
     // the source clock, pose and controller never advance or restart.
-    this.applyBoardPresentation();
+    if(this.active)this.applyBoardPresentation();
   }
 
   private updateScribble(dt: number, previous: Phase): void {
@@ -155,7 +193,7 @@ export class PlayableSkateMotion {
     }
   }
 
-  dispose(): void {this.boardScribble.cancel(); this.stop(); this.opacity(1);}
+  dispose(): void {this.setActive(false);}
   reset(): void {
     this.boardScribble.reset();
     this.boardGroundLift=0;
@@ -163,7 +201,8 @@ export class PlayableSkateMotion {
     this.baselineBoardAlpha = 1;
     this.phase = 'foot'; this.time = 0; this.clip = null;
     this.sourceName='';this.previousFootSpeed=0;this.mountHold=false;this.visits.clear();
-    this.lastPose = this.fromPose = null; this.fade = 1;
+    this.lastPose = this.previousPose = this.fromPose = this.fromPreviousPose = null; this.fade = 1;
+    this.transitionAge=0;
     this.wasMounted = false; this.wasGrounded = true; this.opacity(1);
   }
   private capture(): Pose {return this.nodes.map(n => ({p:n.position.clone(),q:n.quaternion.clone(),s:n.scale.clone()}));}
@@ -172,6 +211,27 @@ export class PlayableSkateMotion {
       n.position.lerp(from[i].p, 1-weight);
       n.quaternion.slerp(from[i].q, 1-weight);
       n.scale.lerp(from[i].s, 1-weight);
+    });
+  }
+  private blendTransition(dt: number): void {
+    if (!this.fromPose || this.fade>=1) return;
+    this.transitionAge+=dt;
+    if (!this.options.continuousTransitions || !this.fromPreviousPose) {
+      this.blend(this.fromPose,smooth(this.fade)); return;
+    }
+    // Continue the outgoing velocity briefly instead of holding a still pose.
+    // Its travel decays to a finite limit as the new clip takes over. Source
+    // clocks, contacts, dimensions, and the native controller keep their timing.
+    const tau=(this.phase==='land'?.07:.18)*.25;
+    const travel=tau*(1-Math.exp(-this.transitionAge/tau))/this.transitionDt;
+    const weight=smooth(this.fade), delta=new THREE.Quaternion(),q=new THREE.Quaternion();
+    this.nodes.forEach((n,i)=>{
+      const from=this.fromPose![i],previous=this.fromPreviousPose![i];
+      n.position.lerp(from.p.clone().addScaledVector(from.p.clone().sub(previous.p),travel),1-weight);
+      delta.copy(previous.q).invert().multiply(from.q);
+      q.identity().slerp(delta,travel).premultiply(from.q);
+      n.quaternion.slerp(q,1-weight);
+      n.scale.lerp(from.s.clone().addScaledVector(from.s.clone().sub(previous.s),travel).max(new THREE.Vector3(.001,.001,.001)),1-weight);
     });
   }
   private opacity(alpha: number): void {
@@ -194,6 +254,7 @@ export class PlayableSkateMotion {
   }
   private enter(phase: Phase, name = ''): void {
     this.fromPose = this.lastPose ?? this.capture(); this.fade = 0;
+    this.fromPreviousPose=this.previousPose;this.transitionDt=this.previousDt;this.transitionAge=0;
     this.phase = phase; this.time = 0; this.sourceName = name;
     this.clip = name ? this.clips.get(name)! : null;
     if (name && !this.clip) throw new Error(`Missing playable source clip: ${name}`);
@@ -205,6 +266,13 @@ export class PlayableSkateMotion {
   private update({deltaSeconds: dt, applyDeformations}: PlayerAnimationOverlayContext): void {
     this.boardGroundLift=0;
     const p = this.p, mounted = Boolean(p.freeSkate || (!p.grounded && p.airFromSkate));
+    const blocked = p.isBailing || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
+    if(this.options.continuousTransitions&&blocked){
+      // Do not even clear/reapply proportions under a different pose owner.
+      this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
+      this.lastPose=this.previousPose=this.fromPose=this.fromPreviousPose=null;
+      this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;
+    }
     if(!this.enabled && this.phase==='foot' && this.fade>=1) {
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.lastPose=null;return;
     }
@@ -213,7 +281,6 @@ export class PlayableSkateMotion {
     // every transition. Reapply that design exactly once after the pose.
     p.clearCharacterAppearance();
     const input = p.rawInput;
-    const blocked = p.isBailing || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
     const wanted = this.enabled && !blocked;
     const entered = mounted && !this.wasMounted, left = !mounted && this.wasMounted;
     const landed = p.grounded && !this.wasGrounded;
@@ -261,7 +328,7 @@ export class PlayableSkateMotion {
     if(!mounted)this.previousFootSpeed=p.walkVelocity.length();
     if (this.phase === 'foot') {
       this.opacity(1);
-      if (this.fromPose && this.fade < 1) this.blend(this.fromPose,smooth(this.fade));
+      this.blendTransition(dt);
       this.lastPose = this.capture();
       p.syncCharacterAppearance();
       return;
@@ -301,7 +368,7 @@ export class PlayableSkateMotion {
       const support = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),p.groundHit.normal);
       this.body.quaternion.premultiply(support);
     }
-    if (this.fromPose && this.fade < 1) this.blend(this.fromPose,smooth(this.fade));
+    this.blendTransition(dt);
     this.fitEquipmentGround();
     this.opacity(this.phase==='mount' ? smooth(this.time/.10)
       : this.phase==='dismount' ? smooth((clipDuration(this.clip!)-this.time)/.14) : 1);

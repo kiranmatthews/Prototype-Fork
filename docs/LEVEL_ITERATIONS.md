@@ -9178,3 +9178,40 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   results, screenshots, real-time video and captured frame review. Temporary
   QA tab and served fixtures removed; heavy leases released. User tab/server
   remain on port 5199. Local-only commit; no integration, push or publication.
+
+## 2026-11-08 — Skate motions in D, continuous transitions and render-floor support
+
+- Brief: integrate the accepted Skate animations/scribbles into A/B/C/D, then
+  polish smoothness and fluidity. Keep all work local, retain the native hold/
+  release gesture, live UI tuning and existing A/B/C and D foot/ledge motion.
+- Elapsed prompt-to-verified-playable: approximately 38 minutes, including the
+  full renderer, recorded-motion review, native regression checks and builds.
+- D now owns the opt-in source overlay. Options separately compare previous D
+  skating and pre-scribble fades. Rejoining on a moving board does not replay
+  equipment cues; paused switches and respawns remove the old pose completely.
+  Native ledges, grinds, bails and other special poses regain control immediately.
+- Clip handoffs continue the outgoing joint velocity for a finite decaying
+  interval instead of freezing it. Source clip durations and ink cues stay
+  unchanged; independent segment elasticity and native movement remain intact.
+- Recheck actual board/contact geometry after render interpolation. Fixed clear
+  poses could otherwise put a tilted tip 3.48 mm through the floor between ticks;
+  final displayed samples now retain at least 2 mm clearance. Existing floor-
+  overlaid, foreground-occluded ink is used by the full game renderer.
+- Watch motion includes Skate flow, Mount cancel, equipment pause points, single
+  stepping and normal/MAX. Its floor/gate now accommodate a complete skate run.
+  1–4 comparisons consume the game's conflicting debug-level hotkeys. `/labs`
+  lists the integration in the skate search. An isolated Vite cache prevents
+  other worktrees/checks invalidating the local server's dependency URLs.
+- Checks: 1,091 actual-D replay frames with exact movement/native-foot comparison,
+  six variant switches, paused restoration, respawn/owner guards, source/ink
+  timing, fixed/interpolated ground support. Aggregate head discontinuity at
+  moving handoffs drops 83% in that replay. The 860-frame historical scribble
+  ownership check and 1,980-frame playable regression pass. Production build
+  and both-entry local build pass; production excludes private studies/data.
+- Browser: actual port-5199 A/B/C/D lite/full, normal/MAX, mount/pickup clearance,
+  single apex followed by smaller drawings, cancellation without committed ink,
+  ledge climb (zero grip error), live keyboard mount and A/B/C/D switching with
+  zero position/velocity changes. Recorded/reviewed the unpaused full-render
+  sequence. Console clean. Evidence in external `jump-skate-integration/`.
+- Local-only increment. No push, publication, shared level pack, tuning, main
+  runtime or extracted-data changes. Earlier unpublished increments preserved.

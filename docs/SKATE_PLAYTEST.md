@@ -2,7 +2,8 @@
 
 This separate playtest starts from rollback `48e60aa4`. It does not restore the
 rejected procedural carry, push or mount experiments. Nothing is authorized for
-publication; the Jump A/B/C/D entry remains unchanged.
+publication. The accepted motions are also available in D of the local Jump
+A/B/C/D entry, with an additional finite transition-continuity pass.
 
 Run `npm run lab:skate-playtest` with these environment variables:
 
@@ -20,6 +21,38 @@ current development origin instead of an obsolete saved port.
 The data file stays outside the repository and `public/`; this entry is absent
 from `tools/site-entries.mjs`. Its optional isolated build goes to the ignored
 `.skate-playtest-build/` directory and does not copy public assets.
+That build now checks both local entry points. The server uses an isolated
+`.skate-playtest-cache/` so other worktrees/native checks cannot invalidate its
+dependency hashes while it is running.
+
+## A/B/C/D integration
+
+Open `http://127.0.0.1:5199/jump-review.html?playtest&level=codex-lab&nocrt&lite`.
+D defaults to the new skate presentation. Playtest options offer **New Skate
+motion in D** (off restores previous D skating) and **Board scribbles** (off
+keeps the source motions and restores their original fades). A/B/C retain their
+own animation documents, and switching removes the skate overlay completely.
+No respawn, input reset or velocity change accompanies a version switch.
+Joining D while already skating enters its riding blend without a fake mount
+or ink burst. Restart/respawn retires the old source pose before placement.
+
+Watch motion adds **Skate flow** and **Mount cancel**, using real native input
+on the existing review floor. Pause at exposes the hold, unwind, board appearance,
+board disappearance, mount and dismount. Render offers normal and MAX/native.
+The full course, on-foot Jak/Bone Man blend, live TUNER values, ledges and eco
+remain available in the same playtest.
+
+D's transition pass briefly continues the outgoing joint velocity while the
+incoming source clip blends in. The continuation decays to a finite limit;
+the existing 180 ms blend (70 ms for landing) still finishes completely.
+This removes the frozen first frame at each handoff without retiming the
+source clips, whole-skeleton scaling, or changing gameplay. Native ledges,
+grinds, bails and other specialized poses take ownership immediately. Final
+render interpolation also rechecks board support: two clear, differently
+tilted fixed poses can otherwise penetrate the floor between ticks. The
+correction changes only the displayed board/contact joints and is restored
+with the game's usual render-pose boundary. Repeated render passes are stable.
+The standalone skate lab retains its accepted transition baseline for comparison.
 
 ## Controls and comparison
 
@@ -203,3 +236,18 @@ The updated floor/grid GPU probe passes 48 four-sample MSAA camera/surface/
 frame cases: zero lost ink pixels and zero overwritten foreground pixels.
 The floor-contact shader is preserved; only the ink's late pass and the grid's
 non-occluding depth policy change. Production and isolated local builds pass.
+
+`tools/test-jump-skate-integration.mjs <private-skate-motion.json> <private-jak-motion.json>`
+replays 1,091 frames through the actual D animation runtime. It compares native
+movement with an untouched player, checks exact native foot poses, source/ink
+timing, six overlay switches, paused restoration, respawn and other pose owners.
+Across the moving clip handoffs, summed head-position second differences fall
+from 0.3046 to 0.0507 (83% less abrupt change in this replay). This is a continuity
+measurement, not a substitute for visual acceptance. Fixed poses and three
+interpolated samples per equipment frame all clear support by at least 2 mm;
+the uncorrected interpolation reproduced a 3.48 mm penetration.
+Browser review covers the real A/B/C/D URL in lite/full and normal/MAX rendering,
+one-tick apex, cancel/unwind, pickup, ledge pull-up, live keyboard mounting and
+1–4 switching without changing course/position. The complete unpaused sequence
+was recorded from the real game canvas and reviewed as captured frames. Both
+builds pass; no console warnings/errors or private motion assets in production.

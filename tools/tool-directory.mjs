@@ -10,7 +10,7 @@ const descriptions = {
   'skate-pose-review.html': ['Skate pose contact sheet', 'Looping, labelled skate captures with transport, views, filters and editable animation studies.', 'Labs & studios'],
   'skate-playtest.html': ['Skate playable motion lab', 'Ride Bone Man with the new Skate motions. Mount, push, jump, land and dismount; punk scribble board effects, original D comparison, slow motion and frame stepping.', 'Labs & studios'],
   'skate-reference-lab.html': ['Skate source-motion lab', 'Browse 218 Skate source clips retargeted to Bone Man: mounts, dismounts, pushes, stances, crouches, flips and landings.', 'Labs & studios'],
-  'jump-review.html': ['Jump A/B/C/D playtest', 'Compare Bone Man and Jak jumps, double jumps, forward rolls, hybrid run, ledge grabs and green eco effects.', 'Labs & studios'],
+  'jump-review.html': ['Jump A/B/C/D playtest', 'Compare Bone Man and Jak jumps, hybrid run, ledges and eco. D also includes Skate mounts, riding, pickups and reversible board scribbles.', 'Labs & studios'],
   'spin-lab.html': ['Spin smear lab', 'Character spin smears, orbital rings, colours, mesh shape and animation preview.', 'Labs & studios'],
   'milk-review.html': ['Fruit / milk pickup lab', 'Pickup model, appearance and motion review.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
