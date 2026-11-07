@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-08",
+  "feature": "Roo PNG pair-spacing studio",
+  "entry": "roo-type-lab.html?tab=kerning",
+  "unitChecks": [
+    "tools/test-roo-pair-spacing.mjs",
+    "tools/test-roo-atlas-readiness.mjs",
+    "tools/test-bonus-hud.mjs"
+  ],
+  "browserChecks": {
+    "desktop": "1440px: pair search, exact entry, +/- nudges, drag and arrow/Shift-arrow editing",
+    "phone": "390px viewport; document scroll width 390px; stacked controls and horizontal pair list",
+    "history": "A drag is one undo step; numeric entry, undo, redo and reload persistence verified",
+    "presets": "Downloaded JSON with AV=-0.08 and 0/=0.01, reset all, imported both entries successfully",
+    "crossTab": "Second tab changed AV to -0.079; first tab updated and cleared stale undo history",
+    "suggestion": "AV contour suggestion -0.217 changed measured clearance from 23.2 to 1.5 pixels at 100px cap height",
+    "palette": "Counter and bonus source artwork inspected; unsupported heart glyph reported visibly",
+    "opticalTitle": "BONUS preview and original appearance tab retain authored letter shapes while applying BO edits",
+    "gameMenuLiveUpdate": {
+      "pair": "ME",
+      "adjustment": -0.099,
+      "resumeViewBoxBefore": "0.0205453127278451 -.1425 3.897335816897929 1.285",
+      "resumeViewBoxAfter": "0.0205453127278451 -.1425 3.7983358168979287 1.285"
+    },
+    "gameRendering": ["production lite Treehouse Trail spawn and Pause", "full Flats & Pipes", "native renderer resolution and Pause"],
+    "productionConsoleErrors": [],
+    "developmentNote": "The editor ran cleanly in Vite. The game encountered a dev-module fetch failure; the production bundle loaded and passed the game checks."
+  },
+  "scope": "Source PNGs, movement, levels and shared published pack are unchanged. Pair presets are browser-local and explicitly exportable. No full suite was run."
+}

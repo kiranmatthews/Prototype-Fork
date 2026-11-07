@@ -10038,3 +10038,15 @@ Select shows Factory Fuss → Dusty Road → Nightmare Grove with the new thumbn
 
 Evidence: `docs/desert-canyon/dusty-road/` contains the endpoint, validation,
 bonus journey and full-resolution gem/bonus captures.
+
+## 8 November 2026 — Roo PNG pair-spacing studio
+
+Prompt: “Give me a UI for adjusting the letter spacing of individual character combinations in the roo png font, make it smart and easy to use.” Approximately 12 minutes prompt-to-first-playable browser editor; focused validation and publication followed.
+
+Added a Pair spacing tab to the existing Roo Font Studio, a searchable tools-directory entry, and a direct link from M → Text Tuning. Choose pairs from text, common combinations, edited pairs, or either glyph selector. Drag the full-resolution PNG preview, use precise numeric/slider controls, or nudge with arrows (Shift for larger steps). A contour-based suggestion measures the facing painted edges and preserves a small clearance. Original-position guides, before/after words, both palettes, counter/menu samples, unsupported-character feedback, grouped undo/redo, per-pair/all resets and strict JSON import/export complete the workflow. The editor supports phone and desktop layouts.
+
+Pair offsets save with existing fork-owned appearance settings and update open game tabs. The shared Canvas/SVG layout handles directional and repeated pairs, spaces, existing numeric kerning and the authored BONUS layout. Raster cache keys include the resulting glyph positions so cached menu text cannot retain stale spacing. Existing settings migrate with no pair edits. Storage failures show a session-only message with export available. No glyph artwork, level geometry or movement settings changed.
+
+Validation: focused pair-layout/preset/persistence tests, atlas readiness, existing BONUS SVG/native parity, production build and release-size check. Real-browser checks covered dragging, keyboard and numeric editing, undo/redo, reload persistence, preset export/import, cross-tab updates, both palettes, 390px phone layout without horizontal document overflow, and original/edited previews. Production game checks passed in lite, full and native rendering with clean console output. An open RESUME menu changed its SVG width by exactly the edited ME adjustment without reloading. No full suite was requested or run.
+
+Evidence: [verification](roo-pair-spacing/verification.json), [editor](roo-pair-spacing/editor-desktop.png), [native game menu](roo-pair-spacing/game-native.png).
