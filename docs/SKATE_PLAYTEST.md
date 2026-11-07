@@ -63,18 +63,23 @@ and finite mount/dismount; short fades cover the source clips' carried endpoints
 
 ## Punk board scribbles
 
-The default board effect uses thirty-two independently drawn thin-ink PNG frames
-at **60 fps**, lasting 0.533 seconds. Eight rapid full-size redraws have a long,
+The default board effect uses thirty-two independently drawn thin-ink PNG frames.
+Mounts and running dismounts play at **60 fps**, lasting 0.533 seconds; standing
+dismounts fit the same drawings into 0.4 seconds (80 fps). Eight rapid full-size
+redraws have a long,
 slim deck silhouette; subsequent drawings use fewer, shorter strokes with the
 same pen weight. A single fixed-size billboard swaps atlas cells, never scales
 down the artwork or fades it. Its long axis follows the board in the camera.
-The appearance switches under the full-size ink; disappearance retains the
-prop's last attachment to the moving player until the smaller drawings clear.
+The appearance switches under the full-size ink. Disappearance follows the
+source prop's pickup path, clearing at the first stable hand catch: source frame
+26 / 0.433 seconds for standing, 56 / 0.933 seconds for running. The effect starts
+at 0.033 / 0.400 seconds respectively. The vanished board stays hidden through
+the remaining source carry/settle, including after the ink has finished.
 
 Only a normal mount or dismount can start ink; arbitrary changes in board
 visibility cannot. Bails, death, jumps, grinds and other pose owners cancel any
-active ink immediately. A naturally completed dismount can finish its smaller
-drawings on foot. The source animations, transitions, timing and controller are
+active ink immediately. No dismount ink continues into the on-foot settle.
+The source animations, transitions, timing and controller are
 unchanged in both comparisons.
 
 Pause at **Board appears** or **Board disappears**, then Step frame to inspect
@@ -113,4 +118,6 @@ and A's board visibility/opacity. It checks paused A/B, native bails during
 mount/ride/dismount and recovery, arbitrary visibility changes, eight other
 pose owners, death and reset. The temporary historical module is removed on
 exit; run this check separately from builds. Browser A/B and native bail review
-pass at normal and MAX/native resolution.
+pass at normal and MAX/native resolution. Both dismount clips also verify the
+last ink frame precedes the catch, the board stays gone through the settle, and
+paused A/B after the burst restores only A's original carried board.

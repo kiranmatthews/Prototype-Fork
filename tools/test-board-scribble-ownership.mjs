@@ -59,8 +59,31 @@ try {
       assert.fail(`Could not reach ${phase}/${age}`);
     };
     const counts=()=>[ink.boardScribble.appearances,ink.boardScribble.disappearances];
+    // Review both complete source clips through the installed final callback.
+    // Catch samples were measured from source board/right-hand separation.
+    const catchResults=[];
+    for(const [name,catchFrame,startFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,2],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24]]){
+      freshB();stepB();ink.enter('dismount',name);
+      let first=-1,last=-1;
+      const source=data.clips.find(c=>c.name===name);
+      for(let frame=1;frame<source.frames.length+3;frame++){
+        stepB();
+        if(ink.boardScribble.active){if(first<0)first=frame;last=frame;}
+        if(frame>=startFrame&&ink.phase==='dismount')assert.equal(ink.retarget.board.visible,false,`${name}: vanished board reappeared at ${frame}`);
+        if(frame>=catchFrame){
+          assert.equal(ink.boardScribble.active,false,`${name}: ink passed the hand catch at ${frame}`);
+          assert.equal(ink.retarget.board.visible,false,`${name}: board survived catch at ${frame}`);
+        }
+        if(frame===catchFrame){
+          ink.scribbles=false;assert.equal(ink.retarget.board.visible,true,'A lost its original carried board');
+          ink.scribbles=true;assert.equal(ink.retarget.board.visible,false,'B revived the caught board after A/B');
+        }
+      }
+      assert.equal(first,startFrame);assert.equal(last,catchFrame-1);
+      assert.deepEqual(counts(),[0,1]);catchResults.push({name,first,last,catchFrame});
+    }
     const bailResults=[];
-    for(const [phase,age,masked] of [['mount',.10,false],['ride',.1,false],['ride',.1,true],['dismount',1.45,false]]){
+    for(const [phase,age,masked] of [['mount',.10,false],['ride',.1,false],['ride',.1,true],['dismount',.20,false],['dismount',1.45,false]]){
       freshB();reach(phase==='dismount'?'ride':phase,phase==='dismount'?0:age);
       if(phase==='dismount')reach('dismount',age);
       const before=counts();b.bail(masked,Math.max(8,b.speed),'trip');assert.ok(b.isBailing);
@@ -68,7 +91,7 @@ try {
         stepB();assert.equal(ink.boardScribble.active,false,`ink during ${phase} bail/recovery at ${f}`);
         assert.deepEqual(counts(),before,`bail/recovery fired an equipment cue (${phase}, ${f})`);
       }
-      bailResults.push({phase,masked,counts:counts()});
+      bailResults.push({phase,age,masked,counts:counts()});
     }
     // Repeated visibility changes are not equipment events, including while a
     // different pose owner (rail, ledge, flip, slide, manual, vert) has control.
@@ -92,6 +115,6 @@ try {
     for(let f=0;f<20;f++){stepB();assert.equal(ink.boardScribble.active,false);assert.deepEqual(counts(),beforeDeath);}
     freshB();assert.equal(ink.boardScribble.active,false);assert.deepEqual(counts(),[0,0]);
     for(const motion of motions)motion.dispose();for(const runtime of runtimes)runtime.dispose();
-    console.log(JSON.stringify({baseline:'22cebbe2',poseFrames,toggleChecks,bailResults,unrelatedVisibilityChanges:60,otherOwners:8,deathAndReset:true}));
+    console.log(JSON.stringify({baseline:'22cebbe2',poseFrames,toggleChecks,catchResults,bailResults,unrelatedVisibilityChanges:60,otherOwners:8,deathAndReset:true}));
   },{levelEntry:{id:'scribble-test',name:'Scribble test',data:{v:1,name:'Scribble test',spawn:[0,.03,6],killY:-20,components:[{t:'platform',p:[0,-.5,-100],s:[1000,1,1000]},{t:'gate',p:[0,0,-400]}]}}});
 } finally {await rm(legacyUrl,{force:true});}

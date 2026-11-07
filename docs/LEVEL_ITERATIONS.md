@@ -8989,3 +8989,27 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   Console clear; evidence is external `skate-scribble-ab/`.
 - Existing local playtest remains at port 5199. No shared movement, level data,
   source-motion retargeting or PNG art changed. Nothing pushed or published.
+
+## Skate scribbles — finish at the dismount hand catch
+
+- 7 November 2026 NZDT: about seven minutes prompt-to-playable including focused
+  validation. Moved the dismount burst from the clip's final fade to its pickup,
+  ending at the first stable hand catch: standing source frame 26 (0.433 s),
+  running frame 56 (0.933 s). Source board/hand samples and browser frame review
+  establish the cue; the remaining clip is the unchanged carry/settle.
+- Standing ink runs 0.033–0.433 s with the same 32 drawings at 80 fps; running
+  runs 0.400–0.933 s at the retained 60 fps. Ink follows the actual pickup path,
+  with fixed sprite dimensions. The board stays hidden after the burst until
+  the existing dismount ends. Mounts, A's pre-scribble presentation, source
+  animation timing, retargeting, controller and tuning remain unchanged.
+- Focused checks pass: 660 exact pose/controller comparisons against accepted
+  `22cebbe2`; both complete dismount clips clear ink at the expected catch and
+  never revive the board; paused A/B at and after the catch; five native bail/
+  recovery cases including during ink and after it; existing ownership guards.
+  The 1,980-frame motion regression, 32 unique atlas cells at both playback
+  rates, fixed dimensions and source-prop tracking checks pass.
+- Production type-check/build and local study build pass. Real browser review
+  checks the pickup, last small drawings, exact catch, paused A/B and complete
+  settle at normal and MAX/native resolution; no console warnings/errors.
+  Evidence is external `skate-scribble-catch/`. Port 5199 remains local only;
+  no integration, push or publication is authorized.

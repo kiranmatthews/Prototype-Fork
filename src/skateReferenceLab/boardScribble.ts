@@ -3,6 +3,7 @@ import {skateboardSettings} from '../skateboard/settings';
 
 export const SCRIBBLE_FRAMES = 32;
 export const SCRIBBLE_FPS = 60;
+export const SCRIBBLE_DURATION = SCRIBBLE_FRAMES / SCRIBBLE_FPS;
 const REVEAL_FRAME = 2;
 // Thirty-two source drawings. Every sample uses the same 384 × 128 pixels.
 // Measured UV origins / ink anchors accommodate the hand-drawn row spacing,
@@ -48,29 +49,32 @@ export class BoardScribbleSequence {
   enabled = true;
   targetVisible = false;
   private playing = false;
+  duration = SCRIBBLE_DURATION;
   elapsed = 0;
   serial = 0;
   appearances = 0;
   disappearances = 0;
   get active(): boolean {return this.enabled && this.playing;}
-  get frame(): number {return Math.min(SCRIBBLE_FRAMES - 1, Math.floor(this.elapsed * SCRIBBLE_FPS + 1e-7));}
+  get frame(): number {return Math.min(SCRIBBLE_FRAMES - 1, Math.floor(this.elapsed / this.duration * SCRIBBLE_FRAMES + 1e-7));}
   get boardVisible(): boolean {return this.targetVisible && (!this.active || this.frame >= REVEAL_FRAME);}
   // Only an explicit equipment cue starts a burst. Board visibility, bails,
   // loose decks and other animation owners are deliberately not inputs.
-  start(visible: boolean): void {
+  start(visible: boolean, duration = SCRIBBLE_DURATION): void {
+    this.duration = duration;
     this.targetVisible = visible; this.elapsed = 0; this.playing = true; this.serial++;
     if (visible) this.appearances++; else this.disappearances++;
   }
   step(dt: number): void {
     if (this.playing) {
       this.elapsed += dt;
-      if (this.elapsed + 1e-7 >= SCRIBBLE_FRAMES / SCRIBBLE_FPS) this.playing = false;
+      if (this.elapsed + 1e-7 >= this.duration) this.playing = false;
     }
   }
   cancel(): void {this.playing = false;}
   reset(): void {
     this.targetVisible = this.playing = false;
     this.elapsed = this.appearances = this.disappearances = 0;
+    this.duration = SCRIBBLE_DURATION;
     this.serial++;
   }
 }
@@ -104,14 +108,13 @@ export class BoardScribbleEffect {
 
   update(camera: THREE.Camera): void {
     this.sprite.visible = this.clock.active;
-    // A/B hides the drawing without losing its captured prop attachment or
-    // changing its size when the same equipment cue is shown again.
+    // A/B hides the drawing without changing the size of the same burst.
     if (!this.clock.active) return;
     const newBurst = this.serial !== this.clock.serial;
     this.board.updateWorldMatrix(true, false);
-    // Follow the actual prop on appearance. On disappearance, retain its last
-    // attachment to the moving player rather than snapping to the idle board.
-    if (newBurst || this.clock.targetVisible) {
+    // Both bursts follow the source prop. Dismount ink clears at the hand catch,
+    // before the source animation relinquishes the board to the idle pose.
+    {
       const s = skateboardSettings.value, scale = s.overallScale;
       const y = (s.boardToGroundDistance + .01) * scale;
       this.center.set(0, y, (s.deckNoseLength - s.deckTailLength) * .5 * scale);

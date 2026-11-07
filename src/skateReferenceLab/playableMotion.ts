@@ -6,12 +6,18 @@ import {solveTwoBoneIk} from '../animation/ik';
 import {skateboardSettings} from '../skateboard/settings';
 import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
 import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
-import {BoardScribbleSequence} from './boardScribble';
+import {BoardScribbleSequence, SCRIBBLE_DURATION} from './boardScribble';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
+// First stable hand catches in the 60 Hz source clips (zero-based frames).
+// The rest of each clip is its existing carry/settle, not the catch itself.
+const dismountCatchFrames: Readonly<Record<string, number>> = {
+  BR_DISMOUNT_LO_INTO_STAND_0: 26,
+  BR_DISMOUNT_LO_INTO_RUN_FWD: 56,
+};
 
 /** Local source-motion presentation only. It observes native gameplay; it never
  * writes position, speed, grounded, input, charge, or a controller state. */
@@ -19,8 +25,7 @@ export class PlayableSkateMotion {
   enabled = true;
   private useScribbles = true;
   readonly boardScribble = new BoardScribbleSequence();
-  private dismountInkPending = false;
-  private dismountInkTail = false;
+  private dismountInkStarted = false;
   private boardAlpha = 1;
   private baselineBoardVisible = false;
   private baselineBoardAlpha = 1;
@@ -71,12 +76,11 @@ export class PlayableSkateMotion {
     this.opacity(1);
     player.exitAnimationPreview();
     this.stop = player.setFinalPoseOverlay(context => {
-      const previousPhase = this.phase, previousTime = this.time;
-      const previousDuration = this.clip ? clipDuration(this.clip) : 0;
+      const previousPhase = this.phase;
       this.update(context);
       this.baselineBoardVisible = this.retarget.board.visible;
       this.baselineBoardAlpha = this.boardAlpha;
-      this.updateScribble(context.deltaSeconds, previousPhase, previousTime, previousDuration);
+      this.updateScribble(context.deltaSeconds, previousPhase);
       this.applyBoardPresentation();
     });
   }
@@ -90,7 +94,7 @@ export class PlayableSkateMotion {
     this.applyBoardPresentation();
   }
 
-  private updateScribble(dt: number, previous: Phase, previousTime: number, previousDuration: number): void {
+  private updateScribble(dt: number, previous: Phase): void {
     const p = this.p, ink = this.boardScribble;
     ink.enabled = this.scribbles && this.enabled;
     ink.step(dt);
@@ -98,32 +102,36 @@ export class PlayableSkateMotion {
       || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding
       || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
     if (interrupted) {
-      ink.cancel(); this.dismountInkPending = this.dismountInkTail = false; return;
+      ink.cancel(); this.dismountInkStarted = false; return;
     }
     if (this.phase !== previous) {
-      if (this.phase === 'mount') {
-        ink.start(true); this.dismountInkPending = this.dismountInkTail = false;
-      } else if (this.phase === 'dismount') {
-        ink.cancel(); this.dismountInkPending = true; this.dismountInkTail = false;
-      } else if (previous === 'dismount' && this.phase === 'foot' && previousTime + dt + 1e-7 >= previousDuration) {
-        // Let a completed, ordinary dismount finish clearing its ink on foot.
-        this.dismountInkTail = true; this.dismountInkPending = false;
-      } else {
-        ink.cancel(); this.dismountInkPending = this.dismountInkTail = false;
+      ink.cancel(); this.dismountInkStarted = false;
+      if (this.phase === 'mount') ink.start(true);
+    }
+    if (this.phase === 'dismount' && !this.dismountInkStarted && this.clip) {
+      const catchTime = dismountCatchFrames[this.sourceName] / this.clip.fps;
+      // The standing pickup catches sooner: fit all 32 drawings into its
+      // 0.4-second pickup. Running retains 60 fps. Neither source clip is sped up.
+      const duration = Math.min(SCRIBBLE_DURATION, catchTime - 2 / this.clip.fps);
+      const start = catchTime - duration;
+      if (this.time + 1e-7 >= start) {
+        ink.start(false, duration); ink.step(Math.max(0, this.time - start));
+        this.dismountInkStarted = true;
       }
     }
-    if (this.phase === 'dismount' && this.dismountInkPending && this.clip && this.time >= clipDuration(this.clip) - .16) {
-      ink.start(false); this.dismountInkPending = false;
-    }
-    if (this.phase === 'foot' && !this.dismountInkTail) ink.cancel();
   }
 
   private applyBoardPresentation(): void {
     this.opacity(this.baselineBoardAlpha);
     this.retarget.board.visible = this.baselineBoardVisible;
     const ink = this.boardScribble;
+    // Keep the vanished prop gone through the remaining carry/settle. Restoring
+    // baseline visibility when the shorter burst ends would make it reappear.
+    if (this.scribbles && this.enabled && this.phase === 'dismount' && this.dismountInkStarted) {
+      this.opacity(1); this.retarget.board.visible = false; return;
+    }
     if (!ink.active) return;
-    if ((this.phase === 'mount' && ink.targetVisible) || (this.phase === 'dismount' && !ink.targetVisible)) {
+    if (this.phase === 'mount' && ink.targetVisible) {
       this.opacity(1); this.retarget.board.visible = ink.boardVisible;
     }
   }
@@ -131,7 +139,7 @@ export class PlayableSkateMotion {
   dispose(): void {this.boardScribble.cancel(); this.stop(); this.opacity(1);}
   reset(): void {
     this.boardScribble.reset();
-    this.dismountInkPending = this.dismountInkTail = this.baselineBoardVisible = false;
+    this.dismountInkStarted = this.baselineBoardVisible = false;
     this.baselineBoardAlpha = 1;
     this.phase = 'foot'; this.time = 0; this.clip = null;
     this.sourceName='';this.previousFootSpeed=0;this.mountHold=false;this.visits.clear();
