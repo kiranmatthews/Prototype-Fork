@@ -1,6 +1,6 @@
 /** Special exploration gems are separate from clear gems and combo prizes. */
 export const COLOURED_GEMS = {
-  yellow: {label:'Yellow', tint:0xfff212},
+  yellow: {label:'Yellow', tint:0xffff00},
   red: {label:'Red', tint:0xf24952},
   blue: {label:'Blue', tint:0x4b9bff},
   green: {label:'Green', tint:0x56db75},

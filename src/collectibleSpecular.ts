@@ -14,7 +14,6 @@ varying vec4 vCollectibleSweep;
 varying vec2 vCollectibleUv;
 varying float vCollectibleEdge;
 varying float vCollectibleEdgeDistance;
-varying float vCollectibleFresnel;
 float power8(float x) { x *= x; x *= x; return x * x; }
 float power16(float x) { x = power8(x); return x * x; }
 float power64(float x) { x = power16(x); x *= x; return x * x; }
@@ -25,10 +24,12 @@ void lightCollectible() {
   float rim = max(dot(n, vec3(0.8, -0.36, 0.48)), 0.0);
   vCollectibleUv = aFaceUv;
   vCollectibleEdgeDistance = aEdgeDistance;
-  vec3 eyeDirection = normalize(-(modelViewMatrix * vec4(position, 1.0)).xyz);
-  float grazing = 1.0 - abs(dot(n, eyeDirection));
-  vCollectibleFresnel = grazing * grazing * grazing;
   #if COLLECTIBLE_CRYSTAL
+    vec3 crystalFill = vec3(0.78, 0.65, 1.0);
+    #if COLLECTIBLE_COLOURED
+      // Keep the crystal optics, with fill in the special gem's own hue.
+      crystalFill = mix(diffuse, vec3(1.0), 0.14);
+    #endif
     vec2 radial = n.xz * inversesqrt(max(dot(n.xz, n.xz), 0.0001));
     vec2 side = tangent.xz * inversesqrt(max(dot(tangent.xz, tangent.xz), 0.0001));
     vec2 key = normalize(vec2(-0.325, 0.946));
@@ -39,7 +40,7 @@ void lightCollectible() {
     float bodyFacing = max(dot(n, normalize(vec3(-0.38, -0.24, 0.893))), 0.0);
     float cutGain = aFacetNormal.y < 0.0 ? 1.0 : 0.65;
     vCollectibleLight = (diffuse * (0.025 + bodyFacing * 1.06)
-      + vec3(0.78, 0.65, 1.0) * power8(max(n.z, 0.0)) * 0.35)
+      + crystalFill * power8(max(n.z, 0.0)) * 0.35)
       * mix(0.88, 1.08, aFaceUv.y) * cutGain;
     // The recording has a separate lower-edge sliver between broad flashes.
     // Its direction is distinct; it does not bloom from the face centre.
@@ -54,14 +55,6 @@ void lightCollectible() {
     float lowerFill = max(dot(n, normalize(vec3(-0.3, -0.8, 0.52))), 0.0);
     vCollectibleLight = diffuse * (0.018 + broad * 0.13 + rim * 0.025 + lowerFill * 0.12);
     vCollectibleEdge = power64(max(dot(n, normalize(vec3(0.68, -0.55, 0.49))), 0.0)) * 1.4;
-    #if COLLECTIBLE_JELLY
-      // Lemon jelly: clear body, denser edges, narrow wet reflections.
-      // Keep the other gems' strong facet flash without whitening the table.
-      vCollectibleLight = diffuse * (0.60 + broad * 0.24 + lowerFill * 0.10);
-      vCollectibleSweep.y = 0.14 + power16(facing) * 0.16;
-      vCollectibleSweep.z *= 0.94;
-      vCollectibleEdge *= 0.85;
-    #endif
   #endif
 }
 `;
@@ -76,30 +69,26 @@ vec3 outgoingLight = vCollectibleLight + vec3(1.0, 0.98, 0.97) * flash
   + vec3(0.88, 0.94, 1.0) * edgeFlash;
 float highlightCoverage = max(flash + edgeFlash, min(min(outgoingLight.r, outgoingLight.g), outgoingLight.b));
 diffuseColor.a = opacity * mix(0.86, 1.0, clamp(highlightCoverage, 0.0, 1.0));
-#if COLLECTIBLE_JELLY
-  float jellyBodyAlpha = mix(0.32, 0.68, vCollectibleFresnel);
-  diffuseColor.a = opacity * mix(jellyBodyAlpha, 0.96, clamp(flash + edgeFlash, 0.0, 1.0));
-#endif
 `;
 
 /** Native opacity/clone/fog behavior, with vertex-lit affine facet highlights. */
 export class CollectibleSpecularMaterial extends THREE.MeshBasicMaterial {
-  constructor(color: THREE.ColorRepresentation = 0xb8c8de, profile: "crystal" | "gem" | "jelly" = "gem") {
-    super({ color, toneMapped: false, transparent: true, depthWrite: profile !== "jelly" });
+  constructor(color: THREE.ColorRepresentation = 0xb8c8de, profile: "crystal" | "gem" | "colouredCrystal" = "gem") {
+    super({ color, toneMapped: false, transparent: true, depthWrite: true });
     this.name = "collectible vertex specular";
     this.userData.collectibleProfile = profile;
     this.onBeforeCompile = shader => {
-      const profileDefine = `#define COLLECTIBLE_CRYSTAL ${this.userData.collectibleProfile === "crystal" ? 1 : 0}\n#define COLLECTIBLE_JELLY ${this.userData.collectibleProfile === "jelly" ? 1 : 0}\n`;
+      const profileDefine = `#define COLLECTIBLE_CRYSTAL ${this.userData.collectibleProfile !== "gem" ? 1 : 0}\n#define COLLECTIBLE_COLOURED ${this.userData.collectibleProfile === "colouredCrystal" ? 1 : 0}\n`;
       shader.vertexShader = profileDefine + COLLECTIBLE_SPECULAR_VERTEX + shader.vertexShader.replace(
         "#include <begin_vertex>", "#include <begin_vertex>\nlightCollectible();",
       );
-      shader.fragmentShader = profileDefine + "varying vec3 vCollectibleLight;\nvarying vec4 vCollectibleSweep;\nvarying vec2 vCollectibleUv;\nvarying float vCollectibleEdge;\nvarying float vCollectibleEdgeDistance;\nvarying float vCollectibleFresnel;\n" + shader.fragmentShader.replace(
+      shader.fragmentShader = profileDefine + "varying vec3 vCollectibleLight;\nvarying vec4 vCollectibleSweep;\nvarying vec2 vCollectibleUv;\nvarying float vCollectibleEdge;\nvarying float vCollectibleEdgeDistance;\n" + shader.fragmentShader.replace(
         "vec3 outgoingLight = reflectedLight.indirectDiffuse;", COLLECTIBLE_SPECULAR_FRAGMENT,
       );
     };
   }
   customProgramCacheKey(): string {
-    return `collectible-facet-sweep-v5:${this.userData.collectibleProfile}`;
+    return `collectible-facet-sweep-v6:${this.userData.collectibleProfile}`;
   }
 }
 

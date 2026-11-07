@@ -14587,10 +14587,10 @@ export class Player {
 
     // Exploration gems bank immediately, so finding one beyond the finish
     // never requires returning through the gate or completing a combo.
+    // Sound and the earned HUD model acknowledge the pickup, like the crystal.
     if(!level.runMode)for(const gem of level.colouredGemPickups){
       if(!gem.collected&&this.playerBox.intersectsBox(gem.box)&&level.collectColouredGem(gem)){
         sfx.play('crystalGet',1.0);this.score(CONST.ptsGem,`${COLOURED_GEMS[gem.colour].label} gem`);
-        this.onCourseHint(`${COLOURED_GEMS[gem.colour].label.toUpperCase()} GEM FOUND`,'Hidden gem collected');
       }
     }
 

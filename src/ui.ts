@@ -1629,7 +1629,7 @@ export class UI {
         this.iconSlots[RELIC_SLOT_0+3]?.spin.traverse(object=>{
           const material=(object as THREE.Mesh).material;
           for(const m of material?(Array.isArray(material)?material:[material]):[])
-            if(m.userData.collectibleProfile==='jelly')(m as THREE.MeshBasicMaterial).color.setHex(gem.tint);
+            if(m.userData.collectibleProfile==='colouredCrystal')(m as THREE.MeshBasicMaterial).color.setHex(gem.tint);
         });
         pop(this.colouredGemIcon);
       }

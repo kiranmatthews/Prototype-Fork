@@ -18520,13 +18520,13 @@ export class Level {
     return g;
   }
 
-  /** Vivid, lightly translucent special gems share their world and HUD art. */
+  /** Special gems share the crystal material and the same world/HUD art. */
   static colouredGemMesh(scale=1,colour:ColouredGemColour='yellow'):THREE.Group {
     const tint=COLOURED_GEMS[colour].tint,group=Level.gemMesh(scale,tint);
     for(const child of group.children){
       if((child as THREE.Mesh).isMesh){
         const shell=child as THREE.Mesh;(shell.material as THREE.Material).dispose();
-        shell.material=new CollectibleSpecularMaterial(tint,'jelly');shell.name=`${colour} jelly gem`;
+        shell.material=new CollectibleSpecularMaterial(tint,'colouredCrystal');shell.name=`${colour} crystal gem`;
       }else if((child as THREE.Sprite).isSprite){
         const material=(child as THREE.Sprite).material as THREE.SpriteMaterial;
         material.color.setHex(tint);material.opacity=.08;

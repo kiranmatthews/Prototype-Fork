@@ -10050,3 +10050,25 @@ Pair offsets save with existing fork-owned appearance settings and update open g
 Validation: focused pair-layout/preset/persistence tests, atlas readiness, existing BONUS SVG/native parity, production build and release-size check. Real-browser checks covered dragging, keyboard and numeric editing, undo/redo, reload persistence, preset export/import, cross-tab updates, both palettes, 390px phone layout without horizontal document overflow, and original/edited previews. Production game checks passed in lite, full and native rendering with clean console output. An open RESUME menu changed its SVG width by exactly the edited ME adjustment without reloading. No full suite was requested or run.
 
 Evidence: [verification](roo-pair-spacing/verification.json), [editor](roo-pair-spacing/editor-desktop.png), [native game menu](roo-pair-spacing/game-native.png).
+
+## 2026-11-08 — Yellow crystal material and quiet discovery
+
+Replaced the yellow gem's jelly material with the purple crystal's denser
+86–100% opacity, depth writing, directional facet shading, moving reflection
+strips and edge flashes. The gem keeps its existing cut and replay location.
+Its colour is fully saturated yellow (`#ffff00`); the crystal fill uses that
+hue instead of the purple crystal's lavender fill. World and inventory models
+share the revised material. The unused jelly/Fresnel path is removed.
+
+Removed the hidden-gem collection title banner. Pickup audio, score, persistent
+discovery and the earned inventory model remain in place.
+
+About five minutes to the first playable material revision. The existing
+collectible geometry/shader/clone check and TypeScript check pass. The real-player
+canyon validator still collects the gem once, retains discovery through reload
+and restart, and leaves other gem rewards unchanged. Normal 720 and native
+2560×1440 full-render previews have no browser warnings or errors. Review image:
+`docs/desert-canyon/dusty-road/yellow-crystal-material.png`.
+A fresh browser session walks into the real gem at the replay location and
+shows the pickup burst with no title banner and no console errors. Production
+build and the 963,307,977-byte release-size check pass.

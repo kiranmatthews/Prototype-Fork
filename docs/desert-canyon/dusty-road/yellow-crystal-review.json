@@ -1,0 +1,37 @@
+{
+  "baseRevision": "61ffd52c",
+  "colour": "#ffff00",
+  "material": "Shared purple-crystal optics with yellow fill",
+  "opacityRange": [
+    0.86,
+    1
+  ],
+  "depthWrite": true,
+  "geometryAndLocationUnchanged": true,
+  "browser": {
+    "fullRender": [
+      "normal 720",
+      "native 2560x1440"
+    ],
+    "pickup": {
+      "collected": true,
+      "position": [
+        -115.51,
+        -724.8,
+        -4623.35
+      ],
+      "grounded": true,
+      "titleBanner": false
+    },
+    "warnings": [],
+    "errors": []
+  },
+  "checks": {
+    "collectibleGeometryAndShader": "pass",
+    "typescript": "pass",
+    "realPlayerPickupAndPersistence": "pass",
+    "productionBuild": "pass",
+    "releaseSize": "pass"
+  },
+  "releaseBytes": 963307977
+}
