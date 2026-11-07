@@ -1,3 +1,4 @@
+import { colouredGemCollection, type ColouredGemColour } from './colouredGems';
 // Campaign-facing level order and durable save data.
 //
 // This deliberately does not depend on levelList(): the editor list is mutable,
@@ -100,7 +101,7 @@ export interface CampaignLevelDefinition {
   timeTrial?: boolean;
   secretRequirement?: SecretRequirement;
   /** Set when a real coloured-gem challenge is authored for this course. */
-  colouredGem?: string;
+  colouredGem?: ColouredGemColour;
 }
 
 export type CampaignIslandId = "island-1" | "island-2" | "island-3" | "island-4" | "island-5" | "hidden-shores";
@@ -374,7 +375,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'maynard-course-5': {name:'Unnamed Course 5',placeholder:true},
   'maynard-boss': {name:'Maynard Quay Boss',placeholder:true,boss:true},
   warehouse: {name:'Factory Fuss',levelId:'warehouse',previewKey:'warehouse',bonus:false,timeTrial:false},
-  'bryce-canyon': {name:'Dusty Road',levelId:'bryce-canyon',previewKey:'bryce-canyon',bonus:true,relicTime:210},
+  'bryce-canyon': {name:'Dusty Road',levelId:'bryce-canyon',previewKey:'bryce-canyon',bonus:true,relicTime:210,colouredGem:'yellow'},
   'jungle-minefield': {name:'Nightmare Grove',levelId:'jungle-minefield',previewKey:'jungle-minefield'},
   'nightworks-after-hours': {name:'Guptus Eruptus'},
   nightworks: {name:'Torchlight Trouble'},
@@ -528,6 +529,13 @@ export const campaignHasCourseRewards = (level: CampaignLevelDefinition): boolea
 export const campaignHasTimeTrial = (level: CampaignLevelDefinition): boolean =>
   campaignHasCourseRewards(level) && level.timeTrial !== false;
 
+/** Exploration discoveries bank immediately, including older standalone runs.
+ * Keep their existing ledger authoritative and accept explicit save ownership. */
+export function earnedColouredGem(level: CampaignLevelDefinition, progress?: CampaignLevelProgress | null): boolean {
+  return !!level.colouredGem && (progress?.colouredGem === true
+    || colouredGemCollection.has(level.levelId, level.colouredGem));
+}
+
 /** One best-tier medal and one all-boxes clear gem per course. Later locked
  * secret stages are excluded from their own requirements to avoid a cycle. */
 export function secretRequirementMet(key: string, save: CampaignSaveV1 | null): boolean {
@@ -550,9 +558,9 @@ export function secretRequirementMet(key: string, save: CampaignSaveV1 | null): 
     case 'all-clear-gems': return courses.every(level => earned(level)?.boxGem);
     case 'all-rewards': {
       const coloured = courses.filter(level => level.colouredGem);
-      // No coloured challenges are authored yet. Never turn an empty set into
-      // an automatic final unlock, or treat retired combo gems as coloured gems.
-      return coloured.length > 0 && coloured.every(level => earned(level)?.colouredGem)
+      // Never turn an empty catalogue into an automatic final unlock, or
+      // treat retired combo gems as coloured discoveries.
+      return coloured.length > 0 && coloured.every(level => earnedColouredGem(level, earned(level)))
         && courses.every(level => earned(level)?.boxGem && (!campaignHasTimeTrial(level) || earnedTimeMedal(earned(level))));
     }
   }
@@ -682,6 +690,8 @@ export interface CampaignTotals {
   maxRelics: number;
   cups: number;
   maxCups: number;
+  colouredGems: number;
+  maxColouredGems: number;
 }
 
 export interface GameAudioOptions {
@@ -1171,6 +1181,11 @@ export class CampaignStore {
     return save.levels[definition.progressKey];
   }
 
+  colouredGemEarned(levelId: string): boolean {
+    const definition = campaignLevelById(levelId);
+    return !!definition && earnedColouredGem(definition, this.levelProgress(levelId));
+  }
+
   // A pickup belongs to the current run until a normal finish secures it.
   // Main courses secure a crystal; Secret Island unlocks trials on a clear.
   runModesUnlocked(levelId: string): boolean {
@@ -1377,9 +1392,11 @@ export class CampaignStore {
     const ordinaryLevels = available.filter(campaignHasCourseRewards).length;
     const trialLevels = available.filter(campaignHasTimeTrial).length;
     const crystalLevels = available.filter(level => levelAllowsCrystal(level.levelId)).length;
+    const colouredLevels = available.filter(level => level.colouredGem);
+    const colouredGems = colouredLevels.filter(level => earnedColouredGem(level, save?.levels[level.progressKey])).length;
     // Secret combo gems retain their save plumbing but are optional awards,
     // outside the standard completion ledger.
-    const maxMilestones = available.length + ordinaryLevels + trialLevels + crystalLevels + maxCups;
+    const maxMilestones = available.length + ordinaryLevels + trialLevels + crystalLevels + maxCups + colouredLevels.length;
     if (save) {
       for (const level of available) {
         const progress = save.levels[level.progressKey] ?? emptyLevelProgress();
@@ -1395,7 +1412,7 @@ export class CampaignStore {
       }
     }
     return {
-      percent: Math.round((earned / maxMilestones) * 100),
+      percent: Math.round(((earned + colouredGems) / maxMilestones) * 100),
       cleared,
       crystals,
       gems,
@@ -1403,6 +1420,7 @@ export class CampaignStore {
       maxLevels: available.length,
       maxGems: ordinaryLevels,
       maxCrystals: crystalLevels, maxRelics: trialLevels, cups, maxCups,
+      colouredGems, maxColouredGems: colouredLevels.length,
     };
   }
 

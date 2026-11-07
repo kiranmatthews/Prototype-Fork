@@ -1,11 +1,7 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import ts from 'typescript';
 
-const source = await readFile(new URL('../src/campaign.ts', import.meta.url), 'utf8');
-const output = ts.transpileModule(source, {
-  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ES2020 },
-}).outputText;
+const output = await campaignTestModule();
 const memory = new Map();
 globalThis.localStorage = {
   getItem: key => memory.get(key) ?? null,

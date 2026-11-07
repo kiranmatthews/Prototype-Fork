@@ -1,5 +1,6 @@
 // Local authoring entry. Never imported by the shipping application.
 import { JungleCupEvent } from '../src/competition/event';
+import { colouredGemCollection } from '../src/colouredGems';
 const g:any = await new Promise(resolve=>{
   const ready=()=>{const game=(window as any).__game;if(game&&!document.body.classList.contains('game-startup-loading')&&!document.getElementById('game-boot-loading')&&!game.gameFlow.transitionActive)resolve(game);else requestAnimationFrame(ready);};ready();
 });
@@ -19,10 +20,27 @@ flow.callbacks.onSaveGame=()=>false;flow.callbacks.onAutosaveChange=()=>false;fl
 flow.callbacks.onResultsRetry=()=>actions.push('results:retry');flow.callbacks.onResultsContinue=()=>actions.push('results:continue');
 flow.callbacks.onGameOverRetry=()=>actions.push('gameover:retry');flow.callbacks.onGameOverQuit=()=>actions.push('gameover:quit');
 const selectors=['launch','new-slots','load-slots','pause','map-pause','options','home-options','map-options','level-select','progress','save-load','confirm-new','confirm-save','confirm-load','confirm-quit-main','confirm-level-select','trick-guide','gameover','results','time-trial','cup-intro','cup-guide','cup-judges','cup-standings','cup-final-win','cup-final-loss'];
+const colouredReview=new URLSearchParams(location.search).has('colouredGems');
+if(colouredReview)selectors.push('dusty-level-stats','dusty-map-board');
 const panel=document.createElement('div');panel.id='menu-review';panel.className='side-wrap';
 panel.innerHTML=`<select aria-label="Review screen">${selectors.map(s=>`<option>${s}</option>`).join('')}</select><select aria-label="Review prompts"><option>keyboard</option><option>ps5</option><option>xbox</option><option>touch</option></select><button>Audit layout</button><output></output>`;
 panel.style.cssText='display:flex!important;position:fixed!important;top:0!important;left:0!important;width:auto!important;height:22px!important;z-index:999999!important;gap:8px;background:#000;color:white;font:12px monospace;pointer-events:auto!important;transform:none!important';
 const chooser=panel.querySelector('select')!,output=panel.querySelector('output')!;
+if(colouredReview){
+  const ownership=document.createElement('select');ownership.setAttribute('aria-label','Review gem ownership');
+  ownership.innerHTML='<option value="saved">Saved gems</option><option value="empty">Empty sockets</option><option value="yellow">Yellow earned</option>';
+  const savedHas=colouredGemCollection.has.bind(colouredGemCollection);
+  ownership.onchange=()=>{
+    // Presentation fixture only: never writes or clears the player’s ledger.
+    colouredGemCollection.has=(level,colour)=>ownership.value==='saved'?savedHas(level,colour):ownership.value==='yellow'&&level==='bryce-canyon'&&colour==='yellow';
+    if(chooser.value==='dusty-map-board')(window as any).__worldMapUI.show('bryce-canyon');else show(chooser.value);
+  };
+  const capture=document.createElement('button');capture.textContent='Save frame';
+  capture.onclick=()=>requestAnimationFrame(()=>g.renderer.domElement.toBlob(async(blob:Blob|null)=>{
+    if(blob)try{const result=await fetch('http://127.0.0.1:51988/frame',{method:'POST',headers:{'Content-Type':'image/png'},body:blob});output.textContent=await result.text();}catch{output.textContent='Start the local capture sink first';}
+  },'image/png'));
+  panel.append(ownership,capture);
+}
 let fixture:JungleCupEvent|null=null;
 const realCupAction=g.competitionUI.action;
 g.competitionUI.action=(action:string)=>fixture?actions.push(`cup:${action}`):realCupAction(action);
@@ -30,7 +48,11 @@ const realCupRender=g.competitionUI.render.bind(g.competitionUI);
 g.competitionUI.render=(event:any,suppressed:boolean)=>realCupRender(fixture??event,fixture?false:suppressed);
 function show(name:string){
   fixture=null;
-  if(name.startsWith('cup-')){
+  if(name==='dusty-map-board'){
+    campaign.setMapFocus('bryce-canyon');g.switchLevel('warproom');flow.hide();
+  }else if(name==='dusty-level-stats'){
+    flow.showMapSection('level-select');flow.levelSelectIsland='island-5';flow.levelSelectKey='bryce-canyon';flow.render();
+  }else if(name.startsWith('cup-')){
     flow.hide();fixture=new JungleCupEvent(()=>.5);
     if(!['cup-intro','cup-guide'].includes(name))for(let i=0;i<(name.includes('final')?3:1);i++){
       fixture.startRun();fixture.stepPresentation(3);fixture.stepRun(60,name.includes('loss')?100:48000,false,true);fixture.stepFinish(1,true,true);fixture.stepPresentation(3);

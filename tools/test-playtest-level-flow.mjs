@@ -1,3 +1,4 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import ts from "typescript";
@@ -161,7 +162,7 @@ assert.equal(
   "repeat clears must not re-announce the time-trial unlock",
 );
 
-const medalApi = await import(`data:text/javascript;base64,${Buffer.from(ts.transpileModule(await readFile(new URL('../src/campaign.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText).toString('base64')}`);
+const medalApi = await import(`data:text/javascript;base64,${Buffer.from(await campaignTestModule()).toString('base64')}`);
 const trial = new Function('player','level','current','recordTT','campaign','campaignLevelById','presentCampaignResults','defaultMedalTimes','medalForTime','time',
   `${compile(functionSource('showTimeTrialResults'))}\nshowTimeTrialResults(time);`);
 for (const time of [83.75,83.751]) {

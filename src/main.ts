@@ -5109,7 +5109,7 @@ function currentHudState(): HudState {
     hasCrystal: level.allowsCrystal && player.hasCrystal && !runStartRewards.crystal,
     hasGem: player.gemEarned && !runStartRewards.boxGem,
     hasComboGem: player.comboGemEarned && !runStartRewards.comboGem,
-    colouredGem: level.colouredGemPickups.find(gem=>gem.collected)?.colour,
+    colouredGem: level.colouredGemPickups.find(gem=>gem.collectedThisRun)?.colour,
     race:skateRace.hud(),
     inventoryHeld: input.inventoryHeld,
     bonusMode: level.hudMode === "bonus",

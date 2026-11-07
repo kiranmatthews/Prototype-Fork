@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-08",
+  "scope": [
+    "Dusty Road map board",
+    "Dusty Road level stats",
+    "separate five-colour collection",
+    "run-local yellow-gem HUD"
+  ],
+  "ownership": {
+    "existingStandaloneDiscovery": true,
+    "emptyAndEarnedSockets": true,
+    "clearGemCountUnchanged": true,
+    "futureColoursEmpty": true,
+    "onlyAuthoredChallengesCount": true
+  },
+  "hud": {
+    "freshPickupShown": true,
+    "softDeathRetainsCarriedGem": true,
+    "hardRestartClearsCarriedGem": true,
+    "revisitInventoryHasNoBankedGem": true,
+    "discoveryRetained": true
+  },
+  "browser": {
+    "modes": [
+      "lite",
+      "full"
+    ],
+    "resolution": [
+      "720p",
+      "MAX/native 2560x1440"
+    ],
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        1024,
+        768
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "actualDustyRoadRevisit": true
+  },
+  "passedChecks": [
+    "test-level-select",
+    "test-map-level-presentation",
+    "test-six-island-campaign",
+    "test-campaign-collectible-visibility",
+    "test-campaign-flow",
+    "test-save-slot-previews",
+    "test-playtest-level-flow",
+    "test-spaghetti-campaign",
+    "desert-canyon/validate-cartoon",
+    "production build"
+  ],
+  "baselineFailures": [
+    "test-jungle-sequel-map expects old jungle-terraces progress key and roster",
+    "test-time-trial-unlock expects previously cleared Coconut Cart Rally to relock after a loss"
+  ],
+  "images": [
+    "coloured-gem-menus.png",
+    "coloured-gem-stats.png",
+    "coloured-gem-board.png"
+  ],
+  "release": {
+    "base": "91702ff7379d4d3aabf38af205b19bdfd443dc36",
+    "bytes": 963311930,
+    "budget": 1000000000,
+    "offlineVersion": "b8e40aa45a772b6b49aa",
+    "productionBuildPassed": true
+  }
+}

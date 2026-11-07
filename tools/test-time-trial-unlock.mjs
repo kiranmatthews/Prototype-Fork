@@ -1,3 +1,4 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
@@ -11,9 +12,7 @@ globalThis.localStorage = {
   setItem: (key, value) => memory.set(key, String(value)),
   removeItem: key => memory.delete(key),
 };
-const api = await import(`data:text/javascript;base64,${Buffer.from(compile(
-  await readFile(new URL('../src/campaign.ts', import.meta.url), 'utf8'),
-)).toString('base64')}`);
+const api = await import(`data:text/javascript;base64,${Buffer.from(await campaignTestModule()).toString('base64')}`);
 const store = new api.CampaignStore();
 assert.equal(store.runModesUnlocked('jungle'), false, 'no active save');
 store.newGame(1);

@@ -6,6 +6,7 @@ import {updateMenuPngFocus} from './menuPngFocus';
 // the pre-CRT render path without turning the menu into canvas hit regions.
 
 import { menuHint, rewardSlot } from "./menuPresentation";
+import { COLOURED_GEMS, type ColouredGemColour } from './colouredGems';
 import menuLayoutStyle from "./game-menu-layout.css?inline";
 import type * as THREE from "three";
 import type { ResultsViewport } from "./resultsPresentation";
@@ -1436,6 +1437,12 @@ export class GameFlowUI {
         const item = element('div', 'game-level-prize');
         item.append(rewardSlot(kind, earned, medal), text('span', label, 'game-reward-caption')); rewards.append(item);
       }
+      if (definition.colouredGem) {
+        const colour = definition.colouredGem, item = element('div', 'game-level-prize');
+        item.append(rewardSlot(colour, this.campaign.colouredGemEarned(definition.levelId)),
+          text('span', `${COLOURED_GEMS[colour].label.toUpperCase()} GEM`, 'game-reward-caption'));
+        rewards.append(item);
+      }
     }
     detail.append(rewards);
     if (definition.competition) detail.append(text('p', '3 RUNS · 60 SECONDS', 'game-level-record-title'));
@@ -1725,7 +1732,16 @@ export class GameFlowUI {
     }
     const cleared = element("p", "game-progress-cleared");
     cleared.textContent = `${totals.cleared} OF ${totals.maxLevels} LEVELS CLEARED`;
-    card.append(head, grid, cleared);
+    const coloured = element('section', 'game-coloured-collection');
+    coloured.setAttribute('aria-label', 'Coloured gems');
+    const colouredTitle = element('h3', 'game-coloured-title'); colouredTitle.textContent = 'COLOURED GEMS';
+    const sockets = element('div', 'game-coloured-sockets');
+    for (const colour of Object.keys(COLOURED_GEMS) as ColouredGemColour[]) {
+      const earned = CAMPAIGN_LEVELS.some(level => !level.placeholder && level.colouredGem === colour && this.campaign.colouredGemEarned(level.levelId));
+      sockets.append(rewardSlot(colour, earned));
+    }
+    coloured.append(colouredTitle, sockets);
+    card.append(head, grid, coloured, cleared);
     return card;
   }
 

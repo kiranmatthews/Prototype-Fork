@@ -4732,7 +4732,7 @@ export class Level {
     collected: boolean;
   } | null = null;
   private colouredGemLevelId='';
-  readonly colouredGemPickups:{colour:ColouredGemColour;group:THREE.Group;box:THREE.Box3;collected:boolean}[]=[];
+  readonly colouredGemPickups:{colour:ColouredGemColour;group:THREE.Group;box:THREE.Box3;collected:boolean;collectedThisRun:boolean}[]=[];
   private committedCrystal = false;
   private committedBoxGem = false;
   // TIME TRIAL: the stopwatch near spawn — touch it to start the clock.
@@ -8615,7 +8615,7 @@ export class Level {
             group.position.set(c.p[0],c.p[1]+1.65,c.p[2]);group.userData.baseY=group.position.y;
             const collected=colouredGemCollection.has(this.colouredGemLevelId,colour);
             group.visible=!collected;this.root.add(group);
-            this.colouredGemPickups.push({colour,group,collected,box:new THREE.Box3().setFromCenterAndSize(
+            this.colouredGemPickups.push({colour,group,collected,collectedThisRun:false,box:new THREE.Box3().setFromCenterAndSize(
               group.position,new THREE.Vector3(2.8,3.5,2.8))});
           } else if (c.t === "clock" || c.t === "comboorb") {
             // run-mode activators: just remember the authored spot — the
@@ -11506,6 +11506,7 @@ export class Level {
     // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {
       this.clockLocked = false;
+      for (const gem of this.colouredGemPickups) gem.collectedThisRun = false;
       if (this.crystalPickup) {
         // A fresh run restores the durable campaign baseline. An uncommitted
         // crystal comes back; one already banked in a previous run remains
@@ -19104,7 +19105,7 @@ export class Level {
   collectColouredGem(pickup:(typeof this.colouredGemPickups)[number]):boolean {
     if(pickup.collected||!this.colouredGemPickups.includes(pickup)||this.runMode)return false;
     const fresh=colouredGemCollection.collect(this.colouredGemLevelId,pickup.colour);
-    pickup.collected=true;pickup.group.visible=false;this.lockTrialClock();
+    pickup.collected=true;pickup.collectedThisRun=fresh;pickup.group.visible=false;this.lockTrialClock();
     if(fresh)this.glimmerBurst(pickup.group.position,COLOURED_GEMS[pickup.colour].tint);
     return fresh;
   }

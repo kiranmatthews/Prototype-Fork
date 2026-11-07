@@ -1,13 +1,12 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
-import ts from 'typescript';
 import {registerPoint,nearbyObjects} from './level-atlas-return.mjs';
 const root=new URL('../public/provenance/level-atlas/',import.meta.url);
 const inventory=JSON.parse(await readFile(new URL('inventory.json',root),'utf8'));
-const source=await readFile(new URL('../src/campaign.ts',import.meta.url),'utf8');
-const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
+const js=await campaignTestModule();
 const {CAMPAIGN_LEVELS}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
 assert.deepEqual(inventory.levels.map(l=>l.levelId).sort(),CAMPAIGN_LEVELS.map(l=>l.levelId).sort(),'Every campaign level must appear exactly once');
 let objects=0,polygons=0;

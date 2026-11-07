@@ -7,12 +7,14 @@ import { type SkateboardSettings } from "./skateboard/settings";
 import { mapSkateboardSettings, DEFAULT_MAP_SKATEBOARD_SETTINGS } from "./skateboard/mapSettings";
 import { TIME_MEDALS, defaultMedalTimes, type MedalTimes, type TimeMedal } from "./campaign";
 import { setTimeMedalTier, TIME_MEDAL_COLORS } from "./timeMedalModel";
+import { COLOURED_GEMS, type ColouredGemColour } from './colouredGems';
 
 export interface MapLevelCardData {
   key: string;
   name: string;
   earned: readonly boolean[];
   allowsCrystal?: boolean;
+  colouredGem?: ColouredGemColour;
   trialUnlocked: boolean;
   times: readonly number[];
   target: number;
@@ -33,10 +35,11 @@ export const MAP_DECK_FLIP_SECONDS = 0.64;
 
 const DECK_FACE = { width: 1.6, height: 0.534, textureWidth: 1536, textureHeight: 512 };
 // Printing and raised models share these texture-space slot centres.
-const REWARD_SOCKETS = [0, 1, 2].map(index => ({ x: 441.2 + index * 326.4, y: 366 }));
-const rewardSocket = (index: number, allowsCrystal = true) => ({
-  ...REWARD_SOCKETS[index], x: allowsCrystal ? REWARD_SOCKETS[index].x : 768 + (index - 1.5) * 326.4,
-});
+const rewardSocket = (index: number, data: Pick<MapLevelCardData, 'allowsCrystal' | 'colouredGem'> = {}) => {
+  const first = data.allowsCrystal === false ? 1 : 0;
+  const count = (data.colouredGem ? 4 : 3) - first;
+  return {x:768 + (index - first - (count - 1) / 2) * (count === 4 ? 270 : 326.4), y:366};
+};
 
 /** Shared flip clock: change the printing only while the grip faces away. */
 export class MapDeckFlip {
@@ -121,7 +124,7 @@ export class MapLevelPresentation {
     mount.add(board); this.deckPivot.add(mount);
     const face = this.face = new THREE.Mesh(new THREE.PlaneGeometry(DECK_FACE.width, DECK_FACE.height), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
     face.position.z = 0.075; this.deckPivot.add(face);
-    const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.timeRelicMesh()];
+    const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.timeRelicMesh(), () => Level.colouredGemMesh()];
     for (const make of factories) {
       const model = make();
       for (const object of [...model.children]) if ((object as THREE.Sprite).isSprite) model.remove(object);
@@ -154,7 +157,7 @@ export class MapLevelPresentation {
 
   get diagnostics() {
     return { shownKey: this.flip.shown?.key, flipping: this.flip.active, phase: this.flip.phase,
-      earned: this.flip.shown?.earned, medal: this.flip.shown?.medal, targets: this.flip.shown?.targets, trialVisible: this.trial.visible, draws: this.draws,
+      earned: this.flip.shown?.earned, colouredGem: this.flip.shown?.colouredGem, medal: this.flip.shown?.medal, targets: this.flip.shown?.targets, trialVisible: this.trial.visible, draws: this.draws,
       rotations: this.rewards.map(p => p.children[0].rotation.y),
       boardSettings: this.boardSettings.value, boardReady: this.board.userData.assetReady,
       boardGeometry: this.board.userData.geometryStats };
@@ -175,7 +178,7 @@ export class MapLevelPresentation {
     this.face.scale.setScalar(printScale);
     this.face.position.set(centre, 0, printZ);
     this.rewards.forEach((pivot, i) => {
-      const socket = rewardSocket(i, this.flip.shown?.allowsCrystal !== false);
+      const socket = rewardSocket(i, this.flip.shown ?? {});
       const x = (socket.x / DECK_FACE.textureWidth - 0.5) * DECK_FACE.width;
       const y = (0.5 - socket.y / DECK_FACE.textureHeight) * DECK_FACE.height;
       pivot.position.set(centre + x * printScale, y * printScale, printZ + 0.145 * scale);
@@ -208,7 +211,7 @@ export class MapLevelPresentation {
     this.deckPivot.rotation.x = -0.08 + Math.PI * 2 * (phase * phase * (3 - 2 * phase));
     this.deckPivot.rotation.y = Math.sin(phase * Math.PI * 2) * 0.07;
     this.rewards.forEach((pivot, i) => {
-      pivot.visible = !data.status && !data.competition && (i !== 0 || data.allowsCrystal !== false) && data.earned[i] === true;
+      pivot.visible = !data.status && !data.competition && (i !== 0 || data.allowsCrystal !== false) && (i !== 3 || !!data.colouredGem) && data.earned[i] === true;
       pivot.children[0].rotation.y = this.time * 0.8 + i * 0.45;
     });
     // The poster changes with the same hidden-face swap as the deck printing.
@@ -235,12 +238,18 @@ export class MapLevelPresentation {
 
   private paint(data: MapLevelCardData,updateTrial=true): void {
     setTimeMedalTier(this.rewards[2], data.medal ?? 'gold');
+    if (data.colouredGem) this.rewards[3].traverse(object => {
+      const material = (object as THREE.Mesh).material;
+      for (const m of material ? Array.isArray(material) ? material : [material] : [])
+        if (m.userData.collectibleProfile === 'colouredCrystal')
+          (m as THREE.MeshBasicMaterial).color.setHex(COLOURED_GEMS[data.colouredGem!].tint);
+    });
     const ctx = this.faceTexture.image.getContext("2d")!;
     ctx.clearRect(0, 0, DECK_FACE.textureWidth, DECK_FACE.textureHeight);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
-    for (let i = 0; i < (data.competition || data.status ? 0 : REWARD_SOCKETS.length); i++) {
+    for (let i = 0; i < (data.competition || data.status ? 0 : data.colouredGem ? 4 : 3); i++) {
       if (i === 0 && data.allowsCrystal === false) continue;
-      const { x, y } = rewardSocket(i, data.allowsCrystal !== false);
+      const { x, y } = rewardSocket(i, data);
       ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, y, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
       if (!data.earned[i]) silhouette(ctx, i, x, y);
     }

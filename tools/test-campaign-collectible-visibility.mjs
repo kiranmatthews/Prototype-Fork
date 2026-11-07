@@ -143,6 +143,7 @@ const { ResetHarness } = evaluateTypeScript(`
   export class ResetHarness {
     committedCrystal = false;
     crystalPickup = null;
+    colouredGemPickups = [{colour:'yellow',collected:true,collectedThisRun:true}];
     clockPickup = null;
     comboOrb = null;
     gemG = null;
@@ -160,6 +161,7 @@ reset.crystalPickup = { collected: true, group: { visible: false } };
 reset.clockPickup = { collected: true, group: { visible: false } };
 reset.comboOrb = { collected: true, group: { visible: false } };
 reset.reset(false);
+assert.equal(reset.colouredGemPickups[0].collectedThisRun,true,'Death must retain the current visit’s yellow gem');
 assert.deepEqual(reset.crystalPickup, {
   collected: true,
   group: { visible: false },
@@ -168,6 +170,8 @@ assert.equal(reset.clockPickup.collected, true);
 assert.equal(reset.comboOrb.collected, true);
 
 reset.reset(true);
+assert.equal(reset.colouredGemPickups[0].collectedThisRun,false,'Retry must clear the carried yellow gem');
+assert.equal(reset.colouredGemPickups[0].collected,true,'Retry must retain banked yellow ownership');
 assert.equal(reset.crystalPickup.collected, false);
 assert.equal(reset.crystalPickup.group.visible, true);
 assert.equal(reset.clockPickup.collected, false);
@@ -284,15 +288,15 @@ assert.ok(baselineDeclaration && firstHudProjection && baselineDeclaration.pos <
   "inventory baseline must be initialized before the startup HUD reads it");
 assert.match(adoption, /runStartRewards = \{\s*crystal: progress\.crystal,\s*boxGem: progress\.boxGem,\s*comboGem: progress\.comboGem/, "new-run boundary must snapshot the banked map collection");
 const { inventory } = evaluateTypeScript(`
-  export function inventory(player, runStartRewards) {
+  export function inventory(player, runStartRewards, colouredGemPickups = []) {
     const input = { inventoryHeld: true };
     const competition = null;
     const skateRace = { hud: () => null };
-    const level = { allowsCrystal: true, runMode: false, hudMode: "normal", totalCrates: 12 };
+    const level = { allowsCrystal: true, runMode: false, hudMode: "normal", totalCrates: 12, colouredGemPickups };
     const sourceComboLabelLine = () => "";
     ${hudProjection}
     const hud = currentHudState();
-    return [hud.hasCrystal, hud.hasGem, hud.hasComboGem];
+    return [hud.hasCrystal, hud.hasGem, hud.hasComboGem, ...(colouredGemPickups.length ? [hud.colouredGem] : [])];
   }
 `);
 const carrying = { hasCrystal: true, gemEarned: true, comboGemEarned: true, lives: 4 };
@@ -304,6 +308,8 @@ assert.deepEqual(inventory(carrying, { ...bankedStart, boxGem: false }), [false,
 assert.deepEqual(inventory({ ...carrying, hasCrystal: false, gemEarned: false, comboGemEarned: false }, emptyStart), [false, false, false]);
 assert.deepEqual(inventory(carrying, emptyStart), [true, true, true], "inventory projection mutated the current run");
 assert.equal(carrying.hasCrystal, true, "HUD must not change durable ownership used to suppress duplicate pickups");
+assert.equal(inventory(carrying,bankedStart,[{colour:'yellow',collected:true,collectedThisRun:true}])[3],'yellow');
+assert.equal(inventory(carrying,bankedStart,[{colour:'yellow',collected:true,collectedThisRun:false}])[3],undefined,'Saved yellow gem reappeared in a later visit’s HUD');
 assert.doesNotMatch(hudProjection, /campaign\.levelProgress/, "results commit must not hide rewards before the run boundary");
 
 console.log(

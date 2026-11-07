@@ -10096,3 +10096,37 @@ with no console warnings or errors. Production build and the 963,309,655-byte
 release-size check pass. Full-render Flats & Pipes and its Pause menu passed at
 720p and MAX/native with a clean console. [Editor capture](roo-pair-spacing/defaults-editor.png),
 [native menu](roo-pair-spacing/defaults-game-native.png).
+
+## 2026-11-08 — Coloured-gem menus and carried inventory
+
+Connected Dusty Road's authored yellow gem to the campaign catalogue and its
+existing discovery ledger. The map skateboard and level stats now have a fourth
+reward socket: empty before discovery, the actual yellow crystal material after
+collection. Existing standalone discoveries appear immediately. Pause and Options
+have a separate five-socket coloured-gem section, with a three/two layout on narrow
+screens. Only authored challenges contribute to completion and the final secret
+requirement; clear-gem totals and retired combo rewards remain separate.
+
+The HUD now distinguishes a fresh pickup from banked discovery. The yellow gem
+appears during the visit in which it is found, remains through a soft death, and
+leaves the inventory on exit/revisit or a hard restart. Its saved ownership,
+quiet pickup, sound and material remain intact.
+
+About ten minutes to the first playable menu revision. Focused level-select,
+map presentation, six-island/save migration, campaign flow, save preview,
+standalone result flow and collectible/HUD checks pass. The real-player canyon
+check collects the gem once and verifies existing discovery on a fresh Level.
+Two older optional checks still fail on the untouched baseline as well: Jungle
+sequel map expects a retired roster placement, and time-trial unlock expects a
+previously cleared Coconut Cart Rally to lock after a losing replay. Those
+unrelated expectations were not changed. Node campaign fixtures now bundle the
+real discovery dependency instead of assuming a dependency-free source file.
+
+Real-browser review verified empty/earned map sockets and level stats, the
+separate five-colour sheet, and a Dusty Road revisit with I held showing no banked
+gem in inventory. Layout audits passed at 1280×720, 1920×1080, 1024×768,
+390×844 and 844×390. Lite and full rendering, normal 720p and MAX/native
+2560×1440 passed with no console warnings/errors. Evidence is in
+`docs/desert-canyon/dusty-road/coloured-gem-{menus,stats,board}.png`.
+Final production build on the current published font defaults passed, as did
+the release-size check: 963,311,930 bytes within the 1 GB hosting budget.

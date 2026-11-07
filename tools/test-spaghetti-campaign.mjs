@@ -1,10 +1,8 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
-import ts from 'typescript';
 const memory=new Map();
 globalThis.localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k)};
-const source=await readFile(new URL('../src/campaign.ts',import.meta.url),'utf8');
-const code=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+const code=await campaignTestModule();
 const c=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 const definition=c.campaignLevelByKey('quagmire-race');
 assert.equal(definition.levelId,'spaghetti-rails');assert.equal(definition.name,'Spaghetti Rails');

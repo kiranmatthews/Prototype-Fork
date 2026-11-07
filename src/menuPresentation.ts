@@ -10,15 +10,17 @@ import { createInputGlyph } from './inputPromptUI';
 import { silverSecondaryLabel } from './secondaryText';
 import type { InputAction } from './inputBindings';
 import { presentationCssViewport } from './presentationCssViewport';
+import { COLOURED_GEMS, isColouredGemColour, type ColouredGemColour } from './colouredGems';
 
-export type MenuReward = 'crystal' | 'gem' | 'combo' | 'medal' | 'cup' | RaceItem;
+export type MenuReward = 'crystal' | 'gem' | 'combo' | 'medal' | 'cup' | ColouredGemColour | RaceItem;
 let socketId = 0;
 export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal | null): HTMLElement {
   const slot = document.createElement('span');
   slot.className = 'game-reward-slot'; slot.dataset.reward = kind;
   slot.dataset.earned = String(earned); if (medal) slot.dataset.medal = medal;
   slot.setAttribute('role', 'img');
-  slot.setAttribute('aria-label', `${medal ?? kind}${earned ? ' earned' : ' empty socket'}`);
+  const label = isColouredGemColour(kind) ? `${COLOURED_GEMS[kind].label} gem` : kind === 'medal' ? medal ?? kind : kind;
+  slot.setAttribute('aria-label', `${label}${earned ? ' earned' : ' empty socket'}`);
   if(earned&&Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind)){
     const image=document.createElement('img');image.src=raceItemPicture(kind as RaceItem);image.alt='';image.setAttribute('aria-hidden','true');image.style.cssText='width:100%;height:100%;object-fit:contain';
     slot.setAttribute('aria-label',RACE_ITEMS[kind as RaceItem].name);slot.append(image);
@@ -33,7 +35,8 @@ export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal 
       cup:'M20 10H80Q78 54 57 62V78H78V92H22V78H43V62Q22 54 20 10Z',
     };
     const id=`menu-socket-${++socketId}`;
-    slot.innerHTML=`<svg class="game-reward-socket" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x2="0" y2="1"><stop stop-color="#010711"/><stop offset="1" stop-color="#102c3c"/></linearGradient></defs><path d="${paths[kind]??paths.medal}" fill="none" stroke="#79aec477" stroke-width="6" transform="translate(0 3)"/><path d="${paths[kind]??paths.medal}" fill="url(#${id})" stroke="#010710" stroke-width="3"/></svg>`;
+    const path = paths[isColouredGemColour(kind) ? 'gem' : kind] ?? paths.medal;
+    slot.innerHTML=`<svg class="game-reward-socket" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x2="0" y2="1"><stop stop-color="#010711"/><stop offset="1" stop-color="#102c3c"/></linearGradient></defs><path d="${path}" fill="none" stroke="#79aec477" stroke-width="6" transform="translate(0 3)"/><path d="${path}" fill="url(#${id})" stroke="#010710" stroke-width="3"/></svg>`;
   }
   return slot;
 }
@@ -71,7 +74,7 @@ export class MenuRewardsPresentation {
       const kind = host.dataset.reward!;
       let item = this.pool.find(value => value.kind === kind && !used.has(value));
       if (!item) {
-        const model = Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind) ? createRaceItemModel(kind) : kind === 'crystal' ? Level.crystalMesh() : kind === 'gem' ? Level.gemMesh() : kind === 'combo' ? Level.gemMesh(1, COMBO_GEM_TINT) : kind === 'cup' ? createJungleCupTrophy() : Level.timeRelicMesh();
+        const model = isColouredGemColour(kind) ? Level.colouredGemMesh(1, kind) : Object.prototype.hasOwnProperty.call(RACE_ITEMS,kind) ? createRaceItemModel(kind) : kind === 'crystal' ? Level.crystalMesh() : kind === 'gem' ? Level.gemMesh() : kind === 'combo' ? Level.gemMesh(1, COMBO_GEM_TINT) : kind === 'cup' ? createJungleCupTrophy() : Level.timeRelicMesh();
         const sprites: THREE.Object3D[] = []; model.traverse(obj => { if ((obj as THREE.Sprite).isSprite) sprites.push(obj); });
         for (const sprite of sprites) sprite.removeFromParent();
         const bounds = new THREE.Box3().setFromObject(model), extent = bounds.getSize(new THREE.Vector3());

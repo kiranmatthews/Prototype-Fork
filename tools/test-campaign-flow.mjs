@@ -1,16 +1,11 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const source = await readFile(`${root}src/campaign.ts`, "utf8");
-const output = ts.transpileModule(source, {
-  compilerOptions: {
-    target: ts.ScriptTarget.ES2020,
-    module: ts.ModuleKind.ES2020,
-  },
-}).outputText;
+const output = await campaignTestModule();
 
 const memory = new Map();
 const failedWrites = new Set();
@@ -502,7 +497,7 @@ console.log('PASS boss crystal award/legacy-slot exclusion preserves ordinary cr
 const completeStore = new campaign.CampaignStore();
 const completeSave = completeStore.startEphemeral();
 for (const definition of campaign.CAMPAIGN_LEVELS) Object.assign(completeSave.levels[definition.progressKey], {
-  cleared: true, crystal: true, boxGem: true, timeMedal: 'gold', cup: true, comboGem: false,
+  cleared: true, crystal: true, boxGem: true, timeMedal: 'gold', cup: true, comboGem: false, colouredGem: true,
 });
 const standardTotals = completeStore.totals();
 assert.equal(standardTotals.percent, 100, 'standard completion still requires secret combo gems');
@@ -510,4 +505,4 @@ assert.equal(standardTotals.gems, standardTotals.maxGems);
 for (const progress of Object.values(completeSave.levels)) progress.comboGem = true;
 assert.deepEqual(completeStore.totals(), standardTotals, 'legacy combo awards inflate standard progress');
 assert.equal(completeStore.levelProgress('jungle').comboGem, true, 'optional award ownership was erased');
-console.log('PASS standard 100% without secret gems; legacy awards remain stored without inflating quotas.');
+console.log('PASS standard 100% includes authored coloured discoveries without requiring retired combo gems.');

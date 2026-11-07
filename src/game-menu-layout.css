@@ -192,6 +192,15 @@
   .game-progress-grid small { font-size:clamp(9px,2.5vw,16px); }
 }
 .game-progress-grid small { text-align:center; }
+.game-coloured-collection { display:flex; flex-direction:column; flex:0 0 22%; min-height:0; margin-top:1.5vh; }
+.game-coloured-title { flex:none; margin:0 0 .5vh; text-align:center; color:#ffd575; font:var(--menu-caption)/1.2 Roo,Impact,sans-serif; }
+.game-coloured-sockets { display:grid; flex:1; min-height:0; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.6vw; }
+.game-coloured-sockets .game-reward-slot { min-width:0; }
+@media(max-aspect-ratio:1/1) {
+  .game-coloured-sockets { grid-template-columns:repeat(6,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); }
+  .game-coloured-sockets .game-reward-slot { grid-column:span 2; }
+  .game-coloured-sockets .game-reward-slot:nth-child(4) { grid-column:2 / span 2; }
+}
 @media(max-aspect-ratio:1/1) {
   .game-options-layout .game-toggle { flex-direction:column; justify-content:center; align-items:center; gap:.6em; min-height:9vh; }
   .game-options-layout .game-panel-subtitle { font-size:clamp(10px,2.8vw,16px); }

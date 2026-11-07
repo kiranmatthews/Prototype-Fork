@@ -1,10 +1,9 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from 'node:assert/strict';
-import {readFile,access} from 'node:fs/promises';
-import ts from 'typescript';
+import {access} from 'node:fs/promises';
 const memory=new Map();let fail=false;
 globalThis.localStorage={getItem:key=>memory.get(key)??null,setItem:(key,value)=>{if(fail&&key==='solProtoCampaignSavesV1')throw Error('blocked');memory.set(key,String(value));},removeItem:key=>memory.delete(key)};
-const source=await readFile(new URL('../src/campaign.ts',import.meta.url),'utf8');
-const code=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+const code=await campaignTestModule();
 const {CampaignStore,CAMPAIGN_SAVE_SLOTS,campaignSavePreviewLevel,CAMPAIGN_LEVELS}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 assert.equal(CAMPAIGN_SAVE_SLOTS,4);
 const initial=new CampaignStore();

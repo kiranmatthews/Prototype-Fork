@@ -56,7 +56,7 @@ try {
  assert.equal(ui.levelSelectIsland,'hidden-shores');assert.deepEqual(rowKeys(),['secret-2']);
  ui.levelSelectKey='secret-1';ui.render();assert.equal(ui.levelSelectKey,'secret-2','locked remembered selection leaked its preview');
  // Fully progressed fixtures expose every satisfied destination; the finale
- // stays hidden until an authored coloured-gem challenge actually exists.
+ // stays hidden until the authored yellow gem is owned.
  for(const d of levels)Object.assign(campaign.active.levels[d.progressKey],{cleared:true,boxGem:true,timeMedal:'silver',cup:true,raceWon:true});
  calls.length=0;ui.showMapSection('level-select');
  assert.equal(ui.levelSelectIslands().length,6);
@@ -146,7 +146,28 @@ try {
    handler('treehouse-trail');
    assert.deepEqual(events,unlocked?['guard',['treehouse-trail',!isCampaignMap]]:[]);
  }
- console.log('PASS unlock-based level/island discovery, independent secret slots, save-switch concealment, unlocked placeholders, reward previews, launch guards, remembered pages, controller and touch entry.');
+ // An old standalone discovery appears immediately in every collection menu,
+ // without granting clear gems, crystals, clears or the four future colours.
+ const {colouredGemCollection,ColouredGemCollection,COLOURED_GEM_STORAGE_KEY}=await server.ssrLoadModule('/src/colouredGems.ts');
+ campaign.startEphemeral({unlockAll:true});ui.showMapSection('level-select');
+ for(let i=0;i<4;i++)ui.changeLevelSelectIsland(1);
+ ui.updateLevelSelectChoice('bryce-canyon',true);
+ const yellow=()=>ui.levelSelectDetail.querySelectorAll('.game-reward-slot').find(slot=>slot.dataset.reward==='yellow');
+ assert.equal(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').length,4);
+ assert.equal(yellow().dataset.earned,'false');assert.match(yellow().getAttribute('aria-label'),/Yellow gem empty socket/);
+ const before=structuredClone(campaign.active);
+ assert.equal(colouredGemCollection.collect('bryce-canyon','yellow'),true);
+ ui.updateLevelSelectChoice('bryce-canyon',true);assert.equal(yellow().dataset.earned,'true');
+ assert.equal(campaign.colouredGemEarned('bryce-canyon'),true);
+ assert.deepEqual(campaign.active,before,'menu projection mutated course progress');
+ const card=ui.progressCard(),coloured=card.querySelector('.game-coloured-sockets');
+ assert.deepEqual(coloured.children.map(n=>n.dataset.reward),['yellow','red','blue','green','purple']);
+ assert.deepEqual(coloured.children.map(n=>n.dataset.earned),['true','false','false','false','false']);
+ assert.equal(card.querySelector('.game-progress-grid').querySelectorAll('.game-reward-slot').length,4);
+ assert.equal(campaign.totals().gems,0);assert.equal(campaign.totals().colouredGems,1);assert.equal(campaign.totals().maxColouredGems,1);
+ const oldRecord=JSON.stringify({v:1,discoveries:[['bryce-canyon','yellow']]});
+ assert.equal(new ColouredGemCollection({getItem:key=>key===COLOURED_GEM_STORAGE_KEY?oldRecord:null,setItem(){throw Error('read only');}}).has('bryce-canyon','yellow'),true);
+ console.log('PASS level discovery, navigation and launch guards; separate coloured-gem sockets, existing discovery ownership and unchanged ordinary rewards.');
 } finally {await server.close();}
 
 process.exit(0);

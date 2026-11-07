@@ -10,6 +10,17 @@ const { MapDeckFlip, MapLevelPresentation, MAP_DECK_FLIP_SECONDS: duration, mapT
 globalThis.TIME_MEDALS = ['gold', 'silver', 'bronze'];
 globalThis.TIME_MEDAL_COLORS = {gold: 0xf8c64e, silver: 0xc6d5e2, bronze: 0xc98246};
 globalThis.setTimeMedalTier = () => {};
+globalThis.COLOURED_GEMS = {yellow:{tint:0xffff00}};
+for(const earned of [false,true]){
+  const sockets=[],tints=[];
+  const ctx=new Proxy({ellipse:(x,y)=>sockets.push([x,y])},{get:(obj,key)=>obj[key]??(()=>{})});
+  MapLevelPresentation.prototype.paint.call({rewards:[{},{},{},{traverse:fn=>fn({material:{userData:{collectibleProfile:'colouredCrystal'},color:{setHex:value=>tints.push(value)}}})}],faceTexture:{image:{getContext:()=>ctx}},boardSettings:{value:{}},rooAtlas:{draw:()=>true},paintTrial:()=>{}},
+    {name:'Dusty Road',earned:[false,false,false,earned],colouredGem:'yellow'});
+  assert.equal(sockets.length,4,'Dusty Road needs a fourth socket even before discovery');
+  assert.equal(sockets[0][0]+sockets[3][0],1536,'Four rewards must remain centred');
+  assert.ok(sockets.every(([x])=>x>109&&x<1536-109),'Reward wells escape the board');
+  assert.deepEqual(tints,[0xffff00]);
+}
 for(const allowsCrystal of [true,false]){
   const sockets=[];
   const ctx=new Proxy({ellipse:(x,y)=>sockets.push([x,y])},{get:(obj,key)=>obj[key]??(()=>{})});

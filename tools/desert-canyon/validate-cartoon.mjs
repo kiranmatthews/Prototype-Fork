@@ -38,6 +38,7 @@ await withSkateRuntime(async({level,player:p,THREE,server,step,Level})=>{
   assert.equal(normalizeCustomLevelData({...data,components:[{t:'colouredgem',p:[0,0,0],gemColour:'orange'}]}),null);
   const gem=level.colouredGemPickups[0];assert.equal(level.colouredGemPickups.length,1);
   assert.equal(gem.colour,'yellow');assert.equal(gem.collected,false);
+  assert.equal(gem.collectedThisRun,false,'An uncollected gem cannot enter the run HUD');
   const [x,y,z]=current.DESERT_YELLOW_GEM;
   const floor=(x,z)=>new THREE.Raycaster(new THREE.Vector3(x,y+50,z),new THREE.Vector3(0,-1,0),0,100).intersectObjects(level.groundMeshes,false)[0]?.point.y;
   const support=floor(x,z);assert.ok(Number.isFinite(support)&&Math.abs(support-y)<.08,`Gem support ${support} versus replay ${y}`);
@@ -50,13 +51,16 @@ await withSkateRuntime(async({level,player:p,THREE,server,step,Level})=>{
     step(makeInput({moveX:(-dx*cf.z+dz*cf.x)/d*.7,moveY:(dx*cf.x+dz*cf.z)/d*.7}));
   }
   assert.ok(gem.collected&&!gem.group.visible,'Walking into the yellow gem must collect it');
+  assert.equal(gem.collectedThisRun,true,'A fresh pickup belongs in this visit’s inventory');
   assert.equal(p.hasCrystal,false);assert.equal(p.gemEarned,false);assert.equal(p.comboGemEarned,false);
   assert.equal(level.collectColouredGem(gem),false,'No duplicate reward');
   level.reset(true);assert.ok(gem.collected&&!gem.group.visible,'Hard restart keeps the discovery');
+  assert.equal(gem.collectedThisRun,false,'A new run clears carried gems without losing discovery');
   assert.ok(new ColouredGemCollection().has('bryce-canyon','yellow'),'Collection survives storage reload');
   const again=new Level(new THREE.Scene(),{id:'bryce-canyon',name:'Gem reload check',data:{v:1,name:'Gem reload check',spawn:[0,.1,0],killY:-20,
     components:[{t:'platform',p:[0,-.5,0],s:[20,1,20]},{t:'colouredgem',gemColour:'yellow',p:[3,0,0]},{t:'gate',p:[0,0,-8]}]}});
-  assert.ok(again.colouredGemPickups[0].collected&&!again.colouredGemPickups[0].group.visible,'New level adopts saved discovery');again.dispose();
+  assert.ok(again.colouredGemPickups[0].collected&&!again.colouredGemPickups[0].group.visible,'New level adopts saved discovery');
+  assert.equal(again.colouredGemPickups[0].collectedThisRun,false,'Exiting and returning must not put banked gems back in the HUD');again.dispose();
   const failing=new ColouredGemCollection({getItem(){throw Error('disabled');},setItem(){throw Error('disabled');}});
   assert.equal(failing.collect('test','yellow'),true);assert.equal(failing.collect('test','yellow'),false);
   assert.equal(failing.has('other','yellow'),false,'Discoveries stay keyed to their level');

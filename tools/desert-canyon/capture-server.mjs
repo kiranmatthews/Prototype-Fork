@@ -4,11 +4,14 @@ import http from 'node:http';
 import {mkdir,writeFile} from 'node:fs/promises';
 const names={dustyGem:'dusty-road/yellow-gem.png',dustyBonus:'dusty-road/cactus-cache.png',dustyEntrance:'dusty-road/bonus-entrance.png',cartoon:'cartoon/final-descent.png',cartoonStart:'cartoon/boardwalk.png',cartoonUpper:'cartoon/hoodoo-garden.png',cartoonGem:'cartoon/yellow-gem.png',tripo:'tripo-cactus-overlook.png',tripoStart:'tripo-cactus-opening.png',tripoFinish:'tripo-cactus-finish.png',cactus:'cactus-overlook.png',cactusStart:'cactus-opening.png',cactusFinish:'cactus-finish.png',pass1:'transformation-gameplay-v1.png',pass2:'transformation-gameplay-v2.png',pass3:'transformation-gameplay-v3.png',valley2:'transformation-valley.png',shoulder:'traversable-shoulder.png',vista:'vista-native-gameplay.png',basin:'vista-basin.png',finish:'vista-finish.png',overview:'native-overview.png',start:'boardwalk-start.png',valley:'valley-extension.png',chute:'revised-rock-chute.png',creek:'revised-creek.png',opening:'revised-boardwalk.png'};
 names.yellowCrystal='dusty-road/yellow-crystal-material.png';
+names.gemMenus='dusty-road/coloured-gem-menus.png';
+names.gemStats='dusty-road/coloured-gem-stats.png';
+names.gemBoard='dusty-road/coloured-gem-board.png';
 const name=names[process.argv[2]??'overview'];
 if(!name)throw new Error('Choose overview, start, valley, chute, creek or opening');
 const target=new URL('../../docs/desert-canyon/'+name,import.meta.url);
 const server=http.createServer(async(req,res)=>{
-  if(!['http://127.0.0.1:5188','http://127.0.0.1:5190'].includes(req.headers.origin)||req.url!=='/frame'){res.writeHead(403).end();return;}
+  if(!['http://127.0.0.1:5188','http://127.0.0.1:5190','http://localhost:5190'].includes(req.headers.origin)||req.url!=='/frame'){res.writeHead(403).end();return;}
   res.setHeader('Access-Control-Allow-Origin',req.headers.origin);
   if(req.method==='OPTIONS'){res.setHeader('Access-Control-Allow-Methods','POST');res.setHeader('Access-Control-Allow-Headers','Content-Type');res.writeHead(204).end();return;}
   if(req.method!=='POST'||req.headers['content-type']!=='image/png'){res.writeHead(415).end();return;}

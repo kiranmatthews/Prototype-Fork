@@ -1,10 +1,9 @@
+import {campaignTestModule} from './campaign-test-module.mjs';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import ts from 'typescript';
 const memory=new Map();
 globalThis.localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k)};
-const source=await readFile(new URL('../src/campaign.ts',import.meta.url),'utf8');
-const code=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+const code=await campaignTestModule();
 const c=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 const {CampaignStore,CAMPAIGN_LEVELS:levels,CAMPAIGN_ISLANDS:islands,CAMPAIGN_BOSSES:bosses,campaignLevelByKey:byKey}=c;
 assert.deepEqual(islands.map(i=>[i.name,i.levelKeys.length]),[['Motu Motu',6],['The Uga Isles',6],['Spooky Shores',6],['Maynard Quay',6],['Quagmire Caverns',7],['Secret Island',8]]);
@@ -169,12 +168,15 @@ save.levels.warehouse.boxGem=true;
 assert.equal(c.secretRequirementMet('secret-6',save),true);
 for(let i=1;i<=6;i++)Object.assign(save.levels[`secret-${i}`],{boxGem:true,timeMedal:'silver'});
 assert.equal(c.secretRequirementMet('secret-7',save),true,'secret 7 requires its own unearned gem');
-assert.equal(c.secretRequirementMet('secret-8',save),false,'empty coloured-gem catalogue auto-unlocked finale');
+assert.equal(c.secretRequirementMet('secret-8',save),false,'unearned yellow gem auto-unlocked finale');
+assert.equal(byKey('bryce-canyon').colouredGem,'yellow');
 // Future authored coloured-gem challenge uses explicit ownership, not combo awards.
 byKey('jungle').colouredGem='red';save.levels.jungle.comboGem=true;
 Object.assign(save.levels['secret-7'],{boxGem:true,timeMedal:'gold'});
 assert.equal(c.secretRequirementMet('secret-8',save),false);
-save.levels.jungle.colouredGem=true;assert.equal(c.secretRequirementMet('secret-8',save),true,'finale requires its own rewards');
+save.levels.jungle.colouredGem=true;assert.equal(c.secretRequirementMet('secret-8',save),false,'red ownership substituted for yellow');
+save.levels['bryce-canyon'].colouredGem=true;
+assert.equal(c.secretRequirementMet('secret-8',save),true,'finale requires its own rewards');
 delete byKey('jungle').colouredGem;
 // A completed older course remains available without inventing prerequisite clears.
 const older=new CampaignStore();older.startEphemeral();older.active.levels['ghost-train'].cleared=true;

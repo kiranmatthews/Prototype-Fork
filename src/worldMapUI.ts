@@ -4,6 +4,7 @@ import { createInputGlyph } from "./inputPromptUI";
 import type { InputAction } from "./inputBindings";
 import type * as THREE from "three";
 import { MapLevelPresentation, mapTrialTime } from "./mapLevelPresentation";
+import { COLOURED_GEMS } from './colouredGems';
 import {
   CAMPAIGN_START_LEVEL_KEY, CAMPAIGN_ISLANDS,
   campaignLevelByKey, levelAllowsCrystal,
@@ -120,11 +121,15 @@ export class WorldMapUI {
     this.islandName.textContent = CAMPAIGN_ISLANDS.find(island => island.id === definition.islandId)!.name.toUpperCase();
     this.levelName.textContent = definition.name.toUpperCase();
     const medal = earnedTimeMedal(progress);
-    const rewards = [
+    const rewards: [string, boolean][] = [
       ["CRYSTAL", progress?.crystal === true],
       ["BOX GEM", progress?.boxGem === true],
       [medal ? `${medal.toUpperCase()} MEDAL` : "TIME MEDAL", medal !== null],
-    ] as const;
+    ];
+    if (definition.colouredGem) rewards.push([
+      `${COLOURED_GEMS[definition.colouredGem].label.toUpperCase()} GEM`,
+      this.campaign.colouredGemEarned(definition.levelId),
+    ]);
     this.collectibleRow.replaceChildren();
     for (const [label, earned] of rewards) {
       if (label === 'CRYSTAL' && !levelAllowsCrystal(definition.levelId)) continue;
@@ -154,6 +159,7 @@ export class WorldMapUI {
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
     this.presentation.select({ key: definition.progressKey, name: definition.name,
       allowsCrystal: levelAllowsCrystal(definition.levelId),
+      colouredGem: definition.colouredGem,
       earned: rewards.map(([, earned]) => earned), competition: definition.competition, cup: progress?.cup === true, status:definition.placeholder ? 'COMING SOON' : undefined, trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
   }
 
