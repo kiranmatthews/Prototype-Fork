@@ -1,0 +1,132 @@
+{
+  "referenceMethod": "Five separate built-in image_gen references, Crash 4 environmental styling with muted cactus and dry-weed species",
+  "implementation": "Native Blender sculpts, inferred rear surfaces; no Tripo credits were used",
+  "iterations": [
+    "Replaced pointed cactus tips with rounded ribbed caps",
+    "Rebuilt thin seed heads as closed overlapping grain forms",
+    "Fitted cactus thorns to the rotated rib/paddle surfaces",
+    "Kept low plants at 4,308\u20134,900 triangles and the tall saguaro at 6,688"
+  ],
+  "plantInstances": 5375,
+  "species": [
+    {
+      "id": "saguaro",
+      "file": "saguaro.glb",
+      "triangles": 6688,
+      "size": [
+        3.080992579460144,
+        4.880006372928619,
+        1.1107463836669922
+      ],
+      "sha256": "37b7b08f04c9f89458a9b63a2ea4b849b841b0b344b79ccfc1a300d13d2186bd",
+      "reference": "../../../tools/desert-canyon/plant-references/saguaro.png"
+    },
+    {
+      "id": "prickly-pear",
+      "file": "prickly-pear.glb",
+      "triangles": 4592,
+      "size": [
+        3.221000909805298,
+        2.7420987486839294,
+        0.5004981160163879
+      ],
+      "sha256": "66dabf4bce8b122c8ac6bd5806938f93c5ccf607094656cae13f4727a484f6df",
+      "reference": "../../../tools/desert-canyon/plant-references/prickly-pear.png"
+    },
+    {
+      "id": "barrel-cactus",
+      "file": "barrel-cactus.glb",
+      "triangles": 4308,
+      "size": [
+        1.8289151191711426,
+        1.857701063156128,
+        1.621874213218689
+      ],
+      "sha256": "903c6bc4bb53e50cca6076a630e4e267d28e24979e9ec82942e2d3264913b3ea",
+      "reference": "../../../tools/desert-canyon/plant-references/barrel-cactus.png"
+    },
+    {
+      "id": "dry-bunchgrass",
+      "file": "dry-bunchgrass.glb",
+      "triangles": 4900,
+      "size": [
+        1.0135739743709564,
+        1.2599312055390328,
+        1.197587013244629
+      ],
+      "sha256": "f034bee2fe000aa6128a8f53bf511c1a75a12fc788264ad8b1694071934e2c99",
+      "reference": "../../../tools/desert-canyon/plant-references/dry-bunchgrass.png"
+    },
+    {
+      "id": "dry-sageweed",
+      "file": "dry-sageweed.glb",
+      "triangles": 4740,
+      "size": [
+        1.4927347302436829,
+        1.5447339788079262,
+        1.3294079899787903
+      ],
+      "sha256": "aed0553fc1e3f91654a5174861acf837bb2142f60aaacbffa6e35b7e8ab90e95",
+      "reference": "../../../tools/desert-canyon/plant-references/dry-sageweed.png"
+    }
+  ],
+  "removedFromCourse": [
+    "canyonpine",
+    "canyonwoodland",
+    "canyonpinegrove",
+    "canyonscrub",
+    "canyongrasspatch",
+    "custardbankshrub",
+    "coastv2grass",
+    "coastv2grassb"
+  ],
+  "geometryPolicy": "Complete native geometry retained in normal, MAX and reflected views; static plants are spatially instanced",
+  "nativeReviewAngles": [
+    0,
+    90,
+    180,
+    270
+  ],
+  "browser": {
+    "maxDrawingBuffer": [
+      2560,
+      1440
+    ],
+    "overlookFrameMs": {
+      "medianRange": [
+        25.3,
+        27.3
+      ],
+      "p95Range": [
+        27.8,
+        31.8
+      ]
+    },
+    "earlierTreeViewMedianMs": 50.6,
+    "renderedTriangles": 12286936,
+    "assetErrors": 0,
+    "consoleWarnings": 0,
+    "consoleErrors": 0,
+    "measurementScope": "Local in-app browser, 240-frame windows, full scene without CRT; desktop load can affect timings. Not a guaranteed frame rate."
+  },
+  "validation": {
+    "nativeMeshesAndColours": "passed",
+    "oldPlantAbsence": "passed",
+    "terrainHashCells": 116,
+    "supportProbes": 8394,
+    "checkpoints": 17,
+    "vistaRouteFrames": 13951,
+    "finishFrames": 135,
+    "freerideShoulder": true,
+    "valleyLanding": true,
+    "build": "Passed: TypeScript, Vite and release preparation",
+    "checkLevels": "Native plant loading and earlier stages pass; existing unrelated waterpark texture-owner assertion at tools/test-waterpark-decks.mjs:49 remains",
+    "localOfflineVersion": "cc36e0b2aef2ae84217d",
+    "releaseBytes": 965401893,
+    "liveFinish": "RUN COMPLETE",
+    "normal720FinishFrameMs": {
+      "median": 16.4,
+      "p95": 28.1
+    }
+  }
+}

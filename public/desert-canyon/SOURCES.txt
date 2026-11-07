@@ -70,3 +70,13 @@ attributes, UVs and original embedded atlases survive; the final patch has
 2,688 triangles at every viewing distance. The unused source LOD1 is not a
 part of the native surface. See grass-cluster-manifest.json and the reproducible
 tools/desert-canyon/cluster-library-grass.py script.
+
+Muted cactus and dry weed set — 7 November 2026
+Five separate reference images generated with the built-in image_gen tool in
+Crash 4 environmental styling. Prompts: tools/desert-canyon/plant-references/prompts.json.
+Native meshes authored in Blender by tools/desert-canyon/build-desert-plants.py
+from those references; unobserved sides are inferred. No Tripo models or credits
+were used for this set. Saguaro, prickly pear, barrel cactus, dry bunchgrass and
+dry sageweed retain their complete geometry at every distance. One shared
+vertex-painted material per model; no external plant textures or billboard LODs.
+Exact source hashes, dimensions and triangle counts: plants/manifest.json.

@@ -6,6 +6,24 @@ import {withSkateRuntime,makeInput} from '../jungle-cup-harness.mjs';
 const bundle=await build({entryPoints:['src/levels/desert-canyon.ts'],bundle:true,format:'esm',platform:'node',write:false});
 const m=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const data=m.DESERT_CANYON_LEVEL,fromVista=process.argv.includes('--vista-only');
+const plants=JSON.parse(await readFile('public/desert-canyon/plants/manifest.json','utf8'));
+const plantKinds=new Set(['canyonsaguaro','canyonpricklypear','canyonbarrel','canyondrygrass','canyondryweed']);
+const planting=data.components.filter(c=>c.t==='decor'&&[30,31,61].includes(c.grp)&&c.dkind!=='deserttalus');
+assert.ok(planting.length>3000,'The cactus habitat must extend throughout the course');
+assert.ok(planting.every(c=>plantKinds.has(c.dkind)),'No tree, leafy shrub or previous green grass may remain in the canyon planting');
+for(const kind of plantKinds)assert.ok(planting.some(c=>c.dkind===kind),`Missing desert species ${kind}`);
+for(const asset of plants.assets){
+  const bytes=await readFile('public/desert-canyon/plants/'+asset.file);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),asset.sha256,`Changed native sculpt ${asset.id}`);
+  const json=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)).toString().trim());
+  const primitives=json.meshes.flatMap(mesh=>mesh.primitives);
+  const triangles=primitives.reduce((n,p)=>n+json.accessors[p.indices].count/3,0);
+  assert.equal(triangles,asset.triangles);assert.ok(triangles<=12000,`Excessive plant budget ${asset.id}`);
+  assert.ok(primitives.every(p=>p.attributes.COLOR_0!==undefined&&p.attributes.NORMAL!==undefined),'Plant sculpt lost its authored colour or normals');
+  assert.equal(json.materials.length,1,'Native instancing needs one shared plant material');
+}
+console.log(JSON.stringify({desertPlantInstances:planting.length,species:plants.assets.map(a=>({id:a.id,triangles:a.triangles})),allPreviousTreesAndShrubsReplaced:true}));
+if(process.argv.includes('--plants-only'))process.exit(0);
 assert.ok(!data.components.some(c=>c.grp>=60&&c.grp<=64&&(c.outOfBounds||c.lethal)), 'The freeride landscape must not contain boundary traps or lethal catch planes');
 const vistaLength=m.DESERT_LENGTH-m.DESERT_VISTA_START;
 assert.ok(vistaLength>1700,'The exposed rim must add a substantial chapter after the old finish');

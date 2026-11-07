@@ -3,6 +3,7 @@ import {mergeVertices,toCreasedNormals} from 'three/examples/jsm/utils/BufferGeo
 import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import type {CustomComponent,DecorKind} from '../level';
 import {VISTA_PLACEMENTS} from '../desertVistaCatalog';
+import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
 
 type Point=[number,number,number];
 type Profile={x:number;y:number;s:number};
@@ -70,8 +71,8 @@ export function vistaColour(x:number,y:number,z:number,u:number,normalY:number):
   const mantle=smooth(.58,.91,normalY);
   colour.lerp(new THREE.Color('#c99963'),mantle*.38);
   const grove=noise.fbm(x*.012,4,z*.012,3,2,.5);
-  const forest=smooth(35,170,u)*smooth(.48,.88,normalY)*smooth(-.55,.12,grove);
-  colour.lerp(new THREE.Color('#465329'),forest*.96);
+  const drySoil=smooth(35,170,u)*smooth(.48,.88,normalY)*smooth(-.55,.12,grove);
+  colour.lerp(new THREE.Color('#8d7958'),drySoil*.70);
   colour.lerp(new THREE.Color('#c6b38b'),(1-smooth(14,47,Math.abs(x-vistaRiverX(z))))*.7);
   colour.lerp(new THREE.Color('#bd7944'),1-smooth(5,15,Math.abs(u)));
   return colour.multiplyScalar(.91+noise.fbm(x*.047,5,z*.047,3,2,.5)*.16);
@@ -230,37 +231,38 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
   }
 
   // Vegetation follows open habitat pockets, with empty worn riding ground.
-  // Existing full native meshes are instanced; silhouettes never change with distance.
+  // Imagegen-guided native plant sculpts keep their silhouettes at every distance.
   for(let i=0;i<2400;i++){
     const s=start+55+random()*(length-start-70),side=random()<.56?-1:1;
     const u=side*(width(s)/2+.35+Math.pow(random(),1.5)*23),p=point(s,u);p[1]=ground(p[0],p[2])-.05;
-    const h=.4+random()*1.0;
-    if(i%3===0)decor('canyonscrub',p,[h*3.2,h*1.18,h*2.9],random()*360,'Olive scrub rooted in rocky pockets',true,'#c6bc7a');
-    else decor('canyongrasspatch',p,[h*3.2,h*.82,h*2.9],random()*360,'Complete native grass patches along the worn shoulder',false,'#d4bd72');
+    const h=.35+random()*.85;
+    const kind:DesertPlantKind=i%5===0?'canyonpricklypear':i%5===1?'canyonbarrel':i%5===2?'canyondryweed':'canyondrygrass';
+    decor(kind,p,desertPlantSize(kind,h),random()*360,'Muted cactus and dry weed along the worn shoulder',i%5<3);
     if(i%7===0){const rock=.25+random()*.85;decor('deserttalus',p,[rock*2.2,rock,rock*1.5],random()*360,'Angular sandstone fragments among the native gravel',rock>.45);}
   }
-  // Varied groves silhouette the near bends without forming a hedge.
+  // Curved saguaros silhouette the bends without forming a hedge.
   seed=919711;
   for(let i=0;i<210;i++){
     const s=start+80+random()*(length-start-100),side=i%3===0?-1:1,u=side*(12+random()*70);
     const p=point(s,u);p[1]=ground(p[0],p[2])-.25;
-    const h=15+random()*19;
-    decor('canyonpine',p,[h*.29,h,h*.28],random()*360,'Native pine grove framing the rolling traverse',true,'#c6bd85');
+    const h=3.4+random()*4.5;
+    decor('canyonsaguaro',p,desertPlantSize('canyonsaguaro',h),random()*360,'Sculpted saguaro framing the rolling traverse',true);
   }
   for(const local of [260,660,1000,1340]){
     const s=start+local,p=point(s,-11.5);p[1]=ground(p[0],p[2])-.2;
-    decor('canyonpine',p,[6.4,26,6.2],yaw(s)+55,'Tall foreground pine and long afternoon shadow',true,'#d0c594');
+    decor('canyonsaguaro',p,desertPlantSize('canyonsaguaro',7.4),yaw(s)+55,'Curved foreground cactus and long afternoon shadow',true);
   }
   seed=274039;
-  for(let i=0;i<4100;i++){
+  for(let i=0;i<2400;i++){
     const z=-2380-random()*1920,x=65+random()*1180,p=profile(z),u=x-p.x;
     if(u<70||Math.abs(x-vistaRiverX(z))<20)continue;
     const pocket=noise.fbm(x*.012,4,z*.012,3,2,.5);
     if(pocket<-.13||random()>.78)continue;
     const y=ground(x,z),slope=Math.hypot(ground(x+3,z)-ground(x-3,z),ground(x,z+3)-ground(x,z-3))/6;
     if(slope>1.05)continue;
-    const broad=i%3!==0,h=20+random()*24;
-    decor(broad?'canyonwoodland':'canyonpinegrove',[x,y-.3,z],[h*(broad?.56:.36),h,h*(broad?.52:.34)],random()*360,'Continuous native woodland on the valley terraces',false,'#b5b981');
+    const kind:DesertPlantKind=i%4===0?'canyonpricklypear':i%4===1?'canyonbarrel':'canyonsaguaro';
+    const h=kind==='canyonsaguaro'?4+random()*5.5:1.3+random()*1.7;
+    decor(kind,[x,y-.06,z],desertPlantSize(kind,h),random()*360,'Sparse muted cactus habitat across the open basin',false);
   }
   return C;
 }

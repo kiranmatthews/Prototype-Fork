@@ -9890,3 +9890,32 @@ The 2560 × 1440 MAX player view remains expensive at 50.6 ms median;
 these local measurements are not a 60 fps claim.
 Build and the 964,646,925-byte release pass. `check:levels` reaches the existing
 unrelated waterpark texture-owner assertion at `tools/test-waterpark-decks.mjs:49`.
+
+## 2026-11-07 — Replace canyon woodland with muted sculpted desert plants
+
+Replaced every tree, leafy shrub and former grass placement throughout Bryce
+Canyon with five imagegen-guided species: curved saguaro, prickly pear, barrel
+cactus, dry bunchgrass and woody desert weed. All 5,375 plant instances use the
+new set, with desert-scale proportions and sparse basin planting. Former green
+woodland soil is now muted dry earth. The boardwalk, course, checkpoints and
+sloping finish retain their validated geometry.
+
+Approximately 20 minutes prompt-to-reviewed playable. Five imagegen references
+were followed by Blender mesh authoring, four-angle review, and corrections to
+rounded tips, seed heads and thorn attachments. The tall saguaro has 6,688
+triangles; low plants have 4,308–4,900. Spatial instancing retains every authored
+triangle at all distances. The local 2560 × 1440 overlook measured 25–27 ms
+median versus 50.6 ms for the previous tree-heavy view; this is a local
+observation, not a 60 fps claim.
+
+The plant inventory and all native mesh hashes/colour attributes pass. The
+current 13,951-frame vista run passes, along with all 8,394 route support probes,
+17 checkpoints, finish, shoulder traversal and valley landing. Normal and
+MAX/native browser review shows the new plants without asset or console errors.
+Prompts, native multiview renders and measurements are in
+`docs/desert-canyon/plants/iteration.json` and `tools/desert-canyon/plant-references/`.
+
+Production build and the 965,401,893-byte local release pass. The live browser
+finish reaches RUN COMPLETE. `check:levels` passes the expanded native plant
+loader regression and reaches the existing unrelated waterpark texture-owner
+assertion at `tools/test-waterpark-decks.mjs:49`.

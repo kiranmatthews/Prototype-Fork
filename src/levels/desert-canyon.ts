@@ -3,6 +3,7 @@ import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import type {CustomComponent,CustomLevelData,DecorKind} from '../level';
 import {lazySourceField} from './lazy-source';
 import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
+import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
 
 type Point=[number,number,number];
 const noise=new SimplexNoise(20261105);
@@ -50,7 +51,7 @@ const core=(s:number)=>DESERT_CANYON_START+s;
 const valley=(s:number)=>DESERT_CANYON_END+s;
 export const DESERT_GAPS=[{from:68,to:80,chargeFrom:43,releaseAt:66.5,name:'Boardwalk launch'},{from:core(67),to:core(73),chargeFrom:core(47),releaseAt:core(63),name:'Canyon rim jump'}];
 export const DESERT_CHECKPOINTS=[14,155,380,610,core(38),core(315),core(730),core(1100),valley(120),valley(400),valley(720),valley(1040),DESERT_VISTA_START-70,DESERT_VISTA_START+400,DESERT_VISTA_START+820,DESERT_VISTA_START+1050,DESERT_LENGTH-95];
-export const DESERT_CHECKPOINT_NAMES=['Boardwalk start','Upper landing','Rim traverse','Overlook approach','Canyon rim','Sunlit narrows','Hoodoo garden','Pine valley','Cathedral ledge','Pine switchbacks','Creek bridge','Lower rock chute','Rim gateway','Eagle ledge','Forested basin','River overlook','Sunset promontory'];
+export const DESERT_CHECKPOINT_NAMES=['Boardwalk start','Upper landing','Rim traverse','Overlook approach','Canyon rim','Sunlit narrows','Hoodoo garden','Cactus valley','Cathedral ledge','Cactus switchbacks','Creek bridge','Lower rock chute','Rim gateway','Eagle ledge','Desert basin','River overlook','Sunset promontory'];
 function routeAt(s:number){
   const at=clamp(s,0,DESERT_LENGTH),index=at<DESERT_CANYON_START?0:at<DESERT_CANYON_END?1:at<DESERT_VISTA_START?2:3;
   return {curve:curves[index],t:clamp((at-(index===0?0:index===1?DESERT_CANYON_START:index===2?DESERT_CANYON_END:DESERT_VISTA_START))/lengths[index])};
@@ -317,41 +318,41 @@ for(const [from,to] of [[18,DESERT_CANYON_START-12],[valley(10),DESERT_VISTA_STA
   }
 }
 
-// The existing native pine is reshaped into a narrow, darker canyon crown;
-// its full source geometry and texture atlas are retained. Planting occurs in
-// sheltered pockets, with the rock passages deliberately left exposed.
+// Imagegen-guided cactus sculpts replace every former tree and shrub. Keep
+// the worn riding line open, with smaller dry species in sheltered pockets.
 for(let i=0;i<310;i++){
   const s=core(760)+random()*(DESERT_VISTA_START-core(760)-35),side=random()<.5?-1:1;
   const pocket=.5+.5*Math.sin(s*.017);
   if(random()>pocket*.82+.12)continue;
   const u=side*(desertWidth(s)/2+4+random()*16),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.25;
-  const h=13+random()*13;
-  decorate('canyonpine',p,[h*.40,h,h*.39],random()*360,'Existing pine library · canyon conifer silhouette',30);
+  const h=3.2+random()*3.7;
+  decorate('canyonsaguaro',p,desertPlantSize('canyonsaguaro',h),random()*360,'Muted curved saguaro on the canyon shoulder',30);
 }
 for(let i=0;i<80;i++){
   const s=30+random()*DESERT_VISTA_START,u=(random()<.5?-1:1)*(45+random()*95),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.3;
-  const h=10+random()*12;decorate('canyonpine',p,[h*.34,h,h*.32],random()*360,'Conifers rooted on rock shelves',30);
+  const h=2.8+random()*3.8;decorate('canyonsaguaro',p,desertPlantSize('canyonsaguaro',h),random()*360,'Saguaro rooted on exposed rock shelves',30);
 }
 for(let i=0;i<190;i++){
   const s=12+random()*(DESERT_VISTA_START-25),u=(random()<.5?-1:1)*(desertWidth(s)/2+1.8+random()*11),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.1;
   const h=.45+random()*1.0;
-  decorate('custardbankshrub',p,[h*2.2,h,h*1.9],random()*360,'Low scrub in sandstone pockets',30);
+  const kind:DesertPlantKind=i%2?'canyonpricklypear':'canyonbarrel';
+  decorate(kind,p,desertPlantSize(kind,h),random()*360,'Muted paddle and barrel cacti in sandstone pockets',30);
 }
 for(let i=0;i<1200;i++){
   const s=12+random()*(DESERT_VISTA_START-25),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1+random()*26),p=desertPoint(s,u);
   p[1]=desertGround(p[0],p[2]);
-  if(i%5===0){const h=.7+random()*.9;decorate('custardbankshrub',p,[h*2.5,h,h*2.2],random()*360,'Low sage-green canyon scrub',31);}
-  else {const h=.34+random()*.42;decorate(i%3?'coastv2grassb':'coastv2grass',p,[h*3.1,h,h*2.8],random()*360,'Dry grass at trail shoulders',31);}
+  if(i%5===0){const h=.65+random()*.8;decorate('canyondryweed',p,desertPlantSize('canyondryweed',h),random()*360,'Twisting dry desert weed at the trail shoulder',31);}
+  else {const h=.32+random()*.42;decorate('canyondrygrass',p,desertPlantSize('canyondrygrass',h),random()*360,'Sculpted straw bunchgrass at trail shoulders',31);}
 }
-// Small, clustered understory softens the route shoulders in the lower
-// woodland; broken patches leave the stone floor and riding line readable.
+// Dry weed and cactus pockets leave the stone floor and riding line readable.
 for(let i=0;i<440;i++){
   const s=valley(220)+random()*(lengths[2]-260),side=random()<.5?-1:1;
   if(Math.sin(s*.027)<-.25)continue;
   const u=side*(desertWidth(s)/2+1.2+random()*9),p=desertPoint(s,u);
   if(s>valley(550)&&s<valley(950)&&Math.abs(u-creekOffset(s-DESERT_CANYON_END))<6)continue;
   p[1]=desertGround(p[0],p[2])-.08;const h=.45+random()*.95;
-  const c=decorate('custardbankshrub',p,[h*2.1,h,h*1.8],random()*360,'Clumped sage and groundcover below the pines',31);c.color='#a8af8c';
+  const kind:DesertPlantKind=i%3===0?'canyonpricklypear':'canyondryweed';
+  decorate(kind,p,desertPlantSize(kind,h),random()*360,'Muted cactus and dried weed pockets',31);
 }
 for(let i=0;i<370;i++){
   const s=45+random()*(DESERT_VISTA_START-60),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1.2+random()*22),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.12;
@@ -448,8 +449,8 @@ export const DESERT_CANYON_LEVEL:CustomLevelData={
   components:[],groups:[
     {id:1,nm:'Boardwalk launch and complete descent',editorOnly:true},{id:2,nm:'Carved Bryce Canyon landform',editorOnly:true},
     {id:20,nm:'Near RockGenerator hoodoos',editorOnly:true},{id:21,nm:'Native sandstone skyline',editorOnly:true},
-    {id:22,nm:'Eroded talus',editorOnly:true},{id:30,nm:'Existing tree and shrub library',editorOnly:true},
-    {id:31,nm:'Existing fine grasses and scrub',editorOnly:true},{id:40,nm:'Reference race dressings',editorOnly:true},
+    {id:22,nm:'Eroded talus',editorOnly:true},{id:30,nm:'Sculpted desert cacti',editorOnly:true},
+    {id:31,nm:'Sculpted dry weeds and grasses',editorOnly:true},{id:40,nm:'Reference race dressings',editorOnly:true},
     {id:60,nm:'Vast valley and opposite mesas',editorOnly:true},{id:61,nm:'Exposed ledge and native conifer groves',editorOnly:true},
     {id:62,nm:'Traversable slopes and basin',editorOnly:true},
     {id:50,nm:'Playable checkpoints and finish',editorOnly:true},{id:51,nm:'Ordered camera course',editorOnly:true},

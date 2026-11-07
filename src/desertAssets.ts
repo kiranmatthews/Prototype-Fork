@@ -1,8 +1,10 @@
 import {DESERT_VISTA_ASSETS} from './desertVistaCatalog';
+import {DESERT_PLANT_ASSETS} from './desertPlants';
 /** Seeded native RockGenerator bakes; never substitute distance meshes. */
 const rock=(file:string,label:string,size:readonly[number,number,number])=>({file:`../desert-canyon/${file}`,label:`Bryce · ${label}`,size,wind:false,normalStrength:0,doubleSided:false,cellSize:85});
 export const DESERT_ASSETS={
   ...DESERT_VISTA_ASSETS,
+  ...DESERT_PLANT_ASSETS,
   canyonpine:{file:'../desert-canyon/canyon-pine',label:'Bryce · reshaped existing native pine',size:[7.2,20,7] as const,wind:true,normalStrength:0,doubleSided:false,cellSize:65},
   // Basin woodland retains every native triangle. Static sheltered groves
   // avoid evaluating branch wind and two-sided foliage lighting millions of
