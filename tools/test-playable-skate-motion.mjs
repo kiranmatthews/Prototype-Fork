@@ -46,6 +46,31 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   clock.start(true);assert.equal(clock.appearances,2,'new mount cue did not restart');
   clock.enabled=false;assert.equal(clock.active,false);assert.equal(clock.boardVisible,true);
   const elapsed=clock.elapsed;clock.enabled=true;assert.equal(clock.elapsed,elapsed,'A/B advanced the source clock');
+  // Floor splitting must cover the complete original PNG rectangle and keep
+  // each triangle on one side of the surface, including corner/edge contacts.
+  board.position.set(0,0,0);clock.start(true);
+  for(const slope of [0,.22])for(const y of [-1,0,.244,1])for(let f=0;f<32;f++){
+    const floor=new THREE.Plane(new THREE.Vector3(0,1,slope).normalize(),-y);
+    clock.elapsed=f/60;effect.update(camera,floor);
+    const geometry=effect.sprite.geometry,positions=geometry.getAttribute('position'),uv=geometry.getAttribute('uv');
+    const count=geometry.drawRange.count;assert.ok(count>=6&&count<=12&&count%3===0);
+    const center=effect.sprite.position.clone().applyMatrix4(camera.matrixWorldInverse),c=Math.cos(effect.sprite.material.rotation),s=Math.sin(effect.sprite.material.rotation);
+    let area=0;
+    for(let i=0;i<count;i+=3){
+      const distances=[];
+      for(let j=0;j<3;j++){
+        const k=i+j,x=positions.getX(k),y=positions.getY(k);
+        assert.ok(Math.abs(uv.getX(k)-x-.5)<1e-7&&Math.abs(uv.getY(k)-y-.5)<1e-7,'floor projection changed PNG coordinates');
+        const u=(x+.5-effect.sprite.center.x)*effect.sprite.scale.x,v=(y+.5-effect.sprite.center.y)*effect.sprite.scale.y;
+        const world=new THREE.Vector3(center.x+c*u-s*v,center.y+s*u+c*v,center.z).applyMatrix4(camera.matrixWorld);
+        distances.push(floor.distanceToPoint(world)-.0005);
+      }
+      assert.ok(Math.min(...distances)>-1e-6||Math.max(...distances)<1e-6,'a triangle interpolates depth across the floor edge');
+      area+=Math.abs((positions.getX(i+1)-positions.getX(i))*(positions.getY(i+2)-positions.getY(i))-(positions.getX(i+2)-positions.getX(i))*(positions.getY(i+1)-positions.getY(i)))/2;
+    }
+    assert.ok(Math.abs(area-1)<1e-7,'floor split lost or overlapped part of the drawing');
+    assert.deepEqual(effect.sprite.scale.toArray(),quad,'floor split resized the drawing');
+  }
   clock.cancel();assert.equal(clock.active,false);
   clock.reset();assert.equal(clock.active,false);effect.dispose();
   const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');

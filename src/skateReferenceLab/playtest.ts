@@ -52,6 +52,7 @@ async function start() {
   const input=new Input(false,()=>true);
   const camera=new THREE.PerspectiveCamera(38,1,.03,200);
   const target=new THREE.Vector3(),offset=new THREE.Vector3(),cameraTarget=new THREE.Vector3();
+  const inkSupport = new THREE.Plane();
   const views={three:[4.8,2.6,7.6],side:[8,1.9,0],back:[0,2.8,8.8],front:[0,2.2,-8.8]};
   let paused=false,frameStep=false,rate=1,demoTime=-1,previousDemoJump=false,accumulator=0,last=0,reportAt=0,bailRequested=false;
   const reset=()=>{p.enterLevel('skate-playtest');p.respawn(level,true);level.setRunModesEnabled(false);(p as any).freeSkate=false;motion.reset();runtime.restart();accumulator=0;paused=false;bailRequested=false;$('pause').textContent='Pause';};
@@ -101,7 +102,10 @@ async function start() {
     cameraTarget.copy(target);cameraTarget.x-=1.15;
     camera.position.copy(cameraTarget).add(offset);camera.lookAt(cameraTarget);
     sun.position.copy(p.pos).add(new THREE.Vector3(3,9,4));sun.target.position.copy(p.pos);
-    scene.updateMatrixWorld(true);camera.updateMatrixWorld();scribble.update(camera);renderer.render(scene,camera);
+    scene.updateMatrixWorld(true);camera.updateMatrixWorld();
+    const ground = (p as unknown as {groundHit: {normal:THREE.Vector3} | null}).groundHit;
+    scribble.update(camera, p.grounded && ground ? inkSupport.setFromNormalAndCoplanarPoint(ground.normal,p.pos) : undefined);
+    renderer.render(scene,camera);
     if(now-reportAt>80){reportAt=now;$('phase').textContent=motion.enabled?motion.phase.replace(/-/g,' ').toUpperCase():'ORIGINAL D SKATING';
       $('diagnostics').textContent=JSON.stringify({...motion.diagnostics,demoTime:+demoTime.toFixed(2),paused,nativeState:p.state,
         comparison:motion.scribbles?'B · Scribble':'A · Pre-scribble',bailing:Boolean((p as any).isBailing),

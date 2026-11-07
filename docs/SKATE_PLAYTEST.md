@@ -82,7 +82,15 @@ the ink has finished.
 
 The ink respects scene depth and does not write depth itself. Foreground limbs
 and level geometry stay in front of it; its late draw order does not override
-occlusion. The flat PNG drawings, fixed dimensions and board attachment remain.
+occlusion. Pixels that would fall below the player's current support surface
+project onto that surface along the viewing ray, with a 0.5 mm clearance.
+This removes the straight floor cut without shifting the drawing off the deck
+or changing its screen size, UVs or stroke width. It follows the actual support
+normal/height, including raised ramps; above-ground pixels retain board depth.
+The card splits at the contact line into at most four triangles. Hardware
+depth interpolation keeps the strokes solid under multisample antialiasing;
+there is no per-pixel depth override or screen-space overlay.
+The flat PNG drawings, fixed dimensions and board attachment remain.
 
 Only a normal mount or dismount can start ink; arbitrary changes in board
 visibility cannot. Bails, death, jumps, grinds and other pose owners cancel any
@@ -140,3 +148,10 @@ readable ink across multiple rendered frames, with the foreground body and
 gloves intact. Mount presentation keeps the board hidden for all eight large
 drawings; standing dismount has a 0.200-second minimum burst. These checks
 replace the earlier assumption that a paused image proved real-time visibility.
+
+The floor regression checks all 32 drawings against flat/sloped support planes
+at four heights (256 cases): unchanged UVs/size, full rectangle coverage, and
+no triangle crossing the depth discontinuity. A four-sample GPU probe checks
+48 frame/view/surface combinations against the same ink with the floor hidden:
+zero missing ink pixels and zero overwritten foreground pixels. Disabling the
+ground correction reproduces the floor cut (up to 1,309 missing pixels).

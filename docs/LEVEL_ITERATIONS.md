@@ -9071,3 +9071,33 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   Recording/review fixtures were evidence-only and removed from local build
   output by the clean build. Port 5199 remains live; no integration, push or
   publication. Temporary QA tab closed and validation leases released.
+
+
+## Skate scribbles — clear the floor without covering the feet
+
+- 7 November 2026 NZDT: approximately twenty-one minutes prompt-to-playable,
+  including focused render validation. The camera-facing card intersected the
+  floor when centred on the low deck. Its lower portion now projects onto the
+  player's actual support plane; the above-ground portion retains prop depth.
+  Screen outline, fixed size, atlas UVs, pen weight and source attachment stay.
+- Split the card exactly at that surface into at most four triangles, with
+  vertex depth and 0.5 mm clearance. This preserves multisample coverage. The
+  initial fragment-depth approach left a faint antialiased edge and was replaced
+  before handoff. Foreground body/feet/world objects keep normal occlusion.
+  No animation timing, source poses, movement/tuning, PNG or A/B changes.
+- Focused native checks pass: all 256 frame/slope/height cases preserve the
+  whole drawing, UVs and size, with no triangle crossing the depth boundary;
+  the existing 1,980-frame controller/sequence/ownership checks also pass.
+  A four-sample GPU comparison passes 48 frame/view/surface combinations with
+  zero ink lost when adding the floor and zero overwritten foreground pixels.
+  The uncorrected negative control loses up to 1,309 ink pixels.
+- Actual playtest review covers running and native-keyboard standing mounts,
+  pickup, normal and MAX/native presentation, and oblique/behind views. Both
+  effects retain their complete outline at the floor; soles/gloves remain in
+  front. No game warnings/errors. Earlier probe failures remain in the evidence
+  log; final GPU results are in `gpu-msaa-final.json`.
+- Production type-check/build, isolated local build and whitespace pass.
+  Production output excludes this study/private data.
+  Evidence: external `skate-scribble-floor/`; final character screenshots and
+  GPU results, with interim fragment-depth recordings labelled separately.
+  Local server/user tab retained. No integration, push or publication.

@@ -93,6 +93,13 @@ export class BoardScribbleEffect {
   private readonly a = new THREE.Vector3();
   private readonly b = new THREE.Vector3();
   private readonly worldScale = new THREE.Vector3();
+  private readonly floor = new THREE.Plane();
+  private readonly floorUniform = {value:new THREE.Vector4()};
+  private readonly floorEnabled = {value:0};
+  private readonly perspective = {value:1};
+  private readonly geometry = new THREE.BufferGeometry();
+  private readonly positions = new THREE.BufferAttribute(new Float32Array(36),3);
+  private readonly uvs = new THREE.BufferAttribute(new Float32Array(24),2);
 
   constructor(texture: THREE.Texture, private readonly root: THREE.Object3D,
     private readonly board: THREE.Object3D, private readonly clock: BoardScribbleSequence) {
@@ -105,15 +112,52 @@ export class BoardScribbleEffect {
     // it normally. Drawing late must not turn it into a screen-space overlay.
     const material = new THREE.SpriteMaterial({map:this.texture, transparent:false,
       alphaTest:.35, depthTest:true, depthWrite:false, toneMapped:false, fog:false});
+    // Split the card at the floor and change only vertex depth below that line.
+    // Keeping clip-space XY/W and UVs preserves the drawing's screen outline.
+    // Vertex depth also preserves per-sample floor/foot occlusion under MSAA;
+    // a per-fragment depth override leaves a faint clipped edge after resolve.
+    material.onBeforeCompile = shader => {
+      Object.assign(shader.uniforms, {inkFloor:this.floorUniform, inkFloorEnabled:this.floorEnabled,
+        inkPerspective:this.perspective});
+      shader.vertexShader = `uniform vec4 inkFloor;
+        uniform float inkFloorEnabled, inkPerspective;
+      ` + shader.vertexShader.replace('gl_Position = projectionMatrix * mvPosition;', `
+        gl_Position = projectionMatrix * mvPosition;
+        if (inkFloorEnabled > 0.5 && dot(inkFloor.xyz, mvPosition.xyz) + inkFloor.w < 0.0) {
+          vec3 rayOrigin = vec3(mvPosition.xy * (1.0 - inkPerspective), 0.0);
+          vec3 rayDirection = mvPosition.xyz - rayOrigin;
+          float denominator = dot(inkFloor.xyz, rayDirection);
+          if (denominator < -0.000001) {
+            float t = -(dot(inkFloor.xyz, rayOrigin) + inkFloor.w) / denominator;
+            if (t > 0.0 && t < 1.0) {
+              vec4 floorClip = projectionMatrix * vec4(rayOrigin + rayDirection * t, 1.0);
+              gl_Position.z = floorClip.z / floorClip.w * gl_Position.w;
+            }
+          }
+        }
+      `);
+    };
+    material.customProgramCacheKey = () => 'board-scribble-ground-depth-v2';
     this.sprite = new THREE.Sprite(material);
+    this.geometry.setAttribute('position',this.positions);
+    this.geometry.setAttribute('uv',this.uvs);
+    this.sprite.geometry = this.geometry;
     this.sprite.name = 'board-scribble'; this.sprite.renderOrder = 100;
     this.sprite.frustumCulled = false; this.sprite.visible = false;
   }
 
-  update(camera: THREE.Camera): void {
+  update(camera: THREE.Camera, support?: THREE.Plane): void {
     this.sprite.visible = this.clock.active;
     // A/B hides the drawing without changing the size of the same burst.
     if (!this.clock.active) return;
+    this.floorEnabled.value = support ? 1 : 0;
+    this.perspective.value = (camera as THREE.PerspectiveCamera).isPerspectiveCamera ? 1 : 0;
+    if (support) {
+      this.floor.copy(support);
+      this.floor.constant -= .0005; // sub-millimetre clearance without painting over soles
+      this.floor.applyMatrix4(camera.matrixWorldInverse);
+      this.floorUniform.value.set(this.floor.normal.x, this.floor.normal.y, this.floor.normal.z, this.floor.constant);
+    }
     const newBurst = this.serial !== this.clock.serial;
     this.board.updateWorldMatrix(true, false);
     // Both bursts follow the source prop, including the standing pickup's short
@@ -141,6 +185,41 @@ export class BoardScribbleEffect {
     const frame = FRAME_REGIONS[this.clock.frame];
     this.sprite.center.set(frame[2], frame[3]);
     this.texture.offset.set(frame[0], frame[1]);
+    this.updateGeometry(camera,!!support);
   }
-  dispose(): void {this.sprite.removeFromParent(); this.sprite.material.dispose(); this.texture.dispose();}
+  private updateGeometry(camera: THREE.Camera, grounded: boolean): void {
+    const center = this.a.copy(this.sprite.position).applyMatrix4(camera.matrixWorldInverse);
+    const c = Math.cos(this.sprite.material.rotation), s = Math.sin(this.sprite.material.rotation);
+    // Each point stores card XY and its signed distance from the support plane.
+    const corners = [[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5]].map(([x,y]) => {
+      const u = (x+.5-this.sprite.center.x)*this.sprite.scale.x;
+      const v = (y+.5-this.sprite.center.y)*this.sprite.scale.y;
+      const d = grounded ? this.floor.distanceToPoint(this.b.set(center.x+c*u-s*v,center.y+s*u+c*v,center.z)) : 1;
+      return new THREE.Vector3(x,y,d);
+    });
+    const clip = (side: number) => {
+      const points: THREE.Vector3[] = [];
+      const append = (point: THREE.Vector3) => {
+        if (!points.length || points[points.length-1].distanceToSquared(point)>1e-16) points.push(point);
+      };
+      for (let i=0;i<4;i++) {
+        const a=corners[i],b=corners[(i+1)%4],inside=a.z*side>=0,next=b.z*side>=0;
+        if (inside) append(a);
+        if (inside!==next) append(a.clone().lerp(b,a.z/(a.z-b.z)));
+      }
+      if (points.length>1&&points[0].distanceToSquared(points[points.length-1])<1e-16) points.pop();
+      return points;
+    };
+    // At most four triangles. Splitting exactly at the floor prevents a single
+    // triangle from interpolating a false near depth across the rider's feet.
+    const polygons = corners.some(v=>v.z<0)&&corners.some(v=>v.z>0) ? [clip(1),clip(-1)] : [corners];
+    let count=0;
+    for (const polygon of polygons) for (let i=1;i+1<polygon.length;i++) {
+      for (const v of [polygon[0],polygon[i],polygon[i+1]]) {
+        this.positions.setXYZ(count,v.x,v.y,0);this.uvs.setXY(count,v.x+.5,v.y+.5);count++;
+      }
+    }
+    this.geometry.setDrawRange(0,count);this.positions.needsUpdate=this.uvs.needsUpdate=true;
+  }
+  dispose(): void {this.sprite.removeFromParent(); this.geometry.dispose(); this.sprite.material.dispose(); this.texture.dispose();}
 }
