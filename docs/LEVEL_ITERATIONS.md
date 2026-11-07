@@ -10072,3 +10072,27 @@ and restart, and leaves other gem rewards unchanged. Normal 720 and native
 A fresh browser session walks into the real gem at the replay location and
 shows the pickup burst with no title banner and no console errors. Production
 build and the 963,307,977-byte release-size check pass.
+
+## 8 November 2026 — Authored Roo pair-spacing defaults
+
+Prompt: “new defaults”, with `roo-pair-spacing (2).json`. Approximately ten minutes
+to the first built browser preview; validation and publication followed.
+
+Installed all 51 supplied values as the shared defaults for the PNG font,
+including the loading title. Existing custom browser edits are retained while
+missing pairs inherit the defaults. Future saves record only deviations, with
+explicit zero overrides preserved across reload and preset export/import.
+
+The editor now compares against project defaults, counts only custom edits,
+and restores the authored values through either Reset control. Reset remains
+undoable. The original submitted preset is preserved in
+[defaults.json](roo-pair-spacing/defaults.json).
+
+Focused checks cover exact preset fidelity, legacy settings, fresh browsers,
+zero overrides, cross-tab refresh, loading-title layout, both palettes and
+BONUS layout parity. Real-browser editor checks passed default values, numeric
+editing, zero persistence/export, per-pair reset, reset all, undo and comparison
+with no console warnings or errors. Production build and the 963,309,655-byte
+release-size check pass. Full-render Flats & Pipes and its Pause menu passed at
+720p and MAX/native with a clean console. [Editor capture](roo-pair-spacing/defaults-editor.png),
+[native menu](roo-pair-spacing/defaults-game-native.png).

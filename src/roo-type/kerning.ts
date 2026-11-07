@@ -5,13 +5,13 @@ export const ROO_PAIR_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !?.,:;/
 export const isRooPair = (pair: string): boolean => pair.length === 2 && [...pair].every(char => ROO_PAIR_CHARACTERS.includes(char));
 export const roundRooSpacing = (value: number): number => Math.round(Math.max(-ROO_PAIR_LIMIT, Math.min(ROO_PAIR_LIMIT, value)) * 1000) / 1000;
 
-export function normalizeRooPairs(raw: unknown): RooPairSpacing {
+export function normalizeRooPairs(raw: unknown, keepZero = false): RooPairSpacing {
   const pairs: Record<string, number> = {};
   if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
     for (const [pair, value] of Object.entries(raw)) {
       if (isRooPair(pair) && typeof value === 'number' && Number.isFinite(value)) {
         const rounded = roundRooSpacing(value);
-        if (rounded) pairs[pair] = rounded;
+        if (rounded || keepZero) pairs[pair] = rounded;
       }
     }
   }

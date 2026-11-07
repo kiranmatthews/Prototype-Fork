@@ -1,8 +1,9 @@
 import type { RooAtlasMetrics } from './bake';
 import type { RooPairSpacing } from './kerning';
+import { ROO_PAIR_SPACING_DEFAULTS } from './kerning-defaults';
 
 // Pure layout shared by DOM/Canvas menus and the loading worker.
-export function layoutRooAtlas(metrics:RooAtlasMetrics,raw:string,tracking=0,pairSpacing:RooPairSpacing={}) {
+export function layoutRooAtlas(metrics:RooAtlasMetrics,raw:string,tracking=0,pairSpacing:RooPairSpacing=ROO_PAIR_SPACING_DEFAULTS) {
   const text=raw.toUpperCase();
   const glyphs:Array<{char:string;x:number;y:number;sx:number;sy:number}>=[];
   const optical=metrics.layouts?.[text];

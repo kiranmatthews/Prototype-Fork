@@ -4,6 +4,7 @@ import { layoutRooAtlas, RooAtlasPainter, rooAtlasGlyphRect } from './atlas';
 import { getRooAppearance, setRooAppearance, rooAppearanceIsSaved, ROO_APPEARANCE_EVENT } from './settings';
 import { exportRooPairs, isRooPair, pairsInText, parseRooPairs, roundRooSpacing, type RooPairSpacing } from './kerning';
 import { analyzeRooPair, loadKerningImage } from './kerning-analysis';
+import { getRooPairEdits, rooPairPreset, ROO_PAIR_SPACING_DEFAULTS } from './kerning-defaults';
 
 const COMMON = ['AV', 'VA', 'WA', 'AW', 'TA', 'AT', 'AY', 'YA', 'LT', 'LY', 'TY', 'TO', 'YO', 'OO', 'RO', 'BO', 'ON', 'NU', 'US', 'GA', 'ME', 'OV', 'VE', 'ER', '11', '10', '00', '0/', '/2', '23', '99', '1:', ':0'];
 const labelPair = (pair: string) => pair.replace(/ /g, '␣');
@@ -26,13 +27,13 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
         <section class="kern-inspector" aria-label="Pair preview">
           <div class="kern-stage-toolbar"><span class="kern-section-title">02 / FIND THE SWEET SPOT</span><div><button id="kern-undo" aria-label="Undo pair spacing" title="Undo (⌘/Ctrl Z)" disabled>↶ Undo</button><button id="kern-redo" aria-label="Redo pair spacing" title="Redo (⌘/Ctrl Shift Z)" disabled>↷</button></div></div>
           <div class="kern-stage" id="kern-stage"><canvas id="kern-canvas" tabindex="0" role="slider" aria-label="Pair spacing. Drag horizontally or use left and right arrows." aria-valuemin="-30" aria-valuemax="30" aria-valuenow="0"></canvas><span class="kern-stage-label" id="kern-stage-label"></span><span class="kern-drag-hint">↔ Drag to adjust · ← → fine tune · Shift for larger steps</span></div>
-          <div class="kern-preview-tools"><label>Color<select id="kern-palette"><option value="counter">Gold / vermilion</option><option value="bonus">Green / cobalt</option></select></label><label class="kern-check"><input id="kern-guides" type="checkbox" checked>Guides</label><label class="kern-check"><input id="kern-light" type="checkbox">Light backdrop</label><button id="kern-compare" aria-pressed="false">Compare original</button></div>
+          <div class="kern-preview-tools"><label>Color<select id="kern-palette"><option value="counter">Gold / vermilion</option><option value="bonus">Green / cobalt</option></select></label><label class="kern-check"><input id="kern-guides" type="checkbox" checked>Guides</label><label class="kern-check"><input id="kern-light" type="checkbox">Light backdrop</label><button id="kern-compare" aria-pressed="false">Compare defaults</button></div>
         </section>
         <section class="kern-context" aria-label="Preview in words"><div class="kern-section-title">03 / CHECK IT IN CONTEXT</div>
           <label for="kern-text">Your text<input id="kern-text" type="text" value="AVATAR WAY TO PLAY" maxlength="80" spellcheck="false" autocomplete="off"></label>
           <div class="kern-samples" role="group" aria-label="Sample text"><button data-sample="BONEMAN BONUS GAME OVER">Menus</button><button data-sample="AVATAR WAY TO PLAY">Tricky letters</button><button data-sample="0/23 11:00 99 100">Counters</button></div>
           <p id="kern-unsupported" class="kern-warning" hidden></p><div id="kern-word-pairs" class="kern-word-pairs" aria-label="Select a pair from your text"></div>
-          <div class="kern-proof"><span>Original</span><canvas id="kern-original" aria-label="Text with original pair spacing"></canvas><span>With your edits</span><canvas id="kern-current" aria-label="Text with your pair adjustments"></canvas></div>
+          <div class="kern-proof"><span>Project defaults</span><canvas id="kern-original" aria-label="Text with default pair spacing"></canvas><span>With your edits</span><canvas id="kern-current" aria-label="Text with your pair adjustments"></canvas></div>
           <p class="kern-small">Preview at 32px cap height. Long text scrolls horizontally. Click a pair above to edit it.</p>
         </section>
       </div>
@@ -63,6 +64,8 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
   let drawing: { cap: number } = { cap: 180 }, analysis: ReturnType<typeof analyzeRooPair> = null;
   let comparing = false;
   const current = () => getRooAppearance().pairSpacing[selected] ?? 0;
+  const defaultValue = () => ROO_PAIR_SPACING_DEFAULTS[selected] ?? 0;
+  const edits = () => getRooPairEdits(getRooAppearance().pairSpacing);
   const palette = () => input('palette').value as 'bonus' | 'counter';
   const message = (text: string) => { el('message').textContent = text; };
   for (const id of ['first', 'second']) {
@@ -91,7 +94,7 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
   }
   function candidates() {
     const search = input('search').value.toUpperCase();
-    const pairs = filter === 'edited' ? Object.keys(getRooAppearance().pairSpacing).sort() : filter === 'common' ? COMMON : pairsInText(input('text').value);
+    const pairs = filter === 'edited' ? Object.keys(edits()).sort() : filter === 'common' ? COMMON : pairsInText(input('text').value);
     if (search.length === 2 && isRooPair(search)) return [search];
     if (search && filter !== 'edited') return [...new Set([...pairs, ...Object.keys(ROO_ATLAS_METRICS.counter.glyphs).flatMap(char => [search + char, char + search])])].filter(isRooPair).filter(pair => pair.includes(search));
     return pairs.filter(pair => pair.includes(search));
@@ -100,7 +103,7 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     const b = document.createElement('button'); b.type = 'button'; b.dataset.pair = pair;
     b.setAttribute('aria-pressed', String(selected === pair)); b.setAttribute('aria-label', `Edit ${labelPair(pair)} spacing`);
     const name = document.createElement('strong'); name.textContent = labelPair(pair); b.append(name);
-    if (!compact) { const value = getRooAppearance().pairSpacing[pair] ?? 0, badge = document.createElement('span'); badge.textContent = value ? amount(value) : '—'; badge.className = value ? 'kern-edited' : ''; b.append(badge); }
+    if (!compact) { const value = getRooAppearance().pairSpacing[pair] ?? 0, edited = value !== (ROO_PAIR_SPACING_DEFAULTS[pair] ?? 0), badge = document.createElement('span'); badge.textContent = value || edited ? amount(value) : '—'; badge.className = edited ? 'kern-edited' : ''; b.append(badge); }
     b.addEventListener('click', () => selectPair(pair)); return b;
   }
   function renderPairs() {
@@ -111,7 +114,7 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     list.scrollTop = scroll;
     const wordPairs = el('word-pairs'); wordPairs.replaceChildren(...pairsInText(input('text').value).map(pair => pairButton(pair, true)));
     if (focus) { const group = wasWord ? wordPairs : list; [...group.querySelectorAll<HTMLButtonElement>('button')].find(b => b.dataset.pair === focus)?.focus({ preventScroll: true }); }
-    el('count').textContent = String(Object.keys(getRooAppearance().pairSpacing).length);
+    el('count').textContent = String(Object.keys(edits()).length);
     for (const b of root.querySelectorAll<HTMLButtonElement>('[data-filter]')) b.setAttribute('aria-pressed', String(b.dataset.filter === filter));
   }
   function setupCanvas(target: HTMLCanvasElement, width: number, height: number) {
@@ -126,9 +129,9 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     const width = canvas.clientWidth, height = canvas.clientHeight, ctx = setupCanvas(canvas, width, height);
     if (!image || imagePalette !== palette()) return;
     const metrics = ROO_ATLAS_METRICS[palette()], tracking = getRooAppearance().tracking;
-    const pairs = comparing ? {} : getRooAppearance().pairSpacing;
+    const pairs = comparing ? ROO_PAIR_SPACING_DEFAULTS : getRooAppearance().pairSpacing;
     const layout = layoutRooAtlas(metrics, selected, tracking, pairs)!;
-    const original = layoutRooAtlas(metrics, selected, tracking, {})!;
+    const original = layoutRooAtlas(metrics, selected, tracking, ROO_PAIR_SPACING_DEFAULTS)!;
     // Anchor the first letter and reserve the full edit range: no zoom or recentering while dragging.
     const span = Math.max(1.15, original.width + .6), cap = Math.min(238, (width - 76) / span, height - 106);
     const x = (width - original.width * cap) / 2 - original.min * cap - .15 * cap, y = (height - cap) / 2;
@@ -149,7 +152,7 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
       }
       ctx.globalAlpha = 1;
     };
-    if (input('guides').checked && current() && !comparing) drawGlyphs(original, .14);
+    if (input('guides').checked && current() !== defaultValue() && !comparing) drawGlyphs(original, .14);
     drawGlyphs(layout, 1);
     if (input('guides').checked) {
       for (const entry of layout.glyphs) {
@@ -160,7 +163,7 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     }
     canvas.setAttribute('aria-valuenow', String(current() * 100));
     canvas.setAttribute('aria-valuetext', `${labelPair(selected)}, ${amount(current())} pixels at 100 pixel cap height`);
-    el('stage-label').textContent = `${labelPair(selected)} / ${comparing ? 'ORIGINAL' : 'LIVE'} · ${Math.round(cap)}px cap`;
+    el('stage-label').textContent = `${labelPair(selected)} / ${comparing ? 'DEFAULTS' : 'LIVE'} · ${Math.round(cap)}px cap`;
     el('stage').classList.toggle('is-light', light);
   }
   function drawContext() {
@@ -170,12 +173,12 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     const warning = el('unsupported'); warning.hidden = !unsupported.length;
     warning.textContent = `No PNG glyph for ${unsupported.join(' ')}. Those characters are shown as spaces in the preview.`;
     const text = [...raw].map(char => metrics.glyphs[char] ? char : ' ').join('');
-    const settings = getRooAppearance(), layouts = [{}, settings.pairSpacing].map(pairs => layoutRooAtlas(metrics, text, settings.tracking, pairs)!);
+    const settings = getRooAppearance(), layouts = [ROO_PAIR_SPACING_DEFAULTS, settings.pairSpacing].map(pairs => layoutRooAtlas(metrics, text, settings.tracking, pairs)!);
     const width = Math.max(220, ...layouts.map(layout => layout.width * 32 + 24));
     for (const [i, id] of ['original', 'current'].entries()) {
       const target = el<HTMLCanvasElement>(id); target.style.width = `${Math.ceil(width)}px`;
       const ctx = setupCanvas(target, width, 58);
-      painter.draw(ctx, text, 12, 29, { size: 32, palette: palette(), pairSpacing: i ? settings.pairSpacing : {}, lightPosition: 0 });
+      painter.draw(ctx, text, 12, 29, { size: 32, palette: palette(), pairSpacing: i ? settings.pairSpacing : ROO_PAIR_SPACING_DEFAULTS, lightPosition: 0 });
     }
   }
   function updateAnalysis() {
@@ -195,14 +198,14 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     } catch (error) { if (version === loadVersion) message(String(error)); }
   }
   function refresh() {
-    const value = current(), count = Object.keys(getRooAppearance().pairSpacing).length;
+    const value = current(), count = Object.keys(edits()).length, isDefault = value === defaultValue();
     input('first').value = selected[0]; input('second').value = selected[1];
     input('range').value = (value * 100).toFixed(1);
     if (document.activeElement !== input('value')) input('value').value = (value * 100).toFixed(1);
-    el('effect').textContent = !value ? 'Original spacing for this pair.' : `${Math.abs(value * 100).toFixed(1)}px ${value < 0 ? 'closer' : 'farther apart'} at 100px. Scales with the text.`;
-    button('reset').disabled = !value; button('reset-all').disabled = !count;
+    el('effect').textContent = isDefault ? `Project default · ${amount(value)}px at 100px cap height.` : !value ? 'No pair adjustment. Reset restores the project default.' : `${Math.abs(value * 100).toFixed(1)}px ${value < 0 ? 'closer' : 'farther apart'} at 100px. Scales with the text.`;
+    button('reset').disabled = isDefault; button('reset-all').disabled = !count;
     button('undo').disabled = !undo.length; button('redo').disabled = !redo.length;
-    button('compare').setAttribute('aria-pressed', String(comparing)); button('compare').textContent = comparing ? 'Viewing original · return' : 'Compare original';
+    button('compare').setAttribute('aria-pressed', String(comparing)); button('compare').textContent = comparing ? 'Viewing defaults · return' : 'Compare defaults';
     for (const id of ['value', 'range', 'minus', 'plus']) input(id).disabled = comparing;
     el('save').textContent = rooAppearanceIsSaved() ? '● Saved in this browser · live in open game tabs' : 'Session only · browser storage unavailable. Export to keep your edits.';
     el('save').classList.toggle('kern-warning', !rooAppearanceIsSaved());
@@ -217,8 +220,8 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
   input('range').onpointerdown = () => { gesture = getRooAppearance().pairSpacing; };
   input('range').oninput = () => change(input('range').valueAsNumber / 100, !gesture);
   input('range').onchange = endGesture; input('range').onblur = endGesture;
-  button('reset').onclick = () => change(0);
-  button('reset-all').onclick = () => { const before = getRooAppearance().pairSpacing; write({}); remember(before); message('All pair edits reset. Undo brings them back.'); refresh(); };
+  button('reset').onclick = () => change(defaultValue());
+  button('reset-all').onclick = () => { const before = getRooAppearance().pairSpacing; write(ROO_PAIR_SPACING_DEFAULTS); remember(before); message('Project defaults restored. Undo brings your edits back.'); refresh(); };
   button('suggest').onclick = () => { if (analysis) { change(analysis.suggestion); message(`Applied the optical suggestion for ${labelPair(selected)}.`); } };
   button('undo').onclick = () => { endGesture(); const before = undo.pop(); if (before) { redo.push(getRooAppearance().pairSpacing); write(before); refresh(); message('Undid pair spacing.'); } };
   button('redo').onclick = () => { endGesture(); const next = redo.pop(); if (next) { undo.push(getRooAppearance().pairSpacing); write(next); refresh(); message('Redid pair spacing.'); } };
@@ -247,7 +250,7 @@ export function createKerningEditor(root: HTMLElement, painter: RooAtlasPainter)
     if (event.key.toLowerCase() === 'z') { event.preventDefault(); button(event.shiftKey ? 'redo' : 'undo').click(); }
   });
   button('export').onclick = () => {
-    const url = URL.createObjectURL(new Blob([exportRooPairs(getRooAppearance().pairSpacing)], { type: 'application/json' }));
+    const url = URL.createObjectURL(new Blob([exportRooPairs(rooPairPreset(getRooAppearance().pairSpacing))], { type: 'application/json' }));
     const a = document.createElement('a'); a.href = url; a.download = 'roo-pair-spacing.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
     message('Exported pair adjustments. Import merges them into another browser.');
   };
