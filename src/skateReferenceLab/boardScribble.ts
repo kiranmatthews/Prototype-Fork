@@ -142,7 +142,9 @@ export class BoardScribbleEffect {
     this.texture.generateMipmaps = false;
     // Keep ink at the prop's depth: foreground limbs and level geometry occlude
     // it normally. Drawing late must not turn it into a screen-space overlay.
-    const material = new THREE.SpriteMaterial({map:this.texture, transparent:false,
+    // Use the late pass without alpha blending. Floor/grid colour cannot cut
+    // the ink, while the character's existing depth still occludes it.
+    const material = new THREE.SpriteMaterial({map:this.texture, transparent:true, blending:THREE.NoBlending,
       alphaTest:.35, depthTest:true, depthWrite:false, toneMapped:false, fog:false});
     // Split the card at the floor and change only vertex depth below that line.
     // Keeping clip-space XY/W and UVs preserves the drawing's screen outline.

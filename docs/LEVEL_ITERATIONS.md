@@ -9138,3 +9138,43 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   screenshots, browser console, build log and validation summary. Temporary QA
   tab/served recording fixtures removed, heavy leases released, user tab and
   port 5199 retained. Local-only checkpoint; no integration, push or publishing.
+
+
+## Skate equipment — keep the deck above the floor
+
+- 7 November 2026 NZDT: approximately eighteen minutes prompt-to-validated
+  playable. Standing/running placement and pickup now constrain the real deck,
+  wheels and trucks against the current support plane after pose crossfades.
+  The board keeps its source angle and dimensions; the minimum normal-direction
+  lift provides 2 mm clearance, with a 12 mm smooth contact region.
+- Existing hand and deck-foot contacts follow that lift through the shared
+  two-bone IK solver, preserving wrist/ankle orientation. The torso and other
+  planted foot remain authored. The source clock, controller/tuning, deformation
+  profiles and one-frame/reversible scribble timing are unchanged. A and B share
+  the correction so their comparison continues to isolate the ink effect.
+- Ink now uses a late cutout pass without blending or depth writes. The plaza
+  floor grid no longer writes depth, allowing ink over the floor/grid while
+  foreground limbs/geometry still occlude it. The existing support projection
+  shader, PNG dimensions and stroke weight remain intact.
+- Focused checks: 1,620 120 Hz samples across all four clips and three flat/
+  raised/sloped support frames clear the floor by at least 2 mm; original
+  penetration reached 0.789 m. Independent world-vertex checks confirm actual
+  geometry, unchanged board angle/scale and head/gameplay position, late mesh
+  adoption, and finite contact motion. Native replay adds 202 actual equipment
+  and crossfade frames within the existing 1,980 movement comparisons.
+- The 860-frame ownership replay retains exact A/B transforms, source clocks,
+  physics and board fades, with only the authorized ground/contact transforms
+  excluded from the historical-source comparison. Cancellation/re-hold, both
+  dismount cues, bails and all existing ownership checks pass. A 48-case
+  four-sample GPU test with the floor grid reports zero lost ink pixels and
+  zero overwritten foreground pixels; the uncorrected negative control loses
+  up to 1,309 pixels.
+- Real browser review at normal/MAX includes side-view standing placement and
+  pickup with ink disabled, running placement and floor overlay. Recorded and
+  inspected the actual unpaused standing sequence. No console warnings/errors.
+  Production type-check/build, isolated local build and whitespace pass; no
+  local study/private motion assets enter production output.
+- Evidence: external `skate-board-ground/` contains native/build logs, GPU
+  results, screenshots, real-time video and captured frame review. Temporary
+  QA tab and served fixtures removed; heavy leases released. User tab/server
+  remain on port 5199. Local-only commit; no integration, push or publication.

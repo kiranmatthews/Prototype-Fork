@@ -8,6 +8,7 @@ import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
 import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
 import {BoardScribbleSequence, MOUNT_CLEAR_DURATION, SCRIBBLE_DURATION} from './boardScribble';
 import {TUNING} from '../tuning';
+import {groundBoard} from './boardGrounding';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
@@ -54,6 +55,9 @@ export class PlayableSkateMotion {
   private readonly bodyScale: THREE.Vector3;
   private readonly boardScale: THREE.Vector3;
   private readonly boardMount: THREE.Object3D;
+  private readonly boardSupport = new THREE.Plane();
+  private readonly boardLift = new THREE.Vector3();
+  private boardGroundLift = 0;
   private readonly stop: () => void;
   // These observations are private in the full game and intentionally exposed
   // only to this opt-in local study, as in jump-browser-review.ts.
@@ -154,6 +158,7 @@ export class PlayableSkateMotion {
   dispose(): void {this.boardScribble.cancel(); this.stop(); this.opacity(1);}
   reset(): void {
     this.boardScribble.reset();
+    this.boardGroundLift=0;
     this.dismountInkStarted = this.baselineBoardVisible = false;
     this.baselineBoardAlpha = 1;
     this.phase = 'foot'; this.time = 0; this.clip = null;
@@ -198,6 +203,7 @@ export class PlayableSkateMotion {
   private pushName(part: string): string {return `R_PUSH${this.pushFast?'HSP':'LSP'}_HSTR_N_0_${part}`;}
 
   private update({deltaSeconds: dt, applyDeformations}: PlayerAnimationOverlayContext): void {
+    this.boardGroundLift=0;
     const p = this.p, mounted = Boolean(p.freeSkate || (!p.grounded && p.airFromSkate));
     if(!this.enabled && this.phase==='foot' && this.fade>=1) {
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.lastPose=null;return;
@@ -296,11 +302,47 @@ export class PlayableSkateMotion {
       this.body.quaternion.premultiply(support);
     }
     if (this.fromPose && this.fade < 1) this.blend(this.fromPose,smooth(this.fade));
+    this.fitEquipmentGround();
     this.opacity(this.phase==='mount' ? smooth(this.time/.10)
       : this.phase==='dismount' ? smooth((clipDuration(this.clip!)-this.time)/.14) : 1);
     this.retarget.board.visible = true;
     this.lastPose = this.capture();
     p.syncCharacterAppearance({upperArmRestAngleWeight:0});
+  }
+
+  private fitEquipmentGround(): void {
+    this.boardGroundLift=0;
+    const p=this.p;
+    if(!p.grounded || (this.phase!=='mount'&&this.phase!=='dismount'))return;
+    this.boardSupport.setFromNormalAndCoplanarPoint(p.groundHit?.normal ?? new THREE.Vector3(0,1,0),p.pos);
+    this.boardGroundLift=groundBoard(this.retarget.board,this.boardSupport,this.boardLift);
+    if(this.boardGroundLift<=0)return;
+    const rt=this.retarget,rig=rt.rig;
+    const src=(name:string)=>new THREE.Vector3(...rt.sampled[rt.data.bones.findIndex(b=>b.name===name)].slice(0,3));
+    const sourceBoard=src('SKATEBOARD_ROOT');
+    // Carry only existing contacts along with the board. The other planted
+    // foot and the torso keep their source pose; never lift the whole rider.
+    const hands=(['Left','Right'] as const).map(side=>({side,d:src(side==='Left'?'LEFTHAND':'RIGHTHAND').distanceTo(sourceBoard)}));
+    const nearest=hands.sort((a,b)=>a.d-b.d)[0];
+    const grip=smooth((sourceBoard.y-.24)/.22)*(1-smooth((nearest.d-.18)/.20));
+    const follow=(side:'Left'|'Right',arm:boolean,weight:number)=>{
+      if(weight<.001)return;
+      const root=rig.jointsById.get(`${arm?'shoulder':'hip'}${side}`)!.node;
+      const mid=rig.jointsById.get(`${arm?'elbow':'knee'}${side}`)!.node;
+      const end=rig.jointsById.get(`${arm?'wrist':'ankle'}${side}`)!.node;
+      const orientation=end.getWorldQuaternion(new THREE.Quaternion());
+      const target=end.getWorldPosition(new THREE.Vector3()).addScaledVector(this.boardLift,weight);
+      const pole=mid.getWorldPosition(new THREE.Vector3());
+      solveTwoBoneIk({root,mid,end,target,pole,accountForParentScale:true,tolerance:.001});
+      end.quaternion.copy(end.parent!.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(orientation);
+      end.updateWorldMatrix(false,true);
+    };
+    follow(nearest.side,true,grip);
+    for(const side of ['Left','Right'] as const){
+      const foot=src(side==='Left'?'LEFTFOOT':'RIGHTFOOT').sub(sourceBoard);
+      const deck=(1-smooth((sourceBoard.y-.16)/.16))*(1-smooth((Math.abs(foot.x)-.095)/.065))*(1-smooth((foot.y-.13)/.10));
+      follow(side,false,deck);
+    }
   }
 
   private fitSourceContacts(): void {
@@ -361,6 +403,6 @@ export class PlayableSkateMotion {
     const p=this.p;
     return {phase:this.phase, source:this.sourceName, time:+this.time.toFixed(3), fade:+this.fade.toFixed(3),
       enabled:this.enabled, speed:+p.speed.toFixed(3), grounded:p.grounded, mounted:p.freeSkate,
-      boardVisible:this.retarget.board.visible, position:p.pos.toArray(), visits:Object.fromEntries(this.visits)};
+      boardVisible:this.retarget.board.visible, boardGroundLift:+this.boardGroundLift.toFixed(4), position:p.pos.toArray(), visits:Object.fromEntries(this.visits)};
   }
 }

@@ -24,15 +24,21 @@ try {
       return createCharacterAnimationRuntime(p,createPlayerStarterAnimationSuite(binding.definition));
     });
     const resetAll=()=>players.forEach((p,i)=>{p.enterLevel('scribble-test');p.respawn(level,true);p.freeSkate=false;motions[i].reset();runtimes[i].restart();});
-    const pose=(motion)=>motion.nodes.flatMap(n=>[...n.position.toArray(),...n.quaternion.toArray(),...n.scale.toArray()]);
-    const comparePose=(x,y,message)=>{const aa=pose(x),bb=pose(y);assert.equal(aa.length,bb.length);aa.forEach((v,i)=>assert.ok(Math.abs(v-bb[i])<1e-9,`${message} transform ${i}: ${v}/${bb[i]}`));};
+    const contactIndices=new Set(['shoulder','elbow','wrist','hip','knee','ankle'].flatMap(name=>['Left','Right'].map(side=>pre.nodes.indexOf(pre.retarget.rig.jointsById.get(name+side).node))));
+    const boardIndex=pre.nodes.indexOf(pre.retarget.board);
+    // A/B still share every transform. Historical comparisons exclude only
+    // the newly authorized board lift and contact-chain rotation corrections.
+    const pose=(motion,contacts=true)=>motion.nodes.flatMap((n,i)=>[
+      ...(contacts||i!==boardIndex?n.position.toArray():[]),
+      ...(contacts||!contactIndices.has(i)?n.quaternion.toArray():[]),...n.scale.toArray()]);
+    const comparePose=(x,y,message,contacts=true)=>{const aa=pose(x,contacts),bb=pose(y,contacts);assert.equal(aa.length,bb.length);aa.forEach((v,i)=>assert.ok(Math.abs(v-bb[i])<1e-9,`${message} transform ${i}: ${v}/${bb[i]}`));};
     resetAll();let held=false,poseFrames=0,toggleChecks=0;const toggled=new Set();
     for(let frame=0;frame<660;frame++){
       const time=frame/60,jump=time>.4&&time<3.5;
       const input=makeInput({moveY:time<4.8?1:0,jumpHeld:jump,jumpPressed:jump&&!held,jumpReleased:!jump&&held,grabHeld:time>4.8&&time<8.4});held=jump;
       for(const p of players){p.rawInput=input;p.step(1/60,input,level);}level.update(1/60);
-      comparePose(pre,accepted,`pre-scribble baseline ${frame}`);
-      comparePose(ink,accepted,`scribble pose ${frame}`);poseFrames++;
+      comparePose(pre,accepted,`historical motion outside ground contacts ${frame}`,false);
+      comparePose(ink,pre,`scribble pose ${frame}`);poseFrames++;
       for(const motion of [pre,ink])for(const key of ['phase','time','sourceName'])assert.equal(motion[key],accepted[key],`${key} changed at ${frame}`);
       assert.equal(pre.retarget.board.visible,accepted.retarget.board.visible,`A board visibility ${frame}`);
       pre.boardMaterials.forEach((v,i)=>assert.equal(v.material.opacity,accepted.boardMaterials[i].material.opacity,`A opacity ${frame}`));
@@ -46,7 +52,7 @@ try {
         assert.equal(ink.retarget.board.visible,accepted.retarget.board.visible);
         ink.boardMaterials.forEach((v,i)=>assert.equal(v.material.opacity,accepted.boardMaterials[i].material.opacity));
         ink.scribbles=true;assert.equal(ink.boardScribble.elapsed,elapsed);assert.equal(ink.time,time);assert.equal(ink.boardScribble.serial,serial);
-        comparePose(ink,accepted,`paused A/B ${frame}`);toggleChecks++;
+        comparePose(ink,pre,`paused A/B ${frame}`);toggleChecks++;
       }
     }
     assert.equal(ink.boardScribble.appearances,1);assert.equal(ink.boardScribble.disappearances,1);assert.ok(toggleChecks>=4);
@@ -70,7 +76,8 @@ try {
         const cancelling=f>=18&&f<21,held=releaseJump?f<18:true;
         const input=makeInput({moveY:cancelling?0:1,jumpHeld:held,jumpPressed:held&&!wasHeld,jumpReleased:!held&&wasHeld});wasHeld=held;
         for(const p of players){p.rawInput=input;p.step(1/60,input,level);}level.update(1/60);
-        comparePose(ink,accepted,`hold/cancel pose ${releaseJump}/${f}`);poseFrames++;
+        comparePose(ink,pre,`hold/cancel A/B pose ${releaseJump}/${f}`);
+        comparePose(ink,accepted,`hold/cancel historical motion ${releaseJump}/${f}`,false);poseFrames++;
         assert.ok(b.pos.distanceTo(legacy.pos)<1e-9);
         for(const key of ['speed','vVel','grounded','state','freeSkate','airFromSkate'])assert.equal(b[key],legacy[key]);
         const effect=ink.boardScribble;

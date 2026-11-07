@@ -28,8 +28,8 @@ from `tools/site-entries.mjs`. Its optional isolated build goes to the ignored
   off. R resets. The native hold threshold and tuning are unchanged.
 - Motion selector: new extracted Skate presentation or original D skating.
 - Compare selector / **1** and **2**: **A · Pre-scribble** restores the accepted
-  Skate presentation and board fades from `22cebbe2`; **B · Scribble** adds ink
-  over the same mount/dismount. Switching also works while paused, without
+  Skate board fades from `22cebbe2`; **B · Scribble** adds ink over the same
+  mount/dismount. Both versions share the corrected board/floor contacts. Switching also works while paused, without
   advancing or restarting the source clip. **B** triggers a native test bail.
 - Riding style: relaxed, loose or aggressive source stance; Loose also selects
   the longer loose landing.
@@ -65,6 +65,18 @@ descending air blends toward the source catch pose. On-foot jumps and other
 actions can interrupt equipment handling. Board visibility is limited to skating
 and finite mount/dismount; short fades cover the source clips' carried endpoints.
 
+Mount and dismount now have a final board support constraint after crossfading.
+It measures every visible deck, wheel and truck vertex against the native
+support plane, including hardware that loads later and live board-size edits.
+The smallest translation along the surface normal clears the floor by 2 mm;
+a 12 mm smooth contact region avoids a hard onset. The source board rotation,
+dimensions, clip timing and gameplay position remain unchanged. A tilted deck
+rests on its actual tip or wheel instead of the corner of an approximate box.
+Existing hand/deck-foot contacts follow the correction with the shared two-bone
+IK solve, preserving wrist/ankle orientation. The other planted foot, torso and
+independent segment elasticity retain their authored motion. This correction
+is shared by A and B and applies only to grounded equipment handling.
+
 ## Punk board scribbles
 
 The atlas contains 32 independently drawn thin-ink PNG frames. Playback now
@@ -91,11 +103,13 @@ catch, frame 26 / 0.433 seconds; small marks finish at frame 36 / 0.600 seconds.
 Running grows for eight ticks, hides the board at frame 32, and finishes its
 small marks at the hand catch, frame 56 / 0.933 seconds. Each has just one
 full-board tick. The deck stays visible during growth, then stays gone through
-the remaining source carry/settle. Source timing and motion are unchanged.
+the remaining source carry/settle. The source clock and ink cues are unchanged
+by the board support correction.
 
-The ink respects scene depth and does not write depth itself. Foreground limbs
-and level geometry stay in front of it; its late draw order does not override
-occlusion. Pixels that would fall below the player's current support surface
+The ink draws in the late pass without alpha blending or depth writes. The
+floor grid no longer writes depth, so the ink can draw over the floor/grid.
+Foreground limbs and other geometry still occlude it through normal depth
+testing; this is not an always-on-top overlay. Pixels that would fall below the player's current support surface
 project onto that surface along the viewing ray, with a 0.5 mm clearance.
 This removes the straight floor cut without shifting the drawing off the deck
 or changing its screen size, UVs or stroke width. It follows the actual support
@@ -144,9 +158,10 @@ consecutive keyboard mounts, release-to-jump, the source sequence and comparison
 controls, with no console warnings/errors. Visual acceptance remains with the user.
 
 `tools/test-board-scribble-ownership.mjs <private-motion.json>` also replays 860
-frames against the actual accepted pre-scribble source at `22cebbe2`, comparing
-every animation node's position, rotation and scale, source timing, movement,
-and A's board visibility/opacity. It includes held anticipation, direction cancellation and re-hold, short
+frames comparing every A/B animation transform, source timing, movement, and
+board visibility/opacity. The historical `22cebbe2` comparison excludes only
+the authorized board-position and contact-chain rotation corrections; all other
+transforms, scales, source clocks and A's original fades still match. It includes held anticipation, direction cancellation and re-hold, short
 release-to-jump, no stationary-jump preview, and exactly one committed apex.
 It checks paused A/B, native bails during
 mount/ride/dismount and recovery, arbitrary visibility changes, eight other
@@ -174,3 +189,17 @@ The previous four-sample GPU review checked 48 frame/view/surface combinations
 against the same ink with the floor hidden: zero missing ink pixels and zero
 overwritten foreground pixels. Disabling the ground correction reproduced the
 floor cut (up to 1,309 missing pixels). This iteration preserves that shader.
+
+`tools/test-skate-equipment-ground.mjs <private-motion.json>` samples all four
+mount/dismount clips at 120 Hz on flat, raised uphill and downhill support
+planes, with different headings. All 1,620 poses clear the floor by at least
+2 mm, compared with up to 0.789 m penetration before correction. An independent
+world-vertex measurement verifies the support calculation; board angle/scale,
+head position and gameplay position are unchanged. Late-arriving geometry is
+included and hidden alternatives are excluded. The native movement replay also
+checks 202 equipment/crossfade frames against the actual support plane.
+
+The updated floor/grid GPU probe passes 48 four-sample MSAA camera/surface/
+frame cases: zero lost ink pixels and zero overwritten foreground pixels.
+The floor-contact shader is preserved; only the ink's late pass and the grid's
+non-occluding depth policy change. Production and isolated local builds pass.

@@ -40,6 +40,8 @@ async function start() {
   scene.add(sun,sun.target);const rim=new THREE.DirectionalLight(0xf2fff7,1.5);rim.position.set(-3,3,-5);scene.add(rim);
   const level=new Level(scene,{id:'skate-playtest',name:SKATE_PLAYTEST_LEVEL.name,data:SKATE_PLAYTEST_LEVEL});
   const grid=new THREE.GridHelper(260,130,0x809375,0xaaba9d);grid.position.set(0,.006,-100);scene.add(grid);
+  // The floor grid is a guide, not an occluder for the board's ink overlay.
+  grid.material.depthWrite=false;
   const p=new Player(scene);p.setCharacterHeadStyle('skull');p.setCharacterRenderBatching(false);
   const motion=new PlayableSkateMotion(p,data);
   const ink = await new THREE.TextureLoader().loadAsync(new URL('./assets/board-scribble.png', import.meta.url).href);

@@ -5,11 +5,16 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const data=JSON.parse(await readFile(process.argv[2] || '.skate-reference-data/motion.json','utf8'));
 await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const {PlayableSkateMotion}=await server.ssrLoadModule('/src/skateReferenceLab/playableMotion.ts');
+  const {boardGroundClearance}=await server.ssrLoadModule('/src/skateReferenceLab/boardGrounding.ts');
   const {BoardScribbleSequence,BoardScribbleEffect,SCRIBBLE_FRAMES,SCRIBBLE_FPS,MOUNT_CLEAR_DURATION}=await server.ssrLoadModule('/src/skateReferenceLab/boardScribble.ts');
   // One full-board tick between the grow-in/out. Smaller drawings change;
   // the card and stroke width never scale, and visibility cannot retrigger ink.
   const clock=new BoardScribbleSequence(),root=new THREE.Group(),board=new THREE.Group();root.add(board);
   const effect=new BoardScribbleEffect(new THREE.Texture(),root,board,clock);
+  assert.equal(effect.sprite.material.transparent,true,'ink must draw after the floor/grid');
+  assert.equal(effect.sprite.material.blending,THREE.NoBlending,'late ink changed the cutout drawing');
+  assert.equal(effect.sprite.material.depthTest,true,'ink would cover foreground limbs');
+  assert.equal(effect.sprite.material.depthWrite,false);
   const camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(4,2,7);camera.lookAt(0,0,0);camera.updateMatrixWorld();
   clock.start(true);effect.update(camera);
   const quad=effect.sprite.scale.toArray(),cells=new Set(),inkFrames=[];
@@ -106,6 +111,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   p.respawn(level,true);control.respawn(level,true);
   let jump=false,frames=0,maxJointStep=0,previousHead=null; const stepByPhase={};
   const visits=new Set();
+  let groundedEquipmentFrames=0;
   for(let f=0;f<900;f++){
     const time=f/60,held=time>.4&&time<3.5 || time>11&&time<13;
     const input=makeInput({moveY:time<4.8 || time>10?1:0,jumpHeld:held,jumpPressed:held&&!jump,jumpReleased:!held&&jump,grabHeld:time>4.8&&time<8.4});jump=held;
@@ -118,6 +124,11 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     const h=p.animationRig.jointsById.get('head').node.getWorldPosition(new THREE.Vector3()).sub(p.pos);
     if(previousHead){const delta=h.distanceTo(previousHead);maxJointStep=Math.max(maxJointStep,delta);stepByPhase[source.phase]=Math.max(stepByPhase[source.phase]??0,delta);if(delta>.2)console.log('large-step',f,source.phase,delta);}previousHead=h;
     visits.add(source.phase);
+    if(p.grounded&&['mount','dismount'].includes(source.phase)){
+      const support=new THREE.Plane().setFromNormalAndCoplanarPoint(p.groundHit.normal,p.pos);
+      assert.ok(boardGroundClearance(source.retarget.board,support)>=.002-1e-7,`native crossfade put the board through the floor at ${f}`);
+      groundedEquipmentFrames++;
+    }
 
   }
   for(const state of ['mount','push','air','land','dismount'])assert.ok(visits.has(state),`missing ${state}`);
@@ -145,5 +156,6 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   for(let f=0;f<30;f++){const input=makeInput();p.rawInput=input;p.step(1/60,input,level);}
   assert.equal(source.phase,'foot');
   source.dispose();runtime.dispose();
-  console.log(JSON.stringify({frames,primaryFrames,visits:[...visits],interrupted:[...interrupted],maxJointStep,stepByPhase}));
+  assert.ok(groundedEquipmentFrames>150);
+  console.log(JSON.stringify({frames,primaryFrames,groundedEquipmentFrames,visits:[...visits],interrupted:[...interrupted],maxJointStep,stepByPhase}));
 },{levelEntry:{id:'skate-motion-test',name:'Skate motion test',data:{v:1,name:'Skate motion test',spawn:[0,.03,6],killY:-20,components:[{t:'platform',p:[0,-.5,-100],s:[1000,1,1000]},{t:'gate',p:[0,0,-400]}]}}});
