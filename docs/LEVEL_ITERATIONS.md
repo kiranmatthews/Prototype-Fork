@@ -10130,3 +10130,27 @@ gem in inventory. Layout audits passed at 1280×720, 1920×1080, 1024×768,
 `docs/desert-canyon/dusty-road/coloured-gem-{menus,stats,board}.png`.
 Final production build on the current published font defaults passed, as did
 the release-size check: 963,311,930 bytes within the 1 GB hosting budget.
+
+## 8 November 2026 — Text Tuning drawer scrolling
+
+Prompt: “in the main game debug the text tuning panel doesn't allow you to scroll down”.
+About six minutes to the first verified scrolling fix; release validation followed.
+
+The docked `<details>` panel's content wrapper did not resolve the scroll body's
+percentage height. Its content therefore grew to 1,697px inside a 939px drawer;
+wheel input left `scrollTop` at zero and the lower controls were off screen.
+The body now uses the existing viewport-bounded drawer height directly, keeping
+all scrolling inside Text Tuning. Standalone layout and saved settings are unchanged.
+
+Real wheel scrolling reaches Reset and Copy settings at the bottom at the normal
+viewport, 1280×720, 390×844 and 844×390. At 844×390 the scroll body is 368px tall
+and reaches `scrollTop=1328.5`, with its footer fully visible. Production build
+and 963,309,786-byte release-size check pass. The full-render bonus course also
+reaches the footer at 720p; the native renderer was inspected as well, with no
+console warnings or errors. No full suite was run.
+
+Evidence: [before](text-tuning-scroll/before.png),
+[desktop bottom](text-tuning-scroll/desktop-bottom.png),
+[short landscape bottom](text-tuning-scroll/compact-bottom.png),
+[full-render bottom](text-tuning-scroll/full-bottom.png),
+[native render mode](text-tuning-scroll/native-render-mode.png).

@@ -187,7 +187,8 @@ function installStyle(): void {
     .side-pane .hud-slider input[type=range] { min-width:0; }
     .side-pane .secondary-text-tuner { position:static; inset:auto; width:100%; height:100%; z-index:auto; }
     .side-pane .secondary-text-tuner > summary { display:none; }
-    .side-pane .secondary-text-tuner-body { width:100%; max-width:none; height:100%; max-height:100%; border-radius:0; overscroll-behavior:contain; }
+    /* The details content box does not resolve percentage heights for its scroll body. */
+    .side-pane .secondary-text-tuner-body { width:100%; max-width:none; height:var(--side-panel-height); max-height:var(--side-panel-height); border-radius:0; overscroll-behavior:contain; }
     body.tc-on .side-wrap { --side-tab-width:48px; }
     body.tc-on .side-tab { width:var(--side-tab-width); min-height:48px; padding:10px 4px; font-size:11px; }
     @media(max-height:600px) {

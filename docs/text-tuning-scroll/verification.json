@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-08",
+  "before": { "drawerHeight": 939, "bodyHeight": 1697, "scrollHeight": 1697, "scrollTopAfterWheel": 0 },
+  "after": { "drawerHeight": 939, "bodyHeight": 937, "scrollHeight": 1697, "scrollTopAfterWheel": 759.5, "footerVisible": true },
+  "viewportChecks": [
+    { "viewport": [1280, 720], "bodyHeight": 698, "scrollTop": 998.5, "footerVisible": true },
+    { "viewport": [390, 844], "bodyHeight": 822, "scrollTop": 874.5, "footerVisible": true },
+    { "viewport": [844, 390], "bodyHeight": 368, "scrollTop": 1328.5, "footerVisible": true }
+  ],
+  "fullRenderer": { "level": "bonus-rolling-bones", "resolution": "720p", "scrollTop": 998.5, "footerVisible": true, "nativePipelineInspected": true },
+  "validation": { "productionBuild": "passed", "releaseBytes": 963309786, "browserConsoleErrors": [] }
+}
