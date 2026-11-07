@@ -4,7 +4,9 @@ import {skateboardSettings} from '../skateboard/settings';
 export const SCRIBBLE_FRAMES = 32;
 export const SCRIBBLE_FPS = 60;
 export const SCRIBBLE_DURATION = SCRIBBLE_FRAMES / SCRIBBLE_FPS;
-const REVEAL_FRAME = 2;
+// The full-size drawings must read before the prop can cover their centre.
+// Foreground geometry still depth-tests normally throughout the burst.
+const REVEAL_FRAME = 8;
 // Thirty-two source drawings. Every sample uses the same 384 × 128 pixels.
 // Measured UV origins / ink anchors accommodate the hand-drawn row spacing,
 // keeping the ink centred without rescaling a drawing or changing pen weight.
@@ -114,8 +116,8 @@ export class BoardScribbleEffect {
     if (!this.clock.active) return;
     const newBurst = this.serial !== this.clock.serial;
     this.board.updateWorldMatrix(true, false);
-    // Both bursts follow the source prop. Dismount ink clears at the hand catch,
-    // before the source animation relinquishes the board to the idle pose.
+    // Both bursts follow the source prop, including the standing pickup's short
+    // ink tail after the hand catch, before its unchanged carry/settle ends.
     {
       const s = skateboardSettings.value, scale = s.overallScale;
       const y = (s.boardToGroundDistance + .01) * scale;

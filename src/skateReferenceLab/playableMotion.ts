@@ -13,7 +13,8 @@ type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' 
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
 // Zero-based 60 Hz source cues, checked against Bone Man's retargeted soles.
-// Keep the deck visible until both feet clear; finish at the existing catch.
+// Keep the deck visible until both feet clear. Very short pickups need a small
+// ink tail after the catch so the burst survives real-time rendering.
 const dismountInkFrames: Readonly<Record<string, {feetClear: number; catch: number}>> = {
   BR_DISMOUNT_LO_INTO_STAND_0: {feetClear: 24, catch: 26},
   BR_DISMOUNT_LO_INTO_RUN_FWD: {feetClear: 24, catch: 56},
@@ -111,9 +112,9 @@ export class PlayableSkateMotion {
     if (this.phase === 'dismount' && !this.dismountInkStarted && this.clip) {
       const cue = dismountInkFrames[this.sourceName];
       const start = cue.feetClear / this.clip.fps;
-      // Standing has a very short airborne pickup. Compress only the ink;
-      // source motion, foot contacts and catch timing remain untouched.
-      const duration = (cue.catch - cue.feetClear) / this.clip.fps;
+      // A two-tick burst can start and finish between rendered frames. Preserve
+      // a readable 0.2 s minimum without changing the source pose or its clock.
+      const duration = Math.max(.2, (cue.catch - cue.feetClear) / this.clip.fps);
       if (this.time + 1e-7 >= start) {
         ink.start(false, duration); ink.step(Math.max(0, this.time - start));
         this.dismountInkStarted = true;

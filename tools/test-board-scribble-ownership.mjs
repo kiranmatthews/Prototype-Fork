@@ -64,7 +64,7 @@ try {
     // Review both complete source clips through the installed final callback.
     // Catch samples were measured from source board/right-hand separation.
     const catchResults=[];
-    for(const [name,catchFrame,startFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,24],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24]]){
+    for(const [name,catchFrame,startFrame,endFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,24,36],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24,56]]){
       freshB();stepB();ink.enter('dismount',name);
       let first=-1,last=-1;
       const source=data.clips.find(c=>c.name===name);
@@ -76,8 +76,8 @@ try {
           assert.equal(ink.retarget.board.visible,true,`${name}: deck vanished before feet cleared`);
         }
         if(frame>=startFrame&&ink.phase==='dismount')assert.equal(ink.retarget.board.visible,false,`${name}: vanished board reappeared at ${frame}`);
+        if(frame>=endFrame)assert.equal(ink.boardScribble.active,false,`${name}: ink did not finish at ${frame}`);
         if(frame>=catchFrame){
-          assert.equal(ink.boardScribble.active,false,`${name}: ink passed the hand catch at ${frame}`);
           assert.equal(ink.retarget.board.visible,false,`${name}: board survived catch at ${frame}`);
         }
         if(frame===catchFrame){
@@ -85,8 +85,8 @@ try {
           ink.scribbles=true;assert.equal(ink.retarget.board.visible,false,'B revived the caught board after A/B');
         }
       }
-      assert.equal(first,startFrame);assert.equal(last,catchFrame-1);
-      assert.deepEqual(counts(),[0,1]);catchResults.push({name,first,last,catchFrame});
+      assert.equal(first,startFrame);assert.equal(last,endFrame-1);
+      assert.deepEqual(counts(),[0,1]);catchResults.push({name,first,last,catchFrame,endFrame});
     }
     const bailResults=[];
     for(const [phase,age,masked] of [['mount',.10,false],['ride',.1,false],['ride',.1,true],['dismount',.20,false],['dismount',.4,false],['dismount',1.45,false]]){

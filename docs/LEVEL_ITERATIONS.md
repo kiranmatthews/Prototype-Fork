@@ -9041,3 +9041,33 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   visible board before foot clearance and clean catch/settle afterwards.
   Console clear. Evidence: external `skate-scribble-depth/`. Local port 5199
   remains available; nothing integrated, pushed or published.
+
+
+## Skate scribbles — restore real-time visibility
+
+- 7 November 2026 NZDT: approximately fifteen minutes prompt-to-playable with
+  focused validation. The previous depth change let the board cover the mount
+  ink, while a two-tick standing dismount was too short to read. Mount now hides
+  the prop for all eight full-size drawings before revealing it (0.133 s).
+- Standing dismount retains its feet-clear start at source frame 24 / 0.400 s
+  and plays for 0.200 s, ending at frame 36. The user selected a small-drawing
+  tail after the frame-26 catch instead of slowing the pickup. Running retains
+  its frame 24–56 timing. Scene depth testing remains enabled. Source motions,
+  contacts, movement, tuning, PNG frames and A comparison are unchanged.
+- Both existing focused suites pass: 660 exact pose/clock/controller comparisons
+  against accepted pre-scribble source; both complete dismounts and their new
+  deadlines; paused A/B, six bail/recovery cases, arbitrary visibility and
+  other-owner guards; 1,980 paired native controller frames, atlas/fixed-size
+  and source-prop tracking checks.
+- Recorded the actual unpaused control demo at full/MAX native resolution.
+  The captured frames show readable mounting and standing dismounting bursts,
+  with foreground body/gloves intact. Also checked a native keyboard standing
+  mount, normal rendering, paused A/B and immediate bail cancellation. Console
+  clear. Video, frame sheet, screenshots and logs: external
+  `skate-scribble-visible/`. Static paused views alone were insufficient to
+  validate the prior visibility change.
+- Production type-check/build, isolated local build and whitespace pass. The
+  production output excludes the study entry, PNG and private motion JSON.
+  Recording/review fixtures were evidence-only and removed from local build
+  output by the clean build. Port 5199 remains live; no integration, push or
+  publication. Temporary QA tab closed and validation leases released.

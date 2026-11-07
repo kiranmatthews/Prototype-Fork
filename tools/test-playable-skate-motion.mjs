@@ -19,7 +19,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     effect.update(camera);cells.add(effect.sprite.material.map.offset.toArray().join(','));
     assert.deepEqual(effect.sprite.scale.toArray(),quad,'scribble is being scaled instead of redrawn');
     assert.ok(effect.sprite.visible);
-    if(f>=2)assert.equal(clock.boardVisible,true);
+    assert.equal(clock.boardVisible,f>=8,'board covered the full-size ink drawings');
   }
   assert.equal(cells.size,SCRIBBLE_FRAMES);
   clock.step(1/20);effect.update(camera);assert.equal(effect.sprite.visible,false);
@@ -34,7 +34,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   board.position.set(5,3,-2);effect.update(camera);
   assert.ok(effect.sprite.position.clone().sub(disappearancePosition).distanceTo(board.position)<1e-9,'pickup ink did not follow the board toward the hand');
   assert.ok(effect.sprite.scale.distanceTo(disappearanceScale)<1e-9,'following the pickup resized the ink');
-  const standingInkDuration=2/60;
+  const standingInkDuration=.2;
   clock.start(false,standingInkDuration);cells.clear();
   for(let f=0;f<SCRIBBLE_FRAMES;f++){
     if(f)clock.step(standingInkDuration/SCRIBBLE_FRAMES);

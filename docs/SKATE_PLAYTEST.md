@@ -65,15 +65,16 @@ and finite mount/dismount; short fades cover the source clips' carried endpoints
 
 The default board effect uses thirty-two independently drawn thin-ink PNG frames.
 Mounts and running dismounts play at **60 fps**, lasting 0.533 seconds. Standing
-dismounts sample the same atlas over the two simulation frames between the feet
-clearing the deck and the hand catch (0.033 seconds). Eight full-size source
-redraws have a long, slim deck silhouette; subsequent drawings use fewer,
-shorter strokes with the
-same pen weight. A single fixed-size billboard swaps atlas cells, never scales
+dismounts sample the same atlas over a readable 0.200 seconds; the small marks
+finish just after the hand catch without slowing the pickup. Eight full-size
+source redraws have a long, slim deck silhouette; subsequent drawings use fewer,
+shorter strokes with the same pen weight. A single fixed-size billboard swaps atlas cells, never scales
 down the artwork or fades it. Its long axis follows the board in the camera.
-The appearance switches under the full-size ink. Disappearance follows the
-source prop's pickup path, clearing at the first stable hand catch: source frame
-26 / 0.433 seconds for standing, 56 / 0.933 seconds for running. The effect starts
+The board appears after the eight full-size drawings (0.133 seconds), so it
+cannot cover their centre with its own depth. Disappearance follows the source
+prop's pickup path, clearing at frame 36 / 0.600 seconds for standing and at
+the hand catch, frame 56 / 0.933 seconds, for running. Standing catches at
+frame 26 / 0.433 seconds and has a short ink tail afterwards. The effect starts
 at frame 24 / 0.400 seconds for both clips, after both feet clear the deck.
 Until then the original board stays visible and there is no ink. The vanished
 board stays hidden through the remaining source carry/settle, including after
@@ -126,9 +127,16 @@ mount/ride/dismount and recovery, arbitrary visibility changes, eight other
 pose owners, death and reset. The temporary historical module is removed on
 exit; run this check separately from builds. Browser A/B and native bail review
 pass at normal and MAX/native resolution. Both dismount clips also verify the
-last ink frame precedes the catch, the board stays gone through the settle, and
+ink finishes at its expected deadline, the board stays gone through the settle, and
 paused A/B after the burst restores only A's original carried board.
 The feet-clear review keeps the board visible and ink inactive through source
 frame 23. A browser GPU probe also checks foreground occlusion at three depths:
 all 21,248 foreground pixels remain intact, while ink still covers the surface
 behind it. Disabling depth testing reproduces the original overlap failure.
+
+Visibility regression review records the unpaused full-render playtest at
+MAX/native resolution. The captured running mount and standing dismount show
+readable ink across multiple rendered frames, with the foreground body and
+gloves intact. Mount presentation keeps the board hidden for all eight large
+drawings; standing dismount has a 0.200-second minimum burst. These checks
+replace the earlier assumption that a paused image proved real-time visibility.
