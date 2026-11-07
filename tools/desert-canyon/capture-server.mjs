@@ -2,7 +2,7 @@
 // loopback only; no URLs, filenames or filesystem paths accepted from clients.
 import http from 'node:http';
 import {mkdir,writeFile} from 'node:fs/promises';
-const names={overview:'native-overview.png',start:'boardwalk-start.png',valley:'valley-extension.png',chute:'revised-rock-chute.png',creek:'revised-creek.png',opening:'revised-boardwalk.png'};
+const names={vista:'vista-native-gameplay.png',basin:'vista-basin.png',finish:'vista-finish.png',overview:'native-overview.png',start:'boardwalk-start.png',valley:'valley-extension.png',chute:'revised-rock-chute.png',creek:'revised-creek.png',opening:'revised-boardwalk.png'};
 const name=names[process.argv[2]??'overview'];
 if(!name)throw new Error('Choose overview, start, valley, chute, creek or opening');
 const target=new URL('../../docs/desert-canyon/'+name,import.meta.url);

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import type {CustomComponent,CustomLevelData,DecorKind} from '../level';
 import {lazySourceField} from './lazy-source';
+import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
 
 type Point=[number,number,number];
 const noise=new SimplexNoise(20261105);
@@ -37,21 +38,22 @@ const valleyKnots:Point[]=[
   [-56,-346,-1940],[-92,-369,-2010],[-57,-389,-2075],[8,-411,-2125],
   [61,-428,-2180],[49,-446,-2230],[0,-460,-2270],[0,-470,-2320],
 ];
-const curves=[upperKnots,canyonKnots,valleyKnots].map(knots=>{
+const curves=[upperKnots,canyonKnots,valleyKnots,VISTA_KNOTS].map(knots=>{
   const curve=new THREE.CatmullRomCurve3(knots.map(p=>new THREE.Vector3(...p)),false,'centripetal');
   curve.arcLengthDivisions=2400;return curve;
 });
 const lengths=curves.map(curve=>curve.getLength());
 export const DESERT_CANYON_START=lengths[0],DESERT_CANYON_END=lengths[0]+lengths[1];
+export const DESERT_VISTA_START=lengths[0]+lengths[1]+lengths[2];
 export const DESERT_LENGTH=lengths.reduce((sum,n)=>sum+n,0);
 const core=(s:number)=>DESERT_CANYON_START+s;
 const valley=(s:number)=>DESERT_CANYON_END+s;
 export const DESERT_GAPS=[{from:68,to:80,chargeFrom:43,releaseAt:66.5,name:'Boardwalk launch'},{from:core(67),to:core(73),chargeFrom:core(47),releaseAt:core(63),name:'Canyon rim jump'}];
-export const DESERT_CHECKPOINTS=[14,155,380,610,core(38),core(315),core(730),core(1100),valley(120),valley(400),valley(720),valley(1040),DESERT_LENGTH-70];
-export const DESERT_CHECKPOINT_NAMES=['Boardwalk start','Upper landing','Rim traverse','Overlook approach','Canyon rim','Sunlit narrows','Hoodoo garden','Pine valley','Cathedral ledge','Pine switchbacks','Creek bridge','Lower rock chute','Canyon finish'];
+export const DESERT_CHECKPOINTS=[14,155,380,610,core(38),core(315),core(730),core(1100),valley(120),valley(400),valley(720),valley(1040),DESERT_VISTA_START-70,DESERT_VISTA_START+400,DESERT_VISTA_START+820,DESERT_VISTA_START+1050,DESERT_LENGTH-95];
+export const DESERT_CHECKPOINT_NAMES=['Boardwalk start','Upper landing','Rim traverse','Overlook approach','Canyon rim','Sunlit narrows','Hoodoo garden','Pine valley','Cathedral ledge','Pine switchbacks','Creek bridge','Lower rock chute','Rim gateway','Eagle ledge','Forested basin','River overlook','Sunset promontory'];
 function routeAt(s:number){
-  const at=clamp(s,0,DESERT_LENGTH),index=at<DESERT_CANYON_START?0:at<DESERT_CANYON_END?1:2;
-  return {curve:curves[index],t:clamp((at-(index===0?0:index===1?DESERT_CANYON_START:DESERT_CANYON_END))/lengths[index])};
+  const at=clamp(s,0,DESERT_LENGTH),index=at<DESERT_CANYON_START?0:at<DESERT_CANYON_END?1:at<DESERT_VISTA_START?2:3;
+  return {curve:curves[index],t:clamp((at-(index===0?0:index===1?DESERT_CANYON_START:index===2?DESERT_CANYON_END:DESERT_VISTA_START))/lengths[index])};
 }
 export function desertPoint(s:number,offset=0):Point{
   const {curve,t}=routeAt(s),p=curve.getPointAt(t),d=curve.getTangentAt(t);
@@ -73,7 +75,7 @@ function segmentTree(indices:number[]):SegmentNode{
   return node;
 }
 const sampleTree=segmentTree(Array.from({length:count},(_,i)=>i));
-function elevationAtZ(z:number){
+export function elevationAtZ(z:number){
   let lo=0,hi=samples.length-1;
   while(hi-lo>1){const mid=(lo+hi)>>1;if(samples[mid].p[2]>z)lo=mid;else hi=mid;}
   const a=samples[lo],b=samples[hi],t=clamp((a.p[2]-z)/(a.p[2]-b.p[2]));
@@ -95,16 +97,19 @@ function nearest(x:number,z:number){
   return {s,y,distance:Math.sqrt(distance),x:px,z:pz};
 }
 export function desertWidth(s:number):number{
+  if(s>DESERT_VISTA_START)return 7.6+1.6*smooth(DESERT_LENGTH-100,DESERT_LENGTH,s);
   if(s<DESERT_CANYON_START)return 9-1.5*smooth(138,210,s);
-  if(s>DESERT_CANYON_END)return 8.8-1.2*smooth(60,180,s-DESERT_CANYON_END)+2.8*smooth(DESERT_LENGTH-80,DESERT_LENGTH,s);
+  if(s>DESERT_CANYON_END)return 8.8-1.2*smooth(60,180,s-DESERT_CANYON_END);
   const at=s-DESERT_CANYON_START;return 13-5*smooth(80,140,at)+3*smooth(350,520,at)+3*smooth(850,1050,at);
 }
 const creekOffset=(local:number)=>mix(-17,17,smooth(670,790,local));
 export function desertGround(x:number,z:number):number{
+  const longitudinal=elevationAtZ(z);
+  if(z<=-2420||(z<-2100&&Math.abs(x)>=500))return vistaHeight(x,z,longitudinal);
   const near=nearest(x,z),d=near.distance;
   // Blend distant hills onto a continuous longitudinal profile. Nearest-bend
   // Voronoi boundaries must not become vertical cliffs between switchbacks.
-  const longitudinal=elevationAtZ(z),far=smooth(18,70,d),baseY=mix(near.y,longitudinal.y,far);
+  const far=smooth(18,70,d),baseY=mix(near.y,longitudinal.y,far);
   const terrainS=mix(near.s,longitudinal.s,far);
   const terrainNoise=noise.fbm(x*.018,3.7,z*.018,4,2,.5);
   const local=terrainS-DESERT_CANYON_END;
@@ -131,7 +136,8 @@ export function desertGround(x:number,z:number):number{
     const mask=smooth(550,575,creekLocal)*(1-smooth(925,950,creekLocal));
     ground=mix(ground,near.y-9.2,mask*(1-smooth(3.1,6.3,Math.abs(u-creekOffset(creekLocal)))));
   }
-  return ground;
+  const vistaBlend=Math.max(smooth(-2250,-2420,z),z<-2100?smooth(300,500,Math.abs(x)):0);
+  return mix(ground,vistaHeight(x,z,longitudinal),vistaBlend);
 }
 
 function buildComponents():CustomComponent[]{
@@ -191,19 +197,21 @@ function trailNormal(s:number,u:number):number[]{
 }
 const trailRows=Math.ceil(DESERT_LENGTH/1.6),step=DESERT_LENGTH/trailRows,cols=12;
 for(let first=0;first<trailRows;first+=32){
+  const vista=first*step>DESERT_VISTA_START;
   const last=Math.min(first+32,trailRows),origin=desertPoint(first*step),vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[],normals:number[]=[];
   for(let i=first;i<=last;i++)for(let j=0;j<=cols;j++){
     const s=i*step,u=(j/cols*2-1)*desertWidth(s)/2,p=desertPoint(s,u);
     vertices.push(round(p[0]-origin[0]),round(trailHeight(s,u)-origin[1]),round(p[2]-origin[2]));
     uvs.push(round(u),round(s));
     normals.push(...trailNormal(s,u));
-    const shade=round(mix(.96,.83,smooth(.5,.98,Math.abs(u)/(desertWidth(s)/2)))+.035*noise.noise3D(s*.08,u*.17,1));colors.push(shade,shade,shade);
+    const shade=round(mix(.96,.83,smooth(.5,.98,Math.abs(u)/(desertWidth(s)/2)))+.035*noise.noise3D(s*.08,u*.17,1));if(vista){const color=vistaColour(p[0],p[1],p[2],u,1);color.multiplyScalar(1+.09*(1-smooth(0,1,Math.abs(u)/(desertWidth(s)/2))));colors.push(...color.toArray());}
+    else colors.push(shade,shade,shade);
     const onTimber=s<132||(s>valley(702)&&s<valley(742));
     if(i<last&&j<cols&&!onTimber&&!DESERT_GAPS.some(g=>s+step>g.from&&s<g.to)){
       const k=(i-first)*(cols+1)+j;indices.push(k,k+1,k+cols+1,k+1,k+cols+2,k+cols+1);
     }
   }
-  if(indices.length)add({t:'mesh',p:origin,vertices,indices,uvs,colors,normals,tex:'desert-trail',smoothCollision:true,gravityTrack:true,grp:1,nm:`Packed sandstone trail ${first}`});
+  if(indices.length)add({t:'mesh',p:origin,vertices,indices,uvs,colors,normals,tex:vista?'desert-sandstone':'desert-trail',smoothCollision:true,gravityTrack:true,grp:1,nm:`Packed sandstone trail ${first}`});
 }
 
 // The valley is an actual landform with a carved trail, not floating road
@@ -272,7 +280,7 @@ tower(970,1,36,46,18,2);tower(1040,-1,29,28,10,1);
 
 // Connected fins and rooted scree belong to the landform. Each wall follows
 // a contour; outer rows break the horizon instead of isolated props on dunes.
-for(const [from,to] of [[18,DESERT_CANYON_START-12],[valley(10),DESERT_LENGTH-28]]){
+for(const [from,to] of [[18,DESERT_CANYON_START-12],[valley(10),DESERT_VISTA_START-28]]){
   for(let s=from;s<to;s+=23)for(const side of [-1,1]){
     const local=s-DESERT_CANYON_END;
     const woodland=local>260&&local<850;
@@ -299,7 +307,7 @@ for(const [from,to] of [[18,DESERT_CANYON_START-12],[valley(10),DESERT_LENGTH-28
 // its full source geometry and texture atlas are retained. Planting occurs in
 // sheltered pockets, with the rock passages deliberately left exposed.
 for(let i=0;i<310;i++){
-  const s=core(760)+random()*(DESERT_LENGTH-core(760)-35),side=random()<.5?-1:1;
+  const s=core(760)+random()*(DESERT_VISTA_START-core(760)-35),side=random()<.5?-1:1;
   const pocket=.5+.5*Math.sin(s*.017);
   if(random()>pocket*.82+.12)continue;
   const u=side*(desertWidth(s)/2+4+random()*16),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.25;
@@ -307,16 +315,16 @@ for(let i=0;i<310;i++){
   decorate('canyonpine',p,[h*.40,h,h*.39],random()*360,'Existing pine library · canyon conifer silhouette',30);
 }
 for(let i=0;i<80;i++){
-  const s=30+random()*DESERT_LENGTH,u=(random()<.5?-1:1)*(45+random()*95),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.3;
+  const s=30+random()*DESERT_VISTA_START,u=(random()<.5?-1:1)*(45+random()*95),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.3;
   const h=10+random()*12;decorate('canyonpine',p,[h*.34,h,h*.32],random()*360,'Conifers rooted on rock shelves',30);
 }
 for(let i=0;i<190;i++){
-  const s=12+random()*(DESERT_LENGTH-25),u=(random()<.5?-1:1)*(desertWidth(s)/2+1.8+random()*11),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.1;
+  const s=12+random()*(DESERT_VISTA_START-25),u=(random()<.5?-1:1)*(desertWidth(s)/2+1.8+random()*11),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.1;
   const h=.45+random()*1.0;
   decorate('custardbankshrub',p,[h*2.2,h,h*1.9],random()*360,'Low scrub in sandstone pockets',30);
 }
 for(let i=0;i<1200;i++){
-  const s=12+random()*(DESERT_LENGTH-25),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1+random()*26),p=desertPoint(s,u);
+  const s=12+random()*(DESERT_VISTA_START-25),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1+random()*26),p=desertPoint(s,u);
   p[1]=desertGround(p[0],p[2]);
   if(i%5===0){const h=.7+random()*.9;decorate('custardbankshrub',p,[h*2.5,h,h*2.2],random()*360,'Low sage-green canyon scrub',31);}
   else {const h=.34+random()*.42;decorate(i%3?'coastv2grassb':'coastv2grass',p,[h*3.1,h,h*2.8],random()*360,'Dry grass at trail shoulders',31);}
@@ -332,7 +340,7 @@ for(let i=0;i<440;i++){
   const c=decorate('custardbankshrub',p,[h*2.1,h,h*1.8],random()*360,'Clumped sage and groundcover below the pines',31);c.color='#a8af8c';
 }
 for(let i=0;i<370;i++){
-  const s=45+random()*(DESERT_LENGTH-60),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1.2+random()*22),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.12;
+  const s=45+random()*(DESERT_VISTA_START-60),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1.2+random()*22),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.12;
   const scale=.24+random()*1.35;
   decorate('deserttalus',p,[scale*2.2,scale,scale*1.6],random()*360,'Eroded sandstone scree',22,Math.abs(u)<13);
 }
@@ -389,13 +397,15 @@ function arrowBoard(s:number,side:number){
 }
 for(const s of [340,366,445,469,596,616,757])arrowBoard(core(s),s===596||s===616?1:-1);
 for(const s of [340,515,valley(320),valley(610),valley(970),valley(1260)])arrowBoard(s,Math.floor(s/100)%2?1:-1);
-for(const s of [core(30),core(960),220,DESERT_LENGTH-110]){
+for(const s of [core(30),core(960),220,DESERT_VISTA_START-110]){
   const p=desertPoint(s,15),ground=desertGround(p[0],p[2]);
   box([p[0],ground+2.4,p[2]],[6,.3,5],'#49342c','Timber event viewing deck',0,true);
   for(const dx of [-2.7,2.7])for(const dz of [-2.2,2.2])box([p[0]+dx,ground+1.2,p[2]+dz],[.24,2.4,.24],'#594334','Viewing deck timber leg');
   decorate('treehouseporchhut',[p[0]+3,ground,p[2]-3],[6,4,5],180,'Existing timber event shelter',40);
 }
 
+for(const s of [DESERT_VISTA_START+140,DESERT_VISTA_START+470,DESERT_VISTA_START+870,DESERT_VISTA_START+1250])banner(s,-1);
+C.push(...buildVista({start:DESERT_VISTA_START,length:DESERT_LENGTH,point:desertPoint,yaw:desertYaw,profile:elevationAtZ,ground:desertGround,width:desertWidth}));
 for(const color of dressingBatches.keys())flushDressing(color);
 for(let i=0;i<DESERT_CHECKPOINTS.length;i++){
   const s=DESERT_CHECKPOINTS[i],p=desertPoint(s,2.7);
@@ -413,12 +423,12 @@ return C;
 
 export const DESERT_CANYON_LEVEL:CustomLevelData={
   v:1,name:'Bryce Canyon · Hoodoo Run',spawn:desertPoint(6).map((n,i)=>i===1?n+.35:n) as Point,startWarpPad:false,
-  killY:-600,sky:'day',jungleStyle:'painterly',hugeDropBail:false,
+  killY:-1500,sky:'day',jungleStyle:'painterly',hugeDropBail:false,
   keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.12,
   cameraRig:{camDist:8,camHeight:3.6,camPitch:9,camFov:70},
-  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:260,fogFar:900,fogColor:'#b6b2b0',
-    drawDistance:1050,ambientSky:'#9cafcc',ambientGround:'#b67a4f',ambientIntensity:1.25,
-    sunColor:'#ffe8c6',sunIntensity:3.5,sunDirection:[-.38,.88,-.27],fillColor:'#8a9fbc',fillIntensity:.32,shadowStrength:1,
+  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:650,fogFar:2000,fogColor:'#b8b8be',
+    drawDistance:2000,ambientSky:'#9cafcc',ambientGround:'#b67a4f',ambientIntensity:1.25,
+    sunColor:'#ffe8c6',sunIntensity:3.5,sunDirection:[.48,.78,.38],fillColor:'#8a9fbc',fillIntensity:.32,shadowStrength:1,
     fallbackTop:'#4685be',fallbackBottom:'#9cb9cc',fallbackFog:'#c9b9a7',fallbackStars:false,fallbackRidges:false,
     fallbackSunColor:'#fff4db',fallbackSunU:.23,fallbackSunV:.23},
   components:[],groups:[
@@ -426,6 +436,8 @@ export const DESERT_CANYON_LEVEL:CustomLevelData={
     {id:20,nm:'Near RockGenerator hoodoos',editorOnly:true},{id:21,nm:'Native sandstone skyline',editorOnly:true},
     {id:22,nm:'Eroded talus',editorOnly:true},{id:30,nm:'Existing tree and shrub library',editorOnly:true},
     {id:31,nm:'Existing fine grasses and scrub',editorOnly:true},{id:40,nm:'Reference race dressings',editorOnly:true},
+    {id:60,nm:'Vast valley and opposite mesas',editorOnly:true},{id:61,nm:'Exposed ledge and native conifer groves',editorOnly:true},
+    {id:62,nm:'Below-cliff recovery',editorOnly:true},
     {id:50,nm:'Playable checkpoints and finish',editorOnly:true},{id:51,nm:'Ordered camera course',editorOnly:true},
   ],
 };

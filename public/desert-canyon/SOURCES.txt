@@ -45,3 +45,14 @@ All original LOD0 triangles, original leaf UVs and the original atlas survive.
 The final 24,763-triangle mesh is retained at every viewing distance.
 See pine-manifest.json for source/output hashes and the reproducible authoring
 script tools/desert-canyon/shape-library-pine.py (Python with Pillow).
+
+Exposed valley continuation (7 November 2026)
+Visual reference: https://www.youtube.com/watch?v=Zwf8svpX__E
+Original authored terrain, undercut strata and river contours use the existing
+MIT RockGenerator SimplexNoise implementation, seed 20261107. No game files,
+video frames or third-party landscape images are shipped. The full native
+landscape is baked by tools/desert-canyon/build-vista.mjs into spatial cells;
+all vertices, faces, UVs and colours remain at every viewing distance.
+The original CC0 ambientCG mineral maps supply surface detail. Trees reuse
+the full canyon conifer and original Country Club umbrella pine, with original
+atlases. See vista/manifest.json for geometry counts and per-cell hashes.

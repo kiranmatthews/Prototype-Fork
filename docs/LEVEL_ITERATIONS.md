@@ -9829,3 +9829,32 @@ clearance, world-solid, kite-art, grip/Indy and tow-motion checks pass. Across
 review covers full MAX/native rendering, held roof/jump poses and normal
 production start/jump input with a clean production console. Evidence and
 the limits of the envelope measurement are in `docs/kite-clearance/`.
+
+## 2026-11-07 — Extend Bryce Canyon above a vast right-hand valley
+
+Added a 1,751 m exposed ledge continuation after the previous finish, following
+the additional Riders Republic reference's close sandstone on the left and
+forested basin on the right. The whole route is now 5,631 m and descends 1,176 m;
+the new chapter loses 356 m, including 65 m in its final 300 m. Four added
+checkpoints lead to the relocated finish. The original boardwalk jump, canyon
+knots and seeded planting extents remain. Movement tuning is unchanged.
+
+The connected valley has an opposite mesa, terraced slopes and a winding river
+about 500 m below the ledge. Sculpted horizontal bedding has real undercuts;
+CC0 triplanar mineral maps, warm directional light, distance haze and native
+conifer/woodland groves establish depth. All 886,856 landscape triangles remain
+in 84 fixed streaming cells, with no distance geometry substitutions. The
+existing tree and plant library supplies all vegetation. A continuous concealed
+recovery surface catches cliff falls and returns to the banked checkpoint.
+
+Approximately 42 minutes prompt-to-reviewed playable; release validation and
+publication followed. A full native-input run reached the finish in 43,379
+simulation frames, clearing both opening jumps. The final focused vista run
+adds 13,951 frames; 8,394 support rays, 17 checkpoints, finish access, native
+cliff/pit recovery and shared texture ownership pass. All 84 terrain hashes and
+native asset loading pass. Browser review includes normal 720 and MAX/native
+2560 × 1440, a full-render finish, a real cliff fall/checkpoint recovery and
+clean warning/error logs. Build and release-size checks pass. The requested
+`check:levels` still reaches the documented unrelated waterpark texture-owner
+assertion at `tools/test-waterpark-decks.mjs:49`. Evidence and measured frame
+times, including their scope, are in `docs/desert-canyon/vista-checks.json`.

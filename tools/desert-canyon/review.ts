@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import {desertPoint,DESERT_LENGTH,DESERT_CHECKPOINTS,DESERT_CHECKPOINT_NAMES,DESERT_GAPS,DESERT_CANYON_START} from '../../src/levels/desert-canyon';
+import {desertPoint,DESERT_LENGTH,DESERT_CHECKPOINTS,DESERT_CHECKPOINT_NAMES,DESERT_GAPS,DESERT_CANYON_START,DESERT_VISTA_START} from '../../src/levels/desert-canyon';
 const g=(window as unknown as {__game:any}).__game;
 const panel=document.createElement('section');panel.setAttribute('aria-label','Canyon review');
 panel.style.cssText='position:fixed;bottom:8px;left:8px;right:8px;z-index:999999;background:#231b17e8;color:#f5e8d4;padding:9px 14px;border:1px solid #b69c70;border-radius:8px;font:12px system-ui;display:flex;align-items:center;gap:12px;flex-wrap:wrap';
-panel.innerHTML=`<b>BRYCE · REVIEW</b><label>Location <select aria-label="Canyon location"><option value="6">Spawn</option><option value="58">Boardwalk takeoff</option>${DESERT_CHECKPOINT_NAMES.map((name,i)=>`<option value="${DESERT_CHECKPOINTS[i]}">${name}</option>`).join('')}</select></label><button>Go to location</button><button>Run traversal</button><button>Stop traversal</button><button>Test fall recovery</button><button>Save frame</button><label>Resolution <select aria-label="Canyon resolution"><option value="720">Normal 720</option><option value="max">MAX native</option></select></label><label>View <select aria-label="Canyon view"><option value="game">Gameplay</option><option value="wide">Wide terrain</option></select></label><output style="flex-basis:100%;font:11px monospace"></output>`;
+panel.innerHTML=`<b>BRYCE · REVIEW</b><label>Location <select aria-label="Canyon location"><option value="6">Spawn</option><option value="58">Boardwalk takeoff</option>${DESERT_CHECKPOINT_NAMES.map((name,i)=>`<option value="${DESERT_CHECKPOINTS[i]}">${name}</option>`).join('')}</select></label><button>Go to location</button><button>Run traversal</button><button>Stop traversal</button><button>Test fall recovery</button><button>Save frame</button><label>Resolution <select aria-label="Canyon resolution"><option value="720">Normal 720</option><option value="max">MAX native</option></select></label><label>View <select aria-label="Canyon view"><option value="game">Gameplay</option><option value="wide">Wide terrain</option><option value="overlook">Right valley</option></select></label><output style="flex-basis:100%;font:11px monospace"></output>`;
 document.body.append(panel);
 const location=panel.querySelector('[aria-label="Canyon location"]') as HTMLSelectElement;
 const output=panel.querySelector('output')!,buttons=panel.querySelectorAll('button');
@@ -18,7 +18,10 @@ function teleport(s:number){
 buttons[0].onclick=()=>{running=false;teleport(Number(location.value));};
 buttons[1].onclick=()=>{teleport(Number(location.value));running=true;};
 buttons[2].onclick=()=>{running=false;g.launchReview.rate=0;g.input.moveX=g.input.moveY=0;};
-buttons[3].onclick=()=>{running=false;g.launchReview.rate=1;settleUntil=performance.now()+3000;g.player.pos.y=-680;g.player.state='air';g.player.grounded=false;};
+buttons[3].onclick=()=>{running=false;g.launchReview.rate=1;settleUntil=performance.now()+7000;
+  if(progress>DESERT_VISTA_START){const p=desertPoint(progress,40);g.player.pos.set(p[0],p[1]+2,p[2]);}
+  else g.player.pos.y=g.getLevel().killY-80;
+  g.player.state='air';g.player.grounded=false;g.player.vVel=-1;g.input.moveX=g.input.moveY=0;};
 buttons[4].onclick=()=>{saveRequested=true;};
 (panel.querySelector('[aria-label="Canyon resolution"]') as HTMLSelectElement).onchange=e=>g.renderQualitySettings.setRegularResolution((e.target as HTMLSelectElement).value==='max'?null:720);
 g.launchReview.beforeStep=()=>{
@@ -37,6 +40,10 @@ g.launchReview.beforeStep=()=>{
   g.input.grindHeld=false;g.input.grabHeld=p.speed>(at>DESERT_CANYON_START+95?12:20)&&at>90;
 };
 g.launchReview.afterCamera=()=>{
+  if((panel.querySelector('[aria-label="Canyon view"]') as HTMLSelectElement).value==='overlook'){
+    const s=running?progress:Number(location.value),eye=desertPoint(s,1),target=desertPoint(s+140,370);
+    g.camera.position.set(eye[0],eye[1]+5,eye[2]);g.camera.up.set(0,1,0);g.camera.lookAt(target[0],target[1]-70,target[2]);g.camera.updateMatrixWorld();
+  }
   if((panel.querySelector('[aria-label="Canyon view"]') as HTMLSelectElement).value==='wide'){
     const s=running?progress:Number(location.value),eye=desertPoint(s-22,-3),target=desertPoint(s+45);
     g.camera.position.set(eye[0],eye[1]+22,eye[2]);g.camera.up.set(0,1,0);g.camera.lookAt(target[0],target[1]+10,target[2]);g.camera.updateMatrixWorld();

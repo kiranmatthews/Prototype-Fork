@@ -1,10 +1,23 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {build} from 'esbuild';
 import {withSkateRuntime,makeInput} from '../jungle-cup-harness.mjs';
 const bundle=await build({entryPoints:['src/levels/desert-canyon.ts'],bundle:true,format:'esm',platform:'node',write:false});
 const m=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
-const data=m.DESERT_CANYON_LEVEL;
+const data=m.DESERT_CANYON_LEVEL,fromVista=process.argv.includes('--vista-only');
+const vistaLength=m.DESERT_LENGTH-m.DESERT_VISTA_START;
+assert.ok(vistaLength>1700,'The exposed rim must add a substantial chapter after the old finish');
+assert.ok(m.desertPoint(m.DESERT_VISTA_START)[1]-m.desertPoint(m.DESERT_LENGTH)[1]>330,'The new chapter must keep descending');
+let vistaProbes=0;
+for(let s=m.DESERT_VISTA_START+250;s<m.DESERT_LENGTH-120;s+=80){
+  const p=m.desertPoint(s),right=m.desertPoint(s,700),lip=m.desertPoint(s,18),left=m.desertPoint(s,-40);
+  assert.ok(p[1]-m.desertGround(right[0],right[2])>300,`Missing vast right-hand drop at ${s}`);
+  assert.ok(p[1]-m.desertGround(lip[0],lip[2])>15,`Right ledge does not expose the valley at ${s}`);
+  assert.ok(m.desertGround(left[0],left[2])-p[1]>10,`Missing uphill sandstone face at ${s}`);
+  vistaProbes++;
+}
+
 await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');
   assert.ok(normalizeCustomLevelData(data),'Canyon must pass the editor/import contract');
@@ -39,11 +52,12 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
     const cf=p.raceInputBasis(level);
     return {moveX:(-dx*cf.z+dz*cf.x)/d*pace,moveY:(dx*cf.x+dz*cf.z)/d*pace};
   };
-  const launch=new THREE.Vector3(...m.desertPoint(6));launch.y+=.4;
-  p.respawn(level,true,false,{position:launch,heading:new THREE.Vector3(...m.desertPoint(8)).sub(launch).setY(0).normalize()});
-  let progress=6,wasJumping=false,routeFrames=0,lastProgress=6,stuck=0;
+  const launchS=fromVista?m.DESERT_VISTA_START+20:6;
+  const launch=new THREE.Vector3(...m.desertPoint(launchS));launch.y+=.4;
+  p.respawn(level,true,false,{position:launch,heading:new THREE.Vector3(...m.desertPoint(launchS+2)).sub(launch).setY(0).normalize()});
+  let progress=launchS,wasJumping=false,routeFrames=0,lastProgress=launchS,stuck=0;
   const airborneGaps=new Set();
-  for(;routeFrames<42000&&p.state!=='finished';routeFrames++){
+  for(;routeFrames<60000&&p.state!=='finished';routeFrames++){
     let best=Infinity,at=progress;
     for(let s=Math.max(0,progress-10);s<Math.min(m.DESERT_LENGTH,progress+25);s++){
       const q=m.desertPoint(s),d=(q[0]-p.pos.x)**2+(q[2]-p.pos.z)**2;if(d<best){best=d;at=s;}
@@ -58,7 +72,7 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
     if(routeFrames%1200===0)console.log(JSON.stringify({routeFrames,progress,position:p.pos.toArray(),state:p.state}));
   }
   assert.equal(p.state,'finished',`Continuous descent stalled at ${progress}: ${p.pos.toArray()}`);
-  assert.equal(airborneGaps.size,m.DESERT_GAPS.length,'Both opening jumps must be crossed airborne');
+  assert.equal(airborneGaps.size,fromVista?0:m.DESERT_GAPS.length,'Both opening jumps must be crossed airborne in a full run');
   const end=m.DESERT_LENGTH-35,start=new THREE.Vector3(...m.desertPoint(end));start.y+=.3;
   p.respawn(level,true,false,{position:start,heading:new THREE.Vector3(...m.desertPoint(end+2)).sub(start).setY(0).normalize()});
   let finishFrames=0;for(;finishFrames<900&&p.state!=='finished';finishFrames++)step(makeInput(steer(m.DESERT_LENGTH-5)));
@@ -72,14 +86,30 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   assert.equal(p.state,'dead','Opening pit must trigger native death');
   p.respawn(level);for(let i=0;i<60;i++)step(makeInput());
   assert.ok(p.grounded&&Math.hypot(p.pos.x-checkpoint.spawnPos.x,p.pos.z-checkpoint.spawnPos.z)<1,'Death must recover to the banked checkpoint');
+  const vistaCheckpoint=level.checkpoints[15];
+  p.respawn(level,true,false,{position:vistaCheckpoint.spawnPos.clone().add(new THREE.Vector3(0,.2,0)),heading:new THREE.Vector3(0,0,-1)});
+  step(makeInput({spinPressed:true,spinHeld:true}));assert.ok(vistaCheckpoint.active,'The valley checkpoint must bank normally');
+  const cliff=m.desertPoint(m.DESERT_CHECKPOINTS[15],65);p.pos.set(cliff[0],cliff[1]+2,cliff[2]);p.state='air';p.grounded=false;p.vVel=-1;
+  for(let i=0;i<300&&p.state!=='dead';i++)step(makeInput());
+  assert.equal(p.state,'dead','The deep cliff fall must trigger recovery before the valley floor');
+  p.respawn(level);for(let i=0;i<60;i++)step(makeInput());
+  assert.ok(p.grounded&&Math.hypot(p.pos.x-vistaCheckpoint.spawnPos.x,p.pos.z-vistaCheckpoint.spawnPos.z)<1,'Cliff death must recover to the valley checkpoint');
   const materialApi=await server.ssrLoadModule('/src/desertMaterials.ts');
   const a=materialApi.createDesertMaterial('sandstone'),b=materialApi.createDesertMaterial('trail'),sa={...THREE.ShaderLib.standard,uniforms:{}},sb={...THREE.ShaderLib.standard,uniforms:{}};
   a.onBeforeCompile(sa);b.onBeforeCompile(sb);assert.equal(sa.uniforms.desertColour.value,sb.uniforms.desertColour.value);
   let releases=0;sa.uniforms.desertColour.value.addEventListener('dispose',()=>releases++);
   a.dispose();b.dispose();assert.equal(releases,0,'Live course retains the shared texture');
   level.dispose();assert.equal(releases,1,'Last material owner releases texture exactly once');
-  console.log(JSON.stringify({supportProbes:probes,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
+  console.log(JSON.stringify({supportProbes:probes,fromVista,vistaProbes,vistaLength,cliffFallRecovery:true,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
 },{levelEntry:{id:'bryce-canyon',name:data.name,data}});
 const manifest=JSON.parse(await readFile(new URL('../../public/desert-canyon/manifest.json',import.meta.url),'utf8'));
 assert.ok(manifest.models.every(r=>r.triangles<=30000));
 console.log('Bryce terrain, checkpoints, finish and native rock budgets pass');
+
+const vistaManifest=JSON.parse(await readFile(new URL('../../public/desert-canyon/vista/manifest.json',import.meta.url),'utf8'));
+for(const model of vistaManifest.models){
+  const bytes=await readFile(new URL('../../public/desert-canyon/vista/'+model.file,import.meta.url));
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),model.sha256,model.file+' native geometry hash');
+  assert.ok(model.triangles<=28000&&model.vertices>0,'Spatial cells retain bounded native geometry');
+}
+console.log(`Verified ${vistaManifest.models.length} complete native vista cells against their authored hashes`);

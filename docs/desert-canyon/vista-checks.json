@@ -1,0 +1,82 @@
+{
+  "fullNativeInputRun": {
+    "supportProbes": 8394,
+    "vistaProbes": 18,
+    "vistaLength": 1751.0326446530826,
+    "cliffFallRecovery": true,
+    "checkpoints": 17,
+    "routeFrames": 43379,
+    "finishFrames": 135,
+    "checkpointBankAndPitRecovery": true,
+    "routeMetres": 5630.595142105832,
+    "upperExtension": 771.8510543215829,
+    "lowerExtension": 3466.7873397347685,
+    "lowerDrop": 781.0000000000001,
+    "final300mDrop": 64.68787848527495,
+    "airborneGaps": [
+      "Boardwalk launch",
+      "Canyon rim jump"
+    ],
+    "materials": "shared mineral texture owners verified"
+  },
+  "baselineLevelSuiteFailure": "tools/test-waterpark-decks.mjs:49 \u2014 existing material/texture retirement remains single-owner",
+  "finalVistaRun": {
+    "supportProbes": 8394,
+    "fromVista": true,
+    "vistaProbes": 18,
+    "vistaLength": 1751.0326446530826,
+    "cliffFallRecovery": true,
+    "checkpoints": 17,
+    "routeFrames": 13951,
+    "finishFrames": 135,
+    "checkpointBankAndPitRecovery": true,
+    "routeMetres": 5630.595142105832,
+    "upperExtension": 771.8510543215829,
+    "lowerExtension": 3466.7873397347685,
+    "lowerDrop": 781.0000000000001,
+    "final300mDrop": 64.68787848527495,
+    "airborneGaps": [],
+    "materials": "shared mineral texture owners verified"
+  },
+  "browser": {
+    "fullRenderFinish": "RUN COMPLETE observed after native-input traversal from River overlook",
+    "cliffRecovery": "1 death; returned grounded to banked River overlook checkpoint",
+    "consoleWarningsAndErrors": [],
+    "nativeDrawingBuffer": [
+      2560,
+      1440
+    ],
+    "normalDrawingBuffer": [
+      1280,
+      720
+    ],
+    "overlookReviewSampleMs": {
+      "native": {
+        "median": 29.1,
+        "p95": 31.3
+      },
+      "normal": {
+        "median": 22.7,
+        "p95": 28.1
+      }
+    },
+    "performanceScope": "240-frame stationary review samples on this machine, not a cross-device guarantee",
+    "screenshots": [
+      "vista-native-gameplay.png",
+      "vista-basin.png"
+    ]
+  },
+  "nativeTerrain": {
+    "cells": 84,
+    "triangles": 886856,
+    "largestCellTriangles": 27392,
+    "geometryHashesVerified": true,
+    "distanceSubstitutions": false
+  },
+  "checks": {
+    "build": "pass",
+    "releaseSize": "> board-platformer-proto@0.1.0 check:release\n> node tools/check-release-size.mjs\n\nRelease output: 2440 files, 882,767,114 bytes / 1,000,000,000 byte budget.\nPASS release fits the hosting budget.",
+    "nativeAssets": "pass",
+    "checkLevels": "blocked only at documented waterpark baseline failure"
+  }
+}
