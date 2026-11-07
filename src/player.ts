@@ -1,3 +1,4 @@
+import {COLOURED_GEMS} from './colouredGems';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import type { AnimationClip } from './animation/types';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
@@ -14582,6 +14583,15 @@ export class Player {
       this.gemEarned = true;
       sfx.play('crystalGet', 0.9);
       this.score(CONST.ptsGem, 'Gem');
+    }
+
+    // Exploration gems bank immediately, so finding one beyond the finish
+    // never requires returning through the gate or completing a combo.
+    if(!level.runMode)for(const gem of level.colouredGemPickups){
+      if(!gem.collected&&this.playerBox.intersectsBox(gem.box)&&level.collectColouredGem(gem)){
+        sfx.play('crystalGet',1.0);this.score(CONST.ptsGem,`${COLOURED_GEMS[gem.colour].label} gem`);
+        this.onCourseHint(`${COLOURED_GEMS[gem.colour].label.toUpperCase()} GEM FOUND`,'Hidden gem collected');
+      }
     }
 
     // The trial stopwatch: touch it and the clock starts NOW.

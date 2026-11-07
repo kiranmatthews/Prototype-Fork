@@ -6,6 +6,9 @@ import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
 import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
 
 type Point=[number,number,number];
+/** User replay 2026-11-07T10-17-59, reconstructed with its omitted sixteen
+ * review checkpoint skips. This is the supported final feet position. */
+export const DESERT_YELLOW_GEM:Point=[300.0149,-909.0452,-4757.2115];
 const noise=new SimplexNoise(20261105);
 const clamp=(v:number,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const smooth=(a:number,b:number,x:number)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
@@ -367,8 +370,8 @@ for(let i=0;i<370;i++){
   decorate('deserttalus',p,[scale*2.2,scale,scale*1.6],random()*360,'Eroded sandstone scree',22,Math.abs(u)<13);
 }
 
-// Event dressings from the reference: slender purple/teal flag pairs, mesh
-// safety fencing, repeated arrow boards, and timber observation platforms.
+// Timber observation platforms and the existing safety fencing. Course
+// flags and directional road signs were removed at the user’s request.
 const dressingBatches=new Map<string,{vertices:number[];indices:number[]}>();
 function flushDressing(color:string){
   const batch=dressingBatches.get(color);if(!batch?.vertices.length)return;
@@ -383,21 +386,6 @@ function box(p:Point,size:Point,color:string,nm:string,yaw=0,solid=false){
   batch.indices.push(...Array.from(geometry.index!.array).map(i=>i+offset));geometry.dispose();
   if(batch.vertices.length>=7200)flushDressing(color);
 }
-function banner(s:number,side:number){
-  const u=side*(desertWidth(s)/2+(s<136?-.15:3)),p=desertPoint(s,u),yaw=desertYaw(s),h=5.2;
-  p[1]=Math.max(p[1],desertGround(p[0],p[2]));
-  box([p[0],p[1]+h/2,p[2]],[.07,h,.07],'#d6a35e','Course flag pole');
-  const vertices:number[]=[],indices:number[]=[],colors:number[]=[];
-  for(let y=0;y<=20;y++)for(let x=0;x<=2;x++){
-    const t=y/20,across=x/2,wx=across*(.9-.2*smooth(.83,1,t));
-    vertices.push(wx,1+t*4.4,Math.sin(t*4.8)*.17*across);
-    const color=new THREE.Color(across<.3?'#28b9bf':'#42336c');color.toArray(colors,colors.length);
-    if(y<20&&x<2){const k=y*3+x;indices.push(k,k+3,k+1,k+1,k+3,k+4);}
-  }
-  add({t:'mesh',p,vertices,indices,colors,yaw,tex:'solid',solid:false,doubleSided:true,grp:40,nm:'Purple and turquoise course flag'});
-}
-for(const s of [14,46,94,168,254,358,454,551,648,743,843,929,1003,1099,1215])for(const side of [-1,1])banner(core(s),side);
-for(const s of [8,60,88,164,300,460,610,valley(75),valley(250),valley(470),valley(690),valley(755),valley(945),valley(1170),DESERT_LENGTH-105])for(const side of [-1,1])banner(s,side);
 function fence(a:number,b:number,side:number){
   for(let s=a;s<b;s+=4){
     const u=side*(desertWidth(s)/2+5),p=desertPoint(s,u),q=desertPoint(Math.min(s+4,b),u),yaw=desertYaw(s);
@@ -409,16 +397,6 @@ function fence(a:number,b:number,side:number){
 }
 fence(core(9),core(49),-1);fence(core(330),core(384),-1);fence(core(428),core(481),-1);fence(core(575),core(632),1);fence(core(745),core(780),-1);
 fence(175,220,-1);fence(380,430,1);fence(540,580,-1);fence(valley(330),valley(390),1);fence(valley(960),valley(1010),-1);
-function arrowBoard(s:number,side:number){
-  const p=desertPoint(s,side*(desertWidth(s)/2+2.6));p[1]+=1.2;const yaw=desertYaw(s)+side*25;
-  add({t:'mesh',p,yaw,vertices:[-2,0,0,2,0,0,2,1.1,0,-2,1.1,0],indices:[0,1,2,0,2,3],color:'#e9dcc0',tex:'solid',solid:false,doubleSided:true,grp:40,nm:'Hairpin direction board'});
-  for(let i=0;i<5;i++){
-    const x=-1.75+i*.72;
-    add({t:'mesh',p,yaw,vertices:[x,0,.012,x+.23,0,.012,x+.58,.55,.012,x+.23,1.1,.012,x,1.1,.012,x+.35,.55,.012],indices:[0,1,2,0,2,5,5,2,3,5,3,4],tex:'solid',color:'#493831',solid:false,doubleSided:true,grp:40,nm:'Repeated dark chevron'});
-  }
-}
-for(const s of [340,366,445,469,596,616,757])arrowBoard(core(s),s===596||s===616?1:-1);
-for(const s of [340,515,valley(320),valley(610),valley(970),valley(1260)])arrowBoard(s,Math.floor(s/100)%2?1:-1);
 for(const s of [core(30),core(960),220,DESERT_VISTA_START-110]){
   const p=desertPoint(s,15),ground=desertGround(p[0],p[2]);
   box([p[0],ground+2.4,p[2]],[6,.3,5],'#49342c','Timber event viewing deck',0,true);
@@ -426,7 +404,6 @@ for(const s of [core(30),core(960),220,DESERT_VISTA_START-110]){
   decorate('treehouseporchhut',[p[0]+3,ground,p[2]-3],[6,4,5],180,'Existing timber event shelter',40);
 }
 
-for(const s of [DESERT_VISTA_START+140,DESERT_VISTA_START+470,DESERT_VISTA_START+870,DESERT_VISTA_START+1250])banner(s,-1);
 C.push(...buildVista({start:DESERT_VISTA_START,length:DESERT_LENGTH,point:desertPoint,yaw:desertYaw,profile:elevationAtZ,ground:desertGround,width:desertWidth}));
 for(const color of dressingBatches.keys())flushDressing(color);
 for(let i=0;i<DESERT_CHECKPOINTS.length;i++){
@@ -440,6 +417,7 @@ add({t:'gate',p:finish,yaw:desertYaw(DESERT_LENGTH-16),grp:50,nm:'Bryce Canyon f
 for(let s=115;s<DESERT_LENGTH-45;s+=57){const p=desertPoint(s);p[1]+=1;add({t:'wumpa',p,grp:50});}
 for(const s of [65,70,75,80]){const p=desertPoint(s);p[1]=352.6+Math.sin((s-65)/15*Math.PI)*1.6;add({t:'wumpa',p,grp:50,nm:'Boardwalk jump arc'});}
 add({t:'crystal',p:desertPoint(DESERT_LENGTH-30),grp:50,nm:'Canyon descent crystal'});
+add({t:'colouredgem',gemColour:'yellow',p:[...DESERT_YELLOW_GEM],grp:50,nm:'Yellow hidden gem · replay destination beyond the finish'});
 return C;
 }
 

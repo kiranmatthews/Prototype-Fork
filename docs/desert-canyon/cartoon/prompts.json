@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-07",
+  "mode": "OpenAI built-in image_gen",
+  "purpose": "Crash 4 inspired painted sandstone and clay; preserve the existing sky, lighting and playable course",
+  "images": [
+    {
+      "kind": "art-direction concept; not a gameplay screenshot",
+      "reference": "docs/desert-canyon/tripo-cactus-finish.png",
+      "output": "docs/desert-canyon/cartoon/style-reference.png",
+      "generation": "exec-4d9f12c0-676e-4fef-9da0-875957f2f2a0",
+      "prompt": "Use case: style-transfer. This is a production art-direction reference for updating an existing playable Three.js canyon. Edit only the rock formations, sandstone terrain and gravel in the supplied gameplay image to have the richly sculpted, hand-painted cartoon aesthetic of Crash Bandicoot 4. Preserve the exact camera, course route, player, crate, all cactus and dry weed plants, sky, clouds, sun, skybox, and composition. Make rock surfaces clean and deliberately sculpted: broad rounded bevels on chunky layered slabs; curved tapering forms, subtly oversized capstones; a few large elegant crack grooves and scallops rather than thousands of noisy fractures. Broad softly undulating ochre and peach sandstone bands with painterly edge highlights, warm muted terracotta faces, violet-brown recesses, creamy dusty top surfaces. The road should read as matte hand-painted dusty clay with soft broad color variation and a sparse scattering of smooth chunky pebbles. Reduce photographic grain and dense erosion noise dramatically; maintain rich volume, warm sunset lighting and existing atmospheric perspective. Preserve overall mountain and cliff placement and road elevations; no new bridges, buildings or structures. Keep the plants' palette intact so the rocks visually belong to the same cartoon world. No outlines, no flat cel shading, no neon, no UI or added text. Retain the high production quality of a polished stylized 3D platformer."
+    },
+    {
+      "kind": "runtime albedo texture",
+      "output": "public/desert-canyon/painted-sandstone.png",
+      "generation": "exec-f8cc1ffb-c1c2-42e8-a6c4-b2725c58c3c5",
+      "prompt": "Use case: stylized-concept. Asset type: 2048 square seamless tileable game albedo texture, orthographic flat texture filling the entire frame. Hand-painted warm sandstone rock face in the Crash Bandicoot 4 aesthetic, for an already built desert canyon. Broad softly waving horizontal orange terracotta layers, creamy peach edges and pale apricot mineral streaks, a few large irregular plum-brown hairline crack shapes, subtle broad directional brush strokes. Clean sculpted cartoon stone, warm muted palette, rich but restrained color, softly rounded chipped ledges suggested by color, no photographic pores or noisy grain. Albedo only: evenly lit, no directional lighting or cast shadows, no perspective, no vignette, no borders, no text, no objects, no dramatic deep black cracks. Perfectly seamless repeating texture on all four edges. Large readable stylized shapes rather than busy small detail."
+    },
+    {
+      "kind": "runtime albedo texture",
+      "output": "public/desert-canyon/painted-clay.png",
+      "generation": "exec-8dda4733-d5f4-4057-8048-7444ca8a4188",
+      "prompt": "Use case: stylized-concept. Asset type: 2048 square seamless tileable game ground albedo texture, top-down orthographic flat texture filling the whole frame. Hand-painted dry desert clay and warm dusty sandstone ground in the Crash Bandicoot 4 aesthetic, for a cartoon canyon trail among muted olive cacti. Broad sweeping ochre, muted orange, peach and warm tan brush patches, softly curved natural dusty swirls, very sparse small smooth pebble marks and gently scuffed dusty wisps. Polished stylized 3D platformer texture with clean large shapes and restrained painterly marks. No photographic sand grains, no cobblestones, no dense gravel, no cracks network, no plants, no trails or roads within the texture. Uniform ambient illumination, no shadows, no highlights, no perspective, no vignette, no borders or text. Seamless on all four sides."
+    }
+  ]
+}

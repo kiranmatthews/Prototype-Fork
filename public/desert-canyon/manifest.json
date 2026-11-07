@@ -1,5 +1,5 @@
 {
-  "generator": "bamyazi/RockGenerator (MIT); unchanged noise.js and displacement.js; authored hoodoo profiles",
+  "generator": "bamyazi/RockGenerator (MIT); unchanged noise.js and displacement.js; imagegen-guided rounded cartoon hoodoo profiles",
   "geometryPolicy": "Native mesh at all distances and in reflections; no simplification",
   "models": [
     {
@@ -7,108 +7,108 @@
       "triangles": 12928,
       "vertices": 6567,
       "size": [
-        13.6055,
-        35.9243,
-        11.3694
+        13.8138,
+        35.5221,
+        10.9507
       ],
-      "bytes": 368128,
-      "sha256": "d59daa55a24fb496a23aaac5f5337b9f7939fbdf2fce52f932921907b7bfb148"
+      "bytes": 368124,
+      "sha256": "e0b78b6c344a352635dac08722abebc38080d5812b6b2e53eb702ad2dd46c8af"
     },
     {
       "name": "hoodoo-cap",
       "triangles": 12928,
       "vertices": 6567,
       "size": [
-        12.6953,
-        25.7142,
-        11.2042
+        12.6843,
+        25.4596,
+        10.6983
       ],
-      "bytes": 368128,
-      "sha256": "8c6aade874495a06f5e549b36a3944be2e8d1d1dd050d5e32f01aa26a98013cc"
+      "bytes": 368124,
+      "sha256": "a8e8efa44a2564801cc1e0a0b04613dc94768782aab75799dec390c8e052b2e1"
     },
     {
       "name": "hoodoo-fluted",
       "triangles": 22080,
       "vertices": 11324,
       "size": [
-        18.4477,
-        42.5426,
-        16.7859
+        18.2015,
+        42.4541,
+        16.394
       ],
-      "bytes": 632356,
-      "sha256": "615fc528cc60c1daede51b03ae1a536d1f794c180f7edb701a213701562c2f1a"
+      "bytes": 632352,
+      "sha256": "70606922ee38e75d7b13dd6bb4e1cf45bf3be3b4833a6ae9e849ae03b0e8fd4d"
     },
     {
       "name": "hoodoo-needle",
       "triangles": 12928,
       "vertices": 6567,
       "size": [
-        7.6497,
-        28.3638,
-        6.4246
+        7.3881,
+        28.3745,
+        6.046
       ],
-      "bytes": 368132,
-      "sha256": "7f9e54114996bbfddab766e7c102d5bc212c9180bd295658bbe9cfa4bb02e9d1"
+      "bytes": 368128,
+      "sha256": "4782e055b0407dbc150b748c26d157a6bada0d70efe89834928a70b9df87c762"
     },
     {
       "name": "hoodoo-buttress",
       "triangles": 27600,
       "vertices": 14155,
       "size": [
-        27.5266,
-        32.5577,
-        21.045
+        26.9053,
+        32.3498,
+        20.3444
       ],
       "bytes": 790048,
-      "sha256": "c2ac614306517ab96bb127341cccc55fd6f87087fae4048bb5b7f33bf2492450"
+      "sha256": "07f73ae0e319497bc1edba0f1ddbdd4566e6db0beb7889647b90143a6f119e7b"
     },
     {
       "name": "hoodoo-low",
       "triangles": 7040,
       "vertices": 3577,
       "size": [
-        19.9613,
-        9.8054,
-        16.4784
+        18.5052,
+        9.3279,
+        15.0363
       ],
-      "bytes": 201228,
-      "sha256": "9dd393f4137c402252c16b6866d39e72f300b518189f72d0ad4f3e1b4ea3536f"
+      "bytes": 201232,
+      "sha256": "30de729d59bf4a8d952a72957ca8620ba29c14512585f24ed5f9203ab48f98e3"
     },
     {
       "name": "hoodoo-twins",
       "triangles": 16320,
       "vertices": 8334,
       "size": [
-        18.3701,
-        35.994,
-        10.9495
+        17.8434,
+        35.5134,
+        10.2178
       ],
-      "bytes": 466228,
-      "sha256": "7f302cbb9f111b4805f1c4e480ea4c42435141f363abd222999cd7d4fe61c925"
+      "bytes": 466232,
+      "sha256": "e2707c9fb9d3fbeea2d1c24af0de37cbc0ffb12b26a05c41d73d1173e5144e60"
     },
     {
       "name": "hoodoo-fin",
       "triangles": 27600,
       "vertices": 14155,
       "size": [
-        28.9329,
-        39.7237,
-        9.4631
+        28.8149,
+        39.4336,
+        9.2057
       ],
       "bytes": 790040,
-      "sha256": "27ee43655da457215de4b050517ff85fb0df5f529b01b99e28d66b57de1e2728"
+      "sha256": "39388209ed6d08252c0fce2b5d4db0f6b381b9ce5791c61dede6d103fde3e7de"
     },
     {
       "name": "talus",
       "triangles": 3360,
       "vertices": 1717,
       "size": [
-        9.6783,
-        3.639,
-        7.6568
+        9.2912,
+        3.3307,
+        7.0162
       ],
-      "bytes": 97308,
-      "sha256": "f1ef8e3f4efdfd06e7371dc10ae70a42b4d48ab14e71219da40af945d5830f1d"
+      "bytes": 97312,
+      "sha256": "1883f95c7d631f75c31ad2bedc81b919991b01ba709e26da301ef697b59db394"
     }
   ]
 }

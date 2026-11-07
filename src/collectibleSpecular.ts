@@ -50,6 +50,13 @@ void lightCollectible() {
     float lowerFill = max(dot(n, normalize(vec3(-0.3, -0.8, 0.52))), 0.0);
     vCollectibleLight = diffuse * (0.018 + broad * 0.13 + rim * 0.025 + lowerFill * 0.12);
     vCollectibleEdge = power64(max(dot(n, normalize(vec3(0.68, -0.55, 0.49))), 0.0)) * 1.4;
+    #if COLLECTIBLE_JELLY
+      // Saturated translucent candy keeps its colour through shaded cuts.
+      // A restrained white sweep reads as wet gloss instead of silver metal.
+      vCollectibleLight = diffuse * (0.82 + broad * 0.14 + rim * 0.04);
+      vCollectibleSweep.z *= 0.34;
+      vCollectibleEdge *= 0.30;
+    #endif
   #endif
 }
 `;
@@ -64,26 +71,29 @@ vec3 outgoingLight = vCollectibleLight + vec3(1.0, 0.98, 0.97) * flash
   + vec3(0.88, 0.94, 1.0) * edgeFlash;
 float highlightCoverage = max(flash + edgeFlash, min(min(outgoingLight.r, outgoingLight.g), outgoingLight.b));
 diffuseColor.a = opacity * mix(0.86, 1.0, clamp(highlightCoverage, 0.0, 1.0));
+#if COLLECTIBLE_JELLY
+  diffuseColor.a = opacity * mix(0.76, 0.97, clamp(flash + edgeFlash, 0.0, 1.0));
+#endif
 `;
 
 /** Native opacity/clone/fog behavior, with vertex-lit affine facet highlights. */
 export class CollectibleSpecularMaterial extends THREE.MeshBasicMaterial {
-  constructor(color: THREE.ColorRepresentation = 0xb8c8de, profile: "crystal" | "gem" = "gem") {
-    super({ color, toneMapped: false, transparent: true, depthWrite: true });
+  constructor(color: THREE.ColorRepresentation = 0xb8c8de, profile: "crystal" | "gem" | "jelly" = "gem") {
+    super({ color, toneMapped: false, transparent: true, depthWrite: profile !== "jelly" });
     this.name = "collectible vertex specular";
     this.userData.collectibleProfile = profile;
     this.onBeforeCompile = shader => {
-      const profileDefine = `#define COLLECTIBLE_CRYSTAL ${this.userData.collectibleProfile === "crystal" ? 1 : 0}\n`;
+      const profileDefine = `#define COLLECTIBLE_CRYSTAL ${this.userData.collectibleProfile === "crystal" ? 1 : 0}\n#define COLLECTIBLE_JELLY ${this.userData.collectibleProfile === "jelly" ? 1 : 0}\n`;
       shader.vertexShader = profileDefine + COLLECTIBLE_SPECULAR_VERTEX + shader.vertexShader.replace(
         "#include <begin_vertex>", "#include <begin_vertex>\nlightCollectible();",
       );
-      shader.fragmentShader = "varying vec3 vCollectibleLight;\nvarying vec4 vCollectibleSweep;\nvarying vec2 vCollectibleUv;\nvarying float vCollectibleEdge;\nvarying float vCollectibleEdgeDistance;\n" + shader.fragmentShader.replace(
+      shader.fragmentShader = profileDefine + "varying vec3 vCollectibleLight;\nvarying vec4 vCollectibleSweep;\nvarying vec2 vCollectibleUv;\nvarying float vCollectibleEdge;\nvarying float vCollectibleEdgeDistance;\n" + shader.fragmentShader.replace(
         "vec3 outgoingLight = reflectedLight.indirectDiffuse;", COLLECTIBLE_SPECULAR_FRAGMENT,
       );
     };
   }
   customProgramCacheKey(): string {
-    return `collectible-facet-sweep-v4:${this.userData.collectibleProfile === "crystal" ? "crystal" : "gem"}`;
+    return `collectible-facet-sweep-v4:${this.userData.collectibleProfile}`;
   }
 }
 

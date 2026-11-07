@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-08 Pacific/Auckland",
+  "renderer": "full",
+  "nativeDrawingBuffer": [1794, 1706],
+  "normalOpening": {"resolution": 720, "routeMetres": 503, "grounded": true, "deaths": 0, "assetErrors": []},
+  "finalDescent": {"result": "RUN COMPLETE", "checkpoint": "Sunset promontory", "assetErrors": []},
+  "gemApproach": {"ground": "Canyon vista · native terrain 60", "grounded": true},
+  "liveGemPickup": {"position": [298.57, -908.93, -4756.82], "collected": true, "grounded": true, "inventoryModelVisible": true},
+  "lemonJelly": {"tint": "#fff212", "bodyOpacity": 0.76, "highlightOpacity": 0.97, "extraTransmissionPass": false, "worldAndHudShareMaterialProfile": true},
+  "currentBrowserErrors": [],
+  "releaseBytes": 963140281,
+  "screenshots": {
+    "final-descent.png": "Native gameplay renderer: painted canyon, rounded shelves and pebbles, existing plants and sky, no course flags or road signs.",
+    "yellow-gem.png": "Native runtime gem art at its authored location. The review tool shows an art-only copy after collection without changing the stored discovery."
+  },
+  "checkLevelsLimitation": "Existing unrelated waterpark material-retirement assertion at tools/test-waterpark-decks.mjs:49."
+}

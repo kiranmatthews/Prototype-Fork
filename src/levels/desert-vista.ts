@@ -122,7 +122,7 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
   }
   function fracturedButtresses(){
     // Fixed native lofts use the MIT RockGenerator noise field. Vertical
-    // jointing splits broad, angular fins; cap beds are narrow and irregular.
+    // shallow jointing splits rounded fins with broad, bevelled cap beds.
     let rockSeed=7112026;
     const rr=()=>{rockSeed=(Math.imul(rockSeed,1664525)+1013904223)>>>0;return rockSeed/4294967296;};
     function fin(s:number,u:number,w:number,h:number,d:number,rotation:number){
@@ -135,23 +135,21 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
       p[1]=base-.6;
       const rows=44,cols=40,vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[];
       const phase=rr()*50;
-      const corners=[[1,.55],[.55,1],[-.55,1],[-1,.55],[-1,-.55],[-.55,-1],[.55,-1],[1,-.55]];
       for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){
         const t=j/rows,a=i/cols*Math.PI*2,cs=Math.cos(a),sn=Math.sin(a);
         const y=t*h+noise.noise3D(cs*2+phase,7,sn*2)*h*.014*smooth(.7,1,t);
-        const bed=(p[1]+y)/4.1,layer=bed-Math.floor(bed);
-        const joint=Math.pow(Math.max(0,Math.sin(a*5+phase+Math.sin(t*3)*.12)),18)*.17;
-        const fracture=noise.fbm(cs*3+phase,t*5.8,sn*3,3,2,.52)*.085;
-        const cap=smooth(.89,.915,t)*.10;
-        const shelf=smooth(.73,.79,layer)*(1-smooth(.91,.97,layer))*.035;
-        const scale=1.03-.18*t+fracture-joint+cap+shelf;
-        const f=i/cols*8,edge=Math.floor(f)%8,along=f-Math.floor(f),a0=corners[edge],b0=corners[(edge+1)%8];
-        const x=mix(a0[0],b0[0],along)*w*.5*scale;
-        const z=mix(a0[1],b0[1],along)*d*.5*scale;
+        const bed=(p[1]+y)/9.5+Math.sin(a*2+phase)*.07,layer=bed-Math.floor(bed);
+        const joint=Math.pow(Math.max(0,Math.sin(a*3+phase+Math.sin(t*3)*.18)),10)*.09;
+        const fracture=noise.fbm(cs*1.5+phase,t*2.1,sn*1.5,2,2,.5)*.035;
+        const cap=smooth(.80,.91,t)*.19;
+        const shelf=smooth(.57,.77,layer)*(1-smooth(.86,.99,layer))*.13;
+        const scale=(1.02-.19*t+fracture-joint+cap+shelf)*(1-.12*smooth(.95,1,t));
+        const x=Math.sign(cs)*Math.abs(cs)**.52*w*.5*scale;
+        const z=Math.sign(sn)*Math.abs(sn)**.52*d*.5*scale;
         vertices.push(round(x*ca+z*sa),round(y),round(-x*sa+z*ca));uvs.push(i/cols*w,y);
         const chalk=smooth(.90,.92,t)*.75+smooth(.74,.80,layer)*(1-smooth(.91,.98,layer))*.24;
-        const colour=new THREE.Color('#bf5928').lerp(new THREE.Color('#e2b681'),Math.min(.8,chalk));
-        colour.multiplyScalar(1-joint*2.1+noise.noise3D(cs*3+phase,y*.15,sn*3)*.14);
+        const colour=new THREE.Color('#cb7848').lerp(new THREE.Color('#edc79a'),Math.min(.8,chalk));
+        colour.multiplyScalar(1-joint*.6+noise.noise3D(cs*2+phase,y*.09,sn*2)*.035);
         colors.push(...colour.toArray());
         if(j<rows&&i<cols){const k=j*(cols+1)+i;indices.push(k,k+cols+1,k+1,k+1,k+cols+1,k+cols+2);}
       }
@@ -160,10 +158,10 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
       const geometry=new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
       geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
       geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setIndex(indices);
-      const creased=toCreasedNormals(geometry,.42),facets=mergeVertices(creased);
+      const creased=toCreasedNormals(geometry,.85),facets=mergeVertices(creased);
       C.push({t:'mesh',p,vertices:Array.from(facets.attributes.position.array),indices:Array.from(facets.index!.array),
         normals:Array.from(facets.attributes.normal.array),uvs:Array.from(facets.attributes.uv.array),colors:Array.from(facets.attributes.color.array),tex:'desert-sandstone',solid:false,
-        castShadow:true,grp:63,nm:'Jointed sandstone fin with weathered cap'});
+        castShadow:true,grp:63,nm:'Rounded sculpted sandstone shelves and broad cap'});
       geometry.dispose();creased.dispose();facets.dispose();
     }
     for(let s=start+90;s<length+5;s+=72){
@@ -177,29 +175,29 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
     }
   }
   function gravel(){
-    // Angular scree is geometry at every distance, with spatially batched
+    // Rounded scree is geometry at every distance, with spatially batched
     // pebbles rather than large flat texture marks or thousands of GLB draws.
-    const shard=new THREE.IcosahedronGeometry(1,0),shape=shard.getAttribute('position');
+    const shard=new THREE.IcosahedronGeometry(1,1),shape=shard.getAttribute('position'),smoothNormals=shard.getAttribute('normal');
     let gravelSeed=15733;
     const rr=()=>{gravelSeed=(Math.imul(gravelSeed,1664525)+1013904223)>>>0;return gravelSeed/4294967296;};
     for(let from=start+65;from<length;from+=64){
-      const end=Math.min(length,from+64),origin=point(from),vertices:number[]=[],indices:number[]=[],colors:number[]=[],uvs:number[]=[];
-      const count=Math.floor((end-from)*12);
+      const end=Math.min(length,from+64),origin=point(from),vertices:number[]=[],indices:number[]=[],colors:number[]=[],uvs:number[]=[],normals:number[]=[];
+      const count=Math.floor((end-from)*3);
       for(let j=0;j<count;j++){
         const s=from+rr()*(end-from),side=rr()<.5?-1:1,onTrail=j%11===0;
         const u=onTrail?(rr()*2-1)*width(s)*.43:side*(width(s)/2+.1+Math.pow(rr(),1.7)*16);
         const p=point(s,u);p[1]=ground(p[0],p[2]);
-        const radius=(.045+rr()**2*.36)*(onTrail?.48:1),rot=rr()*Math.PI*2,ca=Math.cos(rot),sa=Math.sin(rot),wide=1+rr()*.8;
+        const radius=(.09+rr()**2*.47)*(onTrail?.48:1),rot=rr()*Math.PI*2,ca=Math.cos(rot),sa=Math.sin(rot),wide=1+rr()*.8;
         const colour=new THREE.Color('#bd794c').lerp(new THREE.Color('#d9b68a'),rr()*.55);
         for(let k=0;k<shape.count;k++){
-          const x=shape.getX(k)*radius*wide,z=shape.getZ(k)*radius,y=(shape.getY(k)*.52+.16)*radius;
+          const x=shape.getX(k)*radius*wide,z=shape.getZ(k)*radius,y=(shape.getY(k)*.67+.16)*radius;
           indices.push(vertices.length/3);vertices.push(round(p[0]-origin[0]+x*ca+z*sa),round(p[1]-origin[1]+y),round(p[2]-origin[2]-x*sa+z*ca));
           colors.push(...colour.toArray());uvs.push(0,0);
+          const n=new THREE.Vector3(smoothNormals.getX(k)/wide,smoothNormals.getY(k)/.67,smoothNormals.getZ(k)).normalize();
+          normals.push(n.x*ca+n.z*sa,n.y,-n.x*sa+n.z*ca);
         }
       }
-      const geometry=new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
-      geometry.setIndex(indices);geometry.computeVertexNormals();const normals=Array.from(geometry.attributes.normal.array);geometry.dispose();
-      C.push({t:'mesh',p:origin,vertices,indices,colors,uvs,normals,tex:'desert-sandstone',solid:false,castShadow:true,grp:64,nm:'Native angular gravel and loose shoulder scree'});
+      C.push({t:'mesh',p:origin,vertices,indices,colors,uvs,normals,tex:'desert-sandstone',solid:false,castShadow:true,grp:64,nm:'Sparse rounded sandstone pebbles on the shoulder'});
     }
     shard.dispose();
   }

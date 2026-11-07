@@ -9953,3 +9953,46 @@ Provenance: `tools/desert-canyon/tripo-plants.json`,
 `public/desert-canyon/plants/manifest.json`; review evidence:
 `docs/desert-canyon/plants/tripo/iteration.json` and
 `docs/desert-canyon/tripo-cactus-{overlook,finish}.png`.
+
+## 2026-11-07 — Cartoon canyon rockwork and the hidden yellow gem
+
+Matched the existing oversized cactus planting with rounded sandstone shelves,
+broader capstones, curved hoodoo profiles, restrained erosion and sparse smooth
+pebbles. Two built-in imagegen albedos replace photographic rock/gravel grain.
+The existing MIT RockGenerator technique remains the procedural basis. Native
+triangles remain intact at every viewing distance: nine rocks are at most
+27,600 triangles each; the 116 vista cells retain 1,423,456 triangles overall.
+The 76 underlying terrain cells are byte-identical. Course geometry, boardwalk
+jump, planting, sky, skybox, lighting, checkpoints and movement are unchanged.
+Removed all 64 blue/purple course flags, their poles and 13 road signs.
+
+Recovered the attached 16,581-frame replay's omitted sixteen checkpoint skips
+from the recorded camera discontinuities and the previous review actions.
+Replayed against the published 10359e0d terrain and the current geometry; both
+end at [300.01490164623647, -909.0451958029946, -4757.211523446957], grounded on
+native terrain 60 beyond the finish, with zero deaths. The yellow gem floats
+above that exact supported stop. Its separate per-level discovery record banks
+on contact, survives reload and restart, and does not award clear/combo gems.
+The earned gem has a real model in the existing inventory HUD. The follow-up
+lemon-jelly brief makes both copies vivid lemon yellow, with 76% body opacity
+and glossy highlights. Its separate material profile keeps the existing clear
+gem and purple crystal appearance; it needs no extra transmission render pass.
+
+Approximately 20 minutes from prompt to the first playable visual iteration;
+replay reconstruction, full-render review and release validation followed.
+The focused cartoon validator passes protected layout, sky/lighting, removed
+signage, exact endpoint, real-player pickup, one-time award, restart/storage
+reload and malformed input checks. `check:levels` reaches the existing unrelated
+waterpark material-retirement assertion at `tools/test-waterpark-decks.mjs:49`.
+Production build and the 963,140,281-byte release pass. The normal-resolution
+opening run clears the boardwalk jump and reaches route metre 503 with no deaths.
+The native full-render final descent reaches RUN COMPLETE. Live walking collects
+the gem and shows its earned inventory model; the lemon-jelly material also
+passes the existing collectible geometry, shader and clone regression check.
+The remote gem review now waits for streamed
+terrain support before placing the player; that tool's frozen review frames do
+not run the normal physics update which registers incoming terrain cells.
+
+Imagegen prompts and concept/runtime distinctions:
+`docs/desert-canyon/cartoon/prompts.json`. Replay and validation evidence:
+`docs/desert-canyon/cartoon/replay-endpoint.json` and `validation.json`.

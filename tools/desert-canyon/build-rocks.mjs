@@ -7,7 +7,7 @@ import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import {crackDisplace} from '../../vendor/rock-generator/displacement.js';
 
 // Offline authoring only. The upstream noise and crack implementation is kept
-// verbatim; these authored hoodoo profiles and placement seeds are our input.
+// verbatim; these imagegen-guided rounded cartoon hoodoo profiles and placement seeds are our input.
 // Every runtime placement uses this complete mesh, including reflections.
 globalThis.FileReader=class {
   readAsArrayBuffer(blob){blob.arrayBuffer().then(result=>{this.result=result;this.onloadend?.();});}
@@ -23,21 +23,21 @@ function pillar(seed,{height=28,radius=4,cap=.4,taper=.4,lean=.7,flutes=6,radial
   const positions=[],indices=[],colors=[],uvs=[];
   for(let j=0;j<=rows;j++){
     const t=j/rows,y=t*height;
-    const ledges=.025*Math.sin(t*27+seed)+.022*Math.sin(t*69+1.3);
-    const neck=1-.14*Math.exp(-(((t-.79)/.08)**2));
-    const crown=cap*Math.exp(-(((t-.9)/.09)**2));
+    const ledges=.08*Math.sin(t*16+seed*.05)+.055*Math.sin(t*31+1.3); // broad rounded beds
+    const neck=1-.23*Math.exp(-(((t-.76)/.10)**2));
+    const crown=cap*1.45*Math.exp(-(((t-.89)/.095)**2));
     const foot=.65*Math.exp(-t*5);
     const profile=(1-taper*t+foot+ledges+crown)*neck;
     const roundTop=1-(cap>.25?.28:.52)*smooth(.9,1,t);
     for(let i=0;i<=radial;i++){
       const a=i/radial*Math.PI*2,cs=Math.cos(a),sn=Math.sin(a);
-      const flute=.19*Math.cos(a*flutes+noise.noise3D(cs*1.8,t*.9,sn*1.8))+.065*Math.cos(a*(flutes+3)+t*.4);
-      const erosion=noise.fbm(cs*2.3,t*5,sn*2.3,4,2,.5)*.22;
+      const flute=.11*Math.cos(a*flutes+noise.noise3D(cs*1.4,t*.7,sn*1.4))+.035*Math.cos(a*(flutes+2)+t*.4);
+      const erosion=noise.fbm(cs*1.4,t*2.5,sn*1.4,2,2,.5)*.065;
       const r=radius*(profile+flute+erosion)*roundTop;
-      const x=Math.sign(cs)*Math.abs(cs)**.84*r+lean*t*t;
+      const x=Math.sign(cs)*Math.abs(cs)**.84*r+lean*1.35*t*t;
       const z=Math.sign(sn)*Math.abs(sn)**.84*r*(.83+.04*Math.sin(seed));
       const peak=1+smooth(.66,1,t)*(noise.noise3D(cs*1.4,seed,sn*1.4)*.012+.005*Math.cos(a*3));
-      positions.push(x,y*peak+noise.noise3D(cs*2,t*8,sn*2)*.09*radius,z);
+      positions.push(x,y*peak+noise.noise3D(cs*1.5,t*3,sn*1.5)*.035*radius,z);
       uvs.push(i/radial,t);
       if(j<rows&&i<radial){const q=j*(radial+1)+i;indices.push(q,q+1,q+radial+1,q+1,q+radial+2,q+radial+1);}
     }
@@ -50,17 +50,17 @@ function pillar(seed,{height=28,radius=4,cap=.4,taper=.4,lean=.7,flutes=6,radial
   for(let i=0;i<indices.length;i+=3)[indices[i+1],indices[i+2]]=[indices[i+2],indices[i+1]];
   let g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g=mergeVertices(g,1e-4);g.computeVertexNormals();
   const p=g.attributes.position,n=g.attributes.normal;
-  const params={baseSize:radius,crackAlgo:'horizontal',crackDensity:.25,crackWidth:.13,crackDepth:.055};
+  const params={baseSize:radius,crackAlgo:'horizontal',crackDensity:.12,crackWidth:.24,crackDepth:.035};
   for(let i=0;i<p.count;i++){
     const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
     const horizontal=crackDisplace(x,y,z,params,cracks,warp);
-    const vertical=crackDisplace(x,y,z,{...params,crackAlgo:'vertical',crackDepth:.065,crackDensity:.35,crackWidth:.18},cracks,warp);
-    const displacement=-(horizontal+vertical)+noise.fbm(x*1.1,y*.8,z*1.1,3,2,.5)*.055;
+    const vertical=crackDisplace(x,y,z,{...params,crackAlgo:'vertical',crackDepth:.045,crackDensity:.14,crackWidth:.26},cracks,warp);
+    const displacement=-(horizontal+vertical)+noise.fbm(x*.25,y*.18,z*.25,2,2,.5)*.018;
     p.setXYZ(i,x+n.getX(i)*displacement,y+n.getY(i)*displacement*.45,z+n.getZ(i)*displacement);
     const sediment=noise.fbm(x*.11,y*.15,z*.11,3,2,.5);
     const chalk=smooth(.85,.97,y/height)*.68+smooth(.23,.27,y/height)*(1-smooth(.29,.33,y/height))*.24;
-    const c=new THREE.Color('#ca6b32').lerp(new THREE.Color('#eed0a9'),Math.min(.94,chalk+clamp(sediment+.3)*.16));
-    c.multiplyScalar(.97+noise.noise3D(x*.3,y*.13,z*.3)*.08+clamp(n.getY(i))*.035);
+    const c=new THREE.Color('#cb7848').lerp(new THREE.Color('#edc79a'),Math.min(.94,chalk+clamp(sediment+.3)*.16));
+    c.multiplyScalar(.97+noise.noise3D(x*.3,y*.13,z*.3)*.035+clamp(n.getY(i))*.035);
     colors.push(c.r,c.g,c.b);
   }
   g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));g.computeVertexNormals();g.computeBoundingBox();
@@ -97,5 +97,5 @@ const twinB=pillar(1201,{height:35,radius:3.6,cap:.45,taper:.5,radial:48,rows:84
 await save('hoodoo-twins',mergeGeometries([twinA,twinB]));
 await save('hoodoo-fin',cathedral(1423,39,24,7,5));
 const boulder=pillar(1601,{height:3.2,radius:2.6,cap:0,taper:.8,flutes:4,lean:.8,rows:34,radial:48});await save('talus',boulder);
-await writeFile(new URL('manifest.json',out),JSON.stringify({generator:'bamyazi/RockGenerator (MIT); unchanged noise.js and displacement.js; authored hoodoo profiles',geometryPolicy:'Native mesh at all distances and in reflections; no simplification',models:manifest},null,2)+'\n');
+await writeFile(new URL('manifest.json',out),JSON.stringify({generator:'bamyazi/RockGenerator (MIT); unchanged noise.js and displacement.js; imagegen-guided rounded cartoon hoodoo profiles',geometryPolicy:'Native mesh at all distances and in reflections; no simplification',models:manifest},null,2)+'\n');
 console.log(JSON.stringify(manifest.map(({name,triangles,bytes})=>({name,triangles,bytes})),null,2));

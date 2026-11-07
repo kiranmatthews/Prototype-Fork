@@ -85,3 +85,17 @@ No simplification or distance LODs. One atlas material per plant.
 Task IDs, source hashes, dimensions and counts: plants/manifest.json and
 tools/desert-canyon/tripo-plants.json. The original Blender authoring script
 and earlier review images document the superseded first iteration only.
+
+Cartoon sandstone and clay — 7 November 2026
+painted-sandstone.png and painted-clay.png are OpenAI built-in image_gen
+albedo textures, replacing photographic grit in the shared canyon material.
+Exact prompts and the separate art-direction concept are recorded in
+docs/desert-canyon/cartoon/prompts.json. No source-game textures are included.
+The existing MIT RockGenerator noise/displacement technique remains the basis
+of the nine procedural rock assets; authored profiles now use rounded shelves,
+wide caps, broad flutes and restrained erosion. Native vista fins use rounded
+cross sections and broad bevelled beds. Sparse smooth pebbles replace dense
+angular scree at the same total triangle budget. The 76 underlying landscape
+terrain cells are byte-identical; route, sky, lighting and plant placement
+remain unchanged. All authored geometry remains at every viewing distance.
+No Tripo generation or credits were used for this rock/material iteration.

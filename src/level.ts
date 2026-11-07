@@ -1,3 +1,4 @@
+import {COLOURED_GEMS,colouredGemCollection,isColouredGemColour,type ColouredGemColour} from './colouredGems';
 import {createDesertMaterial} from './desertMaterials';
 import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
@@ -104,7 +105,7 @@ import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THE
   SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR, type CustomAtmosphereData } from "./levelAtmosphere";
 export type { CustomAtmosphereData } from "./levelAtmosphere";
 export { SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR } from "./levelAtmosphere";
-import { createCollectibleShell } from "./collectibleSpecular";
+import { createCollectibleShell, CollectibleSpecularMaterial } from "./collectibleSpecular";
 import { createTimeMedal, timeMedalGeometry } from "./timeMedalModel";
 import { trackPresentationImage } from "./presentationLoading";
 import { Rail, batchRailVisuals } from "./rails";
@@ -797,6 +798,7 @@ export interface CustomComponent {
     | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane. `range` + `cycle` send the whole anchor TRAVELLING along `axis` — a swing that also ferries
     | "gate" // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
     | "clock" // time-trial activator: the stopwatch near the start; p = [x, deckY, z]. One per level.
+    | "colouredgem" // hidden exploration prize; p is supported ground, gemColour chooses its identity
     | "comboorb" // optional secret combo-gem activator; p = [x, deckY, z]. At most one per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
@@ -813,6 +815,7 @@ export interface CustomComponent {
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
+  gemColour?: ColouredGemColour; // colouredgem only; distinct from box/combo rewards
   minefieldTrap?: number; // rail: detonate this pressure field on contact
   checkpointTrip?: boolean; // tumblezone: mandatory forward board-ejecting threshold
   openFloor?: boolean; // roofedtemple: retain authored floor; hollowcavebore: physical floor break
@@ -2708,7 +2711,7 @@ export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
   "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
   "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
   "enemy", "crusher", "mover", "spinbridge", "firetiki", "torch", "phasepad", "stone", "pendulum",
-  "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
+  "ropeswing", "gate", "clock", "comboorb", "colouredgem", "zone", "rope", "terrain",
   "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
   "returnportal", "grindosaurus", "angryball", "thorn", "decor", "wumpa", "crystal",
   "bonusplatform", "worldmap", "tumblezone", "coastwall", "mesh",
@@ -2749,7 +2752,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "cycle", "hold", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
-  "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
+  "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir", "gemColour",
   "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "smoothCollision", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopKind", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
@@ -3203,6 +3206,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if((component.t==='colouredgem'&&!isColouredGemColour(component.gemColour))||
+      (component.gemColour!==undefined&&component.t!=='colouredgem'))return null;
     if(component.t!=='enemy'&&(component.kookRole!==undefined||component.alertGroup!==undefined))return null;
     if (component.wallHeights !== undefined && (
       component.t !== 'wallpath' || !finiteTuple(component.wallHeights, 2) ||
@@ -4726,6 +4731,8 @@ export class Level {
     box: THREE.Box3;
     collected: boolean;
   } | null = null;
+  private colouredGemLevelId='';
+  readonly colouredGemPickups:{colour:ColouredGemColour;group:THREE.Group;box:THREE.Box3;collected:boolean}[]=[];
   private committedCrystal = false;
   private committedBoxGem = false;
   // TIME TRIAL: the stopwatch near spawn — touch it to start the clock.
@@ -5601,6 +5608,7 @@ export class Level {
       sfx.play(removed ? 'crateBounce' : 'crateBreak1', removed ? .18 : .35, removed ? 1.5 : 1.15);
     };
     this.name = entry.name;
+    this.colouredGemLevelId=entry.id;
     this.skateRace = entry.data?.skateRace ?? null;
     this.railNavigation = entry.data?.railNavigation ?? null;
     const campaignDefinition = campaignLevelById(entry.id);
@@ -8601,6 +8609,14 @@ export class Level {
             this.spinBridges.push(bridge); this.walls.push(bridge.wallBox);
           } else if (c.t === "mesh") {
             this.buildSurfaceMesh(c,gameplayGroupChainOf(c,data));
+          } else if (c.t === 'colouredgem' && c.gemColour) {
+            const colour=c.gemColour,group=Level.colouredGemMesh(1.35,colour);
+            group.name=`${COLOURED_GEMS[colour].label} hidden gem`;
+            group.position.set(c.p[0],c.p[1]+1.65,c.p[2]);group.userData.baseY=group.position.y;
+            const collected=colouredGemCollection.has(this.colouredGemLevelId,colour);
+            group.visible=!collected;this.root.add(group);
+            this.colouredGemPickups.push({colour,group,collected,box:new THREE.Box3().setFromCenterAndSize(
+              group.position,new THREE.Vector3(2.8,3.5,2.8))});
           } else if (c.t === "clock" || c.t === "comboorb") {
             // run-mode activators: just remember the authored spot — the
             // pickups build after every level's geometry (placeClock /
@@ -18504,6 +18520,21 @@ export class Level {
     return g;
   }
 
+  /** Vivid, lightly translucent special gems share their world and HUD art. */
+  static colouredGemMesh(scale=1,colour:ColouredGemColour='yellow'):THREE.Group {
+    const tint=COLOURED_GEMS[colour].tint,group=Level.gemMesh(scale,tint);
+    for(const child of group.children){
+      if((child as THREE.Mesh).isMesh){
+        const shell=child as THREE.Mesh;(shell.material as THREE.Material).dispose();
+        shell.material=new CollectibleSpecularMaterial(tint,'jelly');shell.name=`${colour} jelly gem`;
+      }else if((child as THREE.Sprite).isSprite){
+        const material=(child as THREE.Sprite).material as THREE.SpriteMaterial;
+        material.color.setHex(tint);material.opacity=.22;
+      }
+    }
+    return group;
+  }
+
   /** Prize shells/materials are per pickup; halo maps and Sprite's quad are shared. */
   private static disposeCollectible(group: THREE.Group): void {
     group.removeFromParent();
@@ -19070,6 +19101,14 @@ export class Level {
     return placed;
   }
 
+  collectColouredGem(pickup:(typeof this.colouredGemPickups)[number]):boolean {
+    if(pickup.collected||!this.colouredGemPickups.includes(pickup)||this.runMode)return false;
+    const fresh=colouredGemCollection.collect(this.colouredGemLevelId,pickup.colour);
+    pickup.collected=true;pickup.group.visible=false;this.lockTrialClock();
+    if(fresh)this.glimmerBurst(pickup.group.position,COLOURED_GEMS[pickup.colour].tint);
+    return fresh;
+  }
+
   /** Touched the materialized gem: it's yours. */
   collectGem(): void {
     if (!this.gemPickup || this.gemPickup.collected) return;
@@ -19139,6 +19178,7 @@ export class Level {
       bobSpin(this.clockPickup.group, 1.3);
     if (this.comboOrb && !this.comboOrb.collected)
       bobSpin(this.comboOrb.group, 1.6);
+    for(const gem of this.colouredGemPickups){gem.group.visible=!gem.collected&&!this.runMode;if(gem.group.visible)bobSpin(gem.group,1.35);}
     if (this.comboGem) bobSpin(this.comboGem.group, 2.0);
     bobSpin(this.gemG, 2.4);
     // ambient glints drip off whatever magic is live (tinted to the pickup)
@@ -19146,6 +19186,7 @@ export class Level {
     if (this.glintT <= 0) {
       this.glintT = 0.2;
       const anchors: { p: THREE.Vector3; c: number }[] = [];
+      for(const gem of this.colouredGemPickups)if(!gem.collected)anchors.push({p:gem.group.position,c:COLOURED_GEMS[gem.colour].tint});
       if (
         this.crystalPickup &&
         !this.crystalPickup.collected &&

@@ -1,3 +1,4 @@
+import {COLOURED_GEMS,type ColouredGemColour} from './colouredGems';
 import { RaceHud } from './race/hud';
 import type { RaceHudState } from './race/types';
 import { toolSectionId } from "./toolRoutes";
@@ -112,6 +113,7 @@ export interface HudState {
   hasCrystal: boolean;
   hasGem: boolean;
   hasComboGem: boolean;
+  colouredGem?: ColouredGemColour;
   inventoryHeld: boolean;
   bonusMode: boolean;
 }
@@ -145,6 +147,8 @@ export class UI {
   private ttOn = false;
   private haloEl!: HTMLElement; // combo-run green viewport halo
   private comboGemIcon!: HTMLElement;
+  private colouredGemIcon!: HTMLElement;
+  private previousColouredGem:ColouredGemColour|undefined;
   private crateIcon!: HTMLElement;
   private wumpaIcon!: HTMLElement;
   // One scene and the game's renderer, drawing into each DOM host rectangle.
@@ -747,6 +751,8 @@ export class UI {
     relicRow.appendChild(this.crystalIcon);
     relicRow.appendChild(this.gemIcon);
     relicRow.appendChild(this.comboGemIcon);
+    this.colouredGemIcon=div("hud-icon hud-icon-gem hud-relic-off");
+    this.colouredGemIcon.style.display="none";relicRow.appendChild(this.colouredGemIcon);
     this.crystalIcon.style.display = "none";
     this.gemIcon.style.display = "none";
     this.comboGemIcon.style.display = "none";
@@ -1248,6 +1254,7 @@ export class UI {
       { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
+      { host: this.colouredGemIcon, revealHost: this.relicRowEl, make: () => Level.colouredGemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
     ];
     for (const [index, { host, revealHost, make, lean, yaw = 0, rate, fill, relic }] of art.entries()) {
       const model = make();
@@ -1544,7 +1551,7 @@ export class UI {
       mode: s.race ? "race" : this.hudMode === "hub" || this.hudMode === "competition" ? this.hudMode : s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
       inventoryHeld: s.inventoryHeld,
-      hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,
+      hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem || !!s.colouredGem,
       nowMs: hudNow,
     });
     if (this.runRowsHidden && !s.bonusMode) {
@@ -1613,6 +1620,20 @@ export class UI {
       this.setRelic(1, this.gemIcon, s.hasGem);
       if (s.hasGem) pop(this.gemIcon);
       this.prevHud.gem = s.hasGem;
+    }
+    if(s.colouredGem!==this.previousColouredGem){
+      this.setRelic(3,this.colouredGemIcon,!!s.colouredGem);
+      if(s.colouredGem){
+        const gem=COLOURED_GEMS[s.colouredGem];
+        this.colouredGemIcon.setAttribute('aria-label',`${gem.label} hidden gem collected`);
+        this.iconSlots[RELIC_SLOT_0+3]?.spin.traverse(object=>{
+          const material=(object as THREE.Mesh).material;
+          for(const m of material?(Array.isArray(material)?material:[material]):[])
+            if(m.userData.collectibleProfile==='jelly')(m as THREE.MeshBasicMaterial).color.setHex(gem.tint);
+        });
+        pop(this.colouredGemIcon);
+      }
+      this.previousColouredGem=s.colouredGem;
     }
     const lifeReadout = s.endlessDeaths ? s.deaths : s.lives;
     if (lifeReadout !== this.prevHud.lives) {
