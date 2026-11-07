@@ -318,41 +318,48 @@ for(const [from,to] of [[18,DESERT_CANYON_START-12],[valley(10),DESERT_VISTA_STA
   }
 }
 
-// Imagegen-guided cactus sculpts replace every former tree and shrub. Keep
-// the worn riding line open, with smaller dry species in sheltered pockets.
-for(let i=0;i<310;i++){
-  const s=core(760)+random()*(DESERT_VISTA_START-core(760)-35),side=random()<.5?-1:1;
-  const pocket=.5+.5*Math.sin(s*.017);
-  if(random()>pocket*.82+.12)continue;
-  const u=side*(desertWidth(s)/2+4+random()*16),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.25;
-  const h=3.2+random()*3.7;
-  decorate('canyonsaguaro',p,desertPlantSize('canyonsaguaro',h),random()*360,'Muted curved saguaro on the canyon shoulder',30);
+// Oversized desert silhouettes read as designed groups from the chase camera.
+// Clearance includes each plant's full rotated footprint, not just its trunk.
+const plant=(kind:DesertPlantKind,s:number,u:number,h:number,rotation:number,nm:string,grp=30)=>{
+  const size=desertPlantSize(kind,h),radius=Math.hypot(size[0],size[2])*.5;
+  u=Math.sign(u||1)*Math.max(Math.abs(u),desertWidth(s)/2+radius+1.8);
+  const p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-h*.045;
+  decorate(kind,p,size,rotation,nm,grp);
+};
+for(let i=0;i<255;i++){
+  const s=25+random()*(DESERT_VISTA_START-60),side=random()<.5?-1:1;
+  if(random()>.42+.42*(.5+.5*Math.sin(s*.017)))continue;
+  plant('canyonsaguaro',s,side*(desertWidth(s)/2+9+random()*22),8+random()*6,
+    desertYaw(s)+(side<0?35:145)+(random()-.5)*35,'Oversized curved cactus framing the trail',30);
 }
 for(let i=0;i<80;i++){
-  const s=30+random()*DESERT_VISTA_START,u=(random()<.5?-1:1)*(45+random()*95),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.3;
-  const h=2.8+random()*3.8;decorate('canyonsaguaro',p,desertPlantSize('canyonsaguaro',h),random()*360,'Saguaro rooted on exposed rock shelves',30);
+  const s=30+random()*(DESERT_VISTA_START-60),u=(random()<.5?-1:1)*(45+random()*95);
+  plant('canyonsaguaro',s,u,9+random()*7,random()*360,'Tall cactus silhouette on sandstone shelves',30);
 }
-for(let i=0;i<190;i++){
-  const s=12+random()*(DESERT_VISTA_START-25),u=(random()<.5?-1:1)*(desertWidth(s)/2+1.8+random()*11),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.1;
-  const h=.45+random()*1.0;
-  const kind:DesertPlantKind=i%2?'canyonpricklypear':'canyonbarrel';
-  decorate(kind,p,desertPlantSize(kind,h),random()*360,'Muted paddle and barrel cacti in sandstone pockets',30);
+// Repeating broad, staggered groups have breathing room between them. A tall
+// cactus, a squat cluster and a sweeping tuft make a readable cartoon rhythm.
+for(let s=22,patch=0;s<DESERT_VISTA_START-24;s+=36+random()*16,patch++){
+  const side=patch%3===0?-1:1,edge=desertWidth(s)/2;
+  const members:Array<[DesertPlantKind,number,number,number]>=[
+    ['canyonpricklypear',0,5,2.5+random()*2],
+    ['canyonbarrel',5.8,8,1.9+random()*1.65],
+    ['canyondryweed',-5.2,6.8,2.0+random()*1.55],
+    ['canyondrygrass',-2.7,2.7,1.3+random()*.9],
+    ['canyondrygrass',7.8,4.2,1.1+random()*.9],
+    ['canyondrygrass',2.4,10.2,1.6+random()*.8],
+    ['canyondryweed',7.2,13,1.9+random()*1.3],
+  ];
+  for(const [kind,ds,offset,h] of members)
+    plant(kind,s+ds,side*(edge+offset),h,desertYaw(s)+(side<0?25:155)+(random()-.5)*55,'Bold asymmetric cactus and dry-weed group',31);
+  // A smaller counter-group keeps the road visually framed without symmetry.
+  for(let j=0;j<3;j++){
+    const kind:DesertPlantKind=j===0?'canyonbarrel':j===1?'canyondryweed':'canyondrygrass';
+    plant(kind,s+14+j*3.2,-side*(edge+4+j*3),j===0?2.1+random():1.4+random(),random()*360,'Offset desert counter-group',31);
+  }
 }
-for(let i=0;i<1200;i++){
-  const s=12+random()*(DESERT_VISTA_START-25),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1+random()*26),p=desertPoint(s,u);
-  p[1]=desertGround(p[0],p[2]);
-  if(i%5===0){const h=.65+random()*.8;decorate('canyondryweed',p,desertPlantSize('canyondryweed',h),random()*360,'Twisting dry desert weed at the trail shoulder',31);}
-  else {const h=.32+random()*.42;decorate('canyondrygrass',p,desertPlantSize('canyondrygrass',h),random()*360,'Sculpted straw bunchgrass at trail shoulders',31);}
-}
-// Dry weed and cactus pockets leave the stone floor and riding line readable.
-for(let i=0;i<440;i++){
-  const s=valley(220)+random()*(lengths[2]-260),side=random()<.5?-1:1;
-  if(Math.sin(s*.027)<-.25)continue;
-  const u=side*(desertWidth(s)/2+1.2+random()*9),p=desertPoint(s,u);
-  if(s>valley(550)&&s<valley(950)&&Math.abs(u-creekOffset(s-DESERT_CANYON_END))<6)continue;
-  p[1]=desertGround(p[0],p[2])-.08;const h=.45+random()*.95;
-  const kind:DesertPlantKind=i%3===0?'canyonpricklypear':'canyondryweed';
-  decorate(kind,p,desertPlantSize(kind,h),random()*360,'Muted cactus and dried weed pockets',31);
+for(const [s,side,h] of [[32,-1,17],[132,1,19],[360,-1,16],[590,1,18],[core(295),-1,18],[core(710),1,20],[valley(380),-1,18],[valley(1010),1,19]]){
+  plant('canyonsaguaro',s,side*(desertWidth(s)/2+11),h,desertYaw(s)+(side<0?30:150),'Landmark cartoon cactus at the next bend',30);
+  plant('canyonpricklypear',s+9,side*(desertWidth(s)/2+7),4.4,desertYaw(s)+60,'Oversized paddle cactus beside the landmark',30);
 }
 for(let i=0;i<370;i++){
   const s=45+random()*(DESERT_VISTA_START-60),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1.2+random()*22),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.12;

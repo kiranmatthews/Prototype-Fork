@@ -9919,3 +9919,37 @@ Production build and the 965,401,893-byte local release pass. The live browser
 finish reaches RUN COMPLETE. `check:levels` passes the expanded native plant
 loader regression and reaches the existing unrelated waterpark texture-owner
 assertion at `tools/test-waterpark-decks.mjs:49`.
+
+## 2026-11-07 — Tripo plants with larger cartoon placement
+
+Used the signed-in Chrome Tripo Studio session to replace the provisional
+Blender plant sculpts with five native Smart Mesh P2.0 assets generated from the
+same imagegen references. Triangle mode, requested targets of 8,000 for saguaro
+and 5,000 for the other species, followed by 2K reference textures with Remove
+Lighting enabled. Total: 550 plan credits (100 mesh + 10 texture per species).
+Actual exports contain 8,074 / 5,202 / 4,341 / 5,388 / 5,495 triangles. Every
+shipped source GLB is byte-identical to its download; no decimation or LODs.
+All five were inspected in Tripo and rendered from four sides locally.
+
+The follow-up request for bigger, cartoonier placement is applied throughout:
+saguaros are 8–20 m tall; paddle and barrel cacti are roughly 2–6.4 m; dry weeds
+and grass are roughly 1.1–3.7 m. Replaced fine scatter with 2,656 larger plants
+in staggered, asymmetric groups, with tall silhouettes marking turns and
+lower clumps framing the shoulders. The clearance calculation includes the
+full cactus arm span. No movement, course, terrain or checkpoint changes.
+Approximately 20 minutes from the Chrome follow-up to reviewed playable.
+
+Validation: native assets/hashes/UVs/materials pass; the full plant footprint
+audit has zero road overlaps (minimum conservative clearance 0.482 m).
+`check:levels` passes the new native loader checks and again reaches the known
+unrelated waterpark material-retirement assertion at
+`tools/test-waterpark-decks.mjs:49`. Production build and 969,390,506-byte local
+release pass. Chrome lite spawn, in-app full render, normal 720 and MAX
+2560×1440 views reviewed with no console errors. Live final descent reaches
+RUN COMPLETE. MAX overlook local median was 35.6 ms; desktop load and render
+settings affect this measurement, so it is not a 60 fps claim.
+
+Provenance: `tools/desert-canyon/tripo-plants.json`,
+`public/desert-canyon/plants/manifest.json`; review evidence:
+`docs/desert-canyon/plants/tripo/iteration.json` and
+`docs/desert-canyon/tripo-cactus-{overlook,finish}.png`.

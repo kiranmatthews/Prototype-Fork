@@ -230,27 +230,34 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
       color:'#709c94',solid:false,castShadow:false,grp:60,nm:'Winding river 500 metres below the rim'});
   }
 
-  // Vegetation follows open habitat pockets, with empty worn riding ground.
-  // Imagegen-guided native plant sculpts keep their silhouettes at every distance.
-  for(let i=0;i<2400;i++){
-    const s=start+55+random()*(length-start-70),side=random()<.56?-1:1;
-    const u=side*(width(s)/2+.35+Math.pow(random(),1.5)*23),p=point(s,u);p[1]=ground(p[0],p[2])-.05;
-    const h=.35+random()*.85;
-    const kind:DesertPlantKind=i%5===0?'canyonpricklypear':i%5===1?'canyonbarrel':i%5===2?'canyondryweed':'canyondrygrass';
-    decor(kind,p,desertPlantSize(kind,h),random()*360,'Muted cactus and dry weed along the worn shoulder',i%5<3);
-    if(i%7===0){const rock=.25+random()*.85;decor('deserttalus',p,[rock*2.2,rock,rock*1.5],random()*360,'Angular sandstone fragments among the native gravel',rock>.45);}
+  // Deliberately oversized, separated clusters frame each reveal. The central
+  // riding corridor remains open even with the cacti's full arm span.
+  const plant=(kind:DesertPlantKind,s:number,u:number,h:number,rotation:number,name:string,shadow=true)=>{
+    const size=desertPlantSize(kind,h),radius=Math.hypot(size[0],size[2])*.5;
+    u=Math.sign(u||1)*Math.max(Math.abs(u),width(s)/2+radius+1.8);
+    const p=point(s,u);p[1]=ground(p[0],p[2])-h*.045;
+    decor(kind,p,size,rotation,name,shadow);
+  };
+  for(let s=start+48,patch=0;s<length-22;s+=34+random()*15,patch++){
+    const side=patch%3===1?1:-1,edge=width(s)/2;
+    for(let j=0;j<9;j++){
+      const kind:DesertPlantKind=j%5===0?'canyonpricklypear':j%5===1?'canyonbarrel':j%5===2?'canyondryweed':'canyondrygrass';
+      const h=kind==='canyonpricklypear'?2.6+random()*2.1:kind==='canyonbarrel'?2+random()*1.6:kind==='canyondryweed'?2+random()*1.7:1.25+random()*1.1;
+      plant(kind,s+(j%3-1)*5.5,side*(edge+3.8+Math.floor(j/3)*6),h,
+        yaw(s)+(side<0?30:150)+(random()-.5)*60,'Sculptural cactus and dry-weed cluster beside the descent',j%5<3);
+    }
+    plant('canyonbarrel',s+17,-side*(edge+6),2.8+random(),yaw(s)+80,'Large barrel cactus marking the opposite shoulder');
+    plant('canyondrygrass',s+22,-side*(edge+4),1.8+random()*.6,yaw(s),'Broad straw tuft at the shoulder');
   }
-  // Curved saguaros silhouette the bends without forming a hedge.
   seed=919711;
-  for(let i=0;i<210;i++){
-    const s=start+80+random()*(length-start-100),side=i%3===0?-1:1,u=side*(12+random()*70);
-    const p=point(s,u);p[1]=ground(p[0],p[2])-.25;
-    const h=3.4+random()*4.5;
-    decor('canyonsaguaro',p,desertPlantSize('canyonsaguaro',h),random()*360,'Sculpted saguaro framing the rolling traverse',true);
+  for(let i=0;i<155;i++){
+    const s=start+80+random()*(length-start-100),side=i%3===0?-1:1;
+    plant('canyonsaguaro',s,side*(18+random()*70),8.5+random()*7,yaw(s)+(side<0?40:140)+(random()-.5)*40,'Tall curved cactus framing the rolling traverse');
   }
-  for(const local of [260,660,1000,1340]){
-    const s=start+local,p=point(s,-11.5);p[1]=ground(p[0],p[2])-.2;
-    decor('canyonsaguaro',p,desertPlantSize('canyonsaguaro',7.4),yaw(s)+55,'Curved foreground cactus and long afternoon shadow',true);
+  for(const [local,side] of [[130,1],[260,-1],[480,1],[660,-1],[850,1],[1000,-1],[1190,1],[1340,-1],[1530,1]]){
+    const s=start+local;
+    plant('canyonsaguaro',s,side*19,18+(local%3),yaw(s)+(side<0?35:145),'Giant cartoon cactus and long afternoon shadow');
+    plant('canyonpricklypear',s+10,side*15,4.8,yaw(s)+50,'Paddle cactus counterpoint to the giant silhouette');
   }
   seed=274039;
   for(let i=0;i<2400;i++){
@@ -261,7 +268,7 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
     const y=ground(x,z),slope=Math.hypot(ground(x+3,z)-ground(x-3,z),ground(x,z+3)-ground(x,z-3))/6;
     if(slope>1.05)continue;
     const kind:DesertPlantKind=i%4===0?'canyonpricklypear':i%4===1?'canyonbarrel':'canyonsaguaro';
-    const h=kind==='canyonsaguaro'?4+random()*5.5:1.3+random()*1.7;
+    const h=kind==='canyonsaguaro'?10+random()*10:3.2+random()*3.2;
     decor(kind,[x,y-.06,z],desertPlantSize(kind,h),random()*360,'Sparse muted cactus habitat across the open basin',false);
   }
   return C;

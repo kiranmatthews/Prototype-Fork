@@ -72,11 +72,16 @@ part of the native surface. See grass-cluster-manifest.json and the reproducible
 tools/desert-canyon/cluster-library-grass.py script.
 
 Muted cactus and dry weed set — 7 November 2026
-Five separate reference images generated with the built-in image_gen tool in
+Five separate reference images generated with OpenAI's built-in image_gen in
 Crash 4 environmental styling. Prompts: tools/desert-canyon/plant-references/prompts.json.
-Native meshes authored in Blender by tools/desert-canyon/build-desert-plants.py
-from those references; unobserved sides are inferred. No Tripo models or credits
-were used for this set. Saguaro, prickly pear, barrel cactus, dry bunchgrass and
-dry sageweed retain their complete geometry at every distance. One shared
-vertex-painted material per model; no external plant textures or billboard LODs.
-Exact source hashes, dimensions and triangle counts: plants/manifest.json.
+Final native meshes generated from those references using the signed-in Tripo
+Studio web app in Chrome: Smart Mesh P2.0, Triangle topology, 2K reference
+textures with Remove Lighting enabled. No HD Model or Ultra Mesh generation.
+Five mesh generations at 100 plan credits and five textures at 10: 550 total.
+Requested triangle targets: 8,000 saguaro, 5,000 each smaller species. Actual
+exports: 8,074 / 5,202 / 4,341 / 5,388 / 5,495 triangles, all below 30,000.
+Each shipped source GLB is byte-identical to its downloaded native export.
+No simplification or distance LODs. One atlas material per plant.
+Task IDs, source hashes, dimensions and counts: plants/manifest.json and
+tools/desert-canyon/tripo-plants.json. The original Blender authoring script
+and earlier review images document the superseded first iteration only.

@@ -1,66 +1,121 @@
 {
-  "method": "Native Blender sculpts from imagegen references, with inferred rear surfaces",
-  "geometryPolicy": "Complete authored geometry at every view distance; no simplified variants",
+  "method": "Tripo web app in Chrome, Smart Mesh P2.0 Triangle and 2K reference texture; plan credits",
+  "geometryPolicy": "Byte-exact original GLB; complete authored geometry at all distances and in reflections",
   "assets": [
     {
       "id": "saguaro",
+      "kind": "canyonsaguaro",
+      "taskId": "75fba114-6bfe-4d12-a9a0-e1b83480a4ff",
+      "requestedTriangles": 8000,
       "file": "saguaro.glb",
-      "triangles": 6688,
+      "triangles": 8074,
+      "vertices": 11297,
       "size": [
-        3.080992579460144,
-        4.880006372928619,
-        1.1107463836669922
+        0.67041015625,
+        0.99951171875,
+        0.3012695610523224
       ],
-      "sha256": "37b7b08f04c9f89458a9b63a2ea4b849b841b0b344b79ccfc1a300d13d2186bd",
-      "reference": "../../../tools/desert-canyon/plant-references/saguaro.png"
+      "bytes": 1197544,
+      "sha256": "e35874d95605173577cf773db584b109ee3b7c9c2e2504f645bea0685b7672c0",
+      "reference": "../../../tools/desert-canyon/plant-references/saguaro.png",
+      "textureResolution": 2048,
+      "credits": {
+        "smartMesh": 100,
+        "texture": 10
+      },
+      "nativeExportPreserved": true
     },
     {
       "id": "prickly-pear",
+      "kind": "canyonpricklypear",
+      "taskId": "5c748aa6-8361-4663-a31e-9bd0d2a3abe2",
+      "requestedTriangles": 5000,
       "file": "prickly-pear.glb",
-      "triangles": 4592,
+      "triangles": 5202,
+      "vertices": 3813,
       "size": [
-        3.221000909805298,
-        2.7420987486839294,
-        0.5004981160163879
+        0.99951171875,
+        0.64404296875,
+        0.3471679091453552
       ],
-      "sha256": "66dabf4bce8b122c8ac6bd5806938f93c5ccf607094656cae13f4727a484f6df",
-      "reference": "../../../tools/desert-canyon/plant-references/prickly-pear.png"
+      "bytes": 638176,
+      "sha256": "64f4cfb2bae49dcb20d2526c45ef370a5f24fc23e9c20468065d3a41cdb605cf",
+      "reference": "../../../tools/desert-canyon/plant-references/prickly-pear.png",
+      "textureResolution": 2048,
+      "credits": {
+        "smartMesh": 100,
+        "texture": 10
+      },
+      "nativeExportPreserved": true
     },
     {
       "id": "barrel-cactus",
+      "kind": "canyonbarrel",
+      "taskId": "5e59e45d-1797-4d94-83f4-5fadbf5e7b3b",
+      "requestedTriangles": 5000,
       "file": "barrel-cactus.glb",
-      "triangles": 4308,
+      "triangles": 4341,
+      "vertices": 6910,
       "size": [
-        1.8289151191711426,
-        1.857701063156128,
-        1.621874213218689
+        0.99951171875,
+        0.90478515625,
+        0.7309570908546448
       ],
-      "sha256": "903c6bc4bb53e50cca6076a630e4e267d28e24979e9ec82942e2d3264913b3ea",
-      "reference": "../../../tools/desert-canyon/plant-references/barrel-cactus.png"
+      "bytes": 901904,
+      "sha256": "50e11a7afd0603ce30e186cbb9ffabc258a8fa9c3984f2eb2ad68a0eceff52a0",
+      "reference": "../../../tools/desert-canyon/plant-references/barrel-cactus.png",
+      "textureResolution": 2048,
+      "credits": {
+        "smartMesh": 100,
+        "texture": 10
+      },
+      "nativeExportPreserved": true
     },
     {
       "id": "dry-bunchgrass",
+      "kind": "canyondrygrass",
+      "taskId": "68e92e7e-215d-4dac-8201-bd41ed5dae98",
+      "requestedTriangles": 5000,
       "file": "dry-bunchgrass.glb",
-      "triangles": 4900,
+      "triangles": 5388,
+      "vertices": 7184,
       "size": [
-        1.0135739743709564,
-        1.2599312055390328,
-        1.197587013244629
+        0.99951171875,
+        0.70947265625,
+        0.85791015625
       ],
-      "sha256": "f034bee2fe000aa6128a8f53bf511c1a75a12fc788264ad8b1694071934e2c99",
-      "reference": "../../../tools/desert-canyon/plant-references/dry-bunchgrass.png"
+      "bytes": 879464,
+      "sha256": "5b5e4eb2b8941a147cc0d8b111bf8c3a3ac291bdc8df57f3a846982b7b4874a5",
+      "reference": "../../../tools/desert-canyon/plant-references/dry-bunchgrass.png",
+      "textureResolution": 2048,
+      "credits": {
+        "smartMesh": 100,
+        "texture": 10
+      },
+      "nativeExportPreserved": true
     },
     {
       "id": "dry-sageweed",
+      "kind": "canyondryweed",
+      "taskId": "2f4e1f4b-87ed-4f77-9b36-7686a9494f5b",
+      "requestedTriangles": 5000,
       "file": "dry-sageweed.glb",
-      "triangles": 4740,
+      "triangles": 5495,
+      "vertices": 9358,
       "size": [
-        1.4927347302436829,
-        1.5447339788079262,
-        1.3294079899787903
+        0.99951171875,
+        0.85791015625,
+        0.3686522841453552
       ],
-      "sha256": "aed0553fc1e3f91654a5174861acf837bb2142f60aaacbffa6e35b7e8ab90e95",
-      "reference": "../../../tools/desert-canyon/plant-references/dry-sageweed.png"
+      "bytes": 1119692,
+      "sha256": "983737daeb6226eca4b83de76e53384dd41142201e54d3410fb51f0c6c75c49b",
+      "reference": "../../../tools/desert-canyon/plant-references/dry-sageweed.png",
+      "textureResolution": 2048,
+      "credits": {
+        "smartMesh": 100,
+        "texture": 10
+      },
+      "nativeExportPreserved": true
     }
   ]
 }

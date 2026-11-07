@@ -1,0 +1,36 @@
+{
+  "method": "Tripo Studio in Chrome; Smart Mesh P2.0 Triangle; 2K texture from the imagegen references, remove lighting enabled",
+  "planCredits": 550,
+  "assets": [
+    {
+      "id": "saguaro",
+      "kind": "canyonsaguaro",
+      "taskId": "75fba114-6bfe-4d12-a9a0-e1b83480a4ff",
+      "requestedTriangles": 8000
+    },
+    {
+      "id": "prickly-pear",
+      "kind": "canyonpricklypear",
+      "taskId": "5c748aa6-8361-4663-a31e-9bd0d2a3abe2",
+      "requestedTriangles": 5000
+    },
+    {
+      "id": "barrel-cactus",
+      "kind": "canyonbarrel",
+      "taskId": "5e59e45d-1797-4d94-83f4-5fadbf5e7b3b",
+      "requestedTriangles": 5000
+    },
+    {
+      "id": "dry-bunchgrass",
+      "kind": "canyondrygrass",
+      "taskId": "68e92e7e-215d-4dac-8201-bd41ed5dae98",
+      "requestedTriangles": 5000
+    },
+    {
+      "id": "dry-sageweed",
+      "kind": "canyondryweed",
+      "taskId": "2f4e1f4b-87ed-4f77-9b36-7686a9494f5b",
+      "requestedTriangles": 5000
+    }
+  ]
+}

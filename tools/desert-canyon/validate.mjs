@@ -9,7 +9,7 @@ const data=m.DESERT_CANYON_LEVEL,fromVista=process.argv.includes('--vista-only')
 const plants=JSON.parse(await readFile('public/desert-canyon/plants/manifest.json','utf8'));
 const plantKinds=new Set(['canyonsaguaro','canyonpricklypear','canyonbarrel','canyondrygrass','canyondryweed']);
 const planting=data.components.filter(c=>c.t==='decor'&&[30,31,61].includes(c.grp)&&c.dkind!=='deserttalus');
-assert.ok(planting.length>3000,'The cactus habitat must extend throughout the course');
+assert.ok(planting.length>1800,'The cactus habitat must extend throughout the course');
 assert.ok(planting.every(c=>plantKinds.has(c.dkind)),'No tree, leafy shrub or previous green grass may remain in the canyon planting');
 for(const kind of plantKinds)assert.ok(planting.some(c=>c.dkind===kind),`Missing desert species ${kind}`);
 for(const asset of plants.assets){
@@ -19,10 +19,25 @@ for(const asset of plants.assets){
   const primitives=json.meshes.flatMap(mesh=>mesh.primitives);
   const triangles=primitives.reduce((n,p)=>n+json.accessors[p.indices].count/3,0);
   assert.equal(triangles,asset.triangles);assert.ok(triangles<=12000,`Excessive plant budget ${asset.id}`);
-  assert.ok(primitives.every(p=>p.attributes.COLOR_0!==undefined&&p.attributes.NORMAL!==undefined),'Plant sculpt lost its authored colour or normals');
+  assert.ok(primitives.every(p=>p.attributes.NORMAL!==undefined),'Plant sculpt lost its authored normals');
+  assert.ok(primitives.every(p=>p.attributes.COLOR_0!==undefined)||(json.materials[0].pbrMetallicRoughness?.baseColorTexture&&primitives.every(p=>p.attributes.TEXCOORD_0!==undefined)),'Plant sculpt lost its authored colour');
   assert.equal(json.materials.length,1,'Native instancing needs one shared plant material');
 }
-console.log(JSON.stringify({desertPlantInstances:planting.length,species:plants.assets.map(a=>({id:a.id,triangles:a.triangles})),allPreviousTreesAndShrubsReplaced:true}));
+// Check full horizontal silhouettes against the riding corridor at overlapping
+// elevations. Large cartoon arms must not conceal the usable road width.
+const routeSamples=[];
+for(let s=0;s<m.DESERT_LENGTH;s+=3)routeSamples.push({p:m.desertPoint(s),width:m.desertWidth(s)});
+let plantClearance=Infinity;
+for(const plant of planting){
+  const radius=Math.hypot(plant.s[0],plant.s[2])*.5;
+  for(const sample of routeSamples){
+    if(plant.p[1]>sample.p[1]+2||plant.p[1]+plant.s[1]<sample.p[1]-1)continue;
+    const clearance=Math.hypot(plant.p[0]-sample.p[0],plant.p[2]-sample.p[2])-radius-sample.width*.5;
+    plantClearance=Math.min(plantClearance,clearance);
+    assert.ok(clearance>=0,`${plant.dkind} intrudes into the riding corridor`);
+  }
+}
+console.log(JSON.stringify({desertPlantInstances:planting.length,minimumPlantClearance:plantClearance,species:plants.assets.map(a=>({id:a.id,triangles:a.triangles})),allPreviousTreesAndShrubsReplaced:true}));
 if(process.argv.includes('--plants-only'))process.exit(0);
 assert.ok(!data.components.some(c=>c.grp>=60&&c.grp<=64&&(c.outOfBounds||c.lethal)), 'The freeride landscape must not contain boundary traps or lethal catch planes');
 const vistaLength=m.DESERT_LENGTH-m.DESERT_VISTA_START;
