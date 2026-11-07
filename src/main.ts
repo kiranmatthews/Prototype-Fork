@@ -39,6 +39,7 @@ import { CompetitionPresentation, type CompetitionAction } from "./competition/p
 import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
 import { CloudPathPass } from "./cloudPathPass";
+import {DesertHeatMirage} from './desertHeatMirage';
 import {StormSquall} from './stormSquall';
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
@@ -1142,6 +1143,7 @@ function releaseGameplayPostForGameFlow(): void {
 }
 
 const cloudPathPass=new CloudPathPass();
+const desertHeat=new DesertHeatMirage();
 
 function renderCloudPrimaryScene(
   activeRenderer:THREE.WebGLRenderer,
@@ -1149,6 +1151,8 @@ function renderCloudPrimaryScene(
   activeCamera:THREE.Camera,
   target:THREE.WebGLRenderTarget|null,
 ):boolean {
+  desertHeat.configure(current.id,level.desertHeat);
+  if(desertHeat.render(activeRenderer,activeScene,activeCamera,target,!paused&&!gameFlow.blocksGameplay))return true;
   return cloudPathPass.render(activeRenderer,activeScene,activeCamera,target);
 }
 
@@ -2531,6 +2535,7 @@ function switchLevel(
   worldMapController?.deactivate();
   worldMapUI?.hide();
   cloudPathPass.release();
+  desertHeat.release();
   level.dispose(candidate);
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
@@ -5001,6 +5006,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;
   cloudPathPass.release();
+  desertHeat.release();
 }, () => {
   recordPresentationStage('graphics-restored');
   installSceneryShadowPass(renderer, () => level);
@@ -5768,6 +5774,7 @@ requestAnimationFrame(frame);
   toggleCharacterTailVisibility: () => player.toggleCharacterTailVisibility(),
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   getStormDiagnostics: () => stormSquall.diagnostics,
+  desertHeat,
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,

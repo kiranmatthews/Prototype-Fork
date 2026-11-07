@@ -10154,3 +10154,41 @@ Evidence: [before](text-tuning-scroll/before.png),
 [short landscape bottom](text-tuning-scroll/compact-bottom.png),
 [full-render bottom](text-tuning-scroll/full-bottom.png),
 [native render mode](text-tuning-scroll/native-render-mode.png).
+
+## 2026-11-08 — Dusty Road and Cactus Cache heat mirage
+
+Prompt: add distant desert heat flicker on Dusty Road and its bonus only, using
+the Jak and Daxter lab's torch/flame distortion method. First playable in about
+8 minutes; real-camera and GPU verification completed in about 16 minutes.
+
+Reused the lab's eleven-slice auxiliary distortion topology and frozen-scene
+sampling method. Low, flattened world-space bands gently shift their inner
+sampling ring vertically. Forty-two terrain-following pockets cover exposed rim,
+open canyon and basin views along the main camera spine; seven gentler pockets
+sit behind the bonus shelves. Near-distance fading keeps the player view clear.
+The retained depth buffer occludes the effect behind foreground rock and plants.
+One colour copy and one instanced draw are added only when pockets enter view.
+Copy storage follows the actual native/720p target and its byte/HDR format; level
+exit and graphics recovery release it. Scope includes the bonus's campaign
+`bonus:bryce-canyon` ID and its standalone `bonus-bryce-canyon` preview ID.
+
+Focused CPU tests and the unchanged Jak distortion regression pass. Real GPU
+checks at 640×360, 1280×720 and 2560×1440 pass in byte and half-float HDR modes:
+zero-warp pixels are identical, animated warps change the image, and foreground
+and outside-band errors are zero. Full-render player-camera reviews cover the
+sunlit narrows, basin, river overlook and the normal Cactus Cache transition at
+720p and MAX/native. Native A/B captures measure 5,385 changed scene pixels at
+the overlook and 16,065 in the bonus, with zero control-frame difference. No
+browser console errors or warnings. The protected-layout check confirms all 116
+terrain cells, route, sky, lighting, plants and the supported gem walk unchanged.
+
+`npm run check:levels` reaches the known unrelated assertion in
+`tools/test-waterpark-decks.mjs:49` (material/texture retirement); affected heat
+checks and canyon preservation checks pass. Production build and the
+963,319,931-byte release-size check pass. The lite upper-rim view also shows
+2,501 changed pixels with a zero-difference control frame. Leaving the level
+releases the copy and all patches. No full suite was run.
+
+Evidence: [main run](desert-canyon/dusty-road/heat-mirage.png),
+[bonus](desert-canyon/dusty-road/heat-mirage-bonus.png),
+[GPU and gameplay measurements](desert-canyon/dusty-road/heat-mirage-review.json).

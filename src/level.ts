@@ -14,6 +14,7 @@ import {addWetRooftopLook} from './wetRooftop';
 import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';
 
 import {Minefields,validMinefields,type MinefieldData} from './minefields';
+import {validDesertHeat,type DesertHeatPatch} from './desertHeatData';
 import {addWaterparkDeckLook} from './waterparkDeck';
 import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';
 import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
@@ -1240,6 +1241,8 @@ export interface CustomLevelData {
   /** Scoped scenery materials; native Jungle rendering remains the default. */
   jungleStyle?: 'painterly';
   atmosphere?: CustomAtmosphereData; // bounded final fog/light/backdrop overrides
+  /** Authored distant hot-air pockets; runtime restricted to Dusty Road and its bonus. */
+  desertHeat?: DesertHeatPatch[];
   components: CustomComponent[];
   layers?: CustomLayer[];
   groups?: CustomGroup[];
@@ -2740,7 +2743,7 @@ const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter', 'kiteTow',
   "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "crateLayoutRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "verticalLoop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
-  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
+  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere", "desertHeat",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
@@ -2997,6 +3000,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
   if (source.crateLayoutRevision !== undefined && source.crateLayoutRevision !== 1) return null;
   if (source.encounter !== undefined && source.encounter !== 'crab-chief') return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
+  if (source.desertHeat !== undefined && !validDesertHeat(source.desertHeat)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
     return null;
   if(source.jungleStyle!==undefined&&source.jungleStyle!=='painterly')return null;
@@ -6350,6 +6354,7 @@ export class Level {
   // comes through correct by construction. Authored geometry, scenery and
   // motion retain their component identities so an edit rebuilds their logic.
   private builtFromData: CustomLevelData | null = null;
+  get desertHeat():readonly DesertHeatPatch[]|undefined {return this.builtFromData?.desertHeat;}
   treehouseStairPath: TreehouseStairPath | null = null;
   private capturedSceneryMeshes: THREE.Mesh[] = [];
   private meshSandMaterials = new Map<string, THREE.MeshStandardMaterial>();

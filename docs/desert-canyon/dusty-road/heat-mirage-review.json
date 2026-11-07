@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-08",
+  "method": "Jak lab eleven-slice auxiliary strip; frozen framebuffer, animated inner sampling ring, preserved scene depth",
+  "scope": ["bryce-canyon", "bonus:bryce-canyon", "bonus-bryce-canyon"],
+  "authoredPatches": {"main": 42, "bonus": 7},
+  "gpu": {
+    "pass": true,
+    "identityMaxErrorAllModes": 0,
+    "foregroundMaxErrorAllModes": 0,
+    "outsideBandMaxErrorAllModes": 0,
+    "results": [
+      {"hdr": false, "size": [640, 360], "warpedPixels": 2232, "animatedPixels": 2936},
+      {"hdr": false, "size": [1280, 720], "warpedPixels": 4822, "animatedPixels": 6508},
+      {"hdr": false, "size": [2560, 1440], "warpedPixels": 10696, "animatedPixels": 15974},
+      {"hdr": true, "size": [640, 360], "warpedPixels": 2320, "animatedPixels": 3087},
+      {"hdr": true, "size": [1280, 720], "warpedPixels": 4928, "animatedPixels": 6686},
+      {"hdr": true, "size": [2560, 1440], "warpedPixels": 10813, "animatedPixels": 16190}
+    ]
+  },
+  "gameplay": {
+    "rimLite720": {"controlPixels": 0, "warpedPixels": 2501, "animatedPixels": 2490, "copySize": [1280, 720], "copyType": "UnsignedByte"},
+    "overlook720": {"controlPixels": 232, "warpedPixels": 1491, "animatedPixels": 1541, "copySize": [1280, 720], "copyType": "HalfFloat"},
+    "overlookNative": {"controlPixels": 0, "warpedPixels": 5385, "animatedPixels": 5416, "warpBoundsBottomOrigin": [859, 805, 1244, 886], "copySize": [2560, 1440], "copyType": "UnsignedByte"},
+    "bonus720": {"controlPixels": 63, "warpedPixels": 4216, "animatedPixels": 4184, "copySize": [1280, 720], "copyType": "HalfFloat"},
+    "bonusNative": {"controlPixels": 0, "warpedPixels": 16065, "animatedPixels": 15825, "warpBoundsBottomOrigin": [703, 672, 2400, 855], "copySize": [2560, 1440], "copyType": "UnsignedByte"},
+    "normalFrameMsObserved": {"overlookMedian": 16.7, "overlookP95": 18.2, "bonusMedian": 16.7, "bonusP95": 18.6},
+    "extraWorldRenders": 0,
+    "extraDraws": 1,
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "note": "720p control differences come from independently rendered HUD/post presentation. MAX/native controls are pixel-identical. Timing is a local observation, not a cross-device performance guarantee."
+  },
+  "protectedLayout": {"pass": true, "terrainCells": 116, "skyLightingRouteAndPlantsUnchanged": true, "gemWalkFrames": 57},
+  "checks": {"heatCPU": "pass", "jakDistortion": "pass", "canyonPreservation": "pass", "build": "pass", "releaseBytes": 963319931, "levelExitReleasesCopyAndPatches": true, "checkLevels": "known unrelated waterpark-decks.mjs:49 assertion"}
+}

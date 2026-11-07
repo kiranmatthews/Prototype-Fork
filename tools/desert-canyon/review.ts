@@ -10,6 +10,33 @@ const bonusOption=document.createElement('option');bonusOption.value=String(DESE
 const location=panel.querySelector('[aria-label="Canyon location"]') as HTMLSelectElement;
 const output=panel.querySelector('output')!,buttons=panel.querySelectorAll('button');
 const gemArtButton=document.createElement('button');gemArtButton.textContent='Review yellow gem';panel.insertBefore(gemArtButton,output);
+const heatControl=document.createElement('label');heatControl.innerHTML='<input type="checkbox" checked aria-label="Desert heat mirage"> Heat mirage';panel.insertBefore(heatControl,output);
+heatControl.querySelector('input')!.onchange=e=>{g.desertHeat.enabled=(e.target as HTMLInputElement).checked;};
+const heatPhase=document.createElement('select');heatPhase.setAttribute('aria-label','Heat animation');
+heatPhase.innerHTML='<option value="live">Heat: animated</option><option value="0">Heat: phase 0</option><option value="0.35">Heat: phase 0.35</option>';
+heatPhase.onchange=()=>{g.desertHeat.reviewTime=heatPhase.value==='live'?null:Number(heatPhase.value);};panel.insertBefore(heatPhase,output);
+const heatBonus=document.createElement('button');heatBonus.textContent='Enter Cactus Cache';
+heatBonus.onclick=()=>{running=false;g.launchReview.rate=1;g.enterBonusRound();};panel.insertBefore(heatBonus,output);
+let heatPixels:unknown=null;
+const measureHeat=document.createElement('button');measureHeat.textContent='Measure heat pixels';panel.insertBefore(measureHeat,output);
+measureHeat.onclick=()=>{
+  const enabled=g.desertHeat.enabled,time=g.desertHeat.reviewTime;
+  const gl=g.renderer.getContext(),w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
+  const capture=(active:boolean,phase:number)=>{
+    g.desertHeat.enabled=active;g.desertHeat.reviewTime=phase;g.captureBonusReviewFrame();
+    const pixels=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return pixels;
+  };
+  const diff=(a:Uint8Array,b:Uint8Array)=>{
+    let changed=0,max=0;const bounds=[w,h,0,0];
+    for(let i=0;i<a.length;i+=4){
+      const d=Math.max(Math.abs(a[i]-b[i]),Math.abs(a[i+1]-b[i+1]),Math.abs(a[i+2]-b[i+2]));max=Math.max(max,d);
+      if(d>2){changed++;const x=i/4%w,y=Math.floor(i/4/w);bounds[0]=Math.min(bounds[0],x);bounds[1]=Math.min(bounds[1],y);bounds[2]=Math.max(bounds[2],x);bounds[3]=Math.max(bounds[3],y);}
+    }return {changed,max,bounds};
+  };
+  try{const baseline=capture(false,0),still=capture(false,0),a=capture(true,0),b=capture(true,.35);
+    heatPixels={size:[w,h],control:diff(baseline,still),effect:diff(still,a),motion:diff(a,b)};
+  }finally{g.desertHeat.enabled=enabled;g.desertHeat.reviewTime=time;}
+};
 let gemPreview:THREE.Group|undefined;
 let running=false,progress=0,saveRequested=false,frames=0,settleUntil=0,previousJump=false,savedFrame='';
 let gemSupport:{y:number;name:string}|undefined;
@@ -94,7 +121,7 @@ function report(){
   if(!running&&settleUntil&&performance.now()>settleUntil){g.launchReview.rate=0;settleUntil=0;}
   if(g.frameStats.frame!==lastFrame){lastFrame=g.frameStats.frame;timings.push(g.frameStats.rawDt*1000);if(timings.length>240)timings.shift();}
   const sorted=timings.slice().sort((a,b)=>a-b),performanceMs={median:+(sorted[Math.floor(sorted.length*.5)]||0).toFixed(1),p95:+(sorted[Math.floor(sorted.length*.95)]||0).toFixed(1),samples:sorted.length};
-  output.textContent=JSON.stringify({loading:g.getLoadingDiagnostics(),state:p.state,grounded:p.grounded,colouredGems:l.colouredGemPickups.map((gem:any)=>({colour:gem.colour,collected:gem.collected,position:gem.group.position.toArray()})),gemSupport,groundSurface:p.groundHit?.name,position:p.pos.toArray().map((x:number)=>+x.toFixed(2)),route:+progress.toFixed(1),running,camera:{rig:l.cameraRig,chase:g.TUNING.chaseCam,authoredSkate:p.authoredSkateCamera,position:g.camera.position.toArray(),direction:g.camera.getWorldDirection(new THREE.Vector3()).toArray()},assets,render:g.getRenderFrameStats(),resolution:g.getRenderQualitySizes(),drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],performanceMs,savedFrame});
+  output.textContent=JSON.stringify({heat:g.desertHeat.diagnostics,heatPixels,loading:g.getLoadingDiagnostics(),state:p.state,grounded:p.grounded,colouredGems:l.colouredGemPickups.map((gem:any)=>({colour:gem.colour,collected:gem.collected,position:gem.group.position.toArray()})),gemSupport,groundSurface:p.groundHit?.name,position:p.pos.toArray().map((x:number)=>+x.toFixed(2)),route:+progress.toFixed(1),running,camera:{rig:l.cameraRig,chase:g.TUNING.chaseCam,authoredSkate:p.authoredSkateCamera,position:g.camera.position.toArray(),direction:g.camera.getWorldDirection(new THREE.Vector3()).toArray()},assets,render:g.getRenderFrameStats(),resolution:g.getRenderQualitySizes(),drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],performanceMs,savedFrame});
   if(saveRequested){
     saveRequested=false;
     g.renderer.domElement.toBlob((blob:Blob|null)=>{if(!blob)return;

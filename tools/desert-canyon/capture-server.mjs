@@ -7,6 +7,8 @@ names.yellowCrystal='dusty-road/yellow-crystal-material.png';
 names.gemMenus='dusty-road/coloured-gem-menus.png';
 names.gemStats='dusty-road/coloured-gem-stats.png';
 names.gemBoard='dusty-road/coloured-gem-board.png';
+names.heat='dusty-road/heat-mirage.png';
+names.heatBonus='dusty-road/heat-mirage-bonus.png';
 const name=names[process.argv[2]??'overview'];
 if(!name)throw new Error('Choose overview, start, valley, chute, creek or opening');
 const target=new URL('../../docs/desert-canyon/'+name,import.meta.url);

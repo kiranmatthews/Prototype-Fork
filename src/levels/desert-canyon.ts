@@ -4,6 +4,7 @@ import type {CustomComponent,CustomLevelData,DecorKind} from '../level';
 import {lazySourceField} from './lazy-source';
 import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
 import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
+import type {DesertHeatPatch} from '../desertHeatData';
 
 type Point=[number,number,number];
 /** User replay 2026-11-07T18-58-38, recovered from Sunset Promontory after
@@ -428,11 +429,30 @@ add({t:'bonusplatform',p:[...DESERT_BONUS_ENTRANCE],to:bonusReturn,grp:50,nm:'Ca
 return C;
 }
 
+/** Low bands on exposed shelves seen ahead along the descending camera lane.
+ * Keep the shaded slot and creek bridge quiet; widen the pockets where the
+ * route opens onto sunlit talus and the final basin. Heights follow terrain. */
+function buildDesertHeat():DesertHeatPatch[]{
+  const patches:DesertHeatPatch[]=[];
+  for(const s of [190,390,640,core(250),core(520),core(930),valley(150),valley(450),
+    valley(1050),DESERT_VISTA_START+180,DESERT_VISTA_START+490,DESERT_VISTA_START+830,
+    DESERT_VISTA_START+1140,DESERT_LENGTH-100]){
+    const vista=s>DESERT_VISTA_START;
+    for(let i=0;i<3;i++){
+      const p=desertPoint(Math.min(DESERT_LENGTH,s+i*28),(i-1)*(vista?48:19));
+      p[1]=desertGround(p[0],p[2])+(vista?5:2.8);
+      patches.push({p,size:[(vista?33:19)+i*5,(vista?4.5:2.5)+i*.3],strength:1.45+i*.15});
+    }
+  }
+  return patches;
+}
+
 export const DESERT_CANYON_LEVEL:CustomLevelData={
   v:1,name:'Dusty Road',spawn:desertPoint(6).map((n,i)=>i===1?n+.35:n) as Point,startWarpPad:false,
   killY:-1700,sky:'bryce-golden-hour',jungleStyle:'painterly',hugeDropBail:false,
   keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.12,
   cameraRig:{camDist:8,camHeight:3.6,camPitch:9,camFov:70},
+  desertHeat:buildDesertHeat(),
   atmosphere:{backdrop:'painted sky',fogEnabled:true,fogNear:650,fogFar:1850,fogColor:'#d7b4a7',
     drawDistance:2000,ambientSky:'#9aaece',ambientGround:'#9d6137',ambientIntensity:.92,
     sunColor:'#ffdab0',sunIntensity:4.1,sunDirection:[.67,.5,.55],fillColor:'#98aad0',fillIntensity:.24,shadowStrength:1,
