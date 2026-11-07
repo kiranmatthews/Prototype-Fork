@@ -53,6 +53,20 @@ MIT RockGenerator SimplexNoise implementation, seed 20261107. No game files,
 video frames or third-party landscape images are shipped. The full native
 landscape is baked by tools/desert-canyon/build-vista.mjs into spatial cells;
 all vertices, faces, UVs and colours remain at every viewing distance.
-The original CC0 ambientCG mineral maps supply surface detail. Trees reuse
+The CC0 ambientCG Rock030 displacement map supplies fine relief. Trees reuse
 the full canyon conifer and original Country Club umbrella pine, with original
 atlases. See vista/manifest.json for geometry counts and per-cell hashes.
+
+Imagegen transformation iteration (7 November 2026)
+golden-hour-sky.png, sandstone-strata.png and trail-gravel.png were generated
+with OpenAI's built-in image_gen. The sky and sandstone received a second
+iteration based on native-resolution gameplay review. Exact prompts and
+concept/gameplay distinctions are in docs/desert-canyon/transformation-iterations.json.
+They contain no source-game textures or extracted video imagery.
+
+grass-cluster.glb batches four complete LOD0 copies from the existing licensed
+public/carlisle-coast-fidelity/grass-tuft-b.glb. All 672 LOD0 triangles per tuft,
+attributes, UVs and original embedded atlases survive; the final patch has
+2,688 triangles at every viewing distance. The unused source LOD1 is not a
+part of the native surface. See grass-cluster-manifest.json and the reproducible
+tools/desert-canyon/cluster-library-grass.py script.

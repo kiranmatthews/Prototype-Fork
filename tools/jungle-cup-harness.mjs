@@ -25,6 +25,7 @@ export async function withSkateRuntime(run, options = {}) {
   const ast = ts.createSourceFile('fixture.mjs', fixture, ts.ScriptTarget.Latest, true);
   const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
   new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
+  await options.prepareRuntime?.();
   const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
   const warn = console.warn, error = console.error;
   console.warn = (...a) => { if (!/failed|GLB|procedural skateboard/i.test(String(a[0]))) warn(...a); };

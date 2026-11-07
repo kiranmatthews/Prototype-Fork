@@ -6,14 +6,15 @@ import {withSkateRuntime,makeInput} from '../jungle-cup-harness.mjs';
 const bundle=await build({entryPoints:['src/levels/desert-canyon.ts'],bundle:true,format:'esm',platform:'node',write:false});
 const m=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const data=m.DESERT_CANYON_LEVEL,fromVista=process.argv.includes('--vista-only');
+assert.ok(!data.components.some(c=>c.grp>=60&&c.grp<=64&&(c.outOfBounds||c.lethal)), 'The freeride landscape must not contain boundary traps or lethal catch planes');
 const vistaLength=m.DESERT_LENGTH-m.DESERT_VISTA_START;
 assert.ok(vistaLength>1700,'The exposed rim must add a substantial chapter after the old finish');
 assert.ok(m.desertPoint(m.DESERT_VISTA_START)[1]-m.desertPoint(m.DESERT_LENGTH)[1]>330,'The new chapter must keep descending');
 let vistaProbes=0;
 for(let s=m.DESERT_VISTA_START+250;s<m.DESERT_LENGTH-120;s+=80){
-  const p=m.desertPoint(s),right=m.desertPoint(s,700),lip=m.desertPoint(s,18),left=m.desertPoint(s,-40);
-  assert.ok(p[1]-m.desertGround(right[0],right[2])>300,`Missing vast right-hand drop at ${s}`);
-  assert.ok(p[1]-m.desertGround(lip[0],lip[2])>15,`Right ledge does not expose the valley at ${s}`);
+  const p=m.desertPoint(s),right=m.desertPoint(s,700),lip=m.desertPoint(s,75),left=m.desertPoint(s,-70);
+  assert.ok(p[1]-m.desertGround(right[0],right[2])>200,`Missing vast right-hand drop at ${s}`);
+  assert.ok(p[1]-m.desertGround(lip[0],lip[2])>30,`Right slope does not expose the valley at ${s}`);
   assert.ok(m.desertGround(left[0],left[2])-p[1]>10,`Missing uphill sandstone face at ${s}`);
   vistaProbes++;
 }
@@ -21,6 +22,9 @@ for(let s=m.DESERT_VISTA_START+250;s<m.DESERT_LENGTH-120;s+=80){
 await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');
   assert.ok(normalizeCustomLevelData(data),'Canyon must pass the editor/import contract');
+  await level.jungleAssets.ready();
+  level.root.updateMatrixWorld(true);level.prepareWorldSolids();
+  assert.ok(level.groundMeshes.some(mesh=>mesh.userData.worldSolidProxy),'Native landscape assets must supply exact physical ground');
   assert.equal(data.components.filter(c=>c.t==='gate').length,1);
   assert.ok(m.DESERT_LENGTH>3300,'Expanded descent must be substantially longer than the original 1,392 m');
   assert.ok(m.DESERT_CANYON_START>650&&m.DESERT_LENGTH-m.DESERT_CANYON_END>1200,'Both ends must gain meaningful distance');
@@ -89,19 +93,53 @@ await withSkateRuntime(async({level,player:p,THREE,server,step})=>{
   const vistaCheckpoint=level.checkpoints[15];
   p.respawn(level,true,false,{position:vistaCheckpoint.spawnPos.clone().add(new THREE.Vector3(0,.2,0)),heading:new THREE.Vector3(0,0,-1)});
   step(makeInput({spinPressed:true,spinHeld:true}));assert.ok(vistaCheckpoint.active,'The valley checkpoint must bank normally');
-  const cliff=m.desertPoint(m.DESERT_CHECKPOINTS[15],65);p.pos.set(cliff[0],cliff[1]+2,cliff[2]);p.state='air';p.grounded=false;p.vVel=-1;
-  for(let i=0;i<300&&p.state!=='dead';i++)step(makeInput());
-  assert.equal(p.state,'dead','The deep cliff fall must trigger recovery before the valley floor');
-  p.respawn(level);for(let i=0;i<60;i++)step(makeInput());
-  assert.ok(p.grounded&&Math.hypot(p.pos.x-vistaCheckpoint.spawnPos.x,p.pos.z-vistaCheckpoint.spawnPos.z)<1,'Cliff death must recover to the valley checkpoint');
+  // Cross a real road edge with native controls. No teleport/recovery shortcut
+  // may masquerade as successful support on the visible shoulder.
+  const shoulderS=m.DESERT_CHECKPOINTS[15]+25,shoulderStart=new THREE.Vector3(...m.desertPoint(shoulderS));shoulderStart.y+=.4;
+  p.respawn(level,true,false,{position:shoulderStart,heading:new THREE.Vector3(0,0,-1)});
+  for(let i=0;i<40;i++)step(makeInput());
+  const shoulderTarget=m.desertPoint(shoulderS,12);let shoulderDistance=Infinity;
+  for(let i=0;i<420;i++){
+    const dx=shoulderTarget[0]-p.pos.x,dz=shoulderTarget[2]-p.pos.z,d=Math.hypot(dx,dz)||1,cf=p.raceInputBasis(level);
+    shoulderDistance=Math.min(shoulderDistance,d);
+    if(d<1.5)break;
+    step(makeInput({moveX:(-dx*cf.z+dz*cf.x)/d*.7,moveY:(dx*cf.x+dz*cf.z)/d*.7}));
+    assert.ok(!['dead','gameover'].includes(p.state),'Crossing the worn trail shoulder must not kill the rider');
+    assert.ok(Math.hypot(p.pos.x-shoulderStart.x,p.pos.z-shoulderStart.z)<45,'Shoulder contact must not warp to a checkpoint');
+  }
+  assert.ok(shoulderDistance<1.5,`Visible shoulder must be freely reachable: ${shoulderDistance}`);
+  // A fall from the rim lands in the same physical landscape seen below.
+  const cliff=m.desertPoint(m.DESERT_CHECKPOINTS[15],120);
+  p.respawn(level,true,false,{position:new THREE.Vector3(cliff[0],cliff[1]+2,cliff[2]),heading:new THREE.Vector3(0,0,-1)});
+  p.state='air';p.grounded=false;p.vVel=-1;
+  let landed=false,landingFrames=0;
+  for(;landingFrames<1200;landingFrames++){
+    step(makeInput());
+    assert.ok(!['dead','gameover'].includes(p.state),'The visible valley slopes must receive falls without an invisible kill plane');
+    if(p.grounded){landed=true;break;}
+  }
+  assert.ok(landed,'Cliff fall must land on the actual slope');
+  assert.ok(Math.hypot(p.pos.x-vistaCheckpoint.spawnPos.x,p.pos.z-vistaCheckpoint.spawnPos.z)>70,'Landing must not be a hidden checkpoint warp');
   const materialApi=await server.ssrLoadModule('/src/desertMaterials.ts');
   const a=materialApi.createDesertMaterial('sandstone'),b=materialApi.createDesertMaterial('trail'),sa={...THREE.ShaderLib.standard,uniforms:{}},sb={...THREE.ShaderLib.standard,uniforms:{}};
   a.onBeforeCompile(sa);b.onBeforeCompile(sb);assert.equal(sa.uniforms.desertColour.value,sb.uniforms.desertColour.value);
   let releases=0;sa.uniforms.desertColour.value.addEventListener('dispose',()=>releases++);
   a.dispose();b.dispose();assert.equal(releases,0,'Live course retains the shared texture');
   level.dispose();assert.equal(releases,1,'Last material owner releases texture exactly once');
-  console.log(JSON.stringify({supportProbes:probes,fromVista,vistaProbes,vistaLength,cliffFallRecovery:true,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
-},{levelEntry:{id:'bryce-canyon',name:data.name,data}});
+  console.log(JSON.stringify({supportProbes:probes,fromVista,vistaProbes,vistaLength,freerideShoulder:true,valleyLanding:true,landingFrames,checkpoints:m.DESERT_CHECKPOINTS.length,routeFrames,finishFrames,checkpointBankAndPitRecovery:true,routeMetres:m.DESERT_LENGTH,upperExtension:m.DESERT_CANYON_START,lowerExtension:m.DESERT_LENGTH-m.DESERT_CANYON_END,lowerDrop,final300mDrop:finalDrop,airborneGaps:[...airborneGaps],materials:'shared mineral texture owners verified'}));
+},{levelEntry:{id:'bryce-canyon',name:data.name,data},prepareRuntime(){
+  globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
+  globalThis.self=globalThis;navigator.userAgent='Headless canyon validation';
+  const NativeRequest=globalThis.Request;
+  globalThis.Request=class extends NativeRequest{constructor(input,init){super(typeof input==='string'?new URL(input,'http://headless.invalid'):input,init);}};
+  // Exercise the production GLTF loader, asset transforms and surface binding
+  // against real native terrain files. Unrelated art remains headless.
+  globalThis.fetch=async input=>{
+    const path=new URL(typeof input==='string'?input:input.url,'http://headless.invalid').pathname;
+    const match=path.match(/\/desert-canyon\/vista\/(terrain-\d+\.glb)$/);
+    return match?new Response(await readFile(new URL('../../public/desert-canyon/vista/'+match[1],import.meta.url))):new Response('',{status:404});
+  };
+}});
 const manifest=JSON.parse(await readFile(new URL('../../public/desert-canyon/manifest.json',import.meta.url),'utf8'));
 assert.ok(manifest.models.every(r=>r.triangles<=30000));
 console.log('Bryce terrain, checkpoints, finish and native rock budgets pass');

@@ -1,0 +1,15 @@
+{
+  "source": "public/carlisle-coast-fidelity/grass-tuft-b.glb",
+  "sourceSha256": "eec31896f54864e2dc1767b78540d1bc653c5bd71e19d1b52aa74c789d8947ff",
+  "file": "grass-cluster.glb",
+  "sha256": "6b988a189c08c02af32eae40f31946dc8b3592139551a6047aa3accfd5ef889f",
+  "copies": 4,
+  "sourceTriangles": 672,
+  "triangles": 2688,
+  "size": [
+    1.7029176577967629,
+    1.08,
+    1.5189715553853964
+  ],
+  "policy": "Four full native LOD0 meshes; all LOD0 attributes, indices and embedded atlases retained; no distance substitutions"
+}

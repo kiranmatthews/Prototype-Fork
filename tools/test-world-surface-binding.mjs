@@ -75,6 +75,25 @@ try {
   binding.dispose();assert.equal(world.surfaces.size,0);assert.equal(ground.length,0);
   root.add(mesh());assert.equal(world.surfaces.size,0,'disposed binding cannot accept late assets');checks++;
 
+  // A native landscape explicitly opts into player support, without turning
+  // ordinary background decoration into unexpected additional floors.
+  const landscapeRoot=new THREE.Group(),landscapeWorld=new WorldSolids(),landscapeGround=[];
+  const landscapeBinding=new WorldSurfaceBinding(landscapeRoot,landscapeWorld,{ground:()=>landscapeGround,sceneryGround:false,walls:()=>[],component:()=>undefined});
+  const backdrop=mesh();backdrop.userData.solidSurface='mesh';landscapeRoot.add(backdrop);landscapeBinding.prepare();
+  assert.equal(landscapeGround.length,0,'ordinary scenery retains its existing support policy');
+  const landscape=new THREE.InstancedMesh(new THREE.BoxGeometry(6,2,6),new THREE.MeshBasicMaterial(),2);
+  landscape.userData.solidSurface='mesh';landscape.userData.authoredGround=true;
+  landscape.setMatrixAt(0,new THREE.Matrix4().makeTranslation(10,-1,0));
+  landscape.setMatrixAt(1,new THREE.Matrix4().makeTranslation(20,-3,0));
+  landscapeRoot.add(landscape);landscapeBinding.prepare();
+  ray.ray.origin.set(10,8,0);ray.ray.direction.set(0,-1,0);ray.near=0;ray.far=20;
+  assert.equal(landscapeGround.length,2,'each native landscape instance has exact support');
+  assert.ok(Math.abs(landscapeBinding.raycastGround(ray)[0].point.y)<1e-6);
+  landscape.visible=false;assert.ok(Math.abs(landscapeBinding.raycastGround(ray)[0].point.y)<1e-6,'camera culling does not revoke ground');
+  ray.ray.origin.x=20;assert.ok(Math.abs(ray.intersectObjects(landscapeGround,false)[0].point.y+2)<1e-6,'direct support queries retain the full transform');
+  landscape.removeFromParent();landscapeBinding.prepare();assert.equal(landscapeGround.length,0,'stream retirement removes its support');
+  landscapeBinding.dispose();checks+=6;
+
   // Rotating arms traverse an arc, not the chord connecting their end poses.
   for(const [x,z,expected]of [[3,-3,true],[4,-4,false]]){
     const rotating=new WorldSolids(),arm=new THREE.Mesh(new THREE.BoxGeometry(10,3,.1));arm.position.y=1.5;

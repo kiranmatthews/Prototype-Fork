@@ -39,6 +39,8 @@ import type {RainProfile} from './rainWeather';
 export interface JungleAssetSpec {
   /** Optional authored batching grain for repeated parts along long streets. */
   cellSize?: number;
+  /** Authored landscape cells supply exact player support from their native mesh. */
+  groundSurface?: boolean;
   /** Legacy authoring metadata; visible meshes always retain native geometry. */
   lodRange?: readonly [number,number];
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
@@ -653,6 +655,7 @@ export class JungleAssetKit {
   private configure(mesh:THREE.Mesh,kind:RenderKind,scenerySolid?:boolean):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
     mesh.userData.solidSurface=scenerySolid===false?'none':scenerySolid===true?'mesh':jungleSolidRole(kind);
+    mesh.userData.authoredGround=spec.groundSurface===true&&scenerySolid!==false;
     if(spec.matte||spec.shaft){mesh.castShadow=false;mesh.receiveShadow=false;return;}
     mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage"&&kind!=="coastv2grass"&&kind!=="coastv2grassb";
     if(kind.startsWith("coast"))mesh.userData.castShadow=mesh.castShadow;

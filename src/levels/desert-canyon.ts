@@ -97,15 +97,30 @@ function nearest(x:number,z:number){
   return {s,y,distance:Math.sqrt(distance),x:px,z:pz};
 }
 export function desertWidth(s:number):number{
-  if(s>DESERT_VISTA_START)return 7.6+1.6*smooth(DESERT_LENGTH-100,DESERT_LENGTH,s);
+  if(s>DESERT_VISTA_START)return 9.4+1.2*Math.sin((s-DESERT_VISTA_START)*.012)+.6*noise.noise3D(s*.02,2,1)+1.6*smooth(DESERT_LENGTH-100,DESERT_LENGTH,s);
   if(s<DESERT_CANYON_START)return 9-1.5*smooth(138,210,s);
   if(s>DESERT_CANYON_END)return 8.8-1.2*smooth(60,180,s-DESERT_CANYON_END);
   const at=s-DESERT_CANYON_START;return 13-5*smooth(80,140,at)+3*smooth(350,520,at)+3*smooth(850,1050,at);
 }
+export function desertTrailHeight(s:number,u:number):number{
+  const center=desertPoint(s),w=desertWidth(s)/2;
+  const crown=-.12*(u/w)**2;
+  const ripples=(noise.noise3D(s*.09,u*.14,5)*.035+Math.sin(s*.31)*.025)*smooth(25,45,s);
+  return center[1]+crown+ripples;
+}
 const creekOffset=(local:number)=>mix(-17,17,smooth(670,790,local));
 export function desertGround(x:number,z:number):number{
   const longitudinal=elevationAtZ(z);
-  if(z<=-2420||(z<-2100&&Math.abs(x)>=500))return vistaHeight(x,z,longitudinal);
+  const vistaGround=()=>{
+    let y=vistaHeight(x,z,longitudinal);
+    if(Math.abs(x-longitudinal.x)<45){
+      const q=nearest(x,z),half=desertWidth(q.s)/2;
+      const blend=1-smooth(half+.3,half+10,q.distance);
+      y=mix(y,desertTrailHeight(q.s,q.distance)-.07,blend);
+    }
+    return y;
+  };
+  if(z<=-2420||(z<-2100&&Math.abs(x)>=500))return vistaGround();
   const near=nearest(x,z),d=near.distance;
   // Blend distant hills onto a continuous longitudinal profile. Nearest-bend
   // Voronoi boundaries must not become vertical cliffs between switchbacks.
@@ -137,7 +152,7 @@ export function desertGround(x:number,z:number):number{
     ground=mix(ground,near.y-9.2,mask*(1-smooth(3.1,6.3,Math.abs(u-creekOffset(creekLocal)))));
   }
   const vistaBlend=Math.max(smooth(-2250,-2420,z),z<-2100?smooth(300,500,Math.abs(x)):0);
-  return mix(ground,vistaHeight(x,z,longitudinal),vistaBlend);
+  return mix(ground,vistaGround(),vistaBlend);
 }
 
 function buildComponents():CustomComponent[]{
@@ -183,12 +198,7 @@ boardwalk(valley(700),valley(745),'Lower canyon · creek crossing',true,10);
 
 // A continuous, metre-sampled riding surface. The visual trail and its
 // collision share vertices and smooth normals, including all banked bends.
-function trailHeight(s:number,u:number){
-  const center=desertPoint(s),w=desertWidth(s)/2;
-  const crown=-.12*(u/w)**2;
-  const ripples=(noise.noise3D(s*.09,u*.14,5)*.035+Math.sin(s*.31)*.025)*smooth(25,45,s);
-  return center[1]+crown+ripples;
-}
+const trailHeight=desertTrailHeight;
 function trailNormal(s:number,u:number):number[]{
   const sample=(at:number,side:number)=>{const p=desertPoint(at,side);p[1]=trailHeight(at,side);return new THREE.Vector3(...p);};
   const across=sample(s,u+.1).sub(sample(s,u-.1));
@@ -204,8 +214,12 @@ for(let first=0;first<trailRows;first+=32){
     vertices.push(round(p[0]-origin[0]),round(trailHeight(s,u)-origin[1]),round(p[2]-origin[2]));
     uvs.push(round(u),round(s));
     normals.push(...trailNormal(s,u));
-    const shade=round(mix(.96,.83,smooth(.5,.98,Math.abs(u)/(desertWidth(s)/2)))+.035*noise.noise3D(s*.08,u*.17,1));if(vista){const color=vistaColour(p[0],p[1],p[2],u,1);color.multiplyScalar(1+.09*(1-smooth(0,1,Math.abs(u)/(desertWidth(s)/2))));colors.push(...color.toArray());}
-    else colors.push(shade,shade,shade);
+    const shade=round(mix(.96,.83,smooth(.5,.98,Math.abs(u)/(desertWidth(s)/2)))+.035*noise.noise3D(s*.08,u*.17,1));
+    if(vista){
+      const colour=vistaColour(p[0],p[1],p[2],p[0]-elevationAtZ(p[2]).x,1);
+      colour.multiplyScalar(1+.055*(1-smooth(0,1,Math.abs(u)/(desertWidth(s)/2))));
+      colors.push(...colour.toArray());
+    }else colors.push(shade,shade,shade);
     const onTimber=s<132||(s>valley(702)&&s<valley(742));
     if(i<last&&j<cols&&!onTimber&&!DESERT_GAPS.some(g=>s+step>g.from&&s<g.to)){
       const k=(i-first)*(cols+1)+j;indices.push(k,k+1,k+cols+1,k+1,k+cols+2,k+cols+1);
@@ -423,21 +437,21 @@ return C;
 
 export const DESERT_CANYON_LEVEL:CustomLevelData={
   v:1,name:'Bryce Canyon · Hoodoo Run',spawn:desertPoint(6).map((n,i)=>i===1?n+.35:n) as Point,startWarpPad:false,
-  killY:-1500,sky:'day',jungleStyle:'painterly',hugeDropBail:false,
+  killY:-1700,sky:'bryce-golden-hour',jungleStyle:'painterly',hugeDropBail:false,
   keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.12,
   cameraRig:{camDist:8,camHeight:3.6,camPitch:9,camFov:70},
-  atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:650,fogFar:2000,fogColor:'#b8b8be',
-    drawDistance:2000,ambientSky:'#9cafcc',ambientGround:'#b67a4f',ambientIntensity:1.25,
-    sunColor:'#ffe8c6',sunIntensity:3.5,sunDirection:[.48,.78,.38],fillColor:'#8a9fbc',fillIntensity:.32,shadowStrength:1,
-    fallbackTop:'#4685be',fallbackBottom:'#9cb9cc',fallbackFog:'#c9b9a7',fallbackStars:false,fallbackRidges:false,
-    fallbackSunColor:'#fff4db',fallbackSunU:.23,fallbackSunV:.23},
+  atmosphere:{backdrop:'painted sky',fogEnabled:true,fogNear:650,fogFar:1850,fogColor:'#d7b4a7',
+    drawDistance:2000,ambientSky:'#9aaece',ambientGround:'#9d6137',ambientIntensity:.92,
+    sunColor:'#ffdab0',sunIntensity:4.1,sunDirection:[.67,.5,.55],fillColor:'#98aad0',fillIntensity:.24,shadowStrength:1,
+    fallbackTop:'#7aa7d5',fallbackBottom:'#f4d4bd',fallbackFog:'#dfbcb1',fallbackStars:false,fallbackRidges:false,
+    fallbackSunColor:'#fff2d5',fallbackSunU:.68,fallbackSunV:.17},
   components:[],groups:[
     {id:1,nm:'Boardwalk launch and complete descent',editorOnly:true},{id:2,nm:'Carved Bryce Canyon landform',editorOnly:true},
     {id:20,nm:'Near RockGenerator hoodoos',editorOnly:true},{id:21,nm:'Native sandstone skyline',editorOnly:true},
     {id:22,nm:'Eroded talus',editorOnly:true},{id:30,nm:'Existing tree and shrub library',editorOnly:true},
     {id:31,nm:'Existing fine grasses and scrub',editorOnly:true},{id:40,nm:'Reference race dressings',editorOnly:true},
     {id:60,nm:'Vast valley and opposite mesas',editorOnly:true},{id:61,nm:'Exposed ledge and native conifer groves',editorOnly:true},
-    {id:62,nm:'Below-cliff recovery',editorOnly:true},
+    {id:62,nm:'Traversable slopes and basin',editorOnly:true},
     {id:50,nm:'Playable checkpoints and finish',editorOnly:true},{id:51,nm:'Ordered camera course',editorOnly:true},
   ],
 };

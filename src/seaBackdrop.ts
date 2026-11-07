@@ -12,6 +12,7 @@ export const SEA_SKY_ART = {
   'coastal-storm':'rooftop-kook/storm-sky-v1.webp',
   'waterslide-island':'waterslide/island-sky.webp',
   'country-club':'country-club-art/sky.webp',
+  'bryce-golden-hour':'desert-canyon/golden-hour-sky.png',
   'coastal-town': 'coastal-town/sky.webp',
 
   pirate: "drowned-crown/sky.webp",

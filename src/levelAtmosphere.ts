@@ -208,6 +208,13 @@ export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     hemiTint:0xc9e5ff,hemiK:1,hemiMul:1,fillTint:0xb8dce9,fillK:1,fillMul:.35,
     top:'#248be2',bottom:'#c4eaf2',stars:false,sunHex:null,imgH:887,horizonPx:444,farPlane:1400,equirectangular:true,
   },
+  'bryce-golden-hour': {
+    file:'desert-canyon/golden-hour-sky.png',label:'Bryce late afternoon',fog:0xd7b4a7,fogFarCap:2800,
+    sunTint:0xffdab0,sunK:1,sunMul:1,groundTint:0x9d6137,groundK:1,
+    hemiTint:0x9aaece,hemiK:1,hemiMul:1,fillTint:0x98aad0,fillK:1,fillMul:.26,
+    top:'#7aa7d5',bottom:'#f4d4bd',stars:false,sunHex:null,imgH:887,horizonPx:444,
+    farPlane:3000,equirectangular:true,hazeElevation:.065,
+  },
   pirate: {
     file:'drowned-crown/sky.webp',label:'Caribbean lantern dusk',fog:0x526d76,fogFarCap:520,
     sunTint:0xffd2a0,sunK:1,sunMul:1,groundTint:0x485967,groundK:1,

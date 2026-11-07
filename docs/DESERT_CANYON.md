@@ -99,3 +99,30 @@ The broader `check:levels` command currently stops at
 was reproduced in an untouched checkout of baseline `68e48cb3`; it is unrelated
 to this course. Focused canyon checks and the production build are recorded in
 the iteration log after validation.
+
+## Imagegen transformation and traversable valley — 7 November
+
+The earlier concealed cliff-recovery surface was rejected and has been removed.
+The new chapter contains no out-of-bounds or lethal catch planes. Its 116 native
+landscape cells provide exact ground support from the same GLB triangles used
+for rendering. The shared asset binder opts into that support only for authored
+landscape assets; ordinary background decoration keeps its previous behavior.
+Cells disappearing from the camera do not revoke contact, and streaming
+retirement removes the corresponding support safely.
+
+The reference was reviewed at 0:18, 0:30 and 1:00, then used for two imagegen
+paintover targets. Gameplay captures prompted a second implementation pass:
+angular sandstone fins with fractured cream cap beds, a connected sloping
+basin, narrow conifers, fine native scrub and four-tuft native grass patches,
+and 20,232 geometric gravel fragments. A further asset iteration strengthened
+the mineral fissures and restored blue above the warm horizon. The terrain,
+rock, gravel and vegetation retain their full authored geometry at all viewing
+distances. The trail blends into the visible shoulder instead of sitting on
+an isolated road strip. The complete route remains 5,631 m, with its opening
+boardwalk jump and a descending final approach.
+
+`docs/desert-canyon/transformation-iterations.json` records exact generation
+prompts, rejected aspects and actual gameplay evidence. Target images are
+art direction, not gameplay screenshots. The three generated runtime textures
+are the sky, sandstone strata and trail gravel; the existing CC0 relief map
+and existing licensed plant library remain in use. Movement tuning is unchanged.

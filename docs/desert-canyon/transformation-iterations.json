@@ -1,0 +1,147 @@
+{
+  "reference": "https://www.youtube.com/watch?v=Zwf8svpX__E",
+  "observedTimes": [
+    "0:18",
+    "0:30",
+    "1:00"
+  ],
+  "method": "Built-in image_gen; reference observation -> generated target -> native gameplay capture -> revised target -> implementation iteration",
+  "targets": [
+    {
+      "file": "transformation-target-v1.png",
+      "prompt": "Use case: style-transfer. Asset type: environment art-direction paintover for an actual playable 3D canyon level. Input image 1 is the Riders Republic visual reference at 0:30: use its geology, warm orange sandstone, dense olive pine groves, pale pink atmospheric ridges and natural rolling trail. Input image 2 is the current prototype screenshot to transform. Keep the third-person camera and small skeleton player of image 2 in the same position and scale; keep the checkpoint crate. Completely redesign its environment to meet the reference rather than merely recolouring it. A winding, descending 8\u201310 metre sandy trail blends into irregular rough shoulders and traversable sandstone slopes. On the LEFT, fractured vertical sandstone fins and blocky hoodoo buttresses with deep dark fissures, layered pale caps, loose angular scree, green shrubs and tall asymmetric pines; replace the smooth continuous dough-like wall. On the RIGHT, an immense open forested valley several hundred metres below, staggered orange spurs, pine-covered terraces, a slender glinting river, and distant layered pink/blue mountain silhouettes. Replace the single uninterrupted opposite wall with irregular broken amphitheatres and broad wooded saddles. Strong late-afternoon amber side light, long cool shadows, clear rich orange foreground with finely grained metre-scale stone texture and subtle worn tire tracks; luminous cream/pink horizon and pale blue upper sky with thin wisps of cloud. Beautiful high-fidelity real-time game render, grounded physical forms, no painted flat backdrop masquerading as near geometry. Keep plenty of readable riding space. No HUD, lettering, extra characters, buildings, railings, fences or floating platforms. Wide landscape composition."
+    },
+    {
+      "file": "transformation-target-v2.png",
+      "prompt": "Use case: precise-object-edit. Asset type: second environment paintover guiding a real game implementation. Input 1 is the ACTUAL first rebuilt gameplay render; input 2 is the intended reference-derived environment target. Keep input 1's exact camera, player, checkpoint crate, trail position, downhill direction and basic scale. Iterate the environment toward input 2 with these specific corrections: replace the broad tropical-looking near trees with slender, asymmetric pine trees and the broad fern-like ground leaves with fine olive desert scrub and dry needle grass. Break the smooth left wall into angular vertical sandstone buttresses with narrow dark fissures, irregular pale cap beds, and loose angular rubble around the base. Reveal the vast valley on the right; avoid a tree blocking the vista. Lower and break up the far continuous cliffs into staggered isolated headlands separated by wooded saddles. Add real-looking fine gravel, scattered small stones and subtle irregular erosion ruts to the trail instead of a flat smooth brown sheet. Keep the warm late-afternoon sunlight and sky, but preserve bright amber lit faces and cool detailed shadows. No new characters, no text or HUD, no fences or rails. Show an achievable detailed 3D environment composition; preserve a readable, wide riding line and natural traversable shoulders."
+    }
+  ],
+  "assets": [
+    {
+      "file": "public/desert-canyon/golden-hour-sky.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: 360-degree equirectangular sky texture for a high-fidelity golden-hour sandstone canyon game. Generate a seamless 2:1 panoramic image, 2048 by 1024. SKY ONLY, no land, no mountains, no trees, no water, no objects, no text. The horizon is exactly halfway down the image. Upper hemisphere: pale clear cornflower blue at zenith gradually shifting through muted lavender into warm cream and pale peach at the horizon, with long sparse delicate cirrus streaks lit blush pink from the lower right. Small soft warm sun at 66% across, 42% down, luminous but no giant glare or clipped white patch. The bottom half is a smoothly continuing subdued peach atmospheric haze with no features, suitable below a distant canyon skyline. Natural photographic cloud detail, subtle gradients, restrained contrast. Left and right edges join seamlessly. This is an environment texture, not a rectangular landscape painting.",
+      "secondIterationPrompt": "Use case: lighting-weather. Asset type: equirectangular sky texture, second gameplay-calibrated iteration. Edit the supplied sky. Keep the exact seamless 2:1 panorama, horizon at half-height, sun at the same horizontal position and just above the halfway horizon, wispy clouds, and featureless lower hemisphere. Change the upper sky to a much cleaner cool cornflower blue, extending this blue down to just 30 pixels above the halfway horizon. Confine the warm peach horizon haze to a narrow band around the middle row, with localized gold light around the small sun. Delicate pink cirrus on blue, rather than an overall pink wash. Preserve photographic natural cloud detail. Keep the sun small, no white giant glare. No land, trees, water, buildings, text, objects or other additions. This is a texture for a camera that sees only 0\u201320 degrees above the horizon, so blue must be clearly present close above the horizon."
+    },
+    {
+      "file": "public/desert-canyon/sandstone-strata.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless physically based sandstone albedo texture, square 2048 by 2048, representing a 5 metre by 5 metre patch of a vertical Bryce Canyon sandstone cliff. Perfectly orthographic, flat diffuse illumination, no perspective, no cast shadows, no vignette, no foreground objects. Rust-orange and ochre sedimentary sandstone with a few thin pale cream horizontal sediment beds, irregular fine grain, weathered vertical fissures, small angular fracture faces and pitted mineral surfaces. The vertical cracks are naturally scattered, narrow and dark, not a regular grid; most surface remains intact rock. Detail at several scales: subtle metre-wide color variation, centimetre cracks and millimetre grit. Texture must tile seamlessly on all four edges, including horizontal strata aligning at the left/right borders. Real photogrammetric material quality, not a painting, not stylized clay, no huge boulders or separate stones, no vegetation, no light direction baked into the image, no text.",
+      "secondIterationPrompt": "Use case: precise-object-edit. Asset type: seamless square sandstone cliff albedo, second gameplay-calibrated iteration. Edit the supplied material, keeping its rust-orange sandstone and fine grain, flat orthographic framing, neutral diffuse illumination and seamless edges. Strengthen the natural geological structure so it reads on 5 metre cliff patches viewed from 15 metres: several narrow deep dark vertical fissures, angular fracture boundaries, chipped pale cream horizontal sediment ledges, and irregular weathered faces. A few dark recessed joints must have strong contrast, but no black outlines or regular grid. Reduce the uniformly sandy appearance. Keep most stone intact and warmly orange. Photogrammetric surface detail with no perspective, no large separate boulders, no vegetation, no baked directional lighting, no text. All four edges must tile."
+    },
+    {
+      "file": "public/desert-canyon/trail-gravel.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless physically based ground albedo texture for a realistic Bryce Canyon trail, square 2048 by 2048. Perfectly overhead orthographic photogrammetry of a 3 metre by 3 metre patch of compacted dry burnt-orange sandstone soil. Fine sandy grit, many tiny angular ochre and pale sandstone pebbles 1 to 5 cm across, a few small flakes, subtle irregular erosion grains, and natural worn patches. Overall midtone warm ochre-brown, approximately #ba8050. Flat neutral diffuse illumination with no directional shadows, no vignette, no lighting gradient. No vegetation, no large rocks, no cracks resembling cracked mud, no footprints, no tire tracks, no man-made objects, no text. Truly seamless on all four edges. High-frequency real mineral detail with restrained contrast; suitable for tiling continuously across a 3D ground surface.",
+      "status": "Integrated"
+    }
+  ],
+  "nativeCaptures": [
+    {
+      "file": "transformation-gameplay-v1.png",
+      "issues": [
+        "Broadleaf foreground vegetation conflicts with reference",
+        "Smooth cliff faces need fracture detail",
+        "Distant continuous walls close the valley",
+        "Trail needs real gravel and mineral detail"
+      ],
+      "nativeFrameMs": {
+        "median": 42.4,
+        "p95": 48.7
+      },
+      "resolution": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "transformation-gameplay-v2.png",
+      "resolution": [
+        2560,
+        1440
+      ],
+      "issues": [
+        "Round cap beds read too softly",
+        "Upper sky needs blue close to horizon",
+        "Far vegetation too diffuse and distant clipping edge visible"
+      ],
+      "changes": [
+        "Added angular creased native strata and sharper cream caps",
+        "Regenerated sky and mineral albedo",
+        "Fog fades inside render distance",
+        "Concentrated native woodland in the basin"
+      ]
+    },
+    {
+      "file": "transformation-gameplay-v3.png",
+      "resolution": [
+        2560,
+        1440
+      ],
+      "changes": [
+        "Sharpened geological profiles and fractures",
+        "Blue sky over warm horizon",
+        "Physical gravel and fine native scrub",
+        "Connected traversable shoulder and valley",
+        "Sheltered basin trees retain their native meshes but stop evaluating wind; 96 m batches improve frustum culling"
+      ],
+      "note": "Actual full-render player-camera gameplay at River overlook, MAX/native 2560 \u00d7 1440; complete authored geometry. Not an imagegen paintover."
+    }
+  ],
+  "completion": "Implementation, full-route traversal, live shoulder/valley landing and finish checks complete. Public deployment verification pending.",
+  "validation": {
+    "nativeSurfaceBindingChecks": 53,
+    "supportProbes": 8394,
+    "routeMetres": 5630.595142105832,
+    "routeFrames": 43378,
+    "checkpoints": 17,
+    "airborneGaps": [
+      "Boardwalk launch",
+      "Canyon rim jump"
+    ],
+    "freerideShoulder": true,
+    "valleyLanding": true,
+    "landingFrames": 181,
+    "terrainCells": 116,
+    "terrainTriangles": 1423456,
+    "terrainSourceBytes": 100779780,
+    "checkLevels": "Existing unrelated assertion at tools/test-waterpark-decks.mjs:49; earlier stages passed.",
+    "build": "Passed: tsc and Vite production build, offline version f8ca88548625bb65e7f9",
+    "releaseBytes": 964646925,
+    "assetRegression": "Passed: native asset loading, material, instancing, collision and disposal regression",
+    "browser": {
+      "fullRender": true,
+      "normal720": true,
+      "maxNative": [
+        2560,
+        1440
+      ],
+      "warnings": 0,
+      "errors": 0,
+      "liveShoulder": "Native keyboard movement crossed from trail onto terrain with zero deaths",
+      "liveValleyLanding": "Approximately 150 m drop landed on native ground with zero deaths",
+      "finish": "RUN COMPLETE"
+    }
+  },
+  "performance": {
+    "scope": "Local in-app browser, full scene, no CRT. 240-frame windows; other desktop load can affect timings. These are observations, not a 60 fps claim.",
+    "priorWideNormal720": {
+      "medianMs": 41.2,
+      "p95Ms": 42.4
+    },
+    "finalWideNormal720": {
+      "medianMsRange": [
+        28,
+        33.4
+      ],
+      "p95MsRange": [
+        31.8,
+        59.2
+      ],
+      "renderedTriangles": 24487830
+    },
+    "finalGameplayMax2560x1440": {
+      "medianMs": 50.6,
+      "p95Ms": 55.5,
+      "renderedTriangles": 24324478
+    },
+    "limitation": "MAX/native remains expensive in this tree-heavy panorama. All authored meshes remain unchanged at every view distance."
+  }
+}

@@ -9858,3 +9858,35 @@ clean warning/error logs. Build and release-size checks pass. The requested
 `check:levels` still reaches the documented unrelated waterpark texture-owner
 assertion at `tools/test-waterpark-decks.mjs:49`. Evidence and measured frame
 times, including their scope, are in `docs/desert-canyon/vista-checks.json`.
+
+## 2026-11-07 — Transform the canyon vista and remove the boundary trap
+
+Replaced the rejected concealed cliff-recovery surface with traversable native
+landscape. The 116 baked cells now supply player support from their actual
+rendered geometry; ordinary scenery retains its existing floor policy. The
+1.75 km continuation includes fractured sandstone fins, pale cap beds, wooded
+slopes, a winding basin, fine library scrub, four-tuft native grass patches and
+20,232 geometric gravel fragments. Every authored mesh remains at all viewing
+distances. The opening boardwalk, 5.63 km route and 65 m descent in the final
+300 m remain; movement tuning is unchanged.
+
+Used the imagegen skill for two reference-based targets, compared actual native
+gameplay against them, and iterated the geometry, planting and textures. A
+second sky/material pass restored blue above the warm horizon and strengthened
+mineral cracks. Fog now fades before the draw boundary. Exact prompts and
+actual/target distinctions are in `docs/desert-canyon/transformation-iterations.json`.
+
+Approximately 65 minutes from the rejection to reviewed playable results;
+publication verification followed. The full native-input run finished in
+43,378 simulation frames, clearing both opening gaps. All 17 checkpoints,
+8,394 support probes, finish access, pit recovery, shoulder traversal and
+valley landing pass. The streamed support binder passes 53 focused checks.
+Live browser keyboard input crosses onto native ground; a roughly 150 m fall
+lands on terrain with zero deaths, and the live finish reaches RUN COMPLETE.
+Full-render normal and MAX/native views have no console warnings/errors.
+Static sheltered basin trees and finer instance cells reduce the measured
+normal-720 overlook median from 41.2 ms to 28–33.4 ms without removing geometry.
+The 2560 × 1440 MAX player view remains expensive at 50.6 ms median;
+these local measurements are not a 60 fps claim.
+Build and the 964,646,925-byte release pass. `check:levels` reaches the existing
+unrelated waterpark texture-owner assertion at `tools/test-waterpark-decks.mjs:49`.
