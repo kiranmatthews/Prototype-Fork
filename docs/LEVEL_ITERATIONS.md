@@ -9013,3 +9013,31 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   settle at normal and MAX/native resolution; no console warnings/errors.
   Evidence is external `skate-scribble-catch/`. Port 5199 remains local only;
   no integration, push or publication is authorized.
+
+## Skate scribbles — foreground occlusion and feet-clear start
+
+- 7 November 2026 NZDT: approximately ten minutes prompt-to-playable including
+  focused validation. Enabled normal scene depth testing for the board ink,
+  retaining its no-depth-write material. Foreground hands, body, feet and world
+  geometry occlude the scribble, rather than being covered by its late draw.
+- Moved standing dismount ink to source frame 24 / 0.400 s, after both feet
+  clear the deck. Running already uses that start. The original board stays
+  visible and no ink plays through frame 23. Both retain the prior catch ends:
+  standing frame 26, running frame 56. Standing therefore has a brief two-tick
+  flash, sampling the existing atlas, rather than masking foot contact early.
+  No animation, controller, tuning, mount timing or PNG changes.
+- Validation: source and retargeted-sole observations plus side-view foot/catch
+  review; 660 exact historical-source pose/controller comparisons; both full
+  dismount clips' pre-release visibility, first/last ink and catch cleanup;
+  paused A/B; six native bail/recovery cases; existing owner guards; 1,980
+  controller frames and fixed-quad/atlas sequence checks pass.
+- A real browser GPU pixel check preserves all 21,248 foreground pixels at
+  0.01, 0.2 and 1 metre in front of the ink while covering 11,418 background
+  pixels. Moving the foreground object behind ink, or disabling depth testing
+  as a negative control, produces the expected 4,752 covered pixels. The test
+  fixture is evidence-only, outside tracked/public source.
+- Production type-check/build, isolated local build and whitespace pass.
+  Normal and MAX/native browser views show the foreground glove/body intact,
+  visible board before foot clearance and clean catch/settle afterwards.
+  Console clear. Evidence: external `skate-scribble-depth/`. Local port 5199
+  remains available; nothing integrated, pushed or published.

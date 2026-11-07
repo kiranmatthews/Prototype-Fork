@@ -64,17 +64,24 @@ and finite mount/dismount; short fades cover the source clips' carried endpoints
 ## Punk board scribbles
 
 The default board effect uses thirty-two independently drawn thin-ink PNG frames.
-Mounts and running dismounts play at **60 fps**, lasting 0.533 seconds; standing
-dismounts fit the same drawings into 0.4 seconds (80 fps). Eight rapid full-size
-redraws have a long,
-slim deck silhouette; subsequent drawings use fewer, shorter strokes with the
+Mounts and running dismounts play at **60 fps**, lasting 0.533 seconds. Standing
+dismounts sample the same atlas over the two simulation frames between the feet
+clearing the deck and the hand catch (0.033 seconds). Eight full-size source
+redraws have a long, slim deck silhouette; subsequent drawings use fewer,
+shorter strokes with the
 same pen weight. A single fixed-size billboard swaps atlas cells, never scales
 down the artwork or fades it. Its long axis follows the board in the camera.
 The appearance switches under the full-size ink. Disappearance follows the
 source prop's pickup path, clearing at the first stable hand catch: source frame
 26 / 0.433 seconds for standing, 56 / 0.933 seconds for running. The effect starts
-at 0.033 / 0.400 seconds respectively. The vanished board stays hidden through
-the remaining source carry/settle, including after the ink has finished.
+at frame 24 / 0.400 seconds for both clips, after both feet clear the deck.
+Until then the original board stays visible and there is no ink. The vanished
+board stays hidden through the remaining source carry/settle, including after
+the ink has finished.
+
+The ink respects scene depth and does not write depth itself. Foreground limbs
+and level geometry stay in front of it; its late draw order does not override
+occlusion. The flat PNG drawings, fixed dimensions and board attachment remain.
 
 Only a normal mount or dismount can start ink; arbitrary changes in board
 visibility cannot. Bails, death, jumps, grinds and other pose owners cancel any
@@ -121,3 +128,7 @@ exit; run this check separately from builds. Browser A/B and native bail review
 pass at normal and MAX/native resolution. Both dismount clips also verify the
 last ink frame precedes the catch, the board stays gone through the settle, and
 paused A/B after the burst restores only A's original carried board.
+The feet-clear review keeps the board visible and ink inactive through source
+frame 23. A browser GPU probe also checks foreground occlusion at three depths:
+all 21,248 foreground pixels remain intact, while ink still covers the surface
+behind it. Disabling depth testing reproduces the original overlap failure.

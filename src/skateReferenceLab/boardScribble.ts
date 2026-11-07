@@ -99,8 +99,10 @@ export class BoardScribbleEffect {
     this.texture.repeat.set(1 / 4, 1 / 8);
     this.texture.magFilter = this.texture.minFilter = THREE.LinearFilter;
     this.texture.generateMipmaps = false;
+    // Keep ink at the prop's depth: foreground limbs and level geometry occlude
+    // it normally. Drawing late must not turn it into a screen-space overlay.
     const material = new THREE.SpriteMaterial({map:this.texture, transparent:false,
-      alphaTest:.35, depthTest:false, depthWrite:false, toneMapped:false, fog:false});
+      alphaTest:.35, depthTest:true, depthWrite:false, toneMapped:false, fog:false});
     this.sprite = new THREE.Sprite(material);
     this.sprite.name = 'board-scribble'; this.sprite.renderOrder = 100;
     this.sprite.frustumCulled = false; this.sprite.visible = false;

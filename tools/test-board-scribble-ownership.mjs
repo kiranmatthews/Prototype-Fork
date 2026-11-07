@@ -26,7 +26,7 @@ try {
     const resetAll=()=>players.forEach((p,i)=>{p.enterLevel('scribble-test');p.respawn(level,true);p.freeSkate=false;motions[i].reset();runtimes[i].restart();});
     const pose=(motion)=>motion.nodes.flatMap(n=>[...n.position.toArray(),...n.quaternion.toArray(),...n.scale.toArray()]);
     const comparePose=(x,y,message)=>{const aa=pose(x),bb=pose(y);assert.equal(aa.length,bb.length);aa.forEach((v,i)=>assert.ok(Math.abs(v-bb[i])<1e-9,`${message} transform ${i}: ${v}/${bb[i]}`));};
-    resetAll();let held=false,poseFrames=0,toggleChecks=0;
+    resetAll();let held=false,poseFrames=0,toggleChecks=0;const toggled=new Set();
     for(let frame=0;frame<660;frame++){
       const time=frame/60,jump=time>.4&&time<3.5;
       const input=makeInput({moveY:time<4.8?1:0,jumpHeld:jump,jumpPressed:jump&&!held,jumpReleased:!jump&&held,grabHeld:time>4.8&&time<8.4});held=jump;
@@ -38,7 +38,9 @@ try {
       pre.boardMaterials.forEach((v,i)=>assert.equal(v.material.opacity,accepted.boardMaterials[i].material.opacity,`A opacity ${frame}`));
       for(const p of [a,b]){assert.ok(p.pos.distanceTo(legacy.pos)<1e-9);for(const key of ['speed','vVel','grounded','state','freeSkate','airFromSkate'])assert.equal(p[key],legacy[key]);}
       assert.equal(pre.boardScribble.active,false,'A drew ink');
-      if(ink.boardScribble.active && (ink.boardScribble.frame===1||ink.boardScribble.frame===12)){
+      const toggleKey=`${ink.boardScribble.serial}:${ink.boardScribble.frame<12?'early':'late'}`;
+      if(ink.boardScribble.active && !toggled.has(toggleKey)){
+        toggled.add(toggleKey);
         const time=ink.time,elapsed=ink.boardScribble.elapsed,serial=ink.boardScribble.serial;
         ink.scribbles=false;assert.equal(ink.boardScribble.active,false);
         assert.equal(ink.retarget.board.visible,accepted.retarget.board.visible);
@@ -62,13 +64,17 @@ try {
     // Review both complete source clips through the installed final callback.
     // Catch samples were measured from source board/right-hand separation.
     const catchResults=[];
-    for(const [name,catchFrame,startFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,2],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24]]){
+    for(const [name,catchFrame,startFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,24],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24]]){
       freshB();stepB();ink.enter('dismount',name);
       let first=-1,last=-1;
       const source=data.clips.find(c=>c.name===name);
       for(let frame=1;frame<source.frames.length+3;frame++){
         stepB();
         if(ink.boardScribble.active){if(first<0)first=frame;last=frame;}
+        if(frame<startFrame){
+          assert.equal(ink.boardScribble.active,false,`${name}: ink started while feet still touched the deck`);
+          assert.equal(ink.retarget.board.visible,true,`${name}: deck vanished before feet cleared`);
+        }
         if(frame>=startFrame&&ink.phase==='dismount')assert.equal(ink.retarget.board.visible,false,`${name}: vanished board reappeared at ${frame}`);
         if(frame>=catchFrame){
           assert.equal(ink.boardScribble.active,false,`${name}: ink passed the hand catch at ${frame}`);
@@ -83,7 +89,7 @@ try {
       assert.deepEqual(counts(),[0,1]);catchResults.push({name,first,last,catchFrame});
     }
     const bailResults=[];
-    for(const [phase,age,masked] of [['mount',.10,false],['ride',.1,false],['ride',.1,true],['dismount',.20,false],['dismount',1.45,false]]){
+    for(const [phase,age,masked] of [['mount',.10,false],['ride',.1,false],['ride',.1,true],['dismount',.20,false],['dismount',.4,false],['dismount',1.45,false]]){
       freshB();reach(phase==='dismount'?'ride':phase,phase==='dismount'?0:age);
       if(phase==='dismount')reach('dismount',age);
       const before=counts();b.bail(masked,Math.max(8,b.speed),'trip');assert.ok(b.isBailing);

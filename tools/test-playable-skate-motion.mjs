@@ -34,14 +34,15 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   board.position.set(5,3,-2);effect.update(camera);
   assert.ok(effect.sprite.position.clone().sub(disappearancePosition).distanceTo(board.position)<1e-9,'pickup ink did not follow the board toward the hand');
   assert.ok(effect.sprite.scale.distanceTo(disappearanceScale)<1e-9,'following the pickup resized the ink');
-  clock.start(false,.4);cells.clear();
+  const standingInkDuration=2/60;
+  clock.start(false,standingInkDuration);cells.clear();
   for(let f=0;f<SCRIBBLE_FRAMES;f++){
-    if(f)clock.step(.4/SCRIBBLE_FRAMES);
+    if(f)clock.step(standingInkDuration/SCRIBBLE_FRAMES);
     effect.update(camera);cells.add(effect.sprite.material.map.offset.toArray().join(','));
     assert.equal(clock.active,true);
   }
   assert.equal(cells.size,32,'short standing pickup omitted source drawings');
-  clock.step(.4/SCRIBBLE_FRAMES);assert.equal(clock.active,false,'standing pickup missed catch deadline');
+  clock.step(standingInkDuration/SCRIBBLE_FRAMES);assert.equal(clock.active,false,'standing pickup missed catch deadline');
   clock.start(true);assert.equal(clock.appearances,2,'new mount cue did not restart');
   clock.enabled=false;assert.equal(clock.active,false);assert.equal(clock.boardVisible,true);
   const elapsed=clock.elapsed;clock.enabled=true;assert.equal(clock.elapsed,elapsed,'A/B advanced the source clock');

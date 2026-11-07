@@ -6,17 +6,17 @@ import {solveTwoBoneIk} from '../animation/ik';
 import {skateboardSettings} from '../skateboard/settings';
 import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
 import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
-import {BoardScribbleSequence, SCRIBBLE_DURATION} from './boardScribble';
+import {BoardScribbleSequence} from './boardScribble';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
-// First stable hand catches in the 60 Hz source clips (zero-based frames).
-// The rest of each clip is its existing carry/settle, not the catch itself.
-const dismountCatchFrames: Readonly<Record<string, number>> = {
-  BR_DISMOUNT_LO_INTO_STAND_0: 26,
-  BR_DISMOUNT_LO_INTO_RUN_FWD: 56,
+// Zero-based 60 Hz source cues, checked against Bone Man's retargeted soles.
+// Keep the deck visible until both feet clear; finish at the existing catch.
+const dismountInkFrames: Readonly<Record<string, {feetClear: number; catch: number}>> = {
+  BR_DISMOUNT_LO_INTO_STAND_0: {feetClear: 24, catch: 26},
+  BR_DISMOUNT_LO_INTO_RUN_FWD: {feetClear: 24, catch: 56},
 };
 
 /** Local source-motion presentation only. It observes native gameplay; it never
@@ -109,11 +109,11 @@ export class PlayableSkateMotion {
       if (this.phase === 'mount') ink.start(true);
     }
     if (this.phase === 'dismount' && !this.dismountInkStarted && this.clip) {
-      const catchTime = dismountCatchFrames[this.sourceName] / this.clip.fps;
-      // The standing pickup catches sooner: fit all 32 drawings into its
-      // 0.4-second pickup. Running retains 60 fps. Neither source clip is sped up.
-      const duration = Math.min(SCRIBBLE_DURATION, catchTime - 2 / this.clip.fps);
-      const start = catchTime - duration;
+      const cue = dismountInkFrames[this.sourceName];
+      const start = cue.feetClear / this.clip.fps;
+      // Standing has a very short airborne pickup. Compress only the ink;
+      // source motion, foot contacts and catch timing remain untouched.
+      const duration = (cue.catch - cue.feetClear) / this.clip.fps;
       if (this.time + 1e-7 >= start) {
         ink.start(false, duration); ink.step(Math.max(0, this.time - start));
         this.dismountInkStarted = true;
