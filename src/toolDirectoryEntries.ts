@@ -66,6 +66,7 @@ entries.push(
   { name: 'Golf Cart Garage', description: 'Five modular low-poly carts, interchangeable drivers, colour palettes, drifting, collisions and damage.', category: 'Labs & studios', path: 'golf-cart-lab.html', source: 'src/golf-cart/lab.ts' },
   { name: 'Skateboard lab · map UI profile', description: 'Open the independent map/menu skateboard settings tab.', category: 'Labs & studios', path: 'skateboard-lab.html?tab=map-ui', source: 'src/skateboard/lab.ts' },
   { name: 'Roo text · bonus palette', description: 'Preview and export the bonus lettering palette.', category: 'Labs & studios', path: 'roo-type-lab.html?palette=bonus&text=BONUS', source: 'src/roo-type/lab.ts' },
+  { name: 'Roo PNG · pair spacing', description: 'Adjust individual character pairs with live previews, optical suggestions, undo and preset import/export.', category: 'Labs & studios', path: 'roo-type-lab.html?tab=kerning', source: 'src/roo-type/kerning-editor.ts', keywords: 'font kerning letters combinations spacing' },
   { name: 'Roo text · counter palette', description: 'Preview and export HUD counter lettering.', category: 'Labs & studios', path: 'roo-type-lab.html?palette=counter&text=0123456789', source: 'src/roo-type/lab.ts' },
 );
 for (const [flag, name, description, level] of [

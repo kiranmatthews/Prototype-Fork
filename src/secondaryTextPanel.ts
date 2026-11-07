@@ -34,6 +34,9 @@ export function createSecondaryTextPanel(): HTMLDetailsElement {
     else if ((key === 'tracking' || key === 'lightStrength') && Number.isFinite(input.valueAsNumber)) setRooAppearance({ [key]: input.valueAsNumber });
   });
   roo.querySelector('[data-roo-studio]')!.addEventListener('click', () => window.open(new URL(`${import.meta.env.BASE_URL}roo-type-lab.html`, location.href).href, 'roo-font-appearance'));
+  const pairs=document.createElement('button');pairs.type='button';pairs.textContent='Adjust individual Roo letter pairs';
+  pairs.addEventListener('click',()=>window.open(new URL(`${import.meta.env.BASE_URL}roo-type-lab.html?tab=kerning`,location.href).href,'roo-font-appearance'));
+  roo.querySelector('hr')!.before(pairs);
   window.addEventListener(ROO_APPEARANCE_EVENT, syncRoo); syncRoo();
   const focus=document.createElement('section');focus.className='menu-png-tuning';
   focus.innerHTML='<hr><b>Menu PNG focus filters</b><p>Orange is the untouched neutral PNG. Reference: one white frame, three orange frames at 30 fps.</p>';

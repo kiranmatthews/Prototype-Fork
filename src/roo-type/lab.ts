@@ -3,11 +3,12 @@ import { RooAtlasPainter, loadRooAtlases, layoutRooAtlas } from './atlas';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
 import { getRooAppearance, setRooAppearance, ROO_APPEARANCE_DEFAULTS, ROO_APPEARANCE_EVENT, rooLightPosition, rooMotionEnabled, rooLightStatus, subscribeRooLight } from './settings';
 import type { RooTreatment } from './geometry';
+import { createKerningEditor } from './kerning-editor';
 
 async function main(){
  const root=document.querySelector<HTMLDivElement>('#app')!;
- root.innerHTML=`<header><strong>ROO / FONT STUDIO</strong><span>Bevel light, close-up inspection and spacing</span><a href="./">Back to game</a></header>
- <main><div class="stage"><canvas aria-label="Roo font preview"></canvas><div class="stamp">Codex/sol fork · Same font in menus and HUD</div></div>
+ root.innerHTML=`<header class="studio-header"><strong>ROO / FONT STUDIO</strong><nav aria-label="Font studio"><button id="appearance-tab" aria-pressed="true">Appearance</button><button id="kerning-tab" aria-pressed="false">Pair spacing</button></nav><a href="./">Back to game ↗</a></header>
+ <main id="appearance-view"><div class="stage"><canvas aria-label="Roo font preview"></canvas><div class="stamp">Codex/sol fork · Same font in menus and HUD</div></div>
  <aside><h1>Roo appearance</h1><p>Spacing and shimmer save automatically and update the game, including other open tabs.</p>
  <label>View<select id="view"><option value="words">Words and alphabet</option><option value="glyph">Inspect one glyph</option><option value="angles">Compare light angles</option><option value="all">All glyphs, close up</option></select></label>
  <label>Text<input id="text" type="text" value="BONEMAN" maxlength="30"></label>
@@ -24,13 +25,22 @@ async function main(){
  <label class="check"><input id="backdrop" type="checkbox">Light background</label>
  <label class="check"><input id="counts" type="checkbox">Run the counter</label>
  <button id="png" class="primary">Export transparent text PNG</button><button id="atlas">Download font + 3 light frames</button>
- <div id="report" aria-live="polite">Loading glyphs…</div></aside></main>`;
+ <div id="report" aria-live="polite">Loading glyphs…</div></aside></main><div id="kerning-view" hidden></div>`;
  const input=(id:string)=>document.getElementById(id) as HTMLInputElement;
  const query=new URLSearchParams(location.search),palette=query.get('palette');
  if(palette==='bonus'||palette==='counter')input('palette').value=palette;
  if(query.has('text'))input('text').value=query.get('text')!.slice(0,30);
  const stage=document.querySelector<HTMLDivElement>('.stage')!,canvas=stage.querySelector('canvas')!,ctx=canvas.getContext('2d')!;
  const painter=new RooAtlasPainter();await loadRooAtlases();if(!painter.ready)throw new Error('Font atlas failed to load');
+ const kerningRoot=document.getElementById('kerning-view')!,appearanceRoot=document.getElementById('appearance-view')!;
+ const kerning=createKerningEditor(kerningRoot,painter);
+ const openTab=(name:string)=>{
+   const pairs=name==='kerning';kerningRoot.hidden=!pairs;appearanceRoot.hidden=pairs;
+   input('appearance-tab').setAttribute('aria-pressed',String(!pairs));input('kerning-tab').setAttribute('aria-pressed',String(pairs));
+   const url=new URL(location.href);if(pairs)url.searchParams.set('tab','kerning');else url.searchParams.delete('tab');history.replaceState(null,'',url);
+   if(pairs)kerning.refresh();else paint();
+ };
+ input('appearance-tab').onclick=()=>openTab('appearance');input('kerning-tab').onclick=()=>openTab('kerning');
  const characters=Object.keys(ROO_ATLAS_METRICS.bonus.glyphs).filter(c=>ROO_ATLAS_METRICS.bonus.glyphs[c].width);
  const glyphSelect=document.getElementById('glyph') as HTMLSelectElement;
  for(const char of characters)glyphSelect.add(new Option(char,char));glyphSelect.value='A';
@@ -43,6 +53,7 @@ async function main(){
  }
  const light=()=>rooMotionEnabled()?rooLightPosition():+input('light').value;
  function paint(){
+   if(appearanceRoot.hidden)return;
    const automatic=rooMotionEnabled(),status=rooLightStatus();
    if(wasAutomatic&&!automatic&&getRooAppearance().shimmer)input('light').value='0';
    const position=light();wasAutomatic=automatic;
@@ -125,6 +136,6 @@ async function main(){
  };
  const fontReport=`51 glyphs · 2 colorways · 3 light frames\nComplete artwork · smooth alpha\n${ROO_ATLAS_METRICS.bonus.capPixels} px source cap band\nSettings save for this browser`;
  input('report').textContent=fontReport;
- paint();Object.assign(window,{rooTypeLab:{ready:true,paint,painter,metrics:()=>({glyphs:51,palettes:2,version:ROO_ATLAS_METRICS.bonus.version,lightFrames:3,width,height}),appearance:getRooAppearance}});
+ openTab(query.get('tab')??'appearance');paint();Object.assign(window,{rooTypeLab:{ready:true,paint,painter,metrics:()=>({glyphs:51,palettes:2,version:ROO_ATLAS_METRICS.bonus.version,lightFrames:3,width,height}),appearance:getRooAppearance}});
 }
 void main().catch(error=>{const report=document.getElementById('report');if(report)report.textContent=String(error);console.error(error);});

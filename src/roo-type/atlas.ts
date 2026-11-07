@@ -1,8 +1,10 @@
 import { releaseImageUrl } from '../releaseImageUrls';
 import { trackPresentationImage } from '../presentationLoading';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
-import { layoutRooAtlas, rooAtlasGlyphRect } from './atlasLayout';
-export { layoutRooAtlas, rooAtlasGlyphRect } from './atlasLayout';
+import { layoutRooAtlas as layoutWithPairs, rooAtlasGlyphRect } from './atlasLayout';
+import type { RooAtlasMetrics } from './bake';
+import type { RooPairSpacing } from './kerning';
+export { rooAtlasGlyphRect } from './atlasLayout';
 import { getRooAppearance, rooLightPosition, rooLightWeights } from './settings';
 import { displayAtlasCap, type RooAtlasCap } from './resolution';
 
@@ -11,6 +13,8 @@ export interface RooAtlasStyle {
   size: number;
   palette?: 'bonus' | 'counter';
   tracking?: number;
+  /** Override for before/after proofs; omitted uses the saved pair adjustments. */
+  pairSpacing?: RooPairSpacing;
   align?: CanvasTextAlign;
   maxWidth?: number;
   alpha?: number;
@@ -18,6 +22,9 @@ export interface RooAtlasStyle {
   lightPosition?: number;
 }
 type Palette = 'bonus' | 'counter';
+export function layoutRooAtlas(metrics:RooAtlasMetrics,raw:string,tracking=0,pairSpacing=getRooAppearance().pairSpacing) {
+  return layoutWithPairs(metrics,raw,tracking,pairSpacing);
+}
 let images: Record<Palette,HTMLImageElement[]>={bonus:[],counter:[]};
 let loading:Promise<void>|null=null;
 let cap = displayAtlasCap(), revision = 0;
@@ -124,7 +131,7 @@ export class RooAtlasPainter {
     const palette=style.palette??'counter',image=images[palette][0],metrics=ROO_ATLAS_METRICS[palette];
     if(!image||!Number.isFinite(style.size)||style.size<=0)return false;
     const tracking=(style.tracking??0)/style.size+getRooAppearance().tracking;
-    const layout=layoutRooAtlas(metrics,text,tracking);
+    const layout=layoutRooAtlas(metrics,text,tracking,style.pairSpacing);
     if(!layout)return false;
     const size=Math.min(style.size,style.maxWidth&&layout.width>0?style.maxWidth/layout.width:style.size);
     if(size<=0)return true;
@@ -144,7 +151,7 @@ export class RooAtlasPainter {
       const width=(Math.max(...placed.map(p=>p.rect.x+p.rect.width))-minX)*size;
       const height=(Math.max(...placed.map(p=>p.rect.y+p.rect.height))-minY)*size;
       const transform=ctx.getTransform(),ratio=Math.max(1,Math.min(3,Math.hypot(transform.a,transform.b)));
-      const key=JSON.stringify([palette,text,size,tracking,ratio]);let item=this.cache.get(key);
+      const key=JSON.stringify([palette,text,size,tracking,ratio,layout.glyphs.map(entry=>entry.x)]);let item=this.cache.get(key);
       if(!item){const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(width*ratio));canvas.height=Math.max(1,Math.ceil(height*ratio));item={canvas,phase:NaN,lights:[],bytes:canvas.width*canvas.height*4};this.cache.set(key,item);this.cacheBytes+=item.bytes;}
       if(item.phase!==phase){
         // Keep both intermediate surfaces on one raster backend. Chrome can
