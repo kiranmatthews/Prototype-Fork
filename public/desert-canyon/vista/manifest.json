@@ -4,27 +4,31 @@
   "models": [
     {
       "file": "terrain-001.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764036,
-      "sha256": "c2aff8c51cfa2884958dcc449579cb94324f2061298866774a5593f79c40b2f8"
+      "sha256": "70e39d34d2e7587f61cde1450e26d0807153dd71af96cf2c1e07561517a2049f"
     },
     {
       "file": "terrain-002.glb",
+      "role": 60,
       "vertices": 8355,
       "triangles": 14976,
       "bytes": 459040,
-      "sha256": "9744d64dee3a1f95b03b0dc0912220c3594e3bdc1baf317b4b218349294a282a"
+      "sha256": "23bcfb9b9b4d4256f60455489347bc25b1a8ab333194c15d9570d2b6d89cbbbf"
     },
     {
       "file": "terrain-003.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764040,
-      "sha256": "84a55862941cf68c39b1d6962b9cffb031376d4edf57ce19d96cd92b1b7f194c"
+      "sha256": "b72cb0aa94e4342428f7f611f95806a654ebe3ccd1dcd86e56fe4fb8472f2a84"
     },
     {
       "file": "terrain-004.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764036,
@@ -32,6 +36,7 @@
     },
     {
       "file": "terrain-005.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764032,
@@ -39,6 +44,7 @@
     },
     {
       "file": "terrain-006.glb",
+      "role": 60,
       "vertices": 2785,
       "triangles": 4992,
       "bytes": 154056,
@@ -46,13 +52,15 @@
     },
     {
       "file": "terrain-007.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764036,
-      "sha256": "49eadf5c93826809b99342a993f67b7f20d6c955b71a457f702086ed2fb9f414"
+      "sha256": "4924d6b0d340f84d5efa898e6b3a6801a769538fd3a0206745dbd8dd88cc3f34"
     },
     {
       "file": "terrain-008.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764040,
@@ -60,6 +68,7 @@
     },
     {
       "file": "terrain-009.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764036,
@@ -67,6 +76,7 @@
     },
     {
       "file": "terrain-010.glb",
+      "role": 60,
       "vertices": 2785,
       "triangles": 4992,
       "bytes": 154052,
@@ -74,13 +84,15 @@
     },
     {
       "file": "terrain-011.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764036,
-      "sha256": "175961ac8a391f0a986166ea328745995360e35390d7556c3ca16f0954b73389"
+      "sha256": "77d203c6bb413a1bcceaf97ec1b72abbed85cf35e00ed5de3caa7c142564eafc"
     },
     {
       "file": "terrain-012.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764032,
@@ -88,6 +100,7 @@
     },
     {
       "file": "terrain-013.glb",
+      "role": 60,
       "vertices": 13925,
       "triangles": 24960,
       "bytes": 764040,
@@ -95,6 +108,7 @@
     },
     {
       "file": "terrain-014.glb",
+      "role": 60,
       "vertices": 2785,
       "triangles": 4992,
       "bytes": 154056,
@@ -102,104 +116,119 @@
     },
     {
       "file": "terrain-015.glb",
+      "role": 60,
       "vertices": 15014,
       "triangles": 26752,
       "bytes": 822688,
-      "sha256": "8eceb724418cc84a526692409b10e27c3c89979e4e40dd060b0f58b6f881353e"
+      "sha256": "6dce6dcad170e3462b5ba8a0a2aa30c968694d6938a1461c99ebe78f8b0a4051"
     },
     {
       "file": "terrain-016.glb",
-      "vertices": 15431,
-      "triangles": 27392,
-      "bytes": 844876,
-      "sha256": "20c76668e6c8238a05b9459fbfa6cbb43198eddd9e0572a2d1d5376fdbf6a949"
+      "role": 60,
+      "vertices": 15558,
+      "triangles": 27550,
+      "bytes": 851412,
+      "sha256": "e9ba9916c3c202f2ebd475894609d059be79711537681665134feee0ba970e1d"
     },
     {
       "file": "terrain-017.glb",
-      "vertices": 834,
-      "triangles": 1280,
-      "bytes": 45912,
-      "sha256": "868838beb7db3bf19db895eea732cd788d15f82740dd29f6ceb50bdf00b45f4f"
+      "role": 60,
+      "vertices": 962,
+      "triangles": 1440,
+      "bytes": 52504,
+      "sha256": "4b1a91e3c7feecd8c83cf557f289985c6561bff5103d3dc901c626e4c3f10729"
     },
     {
       "file": "terrain-018.glb",
-      "vertices": 6004,
-      "triangles": 9480,
-      "bytes": 322604,
-      "sha256": "c1a80ad8364fd4b89c5f14427a30f7d154b472d8d948a19f90f8f31e7f38a3a9"
+      "role": 60,
+      "vertices": 6805,
+      "triangles": 10536,
+      "bytes": 364188,
+      "sha256": "85c827e1824977a3da50010c3aaff209aa1595d28bd271bf180ddd10526dcfbc"
     },
     {
       "file": "terrain-019.glb",
-      "vertices": 11678,
-      "triangles": 18776,
-      "bytes": 628064,
-      "sha256": "a4cd726db5e5e19dea28014f22aefd9b52f1eccccb2e4ba6f743b57008084d83"
+      "role": 60,
+      "vertices": 12254,
+      "triangles": 19592,
+      "bytes": 658304,
+      "sha256": "86808bc15745cac29a10abbefb833da24393d11a3dfdb6f7d9c5aaa01afa4d0b"
     },
     {
       "file": "terrain-020.glb",
-      "vertices": 11678,
-      "triangles": 18776,
-      "bytes": 628060,
-      "sha256": "0c7a158a56d6995f476515010c6a2522a9b57c6606368769038ef3266027057e"
+      "role": 60,
+      "vertices": 12254,
+      "triangles": 19592,
+      "bytes": 658300,
+      "sha256": "5b9f90e5923b595d2357d2e8a3fb7621cffe1a155a1d9b0a126c6f1115e8bb13"
     },
     {
       "file": "terrain-021.glb",
-      "vertices": 11678,
-      "triangles": 18776,
-      "bytes": 628064,
-      "sha256": "93a3d0954e694b62e004743cf068d5653f7a759eb678a62aa05df8a63201aeec"
+      "role": 60,
+      "vertices": 12254,
+      "triangles": 19592,
+      "bytes": 658304,
+      "sha256": "0206386133402384ed68e33bb00ab356cac5a3f7eac629d70643fc141b0de299"
     },
     {
       "file": "terrain-022.glb",
-      "vertices": 10760,
-      "triangles": 17080,
-      "bytes": 577492,
-      "sha256": "dc3dc2eb833d6456f6a6b8abc167c39b9dbc1a1a8e3e5e584fbcb1f1c57aeceb"
+      "role": 60,
+      "vertices": 11817,
+      "triangles": 18624,
+      "bytes": 633264,
+      "sha256": "3d6b1d91c98b19debe41ff9bfd46bf9ebaae0629d2c40999e25119290b791b81"
     },
     {
       "file": "terrain-023.glb",
-      "vertices": 12105,
-      "triangles": 20736,
-      "bytes": 658612,
-      "sha256": "4d9e64c02cbd9d4c25cda59e47c81c072985023128ffea13613a51f817392025"
+      "role": 60,
+      "vertices": 12872,
+      "triangles": 21886,
+      "bytes": 699260,
+      "sha256": "c077660428ffa2fa34957ede0b4d422894813ddee9da82b3bc24aea6b58d0591"
     },
     {
       "file": "terrain-024.glb",
-      "vertices": 12105,
-      "triangles": 20736,
-      "bytes": 658612,
-      "sha256": "b35cc50782d9b0e748b44e65e02bc25476727d32a01b10010b576224c885e508"
+      "role": 60,
+      "vertices": 12297,
+      "triangles": 21024,
+      "bytes": 668788,
+      "sha256": "47eebb143a3eb36a82c03a7918a456ed698ba3dcf621c0f12c69aceba65de44f"
     },
     {
       "file": "terrain-025.glb",
-      "vertices": 12105,
-      "triangles": 20736,
-      "bytes": 658616,
-      "sha256": "6d19ed0c127aa4e6797230afe0bcf64ca87f17087a423149c0bb4c9b637ff4ae"
+      "role": 60,
+      "vertices": 12297,
+      "triangles": 21024,
+      "bytes": 668788,
+      "sha256": "2ea6a45d36fedce1f0e890ac01502e3666145c6f515384be385643a07022eec5"
     },
     {
       "file": "terrain-026.glb",
-      "vertices": 12105,
-      "triangles": 20736,
-      "bytes": 658612,
-      "sha256": "51a755aa67522b644bda95bb6324cacd3efe5605debae092cb9d0fb2d60ba3ac"
+      "role": 60,
+      "vertices": 12297,
+      "triangles": 21024,
+      "bytes": 668788,
+      "sha256": "db10c1b730bf4d44d90c446873789bf872d24f56b8a0ae211d98b84653bc05d2"
     },
     {
       "file": "terrain-027.glb",
-      "vertices": 11580,
-      "triangles": 19392,
-      "bytes": 627452,
-      "sha256": "f2225fc438e3b26962dbf4ea1107ef4339434f36c94c17d437ab47612b731a73"
+      "role": 60,
+      "vertices": 12187,
+      "triangles": 20238,
+      "bytes": 659232,
+      "sha256": "504e0188a233dca0908ac1af385e2a241bbf4007541805058e8e3f44a2c29a04"
     },
     {
       "file": "terrain-028.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201256,
-      "sha256": "bdba383da6af895ae8d41d9a0ee756522e7ca0682943c1982e6d1b7a600173c1"
+      "role": 60,
+      "vertices": 4329,
+      "triangles": 6480,
+      "bytes": 230920,
+      "sha256": "48e5e4635e52922c0d930cb6b0e43aa42908db2e0d23eff6a6a95b6aebcbbbb8"
     },
     {
       "file": "terrain-029.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -207,6 +236,7 @@
     },
     {
       "file": "terrain-030.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -214,6 +244,7 @@
     },
     {
       "file": "terrain-031.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -221,20 +252,23 @@
     },
     {
       "file": "terrain-032.glb",
-      "vertices": 4500,
-      "triangles": 6816,
-      "bytes": 240460,
-      "sha256": "67b7d47e6847e6e56b9b33f6e6baf88b677d2f8edf7f191d1909d9d211f763c3"
+      "role": 60,
+      "vertices": 4884,
+      "triangles": 7296,
+      "bytes": 260236,
+      "sha256": "6a674c6dcf3b6a9bac79cb30151e711c0a044f4c510d201dc51f49fc0914a427"
     },
     {
       "file": "terrain-033.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201260,
-      "sha256": "f0b05fa36b57d9dee89faa9a01b313914fa3546579a84b050f823f852d49fbc0"
+      "role": 60,
+      "vertices": 4329,
+      "triangles": 6480,
+      "bytes": 230924,
+      "sha256": "0eb1cdf9fc3eca07e86e6757e717ca95e7f29eecc7b38eac442f1364c23c14f4"
     },
     {
       "file": "terrain-034.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -242,6 +276,7 @@
     },
     {
       "file": "terrain-035.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -249,6 +284,7 @@
     },
     {
       "file": "terrain-036.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -256,20 +292,23 @@
     },
     {
       "file": "terrain-037.glb",
-      "vertices": 4500,
-      "triangles": 6816,
-      "bytes": 240464,
-      "sha256": "0c8e4f773e0e0169a4552f38529febc0b43b7bb55e717e030ec31bfd16fcb3b1"
+      "role": 60,
+      "vertices": 4884,
+      "triangles": 7296,
+      "bytes": 260240,
+      "sha256": "7f3650ce65b57ecc1c046678fdcab52db5cc61b762926455afe8a7139ef7c576"
     },
     {
       "file": "terrain-038.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201260,
-      "sha256": "d80955275f4251eac1eb4c42e9407393e68a50502b0a7ef11cedf54d711b5654"
+      "role": 60,
+      "vertices": 4329,
+      "triangles": 6480,
+      "bytes": 230924,
+      "sha256": "6de5528f753cd27e01277c386e5f196a00a26a34b0f1366730eb2ed62749287d"
     },
     {
       "file": "terrain-039.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -277,6 +316,7 @@
     },
     {
       "file": "terrain-040.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -284,6 +324,7 @@
     },
     {
       "file": "terrain-041.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -291,20 +332,23 @@
     },
     {
       "file": "terrain-042.glb",
-      "vertices": 4500,
-      "triangles": 6816,
-      "bytes": 240464,
-      "sha256": "9d2ba4d77825b7f32d2fddde3825ead3121cefe6fbe3468d8c64b678df45e159"
+      "role": 60,
+      "vertices": 4884,
+      "triangles": 7296,
+      "bytes": 260240,
+      "sha256": "369d33e1ae3eb7b782ee913967018846df429e9054288ac2b208908752169a60"
     },
     {
       "file": "terrain-043.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201260,
-      "sha256": "fce974416a56a3da21e694837d0edf71c16f0abb3deb3429b7b9a445d5a7193b"
+      "role": 60,
+      "vertices": 4329,
+      "triangles": 6480,
+      "bytes": 230924,
+      "sha256": "d3f138d0472d06afa98f08ea2348c94ac48eae05800b1500ebbb03fb24643e44"
     },
     {
       "file": "terrain-044.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -312,6 +356,7 @@
     },
     {
       "file": "terrain-045.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -319,6 +364,7 @@
     },
     {
       "file": "terrain-046.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201264,
@@ -326,111 +372,127 @@
     },
     {
       "file": "terrain-047.glb",
-      "vertices": 4500,
-      "triangles": 6816,
-      "bytes": 240460,
-      "sha256": "069003c4f3db227901b969ea130b42e2aef9245587d8b4607d8e4a53c0c7242e"
+      "role": 60,
+      "vertices": 4884,
+      "triangles": 7296,
+      "bytes": 260236,
+      "sha256": "ef890e6aeab075c394711658437228eb0016e520e99b00c7743d54b63d014c62"
     },
     {
       "file": "terrain-048.glb",
-      "vertices": 1251,
-      "triangles": 1920,
-      "bytes": 68124,
-      "sha256": "1d360b74dfd9d6916fb2410cd8ab5ad03f560b675f02d468c1a0e6f96f25f1a8"
+      "role": 60,
+      "vertices": 1443,
+      "triangles": 2160,
+      "bytes": 78012,
+      "sha256": "ddeffd5a536e6b93d02614f544c65b13e5cc0c33b84537824e66539bd6b3979c"
     },
     {
       "file": "terrain-049.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
-      "bytes": 68128,
-      "sha256": "997a28447ddbf4b8f0e8d53d8aefb5b7c90da4dbb1e9cf71d51b0c24938dde6b"
+      "bytes": 68124,
+      "sha256": "d9229ea067abf8a9065745a0ca459394363ed7a0a63d976b36f09921955be51d"
     },
     {
       "file": "terrain-050.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
-      "bytes": 68128,
-      "sha256": "330c9abb0646e279d6ff7bf5931ade51466c961800951f791a03f63c5399e384"
+      "bytes": 68124,
+      "sha256": "58d9ad8e2e1ded38a57691836302b6d2d26776637c0d5d79d0332e3bf9d32d19"
     },
     {
       "file": "terrain-051.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
-      "bytes": 68128,
-      "sha256": "2745230444059d764a35832f0f8d06bd5af9f6606087d3943debdce60d18491c"
+      "bytes": 68124,
+      "sha256": "ae1b9b07886b7dc51fc9f4ee42f160da140aeb3819be4530b7cb88f313316425"
     },
     {
       "file": "terrain-052.glb",
-      "vertices": 1812,
-      "triangles": 2732,
-      "bytes": 97684,
-      "sha256": "84a9941e69e0082d03aaa7b09b116a1ade0b9946375e8e29e37e1b6eee72970c"
+      "role": 60,
+      "vertices": 1984,
+      "triangles": 2947,
+      "bytes": 106544,
+      "sha256": "b7496c6f3637310eaa3cfdac978a9a9f3567639325fa07cb06191e7ff3bb6c06"
     },
     {
       "file": "terrain-053.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201260,
-      "sha256": "b1da93907332ee07de3db23ace8cdea70abf858d85dfdbd15ea2aabea2086c7a"
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211144,
+      "sha256": "a5b2a912dff57de6559e4ee5dfc1a9d5648a4bc3a5b971c54331ffe9374b75dc"
     },
     {
       "file": "terrain-054.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201264,
-      "sha256": "8ee3530b2f4ec69c72b53b772c50a8e924c894874d9aede1f7e09926e3faa8ba"
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211152,
+      "sha256": "a6ad3c94ba5756dd70d07f3a289623b861cf20c3bfc2e483e32595186e823d60"
     },
     {
       "file": "terrain-055.glb",
-      "vertices": 1251,
-      "triangles": 1920,
-      "bytes": 68124,
-      "sha256": "556024ea7c38233b0488e99595241b68b6a4b7a74b17097d342e2cfbda63c0a5"
+      "role": 60,
+      "vertices": 1315,
+      "triangles": 2000,
+      "bytes": 71420,
+      "sha256": "7a97a141961a0f50f49ef06b32f60656c0965a342b73269f559d7e3be0720062"
     },
     {
       "file": "terrain-056.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201236,
-      "sha256": "665e7314bda07d718e389f31e53582eb27b3abea9370dda89c540e9135f47200"
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211124,
+      "sha256": "56e8e2a7b3d7c8ab2a00e904c78fd60fdff58fa756ee1970bd236420a0f3bfff"
     },
     {
       "file": "terrain-057.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201256,
-      "sha256": "bc17f7d548958be26481a1870c4d4c31eaa079b920565e70c74694b5993cd5f2"
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211144,
+      "sha256": "c6f0c42bda5a124cb308aa895f69a453693007964d7059c7b7193d3cc9e2e8d7"
     },
     {
       "file": "terrain-058.glb",
-      "vertices": 1251,
-      "triangles": 1920,
-      "bytes": 68120,
-      "sha256": "7952ecbc69e2078c44df113a3b6775395253160abf5ea1b2afc0f0553c7c4e5a"
+      "role": 60,
+      "vertices": 1315,
+      "triangles": 2000,
+      "bytes": 71416,
+      "sha256": "2130e15afa1a68ca4f06aaa23736bb3835ad7146ff1c4e314b7d0baff6eff2c7"
     },
     {
       "file": "terrain-059.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201256,
-      "sha256": "9495538b5de8ba2cd5093cd6186c82f8bd99a2dccb2f6302517f29c5491da71b"
+      "role": 60,
+      "vertices": 4233,
+      "triangles": 6720,
+      "bytes": 228136,
+      "sha256": "faef4acbcce49c092fdeff196b5fa6ccd77c8805216b97425ca38f2bacfc57b8"
     },
     {
       "file": "terrain-060.glb",
-      "vertices": 3753,
-      "triangles": 5760,
-      "bytes": 201252,
-      "sha256": "da787f1c37a4b55f163e296b538fc8a6071b3e3eced528774e4e68bff052d5ef"
+      "role": 60,
+      "vertices": 4233,
+      "triangles": 6720,
+      "bytes": 228136,
+      "sha256": "bba1c8382b6e14270dff2e838a959d851d60ca3d8de90163ad6b63788f8aa1bf"
     },
     {
       "file": "terrain-061.glb",
-      "vertices": 1251,
-      "triangles": 1920,
-      "bytes": 68124,
-      "sha256": "7cb8c9b145f9e25f6eea86f3be47498828a57f2fcffab8b9e24a32e180d98003"
+      "role": 60,
+      "vertices": 1411,
+      "triangles": 2240,
+      "bytes": 77084,
+      "sha256": "d90a8e6e2f8e1e726922ed2782bc88ed2e5b423ac6d87f625fdde5f4359be4fb"
     },
     {
       "file": "terrain-062.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -438,6 +500,7 @@
     },
     {
       "file": "terrain-063.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -445,13 +508,15 @@
     },
     {
       "file": "terrain-064.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
       "bytes": 68124,
-      "sha256": "201a2c84b5b51b0c36456bcd60bc6dd32f292346f0c7be3334a4f576b206b04d"
+      "sha256": "1165b2b9949f41f211d1ce4aa5ea31f3416e4d27152e4f3849926d9f155a542b"
     },
     {
       "file": "terrain-065.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -459,6 +524,7 @@
     },
     {
       "file": "terrain-066.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -466,13 +532,15 @@
     },
     {
       "file": "terrain-067.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
-      "bytes": 68120,
-      "sha256": "6a4acbf5b671b8174a6a521e911683131f37b71618a6886a97e9e7ade4f06cfb"
+      "bytes": 68124,
+      "sha256": "4c305b65ba6ba882df1727a6ac0fcf6831bd13ac51016ef31acb77a705e56dc6"
     },
     {
       "file": "terrain-068.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -480,6 +548,7 @@
     },
     {
       "file": "terrain-069.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -487,13 +556,15 @@
     },
     {
       "file": "terrain-070.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
       "bytes": 68124,
-      "sha256": "282f140ae20904e0f56afd90ba25e2b471c0a8fb2d64d4850b0e6eee6e10658e"
+      "sha256": "f7de382d35d6ba969f0328cd85edec29fe3a1fc38a27c57dba88cff4744b1bf9"
     },
     {
       "file": "terrain-071.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201256,
@@ -501,6 +572,7 @@
     },
     {
       "file": "terrain-072.glb",
+      "role": 60,
       "vertices": 3753,
       "triangles": 5760,
       "bytes": 201260,
@@ -508,311 +580,811 @@
     },
     {
       "file": "terrain-073.glb",
+      "role": 60,
       "vertices": 1251,
       "triangles": 1920,
       "bytes": 68128,
-      "sha256": "06ee937266120a58459008b31d2a39e12469652755fdbea6a7549f4fadb63b6f"
+      "sha256": "5471d5bbd39f7d9f79b78708d329cc00b9c1a78e7bd325b42688a03f72e7420e"
     },
     {
       "file": "terrain-074.glb",
+      "role": 60,
       "vertices": 2187,
       "triangles": 3300,
       "bytes": 117592,
-      "sha256": "5481e8edc36f01c30acf4d17fcba1e8d1fcfb12bbea77437e0d384395519e23a"
+      "sha256": "b981b5ce0e988213495c84e90f02102b9eb95cc3def98d0836650925a3e7bc70"
     },
     {
       "file": "terrain-075.glb",
+      "role": 60,
       "vertices": 2187,
       "triangles": 3300,
       "bytes": 117592,
-      "sha256": "3552d3f7498aa5b55cdac4cc4a017a2204c082ee703e82ac662ce9278467241a"
+      "sha256": "d0dd8b607e9bf1ea936ffcd652f4c67499e37c43d92f4301ea2ddcbef54fddfa"
     },
     {
       "file": "terrain-076.glb",
+      "role": 60,
       "vertices": 729,
       "triangles": 1100,
       "bytes": 40228,
-      "sha256": "d9806cf11a8c15edc4541e29dadd5843174065ef962201a23075d497d9f625f1"
+      "sha256": "efb72ba7dad53bf754182757e80b4e5ad0dc07dd1e8b33956d43979c26ce6723"
     },
     {
       "file": "terrain-077.glb",
-      "vertices": 18460,
-      "triangles": 24920,
-      "bytes": 963412,
-      "sha256": "53693dffbc23f43bd452b0a4195d04293a4a2256dac3c5915c299a1cac14f0f3"
+      "role": 63,
+      "vertices": 18657,
+      "triangles": 25200,
+      "bytes": 973736,
+      "sha256": "d65271ea027a8e8712e5523f12c49da5fdb12762b679b63233778fc1e45a130c"
     },
     {
       "file": "terrain-078.glb",
-      "vertices": 3115,
-      "triangles": 3560,
-      "bytes": 160056,
-      "sha256": "49696bc34569ab6dd3716c95dada880f318a3c644f6a97a58cb06ceb9a4ba11a"
+      "role": 63,
+      "vertices": 3050,
+      "triangles": 3600,
+      "bytes": 157416,
+      "sha256": "9922a45721c66cb79a1d9a2cfa11b4ee469946fbb472786f52863a275463cea9"
     },
     {
       "file": "terrain-079.glb",
-      "vertices": 18924,
-      "triangles": 24920,
-      "bytes": 983828,
-      "sha256": "0679a944755b512495a65636149505399976bfe44ceb157223d09cb3c41be232"
+      "role": 63,
+      "vertices": 18966,
+      "triangles": 25200,
+      "bytes": 987340,
+      "sha256": "1a6c2a846fe4aca4d768e0956b92971b875b4d146ab38fabb293de52f332df37"
     },
     {
       "file": "terrain-080.glb",
-      "vertices": 19425,
-      "triangles": 24920,
-      "bytes": 1005868,
-      "sha256": "4b5ddca7010530a1245f03fad9455934eec09b0b21a87e53f1b293b917cf5df4"
+      "role": 63,
+      "vertices": 19941,
+      "triangles": 25200,
+      "bytes": 1030236,
+      "sha256": "e28d312d1b30af50869848c53f11fac7f9a11c224cbcea4d0cfc7e2edd057371"
     },
     {
       "file": "terrain-081.glb",
-      "vertices": 19882,
-      "triangles": 24920,
-      "bytes": 1025980,
-      "sha256": "92332741cd4fb0934df0158e0cb0f094701ad594fb63569f08bf071ee9472305"
+      "role": 63,
+      "vertices": 19885,
+      "triangles": 25200,
+      "bytes": 1027776,
+      "sha256": "1b0f8a8cd123fd5a3cf418c3d8ed7d73d69c43c76ad9f4abb91423574d7f2f6d"
     },
     {
       "file": "terrain-082.glb",
-      "vertices": 2907,
-      "triangles": 3560,
-      "bytes": 150900,
-      "sha256": "e00c4e40d686a9f3bb996e4f892aa570b2547eb3054868d67c91b4400454d2ba"
+      "role": 63,
+      "vertices": 2948,
+      "triangles": 3600,
+      "bytes": 152936,
+      "sha256": "76f8a22042a18cc73f060c277d047d8738cefe6bae1d3b23ed3d10e6d2274325"
     },
     {
       "file": "terrain-083.glb",
-      "vertices": 18582,
-      "triangles": 24920,
-      "bytes": 968772,
-      "sha256": "f29b9ce9fd855860cb2745d27d843666bec333509a387ed36ec14794e3f553a0"
+      "role": 63,
+      "vertices": 18958,
+      "triangles": 25200,
+      "bytes": 986980,
+      "sha256": "0ec9325dbe74aa0148b7a9b5c9ab4224e4a2e57f289e2d399ec014ef7a20bc61"
     },
     {
       "file": "terrain-084.glb",
-      "vertices": 18372,
-      "triangles": 24920,
-      "bytes": 959536,
-      "sha256": "23b7db97b5a0176b1da8ef94d9acfff517b3e9f99435dc957396eb64a1601907"
+      "role": 63,
+      "vertices": 18514,
+      "triangles": 25200,
+      "bytes": 967452,
+      "sha256": "51844e5608680b23f332adc78e099c89fb8a4ce8de6032163896cc512748923a"
     },
     {
       "file": "terrain-085.glb",
-      "vertices": 6081,
-      "triangles": 7120,
-      "bytes": 311924,
-      "sha256": "c8eac86c98c980263eed562524be6ce1c0ef311a947cecbab38ac3fbb514d4a2"
+      "role": 63,
+      "vertices": 6177,
+      "triangles": 7200,
+      "bytes": 316608,
+      "sha256": "fe75d95c49a72b47fab14baed5bda821a9003ec34892ea53cfc735ce6d32f2b2"
     },
     {
       "file": "terrain-086.glb",
-      "vertices": 18316,
-      "triangles": 24920,
-      "bytes": 957076,
-      "sha256": "a14bd30e21c1a1ebd3926833024b7b0d8f89511c5a2b03b0aeabd1614094737d"
+      "role": 63,
+      "vertices": 18966,
+      "triangles": 25200,
+      "bytes": 987336,
+      "sha256": "271aaa4ea40b6087b3ea23b4ad41ced20adcb2d31c35d294bcb85c8ed39765b3"
     },
     {
       "file": "terrain-087.glb",
-      "vertices": 19613,
-      "triangles": 24920,
-      "bytes": 1014144,
-      "sha256": "f77be4e19041332f93781b789f89ad607de6c42f3546aa452e68889f696bef29"
+      "role": 63,
+      "vertices": 19736,
+      "triangles": 25200,
+      "bytes": 1021216,
+      "sha256": "a48659937761a6bf7d123d4ce5e04aafb737cf13636324415c6d8d0bcb0d29ba"
     },
     {
       "file": "terrain-088.glb",
-      "vertices": 14315,
-      "triangles": 17800,
-      "bytes": 738308,
-      "sha256": "6cab7ff84ff5495663cac2c263eb12fb5a083d4d62b5eb3bee82f247d2274524"
+      "role": 63,
+      "vertices": 14408,
+      "triangles": 18000,
+      "bytes": 743580,
+      "sha256": "0a5f33e34f6aafa57f33420e9340ffc80f263317e4e8a6c94d175f897ff841c3"
     },
     {
       "file": "terrain-089.glb",
-      "vertices": 18484,
-      "triangles": 24920,
-      "bytes": 964472,
-      "sha256": "1aa57ebd3ceb947ae219dbd60ea04c7d7bb31753b213820feabe2ae245377700"
+      "role": 63,
+      "vertices": 18834,
+      "triangles": 25200,
+      "bytes": 981524,
+      "sha256": "38615e5eaef0b9f773f6c8b3349f67bc735af8b789afd8301bcfa7f06be6d2f2"
     },
     {
       "file": "terrain-090.glb",
-      "vertices": 8606,
-      "triangles": 10680,
-      "bytes": 444392,
-      "sha256": "dba0f45be1dafeb5ad54b8784a352994e0edc2aed0c60999e3381696350ea818"
+      "role": 63,
+      "vertices": 8766,
+      "triangles": 10800,
+      "bytes": 452132,
+      "sha256": "173ee605a9c8d340c67ee46fcda142cb7bbde54beecdf9670d0fbcc19f8dd83e"
     },
     {
       "file": "terrain-091.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121260,
-      "sha256": "0b3ee862b3e131e10033018d19b5eb3d0c463a5f236d9c64a3171b4aef38f076"
+      "bytes": 2121300,
+      "sha256": "cfff13a397d133cb226c7c026d8e638e47ff6effcb2458b7bf33919d5ec5c6e3"
     },
     {
       "file": "terrain-092.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121260,
-      "sha256": "e06277be9e16131f1178259da532f21feb0ae6058d454cc31b06d35e9c7a2ca0"
+      "bytes": 2121300,
+      "sha256": "ff96704f258ec3be5b378a16b940a6e1ed4adc6ef7c31fc76330120b0cf0a0ff"
     },
     {
       "file": "terrain-093.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "216370925fc332540873602d143981a0e5b6d41bee56429c1d73f1571c4d7b35"
+      "bytes": 2121300,
+      "sha256": "f0df72e6400441bbe64878dd9f7e3a43d311d731000505ed49bd78a60213a520"
     },
     {
       "file": "terrain-094.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121260,
-      "sha256": "4f845d34b815bdcf014e9030bfeeaaa1c963ff25273c40fc2a9629b1ced9c5d4"
+      "bytes": 2121296,
+      "sha256": "2888ea9cf515c1a6d2c33bf3716fce3ffbe566675e9c406abe5ebbb8796b7637"
     },
     {
       "file": "terrain-095.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121200,
-      "sha256": "5a396c965a38a53f74286e399e3c972974c54801b7e0b31307d3844295d7aee8"
+      "bytes": 2121300,
+      "sha256": "2170f2ed32614c51e76fdae7198ce0973227ff3bd0b7febc023697ced31c1646"
     },
     {
       "file": "terrain-096.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "32ba5a14b44c41532ec1f5b654be9d2a48059445d7ace83e7cb90772f77ed269"
+      "bytes": 2121292,
+      "sha256": "14201040abf350b621939236a0a2c3ee96d70b6b466a39cdc395e0e258116fbd"
     },
     {
       "file": "terrain-097.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121264,
-      "sha256": "5e0c32587207c92753417ca3f88ffd9c49c7427974b31aa548e81ac62a735567"
+      "bytes": 2121296,
+      "sha256": "48076b5eb95afd7a6f7c20125091459a710eaf45cbaf4d2131f7992e30a06274"
     },
     {
       "file": "terrain-098.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "accc647854d3172322a23021861db2a85c5f7ca4ea69f35c4d2fe2b727719ec8"
+      "bytes": 2121300,
+      "sha256": "a35691ea01a2eb2c1e98bcb30aa734cbfbf9000988270583d7b71a9d811383e9"
     },
     {
       "file": "terrain-099.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "aca5a34e6ba9a48d2c00356e93c2b1cc512d7fad54f79a1b519c1116ac2e6575"
+      "bytes": 2121300,
+      "sha256": "7a39068aa28dccce928889b10e8bbbfcb1aceb58709311a0f166e4243fa91df1"
     },
     {
       "file": "terrain-100.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "2c205fd0e3364b887fc823dfbecfd91a38a475319c01d8f1af4be319966a155a"
+      "bytes": 2121296,
+      "sha256": "f5b265ff3425d0601aa871693e9cb2f14b206097aae1897806dd83f52137e88b"
     },
     {
       "file": "terrain-101.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "c295aff2540972aca71bee6102293f2d3719fd022ce042098bbd40d4c1685e14"
+      "bytes": 2121300,
+      "sha256": "0b7b54b2ebc4440af658fea60ac929df97afc7a4843adb29ec8ff15998be21c8"
     },
     {
       "file": "terrain-102.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121260,
-      "sha256": "4afe859473d4be25e21eeafbb3267482d1e0bb833b1c47b2a44220ee16a94790"
+      "bytes": 2121296,
+      "sha256": "149ab0079460f10e163109452c98791e17d94acb9316ebe80e98928f0e643359"
     },
     {
       "file": "terrain-103.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121264,
-      "sha256": "1a33e7b6bf9592edc4823d012c1f59889fbe139891a562048c77d5807f112e81"
+      "bytes": 2121296,
+      "sha256": "61473e60202c0dd1653f8b66efa6b5a0a503363a1dadc865d65f6485c28645fb"
     },
     {
       "file": "terrain-104.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121260,
-      "sha256": "73c660b408bff35e42c7c6cf36ad3d6f12dcb5ff3737047f92ad2e229e784410"
+      "bytes": 2121284,
+      "sha256": "7d2fa38088eb7ed50098490f80118b1670940acfca3e43eeabdbc62873d5a2d0"
     },
     {
       "file": "terrain-105.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121200,
-      "sha256": "4964f2b2f15d51df81f10be9f48cc168edc825c10ab66046cf1e81848894e4bf"
+      "bytes": 2121304,
+      "sha256": "1423aafcd646321a89f372a9d6b0051a5770347d71414ca82eceeb8abb2b79f2"
     },
     {
       "file": "terrain-106.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121260,
-      "sha256": "a2d023449de0907c17648daf595f44abfee9bb2b6740bb4dd3e74810de9b5e93"
+      "bytes": 2121296,
+      "sha256": "c3dab3690f94b0c9687eeacc5cac1aec89a768f6a343f5f4ba6543b147c9412f"
     },
     {
       "file": "terrain-107.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "b1de2c021eb85061c442bb2408f92606194c86fc426f246b9fc44798ea0c2a5d"
+      "bytes": 2121300,
+      "sha256": "ad72447f1d0263c5a9aa63bb25f5c4e136486d62af52fb10b43a8144568e6722"
     },
     {
       "file": "terrain-108.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121232,
-      "sha256": "adbd8908363df055057bf1ae779edee4d5f64ea159ca6cdf1891d1ca9d052eb6"
+      "bytes": 2121304,
+      "sha256": "e2e7972937cf5318aa10b8804c548763b6890169add1f2c22313416496ea8393"
     },
     {
       "file": "terrain-109.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "b4d1f2f95851e3c32b3a51ff205ff26bf998f44dd0199d51f87541f7f37b7e41"
+      "bytes": 2121296,
+      "sha256": "7528895f47f64008936bec4c7ba1d9f2b5071d2b0c11bb5a9777f790afb64ebf"
     },
     {
       "file": "terrain-110.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "d6f3f7625921291dfc9a9d6352a4929e3289e12632e248ec4f5abf5f28c7328d"
+      "bytes": 2121296,
+      "sha256": "56ed1574f30fed226566fdecdb4f5f8349fa36e2039617c06253cd30cb1fda45"
     },
     {
       "file": "terrain-111.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121264,
-      "sha256": "7eb3381bd619b7d5489c90e49979a2d46d3d6764e7a697ae227067e735be07cf"
+      "bytes": 2121300,
+      "sha256": "d5784ffe15c67e92432616773ee1ca5e7c7e36bf3569e53936affee5e3813e38"
     },
     {
       "file": "terrain-112.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "e65c21f54cc731a6c98f285a4b63466f4642f340c6e5611294ad9451c101468d"
+      "bytes": 2121296,
+      "sha256": "b70dd6b19eb37e920849a516c79a5854cf4815cdcb0c42ec9677ad7d21a595ee"
     },
     {
       "file": "terrain-113.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121268,
-      "sha256": "5229aa67840d5beebac3a3da81fd9fd32b022e464452bbae2017f6ff32bb2d9b"
+      "bytes": 2121300,
+      "sha256": "d6d63836cf5b64f967761ab2bdeb96418286c3f1170bd89b400ee0927e6deb76"
     },
     {
       "file": "terrain-114.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121264,
-      "sha256": "d70cb31dcb39356a5ae4ca504e7551ec19b83a96948cb42d3010c3488dbafd75"
+      "bytes": 2121300,
+      "sha256": "a3b8031d83c56b3e8323027ddc7482ed235e28c6c9c136f0c4ded5d8558d41bd"
     },
     {
       "file": "terrain-115.glb",
+      "role": 64,
       "vertices": 46080,
       "triangles": 15360,
-      "bytes": 2121228,
-      "sha256": "78f1e4a0dcc02ebb6adfe0c2ae6f6918b7184f82ff96a6424dd6e84b092d4c12"
+      "bytes": 2121296,
+      "sha256": "91877baa078dbabe896ea0098f7d19700e0495d9542489aa8c3f2c75edd067df"
     },
     {
       "file": "terrain-116.glb",
+      "role": 64,
       "vertices": 61920,
       "triangles": 20640,
-      "bytes": 2849908,
-      "sha256": "a8e59e33a93410261276117a59b570e01c3bfa70b2c8726acbd25d63e96a6043"
+      "bytes": 2849932,
+      "sha256": "e45bb7d8047f53912724ef2cc6f66f188e35f042f17078a355f745c9867ee0ee"
+    },
+    {
+      "file": "terrain-117.glb",
+      "role": 60,
+      "vertices": 2630,
+      "triangles": 4000,
+      "bytes": 141280,
+      "sha256": "2eadbaf1200b3aba5feeb058bd0b9990e03e48c306b656feb414ed762d6e1d6d"
+    },
+    {
+      "file": "terrain-118.glb",
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211144,
+      "sha256": "d43e97870ef4a98b5d7f5b671bef1a781bc187454605bc7322557117807b6bc5"
+    },
+    {
+      "file": "terrain-119.glb",
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211144,
+      "sha256": "1102e1e94dacaae668f4ddabb04239f009adb9514804fe2b0ba816f92cf3cd86"
+    },
+    {
+      "file": "terrain-120.glb",
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211144,
+      "sha256": "bd91c6e6170f5b4f869fe4997238dafe83e438085892a2e2074c08a81acfb7cb"
+    },
+    {
+      "file": "terrain-121.glb",
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211148,
+      "sha256": "2a483c1db5a268176c33902ef20a2934a3237fc79d2c9e0402a3d8e7dce549f8"
+    },
+    {
+      "file": "terrain-122.glb",
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211148,
+      "sha256": "7c61190a27cda00e05894db9f3146558584620c2c2f02af0858eeafeb7d1f6c7"
+    },
+    {
+      "file": "terrain-123.glb",
+      "role": 60,
+      "vertices": 3945,
+      "triangles": 6000,
+      "bytes": 211144,
+      "sha256": "f33031f2997ff2f0534b7028dd128d84b07a1f6edaa3b576789a67f97662371d"
+    },
+    {
+      "file": "terrain-124.glb",
+      "role": 60,
+      "vertices": 3667,
+      "triangles": 5447,
+      "bytes": 195596,
+      "sha256": "51b7aa7b42ad3b72711ae1a1a49433a56913b5eea159a9b227e6392bc8fd619b"
+    },
+    {
+      "file": "terrain-125.glb",
+      "role": 60,
+      "vertices": 1796,
+      "triangles": 2720,
+      "bytes": 96900,
+      "sha256": "ead6837f76e7a5e995538ef98c51ab9b428f2ca8f25eb3e09c1066eb64e52673"
+    },
+    {
+      "file": "terrain-126.glb",
+      "role": 60,
+      "vertices": 2694,
+      "triangles": 4080,
+      "bytes": 144576,
+      "sha256": "6d119f1d9cf131760f9082f5aaa3d96047196f76a7b3093c0d8120644d5695e2"
+    },
+    {
+      "file": "terrain-127.glb",
+      "role": 60,
+      "vertices": 2694,
+      "triangles": 4080,
+      "bytes": 144576,
+      "sha256": "eccfc4b9e6136a04be60aea5540ccbc8b72f3e987499acc5b33ebc09ad6d24ea"
+    },
+    {
+      "file": "terrain-128.glb",
+      "role": 60,
+      "vertices": 2694,
+      "triangles": 4080,
+      "bytes": 144576,
+      "sha256": "3a86009a075fab59883030f6e636bc88c3c7638c5bc74c580036c1d4cd540cbd"
+    },
+    {
+      "file": "terrain-129.glb",
+      "role": 60,
+      "vertices": 2694,
+      "triangles": 4080,
+      "bytes": 144576,
+      "sha256": "b138df92dc06340df1123fc7cd491a2107fe227f6a0623336361ec1c75f89f85"
+    },
+    {
+      "file": "terrain-130.glb",
+      "role": 60,
+      "vertices": 2694,
+      "triangles": 4080,
+      "bytes": 144580,
+      "sha256": "ebae9f3eff4ec16927b7ed0e874846e7b9a575ec5fc55c91b3cccc70002ac6de"
+    },
+    {
+      "file": "terrain-131.glb",
+      "role": 60,
+      "vertices": 2694,
+      "triangles": 4080,
+      "bytes": 144580,
+      "sha256": "a0f1bacf44f10e85586e556f645ff292ec5f6fc7b3df49c949207b3276bcb562"
+    },
+    {
+      "file": "terrain-132.glb",
+      "role": 60,
+      "vertices": 2500,
+      "triangles": 3701,
+      "bytes": 133772,
+      "sha256": "625ae7ce26fca5174ab42f161f80198b3c640374f84d8b327115af7b5aa360e4"
+    },
+    {
+      "file": "terrain-133.glb",
+      "role": 60,
+      "vertices": 2502,
+      "triangles": 3840,
+      "bytes": 134684,
+      "sha256": "d8ca2853f35fd5eaea44b75bb70056c25ab78bcb61ed8a6a178429596f299032"
+    },
+    {
+      "file": "terrain-134.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201252,
+      "sha256": "c925c68f59a0fa08af43a037763c16e189192cf2bcbcf50c125df199d8ac2ef2"
+    },
+    {
+      "file": "terrain-135.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "687f559006c9b09601ba6ce93d9fb2f8de79303662453af4789c04d045e18f36"
+    },
+    {
+      "file": "terrain-136.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201252,
+      "sha256": "6e9ddecd0310016f3bde26710b4ac245f39054dcfb8cfb1a29606480019c5547"
+    },
+    {
+      "file": "terrain-137.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "6d076ceceef25dce1a3787d32b609d594393f71aae75bdb03bff1e09be1b7234"
+    },
+    {
+      "file": "terrain-138.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "cb6b007f36ea4c3aca07e974b59af1095c39e4e7b16ae3a74964cdd1bd28b9c0"
+    },
+    {
+      "file": "terrain-139.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "cd291cd0882c3f70f5e9cc69c92bb87dc105de003fd5c1c632fcaff337e6bc76"
+    },
+    {
+      "file": "terrain-140.glb",
+      "role": 60,
+      "vertices": 3504,
+      "triangles": 5244,
+      "bytes": 187204,
+      "sha256": "ddab0ce47a30ea74159c23dca6f3b6d841725b5276d90745a6a83c66dc566ce4"
+    },
+    {
+      "file": "terrain-141.glb",
+      "role": 60,
+      "vertices": 2502,
+      "triangles": 3840,
+      "bytes": 134684,
+      "sha256": "912cf9a2fdde043aecd95d1cd87063e59cc1383f6636c47b6b59ee6ad4717170"
+    },
+    {
+      "file": "terrain-142.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "fdbf8fbfc98179af8afe93e538ce91adb2c23a3af2aaf7c0dbf442a5992e050e"
+    },
+    {
+      "file": "terrain-143.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "501aaeedb5c8a5129a5aedc44bf399d62d0886f17782f371e9674b04c59b7d22"
+    },
+    {
+      "file": "terrain-144.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "c99cbf7f07f1bf3784f1bf80316237f14ebd595326a85a28bc05747c5af41e2d"
+    },
+    {
+      "file": "terrain-145.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "2570a55b808be1f8a91ef9a928de7ea9f70eddde1eec6d2c4243653d4426da55"
+    },
+    {
+      "file": "terrain-146.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "b53f609498e0c023d199109ca0a7e3d3ec068f50be0bf9fdc7f89bfcc7391def"
+    },
+    {
+      "file": "terrain-147.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "28f81d125ff1992fc757662b57349db63502864e0e54de5575d5fcd1b38321ec"
+    },
+    {
+      "file": "terrain-148.glb",
+      "role": 60,
+      "vertices": 3504,
+      "triangles": 5244,
+      "bytes": 187204,
+      "sha256": "9aa9a62f8cb2c876edd5274011845259e211a78073348fc58d505b4bcf9896a5"
+    },
+    {
+      "file": "terrain-149.glb",
+      "role": 60,
+      "vertices": 2502,
+      "triangles": 3840,
+      "bytes": 134684,
+      "sha256": "b35e69715c7c91128d07a6c76f1eec8fdd94293a086428d0c5de25bf2b3f2b6d"
+    },
+    {
+      "file": "terrain-150.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201252,
+      "sha256": "a1d223dbdad32383caae57f77746c659ff8e3f4690f27bfbf83d000ed555078c"
+    },
+    {
+      "file": "terrain-151.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "f7545876ea090279d34838055a48015c80937fb67e122cf81841f06427f6ca13"
+    },
+    {
+      "file": "terrain-152.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "70a9346aa4f35e5590935918b69ba9af9acd6da03c2cb84a2f8e864485d2649e"
+    },
+    {
+      "file": "terrain-153.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "2c40e6ac5c211f825ac3180855229efb1c76d7a3c373815d954215b791212a4c"
+    },
+    {
+      "file": "terrain-154.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "979e05abe6740c4d6d4af424793ac6799ae00e1e47c318a6e7c52f81191ebe3a"
+    },
+    {
+      "file": "terrain-155.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201260,
+      "sha256": "6b743a37b0d335bc7b675fa15d85f695e066431ffc8bfbb5ba552af15b20071a"
+    },
+    {
+      "file": "terrain-156.glb",
+      "role": 60,
+      "vertices": 3504,
+      "triangles": 5244,
+      "bytes": 187208,
+      "sha256": "9257cf283c4d197814eed0c180654cf7980260fb8eb6d61cbc306ed545cf16f2"
+    },
+    {
+      "file": "terrain-157.glb",
+      "role": 60,
+      "vertices": 2502,
+      "triangles": 3840,
+      "bytes": 134688,
+      "sha256": "11e5a8eea0467d6a4d1e42c9e65fc6035bb88f6301c7620d770eaeb7703c7862"
+    },
+    {
+      "file": "terrain-158.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201252,
+      "sha256": "ffad7896a56e885fbf2b286eb258225e4a7e2dca149eb155c85087c136a65ce9"
+    },
+    {
+      "file": "terrain-159.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "5d2dd90a612b8a6ede4839bfa2d4065139bc4e09cca7b885c50ee0d6e3c285f6"
+    },
+    {
+      "file": "terrain-160.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "ebc550ddb5117df90b5393cf9501c79dac744eec4b56da0f04e0692c75d4b046"
+    },
+    {
+      "file": "terrain-161.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201256,
+      "sha256": "a21cfca69c09d58b650bf5260877796edf6631b3cff71c0ff05e3b58a476be7b"
+    },
+    {
+      "file": "terrain-162.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201260,
+      "sha256": "71e5a2b1aea970c4f36e09d19f6245ad95eff2e40079799056f3470b396059ee"
+    },
+    {
+      "file": "terrain-163.glb",
+      "role": 60,
+      "vertices": 3753,
+      "triangles": 5760,
+      "bytes": 201260,
+      "sha256": "8b946134c24f796d6e251fafef6e7d4a18245f72d94f121f5883effef33bcc72"
+    },
+    {
+      "file": "terrain-164.glb",
+      "role": 60,
+      "vertices": 3504,
+      "triangles": 5244,
+      "bytes": 187204,
+      "sha256": "6903361cd93158de9f11814446ba975bf57236b493cced95aae058876e47b75d"
+    },
+    {
+      "file": "terrain-165.glb",
+      "role": 60,
+      "vertices": 834,
+      "triangles": 1280,
+      "bytes": 45928,
+      "sha256": "0f1230fc6358b96ece38f674dd4b6f022a002f7c47b36ae0c190903764ff34ac"
+    },
+    {
+      "file": "terrain-166.glb",
+      "role": 60,
+      "vertices": 1251,
+      "triangles": 1920,
+      "bytes": 68116,
+      "sha256": "14f3fc1cb4f0273e555a23869673ea86e60988bd80e9b8309a2d496c36fbe1f9"
+    },
+    {
+      "file": "terrain-167.glb",
+      "role": 60,
+      "vertices": 1251,
+      "triangles": 1920,
+      "bytes": 68120,
+      "sha256": "7353bb07037a6c4df2afbe87137871c9ac1ea6732bb0812957e9681fdafb5265"
+    },
+    {
+      "file": "terrain-168.glb",
+      "role": 60,
+      "vertices": 1251,
+      "triangles": 1920,
+      "bytes": 68120,
+      "sha256": "f9d8acfc7500aa5098d0fba8384a491fb387abaaefc1600b8eaaa433eeaa2b5d"
+    },
+    {
+      "file": "terrain-169.glb",
+      "role": 60,
+      "vertices": 1251,
+      "triangles": 1920,
+      "bytes": 68124,
+      "sha256": "0b5ed7059214227d8ab74110005f258aa421be954ed2e9c3503bba4c29e73068"
+    },
+    {
+      "file": "terrain-170.glb",
+      "role": 60,
+      "vertices": 1251,
+      "triangles": 1920,
+      "bytes": 68120,
+      "sha256": "e8df78bf1ba6de6fabb1723a500c764070897e0248fb79b9ad0a57be554ea933"
+    },
+    {
+      "file": "terrain-171.glb",
+      "role": 60,
+      "vertices": 1251,
+      "triangles": 1920,
+      "bytes": 68124,
+      "sha256": "d24e2c7d5950f1591564f00cec24e677a0f0c40855599b6fd7a2972af6d99f78"
+    },
+    {
+      "file": "terrain-172.glb",
+      "role": 60,
+      "vertices": 1168,
+      "triangles": 1748,
+      "bytes": 63440,
+      "sha256": "8bb9df33a4565c389c7f2d601a9f9e09629e388b9d88c6fb22053211a9a73e64"
+    },
+    {
+      "file": "terrain-173.glb",
+      "role": 65,
+      "vertices": 16384,
+      "triangles": 8192,
+      "bytes": 771700,
+      "sha256": "ccfc75e277858a31d956213d71a7572a9a3591c10147c849d3916ef85d0eddad"
     }
   ]
 }

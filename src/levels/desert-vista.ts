@@ -4,6 +4,8 @@ import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import type {CustomComponent,DecorKind} from '../level';
 import {VISTA_PLACEMENTS} from '../desertVistaCatalog';
 import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
+import {desertRockFooting} from '../desertGrounding';
+import {stitchDesertTerrain} from '../desertTerrainSeams';
 
 type Point=[number,number,number];
 type Profile={x:number;y:number;s:number};
@@ -102,6 +104,7 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
         colors.push(...vistaColour(wx,y,wz,u,normal.y).toArray().map(round));
         if(j<nx&&k<nz){const a=k*(nx+1)+j;indices.push(a,a+1,a+nx+1,a+1,a+nx+2,a+nx+1);}
       }
+      stitchDesertTerrain({vertices,indices,normals,colors,uvs},[x,0,z],ground);
       // Fixed terrain detail by authored region, never selected by distance.
       // Native skirts close tessellation boundaries on steep eroded faces.
       const edge:number[]=[];
@@ -111,7 +114,11 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
       for(let k=nz-1;k>0;k--)edge.push(k*(nx+1));
       for(let i=0;i<edge.length;i++){
         const a=edge[i],b=edge[(i+1)%edge.length],c=vertices.length/3;
-        vertices.push(vertices[a*3],vertices[a*3+1]-4,vertices[a*3+2],vertices[b*3],vertices[b*3+1]-4,vertices[b*3+2]);
+        const outer=(index:number)=>{
+          const wx=vertices[index*3]+x,wz=vertices[index*3+2]+z;
+          return Math.abs(wx+684)<.001||Math.abs(wx-2220)<.001||Math.abs(wz-740)<.001||Math.abs(wz+5024)<.001;
+        };
+        vertices.push(vertices[a*3],outer(a)?-1750:vertices[a*3+1]-4,vertices[a*3+2],vertices[b*3],outer(b)?-1750:vertices[b*3+1]-4,vertices[b*3+2]);
         normals.push(...normals.slice(a*3,a*3+3),...normals.slice(b*3,b*3+3));
         colors.push(...colors.slice(a*3,a*3+3),...colors.slice(b*3,b*3+3));
         uvs.push(...uvs.slice(a*2,a*2+2),...uvs.slice(b*2,b*2+2));indices.push(a,c,b,b,c,c+1);
@@ -127,12 +134,8 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
     const rr=()=>{rockSeed=(Math.imul(rockSeed,1664525)+1013904223)>>>0;return rockSeed/4294967296;};
     function fin(s:number,u:number,w:number,h:number,d:number,rotation:number){
       const p=point(s,u),angle=rotation*Math.PI/180,ca=Math.cos(angle),sa=Math.sin(angle);
-      let base=ground(p[0],p[2]);
-      for(let i=0;i<12;i++){
-        const a=i/12*Math.PI*2,x=Math.cos(a)*w*.48,z=Math.sin(a)*d*.48;
-        base=Math.min(base,ground(p[0]+x*ca+z*sa,p[2]-x*sa+z*ca));
-      }
-      p[1]=base-.6;
+      // Include the broad lower bedding, whose corners extend beyond an ellipse.
+      p[1]=desertRockFooting(ground,p[0],p[2],w*1.3,d*1.3,rotation);
       const rows=44,cols=40,vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[];
       const phase=rr()*50;
       for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){
@@ -155,6 +158,8 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
       }
       const cap=vertices.length/3;vertices.push(0,h,0);uvs.push(.5,h);colors.push(...new THREE.Color('#dfb07b').toArray());
       for(let i=0;i<cols;i++)indices.push(rows*(cols+1)+i,cap,rows*(cols+1)+i+1);
+      const foot=vertices.length/3;vertices.push(0,0,0);uvs.push(.5,0);colors.push(...new THREE.Color('#bd7944').toArray());
+      for(let i=0;i<cols;i++)indices.push(i,i+1,foot);
       const geometry=new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
       geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
       geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setIndex(indices);
@@ -177,7 +182,13 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
   function gravel(){
     // Rounded scree is geometry at every distance, with spatially batched
     // pebbles rather than large flat texture marks or thousands of GLB draws.
-    const shard=new THREE.IcosahedronGeometry(1,1),shape=shard.getAttribute('position'),smoothNormals=shard.getAttribute('normal');
+    const clay=mergeVertices(new THREE.IcosahedronGeometry(1,1)),cp=clay.getAttribute('position');
+    for(let i=0;i<cp.count;i++){
+      const x=cp.getX(i),y=cp.getY(i),z=cp.getZ(i),pressed=1+noise.noise3D(x*1.7+8,y,z*1.7)*.09;
+      cp.setXYZ(i,x*pressed,Math.min(.62,Math.max(-.56,y))*pressed,z*pressed);
+    }
+    clay.computeVertexNormals();const shard=clay.toNonIndexed();clay.dispose();
+    const shape=shard.getAttribute('position'),smoothNormals=shard.getAttribute('normal');
     let gravelSeed=15733;
     const rr=()=>{gravelSeed=(Math.imul(gravelSeed,1664525)+1013904223)>>>0;return gravelSeed/4294967296;};
     for(let from=start+65;from<length;from+=64){
@@ -188,7 +199,7 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
         const u=onTrail?(rr()*2-1)*width(s)*.43:side*(width(s)/2+.1+Math.pow(rr(),1.7)*16);
         const p=point(s,u);p[1]=ground(p[0],p[2]);
         const radius=(.09+rr()**2*.47)*(onTrail?.48:1),rot=rr()*Math.PI*2,ca=Math.cos(rot),sa=Math.sin(rot),wide=1+rr()*.8;
-        const colour=new THREE.Color('#bd794c').lerp(new THREE.Color('#d9b68a'),rr()*.55);
+        const colour=new THREE.Color('#ce9667').lerp(new THREE.Color('#e4b68a'),rr()*.55);
         for(let k=0;k<shape.count;k++){
           const x=shape.getX(k)*radius*wide,z=shape.getZ(k)*radius,y=(shape.getY(k)*.67+.16)*radius;
           indices.push(vertices.length/3);vertices.push(round(p[0]-origin[0]+x*ca+z*sa),round(p[1]-origin[1]+y),round(p[2]-origin[2]-x*sa+z*ca));
@@ -209,7 +220,12 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
     terrain(-684,-300,-2144,-4000,4);
     terrain(300,2220,-2144,-4000,8);
     terrain(-684,2220,-4000,-5024,8);
-    fracturedButtresses();gravel();return C;
+    fracturedButtresses();gravel();
+    // The earlier narrow canyon used to stop at x=+/-300, exposing empty sky
+    // beneath the approach to this wide valley. Continue its outer landform
+    // all the way back to the launch, with the same fixed native surface.
+    terrain(-684,-300,740,-2144,8);
+    terrain(300,2220,740,-2144,8);return C;
   }
   for(const c of VISTA_PLACEMENTS)C.push({t:'decor',dkind:c.kind as DecorKind,p:[...c.p],s:[...c.s],
     scenerySolid:c.ground,castShadow:c.shadow,grp:60,nm:'Native eroded amphitheatre and wooded basin'});

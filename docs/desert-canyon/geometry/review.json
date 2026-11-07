@@ -1,0 +1,153 @@
+{
+  "baseRevision": "ab8959078ed7161e9f66ddd86c44ac72630708a3",
+  "scope": "Dusty Road geometry, clay pebbles and sunlight; Cactus Cache inherits the same corrected lighting",
+  "fullTraversal": {
+    "supportProbes": 8394,
+    "fromVista": false,
+    "vistaProbes": 18,
+    "vistaLength": 1751.0326446530826,
+    "freerideShoulder": true,
+    "valleyLanding": true,
+    "landingFrames": 181,
+    "checkpoints": 17,
+    "routeFrames": 43378,
+    "finishFrames": 135,
+    "checkpointBankAndPitRecovery": true,
+    "routeMetres": 5630.595142105832,
+    "upperExtension": 771.8510543215829,
+    "lowerExtension": 3466.7873397347685,
+    "lowerDrop": 781.0000000000001,
+    "final300mDrop": 64.68787848527495,
+    "airborneGaps": [
+      "Boardwalk launch",
+      "Canyon rim jump"
+    ],
+    "materials": "shared mineral texture owners verified"
+  },
+  "finalNativeVistaValidation": {
+    "supportProbes": 8394,
+    "fromVista": true,
+    "vistaProbes": 18,
+    "vistaLength": 1751.0326446530826,
+    "freerideShoulder": true,
+    "valleyLanding": true,
+    "landingFrames": 181,
+    "checkpoints": 17,
+    "routeFrames": 13951,
+    "finishFrames": 135,
+    "checkpointBankAndPitRecovery": true,
+    "routeMetres": 5630.595142105832,
+    "upperExtension": 771.8510543215829,
+    "lowerExtension": 3466.7873397347685,
+    "lowerDrop": 781.0000000000001,
+    "final300mDrop": 64.68787848527495,
+    "airborneGaps": [],
+    "materials": "shared mineral texture owners verified"
+  },
+  "nativeVistaCells": 173,
+  "lighting": {
+    "direction": [
+      0.3923907585459757,
+      0.626024087452272,
+      -0.6738867371726972
+    ],
+    "shadowHalf": 512,
+    "shadowFar": 2600,
+    "shadowMap": [
+      4096,
+      4096
+    ],
+    "sunAlignmentView": "Camera aimed along the actual light vector; disc centred at 960,540 in a 1920x1080 render."
+  },
+  "shadowMeasurement": {
+    "method": "Frozen player camera/world; heat disabled during comparison; actual shadow focus moved +40/-40 world metres. Sample lower central 70% width by 45% height; changed means any RGB channel differs by more than 3/255.",
+    "native1080": {
+      "size": [
+        1920,
+        1080
+      ],
+      "totalPixels": 653184,
+      "controlChanged": 0,
+      "forwardChanged": 2,
+      "backChanged": 1,
+      "forwardMeanDelta": 0.0008374363119733491,
+      "backMeanDelta": 0.0010869831471683323
+    },
+    "normal720": {
+      "size": [
+        1280,
+        720
+      ],
+      "totalPixels": 290304,
+      "controlChanged": 0,
+      "forwardChanged": 2,
+      "backChanged": 4,
+      "forwardMeanDelta": 0.0008990575396825396,
+      "backMeanDelta": 0.0011677414021164022
+    }
+  },
+  "browser": {
+    "consoleErrors": [],
+    "failedAssets": [],
+    "views": [
+      "Sunlit narrows gameplay",
+      "Cactus switchbacks gameplay",
+      "Lower rock chute wide terrain",
+      "Rim gateway wide terrain",
+      "River overlook gameplay",
+      "Sun alignment",
+      "Cactus Cache gameplay"
+    ],
+    "resolutions": [
+      [
+        1280,
+        720
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "bonus": {
+      "level": "bonus:bryce-canyon",
+      "shadowHalf": 512,
+      "shadowFar": 2600,
+      "heatPatches": 7,
+      "grounded": true,
+      "pendingAssets": 0
+    },
+    "scopeExit": {
+      "level": "beachfront",
+      "shadowHalf": 96,
+      "shadowFar": 600,
+      "authoredDirection": [
+        0.42,
+        0.52,
+        -0.74
+      ],
+      "heatPatches": 0,
+      "heatCopySize": null,
+      "pendingAssets": 0,
+      "consoleErrors": []
+    }
+  },
+  "checks": {
+    "geometrySurvey": "pass",
+    "completeTraversal": "pass",
+    "finalNativeVista": "pass",
+    "typecheckAndBuild": "pass",
+    "releaseSize": "pass",
+    "releaseBytes": 974153459,
+    "releaseBudgetBytes": 1000000000,
+    "bananaBaySkyIsolation": "pass",
+    "mapSkyClouds": "pass",
+    "checkLevels": "Known baseline failure: tools/test-waterpark-decks.mjs:49 single-owner material/texture disposal."
+  },
+  "performanceNote": "Observed settled main-canyon median frames around 23\u201327 ms at 720p/native 1080p, with heavier frames. No 60 fps guarantee. No camera-distance mesh simplification introduced.",
+  "captures": [
+    "sunlit-narrows.png",
+    "valley-approach.png",
+    "native-vista.png",
+    "aligned-sun.png"
+  ]
+}

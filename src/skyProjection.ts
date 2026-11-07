@@ -2,6 +2,7 @@ import { SKYSTREAM_SUN } from './skystreamSun';
 import {RALLY_NOISE,RALLY_SUN} from './rallyMaterials';
 import * as THREE from 'three';
 import { createSeaSkyGeometry, seaBackdropRadius } from './seaBackdrop';
+import {DESERT_PAINTED_SUN_UV} from './desertLighting';
 
 type Scalar = { value: number };
 
@@ -14,7 +15,7 @@ export function installSkyProjection(
   hazeStrength: Scalar,
   opaque: Scalar,
   sea: Scalar,
-): { setCloudRoadSky:(enabled:boolean)=>void; setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void;setDustHaze:(amount:number)=>void;setStormGlow:(strength:number,azimuth:number)=>void } {
+): { setDesertSun:(direction:readonly number[]|null)=>void;setCloudRoadSky:(enabled:boolean)=>void; setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void;setDustHaze:(amount:number)=>void;setStormGlow:(strength:number,azimuth:number)=>void } {
   const flatGeometry = sky.geometry;
   const seaGeometry = createSeaSkyGeometry();
   let seaLevel: number | null = null;
@@ -26,6 +27,7 @@ export function installSkyProjection(
   const hazeElevation = { value: .26 };
   const dustHaze = { value: 0 };
   const cloudRoadSky={value:0},cloudSun={value:SKYSTREAM_SUN};
+  const desertSun={value:new THREE.Vector4(0,1,0,0)};
   const rallySun={value:new THREE.Vector3(...RALLY_SUN).normalize()};
   const stormGlow = { value: new THREE.Vector4(0,.27,-1,0) };
   let lastMap: THREE.Texture | null = null;
@@ -70,6 +72,7 @@ export function installSkyProjection(
       uSkyOpaqueBackdrop: opaque, uSkySea: sea, uSkyPoleColor: poleColor,
       uSkyHazeElevation:hazeElevation,
       uSkyStorm:stormGlow,uSkyDust:dustHaze,uRallySun:rallySun,uCloudRoadSky:cloudRoadSky,uCloudSun:cloudSun,
+      uDesertSun:desertSun,
     });
     shader.vertexShader = 'uniform mat4 uSkyCameraWorld; uniform float uSkySea; varying vec3 vSkyRay;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
@@ -98,6 +101,7 @@ export function installSkyProjection(
       uniform vec3 uSkyHazeColor, uSkyPoleColor;
       uniform float uSkyHazeStrength, uSkyOpaqueBackdrop, uSkySea,uSkyHazeElevation;
       uniform float uCloudRoadSky;uniform vec3 uCloudSun;
+      uniform vec4 uDesertSun;
       uniform vec4 uSkyStorm;uniform float uSkyDust;uniform vec3 uRallySun;
       ${RALLY_NOISE}
     ` + shader.fragmentShader;
@@ -123,6 +127,18 @@ export function installSkyProjection(
         dx.x -= round(dx.x / wrap) * wrap;
         dy.x -= round(dy.x / wrap) * wrap;
         diffuseColor *= textureGrad(map, skyUv, dx, dy);
+        if(uDesertSun.w>.5){
+          // Retain the exact cloud painting and horizon. Reconstruct only its
+          // tiny old disc from adjacent sky, then draw the sun at the physical
+          // light's direction. No panorama stretch or duplicate low sun.
+          vec2 discUv=vec2(${DESERT_PAINTED_SUN_UV[0]},${DESERT_PAINTED_SUN_UV[1]});
+          float oldDisc=1.0-smoothstep(.0075,.012,length((skyUv-discUv)*vec2(2.0,1.0)));
+          if(oldDisc>0.001){
+            vec4 skyAround=(textureGrad(map,skyUv+vec2(.009,0),dx,dy)+textureGrad(map,skyUv-vec2(.009,0),dx,dy)
+              +textureGrad(map,skyUv+vec2(0,.018),dx,dy)+textureGrad(map,skyUv-vec2(0,.018),dx,dy))*.25;
+            diffuseColor=mix(diffuseColor,skyAround,oldDisc);
+          }
+        }
         diffuseColor.rgb = mix(diffuseColor.rgb, uSkyPoleColor,
           smoothstep(0.6, 0.96, skyRay.y));
       #endif
@@ -162,11 +178,17 @@ export function installSkyProjection(
         vec3 bloom=vec3(1.1,.86,.52)*exp(-d*d*530.0)+vec3(.22,.19,.14)*exp(-d*d*45.0);
         diffuseColor.rgb+=bloom+vec3(9.0,7.8,5.8)*disk;
       }
+      if(uDesertSun.w>.5){
+        float d=length(skyRay-normalize(uDesertSun.xyz));
+        float disk=1.0-smoothstep(.017,.022,d);
+        diffuseColor.rgb+=vec3(.42,.23,.075)*exp(-d*d*380.0)
+          +vec3(.12,.058,.018)*exp(-d*d*40.0)+vec3(3.6,3.35,2.65)*disk;
+      }
 
     `);
   };
-  material.customProgramCacheKey = () => 'sea-level-hemisphere-v9-cloud-road-blue';
-  return {setCloudRoadSky(enabled){cloudRoadSky.value=enabled?1:0;},setDustHaze(amount){dustHaze.value=THREE.MathUtils.clamp(amount,0,1);},setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
+  material.customProgramCacheKey = () => 'sea-level-hemisphere-v10-matched-desert-sun';
+  return {setDesertSun(direction){if(direction)desertSun.value.set(direction[0],direction[1],direction[2],1);else desertSun.value.w=0;},setCloudRoadSky(enabled){cloudRoadSky.value=enabled?1:0;},setDustHaze(amount){dustHaze.value=THREE.MathUtils.clamp(amount,0,1);},setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
     const enabled = height !== null;
     seaLevel = height; sea.value = enabled ? 1 : 0;
     sky.name = enabled ? 'Sea-level sky backdrop' : 'Distant sky backdrop';

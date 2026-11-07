@@ -22,5 +22,5 @@ export const DESERT_ASSETS={
   deserthoodoolow:rock('hoodoo-low','eroded low shelf',[14,9,12]),
   deserthoodootwins:rock('hoodoo-twins','paired capstone towers',[15,35,10]),
   deserthoodoofin:rock('hoodoo-fin','thin sandstone fin',[22,35,8]),
-  deserttalus:rock('talus','angular sandstone talus',[5.6,3.2,4.5]),
+  deserttalus:{...rock('talus','soft sculpted clay pebbles',[5.6,3.2,4.5]),clay:true},
 } as const;

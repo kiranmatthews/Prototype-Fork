@@ -617,7 +617,7 @@ export class JungleAssetKit {
       material.customProgramCacheKey=()=> 'caldera-backdrop-blend-v4';
       cache.set(kind,material);return material;
     }
-    if(kind.startsWith('desert')){const material=createDesertMaterial('sandstone');material.userData.jungleAsset=true;cache.set(kind,material);return material;}
+    if(kind.startsWith('desert')){const material=spec.clay?new THREE.MeshStandardMaterial({vertexColors:true,roughness:.86,metalness:0}):createDesertMaterial('sandstone');material.userData.jungleAsset=true;cache.set(kind,material);return material;}
     if (kind.startsWith("night")) {
       const material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x1b2d4b,emissiveIntensity:.3});
       material.name=spec.label;material.userData.jungleAsset=true;cache.set(kind,material);return material;

@@ -5,6 +5,9 @@ import {lazySourceField} from './lazy-source';
 import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
 import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
 import type {DesertHeatPatch} from '../desertHeatData';
+import {desertRockFooting} from '../desertGrounding';
+import {stitchDesertTerrain} from '../desertTerrainSeams';
+import {DESERT_SUN_DIRECTION} from '../desertLighting';
 
 type Point=[number,number,number];
 /** User replay 2026-11-07T18-58-38, recovered from Sunset Promontory after
@@ -125,7 +128,7 @@ export function desertGround(x:number,z:number):number{
     }
     return y;
   };
-  if(z<=-2420||(z<-2100&&Math.abs(x)>=500))return vistaGround();
+  if(z<=-2420)return vistaGround();
   const near=nearest(x,z),d=near.distance;
   // Blend distant hills onto a continuous longitudinal profile. Nearest-bend
   // Voronoi boundaries must not become vertical cliffs between switchbacks.
@@ -156,7 +159,9 @@ export function desertGround(x:number,z:number):number{
     const mask=smooth(550,575,creekLocal)*(1-smooth(925,950,creekLocal));
     ground=mix(ground,near.y-9.2,mask*(1-smooth(3.1,6.3,Math.abs(u-creekOffset(creekLocal)))));
   }
-  const vistaBlend=Math.max(smooth(-2250,-2420,z),z<-2100?smooth(300,500,Math.abs(x)):0);
+  // The distant basin opens gradually around the canyon's shoulders. A hard
+  // z=-2100 switch made a several-hundred-metre vertical cut visible ahead.
+  const vistaBlend=Math.max(smooth(-2250,-2420,z),smooth(-1750,-2250,z)*smooth(300,500,Math.abs(x)));
   return mix(ground,vistaGround(),vistaBlend);
 }
 
@@ -171,16 +176,9 @@ const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294
 const C:CustomComponent[]=[];
 const add=(c:CustomComponent)=>{C.push(c);return c;};
 const decorate=(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp=30,solid=false)=>add({t:'decor',dkind:kind,p:p.map(round) as Point,s:size,yaw,scenerySolid:solid,grp,nm});
-function groundedRock(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp:number){
-  // A broad, flat rock base must reach the downhill side of its footprint.
-  // Sampling only its centre leaves the lower edge suspended over sloped soil.
-  const angle=yaw*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
-  let floor=desertGround(p[0],p[2]);
-  for(let i=0;i<8;i++){
-    const a=i*Math.PI/4,x=Math.cos(a)*size[0]*.46,z=Math.sin(a)*size[2]*.46;
-    floor=Math.min(floor,desertGround(p[0]+x*c+z*s,p[2]-x*s+z*c));
-  }
-  decorate(kind,[p[0],floor-.8,p[2]],size,yaw,nm,grp);
+function groundedRock(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp:number,solid=false){
+  const floor=desertRockFooting(desertGround,p[0],p[2],size[0],size[2],yaw);
+  decorate(kind,[p[0],floor,p[2]],size,yaw,nm,grp,solid);
 }
 function boardwalk(from:number,to:number,name:string,rails:boolean,depth:number){
   const origin=desertPoint(from),n=Math.ceil((to-from)/2);
@@ -257,6 +255,7 @@ for(let x=x0;x<x1;x+=64)for(let z=z0;z>z1;z-=64){
   }
   // These buried tile borders are tessellation seams inside continuous ground.
   // Generating grind rails for them created thousands of artificial candidates.
+  stitchDesertTerrain({vertices,indices,uvs,colors,normals},origin,desertGround);
   add({t:'mesh',p:origin,vertices,indices,uvs,colors,normals,tex:'desert-trail',smoothCollision:true,edgeGrinding:false,grp:2,nm:'Continuous carved canyon terrain'});
 }
 
@@ -271,8 +270,8 @@ decorate('desertsurveyrim',[-246,95,-260],[320,138.12,320],-55,'Measured amphith
 decorate('desertsurveyrim',[267,25,-590],[320,138.12,320],120,'Measured amphitheatre · east rim',21);
 function tower(s:number,side:number,offset:number,h:number,w:number,index:number,depth=w*.8){
   s=core(s);
-  const p=desertPoint(s,side*offset);p[1]=desertGround(p[0],p[2])-.8;
-  decorate(kinds[index%kinds.length],p,[w,h,depth],random()*360,'Eroded sandstone hoodoo',20,offset<26);
+  const p=desertPoint(s,side*offset);
+  groundedRock(kinds[index%kinds.length],p,[w,h,depth],random()*360,'Eroded sandstone hoodoo',20,offset<26);
 }
 // Tight slot (1:10–1:18): continuous close rock faces, daylight overhead.
 for(let s=100;s<380;s+=19){
@@ -280,7 +279,7 @@ for(let s=100;s<380;s+=19){
     const h=29+random()*24,w=10+random()*7;
     tower(s,side,desertWidth(core(s))/2+w*.55+1.8,h,w,Math.floor(random()*kinds.length));
     const p=desertPoint(core(s+3),side*(23+random()*6));p[1]=desertGround(p[0],p[2])-3;
-    decorate('deserthoodoobuttress',p,[24,38+random()*28,25],desertYaw(core(s)),'Connected canyon wall',20);
+    groundedRock('deserthoodoobuttress',p,[24,38+random()*28,25],desertYaw(core(s)),'Connected canyon wall',20);
   }
 }
 // Exposed switchbacks (1:20–1:38): tower garden downhill, massive fins uphill.
@@ -295,8 +294,8 @@ for(let row=0;row<10;row++)for(let col=0;col<12;col++){
   if(n.distance<33||n.distance>140)continue;
   const h=22+random()*58,w=5+random()*15;
   const kind=kinds[Math.floor(random()*kinds.length)];
-  decorate(kind,[x,desertGround(x,z)-2,z],[w,h,w*(.6+random()*.5)],random()*360,'Distant native hoodoo field',21);
-  if(col%3===0)decorate('deserthoodoobuttress',[x+8,desertGround(x+8,z)-5,z],[25,h*.72,24],random()*360,'Joined sandstone mesa',21);
+  groundedRock(kind,[x,0,z],[w,h,w*(.6+random()*.5)],random()*360,'Distant native hoodoo field',21);
+  if(col%3===0)groundedRock('deserthoodoobuttress',[x+8,0,z],[25,h*.72,24],random()*360,'Joined sandstone mesa',21);
 }
 // The paired capstones from the open-valley reveal at about 1:40.
 tower(910,-1,21,35,15,4);tower(927,1,24,39,13,1);
@@ -373,7 +372,9 @@ for(const [s,side,h] of [[32,-1,17],[132,1,19],[360,-1,16],[590,1,18],[core(295)
 for(let i=0;i<370;i++){
   const s=45+random()*(DESERT_VISTA_START-60),side=random()<.5?-1:1,u=side*(desertWidth(s)/2+1.2+random()*22),p=desertPoint(s,u);p[1]=desertGround(p[0],p[2])-.12;
   const scale=.24+random()*1.35;
-  decorate('deserttalus',p,[scale*2.2,scale,scale*1.6],random()*360,'Eroded sandstone scree',22,Math.abs(u)<13);
+  const yaw=random()*360;
+  p[1]=desertRockFooting(desertGround,p[0],p[2],scale*2.2,scale*1.6,yaw,.08);
+  decorate('deserttalus',p,[scale*2.2,scale,scale*1.6],yaw,'Rounded clay sandstone scree',22,Math.abs(u)<13);
 }
 
 // Timber observation platforms and the existing safety fencing. Course
@@ -454,8 +455,8 @@ export const DESERT_CANYON_LEVEL:CustomLevelData={
   cameraRig:{camDist:8,camHeight:3.6,camPitch:9,camFov:70},
   desertHeat:buildDesertHeat(),
   atmosphere:{backdrop:'painted sky',fogEnabled:true,fogNear:650,fogFar:1850,fogColor:'#d7b4a7',
-    drawDistance:2000,ambientSky:'#9aaece',ambientGround:'#9d6137',ambientIntensity:.92,
-    sunColor:'#ffdab0',sunIntensity:4.1,sunDirection:[.67,.5,.55],fillColor:'#98aad0',fillIntensity:.24,shadowStrength:1,
+    drawDistance:2000,ambientSky:'#9aaece',ambientGround:'#9d6137',ambientIntensity:1.12,
+    sunColor:'#ffdab0',sunIntensity:4.1,sunDirection:[...DESERT_SUN_DIRECTION],fillColor:'#98aad0',fillIntensity:.32,shadowStrength:1,
     fallbackTop:'#7aa7d5',fallbackBottom:'#f4d4bd',fallbackFog:'#dfbcb1',fallbackStars:false,fallbackRidges:false,
     fallbackSunColor:'#fff2d5',fallbackSunU:.68,fallbackSunV:.17},
   components:[],groups:[

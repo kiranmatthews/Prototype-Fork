@@ -9,6 +9,34 @@ panel.querySelector('b')!.textContent='DUSTY ROAD · REVIEW';
 const bonusOption=document.createElement('option');bonusOption.value=String(DESERT_BONUS_STATION);bonusOption.textContent='Cactus Cache entrance';panel.querySelector('select')!.append(bonusOption);
 const location=panel.querySelector('[aria-label="Canyon location"]') as HTMLSelectElement;
 const output=panel.querySelector('output')!,buttons=panel.querySelectorAll('button');
+const station=document.createElement('input');station.type='number';station.min='0';station.max=String(DESERT_LENGTH);station.value='3200';station.style.width='78px';station.setAttribute('aria-label','Route metres');panel.insertBefore(station,output);
+const stationGo=document.createElement('button');stationGo.textContent='Go to metre';panel.insertBefore(stationGo,output);
+stationGo.onclick=()=>{const s=Number(station.value);location.value='6';running=false;teleport(s);};
+const sunView=document.createElement('option');sunView.value='sun';sunView.textContent='Sun alignment';panel.querySelector('[aria-label="Canyon view"]')!.append(sunView);
+let shadowPixels:unknown=null;
+const shadowMeasure=document.createElement('button');shadowMeasure.textContent='Measure shadow stability';panel.insertBefore(shadowMeasure,output);
+shadowMeasure.onclick=()=>{
+  running=false;g.launchReview.rate=0;
+  const light=g.scene.children.find((o:any)=>o.isDirectionalLight&&o.castShadow),target=light.target.position.clone(),position=light.position.clone();
+  const enabled=g.desertHeat.enabled;g.desertHeat.enabled=false;
+  const gl=g.renderer.getContext(),w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
+  const capture=(offset:number)=>{
+    g.reviewSunShadowFocus([target.x,target.y,target.z+offset]);g.captureBonusReviewFrame();
+    const bytes=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes;
+  };
+  try{
+    const a=capture(0),still=capture(0),b=capture(40),c=capture(-40);
+    const difference=(x:Uint8Array,y:Uint8Array)=>{
+      let changed=0,sum=0,total=0,max=0;
+      // Lower central view is nearby supported ground, excluding HUD corners.
+      for(let py=0;py<h*.45;py++)for(let px=Math.floor(w*.15);px<w*.85;px++){
+        const i=(py*w+px)*4,d=Math.max(Math.abs(x[i]-y[i]),Math.abs(x[i+1]-y[i+1]),Math.abs(x[i+2]-y[i+2]));
+        total++;sum+=d;max=Math.max(max,d);if(d>3)changed++;
+      }return {changed,total,fraction:changed/total,mean:sum/total,max};
+    };
+    shadowPixels={size:[w,h],control:difference(a,still),forward40m:difference(a,b),back40m:difference(a,c)};
+  }finally{light.position.copy(position);light.target.position.copy(target);light.target.updateMatrixWorld();g.desertHeat.enabled=enabled;}
+};
 const gemArtButton=document.createElement('button');gemArtButton.textContent='Review yellow gem';panel.insertBefore(gemArtButton,output);
 const heatControl=document.createElement('label');heatControl.innerHTML='<input type="checkbox" checked aria-label="Desert heat mirage"> Heat mirage';panel.insertBefore(heatControl,output);
 heatControl.querySelector('input')!.onchange=e=>{g.desertHeat.enabled=(e.target as HTMLInputElement).checked;};
@@ -115,13 +143,19 @@ g.launchReview.afterCamera=()=>{
     const s=running?progress:Number(location.value),eye=desertPoint(s-22,-3),target=desertPoint(s+45);
     g.camera.position.set(eye[0],eye[1]+22,eye[2]);g.camera.up.set(0,1,0);g.camera.lookAt(target[0],target[1]+10,target[2]);g.camera.updateMatrixWorld();
   }
+  if((panel.querySelector('[aria-label="Canyon view"]') as HTMLSelectElement).value==='sun'){
+    const p=g.player.pos,d=g.getLevel().atmosphere.sunDirection;
+    g.camera.position.set(p.x,p.y+8,p.z);g.camera.up.set(0,1,0);
+    g.camera.lookAt(p.x+d[0]*100,p.y+8+d[1]*100,p.z+d[2]*100);g.camera.updateMatrixWorld();
+  }
 };
 function report(){
   const p=g.player,l=g.getLevel(),assets=l.jungleAssetDiagnostics;
   if(!running&&settleUntil&&performance.now()>settleUntil){g.launchReview.rate=0;settleUntil=0;}
   if(g.frameStats.frame!==lastFrame){lastFrame=g.frameStats.frame;timings.push(g.frameStats.rawDt*1000);if(timings.length>240)timings.shift();}
   const sorted=timings.slice().sort((a,b)=>a-b),performanceMs={median:+(sorted[Math.floor(sorted.length*.5)]||0).toFixed(1),p95:+(sorted[Math.floor(sorted.length*.95)]||0).toFixed(1),samples:sorted.length};
-  output.textContent=JSON.stringify({heat:g.desertHeat.diagnostics,heatPixels,loading:g.getLoadingDiagnostics(),state:p.state,grounded:p.grounded,colouredGems:l.colouredGemPickups.map((gem:any)=>({colour:gem.colour,collected:gem.collected,position:gem.group.position.toArray()})),gemSupport,groundSurface:p.groundHit?.name,position:p.pos.toArray().map((x:number)=>+x.toFixed(2)),route:+progress.toFixed(1),running,camera:{rig:l.cameraRig,chase:g.TUNING.chaseCam,authoredSkate:p.authoredSkateCamera,position:g.camera.position.toArray(),direction:g.camera.getWorldDirection(new THREE.Vector3()).toArray()},assets,render:g.getRenderFrameStats(),resolution:g.getRenderQualitySizes(),drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],performanceMs,savedFrame});
+  const light=g.scene.children.find((o:any)=>o.isDirectionalLight&&o.castShadow),direction=light.position.clone().sub(light.target.position).normalize();
+  output.textContent=JSON.stringify({lighting:{direction:direction.toArray(),authored:l.atmosphere?.sunDirection,shadowHalf:light.shadow.camera.right,shadowFar:light.shadow.camera.far,shadowMap:light.shadow.mapSize.toArray()},shadowPixels,heat:g.desertHeat.diagnostics,heatPixels,loading:g.getLoadingDiagnostics(),state:p.state,grounded:p.grounded,colouredGems:l.colouredGemPickups.map((gem:any)=>({colour:gem.colour,collected:gem.collected,position:gem.group.position.toArray()})),gemSupport,groundSurface:p.groundHit?.name,position:p.pos.toArray().map((x:number)=>+x.toFixed(2)),route:+progress.toFixed(1),running,camera:{rig:l.cameraRig,chase:g.TUNING.chaseCam,authoredSkate:p.authoredSkateCamera,position:g.camera.position.toArray(),direction:g.camera.getWorldDirection(new THREE.Vector3()).toArray()},assets,render:g.getRenderFrameStats(),resolution:g.getRenderQualitySizes(),drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],performanceMs,savedFrame});
   if(saveRequested){
     saveRequested=false;
     g.renderer.domElement.toBlob((blob:Blob|null)=>{if(!blob)return;

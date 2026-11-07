@@ -100,15 +100,15 @@
     },
     {
       "name": "talus",
-      "triangles": 3360,
-      "vertices": 1717,
+      "triangles": 180,
+      "vertices": 101,
       "size": [
-        9.2912,
-        3.3307,
-        7.0162
+        5.6914,
+        2.9397,
+        4.4813
       ],
-      "bytes": 97312,
-      "sha256": "1883f95c7d631f75c31ad2bedc81b919991b01ba709e26da301ef697b59db394"
+      "bytes": 7160,
+      "sha256": "998a57351fd2284a73b165de9af7ef87cc207336b167bd92e117063b47d91878"
     }
   ]
 }

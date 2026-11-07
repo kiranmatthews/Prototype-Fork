@@ -40,6 +40,7 @@ import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
 import { CloudPathPass } from "./cloudPathPass";
 import {DesertHeatMirage} from './desertHeatMirage';
+import {DESERT_SHADOW_HALF,isDesertCanyonLevel,snapDesertShadowFocus} from './desertLighting';
 import {StormSquall} from './stormSquall';
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
@@ -290,11 +291,13 @@ const mapSunOffset = new THREE.Vector3();
 const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
 const PAINTERLY_JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, -16);
 const authoredSunOffset = new THREE.Vector3();
+const desertShadowFocus = new THREE.Vector3();
 let drownedCrownLighting:DrownedCrownLighting|undefined;
 let mapIslandLighting:MapIslandLighting|undefined;
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   drownedCrownLighting?.update(focusX,focusY+1,focusZ);
-  const shadowHalf = document.body.classList.contains("game-world-map")
+  const desert=isDesertCanyonLevel(current.id);
+  const shadowHalf = desert ? DESERT_SHADOW_HALF : document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
     : SHADOW_HALF;
   if (sun.shadow.camera.right !== shadowHalf) {
@@ -302,8 +305,10 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     sun.shadow.camera.right = shadowHalf;
     sun.shadow.camera.top = shadowHalf;
     sun.shadow.camera.bottom = -shadowHalf;
+    sun.shadow.camera.far=desert?2600:600;
     sun.shadow.camera.updateProjectionMatrix();
   }
+  sun.shadow.bias=desert?-.000045:-.0002;
   let offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
     : level.jungleStyle === 'painterly' ? PAINTERLY_JUNGLE_SUN_OFFSET
@@ -319,9 +324,14 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     }
   }
   if(!level.isCampaignMap&&level.atmosphere?.sunDirection)
-    offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(90);
+    offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(desert?400:90);
   const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive
     ? (current.id==='jungle-cup'?motuHeatLook(competition.runNumber):competition.heatLook).sunOffset : null;
+  if(desert){
+    desertShadowFocus.set(focusX,focusY,focusZ);
+    snapDesertShadowFocus(desertShadowFocus,offset,sun.shadow.mapSize.x);
+    [focusX,focusY,focusZ]=desertShadowFocus.toArray();
+  }
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
@@ -887,6 +897,7 @@ function applyTheme(): void {
   // and sun. Inheriting them from a collider also recoloured Sky Bridge.
   const skystreamSkyActive=current.id==='skystream'||current.id==='bonus:skystream'||current.id==='bonus-skystream';
   skyProjection.setCloudRoadSky(skystreamSkyActive);
+  skyProjection.setDesertSun(isDesertCanyonLevel(current.id)&&skyPreset==='bryce-golden-hour' ? atmosphere.sunDirection??null : null);
   skystreamSun.visible=skystreamSkyActive&&!LITE;
   const bananaBaySkyActive=current.id==='beachfront'&&skyPreset==='tropical-clouds';
   setBananaBaySkySun(bananaBaySkyActive);
@@ -5775,6 +5786,7 @@ requestAnimationFrame(frame);
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   getStormDiagnostics: () => stormSquall.diagnostics,
   desertHeat,
+  reviewSunShadowFocus:(p:readonly number[])=>{if(shellBypass)updateSunShadow(p[0],p[1],p[2]);},
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,

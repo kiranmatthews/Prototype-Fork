@@ -10192,3 +10192,43 @@ releases the copy and all patches. No full suite was run.
 Evidence: [main run](desert-canyon/dusty-road/heat-mirage.png),
 [bonus](desert-canyon/dusty-road/heat-mirage-bonus.png),
 [GPU and gameplay measurements](desert-canyon/dusty-road/heat-mirage-review.json).
+
+## 8 November 2026 — Dusty Road rooted formations and sun alignment
+
+Brief: bury floating tower bases, close distant terrain openings before the
+scenic valley, replace small rocks with the reference's clay forms, stabilize
+near-ground shadows and align the visible sun with sunlight over most of the
+route. Geometry work resumed after the requested full-suite run at 22:35 UTC;
+first revised playable in approximately 15 minutes, final local validation in
+approximately 45 minutes. This elapsed authoring estimate excludes the earlier
+40-minute full-suite run.
+
+Grounded all 563 hoodoo placements across their complete rotated footprints
+and rooted 75 native sculpted formations. Stitched mixed terrain grids along
+their shared boundaries, extended the outer landform back to the launch, blended
+the abrupt valley approach, and added companion rock faces beneath both measured
+amphitheatres' 1,483 open edges. Their original upper surfaces are retained.
+Replaced miniature pillar-shaped scree with squat, soft clay pebbles and warm
+clay materials, keeping the authored scatter locations.
+
+Kept the sky painting and horizon, moved only the visible solar disc to the
+physical light direction, and raised that matched sun to illuminate 78.6% of
+the terrain/rock-tested route samples. Desert-only shadows use a larger coverage
+volume, fixed world-space texel alignment and a distant sandstone-edge fade.
+The bonus inherits the light; a real transition to Banana Bay confirms normal
+shadow settings and no retained desert heat resources.
+
+The protected layout comparison, 5,528 seam probes, actual mesh footprint/rim
+survey, complete 5.6 km traversal, both jumps, 17 checkpoints, pit recovery and
+finish pass. The final 173-cell bake passes native-hash, support and valley
+landing checks. Full-render 720p and native 1080p reviews show no console errors
+or failed assets; the frozen-camera shadow test changes at most four pixels
+of 290,304 at 720p and two of 653,184 at 1080p when coverage moves 40 metres.
+Typecheck/build, sky-isolation checks and the 974,153,459-byte release-size check
+pass. `check:levels` reaches the known Waterpark disposal assertion at line 49;
+the prior full-suite run completed all 205 commands (182 pass, 23 fail), recorded
+separately without changing tests to match current behavior.
+
+Evidence and captures: [geometry review](desert-canyon/geometry/README.md),
+[survey](desert-canyon/geometry/survey.json),
+[runtime/renderer measurements](desert-canyon/geometry/review.json).

@@ -1,0 +1,204 @@
+{
+  "protectedLayout": true,
+  "terrainObjects": 632,
+  "occluders": 1520,
+  "rimEdges": [
+    {
+      "name": "Measured amphitheatre · west rim",
+      "originalOpenEdges": 785,
+      "maxOriginalGap": 106.8145582267789,
+      "covered": 785,
+      "unclosed": 0
+    },
+    {
+      "name": "Measured amphitheatre · east rim",
+      "originalOpenEdges": 698,
+      "maxOriginalGap": 69.71127102796133,
+      "covered": 698,
+      "unclosed": 0
+    }
+  ],
+  "rockFormations": 563,
+  "foundationProbes": 101218,
+  "maxExposedBase": -1.4070325157748869,
+  "exposed": [],
+  "sculptedFormations": 75,
+  "sculptedBaseProbes": 6196,
+  "highestSculptedBase": -2.226242323152519,
+  "rootBaseProbes": 8192,
+  "highestRootBase": -4.391136967884449,
+  "seamProbes": 5528,
+  "missingSeamSupport": 0,
+  "maxSeamStep": 0.1082857151452572,
+  "seams": [],
+  "sunlight": [
+    {
+      "direction": [
+        0.4999327635646469,
+        0.08498856980598998,
+        -0.8618840843854513
+      ],
+      "lit": 151,
+      "total": 350,
+      "fraction": 0.43142857142857144,
+      "sections": [
+        {
+          "lit": 9,
+          "total": 46
+        },
+        {
+          "lit": 6,
+          "total": 87
+        },
+        {
+          "lit": 26,
+          "total": 107
+        },
+        {
+          "lit": 110,
+          "total": 110
+        }
+      ]
+    },
+    {
+      "direction": [
+        0.44846314013272437,
+        0.44846314013272437,
+        -0.7731504535888168
+      ],
+      "lit": 225,
+      "total": 350,
+      "fraction": 0.6428571428571429,
+      "sections": [
+        {
+          "lit": 26,
+          "total": 46
+        },
+        {
+          "lit": 34,
+          "total": 87
+        },
+        {
+          "lit": 55,
+          "total": 107
+        },
+        {
+          "lit": 110,
+          "total": 110
+        }
+      ]
+    },
+    {
+      "direction": [
+        0.4202505763223698,
+        0.5463257492190807,
+        -0.7245119935797655
+      ],
+      "lit": 249,
+      "total": 350,
+      "fraction": 0.7114285714285714,
+      "sections": [
+        {
+          "lit": 31,
+          "total": 46
+        },
+        {
+          "lit": 44,
+          "total": 87
+        },
+        {
+          "lit": 64,
+          "total": 107
+        },
+        {
+          "lit": 110,
+          "total": 110
+        }
+      ]
+    },
+    {
+      "direction": [
+        0.3912650546576701,
+        0.6260240874522722,
+        -0.6745409542298232
+      ],
+      "lit": 275,
+      "total": 350,
+      "fraction": 0.7857142857142857,
+      "sections": [
+        {
+          "lit": 33,
+          "total": 46
+        },
+        {
+          "lit": 56,
+          "total": 87
+        },
+        {
+          "lit": 76,
+          "total": 107
+        },
+        {
+          "lit": 110,
+          "total": 110
+        }
+      ]
+    },
+    {
+      "direction": [
+        0.3541698283843513,
+        0.7083396567687026,
+        -0.6105887841346216
+      ],
+      "lit": 292,
+      "total": 350,
+      "fraction": 0.8342857142857143,
+      "sections": [
+        {
+          "lit": 35,
+          "total": 46
+        },
+        {
+          "lit": 61,
+          "total": 87
+        },
+        {
+          "lit": 86,
+          "total": 107
+        },
+        {
+          "lit": 110,
+          "total": 110
+        }
+      ]
+    },
+    {
+      "direction": [
+        0.3923907585459757,
+        0.626024087452272,
+        -0.6738867371726972
+      ],
+      "lit": 275,
+      "total": 350,
+      "fraction": 0.7857142857142857,
+      "sections": [
+        {
+          "lit": 33,
+          "total": 46
+        },
+        {
+          "lit": 56,
+          "total": 87
+        },
+        {
+          "lit": 76,
+          "total": 107
+        },
+        {
+          "lit": 110,
+          "total": 110
+        }
+      ]
+    }
+  ]
+}

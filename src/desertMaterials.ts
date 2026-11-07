@@ -91,6 +91,15 @@ export function createDesertMaterial(kind:'sandstone'|'trail',vertexColors=true)
       normal=normalize(abs(det)*normal-sign(det)*(dFdx(relief)*s0+dFdy(relief)*s1));
     `);
   };
-  material.customProgramCacheKey=()=>`bryce-painted-v3:${kind}`;
+  const compile=material.onBeforeCompile;
+  material.onBeforeCompile=(shader,renderer)=>{
+    compile.call(material,shader,renderer);
+    // The large canyon shadow volume fades only at its distant perimeter.
+    // A hard getShadow frustum edge must not sweep across the landscape.
+    shader.fragmentShader=shader.fragmentShader.replace('#include <shadowmap_pars_fragment>',
+      THREE.ShaderChunk.shadowmap_pars_fragment.replace('return mix( 1.0, shadow, shadowIntensity );',
+        'float desertEdge=min(min(shadowCoord.x,1.0-shadowCoord.x),min(shadowCoord.y,1.0-shadowCoord.y)); return mix(1.0,shadow,shadowIntensity*smoothstep(0.0,.10,desertEdge));'));
+  };
+  material.customProgramCacheKey=()=>`bryce-painted-v4:${kind}`;
   return material;
 }

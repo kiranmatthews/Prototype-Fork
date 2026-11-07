@@ -96,6 +96,20 @@ const twinA=pillar(1081,{height:31,radius:3.3,cap:.6,taper:.4,radial:48,rows:84}
 const twinB=pillar(1201,{height:35,radius:3.6,cap:.45,taper:.5,radial:48,rows:84});twinA.translate(-2.7,0,0);twinB.translate(2.7,0,.7);
 await save('hoodoo-twins',mergeGeometries([twinA,twinB]));
 await save('hoodoo-fin',cathedral(1423,39,24,7,5));
-const boulder=pillar(1601,{height:3.2,radius:2.6,cap:0,taper:.8,flutes:4,lean:.8,rows:34,radial:48});await save('talus',boulder);
+// Hand-pressed clay pebbles from the existing cartoon reference: broad soft
+// planes and a squat, uneven silhouette, without a miniature hoodoo's neck.
+const clayNoise=new SimplexNoise(1601);
+const boulder=mergeVertices(new THREE.IcosahedronGeometry(1,2));
+const bp=boulder.attributes.position,bc=[];
+for(let i=0;i<bp.count;i++){
+  const x=bp.getX(i),y=bp.getY(i),z=bp.getZ(i);
+  const shape=1+clayNoise.noise3D(x*1.6+4,y*1.6,z*1.6)*.10;
+  bp.setXYZ(i,x*2.8*shape+Math.max(y,0)*.18,
+    Math.max(-.54,y*.66)*2.4*shape,z*2.25*shape);
+  const tint=new THREE.Color('#ce9667').lerp(new THREE.Color('#e4b68a'),(y+1)*.12);
+  tint.multiplyScalar(.98+clayNoise.noise3D(x,y+3,z)*.025);bc.push(...tint.toArray());
+}
+boulder.setAttribute('color',new THREE.Float32BufferAttribute(bc,3));
+boulder.computeVertexNormals();await save('talus',boulder);
 await writeFile(new URL('manifest.json',out),JSON.stringify({generator:'bamyazi/RockGenerator (MIT); unchanged noise.js and displacement.js; imagegen-guided rounded cartoon hoodoo profiles',geometryPolicy:'Native mesh at all distances and in reflections; no simplification',models:manifest},null,2)+'\n');
 console.log(JSON.stringify(manifest.map(({name,triangles,bytes})=>({name,triangles,bytes})),null,2));
