@@ -1,10 +1,14 @@
 # Board scribble flipbook
 
 `board-scribble.png` is a 1536 × 1024 transparent PNG atlas with **32 distinct
-source drawings**, arranged in four columns and eight rows. They play once
-at 60 fps (0.533 seconds). The first eight drawings chatter at full deck size;
-the following twenty-four progressively clear to short pen ticks. Thin strokes
-retain their weight throughout; the smaller drawings use shorter/fewer marks.
+source drawings**, arranged in four columns and eight rows. The source sheet
+has eight full-size variants followed by twenty-four progressively smaller
+scribbles. Current playback uses drawing 0 for **one 60 Hz apex tick** and
+indices 14–31 for growth/clearing; other large drawings also cover the full
+board at the fitted size and are deliberately skipped. The 18 smaller drawings
+reverse during mount anticipation, unwind on cancellation, then clear after
+commitment. Thin strokes retain their weight; smaller drawings use shorter,
+fewer marks. See `docs/SKATE_PLAYTEST.md` for the native hold and pickup cues.
 
 Generated with the built-in imagegen tool on 6 November 2026, extending the
 earlier thin-stroke atlas at the user's request for more source frames. No game

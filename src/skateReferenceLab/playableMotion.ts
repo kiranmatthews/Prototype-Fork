@@ -6,7 +6,8 @@ import {solveTwoBoneIk} from '../animation/ik';
 import {skateboardSettings} from '../skateboard/settings';
 import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
 import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from './retarget';
-import {BoardScribbleSequence} from './boardScribble';
+import {BoardScribbleSequence, MOUNT_CLEAR_DURATION, SCRIBBLE_DURATION} from './boardScribble';
+import {TUNING} from '../tuning';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
@@ -96,28 +97,40 @@ export class PlayableSkateMotion {
   }
 
   private updateScribble(dt: number, previous: Phase): void {
-    const p = this.p, ink = this.boardScribble;
-    ink.enabled = this.scribbles && this.enabled;
+    const p=this.p,ink=this.boardScribble,input=p.rawInput;
+    ink.enabled=this.scribbles&&this.enabled;
+    const interrupted=!this.enabled||p.isBailing||p.ragActive||p.bailing
+      ||!['ride','air'].includes(p.state)||p.crawling||p.sliding||p.wallriding
+      ||p.grabbing||p.flipT>0||p.manualing||p.vertAir;
+    if(interrupted){ink.cancel();this.dismountInkStarted=false;return;}
+    if(this.phase!==previous){
+      this.dismountInkStarted=false;
+      if(this.phase==='mount'){
+        const prepared=ink.preparing;
+        ink.start(true,prepared?MOUNT_CLEAR_DURATION:SCRIBBLE_DURATION,prepared?0:8);
+        return;
+      }
+      if(!ink.preparing)ink.cancel();
+    }
+    const holding=this.phase==='foot'&&p.grounded&&!p.freeSkate&&!p.boardMountBlocked
+      &&p.charging&&input.jumpHeld&&!input.jumpCancelled&&!input.grabHeld
+      &&(input.moveX!==0||input.moveY!==0);
+    if(holding){ink.prepare(dt,TUNING.skateHoldTime);return;}
+    if(ink.preparing){
+      // Cancelling a pending mount winds its existing ink back at the last
+      // ground attachment, even if release also launches the native foot jump.
+      ink.unwind();ink.step(dt);return;
+    }
+    if(!p.grounded){ink.cancel();this.dismountInkStarted=false;return;}
     ink.step(dt);
-    const interrupted = !this.enabled || !p.grounded || p.isBailing || p.ragActive || p.bailing
-      || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding
-      || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
-    if (interrupted) {
-      ink.cancel(); this.dismountInkStarted = false; return;
-    }
-    if (this.phase !== previous) {
-      ink.cancel(); this.dismountInkStarted = false;
-      if (this.phase === 'mount') ink.start(true);
-    }
-    if (this.phase === 'dismount' && !this.dismountInkStarted && this.clip) {
-      const cue = dismountInkFrames[this.sourceName];
-      const start = cue.feetClear / this.clip.fps;
-      // A two-tick burst can start and finish between rendered frames. Preserve
-      // a readable 0.2 s minimum without changing the source pose or its clock.
-      const duration = Math.max(.2, (cue.catch - cue.feetClear) / this.clip.fps);
-      if (this.time + 1e-7 >= start) {
-        ink.start(false, duration); ink.step(Math.max(0, this.time - start));
-        this.dismountInkStarted = true;
+    if(this.phase==='dismount'&&!this.dismountInkStarted&&this.clip){
+      const cue=dismountInkFrames[this.sourceName],start=cue.feetClear/this.clip.fps;
+      const duration=Math.max(.2,(cue.catch-cue.feetClear)/this.clip.fps);
+      if(this.time+1e-7>=start){
+        // Standing grows for two ticks and switches at its hand catch. Running
+        // has a longer pickup: eight ticks in, one full drawing, then out.
+        ink.start(false,duration,this.sourceName==='BR_DISMOUNT_LO_INTO_STAND_0'?2:8);
+        ink.step(Math.max(0,this.time-start));this.dismountInkStarted=true;
       }
     }
   }
@@ -129,9 +142,10 @@ export class PlayableSkateMotion {
     // Keep the vanished prop gone through the remaining carry/settle. Restoring
     // baseline visibility when the shorter burst ends would make it reappear.
     if (this.scribbles && this.enabled && this.phase === 'dismount' && this.dismountInkStarted) {
-      this.opacity(1); this.retarget.board.visible = false; return;
+      this.opacity(1); this.retarget.board.visible = ink.active && ink.boardVisible; return;
     }
     if (!ink.active) return;
+    if (ink.preparing) {this.retarget.board.visible=false;return;}
     if (this.phase === 'mount' && ink.targetVisible) {
       this.opacity(1); this.retarget.board.visible = ink.boardVisible;
     }

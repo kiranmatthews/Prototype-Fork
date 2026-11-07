@@ -23,8 +23,9 @@ from `tools/site-entries.mjs`. Its optional isolated build goes to the ignored
 
 ## Controls and comparison
 
-- WASD/arrows: native movement. Hold Space with forward movement to mount and
-  accelerate; release Space to jump. Hold Q to brake and step off. R resets.
+- WASD/arrows: native movement. Hold Space (controller X / Cross) with a
+  direction to mount and accelerate; release to jump. Hold Q to brake and step
+  off. R resets. The native hold threshold and tuning are unchanged.
 - Motion selector: new extracted Skate presentation or original D skating.
 - Compare selector / **1** and **2**: **A · Pre-scribble** restores the accepted
   Skate presentation and board fades from `22cebbe2`; **B · Scribble** adds ink
@@ -32,9 +33,12 @@ from `tools/site-entries.mjs`. Its optional isolated build goes to the ignored
   advancing or restarting the source clip. **B** triggers a native test bail.
 - Riding style: relaxed, loose or aggressive source stance; Loose also selects
   the longer loose landing.
-- Run control demo performs real input through the same Player controller.
-  Take control exits it. Pause, frame step, slow motion, four camera views and
-  Pause at make every phase reviewable. MAX/native retains full geometry.
+- Ride demo performs real input through the same Player controller. Hold /
+  cancel demonstrates a standing preparation, brief direction cancellation,
+  and re-hold before committing. Take control exits either demo. Pause, frame
+  step, slow motion, four views and Pause at make every phase reviewable.
+  Mount hold and Cancel / unwind stops expose the reversible preparation.
+  MAX/native retains full geometry.
 
 The new animation layer only observes gameplay. Acceleration, jump velocity,
 turning, braking, collisions and UI tuning remain native. D's earlier Jak jump,
@@ -63,22 +67,31 @@ and finite mount/dismount; short fades cover the source clips' carried endpoints
 
 ## Punk board scribbles
 
-The default board effect uses thirty-two independently drawn thin-ink PNG frames.
-Mounts and running dismounts play at **60 fps**, lasting 0.533 seconds. Standing
-dismounts sample the same atlas over a readable 0.200 seconds; the small marks
-finish just after the hand catch without slowing the pickup. Eight full-size
-source redraws have a long, slim deck silhouette; subsequent drawings use fewer,
-shorter strokes with the same pen weight. A single fixed-size billboard swaps atlas cells, never scales
-down the artwork or fades it. Its long axis follows the board in the camera.
-The board appears after the eight full-size drawings (0.133 seconds), so it
-cannot cover their centre with its own depth. Disappearance follows the source
-prop's pickup path, clearing at frame 36 / 0.600 seconds for standing and at
-the hand catch, frame 56 / 0.933 seconds, for running. Standing catches at
-frame 26 / 0.433 seconds and has a short ink tail afterwards. The effect starts
-at frame 24 / 0.400 seconds for both clips, after both feet clear the deck.
-Until then the original board stays visible and there is no ink. The vanished
-board stays hidden through the remaining source carry/settle, including after
-the ink has finished.
+The atlas contains 32 independently drawn thin-ink PNG frames. Playback now
+uses **one full-board drawing for one 60 Hz tick**, with the emphasis on growing
+in and drawing back out. Eighteen smaller drawings (atlas indices 14–31) run
+backwards for growth and forwards for clearing. The larger intermediate atlas
+images are skipped because they also cover the full deck at the fitted size.
+Every drawing uses the same fixed-size card and pixel density: no scale tween,
+stroke-width change or opacity fade. Its long axis follows the source board.
+
+Mount growth starts during native X / Space + direction anticipation, following
+the UI's `skateHoldTime` (default 0.55 seconds). Withdrawing the gesture reverses
+from the currently displayed size; a full-range unwind takes 0.18 seconds.
+Re-holding during that unwind grows from the current size without restarting.
+Only native gameplay can commit the mount. Until then the preview cannot show
+the full-board drawing or reveal a carried board, even if the speed gate delays
+entry. At commitment, one full-board tick hides the switch, then all 18 smaller
+drawings clear over 0.300 seconds. Entry without a preceding hold uses an
+8-tick growth, one-tick apex, and clearing tail (0.533 seconds total).
+
+Both dismounts still start at source frame 24 / 0.400 seconds, after both feet
+clear the deck. Standing grows for two ticks and hides the board at its hand
+catch, frame 26 / 0.433 seconds; small marks finish at frame 36 / 0.600 seconds.
+Running grows for eight ticks, hides the board at frame 32, and finishes its
+small marks at the hand catch, frame 56 / 0.933 seconds. Each has just one
+full-board tick. The deck stays visible during growth, then stays gone through
+the remaining source carry/settle. Source timing and motion are unchanged.
 
 The ink respects scene depth and does not write depth itself. Foreground limbs
 and level geometry stay in front of it; its late draw order does not override
@@ -92,16 +105,19 @@ depth interpolation keeps the strokes solid under multisample antialiasing;
 there is no per-pixel depth override or screen-space overlay.
 The flat PNG drawings, fixed dimensions and board attachment remain.
 
-Only a normal mount or dismount can start ink; arbitrary changes in board
-visibility cannot. Bails, death, jumps, grinds and other pose owners cancel any
-active ink immediately. No dismount ink continues into the on-foot settle.
-The source animations, transitions, timing and controller are
-unchanged in both comparisons.
+Only mount anticipation and normal equipment transitions can start ink;
+arbitrary board visibility changes cannot. Bails, death, grinds and other pose
+owners clear it immediately. Releasing a pending hold still performs the native
+on-foot jump: the existing small preview unwinds at its last world/ground
+attachment instead of following the rider into the air. A preparation that was
+never rendered cannot appear for the first time during cancellation. No new
+jump or bail burst is triggered. The source animations, transitions, timing and
+controller remain identical in both comparisons.
 
-Pause at **Board appears** or **Board disappears**, then Step frame to inspect
-the sequence and press **1 / 2** to compare the same pose with its original
-board fade. Slow motion slows the simulation and ink together. Reset, brief
-gestures and remounts clear/restart the effect without retaining a carried board.
+Pause at **Mount hold**, **Cancel / unwind**, **Board appears** or **Board
+disappears**, then Step frame to inspect growth, reversal and the single apex.
+Press **1 / 2** to compare the same pose with its original board fade. Slow
+motion slows simulation and ink together. Reset clears the preview and commits;
 Original D skating remains a separate unmodified motion comparison.
 
 Asset and final generation prompt: `src/skateReferenceLab/assets/README.md`.
@@ -127,10 +143,12 @@ private motion JSON. Real browser review covers normal/native rendering, three
 consecutive keyboard mounts, release-to-jump, the source sequence and comparison
 controls, with no console warnings/errors. Visual acceptance remains with the user.
 
-`tools/test-board-scribble-ownership.mjs <private-motion.json>` also replays 660
+`tools/test-board-scribble-ownership.mjs <private-motion.json>` also replays 860
 frames against the actual accepted pre-scribble source at `22cebbe2`, comparing
 every animation node's position, rotation and scale, source timing, movement,
-and A's board visibility/opacity. It checks paused A/B, native bails during
+and A's board visibility/opacity. It includes held anticipation, direction cancellation and re-hold, short
+release-to-jump, no stationary-jump preview, and exactly one committed apex.
+It checks paused A/B, native bails during
 mount/ride/dismount and recovery, arbitrary visibility changes, eight other
 pose owners, death and reset. The temporary historical module is removed on
 exit; run this check separately from builds. Browser A/B and native bail review
@@ -142,16 +160,17 @@ frame 23. A browser GPU probe also checks foreground occlusion at three depths:
 all 21,248 foreground pixels remain intact, while ink still covers the surface
 behind it. Disabling depth testing reproduces the original overlap failure.
 
-Visibility regression review records the unpaused full-render playtest at
-MAX/native resolution. The captured running mount and standing dismount show
-readable ink across multiple rendered frames, with the foreground body and
-gloves intact. Mount presentation keeps the board hidden for all eight large
-drawings; standing dismount has a 0.200-second minimum burst. These checks
-replace the earlier assumption that a paused image proved real-time visibility.
+Visibility regression review uses the unpaused full-render playtest and its
+native input demos at normal and MAX/native resolution. Growth/reversal and
+clearing remain readable across multiple rendered frames despite the one-tick
+full-board apex. The board's foreground limbs and ground occlusion remain.
 
-The floor regression checks all 32 drawings against flat/sloped support planes
-at four heights (256 cases): unchanged UVs/size, full rectangle coverage, and
-no triangle crossing the depth discontinuity. A four-sample GPU probe checks
-48 frame/view/surface combinations against the same ink with the floor hidden:
-zero missing ink pixels and zero overwritten foreground pixels. Disabling the
-ground correction reproduces the floor cut (up to 1,309 missing pixels).
+The floor regression samples 32 playback ticks against flat/sloped support
+planes at four heights (256 cases): unchanged UVs/size, full rectangle
+coverage, and no triangle crossing the depth discontinuity. The cancellation
+check moves the rider/board after release and verifies that the ink keeps its
+last world attachment and ground plane, then follows the board on re-hold.
+The previous four-sample GPU review checked 48 frame/view/surface combinations
+against the same ink with the floor hidden: zero missing ink pixels and zero
+overwritten foreground pixels. Disabling the ground correction reproduced the
+floor cut (up to 1,309 missing pixels). This iteration preserves that shader.

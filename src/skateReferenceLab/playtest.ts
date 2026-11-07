@@ -54,14 +54,16 @@ async function start() {
   const target=new THREE.Vector3(),offset=new THREE.Vector3(),cameraTarget=new THREE.Vector3();
   const inkSupport = new THREE.Plane();
   const views={three:[4.8,2.6,7.6],side:[8,1.9,0],back:[0,2.8,8.8],front:[0,2.2,-8.8]};
-  let paused=false,frameStep=false,rate=1,demoTime=-1,previousDemoJump=false,accumulator=0,last=0,reportAt=0,bailRequested=false;
+  let paused=false,frameStep=false,rate=1,demoTime=-1,holdDemo=false,previousDemoJump=false,accumulator=0,last=0,reportAt=0,bailRequested=false;
   const reset=()=>{p.enterLevel('skate-playtest');p.respawn(level,true);level.setRunModesEnabled(false);(p as any).freeSkate=false;motion.reset();runtime.restart();accumulator=0;paused=false;bailRequested=false;$('pause').textContent='Pause';};
   reset();
   const resize=()=>{renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();};resize();addEventListener('resize',resize);
   $<HTMLButtonElement>('reset').onclick=()=>{demoTime=-1;reset();canvas.focus();};
   $<HTMLButtonElement>('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'Resume':'Pause';};
   $<HTMLButtonElement>('step').onclick=()=>{paused=true;frameStep=true;$('pause').textContent='Resume';};
-  $<HTMLButtonElement>('demo').onclick=()=>{reset();demoTime=0;previousDemoJump=false;paused=false;$('pause').textContent='Pause';canvas.focus();};
+  const runDemo=(hold:boolean)=>{reset();demoTime=0;holdDemo=hold;previousDemoJump=false;canvas.focus();};
+  $<HTMLButtonElement>('demo').onclick=()=>runDemo(false);
+  $<HTMLButtonElement>('hold-demo').onclick=()=>runDemo(true);
   $<HTMLButtonElement>('return').onclick=()=>{demoTime=-1;previousDemoJump=false;paused=false;$('pause').textContent='Pause';$<HTMLSelectElement>('stop').value='none';canvas.focus();};
   const version = (value: string) => {motion.scribbles=value==='on';$<HTMLSelectElement>('ink').value=value;canvas.focus();};
   $<HTMLSelectElement>('motion').onchange=event=>{motion.enabled=(event.target as HTMLSelectElement).value==='source';version($<HTMLSelectElement>('ink').value);};
@@ -78,16 +80,23 @@ async function start() {
   canvas.addEventListener('pointerdown',()=>canvas.focus());
   function tick() {
     if(bailRequested){bailRequested=false;(p as any).bail(false,Math.abs(p.speed),'trip');}
+    // Briefly relax direction during the held-button anticipation, then
+    // reapply it. This is ordinary controller input, not a staged source pose.
+    const reversing=holdDemo&&demoTime>=.7&&demoTime<.75;
+    const demoHeld=demoTime>.4&&demoTime<3.5;
     const activeInput=demoTime<0 ? input : Object.assign(Object.create(Object.getPrototypeOf(input)),input,{
-      moveX:0,moveY:demoTime<4.8?1:0,jumpHeld:demoTime>.4&&demoTime<3.5,
-      jumpPressed:demoTime>.4&&demoTime<3.5&&!previousDemoJump,
-      jumpReleased:!(demoTime>.4&&demoTime<3.5)&&previousDemoJump,
+      moveX:0,moveY:demoTime<4.8&&(!holdDemo||demoTime>.4)&&!reversing?1:0,jumpHeld:demoHeld,
+      jumpPressed:demoHeld&&!previousDemoJump,
+      jumpReleased:!demoHeld&&previousDemoJump,
       grabHeld:demoTime>4.8&&demoTime<8.4,grabPressed:false,spinHeld:false,spinPressed:false,grindHeld:false,grindPressed:false,restartPressed:false,
     });
     if(demoTime>=0){previousDemoJump=activeInput.jumpHeld;demoTime+=CONST.fixedStep;if(demoTime>11)demoTime=-1;}
     (p as any).rawInput=activeInput;p.camDir.set(0,0,-1);p.step(CONST.fixedStep,activeInput,level);level.update(CONST.fixedStep);activeInput.consumeEdges();
     const stop = $<HTMLSelectElement>('stop').value, effect = motion.boardScribble;
-    if((stop===motion.phase && motion.time>=.3) || (effect.active && effect.frame===0 && stop===(effect.targetVisible?'board-in':'board-out'))) {
+    if((stop===motion.phase && motion.time>=.3)
+      ||(stop==='hold'&&effect.stage==='prepare'&&effect.progress>=.45)
+      ||(stop==='unwind'&&effect.stage==='unwind')
+      ||(effect.active && effect.frame===0 && stop===(effect.targetVisible?'board-in':'board-out'))) {
       paused=true;$('pause').textContent='Resume';$<HTMLSelectElement>('stop').value='none';
     }
     input.consumeEdges();
@@ -109,8 +118,8 @@ async function start() {
     if(now-reportAt>80){reportAt=now;$('phase').textContent=motion.enabled?motion.phase.replace(/-/g,' ').toUpperCase():'ORIGINAL D SKATING';
       $('diagnostics').textContent=JSON.stringify({...motion.diagnostics,demoTime:+demoTime.toFixed(2),paused,nativeState:p.state,
         comparison:motion.scribbles?'B · Scribble':'A · Pre-scribble',bailing:Boolean((p as any).isBailing),
-        scribble:{active:motion.boardScribble.active,frame:motion.boardScribble.frame+1,appearances:motion.boardScribble.appearances,disappearances:motion.boardScribble.disappearances,quad:scribble.sprite.scale.toArray()}},null,2);
-      $('hint').textContent=demoTime>=0?'Control demo running · Take control at any time':'WASD · Hold Space to mount · Release to jump · Q brake · R reset';}
+        scribble:{active:motion.boardScribble.active,stage:motion.boardScribble.stage,progress:+motion.boardScribble.progress.toFixed(3),frame:motion.boardScribble.frame+1,appearances:motion.boardScribble.appearances,disappearances:motion.boardScribble.disappearances,quad:scribble.sprite.scale.toArray()}},null,2);
+      $('hint').textContent=demoTime>=0?(holdDemo?'Hold / cancel demo · Take control at any time':'Control demo running · Take control at any time'):'WASD · Hold X / Space + direction to mount · Release to jump · Q brake · R reset';}
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);

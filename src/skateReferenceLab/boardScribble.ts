@@ -4,9 +4,14 @@ import {skateboardSettings} from '../skateboard/settings';
 export const SCRIBBLE_FRAMES = 32;
 export const SCRIBBLE_FPS = 60;
 export const SCRIBBLE_DURATION = SCRIBBLE_FRAMES / SCRIBBLE_FPS;
-// The full-size drawings must read before the prop can cover their centre.
-// Foreground geometry still depth-tests normally throughout the burst.
-const REVEAL_FRAME = 8;
+// Only drawing 0 covers the full board. The smaller drawings handle both
+// growth and clearing, at the same fixed pixel density and stroke weight.
+const PARTIAL_FIRST = 14;
+const PARTIAL_LAST = 31;
+const APEX_DURATION = 1 / SCRIBBLE_FPS;
+export const MOUNT_CLEAR_DURATION = (1 + PARTIAL_LAST - PARTIAL_FIRST + 1) / SCRIBBLE_FPS;
+const partialFrame = (size: number) => Math.min(PARTIAL_LAST,
+  PARTIAL_FIRST + Math.floor((1 - THREE.MathUtils.clamp(size,0,1)) * (PARTIAL_LAST-PARTIAL_FIRST+1) + 1e-7));
 // Thirty-two source drawings. Every sample uses the same 384 × 128 pixels.
 // Measured UV origins / ink anchors accommodate the hand-drawn row spacing,
 // keeping the ink centred without rescaling a drawing or changing pen weight.
@@ -45,39 +50,63 @@ const FRAME_REGIONS = [
   [0.75,0,0.501302083,0.44140625]
 ] as const;
 
-/** Simulation clock, so pause / frame step / slow motion also control the ink.
- * Equipment switches under the full-size drawings, before the smaller drawings. */
+/** The hold preview is reversible. A committed switch has one apex tick, then
+ * clears through independently drawn smaller frames without scaling the card. */
 export class BoardScribbleSequence {
   enabled = true;
   targetVisible = false;
-  private playing = false;
+  private mode: 'idle' | 'prepare' | 'unwind' | 'burst' = 'idle';
+  private growTime = 0;
+  progress = 0;
   duration = SCRIBBLE_DURATION;
   elapsed = 0;
   serial = 0;
   appearances = 0;
   disappearances = 0;
-  get active(): boolean {return this.enabled && this.playing;}
-  get frame(): number {return Math.min(SCRIBBLE_FRAMES - 1, Math.floor(this.elapsed / this.duration * SCRIBBLE_FRAMES + 1e-7));}
-  get boardVisible(): boolean {return this.targetVisible && (!this.active || this.frame >= REVEAL_FRAME);}
-  // Only an explicit equipment cue starts a burst. Board visibility, bails,
-  // loose decks and other animation owners are deliberately not inputs.
-  start(visible: boolean, duration = SCRIBBLE_DURATION): void {
-    this.duration = duration;
-    this.targetVisible = visible; this.elapsed = 0; this.playing = true; this.serial++;
+  get preparing(): boolean {return this.mode === 'prepare' || this.mode === 'unwind';}
+  get frozen(): boolean {return this.mode === 'unwind';}
+  get stage(): string {return this.mode;}
+  get active(): boolean {return this.enabled && this.mode !== 'idle';}
+  get frame(): number {
+    if (this.preparing) return partialFrame(this.progress);
+    if (this.elapsed + 1e-7 < this.growTime) return partialFrame(this.elapsed / this.growTime);
+    if (this.elapsed + 1e-7 < this.growTime + APEX_DURATION) return 0;
+    return partialFrame(1 - (this.elapsed-this.growTime-APEX_DURATION) / (this.duration-this.growTime-APEX_DURATION));
+  }
+  get boardVisible(): boolean {
+    if (this.preparing) return false;
+    if (!this.active) return this.targetVisible;
+    return this.targetVisible ? this.elapsed + 1e-7 >= this.growTime + APEX_DURATION
+      : this.elapsed + 1e-7 < this.growTime;
+  }
+  prepare(dt: number, holdSeconds: number): void {
+    if (!this.preparing) {this.progress=0;this.elapsed=0;this.serial++;}
+    this.mode='prepare';this.targetVisible=true;
+    this.progress=Math.min(1,this.progress+dt/Math.max(APEX_DURATION,holdSeconds));
+  }
+  unwind(): void {if(this.preparing)this.mode='unwind';}
+  // Only an explicit mount/dismount cue commits a burst. Bails and unrelated
+  // board visibility changes never start one; the preparation is not a commit.
+  start(visible: boolean, duration = SCRIBBLE_DURATION, growFrames = 8): void {
+    this.duration = Math.max(2*APEX_DURATION,duration);
+    this.growTime = THREE.MathUtils.clamp(growFrames/SCRIBBLE_FPS,0,this.duration-2*APEX_DURATION);
+    this.targetVisible=visible;this.elapsed=0;this.progress=0;this.mode='burst';this.serial++;
     if (visible) this.appearances++; else this.disappearances++;
   }
   step(dt: number): void {
-    if (this.playing) {
-      this.elapsed += dt;
-      if (this.elapsed + 1e-7 >= this.duration) this.playing = false;
+    if (this.mode==='unwind') {
+      this.progress=Math.max(0,this.progress-dt/.18);
+      if(this.progress<=1e-7)this.mode='idle';
+    } else if (this.mode==='burst') {
+      this.elapsed+=dt;
+      if(this.elapsed+1e-7>=this.duration)this.mode='idle';
     }
   }
-  cancel(): void {this.playing = false;}
+  cancel(): void {this.mode='idle';this.progress=0;}
   reset(): void {
-    this.targetVisible = this.playing = false;
-    this.elapsed = this.appearances = this.disappearances = 0;
-    this.duration = SCRIBBLE_DURATION;
-    this.serial++;
+    this.targetVisible=false;this.mode='idle';this.progress=0;
+    this.elapsed=this.appearances=this.disappearances=0;
+    this.duration=SCRIBBLE_DURATION;this.serial++;
   }
 }
 
@@ -93,6 +122,9 @@ export class BoardScribbleEffect {
   private readonly a = new THREE.Vector3();
   private readonly b = new THREE.Vector3();
   private readonly worldScale = new THREE.Vector3();
+  private readonly attachment = new THREE.Matrix4();
+  private readonly supportWorld = new THREE.Plane();
+  private hasSupport = false;
   private readonly floor = new THREE.Plane();
   private readonly floorUniform = {value:new THREE.Vector4()};
   private readonly floorEnabled = {value:0};
@@ -150,16 +182,23 @@ export class BoardScribbleEffect {
     this.sprite.visible = this.clock.active;
     // A/B hides the drawing without changing the size of the same burst.
     if (!this.clock.active) return;
-    this.floorEnabled.value = support ? 1 : 0;
+    const newBurst = this.serial !== this.clock.serial;
+    // A sub-render-frame tap has no displayed preparation to unwind. Do not
+    // create its first drawing on an already airborne, released board pose.
+    if(newBurst&&this.clock.frozen){this.sprite.visible=false;return;}
+    if (newBurst || !this.clock.frozen) {
+      this.hasSupport=!!support;
+      if(support)this.supportWorld.copy(support);
+      this.board.updateWorldMatrix(true,false);this.attachment.copy(this.board.matrixWorld);
+    }
+    this.floorEnabled.value = this.hasSupport ? 1 : 0;
     this.perspective.value = (camera as THREE.PerspectiveCamera).isPerspectiveCamera ? 1 : 0;
-    if (support) {
-      this.floor.copy(support);
+    if (this.hasSupport) {
+      this.floor.copy(this.supportWorld);
       this.floor.constant -= .0005; // sub-millimetre clearance without painting over soles
       this.floor.applyMatrix4(camera.matrixWorldInverse);
       this.floorUniform.value.set(this.floor.normal.x, this.floor.normal.y, this.floor.normal.z, this.floor.constant);
     }
-    const newBurst = this.serial !== this.clock.serial;
-    this.board.updateWorldMatrix(true, false);
     // Both bursts follow the source prop, including the standing pickup's short
     // ink tail after the hand catch, before its unchanged carry/settle ends.
     {
@@ -168,7 +207,7 @@ export class BoardScribbleEffect {
       this.center.set(0, y, (s.deckNoseLength - s.deckTailLength) * .5 * scale);
       this.tail.set(0, y, -s.deckTailLength * scale);
       this.nose.set(0, y, s.deckNoseLength * scale);
-      for (const v of [this.center, this.tail, this.nose]) this.root.worldToLocal(this.board.localToWorld(v));
+      for (const v of [this.center, this.tail, this.nose]) this.root.worldToLocal(v.applyMatrix4(this.attachment));
       if (newBurst) {
         this.board.getWorldScale(this.worldScale);
         const width = (s.deckNoseLength + s.deckTailLength) * scale * this.worldScale.z * 1.45;
@@ -185,7 +224,7 @@ export class BoardScribbleEffect {
     const frame = FRAME_REGIONS[this.clock.frame];
     this.sprite.center.set(frame[2], frame[3]);
     this.texture.offset.set(frame[0], frame[1]);
-    this.updateGeometry(camera,!!support);
+    this.updateGeometry(camera,this.hasSupport);
   }
   private updateGeometry(camera: THREE.Camera, grounded: boolean): void {
     const center = this.a.copy(this.sprite.position).applyMatrix4(camera.matrixWorldInverse);

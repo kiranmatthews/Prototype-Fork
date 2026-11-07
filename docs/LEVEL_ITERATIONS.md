@@ -9101,3 +9101,40 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   Evidence: external `skate-scribble-floor/`; final character screenshots and
   GPU results, with interim fragment-depth recordings labelled separately.
   Local server/user tab retained. No integration, push or publication.
+
+
+## Skate scribbles — one-frame apex and reversible mount hold
+
+- 7 November 2026 NZDT: approximately twenty-two minutes prompt-to-validated
+  playable. The full-board drawing now lasts one 60 Hz animation tick. Growth
+  and clearing use 18 separately drawn smaller PNG frames at fixed dimensions
+  and stroke weight. The other large atlas drawings are no longer held over
+  the deck. The existing 32-drawing source PNG is unchanged.
+- Mount growth observes native X / Space + direction anticipation and the UI
+  skate-hold threshold. Cancelling reverses from the current drawing, with a
+  finite 0.18-second full-range unwind; re-holding grows from there. The native
+  controller still owns commitment and jump release. Cancelling retains the
+  last world/ground attachment, so the remaining ink does not follow a released
+  on-foot jump. An unrendered preparation cannot first appear during unwind.
+- A committed hold has one apex tick and 18 clearing ticks. Both dismounts
+  retain their feet-clear frame-24 start. Standing grows for two ticks, vanishes
+  at the frame-26 catch, and clears at frame 36; running grows for eight ticks,
+  vanishes at frame 32, and clears at its frame-56 catch. Source animations,
+  their clocks, physics, tuning, floor/foreground depth and A remain unchanged.
+- Added Hold / cancel input demo and Mount hold / Cancel-unwind pause points.
+  Native short release-to-jump, sustained mount and bail checked in the browser;
+  normal/MAX rendering, one-frame stepping, A/B and local /labs link verified.
+  Recorded unpaused native-resolution growth, reverse/re-hold and dismount,
+  and reviewed actual captured frames. Game console has no warnings/errors.
+- Focused checks pass: 860 pose/clock/controller frames against the accepted
+  pre-scribble implementation; both pickup deadlines and one apex each;
+  direction cancellation, re-hold, short release, stationary charge exclusion,
+  paused A/B, preparation bail and existing six bail/recovery/owner checks.
+  The 1,980-frame movement replay, fixed-size sequence, frozen cancellation
+  attachment, reattachment and 256 floor geometry cases also pass.
+- Production type-check/build and isolated local build pass. No study entries,
+  private motion JSON or scribble atlas in production output. Evidence remains
+  outside the checkout in `skate-scribble-charge/`: recordings, contact sheet,
+  screenshots, browser console, build log and validation summary. Temporary QA
+  tab/served recording fixtures removed, heavy leases released, user tab and
+  port 5199 retained. Local-only checkpoint; no integration, push or publishing.

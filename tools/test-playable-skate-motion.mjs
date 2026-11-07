@@ -5,27 +5,30 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const data=JSON.parse(await readFile(process.argv[2] || '.skate-reference-data/motion.json','utf8'));
 await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   const {PlayableSkateMotion}=await server.ssrLoadModule('/src/skateReferenceLab/playableMotion.ts');
-  const {BoardScribbleSequence,BoardScribbleEffect,SCRIBBLE_FRAMES,SCRIBBLE_FPS}=await server.ssrLoadModule('/src/skateReferenceLab/boardScribble.ts');
-  // A short deterministic effect check: every drawing is visited, the sprite
-  // never shrinks, and a held visibility state cannot retrigger the burst.
+  const {BoardScribbleSequence,BoardScribbleEffect,SCRIBBLE_FRAMES,SCRIBBLE_FPS,MOUNT_CLEAR_DURATION}=await server.ssrLoadModule('/src/skateReferenceLab/boardScribble.ts');
+  // One full-board tick between the grow-in/out. Smaller drawings change;
+  // the card and stroke width never scale, and visibility cannot retrigger ink.
   const clock=new BoardScribbleSequence(),root=new THREE.Group(),board=new THREE.Group();root.add(board);
   const effect=new BoardScribbleEffect(new THREE.Texture(),root,board,clock);
   const camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(4,2,7);camera.lookAt(0,0,0);camera.updateMatrixWorld();
   clock.start(true);effect.update(camera);
-  const quad=effect.sprite.scale.toArray(),cells=new Set();
+  const quad=effect.sprite.scale.toArray(),cells=new Set(),inkFrames=[];
   assert.equal(clock.boardVisible,false,'board reveals before the first ink drawings');
   for(let f=0;f<SCRIBBLE_FRAMES;f++){
     if(f)clock.step(1/SCRIBBLE_FPS);
     effect.update(camera);cells.add(effect.sprite.material.map.offset.toArray().join(','));
+    inkFrames.push(clock.frame);
     assert.deepEqual(effect.sprite.scale.toArray(),quad,'scribble is being scaled instead of redrawn');
     assert.ok(effect.sprite.visible);
-    assert.equal(clock.boardVisible,f>=8,'board covered the full-size ink drawings');
+    assert.equal(clock.boardVisible,f>=9,'board covered the one full-size ink drawing');
   }
-  assert.equal(cells.size,SCRIBBLE_FRAMES);
+  assert.equal(cells.size,19);assert.equal(inkFrames.filter(f=>f===0).length,1);
+  assert.ok(inkFrames.slice(0,8).every((f,i,a)=>f>=14&&(!i||f<=a[i-1])),'growth does not use larger successive drawings');
+  assert.ok(inkFrames.slice(9).every((f,i,a)=>f>=14&&(!i||f>=a[i-1])),'clearing does not use smaller successive drawings');
   clock.step(1/20);effect.update(camera);assert.equal(effect.sprite.visible,false);
   for(let f=0;f<120;f++)clock.step(1/60);
   assert.equal(clock.appearances,1);
-  clock.start(false);assert.equal(clock.disappearances,1);assert.equal(clock.boardVisible,false);
+  clock.start(false);assert.equal(clock.disappearances,1);assert.equal(clock.boardVisible,true,'dismount hides the deck before the growth apex');
   effect.update(camera);const disappearancePosition=effect.sprite.position.clone(),disappearanceScale=effect.sprite.scale.clone();
   clock.enabled=false;effect.update(camera);
   clock.enabled=true;effect.update(camera);
@@ -35,20 +38,41 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   assert.ok(effect.sprite.position.clone().sub(disappearancePosition).distanceTo(board.position)<1e-9,'pickup ink did not follow the board toward the hand');
   assert.ok(effect.sprite.scale.distanceTo(disappearanceScale)<1e-9,'following the pickup resized the ink');
   const standingInkDuration=.2;
-  clock.start(false,standingInkDuration);cells.clear();
-  for(let f=0;f<SCRIBBLE_FRAMES;f++){
-    if(f)clock.step(standingInkDuration/SCRIBBLE_FRAMES);
+  clock.start(false,standingInkDuration,2);let apexTicks=0;
+  for(let f=0;f<12;f++){
+    if(f)clock.step(1/60);
     effect.update(camera);cells.add(effect.sprite.material.map.offset.toArray().join(','));
     assert.equal(clock.active,true);
+    if(clock.frame===0)apexTicks++;
+    assert.equal(clock.boardVisible,f<2,'standing deck missed the hand catch');
   }
-  assert.equal(cells.size,32,'short standing pickup omitted source drawings');
-  clock.step(standingInkDuration/SCRIBBLE_FRAMES);assert.equal(clock.active,false,'standing pickup missed catch deadline');
+  assert.equal(apexTicks,1);
+  clock.step(1/60);assert.equal(clock.active,false,'standing pickup missed tail deadline');
   clock.start(true);assert.equal(clock.appearances,2,'new mount cue did not restart');
   clock.enabled=false;assert.equal(clock.active,false);assert.equal(clock.boardVisible,true);
   const elapsed=clock.elapsed;clock.enabled=true;assert.equal(clock.elapsed,elapsed,'A/B advanced the source clock');
+  clock.cancel();clock.prepare(.3,.55);effect.update(camera,new THREE.Plane(new THREE.Vector3(0,1,0),0));
+  const previewPosition=effect.sprite.position.clone(),previewProgress=clock.progress,previewCounts=[clock.appearances,clock.disappearances];
+  clock.unwind();clock.step(1/60);
+  root.position.set(1,2,3);board.position.set(-4,5,7);effect.update(camera);
+  assert.ok(clock.progress<previewProgress&&clock.frame>=14,'cancel did not reverse the preview');
+  assert.ok(effect.sprite.position.distanceTo(previewPosition)<1e-9,'cancelled preparation followed a released jump into the air');
+  assert.equal(effect.floorEnabled.value,1,'cancelled preparation lost its cached ground surface');
+  const partial=clock.progress;clock.prepare(1/60,.55);effect.update(camera);
+  assert.ok(clock.progress>partial&&clock.progress<previewProgress,'re-hold restarted instead of reversing from the current drawing');
+  assert.ok(effect.sprite.position.distanceTo(previewPosition)>.1,'re-hold failed to follow the board again');
+  clock.prepare(2,.55);assert.equal(clock.frame,14,'a pending mount held a full-board drawing');
+  assert.deepEqual([clock.appearances,clock.disappearances],previewCounts,'a cancelled preview counted as an equipment switch');
+  clock.start(true,MOUNT_CLEAR_DURATION,0);const committed=[];
+  for(let f=0;f<19;f++){if(f)clock.step(1/60);committed.push(clock.frame);assert.equal(clock.boardVisible,f>0);}
+  assert.deepEqual(committed,[0,...Array.from({length:18},(_,i)=>i+14)],'committed mount did not have one apex and 18 clearing drawings');
+  clock.step(1/60);assert.equal(clock.active,false);
+  clock.prepare(.2,.55);clock.unwind();clock.step(.18);assert.equal(clock.active,false,'cancel never settled');
+  clock.prepare(1/60,.55);clock.unwind();effect.update(camera);
+  assert.equal(effect.sprite.visible,false,'unrendered preparation first appeared on release');
   // Floor splitting must cover the complete original PNG rectangle and keep
   // each triangle on one side of the surface, including corner/edge contacts.
-  board.position.set(0,0,0);clock.start(true);
+  root.position.set(0,0,0);board.position.set(0,0,0);clock.start(true);
   for(const slope of [0,.22])for(const y of [-1,0,.244,1])for(let f=0;f<32;f++){
     const floor=new THREE.Plane(new THREE.Vector3(0,1,slope).normalize(),-y);
     clock.elapsed=f/60;effect.update(camera,floor);

@@ -61,21 +61,51 @@ try {
       assert.fail(`Could not reach ${phase}/${age}`);
     };
     const counts=()=>[ink.boardScribble.appearances,ink.boardScribble.disappearances];
+    // Native hold preparation, direction cancellation, immediate re-hold, and
+    // short release-to-jump retain the accepted pose/physics on every tick.
+    const holdResults=[];
+    for(const releaseJump of [false,true]){
+      resetAll();let wasHeld=false,previousProgress=0,sawUnwind=false,sawResume=false,sawCommit=false,peakTicks=0;
+      for(let f=0;f<100;f++){
+        const cancelling=f>=18&&f<21,held=releaseJump?f<18:true;
+        const input=makeInput({moveY:cancelling?0:1,jumpHeld:held,jumpPressed:held&&!wasHeld,jumpReleased:!held&&wasHeld});wasHeld=held;
+        for(const p of players){p.rawInput=input;p.step(1/60,input,level);}level.update(1/60);
+        comparePose(ink,accepted,`hold/cancel pose ${releaseJump}/${f}`);poseFrames++;
+        assert.ok(b.pos.distanceTo(legacy.pos)<1e-9);
+        for(const key of ['speed','vVel','grounded','state','freeSkate','airFromSkate'])assert.equal(b[key],legacy[key]);
+        const effect=ink.boardScribble;
+        if(f<18){assert.equal(effect.stage,'prepare');assert.equal(b.freeSkate,false);assert.equal(effect.boardVisible,false);assert.ok(effect.frame>=14);assert.deepEqual(counts(),[0,0]);}
+        if(cancelling){assert.equal(effect.stage,'unwind');assert.ok(effect.progress<previousProgress);sawUnwind=true;}
+        if(f===21&&!releaseJump){assert.equal(effect.stage,'prepare');assert.ok(effect.progress>previousProgress);assert.ok(effect.progress<.5);sawResume=true;}
+        if(effect.active&&effect.frame===0){peakTicks++;sawCommit=true;assert.equal(b.freeSkate,true);}
+        if(f===19){const progress=effect.progress;ink.scribbles=false;assert.equal(effect.active,false);assert.equal(ink.retarget.board.visible,accepted.retarget.board.visible);ink.scribbles=true;assert.equal(effect.progress,progress);}
+        if(releaseJump&&f>=30){assert.equal(effect.active,false,'released preview never cleared');assert.deepEqual(counts(),[0,0]);}
+        previousProgress=effect.progress;
+      }
+      assert.ok(sawUnwind);
+      if(!releaseJump){assert.ok(sawResume&&sawCommit);assert.equal(peakTicks,1);assert.deepEqual(counts(),[1,0]);}
+      else assert.equal(sawCommit,false);
+      holdResults.push({releaseJump,sawUnwind,sawResume,sawCommit,peakTicks});
+    }
+    freshB();for(let f=0;f<60;f++){stepB(makeInput({jumpHeld:true,jumpPressed:f===0}));assert.equal(ink.boardScribble.active,false,'stationary jump charge triggered mount ink');}
+    freshB();for(let f=0;f<16;f++)stepB(makeInput({jumpHeld:true,jumpPressed:f===0,moveY:1}));
+    assert.equal(ink.boardScribble.stage,'prepare');b.bail(false,8,'trip');stepB();assert.equal(ink.boardScribble.active,false);assert.deepEqual(counts(),[0,0]);
     // Review both complete source clips through the installed final callback.
     // Catch samples were measured from source board/right-hand separation.
     const catchResults=[];
-    for(const [name,catchFrame,startFrame,endFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,24,36],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24,56]]){
+    for(const [name,catchFrame,startFrame,peakFrame,endFrame] of [['BR_DISMOUNT_LO_INTO_STAND_0',26,24,26,36],['BR_DISMOUNT_LO_INTO_RUN_FWD',56,24,32,56]]){
       freshB();stepB();ink.enter('dismount',name);
-      let first=-1,last=-1;
+      let first=-1,last=-1,apexTicks=0;
       const source=data.clips.find(c=>c.name===name);
       for(let frame=1;frame<source.frames.length+3;frame++){
         stepB();
-        if(ink.boardScribble.active){if(first<0)first=frame;last=frame;}
+        if(ink.boardScribble.active){if(first<0)first=frame;last=frame;if(ink.boardScribble.frame===0)apexTicks++;}
         if(frame<startFrame){
           assert.equal(ink.boardScribble.active,false,`${name}: ink started while feet still touched the deck`);
           assert.equal(ink.retarget.board.visible,true,`${name}: deck vanished before feet cleared`);
         }
-        if(frame>=startFrame&&ink.phase==='dismount')assert.equal(ink.retarget.board.visible,false,`${name}: vanished board reappeared at ${frame}`);
+        if(frame>=startFrame&&frame<peakFrame)assert.equal(ink.retarget.board.visible,true,`${name}: board vanished during ink growth`);
+        if(frame>=peakFrame&&ink.phase==='dismount')assert.equal(ink.retarget.board.visible,false,`${name}: vanished board reappeared at ${frame}`);
         if(frame>=endFrame)assert.equal(ink.boardScribble.active,false,`${name}: ink did not finish at ${frame}`);
         if(frame>=catchFrame){
           assert.equal(ink.retarget.board.visible,false,`${name}: board survived catch at ${frame}`);
@@ -85,8 +115,8 @@ try {
           ink.scribbles=true;assert.equal(ink.retarget.board.visible,false,'B revived the caught board after A/B');
         }
       }
-      assert.equal(first,startFrame);assert.equal(last,endFrame-1);
-      assert.deepEqual(counts(),[0,1]);catchResults.push({name,first,last,catchFrame,endFrame});
+      assert.equal(first,startFrame);assert.equal(last,endFrame-1);assert.equal(apexTicks,1);
+      assert.deepEqual(counts(),[0,1]);catchResults.push({name,first,last,peakFrame,catchFrame,endFrame,apexTicks});
     }
     const bailResults=[];
     for(const [phase,age,masked] of [['mount',.10,false],['ride',.1,false],['ride',.1,true],['dismount',.20,false],['dismount',.4,false],['dismount',1.45,false]]){
@@ -121,6 +151,6 @@ try {
     for(let f=0;f<20;f++){stepB();assert.equal(ink.boardScribble.active,false);assert.deepEqual(counts(),beforeDeath);}
     freshB();assert.equal(ink.boardScribble.active,false);assert.deepEqual(counts(),[0,0]);
     for(const motion of motions)motion.dispose();for(const runtime of runtimes)runtime.dispose();
-    console.log(JSON.stringify({baseline:'22cebbe2',poseFrames,toggleChecks,catchResults,bailResults,unrelatedVisibilityChanges:60,otherOwners:8,deathAndReset:true}));
+    console.log(JSON.stringify({baseline:'22cebbe2',poseFrames,toggleChecks,holdResults,catchResults,bailResults,unrelatedVisibilityChanges:60,otherOwners:8,deathAndReset:true}));
   },{levelEntry:{id:'scribble-test',name:'Scribble test',data:{v:1,name:'Scribble test',spawn:[0,.03,6],killY:-20,components:[{t:'platform',p:[0,-.5,-100],s:[1000,1,1000]},{t:'gate',p:[0,0,-400]}]}}});
 } finally {await rm(legacyUrl,{force:true});}
