@@ -26,5 +26,11 @@
     "productionConsoleErrors": [],
     "developmentNote": "The editor ran cleanly in Vite. The game encountered a dev-module fetch failure; the production bundle loaded and passed the game checks."
   },
-  "scope": "Source PNGs, movement, levels and shared published pack are unchanged. Pair presets are browser-local and explicitly exportable. No full suite was run."
+  "scope": "Source PNGs, movement, levels and shared published pack are unchanged. Pair presets are browser-local and explicitly exportable. No full suite was run.",
+  "initialPublication": {
+    "run": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/42407082329",
+    "commit": "3c78e25471bb004b021d94e5a5b1ba36da696d73",
+    "buildAndSizeChecks": "passed",
+    "result": "Pages stayed in syncing_files until its ten-minute timeout and cancelled the deployment ID. Reissuing the same validated source with a fresh commit/deployment ID, matching the earlier canyon release recovery."
+  }
 }
