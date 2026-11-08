@@ -11173,3 +11173,42 @@ Prompt: “Fix the things that need fixing and if the tests are wrong because we
 Fixed the assisted ledge broadphase rejecting valid authored hand reaches, and exact recognition of untouched Test Course saves after crate-size migration. Updated obsolete test fixtures for intentional natural grind landings, map progression and resident skaters, coloured-gem sockets, the Beach Street shoreline, shared texture ownership, enlarged crates and restored fruit. Frozen input recordings retain their original trajectory hashes and camera windows; a focused moving-lift test replaces a historical lead-in that no longer reaches its target.
 
 All originally failing cases have passing focused coverage. Actual browser checks show both Ancient Gates Arrow catches and supported mantles, held-jump climb continuity, pit respawn and preservation of edited saves. Lite, full 720p and MAX/native 1080p reviews have a clean console. Production build and the 974,153,616-byte release-size check pass. The complete 205-command rerun took 45 minutes 31 seconds. Its four remaining harness issues (varied bail poses and new desert dependencies) were repaired and passed fresh-process rechecks, leaving all 205 commands validated with no skipped commands or timeouts. Runtime files were unchanged during these final harness repairs. Results, revision provenance and browser captures are in [the repair report](full-suite-repairs/README.md). Release uses the existing main → Pages workflow.
+
+
+## 2026-11-08 — Publish the accepted Jump and Skate comparisons
+
+- Brief: merge the accepted motion exploration with current game changes and
+  publish it for continued testing. The user lifted the previous local-only
+  hold and confirmed that no release coordinator is active. The separate
+  full-suite repair chat retained ownership of those failures.
+- Elapsed prompt-to-verified merged playtest: approximately 29 minutes.
+- Integrated `8b0a22ca` with current main, including the full-suite repair
+  increment through `00b232eb`. Preserved both iteration histories, all current
+  level data, A/B/C/D choices, native controls and D's live UI tuning.
+- Published entries now include Jump A/B/C/D, Skate playable motion and the
+  218-clip source viewer. Labs keeps the playable query on the Jump link;
+  a bare Jump bookmark also boots the comparison. Relative paths work at the
+  GitHub Pages repository subdirectory, including the Skate-to-Labs link.
+- Packaged the existing approved study exports with decoded-byte provenance:
+  25 Jak motion clips, 218 Skate clips, six sound placeholders, three eco
+  textures and the optional complete Jak reference model. Motion banks/model
+  use lossless gzip: every decoded hash matches its original export. This
+  saved 31.2 MB, keeping the release under the decimal 1 GB limit. No source
+  disc image, game bank, extraction cache or host filesystem path is included.
+- Reference audio remains an explicit comparison-page opt-in in production;
+  ordinary gameplay retains its own sounds. Private development overrides
+  still work. Pose curves, gameplay physics and equipment timing are unchanged
+  by publication support.
+- Checks: playable Skate motion, scribble ownership, board/floor support,
+  D integration, D UI tuning, local/published audio, and published Labs/data
+  integrity pass. After merging the other chat's repairs, actual-D integration
+  and ledge traversal pass again. Production build and release-size check pass
+  (987,278,275 bytes before the final link/copy update). The full suite was not
+  repeated here; the other chat's results and repairs remain documented in
+  `docs/full-suite-repairs/`.
+- Browser: static build served under `/Prototype-Fork/`, all A/B/C/D switches,
+  decoded reference model/audio/eco, reversible mount preview without committed
+  ink, hand-catch disappearance at 0.433 s, pre-scribble/previous-D toggles,
+  standalone playable comparison and all 218 source clips. Lite and full
+  renderers, normal and MAX/native 2560×1440; no console warnings or errors.
+  Evidence is in the chat's external `publish-2026-11-08/` directory.
