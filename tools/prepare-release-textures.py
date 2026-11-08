@@ -47,14 +47,17 @@ for path in sorted((ROOT/'public').rglob('*.glb')):
  for i,image in enumerate(doc.get('images',[])):
   mime=image.get('mimeType');use=image_roles.get(i,set())
   if mime not in ['image/png','image/jpeg'] or 'bufferView' not in image or not use:continue
-  if mime=='image/jpeg' and use!={'baseColorTexture'}:continue
+  # JPEG data maps are only taken when a resize policy owns them; they are then
+  # stored losslessly at the reviewed size (lossy WebP stays base-colour only).
+  jpeg_data=args.resize_carlisle and rel.startswith('props/carlisle') and use=={'metallicRoughnessTexture'}
+  if mime=='image/jpeg' and use!={'baseColorTexture'} and not jpeg_data:continue
   view=doc['bufferViews'][image['bufferView']];start=view.get('byteOffset',0);data=binary[start:start+view['byteLength']]
   if len(data)<16384:continue
   digest=sha(data);entry=unique.setdefault(digest,{'source':data,'mime':mime,'uses':[]});entry['uses'].append({'file':rel,'image':i,'roles':sorted(use)})
   models[rel]={'sourceSha256':sha(raw),'sourceBytes':len(raw)}
 print(json.dumps({'images':len(unique),'uses':sum(len(x['uses'])for x in unique.values()),'sourceBytes':sum(len(x['source'])*len(x['uses'])for x in unique.values())}),flush=True)
 def encode(item,allow_resize=True):
- digest,entry=item;start=time.time();im=Image.open(io.BytesIO(entry['source']));mode='lossless' if entry['mime']=='image/png' else 'color';rgba=im.convert('RGBA')
+ digest,entry=item;start=time.time();im=Image.open(io.BytesIO(entry['source']));mode='lossless' if entry['mime']=='image/png' or all(u['roles']==['metallicRoughnessTexture'] for u in entry['uses']) else 'color';rgba=im.convert('RGBA')
  row={'sourceSha256':digest,'sourceBytes':len(entry['source']),'mimeType':entry['mime'],'width':im.width,'height':im.height,'uses':entry['uses']}
  # The map pack's KTX extractor writes standard sRGB/Rec.709 primaries into
  # PNGs. They do not change sampled channel values; glTF's texture role still

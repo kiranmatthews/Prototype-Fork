@@ -91,6 +91,42 @@ per-mesh allocations drove the periodic JS-heap sawtooth on Codex lab.
 | `main` | 292 | 1,160 MB |
 | This change | 288 | 1,091 MB |
 
+## Carlisle texture resolution (follow-up)
+
+A census of live Carlisle textures (94 textures, about 1.56 GB estimated GPU)
+found these large maps:
+
+- the broad-deck and shrimp-boat 8192² colour maps, about 341 MB each;
+- the 4096² solid-timber colour map, about 85 MB;
+- 32 textures at 2048²: shipyard/cone colour maps, crate art, and the shipyard
+  and cone metallic-roughness JPEGs.
+
+The fish market and repair shed already ship at 1024² through the top-40 stage.
+
+**Applied:** the 13 shipyard and cone metallic-roughness JPEGs (2048²) now go
+through the existing Carlisle policy limit of 256² with linear Lanczos, stored
+as lossless WebP. Previously `prepare-release-textures.py` skipped every
+non-colour JPEG, so these shipped at full size. Every other image in those
+models reproduced its existing reviewed encoding byte for byte (26 of 26). The
+release shrank from 989.6 MB to 984.3 MB. Rows are in
+`release-textures/carlisle-data-review.json`.
+
+**Not applied: colour-map downsizing.** Lowering the 8192/4096 overrides and
+the 2048 colour limit was tried. None of the resized colour maps passes the
+reviewed lossy gates (PSNR ≥ 40 dB, p99 ≤ 8, max ≤ 64):
+
+- quality 95 reaches 35–41 dB with p99 9–20 on these noisy Tripo textures;
+- quality 98 and 100 plateau at the same error, because WebP subsamples
+  chroma.
+
+The pipeline then falls back to lossless. That would add about 27 MB to the
+release (broad deck 2.6 → 13.5 MB, shrimp boat 4.1 → 16.0 MB at 4096²), which
+exceeds the remaining 1 GB budget. Downsizing these maps needs a decision:
+
+- relax the lossy gate for resized colour maps;
+- move them to KTX2/UASTC;
+- or free hosting budget elsewhere.
+
 ## Validation
 
 - `npm run build`, `npm run check:release` (989.6 MB of the 1,000 MB budget).

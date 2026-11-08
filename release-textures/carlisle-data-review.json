@@ -1,0 +1,477 @@
+{
+  "encoder": {
+    "pillow": "12.3.0",
+    "libwebp": "1.6.0",
+    "format": "WebP",
+    "dimensions": "Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged",
+    "lossyQualityCandidates": [
+      85,
+      90,
+      95
+    ],
+    "minPSNR": 40,
+    "maxP99": 8,
+    "maxError": 64,
+    "losslessPNG": true
+  },
+  "models": {
+    "props/carlisle-cone/cone-body.glb": {
+      "sourceSha256": "d413b5d213824e2ece0de719dd056e5958a835e5cfdb25235d90b9179a098e42",
+      "sourceBytes": 3483528
+    },
+    "props/carlisle-shipyard/01-net-housing.glb": {
+      "sourceSha256": "f52ece313be72cdad6915b1558cc32885c69d297d827a2f2fd939ea00e4d1667",
+      "sourceBytes": 2347144
+    },
+    "props/carlisle-shipyard/02-dock-winch.glb": {
+      "sourceSha256": "13fc51229e26d242e961fc57bada6ab4c00f4084ab754376dfb70e85baed34dc",
+      "sourceBytes": 3226412
+    },
+    "props/carlisle-shipyard/03-rotary-hub.glb": {
+      "sourceSha256": "294dc1ca0e7a9891c0f0d631d9f22aac0e78919e5cd9c6f69182eb2e456c5cb7",
+      "sourceBytes": 2936584
+    },
+    "props/carlisle-shipyard/04-work-skiff.glb": {
+      "sourceSha256": "4c62baddeb60e7fc9d2355fdd5c58ae967a8be3fac75cd94ece629c44fc241db",
+      "sourceBytes": 3455832
+    },
+    "props/carlisle-shipyard/05-cargo-crane.glb": {
+      "sourceSha256": "58fdcfe52e6f07ea351fc65c2127e928206d7f7b8c8f54a13223b3973ba5410b",
+      "sourceBytes": 3219228
+    },
+    "props/carlisle-shipyard/06-counterweight-hoist.glb": {
+      "sourceSha256": "263a54f506b3828add11e94d5434113c87358d66f78cb09630719652a8727092",
+      "sourceBytes": 2973520
+    },
+    "props/carlisle-shipyard/07-piling-fender.glb": {
+      "sourceSha256": "d6581a4e9160f40ff40678873db38682a233a1e913954aa4b6f0765a2e5c2588",
+      "sourceBytes": 2705896
+    },
+    "props/carlisle-shipyard/08-boathouse.glb": {
+      "sourceSha256": "979d39e57851845e964eb5f4f90dbaecc351478aa074aaeb970adbb199a55413",
+      "sourceBytes": 3436620
+    },
+    "props/carlisle-shipyard/09-cable-spool.glb": {
+      "sourceSha256": "5e7739ed09068c2bb00562f5d8a0f08e8db14f31bfd53bc5179e670e1bcd93bd",
+      "sourceBytes": 2952460
+    },
+    "props/carlisle-shipyard/10-dredger-pump.glb": {
+      "sourceSha256": "05b6c35c0648815ae934d93b390b3c2c5c3c37d38c3298eb0a9043c0fe5046c7",
+      "sourceBytes": 3142516
+    },
+    "props/carlisle-shipyard/11-harbour-beacon.glb": {
+      "sourceSha256": "3ca2e6f0b71e5c51b0df935a949caaba13bc321d8d333fa01c1d4dbbb46d8a3a",
+      "sourceBytes": 3637872
+    },
+    "props/carlisle-shipyard/12-dock-lantern.glb": {
+      "sourceSha256": "cc1af0b7cae471c1abe45f593e30dff370a6548c67c10e02e4f37325e5f6e208",
+      "sourceBytes": 2555968
+    }
+  },
+  "images": [
+    {
+      "sourceSha256": "2bbbfa66cdae217d5c44e11e77e1903cd630f3141b789b713f313992fbd3bacc",
+      "sourceBytes": 477306,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/09-cable-spool.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "f78d4f1ef484eef4f7e4489eabb21f7dc12900de0c5c70c0096ca3bee7aaae34",
+      "encodedBytes": 61514,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 415792
+    },
+    {
+      "sourceSha256": "5936ed6b8c39a68ee5a3385b14d3c319af8c5374547810a0e1d7663100f1a000",
+      "sourceBytes": 459756,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/01-net-housing.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "6302fc03034640f67910e06e1f31e22e642970f797def56fa1defb707b974392",
+      "encodedBytes": 57798,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 401958
+    },
+    {
+      "sourceSha256": "60823d85d3beb834c277f57c8343e152341846e1c4911a7023eebd9ff8641f1a",
+      "sourceBytes": 349781,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/03-rotary-hub.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "dfec6abe67127ea849568910e9730b7dbccc7f26b62d2a28457df2e9e51ca587",
+      "encodedBytes": 49826,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 299955
+    },
+    {
+      "sourceSha256": "6468a0b93790adeb668261ecdc71211aa14ecb52939ad4a4741c564ab5adab66",
+      "sourceBytes": 388445,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/05-cargo-crane.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "4e9f7a1ad0b139af4ce2e1a341f4ded5919f861195b7914419468f6ce6ced0b2",
+      "encodedBytes": 49576,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 338869
+    },
+    {
+      "sourceSha256": "65858164afaf00615e889a5576aabb1abcf9ff06df566024a1a29053f0185452",
+      "sourceBytes": 570200,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/11-harbour-beacon.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "e99761be7a7e726d436a7e8867e7fef7761a1ebbcb9492c0143abfdba25da58a",
+      "encodedBytes": 62540,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 507660
+    },
+    {
+      "sourceSha256": "6c383822450b671c5dc31c92e666948ac0c3fe86b7eea57da40ee322a0c99839",
+      "sourceBytes": 826358,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/08-boathouse.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "6b3819694a7da9f93aab7bd0022b91c3b0d6d705df3bfa59b80c7a9ab97d01bb",
+      "encodedBytes": 71244,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 755114
+    },
+    {
+      "sourceSha256": "7105d6440ac4105cd8f2fae586e41a5a0c2955e916332607d779c6efaa7bfd48",
+      "sourceBytes": 408673,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/02-dock-winch.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "fe2bedb02dccbc6b9c5be9569fbdd6f8eea82fda414ed7bbfe34daa3a02b8993",
+      "encodedBytes": 51384,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 357289
+    },
+    {
+      "sourceSha256": "87fe6e620099e6ca454a6ca16614bfd8b6343d06ca9102a754f1771ab2046723",
+      "sourceBytes": 283920,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/12-dock-lantern.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "92d04998c4f7fbb432cfad168cff8bae74123217a8bcc71dd128c430fe525d96",
+      "encodedBytes": 41752,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 242168
+    },
+    {
+      "sourceSha256": "acb42f46ecd80b64c137db0aedac9bd465e1592b237cb2593792f27d8936ebf9",
+      "sourceBytes": 398947,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/07-piling-fender.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "f42d52f6b67a6637cdf326961ab3f494a3f48c50eef6210db9cf1f5c59a9ef1c",
+      "encodedBytes": 50576,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 348371
+    },
+    {
+      "sourceSha256": "cbbd569c5b76769a74ec38baa86c260b3c1f572f8643ef627a1a16a65868f273",
+      "sourceBytes": 640534,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-cone/cone-body.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "123bda31d69aef8d06a7848b7f62bc447658974e4a2ce1eafb197e7ba2a8cade",
+      "encodedBytes": 66758,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 573776
+    },
+    {
+      "sourceSha256": "cc99ca69e923bf81830eaf1e4b97c2d6abf5043473c10211661b63ba564aba47",
+      "sourceBytes": 659030,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/06-counterweight-hoist.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "9b12a4e92f5fe71f618dab9d7178ec588e6c2628b0f3592db90e76b564167a91",
+      "encodedBytes": 71072,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 587958
+    },
+    {
+      "sourceSha256": "ea73de0ca2bc25fb9bd5b58bd9623ab271c2d08a45abf5699ab8fabae4bc0c36",
+      "sourceBytes": 307203,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/04-work-skiff.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "eeba1b49abebcdd9ed6092809a4466448691b40a43f6ce32a8bc4519d9ad45c6",
+      "encodedBytes": 40890,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 266313
+    },
+    {
+      "sourceSha256": "ec8dc55cd2ed9248b75159b1723dcd1092033fa5ab397eae7f0d0d55ff6f4661",
+      "sourceBytes": 291564,
+      "mimeType": "image/jpeg",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "props/carlisle-shipyard/10-dredger-pump.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "34e840587868d1ef21bf7ffc3b1e53fa254834152b07f5a1f4d373305c3d44fe",
+      "encodedBytes": 36530,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 255034
+    }
+  ],
+  "scope": "Carlisle shipyard and cone JPEG metallic-roughness maps: 2048 to 256, linear Lanczos, lossless WebP. Colour and normal maps in these models keep their existing reviewed encodings."
+}
