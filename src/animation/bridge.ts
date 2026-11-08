@@ -366,6 +366,7 @@ export class PlayerAnimationBridge {
   private readonly overlayBaseline: MutableTransformSnapshot[] = [];
   private overlayBaselineApplied = false;
   private overlay: PlayerAnimationOverlay | null = null;
+  private finalOverlay: PlayerAnimationOverlay | null = null;
   private readonly deformationStates: AppliedDeformationState[] = [];
   private readonly visualDeformations = new Map<THREE.Object3D, AppliedDeformationState>();
   private readonly endpointDeformations = new Map<THREE.Object3D, AppliedDeformationState>();
@@ -431,6 +432,35 @@ export class PlayerAnimationBridge {
   }
 
   /** Remove authored writes before legacy code calculates its next pose. */
+  setFinalOverlay(overlay: PlayerAnimationOverlay | null): () => void {
+    this.restoreOverlayBaseline();
+    this.finalOverlay = overlay;
+    return () => {
+      if (this.finalOverlay !== overlay) return;
+      this.restoreOverlayBaseline();
+      this.finalOverlay = null;
+    };
+  }
+
+  /** Optional local presentations run after legacy contacts, inside the same
+   * restore boundary as the ordinary animation document. No physics owns it. */
+  applyFinalOverlay(deltaSeconds: number): void {
+    if (!this.finalOverlay || this.previewActive) return;
+    if (!this.overlayBaselineApplied) {
+      captureHierarchy(this.playerRoot, this.overlayBaseline);
+      this.overlayBaselineApplied = true;
+    }
+    try {
+      const bridge = this;
+      let rig: PlayerAnimationRig | undefined;
+      this.finalOverlay({get rig() {return rig ??= bridge.rig;}, deltaSeconds,
+        applyDeformations: values => this.applyDeformations(values)});
+    } catch (error) {
+      this.restoreOverlayBaseline();
+      throw error;
+    }
+  }
+
   prepareLegacyPose(): void {
     this.restoreOverlayBaseline();
     // Preview normally pauses simulation. If an integration forgets to do so,

@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { discoverToolPages } from './tool-directory.mjs';
 import { siteEntries } from './site-entries.mjs';
+import { createHash } from 'node:crypto';
+import { gunzipSync } from 'node:zlib';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 async function load(file) {
@@ -39,6 +41,16 @@ for (const section of TUNING_SECTIONS.filter(section => section.keys.some(key =>
   assert.ok(toolEntries.some(entry => entry.name === section.title), `Missing tuning section ${section.title}`);
 assert.equal(pages.find(page => page.path === 'tools/enemies/motion-review.html')?.local,false);
 assert.ok(!pages.find(page => page.path === 'skate-pose-review.html')?.local);
+for (const source of ['jump-review.html', 'skate-playtest.html', 'skate-reference-lab.html']) {
+  const page = pages.find(page => page.source === source);
+  assert.equal(page?.local, false, `${source} must be available on the published site`);
+  const url = new URL(page.path, 'https://example.test/Prototype-Fork/');
+  assert.equal(url.pathname, `/Prototype-Fork/${source}`);
+  if (source === 'jump-review.html') {
+    assert.ok(url.searchParams.has('playtest'));
+    assert.equal(url.searchParams.get('level'), 'codex-lab');
+  }
+}
 for (const prefix of ['drowned-crown/storyboard/', 'coastal-town/storyboard/', 'custard-creek/storyboard/', 'sunny-beach/gallery/', 'carlisle-bonus/storyboard.html', 'provenance/level-atlas/', 'docs/']) {
   const reviews = pages.filter(page => page.path.startsWith(prefix));
   assert.ok(reviews.length, `Missing local review directory ${prefix}`);
@@ -46,6 +58,15 @@ for (const prefix of ['drowned-crown/storyboard/', 'coastal-town/storyboard/', '
 }
 for (const entry of Object.values(siteEntries)) await access(root + 'dist/' + entry);
 const worker = await readFile(root + 'dist/sw.js', 'utf8');
+const provenance = JSON.parse(await readFile(root + 'public/motion-study/provenance.json', 'utf8'));
+for (const asset of provenance.assets) {
+  const packed = await readFile(root + 'dist/motion-study/' + asset.path);
+  const bytes = asset.encoding === 'gzip' ? gunzipSync(packed) : packed;
+  assert.equal(bytes.length, asset.bytes, `Published sample size changed: ${asset.path}`);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), asset.sha256, `Published sample changed: ${asset.path}`);
+}
+for (const entry of ['jump-review.html', 'skate-playtest.html', 'skate-reference-lab.html'])
+  assert.ok(worker.includes(entry), `Offline manifest is missing ${entry}`);
 assert.ok(worker.includes('labs/index.html'), 'Directory must ship in offline manifest');
 assert.ok(worker.includes('tools/enemies/motion-review.html'), 'Enemy preview must ship in offline manifest');
 console.log(`PASS ${pages.length} browser pages, ${toolEntries.length} embedded tools / variants, ${TOOL_ROUTES.length} routes and ${TUNING_SECTIONS.length} tuning sections; production and offline entries present.`);

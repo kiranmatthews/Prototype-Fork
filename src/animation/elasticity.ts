@@ -19,6 +19,9 @@ const PROFILES:Record<string,Amplitudes> = {
   'swim-idle':[.025,.035,.045,.015,.022], swim:[.055,.060,.090,.045,.060],
   'jump-charge':[.06,.04,.06,.035,.045], 'run-stop':[.05,.035,.05,.025,.04],
   jump:[.12,.08,.12,.12,.15], 'double-jump':[.12,.08,.12,.12,.15], 'slide-jump':[.12,.08,.12,.12,.15],
+  // Local D authoring profiles multiply the source's existing segment keys.
+  // The source double-jump torso already stretches strongly; legs need more.
+  'jak-flip':[.18,.10,.18,.16,.22], 'jak-double-jump':[.06,.10,.18,.16,.22],
   fall:[.08,.06,.08,.08,.10], land:[.10,.06,.08,.10,.12],
   'roll-land':[.18,.08,.12,.12,.15],
   'launch-rise':[.14,.10,.15,.08,.10], 'launch-float':[.045,.05,.075,.045,.065],

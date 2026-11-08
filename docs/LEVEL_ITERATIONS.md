@@ -10232,3 +10232,936 @@ separately without changing tests to match current behavior.
 Evidence and captures: [geometry review](desert-canyon/geometry/README.md),
 [survey](desert-canyon/geometry/survey.json),
 [runtime/renderer measurements](desert-canyon/geometry/review.json).
+
+
+## 3 November 2026 NZDT — Jak-informed jump, double jump and landing
+
+**Brief:** use the supplied local Jak and Daxter motion reference to move the
+character closer to Jak's jump and double jump, including original jump SFX as
+local placeholders, while preserving movement physics and segment elasticity.
+
+**Playable:** the revised pose sequence and six decoded sound variations were
+working in the local real-input preview by 11:22 UTC on 2 November (00:22 NZDT
+on 3 November), approximately **46 minutes** from the recorded 10:36:22 UTC
+implementation start. This includes reference comparison and audio extraction.
+
+- Original editable poses now trail the arms at launch, gather asymmetric knees
+  into a broad tucked apex, lift the arms during descent, and recover through
+  planted landing compression, rebound and a finite settle. Double jump uses
+  the same pose family with a 50 ms blend instead of the previous wide split.
+- Catalogue 38 upgrades only untouched defaults; edited or deleted saved clips
+  remain intact. No tuning, jump impulses, input rules, steering, collisions or
+  whole-skeleton scale changed.
+- Added a reproducible resident-bank extractor and optional development-only
+  audio endpoint. The actual launch cues play the extracted whoosh/voice
+  variants through the existing sound bus. Source game assets remain outside
+  Git and the published build; normal project SFX remain the release fallback.
+- Validation: animation suite, idle/charge recovery, audio regression suite and
+  local sound-bank tests passed. Seven real-input scenarios matched before/after
+  movement exactly for 1,820 frames; landing soles remained 6–34 mm above
+  support. All four clips clear the torso; maximum descent/landing shoulder step
+  is 16 degrees at 60 Hz.
+- Browser review: real-controller tap/full/double/running motions, front/side/
+  oblique views, full renderer at native 1630×1706 and normal 720×754 input;
+  both extracted launch cues played and the console was clear.
+
+Production build and release-size check passed (803,491,859 bytes). The build
+contains no extracted Jak audio, local audio endpoint or development review page.
+
+Source and reproduction notes: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+### Follow-up — local A/B/C playtest, 3 November 2026 NZDT
+
+The user clarified that they want an interactive comparison before any
+publication, then requested a third, stronger Jak motion/physics experiment.
+**Nothing was pushed or published.** Total elapsed from the recorded original
+implementation start to the validated three-variant local playtest was about
+**83 minutes**, including the two scope extensions and original asset study.
+
+- The page now defaults to real gameplay on the selected course. Keyboard
+  **1 / 2 / 3** and visible buttons select A (original), B (new animation, old
+  physics), or C (further animation and on-foot physics changes). Switching
+  preserves position and momentum. The old automated viewer remains optional.
+- A restores the original audio and zero-length double-jump transition. B/C use
+  the local extracted sounds; the checkbox permits animation-only comparison.
+- C gathers earlier, folds the torso farther and retains independently shaped
+  stretch/compression. Its symmetric 60 m/s² arc gives measured tap/full peaks
+  of 1.268/2.799 m; the second pop adds 1.799 m. Air steering carries momentum.
+- C is opt-in per player and captured per launch, with no global tuner changes.
+  Switching variants during flight cannot splice gravity curves. The existing
+  hold/release gesture, skateboard mount, ollies and special launch paths remain
+  on their original rules.
+- Tests: C height/airtime, coast/recovery and selection continuity passed;
+  180 frames of hold-to-skate and 1,344 campaign/park skating frames (tap/full,
+  both stances) matched the default controller exactly with C selected. B/A
+  still match for 1,820 paired frames. B/C arm-clearance and runtime checks pass.
+  Source and local playtest modules type-check; production build and release
+  size pass (803,493,410 bytes), although release remains explicitly deferred.
+- Browser: real keyboard input activates C jumps/double jumps and A original
+  audio; toggles report zero position, vertical-velocity and speed discontinuity.
+  C's apex was reviewed at native 2560×1440 and normal 1280×720 input; its landing
+  catch and finite return to idle were checked in native mode. The retained
+  playable tab has no console errors. The full-render review logged
+  texture-loading warnings during startup.
+
+The shared release handoff is marked **LOCAL PLAYTEST — DO NOT INTEGRATE OR
+PUBLISH**. Continue evaluation at the local jump-review page.
+
+### Follow-up — D direct Jak retarget, 3 November 2026 NZDT
+
+The user requested direct reconstruction on Bone Man, including recovery
+pacing, and a check for usable Jak board motion. Prompt → validated local
+playtest: **approximately 50 minutes** (estimated; the first retained clock
+checkpoint is 09:28 UTC and final live review is around 10:10 UTC). One control
+preference was clarified: preserve release-to-jump / hold-to-skate. **Local only;
+no push, integration or publication.**
+
+- D retargets the supplied game's sampled skeleton curves onto the existing
+  character, including waist translation, independent stretch, jump-forward
+  blending, double-jump restart, fall, landing variants, walk/run, and the full
+  three-cycle pacing lead-in and run-to-stance settle. Source files stay outside
+  the repository. Main-body directions are preserved; Bone Man's proportions,
+  procedural fingers and accessories remain its own.
+- Source apex timing, jump heights, double-jump window, flat-foot thrust and
+  nonlinear braking are isolated behind D. Existing charge/release and mount
+  gestures, collisions and special-surface handling remain available. Mounted
+  skating retains the original controller and pose ownership.
+- The local A/B/C/D page supports 1–4 selection, course play, automated motion,
+  a Run and stop sequence, and a synchronized original-Jak overlay. Controls
+  can collapse to reveal both characters. No campaign or animation drafts save.
+- Validation: 1,025 retargeted pose samples and the live composed apex preserve
+  source limb directions. Measured tap/full peaks 1.083/2.799 m; second pop
+  1.799 m. Recovery finishes, soles stay above support, and hold-to-skate with
+  release-to-ollie works. D-enabled skating matches the default for 1,344 frames
+  across campaign/park, both stances and charge lengths. C physics, 1,820 A/B
+  paired frames, animation-runtime checks and strict types pass.
+- Browser: full jump, double jump, landing catch and pacing compared beside the
+  original, including front/side/oblique inspection. Full-render native
+  1506×1706 and normal 720×816 inputs checked. Live keyboard release launches D;
+  local source audio plays and no console errors were logged. The user's prior
+  1080p render setting was restored. Build and release-size check pass
+  (803,497,488 bytes); extracted model/motion paths and the review page are absent
+  from production output.
+- Jak II's jetboard has appropriate ride/lean, pump, jump, landing, grind and
+  trick clips. The supplied Jak 1 data lacks those; direct board retargeting
+  needs legitimate Jak II data. Existing skating was not replaced.
+
+Reproduction and source details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## 2026-11-03 — Green eco fire in the jump comparison
+
+- Request: recreate the large Sentinel Beach green eco vent effect and scatter
+  a few through the local Jump A/B/C/D playtest. Prompt-to-playable: about
+  9 minutes (10:12:58–10:22 UTC); validated handoff about 18 minutes.
+- Inspected OpenGOAL's green-vent group and harvester definitions. The source
+  uses hot-dot, flash and puff sprites; the recreation uses textureless Gouraud
+  fans for luminous wisps, curled trails, motes and the vent mouth.
+- Added reusable `GreenEcoFire` and four editable Puff Studio layer presets.
+  Seven local course placements, a show/hide checkbox and a Next eco vent
+  shortcut are available with A, B, C and D. Published level data, movement,
+  jump/skate controls and animation definitions remain unchanged.
+- Cost: one shared batch/two draw calls per view, zero textures/lights. All
+  seven vents at 30/60/120 Hz peaked at 377/768 particles. Dedicated effect
+  pool preserves gameplay dust; offscreen emitters cull as complete effects.
+- Validation: finite geometry, capacity, lifecycle and disposal checks; puff
+  preparation/upload regressions; seven real-course supported placements and
+  approach positions, no added collision; strict source/playtest types and
+  production build pass. Browser review at normal and native/MAX rendering
+  shows visible plumes, grounded player and no console errors. Original 720p
+  setting restored and local playtest left available. No publication.
+
+Details and reuse: [Green eco fire](GREEN_ECO_FIRE.md).
+
+## 2026-11-04 — Port the original green eco graph, then swap to Gouraud puffs
+
+- Follow-up: match the original J&D vent first, then substitute Gouraud puffs.
+  Cumulative prompt-to-playable time was about 44 minutes from the original
+  10:12:58 UTC brief to the verified source/Gouraud comparison at 10:57 UTC on
+  3 November. This includes the first sketch and subsequent fidelity requests;
+  the source-port iteration followed the 10:30 UTC first-sketch commit.
+- Replaced the invented helices/extra motes/floor disk with the 222–227 source
+  particle graph: fifteen orbit bindings, delayed trails, native 300 Hz timer,
+  original velocities, random ranges, lifetimes, shrink and colour relaunches.
+  Extracted the three original sprites locally for the first reference render.
+- Swapped only the renderer to Gouraud triangle fans. Default is now Gouraud;
+  Original textures and Freeze eco for comparison permit direct inspection of
+  the same particle frame. Superseded approximate layer presets were removed.
+  The source PNGs remain outside Git and release assets.
+- Seven unchanged placements, three instanced draw calls per view. Full-field
+  stress peak: 4,041 particles, 162,456 Gouraud triangles, no drops. Original
+  sprite quads use two triangles each; no claim that Gouraud is universally
+  faster. Three visible vents measured about 0.36 ms CPU update on this Mac.
+- Validation: source-equation/lifecycle tests, exact 30/60/120 Hz final-state
+  equality, renderer switches preserving instance buffers, resource cleanup,
+  puff preparation/upload regressions, strict source/playtest types, build and
+  release-size check. Browser comparison at normal and native resolution;
+  all A/B/C/D switches continuous, skate gesture works, no console errors.
+- Normal 720p restored; local D playtest uses animated Gouraud eco. Movement,
+  jump/skate controls, animation definitions and published level data are
+  unchanged. Local commit/handoff only; no publication.
+
+Details and limitations: [Green eco fire](GREEN_ECO_FIRE.md).
+
+## 2026-11-04 — Jak ledge suite and restored standard jump flip in local D
+
+- Brief: add Jak's ledge family and restore Bone Man's normal forward flip
+  using a source rolling/flip animation. About 27 minutes prompt-to-verified
+  playable comparison (11:13:24–11:40 UTC, 3 November); subsequent validation,
+  release-asset preparation and local handoff followed. No public release.
+- Sampled seven source ledge motions plus wheel-flip and wheel-flip-land from
+  the user's existing local Jak 1 GLB. D selects straight/left/right catches,
+  alternates both holds, follows the existing climb progress, and plays release
+  over the existing drop. Climb input can interrupt the catch. Adapted glove
+  contacts after segment elasticity; retained shimmy with alternate plants.
+- D's standard jump now uses the source roll-jump rotation/tuck about the hips.
+  Removed source root travel and fitted the clip to the existing jump arc.
+  Double jump/catch interrupt it; running recovery and pacing remain available.
+  The forward-flip checkbox restores the previous upright D jump for comparison.
+  A/B/C, release-to-jump, hold-to-skate and board simulation are preserved.
+- Local fixture, motion/view selectors, slow/freeze/phase stops and original Jak
+  alongside make the suite reviewable. Fixed source skin-matrix refresh and
+  placed reference ledge poses along the lip so comparison geometry is visible.
+- Checks: 1,599 source poses match eight major limb directions; 2,485 native
+  frames cover the ledge family, planted shimmy, exact flip-off/on physics for
+  tap/full/running/double jumps, and hold-to-skate. Maximum catch/hold glove
+  error 0.000193 m. Strict source/playtest types, build and release-size pass.
+  Source bank, model and local review are absent from the production output.
+- Browser: full-render catch, pull-up, release and flip comparison; side/front
+  flip views; normal 720p and native render paths; A/B/C/D switches preserve
+  position/velocity/speed. Restored normal rendering. Proof is in the external
+  `ledge-flip-review` directory; source data remains outside Git.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## 2026-11-04 — Fix D's sideways ledge traversal
+
+- Brief: sideways movement was broken; continue polishing the ledge exploration.
+  About 35 minutes prompt-to-browser-verified playable correction, including
+  full-speed reversals and a manual corner traverse (approximately 12:11–12:46
+  UTC, 3 November). Final regression/build and local handoff followed.
+- Replaced distance-quantised hand stepping with timed alternating reaches,
+  fixed plants, continuous reversal redirection and a finite stopped settle.
+  Removed the hand midpoint's lateral tug on the torso. Added bounded visual
+  corner travel/facing, real lip projection and an arm-length-aware shoulder
+  correction after independent segment deformation.
+- Quiet source hold during traversal; original expressive holds resume at
+  rest. Contact history clears when switching away from D. The local ledge
+  playground now uses its displayed camera for input; Control this ledge lets
+  the player take over an inspection pose without resetting their position.
+- Preserved the existing traversal speed and collision path, climb/drop,
+  release-to-jump, hold-to-skate, A/B/C and the source flip. No level-data,
+  geometry, global tuning, source-asset or production-entrypoint edits.
+- Checks: 1,731 native traversal frames plus 2,485 ledge/flip/skate frames;
+  30/60/120 Hz contact-driver checks; strict types and build. Straight hip step
+  improves from 0.133 to 0.052 m/frame at 60 Hz; no backwards motion against
+  input; hand residual below 1 mm in the default-rig straight/corner fixture.
+- Browser: keyboard reversals in behind/oblique views, ground jump/catch/climb,
+  manual traversal around the block corner, normal 720p and native rendering.
+  No console warnings/errors; normal rendering restored. Evidence is external
+  `ledge-shimmy-review/`. Local D comparison retained; no publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## Direct Jak D — movement, proportions and jump-height polish
+
+- Completed 4 November 2026 NZDT in the existing isolated comparison worktree.
+  Approximately 34 minutes prompt-to-validated playable (21:25–21:59 UTC,
+  3 November), including calibration, corner/contact corrections and browser
+  review. Local playtest only; no integration or publication authorized.
+- Reduced the run's excessive lower-waist stretch while retaining source limb
+  directions and independent segment elasticity. Restored our native analog
+  walk, 9 m/s run, acceleration, turn inertia, coasting and air steering in D.
+  Added a Walk, run and turn inspection sequence.
+- Measured the actual skull mesh against A. Raised D's first arc and calibrated
+  the second boost by first-jump charge; twelve tap/partial/full/running/double
+  comparisons match visible head peaks within 0.0152 m with the flip enabled.
+  A/B/C, global tuning and the jump/skate gesture remain unchanged.
+- Blended continuing strides underneath the source landing rebound, with a
+  phase-continuous return to run/idle and a D-only floor-penetration correction.
+  No head-position jump at the final recovery handoff in the test fixtures.
+- Widened ledge grip from 0.60 to 0.70 m and slowed D traversal from 2.4 to
+  2.0 m/s. Bounded projected corner contacts to their planned reach. Pull-up
+  takes 0.475 s plus a 0.20 s visual settle with controls already active;
+  finishing on the deck avoids an extra jump/landing or air-control speed spike.
+- Checks: 6,620 new movement/height/recovery frames; exact 240-frame A/D native
+  locomotion parity; 1,599 source poses; 2,485 ledge/flip frames; 1,731 reversal
+  and corner frames; 30/60/120 Hz hand contacts; campaign/park skateboard parity;
+  runtime routing, strict playtest types, build and release size. Worst ledge
+  grip residual is 0.000273 m. Release output is 803,510,039 bytes; the local
+  review entry and external source bank remain excluded.
+- Browser: lite and full rendering, normal/native resolution, waist/run views,
+  running rebound and recovery, manual corner traversal and pull-up into
+  movement. A/B/C/D switches preserve position/velocity. No console errors;
+  the final scene switch logged a brief texture-image warning burst, recorded
+  with the otherwise clean browser passes. Evidence is external
+  `d-movement-polish/`; port 5188 remains the
+  local playtest. No level geometry, shared level pack or production entry edits.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## Direct Jak D — Bone Man locomotion continuity
+
+- Completed 4 November 2026 NZDT, approximately 22 minutes prompt-to-validated
+  playable (03:09–03:31 UTC). Local A/B/C/D comparison only.
+- D now inherits native walk/run cadence and blending, keeps the run cycle
+  continuous through direction reversals, and phase-matches starts/restarts.
+  Physical movement and facing are unchanged.
+- Replaced the long Jak pacing-to-idle sequence with Bone Man's momentum-driven
+  brake and finite settle. Landing/climb recovery keeps the running stride
+  through a reversal while preserving the source rebound.
+- Added Reverse and restart inspection, Turn/Restart pause points, and visible
+  gait-speed/walk-blend diagnostics. Source overlay labels native transitions.
+- Checks: 1,360 new native comparison frames; all 463 gait frames match original
+  normalized cadence, including nine reversal frames below 3 m/s. Native motion,
+  facing and clip selection match exactly. Maximum transition head step 0.0291 m.
+  Existing 6,620-frame polish, 1,108 source poses, direct jump/mount checks,
+  1,344-frame board parity, runtime routing, strict types, build and release size
+  passed. A/D skull peaks remain within 0.0151 m; landing handoffs stay continuous.
+- Browser: lite/full, 720p/native, side/oblique reversal and restart, A/D switch.
+  Chrome completed review after the in-app automation transport disconnected.
+  No game JavaScript errors; two startup audio-gesture warnings and favicon 404
+  recorded. Evidence: external d-locomotion-continuity/. Render settings restored
+  and Chrome test tab closed. Release output 803,509,782 bytes. No publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## Direct Jak D — smooth double-jump transition and visible lift
+
+- Completed 4 November 2026 NZDT, approximately 23 minutes prompt-to-validated
+  playable (03:54–04:17 UTC). Local A/B/C/D comparison only.
+- Replaced the frozen three-frame double-jump handoff with a 0.14-second moving
+  blend. Retimed source extension/gather to the second arc, using captured charge
+  to preserve the calibrated head reach. Added Running double jump inspection and
+  a Second boost pause point; source overlay follows the new presentation clock.
+- Eighteen standing/running, flip-on/off and early/late second-jump cases pass.
+  All 3,600 recorded physics frames exactly match the prior implementation.
+  Worst three-frame head rise improves from 0.0126 to 0.4749 m; worst per-frame
+  hip rotation falls from 85.6 to 31.5 degrees. Initial head/hip movement is upward.
+- Existing 6,620-frame polish regression passes without relaxing assertions:
+  A/D head peaks within 0.0151 m, continuous landing handoffs, native locomotion
+  and climb recovery. Board parity passes across 1,344 frames. Runtime routing,
+  strict review types, build and release size pass (803,510,877 bytes).
+- Browser: full rendering, normal/native resolution, standing/running boost,
+  A/D switching and running rebound. Original rendering settings restored.
+  No console errors or warnings. Evidence: external `d-double-jump/`.
+  The jump/skate gesture, physical jump
+  heights, board motion, A/B/C and source assets remain unchanged. No publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## Direct Jak D — idle pose and recovery handoff
+
+- Completed 4 November 2026 NZDT, approximately 12 minutes prompt-to-validated
+  playable (04:59–05:11 UTC). Local A/B/C/D comparison only.
+- Verified `stance-loop` is Jak's normal grounded idle. Removed the additional
+  Bone Man neutral-arm layer from D's direct-source idle and its recoveries;
+  it distorted the stance by 19 degrees and snapped the hands up to 0.1794 m
+  when landing/climb finished. Original source keys and motion timing retained.
+- Added Idle / Idle and stops review sequences. Settled now waits for the actual
+  end of a jump's landing and transition instead of pausing mid-recovery.
+- Checks: seven idle/recovery cases over 2,940 native frames, including walk/run
+  stops, three landing types and ledge get-up. Idle handoffs show angular error
+  below 6e-8 radians and joint steps below 0.00056 m. Source arm directions match
+  within 0.00118 radians. Native idle/charge recovery, runtime routing, 1,360-frame
+  locomotion parity and 6,620-frame movement/height/recovery regressions pass.
+  A/D head peaks still match within 0.0151 m. Strict types, build and release-size
+  checks pass (803,510,988 bytes).
+- Browser: source stance comparison, full rendering, normal/native resolution,
+  front/side/oblique idle, running/walking stops and full landing-to-idle. Original
+  render settings restored; no console errors or warnings. Evidence: external
+  `d-idle-continuity/`. Physics,
+  jump/skate controls, board presentation, A/B/C and level data unchanged.
+  No publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## D — native idle and A/D hybrid run
+
+- Completed 4 November 2026 NZDT, approximately 15 minutes prompt-to-validated
+  playable (05:59–06:14 UTC). Local A/B/C/D comparison only.
+- D now uses the exact A/B/C idle, including Bone Man's resting arm pose and
+  segment elasticity. The native arm layer fades in during source landing/climb
+  recovery. Retained D's recovery floor correction after finding a 1.9 cm shoe
+  penetration in the initial pass.
+- Run blends 50/50 native Bone Man and retargeted Jak motion. Full-cycle leg
+  matching aligns the native cycle by 7/64 of a stride. Rotations, root/waist
+  and segment elasticity mix, retaining native cadence, analog walking,
+  continuous reversal strides, braking and restarts. D is labeled Jak hybrid.
+- Checks: 3,360-frame idle/recovery comparison, 1,360-frame native locomotion
+  parity plus actual hybrid sampling, 6,620-frame jump-height/landing/climb
+  regression, 1,026 pure-source retarget frames, and 1,344-frame skating parity.
+  Rendered A/D idle poses match; idle handoff joint steps are below 0.00056 m.
+  All twelve A/D skull peaks remain within 0.0151 m. Native idle/charge recovery,
+  runtime routing, strict review types, build and release-size check pass
+  (803,511,584 bytes). No full-suite run.
+- Browser: full rendering at normal 720p and native resolution; identical A/D
+  idle, hybrid reversal stride, walk/run stops and flip landing into idle.
+  No console warnings/errors. Original 720p/2× settings restored, D in live play.
+  Evidence: external `d-hybrid-locomotion/`. Source assets, jump/skate gesture,
+  physics, A/B/C and level data retained. No integration or publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+
+## D — upright vertical and precision jumps
+
+- Completed 4 November 2026 NZDT, approximately 15 minutes prompt-to-validated
+  playable (21:34–21:49 NZDT). Local A/B/C/D comparison only.
+- Captured the roll choice at takeoff: running momentum plus committed movement
+  input roll; vertical, walking and short-nudge jumps stay upright. Steering
+  cannot start a roll in midair, and upright jumps keep the upright landing.
+- Kept physical arcs intact while matching upright head reach to A. A finite
+  root gather and a shorter upright-to-double transition preserve the height
+  calibration and second-jump lift. Running flips retain their existing motion.
+- Added Precision jump inspection and a 4,840-frame launch-selection regression.
+  Exact enabled/disabled physics parity; all 3,600 double-jump physical frames
+  match the prior validated version. Existing 6,620-frame polish suite passes;
+  all twelve A/D head peaks are within 0.023 m. Idle/recovery, source retarget,
+  skating parity, runtime routing, strict types, build and release size pass
+  (803,512,107 bytes). No full-suite run.
+- Browser confirms upright vertical/short hops and running rolls in full render
+  at normal/native resolution, with no console warnings/errors. Original render
+  settings restored; D ready in live play. Evidence: external `d-precision-jumps/`.
+  No integration or publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## D — rubbery roll and double jump
+
+- Completed 4 November 2026 NZDT, approximately 28 minutes prompt-to-validated
+  playable (22:38–23:06 NZDT). Local A/B/C/D comparison only.
+- Added shared editable D elasticity profiles: independent segment compression,
+  stretch and finite recoil preserve the original source deformation. The roll
+  now visibly tucks and extends; second-boost limb stretch arrives before the
+  slower body rotation blend completes. No whole-skeleton scale or physics edit.
+- Added airborne/landing joint follow-through. It preserves rotation when a
+  roll is interrupted by a double jump and smooths the source landing's internal
+  splice, then gives exact ownership back to phase-matched native locomotion.
+- New 1,440-frame before/after regression verifies exact physics parity and
+  finite segment deformation. Peak roll joint steps fall from 62.1° to 27.4°;
+  short-landing steps fall from 83.6° to 30.0°. Existing double-jump, height,
+  precision-hop, idle/recovery, source retarget and skating checks pass. Twelve
+  A/D head peaks remain within 0.050 m. Runtime, elasticity, strict review types,
+  build and release size pass (803,514,472 bytes). No full-suite run.
+- Full browser review at normal/native resolution: running roll into double,
+  upright double and running rebound. No console warnings/errors. Original
+  720p/2× settings restored; D ready in live play. Evidence: `d-rubber-motion/`
+  outside Git. A/B/C, jump/skate gesture, physical arcs and level data unchanged.
+  No integration or publication.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## D — UI tuning and a complete forward roll
+
+- Completed 5 November 2026 NZDT, approximately 28 minutes prompt-to-validated
+  playable (00:18–00:46 NZDT). Local A/B/C/D comparison only.
+- Removed D's custom height/gravity/second-boost profile. It uses the live TUNER
+  movement path, including asymmetric gravity and the double-jump window. Retired
+  physical compensation for pose-dependent head height; A/B/C remain unchanged.
+- Completed the source roll's remaining 23° in the air and fitted the animation
+  to the tuned arc, with time to open out. An early double jump preserves forward
+  rotation and applies its boost immediately. Very short/vertical hops stay
+  upright. Native descent timing releases both legs before contact; independent
+  squash/stretch and the existing landing recovery are retained.
+- Checks: 7,200 exact paired A/D physics frames across twelve tuning scenarios,
+  including live edits; every started roll finishes forward and opens before
+  landing. Rubber, direct retarget, double jump, precision hops, landing/climb,
+  skating, C physics, runtime, strict types, build and release size pass
+  (803,516,367 bytes). No full-suite run.
+- Browser: the UI jump-strength change 14 → 18 raises D's paused apex from
+  2.849 m to 4.757 m; A at 18 also measures 4.757 m. Restored 14. Full-render
+  normal/native roll completion and double continuation reviewed; no console
+  warnings/errors. Normal 720p/2× restored, D in real-time live play. Added
+  Roll complete inspection pause. Evidence: external `d-ui-tuning-roll/`.
+  No integration or publication; level data and extracted assets unchanged.
+
+Details: [Jump motion study](JUMP_MOTION_STUDY.md).
+
+## D — continuous board carry, mounting and pickup
+
+- Completed 5 November 2026 NZDT, approximately two hours prompt-to-validated
+  playable (01:55–03:56 NZDT), including shared validation-capacity waits.
+  Those waits are not productive geometry-authoring time. Local A/B/C/D only.
+- Replaced the abrupt board handoff in D with visible back carry, cancellable
+  hand preparation during the existing hold, board placement, hop, foot catch
+  and initial pushes. Halting steps off, raises the deck into the hand and
+  returns it to carry. An interrupted pickup reverses from its displayed pose.
+  A spin is not needed to conceal the deck; its full geometry stays visible.
+- Added independently elastic chest/arms, real-heading turn lean and rear-foot
+  pushes during initial travel and acceleration. Existing jump/skate gestures,
+  all live UI tuning and movement physics are unchanged. The old skate contact
+  owner takes over for tricks, grabs, grinds and vert. Contact rest joints are
+  captured before the new boarding lean, preventing a later tail-grab offset.
+- Inspected pinned THUG walking/ground scripts and WalkComponent for reversible
+  transitions, preserved gait phase, speed scaling and board ownership. No
+  external code or assets copied. Research and Jak assets remain outside Git.
+- Validation: 6,360 exact paired movement frames across six scenarios in both
+  stances; visible deck every frame, locked hand error under 1 mm, transfer soles
+  under 4.1 mm, push sole under 1 mm. Reversal/settle checks at 30/60/120 Hz.
+  D ollie parity (1,344 frames), complete skate contacts in D and A (11,246 poses
+  each), live UI tuning (7,200), runtime, elasticity, strict review types, build
+  and release size pass (803,531,608 bytes). No full-suite run.
+- Full-render normal/native review covers preparation, placement, hop, push,
+  pickup, cancellation, early ollie and remount, with both stances and multiple
+  views. Long inspector takes now have sufficient floor and an off-path gate.
+  A/B/C/D switching preserves position/velocity; console is clean. Restored
+  observed 720p/1× rendering and hidden debug menus; D left in live play.
+- Updated worktree playtest: `http://127.0.0.1:5189/jump-review.html?playtest&level=codex-lab&nocrt`.
+  Existing port 5188 is preserved. Evidence: external `skate-travel/` directory.
+  No level-pack changes, integration or publication.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+
+## D — board swap correction and cancellable mount load (local checkpoint)
+
+- 5 November 2026 NZDT. The user rejected the earlier carry/grab and kick-push
+  quality; its recorded technical checks do not establish visual acceptance.
+  Removed carried-board/hand-fetch routes and then removed kick-pushing entirely.
+  The existing current-character smear briefly covers committed board swaps.
+- Connected the previously unused preparation meter to visible torso/arm load
+  and a lower pelvis, preserving the current stride's two foot targets. It
+  follows live hold tuning. Releasing direction unwinds over 0.18 s; re-pressing
+  continues from the current pose. Release-to-jump remains authoritative.
+  Retained low balance arms, turn lean and the deeper two-foot skate charge.
+- Local playable correction took about 54 minutes from the initial rejection
+  (09:22–10:16 NZDT), including substantial shared-capacity waiting; the later
+  kick-removal/mount-load request was playable in about six minutes. Idle
+  resource waits are not productive authoring time.
+- Lightweight checks: five TS modules transpile, modified scripts parse,
+  whitespace check passes, and 420 pure preparation/cancel samples pass at
+  30/60/120 fps. Lite browser: load/cancel hidden-board behavior, both stances,
+  lower charge and measured sole retention reviewed. New evidence is external
+  `skate-correction/`; previous `skate-travel/` proof belongs to the rejected work.
+- **Validation incomplete:** required native movement/contact/ollie checks,
+  production build and normal/native full-render review remain pending. The
+  shared helper returned 75 again at 10:20 NZDT; no further polling or heavy job
+  was started. This checkpoint is not marked validated or READY.
+- All work remains local at port 5189. The user explicitly reaffirmed that this
+  entire exploration stays local until they are extremely satisfied with its
+  quality. No integration, push or publication is authorized or attempted.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+## D — deeper rubbery mount (local authoring checkpoint)
+
+- 5 November 2026 NZDT, approximately 19 minutes prompt-to-local checkpoint
+  (10:41–11:00 NZDT), including shared validation-capacity waiting. D only;
+  live UI tuning, hold-to-skate/release-to-jump and A/B/C are unchanged.
+- The real hold meter loads earlier and converges on a much deeper supported
+  crouch. Torso and arm segments compress independently; planted soles remain
+  fixed, and lifted stride feet gather beneath the hips within their reach.
+  Committing produces a 0.40 m visual hop with exposed upward stretch and a
+  finite soft catch. Mount smear now ends after 0.10 s so it does not hide that
+  spring. Cancellation retains incoming compression speed and unwinds over
+  0.32 s; re-pressing continues from the current pose. No physical retuning.
+- The first 7,420-frame paired native check exposed an overfolded running leg.
+  Corrected the support height, lifted-foot gather and affine reach constraint.
+  Lite review of the corrected standing load retains soles within 0.8 mm;
+  14 unwind frames retain intended soles within 1.33 mm. Cancellation reaches
+  zero with the board hidden. Final spring and load captures are in external
+  `skate-mount-rubber/`; the console has no new warnings/errors.
+- Five modified TS modules transpile, test syntax and whitespace pass, and 726
+  pure envelope samples pass across three hold times and 30/60/120 fps.
+  **Validation incomplete:** the expanded 8,480-frame travel check, focused
+  contact/ollie checks, build and normal/native full-render review need a shared
+  slot. The helper returned 75 at 10:59 NZDT with both slots reserved. No heavy
+  job remains running. This checkpoint is WORKING, not READY or user accepted.
+- D is left in live play at local port 5189. Kick-push and carried-board grabs
+  remain removed. Nothing was integrated, pushed or published.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+## D — visible mount and dismount, without the spin cover (local)
+
+- 5 November 2026 NZDT, approximately 47 minutes prompt-to-validated playable
+  (15:52–16:39 NZDT). This supersedes the earlier spin-covered swaps. D only;
+  A/B/C, live UI tuning and hold-to-skate/release-to-jump remain unchanged.
+- Removed the equipment-triggered spin route. A short hand draw leads into a
+  deep supported load. Placement drops beside the shoes before the board
+  moves under a 0.30 m hop; staggered feet catch and settle in 0.64 s. Dismount
+  steps aside, tips the deck with the trailing shoe, catches it and stows it
+  in 0.86 s. No persistent back carry or kick-push. Reversal preserves the
+  displayed hand/deck pose; actual ollies and tricks interrupt immediately.
+- Independent editable segment compression/rebound and the 0.32 s cancellable
+  unwind remain. Lifted stride feet gather within measured reach. Native turn
+  changes ease through the equipment transition; physics never reads the pose.
+- Final checks pass: 8,480 exact paired travel frames, 1,344 paired D ollie
+  frames, 11,246 D contact poses, production build/type-check, release size
+  (803,535,769 bytes) and whitespace. Transfer soles stay within 3.05 mm;
+  full grips within 1 mm. No level changes or unrelated/full-suite audits.
+- Lite and full-render normal/native review covers load, placement, hop,
+  catch, both stances, step-off, pickup, stow and cancellation. Fourteen native
+  unwind frames have sole errors below 1.72 mm; final stow hides the deck.
+  No console warnings/errors. Restored 720p/1×, hidden debug panels, and D live
+  play at local port 5189. Evidence is external `skate-contact-mount/`.
+- This is ready for local user review, not user acceptance. Nothing is
+  integrated, pushed or published; the publication hold remains explicit.
+
+Details: [Board travel study](SKATE_TRAVEL_STUDY.md).
+
+## D — rollback before the 3:58am board update (local)
+
+- 5 November 2026 NZDT, approximately six minutes request-to-restored and
+  checked playtest (16:50–16:56 NZDT). The user rejected the mount experiments
+  for triggering reliability and visual quality and requested the version
+  before the 3:58am update.
+- Restored every tracked runtime, asset and review/test tool exactly to
+  `d70a6f6d743cfd1b7b28906a85fb3a09037655d0` (12:45am NZDT), the parent of
+  the first board-handling commit at 3:56am. Removed all later carry, pickup,
+  placement, kick-push, swap-smear and mount-load experiments. Earlier D
+  jump/roll, run, idle, ledge and live-tuning changes remain.
+- The only differences from that target are audit documentation. Prior commits
+  and this iteration log remain intact; technical checks from the rejected
+  experiments do not establish user acceptance. No new animation changes.
+- Exact source comparison, production build/type-check, release-size check
+  (803,516,367 bytes) and whitespace pass. Reused the restored revision's
+  native-regression evidence rather than rerunning unchanged suites. Lite
+  and full/native browser smoke exercise the original hold-to-skate gesture;
+  no console warnings/errors. Restored normal 720p/1× and hidden debug panels.
+- D is left in live play at local port 5189. Evidence: external `skate-rollback/`.
+  The validation slot was released. Nothing was integrated, pushed or published.
+
+## Skate source motions — separate local playable demo
+
+- 6 November 2026 NZDT, approximately 45 minutes handoff-to-playable validation
+  (00:39–01:24 NZDT). The user approved the separate Skate reference lab and
+  explicitly handed its motions to Character Animation for gameplay integration.
+  Starts from rollback `48e60aa4`; rejected procedural mount experiments remain
+  removed. Nothing is integrated, pushed or published.
+- Added an opt-in local plaza at port 5198 using the actual Player controller,
+  the earlier D on-foot document, and approved extracted Skate mount/dismount,
+  push, stance, crouch/air and landing samples. Original D skating remains
+  selectable. Native input, physics and tuning are unchanged.
+- The final presentation callback shares the existing restore boundary. Finite
+  source clips crossfade from animation-space poses without double-applying
+  Character Lab proportions. A started push completes before cruising. Actual
+  support loss and landing own air/catch. Contacts fit Bone Man's proportions;
+  source limb extension and shared independent torso elasticity remain.
+  The board is only carried during finite equipment handling, with no spin
+  cover. Unsupported actions retain their ordinary pose owners.
+- Focused checks pass: 1,980 paired native-controller frames covering complete
+  sequences, early releases and remounts; exact position, speed, velocity,
+  grounded and movement-state agreement. Finite pose samples and transition
+  bounds pass. Overlay snapshot/preview/replacement/exception checks pass.
+  `npm run check:levels`, production build/type-check, isolated local build and
+  whitespace checks pass. Normal dist excludes this entry and private motion
+  JSON. No `check:all` or publication checks were run.
+- Browser review: normal and MAX/native, standing/running mount, complete push,
+  release during mount, air/landing, pickup, three styles and original-motion
+  comparison. Three consecutive real keyboard holds mounted successfully;
+  short taps retain the on-foot jump. The ordinary finish gate also triggers.
+  Console is clear. Evidence is external `skate-playable/`.
+- This is a first local gameplay assembly of the approved raw clips, ready for
+  user visual review, not acceptance of every transition or Skate's original
+  animation graph. Data and demo remain private/local.
+
+Details: [Skate playable study](SKATE_PLAYTEST.md).
+
+## Skate board scribbles and local lab directory
+
+- 6 November 2026 NZDT: about 12 minutes prompt-to-first-playable effect;
+  about 24 minutes including the wider-apex / thinner-stroke / 60 fps follow-ups
+  and focused validation. The accepted source-motion animations and native
+  movement remain unchanged. This entire increment is local only.
+- Added twelve independent transparent PNG scribble drawings. Four rapid
+  full-size redraws have a slim deck silhouette, followed by progressively
+  smaller drawings with consistent pen weight. The fixed-size billboard swaps
+  atlas cells at 60 fps for 0.2 seconds; no shrinking-image tween or alpha fade.
+  Appearance reveals under the ink, and disappearance keeps the last prop
+  attachment until the small marks clear. Added an effect comparison selector,
+  appearance/disappearance pause points and frame stepping.
+- Port 5198 had been reused by another checkout and was silently serving the
+  main game for a missing playtest URL. This study now owns loopback port 5199.
+  `/labs/` works on the same server, uses its current origin, and includes the
+  playable study, the approved 218-clip source viewer, Jump A/B/C/D, and four
+  previously omitted art reviews. The source viewer's HTML/main/style are
+  adopted from the approved Skate lab; private motion data remains external.
+- Validation: 1,980 controller-comparison frames, interruptions/remounts, all
+  twelve distinct UV frames, constant sprite dimensions, finite termination,
+  and one burst per equipment transition pass. The directory audit passes for
+  139 browser pages and 73 embedded tools. Production type-check/build and the
+  isolated local build pass; production output excludes both Skate entries,
+  the scribble PNG and private motion JSON. No level data changed.
+- Browser evidence at normal and MAX/native: real keyboard mount, complete
+  mount/push/jump/land/dismount, smaller drawings and final hidden board,
+  original-fade comparison, working catalogue links and loaded source library.
+  Evidence is external `skate-scribble/`; asset/prompt provenance is in
+  `src/skateReferenceLab/assets/README.md`. No publication is authorized.
+
+## Skate scribbles — 32 source frames
+
+- 6 November 2026 NZDT: about five minutes prompt-to-playable, nine minutes
+  including validation. Expanded the effect from twelve to thirty-two source
+  drawings at the retained 60 fps: eight full-size redraws followed by twenty-four
+  smaller drawings, for a 0.533-second burst. Thin pen strokes and deck proportions
+  remain the target; no sprite shrinking or controller changes.
+- Generated a new transparent PNG atlas and measured fixed 384 × 128 pixel
+  windows/anchors for each drawing. All 32 source windows contain ink and have
+  distinct pixel hashes; no duplicated or interpolated frames. The same sprite
+  dimensions and pixel density apply throughout each burst.
+- Focused motion checks pass, including all 32 UV frames, finite disappearance,
+  constant sprite dimensions and 1,980 exact native-controller comparisons.
+  Production type-check/build and isolated local build pass. Browser review at
+  normal and MAX/native checks early/middle/final appearance frames, the full
+  dismount sequence and final hidden board. Console clear.
+- Evidence: external `skate-scribble-32/`, including atlas bounds/hashes, browser
+  state captures and build logs. The existing port 5199 playtest and `/labs`
+  links remain current. Local only; no publication is authorized.
+
+## Skate scribbles — pre-scribble comparison and explicit equipment cues
+
+- 6 November 2026 NZDT: about 18 minutes prompt-to-playable including focused
+  validation (14:18–14:36). Added A · Pre-scribble / B · Scribble comparison,
+  with 1 / 2 shortcuts that also switch at the same paused animation frame.
+  A restores the accepted `22cebbe2` board fades; both retain its source poses,
+  clip clocks, transitions, movement and native controls.
+- Replaced visibility-change detection with explicit normal mount/dismount
+  cues. Bails, death, jumps and other pose owners cancel active ink without
+  starting disappearance bursts. Only a naturally completed dismount keeps
+  its small-drawing tail on foot. Paused A/B preserves the captured attachment
+  and fixed sprite size. Added a local B-key native bail test action.
+- Validation: 660 frames compared against the actual pre-scribble source,
+  including every pose-node transform, source phase/time, controller values
+  and A's board visibility/opacity. Four paused switches, native bails during
+  mount/ride/dismount and recovery, 60 unrelated visibility changes, eight
+  other pose owners, death and reset pass. Existing 1,980 paired-controller
+  frames and 32-frame/fixed-quad checks also pass.
+- Production type-check/build, isolated local build and whitespace checks pass.
+  Production output excludes the Skate entries, PNG and private JSON. Browser
+  review at normal and MAX/native confirms paused keyboard/selector comparison,
+  immediate bail cancellation, one normal dismount burst and finite cleanup.
+  Console clear; evidence is external `skate-scribble-ab/`.
+- Existing local playtest remains at port 5199. No shared movement, level data,
+  source-motion retargeting or PNG art changed. Nothing pushed or published.
+
+## Skate scribbles — finish at the dismount hand catch
+
+- 7 November 2026 NZDT: about seven minutes prompt-to-playable including focused
+  validation. Moved the dismount burst from the clip's final fade to its pickup,
+  ending at the first stable hand catch: standing source frame 26 (0.433 s),
+  running frame 56 (0.933 s). Source board/hand samples and browser frame review
+  establish the cue; the remaining clip is the unchanged carry/settle.
+- Standing ink runs 0.033–0.433 s with the same 32 drawings at 80 fps; running
+  runs 0.400–0.933 s at the retained 60 fps. Ink follows the actual pickup path,
+  with fixed sprite dimensions. The board stays hidden after the burst until
+  the existing dismount ends. Mounts, A's pre-scribble presentation, source
+  animation timing, retargeting, controller and tuning remain unchanged.
+- Focused checks pass: 660 exact pose/controller comparisons against accepted
+  `22cebbe2`; both complete dismount clips clear ink at the expected catch and
+  never revive the board; paused A/B at and after the catch; five native bail/
+  recovery cases including during ink and after it; existing ownership guards.
+  The 1,980-frame motion regression, 32 unique atlas cells at both playback
+  rates, fixed dimensions and source-prop tracking checks pass.
+- Production type-check/build and local study build pass. Real browser review
+  checks the pickup, last small drawings, exact catch, paused A/B and complete
+  settle at normal and MAX/native resolution; no console warnings/errors.
+  Evidence is external `skate-scribble-catch/`. Port 5199 remains local only;
+  no integration, push or publication is authorized.
+
+## Skate scribbles — foreground occlusion and feet-clear start
+
+- 7 November 2026 NZDT: approximately ten minutes prompt-to-playable including
+  focused validation. Enabled normal scene depth testing for the board ink,
+  retaining its no-depth-write material. Foreground hands, body, feet and world
+  geometry occlude the scribble, rather than being covered by its late draw.
+- Moved standing dismount ink to source frame 24 / 0.400 s, after both feet
+  clear the deck. Running already uses that start. The original board stays
+  visible and no ink plays through frame 23. Both retain the prior catch ends:
+  standing frame 26, running frame 56. Standing therefore has a brief two-tick
+  flash, sampling the existing atlas, rather than masking foot contact early.
+  No animation, controller, tuning, mount timing or PNG changes.
+- Validation: source and retargeted-sole observations plus side-view foot/catch
+  review; 660 exact historical-source pose/controller comparisons; both full
+  dismount clips' pre-release visibility, first/last ink and catch cleanup;
+  paused A/B; six native bail/recovery cases; existing owner guards; 1,980
+  controller frames and fixed-quad/atlas sequence checks pass.
+- A real browser GPU pixel check preserves all 21,248 foreground pixels at
+  0.01, 0.2 and 1 metre in front of the ink while covering 11,418 background
+  pixels. Moving the foreground object behind ink, or disabling depth testing
+  as a negative control, produces the expected 4,752 covered pixels. The test
+  fixture is evidence-only, outside tracked/public source.
+- Production type-check/build, isolated local build and whitespace pass.
+  Normal and MAX/native browser views show the foreground glove/body intact,
+  visible board before foot clearance and clean catch/settle afterwards.
+  Console clear. Evidence: external `skate-scribble-depth/`. Local port 5199
+  remains available; nothing integrated, pushed or published.
+
+
+## Skate scribbles — restore real-time visibility
+
+- 7 November 2026 NZDT: approximately fifteen minutes prompt-to-playable with
+  focused validation. The previous depth change let the board cover the mount
+  ink, while a two-tick standing dismount was too short to read. Mount now hides
+  the prop for all eight full-size drawings before revealing it (0.133 s).
+- Standing dismount retains its feet-clear start at source frame 24 / 0.400 s
+  and plays for 0.200 s, ending at frame 36. The user selected a small-drawing
+  tail after the frame-26 catch instead of slowing the pickup. Running retains
+  its frame 24–56 timing. Scene depth testing remains enabled. Source motions,
+  contacts, movement, tuning, PNG frames and A comparison are unchanged.
+- Both existing focused suites pass: 660 exact pose/clock/controller comparisons
+  against accepted pre-scribble source; both complete dismounts and their new
+  deadlines; paused A/B, six bail/recovery cases, arbitrary visibility and
+  other-owner guards; 1,980 paired native controller frames, atlas/fixed-size
+  and source-prop tracking checks.
+- Recorded the actual unpaused control demo at full/MAX native resolution.
+  The captured frames show readable mounting and standing dismounting bursts,
+  with foreground body/gloves intact. Also checked a native keyboard standing
+  mount, normal rendering, paused A/B and immediate bail cancellation. Console
+  clear. Video, frame sheet, screenshots and logs: external
+  `skate-scribble-visible/`. Static paused views alone were insufficient to
+  validate the prior visibility change.
+- Production type-check/build, isolated local build and whitespace pass. The
+  production output excludes the study entry, PNG and private motion JSON.
+  Recording/review fixtures were evidence-only and removed from local build
+  output by the clean build. Port 5199 remains live; no integration, push or
+  publication. Temporary QA tab closed and validation leases released.
+
+
+## Skate scribbles — clear the floor without covering the feet
+
+- 7 November 2026 NZDT: approximately twenty-one minutes prompt-to-playable,
+  including focused render validation. The camera-facing card intersected the
+  floor when centred on the low deck. Its lower portion now projects onto the
+  player's actual support plane; the above-ground portion retains prop depth.
+  Screen outline, fixed size, atlas UVs, pen weight and source attachment stay.
+- Split the card exactly at that surface into at most four triangles, with
+  vertex depth and 0.5 mm clearance. This preserves multisample coverage. The
+  initial fragment-depth approach left a faint antialiased edge and was replaced
+  before handoff. Foreground body/feet/world objects keep normal occlusion.
+  No animation timing, source poses, movement/tuning, PNG or A/B changes.
+- Focused native checks pass: all 256 frame/slope/height cases preserve the
+  whole drawing, UVs and size, with no triangle crossing the depth boundary;
+  the existing 1,980-frame controller/sequence/ownership checks also pass.
+  A four-sample GPU comparison passes 48 frame/view/surface combinations with
+  zero ink lost when adding the floor and zero overwritten foreground pixels.
+  The uncorrected negative control loses up to 1,309 ink pixels.
+- Actual playtest review covers running and native-keyboard standing mounts,
+  pickup, normal and MAX/native presentation, and oblique/behind views. Both
+  effects retain their complete outline at the floor; soles/gloves remain in
+  front. No game warnings/errors. Earlier probe failures remain in the evidence
+  log; final GPU results are in `gpu-msaa-final.json`.
+- Production type-check/build, isolated local build and whitespace pass.
+  Production output excludes this study/private data.
+  Evidence: external `skate-scribble-floor/`; final character screenshots and
+  GPU results, with interim fragment-depth recordings labelled separately.
+  Local server/user tab retained. No integration, push or publication.
+
+
+## Skate scribbles — one-frame apex and reversible mount hold
+
+- 7 November 2026 NZDT: approximately twenty-two minutes prompt-to-validated
+  playable. The full-board drawing now lasts one 60 Hz animation tick. Growth
+  and clearing use 18 separately drawn smaller PNG frames at fixed dimensions
+  and stroke weight. The other large atlas drawings are no longer held over
+  the deck. The existing 32-drawing source PNG is unchanged.
+- Mount growth observes native X / Space + direction anticipation and the UI
+  skate-hold threshold. Cancelling reverses from the current drawing, with a
+  finite 0.18-second full-range unwind; re-holding grows from there. The native
+  controller still owns commitment and jump release. Cancelling retains the
+  last world/ground attachment, so the remaining ink does not follow a released
+  on-foot jump. An unrendered preparation cannot first appear during unwind.
+- A committed hold has one apex tick and 18 clearing ticks. Both dismounts
+  retain their feet-clear frame-24 start. Standing grows for two ticks, vanishes
+  at the frame-26 catch, and clears at frame 36; running grows for eight ticks,
+  vanishes at frame 32, and clears at its frame-56 catch. Source animations,
+  their clocks, physics, tuning, floor/foreground depth and A remain unchanged.
+- Added Hold / cancel input demo and Mount hold / Cancel-unwind pause points.
+  Native short release-to-jump, sustained mount and bail checked in the browser;
+  normal/MAX rendering, one-frame stepping, A/B and local /labs link verified.
+  Recorded unpaused native-resolution growth, reverse/re-hold and dismount,
+  and reviewed actual captured frames. Game console has no warnings/errors.
+- Focused checks pass: 860 pose/clock/controller frames against the accepted
+  pre-scribble implementation; both pickup deadlines and one apex each;
+  direction cancellation, re-hold, short release, stationary charge exclusion,
+  paused A/B, preparation bail and existing six bail/recovery/owner checks.
+  The 1,980-frame movement replay, fixed-size sequence, frozen cancellation
+  attachment, reattachment and 256 floor geometry cases also pass.
+- Production type-check/build and isolated local build pass. No study entries,
+  private motion JSON or scribble atlas in production output. Evidence remains
+  outside the checkout in `skate-scribble-charge/`: recordings, contact sheet,
+  screenshots, browser console, build log and validation summary. Temporary QA
+  tab/served recording fixtures removed, heavy leases released, user tab and
+  port 5199 retained. Local-only checkpoint; no integration, push or publishing.
+
+
+## Skate equipment — keep the deck above the floor
+
+- 7 November 2026 NZDT: approximately eighteen minutes prompt-to-validated
+  playable. Standing/running placement and pickup now constrain the real deck,
+  wheels and trucks against the current support plane after pose crossfades.
+  The board keeps its source angle and dimensions; the minimum normal-direction
+  lift provides 2 mm clearance, with a 12 mm smooth contact region.
+- Existing hand and deck-foot contacts follow that lift through the shared
+  two-bone IK solver, preserving wrist/ankle orientation. The torso and other
+  planted foot remain authored. The source clock, controller/tuning, deformation
+  profiles and one-frame/reversible scribble timing are unchanged. A and B share
+  the correction so their comparison continues to isolate the ink effect.
+- Ink now uses a late cutout pass without blending or depth writes. The plaza
+  floor grid no longer writes depth, allowing ink over the floor/grid while
+  foreground limbs/geometry still occlude it. The existing support projection
+  shader, PNG dimensions and stroke weight remain intact.
+- Focused checks: 1,620 120 Hz samples across all four clips and three flat/
+  raised/sloped support frames clear the floor by at least 2 mm; original
+  penetration reached 0.789 m. Independent world-vertex checks confirm actual
+  geometry, unchanged board angle/scale and head/gameplay position, late mesh
+  adoption, and finite contact motion. Native replay adds 202 actual equipment
+  and crossfade frames within the existing 1,980 movement comparisons.
+- The 860-frame ownership replay retains exact A/B transforms, source clocks,
+  physics and board fades, with only the authorized ground/contact transforms
+  excluded from the historical-source comparison. Cancellation/re-hold, both
+  dismount cues, bails and all existing ownership checks pass. A 48-case
+  four-sample GPU test with the floor grid reports zero lost ink pixels and
+  zero overwritten foreground pixels; the uncorrected negative control loses
+  up to 1,309 pixels.
+- Real browser review at normal/MAX includes side-view standing placement and
+  pickup with ink disabled, running placement and floor overlay. Recorded and
+  inspected the actual unpaused standing sequence. No console warnings/errors.
+  Production type-check/build, isolated local build and whitespace pass; no
+  local study/private motion assets enter production output.
+- Evidence: external `skate-board-ground/` contains native/build logs, GPU
+  results, screenshots, real-time video and captured frame review. Temporary
+  QA tab and served fixtures removed; heavy leases released. User tab/server
+  remain on port 5199. Local-only commit; no integration, push or publication.
+
+## 2026-11-08 — Skate motions in D, continuous transitions and render-floor support
+
+- Brief: integrate the accepted Skate animations/scribbles into A/B/C/D, then
+  polish smoothness and fluidity. Keep all work local, retain the native hold/
+  release gesture, live UI tuning and existing A/B/C and D foot/ledge motion.
+- Elapsed prompt-to-verified-playable: approximately 38 minutes, including the
+  full renderer, recorded-motion review, native regression checks and builds.
+- D now owns the opt-in source overlay. Options separately compare previous D
+  skating and pre-scribble fades. Rejoining on a moving board does not replay
+  equipment cues; paused switches and respawns remove the old pose completely.
+  Native ledges, grinds, bails and other special poses regain control immediately.
+- Clip handoffs continue the outgoing joint velocity for a finite decaying
+  interval instead of freezing it. Source clip durations and ink cues stay
+  unchanged; independent segment elasticity and native movement remain intact.
+- Recheck actual board/contact geometry after render interpolation. Fixed clear
+  poses could otherwise put a tilted tip 3.48 mm through the floor between ticks;
+  final displayed samples now retain at least 2 mm clearance. Existing floor-
+  overlaid, foreground-occluded ink is used by the full game renderer.
+- Watch motion includes Skate flow, Mount cancel, equipment pause points, single
+  stepping and normal/MAX. Its floor/gate now accommodate a complete skate run.
+  1–4 comparisons consume the game's conflicting debug-level hotkeys. `/labs`
+  lists the integration in the skate search. An isolated Vite cache prevents
+  other worktrees/checks invalidating the local server's dependency URLs.
+- Checks: 1,091 actual-D replay frames with exact movement/native-foot comparison,
+  six variant switches, paused restoration, respawn/owner guards, source/ink
+  timing, fixed/interpolated ground support. Aggregate head discontinuity at
+  moving handoffs drops 83% in that replay. The 860-frame historical scribble
+  ownership check and 1,980-frame playable regression pass. Production build
+  and both-entry local build pass; production excludes private studies/data.
+- Browser: actual port-5199 A/B/C/D lite/full, normal/MAX, mount/pickup clearance,
+  single apex followed by smaller drawings, cancellation without committed ink,
+  ledge climb (zero grip error), live keyboard mount and A/B/C/D switching with
+  zero position/velocity changes. Recorded/reviewed the unpaused full-render
+  sequence. Console clean. Evidence in external `jump-skate-integration/`.
+- Local-only increment. No push, publication, shared level pack, tuning, main
+  runtime or extracted-data changes. Earlier unpublished increments preserved.

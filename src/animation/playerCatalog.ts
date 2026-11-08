@@ -24,6 +24,7 @@ import { QUATERNIUS_CROUCH_EXIT_DURATION, QUATERNIUS_CROUCH_EXIT_ROOT_KEYS,
   QUATERNIUS_CROUCH_EXIT_ROTATION_KEYS, QUATERNIUS_CROUCH_EXIT_SOURCE } from './quaterniusCrouchExit.generated';
 import { createAnimationSuiteDocument, createProceduralDriver } from './document';
 import { withCharacterElasticity } from './elasticity';
+import { JUMP_REFERENCE_CLIP_IDS, withJumpReferenceMotion } from './jumpReferenceMotion';
 import { PLAYER_PROCEDURAL_RIG_ID } from './rigBinding';
 import {
   FORWARD_ROLL_SQUASH_MULTIPLIER,
@@ -150,7 +151,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 37;
+export const PLAYER_STARTER_CATALOG_VERSION = 38;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -1536,6 +1537,12 @@ export function createLegacyUnityLowPoseClips(rig: string | RigDefinition): Anim
 export function createPlayerStarterClips(
   rig: string | RigDefinition = PLAYER_PROCEDURAL_RIG_ID,
 ): AnimationClip[] {
+  return buildPlayerStarterClips(rig, true);
+}
+
+// Retain the pre-study factories for exact saved-starter matching. A user's
+// changed keys, speed, contacts or drivers must never be replaced by this update.
+function buildPlayerStarterClips(rig: string | RigDefinition, referenceMotion: boolean): AnimationClip[] {
   const rigId = typeof rig === 'string' ? rig : rig.id;
   const includeTorsoRoot = typeof rig === 'string' ||
     rig.joints.some((joint) => joint.id === 'torsoRoot');
@@ -1577,6 +1584,7 @@ export function createPlayerStarterClips(
     buildDeath(rigId, includeTorsoRoot),
     placeholder('player.spin', 'Spin', 0.8, rigId),
   ].map(clip=>{
+    if(referenceMotion)clip=withJumpReferenceMotion(clip);
     // Starter poses may include optional fingers/tail. Keep them on the live
     // rider, but only author supported joints on smaller/aliased rigs. Saved
     // user clips are not filtered or rewritten here.
@@ -1867,6 +1875,22 @@ export function reconcilePlayerStarterAnimationSuite(
       clips=clips.map(clip=>clip===old?{...old,
         tracks:[...old.tracks.filter(track=>track.kind!=='quaternion'||!legTargets.has(canonical(track.target))),...legTracks],
         metadata:{...old.metadata,launchPedalRevision:1}}:clip);
+    }
+  }
+
+  if (previousVersion < 38) {
+    const legacy = buildPlayerStarterClips(rig, false);
+    const signature = (clip: AnimationClip) => {
+      const { starterCatalogVersion: _version, ...metadata } = clip.metadata ?? {};
+      return canonicalLegacyStarterClipSignature({ ...clip, metadata });
+    };
+    for (const id of JUMP_REFERENCE_CLIP_IDS) {
+      const old = clips.find(clip => clip.id === id);
+      const original = legacy.find(clip => clip.id === id)!;
+      if (old && signature(old) === signature(original)) {
+        const replacement = starters.find(clip => clip.id === id)!;
+        clips = clips.map(clip => clip === old ? replacement : clip);
+      }
     }
   }
 

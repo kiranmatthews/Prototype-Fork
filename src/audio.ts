@@ -113,6 +113,11 @@ function requestAmbientSession(): void {
 
 class SfxEngine {
   volume = 0.5; // master
+  jumpAudioSource = 'Project sounds';
+  readonly jumpAudioPlays = { jump: 0, doubleJump: 0 };
+  private jumpReferences: { jump: string[]; doubleJump: string[] } | null = null;
+  private jumpReferenceLoad: Promise<void> | null = null;
+  private previousJumpReference = new Map<string, number>();
 
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
@@ -137,6 +142,9 @@ class SfxEngine {
     // the context — instead of only starting the async load on the first gesture
     // (which left the opening seconds silent). unlock() then just resumes.
     this.preparation = this.init();
+    if (import.meta.env?.DEV && import.meta.env.VITE_JAK_REFERENCE_AUDIO) {
+      void this.preparation.then(() => this.loadLocalJumpReferences());
+    }
     const unlock = (): void => this.unlock();
     // keydown/pointer/touch are real user gestures; gamepadconnected + the
     // per-frame poll (see main.ts) cover controller-only players, who fire none
@@ -287,6 +295,64 @@ class SfxEngine {
     } catch {
       /* ignore */
     }
+  }
+
+  /** Semantic launch cue; ordinary footsteps keep their original sound. */
+  playJump(second = false): void {
+    const key = second ? 'doubleJump' : 'jump';
+    const choices = this.jumpReferences?.[key];
+    let stop: (() => void) | undefined;
+    if (choices?.length) {
+      let index = Math.floor(Math.random() * choices.length);
+      if (index === this.previousJumpReference.get(key)) index = (index + 1) % choices.length;
+      this.previousJumpReference.set(key, index);
+      stop = this.play(choices[index], second ? .6 : .55, 1, 0);
+    } else {
+      stop = this.play('footstep2', second ? .6 : .55, second ? 1.8 : 1.5);
+    }
+    if (stop) this.jumpAudioPlays[key]++;
+  }
+
+  private async loadLocalJumpReferences(): Promise<void> {
+    if (!import.meta.env?.DEV) return;
+    await this.loadJumpReferenceAudio('/__jak-reference-audio/');
+  }
+
+  /** The comparison page opts in; ordinary gameplay keeps its sound bank. */
+  async loadJumpReferenceAudio(base: string): Promise<void> {
+    await this.preparation;
+    if (this.jumpReferences || !this.ctx) return;
+    this.jumpReferenceLoad ??= this.decodeJumpReferenceAudio(base).finally(() => {
+      this.jumpReferenceLoad = null;
+    });
+    await this.jumpReferenceLoad;
+  }
+
+  private async decodeJumpReferenceAudio(base: string): Promise<void> {
+    if (!this.ctx) return;
+    try {
+      const response = await fetch(base + 'manifest.json');
+      if (!response.ok) return;
+      const manifest = await response.json();
+      const references = { jump: [] as string[], doubleJump: [] as string[] };
+      // Install only after all six buffers decode, keeping fallback atomic.
+      const decoded = new Map<string, AudioBuffer>();
+      for (const key of ['jump', 'doubleJump'] as const) {
+        const files: unknown = manifest[key];
+        if (!Array.isArray(files) || files.length !== 3) return;
+        for (const file of files) {
+          if (typeof file !== 'string' || !/^jump(?:-double)?-[1-3]\.wav$/.test(file)) return;
+          const sound = await fetch(base + file);
+          if (!sound.ok) return;
+          const name = 'local-reference:' + file;
+          decoded.set(name, await this.ctx.decodeAudioData(await sound.arrayBuffer()));
+          references[key].push(name);
+        }
+      }
+      for (const [name, buffer] of decoded) this.buffers.set(name, buffer);
+      this.jumpReferences = references;
+      this.jumpAudioSource = base.startsWith('/__') ? 'Jak placeholders · local' : 'Jak placeholders';
+    } catch { /* The regular project sounds remain available. */ }
   }
 
   /** Finite ambience shares loop cancellation on pause, navigation and hide. */

@@ -1,4 +1,6 @@
 import type { Player, PlayerAnimationClipHint } from './player';
+import { MathUtils } from 'three';
+import { JakAirPoseSpring } from './jakAirMotion';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
@@ -156,7 +158,7 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
   'player.fall',
 ]);
 
-function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
+function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpReference = false): number {
   if (!from) return 0;
   if (isLaunchClip(to)) return to === LAUNCH_CLIPS.rise || to === LAUNCH_CLIPS.boardRise ? .045 : .14;
   if (isLaunchClip(from)) return to === LAND_CLIP_ID ? LAND_IMPACT_CROSSFADE_SECONDS : .12;
@@ -175,6 +177,9 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
     return LAND_IMPACT_CROSSFADE_SECONDS;
   }
+  // Capture the interrupted airborne pose before the second jump pop.
+  // Only presentation blends; the controller's second impulse is immediate.
+  if (jumpReference && to === 'player.double-jump' && AIRBORNE_CLIP_IDS.has(from)) return .05;
   if ((to === 'player.jump' || to === 'player.fall') &&
       (AIRBORNE_CLIP_IDS.has(from) || from === 'player.idle' || from === 'player.run' || from === LAND_CLIP_ID)) {
     return 0.1;
@@ -280,6 +285,9 @@ export class CharacterAnimationRuntime {
   private pendingRunHandoffOffset: number | null = null;
   private pendingIdleHandoffOffset: number | null = null;
   private recoveryIdle: { source: ClipId; offset: number; clock: number } | null = null;
+  private directRecovery: {
+    source: ClipId; runOffset: number; idleOffset: number; runClock: number; idleClock: number;
+  } | null = null;
   private recoveryIdleWeight = 0;
   private recoveryIdleTimelineTime: number | null = null;
   private landingRunBlendProgress = 0;
@@ -300,6 +308,7 @@ export class CharacterAnimationRuntime {
   private runStopSettleElapsed = 0;
   private transient: RuntimeTransient | null = null;
   private lastSampledPose: PoseBuffer | null = null;
+  private readonly jakAirSpring = new JakAirPoseSpring();
   private transitionBlendWeight: number | null = null;
   private switchOutgoingPose: PoseBuffer | null = null;
   private bailOutgoingPose: PoseBuffer | null = null;
@@ -527,9 +536,17 @@ export class CharacterAnimationRuntime {
       }
       // Ice balance and gravity-slope gliding start on contact, without a dry
       // landing plant/recovery. Board contact retains its procedural spring.
-      if (justLanded && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && (intent.motion.inputs?.jakLedgeClimbRecovery ?? -1) < 0 && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
-        this.transient = this.makeTransient('landing', LAND_CLIP_ID);
+        const directLanding = this.findPlayableClip(LAND_CLIP_ID)?.metadata?.jakDirect;
+        const directMovingLanding = directLanding && moveIntent > .05 && (intent.motion.inputs?.footSpeed ?? 0) > 3;
+        const landing = directMovingLanding
+          ? (intent.motion.inputs?.jakImpact ?? 0) > 15 ? 'player.jak-run-land' : 'player.jak-run-land-weak'
+          : directLanding && intent.motion.inputs?.jakFlip ? 'player.jak-flip-land'
+          : directLanding && (intent.motion.inputs?.jakFrame ?? 40) < 38
+            ? (intent.motion.inputs?.jakFrame ?? 40) >= 35 ? 'player.jak-short-land' : 'player.jak-soft-land'
+            : LAND_CLIP_ID;
+        this.transient = this.makeTransient('landing', landing);
       } else if (this.transient?.kind === 'landing') {
         if (
           !grounded ||
@@ -562,6 +579,41 @@ export class CharacterAnimationRuntime {
 
     let requested: ClipId =
       this.manualClipId ?? this.transient?.clipId ?? hint;
+    // Local D supplies this complete source family. These presentation clocks
+    // never hold a movement state or consume jump/skate input.
+    let directTime: number | null = null;
+    if (this.manualClipId === null && this.findPlayableClip('player.hang')?.metadata?.jakLedge) {
+      const inputs = intent.motion.inputs ?? {};
+      if (hint === 'player.hang') {
+        const catchId = inputs.jakLedgeSide > 0 ? 'player.jak-ledge-left'
+          : inputs.jakLedgeSide < 0 ? 'player.jak-ledge-right' : 'player.jak-ledge-catch';
+        const catchDuration = this.findPlayableClip(catchId)!.duration;
+        const elapsed = inputs.jakLedgeSeconds ?? 0;
+        if(inputs.jakLedgeMoving) {requested='player.hang';directTime=0;}
+        else if (elapsed < catchDuration) {requested = catchId; directTime = elapsed;}
+        else {
+          const a = this.findPlayableClip('player.hang')!.duration;
+          const b = this.findPlayableClip('player.jak-hang-shift')!.duration;
+          const cycle = Math.min(elapsed-catchDuration,inputs.jakLedgeRestSeconds??0) % (a + b);
+          requested = cycle < a ? 'player.hang' : 'player.jak-hang-shift';
+          directTime = cycle < a ? cycle : cycle - a;
+        }
+      } else if ((inputs.jakLedgeClimbRecovery ?? -1) >= 0 &&
+          ['player.run','player.idle','player.jump','player.fall'].includes(hint)) {
+        // The feet have reached the deck and movement is already live. Keep
+        // the pull-up's final pose for its finite settle, without a fake jump
+        // and landing one-shot between the climb and the next running step.
+        requested = 'player.climb';
+        directTime = this.findPlayableClip(requested)!.duration;
+      } else if (hint === 'player.climb') {
+        directTime = intent.motion.actionProgress * this.findPlayableClip('player.climb')!.duration;
+      } else if ((hint === 'player.jump' || hint === 'player.fall') && inputs.jakLedgeRelease >= 0) {
+        requested = 'player.jak-ledge-off'; directTime = inputs.jakLedgeRelease;
+      } else if (hint === 'player.jump' && inputs.jakFlip && this.player.onFootJumpStudy?.flip) {
+        requested = inputs.jakFlipProgress < 1.14 ? 'player.jak-flip' : 'player.fall';
+        if (requested === 'player.jak-flip') directTime = Math.min(1, inputs.jakFlipProgress) * this.findPlayableClip(requested)!.duration;
+      }
+    }
     let clip = this.findPlayableClip(requested);
     // The pre-animation-suite skate mount/stance already eases skatePose,
     // sidePose and deckPose, solves conventional knees/ankles, and plants the
@@ -589,13 +641,20 @@ export class CharacterAnimationRuntime {
 
     const previousClipId = this.currentClipId;
     const switched = previousClipId !== clip.id || this.restartPending;
+    if (this.restartPending) this.jakAirSpring.reset();
     if (switched) {
       const idle = this.findPlayableClip('player.idle');
       const locomotionSwitch = this.manualClipId === null && !this.restartPending &&
         idle?.metadata?.locomotionTransition === LOCOMOTION_PHASE_MATCHED_IDLE &&
         ((clip.id === 'player.idle' && (previousClipId === 'player.run' || previousClipId === PLAYER_WALK_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID)) ||
-          (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)));
+          (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)) ||
+          (clip.metadata?.jakDirect && previousClipId === RUN_STOP_CLIP_ID && clip.id === 'player.run'));
       const previousClip = previousClipId ? this.findPlayableClip(previousClipId) : null;
+      const directDoubleSwitch = this.manualClipId === null && clip.metadata?.jakDirect &&
+        clip.id === 'player.double-jump' && previousClip?.metadata?.jakDirect;
+      // Upright hops need less rotation to unwind; finish that shorter blend
+      // before the second apex so its upward accent stays visible.
+      const directDoubleBlend = previousClipId === 'player.jak-flip' ? .18 : .10;
       // A steady outgoing loop keeps moving as it fades. If input reverses
       // during a fade, start from the last fully mixed pose instead: restarting
       // a raw source there would pop the entire skeleton back to that source.
@@ -603,20 +662,35 @@ export class CharacterAnimationRuntime {
         ? { clip: previousClip, playbackSeconds: this.playbackSeconds, offset: this.playbackOffset,
             rate: this.locomotionPlaybackScale(previousClip, this.motionContext), motion: this.motionContext }
         : null;
+      // Finish the interrupted airborne motion as it fades; a frozen flip
+      // followed by a three-frame upright snap hides the second impulse.
+      if (directDoubleSwitch && !this.switchOutgoingPose && previousClip && this.motionContext && this.timelineTime !== null) {
+        const flipAdvance = (intent.motion.inputs?.jakFlipProgress ?? 0) -
+          (this.motionContext.inputs?.jakFlipProgress ?? 0);
+        this.locomotionOutgoing = {
+          clip: previousClip, playbackSeconds: 0, offset: this.timelineTime - previousClip.range.start,
+          rate: previousClip.id === 'player.jak-flip' && dt > 0
+            ? Math.max(0, flipAdvance) * previousClip.duration / dt / previousClip.playbackSpeed : 1,
+          motion: this.motionContext,
+        };
+      }
       const matchedOffset = locomotionSwitch && this.lastSampledPose
         ? this.closestLocomotionOffset(clip, this.lastSampledPose, intent.motion) : null;
       const runHandoffOffset =
         this.manualClipId === null &&
-        (previousClipId === LAND_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID) && clip.id === 'player.run'
+        (previousClipId === LAND_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID || previousClip?.metadata?.jakDirect) && clip.id === 'player.run'
           ? this.pendingRunHandoffOffset
           : null;
       const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
-        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID)
+        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID || previousClip?.metadata?.jakDirect)
         ? this.pendingIdleHandoffOffset : null;
       const switchBlendDuration = this.manualClipId === null
-        ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
+        ? idleHandoffOffset !== null || runHandoffOffset !== null && clip.metadata?.jakDirect ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
-          : authoredSwitchBlendDuration(previousClipId, clip.id)
+          : clip.metadata?.jakDirect ? (previousClipId ? directDoubleSwitch ? directDoubleBlend : clip.id === LAND_CLIP_ID ? .02
+            : clip.id==='player.hang'||clip.id==='player.jak-hang-shift' ? .14
+            : clip.id==='player.jak-flip'||clip.id==='player.fall' ? .10 : .05 : 0)
+          : authoredSwitchBlendDuration(previousClipId, clip.id, clip.metadata?.jumpReferenceRevision === 1)
         : 0;
       // Bail's visible get-up is a moving procedural pose under its editable
       // keys. Keep that base alive during the fade, including its running
@@ -656,6 +730,25 @@ export class CharacterAnimationRuntime {
     }
 
     let motion = this.motionForClip(clip, intent.motion);
+    if (clip.metadata?.jakDirect && clip.id === 'player.double-jump' && this.manualClipId === null) {
+      // The second arc is much shorter than the first. Pace the source's
+      // extension and gather across that rise, then continue into descent.
+      // Reconstruct the launch age from its existing frame clock; physics,
+      // jump eligibility and the calibrated height remain controller-owned.
+      const ageFrames = Math.max(0, (motion.inputs?.jakFrame ?? 5) - 5);
+      const remainingFrames = motion.verticalVelocity / Math.max(.001, motion.inputs?.jakGravity ?? 60) * 60;
+      // A small boost gathers less before its apex; the longer charged arc
+      // has time for the deeper tuck. Upright launches need one less gather
+      // frame to retain the calibrated head reach after their shorter fade.
+      const gatherFrames = motion.inputs?.jakUprightLaunch ? 2 : 3;
+      const apexFrame = 11 + gatherFrames * MathUtils.clamp(motion.inputs?.jakJumpCharge ?? 1, 0, 1);
+      const sourceFrame = remainingFrames >= 0
+        ? 5 + (apexFrame - 5) * ageFrames / Math.max(1, ageFrames + remainingFrames)
+        : this.player.onFootJumpStudy?.nativePhysics
+          ? apexFrame + (40 - apexFrame) * Math.min(1, (motion.inputs?.jakDescentProgress ?? 0) / .85)
+          : apexFrame - remainingFrames;
+      motion = { ...motion, inputs: { ...motion.inputs, jakFrame: sourceFrame } };
+    }
     const gameplayProgressTimeline =
       this.manualClipId === null && usesActionProgressTimeline(clip);
     this.timelineTime = gameplayProgressTimeline
@@ -663,7 +756,12 @@ export class CharacterAnimationRuntime {
         Math.min(1, Math.max(0, motion.actionProgress)) *
         (clip.range.end - clip.range.start)
       : clipTimeAt(clip, this.playbackSeconds, { offset: this.playbackOffset });
-    if (this.manualClipId === null && this.transient?.kind === 'run-stop') {
+    if (clip.metadata?.jakDirect && this.manualClipId === null &&
+        (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
+      this.timelineTime = Math.min(clip.range.end, (motion.inputs?.jakFrame ?? 0) / 60);
+    }
+    if (directTime !== null) this.timelineTime = Math.min(clip.range.end, Math.max(clip.range.start, directTime));
+    if (this.manualClipId === null && this.transient?.kind === 'run-stop' && !clip.metadata?.jakDirect) {
       const span = Math.max(1e-6, clip.range.end - clip.range.start);
       const coasting = motion.normalizedSpeed > .005;
       if (!coasting) this.runStopSettleElapsed += dt * this.runtimeSpeed * clip.playbackSpeed;
@@ -686,7 +784,7 @@ export class CharacterAnimationRuntime {
     let pose = this.samplePoseAt(clip, this.timelineTime, motion, this.manualClipId === null);
     let landingRunBlendWeight = 0;
     let landingRunBlendInFlight = false;
-    if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID) {
+    if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID && !clip.metadata?.jakDirect) {
       const runClip = this.findPlayableClip('player.run');
       if (runClip) {
         // This clock intentionally continues beyond an edited Land range. The
@@ -767,13 +865,21 @@ export class CharacterAnimationRuntime {
     // own channel until the last part of the bounce.
     this.recoveryIdleWeight = 0;
     this.recoveryIdleTimelineTime = null;
-    if (this.manualClipId === null && hint === 'player.idle' &&
+    if (this.manualClipId === null && hint === 'player.idle' && !clip.metadata?.jakDirect &&
         (this.transient?.kind === 'landing' || this.transient?.kind === 'run-stop')) {
       pose = this.recoverIntoIdle(clip, pose, motion, dt);
     } else {
       this.recoveryIdle = null;
       this.pendingIdleHandoffOffset = null;
     }
+    if (this.manualClipId === null && clip.metadata?.jakDirect &&
+        (this.transient?.kind === 'landing' || clip.id === 'player.climb')) {
+      const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
+      const phase = clip.id === 'player.climb'
+        ? recovery >= 0 ? .7 + recovery * .3 : motion.actionProgress * .7
+        : (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
+      pose = this.recoverDirectLocomotion(clip, pose, motion, phase, dt);
+    } else this.directRecovery = null;
     // Complete the revolution, then recover into the locomotion actually
     // being performed. Releasing the stick can settle into Idle; the roll
     // must never manufacture a final running stride on a stationary player.
@@ -810,14 +916,17 @@ export class CharacterAnimationRuntime {
         : outgoing
         ? this.samplePoseAt(outgoing.clip, clipTimeAt(outgoing.clip, outgoing.playbackSeconds, { offset: outgoing.offset }), outgoing.motion, true)
         : this.switchOutgoingPose;
-      pose = blendPoses(
-        withControlDefaults(
-          canonicalizePose(outgoingPose, this.binding),
-          this.controlDefaults,
-        ),
-        withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
-        weight,
-      );
+      const outgoingTarget = withControlDefaults(canonicalizePose(outgoingPose, this.binding), this.controlDefaults);
+      const incomingTarget = withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults);
+      pose = blendPoses(outgoingTarget, incomingTarget, weight);
+      if (clip.metadata?.jakDirect && clip.id === 'player.double-jump') {
+        // The limbs stretch with the new impulse while the body's rotation
+        // finishes its slower unwind. A long pose fade must not hide the pop.
+        const elasticWeight = smoothstep01(this.switchBlendElapsed / .06);
+        for (const [id, value] of Object.entries(incomingTarget.scalars))
+          if (/^deform\.(arm|leg)\..*\.length$/.test(id))
+            pose.scalars[id] = MathUtils.lerp(outgoingTarget.scalars[id], value, elasticWeight);
+      }
       this.transitionBlendWeight = weight;
       if (weight >= 1) {
         this.switchOutgoingPose = null;
@@ -829,7 +938,10 @@ export class CharacterAnimationRuntime {
     } else {
       this.transitionBlendWeight = null;
     }
-    const incomingRestWeight = clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
+    // Source idles own their shoulder angles. Native idles also use the
+    // editable neutral-arm layer; recoveries fade that layer with the pose.
+    const sourceOwnsIdleArms = this.findPlayableClip('player.idle')?.metadata?.jakDirect;
+    const incomingRestWeight = sourceOwnsIdleArms ? 0 : clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
     this.upperArmRestWeight = this.transitionBlendWeight === null ? incomingRestWeight
       : this.switchOutgoingUpperArmRestWeight * (1 - this.transitionBlendWeight) + incomingRestWeight * this.transitionBlendWeight;
     this.player.setCharacterUpperArmRestAngleWeight(this.upperArmRestWeight);
@@ -861,6 +973,26 @@ export class CharacterAnimationRuntime {
       pose = {joints:Object.fromEntries(Object.entries(pose.joints).filter(([id])=>owned.has(id))),
         scalars:Object.fromEntries(Object.entries(pose.scalars).filter(([id])=>id.startsWith('deform.arm.')||id==='deform.torso.length'))};
     }
+    if (this.manualClipId === null && clip.metadata?.jakDirect && clip.id === 'player.double-jump' &&
+        motion.inputs?.jakRollLaunch && (motion.inputs.jakFlipProgress ?? 2) < 1.3) {
+      // The second impulse is immediate, but it must not reverse/cancel a
+      // partly completed somersault through shortest-path quaternion blending.
+      const roll = this.findPlayableClip('player.jak-flip')!;
+      const progress = motion.inputs.jakFlipProgress ?? 0;
+      const rollPose = this.samplePoseAt(roll, Math.min(1, progress) * roll.duration, motion, true);
+      const weight = 1 - smoothstep01((progress - 1.14) / .16);
+      const turned = blendPoses(pose, rollPose, weight);
+      pose.joints.hips = turned.joints.hips;
+    }
+    const directLandingSpring = clip.metadata?.jakDirect && this.transient?.kind === 'landing';
+    if (this.manualClipId === null && clip.metadata?.jakDirect && (directLandingSpring || !motion.grounded &&
+        ['player.jump','player.double-jump','player.jak-flip','player.fall'].includes(clip.id))) {
+      const filtered = this.jakAirSpring.sample(pose, dt, this.lastSampledPose);
+      // Retain momentum through the source landing's internal clip splice,
+      // then return exact ownership to the phase-matched locomotion target.
+      const phase = (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
+      pose = directLandingSpring ? blendPoses(pose, filtered, 1 - smoothstep01((phase - .70) / .30)) : filtered;
+    } else this.jakAirSpring.reset();
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
     // from the fully composed joint pose, and limbs never inherit parent scale.
@@ -917,8 +1049,85 @@ export class CharacterAnimationRuntime {
     return result;
   }
 
+  /** Resume strides under the source rebound. The waist and root finish their
+   * bounce independently of the legs, then hand off at the very same phase. */
+  private recoverDirectLocomotion(clip: AnimationClip, pose: PoseBuffer, motion: ProceduralMotionContext,
+    phase: number, dt: number): PoseBuffer {
+    const run = this.findPlayableClip('player.run'), idle = this.findPlayableClip('player.idle');
+    if (!run || !idle) return pose;
+    if (this.directRecovery?.source !== clip.id) this.directRecovery = {
+      source: clip.id, runOffset: this.closestLocomotionOffset(run, pose, motion),
+      idleOffset: this.closestLocomotionOffset(idle, pose, motion), runClock: 0, idleClock: 0,
+    };
+    else {
+      this.directRecovery.runClock += dt * this.runtimeSpeed * this.locomotionPlaybackScale(run, motion);
+      this.directRecovery.idleClock += dt * this.runtimeSpeed;
+    }
+    const state = this.directRecovery;
+    const runTime = clipTimeAt(run, state.runClock, {offset: state.runOffset});
+    const idleTime = clipTimeAt(idle, state.idleClock, {offset: state.idleOffset});
+    const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
+    const moving = smoothstep01(motion.normalizedSpeed * TUNING.walkSpeed / .8);
+    const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)),
+      canonical(this.samplePoseAt(run, runTime, motion, true)), moving);
+    const source = canonical(pose);
+    const climb = clip.id === 'player.climb';
+    const bodyWeight = smoothstep01((phase - (climb ? .62 : .45)) / (climb ? .38 : .55));
+    const legsWeight = smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
+    const result = blendPoses(source, target, bodyWeight);
+    const stride = blendPoses(source, target, legsWeight);
+    for (const id of ['hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight','toeLeft','toeRight'])
+      if (stride.joints[id]) result.joints[id] = stride.joints[id];
+    for (const [id, value] of Object.entries(stride.scalars ?? {}))
+      if (id.startsWith('deform.leg.')) result.scalars![id] = value;
+    this.recoveryIdleWeight = bodyWeight * (1 - moving);
+    this.recoveryIdleTimelineTime = idleTime;
+    this.pendingRunHandoffOffset = runTime - run.range.start;
+    this.pendingIdleHandoffOffset = idleTime - idle.range.start;
+    return result;
+  }
+
   private samplePoseAt(clip: AnimationClip, time: number, motion: ProceduralMotionContext, includeVariant: boolean): PoseBuffer {
-    const pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    if (clip.metadata?.jakDirect && (clip.id === 'player.jump' || clip.id === 'player.double-jump') &&
+        (motion.inputs?.jakFrame ?? 0) > 40) {
+      const fall = this.findPlayableClip('player.fall');
+      if (fall) return sampleComposedClip(fall, clipTimeAt(fall, ((motion.inputs?.jakFrame ?? 40) - 40) / 60), motion);
+    }
+    let pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    if (clip.metadata?.jakDirect && clip.id === 'player.jump' && !motion.inputs?.jakFlip && !this.player.onFootJumpStudy?.nativePhysics) {
+      // An upright skull extends higher than the rolled pose on the same arc.
+      // Gather the authored root during the rise, then release on descent;
+      // retain the calibrated head reach without changing flight physics.
+      const frame = motion.inputs?.jakFrame ?? 0;
+      const gather = smoothstep01((frame - 2) / 9) * (1 - smoothstep01((frame - 29) / 11));
+      const root = pose.joints.root?.position;
+      if (root) root[1] -= .37 * gather;
+    }
+    const nativeRunId = clip.metadata?.jakNativeRunClip;
+    const nativeRun = typeof nativeRunId === 'string' ? this.findPlayableClip(nativeRunId) : null;
+    if (nativeRun) {
+      const phase = normalizedPhase((time - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start)
+        + Number(clip.metadata?.jakNativeRunPhase ?? 0));
+      const nativePose = sampleComposedClip(nativeRun,
+        nativeRun.range.start + phase * (nativeRun.range.end - nativeRun.range.start), motion,
+        { evaluators: this.proceduralEvaluators });
+      // Blend independent segment elasticity as well as rotations/root motion.
+      // Unkeyed controls retain their rig defaults, rather than shrinking to 0.
+      pose = blendPoses(withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
+        withControlDefaults(canonicalizePose(nativePose, this.binding), this.controlDefaults),
+        MathUtils.clamp(Number(clip.metadata?.jakNativeRunWeight ?? .5), 0, 1));
+    }
+    if (clip.metadata?.jakDirect && (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
+      const speed = motion.inputs?.footSpeed ?? 0;
+      const alternate = this.findPlayableClip('player.jak-jump-forward');
+      if (!alternate) return pose;
+      // The forward source holds a bent trailing leg at its final key. Open
+      // both legs as the descent finishes instead of holding that tuck to impact.
+      const weight = MathUtils.clamp((speed - 2.5) / 5, 0, 1) *
+        (this.player.onFootJumpStudy?.nativePhysics ? 1 - smoothstep01((time * 60 - 28) / 12) : 1);
+      const other = sampleComposedClip(alternate, time, motion);
+      return blendPoses(pose, other, weight);
+    }
     if(includeVariant&&(clip.id===LAUNCH_CLIPS.rise||clip.id===LAUNCH_CLIPS.boardRise))
       return tuneLaunchBackLean(pose,TUNING.launchBackLean,this.binding.definition);
     const variant = includeVariant ? clipVariantBlend(clip) ?? (clip.id === 'player.run'
@@ -1072,6 +1281,9 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
+    if (this.manualClipId === null && clip.metadata?.jakDirect &&
+        (clip.id === 'player.jak-run-land' || clip.id === 'player.jak-run-land-weak'))
+      return this.playbackSeconds < .05 ? 1 : Math.max(5, motion.normalizedSpeed * TUNING.walkSpeed) / 5;
     if (this.manualClipId === null && clip.id === CROUCH_CLIP_IDS.move) {
       // One complete left/right crawl cycle covers 1.8 m. Integrate distance
       // into the existing clock so analog speed changes never restart a pose;
@@ -1142,6 +1354,7 @@ export class CharacterAnimationRuntime {
     this.crawlPalmWeight = 0;
     this.switchOutgoingCrawlPalmWeight = 0;
     this.currentClipId = null;
+    this.directRecovery = null;
     if (clearRequest) this.requestedClipId = null;
     this.elapsedSeconds = 0;
     this.playbackSeconds = 0;
@@ -1159,6 +1372,7 @@ export class CharacterAnimationRuntime {
     this.proceduralDriverCount = 0;
     this.motionContext = null;
     this.lastSampledPose = null;
+    this.jakAirSpring.reset();
     this.transitionBlendWeight = null;
     this.switchOutgoingPose = null;
     this.bailOutgoingPose = null;

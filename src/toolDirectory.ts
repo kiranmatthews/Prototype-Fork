@@ -18,7 +18,9 @@ const localCount = entries.length - publishedCount;
 const params = new URLSearchParams(location.search);
 const key = 'solProtoToolDirectoryLocalBase';
 let localBase = import.meta.env.DEV ? root.href : 'http://localhost:5173/';
-try { localBase = safeBase(localStorage.getItem(key) ?? '') ?? localBase; } catch { /* storage optional */ }
+// A local directory belongs to this running checkout. An old saved port must
+// not send its new labs to a different / stopped development server.
+try { if (!import.meta.env.DEV) localBase = safeBase(localStorage.getItem(key) ?? '') ?? localBase; } catch { /* storage optional */ }
 
 function safeBase(value: string): string | null {
   try {

@@ -1,0 +1,73 @@
+{
+  "scope": "User-authorized Jump A/B/C/D and Skate playtests; publication requested 2026-11-08.",
+  "jak": "Reference samples exported from the user-supplied Jak and Daxter USA data via OpenGOAL.",
+  "skate": "Approved 218-clip source-motion reference study; decoded OnBoard and OffBoard leaves.",
+  "assets": [
+    {
+      "path": "jak/motion.json.gz",
+      "bytes": 2962964,
+      "sha256": "fed795d961ed498670ea1145858f3c948aa204f6f7c49bb2197574b8e8b7a2ef",
+      "encoding": "gzip",
+      "packedBytes": 927030
+    },
+    {
+      "path": "jak/eichar-lod0.glb.gz",
+      "bytes": 14524956,
+      "sha256": "db44ff21b475ea383bd6bbb6d8e49816391793f3f458db31dfaa8c67bc271e0e",
+      "encoding": "gzip",
+      "packedBytes": 1274854
+    },
+    {
+      "path": "skate/motion.json.gz",
+      "bytes": 24562507,
+      "sha256": "2adbfff0bf1b0eac08aa8a994d3e1beba36c9cddba574d9296757e05c412f04b",
+      "encoding": "gzip",
+      "packedBytes": 8626641
+    },
+    {
+      "path": "jak/audio/jump-1.wav",
+      "bytes": 28666,
+      "sha256": "298ccff4fe2e52aab4ab721f7a2d99ad758d38c52ad4f9bc0590c9a2df453dff"
+    },
+    {
+      "path": "jak/audio/jump-2.wav",
+      "bytes": 27068,
+      "sha256": "ee0c9c0f0c30e41bef49ae878ce38910656c3c53e723a3993711110daf40f982"
+    },
+    {
+      "path": "jak/audio/jump-3.wav",
+      "bytes": 25544,
+      "sha256": "b85e254a864c523a6256bc2548f2af412236dd446072b974aaa504731765d9b4"
+    },
+    {
+      "path": "jak/audio/jump-double-1.wav",
+      "bytes": 27884,
+      "sha256": "dc40e8a1b318a41ecdb9969c3be5cb4e4a2c64694d68b6ea8da6e86d56ac836c"
+    },
+    {
+      "path": "jak/audio/jump-double-2.wav",
+      "bytes": 28892,
+      "sha256": "1d98d7425ed3712115cf1619416e738b0eda3f3e08074ebcbcd584b06b641b20"
+    },
+    {
+      "path": "jak/audio/jump-double-3.wav",
+      "bytes": 34442,
+      "sha256": "991d922ee0751a57b241978c6602711ac1162f5b1b3b9ef70e374b0af7759882"
+    },
+    {
+      "path": "jak/eco/hotdot.png",
+      "bytes": 917,
+      "sha256": "7bfa5791c8070b352b4fd1201eb1787f3b247682ce64318735048d2ace282f4d"
+    },
+    {
+      "path": "jak/eco/bigpuff.png",
+      "bytes": 9559,
+      "sha256": "2879837e1bedd718dcbd8191684078717e2c585ebf3a91cbfb90b25de5e04433"
+    },
+    {
+      "path": "jak/eco/starflash.png",
+      "bytes": 5797,
+      "sha256": "266f1c8808c657434624affc98ec60854c69afd4f9c3f3763290e7272ff034e6"
+    }
+  ]
+}

@@ -910,6 +910,15 @@ export class PuffSystem {
     }
   }
 
+  /** Release an owned effect field. The global gameplay system stays attached. */
+  dispose(): void {
+    this.clear();
+    for (const b of new Set([...this.batches.values(), ...this.preparedBatches.values()])) {
+      b.mesh?.removeFromParent(); b.geo.dispose(); b.material.dispose();
+    }
+    this.batches.clear(); this.preparedBatches.clear(); this.root = null;
+  }
+
   private batch(style: BlendStyle): Batch {
     let b = this.batches.get(style);
     if (!b) {
@@ -1543,6 +1552,13 @@ export class PuffSystem {
     let c = 0;
     for (const b of this.batches.values()) if (b.mesh.visible) c++;
     return c;
+  }
+
+  /** Submitted triangles per material pass, for effect budget inspection. */
+  get triangleCount(): number {
+    let count = 0;
+    for (const b of this.batches.values()) count += b.iCount / 3;
+    return count;
   }
 }
 

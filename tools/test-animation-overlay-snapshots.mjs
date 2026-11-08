@@ -116,6 +116,24 @@ try {
   edit(expected, 1); restore(failed); compare('failed overlay');
   bridge.setOverlay(null);
   assert.ok(actualRestoreWrites < referenceWrites / 4, 'mostly static rig kept restoring every quaternion');
+  // A final contact presentation shares the pre-document restoration boundary.
+  // It also works alone and stale disposers must not remove a replacement.
+  const finalRoot=new THREE.Group(), finalNode=new THREE.Group();finalRoot.add(finalNode);
+  const finalBridge=new PlayerAnimationBridge(finalRoot,finalRoot);
+  finalBridge.setOverlay(()=>{finalNode.position.y=2;});
+  const stale=finalBridge.setFinalOverlay(()=>{finalNode.position.y+=3;});
+  finalBridge.applyOverlay(1/60);finalBridge.applyFinalOverlay(1/60);
+  assert.equal(finalNode.position.y,5);
+  finalBridge.prepareLegacyPose();assert.equal(finalNode.position.y,0);
+  finalBridge.setOverlay(null);
+  finalBridge.setFinalOverlay(()=>{finalNode.position.y=7;});stale();
+  finalBridge.applyFinalOverlay(1/60);assert.equal(finalNode.position.y,7);
+  finalBridge.prepareLegacyPose();assert.equal(finalNode.position.y,0);
+  finalBridge.enterPreview();finalBridge.applyFinalOverlay(1/60);
+  assert.equal(finalNode.position.y,0);finalBridge.exitPreview();
+  finalBridge.setFinalOverlay(()=>{finalNode.position.y=9;throw new Error('final failure');});
+  assert.throws(()=>finalBridge.applyFinalOverlay(1/60),/final failure/);
+  assert.equal(finalNode.position.y,0);finalBridge.setFinalOverlay(null);
   console.log(JSON.stringify({ passed: true, frames: frame, comparedNodes, referenceRestoreWrites: referenceWrites,
     actualRestoreWrites,
     warm: { nodes: still.nodes.length, frames: 240, quaternionWrites: callbacks, transformClones: clones,

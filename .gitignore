@@ -37,3 +37,9 @@ desktop/test-results/
 !/public/props/carlisle-cone/cone-body.glb
 # Local Tripo CLI task history.
 .tripo/
+
+# Private source overrides and generated local motion-study builds/caches.
+.skate-reference-data
+.skate-playtest-build/
+.skate-playtest-cache/
+.motion-playtest-cache/

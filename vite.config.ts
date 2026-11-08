@@ -3,13 +3,16 @@ import { offlineBuild } from './tools/offline-build.mjs';
 import { siteEntries } from './tools/site-entries.mjs';
 import { toolDirectory } from './tools/tool-directory.mjs';
 import { ktxFormatPreferences } from './tools/ktx-format-preferences.mjs';
+import { localJakAudio } from './tools/local-jak-audio.mjs';
 
 // Relative base so the build works both at a domain root and on a subpath
 // like GitHub Pages (https://<user>.github.io/<repo>/).
 export default defineConfig({
   base: './',
-  plugins: [ktxFormatPreferences(), toolDirectory(), offlineBuild()],
+  cacheDir: '.motion-playtest-cache',
+  plugins: [ktxFormatPreferences(), toolDirectory(), offlineBuild(), localJakAudio()],
   build: {
+    target: 'es2022',
     rollupOptions: {
       input: siteEntries,
     },
@@ -21,6 +24,8 @@ export default defineConfig({
   },
   define: {
     'import.meta.env.VITE_JAK_LAB_CATALOGUE_URL': JSON.stringify('./jak-lab/catalogue.json'),
+    'import.meta.env.VITE_JAK_REFERENCE_AUDIO': JSON.stringify(Boolean(process.env.JAK_REFERENCE_AUDIO_DIR)),
+    'import.meta.env.VITE_SKATE_REFERENCE_LOCAL': JSON.stringify(Boolean(process.env.SKATE_REFERENCE_DATA_ROOT)),
     // Baked at build time and shown in the HUD corner, so a playtest can
     // always tell WHICH build it's actually running (cache-confusion killer).
     __BUILD_TAG__: JSON.stringify(new Date().toISOString().slice(5, 16).replace('T', ' ') + ' UTC'),
