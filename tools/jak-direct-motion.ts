@@ -67,6 +67,14 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
   nativeRun.id='player.jak-native-run';
   nativeRun.name='D · Bone Man run blend reference';
   suite.clips.push(nativeRun);
+  // Keep Bone Man's original airborne poses for Abandon Ship. Its native outer
+  // somersault and tuck clock are independent of D's on-foot source jump clock.
+  for(const name of ['jump','fall']) {
+    const native=structuredClone(base.clips.find(clip=>clip.id===`player.${name}`)!);
+    native.id=`player.board-abandon-${name}`;
+    native.name=`Bone Man · Abandon Ship ${name}`;
+    suite.clips.push(native);
+  }
   const neutral=bank.clips['stance-loop'].samples[0];
   const definitions=new Map(rig.joints.map(j=>[j.id,j]));
   const correction=new Map<string,THREE.Quaternion>();

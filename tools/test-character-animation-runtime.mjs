@@ -76,6 +76,7 @@ try {
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
     'player.jump-charge',
     'player.jump', 'player.double-jump', 'player.slide-jump', 'player.fall',
+    'player.board-abandon-jump', 'player.board-abandon-fall',
     'player.launch-rise', 'player.launch-gather', 'player.launch-board-rise', 'player.launch-board-gather',
     'player.roll-land', 'player.rope-climb',
     'player.rope-release', 'player.slam',

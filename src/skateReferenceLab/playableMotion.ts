@@ -143,7 +143,8 @@ export class PlayableSkateMotion {
     ink.enabled=this.scribbles&&this.enabled;
     const interrupted=!this.enabled||p.isBailing||p.ragActive||p.bailing
       ||!['ride','air'].includes(p.state)||p.crawling||p.sliding||p.wallriding
-      ||p.grabbing||p.flipT>0||p.manualing||p.vertAir;
+      ||p.grabbing||p.flipT>0||p.manualing||p.vertAir
+      ||p.boardAbandonActive||p.animationClipHint==='player.roll-land';
     if(interrupted){ink.cancel();this.dismountInkStarted=false;return;}
     if(this.phase!==previous){
       this.dismountInkStarted=false;
@@ -266,9 +267,12 @@ export class PlayableSkateMotion {
   private update({deltaSeconds: dt, applyDeformations}: PlayerAnimationOverlayContext): void {
     this.boardGroundLift=0;
     const p = this.p, mounted = Boolean(p.freeSkate || (!p.grounded && p.airFromSkate));
+    const nativeAbandon = p.boardAbandonActive || p.animationClipHint === 'player.roll-land';
     const blocked = p.isBailing || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
-    if(this.options.continuousTransitions&&blocked){
+    if(nativeAbandon||this.options.continuousTransitions&&blocked){
       // Do not even clear/reapply proportions under a different pose owner.
+      // Abandon Ship ejects a real loose board. Neither a mount/pickup fade nor
+      // its carried-board ink may overwrite the original flip and landing roll.
       this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
       this.lastPose=this.previousPose=this.fromPose=this.fromPreviousPose=null;
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;

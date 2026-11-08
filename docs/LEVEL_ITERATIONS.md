@@ -11218,3 +11218,33 @@ All originally failing cases have passing focused coverage. Actual browser check
   the lightweight art review HTML so the directory matches local discovery.
   Packed motion/model references are also included in the offline manifest;
   provenance checks assert both decoded bytes and offline membership.
+
+## 2026-11-08 — Restore the original Abandon Ship animation
+
+- Brief: restore the older skating ejection for this specific action while
+  retaining the accepted new Skate suite. Prompt-to-playable: approximately
+  20 minutes, including native-pose reproduction and browser review.
+- The source Skate overlay now yields immediately for the native ejection and
+  landing roll, clearing its outgoing pose instead of fading a board stance
+  over the flip. This applies to both playable comparison pages. The action
+  cannot start mount/pickup scribbles.
+- D retains Bone Man's original jump/fall clips for Abandon Ship and releases
+  the native outer somersault from its on-foot Jak override. Original tuck,
+  deformation, action-progress timing and jump/fall blends remain intact;
+  the landing roll still recovers into the selected locomotion cycle. The
+  independently flying deck, controls, charge, velocities and tuning are
+  unchanged.
+- Added `Watch motion → Abandon ship` with `Abandon flip` and `Landing roll`
+  pause points to the existing A/B/C/D page.
+- Regression: `test-skate-abandon-presentation.mjs` reproduces the original
+  failure, then passes 1,404 frames across native/D and both Skate transition
+  modes. It compares original airborne/planted-roll transforms, exact player
+  trajectory, discarded-board ownership, absence of ink, finite recovery and
+  a later deliberate remount. Character-animation runtime, 1,091-frame D/Skate
+  integration and 7,200-frame UI-tuning checks pass.
+- Browser: verified the native flip, hidden carried deck and supported roll
+  on the existing port 5199 playtest, using lite and full rendering at
+  MAX/native 2772×1918. Evidence is in the external
+  `abandon-ship-2026-11-08/` directory. No console errors observed.
+- Node 22 production build and release check pass: 987,279,898 bytes of the
+  1,000,000,000-byte budget. No full-suite rerun was requested for this fix.
