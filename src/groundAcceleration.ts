@@ -10,54 +10,6 @@ import {
 /** Tiny primitives are faster through Three's stock raycast than a BVH. */
 export const GROUND_BVH_MIN_TRIANGLES = 128;
 
-const boundedSphere = new THREE.Sphere();
-const boundedRay = new THREE.Ray();
-const boundedEntry = new THREE.Vector3();
-
-/**
- * `acceleratedRaycast` with Three's stock bounding-sphere rejection in front.
- *
- * three-mesh-bvh enters the tree for every mesh it is asked about: it inverts
- * the world matrix and allocates typed-array views over the BVH buffer even
- * when the ray is nowhere near. Ground queries ask about every ground mesh
- * several times per step, so that per-mesh setup dominated their cost and
- * garbage. A triangle hit always lies inside the geometry's bounding sphere,
- * so a ray that misses the (slightly inflated) world-space sphere, or reaches
- * it only beyond `far`, cannot produce a hit: results are unchanged. Batched
- * meshes keep the library's own path.
- */
-export function boundedAcceleratedRaycast(
-  this: THREE.Mesh,
-  raycaster: THREE.Raycaster,
-  intersects: THREE.Intersection[],
-): void {
-  const geometry = this.geometry;
-  if (
-    this.material !== undefined &&
-    geometry?.boundsTree &&
-    !(this as unknown as { isBatchedMesh?: boolean }).isBatchedMesh
-  ) {
-    if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
-    const local = geometry.boundingSphere;
-    if (local && Number.isFinite(local.radius) && local.radius >= 0) {
-      boundedSphere.copy(local).applyMatrix4(this.matrixWorld);
-      // Inflate so floating-point rounding can only keep a mesh, never drop one.
-      boundedSphere.radius = boundedSphere.radius * (1 + 1e-6) + 1e-6;
-      boundedRay.copy(raycaster.ray).recast(raycaster.near);
-      if (!boundedSphere.containsPoint(boundedRay.origin)) {
-        if (boundedRay.intersectSphere(boundedSphere, boundedEntry) === null) return;
-        const span = raycaster.far - raycaster.near;
-        if (
-          Number.isFinite(span) &&
-          boundedRay.origin.distanceTo(boundedEntry) > span * (1 + 1e-6) + 1e-6
-        )
-          return;
-      }
-    }
-  }
-  acceleratedRaycast.call(this, raycaster, intersects);
-}
-
 export interface GroundAccelerationStats {
   candidateMeshes: number;
   acceleratedMeshes: number;
@@ -137,7 +89,7 @@ export function accelerateGroundMeshes(
     }
 
     if (geometry.boundsTree) {
-      mesh.raycast = boundedAcceleratedRaycast;
+      mesh.raycast = acceleratedRaycast;
       stats.acceleratedMeshes++;
     }
   }

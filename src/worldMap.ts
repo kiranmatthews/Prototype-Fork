@@ -321,34 +321,18 @@ function bindBeachCoordinates(
   return coast;
 }
 
-/** One upload of the sand and moss maps, shared by the island and sky materials. */
-interface MapSandTextures {sand:Map<string,THREE.Texture>;moss:THREE.Texture;ready:Promise<void>;users:number;disposed:boolean;}
-function loadMapSandTextures():MapSandTextures {
+function mapSandMaterial(beachTime:{value:number},water:CoastWater,dry=false): {material:THREE.MeshStandardMaterial;ready:Promise<void>} {
+  const owner = createUnitySandMaterial({name:"World map fine sand and pebbles"});
+  const material = owner.material;
+  let disposed=false;
   let resolveSurface:()=>void, rejectSurface:(error:unknown)=>void;
   const ready=new Promise<void>((resolve,reject)=>{resolveSurface=resolve;rejectSurface=reject;});
   ready.catch(()=>{});
-  const textures:MapSandTextures={sand:new Map(),moss:null!,ready,users:0,disposed:false};
-  textures.moss=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'carlisle-coast/moss-albedo.webp',texture=>{
-    if(textures.disposed)texture.dispose();resolveSurface();
+  const moss=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'carlisle-coast/moss-albedo.webp',texture=>{
+    if(disposed)texture.dispose();resolveSurface();
   },undefined,error=>rejectSurface(error));
-  textures.moss.colorSpace=THREE.SRGBColorSpace;textures.moss.wrapS=textures.moss.wrapT=THREE.RepeatWrapping;textures.moss.anisotropy=8;
-  return textures;
-}
-
-function mapSandMaterial(beachTime:{value:number},water:CoastWater,textures:MapSandTextures,dry=false): {material:THREE.MeshStandardMaterial;ready:Promise<void>} {
-  const owner = createUnitySandMaterial({name:"World map fine sand and pebbles",ownsTextures:false,loadTexture:url=>{
-    let texture=textures.sand.get(url);
-    if(!texture){texture=new THREE.TextureLoader().load(url);textures.sand.set(url,texture);}
-    return texture;
-  }});
-  const material = owner.material;
-  const moss=textures.moss, ready=textures.ready;
-  textures.users++;
-  let released=false; // a shared material can be disposed by several owners
-  material.addEventListener('dispose',()=>{
-    if(released)return;released=true;
-    if(--textures.users===0){textures.disposed=true;moss.dispose();}
-  });
+  moss.colorSpace=THREE.SRGBColorSpace;moss.wrapS=moss.wrapT=THREE.RepeatWrapping;moss.anisotropy=8;
+  material.addEventListener('dispose',()=>{disposed=true;moss.dispose();});
   material.vertexColors = true;
   material.normalScale.set(0.24, 0.24);
   material.aoMapIntensity = 0.3;
@@ -789,9 +773,8 @@ export function createCampaignWorldMap(
   parentRoot.add(water.group);
 
   const beachTime={value:0};
-  const sandTextures = loadMapSandTextures();
-  const islandSurface = mapSandMaterial(beachTime,water,sandTextures);
-  const skySurface = mapSandMaterial(beachTime,water,sandTextures,true);
+  const islandSurface = mapSandMaterial(beachTime,water);
+  const skySurface = mapSandMaterial(beachTime,water,true);
   skySurface.material.side=THREE.DoubleSide;
   const coastlines:THREE.Vector3[][]=[];
   const shelfMaterial = new THREE.MeshStandardMaterial({

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import {MeshBVH} from 'three-mesh-bvh';
-import {boundedAcceleratedRaycast} from './groundAcceleration';
+import {MeshBVH,acceleratedRaycast} from 'three-mesh-bvh';
 import type {CustomComponent} from './level';
 import {WAREHOUSE_CONTACTS} from './warehouseContacts.generated';
 import {WAREHOUSE_ASSET_SIZE} from './warehouseAssetMetrics';
@@ -14,6 +13,6 @@ export function warehouseContactMesh(c:CustomComponent):THREE.Mesh|null {
   geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.boundsTree=new MeshBVH(geometry,{indirect:true});geometry.userData.shared=true;templates.set(kind,geometry);}
  const mesh=new THREE.Mesh(geometry,material),nominal=WAREHOUSE_ASSET_SIZE[kind as keyof typeof WAREHOUSE_ASSET_SIZE],size=c.s??nominal;
  mesh.position.fromArray(c.p);mesh.rotation.y=(c.yaw??0)*Math.PI/180;mesh.scale.set(size[0]/nominal[0],size[1]/nominal[1],size[2]/nominal[2]).multiplyScalar(c.w??1);
- mesh.updateMatrixWorld(true);mesh.raycast=boundedAcceleratedRaycast;mesh.visible=false;mesh.name='Warehouse solid / '+(c.nm??kind);
+ mesh.updateMatrixWorld(true);mesh.raycast=acceleratedRaycast;mesh.visible=false;mesh.name='Warehouse solid / '+(c.nm??kind);
  Object.assign(mesh.userData,{warehouseContact:kind,editorGhost:true,edgeGrinding:false,carlisleScenery:true,solidSides:true,vert:false,castShadow:false});return mesh;
 }
