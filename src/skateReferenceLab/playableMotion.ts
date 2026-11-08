@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type {Player} from '../player';
 import type {PlayerAnimationOverlayContext} from '../animation/bridge';
-import {characterElasticityAmplitudes} from '../animation/elasticity';
+import {characterElasticityAmplitudes,ELASTIC_LENGTH_CONTROLS} from '../animation/elasticity';
 import {solveTwoBoneIk} from '../animation/ik';
 import {skateboardSettings} from '../skateboard/settings';
 import {evaluateSkateboardSurfaceHeight} from '../skateboard/model';
@@ -12,6 +12,7 @@ import {groundBoard,boardGroundClearance} from './boardGrounding';
 import {DEFAULT_SKATE_STANCE} from '../skateMount';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
+type FootContact = {side:'Left'|'Right';p:THREE.Vector3;q:THREE.Quaternion};
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
@@ -67,6 +68,8 @@ export class PlayableSkateMotion {
   private readonly boardLift = new THREE.Vector3();
   private boardGroundLift = 0;
   private nativeOwner: string | null = null;
+  private iceBlend = 0;
+  private iceFootError = 0;
   private stop: (() => void) | null = null;
   // These observations are private in the full game and intentionally exposed
   // only to this opt-in local study, as in jump-browser-review.ts.
@@ -110,6 +113,8 @@ export class PlayableSkateMotion {
     this.reset();
     this.wasMounted=Boolean(this.p.freeSkate||!this.p.grounded&&this.p.airFromSkate);
     this.wasGrounded=this.p.grounded;
+    // Joining D while already on ice should preserve the current native pose.
+    if(this.nativePoseOwner==='ice balance'&&this.p.groundHit?.slippy)this.iceBlend=1;
     this.stop = this.p.setFinalPoseOverlay((context: PlayerAnimationOverlayContext) => {
       const previousPhase = this.phase;
       const previousPose = this.lastPose;
@@ -149,7 +154,7 @@ export class PlayableSkateMotion {
     if(p.kiteTowing||p.kiteReleased||p.kiteBonusDocked)return 'kite';
     if(p.sliding||p.crawling||p.slidePose>.001||p.crawlPose>.001)return 'slide / crouch';
     if(p.slamActive||p.slamFlatT>0||p.slamSquash>0||p.starTimer>0||p.starPose>.001)return 'slam / split jump';
-    if(p.slipping||p.teetering||p.teeterPose>.001||this.retarget.board.userData.iceSkateMotion)return 'surface balance';
+    if(p.slipping||p.teetering||p.teeterPose>.001)return 'surface balance';
     if(p.sketchyT>0)return 'sketchy landing';
     if(p.competitionFinishT>=0||p.resultsPose||p.worldMapBaseScale!=null)return 'course presentation';
     if(!ordinaryMotionHints.has(p.animationClipHint))return p.animationClipHint;
@@ -159,6 +164,7 @@ export class PlayableSkateMotion {
       if(p.stance!==DEFAULT_SKATE_STANCE)return 'switch stance';
       if(Math.abs(Math.atan2(Math.sin(p.deckYawOffset),Math.cos(p.deckYawOffset)))>.0001)return 'reversed deck';
     }
+    if(this.retarget.board.userData.iceSkateMotion)return 'ice balance';
     return null;
   }
 
@@ -237,6 +243,7 @@ export class PlayableSkateMotion {
   reset(): void {
     this.boardScribble.reset();
     this.nativeOwner=null;
+    this.iceBlend=this.iceFootError=0;
     this.boardGroundLift=0;
     this.dismountInkStarted = this.baselineBoardVisible = false;
     this.baselineBoardAlpha = 1;
@@ -306,15 +313,27 @@ export class PlayableSkateMotion {
 
   private update({deltaSeconds: dt, applyDeformations}: PlayerAnimationOverlayContext): void {
     this.boardGroundLift=0;
+    this.iceFootError=0;
     const p = this.p, mounted = Boolean(p.freeSkate || (!p.grounded && p.airFromSkate));
     this.nativeOwner=this.nativePoseOwner;
-    if(this.nativeOwner!==null){
+    if(!mounted||!p.grounded||!this.enabled)this.iceBlend=0;
+    const ice=this.nativeOwner==='ice balance';
+    if((this.nativeOwner!==null&&!ice) || (!this.enabled&&ice)){
       // Do not even clear/reapply proportions under a different pose owner.
       // Clear outgoing source poses immediately; recovery blends from the
       // current native pose without inventing a mount, pickup or ink event.
       this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
       this.lastPose=this.previousPose=this.fromPose=this.fromPreviousPose=null;
+      this.iceBlend=0;
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;
+    }
+    const iceTarget=ice&&p.groundHit?.slippy?1:0;
+    this.iceBlend=THREE.MathUtils.clamp(this.iceBlend+(iceTarget?1:-1)*Math.max(0,dt)/(iceTarget ? .24 : .28),0,1);
+    if(this.iceBlend===1){
+      // Once settled, native ice owns its exact live pose and elasticity.
+      this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
+      this.lastPose=this.previousPose=this.fromPose=this.fromPreviousPose=null;
+      this.idleClock+=dt;this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;
     }
     if(!this.enabled && this.phase==='foot' && this.fade>=1) {
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.lastPose=null;return;
@@ -323,6 +342,14 @@ export class PlayableSkateMotion {
     // Character Lab offsets here would apply the neck/hip offsets twice at
     // every transition. Reapply that design exactly once after the pose.
     p.clearCharacterAppearance();
+    const iceWeight=smooth(this.iceBlend);
+    const nativeFeet=iceWeight>0?this.captureFootContacts():null;
+    const nativeLengths=iceWeight>0?Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([id])=>
+      [id,p.playerAnimationBridge.deformationValue(id)])):null;
+    // Blend undeformed poses, then apply the interpolated independent lengths
+    // once. Otherwise endpoint translation would receive the stretch twice.
+    if(nativeLengths)applyDeformations({});
+    const nativePose=iceWeight>0?this.capture():null;
     const input = p.rawInput;
     const wanted = this.enabled;
     const entered = mounted && !this.wasMounted, left = !mounted && this.wasMounted;
@@ -413,11 +440,56 @@ export class PlayableSkateMotion {
     }
     this.blendTransition(dt);
     this.fitEquipmentGround();
+    if(nativePose&&nativeFeet&&nativeLengths){
+      const sourceFeet=this.captureFootContacts();
+      applyDeformations({});
+      this.blend(nativePose,1-iceWeight);
+      const lengths=Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([id])=>
+        [id,THREE.MathUtils.lerp(scalars[id]??1,nativeLengths[id],iceWeight)]));
+      applyDeformations(lengths);
+      this.boardSupport.setFromNormalAndCoplanarPoint(p.groundHit?.normal??new THREE.Vector3(0,1,0),p.pos);
+      this.boardGroundLift=groundBoard(this.retarget.board,this.boardSupport,this.boardLift);
+      this.fitBlendedFeet(sourceFeet,nativeFeet,iceWeight);
+    }
     this.opacity(this.phase==='mount' ? smooth(this.time/.10)
       : this.phase==='dismount' ? smooth((clipDuration(this.clip!)-this.time)/.14) : 1);
     this.retarget.board.visible = true;
     this.lastPose = this.capture();
-    p.syncCharacterAppearance({upperArmRestAngleWeight:0});
+    p.syncCharacterAppearance({upperArmRestAngleWeight:iceWeight*(p.characterUpperArmRestAngleWeight??0)});
+  }
+
+  private captureFootContacts(): FootContact[] {
+    const board=this.retarget.board;
+    board.updateWorldMatrix(true,true);
+    const inverse=board.getWorldQuaternion(new THREE.Quaternion()).invert();
+    return (['Left','Right'] as const).map(side=>{
+      const ankle=this.retarget.rig.jointsById.get(`ankle${side}`)!.node;
+      const socket=ankle.getObjectByName(`socket-foot-${side.toLowerCase()}`)!;
+      return {side,p:board.worldToLocal(socket.getWorldPosition(new THREE.Vector3())),
+        q:inverse.clone().multiply(ankle.getWorldQuaternion(new THREE.Quaternion()))};
+    });
+  }
+
+  private fitBlendedFeet(source:FootContact[],native:FootContact[],weight:number):void {
+    const board=this.retarget.board,rig=this.retarget.rig;
+    board.updateWorldMatrix(true,true);
+    const boardQ=board.getWorldQuaternion(new THREE.Quaternion());
+    for(let i=0;i<source.length;i++){
+      const {side}=source[i],root=rig.jointsById.get(`hip${side}`)!.node,mid=rig.jointsById.get(`knee${side}`)!.node;
+      const ankle=rig.jointsById.get(`ankle${side}`)!.node,socket=ankle.getObjectByName(`socket-foot-${side.toLowerCase()}`)!;
+      const target=board.localToWorld(source[i].p.clone().lerp(native[i].p,weight));
+      const orientation=boardQ.clone().multiply(source[i].q.clone().slerp(native[i].q,weight));
+      const pole=mid.getWorldPosition(new THREE.Vector3());
+      for(let n=0;n<3;n++){
+        ankle.quaternion.copy(ankle.parent!.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(orientation);
+        ankle.updateWorldMatrix(true,true);
+        const end=target.clone().sub(socket.getWorldPosition(new THREE.Vector3())).add(ankle.getWorldPosition(new THREE.Vector3()));
+        solveTwoBoneIk({root,mid,end:ankle,target:end,pole,accountForParentScale:true,tolerance:.001});
+      }
+      ankle.quaternion.copy(ankle.parent!.getWorldQuaternion(new THREE.Quaternion()).invert()).multiply(orientation);
+      ankle.updateWorldMatrix(true,true);
+      this.iceFootError=Math.max(this.iceFootError,socket.getWorldPosition(new THREE.Vector3()).distanceTo(target));
+    }
   }
 
   private fitEquipmentGround(): void {
@@ -513,6 +585,7 @@ export class PlayableSkateMotion {
     const p=this.p;
     return {phase:this.phase, source:this.sourceName, time:+this.time.toFixed(3), fade:+this.fade.toFixed(3),
       enabled:this.enabled, nativeOwner:this.nativeOwner, speed:+p.speed.toFixed(3), grounded:p.grounded, mounted:p.freeSkate,
+      iceBlend:+smooth(this.iceBlend).toFixed(4),iceFootError:+this.iceFootError.toFixed(5),
       boardVisible:this.retarget.board.visible, boardGroundLift:+this.boardGroundLift.toFixed(4), position:p.pos.toArray(), visits:Object.fromEntries(this.visits)};
   }
 }

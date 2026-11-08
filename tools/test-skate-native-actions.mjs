@@ -93,7 +93,9 @@ await withSkateRuntime(async({server,scene,level,Player,CONST})=>{
   assert.equal(p.manualing,0,'ollie did not release the manual');rejoined();
   run('reversed deck',p=>{p.deckYawOffset=Math.PI;},()=>true,()=>({}),30);
   run('ice stride and brace',p=>{p.pos.set(300,.2,0);p.prevPos.copy(p.pos);p.groundHit=p.queryGround(level);},
-    p=>!!p.boardG.userData.iceSkateMotion,f=>({moveX:f>10?.4:0}),45);
+    // Entry is now an intentional source/native blend. Settled ice must still
+    // preserve the exact native pose; all discrete actions retain that rule.
+    p=>!!p.boardG.userData.iceSkateMotion&&motion.diagnostics.iceBlend===1,f=>({moveX:f>10?.4:0}),45);
   // These motions share a native jump/fall hint, but do not run D's on-foot
   // source clock. A leftover Jak clock must not replace their authored poses.
   for(const flag of ['bounceJump','grindExitAir','swimJumpAir','kiteReleased'])run(`native air ${flag}`,player=>{
