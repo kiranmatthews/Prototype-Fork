@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS, createProceduralMotionContext, sampleComposedClip, withCharacterElasticity } from '../src/animation';
 import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefinition, QuaternionTuple, Vec3Tuple } from '../src/animation';
 import type { OnFootJumpStudy } from '../src/onFootJumpStudy';
+import { JAK_LEDGE_MOTION, ledgeRebound } from '../src/animation/ledgeMotion';
 
 type JointSample = {p: Vec3Tuple; q: QuaternionTuple};
 type Frame = Record<string, JointSample>;
@@ -184,9 +185,26 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     const original=suite.clips.find(c=>c.id===id)??suite.clips.find(c=>c.id==='player.land')!;
     const tracks:AnimationTrack[]=[];
     const ledge=name.includes('edge-grab');
+    const catchMotion=['player.jak-ledge-catch','player.jak-ledge-left','player.jak-ledge-right'].includes(id);
+    const timeScale=catchMotion?JAK_LEDGE_MOTION.catchTimeScale:1;
+    const duration=reference.duration*timeScale;
+    const keyTime=(i:number)=>Math.min(reference.duration,i/60)*timeScale;
     const rootMode=id==='player.jak-flip'?'flip':id==='player.jak-ledge-off'?'release':id==='player.climb'?'climb':ledge?'hands':'feet';
     const locomotion=['player.run','player.walk','player.jak-run-land','player.jak-run-land-weak'].includes(id);
     const poses=reference.samples.map((frame,i)=>retarget(frame,rootMode,i/Math.max(1,reference.samples.length-1),locomotion));
+    if(catchMotion) {
+      const rest=retarget(bank.clips['edge-grab-stance0'].samples[0],'hands');
+      const amplitudes=characterElasticityAmplitudes('jak-ledge-catch');
+      poses.forEach((pose,i)=>{
+        const phase=i/Math.max(1,poses.length-1), settle=THREE.MathUtils.smoothstep(phase,.62,1);
+        for(const joint of Object.keys(pose.locals))pose.locals[joint]=q(pose.locals[joint]).slerp(q(rest.locals[joint]),settle).toArray() as QuaternionTuple;
+        for(const joint of Object.keys(pose.translations))pose.translations[joint]=v(pose.translations[joint]).lerp(v(rest.translations[joint]),settle).toArray() as Vec3Tuple;
+        pose.root=v(pose.root).lerp(v(rest.root),settle).toArray() as Vec3Tuple;
+        for(const control of Object.keys(pose.lengths))pose.lengths[control]=THREE.MathUtils.lerp(pose.lengths[control],rest.lengths[control],settle);
+        const pulse=ledgeRebound((phase-.52)/.48);
+        for(const [control,part] of ELASTIC_LENGTH_CONTROLS)pose.lengths[control]*=1+amplitudes[part]*pulse;
+      });
+    }
     if(id==='player.jak-flip') {
       // The source ends 23 degrees short of upright, expecting its ground
       // recovery to finish the turn. Finish that last part in the air instead.
@@ -210,26 +228,29 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
       }
     }
     for(const target of Object.keys(poses[0].locals))tracks.push({id:`${id}:${target}:source`,kind:'quaternion',target,
-      keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.locals[target],interpolation:'linear'}))});
-    tracks.push({id:`${id}:root:source`,kind:'position',target:'root',keys:poses.map((pose,i)=>({id:`${id}:root:p${i}`,time:Math.min(reference.duration,i/60),value:pose.root,interpolation:'linear'}))});
+      keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:keyTime(i),value:pose.locals[target],interpolation:'linear'}))});
+    tracks.push({id:`${id}:root:source`,kind:'position',target:'root',keys:poses.map((pose,i)=>({id:`${id}:root:p${i}`,time:keyTime(i),value:pose.root,interpolation:'linear'}))});
     for(const target of Object.keys(poses[0].translations))tracks.push({id:`${id}:${target}:position:source`,kind:'position',target,
-      keys:poses.map((pose,i)=>({id:`${id}:${target}:p${i}`,time:Math.min(reference.duration,i/60),value:pose.translations[target],interpolation:'linear'}))});
+      keys:poses.map((pose,i)=>({id:`${id}:${target}:p${i}`,time:keyTime(i),value:pose.translations[target],interpolation:'linear'}))});
     for(const target of Object.keys(poses[0].lengths))tracks.push({id:`${id}:${target}:source`,kind:'scalar',target,
-      keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:Math.min(reference.duration,i/60),value:pose.lengths[target],interpolation:'linear'}))});
+      keys:poses.map((pose,i)=>({id:`${id}:${target}:${i}`,time:keyTime(i),value:pose.lengths[target],interpolation:'linear'}))});
     // Transfer Bone Man's cycle cadence, not raw foot velocity. Its animation
     // intent keeps strides alive as physical momentum crosses zero in a turn.
     const playbackSpeed=id==='player.run'||id==='player.walk'
       ? original.playbackSpeed*reference.duration/(original.range.end-original.range.start) : 1;
-    const clip:AnimationClip=withCharacterElasticity({...original,id,name:`D · Jak ${name} (direct retarget)`,duration:reference.duration,
-      playbackSpeed,range:{start:0,end:reference.duration},loop:{...original.loop,mode:loop?'loop':'once'},
+    const clip:AnimationClip=withCharacterElasticity({...original,id,name:`D · Jak ${name} (direct retarget)`,duration,
+      playbackSpeed,range:{start:0,end:duration},loop:{...original.loop,mode:loop?'loop':'once'},
       tracks,proceduralDrivers:[],contacts:[],events:[],markers:[],
       metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,jakRootMode:rootMode,
         ...(ledge?{jakLedge:true}:{}),
+        ...(catchMotion?{jakSourceTimeScale:timeScale,jakLedgeSettle:true,elasticityProfile:'jak-ledge-catch'}:{}),
+        ...(id==='player.climb'?{elasticityProfile:'jak-ledge-climb'}:{}),
         ...(shortTail?{jakSourceTailClip:'jump-land',jakSourceTailAt:source.frames,jakSourceTailFrame:50}:{}),
         ...(startFrame?{jakSourceStartFrame:startFrame}:{}),
         referenceStudy:'Direct local source sample retarget; source data excluded from Git and production'},
     },rig);
-    if(elasticProfile)clip.metadata={...clip.metadata,elasticityProfile:elasticProfile};
+    const profile=elasticProfile??(catchMotion?'jak-ledge-catch':id==='player.climb'?'jak-ledge-climb':null);
+    if(profile)clip.metadata={...clip.metadata,elasticityProfile:profile};
     if(id==='player.run') {
       clip.name='D · Bone Man / Jak run (50/50)';
       clip.metadata={...clip.metadata,jakNativeRunClip:nativeRun.id,jakNativeRunWeight:.5,

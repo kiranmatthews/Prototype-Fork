@@ -11280,3 +11280,35 @@ All originally failing cases have passing focused coverage. Actual browser check
   `d-action-restore-2026-11-08/` directory.
 - Node 22 production build and release check pass: 987,282,502 bytes of the
   1,000,000,000-byte budget. No full-suite rerun was requested for this fix.
+
+## 2026-11-08 — Softer ledge catches and deliberate climbing
+
+- Brief: slow the ledge animation, add a finishing rebound, and prevent held
+  approach input from immediately climbing. Prompt-to-playable: approximately
+  12 minutes, including the first focused contact/input regression.
+- D's three catch clips take 25% longer and blend their ending into the actual
+  hanging pose, with a finite compression/rebound using shared segment
+  elasticity profiles. The pull-up takes 24% longer than the previous D timing
+  and has a 0.34-second settle into idle or live running. Hands stay planted
+  during catches; supported feet retain their lengths during the mantle settle.
+- The shared ledge controller consumes approach input at the catch. A fresh
+  inward direction, jump or spin press requests a climb; inherited inward or
+  jump holds must continue for more than 0.75 seconds after catching. Analog
+  strength jitter, camera turns and corner refits cannot fake a fresh direction.
+  Shimmying, dropping, clearance validation and moving support remain active.
+- Added held-input and release/repress replays, before-climb and rebound pause
+  points, and updated the in-playtest control hint. Original Jak comparison
+  playback follows the catch's slower source clock.
+- Focused checks: 23 actual-player scenarios across native/D (1,448 frames),
+  hold timing at 30/60/120 Hz, D ledge traversal/corners (1,731 frames), the real
+  Jungle ledge replay, shared elasticity and animation runtime all pass. The
+  historical held-X test now verifies the requested 0.75-second contract.
+  Catch grip error stays below 0.00023 m; stationary catch/mantle endings move
+  at most 0.023/0.025 m per frame. Both idle and running recovery finish.
+- Browser: verified hanging at exactly 0.75 seconds and climbing on the next
+  held frame, catch rebound into hang, and the supported mantle rebound into
+  idle. Lite and full rendering, MAX/native 2560×1440 and normal presentation
+  pass with no console warnings/errors. External evidence is in
+  `ledge-catch-rebound-2026-11-08/`.
+- Node 22 production build and release-size check pass: 987,285,564 bytes of
+  the 1,000,000,000-byte budget. No full-suite rerun for this scoped change.

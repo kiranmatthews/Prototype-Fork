@@ -1,6 +1,8 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { MathUtils } from 'three';
 import { JakAirPoseSpring } from './jakAirMotion';
+import { ledgeRebound } from './animation/ledgeMotion';
+import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from './animation/elasticity';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
@@ -1091,6 +1093,13 @@ export class CharacterAnimationRuntime {
       if (stride.joints[id]) result.joints[id] = stride.joints[id];
     for (const [id, value] of Object.entries(stride.scalars ?? {}))
       if (id.startsWith('deform.leg.')) result.scalars![id] = value;
+    const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
+    if (climb && recovery >= 0) {
+      const pulse = ledgeRebound(recovery), amplitudes = characterElasticityAmplitudes('jak-ledge-climb');
+      result.scalars ??= {};
+      for (const [control, part] of ELASTIC_LENGTH_CONTROLS)
+        result.scalars[control] = (result.scalars[control] ?? 1) * (1 + amplitudes[part] * pulse);
+    }
     this.recoveryIdleWeight = bodyWeight * (1 - moving);
     this.recoveryIdleTimelineTime = idleTime;
     this.pendingRunHandoffOffset = runTime - run.range.start;

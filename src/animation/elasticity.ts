@@ -22,6 +22,8 @@ const PROFILES:Record<string,Amplitudes> = {
   // Local D authoring profiles multiply the source's existing segment keys.
   // The source double-jump torso already stretches strongly; legs need more.
   'jak-flip':[.18,.10,.18,.16,.22], 'jak-double-jump':[.06,.10,.18,.16,.22],
+  'jak-ledge-catch':[.065,0,0,.035,.045], // hands stay planted while the hanging body rebounds
+  'jak-ledge-climb':[.10,.03,.04,0,0], // supported feet retain their lengths during the settle
   fall:[.08,.06,.08,.08,.10], land:[.10,.06,.08,.10,.12],
   'roll-land':[.18,.08,.12,.12,.15],
   'launch-rise':[.14,.10,.15,.08,.10], 'launch-float':[.045,.05,.075,.045,.065],

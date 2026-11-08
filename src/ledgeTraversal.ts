@@ -29,6 +29,53 @@ export const LEDGE_SHIM_INPUT_THRESHOLD = 0.25;
 export const LEDGE_AWAY_INPUT_THRESHOLD = 0.55;
 export const LEDGE_AWAY_DOMINANCE_MARGIN = 0.05;
 
+export const LEDGE_CLIMB_HOLD_SECONDS = .75;
+interface LedgeClimbControls {
+  moveX: number; moveY: number;
+  jumpHeld?: boolean; jumpPressed?: boolean;
+  spinHeld?: boolean; spinPressed?: boolean;
+}
+
+/** A catch consumes its approach input. Only a new deliberate input, or a
+ * continuous post-catch hold, may mantle. Raw stick direction is tracked so
+ * camera turns and refitted corner normals cannot manufacture a fresh press. */
+export class LedgeClimbInput {
+  private x = 0;
+  private y = 0;
+  private jumpHeld = false;
+  private spinHeld = false;
+  private towardSeconds = 0;
+  private jumpSeconds = 0;
+
+  reset(input: LedgeClimbControls = {moveX: 0, moveY: 0}): void {
+    const length = Math.hypot(input.moveX, input.moveY);
+    this.x = length > .2 ? input.moveX / length : 0;
+    this.y = length > .2 ? input.moveY / length : 0;
+    this.jumpHeld = Boolean(input.jumpHeld || input.jumpPressed);
+    this.spinHeld = Boolean(input.spinHeld || input.spinPressed);
+    this.towardSeconds = this.jumpSeconds = 0;
+  }
+
+  update(dt: number, input: LedgeClimbControls, pullingToward: boolean): boolean {
+    const length = Math.hypot(input.moveX, input.moveY);
+    const x = length > .2 ? input.moveX / length : 0;
+    const y = length > .2 ? input.moveY / length : 0;
+    // Ignore analog jitter and strength changes. A neutral/repress or a clear
+    // change of direction is a new request; the camera is not an input edge.
+    const freshDirection = length > .2 && (this.x === 0 && this.y === 0 || x * this.x + y * this.y < .8);
+    if (length <= .2 || freshDirection) { this.x = x; this.y = y; }
+    this.towardSeconds = pullingToward ? (freshDirection ? dt : this.towardSeconds + dt) : 0;
+    this.jumpSeconds = input.jumpHeld ? this.jumpSeconds + dt : 0;
+    const requested = pullingToward && (freshDirection || this.towardSeconds > LEDGE_CLIMB_HOLD_SECONDS + 1e-8)
+      || Boolean(input.jumpPressed && !this.jumpHeld)
+      || Boolean(input.spinPressed && !this.spinHeld)
+      || this.jumpSeconds > LEDGE_CLIMB_HOLD_SECONDS + 1e-8;
+    this.jumpHeld = Boolean(input.jumpHeld || input.jumpPressed);
+    this.spinHeld = Boolean(input.spinHeld || input.spinPressed);
+    return requested;
+  }
+}
+
 /**
  * Expand the default catch gates for a level-authored 0..1 accessibility
  * assist. Zero is byte-for-byte the shipped global feel; one is the generous

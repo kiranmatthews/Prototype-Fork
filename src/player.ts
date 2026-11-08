@@ -3,6 +3,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import type { AnimationClip } from './animation/types';
 import { jakFootThrust, studyJumpVelocity, type OnFootJumpStudy } from './onFootJumpStudy';
 import { LedgeHandMotion } from './animation/ledgeHands';
+import { JAK_LEDGE_MOTION } from './animation/ledgeMotion';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
@@ -106,6 +107,7 @@ import {
   ledgeEdgePoint,
   ledgeLandingPoint,
   ledgeScreenGripIntent,
+  LedgeClimbInput,
   ledgeTraversePoint,
   LEDGE_SHIM_INPUT_THRESHOLD,
   type LedgeBasis,
@@ -1412,7 +1414,8 @@ export class Player {
   private readonly ledgeClimbTo = new THREE.Vector3();
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
   private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
-  private ledgeClimbQueued = false; // preserves X pressed/held on the catch frame
+  private ledgeClimbQueued = false; // deliberate input buffered through the catch ease
+  private readonly ledgeClimbInput = new LedgeClimbInput();
   private readonly ledgeEnvelope: LedgeCatchEnvelope =
     ledgeCatchEnvelope(TUNING.ledgeReach, 0);
   // baked Mixamo braced-hang clips: which one is playing, its clock, and the
@@ -2457,7 +2460,7 @@ export class Player {
           jakLedgeMoving: Math.abs(this.ledgeShimmy) > .05 || this.ledgeHands.reaching ? 1 : 0,
           jakLedgeSide: this.ledgeSourceSide,
           jakLedgeClimbRecovery: this.directFootStudy && this.ledgeClimbRecovery >= 0
-            ? Math.min(1, this.ledgeClimbRecovery / .2) : -1,
+            ? Math.min(1, this.ledgeClimbRecovery / JAK_LEDGE_MOTION.climbRecoverySeconds) : -1,
           jakLedgeRelease: this.state === 'air' && !this.doubleJumpAir && this.hangExitW > 0 &&
             (this.hangClipName === 'drop' || this.hangClipName === 'fall')
             ? this.hangClipT / this.hangClipRate : -1,
@@ -4173,6 +4176,7 @@ export class Player {
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
     this.ledgeClimbQueued = false;
+    this.ledgeClimbInput.reset();
     this.hangClipName = null;
     this.hangExitW = 0;
     this.wallridePose = 0;
@@ -4698,8 +4702,8 @@ export class Player {
     }
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
-    if (this.ledgeClimbRecovery >= 0) this.ledgeClimbRecovery = this.ledgeClimbRecovery >= .2
-      ? -1 : Math.min(.2, this.ledgeClimbRecovery + dt);
+    if (this.ledgeClimbRecovery >= 0) this.ledgeClimbRecovery = this.ledgeClimbRecovery >= JAK_LEDGE_MOTION.climbRecoverySeconds
+      ? -1 : Math.min(JAK_LEDGE_MOTION.climbRecoverySeconds, this.ledgeClimbRecovery + dt);
     this.hangExitW = Math.max(0, this.hangExitW - dt * 2.6);
     if (this.state !== 'hang' && this.hangClipName) {
       if (this.hangExitW > 0) this.hangClipT += dt * this.hangClipRate;
@@ -17039,7 +17043,8 @@ export class Player {
     this.ledgeClimbK = 0;
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
-    this.ledgeClimbQueued = this.rawInput.jumpPressed || this.rawInput.jumpHeld;
+    this.ledgeClimbQueued = false;
+    this.ledgeClimbInput.reset(this.rawInput);
     // A two-handed ledge catch cannot leave the deck mounted. Detach before
     // zeroing speed/vVel so the loose board inherits the actual catch flight.
     this.detachBoardForTraversal(level);
@@ -17134,7 +17139,7 @@ export class Player {
       // first, the over-the-lip travel overlaps the tail of the rise, so the
       // path rounds the corner instead of snapping between two points.
       this.ledgeClimbT += dt;
-      const T = Math.max(0.12, TUNING.ledgeClimbTime) * (this.directFootStudy ? 1.25 : 1);
+      const T = Math.max(0.12, TUNING.ledgeClimbTime) * (this.directFootStudy ? JAK_LEDGE_MOTION.climbTimeScale : 1);
       const t = Math.min(1, this.ledgeClimbT / T);
       ledgeClimbPoint(this.pos, this.ledgeClimbFrom, this.ledgeClimbTo, this.ledgeLip, t);
       this.ledgeClimbK = t;
@@ -17226,7 +17231,7 @@ export class Player {
       // requested motion that an actual end blocks does not create an infinite
       // hang: only real displacement refreshes the hands.
       if (!didShimmy) this.ledgeT -= dt;
-      if (input.jumpPressed || input.spinPressed || gripIntent.pullingToward)
+      if (this.ledgeClimbInput.update(dt, this.rawInput, gripIntent.pullingToward))
         this.ledgeClimbQueued = true;
       const climbRequested =
         this.ledgeEaseT >= LEDGE_EASE && this.ledgeClimbQueued;

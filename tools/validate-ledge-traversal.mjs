@@ -692,7 +692,7 @@ try {
   gateLevel.dispose();
 
   const checkpoints = new Set([
-    4351, 4352, 4389, 4360, 4442, 4450, 4497, 4503, 4554, 4565, 4595,
+    4351, 4352, 4389, 4360, 4395, 4396, 4442, 4450, 4497, 4503, 4554, 4565, 4595,
     4620,
   ]);
   async function runReplay(data, beforeFrame, stopAfter = Number.POSITIVE_INFINITY) {
@@ -860,16 +860,22 @@ try {
   assert.equal(neutralEnd.grounded, true);
   assert.ok(neutralEnd.pos.z < -39.5, "neutral climb finished outside the ledge");
 
-  // Holding X through the collision frame must queue the mantle; no release
-  // and second press should be required after the hands catch.
+  // An inherited X hold must leave time to hang. It may mantle after more
+  // than 0.75 seconds without requiring release/repress. This fixture calls
+  // stepHang on the catch frame itself, so frame 4395 is its 45th grip tick.
   const heldCatch = structuredClone(traversalFixture);
-  for (let frame = 4351; frame <= 4375; frame++) heldCatch.b[frame] |= 1;
-  const heldRun = await runReplay(heldCatch);
+  for (let frame = 4351; frame <= 4400; frame++) {
+    heldCatch.b[frame] |= 1;
+    heldCatch.mx[frame] = heldCatch.my[frame] = 0;
+  }
+  const heldRun = await runReplay(heldCatch, undefined, 4396);
   assert.equal(heldRun.rows.get(4351).state, "hang");
+  assert.equal(heldRun.rows.get(4360).phase, "grip", "inherited jump climbed immediately");
+  assert.equal(heldRun.rows.get(4395).phase, "grip", "inherited jump climbed before the hold deadline");
   assert.equal(
-    heldRun.rows.get(4360).phase,
+    heldRun.rows.get(4396).phase,
     "climb",
-    "held-through-catch jump intent was lost",
+    "sustained post-catch jump hold did not climb after 0.75 seconds",
   );
 
   // A real low ceiling blocks only the climb. The grip remains live and can

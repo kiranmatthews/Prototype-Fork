@@ -107,7 +107,9 @@ function updateSource() {
   if (!sourceModel.visible) return false;
   const clip = runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId);
   let name = clip?.metadata?.jakSourceClip as string | undefined, time = runtime.diagnostics.timelineTime ?? 0;
+  time /= Number(clip?.metadata?.jakSourceTimeScale ?? 1);
   sourceNote.textContent = clip?.metadata?.jakNativeRunClip ? 'Bone Man left · 50/50 run · original Jak right'
+    : clip?.metadata?.jakLedgeSettle ? 'Bone Man left · softer ledge catch · original Jak right'
     : name ? 'Bone Man left · original Jak right · same source frame'
     : 'Bone Man left · native idle / transition · Jak at rest';
   if (clip?.metadata?.jakSourceTailClip && time * 60 >= Number(clip.metadata.jakSourceTailAt)) {
@@ -265,10 +267,13 @@ p.step = (dt: number, input: any, level: Level) => {
   if (mode.toLowerCase().includes('ledge') || mode.startsWith('Catch ')) {
     p.camDir.set(0,0,-1);
     const demo={moveX:mode==='Shimmy ledge'?(frame>90&&frame<150?1:frame>=150&&frame<250?-1:frame>=280&&frame<340?1:0):0,
-      moveY:mode==='Climb ledge'&&frame===230?1:mode==='Release ledge'&&frame>230?-1:0,
+      moveY:mode==='Ledge hold to climb'?1:mode==='Ledge release and climb'?(frame<20||frame>=32?1:0):mode==='Climb ledge'&&frame===230?1:mode==='Release ledge'&&frame>230?-1:0,
       jumpHeld:false,jumpPressed:false,jumpReleased:false};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
     if(stopAt==='Catch'&&frame===20 || stopAt==='Settled'&&frame===160 ||
+      stopAt==='Before climb'&&frame===45 ||
+      stopAt==='Catch rebound'&&runtime.activeClipId?.startsWith('player.jak-ledge-')&&(runtime.diagnostics.timelineTime??0)>=1.18 ||
+      stopAt==='Climb rebound'&&p.ledgeClimbRecovery>=.23 ||
       stopAt==='Pull-up'&&p.state==='hang'&&p.ledgePhase==='climb'&&p.ledgeClimbK>=.5 ||
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
@@ -432,7 +437,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
 const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
-  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ledge catch','Catch left','Catch right','Climb ledge','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -446,10 +451,10 @@ button(inspectorControls, 'Control this ledge', () => {
   if(p.state!=='hang')resetInspector();
 });
 const ledgeHint=document.createElement('small');
-ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
+ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release'],value=>{stopAt=value;resetInspector();});
+  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Before climb','Catch rebound','Climb rebound'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -488,6 +493,7 @@ function report() {
     walkBlend:+(d.motionContext?.inputs?.[LOCOMOTION_WALK_BLEND_INPUT] ?? 0).toFixed(3),
     lastSwitch, torso: scalars?.['deform.torso.length']?.toFixed(2), shin: scalars?.['deform.leg.lower.left.length']?.toFixed(2),
     jumpFlip,ledge:p.state==='hang'?p.ledgePhase:null,ledgeGripError:+p.ledgeGripError.toFixed(4),
+    ledgeSeconds:+p.ledgeSourceSeconds.toFixed(3),ledgeClimbRecovery:+p.ledgeClimbRecovery.toFixed(3),
     cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),
     sourceHip:sourceModel?.getObjectByName('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
     targetHip:binding.joints.get('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
