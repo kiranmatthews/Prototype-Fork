@@ -1,11 +1,89 @@
 {
   "state": "finished",
-  "seconds": 131.28333333333333,
+  "seconds": 108,
   "deaths": 0,
   "position": [
-    -85.4566349997933,
-    104.22666666915019,
-    25.993594587764232
+    1.2338367508404067,
+    46.72666666915019,
+    -543.0134260037731
   ],
-  "frames": 7877
+  "frames": 6477,
+  "stations": [
+    {
+      "station": 0,
+      "frame": 106,
+      "seconds": 1.8
+    },
+    {
+      "station": 100,
+      "frame": 369,
+      "seconds": 6.2
+    },
+    {
+      "station": 200,
+      "frame": 799,
+      "seconds": 13.3
+    },
+    {
+      "station": 300,
+      "frame": 1254,
+      "seconds": 20.9
+    },
+    {
+      "station": 400,
+      "frame": 1647,
+      "seconds": 27.4
+    },
+    {
+      "station": 500,
+      "frame": 2014,
+      "seconds": 33.6
+    },
+    {
+      "station": 600,
+      "frame": 2239,
+      "seconds": 37.3
+    },
+    {
+      "station": 700,
+      "frame": 2518,
+      "seconds": 42
+    },
+    {
+      "station": 800,
+      "frame": 3590,
+      "seconds": 59.8
+    },
+    {
+      "station": 900,
+      "frame": 3878,
+      "seconds": 64.6
+    },
+    {
+      "station": 1000,
+      "frame": 4137,
+      "seconds": 69
+    },
+    {
+      "station": 1100,
+      "frame": 4532,
+      "seconds": 75.5
+    },
+    {
+      "station": 1200,
+      "frame": 4929,
+      "seconds": 82.2
+    },
+    {
+      "station": 1300,
+      "frame": 5735,
+      "seconds": 95.6
+    },
+    {
+      "station": 1400,
+      "frame": 6078,
+      "seconds": 101.3
+    }
+  ],
+  "cratesBroken": 38
 }

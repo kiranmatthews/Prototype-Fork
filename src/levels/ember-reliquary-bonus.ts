@@ -1,7 +1,7 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { BonusCourse } from './bonus-course-kit';
 import { bonusCourseArt, bonusArtAtmosphere } from './bonus-course-art';
-import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-route';
+import { TEMPLE_NIGHT_ATMOSPHERE } from './temple-night-atmosphere';
 
 type Kind = NonNullable<CustomComponent['kind']>;
 const STONE = '#c8bc94', JADE = '#79a996';

@@ -2,174 +2,186 @@
 
 Temple of Embers (`jungle-terraces`, Secret Island slot 2, unlocked by five all-box gems) is the
 course where the game's two halves have to meet: Crash Bandicoot's readable corridor of crates,
-hazards and checkpoints, and Tony Hawk's lines, transitions and speed that has to be earned.
-This document records the principles used to re-author its layout, crates, enemies, fire and
-scenery, and the Ember Reliquary bonus that now serves as the course's exam. It is the design
-reference; `docs/LEVEL_ITERATIONS.md` holds the timed record and validation evidence.
+hazards and checkpoints, and Tony Hawk's lines, grinds and speed that has to be earned. This is
+the second redesign. The first kept the old site and re-dressed it; players could not tell it
+apart from what came before, and its rails ran through its crates. This version starts from a
+new site, gives every chapter one set piece the course never had, and refuses to build if any
+two things it places collide. `docs/LEVEL_ITERATIONS.md` holds the timed record and evidence.
 
-The site is kept: both temple arms, the five jade reservoirs, the two stair climbs, the two switch
-bridges, the two ollie gaps, the causeway, the lantern stair court and the cores. Everything the
-player meets on that site was re-decided.
+Source: `src/levels/temple-of-embers.ts` (the course, authored in station space through a DSL
+that registers everything it places), `src/levels/jungle-temple-space.ts` (the winding world
+builder), `src/levels/jungle-sequel-art.ts` (banks, paving, gateways, halls, ravine),
+`src/levels/ember-reliquary-bonus.ts` (the bonus). Stations are route metres from the ravine rim
+(−24) to the sanctuary gate (1484); `side` is metres across the eight-metre road, negative left.
 
 ## 1. Pillars
 
-1. **Two kinds of time.** Skating time is kinetic and low on decisions: banks, rails, bowls,
-   gaps. Platforming time is slow and decision-heavy: crate order, switch circuits, fuse refuges,
-   patrol reading. Chapters alternate between the two and never demand both at once until the
-   climax. A checkpoint ends every chapter so the player can reset their attention.
-2. **Introduce, develop, twist, conclude.** Every mechanic appears four times: alone on safe
-   ground, combined with one other element, inverted or combined with a hazard, and finally
-   as part of the summit. Act I (the Terraces) introduces; the causeway breathes; Act II (the
-   Skyline) develops and twists; the Sanctuary concludes.
-3. **Readable danger, paid risk.** Every hazard telegraphs before it harms: the sentinel's
-   amber windup, the TNT count, nitro's green glow, the bull's planted windup, the sentry's
-   charging lens. Every risk has a visible reward sitting inside it, and a visible safe lane
-   beside it.
-4. **Crates are the grammar.** A crate is a breadcrumb (it draws the line), a reward (it marks
-   progress), a tool (arrow, striped support, steel footing), a puzzle (an order that can be
-   got wrong) or a hazard (TNT, nitro). Each placement has exactly one of those jobs, and the
-   all-box gem is the meta-objective that makes the optional lines and the bonus matter.
-5. **Lines, not rooms.** Where the course skates, rewards sit on skate lines: low gold rails
-   beside banks, caps suspended above the reservoir lips where every drop-in's air arrives,
-   exit offerings on both carving lines out of a bowl, a pumped-return cap above the giant
-   bowl's entry. Speed is never free; it pays in reach.
-6. **Light is language.** Warm lamps mean safe ground. Paired lamps mean a banked checkpoint.
-   No lamps mean a sentinel's territory, where its fire is the only light. Jade means a switch
-   circuit. Scorched paving means a gauntlet.
-7. **Checkpoint before a twist, never on a landing.** Every chapter that changes the rules
-   starts from a checkpoint; no checkpoint, enemy or fire stands where a jump lands blind.
-8. **Difficulty is combination, not numbers.** Nothing gets faster, longer or deadlier on its
-   own; the course gets harder because elements the player already knows start overlapping.
+1. **One idea per chapter, and it is the chapter.** Thirteen chapters, each built around a single
+   set piece with a Crash half (a hazard with a rule) and a skating half (the line that answers
+   it). Nothing from one chapter leaks into the next except knowledge.
+2. **Every hazard has a skating answer, every line has a walking answer.** Breathing stones are
+   crossed by waiting or by the gold rail that ignores them; burning ropes are grinds, and a fall
+   lands on a bellows floor; the ash floor is a hop rhythm or one board boost; the censers are
+   timed or passed on the right-hand rail; the pistons are three timings or one breath at speed.
+3. **Fail soft before fail hard.** The first three chapters never kill a rider who commits: the
+   rope floor catches, the lift well returns you to the court, the stone chasms are the first
+   death pits and they come after the rail has been shown. From the serpent on, the course bites.
+4. **Collision-free by construction.** The authoring layer registers every crate, rail, rope,
+   flame, swing, pad, patrol, pit, void and checkpoint and refuses to build the course if a rail
+   passes within a crate, a crate stands in a sweep or a swing without being meant to, a crate
+   sits on anything that moves or breaks, a checkpoint respawns within ten metres of a hazard, or
+   a rigid set piece lands in a bend. A second audit checks the built world independently.
+5. **Readable danger, paid risk.** Every hazard telegraphs: amber-to-blue stones, the rope's
+   smoulder, the ash pad's shake, the censer's arc, the hammer's rest, the sentinel's amber
+   windup, nitro's green glow. Every risk has a reward inside it and a safe lane beside it.
+6. **Crates are the grammar.** Rhythm lines on the straights, offerings at the edge of each
+   hazard, caps where the air arrives, consolation where a fall lands, a hoard beyond a patrol,
+   nitro that is only ever looked at. 83 counted boxes on the course, 17 in the bonus, 100 in all.
+7. **Light is language.** Warm lamps every 26 m mean safe ground; paired lamps mean a banked
+   checkpoint; no lamps within 14 m of a sentinel, where its fire is the only light; scorched
+   paving marks the gauntlet; the brazier on the lift is the only light that moves.
+8. **Checkpoint before a twist, never on a landing, never beside a hazard.** Eleven checkpoints,
+   one at the start of every chapter that changes the rules, each at least ten metres from any
+   flame, patrol, nitro, fuse, swing or hammer, and never inside the side-view turn.
 
-## 2. Beat chart
+## 2. Site and silhouette
 
-Stations are route metres from the Fern court spawn (−20) to the sanctuary gate (1384). Intensity
-is 1 (rest) to 5 (climax). Mode: S skating, P platforming, R rest.
+The temple is cut into a cliff. The road is an axis-aligned switchback: an arrival leg down a
+ravine rim, then four 240 m galleries running east, west, east, west, each one storey (12 m)
+above the last, joined by 100 m courts at the ends, and a final spur north to the sanctuary.
+Every leg is axis aligned, so world-axis primitives (patrols, the lift, pads, hammers) keep their
+authored meaning, and every bend is a 12 m fillet the rigid set pieces stay out of.
 
-| Ch. | Stations | Chapter | Mode | Int. | What is learned or combined | Crates | Enemy | Fire | Light |
+| Leg | Stations | Heading | Height | Storey block beneath |
+| --- | --- | --- | --- | --- |
+| Ravine rim and ash court | −24 → 115 | north, dropping 7 → 0 | 7 → 0 | ash court core |
+| Gallery of stones and ropes | 115 → 355 | east | 0 | cut open under the rope floor |
+| Pilgrim bank | 355 → 455 | north | 0 → 12 | self-supporting ribbon |
+| Ash gallery and censer hall | 455 → 695 | west | 12 | cut open under the ash chasm |
+| Lift court and well | 695 → 795 | north | 12 → 24 | the well is open to its floor at 7 |
+| Serpent gallery and shrine | 795 → 1035 | east | 24 | full |
+| Flame climb | 1035 → 1135 | north | 24 → 36 | self-supporting ribbon |
+| Reservoir, vault and leap | 1135 → 1375 | west | 36 | cut under the bowl and the leap |
+| Ember Gauntlet and sanctuary | 1375 → 1490 | north | 36 → 46 | sanctuary core |
+
+The storey blocks are each deep enough to reach the previous gallery's cornice, so from any
+gallery the temple reads as a stepped pyramid with the road zigzagging up its face, and from the
+lift the rider sees the three galleries already ridden. The ravine is an elliptical ring of 44
+cliff bays; Treehouse trees and ferns replace the old jungle foliage, rooted clear of every road.
+
+## 3. Beat chart
+
+Mode: S skating, P platforming, R rest. Intensity 1 (rest) to 5 (climax).
+
+| Ch. | Stations | Chapter | Mode | Int. | Set piece (Crash half → skating half) | Crates | Enemy | Fire | Checkpoint |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | −20–34 | Fern court | R→P | 1 | Spin, count, mask; optional arrow-first room (life above) | mask, 3 wood, arrow room | — | — | arrival lamps |
-| 1 | 34–151 | First bank and teaching reservoir | S | 2 | First low gold rail; first flame seen from the right-hand lane; first bowl, with its exit line | multihit inside the sweep; exit offerings; suspended exit cap | crab (open bank) | T1 teaches | lamps stop 14 m before the sentinel |
-| 2 | 151–285 | Processional climb and switch court | P | 2 | Stair alternative with rewards; stomp lesson; `!` creates the visible bridge | climb mystery/life; switch; 3 rewards after the bridge | mossback (shell stays in the offering lane) | — | paired lamps at 151 |
-| 3 | 285–359 | Three-times-high ascent | S | 2 | Timing an attack on a jumping foe while climbing at speed | offering beyond the frog | spring frog | — | paired lamps at 285 |
-| 4 | 359–504 | Summit fuse court, sanctuary reservoir, first ollie | P→S | 3 | Cap before fuse, refuge, blast relay; fire over the court approach; 6 m ollie or gold rail | TNT court and relay cache; exit line; landing mysteries | — | T2 over the court approach | summit lamps, none at the sentinel |
-| 5 | 504–600 | Torch causeway | R | 1 | Breath. Lantern stair court (optional steel-tower restoration); Ember Reliquary bonus; mask for Act II | 48 steel + 3 rewards; mask; weaving pickup line | — | — | courtyard braziers |
-| 6 | 600–805 | Return gallery, bull bank, cloud reservoir | P→S | 3 | Arrow room gains a return switch; the bull owns the centre of its bank; the sentry covers the apron; flame sweeps the drop-in lane | return rewards; bull refuge offering; sentry's life; multihit; exit line | russet bull, ember sentry | T3 on the drop-in lane | lamps at 632 only |
-| 7 | 805–920 | Cloud fuse reprise and crown bank | P | 4 | Fuse reprise chains a nitro; a hovering watcher over the fast lane while the pilgrim stair is the slow safe route; the stomp habit is punished | TNT court + chained nitro; climb rewards; offerings | violet watcher, bristleback | T4 beside the bank | lamps at 832 |
-| 8 | 920–1049 | Crown court and sun crown reservoir | P→S | 4 | First nitro beside the lane (never touch); arrow kept for the high life; `!` bridge into the bowl | 2 nitro; crown arrow + life; switch; exit line | — | — | crown lamps |
-| 9 | 1049–1152 | Rising sun and the giant reservoir | S | 4 | The biggest bowl: exit line plus a pumped-return life above the entry lip | rhythm pair; exit line; entry life | — | — | paired lamps at 1049 |
-| 10 | 1152–1194 | Descending aqueduct | S | 3 | Flame guards the gold rail mount: time the grind entry or take the open right lane | — | — | T5 at the rail mount | none: scorched paving |
-| 11 | 1194–1345 | Final leap and the Ember Gauntlet | S→P | 5 | 7 m ollie, landing under a flame, mask, then three sentinels in a staggered wave with offerings inside each sweep | mask; 3 mysteries; 3 gauntlet offerings | — | T6 landing; T7–T9 wave | none: fire only |
-| 12 | 1345–1392 | Sanctuary | R→P | 2 | Victory lap: a procession between two crossing guardians, flanked by nitro; crystal; green switch counts every nitro; gate | 3 procession wood; 3 nitro; green switch | two crabs crossing opposite halves | — | sanctuary lamps |
+| 0 | −24–127 | Ravine rim and ash court | S | 1 | Drop-in bank → the rim rail beside it; weaving crate line; first flame read from the right lane | 3 weave, mask, 2 in the sweep, 2 after the crab | crab crossing | T1 left at 84 | 58 |
+| 1 | 127–250 | Gallery of stones | P | 2 | Ember stones breathe amber and blue over two chasms → a gold rail on the right crosses regardless | 2 rhythm, island mystery, 2 landing | — | — | 140 |
+| 2 | 250–343 | Burning ropes | S | 2 | Two grind ropes that part after 3 s and 2.4 s of weight → the fall lands on an ash floor with two bellows that bounce you back | 3 consolation below, 2 rhythm, 2 after the mossback | mossback crossing | — | 252 |
+| 3 | 343–467 | Pilgrim bank | S | 2 | Bank, left stair with offerings, right gold rail: three routes up | 3 stair | — | — | — |
+| 4 | 443–590 | Ash gallery | P | 3 | Seven ash pads that break under weight, an island mid-field → one board boost crosses it all | 2 rhythm, island mystery, 2 after, 2 after the frog | spring frog | T2 left at 566 over a striped crate | 474 |
+| 5 | 590–683 | Censer hall | P | 3 | Side view. Three censers swing along the hall through the fruit line → the right-hand rail passes every swing | 6 at the swing edges, 2 under the watcher | violet watcher | — | 592 |
+| 6 | 683–807 | Lift court | R | 1 | The bonus door in a right-hand court; a burning lift to the third storey (a fall returns through an ember draft); cap-before-fuse court on top | TNT + cap + refuge mystery, 2 rhythm | — | — | 756 |
+| 7 | 807–920 | Serpent gallery | S | 3 | A lethal body patrolling the centre whose spine is a grind: ride most of it to defeat it, or take the side lanes; then the flame and the bull | 2 rhythm, hoard, 1 in the sweep, bull refuge | russet bull along the lane | T3 right at 884 | 814 |
+| 8 | 920–1023 | Sealed shrine | P | 3 | A side chamber behind a kickflip seal: a flip through the ring opens it for good; the ember sentry covers the approach to the climb | life, mystery, wood inside; 1 after the sentry; 2 rhythm | ember sentry | — | 930 |
+| 9 | 1023–1147 | Flame climb | S | 3 | The pilgrim bank again with a sentinel on the right: the stair and the left rail are the safe routes | 3 stair | — | T4 right at 1090 | — |
+| 10 | 1123–1240 | Jade reservoir | S | 3 | The one bowl: exit offerings on both carving lines, a cap above the exit lip met by drop-in air, a life above the entry lip for a pumped return; the first nitro glows beside the lane | 2 exit, 2 caps, 2 nitro, 2 rhythm | — | — | 1150 |
+| 11 | 1240–1363 | Piston vault | P | 4 | Three hammers that breathe together in a roofed vault → the boost before it carries a rider through in one breath; mask; the seven-metre leap with its gold rail | 4 after the vault, mask, 2 landing | — | — | 1238 |
+| 12 | 1363–1490 | Ember Gauntlet and sanctuary | S→P | 5 | Three sentinels in a staggered wave up the last bank with an offering inside each sweep; a bristleback at the door; the crystal; the nitro gate; the green switch | 3 in the sweeps, 2 procession, 3 nitro | bristleback crossing | T5–T7 at 1402/1420/1438 | 1392 |
 
-## 3. Mechanic arcs
+## 4. Set-piece catalogue
+
+| Set piece | Rule | Telegraph | Skating answer | Failure | Recovery |
+| --- | --- | --- | --- | --- | --- |
+| Ember stones (5 phase pads, 10 s round, lit 65 %) | stand only on a lit stone; amber and blue trade places | the warning pulse before a stone goes dark | gold rail at side 3.6 over each chasm | death pit | checkpoint 140 |
+| Burning ropes (15 m, 3 s; 20 m, 2.4 s; both at side −1.6) | grind across before the fibre parts; it restrings after 4 s | the rope sags and smoulders under weight | the ropes are the line | a fall of 5 m onto the ash floor | two bellows (19 m/s) under the island and the landing |
+| Ash floor (7 pads, 0.72 s shake, 1.4 m hops) | keep moving | the shake | board boost to 30 m/s at station 494 | death pit | checkpoint 474 |
+| Censer hall (3 pendulums, 6 m arms, 0.95 rad, 1.3 rad/s) | the bob owns the centre line | the swing is read in side view | gold rail at side 3.6 | crushed | checkpoint 592 |
+| Brazier lift (10.4 m deck, 12 ↔ 24 m, 12.6 s round) | wait, board, ride | the deck's brazier | — (a rest beat) | a fall into the well | the ember draft portal returns you to station 737 |
+| Serpent (grindosaurus, 24 m patrol, 60 % spine) | the body is lethal; its spine is a grind | spine fruit | ride the spine to defeat it | death | checkpoint 814 |
+| Kickflip seal (trick gate, 2.2 m aperture) | only a kickflip through the ring opens the shrine | the sealed ring and its sigil | the flip itself | bounced off | optional: three boxes inside |
+| Piston vault (3 hammers, 3.6 m blocks, 3.8 s round, in phase) | pass as they rise or hang | the rest on the deck, the rise | board boost at station 1248 through all three | crushed | checkpoint 1238 |
+| Jade reservoir (radius 7, 60° walls) | pump for height | the bowl | drop-in air meets the exit cap; a pumped return reaches the entry life | — | — |
+| Ember Gauntlet (three sentinels 18 m apart, phases a third apart) | weave to the far lane of each flame | amber windup | speed through the wave | burned (a mask absorbs one) | checkpoint 1392 |
+
+Sentinels: 7.1 m reach, 7.8 s cycle (cool 0–54 %, warn 54–70 %, fire 70–93 %), ±28° sweep, heads
+at side ±6.4 on their own footing. A head on one side leaves the far 2.2 m of the road cool.
+
+## 5. Mechanic arcs
 
 | Mechanic | Introduce | Develop | Twist | Conclude |
 | --- | --- | --- | --- | --- |
-| Flame sentinel | T1 (94) beside the first terrace; its sweep reaches a striped crate but not the right-hand lane | T2 (375) sweeps the summit court approach, where the TNT puzzle wants your attention | T3 (734) sweeps the reservoir drop-in lane; T4 (872) makes the stair the slow safe route; T5 (1176) guards the rail mount; T6 (1252) waits at the landing of the final leap | T7–T9 (1278/1300/1322) alternate sides with phases a third of a cycle apart: a wave to weave through |
-| Reservoir (bowl) | r6 teaching bowl with a low exit line | r9 bowl after the fuse court | r12 and r14 bowls arrive at speed from a flame lane and a switch bridge | r18 giant bowl: exit line plus a life above the entry lip that needs a pumped return (or a hop from the aqueduct rail) |
-| Gold rail | First bank grind, 0.8 m above the slope | Ascending aqueduct grind beside the stair | Rails over both switch bridges and the two gaps; the aqueduct rail passes beside every suspended cap | Final gap grind as the fast finish line |
-| Switch bridge | `!` at 249 creates the jade bridge at 256 | `!` at 619 reveals the earlier return-gallery rewards | `!` at 948 creates the crown bridge straight into the sun crown bowl | The green `!` at 1378 changes the whole level's count |
-| Arrow room | Fern court: keep the arrow, claim the life above, destroy the arrow last | Return gallery: the rewards are outlines until a far switch reveals them | Crown arrow with a life ten metres up, beside the first nitro | The bonus turns the arrow into the key to a switch |
-| Fuse court | Summit: stomp the cap, prime, retreat to the marked refuge; the blast flips a relay and restores a cache | Cloud reprise: the blast also detonates a chained nitro | — | The bonus vault repeats the cap-before-fuse order in side view |
-| Nitro | Two glow beside the crown court lane: look, never touch | One chained inside the cloud fuse blast | Three flank the sanctuary procession | The green switch beyond the crystal counts all six at once |
-| Enemy reading | Crab on open ground | Mossback (stomp), frog (timing) | Bull (dodge, then strike while dizzy), sentry (ranged), watcher (hover), bristleback (no stomp) | Two crabs crossing opposite halves of the procession |
+| Grinding | the rim rail beside the drop-in | rails over the stone chasms that ignore the stones | ropes that part under weight; the censer rail past the swings; the serpent's spine | the leap rail into the gauntlet |
+| Timing | breathing stones | ash pads that break | censers in side view; the lift's cycle | three hammers in one breath; the three-flame wave |
+| Fire | T1 beside the ash court, read from the right lane | T2 over the striped crate on the ash landing | T3 on the serpent gallery, T4 making the climb's stair and rail the safe routes | T5–T7 staggered up the gauntlet bank |
+| Crates | weave line, mask, offering after the crab | offerings at the edge of each hazard; consolation on the rope floor | caps where the air arrives; the hoard beyond the serpent; three boxes behind a trick | nitro beside the lane, then the green switch counts all five |
+| Enemies | crab (any attack) | mossback (stomp), frog (spin while grounded) | watcher (jump-spin, side view), bull (dodge then strike), sentry (jump the orb) | bristleback at the door (spin only) |
 
-## 4. Crate inventory
+## 6. Crate inventory
 
-Counted boxes (everything except steel, steel arrows and switches): **89 on the main course, 17
-in the bonus, 106 in all.** By job:
+Counted boxes: **83 on the course, 17 in the bonus, 100 in all.**
 
 | Job | Kinds | Where |
 | --- | --- | --- |
-| Breadcrumb lines | wood | opening rhythm (9–17), weaving arrival line (584–592), bridge rewards, rising sun pair, sanctuary procession |
-| Skate-line rewards | wood, life | exit offerings on both carving lines of all five bowls; a suspended cap above each exit lip; the giant bowl's entry life |
-| Encounter offerings | wood, mystery, life | one stack after each encounter, capped with a mystery where the lesson changed (bull, bristleback); the sentry's life |
-| Tools | bouncy, multihit, metal | three arrows (Fern court, return gallery, crown); two striped crates, one inside a sweep; 48 steel steps of the lantern stair |
-| Puzzles | bang, outline rewards | two bridge switches, one return switch, one lantern switch, two blast relays with outlined caches |
-| Hazards | tnt, nitro, nitrobang | two capped TNT with refuges; six nitro; one green switch |
-| Milestones | life, mask, mystery | masks before the first ascent, before Act II and before the gauntlet; lives on both stair tops, above arrows, over the giant bowl, behind the sentry and on the lantern shelf |
+| Rhythm lines | wood | arrival weave (36–44), stone approach, rope landing, terrace, lift court, serpent approach, climb approach, reservoir terrace, sanctuary procession |
+| Hazard-edge offerings | wood, mystery, multihit | stacks beside the crab, mossback, frog, watcher, bull and sentry; the striped crate inside T2's sweep; offerings at the edge of each censer swing; one inside T1, T3 and each gauntlet sweep |
+| Caps where the air arrives | wood, life | above the reservoir's exit and entry lips |
+| Consolation | wood, mystery | the ash floor under the ropes; the stone island; the ash island |
+| Hoards behind a skill | wood, mystery, life | beyond the serpent's patrol; the three boxes inside the kickflip-sealed shrine; the pilgrim stair offerings |
+| Milestones | mask, mystery | masks before the first flame and before the gauntlet; the fuse court's refuge mystery; two landing mysteries after the leap |
+| Hazards | tnt, nitro, nitrobang | one capped TNT with a marked refuge; two nitro beside the reservoir terrace, three at the sanctuary gate; the green switch beyond the crystal |
 
-Rules applied to every placement: visible before commitment, never on a blind landing, never
-within spin reach (1.3 m) plus blast radius (2.75 m) of a nitro, the pilot lane at +1.25 m stays
-clear of every nitro by more than a body width, and no counted box depends on a hidden route.
+## 7. Enemy roster
 
-## 5. Enemy roster
-
-Seven of the game's eight kinds, each placed where its rule is legible and its escape lane is
-open. Patrols are axis-bound, so crossing patrols walk the lane's cross-axis and the bull runs
-along the one long straight bank that has no rail on its side.
-
-| Station | Kind | Placement rule | Lesson |
+| Station | Kind | Placement | Lesson |
 | --- | --- | --- | --- |
-| 56 | crab | open bank, centre, escape both sides | spin or stomp |
-| 198 | mossback | offering lane; its solid shell stays there | stomp, then the shell is footing |
-| 319 | spring frog | long straight ascent | attack only while it is grounded |
-| 660 | russet bull | centre of the long rolling ascent, 18 m lane, right-hand lane clear | read the windup, step aside, strike while it is dizzy |
-| 727 | ember sentry | pipe apron, right side | jump the slow orb, spin the body; its life is behind it |
-| 848 | violet watcher | over the crown bank's fast lane | jump-spin, or take the pilgrim stair |
-| 896 | bristleback | after the crown flame, left lane | the stomp habit is punished |
-| 1352 / 1362 | two crabs | crossing opposite halves of the sanctuary, ten metres apart | the centre lane stays clear; rhythm, not threat |
+| 96 | crab | crossing the ash court | spin or stomp, escape either side |
+| 318 | mossback | crossing the rope landing on the left | stomp; the shell stays in the offering lane |
+| 580 | spring frog | crossing the ash landing | spin only while it is grounded |
+| 648 | violet watcher | between the censers, in side view | jump-spin it |
+| 846 | temple serpent | patrolling 24 m of the gallery centre | grind its spine, or keep to the side lanes |
+| 906 | russet bull | running the gallery centre for 18 m | read the windup, keep left, strike while it is dizzy |
+| 996 | ember sentry | right of the climb approach | jump the slow orb, spin the body |
+| 1452 | bristleback | crossing the sanctuary door | the stomp habit is punished |
 
-## 6. Scenery and wayfinding
+## 8. Scenery and wayfinding
 
-- **Landmarks per chapter.** Gateway arches mark chapter starts (Fern court, Jade reservoir,
-  Bridge court, Sanctuary garden, Sanctuary landing, Forest arrival, Cloud reservoir, Crown court,
-  Cloud garden, Upper landing, Ember Gauntlet, Sun sanctuary). Roofed halls mark rests.
-- **Lamps.** Guidance lamps every 26 m on alternating shoulders, skipping gaps and any station
-  within 14 m of a sentinel. Paired lamps stand at every checkpoint and at the start of each
-  patrol bank. The aqueduct flame and the gauntlet have no lamps at all.
-- **Paving.** Worn processional slabs on every encounter bank, scorched slabs under the
-  sentinels of the aqueduct and gauntlet, fitted court paving on the causeway and lantern court.
-- **Planting.** The Treehouse library (ancient trees, crowns, ferns, groundcover) at measured
-  proportions, rooted outside every route arm; reservoir masonry, piers and vines tie each bowl
-  to its storey.
-- **Night.** Moon fill and fog keep floor edges readable; the sentinel crowns and torches share
-  the bounded six-light pool.
+- **Gateways** (hanging arches) open every chapter: ravine rim, stones, ropes, ash gallery,
+  censer hall, lift court, serpent gallery, sealed shrine, reservoir, vault, gauntlet, sanctuary.
+- **Roofed halls** cover the censer hall and the piston vault, the two chapters played indoors.
+- **Side courts** hold the bonus door (right of the lift court) and the sealed shrine (left of the
+  serpent gallery), each with its own parapet, paving and lamps.
+- **Paving** marks every flat court; scorched paving marks the gauntlet bank.
+- **Shoulders and parapets** run continuously along the road, breaking only at chasms, voids, the
+  lift well, the bowl, the hammers' footprints and the side courts.
+- **The storey blocks** and their cornices make the pyramid; the reservoir sits in a cut in the
+  fourth storey with its own retaining walls.
 
-## 7. Ember Reliquary (bonus)
+## 9. The Ember Reliquary
 
-A side-scrolling exam of the course's vocabulary in the order the course taught it. Seventeen
-counted boxes; a bonus death returns to the parent as usual, so the vestibule gives a mask first.
+The bonus is unchanged from the first redesign: five side-view rooms (vestibule with mask, a
+sentinel breathing across the lane, an arrow kept to reach a high switch that creates the jade
+bridge, the cap-before-fuse vault, a nitro corridor counted from a green switch), 17 boxes, entered
+from the lift court's right-hand landing.
 
-| Room | x | Decision | Boxes |
-| --- | --- | --- | --- |
-| Offering vestibule | 0–20 | spin, count, and take the mask before the fire | wood ×2, mask, mystery |
-| Ember gate | 20–42 | a sentinel behind the lane breathes across it toward the viewer, sweeping about six metres of floor; two offerings stand inside the sweep | wood ×2 |
-| Jade bridge chain | 42–86 | keep the arrow; bounce to the shelf; strike the high `!` so the outlined bridge becomes real; drop back; clear the arrow last; cross; collect | arrow, mystery, wood, mystery |
-| Fuse vault | 86–112 | stomp the wooden cap, double-jump for the life, return to prime the TNT, wait in the marked refuge | TNT, wood, life, mystery |
-| Nitro corridor | 112–156 | jump three volatile offerings seven metres apart, then strike the green switch beyond them | nitro ×3 |
+## 10. Validation
 
-The dependency chain is deliberate: the arrow is both a counted box and the only key to the
-switch; the bridge cannot be crossed before the switch; the life above the TNT disappears with its
-support; the three nitro only count through the green switch, which must be struck from outside
-every blast radius.
-
-## 8. Kept on purpose
-
-The merged two-arm route, its heights, turns and bowl radii are unchanged because the collision,
-camera spine and support were already audited. The lantern stair court and both blast relays are
-kept because they already express their lessons well. Movement tuning is untouched. The level
-uses only existing editor components: no new runtime system was required.
-
-## 9. Validation (8 November 2026)
-
-All checks ran against the final source. Evidence is in `docs/temple-embers-design/`.
-
-| Check | Result |
-| --- | --- |
-| `tools/test-temple-night.mjs` | 3,625 five-lane support and body-clearance probes pass; 9 sentinels, 96 torches, 12 checkpoint warps, pit recovery |
-| `tools/temple-embers-audit.mjs` | 2,192 shoulder probes with no missing support; 18 lateral exits supported; 16 masonry side sweeps blocked; 9 enemies |
-| `tools/test-temple-night-flow.mjs` | continuous input-only journey finishes in 7,877 fixed steps / 131.3 s with zero deaths, both mainline gaps ollied, both switch bridges created |
-| `tools/test-temple-embers-encounters.mjs` | all nine patrols supported along their whole span and defeated unmasked, ending upright: crab, mossback, frog, bull (struck from the shoulder while winding up), sentry, watcher, bristleback, two sanctuary crabs |
-| `tools/test-jungle-sequel-crates.mjs` | both arrow rooms (correct and wrong order), the crown arrow, and both TNT refuges pass; the cloud reprise now also chains its nitro |
-| `tools/test-temple-embers-puzzles.mjs` | lantern stair: switch, 48 restored steel steps, 3 rewards, supported return |
-| `tools/test-jungle-sequel-climbs.mjs`, `test-temple-fire.mjs`, `test-jungle-sequel-bank-clearance.mjs` | pass unchanged |
-| `tools/test-ember-reliquary-bonus.mjs` | 17/17 boxes, gem, zero deaths, no mask spent at the ember gate; the chasm stays open until the high switch; `themed-bonus-puzzles --id=bonus-jungle-terraces` passes through the shared pilot |
-| `npm run check:levels`, `npm run build` | pass after `sync-temple-night` and `certify-stock-levels` |
-| Browser (Chromium, `?playtest&level=…`) | lite: 19 temple stations and 9 bonus views supported with a clean console; full render: 7 stations and 3 bonus views, clean console, `Codex/sol fork` stamp |
-
-Known limits: the suspended reservoir caps and the giant bowl's entry life are reachable by a
-bowl air or a hop from the adjacent aqueduct rail by construction (bottom 2.6 m above the lip,
-reached with 0.8 m of feet clearance), but no automated pilot performs a vert air; they remain
-the course's mastery items.
+- **Authoring rules** (12, run every time the module loads; a violation throws): rigid set pieces
+  out of the bends; no rail or rope within a crate; no rail ending over a chasm; crates inside a
+  sweep only when flagged, and flagged crates actually reachable; no crate within a censer swing;
+  no crate on a pad, lift, bellows, boost or hammer; no rail through a hammer; every crate on
+  authored floor; no crate inside a patrol; checkpoints ten metres clear of every hazard;
+  volatile crates clear of other boxes; frames and heads out of the lane.
+- **World audit** (`tools/test-temple-embers-collisions.mjs`): rails and ropes against crates in
+  world space, lamps against flames, crates against machinery, parapets against hammers, crates
+  against patrol walks, floor under every crate, the side-view zone's coverage, the seal and the
+  heads beside the lane. Zero hits.
+- **Structure** (`tools/test-temple-night.mjs`): 3,544 support probes across the road, the lower
+  floors, the side courts and every stair step; eleven safe checkpoint warps; the kill plane
+  respawn; the sentinel breath phases.
+- **Journey** (`tools/test-temple-embers-journey.mjs`): one input-only run from spawn to gate
+  through every set piece, 138 s, zero deaths, grinding both stone rails and both ropes, boosting
+  the ash floor, riding the lift, waiting each hammer, ollieing the leap, weaving the gauntlet.
+- **Encounters, climbs, fire, bonus**: all seven patrols defeated unmasked from a standing start;
+  both pilgrim stairs climbed from the bank and rejoined; fire contact, mask absorption and ledge
+  hang; the bonus and the themed-bonus flow.

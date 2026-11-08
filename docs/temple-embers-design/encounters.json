@@ -1,6 +1,6 @@
 [
   {
-    "s": 56,
+    "s": 96,
     "foe": "grunt",
     "patrolProbes": 21,
     "frames": 118,
@@ -11,12 +11,12 @@
     "state": "ride",
     "position": [
       0.5840738881189982,
-      4.032209597462635,
-      15.569818317165673
+      0.03500000014901161,
+      -114.4301816828343
     ]
   },
   {
-    "s": 198,
+    "s": 318,
     "foe": "turtle",
     "patrolProbes": 21,
     "frames": 120,
@@ -26,61 +26,29 @@
     "grounded": true,
     "state": "ride",
     "position": [
-      32.37692945907232,
-      15.279121932850742,
-      -95.41796834026219
+      201.37692945907241,
+      0.03500000014901161,
+      -136.41796834026226
     ]
   },
   {
-    "s": 319,
+    "s": 580,
     "foe": "hopper",
     "patrolProbes": 21,
-    "frames": 151,
+    "frames": 168,
     "deaths": 0,
     "defeated": true,
     "bailing": false,
     "grounded": true,
     "state": "ride",
     "position": [
-      130.57393944337264,
-      27.168824509073165,
-      -70.83087763131739
+      116.89199858139585,
+      12.03499984741211,
+      -234.4288049283647
     ]
   },
   {
-    "s": 660,
-    "foe": "charger",
-    "patrolProbes": 21,
-    "frames": 472,
-    "deaths": 0,
-    "defeated": true,
-    "bailing": false,
-    "grounded": true,
-    "state": "ride",
-    "position": [
-      -86.87614913152163,
-      40.45292837524969,
-      48.10127202607449
-    ]
-  },
-  {
-    "s": 727,
-    "foe": "sentry",
-    "patrolProbes": 21,
-    "frames": 80,
-    "deaths": 0,
-    "defeated": true,
-    "bailing": false,
-    "grounded": true,
-    "state": "ride",
-    "position": [
-      -143.64789694697586,
-      51.78499984741211,
-      37.59079524179851
-    ]
-  },
-  {
-    "s": 848,
+    "s": 648,
     "foe": "floater",
     "patrolProbes": 21,
     "frames": 171,
@@ -90,57 +58,57 @@
     "grounded": true,
     "state": "ride",
     "position": [
-      -122.05645796360632,
-      56.374179068937615,
-      -60.29016331064619
+      46.93138713178704,
+      12.03499984741211,
+      -234.31148678292408
     ]
   },
   {
-    "s": 896,
+    "s": 906,
+    "foe": "charger",
+    "patrolProbes": 21,
+    "frames": 140,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride",
+    "position": [
+      111.84670314040339,
+      24.03499984741211,
+      -336.90618452030935
+    ]
+  },
+  {
+    "s": 996,
+    "foe": "sentry",
+    "patrolProbes": 21,
+    "frames": 90,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride",
+    "position": [
+      200.3308332723547,
+      24.03499984741211,
+      -332.6983603859054
+    ]
+  },
+  {
+    "s": 1452,
     "foe": "spiker",
     "patrolProbes": 21,
-    "frames": 122,
+    "frames": 118,
     "deaths": 0,
     "defeated": true,
     "bailing": false,
     "grounded": true,
     "state": "ride",
     "position": [
-      -75.61983720759441,
-      65.27453075188836,
-      -61.762168340262406
-    ]
-  },
-  {
-    "s": 1350,
-    "foe": "grunt",
-    "patrolProbes": 21,
-    "frames": 119,
-    "deaths": 0,
-    "defeated": true,
-    "bailing": false,
-    "grounded": true,
-    "state": "ride",
-    "position": [
-      -102.27569887303018,
-      103.53500366210938,
-      9.116224076631537
-    ]
-  },
-  {
-    "s": 1358,
-    "foe": "grunt",
-    "patrolProbes": 21,
-    "frames": 209,
-    "deaths": 0,
-    "defeated": true,
-    "bailing": false,
-    "grounded": true,
-    "state": "ride",
-    "position": [
-      -107.07241361273742,
-      103.53500366210938,
-      16.933133647765317
+      0.7784056480863607,
+      46.03499984741211,
+      -510.4043705529608
     ]
   }
 ]

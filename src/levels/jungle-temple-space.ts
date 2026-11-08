@@ -2,14 +2,33 @@ import type { CustomComponent } from '../level';
 import { jungleSequelArt } from './jungle-sequel-art';
 type P=[number,number,number];
 export type TempleVariant=1|2;
+export type TempleKnots=readonly (readonly [number,number,number])[];
+/** A temple storey core: [stationA, stationB, nearZ, farZ, terraceHeight] in the course's local world axes. */
+export type TempleCore=readonly [number,number,number,number,number];
+export interface TempleArtLayout {
+  stairs?: readonly (readonly [number,number])[];
+  /** Side bays [stationA, stationB, side sign]: courts beside the lane whose planted bank starts further out. */
+  bays?: readonly (readonly [number,number,number])[];
+  paved?: readonly (readonly [number,number])[];
+  gateways?: readonly (readonly [number,string])[];
+  halls?: readonly (readonly [number,number,string])[];
+  /** Ravine ring. `radii` makes it an ellipse for long footprints; `count` is the number of cliff bays. */
+  enclosure?: {center:readonly [number,number]; radius:number; radii?:readonly [number,number]; count?:number};
+  terminals?: readonly number[];
+}
+/** A complete course shape. Variant courses keep their legacy knots and cores;
+ * a new course passes its own so the world builder is not bound to them. */
+export interface TempleLayout { knots:TempleKnots; cores:readonly TempleCore[]; art?:TempleArtLayout; courtyards?:boolean; }
+export type TempleShape=TempleVariant|TempleLayout;
+const knotsOf=(shape:TempleShape):TempleKnots=>typeof shape==='number'?TEMPLE_TURNS[shape]:shape.knots;
 export const TEMPLE_TURNS:Record<TempleVariant,readonly (readonly [number,number,number])[]>={
   1:[[-20,0,90],[164,0,-94],[234,70,-94],[252,70,-56],[276,110,-56],[294,130,-94],[438,130,50],[510,58,50]],
   2:[[-20,0,100],[140,0,-60],[250,110,-60],[340,110,30],[354,82,30],[366,82,62],[376,110,62],[384,110,74],[464,30,74],
     [594,121.9239,-17.9239],[694,51.2132,-88.6346],[764,51.2132,-18.6346],
     [790,25.2132,-18.6346],[838,25.2132,29.3654]],
 };
-export function templeFrame(s:number,variant:TempleVariant){
- const knots=TEMPLE_TURNS[variant];let i=0;while(i<knots.length-2&&s>knots[i+1][0])i++;
+export function templeFrame(s:number,variant:TempleShape){
+ const knots=knotsOf(variant);let i=0;while(i<knots.length-2&&s>knots[i+1][0])i++;
  const a=knots[i],b=knots[i+1],length=Math.hypot(b[1]-a[1],b[2]-a[2]),fx=(b[1]-a[1])/length,fz=(b[2]-a[2])/length;
  let x=a[1]+(s-a[0])/(b[0]-a[0])*(b[1]-a[1]),z=a[2]+(s-a[0])/(b[0]-a[0])*(b[2]-a[2]);
  let dx=fx,dz=fz,scale=length/(b[0]-a[0]);
@@ -29,7 +48,7 @@ export function templeFrame(s:number,variant:TempleVariant){
  }
  return {x,z,fx:dx,fz:dz,scale,yaw:Math.atan2(-dz,dx)*180/Math.PI};
 }
-export function templePoint(s:number,y:number,side:number,variant:TempleVariant):P{
+export function templePoint(s:number,y:number,side:number,variant:TempleShape):P{
  const f=templeFrame(s,variant);return[f.x-f.fz*side,y,f.z+f.fx*side];
 }
 export function profileHeight(profile:readonly (readonly [number,number])[],s:number){
@@ -43,8 +62,8 @@ export function templeSourceHeight(components:readonly CustomComponent[],profile
  for(const c of components)if(c.t==='ramp'){const a=c.p[0]-c.len!/2,b=c.p[0]+c.len!/2;if(s>=a&&s<=b)return c.p[1]+c.rise!*((c.yaw??0)<0?(s-a)/(b-a):(b-s)/(b-a));}
  return profileHeight(profile,s);
 }
-const SPACE_CACHE=new WeakMap<readonly CustomComponent[],{variant:TempleVariant;profile:readonly (readonly [number,number])[];samples:{s:number;x:number;y:number;z:number}[]}>();
-export function templeLocal(p:readonly number[],variant:TempleVariant,source:readonly CustomComponent[],profile:readonly (readonly [number,number])[]):P{
+const SPACE_CACHE=new WeakMap<readonly CustomComponent[],{variant:TempleShape;profile:readonly (readonly [number,number])[];samples:{s:number;x:number;y:number;z:number}[]}>();
+export function templeLocal(p:readonly number[],variant:TempleShape,source:readonly CustomComponent[],profile:readonly (readonly [number,number])[]):P{
  let entry=SPACE_CACHE.get(source);
  if(!entry||entry.variant!==variant||entry.profile!==profile){
   const samples=[];for(let s=-20;s<=profile[profile.length-1][0];s++){const f=templeFrame(s,variant);samples.push({s,x:f.x,y:templeSourceHeight(source,profile,s),z:f.z});}
@@ -54,7 +73,8 @@ export function templeLocal(p:readonly number[],variant:TempleVariant,source:rea
  const f=templeFrame(bs,variant),along=(p[0]-f.x)*f.fx+(p[2]-f.z)*f.fz;
  return[bs+along/f.scale,p[1],-(p[0]-f.x)*f.fz+(p[2]-f.z)*f.fx];
 }
-export function makeTempleWorld(source:readonly CustomComponent[],profile:readonly (readonly [number,number])[],variant:TempleVariant):CustomComponent[]{
+export function makeTempleWorld(source:readonly CustomComponent[],profile:readonly (readonly [number,number])[],variant:TempleShape):CustomComponent[]{
+ const layout=typeof variant==='number'?null:variant;
  const out:CustomComponent[]=[];
  const road=(a:number,b:number,top:(s:number)=>number,width:number,side:number,c:CustomComponent,thin=false)=>{
   const stations=Array.from({length:Math.max(2,Math.ceil(b-a)+1)},(_,i)=>a+(b-a)*i/Math.ceil(b-a));
@@ -74,7 +94,11 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
   if(c.t==='camnode'||c.t==='zone'||c.t==='decor'||(c.t==='wall'&&c.invisible))continue;
   if(c.t==='platform'&&!(c.yaw??0)){
    const [w,h,d]=c.s!,y=c.p[1]+h/2,a=c.p[0]-w/2,b=c.p[0]+w/2;
-   road(a,b,()=>y,d,c.p[2],c,Math.abs(y-profileHeight(profile,c.p[0]))>3);continue;
+   // A deck hanging above a lower authored floor is a floating slab: solid
+   // masonry down to the foundation would bury the floor beneath it.
+   const floorBelow=source.some(o=>o!==c&&o.t==='platform'&&!(o.yaw??0)&&o.s&&o.p[1]+o.s[1]/2<y-1&&
+    Math.abs(o.p[2]-c.p[2])<(o.s[2]+d)/2&&o.p[0]-o.s[0]/2<b&&o.p[0]+o.s[0]/2>a);
+   road(a,b,()=>y,d,c.p[2],c,floorBelow||Math.abs(y-profileHeight(profile,c.p[0]))>3);continue;
   }
   if(c.t==='ramp'&&Math.abs(c.yaw??0)===90){const a=c.p[0]-c.len!/2,b=c.p[0]+c.len!/2,up=(c.yaw??0)<0;
    road(a,b,s=>c.p[1]+c.rise!*(up?(s-a)/(b-a):(b-s)/(b-a)),c.w!,c.p[2],c);continue;}
@@ -84,7 +108,7 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
    road(a,b,()=>y,Math.max(...zs)-Math.min(...zs),c.p[2]+(Math.max(...zs)+Math.min(...zs))/2,c,true);continue;
   }
   const f=templeFrame(c.p[0],variant),next:CustomComponent={...c,p:templePoint(c.p[0],c.p[1],c.p[2],variant),yaw:(c.yaw??0)+f.yaw};
-  if(c.t==='rail'&&c.pts){
+  if((c.t==='rail'||c.t==='trickrail')&&c.pts){
    const points=c.pts.map(q=>templePoint(c.p[0]+q[0],c.p[1]+(q[3]??0),c.p[2]+q[1],variant)),p=points[0];
    next.p=p;next.yaw=0;next.pts=points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);
   }
@@ -99,7 +123,7 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
    road(c.p[0]-edge,c.p[0]+edge,()=>c.p[1]-.08,c.len!,0,{t:'platform',p:c.p,grp:1,color:'#8a9c82',tex:'jungle',nm:`${c.nm} excavated temple foundation`});
   }
  }
- const cores=variant===1?[[16,114,-76,70,11.5],[25,103,-62,64,22.5],[25,95,-5,55,34.5]]:
+ const cores:readonly TempleCore[]=layout?layout.cores:variant===1?[[16,114,-76,70,11.5],[25,103,-62,64,22.5],[25,95,-5,55,34.5]]:
   [[16,96,-44,60,11.5],[22,90,-36,48,23],[26,96,-32,56,34.5],[24,60,-26,16,46],[24,64,-18,14,57.5],[18,70,-18.6346,13.4,69]];
  cores.forEach(([a,b,c,d,y],i)=>{
   const h=11.5,bottom=y-h;
@@ -120,7 +144,7 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
   const points:P[]=[];for(let x=c.p[0]-c.s![0]/2-.5;x<=c.p[0]+c.s![0]/2+.5;x+=.5)for(const z of [-5,5])points.push(templePoint(x,c.p[1],z,variant));
   return {minX:Math.min(...points.map(p=>p[0]))-1,maxX:Math.max(...points.map(p=>p[0]))+1,minZ:Math.min(...points.map(p=>p[2]))-1,maxZ:Math.max(...points.map(p=>p[2]))+1};
  });
- for(const [s,x,z]of TEMPLE_TURNS[variant].slice(1,-1)){
+ for(const [s,x,z]of (layout?.courtyards===false?[]:knotsOf(variant).slice(1,-1))){
   const y=templeSourceHeight(source,profile,s);if(Math.abs(templeSourceHeight(source,profile,s-6)-y)>.05||Math.abs(templeSourceHeight(source,profile,s+6)-y)>.05)continue;
   const v:number[]=[],ix:number[]=[];
   for(let dx=-14;dx<14;dx+=2)for(let dz=-14;dz<14;dz+=2){const cx=x+dx+1,cz=z+dz+1;
@@ -130,7 +154,7 @@ export function makeTempleWorld(source:readonly CustomComponent[],profile:readon
   if(ix.length)out.push({t:'mesh',p:[0,0,0],vertices:v,indices:ix,solid:true,tex:'dirt',color:'#d3c8a6',vert:false,grp:7,nm:'Playable temple courtyard: broad carved floor with an open bridge void'});
  }
  for(let s=-20;s<=profile[profile.length-1][0];s+=5){const y=templeSourceHeight(source,profile,s);out.push({t:'camnode',p:templePoint(s,y,0,variant),radius:0,grp:6,nm:'Ordered winding temple camera spine'});}
- out.push(...jungleSequelArt({variant,end:profile[profile.length-1][0],source,
+ out.push(...jungleSequelArt({variant:typeof variant==='number'?variant:1,art:layout?.art,end:profile[profile.length-1][0],source,
   point:(s,y,side)=>templePoint(s,y,side,variant),height:s=>templeSourceHeight(source,profile,s),frame:s=>templeFrame(s,variant)}));
  return out;
 }

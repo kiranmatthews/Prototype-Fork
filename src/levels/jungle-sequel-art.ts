@@ -1,10 +1,11 @@
 import type { CustomComponent } from '../level';
+import type { TempleArtLayout } from './jungle-temple-space';
 import type { JungleAssetKind } from '../jungleAssets';
 import { jungleAssemblyComponents } from '../jungleAssemblies';
 
 type P = [number, number, number];
 interface TempleLandscape {
-  variant: 1 | 2; end: number; source: readonly CustomComponent[];
+  variant: 1 | 2; end: number; source: readonly CustomComponent[]; art?: TempleArtLayout;
   point: (s: number, y: number, side: number) => P;
   height: (s: number) => number;
   frame: (s: number) => { x: number; z: number; fx: number; fz: number; yaw: number };
@@ -17,10 +18,12 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
   const out: CustomComponent[] = [];
   const rnd = (n: number) => { const x = Math.sin(n * 12.9898 + r.variant * 17.7) * 43758.5453; return x - Math.floor(x); };
   const pipes = r.source.filter(c => c.t === 'vertramp'), gaps = r.source.filter(c => c.t === 'pit');
-  const stairs = r.variant === 1 ? [168, 234] : [258, 340];
+  const stairRanges = r.art?.stairs ?? [r.variant === 1 ? [168, 234] : [258, 340]];
   const pipeAt = (s: number) => pipes.find(c => Math.abs(s-c.p[0]) < c.w!+c.rise!*Math.sin((c.arc??60)*Math.PI/180)+(c.deck??0)+1);
   const bankY = (s: number) => { const c = pipeAt(s); return c ? c.p[1]+c.rise!*(1-Math.cos((c.arc??60)*Math.PI/180)) : r.height(s); };
-  const inner = (s: number, side: number) => pipeAt(s) ? 9 : side<0 && s>stairs[0]-12 && s<stairs[1]+8 ? 11 : 4.8;
+  const bays = r.art?.bays ?? [];
+  const inner = (s: number, side: number) => pipeAt(s) ? 9 : side<0 && stairRanges.some(([a,b]) => s>a-12 && s<b+8) ? 11 :
+    bays.some(([a,b,sign]) => Math.sign(side)===Math.sign(sign) && s>a-6 && s<b+6) ? 13.5 : 4.8;
   const samples = Array.from({length:Math.ceil((r.end+40)/3)},(_,i)=>{
     const s=-20+i*3,f=r.frame(s);return {s,x:f.x,z:f.z,y:r.height(s)};
   });
@@ -72,8 +75,8 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
   }
 
   // Missing slabs expose real earth, rather than another patterned plane.
-  const paved:[number,number][]=r.variant===1?[[ -6,20],[80,108],[144,164],[234,294],[354,378],[424,490]]:
-    [[-6,22],[140,172],[222,250],[340,400],[452,464],[568,594],[642,694],[764,818]];
+  const paved:readonly (readonly [number,number])[]=r.art?.paved??(r.variant===1?[[ -6,20],[80,108],[144,164],[234,294],[354,378],[424,490]]:
+    [[-6,22],[140,172],[222,250],[340,400],[452,464],[568,594],[642,694],[764,818]]);
   for(const [a,b]of paved)for(let s=a+1.3;s<b-.7;s+=2.65){
     if(gaps.some(c=>Math.abs(s-c.p[0])<c.s![0]/2+1.4)||pipeAt(s))continue;
     for(const side of [-2.55,0,2.55]){
@@ -94,8 +97,8 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
     out.push(...jungleAssemblyComponents({dkind:'hangingarch',p,s:[width,12.5,2.8],yaw,seed:Math.round(s)},name,92));
     for(const side of [-1,1])out.push({t:'wall',p:r.point(s,r.height(s),side*(width/2-1.6)),s:[2.1,7.8,2.1],yaw,invisible:true,grp:92,nm:`${name} solid pier`});
   };
-  const gateways:[number,string][]=r.variant===1?[[ -2,'Fern court gateway'],[82,'Jade reservoir gateway'],[237,'Bridge court gateway'],[357,'Sanctuary garden gateway'],[465,'Sanctuary landing gateway']]:
-    [[-2,'Forest arrival gateway'],[143,'Cloud reservoir gateway'],[343,'Crown court gateway'],[575,'Cloud garden gateway'],[666,'Upper landing gateway'],[694,'Ember Gauntlet gateway'],[769,'Sun sanctuary gateway']];
+  const gateways:readonly (readonly [number,string])[]=r.art?.gateways??(r.variant===1?[[ -2,'Fern court gateway'],[82,'Jade reservoir gateway'],[237,'Bridge court gateway'],[357,'Sanctuary garden gateway'],[465,'Sanctuary landing gateway']]:
+    [[-2,'Forest arrival gateway'],[143,'Cloud reservoir gateway'],[343,'Crown court gateway'],[575,'Cloud garden gateway'],[666,'Upper landing gateway'],[694,'Ember Gauntlet gateway'],[769,'Sun sanctuary gateway']]);
   for(const [s,name]of gateways)gateway(s,name);
   const hall=(s:number,depth:number,name:string)=>{
     const y=r.height(s),yaw=90+r.frame(s).yaw;
@@ -103,7 +106,8 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
     for(const side of [-1,1])for(const along of [-depth/2+1.7,depth/2-1.7])
       out.push({t:'wall',p:r.point(s+along,y,side*7.8),s:[2.2,8,2.2],yaw,invisible:true,grp:93,nm:`${name} solid column`});
   };
-  if(r.variant===1){hall(11,14,'Fern court portico');hall(280,12,'Jade bridge reward pavilion');hall(478,18,'High sanctuary');}
+  if(r.art?.halls)for(const [s,depth,name]of r.art.halls)hall(s,depth,name);
+  else if(r.variant===1){hall(11,14,'Fern court portico');hall(280,12,'Jade bridge reward pavilion');hall(478,18,'High sanctuary');}
   else{hall(11,14,'Forest arrival portico');hall(156,16,'Cloud aqueduct hall');hall(582,14,'Cloud garden rest pavilion');hall(805,18,'Sun sanctuary');}
 
   // Retaining piers, coping and vines tie each real halfpipe to its reservoir.
@@ -120,15 +124,17 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
     }
   }
   // Enclosure rises with the course, including its high sanctuary storeys.
-  const center=r.variant===1?[62,-17]:[56,-7];
-  for(let i=0;i<26;i++){
-    const angle=i/26*Math.PI*2,radius=r.variant===1?153:159,x=center[0]+Math.cos(angle)*radius,z=center[1]+Math.sin(angle)*radius;
+  const center=r.art?.enclosure?.center??(r.variant===1?[62,-17]:[56,-7]);
+  const ringCount=r.art?.enclosure?.count??26;
+  for(let i=0;i<ringCount;i++){
+    const angle=i/ringCount*Math.PI*2,radius=r.art?.enclosure?.radius??(r.variant===1?153:159);
+    const [rx,rz]=r.art?.enclosure?.radii??[radius,radius],x=center[0]+Math.cos(angle)*rx,z=center[1]+Math.sin(angle)*rz;
     const nearest=samples.reduce((a,b)=>Math.hypot(a.x-x,a.z-z)<Math.hypot(b.x-x,b.z-z)?a:b);
     const base=Math.max(-14,nearest.y-27),height=46+rnd(i*17)*20;
     add('junglecliff',[x,base,z],[44,height,42],'Outer jungle ravine wall',i%2?'#b4c2ad':'#c6cbb1',angle*180/Math.PI,94);
     add('junglebackdrop',[x,base+height-14,z],[53,37,48],'Ravine canopy silhouette','#8eaf98',rnd(i*37)*360,94);
   }
-  for(const s of [-33,r.end+14]){
+  for(const s of r.art?.terminals??[-33,r.end+14]){
     const p=r.point(s,bankY(s)-9,0);
     if(clear(s,p,12,28)){
       add('junglecliff',p,[38,11,22],'Terminal jungle bank','#b3bea2',90+r.frame(s).yaw,94);

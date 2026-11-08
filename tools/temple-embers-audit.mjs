@@ -10,11 +10,12 @@ await withBlockworksRuntime(async r=>{
  const floor=(s,side)=>{const q=route.toWorld(s,route.groundAt(s),side);ray.set(new THREE.Vector3(...q).add(new THREE.Vector3(0,.3,0)),down);ray.far=.65;return ray.intersectObjects(l.groundMeshes,false)[0]?.point.y??null;};
  const missing=[],probes=[];
  for(let s=-12;s<route.end-12;s+=2){
-  if(route.gaps.some(g=>s>g.a-1&&s<g.b+1)||route.pipes.some(b=>s>b.a-1&&s<b.b+1))continue;
+  if(route.gaps.some(g=>s>g.a-1&&s<g.b+1)||route.voids.some(v=>s>v.a-1&&s<v.b+1)||route.pipes.some(b=>s>b.a-1&&s<b.b+1))continue;
+  if(route.setPieces.crushers.some(c=>Math.abs(s-c.s)<2.4))continue;
   for(const side of [-4.7,-4.25,4.25,4.7]){const hit=floor(s,side),q={s,side,hit};probes.push(q);if(hit===null)missing.push(q);}
  }
  const exits=[];
- for(const s of [50,210,315,535,660,860,1065,1195,1300])for(const side of [-1,1]){
+ for(const s of [50,190,312,480,620,770,870,1000,1225,1320,1460])for(const side of [-1,1]){
   p.respawn(l,true,false,{position:new THREE.Vector3(...route.toWorld(s,route.groundAt(s)+.12,side*2.9))});
   r.stepFor(12);
   let drop=0;
@@ -26,7 +27,7 @@ await withBlockworksRuntime(async r=>{
   exits.push({s,side,drop,local:route.toLocal(p.pos.toArray()),grounded:p.grounded,state:p.state});
  }
  const sideContacts=[];
- for(const s of [50,198,315,660,848,1065,1195,1300])for(const side of [-1,1]){
+ for(const s of [50,190,312,480,620,770,870,1000,1225,1320,1460])for(const side of [-1,1]){
   const y=route.groundAt(s)-2,from=new THREE.Vector3(...route.toWorld(s,y,side*7));
   const to=new THREE.Vector3(...route.toWorld(s,y,side*2)),normal=new THREE.Vector3();
   const hit=l.meshSideCollisions.resolve(from,to,r.CONST.playerHalf,normal);
@@ -40,7 +41,7 @@ await withBlockworksRuntime(async r=>{
  if(!process.argv.includes('--baseline')){
   assert.deepEqual(missing,[],'Every ordinary route shoulder must have real support');
   assert.ok(exits.every(q=>q.grounded&&q.state==='ride'&&q.drop<.1),'Lateral input must not fall through the banks');
-  assert.equal(l.enemies.length,9);
+  assert.equal(l.enemies.length,7);
   assert.ok(sideContacts.every(q=>q.hit),'A body below an elevated lip must not clip through the masonry side');
  }
 },{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',source:m=>m.JUNGLE_TERRACES_LEVEL,endlessDeaths:true,
