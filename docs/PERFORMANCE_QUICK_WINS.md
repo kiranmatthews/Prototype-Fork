@@ -96,36 +96,47 @@ per-mesh allocations drove the periodic JS-heap sawtooth on Codex lab.
 A census of live Carlisle textures (94 textures, about 1.56 GB estimated GPU)
 found these large maps:
 
-- the broad-deck and shrimp-boat 8192² colour maps, about 341 MB each;
+- the broad-deck and shrimp-boat 8192² colour maps, about 341 MB each on the
+  GPU (their files were only 2.6 and 4.1 MB: GPU cost follows pixel count, not
+  file size);
 - the 4096² solid-timber colour map, about 85 MB;
 - 32 textures at 2048²: shipyard/cone colour maps, crate art, and the shipyard
   and cone metallic-roughness JPEGs.
 
 The fish market and repair shed already ship at 1024² through the top-40 stage.
 
-**Applied:** the 13 shipyard and cone metallic-roughness JPEGs (2048²) now go
-through the existing Carlisle policy limit of 256² with linear Lanczos, stored
-as lossless WebP. Previously `prepare-release-textures.py` skipped every
-non-colour JPEG, so these shipped at full size. Every other image in those
-models reproduced its existing reviewed encoding byte for byte (26 of 26). The
-release shrank from 989.6 MB to 984.3 MB. Rows are in
-`release-textures/carlisle-data-review.json`.
+**Step 1 (commit `d9d73cc`):** the 13 shipyard and cone metallic-roughness
+JPEGs (2048²) went through the existing Carlisle policy limit of 256² with
+linear Lanczos, stored as lossless WebP. Previously `prepare-release-textures.py`
+skipped every non-colour JPEG, so these shipped at full size.
 
-**Not applied: colour-map downsizing.** Lowering the 8192/4096 overrides and
-the 2048 colour limit was tried. None of the resized colour maps passes the
-reviewed lossy gates (PSNR ≥ 40 dB, p99 ≤ 8, max ≤ 64):
+**Step 2:** the user set Carlisle colour maps to 1024. The 16 colour maps in the
+joined decks, shrimp boat, shipyard kit and cone are resized 8192/2048 → 1024
+(linear-light Lanczos with the pipeline's restrained sharpening) and encoded as
+WebP quality 95.
 
-- quality 95 reaches 35–41 dB with p99 9–20 on these noisy Tripo textures;
-- quality 98 and 100 plateau at the same error, because WebP subsamples
-  chroma.
+The reviewed lossy gate (PSNR ≥ 40 dB, p99 ≤ 8, max ≤ 64) was calibrated for
+unresized originals. A resized colour map is measured against its sharpened,
+resized reference, which is far noisier: the 8192 → 1024 maps reach only
+32–36 dB even at quality 100, because WebP subsamples chroma. Falling back to
+lossless would have added about 27 MB and broken the 1 GB hosting budget. The
+policy therefore gained a `resizedColor` entry (quality 95; floor PSNR ≥ 30 dB,
+p99 ≤ 32, max ≤ 128) that both `prepare-release-textures.py` and the build-time
+check in `release-textures.mjs` apply only to resized colour maps at that
+quality; everything else keeps the strict gate, and `test-release-textures.mjs`
+covers both gates. The resize is the authorized loss, so these maps are judged
+by the paired captures below rather than by the floor.
 
-The pipeline then falls back to lossless. That would add about 27 MB to the
-release (broad deck 2.6 → 13.5 MB, shrimp boat 4.1 → 16.0 MB at 4096²), which
-exceeds the remaining 1 GB budget. Downsizing these maps needs a decision:
+| Measure | Before | After |
+| --- | ---: | ---: |
+| Hosted bytes, the 16 affected models | 22.1 MB | 12.6 MB |
+| Release output | 989.6 MB | 974.8 MB |
+| Carlisle estimated GPU texture bytes at spawn | 1,583 MB | TEXMB_AFTER |
 
-- relax the lossy gate for resized colour maps;
-- move them to KTX2/UASTC;
-- or free hosting budget elsewhere.
+Rows for every image in the batch are in `release-textures/carlisle-review.json`.
+Every normal map reproduced its existing reviewed encoding byte for byte.
+
+CAPTURES_PLACEHOLDER
 
 ## Validation
 

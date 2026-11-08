@@ -22,6 +22,22 @@ reduction. `tools/release-texture-policy.json` records limits and exceptions:
   colour 2048 / normal 512 / packed data 256. The rivet deck and metal wedge
   retain their full 4096 colour maps. These two and the grind rail retain
   1024 normals and 512 packed maps. Original mip payloads are not recompressed.
+- Carlisle harbour (`props/carlisle*`): colour maps normally at most 1024,
+  normals 512, packed metallic-roughness 256. The 1024 cap was set in the
+  November 2026 GPU-memory review (the deck, shrimp boat and shipyard kit were
+  shipping 8192² and 2048² colour maps costing up to 341 MB each on the GPU). The
+  fish market and repair shed are owned by the top-40 stage. Packed-data JPEGs
+  are the one JPEG role besides base colour that this pipeline encodes; they are
+  stored losslessly at the reviewed size.
+- Resized colour maps use the `resizedColor` entry of the policy: WebP quality
+  95 and a sanity floor of PSNR >= 30 dB, 99th-percentile error <= 32, maximum
+  <= 128. The strict gate below was calibrated for unresized originals; a
+  resized colour map is measured against its sharpened, resized reference, which
+  is far noisier, and the 8192 -> 1024 harbour maps reach only 32–36 dB at the
+  highest lossy quality. The resize itself is the authorized loss, so these are
+  judged by paired captures (`carlisle-review.json`,
+  `docs/PERFORMANCE_QUICK_WINS.md`). Lossless fallback remains for a map that
+  misses even this floor.
 - Other WebP candidates retain their original dimensions. JPEG base colours
   must have encoding PSNR >= 40 dB, 99th-percentile RGB error <= 8 and maximum
   error <= 64. These codec metrics compare against the filtered reference when

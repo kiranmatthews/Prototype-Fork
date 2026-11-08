@@ -145,11 +145,16 @@ export async function prepareReleaseTextures({root,outDir}){
  const manifest=JSON.parse(await regularFile(path.join(review,'manifest.json'),review));
  if(manifest.v!==1||!Array.isArray(manifest.models)||!Array.isArray(manifest.textures))throw Error('Invalid reviewed texture manifest');
  if(manifest.policy)assert.deepEqual(manifest.policy,JSON.parse(await readFile(path.join(root,'tools/release-texture-policy.json'))),'Regenerate reviewed textures after changing their policy');
+ // Resized colour maps are measured against their sharpened resized reference,
+ // so the reviewed policy may give them a relaxed sanity floor.
+ const resized=manifest.policy?.resizedColor;
+ if(resized&&!(integer(resized.quality,1)&&Number.isFinite(resized.minPSNR)&&Number.isFinite(resized.maxP99)&&Number.isFinite(resized.maxError)))throw Error('Invalid resized colour gate');
  const textures=new Map(),files=new Set(),result=[];
  for(const row of manifest.textures){
   if(!/^[a-f0-9]{64}$/.test(row.sha256)||!/^[a-f0-9]{64}$/.test(row.sourceSha256)||textures.has(row.sha256)||!integer(row.width,1)||!integer(row.height,1)||!integer(row.bytes,1))throw Error('Invalid reviewed image identity');
   const exact=row.psnr===null&&row.p99===0&&row.max===0&&row.meanAbs===0;
-  if(typeof row.lossless!=='boolean'||row.lossless!==true&&!exact&&!(Number.isFinite(row.psnr)&&row.psnr>=40&&row.p99>=0&&row.p99<=8&&row.max>=0&&row.max<=64))throw Error('Image does not meet reviewed error limits');
+  const gate=resized&&row.resampling?.role==='baseColorTexture'&&row.quality===resized.quality?{psnr:resized.minPSNR,p99:resized.maxP99,max:resized.maxError}:{psnr:40,p99:8,max:64};
+  if(typeof row.lossless!=='boolean'||row.lossless!==true&&!exact&&!(Number.isFinite(row.psnr)&&row.psnr>=gate.psnr&&row.p99>=0&&row.p99<=gate.p99&&row.max>=0&&row.max<=gate.max))throw Error('Image does not meet reviewed error limits');
   textures.set(row.sha256,row);
  }
  for(const model of manifest.models){

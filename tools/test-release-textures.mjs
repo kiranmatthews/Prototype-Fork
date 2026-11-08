@@ -39,7 +39,9 @@ for(const model of manifest.models){
 }
 const scratch=await mkdtemp(path.join(tmpdir(),'release-texture-test-'));
 try{
- const model=manifest.models.find(m=>m.images.some(i=>manifest.textures.find(t=>t.sha256===i.sha256).lossless===false));
+ const texture=sha=>manifest.textures.find(t=>t.sha256===sha);
+ // The strict gate case uses a model whose lossy images are unresized originals.
+ const model=manifest.models.find(m=>m.images.every(i=>texture(i.sha256).lossless||!texture(i.sha256).resampling)&&m.images.some(i=>texture(i.sha256).lossless===false));
  const doc={v:1,models:[model],textures:manifest.textures.filter(t=>model.images.some(i=>i.sha256===t.sha256))};
  const publicDir=path.join(scratch,'public'),outDir=path.join(scratch,'dist'),reviewDir=path.join(scratch,'release-textures');
  for(const directory of [publicDir,outDir]){await mkdir(path.dirname(path.join(directory,model.file)),{recursive:true});await copyFile(path.join(root,'public',model.file),path.join(directory,model.file));}
@@ -60,6 +62,20 @@ try{
  const linked=path.join(scratch,'linked');await mkdir(path.dirname(path.join(linked,model.file)),{recursive:true});await symlink(path.join(publicDir,model.file),path.join(linked,model.file));await assert.rejects(prepareReleaseTextures({root:scratch,outDir:linked}),/regular contained/);
  await rm(path.join(outDir,'provenance'),{recursive:true});await symlink(publicDir,path.join(outDir,'provenance'));await assert.rejects(prepareReleaseTextures({root:scratch,outDir}),/real output provenance/);
  assert.deepEqual(await readFile(path.join(publicDir,model.file)),before,'all failures preserve authoring data');
+ // Resized colour maps use the policy's relaxed floor, and only with the policy present.
+ const resizedModel=manifest.models.find(m=>m.images.some(i=>{const t=texture(i.sha256);return !t.lossless&&t.resampling?.role==='baseColorTexture'&&t.psnr<40;}));
+ if(resizedModel){
+  const resizedDoc={v:1,policy:manifest.policy,models:[resizedModel],textures:manifest.textures.filter(t=>resizedModel.images.some(i=>i.sha256===t.sha256))};
+  for(const directory of [publicDir,outDir]){await mkdir(path.dirname(path.join(directory,resizedModel.file)),{recursive:true});await copyFile(path.join(root,'public',resizedModel.file),path.join(directory,resizedModel.file));}
+  for(const row of resizedDoc.textures)await copyFile(path.join(review,'encoded',row.sha256+'.webp'),path.join(reviewDir,'encoded',row.sha256+'.webp'));
+  await mkdir(path.join(scratch,'tools'),{recursive:true});await copyFile(path.join(root,'tools/release-texture-policy.json'),path.join(scratch,'tools/release-texture-policy.json'));
+  await rm(path.join(outDir,'provenance'),{recursive:true,force:true}); // the symlink case above
+  await save(resizedDoc);const accepted=await prepareReleaseTextures({root:scratch,outDir});assert.equal(accepted.models,1);
+  const noPolicy=structuredClone(resizedDoc);delete noPolicy.policy;await save(noPolicy);await assert.rejects(prepareReleaseTextures({root:scratch,outDir}),/error limits/,'relaxed floor requires the reviewed policy');
+  const belowFloor=structuredClone(resizedDoc);const relaxed=belowFloor.textures.find(t=>!t.lossless&&t.resampling?.role==='baseColorTexture');relaxed.psnr=manifest.policy.resizedColor.minPSNR-1;await save(belowFloor);await assert.rejects(prepareReleaseTextures({root:scratch,outDir}),/error limits/);
+  const wrongQuality=structuredClone(resizedDoc);wrongQuality.textures.find(t=>!t.lossless&&t.resampling?.role==='baseColorTexture').quality=85;await save(wrongQuality);await assert.rejects(prepareReleaseTextures({root:scratch,outDir}),/error limits/,'relaxed floor only applies at the policy quality');
+  await save(doc);
+ }
  const invalid=Buffer.from(data);invalid.writeUInt32LE(1,4);assert.throws(()=>inspectWebp(invalid),/Invalid reviewed WebP/);
  assert.throws(()=>parseTextureGlb(Buffer.alloc(32)),/Invalid GLB/);
 }finally{await rm(scratch,{recursive:true,force:true});}

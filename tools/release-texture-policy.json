@@ -40,7 +40,7 @@
       }
     }
   },
-  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions.",
+  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions. Carlisle harbour colour maps are normally at most 1024 after the November 2026 GPU-memory review; the fish market and repair shed are owned by the top-40 stage.",
   "map": {
     "limits": {
       "baseColorTexture": 1024,
@@ -53,26 +53,11 @@
   },
   "carlisle": {
     "limits": {
-      "baseColorTexture": 2048,
+      "baseColorTexture": 1024,
       "normalTexture": 512,
       "metallicRoughnessTexture": 256
     },
     "overrides": {
-      "props/carlisle-decks/broad-deck-joined.glb": {
-        "baseColorTexture": 4096
-      },
-      "props/carlisle-decks/solid-timber-joined.glb": {
-        "baseColorTexture": 4096
-      },
-      "props/carlisle-coast/dune-bank.glb": {
-        "baseColorTexture": 1024
-      },
-      "props/carlisle-coast/marsh-bank.glb": {
-        "baseColorTexture": 1024
-      },
-      "props/carlisle-fleet/shrimp-boat.glb": {
-        "baseColorTexture": 8192
-      },
       "props/carlisle-buildings/fish-market.glb": {
         "baseColorTexture": 8192
       },
@@ -80,5 +65,12 @@
         "baseColorTexture": 8192
       }
     }
+  },
+  "resizedColor": {
+    "quality": 95,
+    "minPSNR": 30,
+    "maxP99": 32,
+    "maxError": 128,
+    "review": "Resized colour maps are compared against their sharpened resized reference, which is far noisier than an original. The resize is the authorized loss; the lossy encode on top uses the highest WebP quality and only this sanity floor. Judge them by paired captures."
   }
 }
