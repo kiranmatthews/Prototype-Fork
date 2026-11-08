@@ -156,6 +156,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   for(let f=0;f<30;f++){const input=makeInput();p.rawInput=input;p.step(1/60,input,level);}
   assert.equal(source.phase,'foot');
   source.dispose();runtime.dispose();
-  assert.ok(groundedEquipmentFrames>150);
+  // Mounts now begin at the released-deck segment, omitting the carried opening.
+  // Still require two seconds of actual grounded mount/pickup floor checks.
+  assert.ok(groundedEquipmentFrames>120);
   console.log(JSON.stringify({frames,primaryFrames,groundedEquipmentFrames,visits:[...visits],interrupted:[...interrupted],maxJointStep,stepByPhase}));
 },{levelEntry:{id:'skate-motion-test',name:'Skate motion test',data:{v:1,name:'Skate motion test',spawn:[0,.03,6],killY:-20,components:[{t:'platform',p:[0,-.5,-100],s:[1000,1,1000]},{t:'gate',p:[0,0,-400]}]}}});

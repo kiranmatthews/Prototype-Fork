@@ -212,6 +212,9 @@ function setInspect(value: boolean) {
         {t: 'platform', p: [1080, -.09, -7], s: [20, .2, 16], slip:true, iceGrip:.08},
       ],
     }});
+    // Synthetic motion review has no race start. Keep its auto-created clock
+    // and combo orb out of the mount/ink silhouette at the inspection spawn.
+    reviewLevel.setRunModesEnabled(false);
     resetInspector();
   } else {
     frozen = false; slow = false; stopAt = 'None';
@@ -269,7 +272,7 @@ p.step = (dt: number, input: any, level: Level) => {
       ||stopAt==='Cancel unwind'&&ink?.stage==='unwind'
       ||stopAt==='Board appears'&&ink?.active&&ink.targetVisible&&ink.frame===0
       ||stopAt==='Board disappears'&&ink?.active&&!ink.targetVisible&&ink.frame===0
-      ||stopAt==='Mount'&&skateMotion?.phase==='mount'&&skateMotion.time>=.3
+      ||stopAt==='Mount'&&skateMotion?.phase==='mount'&&skateMotion.mountProgress>=.5
       ||stopAt==='Dismount'&&skateMotion?.phase==='dismount'&&skateMotion.time>=.3
       ||stopAt==='Abandon flip'&&p.boardAbandonActive&&p.flipTimer>0&&p.flipTimer<=CONST.flipDuration*.525
       ||stopAt==='Landing roll'&&p.rollLandingT>=.2
