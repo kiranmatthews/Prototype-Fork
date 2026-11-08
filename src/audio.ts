@@ -4,6 +4,7 @@
 // audio must never break the sim, so everything is wrapped in try/catch.
 
 const FILES: Record<string, string> = {
+  bridgeStepLeft:'rope-bridge/step-left.wav',bridgeStepRight:'rope-bridge/step-right.wav',bridgeLand:'rope-bridge/land.wav',
   kartLanding:'karts/landing-crunch-v1.wav',kartEngine:'karts/engine-rattle-v2.wav', kartSkid:'karts/skid.m4a', kartCrash:'karts/crash.wav',
   kartExplosion:'karts/explosion.m4a', kartFire:'karts/fire-crackle-v2.wav',
   kartThrusterStart:'karts/thruster-start.wav', kartThrusterLoop:'karts/thruster-loop.wav', kartThrusterEnd:'karts/thruster-end.wav',
@@ -83,7 +84,7 @@ const FILES: Record<string, string> = {
 
 // Long environment beds are requested by their owning scenery, rather than
 // adding several megabytes to every level's initial sound bank.
-const DEFERRED = new Set(['carlisleWater', 'carlisleWind']);
+const DEFERRED = new Set(['carlisleWater', 'carlisleWind','bridgeStepLeft','bridgeStepRight','bridgeLand']);
 
 interface LoopChannel {
   src: AudioBufferSourceNode;

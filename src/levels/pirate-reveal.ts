@@ -15,7 +15,7 @@ export function stageDrownedReveal(source:CustomComponent[]):CustomComponent[]{
  const vault=(c:CustomComponent):CustomComponent=>{
   const delta=DROWNED_TREASURY_OFFSET;
   const move=(p:P):P=>[p[0]+OFFSET+delta[0],p[1]+delta[1],p[2]+delta[2]];
-  return {...c,p:move(c.p),...(c.to?{to:move(c.to)}:{}),...(c.cameraPosition?{cameraPosition:move(c.cameraPosition)}:{}),...(c.cameraTarget?{cameraTarget:move(c.cameraTarget)}:{})};
+  return {...c,p:move(c.p),...(c.bridgeSpan?{bridgeSpan:c.bridgeSpan.map(move) as [P,P]}:{}),...(c.to?{to:move(c.to)}:{}),...(c.cameraPosition?{cameraPosition:move(c.cameraPosition)}:{}),...(c.cameraTarget?{cameraTarget:move(c.cameraTarget)}:{})};
  };
  const out:CustomComponent[]=[];
  for(const c of source){

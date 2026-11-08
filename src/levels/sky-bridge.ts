@@ -148,7 +148,7 @@ function visual(geometry:THREE.BufferGeometry,p:P,color:string,name:string,tex='
   geometry.dispose();
 }
 
-// Static lower bearers reuse the same filtered braided-rope model as the
+// Suspended lower bearers reuse the same filtered braided-rope model as the
 // handrails. Their 24 cm envelope touches the 18 cm board undersides exactly.
 for(const [i,span] of SKY_BRIDGE_SPANS.entries()) {
   for(const side of [-1,1]) {
@@ -213,6 +213,15 @@ for(const [i,island] of [...SKY_BRIDGE_ISLANDS,...SKY_BRIDGE_EXTENSION_ISLANDS].
 for(const [x,z] of [[-25,-42],[29,-91],[-30,-155],[27,-215]] as const){
   add({t:'decor',dkind:'coastspire',p:[x,-42,z],s:[13,46,11],yaw:z,color:'#dbe6eb',solid:false,grp:7,nm:'Cloud spire upper cliff'});
   add({t:'decor',dkind:'coastv2buttress',p:[x,-105,z],s:[18,76,16],yaw:z,color:'#d0dfe4',solid:false,grp:7,nm:'Cloud spire continuing below view'});
+}
+
+// Bind only actual suspended timber and its attached cables/ice. Stone
+// refuges, cumulus stepping platforms and fixed anchor posts stay anchored.
+const suspensionSpans=[...SKY_BRIDGE_SPANS,...[[-242,-264],[-319,-338],[-386,-396],[-446,-449]].map(([near,far])=>({near,far}))];
+for(const c of C){
+  if(!(c.t==='rope'||c.dkind==='braidedrope'||c.tex==='bridge-timber'||c.tex==='bridge-ice'||c.t==='crumble'||c.nm==='Ice dripping below visible timber ends'))continue;
+  const span=suspensionSpans.find(s=>c.p[2]<=s.near&&c.p[2]>=s.far);
+  if(span)c.bridgeSpan=[[0,0,span.near],[0,0,span.far]];
 }
 
 export const SKY_BRIDGE_LEVEL: CustomLevelData = {

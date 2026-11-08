@@ -1,0 +1,108 @@
+{
+  "source": "Jak and Daxter: The Precursor Legacy, USA NTSC-v1 COMMON.SBK",
+  "status": "Temporary original-game SFX placeholders requested by project owner, 2026-11-08",
+  "rights": "Original game recordings; Naughty Dog / Sony Computer Entertainment. Not covered by the OpenGOAL ISC source-code license.",
+  "bankSha256": "bdcfb52e71755c8aa941713fe22497db68b28cdaef6ded185ff99372de561529",
+  "renderer": "PS-ADPCM, authored bank/tone gains, pitch register and 240 Hz grain delays; mono 48 kHz preview mix with 0.65 common headroom",
+  "files": {
+    "step-left.wav": {
+      "effect": "walk-crwood1",
+      "duration": 0.4051666666666667,
+      "peak": 15428,
+      "clippedSamples": 0,
+      "sha256": "d7e74704f68fbe2954120dc43939e729dd3a464af123300a90225a87313be578",
+      "tones": [
+        {
+          "sampleOffset": 140240,
+          "centerNote": -80,
+          "centerFine": 124,
+          "pitchRegister": 1364,
+          "toneVolume": 90,
+          "startSeconds": 0.0
+        },
+        {
+          "sampleOffset": 12256,
+          "centerNote": -74,
+          "centerFine": 66,
+          "pitchRegister": 1880,
+          "toneVolume": 127,
+          "startSeconds": 0.0
+        },
+        {
+          "sampleOffset": 131184,
+          "centerNote": -83,
+          "centerFine": 66,
+          "pitchRegister": 1118,
+          "toneVolume": 90,
+          "startSeconds": 0.2
+        }
+      ]
+    },
+    "step-right.wav": {
+      "effect": "walk-crwood2",
+      "duration": 0.3161041666666667,
+      "peak": 15283,
+      "clippedSamples": 0,
+      "sha256": "0d7a9df08f83225e6e4adafbb903db1a8caeb2e100aca7ab48948d7d81fc3538",
+      "tones": [
+        {
+          "sampleOffset": 140240,
+          "centerNote": -78,
+          "centerFine": 124,
+          "pitchRegister": 1531,
+          "toneVolume": 80,
+          "startSeconds": 0.0
+        },
+        {
+          "sampleOffset": 12256,
+          "centerNote": -72,
+          "centerFine": 66,
+          "pitchRegister": 2110,
+          "toneVolume": 127,
+          "startSeconds": 0.0
+        },
+        {
+          "sampleOffset": 131184,
+          "centerNote": -81,
+          "centerFine": 66,
+          "pitchRegister": 1255,
+          "toneVolume": 50,
+          "startSeconds": 0.13333333333333333
+        }
+      ]
+    },
+    "land.wav": {
+      "effect": "land-crwood",
+      "duration": 0.40177083333333335,
+      "peak": 16323,
+      "clippedSamples": 0,
+      "sha256": "cc6c24f5415d7170f696888da98ad08dedb6b7683603e3d3c1eea836c7c315f4",
+      "tones": [
+        {
+          "sampleOffset": 140240,
+          "centerNote": -83,
+          "centerFine": 124,
+          "pitchRegister": 1147,
+          "toneVolume": 40,
+          "startSeconds": 0.0
+        },
+        {
+          "sampleOffset": 12256,
+          "centerNote": -77,
+          "centerFine": 66,
+          "pitchRegister": 1581,
+          "toneVolume": 127,
+          "startSeconds": 0.0
+        },
+        {
+          "sampleOffset": 131184,
+          "centerNote": -80,
+          "centerFine": 66,
+          "pitchRegister": 1329,
+          "toneVolume": 50,
+          "startSeconds": 0.22916666666666666
+        }
+      ]
+    }
+  }
+}

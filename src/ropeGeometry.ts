@@ -70,6 +70,7 @@ const ROPE_SIDES=8;
 const circle=Array.from({length:ROPE_SIDES+1},(_,i)=>[Math.cos(i/ROPE_SIDES*Math.PI*2),Math.sin(i/ROPE_SIDES*Math.PI*2)] as const);
 const p=new THREE.Vector3(),before=new THREE.Vector3(),after=new THREE.Vector3(),tangent=new THREE.Vector3(),side=new THREE.Vector3(),cross=new THREE.Vector3();
 /** One low-poly tube follows the physical curve; its shader supplies the braid. */
+export const braidedRopeOwners=new WeakMap<THREE.Object3D,BraidedRope>();
 export class BraidedRope {
   readonly mesh:THREE.Mesh;
   readonly endKnot:THREE.Mesh|null;
@@ -79,6 +80,7 @@ export class BraidedRope {
   private positions:THREE.BufferAttribute;private normals:THREE.BufferAttribute;
   private readonly curveBounds=new THREE.Box3();
   constructor(readonly len:number,readonly radius=.10,knot=true){
+    braidedRopeOwners.set(this.root,this);
     this.len=Math.max(.001,len);
     this.segments=Math.min(96,Math.max(24,Math.ceil(this.len*2)));
     const rings=this.segments+1,sides=this.radialSegments,geometry=new THREE.BufferGeometry();

@@ -2111,6 +2111,7 @@ export function setComponentPosition(c: CustomComponent, p: CustomComponent["p"]
       if (c[key]) c[key] = c[key]!.map((v, i) => v + delta[i]) as CustomComponent["p"];
   if (c.t === "woodpath" && c.supportBaseY !== undefined) c.supportBaseY += delta[1];
   if (c.t === "platform" && c.shoreSeaLevel !== undefined) c.shoreSeaLevel += delta[1];
+  if(c.bridgeSpan)c.bridgeSpan=c.bridgeSpan.map(a=>a.map((v,i)=>v+delta[i])) as NonNullable<CustomComponent["bridgeSpan"]>;
   c.p = [...p];
 }
 
@@ -4180,6 +4181,9 @@ export class Editor {
       const c = this.data.components[idx];
       if (!c) continue;
       this.materializeDims(c);
+      if(c.bridgeSpan)c.bridgeSpan=c.bridgeSpan.map(a=>[
+        anchor.x+(a[0]-anchor.x)*sx,anchor.y+(a[1]-anchor.y)*sy,anchor.z+(a[2]-anchor.z)*sz,
+      ]) as NonNullable<CustomComponent["bridgeSpan"]>;
       if ((c.t === "returnportal" || c.t === "bonusplatform" || (c.t === "decor" && c.dkind === "ghostshowlight")) && c.to)
         c.to = [
           anchor.x + (c.to[0] - anchor.x) * sx,
@@ -7460,6 +7464,9 @@ export class Editor {
           else delete c.travelSign;
         }
       }
+      if(c.bridgeSpan)c.bridgeSpan=c.bridgeSpan.map(a=>{
+        const [x,z]=rot(a[0]-cx,a[2]-cz);return [cx+x,a[1],cz+z];
+      }) as NonNullable<CustomComponent["bridgeSpan"]>;
       if (c.t === "stone") c.axis = c.axis === "x" ? "z" : "x";
       if (c.t === "camnode" && c.cameraView)
         for (const key of ["cameraPosition", "cameraTarget"] as const)

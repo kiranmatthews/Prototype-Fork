@@ -70,6 +70,7 @@ import {
 } from './level';
 import { sfx } from './audio';
 import { FootstepAudio, footstepSurface } from './footstepAudio';
+import {ropeBridgeContacts} from './ropeBridges';
 import { Rail, RailSample, nearestRail } from './rails';
 import { naturalRailLandingTime, railLandingFraction } from './grindLanding';
 import {nearestReferenceRail} from './referenceRailCapture';
@@ -3368,6 +3369,11 @@ export class Player {
   }
 
   commitRenderStep(level: Level): void {
+    if(this.grounded&&this.groundHit){
+      level.ropeBridges.carry(this,this.groundHit.mesh,this.pos);
+      if(this.groundHit.mesh&&ropeBridgeContacts.has(this.groundHit.mesh))this.groundHit.y=this.pos.y;
+    }
+    level.ropeBridges.observe(this,this.grounded?this.groundHit?.mesh??null:null,this.pos,this.vVel,this.slamActive);
     this.fallCameraProbeValid = false;
     // PVP separation/kicks run after Player.step() authored the pose. Fold that
     // final root correction into the snapshot and carry player-attached world
@@ -3503,7 +3509,9 @@ export class Player {
       const materials = Array.isArray(material) ? material : material ? [material] : [];
       const name = [hit?.name, ...materials.map(value => value.userData.texKind)].join(' ');
       const surface = footstepSurface(hit?.surface ?? surfaceFromName(hit?.name), name);
-      this.footstepAudio.play(side, surface, this.animationPlanarSpeed / Math.max(.001, TUNING.walkSpeed));
+      const bridge=hit?.mesh?ropeBridgeContacts.get(hit.mesh):undefined;
+      if(bridge)bridge.step(side,this.animationPlanarSpeed/Math.max(.001,TUNING.walkSpeed));
+      else this.footstepAudio.play(side, surface, this.animationPlanarSpeed / Math.max(.001, TUNING.walkSpeed));
     }
   }
 
@@ -4612,6 +4620,7 @@ export class Player {
     // delta before this step's movement so we stay glued). Crumble pads get
     // told they've been stepped on.
     if (this.grounded && this.groundHit) {
+      level.ropeBridges.carry(this,this.groundHit.mesh,this.pos);
       if (this.groundHit.moverId !== undefined) {
         const delta = level.moverDelta(this.groundHit.moverId, this.pos);
         this.pos.add(delta);
@@ -11990,8 +11999,8 @@ export class Player {
     this.balanceAge += dt;
     this.balanceEntryAge += dt;
     this.grindStyleT += dt;
-    level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
-    level.grindSurfaceEdge(rail); // fallaway decks react to grinders as well as planted feet
+    level.grindRope(rail,this.pos,this); // load the same suspended chain as the visible rope and boards
+    level.grindSurfaceEdge(rail,this.pos,this); // fallaway decks react to grinders as well as planted feet
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
     // TRICK SWITCHING: every fresh Triangle press mid-grind re-reads the
     // stick and swaps the trick in place — a new plate entry (repeat decay

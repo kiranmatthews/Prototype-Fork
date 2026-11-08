@@ -52,6 +52,7 @@ function floor(name:string,a:P,b:P,width:number,color:string=SEA.stone,thickness
  M.quad(v,ribbonPoint(a,b,width,1,-1),ribbonPoint(a,b,width,1,1),ribbonPoint(a,b,width,1,1,-thickness),ribbonPoint(a,b,width,1,-1,-thickness));
  M.mesh(name,v,color,true);
 }
+const ESCAPE_BRIDGE_SPAN:NonNullable<CustomComponent['bridgeSpan']>=[[6,8.4,-252],[30,10,-271]];
 function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
  const base=C.length;floor(name,a,b,width,SEA.timber,.32);
  // The authored outline remains the invisible walkable/grindable surface.
@@ -107,6 +108,7 @@ function planks(name:string,a:P,b:P,width:number,_spacing=1.7){
    }
   }
  }
+ if(name.startsWith('Rope bridge '))for(const c of C.slice(base))c.bridgeSpan=ESCAPE_BRIDGE_SPAN;
 }
 function fruit(a:P,b:P,count=5){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:a.map((v,k)=>v+(b[k]-v)*t+(k===1?.9:0)) as P});}}
 function checkpoint(p:P,nm:string){add({t:'checkpoint',p,nm});M.lantern([p[0]+3,p[1],p[2]]);}
@@ -461,7 +463,9 @@ planks('Rope bridge far bank',[18.7,9.3,-262.2],[30,10,-271],5.2,.9);
 const bridgeLength=Math.hypot(24,19),bridgeRight:[number,number]=[19/bridgeLength,24/bridgeLength];
 for(const side of [-1,1]){
  const dx=bridgeRight[0]*side*2.85,dz=bridgeRight[1]*side*2.85;
+ const cableStart=C.length;
  M.rope('Long escape bridge cable',[6+dx,10.1,-252+dz],[30+dx,11.7,-271+dz],.35,.12);
+ for(const c of C.slice(cableStart))c.bridgeSpan=ESCAPE_BRIDGE_SPAN;
  for(const [x,y,z] of [[6,8.4,-252],[30,10,-271]])M.beam('Bridge anchoring post',[x+dx,y-.25,z+dz],[x+dx,y+2.1,z+dz],.25);
 }
 for(const [x,y,z] of [[6,8.4,-252],[30,10,-271]])M.beam('Bridge bearing crossbeam',[x-bridgeRight[0]*3.25,y-.35,z-bridgeRight[1]*3.25],[x+bridgeRight[0]*3.25,y-.35,z+bridgeRight[1]*3.25],.32,SEA.dark);

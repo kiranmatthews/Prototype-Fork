@@ -190,7 +190,7 @@ export function jungleSolidRole(kind:string):'mesh'|'trunk'|'none'{
 }
 export interface JunglePlacement {
   dkind:JungleAssetKind;p:[number,number,number];s?:[number,number,number];w?:number;
-  scenerySolid?:boolean;openFloor?:boolean;
+  scenerySolid?:boolean;openFloor?:boolean;bridgeSpan?:[[number,number,number],[number,number,number]];
   yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;cameraCutaway?:boolean;castShadow?:boolean;
 }
 export function jungleAssetMatrix(c:JunglePlacement):THREE.Matrix4 {
@@ -683,7 +683,7 @@ export class JungleAssetKit {
     const drawParts=parts.filter(p=>{
       if(this.lite&&renderSpec(p.kind).wind&&c.scenerySolid!==true&&jungleSolidRole(p.kind)==='none'){this.skipped++;return false;}return true;
     });
-    if(this.batched){
+    if(this.batched&&!c.bridgeSpan){
       for(const part of drawParts){
         const point=new THREE.Vector3().setFromMatrixPosition(part.matrix);
         // Fine cells keep a detailed temple bay from dragging the whole temple into view.

@@ -92,9 +92,10 @@ await withBlockworksRuntime(async r=>{
  r.until(()=>p.state==='grind',{moveY:1,grindHeld:true},{maxFrames:100,label:'charged ollie onto first hand rope'});
  const caught=l.ropes.find(rope=>rope.rail===p.grindRail);assert.ok(caught);
  const balance=()=>({moveX:Math.max(-1,Math.min(1,-p.balance*8-p.balanceVel*.8)),grindHeld:true});
- r.until(()=>p.pos.z<-34,balance,{maxFrames:400,label:'clear the ice and Nitro by grinding'});
- r.charge(8,balance);r.releaseJump({spinHeld:true});
- r.until(()=>p.grounded,{moveY:1,spinHeld:true},{maxFrames:140,label:'land at the temple refuge'});
+ // Leave room to charge before the loaded spring rope reaches its fixed end.
+ r.until(()=>p.pos.z<-30.5,balance,{maxFrames:400,label:'clear the ice and Nitro by grinding'});
+ r.charge(6,balance);r.charge(2,{grindHeld:true,moveX:.5});r.releaseJump({moveX:.5});
+ r.until(()=>p.grounded,{moveY:1},{maxFrames:140,label:'land inside the temple refuge, clear of its fixed rope-side pillar'});
  assert.equal(p.totalDeaths,0);assert.equal(p.isBailing,false);assert.ok(p.pos.z<-36&&p.pos.z>-44.5);
  const result={name:'charged-ollie-rope-bypass',pass:true,charged,frames:r.frame,final:r.snapshot()};reports.push(result);
  await writeFile(out+'/skate.json',JSON.stringify({result,trace:r.trace},null,2));

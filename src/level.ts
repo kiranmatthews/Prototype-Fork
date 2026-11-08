@@ -151,6 +151,7 @@ import {
   beachfrontPointAtDistance,
 } from "./beachfrontCourse";
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
+import {RopeBridges,type RopeBridgeSpan,type BridgeAnchors} from './ropeBridges';
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';
 import { TRIBAL_GUARDIAN, isTribalGuardian, stepTribalGuardian } from './enemies/tribalGuardian';
@@ -548,6 +549,7 @@ interface Crumble {
 // and, if you linger, snaps and drops you into the void. Eases back to taut
 // if you hop off in time.
 interface SkyRope {
+  bridge: RopeBridgeSpan;
   visual: BraidedRope;
   rail: Rail;
   segs: THREE.Mesh[]; // visual rope segments, repositioned each frame to the live nodes
@@ -822,6 +824,7 @@ export interface CustomComponent {
   openFloor?: boolean; // roofedtemple: retain authored floor; hollowcavebore: physical floor break
   cameraCutaway?: boolean; // scenery-only: hide foreground obstruction during an E/W camera view
   p: [number, number, number];
+  bridgeSpan?: BridgeAnchors; // shared pinned ends for rope, suspended deck and attached scenery; preserves each component's unloaded geometry
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
   wallHeights?: [number, number]; // straight two-knot wallpath: exact height at each end, including triangular caps
@@ -2748,7 +2751,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "orbit", "spin", "bounce",
-  "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "slipGravity", "groundSpeedLimit", "containment",
+  "minefieldTrap", "t", "p", "s", "to", "bridgeSpan", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "slipGravity", "groundSpeedLimit", "containment",
   "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
@@ -3210,6 +3213,14 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if(component.bridgeSpan!==undefined){
+      const anchors=component.bridgeSpan;
+      if(!['platform','ice','crumble','mesh','decor','rope'].includes(component.t)||
+        !Array.isArray(anchors)||anchors.length!==2||!anchors.every(a=>finiteTuple(a,3)&&a.every(n=>Math.abs(n)<=MAX_ABS)))return null;
+      const length=Math.hypot(anchors[1][0]-anchors[0][0],anchors[1][2]-anchors[0][2]);
+      if(length<.1||length>2000)return null;
+      aggregateNodes+=2;
+    }
     if((component.t==='colouredgem'&&!isColouredGemColour(component.gemColour))||
       (component.gemColour!==undefined&&component.t!=='colouredgem'))return null;
     if(component.t!=='enemy'&&(component.kookRole!==undefined||component.alertGroup!==undefined))return null;
@@ -3417,7 +3428,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true, options: { cra
     if (component.depthBias !== undefined && Math.abs(component.depthBias) > 8) return null;
     if (component.outerBank !== undefined &&
         (component.t !== 'vertramp' || component.outerBank < 0 || component.outerBank > 40)) return null;
-    const dynamic = dynamicKinds.has(component.t) ||
+    if(component.bridgeSpan){
+      const length=Math.hypot(component.bridgeSpan[1][0]-component.bridgeSpan[0][0],component.bridgeSpan[1][2]-component.bridgeSpan[0][2]);
+      aggregateSamples+=Math.min(320,Math.ceil(length/.58))*Math.max(12,(component.indices?.length??(component.vertices?.length??0)/3)/3);
+    }
+    const dynamic = !!component.bridgeSpan || dynamicKinds.has(component.t) ||
       (component.t === "rail" && (component.amp ?? 0) > 0);
     if (dynamic && ++dynamicCount > 1024) return null;
     if (component.t === "checkpoint" && ++checkpointCount > 128) return null;
@@ -4547,6 +4562,7 @@ export class Level {
   movers: Mover[] = [];
   crumbles: Crumble[] = [];
   ropes: SkyRope[] = [];
+  readonly ropeBridges = new RopeBridges();
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
   private blockworksSurfaces: BlockworksSurfaces | null = null;
@@ -5675,8 +5691,10 @@ export class Level {
     // replacements, user levels, and the separately-constructed bonus stage
     // all get the same rule without hard-coded level lists.
     if (!this.skateRace) this.placeSystemicEndNitroBang();
+    if(!EDITOR_BUILD&&this.builtFromData)this.ropeBridges.bind(this.builtFromData,this.root,this.groundMeshes);
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
+    for(const edge of this.ropeBridges.edges){this.surfaceEdgeRails.push(edge.rail);this.surfaceEdgeOwners.set(edge.rail,edge.owner);}
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
     if (this.skateCollectathon && this.gateSpec)
@@ -5722,6 +5740,7 @@ export class Level {
     this.reconcileCrateColumnGrounds(); // support floors cannot depend on component order
     this.refreshCartonTops(true);
     this.snapshotHome(); // last: reset() needs where everything actually started
+    this.ropeBridges.bindCrates(this.crates);
     this.rebuildCrateRails(); // every crate is placed: derive the grind lines
     // All geometry and authoring transforms are now final. Build local-space
     // BVHs before the first gameplay tick so every ground consumer—landing,
@@ -5733,7 +5752,7 @@ export class Level {
     // ground-membership switch/checkpoint lifecycle, including hard resets.
     this.root.traverse(object=>{
       const mesh=object as THREE.Mesh;
-      const moving=mesh.userData.moverId!==undefined;
+      const moving=mesh.userData.moverId!==undefined||mesh.userData.bridgeBoard===true;
       if(mesh.isMesh && (mesh.userData.solidSides || moving) && !mesh.userData.carlisleScenery)
         this.meshSideCollisions.add(mesh,()=>this.groundMeshes.includes(mesh),moving);
     });
@@ -5958,7 +5977,8 @@ export class Level {
 
   isSurfaceEdgeRail(rail: Rail): boolean { return this.surfaceEdgeOwners.has(rail); }
 
-  grindSurfaceEdge(rail: Rail): void {
+  grindSurfaceEdge(rail: Rail,position=this.playerPos,rider:object=rail): void {
+    this.ropeBridges.pressEdge(rail,position,rider);
     const id = this.surfaceEdgeOwners.get(rail)?.userData.crumbleId;
     if (typeof id === 'number') this.touchCrumble(id);
   }
@@ -6704,7 +6724,7 @@ export class Level {
     // Keep Carlisle's cone placeholders individually replaceable after their
     // animated skin loads; their separate contact volumes are unchanged.
     const coneRow=this.builtFromData?.name==='Carlisle Coast'&&isCarlisleConeRow(c);
-    if(!EDITOR_BUILD&&this.batchDecor&&!coneRow&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.breakable&&!c.sourceBox&&!c.materialStyle&&!standingWater&&
+    if(!EDITOR_BUILD&&this.batchDecor&&!c.bridgeSpan&&!coneRow&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.breakable&&!c.sourceBox&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&!c.slip&&c.iceGrip===undefined&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided,!!c.flatShading,c.fog??null]);
@@ -8178,7 +8198,7 @@ export class Level {
             {
               const top = c.p[1] + s[1] / 2 - 0.25;
               const bottom = c.p[1] - s[1] / 2;
-              if (top > bottom) {
+              if (top > bottom && !c.bridgeSpan) {
                 if (yawQ % 90 === 0) {
                   const swapped = yawQ % 180 !== 0;
                   const w = swapped ? s[2] : s[0];
@@ -8581,6 +8601,7 @@ export class Level {
               c.shake ?? 3,
               c.amp ?? 1.2,
               4,
+              c.bridgeSpan,
             );
           } else if (c.t === "gate") {
             // finish gate: crossing its plane ends the run (and the time trial)
@@ -9035,6 +9056,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.ropeBridges.dispose();
     this.verticalLoopView?.dispose();this.verticalLoopView=null;
     this.pickupVisualBatch?.dispose();this.pickupVisualBatch=null;
     this.chaseLightning?.dispose();this.chaseLightning=undefined;
@@ -10584,12 +10606,13 @@ export class Level {
       c.mesh.updateWorldMatrix(true, false);
     }
 
+    this.ropeBridges.update(dt);
     this.syncSurfaceEdgeRails();
 
     this.ancientMechanisms?.update();
 
-    // Sky-bridge ropes: sag + wobble under a grinder, snap if you linger too
-    // long, ease back taut if you hop off in time, restring after the fall.
+    // Suspension ropes share the loaded spring chain with their deck. Keep
+    // the authored grind time limit, falling rope and restring lifecycle.
     for (const r of this.ropes) {
       const N = r.rest.length - 1;
       if (r.state === "break") {
@@ -10645,16 +10668,17 @@ export class Level {
       } else if (r.state === "sag") {
         r.t = Math.max(0, r.t - dt * 1.6); // hopped off: recover toward taut
         if (r.t <= 0) r.state = "idle";
-      } else {
-        // Rest geometry is already current. Rebuilding every braided vertex
-        // and grind segment at 60 Hz used to dominate Sky's idle simulation.
+      } else if(!r.bridge.physics.awake&&r.bridge.physics.diagnostics.maxDisplacement===0) {
+        // A finite settle restores the exact authored curve once, then sleeps.
+        if(r.rail.points.some((point,i)=>!point.equals(r.rest[i]))){
+          r.rail.points.forEach((point,i)=>point.copy(r.rest[i]));r.rail.rebake();this.syncRope(r);
+        }
         continue;
       }
-      const load = r.state === "sag" ? Math.min(1, r.t / 0.25) : 0;
       for (let i = 1; i < N; i++) {
-        const shape = Math.sin((Math.PI * i) / N); // 0 at the posts, 1 at mid-span
-        const wob = Math.sin(this.time * 9 + i * 1.3) * 0.09 * shape * load;
-        r.rail.points[i].y = r.rest[i].y - shape * r.sagAmt * load + wob;
+        const s=r.bridge.distance(r.rest[i]),sample=r.bridge.physics.sample(s);
+        r.rail.points[i].copy(r.rest[i]).addScaledVector(r.bridge.direction,sample.along*r.bridge.gain);
+        r.rail.points[i].y+=sample.height*r.bridge.gain;
       }
       // The sag is a STRETCH, not the rigid translation a live rail is allowed
       // (see the MovingRail note above). Without a re-bake the grind keeps
@@ -10817,6 +10841,8 @@ export class Level {
       c.art.state.fuse = c.fuse;
       updateCrateArt(c.art, dt, this.time);
     }
+
+    this.ropeBridges.updateCrates();
 
     // Expanding blasts: chain explosives, break crates, kill enemies.
     for (const ex of this.explosions) {
@@ -11740,6 +11766,7 @@ export class Level {
     // Publish restored mover/crumble/phase transforms immediately so every
     // subsequent ground ray sees the reset world rather than stale matrices.
     this.root.updateMatrixWorld(true);
+    this.ropeBridges.reset();
     this.syncSurfaceEdgeRails();
     this.meshSideCollisions.resetMotion();
   }
@@ -15164,10 +15191,11 @@ export class Level {
 
   // The player grinds a rope this frame — flag its rope so the update loop sags
   // it and counts down to the snap. No-op for ordinary rails.
-  grindRope(rail: Rail): void {
+  grindRope(rail: Rail,position=this.playerPos,rider:object=rail): void {
     for (const r of this.ropes) {
       if (r.rail === rail && (r.state === "idle" || r.state === "sag")) {
         r.active = true;
+        r.bridge.press(rider,position);
         return;
       }
     }
@@ -15190,6 +15218,7 @@ export class Level {
     breakTime = 3,
     sagAmt = 1.2,
     regen: number | null = 4,
+    bridgeSpan?: BridgeAnchors,
   ): void {
     const N = 24;
     const rest: THREE.Vector3[] = [];
@@ -15235,6 +15264,7 @@ export class Level {
     }
     this.root.add(group);
     const rope: SkyRope = {
+      bridge:this.ropeBridges.span(bridgeSpan??[[x0,y,z0],[x1,y,z1]],bridgeSpan?1:sagAmt/.65),
       visual,
       rail,
       segs,
