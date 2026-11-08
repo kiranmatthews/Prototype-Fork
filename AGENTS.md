@@ -26,9 +26,7 @@ as ended when that batch is done.
   checks the integration invalidated. Never force-push `main`.
 - Shared runtime files and `public/levels.json` change often. Merge published
   level data by level ID; never overwrite the pack with an older branch's copy.
-- Respect publication holds the user has placed on a branch. The unfinished
-  `codex/jump-reference-motion` animation experiments stay unpublished until the
-  user lifts that hold.
+- Respect any publication hold the user places on a branch until they lift it.
 - `docs/RELEASE_COORDINATION.md` records two one-off coordinated batches
   (October and November 2026). It is history, not current instructions.
 
