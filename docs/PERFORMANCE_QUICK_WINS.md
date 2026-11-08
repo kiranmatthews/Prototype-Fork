@@ -129,8 +129,8 @@ by the paired captures below rather than by the floor.
 
 | Measure | Before | After |
 | --- | ---: | ---: |
-| Hosted bytes, the 16 affected models | 22.1 MB | 12.6 MB |
-| Release output | 989.6 MB | 974.8 MB |
+| Hosted bytes, the 16 affected models | 22.1 MB | 13.4 MB (12.6 MB with the boat at 1024) |
+| Release output | 989.6 MB | 975.5 MB (974.8 MB with the boat at 1024) |
 | Carlisle estimated GPU texture bytes at spawn | 1,583 MB (1,310 MB after step 1) | 346 MB measured with the boat at 1024; about 363 MB with the boat at 2048 |
 
 Rows for every image in the batch are in `release-textures/carlisle-review.json`.
