@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Export the supplied Jak 1 data with the official local OpenGOAL extractor.
 
-Run under the repository's shared heavy-job helper. The source installation is
+The source installation is
 read-only; all generated originals and extraction configuration stay in output.
 """
 import argparse

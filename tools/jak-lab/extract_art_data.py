@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Disassemble all source art groups without re-exporting levels or textures.
 
-Run under the shared heavy-job guard. Inputs remain read-only; the output is
+Inputs remain read-only; the output is
 local game-derived data and must stay outside Git and public/.
 """
 import argparse

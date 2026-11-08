@@ -87,7 +87,7 @@ for (let side=0; side<4; side++) {
     assert.equal(new THREE.Raycaster(origin,direction,0,2.8).intersectObjects(cage.meshes,false).length,0,'cage slat gaps must be open geometry on every side');
   }
 }
-const server=await createServer({appType:'custom',logLevel:'silent',cacheDir:'.release-queue/crate-asset-test-cache',server:{middlewareMode:true}});
+const server=await createServer({appType:'custom',logLevel:'silent',cacheDir: '.motion-playtest-cache/crate-asset-test-cache',server:{middlewareMode:true}});
 let fruitTriangles;
 try {
   const {buildFruitGeometry}=await server.ssrLoadModule('/src/fruitAssets.ts');

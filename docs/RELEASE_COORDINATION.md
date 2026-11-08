@@ -1,6 +1,13 @@
-# Release coordination
+# Release coordination (historical)
 
-## Current status — active again 5 November 2026
+> **Retired. Not current instructions.** The user ran release coordination as a
+> one-off for two batches of concurrent chats (from 27 October and from
+> 5 November 2026). The coordinator recorded its own retirement on 5 November.
+> There is no standing coordinator, handoff inbox or shared heavy-job limit:
+> chats publish their own validated work as `AGENTS.md` describes. Everything
+> below is kept as a record of those batches.
+
+## Status recorded on 5 November 2026 (superseded)
 
 The user reactivated **Coordinate local work and releases** for the next batch
 of concurrent chats. Feature owners work, test and commit locally, submit an
@@ -49,10 +56,10 @@ release from that cycle was `aac956ab544572811e0787815450ce8718e09343`, verified
 through Pages run `40580839323`. Its evidence and source mappings remain in the
 shared inbox. No background polling job was started by this reactivation audit.
 
-## Active coordination procedure
+## Coordination procedure used during those batches (retired)
 
 **Coordinate local work and releases** (`01a17b2e-3553-70e0-abb3-0bcc400dcc1b`)
-is the sole active release coordinator, as requested by the user. This section
+was the release coordinator for those batches, as requested by the user. This section
 supersedes the ownership and pending statuses in the historical record below.
 Other chats keep working locally and hand off immutable, validated commits.
 They do not push to `origin/main`, dispatch duplicate workflows, or watch GitHub.
@@ -116,7 +123,11 @@ especially `src/main.ts`, `src/level.ts`, `src/player.ts`, `src/audio.ts`,
    console is clean. Record the commit, run URL, public version/stamp and evidence.
    Report failures once with the actionable cause; owners keep working locally.
 
-## Shared Mac validation capacity
+## Shared Mac validation capacity (removed)
+
+The user removed this limit on 9 November 2026: the crash it guarded against came
+from about ten simultaneous tasks running at maximum speed, not ordinary use.
+Builds and checks no longer go through the helper. The original rule was:
 
 During this local coordination, use the ignored shared helper
 `/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/run_heavy.py`

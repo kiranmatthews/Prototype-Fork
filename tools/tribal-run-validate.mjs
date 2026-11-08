@@ -1,5 +1,4 @@
-// Serial local handoff checks. Launch this foreground command through the
-// shared run_heavy.py guard; it owns no browser or publishing credentials.
+// Serial local checks. It owns no browser or publishing credentials.
 import {spawn} from 'node:child_process';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createWriteStream} from 'node:fs';

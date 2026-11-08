@@ -4,7 +4,6 @@
 Shared level buffers contain vertices/accessors that a particular exported model
 never references. Remove only that unreachable storage. Preserve draw-order
 attribute bytes, morphs, skins, animation keys, materials and original images.
-Run the complete catalogue through the shared heavy-job guard.
 """
 from __future__ import annotations
 

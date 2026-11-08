@@ -15,7 +15,7 @@ globalThis.Image = class {
   get src() { return this.url; }
 };
 const server = await createServer({ appType: 'custom', logLevel: 'silent',
-  cacheDir: '.release-queue/crate-portrait-test-cache', server: { middlewareMode: true } });
+  cacheDir: '.motion-playtest-cache/crate-portrait-test-cache', server: { middlewareMode: true } });
 try {
   const { createCrateArt } = await server.ssrLoadModule('/src/crateArt.ts');
   const { LIFE_PORTRAITS, setLifePortraitStyle } = await server.ssrLoadModule('/src/lifePortrait.ts');

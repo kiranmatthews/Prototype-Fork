@@ -4,7 +4,7 @@ import {createServer} from 'vite';
 import * as THREE from 'three';
 const source=await readFile(new URL('./test-life-multihit-crates.mjs',import.meta.url),'utf8');
 new Function('noop',source.slice(source.indexOf('function installHeadlessDom()'),source.indexOf('const held ='))+'installHeadlessDom();')(()=>{});
-const server=await createServer({appType:'custom',logLevel:'silent',cacheDir:'.release-queue/explosive-test-vite-cache',server:{middlewareMode:true}});
+const server=await createServer({appType:'custom',logLevel:'silent',cacheDir: '.motion-playtest-cache/explosive-test-vite-cache',server:{middlewareMode:true}});
 const warn=console.warn;console.warn=()=>{};let level,puffs,originalBurst;
 try{
  const {CRATE_SIZE}=await server.ssrLoadModule('/src/crateDimensions.ts');

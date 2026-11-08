@@ -11,40 +11,26 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 5. Record each completed brief in `docs/LEVEL_ITERATIONS.md`, including elapsed prompt-to-playable time. Do not include unrelated cleanup in a timed iteration.
 6. By default, commit and publish completed, validated changes through `origin/main` and the existing GitHub Pages workflow. Verify the deployment before handoff. Stage only task-owned changes and preserve unrelated work; follow any explicit request to keep a change local or use a different delivery workflow.
 
-## Concurrent release coordination
+## Working alongside other chats
 
-**Active again as of 5 November 2026, at the user's request.** Feature chats
-work, test and commit locally, then hand off validated increments to the
-coordinator. Continue independent local work after handoff; do not wait for
-GitHub or duplicate coordinator release checks.
+Several Codex and Claude chats may work on this repository at the same time.
+There is no standing release coordinator: each chat publishes its own validated
+work through `origin/main` (Fast path, step 6). Coordinate releases through a
+single chat only when the user explicitly sets that up for a batch, and treat it
+as ended when that batch is done.
 
-The unfinished experiments in **Locate OpenGOAL character animations**
-(`codex/jump-reference-motion`) are explicitly held from publication until the
-user releases that hold. The user lifted the `codex/spaghetti-infinite` hold
-on 5 November and requested publication. The separate particle-harvesting fork
-(**Locate OpenGOAL character animations (3)**) is publishable when complete;
-keep its scoped particle work separate from the held animation experiments.
-
-The user has appointed **Coordinate local work and releases**
-(`01a17b2e-3553-70e0-abb3-0bcc400dcc1b`) as release coordinator. While this
-coordination is active, it overrides the default individual publishing step:
-feature chats work, test and commit locally; only the coordinator integrates,
-pushes to `origin/main`, follows GitHub runs and verifies the public deployment.
-
-- Read `docs/RELEASE_COORDINATION.md` before release work. The shared handoff inbox
-  is `/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/`.
-- Use a task worktree for new work. Never build concurrently in the same checkout,
-  reset/stash another chat's changes, or stage the primary checkout wholesale.
-- Write one handoff per chat to `.release-queue/<thread-id>.md` in that shared
-  inbox, containing status, checkout/branch, immutable commit SHA(s), owned files,
-  dependencies, completed checks/browser evidence and unfinished work. Mark it
-  `READY` only for a validated coherent increment. Commit before handing off.
-- Continue independent local work after handoff; do not poll GitHub, repeatedly
-  rebase for moving `main`, or wait for deployment. The coordinator owns release
-  validation and publication. Keep later changes in new commits.
-- Shared runtime files and `public/levels.json` need explicit ownership/dependency
-  notes. Resolve published level data by level ID; never overwrite the pack with
-  an older branch's complete copy.
+- Work in a task worktree or branch. Never build concurrently in the same
+  checkout, reset or stash another chat's changes, or stage a shared checkout
+  wholesale.
+- Before pushing, fetch `origin/main` and rebase or merge onto it; rerun only the
+  checks the integration invalidated. Never force-push `main`.
+- Shared runtime files and `public/levels.json` change often. Merge published
+  level data by level ID; never overwrite the pack with an older branch's copy.
+- Respect publication holds the user has placed on a branch. The unfinished
+  `codex/jump-reference-motion` animation experiments stay unpublished until the
+  user lifts that hold.
+- `docs/RELEASE_COORDINATION.md` records two one-off coordinated batches
+  (October and November 2026). It is history, not current instructions.
 
 ## Guardrails
 

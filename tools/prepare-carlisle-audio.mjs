@@ -1,6 +1,6 @@
 // Decode the licensed originals with the same native decoder used by the game.
-// Run through the shared heavy-job lease. The Python mastering step consumes
-// these temporary planar float files and retains the original downloads.
+// The Python mastering step consumes these temporary planar float files and
+// retains the original downloads.
 import {readFile,writeFile} from 'node:fs/promises';
 import {chromium} from '/Users/kiki/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 const root='art/carlisle-shipyard/harbour-sound/source';

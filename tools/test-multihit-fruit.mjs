@@ -34,7 +34,7 @@ cage.scene.traverse(node => {
   timber.push(g);
 });
 const cageGeometry = mergeGeometries(timber), cageBvh = new MeshBVH(cageGeometry);
-const server = await createServer({ appType: 'custom', logLevel: 'silent', cacheDir: '.release-queue/multihit-fruit-test-cache', server: { middlewareMode: true } });
+const server = await createServer({ appType: 'custom', logLevel: 'silent', cacheDir: '.motion-playtest-cache/multihit-fruit-test-cache', server: { middlewareMode: true } });
 try {
   const { createMultihitContents, updateMultihitContents } = await server.ssrLoadModule('/src/crateMultihit.ts');
   const { buildFruitGeometry } = await server.ssrLoadModule('/src/fruitAssets.ts');

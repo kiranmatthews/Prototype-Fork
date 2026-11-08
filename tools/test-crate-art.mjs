@@ -5,7 +5,7 @@ import * as THREE from 'three';
 const noop = () => {};
 const ctx = new Proxy({ createLinearGradient: () => ({ addColorStop: noop }), createRadialGradient: () => ({ addColorStop: noop }), measureText: text => ({ width: text.length * 8 }) }, { get: (target, key) => target[key] ?? noop });
 globalThis.document = { createElement: () => ({ width: 1, height: 1, getContext: () => ctx }) };
-const server = await createServer({ appType: 'custom', logLevel: 'silent', cacheDir: '.release-queue/crate-test-vite-cache', server: { middlewareMode: true } });
+const server = await createServer({ appType: 'custom', logLevel: 'silent', cacheDir: '.motion-playtest-cache/crate-test-vite-cache', server: { middlewareMode: true } });
 try {
   const art = await server.ssrLoadModule('/src/crateArt.ts');
   const { CrateEffects } = await server.ssrLoadModule('/src/crateEffects.ts');

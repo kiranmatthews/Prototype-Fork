@@ -1,4 +1,4 @@
-// Run sequentially inside the release coordinator's shared heavy-job guard.
+// Runs its checks sequentially.
 import {spawnSync} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {dirname,resolve} from 'node:path';
