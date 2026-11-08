@@ -108,23 +108,32 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,CONST,TUNI
   Object.assign(TUNING,defaults);
   const replayData=JSON.parse(await readFile(new URL('./fixtures/grind-head-user-replay.json',import.meta.url),'utf8'));
   const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
-  const rider=new Player(scene);rider.competitionMode=true;rider.endlessDeaths=replayData.endlessDeaths;rider.setAuthoredPoseOverlay(()=>{});rider.respawn(level,true);
-  const replay=new Replayer();replay.begin(replayData);const input=makeInput();let previous=null,peak=0,grindFrames=0;
-  for(let frame=0;frame<replayData.frames;frame++){
-    rider.restoreRenderPose();replay.feed(input,rider.camDir);rider.step(1/60,input,level);level.update(1/60);input.consumeEdges();rider.commitRenderStep(level);
-    if(rider.state==='grind'){
-      const q=rider.headM.quaternion.clone();if(previous)peak=Math.max(peak,THREE.MathUtils.radToDeg(q.angleTo(previous)));previous=q;grindFrames++;
-    }else previous=null;
-    rider.applyRenderInterpolation(.5);
+  // Freeze the current varied bail poses for this historical input-only
+  // approach. Otherwise its recovery can miss the later head-regression
+  // sequence intermittently. Balance retains its own simulation RNG.
+  const cosmeticRandom=Math.random;let cosmeticSeed=0xC0DE;
+  const replay=new Replayer(),input=makeInput();let rider,previous=null,peak=0,grindFrames=0;
+  try {
+    Math.random=()=>((cosmeticSeed=(Math.imul(cosmeticSeed,1664525)+1013904223)>>>0)/4294967296);
+    rider=new Player(scene);rider.competitionMode=true;rider.endlessDeaths=replayData.endlessDeaths;rider.setAuthoredPoseOverlay(()=>{});rider.respawn(level,true);
+    replay.begin(replayData);
+    for(let frame=0;frame<replayData.frames;frame++){
+      rider.restoreRenderPose();replay.feed(input,rider.camDir);rider.step(1/60,input,level);level.update(1/60);input.consumeEdges();rider.commitRenderStep(level);
+      if(rider.state==='grind'){
+        const q=rider.headM.quaternion.clone();if(previous)peak=Math.max(peak,THREE.MathUtils.radToDeg(q.angleTo(previous)));previous=q;grindFrames++;
+      }else previous=null;
+      rider.applyRenderInterpolation(.5);
+    }
+  } finally {
+    replay.end();rider?.restoreRenderPose();Math.random=cosmeticRandom;
   }
-  replay.end();rider.restoreRenderPose();
   // This recording predates the absolute park controls. Replayer supplies
   // current defaults for absent keys, so its exact grind-frame count changes
   // with the movement model. Keep it exercising a substantial grind sequence.
-  assert.ok(grindFrames>=50,'replay did not exercise its grinding sequence');assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
+  assert.ok(grindFrames>=50,`replay did not exercise its grinding sequence: ${grindFrames} frames`);assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
   // Authored head tracks remain the final authority; removing one returns to
   // the independent procedural state rather than feeding the edit into it.
-  // The replay may finish in a bail/death settle depending on balance noise.
+  // The historical replay may finish in a bail/death settle.
   // Test the independent authored-pose contract on a fresh live rider.
   rider.respawn(level,true);
   const authored=new THREE.Quaternion().setFromEuler(new THREE.Euler(.3,1.8,-.2));
