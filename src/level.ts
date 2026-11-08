@@ -278,6 +278,7 @@ import {
 import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
 import { jungleFruitClusters } from "./levels/fruit-clusters";
 import { PickupVisualBatch } from "./pickupVisualBatch";
+import { CrateShellBatch } from "./crateShellBatch";
 import { pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
 
 export interface Crate {
@@ -4476,6 +4477,11 @@ export class Level {
   readonly raceCheckpoints: THREE.Vector3[] = [];
   pickups: Pickup[] = [];
   private pickupVisualBatch: PickupVisualBatch | null = null;
+  private crateShellBatch: CrateShellBatch | null = null;
+  /** Play builds instance repeated crate shells once their sculpts settle. */
+  private crateShellBatchWanted = false;
+  /** Settles once the batch exists; covered warm-up waits for it. */
+  private crateShellBatchReady: Promise<void> = Promise.resolve();
   rails: Rail[] = [];
   halfpipes: Halfpipe[] = []; // dedicated smooth transitions ridden by the pipe physics
   // Travel zones: rectangular regions where the course itself runs along X
@@ -5783,8 +5789,22 @@ export class Level {
       this.water.setShoreGeometry(shorelineMeshes);
       this.islandShoreFoam?.bindSurf(this.water.surfUniforms);
     }
-    if (!EDITOR_BUILD && this.builtFromData?.atmosphere?.profile === "drowned-crown")
+    // Every play build draws its floating fruit through spatial instance cells
+    // (first validated on Drowned Crown). Editor builds keep one pickable mesh
+    // per pickup; pickups spawned later stay native.
+    if (!EDITOR_BUILD)
       this.pickupVisualBatch = new PickupVisualBatch(this.root, this.pickups);
+    // Repeated crate shells are instanced once their sculpts have settled, so
+    // the batch normally exists before the covered warm-up frame. Editor
+    // builds keep one pickable crate per component.
+    if (!EDITOR_BUILD && this.crates.some(c => c.art)) {
+      this.crateShellBatchWanted = true;
+      this.crateShellBatchReady = Promise.allSettled(this.crates.map(c => c.art?.ready)).then(() => {
+        if (!this.crateShellBatchWanted) return; // disposed while sculpts loaded
+        this.crateShellBatchWanted = false;
+        this.crateShellBatch = new CrateShellBatch(this.root, this.crates);
+      });
+    }
   }
 
   private installGroundAcceleration(meshes: readonly THREE.Mesh[]): void {
@@ -9059,6 +9079,7 @@ export class Level {
     this.ropeBridges.dispose();
     this.verticalLoopView?.dispose();this.verticalLoopView=null;
     this.pickupVisualBatch?.dispose();this.pickupVisualBatch=null;
+    this.crateShellBatchWanted=false;this.crateShellBatch?.dispose();this.crateShellBatch=null;
     this.chaseLightning?.dispose();this.chaseLightning=undefined;
     this.caveCollapse?.dispose();this.caveCollapse=null;
     for (const tiki of this.fireTikis) tiki.dispose();
@@ -16564,6 +16585,7 @@ export class Level {
       (this.heightFog??=new HeightFog()).update(this.root,camera.position,this.atmosphere.heightFog,color,atmosphere.fogEnabled&&!clearInspectionView);
     }else this.heightFog?.disable();
     this.pickupVisualBatch?.sync();
+    this.crateShellBatch?.sync();
     this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
     if(!clearInspectionView)this.tribalTrampolines?.view(camera,this.scene);
@@ -16598,7 +16620,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.tribalTrampolines?.ready,this.spaghettiSprings?.ready,this.carlisleShipyard?.ready,this.carlisleCones?.ready,...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.art?.ready]), this.crateShellBatchReady, ...this.checkpoints.map(cp => cp.art?.ready), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}

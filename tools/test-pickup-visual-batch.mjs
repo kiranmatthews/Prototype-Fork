@@ -55,8 +55,8 @@ try{
  assert.ok(native.every(mesh=>mesh.visible),'native visibility was not restored');
  assert.ok([...resources.values()].every(n=>n===0),'batch disposed shared fruit art');
  assert.ok([...disposals.values()].every(n=>n===1),'owned instance/morph resources were not disposed once');
- // Verify the Level integration stays opt-in and leaves native editor data
- // and picking meshes available in every editor build.
+ // Every play build batches fruit, whatever its atmosphere profile; editor
+ // builds keep native editor data and picking meshes.
  const harness=await readFile(new URL('./validate-editor-roundtrip.mjs',import.meta.url),'utf8');
  new Function(harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('))+'\ninstallHeadlessDom();')();
  const api=await server.ssrLoadModule('/src/level.ts');
@@ -66,9 +66,9 @@ try{
   const data={v:1,name:'Pickup presentation ownership',spawn:[0,1,0],killY:-20,
    ...(crown?{atmosphere:{profile:'drowned-crown'}}:{}),components:[{t:'platform',p:[0,-.5,0],s:[10,1,10]},...fruit,{t:'gate',p:[0,0,-3]}]};
   const level=new api.Level(new THREE.Scene(),{id:'pickup-batch-fixture',name:data.name,data});
-  assert.equal(!!level.pickupVisualBatch,crown&&!editing);
+  assert.equal(!!level.pickupVisualBatch,!editing);
   assert.deepEqual(level.captureData().components.filter(c=>c.t==='wumpa'),fruit);
-  assert.ok(level.pickups.every(p=>p.mesh.children[0].visible===!(crown&&!editing)));
+  assert.ok(level.pickups.every(p=>p.mesh.children[0].visible===editing));
   if(level.pickupVisualBatch){
    level.pickups[0].alive=false;level.pickups[0].mesh.visible=false;
    level.updateSceneryView(new THREE.PerspectiveCamera());

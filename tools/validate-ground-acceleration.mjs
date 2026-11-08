@@ -142,7 +142,7 @@ installHeadlessDom();
 const server = await createServer({ logLevel: "silent", server: { middlewareMode: true } });
 
 try {
-  const { accelerateGroundMeshes, disposeGroundAcceleration } =
+  const { accelerateGroundMeshes, disposeGroundAcceleration, boundedAcceleratedRaycast } =
     await server.ssrLoadModule("/src/groundAcceleration.ts");
 
   // Exact Beachfront topology: 64 lateral by 370 longitudinal quads.
@@ -349,7 +349,7 @@ try {
       );
       assert.equal(
         ground.raycast,
-        acceleratedRaycast,
+        boundedAcceleratedRaycast,
         `${builtIn.id}: dense ground retained stock raycast`,
       );
     }
