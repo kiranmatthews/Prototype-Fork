@@ -56,7 +56,12 @@ function reviewQuery(file) {
 
 async function htmlFiles(root, directory, recursive) {
   const result = [];
-  for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {
+  // Release checkouts can omit optional authoring/archive directories.
+  const entries = await readdir(path.join(root, directory), { withFileTypes: true }).catch(error => {
+    if (error.code === 'ENOENT') return [];
+    throw error;
+  });
+  for (const entry of entries) {
     const file = path.posix.join(directory, entry.name);
     if (entry.isFile() && file.endsWith('.html')) result.push(file);
     else if (recursive && entry.isDirectory()) result.push(...await htmlFiles(root, file, true));

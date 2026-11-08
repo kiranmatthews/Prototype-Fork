@@ -37,6 +37,7 @@ jobs:
             !/docs/
             !/art/
             /docs/**/*.html
+            /art/**/*.html
             /docs/mall/source-survey.json
             /docs/mall/retail-rails.json
             /docs/school/source-geometry.json

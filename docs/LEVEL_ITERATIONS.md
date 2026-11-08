@@ -11212,3 +11212,9 @@ All originally failing cases have passing focused coverage. Actual browser check
   standalone playable comparison and all 218 source clips. Lite and full
   renderers, normal and MAX/native 2560×1440; no console warnings or errors.
   Evidence is in the chat's external `publish-2026-11-08/` directory.
+- CI follow-up: the first Pages attempt exposed an optional-directory failure
+  in Labs discovery because its sparse checkout omitted `art/`. The missing-art
+  fixture reproduced it, then passed with ENOENT handling. CI now retains only
+  the lightweight art review HTML so the directory matches local discovery.
+  Packed motion/model references are also included in the offline manifest;
+  provenance checks assert both decoded bytes and offline membership.

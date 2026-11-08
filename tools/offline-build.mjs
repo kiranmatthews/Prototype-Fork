@@ -27,6 +27,7 @@ export function runtimeAsset(file, fontVersions) {
   if (file === 'update-game.html' || file === 'offline-save.html' || file === 'release.json') return false;
   if (file === 'sw.js' || /(?:^|\/)(?:provenance|UpstreamSource)\//.test(file)) return false;
   if (/^jak-lab\/assets\/(?:models\/[a-f0-9]{64}\.glb\.gz|death\/[a-f0-9]{64}\.json\.gz)$/.test(file)) return true;
+  if (/^motion-study\/(?:jak|skate)\/(?:motion\.json|eichar-lod0\.glb)\.gz$/.test(file)) return true;
   if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
   if (file.startsWith('fonts/')) {
     if (/\.(?:otf|ttf|woff2?)$/.test(file)) return true;

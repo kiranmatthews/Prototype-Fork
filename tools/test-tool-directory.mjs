@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
@@ -14,6 +16,16 @@ async function load(file) {
   return import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString('base64')}`);
 }
 const pages = await discoverToolPages(root);
+const sparseRoot = await mkdtemp(join(tmpdir(), 'motion-sparse-labs-'));
+try {
+  for (const directory of ['tools', 'public', 'docs']) await mkdir(join(sparseRoot, directory));
+  await writeFile(join(sparseRoot, 'jump-review.html'), '<title>Jump A/B/C/D playtest</title>');
+  const sparsePages = await discoverToolPages(sparseRoot);
+  assert.deepEqual(sparsePages.map(page => page.source), ['jump-review.html']);
+  assert.equal(sparsePages[0].local, false, 'An omitted authoring archive must not disable the playtest');
+} finally {
+  await rm(sparseRoot, {recursive: true, force: true});
+}
 const expected = [...new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { cwd: root, encoding: 'utf8' })
   .trim().split('\n').filter(file => file.endsWith('.html') && file !== 'labs/index.html' && !file.startsWith('vendor/')))];
 assert.deepEqual(pages.map(page => page.source).sort(), expected.sort(), 'Every project-owned HTML entry must be discoverable');
@@ -64,6 +76,7 @@ for (const asset of provenance.assets) {
   const bytes = asset.encoding === 'gzip' ? gunzipSync(packed) : packed;
   assert.equal(bytes.length, asset.bytes, `Published sample size changed: ${asset.path}`);
   assert.equal(createHash('sha256').update(bytes).digest('hex'), asset.sha256, `Published sample changed: ${asset.path}`);
+  assert.ok(worker.includes('motion-study/' + asset.path), `Offline playtest is missing ${asset.path}`);
 }
 for (const entry of ['jump-review.html', 'skate-playtest.html', 'skate-reference-lab.html'])
   assert.ok(worker.includes(entry), `Offline manifest is missing ${entry}`);
