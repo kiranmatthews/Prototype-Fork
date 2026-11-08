@@ -76,6 +76,7 @@ try {
         activate: mark("map.activate"), selectedKey: "flats" },
       worldMapUI: { visible: true, hide() { this.visible = false; mark("map.hide")(); }, show: mark("map.show") },
       puffs, swirls, fieldSwirls, cloudPathPass: {release: mark('cloud.release')},
+      desertHeat: {release: mark('desert.release')},
       player: { lives: 5, fruit: 12, bonusMode: true, hubMode: false, bonusCrates: 3,
         pos: new THREE.Vector3(1, 2, 3), fruitCollectionRevision: 6,
         enterLevel: mark("player.enter"),
@@ -180,6 +181,8 @@ try {
   assert.equal(api.setEditorBuild(false), false, "gameplay switch left authoring build mode active");
   assert.ok(direct.events.findIndex(event => event[0] === "fruit.bank") <
     direct.events.findIndex(event => event[0] === "player.enter"));
+  assert.equal(direct.events.filter(event => event[0] === "desert.release").length, 1,
+    "accepted level switch must release the previous desert heat resources once");
   assert.equal(direct.events.filter(event => event[0] === "player.respawn").length, 1);
   assert.equal(puffs.liveCount, 0); assert.equal(swirls.count, 0); assert.equal(fieldSwirls.count, 0); checks++;
 

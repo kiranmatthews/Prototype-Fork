@@ -54,9 +54,22 @@ try{
   const {DrownedCrownLighting}=await server.ssrLoadModule('/src/drownedCrownLighting.ts');
   const {motuHeatLook}=await server.ssrLoadModule('/src/motuLighting.ts');
   const {MapIslandLighting}=await server.ssrLoadModule('/src/mapIslandLighting.ts');
-  const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere,DrownedCrownLighting,MapIslandLighting,motuHeatLook);
+  const {isDesertCanyonLevel,DESERT_SUN_DIRECTION}=await server.ssrLoadModule('/src/desertLighting.ts');
+  const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere,DrownedCrownLighting,MapIslandLighting,motuHeatLook,isDesertCanyonLevel);
   const renderLevel=(level,entry,painted=true,editor=false)=>render(level,entry,{painted,editor},THREE,atmosphere);
   const build=(data,id='atmosphere_copy')=>new api.Level(new THREE.Scene(),{id,name:data.name,data:clone(data)});
+  {
+    const data={...dataFor('ordinary','bryce-golden-hour'),atmosphere:{sunDirection:DESERT_SUN_DIRECTION}};
+    const desert=build(data,'bryce-canyon'),plain=build(dataFor(),'ordinary');
+    try {
+      check('Desert sun projection follows its authored light and clears on level change',()=>{
+        const directions=[];
+        render(desert,{id:'bryce-canyon'},{onDesertSun:direction=>directions.push(direction?[...direction]:null),
+          transitionTo:{level:plain,entry:{id:'ordinary'}}},THREE,atmosphere);
+        assert.deepEqual(directions,[DESERT_SUN_DIRECTION,null]);
+      });
+    } finally {desert.dispose();plain.dispose();}
+  }
   {
     const data={...dataFor('ordinary','pirate'),atmosphere:{profile:'drowned-crown',ambientIntensity:.9,sunIntensity:2.8,fillIntensity:.5,fogNear:85,fogFar:400}};
     const entry={id:'drowned-crown',name:data.name,data},profiled=build(data,entry.id),plainData={...data,atmosphere:{...data.atmosphere}};
