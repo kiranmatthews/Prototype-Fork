@@ -112,11 +112,32 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
     }
     rooms.push({name:nm,x,y,launchX:x,capY:y+7.8,switchX:returnSwitch,group});
   };
-  const recovery = (x:number,y:number,nm:string) => {
+  const recovery = (x:number,y:number,nm:string,chainNitro=false) => {
     // Deliberately off the fast central line, with six metres of clear refuge.
     crate(x,y,'tnt',`${nm}: prime from above, leave the marked refuge clear`,-2.3);
     crate(x,y+.96,'wood',`${nm}: collect the cap without a ground spin`,-2.3);
     crate(x+5.5,y,'mystery',`${nm}: safe recovery reward`,-2.3);
+    // The reprise adds one volatile offering inside the blast radius, on the
+    // solid shoulder behind the TNT: the fuse now also counts a nitro, and the
+    // marked refuge keeps clear of both explosions.
+    if(chainNitro)crate(x-1.2,y,'nitro',`${nm}: volatile offering chained to the fuse blast`,-4.4);
+  };
+  // Nitro is a static, untouchable shape beside the lane. It glows green and
+  // counts only once the summit's green switch detonates every one of them.
+  const nitro = (x:number,y:number,z:number,nm:string) => crate(x,y,'nitro',nm,z);
+  const nitroSwitch = (x:number,y:number,nm:string) => crate(x,y,'nitrobang',nm,-2.3);
+  // Reservoir lines. Exit offerings on both carving lines reward leaving the
+  // bowl wide; a cap suspended above the exit lip is met by the air every
+  // drop-in earns. The optional aqueduct rail passes beside each cap, so a
+  // rail hop is the second route. An entry cap needs a pumped return.
+  const bowlLine = (a:number,b:number,lipY:number,nm:string,entryKind?:Kind) => {
+    for(const side of [-2.6,2.6])crate(b+3,lipY,'wood',`${nm}: exit offerings on both carving lines`,side);
+    crate(b-2.6,lipY+2.6,'wood',`${nm}: suspended cap above the exit lip`,0);
+    if(entryKind)crate(a+2.6,lipY+2.6,entryKind,`${nm}: pumped-return cap above the entry lip`,0);
+  };
+  // Fruit floats just above a gold rail so the grind line reads from a distance.
+  const railFruit = (a:number,b:number,ya:number,yb:number,from:number,to:number) => {
+    for(let x=from;x<=to;x+=6)add({t:'wumpa',p:[x,ya+(yb-ya)*(x-a)/(b-a)+1.15,-2.5],grp:3,nm:'Gold grind line fruit'});
   };
   const finish = (y:number) => {
     add({t:'crystal',p:[end-20,y,1.25],grp:5,nm:'Temple summit crystal'});
@@ -142,10 +163,14 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
           ambientIntensity:1.15,sunColor:'#fff0c2',sunIntensity:1.5},
         medalTimes:variant===1?{gold:105,silver:145,bronze:200}:{gold:125,silver:175,bronze:240},groups,components:world}};
   };
-  return {slab,slope,climb,crate,line,rail,checkpoint,bonus,pipe,gap,preserve,recovery,finish,result};
+  return {slab,slope,climb,crate,line,rail,railFruit,checkpoint,bonus,pipe,gap,preserve,recovery,nitro,nitroSwitch,bowlLine,finish,result};
 }
 
 const TERRACES_PROFILE: readonly Point[] = [[-20,0],[34,0],[80,9],[164,9],[234,22.5],[294,22.5],[354,34.5],[490,34.5]];
+// ACT I · THE TERRACES. Every mechanic appears once in a safe, readable form
+// before the causeway: spin and mask, the arrow-first room, a first low grind,
+// the first flame seen from a safe lane, the first reservoir line, the stair
+// alternative, the switch bridge, the fuse court, and a short ollie gap.
 const a=templeCourse(1,TERRACES_PROFILE,490);
 a.slab(-20,34,0,'Fern court: learn the reward and skating lanes');
 a.crate(1,0,'mask','Protection before the first temple ascent');
@@ -153,24 +178,26 @@ for(const x of [9,13,17])a.crate(x,0,'wood','Opening spin rhythm, on supported s
 a.checkpoint(25,0,'Fern court checkpoint before the upper-first room');
 a.preserve(28,0,'Fern court upper-first lesson');
 a.slope(34,80,0,9,'First broad temple bank');a.line(40,76,1.17,8.22);
-a.slab(80,108,9,'First pipe observation terrace');
-a.crate(88,9,'multihit','Optional striped rhythm on the quiet back edge');
+// The first gold line: a low grind beside the bank, before any reservoir.
+a.rail(44,74,2.76,8.63,'First bank gold grind',-2.5);a.railFruit(44,74,2.76,8.63,48,70);
+a.slab(80,108,9,'First flame terrace: read the sentinel from the right-hand lane');
+a.crate(88,9,'multihit','Striped offering inside the first flame\'s reach: five hits timed to its cooling',-2);
 a.pipe(108,144,9,6,'Jade teaching halfpipe');
-a.slab(144,164,9,'Wide halfpipe recovery');a.checkpoint(151,9,'Lower aqueduct checkpoint');
+a.slab(144,164,9,'Wide halfpipe recovery');a.bowlLine(108,144,9,'Jade teaching reservoir');
+a.checkpoint(151,9,'Lower aqueduct checkpoint');
 a.slope(164,234,9,22.5,'Second temple processional bank');a.line(170,226,10.16,20.96);
 a.climb(168,234,9,22.5,6);
 a.rail(176,218,12.1,20.2,'Ascending aqueduct grind',-2.5);
 a.slab(234,256,22.5,'Switch court: bridge and landing are both visible');
 a.crate(239,22.5,'wood','Slow down at the switch court');
-a.bonus(242,22.5,'Jade Reservoir bonus entrance off the skating line');
 a.gap(256,268,22.5,'Jade bridge trial',249,20);
 a.slab(268,294,22.5,'Jade bridge reward terrace');
-for(const x of [275,278,281])a.crate(x,22.5,'wood','Rewards after the created bridge',1.25);
+for(const [x,kind] of [[275,'wood'],[278,'wood'],[281,'mystery']] as const)a.crate(x,22.5,kind,'Rewards after the created bridge',1.25);
 a.slope(294,354,22.5,34.5,'Three-times-high temple ascent');a.line(300,348,23.7,33.3);
 a.slab(354,378,34.5,'Summit observation and checkpoint');a.checkpoint(359,34.5,'Summit checkpoint before the fuse court');
 a.recovery(366,34.5,'Summit fuse court');
 a.pipe(378,424,34.5,9,'High sanctuary halfpipe');
-a.slab(424,438,34.5,'Clear approach to the sanctuary jump');
+a.slab(424,438,34.5,'Clear approach to the sanctuary jump');a.bowlLine(378,424,34.5,'High sanctuary reservoir');
 a.slab(438,452,34.5,'Flat sanctuary ollie approach after the temple turn');
 a.gap(452,458,34.5,'Six-metre sanctuary ollie');a.rail(447,465,35.2,35.2,'Sanctuary gap grind alternative',-2.5);
 a.slab(458,490,34.5,'Broad sanctuary landing and finish');
@@ -178,45 +205,59 @@ for(const x of [463,466])a.crate(x,34.5,'mystery','Landing rewards set behind th
 a.finish(34.5);
 
 const SKYLINE_PROFILE: readonly Point[] = [[-20,0],[50,0],[140,17.25],[250,17.25],[340,34.5],[464,34.5],[510,46],[594,46],[642,57.5],[650,57.5],[694,57.5],[764,69],[818,69]];
+// ACT II · THE SKYLINE. Each lesson returns combined with another, higher and
+// faster: the arrow room gains a return switch, the fuse court chains a nitro,
+// flames guard a drop-in, a rail and a landing, the reservoirs grow until the
+// giant bowl's pumped return, and the Ember Gauntlet leads to a sanctuary
+// whose green switch counts every volatile offering.
 const b=templeCourse(2,SKYLINE_PROFILE,818);
 b.slab(-20,50,0,'High temple arrival and open skating runway');
 b.crate(0,0,'mask','Protection for the skyline route');
-for(const x of [10,14,18])b.crate(x,0,'wood','Three-box skating pickup line',1.25);
+for(const [x,z] of [[10,1.25],[14,-1.25],[18,1.25]] as const)b.crate(x,0,'wood','Weaving arrival pickup line',z);
 b.checkpoint(26,0,'Arrival checkpoint before the return-gallery puzzle');
 b.preserve(31,0,'Return-gallery plan',45,30);
 b.slope(50,140,0,17.25,'Long rolling ascent to the fifth temple tier');b.line(58,132,1.53,15.72);
 b.rail(72,124,4.92,14.89,'Fifth-tier long rising grind',-2.5);
-b.slab(140,172,17.25,'Pipe approach with space to build speed');
+b.slab(140,172,17.25,'Pipe approach: the sentinel sweeps the drop-in lane');
 b.crate(149,17.25,'multihit','Optional rhythm box clear of the pipe takeoff');
 b.pipe(172,222,17.25,12,'Cloud aqueduct halfpipe');
-b.slab(222,250,17.25,'Cloud aqueduct recovery and checkpoint');b.checkpoint(231,17.25,'Cloud aqueduct checkpoint');
-b.recovery(239,17.25,'Cloud fuse lesson reprise');
+b.slab(222,250,17.25,'Cloud aqueduct recovery and checkpoint');b.bowlLine(172,222,17.25,'Cloud aqueduct reservoir');
+b.checkpoint(231,17.25,'Cloud aqueduct checkpoint');
+b.recovery(239,17.25,'Cloud fuse lesson reprise',true);
 b.slope(250,340,17.25,34.5,'Six-times-high temple crown bank');b.line(258,332,18.78,32.97);
 b.climb(258,340,17.25,34.5,8);
 b.rail(268,323,21.6,32.14,'Crown bank gold grind',-2.5);
 b.slab(340,384,34.5,'Crown court: visible bridge then uninterrupted pipe line');
 b.checkpoint(346,34.5,'Crown court checkpoint before final skating sequence');
-b.bonus(362,34.5,'Sun-Crown Treasury bonus entrance off the skating line');
+for(const x of [349,352])b.nitro(x,34.5,3.4,'Volatile offering: the first nitro glows beside the lane. Never touch it; the summit green switch counts it');
 b.crate(354,34.5,'bouncy','Preserve crown arrow for the upper life crate',-2.3);
 b.crate(354,43.9,'life','Crown upper target before destroying its arrow',-2.3);
 b.gap(384,396,34.5,'Crown bridge',374,31);
 b.slab(396,400,34.5,'Crown bridge pipe entry');
 b.pipe(400,452,34.5,14,'Sun crown halfpipe');
-b.slab(452,464,34.5,'Sun crown downhill entry');
+b.slab(452,464,34.5,'Sun crown downhill entry');b.bowlLine(400,452,34.5,'Sun crown reservoir');
 b.slope(464,510,34.5,46,'Rising sun passage through the fourth storey');b.line(470,502,36,44);
 b.pipe(510,568,46,18,'Giant jade halfpipe');
-b.slab(568,594,46,'Giant pipe recovery');b.checkpoint(578,46,'Final aqueduct checkpoint');
+b.slab(568,594,46,'Giant pipe recovery');b.bowlLine(510,568,46,'Giant jade reservoir','life');
+b.checkpoint(578,46,'Final aqueduct checkpoint');
 b.slope(594,642,46,57.5,'Fifth-storey winding temple bank');b.line(602,642,47.6,55.8);
 b.rail(604,642,49.1,58.2,'Descending aqueduct finale',-2.5);
 b.slab(642,650,57.5,'Flat final ollie apron above the temple court');
 b.gap(650,657,57.5,'Seven-metre final skate jump');b.rail(642,665,58.2,58.2,'Final gap gold grind',-2.5);
 b.slab(657,694,57.5,'Deep sanctuary landing after the skyline run');
+b.crate(662,57.5,'mask','Protection before the Ember Gauntlet',1.25);
 for(const x of [667,670,673])b.crate(x,57.5,'mystery','Finish rewards beyond the clear touchdown',-2.3);
-b.slope(694,764,57.5,69,'Last temple storey: climb onto the sanctuary core');
+b.slope(694,764,57.5,69,'Last temple storey: the Ember Gauntlet');
 b.line(702,754,58.8143,67.3571);
 b.slab(764,818,69,'Upper temple terrace and playable sanctuary hall');
 b.checkpoint(771,69,'Sanctuary core checkpoint');
+for(const x of [774,780,786])b.crate(x,69,'wood','Sanctuary procession offering between the crossing guardians',0);
+// A nitro gate after the guardians: a pair flanks the lane, a third stands
+// beyond it, all outside spin reach of every other box and well clear of the
+// green switch so the final strike is never inside a blast radius.
+for(const [x,z] of [[792,-3.5],[792,3.5],[796,-3.5]] as const)b.nitro(x,69,z,'Volatile offering of the sanctuary gate: counted from the green switch');
 b.finish(69);
+b.nitroSwitch(804,69,'Green switch beyond the last nitro and the crystal: detonate every volatile offering for the complete count');
 
 const TERRACES_SOURCE_ROUTE=a.result();
 const SKYLINE_SOURCE_ROUTE=b.result();

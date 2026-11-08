@@ -23,8 +23,7 @@ Every non-boss campaign course has a distinct bonus room selected by `resolveBon
 | Chimeworks | Belfry Counterweights | 6 | finite supports → reveal and return |
 | Deadwater Park | Deadwater Valve House | 9 | cap before fuse → visible switch bridge → reveal and return |
 | Nightworks: After Hours | After Hours Dispatch | 11 | retain gap anchors → cap before fuse → reveal and return |
-| Temple Terraces | Jade Reservoir | 9 | finite supports → visible switch bridge → cap before fuse |
-| Temple Skyline | Sun-Crown Treasury | 10 | reveal and return → retain gap anchors → arrow before reward |
+| Temple of Embers | Ember Reliquary | 17 | mask before fire → cross a sentinel's sweep → arrow to a high switch creates the bridge → cap before fuse → jump three nitro, count them from the green switch (see [TEMPLE_OF_EMBERS_DESIGN.md](TEMPLE_OF_EMBERS_DESIGN.md)) |
 | The Drowned Crown | The Captain’s Last Ledger | 9 | reveal and return → cap before fuse → visible switch bridge |
 | The Bone Yard | Ivory Salvage | 10 | retain gap anchors → finite supports → reveal and return |
 | Ripcord River | Sluicekeeper’s Cache | 21 | climb the spillway → reveal river islands → cross falling timbers |

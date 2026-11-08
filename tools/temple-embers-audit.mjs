@@ -40,7 +40,7 @@ await withBlockworksRuntime(async r=>{
  if(!process.argv.includes('--baseline')){
   assert.deepEqual(missing,[],'Every ordinary route shoulder must have real support');
   assert.ok(exits.every(q=>q.grounded&&q.state==='ride'&&q.drop<.1),'Lateral input must not fall through the banks');
-  assert.equal(l.enemies.length,8);
+  assert.equal(l.enemies.length,9);
   assert.ok(sideContacts.every(q=>q.hit),'A body below an elevated lip must not clip through the masonry side');
  }
 },{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',source:m=>m.JUNGLE_TERRACES_LEVEL,endlessDeaths:true,

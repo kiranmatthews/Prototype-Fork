@@ -30,8 +30,13 @@ export function* runTempleJourney(r){
       else {const pipeSpeed=pipe?Math.sqrt(31.17*pipe.radius)+4.2:15;
         const maximum=corner?(s>574?15:10):pipeSpeed,minimum=maximum-3;
         if(p.speed>maximum)braking=true;else if(p.speed<minimum)braking=false;}
-      const tiki=route.tikiTrials.find(q=>Math.abs(q.s-s)<13);
-      const safeSide=tiki?-tiki.side*3.15:1.25;
+      // Hazard lanes. A flame sentinel owns one side until the rider has passed
+      // its head; the bull owns the centre of its bank, so the rider takes the
+      // right-hand lane beside its charge line and only attacks while it is
+      // patrolling or dizzy. Between hazards the rider returns to the centre-right.
+      const tiki=route.tikiTrials.find(q=>s>q.s-13&&s<q.s+5);
+      const bull=r.l.enemies.find(e=>e.alive&&e.kind==='charger'&&(()=>{const q=route.toLocal(e.group.position.toArray())[0];return s>q-32&&s<q+14;})());
+      const safeSide=tiki?-tiki.side*3.15:bull?3.15:1.25;
       const target=route.toWorld(Math.min(route.end-6,s+(corner?Math.min(2,2.8/turn.scale):Math.min(7,7/turn.scale))),p.pos.y,safeSide);
       const delta={x:target[0]-p.pos.x,z:target[2]-p.pos.z};
       const move=!pop&&(p.grounded||!p.airFromSkate)?r.worldDirectionInput(delta):{};
@@ -44,7 +49,7 @@ export function* runTempleJourney(r){
    const checkpoint=r.l.checkpoints.some(cp=>!cp.active&&cp.box.distanceToPoint(p.pos)<3.5);
    const plainCrate=r.l.crates.some(c=>c.alive&&!c.pending&&!c.metal&&!c.metalBounce&&!c.bang&&!c.nitroBang&&!c.bouncy&&!c.tnt&&!c.nitro&&c.box.distanceToPoint(p.pos)<2.8);
    const explosive=r.l.crates.some(c=>c.alive&&!c.pending&&(c.tnt||c.nitro)&&c.box.distanceToPoint(p.pos)<3.5);
-   const enemy=r.l.enemies.some(e=>e.alive&&e.spinKill&&e.box.distanceToPoint(p.pos)<3.5);
+   const enemy=r.l.enemies.some(e=>e.alive&&e.spinKill&&(e.kind!=='charger'||e.state==='recover'||e.state==='patrol')&&e.box.distanceToPoint(p.pos)<3.5);
    if(checkpoint||(plainCrate||enemy)&&!explosive)sample.spinHeld=p.spinning||!r.lastInput.spinHeld;
   }
   yield sample;

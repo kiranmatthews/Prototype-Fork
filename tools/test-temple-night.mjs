@@ -7,7 +7,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(normalizeCustomLevelData(route.data));assert.equal(BUILTIN_LEVELS.some(e=>e.id==='jungle-skyline'),false);
  assert.equal(route.data.sky,'night');assert.equal(route.data.components.filter(c=>c.t==='gate').length,1);
  assert.equal(route.data.components.filter(c=>c.t==='bonusplatform').length,1);assert.equal(route.data.components.filter(c=>c.t==='crystal').length,1);
- assert.equal(l.fireTikis.length,6);assert.ok(l.torches.length>=60);assert.ok(route.end>1300);
+ assert.equal(l.fireTikis.length,9);assert.ok(l.torches.length>=60);assert.ok(route.end>1300);
  const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
  const floorAt=(q,up=.3,depth=1)=>{ray.set(new THREE.Vector3(...q).add(new THREE.Vector3(0,up,0)),down);ray.far=depth;return ray.intersectObjects(l.groundMeshes,false)[0]?.point.y;};
  for(const box of l.crates.filter(c=>c.bang))l.triggerBang(box);l.root.updateMatrixWorld(true);

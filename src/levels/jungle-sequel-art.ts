@@ -95,7 +95,7 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
     for(const side of [-1,1])out.push({t:'wall',p:r.point(s,r.height(s),side*(width/2-1.6)),s:[2.1,7.8,2.1],yaw,invisible:true,grp:92,nm:`${name} solid pier`});
   };
   const gateways:[number,string][]=r.variant===1?[[ -2,'Fern court gateway'],[82,'Jade reservoir gateway'],[237,'Bridge court gateway'],[357,'Sanctuary garden gateway'],[465,'Sanctuary landing gateway']]:
-    [[-2,'Forest arrival gateway'],[143,'Cloud reservoir gateway'],[343,'Crown court gateway'],[575,'Cloud garden gateway'],[666,'Upper landing gateway'],[769,'Sun sanctuary gateway']];
+    [[-2,'Forest arrival gateway'],[143,'Cloud reservoir gateway'],[343,'Crown court gateway'],[575,'Cloud garden gateway'],[666,'Upper landing gateway'],[694,'Ember Gauntlet gateway'],[769,'Sun sanctuary gateway']];
   for(const [s,name]of gateways)gateway(s,name);
   const hall=(s:number,depth:number,name:string)=>{
     const y=r.height(s),yaw=90+r.frame(s).yaw;

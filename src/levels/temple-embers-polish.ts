@@ -146,26 +146,48 @@ export function polishTempleEmbers(route: TempleRoute): void {
     for(const u of [-1,1])decor('stonepaver',s+5.5,u*1.1,-.14,[2.5,.2,2.5],'Pale safe-refuge paving','#c7d3b6');
   }
 
-  // Small combat pockets live on long supported stretches, outside fire
-  // sweeps, checkpoint arrivals, takeoffs and blind landings. Native patrols
-  // are axis-bound, so choose the nearest world cross-axis explicitly.
-  const patrols:[number,number,NonNullable<CustomComponent['foe']>][]=[
-    [56,0,'grunt'],[198,-2,'turtle'],[319,-.2,'grunt'],[666,-2,'turtle'],
-    [848,.2,'hopper'],[1058,0,'grunt'],[1290,-2,'turtle'],[1362,.4,'grunt'],
+  // ENEMY GRAMMAR. Seven kinds. Each is introduced alone on a long supported
+  // stretch, outside fire sweeps, checkpoint arrivals, takeoffs and blind
+  // landings, then returns in combination with another element. Native
+  // patrols are axis-bound: a crossing patrol walks the lane's cross-axis
+  // (the defeated turtle's solid shell stays in the offering lane); the bull
+  // runs along the lane, so its charge never leaves the bank it owns.
+  type Foe=NonNullable<CustomComponent['foe']>;
+  const patrols:[number,number,Foe,{range:number;speed:number;along?:boolean},string][]=[
+    [56,0,'grunt',{range:1.45,speed:1.35},'first crab on the open bank: spin or stomp, escape on either side'],
+    [198,-2,'turtle',{range:.75,speed:1.35},'mossback on the processional bank: the stomp lesson, its shell left in the offering lane'],
+    [319,0,'hopper',{range:1.45,speed:1.15},'spring frog on the high ascent: spin only while it is grounded'],
+    [660,0,'charger',{range:9,speed:2.4,along:true},'russet bull owns the long ascent lane: read the windup, step aside, strike while it is dizzy'],
+    [727,2.6,'sentry',{range:0,speed:1},'ember sentry covers the pipe apron: jump its slow orb, then spin the body'],
+    [848,.2,'floater',{range:1.45,speed:1.15},'violet watcher over the crown bank: jump-spin it, or take the slow pilgrim stair'],
+    [896,-2,'spiker',{range:.75,speed:1.35},'bristleback after the flame: the stomp habit is punished, spin only'],
+    // The two guardians cross opposite halves of the procession ten metres
+    // apart; the centre lane between their turning points stays clear.
+    [1350,-3,'grunt',{range:1.6,speed:1.35},'sanctuary guardian crossing the left half of the procession'],
+    [1358,3,'grunt',{range:1.6,speed:1.6},'second sanctuary guardian crossing the right half, out of step'],
   ];
-  for(const [s,side,foe]of patrols){
-    const f=route.frameAt(s);
-    add({t:'enemy',foe,p:point(s,side,.04),yaw:Math.abs(f.fx)>Math.abs(f.fz)?90:0,
-      // A defeated turtle leaves a solid shell. Its entire patrol and shell
-      // stay in the offering lane, leaving the main approach clear.
-      range:foe==='turtle'?.75:1.45,speed:foe==='hopper'?1.15:1.35,terrainSupports:true,grp:214,
-      nm:`Temple ${foe} patrol: visible approach, wide escape lane`});
+  for(const [s,side,foe,{range,speed,along},role]of patrols){
+    const f=route.frameAt(s),alongX=Math.abs(f.fx)>Math.abs(f.fz);
+    add({t:'enemy',foe,p:point(s,side,.04),yaw:alongX!==!!along?90:0,
+      range,speed,terrainSupports:true,grp:214,nm:`Temple ${foe}: ${role}`});
   }
-  for(const [s,side]of [[64,-2.25],[207,3],[328,-2.25],[677,-2.25],[858,3],[1068,-2.25],[1302,-2.25],[1370,-2.25]]){
-    crate(s,side,0,'wood','Offering after the patrol: supported optional spin line');
-    crate(s,side,.96,'wood','Offering stack cap: jump or spin after reading the patrol');
-    for(const ds of [-3,0,3])add({t:'wumpa',p:point(s+ds,side,2.4),grp:213,nm:'Fruit trail toward the patrol offering'});
-  }
+  // Every offering answers an encounter: what the enemy guards, and where the
+  // safe ground is. A cap varies the stack where the lesson has changed.
+  const offering=(s:number,side:number,cap:CustomComponent['kind'],nm:string)=>{
+    crate(s,side,0,'wood',nm);crate(s,side,.96,cap,`${nm}: cap`);
+    for(const ds of [-3,0,3])add({t:'wumpa',p:point(s+ds,side,2.4),grp:213,nm:'Fruit trail toward the offering'});
+  };
+  offering(64,-2.25,'wood','First offering after the crab');
+  offering(207,3,'wood','Offering across from the mossback shell');
+  offering(328,-2.25,'wood','Offering beyond the frog');
+  offering(676,3,'mystery','Bull refuge offering past the end of its lane');
+  crate(731,2.6,0,'life','The ember sentry guards a life');
+  offering(858,3,'wood','Offering beneath the watcher');
+  offering(904,-2.25,'mystery','Offering beyond the bristleback');
+  for(const s of [1062,1066])crate(s,1.25,0,'wood','Rising sun rhythm pair: smash them at speed');
+  // Gauntlet offerings stand inside each flame's sweep: take them while it cools.
+  for(const [s,side]of [[1278,1.3],[1300,-1.3],[1322,1.3]])
+    crate(s,side,0,'wood','Ember Gauntlet offering inside the sweep: take it while the sentinel cools');
   for(const c of route.climbs)for(let i=1;i<c.steps;i+=2){
     const s=c.a+(i+.62)*(c.b-c.a)/c.steps,y=c.base+(c.top-c.base)*(i+1)/c.steps;
     add({t:'crate',p:route.toWorld(s,y+.035,c.side-1.3),kind:i+2>=c.steps?'life':'mystery',grp:213,
@@ -174,15 +196,19 @@ export function polishTempleEmbers(route: TempleRoute): void {
 
   // Fitted paving makes the long banks read as constructed processional
   // routes. Warm paired lamps and mossy coping mark encounters and courts.
-  for(const [a,b]of [[38,78],[174,232],[300,352],[632,710],[832,912],[1044,1080],[1174,1212],[1276,1336]]){
+  // Fitted paving marks every encounter bank. Lamps announce the patrol courts
+  // only; the aqueduct flame and the Ember Gauntlet get scorched paving and no
+  // lamps, so their sentinels are the only light.
+  for(const [a,b,fire]of [[38,78,0],[174,232,0],[300,352,0],[632,710,0],[832,912,0],[1044,1080,0],[1174,1212,1],[1276,1336,1]]){
     for(let s=a;s<b;s+=3.8){
       const before=route.frameAt(s-2),after=route.frameAt(s+2);
       // A rigid slab cannot follow a curved, rising ribbon. Leave those
       // short bends as earth; straight runs have deliberate mortar gaps.
       if(before.fx*after.fx+before.fz*after.fz<.998)continue;
       for(const side of [-2.35,0,2.35])
-        decor('stonepaver',s,side,-.12,[2.8,.23,2.2],'Worn processional ascent paving','#c5c6aa');
+        decor('stonepaver',s,side,-.12,[2.8,.23,2.2],fire?'Scorched paving beneath the sentinels':'Worn processional ascent paving',fire?'#8d7466':'#c5c6aa');
     }
+    if(fire)continue;
     for(const side of [-1,1]){
       decor('stonebase',a,side*4.75,.035,[1.0,.45,1.0],'Mossy lantern pedestal','#98a88c');
       add({t:'torch',p:point(a,side*4.75,.45),rise:1.45,w:.85,grp:215,nm:'Paired lamps announce a temple patrol court'});

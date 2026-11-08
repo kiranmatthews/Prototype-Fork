@@ -1,5 +1,6 @@
 import { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 import { runCalderaBonusJourney } from './nightworks-caldera-pilot.mjs';
+import { runEmberReliquaryJourney } from './ember-reliquary-pilot.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
 
 /** Each yield is an ordinary device sample. No position, physics, crate state,
@@ -7,6 +8,7 @@ import { puzzleControls } from './puzzle-controls.mjs';
 export function* runThemedBonusJourney(r) {
   if (r.course.layout) return yield* runPuzzleJourney(Object.assign(Object.create(r),{id:r.course.layout}));
   if (r.course.parentId === 'nightworks-after-hours') return yield* runCalderaBonusJourney(r);
+  if (r.course.parentId === 'jungle-terraces') return yield* runEmberReliquaryJourney(r);
   const c=puzzleControls(r), {p,l}=r, course=r.course;
   const deaths=p.totalDeaths;
   yield* c.stepFor(20);c.check(p.grounded,'bonus source spawn unsupported');

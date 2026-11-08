@@ -103,19 +103,37 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
   const climbs=[...a.climbs,...b.climbs.map(c=>({...c,a:c.a+offset,b:c.b+offset,base:c.base+lift,top:c.top+lift}))];
   // Every elevated recovery stretch gets a checkpoint before a distinct trial.
   for(const s of [285,offset+475,offset+620])add({t:'checkpoint',p:point(s,1.1,.04),grp:205,nm:'Temple recovery checkpoint before the next climb'});
-  // Warm route punctuation uses the existing bounded six-light pool.
-  for(let s=-8,i=0;s<end-6;s+=22,i++){
-    if(gaps.some(g=>s>g.a-3&&s<g.b+3))continue;
+  // Nine flame sentinels form the level's escalating arc. Each entry is
+  // [station, side, phase, role]. Act I shows one from a safe lane and one
+  // over a crate court; Act II puts fire on a drop-in lane, a bank whose stair
+  // is the slow safe route, a bank whose rail is the fast safe route, and a
+  // landing; the Ember Gauntlet staggers three in a wave down the last storey.
+  const tikiStations:readonly (readonly [number,number,number,string])[]=[
+    [94,-1,0,'first flame, read from the right-hand lane'],
+    [375,-1,1.27,'summit flame over the fuse court approach'],
+    [offset+160,-1,2.54,'flame sweeping the cloud reservoir drop-in lane'],
+    [offset+298,1,3.81,'crown bank flame: the pilgrim stair is the slow safe route'],
+    [offset+602,-1,5.08,'aqueduct flame guards the gold rail mount: time the grind entry, or take the open right lane'],
+    [offset+678,1,6.35,'landing flame after the final leap'],
+    // The landing leg folds back under the gauntlet's left shoulder until
+    // station 704, so the first wave stands on the right.
+    [offset+704,1,0,'Ember Gauntlet first wave'],
+    [offset+726,-1,2.6,'Ember Gauntlet second wave'],
+    [offset+748,1,5.2,'Ember Gauntlet third wave'],
+  ];
+  // Warm guidance uses the existing bounded six-light pool. Lamps never stand
+  // inside a sentinel's reach: there, the fire is the only light.
+  for(let s=-8,i=0;s<end-6;s+=26,i++){
+    if(gaps.some(g=>s>g.a-3&&s<g.b+3)||tikiStations.some(([t])=>Math.abs(t-s)<14))continue;
     const inPipe=pipes.find(p=>s>p.a-1&&s<p.b+1),side=(i%2?-1:1)*(inPipe?8.9:4.65);
     const y=inPipe?inPipe.lipY:groundAt(s);
     add({t:'torch',p:toWorld(s,y,side),rise:1.7,w:1.1,grp:207,nm:'Warm temple trail torch'});
   }
-  const tikiStations=[94,375,offset+160,offset+298,offset+578,offset+678];
-  for(const [i,s]of tikiStations.entries()){
-    const side=([-1,-1,-1,1,-1,1] as const)[i],f=frameAt(s),p=point(s,side*6.4),yaw=Math.atan2(side*f.fz,-side*f.fx)*180/Math.PI;
+  for(const [i,[s,side,phase,role]]of tikiStations.entries()){
+    const f=frameAt(s),p=point(s,side*6.4),yaw=Math.atan2(side*f.fz,-side*f.fx)*180/Math.PI;
     add({t:'platform',p:[p[0],p[1]-.25,p[2]],s:[3.8,.5,3.8],color:'#a1a68c',tex:'stone',grp:208,nm:'Tiki brazier footing clear of the traversable lane'});
     add({t:'wall',p:[p[0],p[1],p[2]],s:[2.65,2.9,2.65],invisible:true,edgeGrinding:false,grp:208,nm:'Tiki head collision core outside the path'});
-    add({t:'firetiki',p,yaw,range:7.1,cycle:7.8,phase:i*1.27,amp:28,w:1,grp:208,nm:'Turning flame tiki: amber windup, fire sweep, then safe cooling'});
+    add({t:'firetiki',p,yaw,range:7.1,cycle:7.8,phase,amp:28,w:1,grp:208,nm:`Turning flame tiki ${i+1}: ${role}`});
   }
   // Replace the coarse original foliage with the accepted Treehouse library.
   // Preserve natural aspect ratios, roots and clearance from EVERY path arm.
@@ -137,11 +155,15 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
     add({t:'decor',dkind:i%2?'trialsv2treea':'trialsv2treeb',p,s:[width,width*.68,width*.85],yaw:(i*137)%360,solid:false,cameraCutaway:true,grp:209,nm:'Treehouse layered outer jungle tree'});
     add({t:'decor',dkind:kind,p:[p[0],p[1]+12,p[2]],s:[width,width*.41,width*.93],yaw:i*73%360,solid:false,cameraCutaway:true,grp:209,nm:'Separate Treehouse overlapping leaf crown'});
   }
-  const tikiTrials=tikiStations.map((s,i)=>({s,side:([-1,-1,-1,1,-1,1] as const)[i]}));
+  const tikiTrials=tikiStations.map(([s,side])=>({s,side}));
   const groups=[...(a.data.groups??[]),...(b.data.groups??[]).map(g=>({...g,id:g.id+100})),
     {id:201,nm:'Torch causeway and refuge',editorOnly:true},{id:205,nm:'Merged course recovery and bonus',editorOnly:true},
     {id:206,nm:'Continuous camera spine',editorOnly:true},{id:207,nm:'Pooled warm torch lighting',editorOnly:true},
     {id:208,nm:'Turning fire tiki sentinels',editorOnly:true},{id:209,nm:'Treehouse forest canopy',editorOnly:true}];
+  for(const cp of components.filter(c=>c.t==='checkpoint')){
+    const [s]=toLocal(cp.p);
+    for(const side of [-1,1])add({t:'torch',p:point(s-1.2,side*4.75,.45),rise:1.45,w:.85,grp:207,nm:'Paired checkpoint lamps: banked safety reads as warmth'});
+  }
   // Checkpoint order follows travel rather than the builder insertion order.
   const orderedCheckpoints=components.filter(c=>c.t==='checkpoint').sort((x,y)=>toLocal(x.p)[0]-toLocal(y.p)[0]);
   for(let i=components.length-1;i>=0;i--)if(components[i].t==='checkpoint')components.splice(i,1);
