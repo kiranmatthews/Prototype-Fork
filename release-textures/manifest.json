@@ -64,7 +64,7 @@
         }
       }
     },
-    "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions. Carlisle harbour colour maps are normally at most 1024 after the November 2026 GPU-memory review; the fish market and repair shed are owned by the top-40 stage.",
+    "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions. Carlisle harbour colour maps are normally at most 1024 after the November 2026 GPU-memory review; the fish market and repair shed are owned by the top-40 stage. The shrimp boat keeps a 2048 colour map: at 1024 its hull paint detail smeared in a 7 m close-up (docs/carlisle-textures-1024).",
     "map": {
       "limits": {
         "baseColorTexture": 1024,
@@ -87,6 +87,9 @@
         },
         "props/carlisle-buildings/repair-shed.glb": {
           "baseColorTexture": 8192
+        },
+        "props/carlisle-fleet/shrimp-boat.glb": {
+          "baseColorTexture": 2048
         }
       }
     },
@@ -5259,25 +5262,6 @@
       "height": 1024,
       "lossless": false,
       "quality": 95,
-      "psnr": 33.881308929863046,
-      "p99": 22.0,
-      "max": 75,
-      "meanAbs": 2.9024426142374673,
-      "sourceWidth": 8192,
-      "sourceHeight": 8192,
-      "resampling": {
-        "role": "baseColorTexture",
-        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
-      },
-      "sha256": "0aa0963396f7e95a39ad20ef181e2355855c1209f1535401023fdde2e5e29533",
-      "bytes": 457824,
-      "sourceSha256": "2c70c0d33c66a2a1370be9600da758154066502e185c31f11bd650080eb9de7a"
-    },
-    {
-      "width": 1024,
-      "height": 1024,
-      "lossless": false,
-      "quality": 95,
       "psnr": 35.315096483268974,
       "p99": 18.0,
       "max": 57,
@@ -5500,6 +5484,25 @@
       "sha256": "a19c436fa147cef2fd96294fab3bc0b8e5f2fa4dc6fa8c11b96359ee33a3426e",
       "bytes": 242276,
       "sourceSha256": "fba2ccad85389b52142d1762047de3d8db277221501cc433548f739bf9088816"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "lossless": false,
+      "quality": 95,
+      "psnr": 36.94591774743558,
+      "p99": 15.0,
+      "max": 96,
+      "meanAbs": 2.0268067518870034,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "sha256": "c4339f7d399ba52ecbb03c6f2318da1c801a6f4d7fdd70d04472edebf8508efe",
+      "bytes": 1235158,
+      "sourceSha256": "2c70c0d33c66a2a1370be9600da758154066502e185c31f11bd650080eb9de7a"
     }
   ],
   "models": [
@@ -9379,7 +9382,7 @@
         {
           "index": 0,
           "sourceSha256": "2c70c0d33c66a2a1370be9600da758154066502e185c31f11bd650080eb9de7a",
-          "sha256": "0aa0963396f7e95a39ad20ef181e2355855c1209f1535401023fdde2e5e29533"
+          "sha256": "c4339f7d399ba52ecbb03c6f2318da1c801a6f4d7fdd70d04472edebf8508efe"
         }
       ]
     },

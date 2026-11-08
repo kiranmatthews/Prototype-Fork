@@ -22,7 +22,8 @@ reduction. `tools/release-texture-policy.json` records limits and exceptions:
   colour 2048 / normal 512 / packed data 256. The rivet deck and metal wedge
   retain their full 4096 colour maps. These two and the grind rail retain
   1024 normals and 512 packed maps. Original mip payloads are not recompressed.
-- Carlisle harbour (`props/carlisle*`): colour maps normally at most 1024,
+- Carlisle harbour (`props/carlisle*`): colour maps normally at most 1024
+  (the shrimp boat keeps 2048 after a close-up review),
   normals 512, packed metallic-roughness 256. The 1024 cap was set in the
   November 2026 GPU-memory review (the deck, shrimp boat and shipyard kit were
   shipping 8192² and 2048² colour maps costing up to 341 MB each on the GPU). The

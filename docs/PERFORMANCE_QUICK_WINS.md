@@ -131,7 +131,7 @@ by the paired captures below rather than by the floor.
 | --- | ---: | ---: |
 | Hosted bytes, the 16 affected models | 22.1 MB | 12.6 MB |
 | Release output | 989.6 MB | 974.8 MB |
-| Carlisle estimated GPU texture bytes at spawn | 1,583 MB (1,310 MB after step 1) | 346 MB |
+| Carlisle estimated GPU texture bytes at spawn | 1,583 MB (1,310 MB after step 1) | 346 MB measured with the boat at 1024; about 363 MB with the boat at 2048 |
 
 Rows for every image in the batch are in `release-textures/carlisle-review.json`.
 Every normal map reproduced its existing reviewed encoding byte for byte.
@@ -146,8 +146,16 @@ colour map went 8192² → 1024², with the shipyard kit behind it.
 `deck-crop.png` is a 2× centre crop. Per pixel: mean difference 3.4 levels,
 10.3 % of pixels differ by more than 8 levels, maximum 79. The plank grain is
 marginally softer at 1024; draw calls (854) and triangles (19.2 M) are
-identical. Estimated GPU texture bytes at this camera: 1,306 → 346 MB. The
-shrimp-boat view is still rendering and will be added when it lands.
+identical. Estimated GPU texture bytes at this camera: 1,306 → 346 MB. The shrimp boat was captured the same way from a fixed camera (no player)
+at 16 m (`boat-pair.jpg`) and 7 m (`boat-close-crop.png`, a 2× centre crop).
+At 1024 the boat read the same from 16 m but visibly softer, with hull
+scratches and paint chips smeared (mean 2.2 levels, 7.8 % of pixels > 8), and
+the 7 m close-up lost its paint detail (mean 7.3 levels, 28.7 % > 8). The boat
+is a 20 m hero prop seen from the quays, so its colour map stays at 2048 via a
+policy override (quality 95, PSNR 36.9 dB, p99 15.0, max 96; file
+1.24 MB; about 21 MB on the GPU instead of 341 MB). Every other Carlisle
+colour map stays at 1024. The 2048 boat capture pair follows as `boat-2048-*`
+when its render completes.
 
 ## Validation
 

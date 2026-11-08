@@ -40,7 +40,7 @@
       }
     }
   },
-  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions. Carlisle harbour colour maps are normally at most 1024 after the November 2026 GPU-memory review; the fish market and repair shed are owned by the top-40 stage.",
+  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions. Carlisle harbour colour maps are normally at most 1024 after the November 2026 GPU-memory review; the fish market and repair shed are owned by the top-40 stage. The shrimp boat keeps a 2048 colour map: at 1024 its hull paint detail smeared in a 7 m close-up (docs/carlisle-textures-1024).",
   "map": {
     "limits": {
       "baseColorTexture": 1024,
@@ -63,6 +63,9 @@
       },
       "props/carlisle-buildings/repair-shed.glb": {
         "baseColorTexture": 8192
+      },
+      "props/carlisle-fleet/shrimp-boat.glb": {
+        "baseColorTexture": 2048
       }
     }
   },

@@ -275,37 +275,6 @@
       "savedBytes": 1724042
     },
     {
-      "sourceSha256": "2c70c0d33c66a2a1370be9600da758154066502e185c31f11bd650080eb9de7a",
-      "sourceBytes": 13653060,
-      "mimeType": "image/jpeg",
-      "width": 1024,
-      "height": 1024,
-      "uses": [
-        {
-          "file": "props/carlisle-fleet/shrimp-boat.glb",
-          "image": 0,
-          "roles": [
-            "baseColorTexture"
-          ]
-        }
-      ],
-      "sourceWidth": 8192,
-      "sourceHeight": 8192,
-      "resampling": {
-        "role": "baseColorTexture",
-        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
-      },
-      "encodedSha256": "0aa0963396f7e95a39ad20ef181e2355855c1209f1535401023fdde2e5e29533",
-      "encodedBytes": 457824,
-      "quality": 95,
-      "lossless": false,
-      "meanAbs": 2.9024426142374673,
-      "p99": 22.0,
-      "max": 75,
-      "psnr": 33.881308929863046,
-      "savedBytes": 13195236
-    },
-    {
       "sourceSha256": "2f1a23b417a032d4e86b6d2b8c3066cc8a7951b705677e5d0b0c6e5df6f5c4a4",
       "sourceBytes": 1342823,
       "mimeType": "image/png",
@@ -1389,7 +1358,38 @@
       "max": 52,
       "psnr": 35.78275128422355,
       "savedBytes": 795653
+    },
+    {
+      "sourceSha256": "2c70c0d33c66a2a1370be9600da758154066502e185c31f11bd650080eb9de7a",
+      "sourceBytes": 13653060,
+      "mimeType": "image/jpeg",
+      "width": 2048,
+      "height": 2048,
+      "uses": [
+        {
+          "file": "props/carlisle-fleet/shrimp-boat.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 8192,
+      "sourceHeight": 8192,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "c4339f7d399ba52ecbb03c6f2318da1c801a6f4d7fdd70d04472edebf8508efe",
+      "encodedBytes": 1235158,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 2.0268067518870034,
+      "p99": 15.0,
+      "max": 96,
+      "psnr": 36.94591774743558,
+      "savedBytes": 12417902
     }
   ],
-  "scope": "Carlisle harbour review, November 2026: colour maps resized to 1024 (quality 95 under the resizedColor floor), normal maps 512 and metallic-roughness JPEGs 256 stored losslessly. Models: carlisle-decks joined decks, shrimp boat, shipyard kit and cone."
+  "scope": "Carlisle harbour review, November 2026: colour maps resized to 1024 (quality 95 under the resizedColor floor), normal maps 512 and metallic-roughness JPEGs 256 stored losslessly. Models: carlisle-decks joined decks, shrimp boat, shipyard kit and cone. The shrimp boat colour map was re-reviewed at 2048 after its 1024 close-up smeared hull paint detail."
 }
