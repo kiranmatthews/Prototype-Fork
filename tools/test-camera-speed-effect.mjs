@@ -126,15 +126,26 @@ try {
     mainSource.slice(mainSource.indexOf('const sun ='), mainSource.indexOf('// Cool fill')),
     { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
   ).outputText;
-  for (const mode of ['default', 'jungle', 'coast', 'map']) {
+  const { DESERT_SHADOW_HALF, DESERT_SUN_DIRECTION, isDesertCanyonLevel, snapDesertShadowFocus } =
+    await server.ssrLoadModule('/src/desertLighting.ts');
+  for (const mode of ['default', 'jungle', 'coast', 'map', 'desert', 'desert-bonus']) {
     const scene = new THREE.Scene();
+    const desert = mode.startsWith('desert');
+    const current = { id: mode === 'desert' ? 'bryce-canyon' : mode === 'desert-bonus' ? 'bonus-bryce-canyon' : 'flats' };
+    const level = { jungleAtmosphere: mode === 'jungle',
+      ...(desert ? { atmosphere: { sunDirection: DESERT_SUN_DIRECTION } } : {}) };
     const { sun, updateSunShadow } = new Function('THREE', 'scene', 'document', 'level', 'activeSky',
+      'current', 'isDesertCanyonLevel', 'DESERT_SHADOW_HALF', 'snapDesertShadowFocus',
       'const competition = null, TOUCH_PRESENTATION = false;\n' + shadowSetup + '; return { sun, updateSunShadow };')(
         THREE, scene, { body: { classList: { contains: () => mode === 'map' } } },
-        { jungleAtmosphere: mode === 'jungle' }, mode === 'coast' ? 'coast' : 'day');
+        level, mode === 'coast' ? 'coast' : 'day', current,
+        isDesertCanyonLevel, DESERT_SHADOW_HALF, snapDesertShadowFocus);
     assert.equal(sun.shadow.mapSize.x, 4096);
     for (const focus of [new THREE.Vector3(), new THREE.Vector3(150, 65, -300)]) {
       updateSunShadow(focus.x, focus.y, focus.z);
+      assert.equal(sun.shadow.camera.right, desert ? DESERT_SHADOW_HALF : mode === 'map' ? 116 : 96);
+      assert.equal(sun.shadow.camera.far, desert ? 2600 : 600);
+      near(sun.shadow.bias, desert ? -.000045 : -.0002, `${mode}: shadow bias`);
       scene.updateMatrixWorld(true);
       sun.shadow.updateMatrices(sun);
       for (const [x, y, z] of [[0,0,0], [70,0,0], [-70,0,0], [0,0,70], [0,0,-70], [0,70,0]]) {
@@ -144,6 +155,14 @@ try {
         assert.ok(Math.max(Math.abs(clip.x), Math.abs(clip.y), Math.abs(clip.z)) < 1,
           `${mode}: distant caster clipped at ${x},${y},${z}`);
       }
+    }
+    if (desert) {
+      current.id = 'beachfront';
+      delete level.atmosphere;
+      updateSunShadow(0, 0, 0);
+      assert.equal(sun.shadow.camera.right, 96, 'desert shadow coverage leaked into another course');
+      assert.equal(sun.shadow.camera.far, 600, 'desert shadow depth leaked into another course');
+      near(sun.shadow.bias, -.0002, 'desert shadow bias leaked into another course');
     }
   }
   assert.match(playerSource, /get cameraSkateSpeed\(\): number/,
