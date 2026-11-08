@@ -5,7 +5,7 @@ import * as THREE from 'three';
 /** Execute the actual app atmosphere/backdrop functions with real Three
  * scene/light state. Only image loading, postprocessing and canvas sky output
  * are replaced; capture the fallback painter's actual input for inspection. */
-export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, mapLightingClass, motuHeatLook) {
+export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, mapLightingClass, motuHeatLook, isDesertCanyonLevel) {
   const ast = ts.createSourceFile('main.ts', mainSource, ts.ScriptTarget.Latest, true);
   const getFunction = name => {
     const node = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name);
@@ -16,7 +16,7 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, 
   const code = ts.transpileModule(`${presetNode?.getText(ast) ?? 'const SKY_PRESETS = atmosphereModule.SKY_PRESETS;'}\n${getFunction('syncSkyBackdropVisibility')}\n${getFunction('applyTheme')}`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
   }).outputText;
-  const execute=new Function('level', 'current', 'settings', 'THREE', 'atmosphereModule', 'DrownedCrownLighting', 'MapIslandLighting', 'motuHeatLook', `
+  const execute=new Function('level', 'current', 'settings', 'THREE', 'atmosphereModule', 'DrownedCrownLighting', 'MapIslandLighting', 'motuHeatLook', 'isDesertCanyonLevel', `
     const SUN_SHADOW_MAP_SIZE=4096, DEFAULT_SKY='sunset', LITE=settings.lite??false, NO_COAST_POST=true, shellBypass=true;
     const editorViewActive=settings.editor??false;
     const competition=settings.competition??null,isCompetitionLevel=settings.isCompetitionLevel??(()=>false);
@@ -26,7 +26,8 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, 
     const sky=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyMist=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyHazeColor={value:new THREE.Color()},skyHazeStrength={value:0},skyOpaqueBackdrop={value:0};
-    const skyProjection={setHazeElevation(){},setStormGlow(){},setDustHaze(){},setCloudRoadSky(){}};
+    const skyProjection={setHazeElevation(){},setStormGlow(){},setDustHaze(){},setCloudRoadSky(){},
+      setDesertSun(direction){settings.onDesertSun?.(direction);}};
     const setBananaBaySkySun=()=>{},bananaBaySun={visible:false};
     const stormSquall={stop(){}};
     const skystreamSun={visible:false};
@@ -50,5 +51,5 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass, 
       sunColor:sun.color.toArray(),sunIntensity:sun.intensity,shadowStrength:sun.shadow.intensity,
       fillColor:fill.color.toArray(),fillIntensity:fill.intensity,skyVisible:sky.visible,mistVisible:skyMist.visible,fallback};
   `);
-  return (...args)=>execute(...args,lightingClass,mapLightingClass, motuHeatLook);
+  return (...args)=>execute(...args,lightingClass,mapLightingClass,motuHeatLook,isDesertCanyonLevel);
 }

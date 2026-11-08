@@ -1,0 +1,19 @@
+{
+  "command": "node tools/test-grind-head-stability.mjs",
+  "revision": "41115fcac8284585b16bd6ef0ed0773c58a8b6d0",
+  "verifiedAt": "2026-11-08T07:00:28.295554+00:00",
+  "status": "passed",
+  "freshProcessRuns": 2,
+  "identicalOutput": true,
+  "logSha256": "87404c0dd7c3f3ac046080c997ef02bf5c029c6b930f29fd61cb07b548c76960",
+  "output": [
+    "PASS 16 native entry/switch/exit/landing cases, 4976 frames: gaze dot >= 0.95668, head <= 7.12\u00b0/step, shoulders <= 11.14\u00b0/step, sole error <= 2.574 mm.",
+    "PASS 24 straight/curved, mirrored cross-grind cases with overlay and render restoration: peak turn 0.751\u00b0/step, render divergence 0.00577\u00b0.",
+    "PASS supplied replay: 97 grind frames, maximum 15.66\u00b0 head turn including trick transitions; no repeated flips. Authored head override and reset remain valid."
+  ],
+  "unchangedAssertions": {
+    "minimumGrindFrames": 50,
+    "maximumHeadTurnDegrees": 30
+  },
+  "fixtureChange": "Pin the historical replay cosmetic RNG to seed 0xC0DE; production code and the simulation RNG are unchanged."
+}

@@ -3,6 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
+import { legacyCrateDimensionsPlugin } from './legacy-crate-envelope.mjs';
 const replay = JSON.parse(await readFile(new URL('./fixtures/slipstream-camera/replay.json', import.meta.url), 'utf8'));
 await withBlockworksRuntime(async r => {
   const { Replayer } = await r.server.ssrLoadModule('/src/replay.ts');
@@ -43,5 +44,5 @@ await withBlockworksRuntime(async r => {
   const report = { frames: replay.frames, recovered, fatal, deaths: r.p.totalDeaths, trajectory: trajectory.digest('hex') };
   await writeFile(`${tmpdir()}/slipstream-fall-replay.json`, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
-}, { modulePath: '/tools/fixtures/slipstream-camera/original-course.ts', source: m => m.SLIPSTREAM_2_LEVEL,
+}, { vitePlugins: [legacyCrateDimensionsPlugin()], modulePath: '/tools/fixtures/slipstream-camera/original-course.ts', source: m => m.SLIPSTREAM_2_LEVEL,
   levelId: 'slipstream-2', endlessDeaths: true, maxFrames: 9000 });

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { assertBeachStreetShore } from './beach-street-shore-contract.mjs';
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -774,7 +775,7 @@ function assertCrateStackBridge(canonical, level) {
       .filter((component) => component.t === "crate")
       .slice(0, 3)
       .map((component) => component.p[1]),
-    [1.92, 0.96, 0],
+    [2.304, 1.152, 0],
     "normalization reordered the deliberately top-first stack",
   );
   if (!level) return;
@@ -800,7 +801,7 @@ function assertCrateStackBridge(canonical, level) {
     assert.equal(rail.points.length, 6, "crate bridge rail must follow every lid");
     assert.deepStrictEqual(
       rail.points.slice(1, -1).map((point) => round(point.y)),
-      [0.96, 1.08, 1.2, 1.32],
+      [1.152, 1.272, 1.392, 1.512],
       "crate bridge rail flattened or split its lid-height chain",
     );
   }
@@ -851,8 +852,8 @@ function assertCrateStackBridge(canonical, level) {
     );
   }
   assert.equal(bottom.alive, false, "bottom support did not break");
-  assert.equal(round(middle.mesh.position.y), 0.48, "middle crate did not settle to floor");
-  assert.equal(round(top.mesh.position.y), 1.44, "metal lid did not settle onto middle crate");
+  assert.equal(round(middle.mesh.position.y), 0.576, "middle crate did not settle to floor");
+  assert.equal(round(top.mesh.position.y), 1.728, "metal lid did not settle onto middle crate");
   assert.equal(compareBottom.alive, false, "comparison bottom support did not break");
   for (const crate of [top, middle]) {
     assert.equal(crate.fallVel, undefined, "settled crate retained fall velocity");
@@ -1287,39 +1288,28 @@ function assertCoastalStreet(data, level) {
           component.grp === 1 &&
           (component.t === "platform" || component.t === "ramp"),
       )
-      .every((component) => component.tex === "bay-paving" && component.edgeGrinding !== false),
+      .every((component) => component.tex === "bay-paving"),
   );
-  assert.deepEqual(data.ocean, {
-    geometryVersion: 2,
-    p: [9.2, -0.36, -1500],
-    length: 3400,
-    yaw: 0,
-    seaward: 1,
-    width: 180,
-    overlap: 4,
-    longitudinalSegments: 160,
-    lateralSegments: 128,
-    sourceCoordinates: "unity",
-  });
-  assert.deepEqual(data.unitySand, [
-    { p: [55, -3.4, -1500], s: [70, 0.8, 3300] },
-  ]);
+  assert.ok(data.components.filter(c=>c.grp===1&&c.nm?.startsWith('water shoulder ')).every(c=>c.edgeGrinding===false));
+  assert.equal(data.components.filter(c=>c.t==='rail'&&c.nm?.startsWith('Bahia retained road edges:')).length,23,
+    'editor normalization lost the exposed road edges around the intentionally ungrindable beach seam');
+  const sandPatches=assertBeachStreetShore(data);
   if (!level) return;
   assert.ok(level.water);
-  assert.equal(level.water.stats.shoreSamples, 161);
+  assert.equal(level.water.stats.shoreSamples, 807);
   if (window.location.search.includes("lite")) {
     assert.equal(level.water.stats.quality, "lite");
-    assert.equal(level.water.stats.verts, 5_363);
-    assert.equal(level.water.stats.tris, 10_336);
+    assert.equal(level.water.stats.verts, 27_068);
+    assert.equal(level.water.stats.tris, 52_390);
   } else {
     assert.equal(level.water.stats.quality, "full");
-    assert.equal(level.water.stats.verts, 20_867);
-    assert.equal(level.water.stats.tris, 41_056);
+    assert.equal(level.water.stats.verts, 105_717);
+    assert.equal(level.water.stats.tris, 207_948);
   }
   const sandMeshes = [];
   const coastalBatches = [];
   level.pickRoot.traverse((object) => {
-    if (object.name.startsWith("Custom MatrixRex sand")) sandMeshes.push(object);
+    if (object.name.startsWith("Bahia continuous Treehouse sand")) sandMeshes.push(object);
     const materials = Array.isArray(object.material)
       ? object.material
       : object.material
@@ -1328,11 +1318,9 @@ function assertCoastalStreet(data, level) {
     for (const material of materials)
       if (material.name.startsWith("coastal:")) coastalBatches.push(material);
   });
-  assert.equal(sandMeshes.length, 1);
-  assert.equal(
-    sandMeshes[0].material.customProgramCacheKey(),
-    "unity-sand-ao-green-v1-coastal-wet-sand-v1",
-  );
+  assert.equal(sandMeshes.length, sandPatches.length);
+  for(const sand of sandMeshes)
+    assert.match(sand.material.customProgramCacheKey(), /treehouse-painterly-v2-.*coastal-wet-sand-v2/);
   for (const role of [
     "coastal:route-arrow",
   ])
@@ -1997,7 +1985,7 @@ try {
         assert.equal(original.rails.length, 68, 'Beachside source rails drifted');
         assert.equal(original.crates.length, 111, 'Beachside source crates drifted');
         assert.equal(original.checkpoints.length, 14, 'Beachside checkpoints drifted');
-        assert.equal(original.pickups.length, 226, 'Beachside fruit rhythm drifted');
+        assert.equal(original.pickups.length, 256, 'Beachside authored route and restored loose fruit clusters drifted');
         assert.ok(original.water, 'Beachside lost the shared MatrixRex ocean');
         const visualCounts = { planks: 0, poles: 0 };
         original.pickRoot.traverse(object => {

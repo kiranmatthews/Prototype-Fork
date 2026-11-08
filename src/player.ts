@@ -14721,9 +14721,7 @@ export class Player {
           // grab, or those jumps slide down 3cm out of reach forever.
           this.state === 'air' &&
           this.vVel <= ledgeEnvelope.maximumRisingSpeed &&
-          HANG_BOX.copy(this.playerBox)
-            .expandByScalar(ledgeEnvelope.nearMiss)
-            .intersectsBox(w) &&
+          this.ledgeContactInReach(w, ledgeEnvelope.reach, ledgeEnvelope.nearMiss) &&
           this.tryLedgeGrab(w, level)
         )
           break;
@@ -16764,6 +16762,14 @@ export class Player {
       if (this.ledgeBodyBlocked(LEDGE_PATH, supportY, level)) return false;
     }
     return true;
+  }
+
+  private ledgeContactInReach(w: THREE.Box3, reach: number, nearMiss: number): boolean {
+    HANG_BOX.copy(this.playerBox).expandByScalar(nearMiss);
+    // The hand reach can exceed the compact movement collider. Otherwise a
+    // valid assisted lip is rejected before tryLedgeGrab can evaluate it.
+    HANG_BOX.max.y = Math.max(HANG_BOX.max.y, this.pos.y + reach);
+    return HANG_BOX.intersectsBox(w);
   }
 
   private tryLedgeGrab(w: THREE.Box3, level: Level): boolean {

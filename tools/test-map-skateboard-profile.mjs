@@ -33,23 +33,32 @@ try {
  const card=new MapLevelPresentation(host,host,map);
  // Compare the actual painted sockets with the models in the print plane's
  // coordinates. Matching scales alone misses a stale slot offset or count.
- const assertRewardAlignment=()=>{
+ const assertRewardAlignment=()=>{ for(const variant of [
+  {indices:[0,1,2]},
+  {colouredGem:'yellow',indices:[0,1,2,3]},
+  {allowsCrystal:false,indices:[1,2]},
+  {allowsCrystal:false,colouredGem:'yellow',indices:[1,2,3]},
+ ]){
+  const {indices,...options}=variant;
+  const data={key:'alignment',name:'ALIGNMENT',earned:[true,true,true,true],medal:'gold',...options};
+  card.select(data,true);card.updateBoard(false);
   const canvas=card.faceTexture.image,ctx=canvas.getContext('2d'),sockets=[];
   const ellipse=ctx.ellipse;
   ctx.ellipse=(x,y)=>sockets.push({x,y});
-  try { card.paint({name:'ALIGNMENT',earned:[true,true,true],medal:'gold'},false); }
+  try { card.paint(data,false); }
   finally { ctx.ellipse=ellipse; }
-  assert.equal(sockets.length,card.rewards.length);
+  assert.equal(sockets.length,indices.length);
   card.scene.updateMatrixWorld(true);
   const {width,height}=card.face.geometry.parameters;
-  card.rewards.forEach((reward,i)=>{
+  indices.forEach((rewardIndex,i)=>{
+   const reward=card.rewards[rewardIndex];
    const centre=card.face.worldToLocal(reward.getWorldPosition(reward.position.clone()));
    const x=(centre.x/width+.5)*canvas.width,y=(.5-centre.y/height)*canvas.height;
    assert.ok(Math.abs(x-sockets[i].x)<1e-7,`reward ${i} misses its printed socket horizontally by ${x-sockets[i].x} texture pixels`);
    assert.ok(Math.abs(y-sockets[i].y)<1e-7,`reward ${i} misses its printed socket vertically by ${y-sockets[i].y} texture pixels`);
    assert.ok(centre.z>0,'earned model must remain raised above the deck');
   });
- };
+ }};
  assertRewardAlignment();
  assert.equal(card.board.userData.settings.deckHalfWidth,.283);
  const grip=card.board.getObjectByName('Deck_ContinuousRoundedKick').material[0].map;

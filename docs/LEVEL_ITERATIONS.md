@@ -11165,3 +11165,11 @@ Details: [Skate playable study](SKATE_PLAYTEST.md).
   sequence. Console clean. Evidence in external `jump-skate-integration/`.
 - Local-only increment. No push, publication, shared level pack, tuning, main
   runtime or extracted-data changes. Earlier unpublished increments preserved.
+
+## 8 November 2026 — Full-suite defect and fixture repairs
+
+Prompt: “Fix the things that need fixing and if the tests are wrong because we deliberately changed features, update the tests”, following the explicit full-suite request. Approximately 45 minutes prompt-to-verified local gameplay; the complete suite rerun and publication follow separately.
+
+Fixed the assisted ledge broadphase rejecting valid authored hand reaches, and exact recognition of untouched Test Course saves after crate-size migration. Updated obsolete test fixtures for intentional natural grind landings, map progression and resident skaters, coloured-gem sockets, the Beach Street shoreline, shared texture ownership, enlarged crates and restored fruit. Frozen input recordings retain their original trajectory hashes and camera windows; a focused moving-lift test replaces a historical lead-in that no longer reaches its target.
+
+All originally failing cases have passing focused coverage. Actual browser checks show both Ancient Gates Arrow catches and supported mantles, held-jump climb continuity, pit respawn and preservation of edited saves. Lite, full 720p and MAX/native 1080p reviews have a clean console. Production build and the 974,153,616-byte release-size check pass. The complete 205-command rerun took 45 minutes 31 seconds. Its four remaining harness issues (varied bail poses and new desert dependencies) were repaired and passed fresh-process rechecks, leaving all 205 commands validated with no skipped commands or timeouts. Runtime files were unchanged during these final harness repairs. Results, revision provenance and browser captures are in [the repair report](full-suite-repairs/README.md). Release uses the existing main → Pages workflow.

@@ -6,15 +6,6 @@ import ts from "typescript";
 import { createServer } from "vite";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const replay = JSON.parse(
-  await readFile(
-    `${root}tools/fixtures/landing-x-nightworks-replay.json`,
-    "utf8",
-  ),
-);
-assert.equal(replay.level, "dark");
-assert.equal(replay.frames, 9649);
-
 function installHeadlessDom() {
   const noop = () => {};
   const storage = new Map();
@@ -197,94 +188,84 @@ console.error = (...args) => {
 };
 
 try {
-  const { Level, findLevel, roundCorners } = await server.ssrLoadModule("/src/level.ts");
+  const { Level, findLevel } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
-  const { Replayer } = await server.ssrLoadModule("/src/replay.ts");
   const { CONST } = await server.ssrLoadModule("/src/tuning.ts");
-  const entry = findLevel(replay.level);
+  const entry = findLevel("dark");
   assert.ok(entry);
   const scene = new THREE.Scene();
-  // This historical replay recorded camera-relative inputs before the fixed
-  // Nightworks camera. Pin its camera fixture so it continues testing landing
-  // marker timing rather than requiring the live course to retain old steering.
-  const legacyCamera = JSON.parse(await readFile(`${root}tools/fixtures/nightworks-legacy-camera.json`, "utf8"));
   const level = new Level(scene, entry);
-  level.cameraViews.length=0; // the historical recording predates view volumes
-  level.lanePts = roundCorners(legacyCamera.filter(c=>c.t==="camnode").map(c=>[c.p[0],c.p[2],c.radius,c.p[1]]),false).map(p=>({x:p.x,y:p.y,z:p.z}));
-  level.measureLane();
-  level.zones = legacyCamera.filter(c=>c.t==="zone").map(c=>({xMin:c.p[0]-c.s[0]/2,xMax:c.p[0]+c.s[0]/2,zMin:c.p[2]-c.s[2]/2,zMax:c.p[2]+c.s[2]/2,dir:c.dir}));
   const player = new Player(scene);
-  if (player.special) {
-    player.special.value = 0;
-    player.special.step = () => {};
-    player.special.award = () => false;
-  }
   player.enterLevel(entry.id);
-  player.endlessDeaths = replay.endlessDeaths === true;
-  player.respawn(level, true);
   const input = makeInput();
-  const replayer = new Replayer();
-  replayer.begin(replay);
-  const rows = new Map();
-  while (replayer.active && replayer.frame <= 8807) {
-    const frame = replayer.frame;
-    if (!replayer.feed(input, player.camDir)) break;
-    const wasDead = player.state === "dead";
-    player.step(CONST.fixedStep, input, level);
-    // Preserve this legacy take's fixed-frame inputs across its earlier deaths.
-    // The longer presentation interval is covered by test-campaign-death-flow.
-    if (!wasDead && player.state === "dead")
-      player.respawnTimer = CONST.respawnDelay;
-    level.update(CONST.fixedStep);
-    player.commitRenderStep(level);
-    if (frame >= 8803) {
-      const mover = level.movers[3];
-      mover.mesh.geometry.computeBoundingBox();
-      const top = mover.mesh.geometry.boundingBox.max.y;
-      rows.set(frame, {
-        state: player.state,
-        grounded: player.grounded,
-        pos: player.pos.clone(),
-        marker: player.floorX.position.clone(),
-        markerVisible: player.floorX.visible,
-        groundY: player.shadowGroundY,
-        moverTop: mover.mesh.position.y + top,
-      });
-    }
-    input.consumeEdges();
-  }
+  const mover = level.movers[3];
+  assert.ok(mover, "Nightworks landing lift is missing");
+  assert.ok(Math.abs(mover.axisV.y) > 0.99 && mover.amp > 0 && mover.speed > 0,
+    "the landing fixture must use the authored vertical lift");
+  mover.mesh.geometry.computeBoundingBox();
+  const localTop = mover.mesh.geometry.boundingBox.max.y;
+  const liftTop = () => mover.mesh.position.y + localTop;
 
-  for (const frame of [8803, 8804, 8805, 8806]) {
-    const row = rows.get(frame);
-    assert.ok(row, `missing frame ${frame}`);
-    assert.equal(row.markerVisible, true, `X hidden on frame ${frame}`);
-    assert.ok(
-      Math.abs(row.groundY - row.moverTop) < 1e-6,
-      `frame ${frame}: ground probe is stale`,
-    );
-    assert.ok(
-      Math.abs(row.marker.y - (row.moverTop + 0.05)) < 1e-6,
-      `frame ${frame}: X is not on the rendered lift`,
-    );
-    assert.ok(Math.abs(row.marker.x - row.pos.x) < 1e-6);
-    assert.ok(Math.abs(row.marker.z - row.pos.z) < 1e-6);
+  // Exercise the actual lift and Player directly. The old 147-second input
+  // lead-in now reaches a death after deliberate course/controller changes;
+  // it no longer reaches the landing-marker regression it was meant to test.
+  // Both motion directions must publish the X at the post-update transform,
+  // while gameplay contact still uses the transform sampled by Player.step.
+  for (const [direction, phase, sign] of [["rising", 0, 1], ["falling", Math.PI, -1]]) {
+    level.time = 0;
+    mover.phase = mover.axisV.y > 0 ? phase : phase + Math.PI;
+    level.update(CONST.fixedStep);
+    player.respawn(level, true);
+    player.pos.set(mover.mesh.position.x, liftTop() + 2, mover.mesh.position.z);
+    player.prevPos.copy(player.pos);
+    player.state = "air";
+    player.grounded = false;
+    player.groundHit = null;
+    player.freeSkate = false;
+    player.airFromSkate = false;
+    player.speed = 0;
+    player.vVel = -2;
+    player.snapRenderInterpolation();
+    let airborneFrames = 0;
+    let touchdown = false;
+    for (let frame = 0; frame < 120; frame++) {
+      const sampledTop = liftTop();
+      player.step(CONST.fixedStep, input, level);
+      level.update(CONST.fixedStep);
+      player.commitRenderStep(level);
+      const renderedTop = liftTop();
+      const label = `${direction} lift, frame ${frame}`;
+      assert.ok((renderedTop - sampledTop) * sign > 1e-5,
+        `${label}: fixture must distinguish the old and rendered transforms`);
+      if (player.grounded) {
+        assert.equal(player.state, "ride", `${label}: expected a supported landing`);
+        assert.ok(Math.abs(player.pos.y - sampledTop) < 1e-6,
+          `${label}: gameplay contact changed from the sampled lift top`);
+        assert.equal(player.groundHit?.mesh, mover.mesh,
+          `${label}: landed on another surface`);
+        const supportRay = new THREE.Raycaster(
+          new THREE.Vector3(player.pos.x, renderedTop + 1, player.pos.z),
+          new THREE.Vector3(0, -1, 0), 0, 2,
+        );
+        assert.ok(supportRay.intersectObject(mover.mesh, false).length > 0,
+          `${label}: feet must remain above the rendered lift`);
+        touchdown = true;
+        break;
+      }
+      assert.equal(player.state, "air", `${label}: approach left the airborne state`);
+      assert.equal(player.floorX.visible, true, `${label}: X is hidden`);
+      assert.ok(Math.abs(player.shadowGroundY - renderedTop) < 1e-6,
+        `${label}: ground probe is stale`);
+      assert.ok(Math.abs(player.floorX.position.y - (renderedTop + 0.05)) < 1e-6,
+        `${label}: X is not on the rendered lift`);
+      assert.ok(Math.abs(player.floorX.position.x - player.pos.x) < 1e-6);
+      assert.ok(Math.abs(player.floorX.position.z - player.pos.z) < 1e-6);
+      airborneFrames++;
+      input.consumeEdges();
+    }
+    assert.ok(airborneFrames >= 4, `${direction}: insufficient airborne coverage`);
+    assert.equal(touchdown, true, `${direction}: never landed on the lift`);
   }
-  const touchdown = rows.get(8807);
-  assert.equal(touchdown.state, "ride");
-  assert.equal(touchdown.grounded, true);
-  // Gameplay lands against the mover transform sampled by Player.step; the
-  // subsequent Level.update is presentation timing and remains untouched.
-  assert.ok(Math.abs(touchdown.pos.y - 3.5764) < 1e-3);
-  // The fitted stone rim can resolve the approach laterally. The replay must
-  // still land on this same lift, with the marker under the actual feet.
-  const supportRay = new THREE.Raycaster(
-    new THREE.Vector3(touchdown.pos.x, rows.get(8806).moverTop + 1, touchdown.pos.z),
-    new THREE.Vector3(0, -1, 0), 0, 2,
-  );
-  assert.ok(supportRay.intersectObject(level.movers[3].mesh, false).length > 0,
-    `touchdown must remain over the lift: ${touchdown.pos.toArray()}`);
-  assert.ok(Math.abs(touchdown.pos.x - level.movers[3].mesh.position.x) < 2.25);
-  assert.ok(Math.abs(touchdown.pos.z - level.movers[3].mesh.position.z) < 2.25);
 
   const main = await readFile(`${root}src/main.ts`, "utf8");
   // Check statement order inside the actual fixed-step loop. A character
@@ -321,7 +302,7 @@ try {
   );
 
   console.log(
-    "Validated post-mover landing-X refresh and the recorded touchdown height on the fitted Nightworks lift.",
+    "Validated post-mover landing-X refresh and sampled gameplay contact on the rising and falling Nightworks lift.",
   );
   level.dispose();
 } finally {

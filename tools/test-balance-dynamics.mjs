@@ -36,7 +36,7 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,CON
   const rail=new Rail([new THREE.Vector3(0,7,25),new THREE.Vector3(0,7,-115)]);
   level.rails.push(rail);level.grindRails.push(rail);level.root.add(rail.object);scene.updateMatrixWorld(true);
   const catchRail=(side=1,held=0)=>{
-    const position=rail.pointAt(2).add(new THREE.Vector3(0,.25,0)),heading=rail.tangentAt(2);
+    const position=rail.pointAt(2).add(new THREE.Vector3(0,CONST.railRideHeight,0)),heading=rail.tangentAt(2);
     p.respawn(level,true,true,{position,heading});p.pos.copy(position);p.prevPos.copy(position);
     p.axisF.copy(heading);p.axisL.set(heading.z,0,-heading.x);
     p.state='air';p.grounded=false;p.freeSkate=p.airFromSkate=true;p.speed=8;p.vVel=0;

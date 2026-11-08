@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
-await withSkateRuntime(async ({ THREE, scene, player, level, step, TUNING }) => {
+await withSkateRuntime(async ({ THREE, scene, player, level, step, CONST, TUNING }) => {
   let cases = 0, frames = 0;
   const catchRail = (rail, t, dir, speed = 14) => {
     const heading = rail.tangentAt(t).multiplyScalar(dir);
-    const position = rail.pointAt(t).add(new THREE.Vector3(0, .25, 0));
+    const position = rail.pointAt(t).add(new THREE.Vector3(0, CONST.railRideHeight, 0));
     player.respawn(level, true, true, { position, heading });
     player.pos.copy(position); player.prevPos.copy(position);
     player.axisF.copy(heading); player.axisL.set(heading.z, 0, -heading.x);

@@ -369,7 +369,7 @@ try {
     /medalForTime\(time, medalTimes\)[\s\S]{0,150}commitTimeTrial\([\s\S]{0,100}medal,/,
     "completed trials must use the common medal evaluator",
   );
-  assert.equal(campaignApi.CAMPAIGN_LEVELS.length, 38);
+  assert.equal(campaignApi.CAMPAIGN_LEVELS.length, 39);
   assert.ok(
     campaignApi.CAMPAIGN_LEVELS.every((level) => campaignApi.validRelicTime(level.relicTime)),
     "every canonical time-trial target must be finite and positive",

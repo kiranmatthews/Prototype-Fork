@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const observe=process.argv.includes('--observe');
-await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Player,Level})=>{
+await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,CONST,TUNING,Player,Level})=>{
   const defaults={...TUNING};
   const {Rail}=await server.ssrLoadModule('/src/rails.ts');
   const rail=new Rail([new THREE.Vector3(0,7,25),new THREE.Vector3(0,7,-115)]);
@@ -12,7 +12,7 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
   TUNING.balanceDrift=0;TUNING.balanceNoise=0;
   const results=[],reference=new Map();
   for(const [shape,activeRail] of [['straight',rail],['left',arcs[0]],['right',arcs[1]]])for(const overlay of [false,true])for(const rendering of [false,true])for(const side of [-1,1]){
-    const position=activeRail.pointAt(2).add(new THREE.Vector3(0,.25,0)),heading=activeRail.tangentAt(2);
+    const position=activeRail.pointAt(2).add(new THREE.Vector3(0,CONST.railRideHeight,0)),heading=activeRail.tangentAt(2);
     p.playerAnimationBridge.setOverlay(overlay?()=>{}:null);
     p.respawn(level,true,true,{position,heading});p.pos.copy(position);p.prevPos.copy(position);p.axisF.copy(heading);p.axisL.set(heading.z,0,-heading.x);
     p.speed=8;p.vVel=0;p.freeSkate=p.airFromSkate=true;p.state='air';p.grounded=false;
@@ -59,7 +59,7 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
     p.freeSkate=p.airFromSkate=true;p.skateMountT=-1;p.sidePose=p.deckPose=p.skatePose=1;p.stance=stance;p.deckYawOffset=deckYaw;
     p.state='ride';p.grounded=true;p.speed=12;p.balanceBoostT=60;p.camDir.set(0,0,-1);
     for(let f=0;f<90;f++)p.syncVisual(makeInput(),1/60);
-    p.pos.set(style==='lip'?.12:-.12,1.05,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-1;p.grindVel=12;p.regrindCd=0;
+    p.pos.set(style==='lip'?.12:-.12,.8+CONST.railRideHeight,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-1;p.grindVel=12;p.regrindCd=0;
     p.axisF.set(.3,0,-direction).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.visualYaw=Math.atan2(p.axisF.x,p.axisF.z)-Math.PI;
     let landed=false,landedFrames=0,lastHead=p.headM.quaternion.clone(),lastShoulder=p.upperG.quaternion.clone();
     for(let f=0;f<360;f++){
@@ -108,23 +108,32 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
   Object.assign(TUNING,defaults);
   const replayData=JSON.parse(await readFile(new URL('./fixtures/grind-head-user-replay.json',import.meta.url),'utf8'));
   const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
-  const rider=new Player(scene);rider.competitionMode=true;rider.endlessDeaths=replayData.endlessDeaths;rider.setAuthoredPoseOverlay(()=>{});rider.respawn(level,true);
-  const replay=new Replayer();replay.begin(replayData);const input=makeInput();let previous=null,peak=0,grindFrames=0;
-  for(let frame=0;frame<replayData.frames;frame++){
-    rider.restoreRenderPose();replay.feed(input,rider.camDir);rider.step(1/60,input,level);level.update(1/60);input.consumeEdges();rider.commitRenderStep(level);
-    if(rider.state==='grind'){
-      const q=rider.headM.quaternion.clone();if(previous)peak=Math.max(peak,THREE.MathUtils.radToDeg(q.angleTo(previous)));previous=q;grindFrames++;
-    }else previous=null;
-    rider.applyRenderInterpolation(.5);
+  // Freeze the current varied bail poses for this historical input-only
+  // approach. Otherwise its recovery can miss the later head-regression
+  // sequence intermittently. Balance retains its own simulation RNG.
+  const cosmeticRandom=Math.random;let cosmeticSeed=0xC0DE;
+  const replay=new Replayer(),input=makeInput();let rider,previous=null,peak=0,grindFrames=0;
+  try {
+    Math.random=()=>((cosmeticSeed=(Math.imul(cosmeticSeed,1664525)+1013904223)>>>0)/4294967296);
+    rider=new Player(scene);rider.competitionMode=true;rider.endlessDeaths=replayData.endlessDeaths;rider.setAuthoredPoseOverlay(()=>{});rider.respawn(level,true);
+    replay.begin(replayData);
+    for(let frame=0;frame<replayData.frames;frame++){
+      rider.restoreRenderPose();replay.feed(input,rider.camDir);rider.step(1/60,input,level);level.update(1/60);input.consumeEdges();rider.commitRenderStep(level);
+      if(rider.state==='grind'){
+        const q=rider.headM.quaternion.clone();if(previous)peak=Math.max(peak,THREE.MathUtils.radToDeg(q.angleTo(previous)));previous=q;grindFrames++;
+      }else previous=null;
+      rider.applyRenderInterpolation(.5);
+    }
+  } finally {
+    replay.end();rider?.restoreRenderPose();Math.random=cosmeticRandom;
   }
-  replay.end();rider.restoreRenderPose();
   // This recording predates the absolute park controls. Replayer supplies
   // current defaults for absent keys, so its exact grind-frame count changes
   // with the movement model. Keep it exercising a substantial grind sequence.
-  assert.ok(grindFrames>=50,'replay did not exercise its grinding sequence');assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
+  assert.ok(grindFrames>=50,`replay did not exercise its grinding sequence: ${grindFrames} frames`);assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
   // Authored head tracks remain the final authority; removing one returns to
   // the independent procedural state rather than feeding the edit into it.
-  // The replay may finish in a bail/death settle depending on balance noise.
+  // The historical replay may finish in a bail/death settle.
   // Test the independent authored-pose contract on a fresh live rider.
   rider.respawn(level,true);
   const authored=new THREE.Quaternion().setFromEuler(new THREE.Euler(.3,1.8,-.2));

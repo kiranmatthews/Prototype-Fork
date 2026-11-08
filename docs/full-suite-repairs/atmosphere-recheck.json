@@ -1,0 +1,12 @@
+{
+  "command": "node tools/test-editor-atmosphere.mjs",
+  "revision": "3c4c0b7709043f8eb1d9fa29584ae2bd838e5ee9",
+  "verifiedAt": "2026-11-08T07:24:52.501221+00:00",
+  "status": "passed",
+  "freshProcessRuns": 1,
+  "logSha256": "3ad82f303b7ffec1ab5cb645006314af89375f427107a26cb5d8352025d65cfa",
+  "output": [
+    "429/429 editor atmosphere runtime/security/history checks passed"
+  ],
+  "fixtureChange": "Supply the real desert predicate and sky projection method, retaining all numeric baselines and testing sun-override cleanup on level change."
+}

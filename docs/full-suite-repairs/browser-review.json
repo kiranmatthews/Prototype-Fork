@@ -1,0 +1,245 @@
+{
+  "revision": "a98da611",
+  "reviewedAt": "2026-11-08T06:47:45.436Z",
+  "modes": [
+    "lite",
+    "full 720p",
+    "MAX/native 1080p"
+  ],
+  "nativeDrawingBuffer": [
+    {
+      "clientHeight": 1080,
+      "clientWidth": 1920,
+      "height": 1080,
+      "width": 1920
+    }
+  ],
+  "results": [
+    {
+      "event": "Perfect Boing",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        1206.1,
+        11.007,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "crateX": 1198,
+      "frames": 54,
+      "perfect": true,
+      "expectedLip": 15,
+      "pass": true
+    },
+    {
+      "event": "Mantle",
+      "level": "jungle-gate-run",
+      "state": "ride",
+      "grounded": true,
+      "position": [
+        1207.42,
+        15,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "pass": true
+    },
+    {
+      "event": "Perfect Boing",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        158.2,
+        8.5212,
+        0
+      ],
+      "lip": 10.000000023841858,
+      "crateX": 151,
+      "frames": 48,
+      "perfect": true,
+      "expectedLip": 10,
+      "pass": true
+    },
+    {
+      "event": "Mantle",
+      "level": "jungle-gate-run",
+      "state": "ride",
+      "grounded": true,
+      "position": [
+        159.42,
+        10,
+        0
+      ],
+      "lip": 10.000000023841858,
+      "pass": true
+    },
+    {
+      "event": "Stock save migration",
+      "level": "jungle-gate-run",
+      "state": "ride",
+      "grounded": true,
+      "position": [
+        159.42,
+        10,
+        0
+      ],
+      "lip": 10.000000023841858,
+      "recognized": true,
+      "preserved": true,
+      "pass": true
+    },
+    {
+      "event": "Pit respawn",
+      "level": "jungle-gate-run",
+      "state": "ride",
+      "grounded": true,
+      "position": [
+        -20,
+        0.8533,
+        0
+      ],
+      "lip": 10.000000023841858,
+      "died": true,
+      "frames": 134,
+      "pass": true
+    },
+    {
+      "event": "Perfect Boing",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        1206.1,
+        11.007,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "render": {
+        "viewportWidth": 1920,
+        "viewportHeight": 1080,
+        "inputWidth": 1280,
+        "inputHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720
+      },
+      "crateX": 1198,
+      "frames": 54,
+      "perfect": true,
+      "expectedLip": 15,
+      "pass": true
+    },
+    {
+      "event": "Held-through catch",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        1207.4117,
+        15.06,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "render": {
+        "viewportWidth": 1920,
+        "viewportHeight": 1080,
+        "inputWidth": 1280,
+        "inputHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720
+      },
+      "phase": "climb",
+      "pass": true
+    },
+    {
+      "event": "Native MAX",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        1207.4117,
+        15.06,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "render": {
+        "viewportWidth": 1920,
+        "viewportHeight": 1080,
+        "inputWidth": 1280,
+        "inputHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720
+      }
+    },
+    {
+      "event": "Perfect Boing",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        1206.1,
+        11.007,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "render": {
+        "viewportWidth": 1920,
+        "viewportHeight": 1080,
+        "inputWidth": 1280,
+        "inputHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720
+      },
+      "crateX": 1198,
+      "frames": 54,
+      "perfect": true,
+      "expectedLip": 15,
+      "pass": true
+    },
+    {
+      "event": "Held-through catch",
+      "level": "jungle-gate-run",
+      "state": "hang",
+      "grounded": false,
+      "position": [
+        1207.4117,
+        15.06,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "render": {
+        "viewportWidth": 1920,
+        "viewportHeight": 1080,
+        "inputWidth": 1280,
+        "inputHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720
+      },
+      "phase": "climb",
+      "pass": true
+    },
+    {
+      "event": "Mantle",
+      "level": "jungle-gate-run",
+      "state": "ride",
+      "grounded": true,
+      "position": [
+        1207.42,
+        15,
+        0
+      ],
+      "lip": 15.000000023841858,
+      "render": {
+        "viewportWidth": 1920,
+        "viewportHeight": 1080,
+        "inputWidth": 1280,
+        "inputHeight": 720,
+        "outputWidth": 1280,
+        "outputHeight": 720
+      },
+      "pass": true
+    }
+  ],
+  "console": []
+}

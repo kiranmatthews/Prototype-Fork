@@ -419,7 +419,7 @@ try {
   );
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
-  assert.equal(CAMPAIGN_LEVELS.length, 38);
+  assert.equal(CAMPAIGN_LEVELS.length, 39);
   const previousMapPoints = [[-151,22,0,1.35],[-111,22,0,4],[-71,22,0,6],[-47,22,0,3],[-111,-1,0,9],
     [48,16,0,1.35],[67,14,0,1.75],[86,14,0,2.4],[104,14,0,3.1],[-71,-1,0,11],[67,26,0,2.3],[-31,22,0,3.8],[-175,22,0,1.35]];
   const previousMap = {v:1,name:'Previous default map',spawn:[0,1,0],killY:-20,hudMode:'hub',
@@ -674,13 +674,16 @@ try {
 
   const positionKeys = new Set();
   for(const edge of CAMPAIGN_MAP_EDGES){
-    if(campaignLevelById(CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.from).levelId).islandId!==
-      CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.to).islandId)continue;
+    const from=CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.from);
+    if(from.islandId!==CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.to).islandId)continue;
     for(let i=1;i<20;i++){
       const pose=warpLevel.campaignMapTravel(edge.from,edge.to,i/20).position;
       const ray=new THREE.Raycaster(pose.clone().add(new THREE.Vector3(0,60,0)),new THREE.Vector3(0,-1,0));
       const hit=ray.intersectObjects(campaignIslands,false)[0];
-      assert.ok(hit&&hit.point.y<pose.y-.1,`terrain buries ${edge.from} → ${edge.to} at ${i}/20`);
+      // The sky sanctuary has a compact temple clearing inside a cloud
+      // volume. Its hub pads and routes do not require a solid island below.
+      assert.ok(hit ? hit.point.y<pose.y-.1 : from.islandId==='hidden-shores',
+        `terrain buries or leaves an unintended gap below ${edge.from} → ${edge.to} at ${i}/20`);
     }
   }
 
@@ -705,7 +708,7 @@ try {
       new THREE.Vector3(0, -1, 0),
     );
     const terrain = terrainRay.intersectObjects(campaignIslands, false)[0];
-    assert.ok(terrain && terrain.point.y < pose.position.y - 0.18,
+    assert.ok(terrain ? terrain.point.y < pose.position.y - 0.18 : definition.islandId === 'hidden-shores',
       `${definition.name} marker is buried in the island sculpt`);
     assert.deepEqual(
       pose.position.toArray(),
@@ -816,6 +819,8 @@ try {
   const sections = [];
   const fakePlayer = {
     group: new THREE.Group(),
+    riderRef: new THREE.Group(),
+    async preparePresentationAssets() {},
     setWorldMapPresentationScale(scale) {
       this.group.scale.setScalar(scale ?? 1);
     },
@@ -826,6 +831,8 @@ try {
     },
     snapRenderInterpolation() {},
   };
+  fakePlayer.group.add(fakePlayer.riderRef);
+  scene.add(fakePlayer.group);
   const controller = new WorldMapController(controllerStore, fakePlayer, {
     onSelection: (key, moving, directions) => selections.push({ key, moving, directions }),
     onEnterLevel: (id) => entered.push(id),
@@ -866,10 +873,15 @@ try {
   assert.equal(selections.at(-1).directions.right,true);assert.equal(controller.navigate(1,0),true);settle();
   assert.equal(controller.selectedKey,"beachside-run");
   controllerStore.commitClear("beachfront",{});controller.refresh();assert.equal(controller.navigate(1,0),true);settle();
+  assert.equal(controller.selectedKey,"rumblewater-run");assert.equal(controllerStore.recommendedMapLevelKey(),"rumblewater-run");
+  controllerStore.commitClear("rumblewater-run",{});controller.refresh();assert.equal(navigateTo('jungle'),true);settle();
   assert.equal(controller.selectedKey,"jungle");assert.equal(controllerStore.recommendedMapLevelKey(),"jungle");
   assert.ok(controllerModes.includes("walk"));
-  for(const id of ["jungle","rumblewater-run","coastal-street-run"])controllerStore.commitClear(id,{});
-  controllerStore.commitCompetitionWin("jungle-cup");controller.activate(warpLevel,"jungle-cup");controllerModes.length=0;
+  for(const id of ["jungle","coastal-street-run"])controllerStore.commitClear(id,{});
+  controllerStore.commitCompetitionWin("jungle-cup");controller.activate(warpLevel,"jungle-cup");
+  await controller.preparePresentation();
+  assert.equal(controller.diagnostics.skaters.length,6,'island relocation needs its resident skaters ready');
+  controllerModes.length=0;
   assert.equal(navigateTo('custard-creek'),true);settle();assert.equal(controller.selectedKey,"custard-creek");
   assert.ok(hiddenTravelFrames>0,'island change lost its relocation transition');
   assert.ok(controllerModes.every(mode=>mode==='idle'),'cross-island relocation started an unsupported sea grind');
@@ -900,16 +912,18 @@ try {
   assert.equal(controller.touchMap((projected.x+1)*422,(1-projected.y)*195,844,390,touchCamera),true);settle();
   assert.equal(controller.selectedKey,"drowned-crown","projected picking selected the wrong course");
   controller.activate(warpLevel,"jungle-cup");controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
-  // The cross-island endpoint is well off-screen in this portrait framing.
+  // Off-screen travel follows the same horizontal progression as keys and
+  // hints. A remote island projected behind the lens is not a tap direction.
   touchCamera.aspect = 390 / 844;
   for (let frame = 0; frame < 240; frame++) controller.frameCamera(touchCamera, 1 / 60);
   touchCamera.updateMatrixWorld();
   const origin = warpLevel.campaignMapPose("jungle-cup").position.clone().project(touchCamera);
   const destination = warpLevel.campaignMapPose("custard-creek").position.clone().project(touchCamera);
-  const ox = (origin.x + 1) * 195, oy = (1 - origin.y) * 422;
-  const vx = (destination.x - origin.x) * 195, vy = (origin.y - destination.y) * 422;
-  const edgeScale = Math.min(vx > 0 ? (382-ox)/vx : (8-ox)/vx, vy > 0 ? (836-oy)/vy : (8-oy)/vy);
-  assert.equal(controller.touchMap(ox + vx * edgeScale, oy + vy * edgeScale, 390, 844, touchCamera), true, "off-screen island direction was ignored");
+  assert.ok(Math.abs(destination.x)>1||Math.abs(destination.y)>1||Math.abs(destination.z)>1,
+    'fixture must keep the destination off-screen');
+  assert.equal(directionTo('custard-creek'),'right');
+  const oy = THREE.MathUtils.clamp((1 - origin.y) * 422, 24, 820);
+  assert.equal(controller.touchMap(382, oy, 390, 844, touchCamera), true, "off-screen island direction was ignored");
   for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
   assert.equal(controller.selectedKey, "custard-creek");
   assert.equal(controller.travelTo("jungle"), true);
@@ -938,13 +952,14 @@ try {
   }
   controller.activate(warpLevel,'rumblewater-run');touchCamera.aspect=844/390;
   controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
-  const sideTarget=warpLevel.campaignMapPose('coastal').position.clone().project(touchCamera);
+  const sideTarget=warpLevel.campaignMapPose('jungle').position.clone().project(touchCamera);
   assert.ok((1-sideTarget.y)/2<0.74,'adjacent hub touch target overlaps the short-landscape utility hit area');
   controller.activate(warpLevel,'codex-switchback');touchCamera.aspect=390/844;
   controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
   const head=warpLevel.campaignMapPose('codex-switchback').position.clone().add(new THREE.Vector3(0,5.8,0)).project(touchCamera);
   assert.ok((1-head.y)/2>0.42,'portrait rider is hidden behind the trial card');
   controller.deactivate();
+  await controller.preparePresentation();
 
   const plantKinds=["fanpalm","bananatree","seagrape","monstera","birdofparadise"];
   const plantData={
