@@ -1,0 +1,12 @@
+{
+  "command": "node tools/test-camera-speed-effect.mjs",
+  "revision": "ad5d3fb583ece73171c35b2333694d5b7375cc44",
+  "verifiedAt": "2026-11-08T07:07:22.685775+00:00",
+  "status": "passed",
+  "freshProcessRuns": 1,
+  "logSha256": "2320276b1777b3476cf93c9cc0cadeabef44f35b07229c192ae27001279bf6d6",
+  "output": [
+    "PASS board-owned high-speed camera FOV curve, easing, split independence, and UI schema"
+  ],
+  "fixtureChange": "Supply the real desert-lighting imports and current level to the extracted sun-shadow function; add desert and desert-bonus coverage plus return-to-normal shadow assertions."
+}

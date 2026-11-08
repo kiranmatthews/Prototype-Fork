@@ -1,0 +1,12 @@
+{
+  "command": "node tools/test-level-switch-transactions.mjs",
+  "revision": "3c4c0b7709043f8eb1d9fa29584ae2bd838e5ee9",
+  "verifiedAt": "2026-11-08T07:24:52.497507+00:00",
+  "status": "passed",
+  "freshProcessRuns": 1,
+  "logSha256": "f06d2fba5a5d77d71822a26174627ca2fc34d0be6a3a15e6149cc278dc3508a4",
+  "output": [
+    "Level switching: 10 actual handler, rejected-build, resource, menu, success and native VFX checks passed."
+  ],
+  "fixtureChange": "Provide the desert heat lifecycle dependency; rejected builds retain resources and accepted switches release them once."
+}
