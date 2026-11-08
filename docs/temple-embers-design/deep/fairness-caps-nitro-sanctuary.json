@@ -1,0 +1,6058 @@
+{
+ "caps2": [
+  {
+   "pipe": "Jade teaching halfpipe",
+   "variant": "lip, steer back",
+   "stand": 142.65,
+   "lipTop": 142,
+   "capStation": 141.4,
+   "capBottom": 11.6,
+   "broke": true,
+   "peakHead": 9.96,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 9.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      142.5,
+      9.02,
+      0
+     ],
+     "vVel": 1.45,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 9.96
+    },
+    {
+     "tag": "end",
+     "local": [
+      142.5,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 9.94
+    }
+   ]
+  },
+  {
+   "pipe": "Jade teaching halfpipe",
+   "variant": "lip, vertical",
+   "stand": 142.65,
+   "lipTop": 142,
+   "capStation": 141.4,
+   "capBottom": 11.6,
+   "broke": true,
+   "peakHead": 9.96,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 9.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      142.65,
+      9.02,
+      0
+     ],
+     "vVel": 1.45,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 9.96
+    },
+    {
+     "tag": "end",
+     "local": [
+      142.65,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 9.94
+    }
+   ]
+  },
+  {
+   "pipe": "Jade teaching halfpipe",
+   "variant": "deck +1.4, steer back",
+   "stand": 143.4,
+   "lipTop": 142,
+   "capStation": 141.4,
+   "capBottom": 11.6,
+   "broke": false,
+   "peakHead": 12.79,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      143.25,
+      9.22,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 10.16
+    },
+    {
+     "tag": "air4",
+     "local": [
+      142.65,
+      10.03,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 10.97
+    },
+    {
+     "tag": "air8",
+     "local": [
+      142.51,
+      10.69,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 11.62
+    },
+    {
+     "tag": "air12",
+     "local": [
+      142.51,
+      11.2,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.14
+    },
+    {
+     "tag": "air16",
+     "local": [
+      142.51,
+      11.56,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.5
+    },
+    {
+     "tag": "air20",
+     "local": [
+      142.51,
+      11.78,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.72
+    },
+    {
+     "tag": "air24",
+     "local": [
+      142.51,
+      11.85,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.79
+    },
+    {
+     "tag": "air28",
+     "local": [
+      142.51,
+      11.64,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.57
+    },
+    {
+     "tag": "air32",
+     "local": [
+      142.51,
+      10.89,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 11.82
+    },
+    {
+     "tag": "air36",
+     "local": [
+      141.91,
+      9.61,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 10.55
+    },
+    {
+     "tag": "air40",
+     "local": [
+      141.4,
+      8.15,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.08
+    },
+    {
+     "tag": "end",
+     "local": [
+      139.82,
+      6.81,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 7.75
+    }
+   ]
+  },
+  {
+   "pipe": "Jade teaching halfpipe",
+   "variant": "deck +1.4, vertical",
+   "stand": 143.4,
+   "lipTop": 142,
+   "capStation": 141.4,
+   "capBottom": 11.6,
+   "broke": false,
+   "peakHead": 12.79,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 9.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      143.4,
+      9.22,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 10.16
+    },
+    {
+     "tag": "air4",
+     "local": [
+      143.4,
+      10.03,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 10.97
+    },
+    {
+     "tag": "air8",
+     "local": [
+      143.4,
+      10.69,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 11.62
+    },
+    {
+     "tag": "air12",
+     "local": [
+      143.4,
+      11.2,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.14
+    },
+    {
+     "tag": "air16",
+     "local": [
+      143.4,
+      11.56,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.5
+    },
+    {
+     "tag": "air20",
+     "local": [
+      143.4,
+      11.78,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.72
+    },
+    {
+     "tag": "air24",
+     "local": [
+      143.4,
+      11.85,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.79
+    },
+    {
+     "tag": "air28",
+     "local": [
+      143.4,
+      11.64,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 12.57
+    },
+    {
+     "tag": "air32",
+     "local": [
+      143.4,
+      10.89,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 11.82
+    },
+    {
+     "tag": "air36",
+     "local": [
+      143.4,
+      9.61,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 10.55
+    },
+    {
+     "tag": "end",
+     "local": [
+      143.4,
+      9,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 9.94
+    }
+   ]
+  },
+  {
+   "pipe": "High sanctuary halfpipe",
+   "variant": "lip, steer back",
+   "stand": 422.65,
+   "lipTop": 422,
+   "capStation": 421.4,
+   "capBottom": 37.1,
+   "broke": false,
+   "peakHead": 38.29,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      422.54,
+      34.72,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.66
+    },
+    {
+     "tag": "air4",
+     "local": [
+      422.12,
+      35.53,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.47
+    },
+    {
+     "tag": "air8",
+     "local": [
+      422.2,
+      36.19,
+      -0.01
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.12
+    },
+    {
+     "tag": "air12",
+     "local": [
+      422.51,
+      36.7,
+      -0.01
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.64
+    },
+    {
+     "tag": "air16",
+     "local": [
+      422.51,
+      37.06,
+      -0.01
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38
+    },
+    {
+     "tag": "air20",
+     "local": [
+      422.51,
+      37.28,
+      -0.02
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.22
+    },
+    {
+     "tag": "air24",
+     "local": [
+      422.51,
+      37.35,
+      -0.03
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.29
+    },
+    {
+     "tag": "air28",
+     "local": [
+      422.51,
+      37.14,
+      -0.03
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.07
+    },
+    {
+     "tag": "air32",
+     "local": [
+      422.51,
+      36.39,
+      -0.04
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.32
+    },
+    {
+     "tag": "air36",
+     "local": [
+      422.08,
+      35.11,
+      -0.04
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.05
+    },
+    {
+     "tag": "end",
+     "local": [
+      420.95,
+      33.04,
+      0.02
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 33.98
+    }
+   ]
+  },
+  {
+   "pipe": "High sanctuary halfpipe",
+   "variant": "lip, vertical",
+   "stand": 422.65,
+   "lipTop": 422,
+   "capStation": 421.4,
+   "capBottom": 37.1,
+   "broke": false,
+   "peakHead": 38.29,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      422.65,
+      34.72,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.66
+    },
+    {
+     "tag": "air4",
+     "local": [
+      422.65,
+      35.53,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.47
+    },
+    {
+     "tag": "air8",
+     "local": [
+      422.65,
+      36.19,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.12
+    },
+    {
+     "tag": "air12",
+     "local": [
+      422.65,
+      36.7,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.64
+    },
+    {
+     "tag": "air16",
+     "local": [
+      422.65,
+      37.06,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38
+    },
+    {
+     "tag": "air20",
+     "local": [
+      422.65,
+      37.28,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.22
+    },
+    {
+     "tag": "air24",
+     "local": [
+      422.65,
+      37.35,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.29
+    },
+    {
+     "tag": "air28",
+     "local": [
+      422.65,
+      37.14,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.07
+    },
+    {
+     "tag": "air32",
+     "local": [
+      422.65,
+      36.39,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.32
+    },
+    {
+     "tag": "air36",
+     "local": [
+      422.65,
+      35.11,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.05
+    },
+    {
+     "tag": "end",
+     "local": [
+      422.65,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    }
+   ]
+  },
+  {
+   "pipe": "High sanctuary halfpipe",
+   "variant": "deck +1.4, steer back",
+   "stand": 423.4,
+   "lipTop": 422,
+   "capStation": 421.4,
+   "capBottom": 37.1,
+   "broke": false,
+   "peakHead": 38.29,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      423.29,
+      34.72,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.66
+    },
+    {
+     "tag": "air4",
+     "local": [
+      422.87,
+      35.53,
+      -0.01
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.47
+    },
+    {
+     "tag": "air8",
+     "local": [
+      422.51,
+      36.19,
+      -0.01
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.12
+    },
+    {
+     "tag": "air12",
+     "local": [
+      422.51,
+      36.7,
+      -0.02
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.64
+    },
+    {
+     "tag": "air16",
+     "local": [
+      422.51,
+      37.06,
+      -0.02
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38
+    },
+    {
+     "tag": "air20",
+     "local": [
+      422.51,
+      37.28,
+      -0.03
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.22
+    },
+    {
+     "tag": "air24",
+     "local": [
+      422.51,
+      37.35,
+      -0.03
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.29
+    },
+    {
+     "tag": "air28",
+     "local": [
+      422.51,
+      37.14,
+      -0.04
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.07
+    },
+    {
+     "tag": "air32",
+     "local": [
+      422.51,
+      36.39,
+      -0.04
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.32
+    },
+    {
+     "tag": "air36",
+     "local": [
+      422.08,
+      35.11,
+      -0.04
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.05
+    },
+    {
+     "tag": "end",
+     "local": [
+      420.95,
+      33.04,
+      0.02
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 33.98
+    }
+   ]
+  },
+  {
+   "pipe": "High sanctuary halfpipe",
+   "variant": "deck +1.4, vertical",
+   "stand": 423.4,
+   "lipTop": 422,
+   "capStation": 421.4,
+   "capBottom": 37.1,
+   "broke": false,
+   "peakHead": 38.29,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      423.4,
+      34.72,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 35.66
+    },
+    {
+     "tag": "air4",
+     "local": [
+      423.4,
+      35.53,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.47
+    },
+    {
+     "tag": "air8",
+     "local": [
+      423.4,
+      36.19,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.12
+    },
+    {
+     "tag": "air12",
+     "local": [
+      423.4,
+      36.7,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.64
+    },
+    {
+     "tag": "air16",
+     "local": [
+      423.4,
+      37.06,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38
+    },
+    {
+     "tag": "air20",
+     "local": [
+      423.4,
+      37.28,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.22
+    },
+    {
+     "tag": "air24",
+     "local": [
+      423.4,
+      37.35,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.29
+    },
+    {
+     "tag": "air28",
+     "local": [
+      423.4,
+      37.14,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 38.07
+    },
+    {
+     "tag": "air32",
+     "local": [
+      423.4,
+      36.39,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 37.32
+    },
+    {
+     "tag": "air36",
+     "local": [
+      423.4,
+      35.11,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 36.05
+    },
+    {
+     "tag": "end",
+     "local": [
+      423.4,
+      34.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 35.44
+    }
+   ]
+  },
+  {
+   "pipe": "Cloud aqueduct halfpipe",
+   "variant": "lip, steer back",
+   "stand": 794.65,
+   "lipTop": 794,
+   "capStation": 793.4,
+   "capBottom": 54.35,
+   "broke": true,
+   "peakHead": 52.71,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "charged",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "released",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 52.69
+    },
+    {
+     "tag": "air0",
+     "local": [
+      794.5,
+      51.77,
+      0
+     ],
+     "vVel": 1.45,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 52.71
+    },
+    {
+     "tag": "end",
+     "local": [
+      794.5,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 52.69
+    }
+   ]
+  },
+  {
+   "pipe": "Cloud aqueduct halfpipe",
+   "variant": "lip, vertical",
+   "stand": 794.65,
+   "lipTop": 794,
+   "capStation": 793.4,
+   "capBottom": 54.35,
+   "broke": true,
+   "peakHead": 52.71,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "charged",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "released",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 52.69
+    },
+    {
+     "tag": "air0",
+     "local": [
+      794.65,
+      51.77,
+      0
+     ],
+     "vVel": 1.45,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 52.71
+    },
+    {
+     "tag": "end",
+     "local": [
+      794.65,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 52.69
+    }
+   ]
+  },
+  {
+   "pipe": "Cloud aqueduct halfpipe",
+   "variant": "deck +1.4, steer back",
+   "stand": 795.4,
+   "lipTop": 794,
+   "capStation": 793.4,
+   "capBottom": 54.35,
+   "broke": false,
+   "peakHead": 55.54,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "charged",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "released",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "air0",
+     "local": [
+      795.25,
+      51.97,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 52.91
+    },
+    {
+     "tag": "air4",
+     "local": [
+      794.65,
+      52.78,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 53.72
+    },
+    {
+     "tag": "air8",
+     "local": [
+      794.51,
+      53.44,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 54.37
+    },
+    {
+     "tag": "air12",
+     "local": [
+      794.51,
+      53.95,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 54.89
+    },
+    {
+     "tag": "air16",
+     "local": [
+      794.51,
+      54.31,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.25
+    },
+    {
+     "tag": "air20",
+     "local": [
+      794.51,
+      54.53,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.47
+    },
+    {
+     "tag": "air24",
+     "local": [
+      794.51,
+      54.6,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.54
+    },
+    {
+     "tag": "air28",
+     "local": [
+      794.51,
+      54.39,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.32
+    },
+    {
+     "tag": "air32",
+     "local": [
+      794.51,
+      53.64,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 54.57
+    },
+    {
+     "tag": "air36",
+     "local": [
+      793.91,
+      52.36,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 53.3
+    },
+    {
+     "tag": "air40",
+     "local": [
+      793.37,
+      50.77,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 51.71
+    },
+    {
+     "tag": "end",
+     "local": [
+      791.78,
+      48.97,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 49.9
+    }
+   ]
+  },
+  {
+   "pipe": "Cloud aqueduct halfpipe",
+   "variant": "deck +1.4, vertical",
+   "stand": 795.4,
+   "lipTop": 794,
+   "capStation": 793.4,
+   "capBottom": 54.35,
+   "broke": false,
+   "peakHead": 55.54,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "charged",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "released",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 52.69
+    },
+    {
+     "tag": "air0",
+     "local": [
+      795.4,
+      51.97,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 52.91
+    },
+    {
+     "tag": "air4",
+     "local": [
+      795.4,
+      52.78,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 53.72
+    },
+    {
+     "tag": "air8",
+     "local": [
+      795.4,
+      53.44,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 54.37
+    },
+    {
+     "tag": "air12",
+     "local": [
+      795.4,
+      53.95,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 54.89
+    },
+    {
+     "tag": "air16",
+     "local": [
+      795.4,
+      54.31,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.25
+    },
+    {
+     "tag": "air20",
+     "local": [
+      795.4,
+      54.53,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.47
+    },
+    {
+     "tag": "air24",
+     "local": [
+      795.4,
+      54.6,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.54
+    },
+    {
+     "tag": "air28",
+     "local": [
+      795.4,
+      54.39,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 55.32
+    },
+    {
+     "tag": "air32",
+     "local": [
+      795.4,
+      53.64,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 54.57
+    },
+    {
+     "tag": "air36",
+     "local": [
+      795.4,
+      52.36,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 53.3
+    },
+    {
+     "tag": "end",
+     "local": [
+      795.4,
+      51.75,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 52.69
+    }
+   ]
+  },
+  {
+   "pipe": "Sun crown halfpipe",
+   "variant": "lip, steer back",
+   "stand": 1024.65,
+   "lipTop": 1024,
+   "capStation": 1023.4,
+   "capBottom": 71.6,
+   "broke": false,
+   "peakHead": 72.79,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1024.54,
+      69.22,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.16
+    },
+    {
+     "tag": "air4",
+     "local": [
+      1024.12,
+      70.03,
+      -0.01
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.97
+    },
+    {
+     "tag": "air8",
+     "local": [
+      1024.2,
+      70.69,
+      -0.01
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.62
+    },
+    {
+     "tag": "air12",
+     "local": [
+      1024.51,
+      71.2,
+      -0.02
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.14
+    },
+    {
+     "tag": "air16",
+     "local": [
+      1024.51,
+      71.56,
+      -0.03
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.5
+    },
+    {
+     "tag": "air20",
+     "local": [
+      1024.51,
+      71.78,
+      -0.03
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.72
+    },
+    {
+     "tag": "air24",
+     "local": [
+      1024.51,
+      71.85,
+      -0.04
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.79
+    },
+    {
+     "tag": "air28",
+     "local": [
+      1024.51,
+      71.64,
+      -0.03
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.57
+    },
+    {
+     "tag": "air32",
+     "local": [
+      1024.51,
+      70.89,
+      -0.04
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.82
+    },
+    {
+     "tag": "air36",
+     "local": [
+      1024.08,
+      69.61,
+      -0.03
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.55
+    },
+    {
+     "tag": "end",
+     "local": [
+      1022.95,
+      67.43,
+      0.01
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 68.37
+    }
+   ]
+  },
+  {
+   "pipe": "Sun crown halfpipe",
+   "variant": "lip, vertical",
+   "stand": 1024.65,
+   "lipTop": 1024,
+   "capStation": 1023.4,
+   "capBottom": 71.6,
+   "broke": false,
+   "peakHead": 72.79,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1024.65,
+      69.22,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.16
+    },
+    {
+     "tag": "air4",
+     "local": [
+      1024.65,
+      70.03,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.97
+    },
+    {
+     "tag": "air8",
+     "local": [
+      1024.65,
+      70.69,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.62
+    },
+    {
+     "tag": "air12",
+     "local": [
+      1024.65,
+      71.2,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.14
+    },
+    {
+     "tag": "air16",
+     "local": [
+      1024.65,
+      71.56,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.5
+    },
+    {
+     "tag": "air20",
+     "local": [
+      1024.65,
+      71.78,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.72
+    },
+    {
+     "tag": "air24",
+     "local": [
+      1024.65,
+      71.85,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.79
+    },
+    {
+     "tag": "air28",
+     "local": [
+      1024.65,
+      71.64,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.57
+    },
+    {
+     "tag": "air32",
+     "local": [
+      1024.65,
+      70.89,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.82
+    },
+    {
+     "tag": "air36",
+     "local": [
+      1024.65,
+      69.61,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.55
+    },
+    {
+     "tag": "end",
+     "local": [
+      1024.65,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    }
+   ]
+  },
+  {
+   "pipe": "Sun crown halfpipe",
+   "variant": "deck +1.4, steer back",
+   "stand": 1025.4,
+   "lipTop": 1024,
+   "capStation": 1023.4,
+   "capBottom": 71.6,
+   "broke": false,
+   "peakHead": 72.79,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1025.29,
+      69.22,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.16
+    },
+    {
+     "tag": "air4",
+     "local": [
+      1024.87,
+      70.03,
+      -0.02
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.97
+    },
+    {
+     "tag": "air8",
+     "local": [
+      1024.51,
+      70.69,
+      -0.03
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.62
+    },
+    {
+     "tag": "air12",
+     "local": [
+      1024.51,
+      71.2,
+      -0.03
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.14
+    },
+    {
+     "tag": "air16",
+     "local": [
+      1024.51,
+      71.56,
+      -0.04
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.5
+    },
+    {
+     "tag": "air20",
+     "local": [
+      1024.51,
+      71.78,
+      -0.03
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.72
+    },
+    {
+     "tag": "air24",
+     "local": [
+      1024.51,
+      71.85,
+      -0.04
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.79
+    },
+    {
+     "tag": "air28",
+     "local": [
+      1024.51,
+      71.64,
+      -0.04
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.57
+    },
+    {
+     "tag": "air32",
+     "local": [
+      1024.51,
+      70.89,
+      -0.04
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.82
+    },
+    {
+     "tag": "air36",
+     "local": [
+      1024.08,
+      69.61,
+      -0.03
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.55
+    },
+    {
+     "tag": "end",
+     "local": [
+      1022.95,
+      67.43,
+      0.02
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 68.37
+    }
+   ]
+  },
+  {
+   "pipe": "Sun crown halfpipe",
+   "variant": "deck +1.4, vertical",
+   "stand": 1025.4,
+   "lipTop": 1024,
+   "capStation": 1023.4,
+   "capBottom": 71.6,
+   "broke": false,
+   "peakHead": 72.79,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "released",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 69.94
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1025.4,
+      69.22,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.16
+    },
+    {
+     "tag": "air4",
+     "local": [
+      1025.4,
+      70.03,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.97
+    },
+    {
+     "tag": "air8",
+     "local": [
+      1025.4,
+      70.69,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.62
+    },
+    {
+     "tag": "air12",
+     "local": [
+      1025.4,
+      71.2,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.14
+    },
+    {
+     "tag": "air16",
+     "local": [
+      1025.4,
+      71.56,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.5
+    },
+    {
+     "tag": "air20",
+     "local": [
+      1025.4,
+      71.78,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.72
+    },
+    {
+     "tag": "air24",
+     "local": [
+      1025.4,
+      71.85,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.79
+    },
+    {
+     "tag": "air28",
+     "local": [
+      1025.4,
+      71.64,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 72.57
+    },
+    {
+     "tag": "air32",
+     "local": [
+      1025.4,
+      70.89,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 71.82
+    },
+    {
+     "tag": "air36",
+     "local": [
+      1025.4,
+      69.61,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 70.55
+    },
+    {
+     "tag": "end",
+     "local": [
+      1025.4,
+      69,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 69.94
+    }
+   ]
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "variant": "lip, steer back",
+   "stand": 1140.65,
+   "lipTop": 1140,
+   "capStation": 1139.4,
+   "capBottom": 83.1,
+   "broke": true,
+   "peakHead": 81.46,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 81.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1140.5,
+      80.52,
+      0
+     ],
+     "vVel": 1.45,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 81.46
+    },
+    {
+     "tag": "end",
+     "local": [
+      1140.5,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 81.44
+    }
+   ]
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "variant": "lip, vertical",
+   "stand": 1140.65,
+   "lipTop": 1140,
+   "capStation": 1139.4,
+   "capBottom": 83.1,
+   "broke": true,
+   "peakHead": 81.46,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 81.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1140.65,
+      80.52,
+      0
+     ],
+     "vVel": 1.45,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 81.46
+    },
+    {
+     "tag": "end",
+     "local": [
+      1140.65,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 81.44
+    }
+   ]
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "variant": "deck +1.4, steer back",
+   "stand": 1141.4,
+   "lipTop": 1140,
+   "capStation": 1139.4,
+   "capBottom": 83.1,
+   "broke": true,
+   "peakHead": 81.66,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1141.25,
+      80.72,
+      0
+     ],
+     "vVel": 2,
+     "state": "air",
+     "grounded": false,
+     "alive": false,
+     "head": 81.66
+    },
+    {
+     "tag": "end",
+     "local": [
+      1141.25,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": false,
+     "head": 81.44
+    }
+   ]
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "variant": "deck +1.4, vertical",
+   "stand": 1141.4,
+   "lipTop": 1140,
+   "capStation": 1139.4,
+   "capBottom": 83.1,
+   "broke": false,
+   "peakHead": 84.29,
+   "log": [
+    {
+     "tag": "settled",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "charged",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "released",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 14,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 81.44
+    },
+    {
+     "tag": "air0",
+     "local": [
+      1141.4,
+      80.72,
+      0
+     ],
+     "vVel": 13.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 81.66
+    },
+    {
+     "tag": "air4",
+     "local": [
+      1141.4,
+      81.53,
+      0
+     ],
+     "vVel": 11.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 82.47
+    },
+    {
+     "tag": "air8",
+     "local": [
+      1141.4,
+      82.19,
+      0
+     ],
+     "vVel": 9.05,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 83.12
+    },
+    {
+     "tag": "air12",
+     "local": [
+      1141.4,
+      82.7,
+      0
+     ],
+     "vVel": 6.85,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 83.64
+    },
+    {
+     "tag": "air16",
+     "local": [
+      1141.4,
+      83.06,
+      0
+     ],
+     "vVel": 4.65,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 84
+    },
+    {
+     "tag": "air20",
+     "local": [
+      1141.4,
+      83.28,
+      0
+     ],
+     "vVel": 2.45,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 84.22
+    },
+    {
+     "tag": "air24",
+     "local": [
+      1141.4,
+      83.35,
+      0
+     ],
+     "vVel": 0.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 84.29
+    },
+    {
+     "tag": "air28",
+     "local": [
+      1141.4,
+      83.14,
+      0
+     ],
+     "vVel": -6.25,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 84.07
+    },
+    {
+     "tag": "air32",
+     "local": [
+      1141.4,
+      82.39,
+      0
+     ],
+     "vVel": -14.18,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 83.32
+    },
+    {
+     "tag": "air36",
+     "local": [
+      1141.4,
+      81.11,
+      0
+     ],
+     "vVel": -22.12,
+     "state": "air",
+     "grounded": false,
+     "alive": true,
+     "head": 82.05
+    },
+    {
+     "tag": "end",
+     "local": [
+      1141.4,
+      80.5,
+      0
+     ],
+     "vVel": 0,
+     "state": "ride",
+     "grounded": true,
+     "alive": true,
+     "head": 81.44
+    }
+   ]
+  }
+ ],
+ "nitro2": [
+  {
+   "label": "stick forward (camera)",
+   "spawnLocal": [
+    920,
+    69.03,
+    2.21
+   ],
+   "spawnWorld": [
+    -57.1,
+    69.13,
+    -48
+   ],
+   "camera": {
+    "x": 0.71,
+    "z": 0.7
+   },
+   "nitros": [
+    {
+     "local": [
+      923,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -59.23,
+      69.61,
+      -41.7
+     ],
+     "distanceFromSpawn": 5.93
+    },
+    {
+     "local": [
+      926,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -56.72,
+      69.61,
+      -35.32
+     ],
+     "distanceFromSpawn": 12.1
+    }
+   ],
+   "death": null,
+   "trail": [
+    {
+     "f": 0,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0.2
+    },
+    {
+     "f": 6,
+     "local": [
+      920.09,
+      69.03,
+      2.19
+     ],
+     "world": [
+      -58.19,
+      69.03,
+      -47.91
+     ],
+     "speed": 1.4
+    },
+    {
+     "f": 12,
+     "local": [
+      920.29,
+      69.03,
+      2.2
+     ],
+     "world": [
+      -58.2,
+      69.03,
+      -47.7
+     ],
+     "speed": 2.6
+    },
+    {
+     "f": 18,
+     "local": [
+      920.6,
+      69.03,
+      2.19
+     ],
+     "world": [
+      -58.19,
+      69.03,
+      -47.37
+     ],
+     "speed": 3.8
+    },
+    {
+     "f": 24,
+     "local": [
+      920.55,
+      69.03,
+      2.17
+     ],
+     "world": [
+      -58.17,
+      69.03,
+      -46.89
+     ],
+     "speed": 5
+    },
+    {
+     "f": 30,
+     "local": [
+      920.84,
+      69.03,
+      2.11
+     ],
+     "world": [
+      -58.11,
+      69.03,
+      -46.33
+     ],
+     "speed": 6.2
+    },
+    {
+     "f": 36,
+     "local": [
+      921.18,
+      69.03,
+      2.04
+     ],
+     "world": [
+      -58.04,
+      69.03,
+      -45.64
+     ],
+     "speed": 7.4
+    },
+    {
+     "f": 42,
+     "local": [
+      921.54,
+      69.03,
+      1.97
+     ],
+     "world": [
+      -57.97,
+      69.03,
+      -44.83
+     ],
+     "speed": 8.6
+    },
+    {
+     "f": 48,
+     "local": [
+      922.03,
+      69.03,
+      1.9
+     ],
+     "world": [
+      -57.9,
+      69.03,
+      -43.94
+     ],
+     "speed": 9
+    },
+    {
+     "f": 54,
+     "local": [
+      922.53,
+      69.03,
+      1.81
+     ],
+     "world": [
+      -57.81,
+      69.03,
+      -43.04
+     ],
+     "speed": 9
+    },
+    {
+     "f": 60,
+     "local": [
+      922.88,
+      69.03,
+      1.78
+     ],
+     "world": [
+      -57.66,
+      69.03,
+      -42.16
+     ],
+     "speed": 9
+    },
+    {
+     "f": 66,
+     "local": [
+      923.38,
+      69.03,
+      1.71
+     ],
+     "world": [
+      -57.46,
+      69.03,
+      -41.28
+     ],
+     "speed": 9
+    },
+    {
+     "f": 72,
+     "local": [
+      923.74,
+      69.03,
+      1.67
+     ],
+     "world": [
+      -57.2,
+      69.03,
+      -40.42
+     ],
+     "speed": 9
+    },
+    {
+     "f": 78,
+     "local": [
+      924.24,
+      69.03,
+      1.63
+     ],
+     "world": [
+      -56.9,
+      69.03,
+      -39.57
+     ],
+     "speed": 9
+    },
+    {
+     "f": 84,
+     "local": [
+      924.6,
+      69.03,
+      1.63
+     ],
+     "world": [
+      -56.59,
+      69.03,
+      -38.73
+     ],
+     "speed": 9
+    },
+    {
+     "f": 90,
+     "local": [
+      925.11,
+      69.03,
+      1.65
+     ],
+     "world": [
+      -56.22,
+      69.03,
+      -37.91
+     ],
+     "speed": 9
+    },
+    {
+     "f": 96,
+     "local": [
+      925.47,
+      69.03,
+      1.62
+     ],
+     "world": [
+      -55.79,
+      69.03,
+      -37.11
+     ],
+     "speed": 9
+    },
+    {
+     "f": 102,
+     "local": [
+      925.97,
+      69.03,
+      1.66
+     ],
+     "world": [
+      -55.32,
+      69.03,
+      -36.35
+     ],
+     "speed": 9
+    },
+    {
+     "f": 108,
+     "local": [
+      926.47,
+      69.03,
+      1.64
+     ],
+     "world": [
+      -54.79,
+      69.03,
+      -35.62
+     ],
+     "speed": 9
+    },
+    {
+     "f": 114,
+     "local": [
+      926.83,
+      69.03,
+      1.66
+     ],
+     "world": [
+      -54.21,
+      69.03,
+      -34.93
+     ],
+     "speed": 9
+    }
+   ]
+  },
+  {
+   "label": "stick forward-right (camera)",
+   "spawnLocal": [
+    920,
+    69.03,
+    2.21
+   ],
+   "spawnWorld": [
+    -57.1,
+    69.13,
+    -48
+   ],
+   "camera": {
+    "x": 0.09,
+    "z": 1
+   },
+   "nitros": [
+    {
+     "local": [
+      923,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -59.23,
+      69.61,
+      -41.7
+     ],
+     "distanceFromSpawn": 5.93
+    },
+    {
+     "local": [
+      926,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -56.72,
+      69.61,
+      -35.32
+     ],
+     "distanceFromSpawn": 12.1
+    }
+   ],
+   "death": {
+    "frame": 53,
+    "seconds": 0.88,
+    "local": [
+     922.26,
+     69.04,
+     3.94
+    ],
+    "nitro": 0
+   },
+   "trail": [
+    {
+     "f": 0,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0.2
+    },
+    {
+     "f": 6,
+     "local": [
+      920.08,
+      69.03,
+      2.24
+     ],
+     "world": [
+      -58.24,
+      69.03,
+      -47.91
+     ],
+     "speed": 1.2
+    },
+    {
+     "f": 12,
+     "local": [
+      920.27,
+      69.03,
+      2.31
+     ],
+     "world": [
+      -58.31,
+      69.03,
+      -47.71
+     ],
+     "speed": 2.3
+    },
+    {
+     "f": 18,
+     "local": [
+      920.57,
+      69.03,
+      2.42
+     ],
+     "world": [
+      -58.42,
+      69.03,
+      -47.41
+     ],
+     "speed": 3.4
+    },
+    {
+     "f": 24,
+     "local": [
+      920.51,
+      69.03,
+      2.57
+     ],
+     "world": [
+      -58.57,
+      69.03,
+      -46.98
+     ],
+     "speed": 4.4
+    },
+    {
+     "f": 30,
+     "local": [
+      920.77,
+      69.03,
+      2.77
+     ],
+     "world": [
+      -58.77,
+      69.03,
+      -46.45
+     ],
+     "speed": 5.5
+    },
+    {
+     "f": 36,
+     "local": [
+      921.09,
+      69.03,
+      3.02
+     ],
+     "world": [
+      -59.02,
+      69.03,
+      -45.81
+     ],
+     "speed": 6.6
+    },
+    {
+     "f": 42,
+     "local": [
+      921.47,
+      69.03,
+      3.32
+     ],
+     "world": [
+      -59.32,
+      69.03,
+      -45.06
+     ],
+     "speed": 7.7
+    },
+    {
+     "f": 48,
+     "local": [
+      921.87,
+      69.03,
+      3.66
+     ],
+     "world": [
+      -59.66,
+      69.03,
+      -44.23
+     ],
+     "speed": 8
+    }
+   ]
+  },
+  {
+   "label": "stick forward-left (camera)",
+   "spawnLocal": [
+    920,
+    69.03,
+    2.21
+   ],
+   "spawnWorld": [
+    -57.1,
+    69.13,
+    -48
+   ],
+   "camera": {
+    "x": 0.7,
+    "z": 0.71
+   },
+   "nitros": [
+    {
+     "local": [
+      923,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -59.23,
+      69.61,
+      -41.7
+     ],
+     "distanceFromSpawn": 5.93
+    },
+    {
+     "local": [
+      926,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -56.72,
+      69.61,
+      -35.32
+     ],
+     "distanceFromSpawn": 12.1
+    }
+   ],
+   "death": null,
+   "trail": [
+    {
+     "f": 0,
+     "local": [
+      920,
+      69.03,
+      2.2
+     ],
+     "world": [
+      -58.2,
+      69.03,
+      -48
+     ],
+     "speed": 0.2
+    },
+    {
+     "f": 6,
+     "local": [
+      920.07,
+      69.03,
+      2.19
+     ],
+     "world": [
+      -58.19,
+      69.03,
+      -47.92
+     ],
+     "speed": 1.2
+    },
+    {
+     "f": 12,
+     "local": [
+      920.24,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -47.75
+     ],
+     "speed": 2.3
+    },
+    {
+     "f": 18,
+     "local": [
+      920.5,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -47.48
+     ],
+     "speed": 3.4
+    },
+    {
+     "f": 24,
+     "local": [
+      920.86,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -47.1
+     ],
+     "speed": 4.4
+    },
+    {
+     "f": 30,
+     "local": [
+      920.69,
+      69.03,
+      1.99
+     ],
+     "world": [
+      -57.99,
+      69.03,
+      -46.63
+     ],
+     "speed": 5.5
+    },
+    {
+     "f": 36,
+     "local": [
+      920.98,
+      69.03,
+      1.62
+     ],
+     "world": [
+      -57.62,
+      69.03,
+      -46.05
+     ],
+     "speed": 6.6
+    },
+    {
+     "f": 42,
+     "local": [
+      921.32,
+      69.03,
+      1.19
+     ],
+     "world": [
+      -57.19,
+      69.03,
+      -45.36
+     ],
+     "speed": 7.7
+    },
+    {
+     "f": 48,
+     "local": [
+      921.67,
+      69.03,
+      0.72
+     ],
+     "world": [
+      -56.72,
+      69.03,
+      -44.6
+     ],
+     "speed": 8
+    },
+    {
+     "f": 54,
+     "local": [
+      922.09,
+      69.03,
+      0.26
+     ],
+     "world": [
+      -56.26,
+      69.03,
+      -43.83
+     ],
+     "speed": 8
+    },
+    {
+     "f": 60,
+     "local": [
+      922.53,
+      69.03,
+      -0.23
+     ],
+     "world": [
+      -55.76,
+      69.03,
+      -43.08
+     ],
+     "speed": 8
+    },
+    {
+     "f": 66,
+     "local": [
+      922.97,
+      69.03,
+      -0.65
+     ],
+     "world": [
+      -55.23,
+      69.03,
+      -42.36
+     ],
+     "speed": 8
+    },
+    {
+     "f": 72,
+     "local": [
+      923.4,
+      69.03,
+      -1.12
+     ],
+     "world": [
+      -54.66,
+      69.03,
+      -41.67
+     ],
+     "speed": 8
+    },
+    {
+     "f": 78,
+     "local": [
+      923.94,
+      69.03,
+      -1.52
+     ],
+     "world": [
+      -54.05,
+      69.03,
+      -41.01
+     ],
+     "speed": 8
+    },
+    {
+     "f": 84,
+     "local": [
+      924.37,
+      69.03,
+      -1.98
+     ],
+     "world": [
+      -53.38,
+      69.03,
+      -40.42
+     ],
+     "speed": 8
+    },
+    {
+     "f": 90,
+     "local": [
+      924.98,
+      69.03,
+      -2.41
+     ],
+     "world": [
+      -52.66,
+      69.03,
+      -39.87
+     ],
+     "speed": 8
+    },
+    {
+     "f": 96,
+     "local": [
+      925.64,
+      69.03,
+      -2.86
+     ],
+     "world": [
+      -51.91,
+      69.03,
+      -39.38
+     ],
+     "speed": 8
+    },
+    {
+     "f": 102,
+     "local": [
+      926.09,
+      69.03,
+      -3.25
+     ],
+     "world": [
+      -51.14,
+      69.03,
+      -38.93
+     ],
+     "speed": 8
+    },
+    {
+     "f": 108,
+     "local": [
+      926.83,
+      69.03,
+      -3.63
+     ],
+     "world": [
+      -50.33,
+      69.03,
+      -38.53
+     ],
+     "speed": 8
+    },
+    {
+     "f": 114,
+     "local": [
+      927.29,
+      69.04,
+      -4
+     ],
+     "world": [
+      -49.51,
+      69.04,
+      -38.18
+     ],
+     "speed": 8
+    }
+   ]
+  },
+  {
+   "label": "stick forward + charge",
+   "spawnLocal": [
+    920,
+    69.03,
+    2.21
+   ],
+   "spawnWorld": [
+    -57.1,
+    69.13,
+    -48
+   ],
+   "camera": {
+    "x": 0.11,
+    "z": 0.99
+   },
+   "nitros": [
+    {
+     "local": [
+      923,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -59.23,
+      69.61,
+      -41.7
+     ],
+     "distanceFromSpawn": 5.93
+    },
+    {
+     "local": [
+      926,
+      69.61,
+      3.4
+     ],
+     "world": [
+      -56.72,
+      69.61,
+      -35.32
+     ],
+     "distanceFromSpawn": 12.1
+    }
+   ],
+   "death": {
+    "frame": 68,
+    "seconds": 1.13,
+    "local": [
+     922.36,
+     69.03,
+     1.86
+    ],
+    "nitro": 0
+   },
+   "trail": [
+    {
+     "f": 0,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0.2
+    },
+    {
+     "f": 6,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0
+    },
+    {
+     "f": 12,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0
+    },
+    {
+     "f": 18,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0
+    },
+    {
+     "f": 24,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0
+    },
+    {
+     "f": 30,
+     "local": [
+      920,
+      69.03,
+      2.21
+     ],
+     "world": [
+      -58.21,
+      69.03,
+      -48
+     ],
+     "speed": 0
+    },
+    {
+     "f": 36,
+     "local": [
+      920.34,
+      69.03,
+      2.19
+     ],
+     "world": [
+      -58.19,
+      69.03,
+      -47.64
+     ],
+     "speed": 5.6
+    },
+    {
+     "f": 42,
+     "local": [
+      920.92,
+      69.03,
+      2.19
+     ],
+     "world": [
+      -58.19,
+      69.03,
+      -47.03
+     ],
+     "speed": 6.5
+    },
+    {
+     "f": 48,
+     "local": [
+      920.83,
+      69.03,
+      2.12
+     ],
+     "world": [
+      -58.12,
+      69.03,
+      -46.33
+     ],
+     "speed": 7.4
+    },
+    {
+     "f": 54,
+     "local": [
+      921.23,
+      69.03,
+      2.04
+     ],
+     "world": [
+      -58.04,
+      69.03,
+      -45.55
+     ],
+     "speed": 8.3
+    },
+    {
+     "f": 60,
+     "local": [
+      921.63,
+      69.03,
+      1.97
+     ],
+     "world": [
+      -57.97,
+      69.03,
+      -44.67
+     ],
+     "speed": 9.2
+    },
+    {
+     "f": 66,
+     "local": [
+      922.17,
+      69.03,
+      1.89
+     ],
+     "world": [
+      -57.89,
+      69.03,
+      -43.7
+     ],
+     "speed": 10.1
+    }
+   ]
+  }
+ ],
+ "sanctuary2": {
+  "cases": [
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.09,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 30,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.77,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 60,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.91,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 90,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.27,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 120,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 1.62,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 150,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 0.97,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 180,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 1.18,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 210,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 1.63,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.09,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 270,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.77,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 300,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 3.45,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 330,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 3.26,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 360,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 2.61,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 390,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 1.96,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 420,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 1.32,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 450,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.17,
+    "minGuardianGap": 0.88,
+    "guardiansAlive": [
+     false,
+     false
+    ],
+    "reached": 1382.11,
+    "end": {
+     "local": [
+      1382.11,
+      103.54,
+      -0.26
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 2.46,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 30,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 3.14,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 60,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 2.52,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 90,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 1.87,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 120,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 1.22,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 150,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 0.57,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 180,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 0.81,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 210,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 1.48,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 2.15,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 270,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 2.82,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 300,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 3.49,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 330,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 2.86,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 360,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 2.22,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 390,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 1.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 420,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 0.92,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": -0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 450,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.37,
+    "minGuardianGap": 0.49,
+    "guardiansAlive": [
+     false,
+     false
+    ],
+    "reached": 1382.01,
+    "end": {
+     "local": [
+      1382.01,
+      103.54,
+      -0.66
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.81,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 30,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 2.42,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 60,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 3.11,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 90,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 2.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 120,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.94,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 150,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.3,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 180,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.45,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 210,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.39,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.81,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 270,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 2.42,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 300,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 3.11,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 330,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 3.58,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 360,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 2.93,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 390,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 2.28,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 420,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.63,
+    "guardiansAlive": [
+     true,
+     false
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "walk and spin the procession",
+    "lane": 0.4,
+    "start": 1346.3,
+    "skate": false,
+    "waitFrames": 450,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 3.14,
+    "minGuardianGap": 1.17,
+    "guardiansAlive": [
+     false,
+     false
+    ],
+    "reached": 1382.1,
+    "end": {
+     "local": [
+      1382.1,
+      103.54,
+      0.14
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive skating from the gauntlet top, charge held",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": true,
+    "waitFrames": 0,
+    "died": false,
+    "tripped": true,
+    "hit": {
+     "kind": "bail",
+     "pose": {
+      "local": [
+       1344.03,
+       103.54,
+       0.38
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.37,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.99
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.27,
+        103.54,
+        2.48
+       ]
+      }
+     ]
+    },
+    "speedAtFirstCrate": 9.06,
+    "minGuardianGap": 0.91,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.18,
+    "end": {
+     "local": [
+      1382.18,
+      103.54,
+      -0.51
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 13.05,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive skating from the gauntlet top, charge held",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": true,
+    "waitFrames": 120,
+    "died": false,
+    "tripped": true,
+    "hit": {
+     "kind": "bail",
+     "pose": {
+      "local": [
+       1344.03,
+       103.54,
+       0.38
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.37,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.49
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.73,
+        103.54,
+        3.52
+       ]
+      }
+     ]
+    },
+    "speedAtFirstCrate": 9.06,
+    "minGuardianGap": 1.62,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.18,
+    "end": {
+     "local": [
+      1382.18,
+      103.54,
+      -0.51
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 13.05,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive skating from the gauntlet top, charge held",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": true,
+    "waitFrames": 240,
+    "died": false,
+    "tripped": true,
+    "hit": {
+     "kind": "bail",
+     "pose": {
+      "local": [
+       1344.03,
+       103.54,
+       0.38
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.37,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.19
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.27,
+        103.54,
+        2.48
+       ]
+      }
+     ]
+    },
+    "speedAtFirstCrate": 9.06,
+    "minGuardianGap": 0.89,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.18,
+    "end": {
+     "local": [
+      1382.18,
+      103.54,
+      -0.51
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 13.05,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive skating from the gauntlet top, charge held",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": true,
+    "waitFrames": 360,
+    "died": false,
+    "tripped": true,
+    "hit": {
+     "kind": "bail",
+     "pose": {
+      "local": [
+       1344.03,
+       103.54,
+       0.38
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.37,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.33
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.73,
+        103.54,
+        3.52
+       ]
+      }
+     ]
+    },
+    "speedAtFirstCrate": 9.06,
+    "minGuardianGap": 0.91,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.18,
+    "end": {
+     "local": [
+      1382.18,
+      103.54,
+      -0.51
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 13.05,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive walking, no spin, lane -0.3",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 9,
+    "minGuardianGap": 2.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.07,
+    "end": {
+     "local": [
+      1382.07,
+      103.54,
+      -0.56
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive walking, no spin, lane -0.3",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": false,
+    "waitFrames": 120,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 9,
+    "minGuardianGap": 1.89,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.07,
+    "end": {
+     "local": [
+      1382.07,
+      103.54,
+      -0.56
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive walking, no spin, lane -0.3",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 9,
+    "minGuardianGap": 3.51,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "reached": 1382.07,
+    "end": {
+     "local": [
+      1382.07,
+      103.54,
+      -0.56
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "label": "arrive walking, no spin, lane -0.3",
+    "lane": -0.3,
+    "start": 1336,
+    "skate": false,
+    "waitFrames": 360,
+    "died": false,
+    "tripped": false,
+    "hit": null,
+    "speedAtFirstCrate": 9,
+    "minGuardianGap": 0.94,
+    "guardiansAlive": [
+     false,
+     true
+    ],
+    "reached": 1382.07,
+    "end": {
+     "local": [
+      1382.07,
+      103.54,
+      -0.56
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 9,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   }
+  ],
+  "summary": {
+   "walk and spin the procession": {
+    "runs": 48,
+    "deaths": 0,
+    "trips": 0,
+    "reached1382": 48,
+    "minGap": 0.49,
+    "speeds": [
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.17,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.37,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14,
+     3.14
+    ]
+   },
+   "arrive skating from the gauntlet top, charge held": {
+    "runs": 4,
+    "deaths": 0,
+    "trips": 4,
+    "reached1382": 4,
+    "minGap": 0.89,
+    "speeds": [
+     9.06,
+     9.06,
+     9.06,
+     9.06
+    ]
+   },
+   "arrive walking, no spin, lane -0.3": {
+    "runs": 4,
+    "deaths": 0,
+    "trips": 0,
+    "reached1382": 4,
+    "minGap": 0.94,
+    "speeds": [
+     9,
+     9,
+     9,
+     9
+    ]
+   }
+  }
+ }
+}

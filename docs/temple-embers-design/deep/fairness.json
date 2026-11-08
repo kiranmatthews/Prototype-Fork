@@ -1,0 +1,3509 @@
+{
+ "caps": [
+  {
+   "pipe": "Jade teaching halfpipe",
+   "label": "exit cap",
+   "variant": "charged",
+   "capStation": 141.4,
+   "capBottom": 11.6,
+   "standStation": 142.65,
+   "lipTop": 142,
+   "launchVertical": 2,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     142.5,
+     9,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Jade teaching halfpipe",
+   "label": "exit cap",
+   "variant": "tap",
+   "capStation": 141.4,
+   "capBottom": 11.6,
+   "standStation": 142.65,
+   "lipTop": 142,
+   "launchVertical": 12.33,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     142.5,
+     9,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "High sanctuary halfpipe",
+   "label": "exit cap",
+   "variant": "charged",
+   "capStation": 421.4,
+   "capBottom": 37.1,
+   "standStation": 422.65,
+   "lipTop": 422,
+   "launchVertical": 14,
+   "peakFeet": 2.85,
+   "broke": false,
+   "framesToBreak": 39,
+   "after": {
+    "local": [
+     420.91,
+     33,
+     0.02
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "High sanctuary halfpipe",
+   "label": "exit cap",
+   "variant": "tap",
+   "capStation": 421.4,
+   "capBottom": 37.1,
+   "standStation": 422.65,
+   "lipTop": 422,
+   "launchVertical": 12.33,
+   "peakFeet": 0.2,
+   "broke": true,
+   "framesToBreak": 2,
+   "after": {
+    "local": [
+     422.44,
+     34.5,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Cloud aqueduct halfpipe",
+   "label": "exit cap",
+   "variant": "charged",
+   "capStation": 793.4,
+   "capBottom": 54.35,
+   "standStation": 794.65,
+   "lipTop": 794,
+   "launchVertical": 2,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     794.5,
+     51.75,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Cloud aqueduct halfpipe",
+   "label": "exit cap",
+   "variant": "tap",
+   "capStation": 793.4,
+   "capBottom": 54.35,
+   "standStation": 794.65,
+   "lipTop": 794,
+   "launchVertical": 12.33,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     794.5,
+     51.75,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Sun crown halfpipe",
+   "label": "exit cap",
+   "variant": "charged",
+   "capStation": 1023.4,
+   "capBottom": 71.6,
+   "standStation": 1024.65,
+   "lipTop": 1024,
+   "launchVertical": 14,
+   "peakFeet": 2.85,
+   "broke": false,
+   "framesToBreak": 39,
+   "after": {
+    "local": [
+     1022.91,
+     67.39,
+     0.01
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Sun crown halfpipe",
+   "label": "exit cap",
+   "variant": "tap",
+   "capStation": 1023.4,
+   "capBottom": 71.6,
+   "standStation": 1024.65,
+   "lipTop": 1024,
+   "launchVertical": 12.33,
+   "peakFeet": 0.2,
+   "broke": true,
+   "framesToBreak": 2,
+   "after": {
+    "local": [
+     1024.44,
+     69,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "label": "exit cap",
+   "variant": "charged",
+   "capStation": 1139.4,
+   "capBottom": 83.1,
+   "standStation": 1140.65,
+   "lipTop": 1140,
+   "launchVertical": 2,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     1140.5,
+     80.5,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "label": "exit cap",
+   "variant": "tap",
+   "capStation": 1139.4,
+   "capBottom": 83.1,
+   "standStation": 1140.65,
+   "lipTop": 1140,
+   "launchVertical": 2,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     1140.5,
+     80.5,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "label": "entry life",
+   "variant": "charged",
+   "capStation": 1086.6,
+   "capBottom": 83.1,
+   "standStation": 1085.35,
+   "lipTop": 1086,
+   "launchVertical": 2,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     1085.5,
+     80.5,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  },
+  {
+   "pipe": "Giant jade halfpipe",
+   "label": "entry life",
+   "variant": "tap",
+   "capStation": 1086.6,
+   "capBottom": 83.1,
+   "standStation": 1085.35,
+   "lipTop": 1086,
+   "launchVertical": 2,
+   "peakFeet": 0,
+   "broke": true,
+   "framesToBreak": 1,
+   "after": {
+    "local": [
+     1085.5,
+     80.5,
+     0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "deaths": 0
+  }
+ ],
+ "nitro920": [
+  {
+   "label": "forward walk",
+   "spawn": [
+    920,
+    69.03,
+    2.21
+   ],
+   "nearestNitro": "5.93",
+   "died": true,
+   "nitroTouched": {
+    "frame": 54,
+    "seconds": 0.9,
+    "pose": {
+     "local": [
+      922.53,
+      69.03,
+      2.17
+     ],
+     "state": "dead",
+     "grounded": true,
+     "bailing": true,
+     "deaths": 1,
+     "speed": 0,
+     "ground": "Crown court: visible bridge then uninterrupted pipe line"
+    }
+   },
+   "end": {
+    "local": [
+     922.53,
+     69.03,
+     2.17
+    ],
+    "state": "dead",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 1,
+    "speed": 0,
+    "ground": "Crown court: visible bridge then uninterrupted pipe line"
+   }
+  },
+  {
+   "label": "forward-right walk",
+   "spawn": [
+    920,
+    69.03,
+    2.21
+   ],
+   "nearestNitro": "5.93",
+   "died": false,
+   "nitroTouched": null,
+   "end": {
+    "local": [
+     921.65,
+     69.04,
+     4.45
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 1.42,
+    "ground": "Supported temple shoulder: seal the planted-bank gap"
+   }
+  },
+  {
+   "label": "right walk",
+   "spawn": [
+    920,
+    69.03,
+    2.21
+   ],
+   "nearestNitro": "5.93",
+   "died": false,
+   "nitroTouched": null,
+   "end": {
+    "local": [
+     919.93,
+     69.04,
+     4.45
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": -1.26,
+    "ground": "Supported temple shoulder: seal the planted-bank gap"
+   }
+  },
+  {
+   "label": "forward skate charge",
+   "spawn": [
+    920,
+    69.03,
+    2.21
+   ],
+   "nearestNitro": "5.93",
+   "died": true,
+   "nitroTouched": {
+    "frame": 68,
+    "seconds": 1.13,
+    "pose": {
+     "local": [
+      922.37,
+      69.03,
+      2.19
+     ],
+     "state": "dead",
+     "grounded": true,
+     "bailing": true,
+     "deaths": 1,
+     "speed": 0,
+     "ground": "Crown court: visible bridge then uninterrupted pipe line"
+    }
+   },
+   "end": {
+    "local": [
+     922.37,
+     69.03,
+     2.19
+    ],
+    "state": "dead",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 1,
+    "speed": 0,
+    "ground": "Crown court: visible bridge then uninterrupted pipe line"
+   }
+  },
+  {
+   "label": "forward-right skate",
+   "spawn": [
+    920,
+    69.03,
+    2.21
+   ],
+   "nearestNitro": "5.93",
+   "died": false,
+   "nitroTouched": null,
+   "end": {
+    "local": [
+     921.66,
+     69.04,
+     4.45
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0.69,
+    "ground": "Supported temple shoulder: seal the planted-bank gap"
+   }
+  }
+ ],
+ "sanctuary": {
+  "cases": [
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 48,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 96,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 144,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 192,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 288,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 336,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 384,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": false,
+    "waitFrames": 432,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.55,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.65,
+      103.54,
+      -0.31
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 0,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.47
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.55,
+        103.54,
+        1.97
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 48,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.39
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.92,
+        103.54,
+        3.15
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 96,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.31
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.66,
+        103.54,
+        4.33
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 144,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.56
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.77,
+        103.54,
+        3.44
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 192,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.64
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.39,
+        103.54,
+        2.26
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 240,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.72
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.55,
+        103.54,
+        1.97
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 288,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.42
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.92,
+        103.54,
+        3.15
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 336,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.34
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.66,
+        103.54,
+        4.33
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 384,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.26
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.77,
+        103.54,
+        3.44
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0,
+    "skate": true,
+    "waitFrames": 432,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.84,
+       103.54,
+       0.56
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.25,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.6
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.39,
+        103.54,
+        2.26
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.56,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.84,
+      103.54,
+      0.56
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.25,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 48,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 96,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 144,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 192,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 288,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 336,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 384,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": false,
+    "waitFrames": 432,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.57,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.73,
+      103.54,
+      -0.65
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 0,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.42
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.52,
+        103.54,
+        2.01
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 48,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.34
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.9,
+        103.54,
+        3.2
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 96,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.26
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.64,
+        103.54,
+        4.38
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 144,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.6
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.79,
+        103.54,
+        3.39
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 192,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.68
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.42,
+        103.54,
+        2.21
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 240,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.76
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.52,
+        103.54,
+        2.01
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 288,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.38
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.9,
+        103.54,
+        3.2
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 336,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.3
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.64,
+        103.54,
+        4.38
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 384,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.22
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.79,
+        103.54,
+        3.39
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": -0.35,
+    "skate": true,
+    "waitFrames": 432,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1344.11,
+       103.54,
+       0.24
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 10.55,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.65
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.42,
+        103.54,
+        2.21
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.59,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1344.11,
+      103.54,
+      0.24
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 10.55,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 0,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 48,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 96,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 144,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 192,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 240,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 288,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 336,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 384,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": false,
+    "waitFrames": 432,
+    "died": false,
+    "bailed": false,
+    "hit": null,
+    "maxDrift": 0.64,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1346.56,
+      103.54,
+      0.06
+     ],
+     "state": "ride",
+     "grounded": true,
+     "bailing": false,
+     "deaths": 0,
+     "speed": 0,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 0,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.51
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.57,
+        103.54,
+        1.92
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 48,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.43
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.95,
+        103.54,
+        3.1
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 96,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.35
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.32,
+        103.54,
+        4.28
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 144,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.51
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.74,
+        103.54,
+        3.49
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 192,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.59
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.36,
+        103.54,
+        2.31
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 240,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.67
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.57,
+        103.54,
+        1.92
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 288,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -4.47
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.95,
+        103.54,
+        3.1
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 336,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -3.39
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.32,
+        103.54,
+        4.28
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 384,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -2.31
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1357.74,
+        103.54,
+        3.49
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   },
+   {
+    "lane": 0.35,
+    "skate": true,
+    "waitFrames": 432,
+    "died": false,
+    "bailed": true,
+    "hit": {
+     "pose": {
+      "local": [
+       1343.58,
+       103.54,
+       0.88
+      ],
+      "state": "air",
+      "grounded": false,
+      "bailing": true,
+      "deaths": 0,
+      "speed": 9.95,
+      "ground": "Upper temple terrace and playable sanctuary hall"
+     },
+     "guardians": [
+      {
+       "alive": true,
+       "local": [
+        1350,
+        103.54,
+        -1.56
+       ]
+      },
+      {
+       "alive": true,
+       "local": [
+        1358.36,
+        103.54,
+        2.31
+       ]
+      }
+     ]
+    },
+    "maxDrift": 0.53,
+    "guardiansAlive": [
+     true,
+     true
+    ],
+    "end": {
+     "local": [
+      1343.58,
+      103.54,
+      0.88
+     ],
+     "state": "air",
+     "grounded": false,
+     "bailing": true,
+     "deaths": 0,
+     "speed": 9.95,
+     "ground": "Upper temple terrace and playable sanctuary hall"
+    }
+   }
+  ],
+  "deaths": 30,
+  "total": 60,
+  "guardianBoxes": [
+   {
+    "s": 1350,
+    "w": 1.3,
+    "x0": [
+     1350,
+     103.54,
+     -1.4
+    ],
+    "x1": [
+     1350,
+     103.54,
+     -4.6
+    ]
+   },
+   {
+    "s": 1358.36,
+    "w": 1.3,
+    "x0": [
+     1357.59,
+     103.54,
+     4.48
+    ],
+    "x1": [
+     1358.65,
+     103.54,
+     1.53
+    ]
+   }
+  ]
+ },
+ "gaps": [
+  {
+   "label": "jade bridge gap, lane edge inside the 8 m floor (bend sliver)",
+   "s": 258.5,
+   "side": 3.5,
+   "fromY": 22.5,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 0.43,
+   "landed": {
+    "local": [
+     258.65,
+     11.5,
+     3.47
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalPose": {
+    "local": [
+     258.65,
+     11.5,
+     3.47
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalY": 11.5,
+   "dropMetres": 11
+  },
+  {
+   "label": "jade bridge gap, shoulder",
+   "s": 262,
+   "side": 4.6,
+   "fromY": 22.5,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 0.43,
+   "landed": {
+    "local": [
+     262,
+     11.5,
+     4.47
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalPose": {
+    "local": [
+     262,
+     11.5,
+     4.47
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalY": 11.5,
+   "dropMetres": 11
+  },
+  {
+   "label": "sanctuary ollie gap, centre (control: pit must kill)",
+   "s": 455,
+   "side": 0,
+   "fromY": 34.5,
+   "died": true,
+   "framesUntilDeath": 20,
+   "secondsFalling": 0.33,
+   "landed": null,
+   "finalPose": {
+    "local": [
+     455,
+     27.72,
+     0
+    ],
+    "state": "dead",
+    "grounded": false,
+    "bailing": true,
+    "deaths": 1,
+    "speed": 0,
+    "ground": null
+   },
+   "finalY": 27.7,
+   "dropMetres": null
+  },
+  {
+   "label": "sanctuary ollie gap, shoulder",
+   "s": 455,
+   "side": 4.6,
+   "fromY": 34.5,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 0.67,
+   "landed": {
+    "local": [
+     455,
+     11.5,
+     4.6
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalPose": {
+    "local": [
+     455,
+     11.5,
+     4.6
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalY": 11.5,
+   "dropMetres": 23
+  },
+  {
+   "label": "sanctuary ollie gap, left shoulder",
+   "s": 455,
+   "side": -4.6,
+   "fromY": 34.5,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 0.67,
+   "landed": {
+    "local": [
+     455,
+     11.5,
+     -4.6
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalPose": {
+    "local": [
+     455,
+     11.5,
+     -4.6
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "platform"
+   },
+   "finalY": 11.5,
+   "dropMetres": 23
+  },
+  {
+   "label": "crown bridge gap, left shoulder",
+   "s": 964,
+   "side": -4.6,
+   "fromY": 69,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 2.45,
+   "landed": {
+    "local": [
+     124,
+     6,
+     -7.4
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "finalPose": {
+    "local": [
+     124,
+     6,
+     -7.4
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "vertramp"
+   },
+   "finalY": 6,
+   "dropMetres": 63
+  },
+  {
+   "label": "crown bridge gap, right shoulder",
+   "s": 964,
+   "side": 4.6,
+   "fromY": 69,
+   "died": true,
+   "framesUntilDeath": 20,
+   "secondsFalling": 0.33,
+   "landed": null,
+   "finalPose": {
+    "local": [
+     964,
+     62.22,
+     4.6
+    ],
+    "state": "dead",
+    "grounded": false,
+    "bailing": true,
+    "deaths": 1,
+    "speed": 0,
+    "ground": null
+   },
+   "finalY": 62.2,
+   "dropMetres": null
+  },
+  {
+   "label": "final leap gap, right shoulder",
+   "s": 1227.5,
+   "side": 4.6,
+   "fromY": 92,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 2.02,
+   "landed": {
+    "local": [
+     797.1,
+     51.78,
+     -3.25
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "Cloud aqueduct recovery and checkpoint"
+   },
+   "finalPose": {
+    "local": [
+     797.1,
+     51.78,
+     -3.25
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 0,
+    "speed": 0.1,
+    "ground": "Cloud aqueduct recovery and checkpoint"
+   },
+   "finalY": 51.8,
+   "dropMetres": 40.2
+  },
+  {
+   "label": "final leap gap, left shoulder",
+   "s": 1227.5,
+   "side": -4.6,
+   "fromY": 92,
+   "died": false,
+   "framesUntilDeath": null,
+   "secondsFalling": 1.6,
+   "landed": {
+    "local": [
+     777.83,
+     45.75,
+     3.26
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 0,
+    "speed": 16.45,
+    "ground": "vertramp"
+   },
+   "finalPose": {
+    "local": [
+     768.5,
+     45.75,
+     3.26
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 0,
+    "speed": 2.45,
+    "ground": "vertramp"
+   },
+   "finalY": 45.8,
+   "dropMetres": 46.3
+  },
+  {
+   "label": "final leap gap, centre (control)",
+   "s": 1227.5,
+   "side": 0,
+   "fromY": 92,
+   "died": true,
+   "framesUntilDeath": 20,
+   "secondsFalling": 0.33,
+   "landed": null,
+   "finalPose": {
+    "local": [
+     1227.5,
+     85.22,
+     0
+    ],
+    "state": "dead",
+    "grounded": false,
+    "bailing": true,
+    "deaths": 1,
+    "speed": 0,
+    "ground": null
+   },
+   "finalY": 85.2,
+   "dropMetres": null
+  }
+ ],
+ "refuge": [
+  {
+   "label": "summit refuge paver, right",
+   "s": 371.5,
+   "side": 1.1,
+   "died": false,
+   "firstDeath": null,
+   "end": {
+    "local": [
+     371.5,
+     34.53,
+     1.1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "Summit observation and checkpoint"
+   }
+  },
+  {
+   "label": "summit refuge paver, left",
+   "s": 371.5,
+   "side": -1.1,
+   "died": false,
+   "firstDeath": null,
+   "end": {
+    "local": [
+     371.5,
+     34.53,
+     -1.1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "Summit observation and checkpoint"
+   }
+  },
+  {
+   "label": "collecting the second restored cache (standing beyond it)",
+   "s": 373.9,
+   "side": -2.3,
+   "died": true,
+   "firstDeath": {
+    "seconds": 5.42,
+    "tiki": [
+     "warn",
+     "fire",
+     "cool",
+     "cool",
+     "cool",
+     "cool",
+     "warn",
+     "cool",
+     "cool"
+    ]
+   },
+   "end": {
+    "local": [
+     374,
+     34.53,
+     -1.78
+    ],
+    "state": "dead",
+    "grounded": true,
+    "bailing": true,
+    "deaths": 1,
+    "speed": 0,
+    "ground": "Summit observation and checkpoint"
+   }
+  },
+  {
+   "label": "collecting the first restored cache (standing before it)",
+   "s": 370.4,
+   "side": -2.3,
+   "died": false,
+   "firstDeath": null,
+   "end": {
+    "local": [
+     370.4,
+     34.53,
+     -2.3
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "Summit observation and checkpoint"
+   }
+  },
+  {
+   "label": "cloud refuge paver, right",
+   "s": 818.5,
+   "side": 1.1,
+   "died": false,
+   "firstDeath": null,
+   "end": {
+    "local": [
+     818.45,
+     51.78,
+     1.11
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "Cloud aqueduct recovery and checkpoint"
+   }
+  },
+  {
+   "label": "cloud refuge paver, left",
+   "s": 818.5,
+   "side": -1.1,
+   "died": false,
+   "firstDeath": null,
+   "end": {
+    "local": [
+     818.45,
+     51.78,
+     -1.09
+    ],
+    "state": "ride",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "ground": "Cloud aqueduct recovery and checkpoint"
+   }
+  }
+ ]
+}
