@@ -131,12 +131,23 @@ by the paired captures below rather than by the floor.
 | --- | ---: | ---: |
 | Hosted bytes, the 16 affected models | 22.1 MB | 12.6 MB |
 | Release output | 989.6 MB | 974.8 MB |
-| Carlisle estimated GPU texture bytes at spawn | 1,583 MB | TEXMB_AFTER |
+| Carlisle estimated GPU texture bytes at spawn | 1,583 MB (1,310 MB after step 1) | 346 MB |
 
 Rows for every image in the batch are in `release-textures/carlisle-review.json`.
 Every normal map reproduced its existing reviewed encoding byte for byte.
 
-CAPTURES_PLACEHOLDER
+### Paired captures
+
+Both builds (`main` at `d9d73cc` and this change) were loaded in headless
+Chromium (SwiftShader, 1280×720, native render quality, player hidden) and
+rendered from the same camera at the spawn deck: the broad joined deck, whose
+colour map went 8192² → 1024², with the shipyard kit behind it.
+`carlisle-textures-1024/deck-pair.jpg` is before (left) and after (right);
+`deck-crop.png` is a 2× centre crop. Per pixel: mean difference 3.4 levels,
+10.3 % of pixels differ by more than 8 levels, maximum 79. The plank grain is
+marginally softer at 1024; draw calls (854) and triangles (19.2 M) are
+identical. Estimated GPU texture bytes at this camera: 1,306 → 346 MB. The
+shrimp-boat view is still rendering and will be added when it lands.
 
 ## Validation
 
