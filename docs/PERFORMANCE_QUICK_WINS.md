@@ -154,8 +154,13 @@ the 7 m close-up lost its paint detail (mean 7.3 levels, 28.7 % > 8). The boat
 is a 20 m hero prop seen from the quays, so its colour map stays at 2048 via a
 policy override (quality 95, PSNR 36.9 dB, p99 15.0, max 96; file
 1.24 MB; about 21 MB on the GPU instead of 341 MB). Every other Carlisle
-colour map stays at 1024. The 2048 boat capture pair follows as `boat-2048-*`
-when its render completes.
+colour map stays at 1024. At 2048 (`boat-2048-pair.jpg`,
+`boat-2048-close-crop.png`, same fixed camera as the 1024 pair) the boat
+matches the original from 16 m (mean 1.4 levels, 4.2 % of pixels > 8; the hull
+scuffs and scratches are back), while the 7 m close-up is still softer than
+the 8192 original (mean 4.4 levels, 16.4 % > 8): paint chips read as features
+but not crisply. That is the chosen trade; a 4096 override would cost about
+85 MB on the GPU instead of 21 MB if extreme close-ups matter.
 
 ## Validation
 
