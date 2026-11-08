@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { assertBeachStreetShore } from './beach-street-shore-contract.mjs';
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -183,11 +184,14 @@ assert.ok(
     .every(
       (component) =>
         component.tex === "bay-paving" &&
-        component.color !== "#59636b" &&
-        component.edgeGrinding !== false,
+        component.color !== "#59636b",
     ),
-  "Coastal road/shoulders must retain the authored bay paving and grind edges",
+  "Coastal road/shoulders must retain the authored bay paving",
 );
+assert.ok(coastal.components.filter(c=>c.grp===1&&c.nm?.startsWith('water shoulder ')).every(c=>c.edgeGrinding===false),
+  'the buried beach-side shoulder must not generate a grind line');
+assert.equal(coastal.components.filter(c=>c.t==='rail'&&c.nm?.startsWith('Bahia retained road edges:')).length,23,
+  'the exposed road edges must retain their explicitly authored rails');
 // This port now owns the authored kite course. Assert each playable phrase,
 // rather than reinstating the retired regular scatter/stair layout.
 assert.equal(coastal.kiteTow, true);
@@ -209,20 +213,7 @@ assert.equal(
   coastal.components.filter((component) => component.dkind === "roadarrow").length,
   99,
 );
-assert.deepEqual(coastal.ocean, {
-  p: [9.2, -0.36, -1500],
-  length: 3400,
-  yaw: 0,
-  seaward: 1,
-  width: 180,
-  overlap: 4,
-  longitudinalSegments: 160,
-  lateralSegments: 128,
-  sourceCoordinates: "unity",
-});
-assert.deepEqual(coastal.unitySand, [
-  { p: [55, -3.4, -1500], s: [70, 0.8, 3300] },
-]);
+assertBeachStreetShore(coastal);
 assert.equal(
   coastal.components.some(
     (component) =>

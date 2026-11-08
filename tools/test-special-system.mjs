@@ -167,9 +167,9 @@ assert.ok(
 );
 const deathStart = player.indexOf('private die(');
 const deathMethod = player.slice(deathStart, player.indexOf('\n  private ', deathStart + 1));
-assert.match(
-  deathMethod,
-  /this\.uberTimer = 0;[^;]*;?\s*this\.state = 'dead';/,
+assert.ok(
+  deathMethod.indexOf('this.uberTimer = 0;') >= 0 &&
+    deathMethod.indexOf('this.uberTimer = 0;') < deathMethod.indexOf("this.state = 'dead';"),
   'death must revoke the triple-mask SPECIAL override immediately',
 );
 

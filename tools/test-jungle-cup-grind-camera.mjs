@@ -85,7 +85,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST, TUNIN
   for (const dir of [-1, 1]) {
     const startT = dir > 0 ? 205 : 241;
     const tangent = coping.tangentAt(startT).multiplyScalar(dir);
-    place(coping.pointAt(startT).add(new THREE.Vector3(0, .25, 0)), tangent);
+    place(coping.pointAt(startT).add(new THREE.Vector3(0, CONST.railRideHeight, 0)), tangent);
     player.state = 'air'; player.grounded = false; player.vVel = 0;
     const view = makeCamera(); tickCamera(view, true);
     step(makeInput({ grindHeld: true, grindPressed: true }));

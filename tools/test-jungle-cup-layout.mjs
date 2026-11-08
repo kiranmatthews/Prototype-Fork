@@ -112,7 +112,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   // Exercise authored bars/coping here. Systemic floor/ramp edges can share
   // catch envelopes and have their own edge-grinding regression coverage.
   for(const rail of level.rails.slice(6))for(const dir of [-1,1]){
-    const t=rail.totalLength*(dir>0?.2:.8),p=rail.pointAt(t).add(new THREE.Vector3(0,.3,0));
+    const t=rail.totalLength*(dir>0?.2:.8),p=rail.pointAt(t).add(new THREE.Vector3(0,CONST.railRideHeight,0));
     const h=rail.tangentAt(t).multiplyScalar(dir).setY(0).normalize();
     place(p.toArray(),h.toArray(),12);player.pos.copy(p);player.prevPos.copy(p);
     player.state='air';player.grounded=false;player.vVel=0;player.airFromSkate=true;player.airGrav='board';player.balanceBoostT=10;

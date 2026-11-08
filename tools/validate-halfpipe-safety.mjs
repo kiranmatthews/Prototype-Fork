@@ -198,8 +198,10 @@ try {
   assert.ok(builtin, "built-in Flats & Pipes level is missing");
   const builtinScene = new THREE.Scene();
   const builtinLevel = new Level(builtinScene, builtin);
-  assert.equal(builtinLevel.vertBacksSkipped, 0);
-  assert.equal(builtinLevel.vertBacks.length, 4);
+  // The source-owned built-in now includes the same inflated pool as the
+  // published pack: its intersecting back must be rejected in both paths.
+  assert.equal(builtinLevel.vertBacksSkipped, 1);
+  assert.equal(builtinLevel.vertBacks.length, 3);
   builtinLevel.dispose();
 
   const pipe = new Halfpipe(

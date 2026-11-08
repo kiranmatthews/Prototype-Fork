@@ -9,7 +9,7 @@ await withSkateRuntime(async ({server,THREE,scene,player:p,level,step,TUNING,CON
   const rail=new Rail([new THREE.Vector3(0,7,25),new THREE.Vector3(0,7,-115)]);
   level.rails.push(rail);level.grindRails.push(rail);level.root.add(rail.object);scene.updateMatrixWorld(true);
   const catchRail=()=>{
-    const position=rail.pointAt(2).add(new THREE.Vector3(0,.25,0)),heading=rail.tangentAt(2);
+    const position=rail.pointAt(2).add(new THREE.Vector3(0,CONST.railRideHeight,0)),heading=rail.tangentAt(2);
     p.respawn(level,true,true,{position,heading});p.pos.copy(position);p.prevPos.copy(position);
     p.axisF.copy(heading);p.axisL.set(heading.z,0,-heading.x);p.speed=8;p.vVel=0;
     p.state='air';p.grounded=false;p.freeSkate=p.airFromSkate=true;
@@ -105,7 +105,7 @@ await withSkateRuntime(async ({server,THREE,scene,player:p,level,step,TUNING,CON
   assert.ok(hop(20)>hop(6)+9);
   TUNING.perfectGrindSpeed=37;TUNING.perfectGrindHold=2;p.applyPerfectGrind();assert.equal(p.speed,37);assert.equal(p.grindBoostT,2);
   const prepareApproach=(t,heading,x=0)=>{
-    const position=rail.pointAt(t).add(new THREE.Vector3(x,.25,0));
+    const position=rail.pointAt(t).add(new THREE.Vector3(x,CONST.railRideHeight,0));
     p.respawn(level,true,true,{position,heading});p.pos.copy(position);p.prevPos.copy(position);p.axisF.copy(heading);
     p.speed=8;p.vVel=0;p.state='air';p.grounded=false;p.freeSkate=p.airFromSkate=true;
     p.lastVelX=heading.x*8;p.lastVelZ=heading.z*8;p.rawInput=makeInput({grindHeld:true,grindPressed:true});

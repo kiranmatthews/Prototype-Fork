@@ -1,4 +1,4 @@
-import { useLegacyCrateEnvelope } from './legacy-crate-envelope.mjs';
+import { useLegacyCrateEnvelope, legacyCrateDimensionsPlugin } from './legacy-crate-envelope.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -56,7 +56,7 @@ const expectedAssetLog = (value) => /mask failed|crossbones failed|skateboard tr
 console.warn = (...args) => { if (!expectedAssetLog(args[0])) originalWarn(...args); };
 console.error = (...args) => { if (!expectedAssetLog(args[0])) originalError(...args); };
 
-const server = await createServer({ logLevel: 'silent', server: { middlewareMode: true } });
+const server = await createServer({ plugins: [legacyCrateDimensionsPlugin()], logLevel: 'silent', server: { middlewareMode: true } });
 try {
   const { Level } = await server.ssrLoadModule('/src/level.ts');
   const { Player } = await server.ssrLoadModule('/src/player.ts');

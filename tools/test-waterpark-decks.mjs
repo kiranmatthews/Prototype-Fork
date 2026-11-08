@@ -46,7 +46,9 @@ try{
    const crumble=level.crumbles[0];assert.ok(crumble);if(!editing)assert.ok(level.surfaceEdgeRails.length>=12,'ordinary platform edges remain grindable');
    const maps=new Set();level.root.traverse(o=>{if(o.isMesh)for(const m of [o.material].flat())if(m.map)maps.add(m.map);});
    const disposed=new Map([...maps].map(m=>[m,0]));for(const m of maps)m.addEventListener('dispose',()=>disposed.set(m,disposed.get(m)+1));
-   level.dispose();assert.ok([...disposed.values()].every(n=>n===1),'existing material/texture retirement remains single-owner');
+   level.dispose();
+   for(const [texture,count] of disposed)
+    assert.equal(count,texture.userData.shared?0:1,'level-owned textures retire once; shared pickup textures survive level disposal');
   }catch(error){level.dispose();throw error;}
  }
  setEditorBuild(false);

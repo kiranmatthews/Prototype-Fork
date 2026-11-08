@@ -5,7 +5,10 @@ import type {LevelEntry} from '../level';
 // Test Course and published Carlisle city snapshots, including the final box overhaul.
 // Any local edit, including a renamed copy, retains its authored data.
 const published = {
- 'Test Course': [{length:31264,a:0x43b5749b,b:0x74039a85},{length:31233,a:0x55c65ad1,b:0xccd03e69}],
+ 'Test Course': [{length:31264,a:0x43b5749b,b:0x74039a85},{length:31233,a:0x55c65ad1,b:0xccd03e69},
+  // Exact stock snapshot after combo retirement and the crate-size migration.
+  // Do not strip the revision or approximate coordinates on edited copies.
+  {length:31325,a:0xbf794e49,b:0x7775da73}],
  'Carlisle Coast': [{length:43404,a:0x0b964f30,b:0xda10f6d0},{length:512065,a:0xb9fcc40e,b:0x46790602},{length:6608581,a:0x561ad32d,b:0x0b52c33f},{length:6609364,a:0x175bba59,b:0x275d6919},{length:2206424,a:0x87923f0a,b:0x1dd4f258},{length:299391,a:0x7a75368f,b:0x3e171a3f},{length:2197562,a:0xb7369587,b:0x23c6c391},
   {length:2206370,a:0x20f109ec,b:0x5c885b28},{length:2197508,a:0x583ddc25,b:0x04685239},{length:299353,a:0xf3e388db,b:0x9c49c21d},
   {length:6609544,a:0xc4d5d8f3,b:0x337b52b1},

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
 import {createServer} from 'vite';
+import {campaignTestModule} from './campaign-test-module.mjs';
 const load = async path => {
  let code=ts.transpileModule(await readFile(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
  if(path==='src/competition/event.ts'){
@@ -86,7 +87,7 @@ assert.equal(level.components.filter(c=>c.t==='camnode').length,0);
 assert.ok(!level.components.some(c=>['clock','comboorb','crystal'].includes(c.t)));
 const storage = new Map();
 globalThis.localStorage = {getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,String(v)),removeItem:k=>storage.delete(k)};
-const campaign = await load('src/campaign.ts');
+const campaign = await import('data:text/javascript;base64,'+Buffer.from(await campaignTestModule()).toString('base64'));
 const save = new campaign.CampaignStore();save.newGame(1);
 for(const id of ['treehouse-trail','beachfront','jungle','rumblewater-run','coastal-street-run'])save.commitClear(id,{crystal:false,boxGem:false,comboGem:false});
 assert.equal(save.levelUnlocked('jungle-cup'),true);
