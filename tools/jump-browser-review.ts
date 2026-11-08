@@ -233,15 +233,18 @@ p.step = (dt: number, input: any, level: Level) => {
     if(stopAt==='Settled'&&frame===(mode==='Idle'?120:470))frozen=true;
     if(mode==='Idle and stops'&&frame>540)resetInspector();return;
   }
-  if(mode==='Skate flow'||mode==='Mount cancel'||mode==='Abandon ship'){
+  if(['Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release'].includes(mode)){
     p.camDir.set(0,0,-1);
     const t=frame/60,cancel=mode==='Mount cancel'&&t>=.7&&t<.75;
     const abandon=mode==='Abandon ship';
     const heldAt=(s:number)=>s>.4&&s<3.5||abandon&&s>=3.6&&s<3.7;
     const held=heldAt(t),previousHeld=heldAt((frame-1)/60);
-    const demo={moveX:0,moveY:t<(abandon?8.4:4.8)&&(mode!=='Mount cancel'||t>.4)&&!cancel?1:0,
+    const airSpin=mode==='Air spin'&&t>=3.55&&!p.grounded&&Math.abs(p.grabSpinAngle)<Math.PI;
+    const sourceGrab=mode==='Grab release'&&t>=3.55&&t<3.72;
+    const demo={moveX:airSpin?1:0,moveY:t<(abandon?8.4:4.8)&&(mode!=='Mount cancel'||t>.4)&&!cancel?1:0,
       jumpHeld:held,jumpPressed:held&&!previousHeld,jumpReleased:!held&&previousHeld,
-      grabHeld:!abandon&&t>4.8&&t<8.4};
+      spinPressed:mode==='Skating spin'&&frame===130,spinHeld:mode==='Skating spin'&&frame>=130&&frame<132,
+      grabHeld:sourceGrab||!abandon&&t>4.8&&t<8.4,grabPressed:mode==='Grab release'&&frame===213};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
     const ink=skateMotion?.boardScribble;
     if(stopAt==='Mount hold'&&ink?.stage==='prepare'&&ink.progress>=.45
@@ -251,7 +254,9 @@ p.step = (dt: number, input: any, level: Level) => {
       ||stopAt==='Mount'&&skateMotion?.phase==='mount'&&skateMotion.time>=.3
       ||stopAt==='Dismount'&&skateMotion?.phase==='dismount'&&skateMotion.time>=.3
       ||stopAt==='Abandon flip'&&p.boardAbandonActive&&p.flipTimer>0&&p.flipTimer<=CONST.flipDuration*.525
-      ||stopAt==='Landing roll'&&p.rollLandingT>=.2)frozen=true;
+      ||stopAt==='Landing roll'&&p.rollLandingT>=.2
+      ||stopAt==='Spin'&&(p.spinning&&p.spinTimer<=TUNING.spinDuration*.5||!p.grounded&&Math.abs(p.grabSpinAngle)>=Math.PI*.5)
+      ||stopAt==='Grab release'&&p.grabPhase==='exit'&&p.grabPose<.8)frozen=true;
     if(frame>=660)resetInspector();return;
   }
   if (mode==='Play ledges') {
@@ -427,7 +432,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
 const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
-  'Skate flow','Mount cancel','Abandon ship','Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ledge catch','Catch left','Catch right','Climb ledge','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -444,7 +449,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy, toward it or Space to climb, and away to drop.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll'],value=>{stopAt=value;resetInspector();});
+  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -474,6 +479,7 @@ function report() {
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
     rollProgress: d.motionContext?.inputs?.jakFlipProgress,
     abandon:p.boardAbandonActive,abandonFlipRemaining:p.flipTimer,landingRoll:p.rollLandingT,
+    spin:{active:p.spinning,attackAngle:p.spinAngle,airAngle:p.grabSpinAngle,stance:p.stance,grabPhase:p.grabPhase},
     tuning: {jumpMinVelocity:TUNING.jumpMinVelocity,jumpVelocity:TUNING.jumpVelocity,riseGravity:TUNING.riseGravity,
       fallGravity:TUNING.fallGravity,doubleJumpVelocity:TUNING.doubleJumpVelocity,doubleJumpWindow:TUNING.doubleJumpWindow},
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,

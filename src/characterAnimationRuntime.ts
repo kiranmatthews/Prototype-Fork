@@ -48,8 +48,9 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.double-jump',
   'player.slide-jump',
   'player.fall',
-  'player.board-abandon-jump',
-  'player.board-abandon-fall',
+  'player.native-air-jump',
+  'player.native-air-fall',
+  'player.native-air-double-jump',
   LAUNCH_CLIPS.rise, LAUNCH_CLIPS.gather, LAUNCH_CLIPS.boardRise, LAUNCH_CLIPS.boardGather,
   ROLL_LANDING_CLIP_ID,
   'player.rope-climb',
@@ -161,9 +162,9 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 ]);
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId, jumpReference = false): number {
-  // Preserved Abandon Ship clips use exactly the original jump/fall blends.
-  const nativeAir = (id: ClipId | null) => id === 'player.board-abandon-jump' ? 'player.jump'
-    : id === 'player.board-abandon-fall' ? 'player.fall' : id;
+  // Preserved special-launch clips use the original airborne blends.
+  const nativeAir = (id: ClipId | null) => id?.startsWith('player.native-air-')
+    ? id.replace('player.native-air-','player.') : id;
   from = nativeAir(from); to = nativeAir(to)!;
   if (!from) return 0;
   if (isLaunchClip(to)) return to === LAUNCH_CLIPS.rise || to === LAUNCH_CLIPS.boardRise ? .045 : .14;
@@ -588,10 +589,10 @@ export class CharacterAnimationRuntime {
     // Local D supplies this complete source family. These presentation clocks
     // never hold a movement state or consume jump/skate input.
     let directTime: number | null = null;
-    const abandonClip = intent.motion.inputs?.boardAbandon && (hint === 'player.jump' || hint === 'player.fall')
-      ? this.findPlayableClip(`player.board-abandon-${hint === 'player.jump' ? 'jump' : 'fall'}`) : null;
-    if (this.manualClipId === null && abandonClip) {
-      requested = abandonClip.id;
+    const nativeAirClip = intent.motion.inputs?.nativeAir && ['player.jump','player.fall','player.double-jump'].includes(hint)
+      ? this.findPlayableClip(hint.replace('player.','player.native-air-')) : null;
+    if (this.manualClipId === null && nativeAirClip) {
+      requested = nativeAirClip.id;
     } else if (this.manualClipId === null && this.findPlayableClip('player.hang')?.metadata?.jakLedge) {
       const inputs = intent.motion.inputs ?? {};
       if (hint === 'player.hang') {

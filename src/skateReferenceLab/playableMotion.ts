@@ -9,11 +9,14 @@ import {SkateRetargeter, clipDuration, type MotionData, type SourceClip} from '.
 import {BoardScribbleSequence, MOUNT_CLEAR_DURATION, SCRIBBLE_DURATION} from './boardScribble';
 import {TUNING} from '../tuning';
 import {groundBoard,boardGroundClearance} from './boardGrounding';
+import {DEFAULT_SKATE_STANCE} from '../skateMount';
 
 type Pose = {p: THREE.Vector3; q: THREE.Quaternion; s: THREE.Vector3}[];
 type Phase = 'foot' | 'mount' | 'ride' | 'push-enter' | 'push' | 'push-recover' | 'charge' | 'air' | 'land' | 'dismount';
 const smooth = (x: number) => {x = THREE.MathUtils.clamp(x, 0, 1); return x*x*(3-2*x);};
 const rideNames = {Relaxed:'R_IDLE_RIDE_N_0_CYC', Loose:'R_IDLE_RIDE_LOOSE_0_CYC', Aggressive:'R_IDLE_RIDE_AGGR_0_CYC'};
+const ordinaryMotionHints = new Set(['player.idle','player.run','player.skate','player.jump-charge',
+  'player.jump','player.fall','player.double-jump']);
 // Zero-based 60 Hz source cues, checked against Bone Man's retargeted soles.
 // Keep the deck visible until both feet clear. Very short pickups need a small
 // ink tail after the catch so the burst survives real-time rendering.
@@ -63,6 +66,7 @@ export class PlayableSkateMotion {
   private readonly boardSupport = new THREE.Plane();
   private readonly boardLift = new THREE.Vector3();
   private boardGroundLift = 0;
+  private nativeOwner: string | null = null;
   private stop: (() => void) | null = null;
   // These observations are private in the full game and intentionally exposed
   // only to this opt-in local study, as in jump-browser-review.ts.
@@ -120,6 +124,41 @@ export class PlayableSkateMotion {
 
   get active(): boolean {return Boolean(this.stop);}
 
+  /** The imported library covers ordinary mounts, riding, ollies and pickups.
+   * Native actions, contacts and their finite releases keep the complete pose
+   * already solved by Player. Input/score alone is not enough: replacing that
+   * final pose also erased spins, switch stance and a releasing grab's hand. */
+  private get nativePoseOwner(): string | null {
+    const p=this.p;
+    if(!['ride','air'].includes(p.state))return p.state;
+    if(p.isBailing||p.bailing||p.ragActive||p.ragBlend>.001||p.bailRiseAge>=0)return 'bail recovery';
+    if(p.boardAbandonActive||p.animationClipHint==='player.roll-land')return 'abandon ship';
+    if(p.spinning)return 'spin';
+    if(p.flipT>0||p.specialFlip)return 'deck trick';
+    if(p.grabPhase!=='none'||p.grabPose>.001||p.specialGrab)return 'grab / release';
+    if(!p.grounded&&Math.abs(p.grabSpinAngle)>.0001)return 'air spin';
+    if(p.manualing||Math.abs(p.manualPitch)>.001)return 'manual / release';
+    if(p.revertPoseT>0)return 'revert';
+    if(p.wallriding||p.wallridePose>.001)return 'wallride / release';
+    if(p.lipStallT>0||Math.abs(p.lipYawPose)>.001)return 'lip stall / release';
+    if(p.vertAir||p.pipeHang||p.freeSkate&&p.grounded&&p.onTransition)return 'vert / transition';
+    if(p.nativeAirPresentation||p.launchPresentation)return 'special launch';
+    if(p.kiteTowing||p.kiteReleased||p.kiteBonusDocked)return 'kite';
+    if(p.sliding||p.crawling||p.slidePose>.001||p.crawlPose>.001)return 'slide / crouch';
+    if(p.slamActive||p.slamFlatT>0||p.slamSquash>0||p.starTimer>0||p.starPose>.001)return 'slam / split jump';
+    if(p.slipping||p.teetering||p.teeterPose>.001||this.retarget.board.userData.iceSkateMotion)return 'surface balance';
+    if(p.sketchyT>0)return 'sketchy landing';
+    if(p.competitionFinishT>=0||p.resultsPose||p.worldMapBaseScale!=null)return 'course presentation';
+    if(!ordinaryMotionHints.has(p.animationClipHint))return p.animationClipHint;
+    // These source clips have one authored stance/deck orientation. Preserve
+    // actual switch/reversed riding until a deliberate new mount resets it.
+    if(p.freeSkate||!p.grounded&&p.airFromSkate){
+      if(p.stance!==DEFAULT_SKATE_STANCE)return 'switch stance';
+      if(Math.abs(Math.atan2(Math.sin(p.deckYawOffset),Math.cos(p.deckYawOffset)))>.0001)return 'reversed deck';
+    }
+    return null;
+  }
+
   /** Interpolating two clear, differently tilted decks can put a tip below
    * ground between fixed ticks. Re-solve only the displayed prop/contacts;
    * Player.restoreRenderPose restores the authoritative fixed pose afterward. */
@@ -141,10 +180,7 @@ export class PlayableSkateMotion {
   private updateScribble(dt: number, previous: Phase): void {
     const p=this.p,ink=this.boardScribble,input=p.rawInput;
     ink.enabled=this.scribbles&&this.enabled;
-    const interrupted=!this.enabled||p.isBailing||p.ragActive||p.bailing
-      ||!['ride','air'].includes(p.state)||p.crawling||p.sliding||p.wallriding
-      ||p.grabbing||p.flipT>0||p.manualing||p.vertAir
-      ||p.boardAbandonActive||p.animationClipHint==='player.roll-land';
+    const interrupted=!this.enabled||this.nativeOwner!==null;
     if(interrupted){ink.cancel();this.dismountInkStarted=false;return;}
     if(this.phase!==previous){
       this.dismountInkStarted=false;
@@ -197,6 +233,7 @@ export class PlayableSkateMotion {
   dispose(): void {this.setActive(false);}
   reset(): void {
     this.boardScribble.reset();
+    this.nativeOwner=null;
     this.boardGroundLift=0;
     this.dismountInkStarted = this.baselineBoardVisible = false;
     this.baselineBoardAlpha = 1;
@@ -267,12 +304,11 @@ export class PlayableSkateMotion {
   private update({deltaSeconds: dt, applyDeformations}: PlayerAnimationOverlayContext): void {
     this.boardGroundLift=0;
     const p = this.p, mounted = Boolean(p.freeSkate || (!p.grounded && p.airFromSkate));
-    const nativeAbandon = p.boardAbandonActive || p.animationClipHint === 'player.roll-land';
-    const blocked = p.isBailing || !['ride','air'].includes(p.state) || p.crawling || p.sliding || p.wallriding || p.grabbing || p.flipT > 0 || p.manualing || p.vertAir;
-    if(nativeAbandon||this.options.continuousTransitions&&blocked){
+    this.nativeOwner=this.nativePoseOwner;
+    if(this.nativeOwner!==null){
       // Do not even clear/reapply proportions under a different pose owner.
-      // Abandon Ship ejects a real loose board. Neither a mount/pickup fade nor
-      // its carried-board ink may overwrite the original flip and landing roll.
+      // Clear outgoing source poses immediately; recovery blends from the
+      // current native pose without inventing a mount, pickup or ink event.
       this.phase='foot';this.sourceName='';this.clip=null;this.time=0;this.fade=1;
       this.lastPose=this.previousPose=this.fromPose=this.fromPreviousPose=null;
       this.wasMounted=mounted;this.wasGrounded=p.grounded;this.opacity(1);return;
@@ -285,7 +321,7 @@ export class PlayableSkateMotion {
     // every transition. Reapply that design exactly once after the pose.
     p.clearCharacterAppearance();
     const input = p.rawInput;
-    const wanted = this.enabled && !blocked;
+    const wanted = this.enabled;
     const entered = mounted && !this.wasMounted, left = !mounted && this.wasMounted;
     const landed = p.grounded && !this.wasGrounded;
     this.wasMounted = mounted; this.wasGrounded = p.grounded;
@@ -473,7 +509,7 @@ export class PlayableSkateMotion {
   get diagnostics() {
     const p=this.p;
     return {phase:this.phase, source:this.sourceName, time:+this.time.toFixed(3), fade:+this.fade.toFixed(3),
-      enabled:this.enabled, speed:+p.speed.toFixed(3), grounded:p.grounded, mounted:p.freeSkate,
+      enabled:this.enabled, nativeOwner:this.nativeOwner, speed:+p.speed.toFixed(3), grounded:p.grounded, mounted:p.freeSkate,
       boardVisible:this.retarget.board.visible, boardGroundLift:+this.boardGroundLift.toFixed(4), position:p.pos.toArray(), visits:Object.fromEntries(this.visits)};
   }
 }

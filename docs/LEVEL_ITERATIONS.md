@@ -11248,3 +11248,35 @@ All originally failing cases have passing focused coverage. Actual browser check
   `abandon-ship-2026-11-08/` directory. No console errors observed.
 - Node 22 production build and release check pass: 987,279,898 bytes of the
   1,000,000,000-byte budget. No full-suite rerun was requested for this fix.
+
+## 2026-11-08 — Restore native actions under D's Skate suite
+
+- Brief: restore skating spins in D and audit other features hidden by the new
+  presentation. Prompt-to-playable: approximately 25 minutes, including the
+  action audit and browser replay.
+- The final source overlay now yields to complete native actions and their
+  releases: spins, directional air turns, deck tricks, grabs, manuals, reverts,
+  switch/reversed-deck riding, wallride/lip/vert motion, ice balance, special
+  launches, and recovery poses. Unrecognized action hints keep their existing
+  owner. Ordinary riding resumes from the current native pose after completion;
+  action handoffs cannot invent a mount, pickup, or scribble.
+- D preserves the original jump/fall/double-jump clips for special airs whose
+  source clock is not advanced, including crate bounces, grind/swim/kite
+  releases, and Abandon Ship. Controls, movement physics and UI tuning remain
+  authoritative. Existing ordinary mounts, pickups and D jumps are retained.
+- Added Skating spin, Air spin and Grab release to Watch motion, with matching
+  pause points and visible ownership diagnostics.
+- Regression: the new native-action audit reproduced 23 overwritten-action
+  failures before the fix. All 34 cases now pass across 2,945 gameplay frames,
+  comparing 1,017 protected poses and 137 native special-air poses, plus exact
+  gameplay trajectories, complete manual release, source-motion recovery, and
+  absence of invented equipment events.
+- Existing Abandon Ship (1,404 frames), D/Skate integration (1,091 frames and
+  six switches), live UI tuning (7,200 frames), native animation runtime, and
+  source Skate/mount/scribble checks (1,980 frames) pass.
+- Browser: the new skating-spin, air-spin and grab-release replays pass on
+  port 5199; full rendering was checked at MAX/native 2772×1918 and normal
+  presentation with no console warnings/errors. Evidence is in the external
+  `d-action-restore-2026-11-08/` directory.
+- Node 22 production build and release check pass: 987,282,502 bytes of the
+  1,000,000,000-byte budget. No full-suite rerun was requested for this fix.

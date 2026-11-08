@@ -640,12 +640,13 @@ export class Player {
   private get directFootStudy(): boolean {
     return this.onFootJumpStudy?.direct === true && !this.freeSkate && !this.alwaysSkate &&
       !this.isBailing && !this.crawling && !this.sliding && !this.swimming && !this.slamActive &&
-      !this.kiteTowing && !this.kiteReleased && !this.trampolineAir && !this.grindExitAir && !this.boardAbandonActive;
+      !this.kiteTowing && !this.kiteReleased && !this.trampolineAir && !this.grindExitAir && !this.nativeAirPresentation;
   }
   private get footJumpStudyFlight(): Readonly<OnFootJumpStudy> | null {
     return !this.grounded && this.airGrav === 'foot' && !this.freeSkate && !this.airFromSkate &&
       !this.isBailing && !this.slamActive && !this.slideJumpAir && !this.grindExitAir &&
-      !this.trampolineAir && !this.bounceJump && !this.kiteTowing && !this.vertAir && !this.pipeHang && !this.boardAbandonActive
+      !this.trampolineAir && !this.bounceJump && !this.kiteTowing && !this.vertAir && !this.pipeHang && !this.boardAbandonActive &&
+      !(this.onFootJumpStudy?.direct && this.nativeAirPresentation)
       ? this.footJumpStudyLaunch : null;
   }
   private get footJumpStudyPhysics() {
@@ -1203,6 +1204,14 @@ export class Player {
   }
   /** The original ejection owns its flip/fall until the supported landing roll. */
   get boardAbandonActive(): boolean { return this.emergencyEjectLandingPending; }
+  /** Special launches do not advance D's on-foot source clock. Keep their
+   * original airborne clips and outer pose, including an earned second jump. */
+  get nativeAirPresentation(): boolean {
+    return this.state==='air' && (this.boardAbandonActive || this.bounceJump || this.trampolineAir ||
+      this.grindExitAir || this.swimJumpAir || this.kiteTowing || this.kiteReleased ||
+      this.wallriding || this.wallridePose>.001 || this.gravityTrackAir ||
+      this.ropeReleaseDuration>0 && this.ropeReleaseElapsed<this.ropeReleaseDuration);
+  }
   /** A single slow turn follows the measured rising arc, then finishes upright
    * before the float. Mounted rider and deck share the same visual pivot. */
   get launchSomersaultProgress(): number | null {
@@ -2433,6 +2442,7 @@ export class Player {
         actionProgress,
         inputs: {
           boardAbandon: this.boardAbandonActive ? 1 : 0,
+          nativeAir: this.nativeAirPresentation ? 1 : 0,
           jakFrame: this.footStudyFrame,
           jakGravity: this.airGravityAt(),
           jakJumpCharge: this.footStudyCharge,
