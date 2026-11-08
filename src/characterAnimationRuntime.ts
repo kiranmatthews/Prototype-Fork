@@ -20,6 +20,7 @@ import {
   QUATERNIUS_CRAWL_PALMS,
   QUATERNIUS_LOW_POSE_OWNERSHIP,
   LOCOMOTION_WALK_BLEND_INPUT,
+  locomotionWalkBlendWeight,
   LOCOMOTION_PHASE_MATCHED_IDLE,
   LOCOMOTION_STOP_BLEND_SECONDS,
   LOCOMOTION_START_BLEND_SECONDS,
@@ -612,7 +613,7 @@ export class CharacterAnimationRuntime {
           directTime = cycle < a ? cycle : cycle - a;
         }
       } else if ((inputs.jakLedgeClimbRecovery ?? -1) >= 0 &&
-          ['player.run','player.idle','player.jump','player.fall'].includes(hint)) {
+          ['player.run','player.idle'].includes(hint)) {
         // The feet have reached the deck and movement is already live. Keep
         // the pull-up's final pose for its finite settle, without a fake jump
         // and landing one-shot between the climb and the next running step.
@@ -1068,6 +1069,14 @@ export class CharacterAnimationRuntime {
     phase: number, dt: number): PoseBuffer {
     const run = this.findPlayableClip('player.run'), idle = this.findPlayableClip('player.idle');
     if (!run || !idle) return pose;
+    const climb = clip.id === 'player.climb';
+    const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
+    const preparedSpeed = climb && recovery <= 0 ? motion.inputs?.jakLedgeRunSpeed ?? 0 : 0;
+    if (preparedSpeed > 0) {
+      const normalizedSpeed = Math.min(1,preparedSpeed / Math.max(.001,TUNING.walkSpeed));
+      motion = {...motion,normalizedSpeed,inputs:{...motion.inputs,footSpeed:preparedSpeed,
+        [LOCOMOTION_WALK_BLEND_INPUT]:locomotionWalkBlendWeight(normalizedSpeed)}};
+    }
     if (this.directRecovery?.source !== clip.id) this.directRecovery = {
       source: clip.id, runOffset: this.closestLocomotionOffset(run, pose, motion),
       idleOffset: this.closestLocomotionOffset(idle, pose, motion), runClock: 0, idleClock: 0,
@@ -1084,16 +1093,19 @@ export class CharacterAnimationRuntime {
     const target = blendPoses(canonical(this.samplePoseAt(idle, idleTime, motion, true)),
       canonical(this.samplePoseAt(run, runTime, motion, true)), moving);
     const source = canonical(pose);
-    const climb = clip.id === 'player.climb';
     const bodyWeight = smoothstep01((phase - (climb ? .62 : .45)) / (climb ? .38 : .55));
-    const legsWeight = smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
+    const restingLegsWeight = smoothstep01((phase - (climb ? .62 : .12)) / (climb ? .38 : .5));
+    // The first stride starts as the feet clear the lip, and is fully live on
+    // the deck. Keep the torso's separate rebound instead of freezing both
+    // legs in the final mantle pose for the whole recovery window.
+    const runningLegsWeight = climb ? recovery >= 0 ? 1 : smoothstep01((motion.actionProgress-.78)/.22) : restingLegsWeight;
+    const legsWeight = MathUtils.lerp(restingLegsWeight,runningLegsWeight,moving);
     const result = blendPoses(source, target, bodyWeight);
     const stride = blendPoses(source, target, legsWeight);
     for (const id of ['hipLeft','hipRight','kneeLeft','kneeRight','ankleLeft','ankleRight','toeLeft','toeRight'])
       if (stride.joints[id]) result.joints[id] = stride.joints[id];
     for (const [id, value] of Object.entries(stride.scalars ?? {}))
       if (id.startsWith('deform.leg.')) result.scalars![id] = value;
-    const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
     if (climb && recovery >= 0) {
       const pulse = ledgeRebound(recovery), amplitudes = characterElasticityAmplitudes('jak-ledge-climb');
       result.scalars ??= {};

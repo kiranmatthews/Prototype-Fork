@@ -35,6 +35,9 @@ const SEGMENTS = [
 ] as const;
 const position = (v: Transform) => new THREE.Vector3(v[0], v[1], v[2]);
 const rotation = (v: Transform) => new THREE.Quaternion(v[3], v[4], v[5], v[6]).normalize();
+// Reflect across the travel plane, exchanging anatomical sides. Reflecting a
+// quaternion's Y/Z components is M * R * M, without a negative skeleton scale.
+const reflect = (v: Transform): Transform => [-v[0],v[1],v[2],v[3],-v[4],-v[5],v[6]];
 
 export function validateMotion(data: MotionData): void {
   if (data.schema !== 1 || !Array.isArray(data.bones) || !Array.isArray(data.clips) || !data.clips.length)
@@ -82,20 +85,29 @@ function relativeRotation(node: THREE.Object3D | null, root: THREE.Object3D): TH
 interface Binding {source: number; joint: PlayerRigJoint; sourceRestInverse: THREE.Quaternion; targetRest: THREE.Quaternion}
 
 export class SkateRetargeter {
+  readonly data: MotionData;
   readonly bindings: Binding[];
   readonly translationScale: number;
   readonly board: THREE.Object3D;
   readonly sourceBoard: number;
   readonly sourceHips: number;
   readonly sampled: Transform[] = [];
+  private readonly unmirrored: Transform[] = [];
+  private readonly mirrorIndices: number[] | null;
   private readonly boardRestPosition: THREE.Vector3;
   private readonly boardRestRotation: THREE.Quaternion;
   private readonly lengths: {id: string; a: number; b: number; rest: number}[];
   private readonly canonical: Map<string, THREE.Quaternion>;
   readonly rootOffset = new THREE.Vector3();
 
-  constructor(readonly rig: PlayerAnimationRig, readonly data: MotionData, targetLegLength: number) {
+  constructor(readonly rig: PlayerAnimationRig, data: MotionData, targetLegLength: number,
+    options: {mirror?: boolean} = {}) {
     validateMotion(data);
+    this.mirrorIndices = options.mirror ? data.bones.map(b => data.bones.findIndex(other => other.name ===
+      (b.name.startsWith('LEFT') ? b.name.replace('LEFT','RIGHT') : b.name.startsWith('RIGHT') ? b.name.replace('RIGHT','LEFT') : b.name))) : null;
+    if (this.mirrorIndices?.some(index => index < 0)) throw new Error('Missing mirrored source joint.');
+    this.data = data = this.mirrorIndices ? {...data,bones:data.bones.map((bone,index)=>
+      ({...bone,rest:reflect(data.bones[this.mirrorIndices![index]].rest)}))} : data;
     const index = (name: string) => data.bones.findIndex(b => b.name === name);
     this.sourceBoard = index('SKATEBOARD_ROOT'); this.sourceHips = index('HIPS');
     this.board = rig.root.getObjectByName('board')!;
@@ -153,7 +165,12 @@ export class SkateRetargeter {
       for (const joint of this.rig.joints) joint.node.quaternion.copy(this.canonical.get(joint.id)!);
       return scalars;
     }
-    sampleMotion(clip, time, this.sampled);
+    sampleMotion(clip, time, this.mirrorIndices ? this.unmirrored : this.sampled);
+    if (this.mirrorIndices) for (let i=0;i<this.mirrorIndices.length;i++) {
+      const source=this.unmirrored[this.mirrorIndices[i]], out=this.sampled[i] ?? (this.sampled[i]=[0,0,0,0,0,0,1]);
+      out[0]=-source[0];out[1]=source[1];out[2]=source[2];
+      out[3]=source[3];out[4]=-source[4];out[5]=-source[5];out[6]=source[6];
+    }
     // Qtarget_world = Qsource_world * inverse(Qsource_bind) * Qtarget_aligned_bind.
     // Parent conversion happens after the mapped ancestor, including skipped
     // source spine/neck joints. No Euler angle copying and no global rig scale.
@@ -170,6 +187,7 @@ export class SkateRetargeter {
       const frame = THREE.MathUtils.clamp(time * clip.fps, 0, clip.frames.length - 1);
       const lower = Math.floor(frame), upper = Math.min(lower + 1, clip.frames.length - 1);
       removal.fromArray(clip.trajectory[lower]).lerp(new THREE.Vector3().fromArray(clip.trajectory[upper]), frame - lower).setY(0);
+      if (this.mirrorIndices) removal.x *= -1;
     }
     const rootTranslation = position(this.sampled[this.sourceHips]).sub(position(this.data.bones[this.sourceHips].rest)).sub(removal).multiplyScalar(this.translationScale);
     this.rig.jointsById.get('hips')!.node.position.add(rootTranslation);

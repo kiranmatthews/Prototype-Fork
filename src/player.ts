@@ -2462,6 +2462,8 @@ export class Player {
           jakLedgeSide: this.ledgeSourceSide,
           jakLedgeClimbRecovery: this.directFootStudy && this.ledgeClimbRecovery >= 0
             ? Math.min(1, this.ledgeClimbRecovery / JAK_LEDGE_MOTION.climbRecoverySeconds) : -1,
+          jakLedgeRunSpeed: this.directFootStudy && (this.state === 'hang' && this.ledgePhase === 'climb' || this.ledgeClimbRecovery === 0)
+            ? TUNING.walkSpeed * this.walkRamp * Math.min(1, Math.hypot(this.rawInput.moveX,this.rawInput.moveY)) : 0,
           jakLedgeRelease: this.state === 'air' && !this.doubleJumpAir && this.hangExitW > 0 &&
             (this.hangClipName === 'drop' || this.hangClipName === 'fall')
             ? this.hangClipT / this.hangClipRate : -1,
@@ -17144,6 +17146,14 @@ export class Player {
     // Presentation resolves the final live lip normal after catch/shimmy;
     // support motion must not compete with that facing or alter control axes.
     if (this.ledgePhase === 'climb') {
+      if (this.directFootStudy) {
+        // A held inward direction prepares the ordinary run envelope during
+        // the pull-up. No movement is applied until the feet reach the deck;
+        // releasing still finishes standing, without a second start-up wait.
+        const toward = ledgeScreenGripIntent(this.rawInput.moveX,this.rawInput.moveY,this.camDir,
+          ledgeBasis(n,CONST.playerHalf.x,CONST.playerHalf.z)).pullingToward;
+        this.walkRamp = toward ? Math.min(1,this.walkRamp + dt / Math.max(dt,TUNING.walkRampTime)) : 0;
+      }
       // THE CLAMBER — committed (no timeout, no inputs): rise up the face
       // first, the over-the-lip travel overlaps the tail of the rise, so the
       // path rounds the corner instead of snapping between two points.

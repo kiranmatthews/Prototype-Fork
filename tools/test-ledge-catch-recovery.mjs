@@ -4,7 +4,7 @@ import {gunzipSync} from 'node:zlib';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 
 const bank=JSON.parse(gunzipSync(await readFile(new URL('../public/motion-study/jak/motion.json.gz',import.meta.url))));
-await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
+await withSkateRuntime(async({server,player:p,level,THREE,CONST,TUNING})=>{
   const {LedgeClimbInput}=await server.ssrLoadModule('/src/ledgeTraversal.ts');
   // Hold age starts at the catch, not at the approach. Strength jitter and
   // changed camera projection must not count as new directional input.
@@ -80,7 +80,8 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
   const climbs=[];
   for(const moving of [false,true]){
     catchLedge();for(let f=0;f<110;f++)tick();tick({jumpPressed:true,jumpHeld:true});
-    let climbFrames=0,recoveryFrames=0,maxEndStep=0,last=point('chest'),minTorso=1,maxTorso=1;
+    let climbFrames=0,recoveryFrames=0,maxEndStep=0,last=point('chest'),minTorso=1,maxTorso=1,firstRunSpeed=null;
+    let earlyStride=0,lastLeg=null;
     for(let f=0;f<125;f++){
       tick(moving?{moveY:1}:{});
       if(p.state==='hang'&&p.ledgePhase==='climb')climbFrames++;
@@ -88,6 +89,10 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
         recoveryFrames++;
         const torso=runtime.lastSampledPose.scalars['deform.torso.length'];
         minTorso=Math.min(minTorso,torso);maxTorso=Math.max(maxTorso,torso);
+        if(p.ledgeClimbRecovery>0&&firstRunSpeed===null)firstRunSpeed=p.walkVelocity.length();
+        const leg=rig.joints.get('hipRight').quaternion.clone();
+        if(lastLeg&&p.ledgeClimbRecovery<.12)earlyStride+=leg.angleTo(lastLeg);
+        lastLeg=leg;
       }
       const next=point('chest');if(f>35)maxEndStep=Math.max(maxEndStep,next.distanceTo(last));last=next;
     }
@@ -98,9 +103,24 @@ await withSkateRuntime(async({server,player:p,level,THREE,CONST})=>{
     assert.ok(maxEndStep<(moving?.22:.10),`pull-up ending snapped ${maxEndStep}`);
     assert.ok(p.grounded&&p.pos.y>=3.59,'pull-up did not finish supported');
     assert.equal(runtime.activeClipId,moving?'player.run':'player.idle');
-    if(moving)assert.ok(p.walkVelocity.length()>5,'rebound blocked running');
-    climbs.push({moving,climbFrames,recoveryFrames,maxEndStep,minTorso,maxTorso});cases++;
+    if(moving){
+      assert.ok(firstRunSpeed>=TUNING.walkSpeed*.75,'held climb restarted a slow walk envelope');
+      assert.ok(firstRunSpeed>5,'held input paused before running');
+      assert.ok(earlyStride>.15,'legs remained parked during the start of the rebound');
+      assert.ok(p.walkVelocity.length()>5,'rebound blocked running');
+    } else assert.equal(firstRunSpeed,0,'neutral climb manufactured running');
+    climbs.push({moving,climbFrames,recoveryFrames,maxEndStep,minTorso,maxTorso,firstRunSpeed,earlyStride});cases++;
   }
+  catchLedge();for(let f=0;f<110;f++)tick();tick({moveY:1});
+  for(let f=0;f<65;f++)tick(f<20?{moveY:1}:{});
+  assert.ok(p.grounded);assert.equal(p.walkVelocity.length(),0,'released climb retained the prepared run');
+  assert.equal(runtime.activeClipId,'player.idle');cases++;
+  catchLedge();for(let f=0;f<110;f++)tick();tick({moveY:1});
+  while(p.state==='hang')tick({moveY:1});
+  for(let f=0;f<6;f++)tick({jumpHeld:true,jumpPressed:f===0});
+  tick({jumpReleased:true});
+  assert.equal(p.state,'air');assert.ok(p.vVel>0);
+  assert.notEqual(runtime.activeClipId,'player.climb','rebound swallowed a new jump');cases++;
   runtime.dispose();console.log(JSON.stringify({status:'pass',frames,cases,catches,climbs},null,2));
 },{levelEntry:{id:'ledge-recovery',name:'Ledge recovery',data:{v:1,name:'Ledge recovery',spawn:[0,.02,5],killY:-30,components:[
   {t:'platform',p:[0,-.5,0],s:[80,1,80]},{t:'platform',p:[0,1.8,-14],s:[20,3.6,25]},{t:'gate',p:[0,0,-35]}]}}});

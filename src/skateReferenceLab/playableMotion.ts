@@ -80,7 +80,10 @@ export class PlayableSkateMotion {
     player.applyAnimationDeformations({});
     player.syncCharacterAppearance({upperArmRestAngleWeight:0});
     const leg = rig.jointsById.get('kneeLeft')!.node.position.length() + rig.jointsById.get('ankleLeft')!.node.position.length();
-    this.retarget = new SkateRetargeter(rig, data, leg);
+    // The library leads with the opposite foot to Bone Man's regular (-1)
+    // stance. Mirror the source, including prop/hand contacts,
+    // so ice, fakie and native tricks keep the same anatomical lead foot.
+    this.retarget = new SkateRetargeter(rig, data, leg, {mirror:true});
     this.body = rig.root;
     this.bodyScale = this.body.scale.clone();
     this.boardScale = this.retarget.board.scale.clone();

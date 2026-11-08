@@ -179,6 +179,11 @@ function resetInspector() {
   if (!reviewLevel) return;
   frame = landFrame = doubleFrame = 0; frozen = hadAir = stepFrame = false; visited.clear();
   p.enterLevel('jump-review'); p.respawn(reviewLevel, true); p.freeSkate = false;
+  if (mode==='Ice stance' || mode==='Fakie ice stance') {
+    p.respawn(reviewLevel,true,true,{position:new THREE.Vector3(1080,.02,18)});
+    p.freeSkate=true;p.speed=18;p.lastPlanar=18;p.stance=mode==='Fakie ice stance'?1:-1;
+    p.grounded=true;p.state='ride';p.groundHit=p.queryGround(reviewLevel);
+  }
   if (mode.toLowerCase().includes('ledge') || mode.startsWith('Catch ')) {
     p.respawn(reviewLevel,true,true,{position:new THREE.Vector3(1020,mode==='Play ledges'?.02:2.35,mode==='Play ledges'?2:-.7)});
     p.freeSkate=false;
@@ -204,6 +209,7 @@ function setInspect(value: boolean) {
         {t: 'platform', p: [1000, -.5, -200], s: [200, 1, 1000]}, {t: 'gate', p: [1000, 0, -400]},
         {t: 'platform', p: [1020, 1.8, -4], s: [8, 3.6, 5]},
         {t: 'platform', p: [1027, .85, -4], s: [4, 1.7, 5]},
+        {t: 'platform', p: [1080, -.09, -7], s: [20, .2, 16], slip:true, iceGrip:.08},
       ],
     }});
     resetInspector();
@@ -227,6 +233,13 @@ p.step = (dt: number, input: any, level: Level) => {
   if(mode==='Play ledges')p.camDir.set(-Math.sin(angle),0,-Math.cos(angle));
   if (!reviewLevel || frozen&&!stepFrame || slow&&!stepFrame&&++skips%3!==0) return;
   stepFrame=false;
+  if (mode==='Ice stance' || mode==='Fakie ice stance') {
+    p.camDir.set(0,0,-1);
+    nativeStep(dt,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Ice approach'&&frame===45 || stopAt==='On ice'&&frame===90 || stopAt==='After ice'&&frame===160)frozen=true;
+    if(frame>=260)resetInspector();return;
+  }
   if (mode === 'Idle' || mode === 'Idle and stops') {
     p.camDir.set(0,0,-1);
     const demo={moveX:0,moveY:mode==='Idle and stops'?(frame>=90&&frame<180?1:frame>=300&&frame<390?.3:0):0,
@@ -267,13 +280,14 @@ p.step = (dt: number, input: any, level: Level) => {
   if (mode.toLowerCase().includes('ledge') || mode.startsWith('Catch ')) {
     p.camDir.set(0,0,-1);
     const demo={moveX:mode==='Shimmy ledge'?(frame>90&&frame<150?1:frame>=150&&frame<250?-1:frame>=280&&frame<340?1:0):0,
-      moveY:mode==='Ledge hold to climb'?1:mode==='Ledge release and climb'?(frame<20||frame>=32?1:0):mode==='Climb ledge'&&frame===230?1:mode==='Release ledge'&&frame>230?-1:0,
+      moveY:mode==='Ledge hold to climb'?1:mode==='Ledge release and climb'?(frame<20||frame>=32?1:0):mode==='Climb ledge and run'&&frame>=230?1:mode==='Climb ledge'&&frame===230?1:mode==='Release ledge'&&frame>230?-1:0,
       jumpHeld:false,jumpPressed:false,jumpReleased:false};
     nativeStep(dt,demo,reviewLevel);reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
     if(stopAt==='Catch'&&frame===20 || stopAt==='Settled'&&frame===160 ||
       stopAt==='Before climb'&&frame===45 ||
       stopAt==='Catch rebound'&&runtime.activeClipId?.startsWith('player.jak-ledge-')&&(runtime.diagnostics.timelineTime??0)>=1.18 ||
       stopAt==='Climb rebound'&&p.ledgeClimbRecovery>=.23 ||
+      stopAt==='Run exit'&&p.ledgeClimbRecovery>=.05 ||
       stopAt==='Pull-up'&&p.state==='hang'&&p.ledgePhase==='climb'&&p.ledgeClimbK>=.5 ||
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
@@ -437,7 +451,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
 const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
-  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ledge catch','Catch left','Catch right','Climb ledge','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -454,7 +468,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Before climb','Catch rebound','Climb rebound'],value=>{stopAt=value;resetInspector();});
+  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','On ice','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);
@@ -497,6 +511,9 @@ function report() {
     cameraInput:p.camDir.toArray(),ledgeNormal:p.ledgeNormal.toArray(),
     sourceHip:sourceModel?.getObjectByName('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
     targetHip:binding.joints.get('hips')?.getWorldPosition(new THREE.Vector3()).toArray(),
+    skateStance:{stance:p.stance,ice:!!p.boardG.userData.iceSkateMotion,
+      rightFootLead:+binding.joints.get('ankleRight')!.getWorldPosition(new THREE.Vector3())
+        .sub(binding.joints.get('ankleLeft')!.getWorldPosition(new THREE.Vector3())).dot(p.axisF).toFixed(3)},
     skate:skateMotion?{...skateMotion.diagnostics,active:skateMotion.active,
       scribble:{stage:skateMotion.boardScribble.stage,frame:skateMotion.boardScribble.frame,
         appearances:skateMotion.boardScribble.appearances,disappearances:skateMotion.boardScribble.disappearances,
