@@ -68,7 +68,7 @@ export class DesertHeatMirage {
   private readonly previousViewport=new THREE.Vector4();
   private readonly uniforms={sceneTexture:{value:null as THREE.Texture|null},time:{value:0},
     bufferSize:{value:new THREE.Vector2()},viewport:{value:new THREE.Vector4()},
-    distanceFade:{value:new THREE.Vector4(35,90,650,1000)}};
+    distanceFade:{value:new THREE.Vector4(22,48,650,1000)}};
   private readonly material=new THREE.ShaderMaterial({name:'Dusty Road · Jak heat mirage',
     vertexShader,fragmentShader,uniforms:this.uniforms,depthTest:true,depthWrite:false,
     side:THREE.DoubleSide,blending:THREE.NoBlending,toneMapped:false});
@@ -86,7 +86,9 @@ export class DesertHeatMirage {
     geometry.instanceCount=0;this.geometry=geometry;
     this.mesh=new THREE.Mesh(geometry,this.material);this.mesh.frustumCulled=false;
     this.scene.add(this.mesh);
-    this.uniforms.distanceFade.value.set(...(id==='bryce-canyon'?[35,90,650,1000]:[22,42,180,300]) as [number,number,number,number]);
+    // Canyon bends often hide the road beyond 90 m. Let the next sunlit band
+    // read before that turn, while still fading out of the player's foreground.
+    this.uniforms.distanceFade.value.set(...(id==='bryce-canyon'?[22,48,650,1000]:[22,42,180,300]) as [number,number,number,number]);
   }
 
   private prepare(camera:THREE.Camera):boolean {

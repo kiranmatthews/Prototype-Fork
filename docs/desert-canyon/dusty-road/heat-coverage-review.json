@@ -1,0 +1,203 @@
+{
+  "date": "2026-11-09",
+  "baseCommit": "afb40ace3064a9c0d9c323de4e546c675dd1b883",
+  "method": "Native gameplay camera at all 17 checkpoints. Freeze simulation, capture heat off twice, then heat at phase 0 and 0.35 seconds. Count RGB changes over 2/255 in central 70% by 65% of the frame. No review camera override.",
+  "resolution": [
+    1280,
+    720
+  ],
+  "before": {
+    "bands": 42,
+    "nearFadeMetres": [
+      35,
+      90
+    ],
+    "viewsWithMotionOver200Pixels": 9
+  },
+  "after": {
+    "bands": 120,
+    "nearFadeMetres": [
+      22,
+      48
+    ],
+    "viewsWithMotionOver200Pixels": 16
+  },
+  "preserved": {
+    "strengthPixelsAt720p": [
+      1.45,
+      1.6,
+      1.75
+    ],
+    "rippleFrequencies": [
+      3.1,
+      4.3,
+      2.1
+    ],
+    "farFadeMetres": [
+      650,
+      1000
+    ],
+    "extraHeatDraws": 1,
+    "bonusBands": 7
+  },
+  "notes": [
+    "Opening boardwalk hot ground is hidden by terrain; its absence is intentional.",
+    "Lite controls are pixel-identical. Full controls include the independently animated HUD glow; central heat motion is at least five times the central control in all 16 affected views.",
+    "All captures report WebGL error 0. Full native 2560x1440 views and a 130 m native-camera run through the narrows were also checked."
+  ],
+  "views": [
+    {
+      "name": "Boardwalk start",
+      "routeMetres": 14,
+      "beforeMotionPixels": 49,
+      "afterMotionPixels": 0,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 20,
+      "fullCentralControlPixels": 65
+    },
+    {
+      "name": "Upper landing",
+      "routeMetres": 155,
+      "beforeMotionPixels": 2242,
+      "afterMotionPixels": 4015,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 4284,
+      "fullCentralControlPixels": 31
+    },
+    {
+      "name": "Rim traverse",
+      "routeMetres": 380,
+      "beforeMotionPixels": 2222,
+      "afterMotionPixels": 4352,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 6885,
+      "fullCentralControlPixels": 26
+    },
+    {
+      "name": "Overlook approach",
+      "routeMetres": 610,
+      "beforeMotionPixels": 1737,
+      "afterMotionPixels": 4821,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 4619,
+      "fullCentralControlPixels": 74
+    },
+    {
+      "name": "Canyon rim",
+      "routeMetres": 809.851,
+      "beforeMotionPixels": 0,
+      "afterMotionPixels": 1890,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 3055,
+      "fullCentralControlPixels": 0
+    },
+    {
+      "name": "Sunlit narrows",
+      "routeMetres": 1086.851,
+      "beforeMotionPixels": 0,
+      "afterMotionPixels": 3905,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 4499,
+      "fullCentralControlPixels": 88
+    },
+    {
+      "name": "Hoodoo garden",
+      "routeMetres": 1501.851,
+      "beforeMotionPixels": 0,
+      "afterMotionPixels": 1085,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 570,
+      "fullCentralControlPixels": 28
+    },
+    {
+      "name": "Cactus valley",
+      "routeMetres": 1871.851,
+      "beforeMotionPixels": 0,
+      "afterMotionPixels": 5519,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 5533,
+      "fullCentralControlPixels": 8
+    },
+    {
+      "name": "Cathedral ledge",
+      "routeMetres": 2283.808,
+      "beforeMotionPixels": 1648,
+      "afterMotionPixels": 5443,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 6050,
+      "fullCentralControlPixels": 60
+    },
+    {
+      "name": "Cactus switchbacks",
+      "routeMetres": 2563.808,
+      "beforeMotionPixels": 3886,
+      "afterMotionPixels": 6219,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 6180,
+      "fullCentralControlPixels": 36
+    },
+    {
+      "name": "Creek bridge",
+      "routeMetres": 2883.808,
+      "beforeMotionPixels": 0,
+      "afterMotionPixels": 3701,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 3548,
+      "fullCentralControlPixels": 23
+    },
+    {
+      "name": "Lower rock chute",
+      "routeMetres": 3203.808,
+      "beforeMotionPixels": 436,
+      "afterMotionPixels": 3947,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 2211,
+      "fullCentralControlPixels": 57
+    },
+    {
+      "name": "Rim gateway",
+      "routeMetres": 3809.562,
+      "beforeMotionPixels": 107,
+      "afterMotionPixels": 2536,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 2802,
+      "fullCentralControlPixels": 3
+    },
+    {
+      "name": "Eagle ledge",
+      "routeMetres": 4279.562,
+      "beforeMotionPixels": 1229,
+      "afterMotionPixels": 7408,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 7634,
+      "fullCentralControlPixels": 11
+    },
+    {
+      "name": "Desert basin",
+      "routeMetres": 4699.562,
+      "beforeMotionPixels": 1388,
+      "afterMotionPixels": 8417,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 11582,
+      "fullCentralControlPixels": 10
+    },
+    {
+      "name": "River overlook",
+      "routeMetres": 4929.562,
+      "beforeMotionPixels": 1459,
+      "afterMotionPixels": 5344,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 3711,
+      "fullCentralControlPixels": 1
+    },
+    {
+      "name": "Sunset promontory",
+      "routeMetres": 5535.595,
+      "beforeMotionPixels": 0,
+      "afterMotionPixels": 15516,
+      "liteControlPixels": 0,
+      "fullMotionPixels": 15607,
+      "fullCentralControlPixels": 10
+    }
+  ]
+}
