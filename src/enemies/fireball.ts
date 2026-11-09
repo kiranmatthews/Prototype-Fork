@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {attachFlameHeat} from '../flameHeatSource';
 
 /** Shared by every sentry, including editor-authored and themed enemies. */
 export const SENTRY_FIREBALL_SPEED = 15 * 0.7;
@@ -81,6 +82,7 @@ export class SentryFireball extends THREE.Mesh<THREE.IcosahedronGeometry, THREE.
       this.halo.updateMatrixWorld();
     };
     this.add(this.halo);
+    attachFlameHeat(this,emit=>emit(0,.15,-.35,.75,.8,1.4,this.phase),[this,this.tail,this.halo]);
     this.update(0);
   }
 

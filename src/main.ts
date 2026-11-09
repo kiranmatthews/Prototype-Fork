@@ -40,6 +40,7 @@ import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
 import { CloudPathPass } from "./cloudPathPass";
 import {DesertHeatMirage} from './desertHeatMirage';
+import {FlameHeatDistortion} from './flameHeatDistortion';
 import {DESERT_SHADOW_HALF,isDesertCanyonLevel,snapDesertShadowFocus} from './desertLighting';
 import {StormSquall} from './stormSquall';
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
@@ -1147,6 +1148,7 @@ function configureCoastPost(enabled: boolean): void {
 // rebuilds and compiles them while the transition curtain is still opaque.
 function releaseGameplayPostForGameFlow(): void {
   cloudPathPass.release();
+  flameHeat.release();
   if (!coastPost || coastPost.suspended) return;
   coastPost.suspendForGameFlow();
   coastPostSuspendCount++;
@@ -1155,6 +1157,7 @@ function releaseGameplayPostForGameFlow(): void {
 
 const cloudPathPass=new CloudPathPass();
 const desertHeat=new DesertHeatMirage();
+const flameHeat=new FlameHeatDistortion();
 
 function renderCloudPrimaryScene(
   activeRenderer:THREE.WebGLRenderer,
@@ -1162,9 +1165,12 @@ function renderCloudPrimaryScene(
   activeCamera:THREE.Camera,
   target:THREE.WebGLRenderTarget|null,
 ):boolean {
-  desertHeat.configure(current.id,level.desertHeat);
-  if(desertHeat.render(activeRenderer,activeScene,activeCamera,target,!paused&&!gameFlow.blocksGameplay))return true;
-  return cloudPathPass.render(activeRenderer,activeScene,activeCamera,target);
+  const drawWorld=()=>{
+    desertHeat.configure(current.id,level.desertHeat);
+    if(desertHeat.render(activeRenderer,activeScene,activeCamera,target,!paused&&!gameFlow.blocksGameplay))return true;
+    return cloudPathPass.render(activeRenderer,activeScene,activeCamera,target);
+  };
+  return flameHeat.render(activeRenderer,activeScene,activeCamera,target,drawWorld,!paused&&!gameFlow.blocksGameplay)||drawWorld();
 }
 
 function renderOceanPrimaryScene(
@@ -2547,6 +2553,7 @@ function switchLevel(
   worldMapUI?.hide();
   cloudPathPass.release();
   desertHeat.release();
+  flameHeat.release();
   level.dispose(candidate);
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
@@ -5018,6 +5025,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   coastPost?.dispose();coastPost=null;
   cloudPathPass.release();
   desertHeat.release();
+  flameHeat.release();
 }, () => {
   recordPresentationStage('graphics-restored');
   installSceneryShadowPass(renderer, () => level);
@@ -5786,6 +5794,7 @@ requestAnimationFrame(frame);
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   getStormDiagnostics: () => stormSquall.diagnostics,
   desertHeat,
+  flameHeat,
   reviewSunShadowFocus:(p:readonly number[])=>{if(shellBypass)updateSunShadow(p[0],p[1],p[2]);},
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):

@@ -430,20 +430,19 @@ add({t:'bonusplatform',p:[...DESERT_BONUS_ENTRANCE],to:bonusReturn,grp:50,nm:'Ca
 return C;
 }
 
-/** Low bands on exposed shelves seen ahead along the descending camera lane.
- * Keep the shaded slot and creek bridge quiet; widen the pockets where the
- * route opens onto sunlit talus and the final basin. Heights follow terrain. */
+/** Low hot-air bands over the road and its sunlit shoulders. Follow each bend
+ * instead of grouping distant pockets behind canyon walls. Start on the sand
+ * beyond the boardwalk; keep the creek itself cool and the final basin broad. */
 function buildDesertHeat():DesertHeatPatch[]{
   const patches:DesertHeatPatch[]=[];
-  for(const s of [190,390,640,core(250),core(520),core(930),valley(150),valley(450),
-    valley(1050),DESERT_VISTA_START+180,DESERT_VISTA_START+490,DESERT_VISTA_START+830,
-    DESERT_VISTA_START+1140,DESERT_LENGTH-100]){
-    const vista=s>DESERT_VISTA_START;
-    for(let i=0;i<3;i++){
-      const p=desertPoint(Math.min(DESERT_LENGTH,s+i*28),(i-1)*(vista?48:19));
-      p[1]=desertGround(p[0],p[2])+(vista?5:2.8);
-      patches.push({p,size:[(vista?33:19)+i*5,(vista?4.5:2.5)+i*.3],strength:1.45+i*.15});
-    }
+  for(let s=147,i=0;s<=DESERT_LENGTH;s+=46,i++){
+    const variant=i%3,vista=s>DESERT_VISTA_START;
+    // At the bridge the hot bank is beside the wash, not above its water.
+    const creek=s>valley(675)&&s<valley(765);
+    const p=desertPoint(s,creek?18:(variant-1)*3);
+    const height=vista?4.5+variant*.3:2.8+variant*.3;
+    p[1]=desertGround(p[0],p[2])+height;
+    patches.push({p,size:[(vista?33:22)+variant*3,height],strength:1.45+variant*.15});
   }
   return patches;
 }

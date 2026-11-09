@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {FlameHeatSamples} from '../flameHeatSource';
 
 type FireKind = 'fire' | 'jet' | 'ember';
 interface Tongue {
@@ -21,6 +22,7 @@ export class CartGouraudFire extends THREE.InstancedMesh<THREE.BufferGeometry,TH
   private dummy=new THREE.Object3D();
   private direction=new THREE.Vector3();
   private lastTime=-Infinity;
+  private readonly heat:FlameHeatSamples;
   readonly diagnostics={emitted:0,active:0,capacity:0};
 
   constructor(capacity:number,name:string){
@@ -88,6 +90,7 @@ export class CartGouraudFire extends THREE.InstancedMesh<THREE.BufferGeometry,TH
     };
     material.customProgramCacheKey=()=> 'kart-gouraud-tongues-v1';
     super(geometry,material,capacity);
+    this.heat=new FlameHeatSamples(capacity);this.heat.attach(this);
     this.name=name;this.data=data;this.count=0;this.visible=false;this.frustumCulled=false;this.renderOrder=5;
     this.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.particles=Array.from({length:capacity},()=>({born:-Infinity,life:0,seed:0,kind:0,strength:0,
@@ -106,7 +109,7 @@ export class CartGouraudFire extends THREE.InstancedMesh<THREE.BufferGeometry,TH
 
   present(time:number){
     if(time===this.lastTime)return;this.lastTime=time;
-    let count=0;
+    let count=0;this.heat.clear();
     for(const p of this.particles){
       const age=time-p.born;if(age<0||age>=p.life)continue;
       const u=age/p.life,ember=p.kind===2,jet=p.kind===0,drag=jet?.65:ember?1.1:1.4;
@@ -119,6 +122,11 @@ export class CartGouraudFire extends THREE.InstancedMesh<THREE.BufferGeometry,TH
       this.dummy.quaternion.setFromUnitVectors(UP,this.direction);
       const grow=ember?1-u*.7:1+u*(jet?2.8:1.15);
       this.dummy.scale.set(p.radius*grow,p.length*(ember?1:1+u*.7),1);this.dummy.updateMatrix();
+      if(!ember){
+        const fade=THREE.MathUtils.smoothstep(u,0,.055)*(1-THREE.MathUtils.smoothstep(u,.5,1));
+        const at=this.dummy.position;
+        this.heat.add(at.x,at.y+.15*p.radius,at.z,p.radius*grow*1.35,Math.max(p.radius*grow,p.length)*1.35,fade*p.strength*1.7,p.seed);
+      }
       this.setMatrixAt(count,this.dummy.matrix);this.data.setXYZW(count,u,p.seed,p.strength,p.kind);count++;
     }
     this.count=this.diagnostics.active=count;this.visible=count>0;

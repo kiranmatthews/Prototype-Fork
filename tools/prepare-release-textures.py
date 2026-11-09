@@ -47,14 +47,17 @@ for path in sorted((ROOT/'public').rglob('*.glb')):
  for i,image in enumerate(doc.get('images',[])):
   mime=image.get('mimeType');use=image_roles.get(i,set())
   if mime not in ['image/png','image/jpeg'] or 'bufferView' not in image or not use:continue
-  if mime=='image/jpeg' and use!={'baseColorTexture'}:continue
+  # JPEG data maps are only taken when a resize policy owns them; they are then
+  # stored losslessly at the reviewed size (lossy WebP stays base-colour only).
+  jpeg_data=args.resize_carlisle and rel.startswith('props/carlisle') and use=={'metallicRoughnessTexture'}
+  if mime=='image/jpeg' and use!={'baseColorTexture'} and not jpeg_data:continue
   view=doc['bufferViews'][image['bufferView']];start=view.get('byteOffset',0);data=binary[start:start+view['byteLength']]
   if len(data)<16384:continue
   digest=sha(data);entry=unique.setdefault(digest,{'source':data,'mime':mime,'uses':[]});entry['uses'].append({'file':rel,'image':i,'roles':sorted(use)})
   models[rel]={'sourceSha256':sha(raw),'sourceBytes':len(raw)}
 print(json.dumps({'images':len(unique),'uses':sum(len(x['uses'])for x in unique.values()),'sourceBytes':sum(len(x['source'])*len(x['uses'])for x in unique.values())}),flush=True)
 def encode(item,allow_resize=True):
- digest,entry=item;start=time.time();im=Image.open(io.BytesIO(entry['source']));mode='lossless' if entry['mime']=='image/png' else 'color';rgba=im.convert('RGBA')
+ digest,entry=item;start=time.time();im=Image.open(io.BytesIO(entry['source']));mode='lossless' if entry['mime']=='image/png' or all(u['roles']==['metallicRoughnessTexture'] for u in entry['uses']) else 'color';rgba=im.convert('RGBA')
  row={'sourceSha256':digest,'sourceBytes':len(entry['source']),'mimeType':entry['mime'],'width':im.width,'height':im.height,'uses':entry['uses']}
  # The map pack's KTX extractor writes standard sRGB/Rec.709 primaries into
  # PNGs. They do not change sampled channel values; glTF's texture role still
@@ -63,7 +66,7 @@ def encode(item,allow_resize=True):
  unsafe_metadata=any(k in im.info for k in ['icc_profile','exif','gamma','transparency']) or ('chromaticity' in im.info and not map_primaries)
  if im.mode not in ['RGB','RGBA','L','LA','P'] or unsafe_metadata or getattr(im,'n_frames',1)!=1:return row|{'skip':'image metadata or unsupported precision','metadata':list(im.info),'imageMode':im.mode}
  strategy='';use_roles=set(r for u in entry['uses'] for r in u['roles'])
- profile=None
+ profile=None;resized_color=False
  if args.resize_drowned and all(u['file'].startswith('drowned-crown/') for u in entry['uses']):profile=POLICY['drowned']
  if args.resize_map and all(u['file'].startswith('map-landmarks/') for u in entry['uses']):profile=POLICY['map']
  if args.resize_carlisle and all(u['file'].startswith('props/carlisle') for u in entry['uses']):profile=POLICY['carlisle']
@@ -73,8 +76,13 @@ def encode(item,allow_resize=True):
   if limit and max(im.size)>limit:
    ratio=limit/max(im.size);size=(max(1,round(im.width*ratio)),max(1,round(im.height*ratio)))
    rgba=resize_map(im,size,role);row.update(sourceWidth=im.width,sourceHeight=im.height,width=size[0],height=size[1],resampling={'role':role,'filter':'linear-light-lanczos3-sharpen-0.6-45-2' if role=='baseColorTexture' else 'vector-lanczos3-renormalize' if role=='normalTexture' else 'linear-lanczos3'})
-   strategy='-resized-v1-'+str(size[0])+'x'+str(size[1])+'-'+role
+   strategy='-resized-v1-'+str(size[0])+'x'+str(size[1])+'-'+role;resized_color=role=='baseColorTexture'
  ref=np.asarray(rgba).astype(np.int16);candidates=[100] if mode=='lossless' else [85,90,95]
+ # A resized colour map is measured against its sharpened, resized reference,
+ # so it uses the policy's highest lossy quality and relaxed sanity floor.
+ gate=POLICY.get('resizedColor') if resized_color and mode!='lossless' else None
+ if gate:candidates=[gate['quality']]
+ min_psnr,max_p99,max_err=(gate['minPSNR'],gate['maxP99'],gate['maxError']) if gate else (40,8,64)
  # A noisy miniature may fail a lossy encoder's worst-pixel gate. Keep the
  # reviewed resized pixels exactly instead of restoring a huge source atlas.
  if mode!='lossless' and strategy and (args.resize_map or args.resize_carlisle):candidates.append(None)
@@ -92,7 +100,7 @@ def encode(item,allow_resize=True):
   rgb=diff[:,:,:3];mse=np.mean(rgb.astype(np.float64)**2);metrics={'encodedSha256':sha(data),'encodedBytes':len(data),'quality':quality,'lossless':lossless,'meanAbs':float(rgb.mean()),'p99':float(np.percentile(rgb,99)),'max':int(rgb.max()),'psnr':float(10*np.log10(255**2/mse)) if mse else None}
   if lossless:assert rgba.tobytes()==dec.tobytes()
   temp=target.with_suffix('.webp.tmp');temp.write_bytes(data);os.replace(temp,target);cached.write_text(json.dumps(metrics))
-  if lossless or metrics['psnr'] is None or metrics['psnr']>=40 and metrics['p99']<=8 and metrics['max']<=64:
+  if lossless or metrics['psnr'] is None or metrics['psnr']>=min_psnr and metrics['p99']<=max_p99 and metrics['max']<=max_err:
    saving=len(entry['source'])-len(data)
    if saving<max(1024,len(entry['source'])*.03):return row|{'skip':'less than three percent saving','best':metrics}
    return row|metrics|{'encodedFile':str(target),'savedBytes':saving,'seconds':round(time.time()-start,2)}
@@ -105,7 +113,7 @@ with ThreadPoolExecutor(max_workers=2) as pool:
  for future in as_completed(futures):
   try:r=future.result()
   except Exception as e:r={'sourceSha256':futures[future],'error':str(e)}
-  rows.append(r);report={'encoder':{'pillow':Image.__version__,'libwebp':features.version('webp'),'format':'WebP','dimensions':'Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged' if args.resize_drowned or args.resize_map or args.resize_carlisle else 'unchanged','lossyQualityCandidates':[85,90,95],'minPSNR':40,'maxP99':8,'maxError':64,'losslessPNG':True},'models':models,'images':sorted(rows,key=lambda r:r['sourceSha256'])}
+  rows.append(r);report={'encoder':{'pillow':Image.__version__,'libwebp':features.version('webp'),'format':'WebP','dimensions':'Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged' if args.resize_drowned or args.resize_map or args.resize_carlisle else 'unchanged','lossyQualityCandidates':[85,90,95],'minPSNR':40,'maxP99':8,'maxError':64,'resizedColor':POLICY.get('resizedColor'),'losslessPNG':True},'models':models,'images':sorted(rows,key=lambda r:r['sourceSha256'])}
   (OUT/'report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'done':len(rows),'total':len(unique),'sha':r['sourceSha256'][:12],'uses':len(r.get('uses',[])),'sourceBytes':r.get('sourceBytes'),'encodedBytes':r.get('encodedBytes'),'quality':r.get('quality'),'skip':r.get('skip'),'error':r.get('error')}),flush=True)
 print(json.dumps({'uniqueEncoded':sum('encodedFile'in r for r in rows),'usedEncoded':sum(len(r.get('uses',[]))for r in rows if 'encodedFile'in r),'savedBytes':sum(r.get('savedBytes',0)*len(r.get('uses',[]))for r in rows),'errors':sum('error'in r for r in rows)}),flush=True)
 

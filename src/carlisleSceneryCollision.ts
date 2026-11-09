@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import {MeshBVH,acceleratedRaycast} from 'three-mesh-bvh';
+import {MeshBVH} from 'three-mesh-bvh';
+import {boundedAcceleratedRaycast} from './groundAcceleration';
 import type {CustomComponent} from './level';
 import {CARLISLE_CONTACTS} from './carlisleContacts.generated';
 import {WorldSolids,solidContact} from './worldSolids';
@@ -21,7 +22,7 @@ function contactMesh(c:CustomComponent):THREE.Mesh|null {
  const mesh=new THREE.Mesh(g,material);
  mesh.position.set(...c.p);mesh.rotation.set(0,THREE.MathUtils.degToRad(c.yaw??0),THREE.MathUtils.degToRad(c.amp??0),'YXZ');
  mesh.scale.set(...(c.s??[1,1,1])).multiplyScalar(c.w??1);mesh.updateMatrixWorld(true);
- mesh.raycast=acceleratedRaycast;mesh.visible=false;mesh.name=`Solid ${c.nm??c.dkind}`;
+ mesh.raycast=boundedAcceleratedRaycast;mesh.visible=false;mesh.name=`Solid ${c.nm??c.dkind}`;
  Object.assign(mesh.userData,{editorGhost:true,edgeGrinding:false,carlisleScenery:true,cameraCutaway:c.cameraCutaway===true,vert:false,castShadow:false});return mesh;
 }
 /** Exact visual top for rooting authored props, not an AABB top estimate. */

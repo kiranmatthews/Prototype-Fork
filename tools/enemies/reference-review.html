@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="OpenGOAL enemy reference audit: measured rigs and animations, behaviour studies, and comparison with the current enemy roster.">
+  <link rel="icon" href="data:,">
+  <title>Enemy lab · OpenGOAL reference audit</title>
+</head>
+<body>
+  <header>
+    <div><a class="eyebrow" href="../../labs/">BONEMAN / LABS</a><h1>Enemy studies <span>01</span></h1></div>
+    <nav aria-label="Enemy lab"><a href="motion-review.html">Our roster</a><a href="reference-review.html" aria-current="page">OpenGOAL references</a></nav>
+    <p id="audit-summary" role="status">Loading audit…</p>
+  </header>
+  <main>
+    <aside class="catalogue" aria-label="Reference candidates">
+      <label class="control">Find a candidate<input id="search" aria-label="Find a candidate" type="search" placeholder="Crab, spikes, recovery…"></label>
+      <div class="filters">
+        <label class="control">Game<select id="game-filter" aria-label="Game"><option value="all">All games</option><option value="jak1">Jak 1</option><option value="jak2">Jak II</option><option value="jak3">Jak 3</option></select></label>
+        <label class="control">Show<select id="scope-filter" aria-label="Show"><option value="all">All candidates</option><option value="recommended">First pass · 8</option><option value="playable-clips">Playable clips</option><option value="unavailable">Needs extraction</option><option value="saved">My shortlist</option></select></label>
+      </div>
+      <div class="list-heading"><span id="result-count"></span><button id="export-shortlist" class="text-button">Export shortlist</button></div>
+      <div id="candidate-list" role="list" aria-label="Enemy candidates"></div>
+      <p class="scope-note">Jak 1 rigs measured from the existing export. Jak II/3 are a source survey. This is a curated audit, not a complete trilogy inventory.</p>
+    </aside>
+    <section class="preview" aria-label="Model inspection">
+      <div class="stage-heading"><div><div id="candidate-role" class="eyebrow">Reference</div><h2 id="candidate-title">Loading…</h2></div><button id="shortlist" aria-pressed="false">☆ Shortlist</button></div>
+      <div id="reference-stage">
+        <div class="stage-labels"><span id="source-label">Source placeholder</span><span id="ours-label" hidden>Our roster</span></div>
+        <div id="model-status" role="status"></div>
+        <div class="stage-foot">Drag to orbit · scroll to zoom · full source geometry</div>
+      </div>
+      <div class="transport">
+        <label class="control">Source animation<select id="clip" aria-label="Source animation"></select></label>
+        <div class="transport-row"><button id="play">Pause</button><button id="back" aria-label="Previous frame">−1</button><button id="forward" aria-label="Next frame">+1</button><button id="restart">↺</button><select id="speed" aria-label="Playback speed"><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option></select><label><input id="loop" type="checkbox" checked>Loop</label><output id="clock">0.00 s</output></div>
+        <input id="timeline" type="range" min="0" max="1" step="0.0166666667" value="0" aria-label="Source animation time">
+        <div class="view-row"><button data-view="front">Front</button><button data-view="quarter" aria-pressed="true">¾</button><button data-view="side">Side</button><button data-view="back">Back</button><label><input id="skeleton" type="checkbox">Rig</label><label><input id="native" type="checkbox">MAX / native</label></div>
+        <p class="caption">Source clips play on their original rigs. Our model plays its existing combat cycle. No AI, hitbox or retargeting equivalence is implied.</p>
+      </div>
+    </section>
+    <aside class="inspector" aria-label="Candidate assessment">
+      <section><h3>Compare with our roster</h3><label class="control">Existing enemy<select id="pair" aria-label="Existing enemy"></select></label><label class="toggle"><input id="compare" type="checkbox" checked>Show both models</label><a id="roster-link" href="motion-review.html">Inspect our full combat cycle ↗</a><p class="caption">Display size is fitted for comparison. Authored bone scales and animation keys are unchanged.</p></section>
+      <section><h3>Why study it</h3><p id="pattern"></p><h3>Adaptation opportunity</h3><p id="adaptation"></p></section>
+      <section><h3>Rig & movement</h3><div id="metrics" class="metrics"></div><p id="rig-notes"></p><p id="caveat" class="caveat"></p></section>
+      <section><h3>Evidence</h3><a href="https://github.com/kiranmatthews/Prototype-Fork/blob/main/docs/OPENGOAL_ENEMY_AUDIT.md" target="_blank" rel="noreferrer">Read the full audit ↗</a><div id="sources"></div><p class="caption">OpenGOAL v0.3.9 · source identifiers and original audit notes. Asset availability is verified separately from behavioural completeness.</p></section>
+      <details><summary>Measured clip / rig details</summary><pre id="diagnostics"></pre></details>
+      <p class="scope-note">Placeholder models are reference assets from the supplied game. Final enemies need original meshes and code. No source AI is imported here.</p>
+    <p id="build-stamp" class="scope-note"></p></aside>
+  </main>
+  <script type="module" src="../../src/enemies/referenceReview.ts"></script>
+</body>
+</html>

@@ -212,6 +212,9 @@ function setInspect(value: boolean) {
         {t: 'platform', p: [1080, -.09, -7], s: [20, .2, 16], slip:true, iceGrip:.08},
       ],
     }});
+    // Synthetic motion review has no race start. Keep its auto-created clock
+    // and combo orb out of the mount/ink silhouette at the inspection spawn.
+    reviewLevel.setRunModesEnabled(false);
     resetInspector();
   } else {
     frozen = false; slow = false; stopAt = 'None';
@@ -237,7 +240,10 @@ p.step = (dt: number, input: any, level: Level) => {
     p.camDir.set(0,0,-1);
     nativeStep(dt,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false},reviewLevel);
     reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
-    if(stopAt==='Ice approach'&&frame===45 || stopAt==='On ice'&&frame===90 || stopAt==='After ice'&&frame===160)frozen=true;
+    const iceMix=skateMotion?.diagnostics.iceBlend??0;
+    if(stopAt==='Ice approach'&&frame===45 || stopAt==='On ice'&&frame===90 || stopAt==='After ice'&&frame===160 ||
+      stopAt==='Ice blend in'&&p.groundHit?.slippy&&iceMix>=.4&&iceMix<1 ||
+      stopAt==='Ice blend out'&&frame>90&&!p.groundHit?.slippy&&iceMix>.2&&iceMix<=.6)frozen=true;
     if(frame>=260)resetInspector();return;
   }
   if (mode === 'Idle' || mode === 'Idle and stops') {
@@ -266,7 +272,7 @@ p.step = (dt: number, input: any, level: Level) => {
       ||stopAt==='Cancel unwind'&&ink?.stage==='unwind'
       ||stopAt==='Board appears'&&ink?.active&&ink.targetVisible&&ink.frame===0
       ||stopAt==='Board disappears'&&ink?.active&&!ink.targetVisible&&ink.frame===0
-      ||stopAt==='Mount'&&skateMotion?.phase==='mount'&&skateMotion.time>=.3
+      ||stopAt==='Mount'&&skateMotion?.phase==='mount'&&skateMotion.mountProgress>=.5
       ||stopAt==='Dismount'&&skateMotion?.phase==='dismount'&&skateMotion.time>=.3
       ||stopAt==='Abandon flip'&&p.boardAbandonActive&&p.flipTimer>0&&p.flipTimer<=CONST.flipDuration*.525
       ||stopAt==='Landing roll'&&p.rollLandingT>=.2
@@ -468,7 +474,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
-  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','On ice','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
+  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);

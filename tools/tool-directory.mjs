@@ -13,6 +13,8 @@ const descriptions = {
   'jump-review.html': ['Jump A/B/C/D playtest', 'Compare Bone Man and Jak jumps, hybrid run, ledges and eco. D also includes Skate mounts, riding, pickups and reversible board scribbles.', 'Labs & studios'],
   'spin-lab.html': ['Spin smear lab', 'Character spin smears, orbital rings, colours, mesh shape and animation preview.', 'Labs & studios'],
   'milk-review.html': ['Fruit / milk pickup lab', 'Pickup model, appearance and motion review.', 'Labs & studios'],
+  'tools/enemies/reference-review.html': ['Enemy lab · OpenGOAL audit', 'Inspect 28 reference enemy rigs and 254 clips beside our roster; shortlist behaviour, design and movement candidates across Jak 1–3.', 'Labs & studios'],
+  'tools/enemies/motion-review.html': ['Enemy lab · current roster', 'Inspect our enemy models, skeletons, combat cycles and defeat states; compare OpenGOAL reference candidates.', 'Labs & studios'],
   'jak-lab.html': ['Jak & Daxter effects lab', 'Browse the effects preview by category, including particle, HUD and disappearance effects.', 'Labs & studios'],
   'roo-type-lab.html': ['Roo text appearance studio', 'Glyphs, palettes, tracking, edge highlights, counters and transparent PNG / atlas exports.', 'Labs & studios'],
   'reset-local-data.html': ['Reset local game data', 'Review local settings and saves, choose what to reset, confirm and undo.', 'Maintenance'],
