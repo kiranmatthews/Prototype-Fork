@@ -624,7 +624,7 @@ const _renderDelta = new THREE.Vector3(); // post-step PVP root correction
 export class Player {
   /** Local comparison opt-in. A selection takes effect at the next foot launch. */
   onFootJumpStudy: Readonly<OnFootJumpStudy> | null = null;
-  private footJumpStudyLaunch: Readonly<OnFootJumpStudy> | null = null;
+  private footJumpStudyLaunch: Readonly<OnFootJumpStudy & {takeoffSpeed: number; flipMinSpeed: number}> | null = null;
   private footStudyFrame = 0;
   private footStudyCharge = 0;
   private footStudyImpact = 0;
@@ -2452,6 +2452,8 @@ export class Player {
           jakJumpCharge: this.footStudyCharge,
           jakUprightLaunch: this.footJumpStudyLaunch?.direct && !this.footJumpStudyLaunch.flip ? 1 : 0,
           jakFlip: this.footJumpStudyLaunch?.flip && !this.doubleJumpAir ? 1 : 0,
+          jakTakeoffSpeed: this.footJumpStudyLaunch?.takeoffSpeed ?? 0,
+          jakFlipMinSpeed: this.footJumpStudyLaunch?.flipMinSpeed ?? 0,
           jakRollLaunch: this.footJumpStudyFlight?.flip ? 1 : 0,
           jakFlipProgress: this.footStudyFlipProgress,
           jakDescentProgress: Math.sqrt(THREE.MathUtils.clamp(
@@ -6246,12 +6248,17 @@ export class Player {
     // springs, kite and special-launch routes keep their authored rules.
     if (this.onFootJumpStudy && !this.freeSkate && !fromSlide && !wasCrawling &&
         !this.trampolineAir && !this.kiteTowing && !this.kiteReleased) {
-      // Commit the presentation at takeoff. Vertical/precision hops stay
-      // upright; only a running launch earns the source roll. Air steering
-      // must not start a flip halfway through an otherwise upright jump.
+      // Snapshot physical horizontal momentum at the release that launches
+      // the jump. This includes sideways travel and release coast, without
+      // mistaking a held stick, vertical pop or run-speed setting for motion.
+      // The vector is also valid for coyote releases before air displacement.
+      const takeoffSpeed = Math.hypot(this.walkVelocity.x, this.walkVelocity.z);
+      const flipMinSpeed = TUNING.jumpFlipMinSpeed;
       this.footJumpStudyLaunch = {...this.onFootJumpStudy,
-        flip: this.onFootJumpStudy.flip && spd > TUNING.walkSpeed * .45 &&
-          Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > .45};
+        takeoffSpeed, flipMinSpeed,
+        // Commit once: steering or tuning edits in the air cannot start or
+        // cancel an already chosen roll.
+        flip: this.onFootJumpStudy.flip && takeoffSpeed >= flipMinSpeed};
       this.footStudyCharge = t;
       const study = this.footJumpStudyLaunch;
       if (!study.nativePhysics)
