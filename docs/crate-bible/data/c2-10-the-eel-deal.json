@@ -935,5 +935,1273 @@
   "S3-e may contain one striped box.",
   "Whether the S2-b ? floats or sits between the Nitros on the floor."
  ],
- "compositionNotes": "'unknown' = 3 bonus boxes inferred from the D2 HUD counter (0 before B-b, 11 at B-c) but not seen. B-a's outline boxes (>=4) carry count 0 because whether they count is unresolved; they may be the 3 unknown boxes. Counted clusters sum to 79 = main 62 + bonus 14 (B-b 8 + B-x 3 + B-c 3) + secret 3."
+ "compositionNotes": "'unknown' = 3 bonus boxes inferred from the D2 HUD counter (0 before B-b, 11 at B-c) but not seen. B-a's outline boxes (>=4) carry count 0 because whether they count is unresolved; they may be the 3 unknown boxes. Counted clusters sum to 79 = main 62 + bonus 14 (B-b 8 + B-x 3 + B-c 3) + secret 3.",
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "alternating round pipes (fans, rolling scrubbers) and pool rooms (eel pools, grated walkways)"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "fork 1: right = dead-end Nitro room with a fake back wall to the secret course; left = barrel pipe, eel pool, C2 + bonus pad"
+  },
+  {
+   "section": "X",
+   "mode": "into-screen",
+   "notes": "secret (green-gem) course: rats, Nitro/eel/barrel pool, five-platform pool, scrubbers; walk back or die to return"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "bonus room: narrow ledges, switch-built outline bridge, steel-hemmed slam column, arrows under a ceiling row"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "fork 2: left = dead-end crystal corridor; right = Nitro pool, barrel pipes, box room with a one-way floor hole"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "hand-over-hand ceiling mesh with patrolling mines, then a low-ceiling floor corridor of static and bobbing mines"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "grated walkway (start)",
+   "size": "4-5 wide",
+   "heightDelta": 0,
+   "edges": "walled (pipe room)",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "TEACH"
+   ],
+   "why": "free crates and a mask before the first fan",
+   "evidence": "D2 s1; F2 p044L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "corridor (round pipe with shallow stream)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "static; fan across the bore",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "only the fan gaps are open; scrubber can be slid into the fan",
+   "evidence": "F2 POINT 1; D2 s3",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "walkway past pool 1",
+   "size": "~4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "why": "reward for the first pool",
+   "evidence": "D2 s5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "corridor (pipe with fan + scrubber #2)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "static; fan",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "fan timing coupled to the scrubber's position",
+   "evidence": "F2 POINT 3; D2 s5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "sinking/floating round pads in an eel pool",
+   "size": "~2 across, gaps ~2",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "sink if stood on",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "footing on a timer inside a timed pool",
+   "evidence": "D2 s6",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-f",
+   "section": "S1",
+   "shape": "walkway with edge Nitro stack, striped sandwich, C1",
+   "size": "4-5",
+   "heightDelta": 0,
+   "edges": "walled; Nitro at one edge",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "Nitro first appears as a passive edge wall",
+   "evidence": "F2 p044L; D2 s8",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "corridor (pipe with two spiky rats)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "second enemy rule in a plain pipe",
+   "evidence": "F2 POINT 4; D2 s8-s9",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "fork 1 junction (Aku/? stack)",
+   "size": "~5",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "why": "mask before the Nitro room",
+   "evidence": "D2 s10",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "Nitro room (grated floor over water, dead end)",
+   "size": "5-6 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE",
+    "BONUS-PAD"
+   ],
+   "why": "explosives as walls: 1-u lane, 2-high hurdle, cover for the secret door",
+   "evidence": "F2 p095R; D2 s11-s12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "corridor (pipe with rocking barrel + rats)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "barrel oscillates",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "pendulum-like obstacle in a round bore",
+   "evidence": "F2 POINT 5; D2 s18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "square pad (mid-pool waiting platform)",
+   "size": "2-3",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static",
+   "roles": [
+    "SAFE-ISLAND"
+   ],
+   "why": "a sanctioned stop inside the timed gap",
+   "evidence": "D2 s19",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-f",
+   "section": "S2",
+   "shape": "grated floor with C2 and bonus pad",
+   "size": "~5",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD",
+    "BONUS-PAD"
+   ],
+   "why": "checkpoint and bonus entry share one floor",
+   "evidence": "D2 s20; F2 p044R",
+   "confidence": "high"
+  },
+  {
+   "id": "P-X-a",
+   "section": "X",
+   "shape": "stepping stones (five floating platforms in a wide pool)",
+   "size": "~2 each",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static (floating)",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "longest stepping run, escalating to dash-jumps",
+   "evidence": "F2 p095R; D2 s15",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "narrow ledges",
+   "size": "~1 deep",
+   "heightDelta": 0,
+   "edges": "open (drop)",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "precision footing",
+   "evidence": "D2 s21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "steel stair + outline-crate bridge",
+   "size": "3 steps; >=4 crates",
+   "heightDelta": "+3",
+   "edges": "open",
+   "behaviour": "materialised by switch",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the switch builds the floor",
+   "evidence": "D2 s22",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "steel-hemmed crate column",
+   "size": "3 wide x 2-3 high",
+   "heightDelta": 0,
+   "edges": "steel on two sides",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "steel blocks side attacks, forcing the body slam",
+   "evidence": "D2 s23; F2 p095R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-d",
+   "section": "B",
+   "shape": "moving platform (exit elevator)",
+   "size": "~2",
+   "heightDelta": "ride",
+   "edges": "open",
+   "behaviour": "vertical ride",
+   "roles": [
+    "REST"
+   ],
+   "why": "bonus exit",
+   "evidence": "D2 s25",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "corridor (pipe with rat + fan behind a rising door)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "static; fan",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "fan lesson reprised with a rat as the key",
+   "evidence": "D2 s26",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "corridor (grated crystal corridor, dead end)",
+   "size": "3-4 wide, 12-15 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "hazard-free payout at the end of a detour",
+   "evidence": "F2 POINT 7; D2 s28",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "walkway with Nitro 2-stack and ?/? stack",
+   "size": "~4",
+   "heightDelta": 0,
+   "edges": "walled; Nitro edge",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "edge Nitro narrows the line beside a pickup",
+   "evidence": "F2 p045L; D2 s30",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "corridor (pipe with scrubbers + rat)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "counter switching (POINT 9)",
+   "evidence": "F2 POINT 9; D2 s32",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "corridor (pipe with two barrels and a rat between)",
+   "size": "bore 5-6",
+   "heightDelta": 0,
+   "edges": "walled (round)",
+   "behaviour": "barrels oscillate",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "the waiting spot is occupied (POINT 10)",
+   "evidence": "F2 POINT 10; D2 s33",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-f",
+   "section": "S3",
+   "shape": "box room floor with a one-way hole",
+   "size": "room ~6; hole 2-3",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "the drop is the exit and the trap",
+   "evidence": "F2 p045L; D2 s34",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-g",
+   "section": "S3",
+   "shape": "landing room (?, C3, green !)",
+   "size": "5-6",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "checkpoint, ? and Nitro switch share the landing",
+   "evidence": "F2 p045R; D2 s35-s36",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "ceiling mesh (hand-over-hand) between floor islands",
+   "size": "panels 3-5; islands ~3",
+   "heightDelta": "ceiling +2-3",
+   "edges": "open below in places",
+   "behaviour": "static; slow traversal",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "slow mode turns moving mines into wait-then-hurry gates",
+   "evidence": "F2 POINT 11 + Aku tip; D2 s35, s37-s41",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "corridor (floor under a low ceiling with mines)",
+   "size": "4-5 wide",
+   "heightDelta": 0,
+   "edges": "walled; low ceiling",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "ceiling caps the jump; the over-jump is the mistake",
+   "evidence": "F2 POINT 13-14; D2 s43-s44",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "timed-lethal water (eel pool, wadable between discharges)",
+   "width": "5-6",
+   "heightDelta": -0.5,
+   "landing": "grated walkway ~4",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "plain"
+   ],
+   "coupling": "eel discharge cycle (yellow flashing)",
+   "failure": "death by discharge",
+   "nearby": [
+    "S1-b",
+    "E-S1-b"
+   ],
+   "why": "first timed gap with wide waiting walkways",
+   "evidence": "F2 POINT 2; D2 s2, s4",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "timed-lethal water with two sinking pads",
+   "width": "pads ~2, gaps ~2",
+   "heightDelta": 0,
+   "landing": "pad ~2",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "plain"
+   ],
+   "coupling": "pads sink if you wait; eel cycle",
+   "failure": "death",
+   "nearby": [],
+   "why": "footing on a timer in a timed pool",
+   "evidence": "D2 s6",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "timed-lethal water (eel pool)",
+   "width": "5-6",
+   "heightDelta": 0,
+   "landing": "platform with two scrubbers",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "plain"
+   ],
+   "coupling": "eel cycle; enemies on the landing",
+   "failure": "death",
+   "nearby": [
+    "E-S1-a"
+   ],
+   "why": "pool with enemies waiting on the far side",
+   "evidence": "D2 s9",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "Nitro hurdle (2-high Nitro set)",
+   "width": "3-4 wide, 2 high",
+   "heightDelta": 2,
+   "landing": "room floor",
+   "lethal": true,
+   "runUp": "room floor",
+   "move": [
+    "running"
+   ],
+   "coupling": "Aku crate before the room absorbs one touch",
+   "failure": "death on Nitro touch",
+   "nearby": [
+    "S2-a",
+    "S2-b"
+   ],
+   "why": "the room's only real jump, sized for a dash-jump",
+   "evidence": "D2 s12",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "timed-lethal water with a mid-pool platform",
+   "width": "2-3 each side",
+   "heightDelta": 0,
+   "landing": "platform 2-3",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "plain",
+    "running"
+   ],
+   "coupling": "wait on the platform for the discharge to end",
+   "failure": "death",
+   "nearby": [],
+   "why": "sanctioned stop inside the timed gap",
+   "evidence": "D2 s19",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-X-a",
+   "section": "X",
+   "kind": "fake wall (illusion)",
+   "width": "-",
+   "heightDelta": 0,
+   "landing": "secret tunnel",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "plain"
+   ],
+   "coupling": "Nitro third row in front",
+   "failure": "none",
+   "nearby": [
+    "X-a"
+   ],
+   "why": "secret door hidden behind explosive walls",
+   "evidence": "F2 p095R; D2 s12-s13",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-X-b",
+   "section": "X",
+   "kind": "timed-lethal water with three Nitro and a barrel at the exit",
+   "width": "6-8",
+   "heightDelta": 0,
+   "landing": "exit pipe",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "plain"
+   ],
+   "coupling": "eel cycle + barrel",
+   "failure": "death",
+   "nearby": [
+    "X-a"
+   ],
+   "why": "three hazards stacked in one pool",
+   "evidence": "D2 s14",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-X-c",
+   "section": "X",
+   "kind": "wide pool with five floating platforms",
+   "width": "gaps ~2, 2, 3, 3, exit",
+   "heightDelta": 0,
+   "landing": "platforms ~2",
+   "lethal": true,
+   "runUp": "platform",
+   "move": [
+    "plain",
+    "running"
+   ],
+   "coupling": "none",
+   "failure": "death",
+   "nearby": [],
+   "why": "longest stepping run (secret only)",
+   "evidence": "F2 p095R caution 1; D2 s15",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "gap under a ceiling row (arrows below)",
+   "width": "2-3",
+   "heightDelta": "arrows lift ~3",
+   "landing": "steel ledge",
+   "lethal": true,
+   "runUp": "ledge",
+   "move": [
+    "arrow"
+   ],
+   "coupling": "none",
+   "failure": "bonus ends (series rule)",
+   "nearby": [
+    "B-c"
+   ],
+   "why": "vertical tool under a ceiling target",
+   "evidence": "D2 s24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "timed-lethal water, no footing, three floating Nitro",
+   "width": "pool ~6 x 8-10; Nitro 2-3 apart",
+   "heightDelta": 0,
+   "landing": "grated exit",
+   "lethal": true,
+   "runUp": "walkway",
+   "move": [
+    "running"
+   ],
+   "coupling": "enter as the discharge ends; thread the Nitro diagonally",
+   "failure": "death (discharge or Nitro)",
+   "nearby": [
+    "S3-d"
+   ],
+   "why": "explosives replace stepping stones",
+   "evidence": "F2 POINT 8; D2 s31",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "drop-down (one-way floor hole)",
+   "width": "2-3",
+   "heightDelta": "- (not visible)",
+   "landing": "landing room with ? and C3",
+   "lethal": false,
+   "runUp": "room floor",
+   "move": [
+    "body-slam drop"
+   ],
+   "coupling": "none",
+   "failure": "irreversible: fork 2 left and the box wall are lost if not done first",
+   "nearby": [
+    "S3-e",
+    "S3-f"
+   ],
+   "why": "point of no return in front of the last payout",
+   "evidence": "F2 p045L; D2 s34",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "floor hole (gap in the grated floor)",
+   "width": "1.5-2",
+   "heightDelta": 0,
+   "landing": "floor with a hovering mine",
+   "lethal": true,
+   "runUp": "corridor",
+   "move": [
+    "plain"
+   ],
+   "coupling": "hovering mine on the far side",
+   "failure": "death (assumed)",
+   "nearby": [
+    "S4-c",
+    "E-S4-c"
+   ],
+   "why": "plain jump guarded on landing",
+   "evidence": "D2 s42",
+   "confidence": "low"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "2",
+   "rest": "walkway after the pool",
+   "noStop": true,
+   "why": "timed footing in a timed pool (one-two)",
+   "evidence": "D2 s6"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 2,
+   "moves": [
+    "plain",
+    "running"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "3-4",
+   "rest": "room floor",
+   "noStop": false,
+   "why": "explosive walls set the jump type",
+   "evidence": "D2 s11-s12"
+  },
+  {
+   "id": "J-S2-b",
+   "section": "S2",
+   "count": 2,
+   "moves": [
+    "plain",
+    "running"
+   ],
+   "rhythm": "stop-and-go",
+   "maxGap": "2-3",
+   "rest": "P-S2-e",
+   "noStop": false,
+   "why": "a sanctioned stop inside the timed gap",
+   "evidence": "D2 s19"
+  },
+  {
+   "id": "J-X-a",
+   "section": "X",
+   "count": 5,
+   "moves": [
+    "plain",
+    "running"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "3",
+   "rest": "exit door",
+   "noStop": true,
+   "why": "longest stepping run, secret only",
+   "evidence": "D2 s15; F2 p095R"
+  },
+  {
+   "id": "J-B-a",
+   "section": "B",
+   "count": 4,
+   "moves": [
+    "plain",
+    "arrow"
+   ],
+   "rhythm": "even",
+   "maxGap": "2-3",
+   "rest": "P-B-d",
+   "noStop": false,
+   "why": "narrow ledges, stair, arrow bounces",
+   "evidence": "D2 s21-s24"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "running",
+    "plain"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "3",
+   "rest": "grated exit",
+   "noStop": true,
+   "why": "hardest timed gap on the main course",
+   "evidence": "F2 POINT 8; D2 s31"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 2,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "2",
+   "rest": "goal",
+   "noStop": false,
+   "why": "height-capped jumps",
+   "evidence": "D2 s42-s44"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1, S3",
+   "kind": "fan (propeller) across the pipe",
+   "placement": "across path",
+   "timing": "continuous rotation; blade gaps visible",
+   "counter": [
+    "slide under",
+    "destroy"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S1-a",
+    "E-S2-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a gate weakened by flinging an enemy into it (breaks a blade)",
+   "evidence": "F2 POINT 1, 3; D2 s3, s5, s26"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1-S3, X",
+   "kind": "electrified eel pool (rising-water-like timed hazard)",
+   "placement": "across path",
+   "timing": "regular discharge; yellow flashing = live",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S1-c",
+    "O-S3-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "visible on/off gap repeated with new footing",
+   "evidence": "F2 POINT 2, 8; D2 s4, s6, s19, s31"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1",
+   "kind": "sinking round pads",
+   "placement": "on platform",
+   "timing": "sink if stood on",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S1-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "footing that forbids waiting",
+   "evidence": "D2 s6"
+  },
+  {
+   "id": "O-S1-d",
+   "section": "S1, S3",
+   "kind": "Nitro 2-stacks at the walkway edge",
+   "placement": "flank",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S1-d",
+    "S3-c"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "narrows the walkway beside pickups",
+   "evidence": "D2 s8, s30"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "Nitro room layout (? between Nitro, 2-high hurdle, third row over the fake wall)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-a",
+    "S2-b"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEST"
+   ],
+   "why": "explosives build the room",
+   "evidence": "F2 p095R; D2 s11-s12"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2, S3, X",
+   "kind": "rolling barrel (rocks across the pipe and up its walls)",
+   "placement": "across path",
+   "timing": "regular back-and-forth",
+   "counter": [
+    "wait-and-go",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "pendulum built from the pipe's curvature; reprise with a rat in the gap",
+   "evidence": "F2 POINT 5, 10 + Aku tip; D2 s14, s18, s29, s33"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "one-way floor hole",
+   "placement": "on platform",
+   "timing": "none",
+   "counter": [
+    "go around"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "S3-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "point of no return in front of the last payout",
+   "evidence": "F2 p045L; D2 s34"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "Nitro floating in an eel pool (x3)",
+   "placement": "in pit",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S1-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "explosives replace stepping stones",
+   "evidence": "F2 POINT 8; D2 s31"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "low ceiling over the mine corridor",
+   "placement": "overhead",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "caps jump height: a dash-jump hits the ceiling (fatal per D2)",
+   "evidence": "D2 s44"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1, S2, S3, X",
+   "kind": "scrubber robot (Baboo)",
+   "archetype": "patrol-loop",
+   "behaviour": "rolls along the pipe walls and ceiling; patrols pool walkways",
+   "counter": [
+    "spin",
+    "slide",
+    "fling into"
+   ],
+   "fails": [],
+   "placement": "on line (pipes); landing walkways",
+   "roles": [
+    "TEACH",
+    "TOOL/STEP"
+   ],
+   "firstAlone": true,
+   "why": "first enemy is also the first tool: slide it into a fan to break a blade",
+   "evidence": "F2 POINT 1, 3; D2 s3-s5, s7, s9, s16, s32",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2, S3, X",
+   "kind": "spiky rat (Togechu)",
+   "archetype": "shielded/armored",
+   "behaviour": "walks the walkway; spikes on back and sides",
+   "counter": [
+    "stomp",
+    "avoid"
+   ],
+   "fails": [
+    "spin (F2 POINT 4; D2 s8, s32; D2 s26 says a spin can knock one into a fan)"
+   ],
+   "placement": "on line (pipes); C2 floor; between barrels",
+   "roles": [
+    "TEACH",
+    "HURDLE"
+   ],
+   "firstAlone": true,
+   "why": "a counter that contradicts the scrubber's",
+   "evidence": "F2 POINT 4; D2 s8-s9, s20, s26, s30, s32-s33",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1-S3, X",
+   "kind": "electric eel (Biriiru)",
+   "archetype": "swimmer",
+   "behaviour": "stays in its pool and discharges on a cycle (pool flashes yellow)",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "entering the water while it flashes"
+   ],
+   "placement": "in pit (every pool)",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": true,
+   "why": "the enemy is the pool's clock (first at a pool with wide walkways)",
+   "evidence": "F2 POINT 2; D2 s4, s19, s31",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "floating mine (patrolling under the mesh)",
+   "archetype": "patrol-1D",
+   "behaviour": "glides along the hanging route; indestructible",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "dawdling after it passes (it catches up)"
+   ],
+   "placement": "on line under the mesh",
+   "roles": [
+    "TIMING-GATE",
+    "PURSUER"
+   ],
+   "firstAlone": true,
+   "why": "a slow traversal makes a slow enemy dangerous",
+   "evidence": "F2 POINT 12 + Aku tip; D2 s37",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "floating mine 'sentry'",
+   "archetype": "patrol-1D",
+   "behaviour": "passes along the right side",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "let it pass, then go in front of it",
+   "evidence": "D2 s39",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "hovering mine beyond the floor gap",
+   "archetype": "static",
+   "behaviour": "hovers, smoking",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "occupies the landing of the last jump",
+   "evidence": "D2 s42",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-d",
+   "section": "S4",
+   "kind": "floating mines x3",
+   "archetype": "static",
+   "behaviour": "do not move",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line, staggered",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "announced easy beat before the last test",
+   "evidence": "F2 POINT 13; D2 s43",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-e",
+   "section": "S4",
+   "kind": "floating mines x2 (bobbing)",
+   "archetype": "patrol-1D",
+   "behaviour": "move up and down",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "dash-jump (hits the low ceiling, D2)"
+   ],
+   "placement": "on line, last corridor",
+   "roles": [
+    "TEST",
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "cycle combined with a height cap",
+   "evidence": "F2 POINT 14; D2 s44",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start trio (mask)",
+    "pipe: fan + scrubber (slide it into the fan)",
+    "two scrubbers",
+    "eel pool 1 (wait, wade fast)",
+    "? trio",
+    "pipe: fan + scrubber (slide when it is on the ceiling)",
+    "pool with two sinking pads (one-two)",
+    "pipe: two scrubbers",
+    "Nitro 2-stack (edge)",
+    "striped sandwich + C1"
+   ],
+   "gaps": 3,
+   "enemies": 6,
+   "hazards": 5
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "two spiky rats (stomp)",
+    "eel pool with scrubbers on the far platform",
+    "Aku/?",
+    "fork 1 right: Nitro room (? between Nitro, 2-high hurdle, third row, fake wall)",
+    "back",
+    "fork 1 left: barrel + rats",
+    "eel pool with mid-pool platform",
+    "rat",
+    "C2 + bonus pad"
+   ],
+   "gaps": 4,
+   "enemies": 7,
+   "hazards": 4
+  },
+  {
+   "section": "X",
+   "beats": [
+    "fake wall",
+    "tunnel: fruit + three rats",
+    "pool: eel + three Nitro + barrel at the exit",
+    "pool: five floating platforms (jump, jump, dash, dash, out)",
+    "two scrubbers",
+    "green gem",
+    "walk back or die"
+   ],
+   "gaps": 3,
+   "enemies": 5,
+   "hazards": 3
+  },
+  {
+   "section": "B",
+   "beats": [
+    "narrow ledges",
+    "! switch",
+    "steel stair + outline bridge",
+    "steel-hemmed body-slam column",
+    "arrows under the ceiling striped row",
+    "elevator"
+   ],
+   "gaps": 3,
+   "enemies": 0,
+   "hazards": 0
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "rising door",
+    "rat + fan",
+    "fork 2 left: crystal corridor + 9-box block",
+    "back",
+    "fork 2 right: rat",
+    "Nitro 2-stack + ?/?",
+    "eel pool with three floating Nitro, no footing",
+    "two scrubbers + rat",
+    "barrel, rat, barrel",
+    "barrel",
+    "box room",
+    "one-way hole",
+    "? + C3"
+   ],
+   "gaps": 2,
+   "enemies": 6,
+   "hazards": 6
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "? + green !",
+    "ceiling mesh",
+    "patrolling mine (wait, then hurry)",
+    "? on an island",
+    "door",
+    "sentry mine (let it pass)",
+    "fruit breather",
+    "swing down",
+    "door",
+    "?/?",
+    "floor gap",
+    "hovering mine",
+    "three static mines",
+    "two bobbing mines under a low ceiling",
+    "goal"
+   ],
+   "gaps": 1,
+   "enemies": 8,
+   "hazards": 1
+  }
+ ],
+ "geometryObservations": [
+  "two room types alternate: pipes are slide tests (fans, rolling enemies), pool rooms are timing tests (eel discharges); crates sit in the calm walkways between",
+  "the pool is one gap re-dressed five times: wide waiting walkways, sinking pads, a mid-pool waiting platform, no footing with floating Nitro, five floating platforms (secret)",
+  "the eel is the pool's clock and the water is the telegraph (yellow flashing); the counter is to enter as the flash ends and leave fast",
+  "fans are gates with an enemy key: sliding a scrubber or knocking a rat into a fan breaks a blade",
+  "counters are taught in contradiction (scrubber: spin/slide; spiky rat: no spin), then mixed one after another (POINT 9)",
+  "rolling barrels use the pipe's curvature as a pendulum; the reprise puts a rat in the waiting spot between two barrels (POINT 10)",
+  "Nitro is architecture: edge stacks narrow walkways, the Nitro room builds a 1-u lane and a 2-high hurdle and hides a secret door, floating Nitro replace stepping stones",
+  "each fork pairs a dead end with a through route; fork 2's through route ends in a one-way hole, so geometry enforces dead end first",
+  "the point of no return (floor hole) lies between the player and the last payout wall",
+  "the finale swaps movement mode: hand-over-hand is safe from falls but slow, so indestructible mines become wait-then-outpace gates",
+  "mines escalate by behaviour: patrolling, sentry, hovering beside a landing, three static (announced easy beat), two bobbing under a low ceiling",
+  "the low ceiling punishes the over-jump: the last gate is passed with a regular jump; a dash-jump is fatal (D2)"
+ ],
+ "geometryTransfer": [
+  "timed pool as a phasepad crossing over a 5-6 m pit (3-4 s cycle, 0.9 s warning): wide waiting ledge first, then a one-two pad pair, then a mid-crossing safe pad, then a crossing between floating Nitro",
+  "rocking-barrel tube: a pendulum swinging across a 5-6 m tube (pass while the bob is high on one side); reprise with a grunt in the waiting spot between two pendulums (stone rolls only along Z)",
+  "counter-switch corridor: alternate grunt (spin) and spiker (stomp only) every 4-6 m in a 4 m corridor after teaching each alone",
+  "on-foot Nitro room: a ? between two Nitro (one 1.152 m lane) and a 2-high Nitro hurdle (2.3 m: full jump on foot clears it, a board ollie cannot); mask crate before it",
+  "one-way drop in front of the last payout: a 2-3 m floor hole between the player and a 2 x 6 crate wall, the drop leading to the next checkpoint",
+  "height-capped final gate: a ceiling at 4.2-4.6 m (above full-jump head reach 3.8 m, below double-jump 5.5 m) over a hazard crossed by one full jump"
+ ]
 }

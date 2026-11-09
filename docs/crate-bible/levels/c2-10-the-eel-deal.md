@@ -207,8 +207,151 @@ Fork-1 left itself carries no boxes. It is a hazard corridor (barrel, rats, eel 
 5. **Floating-hazard pool crossing.** Three Nitros floating across a water gap act as the obstacle. The rider ollies between them on a diagonal line (S3-d). Keep ≥1.2 m between Nitro faces along the jump line, because a full ollie only clears one crate height.
 6. **Teaching sandwich at a checkpoint.** A striped crate floating above a floor striped beside C1, for repeated bounce fruit on foot. On the board it is a plow-proof pair (multi-hit) that rewards stopping.
 
+## Geometry, obstacles and enemies
+
+Geometry pass (agent geo-G2): F2 p044L–p045R and p095R re-read as half-page overviews; D2 p031–p033 shots 1–44 re-read for tube and pool shapes and hazard behaviour (fresh crops of D2 s6, s11, s31, s42). **u = one crate edge.** Rulers: the Nitro room's front row (Nitro – ? – Nitro, D2 s11), the Nitro stacks beside the walkways (D2 s8, s30) and the three floating Nitros (D2 s31). Tube diameters and pool lengths are perspective estimates.
+
+### Camera and route shape
+- **Into-screen throughout** (F2 おくスクロール); the bonus is a side-scroll room (D2 s21–s25).
+- The course alternates two room types: **round pipes** (a shallow stream in the bottom, fans across the bore, enemies rolling round the walls) and **pool rooms** (grated walkways around eel pools).
+- **Fork 1** (after the Aku crate): right = a dead-end Nitro room whose back wall is fake and leads to the secret course; left = barrel pipe, eel pool, C2 and the bonus pad. **Fork 2** (after a fan): left = a dead-end crystal corridor with the 9-box block; right = Nitro stacks, the Nitro pool, barrel pipes and the box room whose floor hole is a **one-way drop** to C3.
+- **S4** finale: hand-over-hand on a ceiling mesh between short floor islands, then a floor corridor of floating mines under a low ceiling to the goal.
+- Shape: a linear sewer whose two forks are a dead-end/through pair each; the order (dead end first) is enforced by geometry: fork 1 right is a cul-de-sac, fork 2 right ends in a drop you cannot climb back.
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — start → C1**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | grated walkway at the pipe mouth (start trio) | ≈ 4–5 wide | 0 | — | — | REST, TEACH | Free crates and a mask before the first fan | D2 s1; F2 p044L (medium) |
+| P-S1-b | S1 | round pipe with a shallow stream (fan + scrubber) | bore ≈ 5–6; stream wadable | 0 | slide under the fan | fan blades; scrubber rolling round the bore | CHOKE | The bore leaves only the fan's gaps; sliding the scrubber into the fan breaks a blade (POINT 1) | F2 p044L POINT 1; D2 s3 (medium) |
+| G-S1-a | S1 | eel pool #1: wadable water made lethal by the eel's discharge | ≈ 5–6 long | ≈ − 0.5 (step down into the water) | wait for the flash to end, then wade or jump in and out fast | discharge = death | — | First timed gap: visible cycle (yellow flashing), wide walkways to wait on | F2 p044L POINT 2; D2 s2 ("you can wade"), s4 (medium) |
+| P-S1-c | S1 | walkway past pool 1 (? trio) | ≈ 4 | 0 | — | — | REST | Reward for the first pool | D2 s5; F2 p044L (medium) |
+| P-S1-d | S1 | pipe with fan + scrubber #2 | bore ≈ 5–6 | 0 | slide under the blades while the scrubber is up on the ceiling | blades; scrubber | CHOKE | Same pipe, now with the enemy timing coupled to the fan | F2 p044L POINT 3; D2 s5 (medium) |
+| P-S1-e | S1 | sinking round pads in eel pool #2 | ≈ 2 across; ≈ 2 apart | 0 (sink if stood on) | keep jumping | a pad sinks under a waiting player | TIMING-STEP | Footing on a timer inside a timed pool | D2 s6 (crop) (medium) |
+| G-S1-b | S1 | eel pool with two round **sinking** pads | pads ≈ 2 across; gaps ≈ 2 | 0 | jump "one-two" across both pads without stopping | a pad sinks if you wait; water + eel | — | Footing on a timer inside a timed pool | D2 s6 (crop); F2 p044L round pads (medium) |
+| P-S1-f | S1 | walkway with a Nitro 2-stack on the right edge, striped sandwich and C1 | ≈ 4–5; Nitro takes ≈ 1 of it | 0 | keep left of the Nitro | Nitro touch = death | CHECKPOINT-PAD | Nitro first appears as a passive edge wall beside a checkpoint | F2 p044L; D2 s8 (medium) |
+
+**S2 — C1 → C2 (with fork 1, secret course and bonus)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | pipe with two spiky rats | bore ≈ 5–6 | 0 | stomp (no spin) | rat contact | CHOKE | Second enemy rule taught in a pipe with no other hazard | F2 p044L POINT 4; D2 s8–s9 (medium) |
+| G-S2-a | S2 | eel pool with a platform on its far side, two scrubbers | ≈ 5–6 | 0 | wait, cross between discharges | death | — | Third pool, with enemies waiting on the landing | D2 s9 (medium) |
+| P-S2-b | S2 | fork 1 junction (Aku/? stack) | ≈ 5 | 0 | — | — | REST | Mask right before the Nitro room | D2 s10; F2 p044L (high) |
+| P-S2-c | S2 | Nitro room (fork 1 right, dead end): grated floor over water | ≈ 5–6 wide | 0 | jump straight onto the ? flanked by two Nitro; dash-jump over a 2-high Nitro set; pass left of the third row | Nitro = death; the Aku absorbs one touch | CHOKE, BONUS-PAD | Explosives as walls: a 1-u lane (the ? itself), a 2-high hurdle, then a gap that is the secret door | F2 p095R; D2 s11–s12 (crop) (medium) |
+| G-S2-b | S2 | Nitro hurdle: middle set with one Nitro stacked on the row (2 high) | ≈ 2 high, ≈ 3–4 wide | +2 | running (dash) jump over | death | — | The room's only real jump, sized for a dash-jump | D2 s12 (medium) |
+| P-S2-d | S2 | fork 1 left: pipe with a barrel rolling across it and rats | bore ≈ 5–6 | 0 | pass while the barrel has rolled up the wall, or hop it | barrel contact | CHOKE | A pendulum-like obstacle in a round bore | F2 p044R POINT 5; D2 s18 (medium) |
+| P-S2-e | S2 | square pad: waiting platform in the middle of the fork-1-left eel pool | ≈ 2–3 | 0 | jump on, wait out the discharge | water on both sides | SAFE-ISLAND | A sanctioned stop inside the timed gap | D2 s19 (medium) |
+| G-S2-c | S2 | eel pool with a waiting platform mid-pool | platform ≈ 2–3; water ≈ 2–3 each side | 0 | jump onto the platform, wait for the electricity to die down, then run and jump across | death | — | A safe island inside the timed gap | D2 s19 (medium) |
+| P-S2-f | S2 | red grated floor with C2 and the green bonus pad | ≈ 5 | 0 | stomp the rat, hit C2, step on the pad | — | CHECKPOINT-PAD, BONUS-PAD | Checkpoint and bonus entry share one floor | D2 s20; F2 p044R (high) |
+| G-X-a | X | secret course: fake back wall of the Nitro room | — | 0 | walk/jump into the wall left of the third Nitro row | none (illusion) | BONUS-PAD | A secret door hidden behind explosive walls | F2 p095R; D2 s12–s13 (medium) |
+| G-X-b | X | secret pool with three Nitro, an eel and a rolling barrel at the exit pipe | ≈ 6–8 | 0 | time the electricity, avoid the Nitro, jump past the barrel | death | — | Three hazards stacked in one pool | D2 s14 (medium) |
+| P-X-a | X | stepping stones: five floating platforms in the wide secret pool | ≈ 2 each | 0 | jump, jump, dash-jump, dash-jump, jump out | water | STEPPING | The longest stepping run, escalating to running jumps | D2 s15; F2 p095R caution 1 (medium) |
+| G-X-c | X | wide secret pool with five floating platforms | platforms ≈ 2; gaps ≈ 2, 2, 3, 3, then a jump to the door | 0 | jump, jump, dash-jump, dash-jump, jump out | death | — | The level's longest stepping-stone run, escalating to running jumps | F2 p095R caution 1; D2 s15 (medium) |
+
+**B — bonus (side-scroll)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | very narrow platforms (pipes/ledges) | ≈ 1 deep | 0 | careful plain jumps | fall ends the bonus (series rule) | STEPPING | Precision footing to open | D2 s21 (medium) |
+| P-B-b | B | steel stair up to an outline-crate bridge, filled by a metal ! | stair 3 steps; bridge ≥ 4 crates | +3 | hit the !, climb, cross the materialised crates | — | STEPPING | The switch builds the floor | D2 s22 (medium) |
+| P-B-c | B | crate column hemmed in by steel (body-slam column) | 3 wide × 2–3 high | — | body slam from above | — | BONUS-PAD | Steel blocks a side attack, so geometry forces the slam | D2 s23; F2 p095R (medium) |
+| G-B-a | B | jump under a ceiling row of striped crates; two steel arrow blocks below | ≈ 2–3 | arrows lift ≈ 3 | arrow bounces into the ceiling crates | — | — | Vertical tool under a ceiling target | D2 s24 (medium) |
+| P-B-d | B | exit elevator | ≈ 2 | ride | — | — | REST | — | D2 s25 (medium) |
+
+**S3 — C2 → C3 (fork 2)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | pipe behind a rising door: rat + fan | bore ≈ 5–6 | 0 | stomp the rat (or knock it into the fan to break a blade), slide under the fan | blades | CHOKE | The fan lesson reprised with a rat as the key | D2 s26 (medium) |
+| P-S3-b | S3 | fork 2 left: straight grated corridor to the crystal and the 9-box block (dead end) | ≈ 3–4 wide, ≈ 12–15 long | 0 | walk; body slam; walk back | none | BONUS-PAD | A hazard-free payout at the end of a detour | F2 p044R POINT 7; D2 s28 (medium) |
+| P-S3-c | S3 | fork 2 right: walkway with a Nitro 2-stack and a ?/? stack | ≈ 4 | 0 | spin the ? stack without drifting into the Nitro | Nitro | CHOKE | Edge Nitro narrows the line beside a pickup | F2 p045L; D2 s30 (medium) |
+| G-S3-a | S3 | eel pool with three floating Nitro and **no footing** | pool ≈ 6 wide, ≈ 8–10 long; Nitro ≈ 2–3 apart | 0 | long jump into the water just before the discharge ends, thread the Nitro diagonally, get out fast | discharge or Nitro = death | — | The pool's stepping stones are replaced by explosives (POINT 8) | F2 p045L POINT 8; D2 s31 (crop) (medium) |
+| P-S3-d | S3 | pipe with two scrubbers and a rat | bore ≈ 5–6 | 0 | spin scrubbers, stomp the rat — in quick alternation | contact | CHOKE | Counter switching under pressure (POINT 9) | F2 p045L POINT 9; D2 s32 (medium) |
+| P-S3-e | S3 | pipe with two rolling barrels and a rat between them | bore ≈ 5–6 | 0 | wait one beat; kill the rat before passing | barrels | CHOKE | The barrel's waiting spot is occupied by an enemy (POINT 10) | F2 p045L POINT 10; D2 s33 (medium) |
+| P-S3-f | S3 | box room floor (round room, 12-crate wall against the back) | room ≈ 6; hole ≈ 2–3 in front of the wall | 0 | break the wall from the solid floor beside the hole | stepping onto the hole drops you (one-way) | CHOKE | The floor around the hole is the only place to work from | F2 p045L; D2 s34 (medium) |
+| G-S3-b | S3 | box room: hole in the floor in front of the 12-crate wall (one-way drop) | hole ≈ 2–3 | − (several u, not visible) | drop down after breaking the crates | one-way: crates and fork 2 left are lost if you drop early | — | The drop is the room's exit and its trap | F2 p045L; D2 s34 (medium) |
+| P-S3-g | S3 | landing room below the hole (?, C3, green !) | ≈ 5–6 | 0 | — | — | CHECKPOINT-PAD | The checkpoint, ? and Nitro switch share the landing | F2 p045R; D2 s35–s36 (high) |
+
+**S4 — C3 → goal**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | ceiling mesh (hand over hand) between short floor islands | mesh panels ≈ 3–5 long; islands ≈ 3 | ceiling ≈ +2–3 above the floor | jump up to grab, move slowly, drop to islands | F2: no danger of falling off, but slow; moving mines catch up if you dawdle | TIMING-STEP | A slow traversal mode turns every moving enemy into a wait-then-hurry gate | F2 p045R POINT 11 + Aku tip; D2 s35, s37–s41 (medium) |
+| G-S4-a | S4 | gap in the grated floor before the mine corridor | ≈ 1.5–2 | 0 | plain jump | lethal (assumed: the guides say only "jump the gap") | — | A plain jump with a hovering mine on the far side | D2 s42 (crop) (low) |
+| P-S4-b | S4 | floor corridor with static then bobbing mines under a low ceiling | ≈ 4–5 wide | ceiling low: a dash-jump hits it | walk around the static mines; regular jump over the bobbing pair when low | ceiling contact on a dash-jump is fatal (D2) | CHOKE | The ceiling caps the jump, so the over-jump is the mistake | F2 p045R POINT 13–14; D2 s43–s44 (medium) |
+
+### Jump sequences
+| id | section | count | moves | rhythm | widest gap | rest | no-stop? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 3 | plain jumps onto two sinking pads and off | even ("one-two") | ≈ 2 | walkway after the pool | yes (pads sink) | Timed footing in a timed pool | D2 s6 |
+| J-S2-a | S2 | 2 | plain jump onto the ? between Nitro, dash-jump over the 2-high Nitro set | syncopated | ≈ 3–4 (hurdle) | room floor | no | Explosive walls set the jump type | D2 s11–s12 |
+| J-S2-b | S2 | 2 | jump to the mid-pool platform, wait, run-and-jump out | stop-and-go | ≈ 2–3 | the platform | no | A sanctioned stop inside the timed gap | D2 s19 |
+| J-X-a | X | 5 | jump, jump, dash-jump, dash-jump, jump | accelerating | ≈ 3 | the door at the end | yes (floating footing) | Longest stepping run, secret-only | D2 s15; F2 p095R |
+| J-B-a | B | 3–5 | plain jumps on narrow ledges, stair climb, arrow bounces | even | ≈ 2–3 | elevator | no | — | D2 s21–s24 |
+| J-S3-a | S3 | 2–3 | long jump into the pool at the end of the flash, diagonal hops between Nitro, jump out | syncopated (timed to the eel) | ≈ 3 | grated exit | yes (water turns lethal) | The hardest timed gap on the main course | F2 POINT 8; D2 s31 |
+| J-S4-a | S4 | 2 | jump the floor gap, regular jump over the bobbing mines | even | ≈ 2 | goal | no | Height-capped jumps | D2 s42–s44 |
+
+### Obstacles and hazards
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1, S3 | fans (propellers) across the pipe | across path | continuous rotation; the gap between blades is visible | slide under through a gap; or break one blade by sliding a scrubber (POINT 1) or knocking a rat into it (D2 s26) | scrubbers, rats | TIMING-GATE | A gate the player can permanently weaken with an enemy | F2 p044L POINT 1, 3; D2 s3, s5, s26 |
+| O-S1-b | S1–S3, X | electrified eel pools (wadable water) | across path | regular discharge; yellow flashing = live | wait-and-go: enter as the flash ends, leave fast | sinking pads, platforms, Nitro, barrels | TIMING-GATE | A visible on/off gap repeated with new footing each time | F2 POINT 2, 8; D2 s4, s6, s19, s31 |
+| O-S1-c | S1 | sinking round pads | on platform | sink if you stand | keep jumping | eel pool | RHYTHM | Footing that forbids waiting | D2 s6 |
+| O-S1-d | S1, S3 | Nitro 2-stacks at the walkway edge | flank | static | go around | checkpoint, ? stack | LANE-BLOCK | Narrows the walkway beside pickups | D2 s8, s30 |
+| O-S2-a | S2 | Nitro room: ? flanked by Nitro, 2-high Nitro hurdle, third row hiding the fake wall | across path | static | jump onto the ?, dash-jump over, pass left | Aku crate before it | AREA-DENIAL, TEST | Explosives build the room's geometry | F2 p095R; D2 s11–s12 |
+| O-S2-b | S2, S3, X | rolling barrels (ドラムカン) rocking across the pipe and up its walls | across path | regular back-and-forth | pass while the barrel is up the wall (F2) or hop it (D2); wait one beat | rats between barrels (S3) | TIMING-GATE | A pendulum built from the pipe's curvature | F2 POINT 5, 10 + Aku tip; D2 s14, s18, s29, s33 |
+| O-S3-a | S3 | floor hole in the box room (one-way drop) | on platform | none | break the crates first, then drop | box wall | TEST | Point of no return placed in front of the last payout | F2 p045L; D2 s34 |
+| O-S3-b | S3 | Nitro floating in an eel pool (×3) | in pit | static | thread diagonally while the water is safe | discharge | TEST | Explosives replace stepping stones | F2 POINT 8; D2 s31 |
+| O-S4-a | S4 | low ceiling over the mine corridor | overhead | static | regular jump only (a dash-jump hits the ceiling, fatal) | bobbing mines | TEST | Caps jump height | D2 s44 |
+
+### Enemies (detailed)
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1, S2, S3, X | scrubber robot (バボー) | patrol-loop | rolls along the pipe walls and over the ceiling; also patrols pool walkways | spin or slide; slide it forward into a fan to break a blade | on line in pipes; landing walkways of pools | TEACH → TOOL/STEP | yes (one scrubber at the first fan) | First enemy is also the first tool (fan key) | F2 p044L POINT 1, 3; D2 s3–s5, s7, s9, s16, s32 (high) |
+| E-S2-a | S2, S3, X | spiky rat (トゲチュール) | shielded/armored | walks the walkway; spikes on its back and sides | stomp or jump over; spinning it fails (F2 "スピン禁止"; D2 s8, s32) — D2 s26 alone says a spin can knock one into a fan | on line (pipes), take-off of the C2 floor, between barrels | TEACH, HURDLE | yes (a pair in a plain pipe after C1) | Introduces a counter that contradicts the scrubber's | F2 p044L POINT 4; D2 s8–s9, s20, s26, s30, s32–s33 (high) |
+| E-S1-b | S1–S3, X | electric eel (ビリール) | swimmer | stays in its pool and discharges on a cycle (pool flashes yellow) | avoid: cross between discharges | in pit (every pool) | TIMING-GATE | yes (pool 1, wide walkways either side) | The enemy is the pool's clock | F2 p044L POINT 2; D2 s4, s19, s31 (high) |
+| E-S4-a | S4 | floating mine (浮遊機雷), patrolling under the mesh | patrol-1D | glides along the hanging route; indestructible | wait until it reaches a set spot, then move (POINT 12); after it passes, hurry or it catches up (Aku tip) | on line (under the mesh) | TIMING-GATE, PURSUER | yes (first mine, alone) | A slow traversal makes a slow enemy dangerous | F2 p045R POINT 12 + Aku tip; D2 s37 (medium) |
+| E-S4-b | S4 | floating mine "sentry" | patrol-1D | passes along the right side | wait for it to pass on the right, then go in front of it down the clear path | on line | TIMING-GATE | no | — | D2 s39 (medium) |
+| E-S4-c | S4 | hovering mine beyond the floor gap | static | hovers, smoking | avoid after landing | landing platform | GUARD | no | Occupies the landing of the last jump | D2 s42 (medium) |
+| E-S4-d | S4 | floating mines ×3 | static | do not move | walk around (F2: "余裕だぜ", an easy beat) | on line, staggered | REST beat (HURDLE) | no | A deliberate easy beat before the last test | F2 p045R POINT 13; D2 s43 (high) |
+| E-S4-e | S4 | floating mines ×2 | patrol-1D (vertical bob) | move up and down | jump over when they are low — a regular jump (D2) / high jump (F2); a dash-jump hits the ceiling | on line, last corridor | TEST, GATEKEEPER | no | The final gate combines a cycle with a height cap | F2 p045R POINT 14; D2 s44 (medium) |
+
+### Section beats
+- **S1**: start trio (mask) → pipe: fan + scrubber (slide it into the fan) → two scrubbers → eel pool 1 (wait, wade fast) → ? trio → pipe: fan + scrubber (slide under while it is on the ceiling) → pool with two sinking pads (one-two) → pipe: two scrubbers → Nitro 2-stack (edge) → striped sandwich + C1. *Gaps 3, enemies ≈ 6 (+ 2 eels), hazards 5 (2 fans, 2 pools, Nitro stack).*
+- **S2**: two spiky rats (stomp) → eel pool with scrubbers on the far platform → Aku/? → **fork 1**: right = Nitro room (? between Nitro, 2-high Nitro hurdle, third row; fake wall → secret: rats, Nitro/eel/barrel pool, five-platform pool, scrubbers, green gem) → back; left = barrel + rats → eel pool with a mid-pool platform → rat → C2 + bonus pad. *Gaps 4 (+ 3 secret), enemies ≈ 7 (+ ≈ 5 secret), hazards 4.*
+- **B**: narrow ledges → ! → steel stair + outline bridge → steel-hemmed body-slam column → arrows under the ceiling striped row → elevator. *Gaps ≈ 3, enemies 0, hazards 0.*
+- **S3**: rising door → rat + fan → **fork 2**: left = crystal corridor + 9-box block (body slam) → back; right = rat → Nitro 2-stack + ?/? → eel pool with three floating Nitro, no footing → two scrubbers + rat (spin/stomp) → barrel, rat, barrel → barrel → box room → hole (one-way) → ? + C3. *Gaps 2, enemies ≈ 6 (+ eel), hazards 6.*
+- **S4**: ? + green ! → ceiling mesh → patrolling mine (wait, then hurry) → ? on an island → door → sentry mine (let it pass) → fruit breather → swing down → door → ?/? → floor gap → hovering mine → three static mines → two bobbing mines under a low ceiling → goal. *Gaps 1 + mesh crossing, enemies 8 (mines), hazards 1 (ceiling).*
+
+### Geometry and enemy design logic
+1. **Two room types alternate like a drum beat.** Pipes are slide tests (fans, rolling enemies); pool rooms are timing tests (eel discharges). Crates sit in the calm walkways between them.
+2. **The pool is one gap re-dressed five times.** Wide walkways to wait on (pool 1) → sinking pads that forbid waiting (S1) → a mid-pool platform where waiting is sanctioned (fork 1 left) → no footing and three floating Nitro (POINT 8) → five floating platforms with dash-jumps (secret). Same clock, new footing each time.
+3. **The eel is the pool's clock, and the telegraph is the water itself** (yellow flashing = live). The counter is precise: enter as the flash ends, leave fast (POINT 8; D2 s31).
+4. **Fans are gates with an enemy key.** Sliding a scrubber or knocking a rat into a fan breaks a blade (POINT 1, D2 s26): the first enemy taught is also the first tool.
+5. **Counters are taught in contradiction.** Scrubbers want spin or slide; spiky rats forbid the spin. POINT 9 then sends them "one after another", so the test is switching counters, not executing one.
+6. **Barrels use the pipe's curvature as a pendulum.** They roll back and forth up the walls; you pass while one is high. The reprise puts a rat between two barrels (POINT 10), so the safe waiting spot is occupied — the Aku tip "wait one beat" is the lesson.
+7. **Nitro is architecture.** Edge stacks narrow walkways (S1, S3); the Nitro room builds a 1-u lane (the ? between two Nitro), a 2-high hurdle and the cover for a secret door; floating Nitro replace stepping stones (S3).
+8. **Forks pair a dead end with a through route**, and the second fork's through route ends in a one-way hole — geometry, not text, enforces "dead end first".
+9. **The point of no return is placed in front of the last payout**: the box room's hole lies between the player and the wall, so lining up a slam carelessly drops you first.
+10. **The finale swaps the movement mode.** Hand-over-hand on the mesh is safe from falls but slow (POINT 11), so the threats are indestructible mines you must let pass and then outpace (Aku tip).
+11. **Mines escalate by behaviour**: patrolling under the mesh → a sentry that passes on one side → hovering beside a landing → three static (an announced easy beat, "余裕だぜ") → two bobbing under a low ceiling where a dash-jump kills.
+12. **The low ceiling punishes the over-jump.** The last gate is passed with a regular jump; the strongest jump is the wrong one (D2 s44).
+
+### Geometry transfer to the skate game
+1. **Timed pool as a phasepad crossing.** A 5–6 m `pit` crossed on `phasepad`s (solid on a 3–4 s cycle with the engine's 0.9 s warning strobe): first with a wide waiting ledge, then two pads that must be taken in a one-two, then one pad mid-crossing where waiting is safe, then a crossing threaded between floating Nitro.
+2. **Rocking-barrel tube.** A `pendulum` swinging across a 5–6 m-wide tube (bob high at each side) so the player passes while it is up on one side; the reprise puts a `grunt` in the waiting spot between two pendulums. (`stone` rolls only along the corridor's Z axis, so it suits a barrel rolling *toward* the player, not this side-to-side rocker.)
+3. **Counter-switch corridor.** Alternate `grunt` (spin) and `spiker` (stomp only) every 4–6 m in a 4 m corridor, after first teaching each alone.
+4. **Nitro room with a 1-crate lane.** A ? crate between two Nitro (one 1.152 m lane, approached straight) and a 2-high Nitro hurdle (2.3 m: inside a full jump on foot, beyond a board ollie) — an on-foot room only; mask crate just before it.
+5. **One-way drop in front of the last payout.** A 2–3 m floor hole between the player and a 2 × 6 crate wall; the drop leads to the next checkpoint, so breaking the wall first is the player's choice.
+6. **Height-capped final gate.** A ceiling at ≈ 4.2–4.6 m (above a full jump's head reach of ≈ 3.8 m, below the double jump's ≈ 5.5 m) over a hazard whose safe crossing is one full jump: the single jump passes, the reflexive double jump bumps the ceiling and drops the player onto the hazard.
+
 ## Open questions / uncertainties
 - The fork-1 Nitro room's Nitro count (12) is a residual. It depends on the two wall estimates (S3-a 9 from front faces, S3-e 13 from D2's 2 × 6 plus F2's front box). If S3-a is two boxes deep, the Nitro count drops accordingly.
 - The bonus's B-x (3 boxes) is unlocated: possibly the outline bridge (≥4 seen, so it would not fit exactly) or boxes near the steel arrows. Whether the outline boxes materialise as counted crates is not visible.
 - S3-e may contain one striped box (a slatted face in D2 shot 34).
 - Whether the S2-b ? floats above the Nitros or sits between them on the floor is unclear. Both guides say it must be broken by jumping.
+- **Geometry (geo-G2):** pipe bores (≈ 5–6 u) and pool lengths are perspective estimates; the only crate rulers are the Nitro room's front row (D2 s11), the edge Nitro stacks and the three floating Nitro (D2 s31).
+- **Geometry:** the eel discharge cycle is not timed in either guide; both describe it only as flashing yellow while live (F2 POINT 2) and say to enter as it ends (POINT 8, D2 s31).
+- **Geometry:** the rolling barrels are read as rocking side to side across the pipe and up its walls (F2 POINT 5 "pass while it has rolled up"); D2 says only "rolling back and forth" (s18), so whether they roll across or along the pipe is medium confidence.
+- **Geometry:** spiky-rat counter conflict: F2 POINT 4 and D2 s8/s32 forbid the spin, but D2 s26 says a spin knocks the rat into the fan; the s26 rat may be a different (non-spiked) rat.
+- **Geometry:** the bobbing mines at the goal (POINT 14): F2 says high-jump over them when they move down, D2 s44 says a regular jump works and a dash-jump hits the ceiling (fatal). Ceiling height not visible.
+- **Geometry:** whether the S4 floor gap (D2 s42) is lethal, and what lies under the ceiling mesh (D2 s39–s40 suggest a void in places; F2 POINT 11 says you cannot fall off), is not stated.
+- **Geometry:** depth of the one-way drop under the box room is not visible.

@@ -214,6 +214,189 @@ Observed gem crates (excluding the uncounted green !): 1+3+2+1+3+6+1+3+2+3+5+2+4
 6. **Nitro on a collapsing bridge.** Nitro on the deck, a 2-high hanging Nitro (bottom at ~1.2 m: slide or duck under), Nitro on the deck again, every 4–5 m, on a bridge that drops after ~2 s of standing — a jump/slide rhythm. On the board any touch kills, so keep this an on-foot section or leave a clean grind line beside it.
 7. **Checkpoint-last cluster.** Ring a checkpoint with 4 crates and tell the player (or teach through a sign) to break them first; supports the target game's own checkpoint-state rules.
 
+## Geometry, obstacles and enemies
+
+Geometry pass (agent geo-G2): F2 p034R–p036L and p094L re-read as half-page overviews with zooms of row 1/row 2; D2 p018–p021 shots 1–64 re-read for platform shapes and hazard captions (fresh crops of D2 s11, s14, s19, s24, s28). Units: **u = one crate edge**. Normal-course widths come from stylised F2 drawings (icons drawn oversize) checked against perspective screenshots, so they are ranges; most gaps have no crate beside them to act as a ruler.
+
+### Camera and route shape
+- **S1 into-screen (3D)**: an ice cave that climbs in terraces toward the screen top (F2 p034R draws hatched step faces); it ends at a round **elevator** that lifts Crash into the side-scroll (D2 s8). C1 waits at the top of the ride.
+- **S2 side-scroll, left → right (row 1)**: long flat ledges and pillars over bottomless pits, an ice up-ramp, one **into-the-screen pocket** at a rock column (S2-b, D2 s13), then a long icy downhill.
+- **S3 side-scroll, left → right (row 2)**: down-slopes alternate with flat floors under icicles and wooden smashers; a pit with the bonus platform at its bottom; ends on a seal slope (D2 s17–s22, s30).
+- **B side-scroll** (green cave): left → right with one forced turn back to the left (outlines behind their switch).
+- **S4 into-screen (3D)**: a narrow climbing path that curves left and right; rolling disc stones cross it in troughs (F2 p036L; D2 s31–s37).
+- **G side-scroll** (green cave), entered by riding the red-gem platform up from S2 and left by an elevator that drops you just before that platform (D2 s38, s64).
+- Shape: two 3D climbs (S1, S4) with a two-row side-scroll traverse between them; every change of camera mode is a vertical ride or drop (elevator, gem platform, bonus pit, hole), and C1/C3 sit on those joins.
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — 3D ice cave → elevator**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | wide floor, ice (cave, walled) | ≈ 6–8 wide | 0 | walk / slide | low traction; one seal and one penguin on it | ARENA, TEACH | Ice and two new enemies meet on the widest, pit-free floor of the level, so the first slips cost nothing | D2 p018L s1; F2 p034R POINT 1 (medium) |
+| P-S1-b | S1 | crate staircase (cluster S1-a) used as steps | 3 wide × 1 deep, tops 1/2/3 | +1 per step | plain jumps | optional; breaking it removes the steps | STEPPING, BONUS-PAD | The first crates double as stairs, teaching "crates are footing" before any gap | F2 p034R bubble; D2 s1–s2 (high) |
+| P-S1-c | S1 | terrace wall with a steel arrow block at its foot | wall ≥ 3 high (not measurable) | + ≥ 3 | arrow bounce | no other way up | CHOKE | A vertical gate whose only key is the arrow: the level's first tool lesson, with no pit underneath | F2 p034R (arrow below a hatched step face); D2 s3 "bounce up to the next level" (low for height) |
+| P-S1-d | S1 | snow ledge carrying the TNT row | ≈ 4–6 wide × 3–4 deep | 0 | — | open front edge to pit G-S1-a | LANDING, PERCH | The TNT/1UP puzzle sits on the take-off ledge of the first pit: a careless spin or a retreat from the blast happens next to an edge | D2 s3–s4 (TNT pair ≈ one third of the ledge width) (medium) |
+| G-S1-a | S1 | bottomless pit (trench) | ≈ 2–3 | ≈ 0 | plain jump | lethal; TNT row on the take-off ledge, ? crate (S1-c) on the far ledge by a rock | — | First pit: short and level, so the only difficulty is the explosive just behind you | D2 s3–s4; F2 p034R (medium) |
+| G-S1-b | S1 | bottomless pit (first of a pair) | ≈ 2–3 | ≈ 0 | plain jump | lethal | — | A repeat pair sets an even rhythm right after the single first pit | D2 s5 "the next two pits"; F2 p034R hatched faces (low–medium) |
+| G-S1-c | S1 | bottomless pit (second of the pair), landing on the penguin lane | ≈ 2–3 | slightly + | plain jump | lethal; three penguins slide down the lane beyond | — | Second hop lands where the sliding penguins arrive | D2 s5–s6; F2 p034R (low–medium) |
+| P-S1-e | S1 | snow lane, sloping down toward the player | ≈ 3–5 wide, wall on one side | rising (into the screen) | walk | three penguins slide down it in file | LANE, CHOKE | The slope is what feeds the penguins toward you; one side is walled, so dodging is limited | F2 p034R POINT 3 photo; D2 s6 (medium) |
+| P-S1-f | S1 | ice patch (wide) | ≈ 6–8 wide, long | 0 | sustained run on ice | three seals bump you; ends in a jump | ARENA (run-up) | The ice is the run-up for the jump that ends it; the seals threaten the run-up, not your health | D2 s7 caption "don't get turned around or stopped, or you'll never make the jump" (medium) |
+| G-S1-d | S1 | pit at the end of the ice patch (to the elevator ledge) | not visible | not visible | running jump carried by ice momentum | lethal (assumed); being turned or stopped by a seal leaves too little speed | — | A gap coupled to enemies through momentum instead of timing | D2 s7 (low) |
+| P-S1-g | S1→S2 | round stone elevator | ≈ 2 across | large + (ride) | ride | seal beside it | CHECKPOINT-PAD (C1 at the top) | Mode change 3D → side-scroll; the checkpoint follows the ride | D2 s8–s9; F2 p034R hole (high) |
+
+**S2 — side-scroll row 1 (C1 → C2)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | long ledge with C1 (open pit at the far end) | ≈ 10–14 long | 0 | walk | hedgehog patrols it; W W + Aku mid-ledge | ARENA, TEACH, CHECKPOINT-PAD | A long flat gives room to wait out the first hedgehog's quills | F2 p035L row 1 (icon ruler); D2 s9 (medium) |
+| G-S2-a | S2 | bottomless pit | ≈ 1.5–2 | ≈ 0 | plain jump | lethal; hedgehog at the take-off end, another on the landing pillar | — | A short gap made hard only by enemies on both edges | F2 p035L row 1; D2 s10–s11 (low–medium) |
+| P-S2-b | S2 | square pillar | ≈ 2–3 wide | 0 | plain jump onto it | hedgehog on it | LANDING (contested) | The landing belongs to an enemy you cannot stomp while spiked: jump over it or time the quills | F2 p035L row 1; D2 s11 (medium) |
+| G-S2-b | S2 | bottomless pit | ≈ 1.5–2 | ≈ 0 | plain jump | lethal | — | Even second hop | F2 p035L row 1 (low) |
+| P-S2-c | S2 | ice up-ramp | ≈ 3–4 long | + ≈ 1–2 | run up it | — | run-up | The ramp supplies the speed the next gap needs | D2 s11 "cruise up the ice ramp" (low) |
+| G-S2-c | S2 | bottomless pit after the ramp | ≈ 3–4 | ≈ 0 to + | running (dash) jump | lethal | — | First gap that needs a running jump, announced by the ramp in front of it | D2 s11 "you'll have to dash-jump"; F2 p035L stepped blocks below the gem ledge (low) |
+| P-S2-d | S2 | raised ledge with the gem platform; rock column at its end | ≈ 4–6 | + ≈ 1 | — | gem platform rises to G (red gem only) | REST, BONUS-PAD | A calm ledge after the dash-jump doubles as the branch point | F2 p035L; D2 s12 (medium) |
+| P-S2-e | S2 | into-the-screen pocket behind the rock column | ≈ 2–3 deep | 0 | walk into the screen | none | BONUS-PAD | A camera-plane detour (holds S2-b); no hazard, curiosity only | F2 p035L green bubble; D2 s13 (medium) |
+| G-S2-d | S2 | pit with a wooden up-down pillar on the far bank | ≈ 2–3 | 0 | running jump started as the pillar begins to rise, then run under | lethal pit, crush under the pillar | — | First gap+hazard coupling; the pillar's rise is the start signal | F2 p035L POINT 5; D2 s14 (medium) |
+| P-S2-f | S2 | long icy down-slope | ≈ 10–14 long | − ≈ 3–4 over its length | slide, jump for crates | a miss means climbing back with chained slides | STEPPING (float line S2-c overhead) | Low traction carries you past the floating crates; the penalty is a climb, never a death | F2 p035R row 1 POINT 6; D2 s15 (medium) |
+| G-S2-e | S2 | landing in front of the green slabs | not visible | − | jump or drop, then run | two slabs drop once you land; hedgehog ahead | — | The landing itself starts a sprint | F2 p035R POINT 7 "着地したら一気に走れ" (low) |
+| P-S2-g | S2 | floor under two green dropping slabs | ≈ 4–5 (two slabs ≈ 2 each) | 0 | run through | crushed if you linger; hedgehog E-S2-d just beyond | CHOKE | A run that must stop short of an enemy: speed has to be controlled, not maximised | F2 p035R POINT 7 photo (medium) |
+| G-S2-f | S2 | short pit before C2 | not visible (short) | 0 | plain jump | lethal | — | A final easy hop onto the checkpoint floor | D2 s16 "jump over to your next checkpoint" (low) |
+| P-S2-h | S2 | small floor with C2 (blue crystals) | ≈ 3–4 | 0 | — | — | CHECKPOINT-PAD, REST | Rest after the slab sprint | D2 s16; F2 p035R (medium) |
+
+**S3 — side-scroll row 2 (C2 → bonus pit → finale)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | down-slope with a seal | ≈ 6–8 | − ≈ 2–3 | slide, spin | seal on the slope | LANE | F2 asks you to spin enemies while descending; slope speed and enemy arrive together | F2 p035L row 2 POINT 8; D2 s17 (medium) |
+| G-S3-a | S3 | pit at the foot of the slope | not visible | ≈ 0 | jump straight after the spin | lethal | — | Spin → jump chain on momentum | D2 s17 "spin into the seal, then jump across" (low) |
+| P-S3-b | S3 | flat floor under icicles | ≈ 4–6 | 0 | stop, wait, go | icicles fall as you approach | PERCH | Teaching floor: flat and wide enough to stop dead | F2 p035L POINT 9; D2 s18 (medium) |
+| G-S3-b | S3 | pit followed by a wooden smasher | ≈ 2 | 0 | jump, then run or slide under the raised smasher | lethal pit, crush; icicles just before it | — | Three hazards chained, but each with its own pause | D2 s19 caption; crop of s19 (low–medium) |
+| P-S3-c | S3 | floor between two smashers, behind foreground rock columns | ≈ 6–8 | 0 | jump blind for hidden crates | — | BONUS-PAD | A rest floor that hides S3-a behind the camera-side rock | F2 p035L/R gutter, POINT 10; D2 s20 (medium) |
+| G-S3-c | S3 | pit with the second smasher; icicles straight after | ≈ 2 | 0 | jump as the smasher rises, then brake (D2) or slide through at once (F2) | lethal | — | The reprise removes the safe pause between hazards | F2 p035R POINT 11; D2 s21 (low–medium) |
+| P-S3-d | S3 | raised block before the bonus pit | ≈ 4–5 | + ≈ 1 | plain jump | — | REST | A step up that frames the pit as a deliberate drop | F2 p035R row 2 zoom (low) |
+| G-S3-d | S3 | drop-down pit to the bonus platform | ≈ 1.5–2 wide | − (deep) | drop | optional; the ? platform at the bottom starts the bonus; lethal if missed: not visible | BONUS-PAD | Bonus access as a drop, not a precision jump | F2 p035R "ボーナスチャレンジへ"; D2 s22 (medium) |
+| P-S3-e | S3 | down-slope with two seals; floating Crash-head life at its end | ≈ 8–10 | − | slide, spin, late jump | life icon floats past the edge | LANE | A last risk/reward: jump late for the life | F2 p035R row 2; D2 s30 (medium) |
+
+**B — bonus (green cave)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | iced start block; ? crate hanging high above | ≈ 3 | crate ≈ 4–5 above the block | slide-jump (slide, then jump at once) | — | TEACH | Height gate that teaches a move, not a tool | D2 s23 (medium) |
+| G-B-a | B | three iced pillars over a pit (2 gaps + approach) | pillars ≈ 2 wide; gaps ≈ 2 | ≈ 0 | plain jumps; fruit on the arcs | a fall ends the bonus (standard Crash 2 rule, not stated here) | STEPPING | Fruit lines trace the jump arcs | D2 s24 (crop) (medium) |
+| P-B-e | B | stepping stones: the three iced pillars of G-B-a | ≈ 2 wide each | 0 | plain jumps | low traction on each top | STEPPING | Small icy tops make each landing a stop-and-go | D2 s24 (crop) (medium) |
+| P-B-b | B | outline floor; steel ! under a rock overhang | ≈ 5–6 | ! ≈ 2–3 up | jump to the !, then go back left | — | BONUS-PAD | The switch beyond its outlines forces a turn back | D2 s25–s26 (medium) |
+| G-B-b | B | pit to the next block | ≈ 3 | + | running (dash) jump | ends the bonus | — | Longer jump after the stepping pillars | D2 s27 (low) |
+| P-B-c | B | block whose L-3 crates are the steps to an icy platform | ≈ 3 | + ≈ 2 via the crates | jump onto the crates | — | STEPPING | Crates as stairs, as in S1 | D2 s27 (medium) |
+| P-B-d | B | platform with the 7-crate TNT wall under a low rock ceiling | ≈ 5–6 | — | spin a low crate while moving left, wait at the left edge | blast and a falling TNT | ARENA | The platform's length is the blast-escape distance; the low ceiling keeps the wall from being cleared from above | D2 s28 (crop); F2 p094L caution 2 (medium) |
+| G-B-c | B | pit to the exit elevator | ≈ 3 | ≈ 0 | running (dash) jump | ends the bonus | — | — | D2 s29 (low) |
+
+**S4 — 3D finale (C3 → goal)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | curved snow walkway with a low stone rim | ≈ 3–5 wide | rising overall | walk | disc troughs cross it | LANE | Narrow enough that the discs cover the whole width | D2 s31–s32, s36; F2 p036L (medium) |
+| G-S4-a | S4 | disc troughs ×5–6 crossing the path (twin crossing counts 2) | trough ≈ 1–2 deep in travel; disc ≈ 3 across | ≈ 0 | timed plain jump across while the disc is at one side | the disc kills | — | Each disc is a moving gate on a short crossing | F2 p036L POINT 12/14 (5 discs drawn); D2 s32, s36–s37 (medium) |
+| P-S4-b | S4 | wide ice patch closed by a step | ≈ 6–8 | step ≈ +1 at its end | slide across | the step stops even a hard slide (POINT 13) | SAFE-ISLAND | Forgiving ice: overshoot is caught by geometry | F2 p036L POINT 13; D2 s33 (medium) |
+| P-S4-c | S4 | crystal spot with a steel arrow (W floating above) | ≈ 3–4 | crate ≈ 3 above the arrow | arrow bounce | — | REST, BONUS-PAD | The one safe stop between discs | F2 p036L; D2 s34 (medium) |
+| G-S4-b | S4 | trench across the path | ≈ 1–2 | ≈ 0 (path descends toward you) | plain jump | lethal; three penguins slide toward you around it | — | A plain jump made busy by incoming sliders | D2 s35; F2 p036L hatched band (medium) |
+| G-S4-c | S4 | second trench near the top | ≈ 1–2 | ≈ 0 | plain jump | lethal | — | Repeat before the last disc | F2 p036L hatched band (low) |
+| P-S4-d | S4 | last ice patch and bridge to the goal | ≈ 4–6 | 0 | slide, jump past the last disc | — | — | Ends on the level's two themes, ice and disc | D2 s37; F2 p036L (low) |
+
+**G — red-gem course (side-scroll)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-G-a | G | arrival ledge with C | ≈ 4 | — | — | — | CHECKPOINT-PAD | — | D2 s39 (high) |
+| G-G-a | G | pits between small snow blocks; Nitro on the next ledge | ≈ 2 | 0 | jump across, then over the Nitro | lethal; Nitro on the landing | — | Nitro first appears as a hurdle on a landing, fruit above it as bait | D2 s42–s43 (medium) |
+| P-G-b | G | porcupine platform | ≈ 4–6 | 0 | wait, then slide into it from behind | — | ARENA | — | D2 s44 (medium) |
+| P-G-c | G | steel blocks and a steel arrow carrying a TNT, high | 1×1 blocks | arrow lift ≈ 3+ | bounce, hit TNT once, drop and wait | the blast releases the steel ! | PERCH | A perch where waiting is the move | D2 s45; F2 p094L gem caution 1 (medium) |
+| P-G-d | G | three steel arrows floating at staggered heights over a void | 1×1 each, ≈ 2 apart | ± 1–2 between arrows | arrow-to-arrow bounces | lethal fall | TIMING-STEP | Bounce blocks as the only footing (sequence J-G-a) | D2 s46 (medium) |
+| P-G-e | G | walkway of four steel blocks | 4 × 1 | 0 | run across during the TNT count | TNT behind you | TIMING-STEP | The fuse is the timer | D2 s47 (high) |
+| G-G-b | G | drop-down after a Nitro on the edge | — | − | leap over the Nitro, drop to the checkpoint ledge | Nitro on the take-off edge | — | — | D2 s50 (medium) |
+| G-G-c | G | gap at the foot of a slope | ≈ 2–3 | + (target block higher) | running jump | lethal | — | Slope momentum feeds the jump | D2 s53 (medium) |
+| G-G-d | G | longest gap of the level | ≈ 4–5 | 0 | full running (dash) jump: "maximum jump" | lethal; fruit grid in the air; landing has a wooden arrow + ? | — | The single max-distance jump, in the optional course | D2 s54–s55 (medium) |
+| P-G-f | G | collapsing wooden bridge #1 | ≈ 3–4 | 0 | jump over it or cross without stopping | falls if you stay | crumble | Teaches the collapsing bridge empty | D2 s57 (medium) |
+| P-G-g | G | floor under automatic smashers (a single, then a set) | ≈ 6 | 0 | run under the first, slide under the next | crush | TIMING-STEP | Faster than the normal course (F2) | D2 s58–s59; F2 p094L gem caution 3 (medium) |
+| P-G-h | G | collapsing wooden bridge #2 with four Nitro | ≈ 6–8 | 0 | jump, slide, jump without stopping | falls if you stay | crumble | Bridge #1 reprised with explosives as rhythm | D2 s61 (high) |
+| P-G-i | G | steel blocks under a hanging Nitro, porcupine ahead | ≈ 2 | 0 | spin from the blocks, never jump | — | PERCH | The ceiling Nitro forbids the reflex jump | D2 s63 (high) |
+| G-G-e | G | last dash-jump to the green ! and the elevator | ≈ 3 | 0 | running jump | lethal | — | — | D2 s64 (low) |
+
+### Jump sequences
+| id | section | count | moves | rhythm | widest gap | rest | no-stop? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 4 | arrow bounce, plain ×3 | even | ≈ 3 | ledges between pits (P-S1-d, ? ledge) | no | Climb, then three short level pits: a gentle opener | D2 s3–s5; F2 p034R |
+| J-S2-a | S2 | 3 | plain, plain, running | accelerating | ≈ 3–4 (G-S2-c) | P-S2-d gem ledge | no (but the ice ramp wants momentum) | Two hops past hedgehogs, then the ramp-fed dash-jump | D2 s10–s11; F2 p035L |
+| J-S2-b | S2 | 4 | mid-slide jumps for the float line | even (diagonal spacing ≈ 1.5–2) | — (no gap) | foot of the slope | yes (ice) | Collection on forced motion; a miss is fixed by climbing back | F2 p035R POINT 6; D2 s15 |
+| J-S3-a | S3 | 3 | plain (after spin), timed, timed | syncopated (go, stop, go, go) | ≈ 2 | P-S3-c hidden-crate floor | no | Stop-and-go: icicles force a halt between jumps | D2 s17–s21 |
+| J-B-a | B | 5 | plain ×3, running ×2 | even, then longer | ≈ 3 | outline floor P-B-b, TNT platform | no | Stepping pillars, then two dash-jumps | D2 s24–s29 |
+| J-S4-a | S4 | ≈ 8 | timed plain jumps across disc troughs ×6, trenches ×2 | syncopated (wait, jump) | ≈ 2 | P-S4-b ice patch, P-S4-c crystal spot | no | Every jump is gated by a moving disc; waiting is always allowed | F2 p036L; D2 s31–s37 |
+| J-G-a | G | 3–4 | arrow bounces | even | ≈ 2 | steel blocks (P-G-e) | yes | A column of bounce blocks over a void | D2 s46 |
+| J-G-b | G | 3 | jump, slide, jump | even | — (on the bridge) | solid ground after the bridge | yes (bridge collapses) | Nitro rhythm on a collapsing floor | D2 s61 |
+| J-G-c | G | 3 | running jumps (slope gap, max gap, dash-jump) | accelerating | ≈ 4–5 (G-G-d) | arrow ledge after G-G-d | no | Escalates to the single max-distance jump | D2 s53–s56 |
+
+### Obstacles and hazards
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S2-a | S2 | wooden up-down pillar (木柱; crusher) on the far bank of a pit | across path | slow up-down cycle; the rise itself is the signal | wait-and-go: jump as it starts rising, run under | pit G-S2-d | TIMING-GATE, TEACH | Introduced alone with a clear signal and a safe waiting spot | F2 p035L POINT 5; D2 s14 |
+| O-S2-b | S2 | two green stone slabs that drop | overhead, across path | triggered on landing (no cycle given) | outrun: run at once after landing | hedgehog E-S2-d beyond | TEST | A sprint that must end before an enemy | F2 p035R POINT 7 |
+| O-S3-a | S3 | icicles (first set) | overhead | fall as you approach (proximity trigger) | wait-and-go: stop, let them drop, then pass; do not slide under | seal before and after | TEACH | Teaches that stopping is safe | F2 p035L POINT 9; D2 s18 |
+| O-S3-b | S3 | icicles → pit → wooden smasher | overhead then across path | icicles by proximity; smasher on its cycle | wait, jump, run or slide under | seal E-S3-c after | TEST | Three known hazards in a row, each with its own pause | D2 s19 |
+| O-S3-c | S3 | wooden smasher over a pit, icicles right after it | across path + overhead | icicles drop the moment you pass the smasher | jump as it rises, then slide through at once (F2) or brake (D2) | hidden-crate floor before it | TEST | The second icicle set punishes the stop the first one taught (guides disagree on the counter) | F2 p035R POINT 11; D2 s21 |
+| O-S4-a | S4 | disc stones (えんばん岩) ×5–6, rolling side to side in troughs across the path | across path | continuous oscillation; the disc's position is the telegraph | wait in front, jump across when the disc is at one side | crate piles S4-b/S4-c in the lanes; penguin | TIMING-GATE, RHYTHM | A readable pendulum-like gate repeated at even intervals | F2 p036L POINT 12, Aku tip; D2 s32 |
+| O-S4-b | S4 | twin discs crossing each other | across path | the two meet in the middle | jump through the middle right after they cross | ? crate + three penguins before it | TEST | The disc lesson doubled | F2 p036L POINT 14; D2 s36 |
+| O-S4-c | S4 | ice patches | on platform | — | slide; a step ends the patch | discs | TEACH (forgiving) | Ice that cannot throw you off an edge | F2 p036L POINT 13; D2 s33, s37 |
+| O-G-a | G | stone smashers (faster than normal) | across path | faster cycle than the normal course | slide under | slopes, crates before them | TEST | The gem course re-tunes a known hazard instead of inventing one | F2 p094L gem caution 3; D2 s52, s56 |
+| O-G-b | G | automatic smashers (single, then a set) | across path | wait for the rise | run under the first, slide under the next | — | RHYTHM | — | D2 s58–s59 |
+| O-G-c | G | collapsing wooden bridges ×2 | on platform | collapse if you stand too long | keep moving or jump over | four Nitro on bridge #2 | TIMING-GATE | — | D2 s57, s61 |
+| O-G-d | G | Nitro crates used as placed hazards (≥ 11) | on landing ledges, take-off edges, hanging overhead, in a lane | static | jump over, slide under, walk between | collapsing bridge, porcupine | AREA-DENIAL | Explosives as geometry: they shape jumps and lanes | D2 s43, s50, s60–s61, s63 |
+| O-G-e | G | icicles → smasher → icicles | overhead | proximity, then cycle | wait, slide, wait | — | TEST | Normal-course hazards stacked closer | D2 s62 |
+| O-G-f | G | TNT fuse as a run timer | on platform | 3-count after a stomp | stomp, run across the steel walkway, jump | steel walkway P-G-e | TIMING-GATE | — | D2 s47 |
+
+### Enemies (detailed)
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | seal (ジョー) | patrol-1D | slides about on the ice | spin, slide | on line, start floor | TEACH | yes (paired with one penguin) | First enemies on the safest floor | F2 p034R; D2 s1 (medium) |
+| E-S1-b | S1 | penguin (グリン) | patrol-1D (slider) | slides on the ice | slide (F2: safer than a stomp on ice), spin | on line | TEACH | yes | — | F2 p034R POINT 1; D2 s1 (medium) |
+| E-S1-c | S1 | penguins ×3 in file | chaser (slide down the lane) | come down the slope one behind another | spin the leader so it bowls the rest (POINT 3), or jump | on line, sloped lane | TEST | no | A group solved by one well-timed spin | F2 p034R POINT 3; D2 s6 (medium) |
+| E-S1-d | S1 | seals ×3 | patrol (pushers) | slide into you on the ice patch | spin; keep moving (being turned or stopped ruins the run-up) | on line, ice patch before a jump | TIMING-GATE | no | Enemies that attack your momentum | D2 s7 (medium) |
+| E-S1-e | S1 | seal by the elevator | patrol | — | spin | take-off of the elevator | GUARD | no | — | D2 s8 (low; may be one of the three) |
+| E-S2-a | S2 | hedgehog (ニック) | shielded/armored, charger | raises its quills on seeing you and runs at you; invincible while spiked; calms down | jump over, or wait for the quills to drop and spin (spin while spiked fails) | on line after C1 | TEACH | yes (long flat, Aku crate just ahead) | Introduced where waiting is possible | F2 p035L POINT 4; D2 s9 (high) |
+| E-S2-b | S2 | hedgehog | shielded/armored | as above | as above | take-off edge of G-S2-a | TEST | no | Now you must deal with it beside a pit | F2 p035L row 1; D2 s11 (medium) |
+| E-S2-c | S2 | hedgehog | shielded/armored | as above | jump over it (little room to wait) | landing pillar P-S2-b | TEST | no | The enemy owns the landing | F2 p035L row 1; D2 s11 (medium) |
+| E-S2-d | S2 | hedgehog | shielded/armored | as above | stop short after the slab sprint | between hazards (after the slabs, before C2) | TEST | no | Turns the sprint into a controlled run | F2 p035R POINT 7 (medium) |
+| E-S3-a | S3 | seals ×3 | patrol | slide on slopes and floors | spin while moving (POINT 8) | on the slope; after the icicles; after the smasher | HURDLE | no | Keep the hands busy between hazards | F2 p035L POINT 8; D2 s17, s19 (medium) |
+| E-S3-b | S3 | seals ×2 | patrol | on the last slope | spin | on line, slope | HURDLE | no | — | F2 p035R; D2 s30 (medium) |
+| E-S4-a | S4 | penguin | patrol-1D | — | spin | beside the 2×2 crate block between discs | GUARD | no | — | F2 p036L; D2 s32 (medium) |
+| E-S4-b | S4 | penguins ×3 | chaser (slide down the path) | slide toward you after the trench | spin or jump | on line, downhill | TEST | no | The S1 trio reprised beside a trench | F2 p036L "×3"; D2 s35 (medium) |
+| E-G-a | G | porcupines ×3 | shielded/armored, patrol-1D | raise quills on seeing you and run back and forth; lower them when turning | jump up and slide into it from behind (D2 s44); spin from the steel blocks without jumping (s63) | platform arena; under a hanging Nitro | TEST, TIMING-GATE | no | The gem course adds a vulnerable-from-behind window | D2 s44, s49, s63 (medium) |
+| E-G-b | G | seal | patrol | — | spin | ledge under the floating ? W ? | HURDLE | no | — | D2 s48 (medium) |
+| E-G-c | G | penguin | patrol | — | stomp the TNT once, drop and kill it | below the bounce blocks | GUARD | no | — | D2 s46 (medium) |
+
+### Section beats
+- **S1**: wide ice floor + seal + penguin → crate staircase → steel arrow up a tall step → TNT row on a ledge → pit (≈ 2–3 u) → ? crate → two pits → three penguins sliding down a lane → ice patch with three seals → jump at the end of the ice → elevator → C1. *Gaps 4, enemies ≈ 8, hazards 0 (ice only).*
+- **S2**: C1 → hedgehog alone on a long ledge → W W + Aku → hedgehog at the take-off → pit → hedgehog on a pillar → pit → ice up-ramp → dash-jump → gem ledge → into-screen pocket (3 crates) → pit + wooden pillar → long icy downhill with a 4-crate float line → landing → two dropping slabs (run) → hedgehog → short pit → C2. *Gaps 5 (+1 landing), enemies 4, hazards 3.*
+- **S3**: seal on a down-slope → pit → icicles (stop) → seal → pit + smasher → seal → hidden trio behind rock → pit + smasher + icicles → raised block → bonus pit (drop) → slope with two seals → late jump for a floating life. *Gaps 4 (+ bonus drop), enemies 5, hazards 4.*
+- **B**: high ? (slide-jump) → three iced pillars → outline floor → ! under a rock → back left → dash-jump → crate steps → icy platform → TNT wall (retreat left) → dash-jump → elevator. *Gaps 5, enemies 0, hazards 1 (wall blast / falling TNT).*
+- **S4**: C3 → disc → cross pile → 2×2 Aku block + penguin → disc → disc → ice patch (step stops you) → crystal + arrow → trench → ? + three sliding penguins → twin discs → trench → disc → ice patch → bridge → goal. *Gaps 2 trenches + ≈ 6 disc crossings, enemies 4, hazards ≈ 7 (discs) + ice.*
+- **G**: C → arrow + overhead crates → ?? overhead → pit + Nitro → porcupine → body slam + TNT on a steel arrow → ! → outlines → three floating arrows → TNT + penguin → TNT fuse + steel walkway → seal + ? W ? → crates + porcupine → Nitro edge, drop → C → smashers → slope + gap → maximum gap → arrow + two high crates → dash-jump + smashers → collapsing bridge → automatic smashers → Nitro lane → Nitro collapsing bridge → icicles/smasher/icicles → steel perch under a Nitro + porcupine → dash-jump → green ! → elevator. *Gaps ≥ 8, enemies 5, hazards ≥ 10.*
+
+### Geometry and enemy design logic
+1. **Ice changes meaning four times.** It is introduced on the widest, pit-free floor (S1 start), becomes a run-up that seals can steal (S1 end), a downhill that carries you past crates (S2), and finally a bounded patch whose step stops any slide (S4, POINT 13). Ice never borders a lethal edge unless momentum is the point.
+2. **Every hazard debuts alone with a safe place to stand.** The wooden pillar (S2) has a waiting bank, the first icicles (S3) a flat floor where F2 says "stop and wait", the first disc (S4) a waiting spot in front. The reprises remove the pause: icicles → pit → smasher (s19), smasher with icicles right behind (s21), twin discs (POINT 14), faster smashers (gem).
+3. **The counter is inverted on the second instance.** Icicles #1: stop and let them fall (POINT 9). Icicles #2: slide through immediately after the pillar (POINT 11). The level teaches waiting, then punishes it.
+4. **Hedgehog difficulty comes from placement, not behaviour.** First on a long flat after C1 with the Aku crate between it and the next one; then on a take-off edge, then on a landing pillar, then just beyond a sprint where you must stop.
+5. **Enemies attack momentum, not health.** The three seals on the ice patch matter because being turned around or stopped loses the run-up for the closing jump (D2 s7).
+6. **Sliding groups are one problem.** Penguins come down lanes in file (S1, S4); POINT 3 makes the line a bowling setup — spin the leader and the rest fall.
+7. **Normal-course gaps are short (≈ 1.5–3 u) and level**; their difficulty comes from what sits on the edges: a TNT row on the take-off (G-S1-a), hedgehogs on both ends (G-S2-a), a crusher on the far bank (G-S2-d). The only running jumps are announced by an ice ramp (G-S2-c) or are in the optional gem course (G-G-d "maximum jump").
+8. **Height is changed by tools and rides**, not long climbs: steel arrow (S1), elevator (S1→S2), crate staircases (S1, bonus), gem platform, bonus drop, return elevator. Each ride is a camera-mode change and hosts a checkpoint.
+9. **The finale turns crate collection into timing**: the cross pile and the 2×2 Aku block sit in disc lanes, and the crystal arrow spot is the only true rest.
+10. **The gem course is the same grammar on hard settings**: faster smashers, collapsing bridges (empty first, then with Nitro), floating bounce blocks over voids, Nitro as placed geometry (a lane between them, a jump/slide/jump rhythm, a ceiling that forbids jumping) and one maximum-distance jump.
+11. **Recovery is generous where the lesson is new**: missed float-line crates cost a climb (POINT 6), the S4 ice step stops overshoot, the bonus pit is a drop, and bonus falls end the bonus instead of a life. Lethal pits are kept short and paired with readable hazards.
+12. **The bonus is a staircase of move tests**: slide-jump height, stepping pillars, a backtrack switch, crate steps, and a wall with a defined blast-escape distance under a low ceiling.
+
+### Geometry transfer to the skate game
+1. **Ice run-up with pushers.** A 15–20 m low-traction strip ending at a 4-crate (≈ 4.6 m) gap; two or three `grunt`/`charger` enemies drift across it. On foot the gap is inside a full jump (≈ 5.6 m) only with speed kept; on the board use a `speedpad` at the start so a rider who is bumped below ≈ 12 m/s must re-accelerate before the lip.
+2. **Pillar over the far bank, then the inverted reprise.** A `crusher` on the landing side of a 2–3 crate (2.3–3.5 m) pit, first alone with a visible rise and a flat waiting bank; later a second `crusher` with another `crusher` cycling 2–3 m behind it so the player who stops between them is caught (our stand-in for "icicles right after the pillar").
+3. **Disc troughs.** A `pendulum` swinging across a 3–4 m path every 8–10 m, with a crate pile sitting in one lane (TIMED). (`stone` rolls only along the corridor's Z axis, so it cannot cross the path the way the discs do.) On the board a 4 m lane takes 0.33 s at cruise, so time the swing so a cruising rider must still choose the moment.
+4. **Hedgehog curriculum.** `spiker` (no stomp) first on a ≥ 12 m flat right after a checkpoint with a mask crate overhead; next on a take-off edge; then on a 2.5-crate (≈ 3 m) landing pad where it must be jumped over.
+5. **Penguin bowling lane.** Three `grunt`s coming down a 4-crate-wide downslope in file; spinning the first should knock the others (if the engine cannot chain hits, space them so one jump clears two).
+6. **Nitro on a crumbling bridge (on foot).** A 7–9 m `crumble` bridge with Nitro at 0, 4 and 8 m, the middle one hanging with ≈ 1.2 m clearance (slide under); never on a board line.
+
 ## Open questions / uncertainties
 - **Normal-course count:** 37 observed (every F2 icon on the course plus D2 confirmation) vs 45 implied by the header's 79. Possible sources: the depth of the 3D piles (stair, cross, 2×2 block could be deeper than drawn), crates on elevator/transition rides not drawn, or a different meaning of the superscript for this stage. Not resolved.
 - **Aku subscript:** header says both Aku crates are off the normal course; both guides show two Aku crates on it. The gem course shows Crash wearing a mask (s42) but no mask crate was seen there.
@@ -221,3 +404,10 @@ Observed gem crates (excluding the uncounted green !): 1+3+2+1+3+6+1+3+2+3+5+2+4
 - **Bonus 18:** taken from gamepressure (N. Sane); PS1 may differ by one (N. Sane total is 125). B-b, B-c, B-e sizes are reconstructed.
 - **Gem course:** ≈ 47 crates seen; exact composition, the "body-slam" crates (possibly reinforced), and how many crates sit between screenshots are unknown.
 - Whether the bonus top crate is a ? (life) or a 1UP crate: the header gives one 1UP total and it is already on the normal course, so ? is assumed.
+- **Geometry (geo-G2):** most gap widths are ranges read from stylised F2 drawings and perspective D2 shots with no crate beside the gap; treat every width as ± 1 u.
+- **Geometry:** the height of the S1 terrace climbed with the steel arrow is not visible; "≥ 3 u" is inferred only from the arrow being the sole way up.
+- **Geometry:** the width of the jump at the end of the S1 ice patch (D2 s7) and whether its pit is lethal are not visible.
+- **Geometry:** number of disc stones — F2 p036L draws 5, but the POINT 14 photo shows two at the twin crossing, so the finale may hold 6.
+- **Geometry:** icicle counters disagree between guides: F2 POINT 11 says slide through right after the second pillar, D2 s21 says slow down; D2 s18 warns never to slide under the first set.
+- **Geometry:** whether the bonus-pit drop (G-S3-d) kills when the ? platform is missed is not visible; "falls in the bonus end it without costing a life" is the general Crash 2 rule, not stated on these pages.
+- **Geometry:** the dropping green slabs (POINT 7) are described only as falling after you land; their reset cycle is not given.

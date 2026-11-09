@@ -927,5 +927,972 @@
   "3 boxes unlocated (48 PS1 vs 45 mapped = N. Sane 45): possibly boxes destroyed by pre-lit TNT before arrival, Nitros under the POINT 9 callout, or a version difference.",
   "Five plain icons are wood? (could be striped).",
   "S4-a Nitro positions approximate; 8 is a minimum."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "vehicle",
+   "notes": "forced into-screen scroll on Polar from the mount; snow road between ice cliffs"
+  },
+  {
+   "section": "S2",
+   "mode": "vehicle",
+   "notes": "forced scroll; first orca holes and pre-lit TNT"
+  },
+  {
+   "section": "S3",
+   "mode": "vehicle",
+   "notes": "forced scroll; TNT gate, ice + Nitro, three orca holes in succession"
+  },
+  {
+   "section": "S4",
+   "mode": "vehicle",
+   "notes": "forced scroll through a Nitro zone on a bend; ride ends at a frozen lake, then on foot to the green ! and goal"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "vehicle lane (snow road)",
+   "size": "6-7 wide",
+   "heightDelta": "gentle undulation",
+   "edges": "walled (ice cliffs)",
+   "behaviour": "forced scroll",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "three lanes; every crate and hazard is a lane instruction",
+   "evidence": "D2 s3, s20-s21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "narrow ice bridge between ponds",
+   "size": "~2 wide",
+   "heightDelta": 0,
+   "edges": "open (ponds both sides)",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "lane precision taught before lateral hazards",
+   "evidence": "D2 s3",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "totem slalom (standing pillars)",
+   "size": "totems ~2 wide, gaps 2-3",
+   "heightDelta": 0,
+   "edges": "posts",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "lethal slalom with the line drawn in fruit",
+   "evidence": "F2 POINT 1; D2 s4",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "ice patch",
+   "size": "6-7 x 6-8",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "no steering",
+   "roles": [
+    "TEST"
+   ],
+   "why": "pre-alignment taught with crates (soft penalty)",
+   "evidence": "F2 POINT 3; D2 s8",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "road between two seals (C1)",
+   "size": "6-7",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "forced scroll",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "checkpoint in a calm gap between slow hurdles",
+   "evidence": "F2 POINT 4; D2 s9-s10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "road narrowed by a flank water channel",
+   "size": "usable ~4",
+   "heightDelta": 0,
+   "edges": "open right (water)",
+   "behaviour": "forced scroll",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "flank pit makes the seal jump directional",
+   "evidence": "D2 s12-s13",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "road after orca hole 2 (pre-lit TNT, C2)",
+   "size": "6-7",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "forced scroll",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "restart after the first orca + TNT block",
+   "evidence": "F2 POINT 6; D2 s18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "hilltop with edge TNT gate",
+   "size": "gap 2.5-3",
+   "heightDelta": "crest",
+   "edges": "walled",
+   "behaviour": "forced scroll",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "a gate passed while it fires",
+   "evidence": "D2 s20",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "ice patch with Nitro on both edges",
+   "size": "centre lane ~3, patch ~7 wide",
+   "heightDelta": 0,
+   "edges": "Nitro edges",
+   "behaviour": "no steering",
+   "roles": [
+    "TEST"
+   ],
+   "why": "S1 ice lesson repeated with lethal penalty",
+   "evidence": "F2 POINT 7; D2 s21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "Nitro zone on a bend",
+   "size": "6-7, one S-line",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "forced scroll",
+   "roles": [
+    "TEST"
+   ],
+   "why": "memorised line right after a checkpoint",
+   "evidence": "F2 POINT 9; D2 s28-s29",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "totem chicane around a river jump",
+   "size": "gaps 2-3",
+   "heightDelta": 0,
+   "edges": "posts",
+   "behaviour": "forced scroll",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "fast lane switches across a jump",
+   "evidence": "F2 POINT 12; D2 s34",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "final slope",
+   "size": "6-7",
+   "heightDelta": "downhill",
+   "edges": "walled",
+   "behaviour": "forced scroll",
+   "roles": [
+    "TEST"
+   ],
+   "why": "pure L-R-L slalom",
+   "evidence": "F2 p040L, p095L; D2 s35",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "small island",
+   "size": "3-4",
+   "heightDelta": 0,
+   "edges": "open (water)",
+   "behaviour": "static",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "two-hop finish",
+   "evidence": "D2 s36-s37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "frozen lake end area (on foot)",
+   "size": "not visible",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "why": "ride ends; green ! needs a deliberate on-foot action",
+   "evidence": "D2 s38-s39",
+   "confidence": "high"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "lethal water (icy pit across the road)",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "road 6-7 wide",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "none",
+   "failure": "death (freeze)",
+   "nearby": [],
+   "why": "first jump right after mounting, alone",
+   "evidence": "D2 s2",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "fallen totems (hurdle)",
+   "width": "~1 high, full road",
+   "heightDelta": "+1",
+   "landing": "road",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "? crate beside a standing totem just before",
+   "failure": "topple (death)",
+   "nearby": [
+    "S1-b"
+   ],
+   "why": "collect then jump at once",
+   "evidence": "F2 POINT 2; D2 s5",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "lethal water (pond)",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "road with ? on the far bank",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "crate marks the landing",
+   "failure": "death",
+   "nearby": [
+    "S1-c"
+   ],
+   "why": "landing marker",
+   "evidence": "D2 s6",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-d",
+   "section": "S1",
+   "kind": "lethal water (double pond)",
+   "width": "~3 + strip 2-3 + ~3",
+   "heightDelta": 0,
+   "landing": "short strip, then ice",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "count-to-two rhythm",
+   "failure": "death",
+   "nearby": [],
+   "why": "first two-jump rhythm",
+   "evidence": "D2 s7",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "lethal water (ice hole)",
+   "width": "~3",
+   "heightDelta": 0,
+   "landing": "road; statues on the left",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "landing dictates the next lane (go right)",
+   "failure": "death",
+   "nearby": [],
+   "why": "jump whose landing sets the lane",
+   "evidence": "D2 s11",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "orca hole 1 (water)",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "road; ? on the left",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "two orcas leap alternately; right one first",
+   "failure": "death",
+   "nearby": [
+    "S2-b",
+    "E-S2-b"
+   ],
+   "why": "first orca lane choice; crate on the other side",
+   "evidence": "F2 POINT 5; D2 s15",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "orca hole 2",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "road; pre-lit TNT right",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "aim where the orca just leapt (left)",
+   "failure": "death",
+   "nearby": [
+    "S2-d",
+    "S2-e"
+   ],
+   "why": "second orca after a swerve",
+   "evidence": "D2 s17",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "orca hole 3",
+   "width": "4-5",
+   "heightDelta": 0,
+   "landing": "road; crate pairs",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "orca pair",
+   "failure": "death",
+   "nearby": [
+    "S3-c"
+   ],
+   "why": "jump to its right",
+   "evidence": "D2 s22",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "orca hole 4 from an ice edge",
+   "width": "4-5",
+   "heightDelta": 0,
+   "landing": "road",
+   "lethal": true,
+   "runUp": "ice",
+   "move": [
+    "ride",
+    "held/high"
+   ],
+   "coupling": "orca surfaces on the right where the jump pushes you",
+   "failure": "death",
+   "nearby": [
+    "S3-d"
+   ],
+   "why": "held jump plus air steering",
+   "evidence": "F2 POINT 8; D2 s24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "orca hole 5",
+   "width": "~4",
+   "heightDelta": 0,
+   "landing": "road",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "orca pair",
+   "failure": "death",
+   "nearby": [],
+   "why": "skid left then jump",
+   "evidence": "D2 s25",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-d",
+   "section": "S3",
+   "kind": "pond with totems on the landing",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "road with standing totems",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "air steering to dodge totems on touchdown",
+   "failure": "death",
+   "nearby": [],
+   "why": "landing zone is hazardous",
+   "evidence": "D2 s26",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-e",
+   "section": "S3",
+   "kind": "pond (lands on C3)",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "C3",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "none",
+   "failure": "death",
+   "nearby": [
+    "C3"
+   ],
+   "why": "checkpoint is the landing marker",
+   "evidence": "D2 s27",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "fallen totem, fallen totem, orca hole A",
+   "width": "~1 high x2, hole ~4",
+   "heightDelta": "+1, +1, 0",
+   "landing": "brief touchdowns",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "orca pair right after two hurdles",
+   "failure": "death",
+   "nearby": [
+    "S4-b",
+    "E-S2-b"
+   ],
+   "why": "no-stop jump chain (POINT 10)",
+   "evidence": "F2 POINT 10; D2 s30-s31",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "orca hole B (wide)",
+   "width": "6-8",
+   "heightDelta": 0,
+   "landing": "road; ? on the far bank",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride",
+    "held/high"
+   ],
+   "coupling": "wait for the orca, then fly right",
+   "failure": "death",
+   "nearby": [
+    "S4-c",
+    "S4-d"
+   ],
+   "why": "widest jump, aimed at a crate",
+   "evidence": "D2 s32-s33",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-c",
+   "section": "S4",
+   "kind": "river jump inside the totem chicane",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "road with totems",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "dodge left before, right after",
+   "failure": "death",
+   "nearby": [],
+   "why": "lane switch straddling a jump",
+   "evidence": "F2 POINT 12; D2 s34",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-d",
+   "section": "S4",
+   "kind": "water jump to a small island, then off it",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "island 3-4",
+   "lethal": true,
+   "runUp": "forced",
+   "move": [
+    "ride"
+   ],
+   "coupling": "none",
+   "failure": "death",
+   "nearby": [],
+   "why": "two-hop finish",
+   "evidence": "D2 s36-s37",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 1,
+   "moves": [
+    "ride"
+   ],
+   "rhythm": "collect-then-jump",
+   "maxGap": "1 high",
+   "rest": "road before the pond",
+   "noStop": true,
+   "why": "pickup coupled to a hurdle",
+   "evidence": "D2 s5; F2 POINT 2"
+  },
+  {
+   "id": "J-S1-b",
+   "section": "S1",
+   "count": 2,
+   "moves": [
+    "ride"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "ice patch run-in",
+   "noStop": true,
+   "why": "rhythm named as a count",
+   "evidence": "D2 s7"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "ride",
+    "held/high"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "4-5",
+   "rest": "crate pairs between holes 3 and 4",
+   "noStop": true,
+   "why": "three holes in quick succession end the section",
+   "evidence": "D2 s22-s25; F2 POINT 8"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 2,
+   "moves": [
+    "ride"
+   ],
+   "rhythm": "even",
+   "maxGap": "3-4",
+   "rest": "C3",
+   "noStop": true,
+   "why": "landing-zone dodge then a safe landing on the checkpoint",
+   "evidence": "D2 s26-s27"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 3,
+   "moves": [
+    "ride"
+   ],
+   "rhythm": "even",
+   "maxGap": "4",
+   "rest": "road before the lone TNT",
+   "noStop": true,
+   "why": "consecutive-jump zone",
+   "evidence": "F2 POINT 10; D2 s30-s31"
+  },
+  {
+   "id": "J-S4-b",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "ride",
+    "held/high"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "6-8",
+   "rest": "final slope",
+   "noStop": true,
+   "why": "wide hole, chicane jump, island hop pair",
+   "evidence": "D2 s33-s37"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1-S4",
+   "kind": "lethal water (pits, ponds, holes, flank channel)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S2-b",
+    "O-S1-b"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "only pit type; every jump crosses it",
+   "evidence": "D2 s2-s37"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1-S4",
+   "kind": "standing polar-bear totems",
+   "placement": "flank",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S1-b"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "lateral posts, later on landing zones and in a chicane",
+   "evidence": "F2 POINT 1, 12; D2 s4, s11, s14, s26, s34"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1-S4",
+   "kind": "fallen totems",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S1-b",
+    "S4-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "hurdles that set jump timing",
+   "evidence": "F2 POINT 2, 10; D2 s5, s30-s31"
+  },
+  {
+   "id": "O-S1-d",
+   "section": "S1, S3",
+   "kind": "ice patches",
+   "placement": "on platform",
+   "timing": "static",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "S1-d",
+    "S3-b"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST"
+   ],
+   "why": "steering removed: placement becomes pre-alignment (soft first, lethal second)",
+   "evidence": "F2 POINT 3, 7; F2 p095L; D2 s8, s21"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2-S4",
+   "kind": "pre-lit TNT (self-detonating) x6",
+   "placement": "flank",
+   "timing": "already counting when seen",
+   "counter": [
+    "wait-and-go",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-c",
+    "S2-e",
+    "S3-a",
+    "S4-c"
+   ],
+   "roles": [
+    "TIMING-GATE",
+    "LANE-BLOCK"
+   ],
+   "why": "timed lane denial readable at speed",
+   "evidence": "F2 POINT 6, 11; D2 s16-s18, s20, s32"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3, S4",
+   "kind": "Nitro (ice edges and a field)",
+   "placement": "flank / across path",
+   "timing": "static",
+   "counter": [
+    "go around",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-b",
+    "S4-a"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEST"
+   ],
+   "why": "lethal edges for pre-alignment; a field for a learned line",
+   "evidence": "F2 POINT 7, 9; D2 s21, s28-s29"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "totem chicane across a river jump",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "lane switch straddling a jump",
+   "evidence": "F2 POINT 12; D2 s34"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "seals (Joe) x2",
+   "archetype": "patrol-1D",
+   "behaviour": "wander across the road",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "spin (not available on the bear)"
+   ],
+   "placement": "on line (either side of C1)",
+   "roles": [
+    "HURDLE",
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "enemies here are hurdles, not targets",
+   "evidence": "F2 POINT 4; D2 s9",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "seal",
+   "archetype": "patrol-1D",
+   "behaviour": "crosses the road beside a flank channel",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "spin"
+   ],
+   "placement": "on line beside a flank pit",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "same hurdle next to a lethal edge",
+   "evidence": "D2 s12",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2-S4",
+   "kind": "orcas, two per hole (8 holes)",
+   "archetype": "burrower/ambusher",
+   "behaviour": "pair leap alternately from left and right halves of each hole",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "jumping over the half whose orca is about to leap"
+   ],
+   "placement": "in pit",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": true,
+   "why": "two-phase gate: the first leap announces the safe half (first at a small hole with only a crate beside it)",
+   "evidence": "F2 POINT 5, 8, 10; D2 s15, s17, s22, s24-s25, s31, s33",
+   "confidence": "high"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "mount",
+    "water pit",
+    "3-lane crate slalom",
+    "ice bridge between ponds",
+    "totem slalom",
+    "? beside a totem",
+    "two fallen totems",
+    "pond (? on landing)",
+    "double pond",
+    "ice patch + 4 crates",
+    "seal, C1, seal"
+   ],
+   "gaps": 5,
+   "enemies": 2,
+   "hazards": 3
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "1UP",
+    "ice hole",
+    "statues (go right)",
+    "seal by flank channel (keep left)",
+    "crystal",
+    "statues",
+    "orca hole 1",
+    "? left",
+    "TNT ? TNT right",
+    "striped left",
+    "orca hole 2",
+    "pre-lit TNT right",
+    "C2"
+   ],
+   "gaps": 3,
+   "enemies": 5,
+   "hazards": 4
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "statues (fruit line)",
+    "pre-lit TNT gate",
+    "ice + 4 Nitro (centre)",
+    "orca hole 3",
+    "two crates left",
+    "two crates right",
+    "orca hole 4 (held, steer left)",
+    "orca hole 5",
+    "pond with totems on landing",
+    "pond onto C3"
+   ],
+   "gaps": 5,
+   "enemies": 6,
+   "hazards": 4
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "Nitro zone (centre, right, jump one)",
+    "three crates right",
+    "fallen totem, fallen totem, orca hole A",
+    "lone TNT (keep left)",
+    "wide orca hole B to the ?",
+    "totem chicane over a river",
+    "slope: ? L-R-L",
+    "island hop",
+    "bear stops",
+    "green ! on foot",
+    "goal"
+   ],
+   "gaps": 5,
+   "enemies": 6,
+   "hazards": 5
+  }
+ ],
+ "geometryObservations": [
+  "forced scroll turns every gap into a timing-and-lane problem; what the landing holds (crate, totem, orca, checkpoint) matters more than the width",
+  "strict hazard curriculum: water pit, ice bridge, totem slalom, fallen totems, ice, seals, orcas, pre-lit TNT, ice + Nitro, Nitro field, no-stop chain, chicane, slalom slope",
+  "each idea appears soft before lethal: ice with crates then ice with Nitro; small orca opening before long and wide holes",
+  "orca holes are two-phase gates; the first leap announces the safe half; crates beyond often sit on the other half",
+  "hole size escalates in steps: small, normal, held jump from an ice edge with air steering, wide, island hop",
+  "air steering becomes the advanced move (hole 4, totems on a landing, hole B, chicane)",
+  "totems play three roles: lethal flank posts, hurdles, landing-zone hazards",
+  "edge hazards fix a 2.5-3 u centre lane on a 6-7 u road",
+  "no enemy can be attacked (no spin on the bear): seals and orcas are pure hurdles and timing gates",
+  "jump density rises and rest falls toward the end (three holes in a row, POINT 10's no-stop triple)",
+  "checkpoints sit in calm beats or on a landing",
+  "the speed burst is made risky near pre-lit TNT (POINT 6) so the player keeps the designed pace"
+ ],
+ "geometryTransfer": [
+  "forced-pace board run on a 7-8 m road (three 2.3 m lanes) at 12 m/s; pits 3.5-5 m (full ollie carries ~6.6 m) with a crate 1-2 m past the far lip in the landing lane",
+  "alternating orca gate: a 4-5 m pit split into halves with two hazards popping in alternation (paired crusher or firetiki offset by half a cycle); reward crate on the other half once learned",
+  "ice pre-alignment pad soft then lethal: crates first, later Nitro at both edges leaving a >=3.3 m centre lane",
+  "no-stop triple: two low walls (<=0.9 m) then a 4 m pit, touchdowns of 0.3-0.5 s (4-6 m) at cruise",
+  "hazard on the landing: a pendulum or post on one lane of each landing, side reversed after the next jump (chicane)",
+  "pace trap: a speedpad just before a timed TNT pair so the rider who takes it arrives in the blast"
  ]
 }

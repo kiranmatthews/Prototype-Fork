@@ -240,9 +240,127 @@ Rhythm: the reward (1UP) comes first, then the first mixed hazard: orca timing p
 6. **Nitro field with a memorised exit and a reward on the exit side.** 6–8 Nitros across a 9–10 m road leaving one S-shaped 3 m line. The line exits to one edge, where a 3-crate grind row starts (S4-a → S4-b). Place the `nitrobang` (green !) on foot or on a slow stretch after the run, so the all-box goal needs a deliberate last action (S4-f).
 7. **Checkpoint plus life in a calm beat.** Put C1 between two slow, jumpable enemies and a life crate straight after it on the held line (C1 + S2-a). Split the crates evenly between checkpoints (about 10 / 8 / 11 / 16).
 
+## Geometry, obstacles and enemies
+
+Geometry pass (agent geo-G2): F2 p039L–p040L and p095L re-read as half-page overviews; D2 p026–p027 shots 1–39 re-read for road width, hole shapes and hazard timing (fresh crop of D2 s20–s22). **u = one crate edge.** Rulers: the pre-lit TNT pair (D2 s20) and the ice-patch Nitro pairs (D2 s21) put the road at **≈ 6–7 u** wide with a **≈ 2.5–3 u** clear centre lane between edge hazards. Along-road lengths of holes are perspective estimates. Under forced scroll every "gap" is crossed by the bear's jump at a fixed running pace; the rider controls lane, jump moment, a short speed burst (O button) and air steering.
+
+### Camera and route shape
+- **Vehicle, forced into-screen scroll** (F2 しろくま / おくスクロール(きょうせい)) from the mount to the end of the ride; one stretch at the start and the green ! at the end are on foot.
+- The road is a snow lane between ice-cliff walls that curves gently left and right (F2 draws a straight diagonal; D2 s28 mentions a bend in the Nitro zone). No branches, no backtracking.
+- Shape: four sections of rising hazard density, each opening with a calm beat (mount, 1UP after C1, statues after C2, Nitro zone right after C3 so retries are cheap) and ending in a jump series.
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — start → C1**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | vehicle lane: snow road between ice cliffs | ≈ 6–7 wide | gentle undulation | steer, jump | forced scroll; a missed crate cannot be revisited | — | Three lanes: every crate and hazard is a lane instruction | D2 s3, s20–s21 (crop) (medium) |
+| G-S1-a | S1 | lethal water pit across the whole road (first "icy pit") | ≈ 3–4 along the road | 0 | ride jump | falling in freezes you (death) | — | First jump right after mounting, with nothing else around it | D2 s2 (medium) |
+| P-S1-b | S1 | narrow ice bridge between two ponds | ≈ 2 wide | 0 | hold the centre lane | ponds either side (death) | CHOKE | Lane precision is taught before any lateral hazard: the first three crates already steer you onto it | D2 s3 "small bridge of ice between the two ponds" (medium) |
+| P-S1-c | S1 | totem slalom: standing polar-bear pillars staggered left/right in pairs | totems ≈ 2 wide; gaps ≈ 2–3 | 0 | steer right, left, right (fruit trail shows the line) | contact at speed = death (POINT 1) | CHOKE | A lethal slalom whose line is drawn in fruit | F2 p039L POINT 1; D2 s4 (medium) |
+| G-S1-b | S1 | two fallen totems lying across the road (hurdle) | each ≈ half the road; ≈ 1 high | +≈ 1 (hurdle) | ride jump | tripping topples you (POINT 2) | — | Directly after the ? beside a standing totem: collect then jump at once | F2 p039L POINT 2; D2 s5 (medium) |
+| G-S1-c | S1 | pond (lethal water) with the ? on the far bank | ≈ 3–4 | 0 | ride jump aimed at the crate | death | — | The crate marks the landing (S1-c) | D2 s6 (medium) |
+| G-S1-d | S1 | double pond: two ponds with a short strip between | each ≈ 3; strip ≈ 2–3 | 0 | jump, "count to two", jump | death | — | The first two-jump rhythm, spelled out as a count | D2 s7 (medium) |
+| P-S1-d | S1 | ice patch (no steering) holding the 4-crate group on the left | ≈ 6–7 wide, ≈ 6–8 long | 0 | enter on the left before the ice; slide through | missed crates are lost (soft penalty) | TEST | Pre-alignment taught with crates, not death | F2 p039L POINT 3; D2 s8 (medium) |
+| P-S1-e | S1 | road between two wandering seals with C1 | ≈ 6–7 | 0 | jump the seals | seal contact | CHECKPOINT-PAD | Checkpoint in the calm gap between two slow hurdles | F2 p039L POINT 4; D2 s9–s10 (medium) |
+
+**S2 — C1 → C2**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| G-S2-a | S2 | ice hole (water) across the road | ≈ 3 | 0 | ride jump, then steer hard right | statues on the left right after landing | — | A jump whose landing dictates the next lane | D2 s11 (medium) |
+| P-S2-a | S2 | road narrowed by a water channel along its right side | usable ≈ 4 | 0 | jump the seal, keep left | falling into the channel = death ("Crash-cicle") | CHOKE | A flank pit makes the seal jump directional | D2 s12–s13 (medium) |
+| G-S2-b | S2 | orca hole 1: small opening across the road, two orcas leaping alternately | ≈ 2–3 along the road | 0 | jump over the half whose orca is under water (the right one leaps first) | orca contact or water = death | — | The first orca lane choice; the crate beyond sits on the other side | F2 p039R POINT 5; D2 s15 "teeny opening" (medium) |
+| G-S2-c | S2 | orca hole 2 | ≈ 3–4 | 0 | aim at the left half, where the orca has just leapt | death | — | Second orca right after the crate swerve | D2 s17 (medium) |
+| P-S2-b | S2 | road after hole 2 (pre-lit TNT on the right, C2) | ≈ 6–7 | 0 | cruise without the burst | TNT blast | CHECKPOINT-PAD | Restart after the first orca + TNT block | F2 p039R POINT 6; D2 s18 (medium) |
+
+**S3 — C2 → C3**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | hilltop with a pre-lit TNT at each edge | gap between them ≈ 2.5–3 | crest | ride the centre (jump the right TNT per D2) | blast | CHOKE | A gate you pass while it fires | D2 s20 (crop) (medium) |
+| P-S3-b | S3 | ice patch with two Nitro on each edge | centre lane ≈ 3; patch ≈ 7 wide | 0 | enter dead centre and do not steer | Nitro touch = death | TEST | S1's ice lesson repeated with a lethal penalty | F2 p039R POINT 7; D2 s21 (crop) (medium) |
+| G-S3-a | S3 | orca hole 3 | ≈ 4–5 | 0 | jump to its right | death | — | Then the two-left / two-right crate pairs | D2 s22 (medium) |
+| G-S3-b | S3 | orca hole 4 taken from an ice edge | ≈ 4–5 | 0 | take off at the very edge of the ice, jump LEFT, hold jump long, steer left in the air | an orca surfaces on the right where the jump pushes you | — | First hole that needs a held jump plus air steering | F2 p039R POINT 8; D2 s24 (medium) |
+| G-S3-c | S3 | orca hole 5 | ≈ 4 | 0 | skid left, then jump | death | — | Third hole in quick succession | D2 s25 (medium) |
+| G-S3-d | S3 | pond with standing totems on the landing | ≈ 3–4 | 0 | jump, steer left in the air to miss the statues on touchdown | landing on a totem = death | — | The landing zone itself is hazardous | D2 s26 (medium) |
+| G-S3-e | S3 | last pond; the jump lands on C3 | ≈ 3–4 | 0 | ride jump | death | CHECKPOINT-PAD (landing) | The checkpoint is the landing marker | D2 s27 (high) |
+
+**S4 — C3 → goal**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | Nitro zone on a bend (8 Nitro scattered) | road ≈ 6–7; one S-shaped safe line | 0 | centre, then right round the bend, jump only the right-end Nitro | Nitro = death | TEST | A memorised line right after a checkpoint | F2 p040L POINT 9; D2 s28–s29 (medium) |
+| G-S4-a | S4 | consecutive-jump zone: two fallen totems, then orca hole A | totems ≈ 1 high; hole ≈ 4 | +1, +1, 0 | three jumps with only brief touchdowns, the last to the right | death on any miss | — | First no-stop jump chain (POINT 10) | F2 p040L POINT 10; D2 s30–s31 (medium) |
+| G-S4-b | S4 | orca hole B (wide) | ≈ 6–8 | 0 | wait for the orca to leap, then fly right to the ? on the far bank | death | — | Widest jump, aimed at a crate, after a TNT that pushed you left | D2 s32–s33 (medium) |
+| P-S4-b | S4 | totem chicane around a river crossing | gaps ≈ 2–3 | 0 | dodge left before the river, right after the jump; land, right, left, jump right | totem = death | CHOKE | Fast lane switches across a jump | F2 p040L POINT 12; D2 s34 (medium) |
+| G-S4-c | S4 | river jump inside the totem chicane | not visible | 0 | ride jump; dodge left before it, right after it | death (water or totem) | — | A lane switch straddling a jump | F2 p040L POINT 12; D2 s34 (medium) |
+| P-S4-c | S4 | final slope with three ? crates left/right/left | ≈ 6–7 | downhill | zig-zag | missed crate | TEST | A pure slalom to close the ride | F2 p040L; F2 p095L caption; D2 s35 (medium) |
+| G-S4-d | S4 | water jump left to a small island, then a last jump | island ≈ 3–4 | 0 | jump left, land, jump again | death | — | Two-hop finish onto a tiny landing | D2 s36–s37 (medium) |
+| P-S4-d | S4 | small island between the last two water jumps | ≈ 3–4 | 0 | land, jump again at once | water both sides | LANDING | A tiny landing that forces an immediate second jump | D2 s36–s37 (medium) |
+| P-S4-e | S4 | frozen lake / end area (on foot) with the green ! | — | — | walk, spin | — | REST | The ride ends and the all-box goal needs one deliberate on-foot action | D2 s38–s39; F2 p040L (high) |
+
+### Jump sequences
+| id | section | count | moves | rhythm | widest gap | rest | no-stop? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 2 | ride jumps over two fallen totems (side by side, one jump) right after a crate | collect-then-jump | ≈ 1 high | road before the pond | yes (forced scroll) | Couples a pickup to a hurdle | D2 s5; F2 POINT 2 |
+| J-S1-b | S1 | 2 | ride jumps over the double pond | even ("count to two") | ≈ 3 | ice patch run-in | yes | The level names its rhythm | D2 s7 |
+| J-S3-a | S3 | 3 | orca holes 3, 4, 5 (hole 4 held + air-steered) | accelerating | ≈ 4–5 | the crate pairs between holes 3 and 4 | yes | Three holes in quick succession end the section | D2 s22–s25; F2 POINT 8 |
+| J-S3-b | S3 | 2 | pond with totems on the landing, pond onto C3 | even | ≈ 3–4 | C3 | yes | Landing-zone dodge, then a safe landing on the checkpoint | D2 s26–s27 |
+| J-S4-a | S4 | 3 | fallen totem, fallen totem, orca hole A (to the right) | even, very short touchdowns | ≈ 4 | road before the lone TNT | yes | POINT 10's consecutive-jump zone | F2 POINT 10; D2 s30–s31 |
+| J-S4-b | S4 | 3 | wide orca hole B, river jump in the chicane, island hop pair | syncopated (wait for the orca, then lane switches) | ≈ 6–8 | slope with the last three ? | yes | The finale mixes timing, width and steering | D2 s33–s37 |
+
+### Obstacles and hazards
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1–S4 | lethal water (pits, ponds, holes, flank channel) | across path / flank | static | ride jump; keep away from the flank channel | orcas, totems | AREA-DENIAL | The only pit type; every jump crosses it | D2 s2–s37 |
+| O-S1-b | S1–S4 | standing polar-bear totems (シロクマ柱) | flank, in staggered pairs; on landings later | static | go around (lethal at speed) | crates beside them (S1-b), fruit lines | LANE-BLOCK | Lateral posts; later moved onto landing zones and into a chicane | F2 POINT 1, 12; D2 s4, s11, s14, s26, s34 |
+| O-S1-c | S1, S2, S4 | fallen totems | across path | static | jump over (tripping topples you) | crate before them; orca right after (S4) | RHYTHM, HURDLE | Hurdles that set jump timing | F2 POINT 2, 10; D2 s5, s14, s30–s31 |
+| O-S1-d | S1, S3 | ice patches | on platform | static | pick the lane before the ice; hold toward the next crate as each breaks (p095L) | crates (S1), Nitro (S3) | TEACH → TEST | Steering removed, so placement becomes pre-alignment | F2 POINT 3, 7; F2 p095L; D2 s8, s21 |
+| O-S2-a | S2–S4 | pre-lit TNT (self-detonating) ×6 | edge of the road, single or as a gate pair | already counting when seen; blows before or as you pass | cruise without the burst; ride the centre or keep to the far side | orca holes, C2 | TIMING-GATE, LANE-BLOCK | A timed lane denial readable at speed | F2 POINT 6, 11; D2 s16–s18, s20, s32 |
+| O-S3-a | S3, S4 | Nitro (4 on ice edges, 8 in a field) | flank (ice) / field across the road | static | centre lane; memorised S-line, one jump | ice, a bend | AREA-DENIAL, TEST | Lethal edges for the pre-alignment test; a field for a learned line | F2 POINT 7, 9; D2 s21, s28–s29 |
+| O-S4-a | S4 | totem chicane across a river jump | across path, alternating | static | left before the river, right after it | water jump | TEST | Lane switch straddling a jump | F2 POINT 12; D2 s34 |
+
+### Enemies (detailed)
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | seals (ジョー) ×2 | patrol-1D | wander across the road | jump over or steer round (no spin on the bear, so attacking fails) | on line, either side of C1 | HURDLE, TEACH | yes (a calm stretch after the ice) | Teach that enemies here are hurdles, not targets | F2 p039L POINT 4; D2 s9 (high) |
+| E-S2-a | S2 | seal | patrol-1D | crosses the road beside the flank channel | jump it, then keep left | on line, beside a flank pit | TEST | no | The same hurdle next to a lethal edge | D2 s12 (medium) |
+| E-S2-b | S2–S4 | orcas (オルカ), two per hole, holes 1–5 and A–C | ambusher (periodic leaper) | the pair leap alternately from the left and right halves of the hole; one is always under water | jump over the half whose orca is submerged; hold and steer in the air on long holes | in pit (every orca hole) | TIMING-GATE | yes (hole 1, a small opening, with a crate as the only extra) | A two-phase gate: the first leap tells you the safe side | F2 p039R POINT 5, 8; p040L POINT 10; D2 s15, s17, s22, s24–s25, s31, s33 (high) |
+
+### Section beats
+- **S1**: mount → water pit → 3-lane crate slalom → ice bridge between ponds → totem slalom (fruit line) → ? beside a totem → two fallen totems → pond (? on the landing) → double pond → ice patch with the 4-crate group → seal · C1 · seal. *Gaps 5, enemies 2, hazards 3 (totems, fallen totems, ice).*
+- **S2**: 1UP → ice hole → statues (go right) → seal beside a flank channel (keep left) → crystal → statues (jump one) → orca hole 1 → ? left → TNT ? TNT right → striped left → orca hole 2 → pre-lit TNT right → C2. *Gaps 3, enemies 5 (seal + 4 orcas), hazards 4.*
+- **S3**: statues (fruit line) → pre-lit TNT gate at a hilltop → ice + 4 Nitro (centre) → orca hole 3 → two crates left → two crates right → orca hole 4 (held, steer left) → orca hole 5 → pond with totems on the landing → pond onto C3. *Gaps 5, enemies 6 (orcas), hazards 4.*
+- **S4**: Nitro zone (centre → right, jump one) → three crates on the right → fallen totem, fallen totem, orca hole A (no-stop) → lone TNT (keep left) → wide orca hole B (to the ?) → totem chicane over a river → slope with three ? (L-R-L) → island hop → bear stops → green ! on foot → goal. *Gaps 5, enemies 6 (orcas), hazards 5.*
+
+### Geometry and enemy design logic
+1. **Forced scroll turns every gap into a timing-and-lane problem.** Approach speed is fixed, so widths matter less than *what the landing holds*: a crate to aim at (S1-c, S2-b, S4-d), a totem to dodge (G-S3-d), an orca to avoid, or C3 itself.
+2. **The hazard curriculum runs in a strict order**: water pit → narrow ice bridge (lane precision) → standing-totem slalom (lethal lateral posts) → fallen totems (hurdle) → ice patch (no steering) → seals (moving hurdles) → orcas (timed lane choice) → pre-lit TNT (timed lane denial) → ice + Nitro (lethal pre-alignment) → Nitro field → no-stop jump chain → chicane → slalom slope.
+3. **Each idea appears soft before it appears lethal.** Ice patch #1 holds crates (a miss loses a crate); ice patch #2 holds Nitro (a miss kills). The first orca hole is a "teeny opening"; later holes are long, then wide.
+4. **Orca holes are two-phase gates.** The pair leap alternately; the first leap announces the safe half. Crates beyond a hole are often on the other half (S2-b), so the clear line and the all-box line disagree by one lateral commitment.
+5. **Hole size escalates in steps**: small (hole 1) → normal (2–3) → held jump from an ice edge with air steering (hole 4) → wide (hole B) → a two-hop island finish.
+6. **Air steering becomes the advanced move**: hole 4 (push left in the air), the pond with totems on the landing (move left in the air), hole B (fly right to the ?), the chicane (dodge after a jump).
+7. **Totems play three roles**: lethal flank posts (slalom), hurdles (fallen), and landing-zone hazards (after a pond, in the chicane). The last turns a jump into a jump plus an immediate dodge.
+8. **Lane width is fixed by edge hazards**: the road is ≈ 6–7 u; TNT gates and Nitro pairs sit at the edges leaving a ≈ 2.5–3 u centre lane — wide enough to hold without steering, narrow enough that drift on ice is fatal.
+9. **No enemy can be attacked.** With no spin on the bear, seals and orcas are pure hurdles and timing gates; the level's "combat" is entirely avoidance.
+10. **Jump density rises, rest falls**: S1 separates its jumps with crate beats; S3 ends with three holes in a row; S4 opens with a memorised Nitro line and holds a no-stop triple (POINT 10).
+11. **Checkpoints sit in calm beats or on a landing** (between seals, after a TNT, on the C3 landing), so each section restarts on a forgiving stretch.
+12. **The speed burst is a trap near pre-lit TNT** (POINT 6 "加速禁止"): the one optional input is made risky so the player keeps the designed pace.
+
+### Geometry transfer to the skate game
+1. **Forced-pace board run with marked landings.** A 7–8 m-wide road (three 2.3 m lanes) at cruise 12 m/s; pits 3.5–5 m long (a full ollie carries ≈ 6.6 m at cruise), each with a crate 1–2 m past the far lip on the lane you must land in.
+2. **Alternating "orca" gate.** Split a 4–5 m pit into left and right halves with two hazards that pop up in alternation (e.g. paired `crusher`s or `firetiki` jets offset by half a cycle). The first to fire tells the rider which half is safe; put the reward crate on the other half once the gate is learned.
+3. **Ice pre-alignment pad, soft then lethal.** First a low-traction pad with a diagonal crate group (miss = lost crate), later the same pad framed by Nitro at both edges leaving a ≥ 3.3 m centre lane (Nitro blast 2.75 m + 0.5 m kill margin).
+4. **No-stop triple.** Two low walls (≤ 0.9 m, ollie-able at full charge 1.7 m) then a 4 m pit, spaced so each touchdown lasts 0.3–0.5 s at cruise (≈ 4–6 m of ground).
+5. **Hazard on the landing.** After a pit, place a standing `pendulum` post or totem-like wall on one lane of the landing so the rider must steer in the air or immediately after touchdown; then reverse the side after the next jump (chicane).
+6. **Pace trap.** Put a `speedpad` just before a timed TNT pair so the rider who takes it arrives inside the blast; the slow line is the safe line.
+
 ## Open questions / uncertainties
 - **3 boxes unlocated.** Header and ludo.guide (PS1) say 48. F2 + D2 show 45, which matches the N. Sane count (45, gamepressure). Candidates: (a) boxes beside the pre-lit TNT that are blown up before the player arrives (ludo step 15: "destroy every box in the area; the TNT goes off before you can reach it"), which a map of what the player sees might omit; (b) Nitro icons hidden under the POINT 9 callout pointer in the S4 Nitro zone; (c) a PS1/N. Sane layout difference. Not resolved.
 - Plain-icon types: five boxes (S1-a #2, S3-c #2, S3-d #1, S4-b #2–3) are `wood?`. Any could be striped.
 - The S2-c line (TNT, ?, TNT) is drawn overlapping. Whether the ? survives the TNT blasts depends on spacing; D2 s16 implies it does.
 - Exact Nitro positions in S4-a are approximate. The lanes given follow F2's drawing and D2's "middle, then right".
 - Whether the 1UP (S2-a) sits left or centre is medium confidence. It is drawn close to the left cliff hatching.
+- **Geometry (geo-G2):** along-road lengths of ponds and orca holes (≈ 3–8 u) are perspective estimates from D2 screenshots; only the road width (≈ 6–7 u) is calibrated against crates (D2 s20–s21).
+- **Geometry:** orca cycle times are not given; the guides only say the pair leap alternately and that the right one leaps first at hole 1 (D2 s15). Whether every hole starts on the same side is not stated.
+- **Geometry:** the number of orca holes is read as 8 (five in S2–S3, three in S4); F2 draws orca pairs at holes 1–5 and A–B, and hole C is inferred from D2 s36 ("a jump over the water to the left").
+- **Geometry:** the height of the fallen totems (≈ 1 u) and whether a single jump clears both side-by-side totems (S1) or the pair must be taken one after the other is not visible.
+- **Geometry:** the flank water channel after the S2 ice hole (D2 s12–s13) is not drawn on F2; its length is unknown.
