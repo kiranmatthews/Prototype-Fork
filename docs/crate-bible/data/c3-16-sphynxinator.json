@@ -1,0 +1,1336 @@
+{
+ "id": "c3-16-sphynxinator",
+ "game": "Crash 3",
+ "stage": 16,
+ "name": "Sphynxinator",
+ "japaneseTitle": "のろいの ピラミッド",
+ "sources": [
+  "F3 p071-p073",
+  "F3 p080L",
+  "F3 p108R",
+  "F3 p011",
+  "P3 p030R-p032L",
+  "gamepressure Sphynxinator (N. Sane total)"
+ ],
+ "camera": "into-screen corridors with right-angle turns; fork after the start",
+ "totalBoxes": 107,
+ "totalSource": "F3 map cluster sum with 3 crates behind the start as drawn; reproduces F3 base checkpoint numbers 6/17/25/47 (Nitro and plaza pair excluded)",
+ "totalConflict": [
+  {
+   "value": 105,
+   "source": "gamepressure (N. Sane)"
+  },
+  {
+   "value": "4 crates behind the start",
+   "source": "P3 p030R s2 caption; gamepressure"
+  }
+ ],
+ "countingRule": "F3 checkpoint base numbers count the checkpoint crate and exclude Nitro and the plaza pair; bracketed numbers add the plaza pair and the Nitro met after the merge (left-route Nitro not included; unexplained); green ! listed with count 0",
+ "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
+ "checkpointsPrinted": {
+  "upperC": "6 (8)",
+  "lowerC": "17 (19)",
+  "C3": "25 (30)",
+  "C4": "47 (54)"
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 79,
+   "basis": "behind-start + plaza + left route + right route + merge..goal (all-box route needs both fork branches)"
+  },
+  {
+   "id": "left-branch",
+   "boxes": 5,
+   "basis": "upper corridor; rejoins by a one-way drop; included in main"
+  },
+  {
+   "id": "right-branch",
+   "boxes": 11,
+   "basis": "lower corridor; included in main"
+  },
+  {
+   "id": "bonus",
+   "boxes": 28,
+   "basis": "F3 p080L header x28, counted"
+  },
+  {
+   "id": "gem-blue",
+   "boxes": 0,
+   "basis": "F3 p073: only steel C-blocks; P3 s12"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "none"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S0",
+   "route": "main",
+   "from": "start (behind)",
+   "to": "start",
+   "boxes": 3,
+   "cumulative": null,
+   "notes": "BACKTRACK; 3 drawn, 4 per P3/gamepressure"
+  },
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "plaza",
+   "boxes": 2,
+   "cumulative": null,
+   "notes": "plaza pair in front of the right route's hole"
+  },
+  {
+   "id": "L",
+   "route": "left-branch",
+   "from": "plaza",
+   "to": "upper C",
+   "boxes": 5,
+   "cumulative": 6,
+   "notes": "printed 6 (8); 4 loose lives; one-way drop to the merge"
+  },
+  {
+   "id": "R",
+   "route": "right-branch",
+   "from": "plaza",
+   "to": "lower C",
+   "boxes": 11,
+   "cumulative": 17,
+   "notes": "printed 17 (19), counts after the reverse run (POINT 4)"
+  },
+  {
+   "id": "M",
+   "route": "main",
+   "from": "merge",
+   "to": "C3",
+   "boxes": 11,
+   "cumulative": 25,
+   "notes": "printed 25 (30); 3 Nitro"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C3",
+   "to": "C4",
+   "boxes": 24,
+   "cumulative": 47,
+   "notes": "printed 47 (54); three TNT piles; blue-gem branch"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C4",
+   "to": "goal",
+   "boxes": 23,
+   "cumulative": null,
+   "notes": "crystal, bonus entrance, 4x4 cube, green !"
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S4-c",
+   "to": "S4",
+   "boxes": 28,
+   "cumulative": null,
+   "notes": "TNT steps, iron dropped onto TNT"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S0-a",
+   "section": "S0",
+   "order": 1,
+   "where": "behind the start point (camera side)",
+   "composition": {
+    "wood": 1,
+    "life": 1,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "tight block (F3 draws 3 icons; P3 and gamepressure say 4 crates)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "backtrack",
+    "spin"
+   ],
+   "relations": [
+    "behind-start",
+    "stopwatch"
+   ],
+   "tags": [
+    "BACKTRACK",
+    "HIDDEN",
+    "COUNT-TRAP",
+    "LIFE",
+    "TIME-TRIAL"
+   ],
+   "why": "first crates of the level are behind the camera; TT two 3-s crates here, shoot the stopwatch with the bazooka from beside them",
+   "evidence": "F3 p071L POINT 1 zoom; P3 p030R s2; gamepressure; F3 p108R frames 01-02",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "front edge of the junction plaza, on the right-route side of its hole",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair (one r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "fork",
+    "before-hole"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SUPPORT-ORDER"
+   ],
+   "why": "POINT 2: break before going left so the reverse run of the right route never crosses the hard hole twice",
+   "evidence": "F3 p071L POINT 2 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "L-a",
+   "section": "L",
+   "order": 1,
+   "where": "corner just beyond the POINT 3 hole on the left route",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (? on W)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "double-jump",
+    "spin"
+   ],
+   "relations": [
+    "after-hole"
+   ],
+   "tags": [
+    "DETOUR",
+    "STACK",
+    "REWARD"
+   ],
+   "why": "pay-off for the long double jump that opens the route",
+   "evidence": "F3 p071L zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "L-b",
+   "section": "L",
+   "order": 2,
+   "where": "inside the spotlight (poison-dart) zone",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "two staggered, floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "hazard:spotlights",
+    "needs:S4-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "TIMED"
+   ],
+   "why": "Nitro in the beams forbid the usual slide; double-jump through",
+   "evidence": "F3 p071L zoom; gamepressure",
+   "confidence": "high"
+  },
+  {
+   "id": "L-C",
+   "section": "L",
+   "order": 3,
+   "where": "ledge after the door at the end of the left route (4 loose lives beside it)",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "one-way-drop-to-merge"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "upper C printed 6 (8)",
+   "evidence": "F3 p071R; P3 p030R s3; gamepressure",
+   "confidence": "high"
+  },
+  {
+   "id": "R-a",
+   "section": "R",
+   "order": 1,
+   "where": "just past the difficult hole at the start of the right route",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (? b2 on W)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "after-hole"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "first reward across the hole; TT break the 2-s crate from the left",
+   "evidence": "F3 p071L zoom; F3 p108R frames 06-07",
+   "confidence": "high"
+  },
+  {
+   "id": "R-b",
+   "section": "R",
+   "order": 2,
+   "where": "further along the lower corridor",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p071L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "R-c",
+   "section": "R",
+   "order": 3,
+   "where": "past the floor spears",
+   "composition": {
+    "wood": 2,
+    "aku": 1,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 grid (back W r1, Aku A; front ?, W)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-flamethrower"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "mask before the flamethrower; TT mask",
+   "evidence": "F3 p071R zoom (descreened)",
+   "confidence": "medium"
+  },
+  {
+   "id": "R-d",
+   "section": "R",
+   "order": 4,
+   "where": "before the flamethrower worker",
+   "composition": {
+    "tnt": 1,
+    "wood": 1,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "stack of 3 bottom->top TNT, W, ? (b2)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "enemy:flamethrower"
+   ],
+   "tags": [
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "TIME-TRIAL"
+   ],
+   "why": "TA2: hop in the wall gap and spin only the top crate; the TNT base punishes a careless spin",
+   "evidence": "F3 p071R TA2; gamepressure",
+   "confidence": "high"
+  },
+  {
+   "id": "R-C",
+   "section": "R",
+   "order": 5,
+   "where": "after the door at the end of the right route",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "merge"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "lower C printed 17 (19); POINT 4: take it after the reverse run",
+   "evidence": "F3 p071R POINT 4",
+   "confidence": "high"
+  },
+  {
+   "id": "M-a",
+   "section": "M",
+   "order": 1,
+   "where": "framed tile on the merge landing",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "auto-door"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "TT graze it from range or the auto-door closes",
+   "evidence": "F3 p071R zoom; F3 p108R frame 11",
+   "confidence": "high"
+  },
+  {
+   "id": "M-b",
+   "section": "M",
+   "order": 2,
+   "where": "framed tile at the stair foot",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing before the auto-door stairs",
+   "evidence": "F3 p071R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "M-c",
+   "section": "M",
+   "order": 3,
+   "where": "corridor beyond the auto-door",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single (b2)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "hazard:spotlights"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "TA3 break it then long-jump the hole on the right",
+   "evidence": "F3 p071R zoom; F3 p108R frames 13-15",
+   "confidence": "high"
+  },
+  {
+   "id": "M-d",
+   "section": "M",
+   "order": 4,
+   "where": "same corridor among the spotlights",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "hazard:spotlights",
+    "needs:S4-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "TIMED"
+   ],
+   "why": "P3 s5: the Nitro forbids sliding under the lights",
+   "evidence": "F3 p071R zoom; P3 p030R s5",
+   "confidence": "high"
+  },
+  {
+   "id": "M-e",
+   "section": "M",
+   "order": 5,
+   "where": "greasy tar pit with stone pillars (POINT 5)",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "one each side",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "hazard:stone-pillars"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "CHAIN"
+   ],
+   "why": "pillars crush the Nitro; wait or be caught in the blast",
+   "evidence": "F3 p072L POINT 5; P3 p031L s8; gamepressure",
+   "confidence": "high"
+  },
+  {
+   "id": "M-f",
+   "section": "M",
+   "order": 6,
+   "where": "after the pit by the flamethrower",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (W r1 on ? r1)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "checkpoint:C3"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "with M-g the TT's four 1-s crates broken by one spin",
+   "evidence": "F3 p072L zoom; F3 p108R frames 16-18",
+   "confidence": "high"
+  },
+  {
+   "id": "M-g",
+   "section": "M",
+   "order": 7,
+   "where": "same spot as M-f",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (W r1 on W r1)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "checkpoint:C3"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "as M-f",
+   "evidence": "F3 p072L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "M-C",
+   "section": "M",
+   "order": 8,
+   "where": "between M-f and M-g",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C3 printed 25 (30)",
+   "evidence": "F3 p072L",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "first pile after the auto-door (POINT 6)",
+   "composition": {
+    "wood": 4,
+    "question": 2
+   },
+   "count": 6,
+   "arrangement": "2 wide x 3 high: W W / ? ?(g3) / W W",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "TIME-TRIAL",
+    "TEACH"
+   ],
+   "why": "safe first pile; TT jump-spin the 3-s crate from the right",
+   "evidence": "F3 p072L POINT 6 zoom; F3 p108R frame 20",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "second pile",
+   "composition": {
+    "question": 2,
+    "tnt": 2,
+    "wood": 2
+   },
+   "count": 6,
+   "arrangement": "2 wide x 3 high: ? ?(r1) / TNT TNT / W(r1) W",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "slide",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "TIME-TRIAL"
+   ],
+   "why": "TNT in the middle row: slide low, jump high",
+   "evidence": "F3 p072L POINT 6; F3 p108R frame 21",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "third pile",
+   "composition": {
+    "wood": 1,
+    "question": 2,
+    "life": 1,
+    "tnt": 2
+   },
+   "count": 6,
+   "arrangement": "2 wide x 3 high: W ? / ?(A) 1UP(b2) / TNT TNT",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "LIFE",
+    "SUPPORT-ORDER",
+    "TIME-TRIAL"
+   ],
+   "why": "TNT moved to the base under a life: take the top four without touching it",
+   "evidence": "F3 p072L POINT 6; F3 p108R frame 22; P3 p032L s24",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "above the path by a sarcophagus, past the blue-gem branch",
+   "composition": {
+    "wood": 1,
+    "question": 2
+   },
+   "count": 3,
+   "arrangement": "staggered trio (W r1)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "blue-gem-branch"
+   ],
+   "tags": [
+    "HIGH",
+    "TIME-TRIAL"
+   ],
+   "why": "pacing reward after the piles",
+   "evidence": "F3 p072L zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "floating over a round hole",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "needs:S4-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "EDGE-BAIT"
+   ],
+   "why": "Nitro over the hole you must jump",
+   "evidence": "F3 p072L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "in the tar pit with two moving blocks (POINT 7)",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "hazard:moving-blocks",
+    "needs:S4-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "TIMED"
+   ],
+   "why": "beside the moving blocks and the flamethrower",
+   "evidence": "F3 p072L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-C",
+   "section": "S3",
+   "order": 7,
+   "where": "after the moving blocks",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C4 printed 47 (54)",
+   "evidence": "F3 p072L",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "after C4",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "target 0:55:00 printed here",
+   "evidence": "F3 p072L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "approaching the crystal",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (A)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "TA5 third mask -> invincible; gear workers stop dropping stones",
+   "evidence": "F3 p072R TA5",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "beside the bonus entrance",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "bonus-entrance"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BONUS"
+   ],
+   "why": "marks the bonus platform",
+   "evidence": "F3 p072R zoom; P3 p031L s9",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "top of the stairs by a sarcophagus",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing before the door",
+   "evidence": "F3 p072R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "past the spear lab assistants in pots",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "pair (one r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:spear-assistants"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "ENEMY-LINK"
+   ],
+   "why": "reward after the spear row",
+   "evidence": "F3 p072R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "next corridor (POINT 8)",
+   "composition": {
+    "question": 8,
+    "wood": 6,
+    "tnt": 2
+   },
+   "count": 16,
+   "arrangement": "4x4 cube: ? ? ? ? / W TNT TNT W / W ?b2 ?b2 W / ? W W ?",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "slide"
+   ],
+   "relations": [],
+   "tags": [
+    "GRID",
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "TIME-TRIAL"
+   ],
+   "why": "slide the side columns crate by crate; a spin risks the core TNT",
+   "evidence": "F3 p072R POINT 8 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-g",
+   "section": "S4",
+   "order": 7,
+   "where": "floating over a hole",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "needs:S4-G"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH"
+   ],
+   "why": "last Nitro before the green !",
+   "evidence": "F3 p072R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-G",
+   "section": "S4",
+   "order": 8,
+   "where": "after the floor switch, just before the goal",
+   "composition": {
+    "switchGreen": 1
+   },
+   "count": 0,
+   "arrangement": "single green ! (not counted)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "clears:L-b,M-d,S3-e,S3-f,S4-g"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "detonates all 8 Nitro (M-e normally already crushed); they count",
+   "evidence": "F3 p072R",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "first platform",
+   "composition": {
+    "tnt": 4,
+    "wood": 1,
+    "question": 1
+   },
+   "count": 6,
+   "arrangement": "2-high block, TNT on top of the W and ?",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "SUPPORT-ORDER"
+   ],
+   "why": "jump on the TNT tops, smash, step off",
+   "evidence": "F3 p080L zoom; P3 p031R s19",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "second platform",
+   "composition": {
+    "tnt": 3,
+    "wood": 3,
+    "question": 1
+   },
+   "count": 7,
+   "arrangement": "staircase with TNT on each step; ? floating high",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "STEPPING",
+    "EXPLOSIVE-MIX",
+    "HIGH",
+    "TOOL"
+   ],
+   "why": "TNT as stepping stones",
+   "evidence": "F3 p080L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "third platform",
+   "composition": {
+    "tnt": 2,
+    "wood": 6,
+    "life": 1,
+    "question": 2
+   },
+   "count": 11,
+   "arrangement": "TNT stack, pyramid on a shelf, life under the shelf, 2x2 block",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "double-jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX",
+    "LIFE",
+    "TOOL"
+   ],
+   "why": "ride the lit TNT up for the life (or double-jump and come back)",
+   "evidence": "F3 p080L; P3 p032L s20",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "last column",
+   "composition": {
+    "tnt": 1,
+    "question": 2,
+    "ironBound": 1
+   },
+   "count": 4,
+   "arrangement": "stack of 4 bottom->top TNT, ?, ?, iron",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "spin",
+    "body-slam",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "TOOL"
+   ],
+   "why": "spin the two ? so the iron drops onto the TNT and lights it; slam the iron",
+   "evidence": "F3 p080L hint; P3 p032L s21",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "L",
+   "kind": "lab assistants with spears in pots",
+   "count": 4,
+   "where": "left route after the sarcophagus",
+   "role": "row obstacle"
+  },
+  {
+   "section": "R",
+   "kind": "flamethrower worker",
+   "count": 1,
+   "where": "after R-d",
+   "role": "timing obstacle"
+  },
+  {
+   "section": "M",
+   "kind": "flamethrower worker",
+   "count": 1,
+   "where": "after the POINT 5 pit",
+   "role": "timing obstacle"
+  },
+  {
+   "section": "S3",
+   "kind": "flamethrower worker",
+   "count": 1,
+   "where": "POINT 7 moving blocks",
+   "role": "wait for the flame to point away"
+  },
+  {
+   "section": "S4",
+   "kind": "lab assistants with spears in pots",
+   "count": 4,
+   "where": "before S4-e",
+   "role": "row obstacle"
+  },
+  {
+   "section": "S4",
+   "kind": "gear-ratchet workers dropping stones",
+   "count": 2,
+   "where": "final corridors",
+   "role": "stop while invincible (TA5)"
+  },
+  {
+   "section": "S4",
+   "kind": "Penky lab assistants",
+   "count": 4,
+   "where": "last door (POINT 9)",
+   "role": "spin them, then step on the floor switch"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "L",
+   "kind": "long hole (POINT 3)",
+   "where": "start of the left route",
+   "crates": [
+    "L-a"
+   ]
+  },
+  {
+   "section": "R",
+   "kind": "difficult hole",
+   "where": "start of the right route",
+   "crates": [
+    "S1-a",
+    "R-a"
+   ]
+  },
+  {
+   "section": "M",
+   "kind": "greasy tar pit with stone pillars",
+   "where": "POINT 5",
+   "crates": [
+    "M-e"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "hole and tar pit with moving blocks",
+   "where": "before C4",
+   "crates": [
+    "S3-e",
+    "S3-f"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "hole",
+   "where": "after the cube",
+   "crates": [
+    "S4-g"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-a",
+    "L-a",
+    "L-b",
+    "L-C",
+    "R-a",
+    "R-b",
+    "R-c",
+    "R-d",
+    "R-C"
+   ],
+   "summary": "fork whose left branch rejoins by a one-way drop",
+   "solution": "break the plaza pair, go left, drop to the merge, run the right route backwards to its hole, come forward, then take the lower C",
+   "wrongOrder": "right first (left contents lost) or skipping the plaza pair (two extra crossings of the hard hole)",
+   "loss": "all-box gem or extra risk"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S0-a"
+   ],
+   "summary": "crates behind the start",
+   "solution": "turn round at the start",
+   "wrongOrder": "running forward",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "M-e"
+   ],
+   "summary": "stone pillars crush two Nitro on greasy tar",
+   "solution": "wait at the edge until both blow",
+   "wrongOrder": "hurrying through",
+   "loss": "a death"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S3-a",
+    "S3-b",
+    "S3-c"
+   ],
+   "summary": "three identical 2x3 piles with TNT in none / middle / bottom row",
+   "solution": "slide low crates, jump for high ones, never spin into a TNT row",
+   "wrongOrder": "spinning pile B or C",
+   "loss": "a death or the 1UP in pile C"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S4-f"
+   ],
+   "summary": "4x4 cube with a TNT core",
+   "solution": "slide the side columns crate by crate",
+   "wrongOrder": "spinning the front",
+   "loss": "a death and the cube's contents"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "B-b",
+    "B-c",
+    "B-d"
+   ],
+   "summary": "bonus: TNT as steps; iron dropped onto TNT",
+   "solution": "climb lit TNT quickly; spin the two ? so the iron falls on the TNT, then slam",
+   "wrongOrder": "slamming the iron first",
+   "loss": "bonus boxes (replayable)"
+  }
+ ],
+ "observations": [
+  "first crates of the level are behind the camera (BACKTRACK count trap)",
+  "the fork is a planning puzzle: one-way left rejoin, so all-box = left, reverse right, forward; the plaza pair saves two hard-hole crossings",
+  "Nitro placed in spotlight beams forbid the default slide",
+  "a hazard (stone pillars) clears explosives if the player waits",
+  "one 2x3 pile silhouette repeated three times with TNT in a new row each time",
+  "densest cluster (4x4 cube, TNT core) sits in the final third",
+  "the blue-gem course holds no boxes, so the all-box gem needs no colour gem",
+  "checkpoints follow each hard beat: reverse run, pillar pit, moving blocks"
+ ]
+}
