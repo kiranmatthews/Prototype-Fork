@@ -80,68 +80,11 @@ def measure(model, pack):
                              parent=parents.get(i)) for i in joints], clips=clips)
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source', required=True, type=Path, help='Official OpenGOAL goal_src directory')
-    parser.add_argument('--source-tree', required=True, type=Path, help='Official recursive Git tree JSON for the pinned revision')
-    parser.add_argument('--historical-catalogue', type=Path, help='Optional prior full model inventory; no asset availability inferred')
-    parser.add_argument('--output', type=Path, default=ROOT/'public/enemies/opengoal-audit.json')
-    args = parser.parse_args()
-    tree = json.loads(args.source_tree.read_text())
-    if tree.get('sha') != REVISION:
-        raise ValueError('Source tree is not the pinned revision')
-    if tree.get('truncated'):
-        raise ValueError('Incomplete source tree')
-    blobs = {row['path']:row['sha'] for row in tree['tree'] if row['type']=='blob'}
-    verified = set()
-    pack = ROOT/'public/jak-lab'
-    catalogue = json.loads((pack/'catalogue.json').read_text())
-    models = {m['id']: m for m in catalogue['models']}
-    history = {m['id']:m for m in json.loads(args.historical_catalogue.read_text())['models']} if args.historical_catalogue else {}
-    candidates = json.loads((ROOT/'tools/enemies/opengoal-candidates.json').read_text())
-    for row in candidates:
-        sources = []
-        for relative in row['sources']:
-            raw = (args.source/relative).read_bytes()
-            blob = hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
-            if blobs.get('goal_src/'+relative) != blob:
-                raise ValueError(f'Source does not match official tree: {relative}')
-            verified.add(relative)
-            text = raw.decode()
-            # Only public identifiers and their line locations, never function bodies.
-            states = [dict(name=m.group(1), line=text.count('\n', 0, m.start())+1)
-                      for m in re.finditer(r'^\(defstate\s+([^\s()]+)', text, re.M)]
-            referenced = sorted(set(re.findall(r'\b([a-z][a-z0-9-]+)-ja\b', text)))
-            sources.append(dict(path=relative, sha256=sha(raw), url=LINK+relative,
-                                states=states, referencedClips=referenced))
-        row['sources'] = sources
-        if row['model'] in models:
-            model = models[row['model']]
-            row['availability'] = 'playable-clips'
-            row['asset'] = measure(model, pack)
-            row['areas'] = sorted({m['area'] for m in catalogue['models'] if m['name']==model['name']})
-        else:
-            row['availability'] = 'inventory-only' if row['model'] in history else 'source-only'
-            row['asset'] = None
-            row['areas'] = []
-            if row['model'] in history:
-                old = history[row['model']]
-                row['historicalClips'] = [c['name'] for c in old['animations']]
-                row['historicalSourceSha256'] = old['sha256']
-    live = [r for r in candidates if r['asset']]
-    report = dict(schemaVersion=1, auditedOn='2026-11-09', sourceRevision=REVISION,
-                  sourceRelease='OpenGOAL v0.3.9', sourceVerification=dict(files=len(verified), gitBlobsMatch=True, treeSha=tree['sha']), sourceGame='User-supplied Jak 1 USA SCUS-97124 NTSC-v1',
-                  scope='Curated enemy/host candidate audit across Jak 1–3. Jak 1 retained export measured; Jak 2/3 source survey only. Not an exhaustive trilogy asset inventory.',
-                  provenance='Existing lossless reference assets only. No OpenGOAL implementation code copied. Behaviour and retargeting are proposals, not implemented gameplay.',
-                  summary=dict(candidates=len(candidates), playableModels=len(live),
-                               exportedClips=sum(len(r['asset']['clips']) for r in live),
-                               timedClips=sum(c['duration']>0 for r in live for c in r['asset']['clips']),
-                               staticPoses=sum(c['duration']==0 for r in live for c in r['asset']['clips']),
-                               inventoryOnly=sum(r['availability']=='inventory-only' for r in candidates),
-                               sourceOnly=sum(r['availability']=='source-only' for r in candidates),
-                               firstPass=sum(r['priority']==1 for r in candidates)), candidates=candidates)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2)+'\n')
-    print(json.dumps(report['summary']))
+    # Keep the original audit command usable; character preparation now owns
+    # the Jak 1-only catalogue and recovered action data.
+    from prepare_jak1_characters import main as prepare
+    prepare()
+
 
 if __name__ == '__main__':
     main()

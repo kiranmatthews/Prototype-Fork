@@ -1,0 +1,1046 @@
+{
+  "base": "http://127.0.0.1:5297/",
+  "mode": "all-characters",
+  "rows": [
+    {
+      "candidate": "babak",
+      "variant": "firecanyon/babak-lod0",
+      "clips": 14,
+      "changingClips": 14,
+      "sourceTriangles": 3078,
+      "joints": 47,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "lurkercrab",
+      "variant": "beach/lurkercrab-lod0",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 1732,
+      "joints": 25,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "aphid",
+      "variant": "jungleb/aphid-lurker-lod0",
+      "clips": 9,
+      "changingClips": 5,
+      "sourceTriangles": 1034,
+      "joints": 36,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "hopper",
+      "variant": "jungle/hopper-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 2510,
+      "joints": 39,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "quicksandlurker",
+      "variant": "misty/quicksandlurker-lod0",
+      "clips": 8,
+      "changingClips": 7,
+      "sourceTriangles": 2510,
+      "joints": 49,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "swamp-bat",
+      "variant": "swamp/swamp-bat-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 352,
+      "joints": 16,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "driller",
+      "variant": "robocave/driller-lurker-lod0",
+      "clips": 12,
+      "changingClips": 12,
+      "sourceTriangles": 3043,
+      "joints": 67,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "bully",
+      "variant": "sunkenb/bully-lod0",
+      "clips": 9,
+      "changingClips": 9,
+      "sourceTriangles": 3094,
+      "joints": 44,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "kermit",
+      "variant": "swamp/kermit-lod0",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 2322,
+      "joints": 28,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "baby-spider",
+      "variant": "darkcave/baby-spider-lod0",
+      "clips": 9,
+      "changingClips": 9,
+      "sourceTriangles": 1434,
+      "joints": 21,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "mother-spider",
+      "variant": "darkcave/mother-spider-lod0",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 1530,
+      "joints": 29,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "mother-spider",
+      "variant": "darkcave/mother-spider-leg-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 48,
+      "joints": 4,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "snake",
+      "variant": "jungle/junglesnake-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 2784,
+      "joints": 26,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "worm",
+      "variant": "beach/lurkerworm-lod0",
+      "clips": 5,
+      "changingClips": 5,
+      "sourceTriangles": 2212,
+      "joints": 15,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "bonelurker",
+      "variant": "misty/bonelurker-lod0",
+      "clips": 14,
+      "changingClips": 12,
+      "sourceTriangles": 3132,
+      "joints": 58,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "puppy",
+      "variant": "beach/lurkerpuppy-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 2568,
+      "joints": 31,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "gnawer",
+      "variant": "maincave/gnawer-lod0",
+      "clips": 10,
+      "changingClips": 10,
+      "sourceTriangles": 2026,
+      "joints": 36,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "gnawer",
+      "variant": "maincave/gnawer-segment-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 172,
+      "joints": 6,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "snow-bunny",
+      "variant": "snow/snow-bunny-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 332,
+      "joints": 21,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "citb-bunny",
+      "variant": "citadel/citb-bunny-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 362,
+      "joints": 21,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "yeti",
+      "variant": "snow/yeti-lod0",
+      "clips": 11,
+      "changingClips": 11,
+      "sourceTriangles": 3047,
+      "joints": 47,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "green-eco-lurker",
+      "variant": "finalboss/green-eco-lurker-lod0",
+      "clips": 9,
+      "changingClips": 9,
+      "sourceTriangles": 1507,
+      "joints": 49,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "swamp-rat",
+      "variant": "swamp/swamp-rat-lod0",
+      "clips": 9,
+      "changingClips": 8,
+      "sourceTriangles": 500,
+      "joints": 16,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "double-lurker",
+      "variant": "sunken/double-lurker-lod0",
+      "clips": 14,
+      "changingClips": 14,
+      "sourceTriangles": 2678,
+      "joints": 32,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "double-lurker-top",
+      "variant": "sunken/double-lurker-top-lod0",
+      "clips": 14,
+      "changingClips": 14,
+      "sourceTriangles": 2232,
+      "joints": 30,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "ram-boss",
+      "variant": "snow/ram-boss-lod0",
+      "clips": 21,
+      "changingClips": 21,
+      "sourceTriangles": 3000,
+      "joints": 44,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "balloonlurker",
+      "variant": "misty/balloonlurker-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 1783,
+      "joints": 20,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "balloonlurker",
+      "variant": "misty/balloonlurker-pilot-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 1038,
+      "joints": 21,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plunger-lurker",
+      "variant": "ogre/plunger-lurker-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3255,
+      "joints": 65,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robber",
+      "variant": "rolling/robber-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 2392,
+      "joints": 59,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "darkvine",
+      "variant": "jungleb/darkvine-lod0",
+      "clips": 4,
+      "changingClips": 3,
+      "sourceTriangles": 342,
+      "joints": 8,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "lightning-mole",
+      "variant": "rolling/lightning-mole-lod0",
+      "clips": 9,
+      "changingClips": 9,
+      "sourceTriangles": 1566,
+      "joints": 36,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "snow-ram",
+      "variant": "snow/ram-lod0",
+      "clips": 3,
+      "changingClips": 2,
+      "sourceTriangles": 3563,
+      "joints": 10,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "puffer",
+      "variant": "sunken/puffer-main-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 1608,
+      "joints": 60,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "puffer",
+      "variant": "sunken/puffer-mean-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 1653,
+      "joints": 60,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plant-boss",
+      "variant": "jungleb/plant-boss-main-lod0",
+      "clips": 17,
+      "changingClips": 17,
+      "sourceTriangles": 4190,
+      "joints": 43,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plant-boss",
+      "variant": "jungleb/plant-boss-arms-lod0",
+      "clips": 5,
+      "changingClips": 4,
+      "sourceTriangles": 826,
+      "joints": 10,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plant-boss",
+      "variant": "jungleb/plant-boss-back-arms-lod0",
+      "clips": 4,
+      "changingClips": 4,
+      "sourceTriangles": 987,
+      "joints": 9,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plant-boss",
+      "variant": "jungleb/plant-boss-leaf-lod0",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 460,
+      "joints": 10,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plant-boss",
+      "variant": "jungleb/plant-boss-vine-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 524,
+      "joints": 12,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plant-boss",
+      "variant": "jungleb/plant-boss-root-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 340,
+      "joints": 5,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "ogreboss",
+      "variant": "ogre/ogreboss-lod0",
+      "clips": 23,
+      "changingClips": 23,
+      "sourceTriangles": 6450,
+      "joints": 73,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "ogreboss",
+      "variant": "village2/ogreboss-village2-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 2409,
+      "joints": 75,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robotboss",
+      "variant": "finalboss/robotboss-basic-lod0",
+      "clips": 34,
+      "changingClips": 33,
+      "sourceTriangles": 10955,
+      "joints": 88,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robotboss",
+      "variant": "finalboss/robotboss-blueeco-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 339,
+      "joints": 8,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robotboss",
+      "variant": "finalboss/robotboss-redeco-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 325,
+      "joints": 10,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robotboss",
+      "variant": "finalboss/robotboss-yelloweco-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 1376,
+      "joints": 19,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robotboss",
+      "variant": "finalboss/robotboss-cinematic-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 6407,
+      "joints": 29,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "robotboss",
+      "variant": "citadel/citb-robotboss-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 930,
+      "joints": 3,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "flying-lurker",
+      "variant": "ogre/flying-lurker-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 2632,
+      "joints": 72,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "junglefish",
+      "variant": "jungle/junglefish-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 878,
+      "joints": 14,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "keira",
+      "variant": "village1/assistant-lod0",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 5236,
+      "joints": 96,
+      "morphTargets": 609
+    },
+    {
+      "candidate": "keira",
+      "variant": "firecanyon/assistant-firecanyon-lod0",
+      "clips": 10,
+      "changingClips": 10,
+      "sourceTriangles": 5156,
+      "joints": 94,
+      "morphTargets": 551
+    },
+    {
+      "candidate": "keira",
+      "variant": "village2/assistant-village2-lod0",
+      "clips": 10,
+      "changingClips": 10,
+      "sourceTriangles": 5236,
+      "joints": 96,
+      "morphTargets": 609
+    },
+    {
+      "candidate": "keira",
+      "variant": "village3/assistant-village3-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 5236,
+      "joints": 96,
+      "morphTargets": 609
+    },
+    {
+      "candidate": "keira",
+      "variant": "lavatube/assistant-lavatube-start-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 5156,
+      "joints": 94,
+      "morphTargets": 551
+    },
+    {
+      "candidate": "keira",
+      "variant": "citadel/assistant-lavatube-end-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 5156,
+      "joints": 94,
+      "morphTargets": 551
+    },
+    {
+      "candidate": "samos",
+      "variant": "village1/sage-lod0",
+      "clips": 5,
+      "changingClips": 5,
+      "sourceTriangles": 5163,
+      "joints": 74,
+      "morphTargets": 810
+    },
+    {
+      "candidate": "samos",
+      "variant": "village2/sage-bluehut-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 5163,
+      "joints": 74,
+      "morphTargets": 810
+    },
+    {
+      "candidate": "samos",
+      "variant": "village3/sage-village3-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 5163,
+      "joints": 74,
+      "morphTargets": 810
+    },
+    {
+      "candidate": "bluesage",
+      "variant": "citadel/bluesage-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3203,
+      "joints": 92,
+      "morphTargets": 575
+    },
+    {
+      "candidate": "redsage",
+      "variant": "citadel/redsage-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3183,
+      "joints": 69,
+      "morphTargets": 418
+    },
+    {
+      "candidate": "yellowsage",
+      "variant": "citadel/yellowsage-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3457,
+      "joints": 79,
+      "morphTargets": 725
+    },
+    {
+      "candidate": "bird-lady",
+      "variant": "beach/bird-lady-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 3336,
+      "joints": 68,
+      "morphTargets": 396
+    },
+    {
+      "candidate": "bird-lady",
+      "variant": "beach/bird-lady-beach-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 3336,
+      "joints": 68,
+      "morphTargets": 396
+    },
+    {
+      "candidate": "mayor",
+      "variant": "beach/mayor-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 3013,
+      "joints": 73,
+      "morphTargets": 336
+    },
+    {
+      "candidate": "explorer",
+      "variant": "village1/explorer-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 2990,
+      "joints": 58,
+      "morphTargets": 340
+    },
+    {
+      "candidate": "farmer",
+      "variant": "village1/farmer-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 3540,
+      "joints": 63,
+      "morphTargets": 418
+    },
+    {
+      "candidate": "fisher",
+      "variant": "jungle/fisher-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 4907,
+      "joints": 88,
+      "morphTargets": 703
+    },
+    {
+      "candidate": "sculptor",
+      "variant": "beach/sculptor-lod0",
+      "clips": 13,
+      "changingClips": 13,
+      "sourceTriangles": 2744,
+      "joints": 65,
+      "morphTargets": 500
+    },
+    {
+      "candidate": "gambler",
+      "variant": "village2/gambler-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 3108,
+      "joints": 72,
+      "morphTargets": 468
+    },
+    {
+      "candidate": "geologist",
+      "variant": "village2/geologist-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 3186,
+      "joints": 78,
+      "morphTargets": 414
+    },
+    {
+      "candidate": "warrior",
+      "variant": "village2/warrior-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 3372,
+      "joints": 59,
+      "morphTargets": 384
+    },
+    {
+      "candidate": "minershort",
+      "variant": "village3/minershort-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 2709,
+      "joints": 65,
+      "morphTargets": 552
+    },
+    {
+      "candidate": "minertall",
+      "variant": "village3/minertall-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 3271,
+      "joints": 72,
+      "morphTargets": 700
+    },
+    {
+      "candidate": "billy",
+      "variant": "swamp/billy-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3015,
+      "joints": 59,
+      "morphTargets": 216
+    },
+    {
+      "candidate": "oracle",
+      "variant": "village3/oracle-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 2407,
+      "joints": 6,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "gol",
+      "variant": "intro/evilbro-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 3282,
+      "joints": 75,
+      "morphTargets": 575
+    },
+    {
+      "candidate": "gol",
+      "variant": "village3/evilbro-village3-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 3282,
+      "joints": 75,
+      "morphTargets": 575
+    },
+    {
+      "candidate": "gol",
+      "variant": "citadel/evilbro-citadel-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 3282,
+      "joints": 75,
+      "morphTargets": 575
+    },
+    {
+      "candidate": "maia",
+      "variant": "intro/evilsis-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 4496,
+      "joints": 75,
+      "morphTargets": 364
+    },
+    {
+      "candidate": "maia",
+      "variant": "village3/evilsis-village3-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 4496,
+      "joints": 75,
+      "morphTargets": 364
+    },
+    {
+      "candidate": "maia",
+      "variant": "citadel/evilsis-citadel-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 4496,
+      "joints": 75,
+      "morphTargets": 364
+    },
+    {
+      "candidate": "daxter",
+      "variant": "common/sidekick-lod0",
+      "clips": 80,
+      "changingClips": 77,
+      "sourceTriangles": 1296,
+      "joints": 49,
+      "morphTargets": 420
+    },
+    {
+      "candidate": "daxter",
+      "variant": "misty/sidekick-human-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 2720,
+      "joints": 75,
+      "morphTargets": 416
+    },
+    {
+      "candidate": "flutflut",
+      "variant": "swamp/flut-saddle-lod0",
+      "clips": 22,
+      "changingClips": 19,
+      "sourceTriangles": 3037,
+      "joints": 49,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "flutflut",
+      "variant": "beach/flutflut-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 1899,
+      "joints": 41,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "flutflut",
+      "variant": "village2/flutflut-bluehut-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3037,
+      "joints": 49,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "flutflut",
+      "variant": "beach/flutflutegg-lod0",
+      "clips": 3,
+      "changingClips": 1,
+      "sourceTriangles": 272,
+      "joints": 18,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "muse",
+      "variant": "misty/muse-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 1610,
+      "joints": 45,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "muse",
+      "variant": "beach/sculptor-muse-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 1610,
+      "joints": 45,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "yakow",
+      "variant": "village1/yakow-lod0",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 1808,
+      "joints": 33,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "pelican",
+      "variant": "beach/pelican-lod0",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 2038,
+      "joints": 32,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "seagull",
+      "variant": "beach/seagull-lod0",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 73,
+      "joints": 10,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "sharkey",
+      "variant": "training/sharkey-lod0",
+      "clips": 2,
+      "changingClips": 2,
+      "sourceTriangles": 1854,
+      "joints": 13,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "billy-sidekick",
+      "variant": "swamp/billy-sidekick-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 1218,
+      "joints": 39,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "snack",
+      "variant": "swamp/farthy-snack-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 396,
+      "joints": 3,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "catch-fish",
+      "variant": "jungle/catch-fisha-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 232,
+      "joints": 5,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "catch-fish",
+      "variant": "jungle/catch-fishb-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 222,
+      "joints": 5,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "catch-fish",
+      "variant": "jungle/catch-fishc-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 982,
+      "joints": 15,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "sunken-fish",
+      "variant": "sunkenb/sunkenfisha-red-yellow-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 132,
+      "joints": 7,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "sunken-fish",
+      "variant": "sunkenb/sunkenfisha-yellow-blue-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 114,
+      "joints": 7,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "sunken-fish",
+      "variant": "sunkenb/sunkenfisha-yellow-eye-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 59,
+      "joints": 7,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "starfish",
+      "variant": "village1/villa-starfish-lod0",
+      "clips": 1,
+      "changingClips": 0,
+      "sourceTriangles": 30,
+      "joints": 4,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "scout-fly",
+      "variant": "common/buzzer-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 320,
+      "joints": 15,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plants",
+      "variant": "rolling/dark-plant-lod0",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 56,
+      "joints": 15,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plants",
+      "variant": "rolling/happy-plant-lod0",
+      "clips": 2,
+      "changingClips": 1,
+      "sourceTriangles": 951,
+      "joints": 38,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "plants",
+      "variant": "village1/evilplant-lod0",
+      "clips": 1,
+      "changingClips": 1,
+      "sourceTriangles": 168,
+      "joints": 15,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "scarecrows",
+      "variant": "training/scarecrow-a-lod0",
+      "clips": 4,
+      "changingClips": 4,
+      "sourceTriangles": 2798,
+      "joints": 22,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "scarecrows",
+      "variant": "training/scarecrow-b-lod0",
+      "clips": 4,
+      "changingClips": 4,
+      "sourceTriangles": 2160,
+      "joints": 22,
+      "morphTargets": 0
+    },
+    {
+      "candidate": "ice-cube",
+      "variant": "snow/ice-cube-lod0",
+      "clips": 13,
+      "changingClips": 13,
+      "sourceTriangles": 1639,
+      "joints": 55,
+      "morphTargets": 0
+    },
+    {
+      "phase": "native",
+      "candidate": "keira",
+      "variant": "village1/assistant-lod0",
+      "status": "ready",
+      "error": "",
+      "sourceTriangles": 5236,
+      "sourceJoints": 96,
+      "vertexFingerprint": 35839294.74601951,
+      "verticesFinite": true,
+      "morphTargets": 609,
+      "clipCount": 7,
+      "clip": "assistant-idle-leaning-right",
+      "time": 0,
+      "duration": 1.9999923706054688,
+      "poseFingerprint": -253884.58311835642,
+      "finite": true,
+      "modelCount": 1,
+      "resolution": [
+        2080,
+        1231
+      ],
+      "triangles": 5238,
+      "shortlist": []
+    },
+    {
+      "phase": "existing-roster",
+      "loaded": 9
+    }
+  ],
+  "issues": [],
+  "summary": {
+    "characters": 72,
+    "candidates": 72,
+    "playableModels": 111,
+    "exportedClips": 670,
+    "timedClips": 637,
+    "staticPoses": 33,
+    "recoveredClips": 95,
+    "removedWrongRigClips": 26,
+    "addedAssetBytes": 11637580
+  }
+}
