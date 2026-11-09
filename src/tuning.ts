@@ -48,7 +48,7 @@ export const TUNING = {
   ollieDownCouple: 0.65, // DOWNHILL OLLIES ONLY: fraction of the slope's descent rate folded back into the pop, so the arc hugs the hill instead of hanging over it. 0 = old floaty behavior, 1 = airtime matches a flat-ground ollie
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // legacy saved-tuning/replay key; no longer selects a jump flip
-  jumpFlipMinSpeed: 4, // D: horizontal momentum at takeoff, in m/s; independent of max run speed
+  jumpFlipMinSpeed: 8.85, // D: horizontal momentum at takeoff, in m/s; independent of max run speed
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop

@@ -32,6 +32,7 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
       const angles=Object.fromEntries(joints.map(id=>[id,previous?new THREE.Quaternion().fromArray(previous.joints[id]?.quaternion??[0,0,0,1])
         .angleTo(new THREE.Quaternion().fromArray(pose.joints[id]?.quaternion??[0,0,0,1])):0]));
       rows.push({f,clip:runtime.activeClipId,time:d.timelineTime,blend:d.transitionBlendWeight,frame:p.footStudyFrame,
+        rollProgress:d.motionContext?.inputs?.jakFlipProgress??0,
         air:!p.grounded,second:p.doubleJumpAir,angles,scalars:pose.scalars,
         hips:pose.joints.hips.quaternion,head:new THREE.Box3().setFromObject(p.meshyHead.mesh,true).max.y,
         physics:[...p.pos.toArray(),p.vVel],root:pose.joints.root.position});
@@ -51,6 +52,15 @@ await withSkateRuntime(async({server,player:p,level,THREE})=>{
       if(name.startsWith('roll')) {
         assert.ok(ranges['deform.leg.lower.left.length'][0]<.86,'roll lost its compression');
         if(secondAt===null)assert.ok(ranges['deform.leg.lower.left.length'][1]>1.12,'roll lost its extension/rebound');
+        const rollRows=air.filter(r=>r.clip==='player.jak-flip');
+        assert.ok(Math.max(...rollRows.flatMap(r=>Object.values(r.angles)))<.44,
+          `${name}: somersault returned to a one-frame limb snap`);
+        const opening=rollRows.filter(r=>r.rollProgress>=.6);
+        assert.ok(Math.max(...opening.flatMap(r=>Object.values(r.angles)))<.41,
+          `${name}: late untuck became abrupt`);
+        const finish=rollRows.filter(r=>r.rollProgress>=.75);
+        assert.ok(Math.max(...finish.map(r=>Math.abs(r.angles.hips-rows[r.f-1].angles.hips)))<.10,
+          `${name}: body accelerated/stopped abruptly at the end of the turn`);
       }
       if(name==='roll double early')assert.ok(rows[second+1].angles.hips>.03,'double jump froze the interrupted rotation');
     }

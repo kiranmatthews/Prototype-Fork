@@ -28,9 +28,17 @@ await withSkateRuntime(async({server,player:p,level,THREE,TUNING})=>{
     const sourceFrames=clip.id==='player.jak-short-land'?[...ref.samples.slice(0,ref.frames),...bank.clips['jump-land'].samples.slice(50)]
       :clip.id==='player.jak-soft-land'?ref.samples.slice(50):ref.samples;
     for(let frame=0;frame<sourceFrames.length;frame++) {
-      const pose=a.sampleComposedClip(clip,Math.min(clip.duration,frame/60),a.createProceduralMotionContext());
+      const pose=a.sampleComposedClip(clip,Math.min(clip.duration,frame/60*Number(clip.metadata.jakSourceTimeScale??1)),a.createProceduralMotionContext());
       isolated.applyPose(pose);isolated.root.updateMatrixWorld(true);
       for(const [j,c,s,t] of segments) {
+        // Ledge catches already use a slowed source clock and a deliberate
+        // rebound-to-hang tail, rather than raw source frames throughout.
+        if(clip.metadata.jakLedgeSettle&&frame/(sourceFrames.length-1)>.62)continue;
+        // The airborne finish deliberately opens earlier than the source's
+        // ground-roll exit. Completion/continuity are checked by the live
+        // UI-tuning and rubber-motion regressions; retain exact source checks
+        // for the unadapted gathering and tuck.
+        if(clip.id==='player.jak-flip'&&frame>Math.round((sourceFrames.length-1)*.60))continue;
         const got=isolated.joints.get(c).getWorldPosition(new THREE.Vector3()).sub(isolated.joints.get(j).getWorldPosition(new THREE.Vector3())).normalize();
         const want=new THREE.Vector3().fromArray(sourceFrames[frame][t].p).sub(new THREE.Vector3().fromArray(sourceFrames[frame][s].p)).normalize();
         if(clip.id==='player.jak-flip') {
