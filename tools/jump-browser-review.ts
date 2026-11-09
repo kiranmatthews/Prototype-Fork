@@ -41,6 +41,7 @@ try {
 } catch (error) { console.warn('Jak motion unavailable', error); }
 let variant: 'A' | 'B' | 'C' | 'D' = 'B';
 let before = false, inspect = false, jakSounds = true, jumpFlip = true;
+let replayReview=false;
 let skateMotion: PlayableSkateMotion | null = null, boardInk: BoardScribbleEffect | null = null;
 let skateEnabled=true, inkEnabled=true;
 const inkSupport=new THREE.Plane();
@@ -346,7 +347,7 @@ p.step = (dt: number, input: any, level: Level) => {
 const nativeRender = g.renderer.render.bind(g.renderer);
 g.renderer.render = (...args: any[]) => {
   const alongside = args[1] === g.camera && updateSource();
-  if (inspect && args[1] === g.camera) {
+  if ((inspect||replayReview) && args[1] === g.camera) {
     const target = p.pos.clone().add(new THREE.Vector3(0, 1.4, 0));
     if (alongside) target.addScaledVector(sourceOffset,.5);
     const distance = alongside ? 8.2 : 6.4;
@@ -391,6 +392,47 @@ const directHint = document.createElement('p');
 directHint.textContent = 'D pairs Bone Man’s idle and hybrid run with Jak’s jumps and ledges, plus the new Skate mounts, riding and pickups. Release to jump; hold X / Space + direction to skate. Q brakes and steps off.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
+// Opt-in local replay inspection uses the real level and recorded controller
+// input. Advance the complete game clock one fixed tick per rendered frame,
+// so pausing never leaves the world running around a frozen player.
+if(import.meta.env.DEV&&g.launchReview){
+  const review=document.createElement('fieldset'),legend=document.createElement('legend');
+  legend.textContent='Local replay review';review.append(legend);options.append(review);
+  const file=document.createElement('input');file.type='file';file.accept='.json';
+  file.setAttribute('aria-label','Replay file');review.append(file);
+  const target=document.createElement('input');target.type='number';target.min='0';target.value='1430';
+  target.setAttribute('aria-label','Pause replay at frame');review.append(target);
+  const note=document.createElement('output');note.setAttribute('aria-label','Replay review status');review.append(note);
+  let data:unknown=null,playing=false;
+  const start=()=>{
+    if(!data)return;
+    setInspect(false);g.launchReview.rate=1;g.loadReplay(data);replayReview=true;playing=true;
+  };
+  file.onchange=async()=>{if(file.files?.[0]){
+    try{data=JSON.parse(await file.files[0].text());start();}catch{note.textContent='Invalid replay JSON';}
+  }};
+  button(review,'Replay from start',start);
+  button(review,'Continue replay',()=>{playing=true;});
+  button(review,'Pause replay',()=>{playing=false;});
+  button(review,'Step replay',()=>{playing=false;g.launchReview.advance=CONST.fixedStep;});
+  button(review,'End replay review',()=>{replayReview=playing=false;g.launchReview.rate=1;});
+  const render=document.createElement('select');render.setAttribute('aria-label','Replay render quality');
+  render.add(new Option('Normal','normal'));render.add(new Option('MAX / native','max'));
+  render.onchange=()=>{g.renderQualitySettings.setRegularResolution(render.value==='max'?null:720);render.blur();};
+  review.append(render);
+  const tick=()=>{
+    if(replayReview){
+      if(g.gameFlow.blocksGameplay)g.launchReview.rate=1;
+      else{
+        g.launchReview.rate=0;
+        if(g.replayer.frame>=Number(target.value))playing=false;
+        if(playing&&g.replayer.active)g.launchReview.advance=CONST.fixedStep;
+      }
+      note.textContent=`${playing?'Playing':'Paused'} replay ${g.replayer.frame} / ${g.replayer.total}`;
+    }
+    requestAnimationFrame(tick);
+  };tick();
+}
 const skateOptions=document.createElement('div');options.append(skateOptions);
 const skateLabel=document.createElement('label'),skateBox=document.createElement('input');
 skateBox.type='checkbox';skateBox.checked=true;skateBox.disabled=!skateMotion;
