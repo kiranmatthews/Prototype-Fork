@@ -1,0 +1,1256 @@
+{
+ "id": "c2-07-air-crash",
+ "game": "Crash 2",
+ "stage": 7,
+ "name": "Air Crash",
+ "nameJa": "ぶっとびサーフィン",
+ "sources": [
+  "F2 p036R (header)",
+  "F2 p037L-p038L (map, POINT 1-12)",
+  "F2 p094R (perfect order, alternate entrance, bonus, death course)",
+  "D2 p022-p024L (shots 1-43)",
+  "D2 p042 (shots 31-46, alternate entrance)",
+  "gamepressure N. Sane Air Crash (summary)"
+ ],
+ "camera": "into-screen (foot and jet board); bonus side-scroll",
+ "totalBoxes": 102,
+ "totalSource": "F2 p036R header (superscript 43 = bonus 8 + alternate entrance 35)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 59,
+   "basis": "counted from F2 icons; equals header split 102-43 exactly"
+  },
+  {
+   "id": "bonus",
+   "boxes": 8,
+   "basis": "gamepressure 8; D2 bonus counter ends at 8; D2 s24 transfer 24+6 = 22+8"
+  },
+  {
+   "id": "secret",
+   "boxes": 35,
+   "basis": "alternate entrance from Bear Down's secret warp; subtraction 43-8-0; 24 seen in D2 p042"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "D2 s28: no boxes on the alternate path"
+  }
+ ],
+ "sections": [
+  {
+   "id": "AE",
+   "route": "secret",
+   "from": "secret warp pier (from Bear Down)",
+   "to": "green ! pier, warp to the normal start",
+   "boxes": 24,
+   "cumulative": null,
+   "notes": "24 seen of 35; 11 unseen; green ! here detonates every Nitro in the stage"
+  },
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1 pier",
+   "boxes": 7,
+   "cumulative": 7,
+   "notes": "on foot"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2 pier",
+   "boxes": 21,
+   "cumulative": 28,
+   "notes": "jet board; stepping line doubles as on-foot route to the Snow Go secret warp"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "? tile after C2",
+   "to": "back to the causeway",
+   "boxes": 8,
+   "cumulative": null,
+   "notes": "side-scroll treetops; switch chain"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3 pier",
+   "boxes": 12,
+   "cumulative": 40,
+   "notes": "on foot; death-route fork (0 boxes)"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 19,
+   "cumulative": 59,
+   "notes": "on-foot detour (6) before boarding, board (10), final causeway on foot (3)"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "causeway after the first plant and moving platform",
+   "composition": {
+    "wood": 1,
+    "question": 2,
+    "aku": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 block (W on ?, Aku and ?)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "piranha run and plant follow (POINT 2)"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "AKU",
+    "REWARD"
+   ],
+   "why": "mask before the densest on-foot enemy stretch",
+   "evidence": "F2 p037L bubble zoom; D2 p022L s4",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "end of the causeway, on C1's pier",
+   "composition": {
+    "arrowWood": 1,
+    "wood": 1,
+    "checkpoint": 1
+   },
+   "count": 3,
+   "arrangement": "crate floating over a wooden arrow crate, C beside",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce",
+    "walk"
+   ],
+   "relations": [
+    "breaking the arrow first strands the floating crate"
+   ],
+   "tags": [
+    "SANDWICH",
+    "TOOL",
+    "HIGH",
+    "CHECKPOINT",
+    "TEACH",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first arrow-to-crate bounce on a safe pier",
+   "evidence": "F2 p037L; D2 s7",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 3,
+   "where": "on the water right after C1's pier, leading to a small square platform",
+   "composition": {
+    "wood": 5
+   },
+   "count": 5,
+   "arrangement": "stepping line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump",
+    "bounce",
+    "secret"
+   ],
+   "relations": [
+    "on-foot route to the Snow Go secret warp",
+    "consumed as crossed"
+   ],
+   "tags": [
+    "STEPPING",
+    "BRIDGE",
+    "ROUTE-SPLIT",
+    "HIDDEN",
+    "TOOL",
+    "SUPPORT-ORDER",
+    "COUNT-TRAP"
+   ],
+   "why": "five easy crates for a rider, the only bridge to the secret warp for a walker; board through them and the bridge is gone",
+   "evidence": "F2 p037L + Aku tip; D2 p022R s8, p024L s40-s43",
+   "confidence": "high",
+   "mode": "board/foot"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 4,
+   "where": "maze of three alternating gate fences",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "singles in the fence gaps",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "gate fences"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SPEED-LINE",
+    "SINGLE"
+   ],
+   "why": "crates mark the racing line through the maze",
+   "evidence": "F2 p037L zoom; D2 s10",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 5,
+   "where": "after the maze, beside a mine",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "mine"
+   ],
+   "tags": [
+    "PAIR",
+    "SPEED-LINE",
+    "ON-PATH"
+   ],
+   "why": "rhythm crates between hazards",
+   "evidence": "F2 p037L zoom; D2 s12",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 6,
+   "where": "above two yellow water ramps",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "floating singles beyond each ramp",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "ramps are the board's only vertical tool"
+   ],
+   "tags": [
+    "HIGH",
+    "SPEED-LINE",
+    "BACKTRACK",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "crates hang where only a ramp launch reaches; a miss costs a loop",
+   "evidence": "F2 p037L; D2 s12",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 7,
+   "where": "beside the ramps near a whirlpool",
+   "composition": {
+    "wood": 1,
+    "aku": 1
+   },
+   "count": 2,
+   "arrangement": "2-high column, mask below",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "moving mines and Nitro gate ahead"
+   ],
+   "tags": [
+    "STACK",
+    "AKU",
+    "DETOUR"
+   ],
+   "why": "mask before the moving mines and the Nitro gate",
+   "evidence": "F2 p037L zoom (mask icon)",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 8,
+   "where": "before C2's pier after two moving mines",
+   "composition": {
+    "nitro": 6
+   },
+   "count": 6,
+   "arrangement": "two converging diagonal lines forming a gate",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "cleared only by the green ! in the alternate entrance"
+   ],
+   "tags": [
+    "ROW",
+    "EXPLOSIVE-MIX",
+    "SPEED-LINE",
+    "TEST",
+    "COUNT-TRAP"
+   ],
+   "why": "lethal funnel at board speed; counted crates keyed to another stage's secret",
+   "evidence": "F2 p037R POINT 4 zoom; D2 s14",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S2-g",
+   "section": "S2",
+   "order": 9,
+   "where": "on C2's pier",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "board to foot change"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "mode change",
+   "evidence": "F2 p037R; D2 s15",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 10,
+   "where": "on the bonus steel walkway",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "walkway assembles from switch blocks"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BONUS"
+   ],
+   "why": "first crate while the walkway builds itself",
+   "evidence": "D2 p023L s18",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 11,
+   "where": "beside a switch on the walkway",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "jump"
+   ],
+   "relations": [
+    "blast trips the switch"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TOOL",
+    "SWITCH",
+    "BONUS",
+    "TEACH"
+   ],
+   "why": "TNT used as the key to a switch",
+   "evidence": "D2 s19; GP",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 12,
+   "where": "on top of a switch",
+   "composition": {
+    "ironBound": 1
+   },
+   "count": 1,
+   "arrangement": "single sitting on a steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "body-slam"
+   ],
+   "relations": [
+    "body slam also presses the switch below"
+   ],
+   "tags": [
+    "REINFORCED",
+    "SWITCH",
+    "SUPPORT-ORDER",
+    "TEACH",
+    "BONUS"
+   ],
+   "why": "reinforced crate as a lid on a switch",
+   "evidence": "D2 s20; GP",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 13,
+   "where": "over the chasm after B-c",
+   "composition": {
+    "outline": 3
+   },
+   "count": 3,
+   "arrangement": "rising stair of outline crates that become wood",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bonus",
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "materialised by B-c"
+   ],
+   "tags": [
+    "OUTLINE",
+    "STEPPING",
+    "FLOAT-LINE",
+    "BONUS"
+   ],
+   "why": "the switch builds the bridge; the crates are route and count",
+   "evidence": "D2 s20 -> s21",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 14,
+   "where": "hanging over the drop",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "floating singles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bonus",
+    "jump"
+   ],
+   "relations": [
+    "fall risk"
+   ],
+   "tags": [
+    "HIGH",
+    "EDGE-BAIT",
+    "BONUS",
+    "COUNT-TRAP"
+   ],
+   "why": "greed vs falling",
+   "evidence": "D2 s22-s23 counters",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 15,
+   "where": "end of the crystal causeway",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "jump-off point for S3-b"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "marks the jump-off",
+   "evidence": "F2 p037R zoom",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 16,
+   "where": "floating on the water beside the causeway",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single, no footing",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [
+    "its bounce is the only way back"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "HIGH",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "one-shot trampoline crate",
+   "evidence": "F2 p037R POINT 6; D2 p023R s26",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 17,
+   "where": "beside the skull platform",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "death route fork (no-death only)"
+   ],
+   "tags": [
+    "AKU",
+    "ROUTE-SPLIT"
+   ],
+   "why": "mask at the death-route fork",
+   "evidence": "F2 p037R zoom (mask icon)",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 18,
+   "where": "causeway before C3",
+   "composition": {
+    "life": 1,
+    "tnt": 4,
+    "striped": 1,
+    "wood": 2
+   },
+   "count": 8,
+   "arrangement": "flat pile: 1UP centre, TNT on four sides, striped at the back right",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "striped",
+    "bounce"
+   ],
+   "relations": [
+    "spinning sets off a TNT",
+    "TNT blast kills the plant ahead"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "LIFE",
+    "TOOL",
+    "TEST",
+    "REWARD"
+   ],
+   "why": "enter via the bouncy crate and stomp the life; never spin",
+   "evidence": "F2 p037R POINT 8 bubble zoom; D2 s29",
+   "confidence": "medium",
+   "mode": "foot"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 19,
+   "where": "on C3's pier",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "foot to board change"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "mode change; saves the TNT pile",
+   "evidence": "F2 p037R; D2 s30",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 20,
+   "where": "small tiles left of C3's pier",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "singles beside the stepping tiles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "on-foot detour"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "EDGE-BAIT"
+   ],
+   "why": "punishes sloppy tile landings",
+   "evidence": "F2 p038L zoom",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 21,
+   "where": "stone pad beyond the tiles",
+   "composition": {
+    "question": 4
+   },
+   "count": 4,
+   "arrangement": "2x2 block",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "unreachable once boarded"
+   ],
+   "tags": [
+    "DETOUR",
+    "BACKTRACK",
+    "STACK",
+    "REWARD",
+    "COUNT-TRAP"
+   ],
+   "why": "must be read and taken before boarding",
+   "evidence": "F2 p038L bubble zoom + POINT + p094R; D2 s31-s32",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 22,
+   "where": "open water after the moving mines",
+   "composition": {
+    "wood": 5,
+    "question": 2,
+    "nitro": 1
+   },
+   "count": 8,
+   "arrangement": "loose field, ? beside a ramp",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "one Nitro hidden in the field"
+   ],
+   "tags": [
+    "GRID",
+    "EXPLOSIVE-MIX",
+    "SPEED-LINE",
+    "COUNT-TRAP"
+   ],
+   "why": "density lowers the guard; the single Nitro is the test",
+   "evidence": "F2 p038L POINT 11 zoom; D2 p024L s35",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 23,
+   "where": "before the last ramp",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "sweeping mines after"
+   ],
+   "tags": [
+    "PAIR",
+    "SPEED-LINE"
+   ],
+   "why": "last board crates",
+   "evidence": "F2 p038L; D2 s38",
+   "confidence": "high",
+   "mode": "board"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 24,
+   "where": "final causeway on foot",
+   "composition": {
+    "question": 1,
+    "nitro": 2
+   },
+   "count": 3,
+   "arrangement": "? and Nitro at the start, Nitro at the far end, piranhas between",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "piranha timing"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "TIMED",
+    "TEST"
+   ],
+   "why": "Nitro timed with leaping piranhas",
+   "evidence": "F2 p038L POINT 10 zoom; D2 s39",
+   "confidence": "high",
+   "mode": "foot"
+  },
+  {
+   "id": "AE-a",
+   "section": "AE",
+   "order": 25,
+   "where": "off the alternate-entrance arrival pier",
+   "composition": {
+    "striped": 3
+   },
+   "count": 3,
+   "arrangement": "line on the water, 3 floating lives above",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "jump",
+    "striped",
+    "vehicle"
+   ],
+   "relations": [
+    "collecting the lives costs a death"
+   ],
+   "tags": [
+    "STEPPING",
+    "HIGH",
+    "LIFE",
+    "TOOL",
+    "ROUTE-SPLIT"
+   ],
+   "why": "lose one life to gain three; footing on foot, targets on the board",
+   "evidence": "F2 p094R caution 2; D2 p042 s38; GP",
+   "confidence": "high",
+   "mode": "foot/board"
+  },
+  {
+   "id": "AE-b",
+   "section": "AE",
+   "order": 26,
+   "where": "wall maze",
+   "composition": {
+    "wood": 2,
+    "nitro": 1
+   },
+   "count": 3,
+   "arrangement": "singles between walls",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "SPEED-LINE",
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "racing line through walls",
+   "evidence": "D2 p042 s39",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-c",
+   "section": "AE",
+   "order": 27,
+   "where": "next turn",
+   "composition": {
+    "wood": 1,
+    "nitro": 1
+   },
+   "count": 2,
+   "arrangement": "Nitro in the lane, crate beside",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "go left around the Nitro",
+   "evidence": "D2 s40",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-d",
+   "section": "AE",
+   "order": 28,
+   "where": "at a moving mine",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle",
+    "timed"
+   ],
+   "relations": [
+    "moving mine"
+   ],
+   "tags": [
+    "TIMED",
+    "ROUTE-SPLIT"
+   ],
+   "why": "break then dodge",
+   "evidence": "D2 s41",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-e",
+   "section": "AE",
+   "order": 29,
+   "where": "behind a mine",
+   "composition": {
+    "wood": 2,
+    "nitro": 2
+   },
+   "count": 4,
+   "arrangement": "pair beyond the mine, Nitro stacked ahead",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle",
+    "backtrack"
+   ],
+   "relations": [
+    "go back round the wall"
+   ],
+   "tags": [
+    "BACKTRACK",
+    "ROUTE-SPLIT",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "crates placed behind a hazard you pass",
+   "evidence": "D2 s42",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-f",
+   "section": "AE",
+   "order": 30,
+   "where": "right bank",
+   "composition": {
+    "wood": 3,
+    "nitro": 4
+   },
+   "count": 7,
+   "arrangement": "crates threaded between Nitro",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "stay right through the Nitro",
+   "evidence": "D2 s43",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-g",
+   "section": "AE",
+   "order": 31,
+   "where": "after the Nitro cluster",
+   "composition": {
+    "wood": 1,
+    "nitro": 1
+   },
+   "count": 2,
+   "arrangement": "crate behind the last Nitro",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "cut round the Nitro to smash the crate",
+   "evidence": "D2 s44",
+   "confidence": "medium",
+   "mode": "board"
+  },
+  {
+   "id": "AE-h",
+   "section": "AE",
+   "order": 32,
+   "where": "edge of a whirlpool before the final pier",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "vehicle"
+   ],
+   "relations": [
+    "whirlpool"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "threading between whirlpool and Nitro",
+   "evidence": "D2 s45",
+   "confidence": "medium",
+   "mode": "board"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "gokkun (snapping plant)",
+   "count": 2,
+   "where": "first tile; end of the piranha run",
+   "role": "spin before landing"
+  },
+  {
+   "section": "S1",
+   "kind": "mecha-piranha",
+   "count": 3,
+   "where": "leaping across the causeway (POINT 2)",
+   "role": "chain spins; mask S1-a precedes them"
+  },
+  {
+   "section": "S3",
+   "kind": "hippo",
+   "count": 1,
+   "where": "water after C2",
+   "role": "stepping stone that dunks you"
+  },
+  {
+   "section": "S3",
+   "kind": "gokkun",
+   "count": 2,
+   "where": "crystal causeway; beyond the TNT pile",
+   "role": "TNT blast can kill the second"
+  },
+  {
+   "section": "S4",
+   "kind": "mecha-piranha",
+   "count": 3,
+   "where": "final causeway",
+   "role": "Nitro jumps timed with them"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S2",
+   "kind": "open water (board)",
+   "where": "whole section",
+   "crates": [
+    "S2-a",
+    "S2-b",
+    "S2-c",
+    "S2-d",
+    "S2-e",
+    "S2-f"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "water with bobbing/sinking pillars",
+   "where": "after C2 and after the crystal",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "water tiles before boarding",
+   "where": "left of C3's pier",
+   "crates": [
+    "S4-a",
+    "S4-b"
+   ]
+  }
+ ],
+ "hazards": [
+  {
+   "section": "S2/S4/AE",
+   "kind": "sea mines (static, sweeping, circling)",
+   "role": "crates sit just past them on the safe line"
+  },
+  {
+   "section": "S2",
+   "kind": "gate fences (maze)",
+   "role": "crates mark the gaps"
+  },
+  {
+   "section": "S2/S4",
+   "kind": "yellow water ramps",
+   "role": "only vertical tool on the board"
+  },
+  {
+   "section": "S2/S4/AE",
+   "kind": "whirlpools",
+   "role": "border crate lines"
+  },
+  {
+   "section": "S3",
+   "kind": "bobbing and sinking stone pillars",
+   "role": "timed footing"
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-a"
+   ],
+   "summary": "stepping crates vs the secret warp",
+   "solution": "cross on foot (crates break under you) to the platform",
+   "wrongOrder": "board through them first",
+   "loss": "route to Snow Go's red gem until restart"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-f",
+    "S4-a",
+    "S4-c",
+    "S4-e"
+   ],
+   "summary": "11 normal-course Nitro keyed to the green ! in the alternate entrance",
+   "solution": "enter via Bear Down's secret warp and hit the green ! first",
+   "wrongOrder": "playing the normal course first",
+   "loss": "box gem for that run"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S3-d"
+   ],
+   "summary": "1UP ringed by 4 TNT with a striped entry crate",
+   "solution": "hop on the striped crate, stomp the 1UP, clear the rest from range",
+   "wrongOrder": "spinning into the pile",
+   "loss": "life or death (crates still count)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S4-b"
+   ],
+   "summary": "2x2 ? block reachable only on foot before boarding",
+   "solution": "detour on foot, return, board",
+   "wrongOrder": "board immediately",
+   "loss": "4 crates"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "B-b",
+    "B-c",
+    "B-d"
+   ],
+   "summary": "bonus switch chain",
+   "solution": "TNT blast trips switch 1; body slam the iron-bound crate on switch 2 to build the outline stair",
+   "wrongOrder": "spinning the iron-bound crate",
+   "loss": "bonus crates"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "S3-b"
+   ],
+   "summary": "floating ? as a one-way trampoline",
+   "solution": "land and hold jump for the bounce back",
+   "wrongOrder": "tap jump",
+   "loss": "death"
+  },
+  {
+   "id": "P7",
+   "clusters": [
+    "AE-a"
+   ],
+   "summary": "three lives over striped crates cost one death",
+   "solution": "bounce along, accept the death, then break the crates from the board",
+   "wrongOrder": "n/a",
+   "loss": "one life"
+  }
+ ],
+ "observations": [
+  "crates follow the vehicle: board crates are singles, pairs and loose fields on the racing line; vertical crates only above ramps; on foot crates form blocks and puzzles",
+  "all three checkpoints stand on piers where the mode changes",
+  "on-foot detours before boarding guard count traps because the board cannot backtrack far",
+  "crates as bridges: stepping line to the secret warp, outline stair in the bonus, striped line under lives",
+  "Nitro is used as a gate, a pair, one hidden in a dense field and two timed with piranhas",
+  "inter-stage locks: the box gem needs Bear Down's secret warp; the stepping crates open the warp to Snow Go's red gem",
+  "masks before dense stretches (piranha run, Nitro gate, death fork)",
+  "lives cost risk (TNT ring, a death for three lives)",
+  "main crates per section 7/21/12/19"
+ ],
+ "openQuestions": [
+  "header 1UP 2 / Aku 2 / C 4 vs map 1 / 3 / 3 on the normal course",
+  "11 unseen alternate-entrance crates",
+  "bonus crate types",
+  "TNT pile exact footprint"
+ ],
+ "observedTotal": 91,
+ "unobservedRemainder": {
+  "boxes": 11,
+  "section": "AE",
+  "note": "alternate-entrance crates between D2 screenshots"
+ }
+}

@@ -1,0 +1,1242 @@
+{
+ "id": "c3-07-hang-em-high",
+ "game": "Crash 3",
+ "stage": 7,
+ "name": "Hang 'em High",
+ "nameJa": "アラビアの あついぶらさがり",
+ "sources": [
+  "F3 p048-p049",
+  "F3 p057L",
+  "F3 p056",
+  "F3 p104L",
+  "F3 p047R",
+  "F3 p011",
+  "P3 p014R-p015R",
+  "gamepressure N. Sane Hang 'Em High (corroboration)"
+ ],
+ "camera": "into-screen rooftops with overhead-mesh hang traverses; side-view bonus",
+ "totalBoxes": 95,
+ "totalSource": "gamepressure 95; reconstructed = main 58 (57 + 1 Nitro) + bonus 20 (F3 p057L) + 17 Nitro on the stage-27 course (F3 p056). F3's printed C3 '64' implies 96",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 58,
+   "basis": "57 non-Nitro + 1 Nitro"
+  },
+  {
+   "id": "bonus",
+   "boxes": 20,
+   "basis": "F3 p057L header x20"
+  },
+  {
+   "id": "secret",
+   "boxes": 17,
+   "basis": "stage-27 course Nitros (F3 p056); credited via the green ! in stage 7 (inferred)"
+  }
+ ],
+ "checkpointCounts": {
+  "C1": 11,
+  "C2": 27,
+  "C3": "64 printed (63 drawn)"
+ },
+ "mismatches": [
+  "C3 printed 64 vs drawn 63; total 95 agrees with the drawn crates"
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 11,
+   "cumulative": 11,
+   "notes": "first mesh; mask at the mesh entrance"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 16,
+   "cumulative": 27,
+   "notes": "carpet run; hidden ? above a carpet"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 16,
+   "cumulative": 64,
+   "cumulativeNote": "printed 64; drawn crates give 63 (16 main + 20 bonus + 27)",
+   "notes": "long mesh traverse; bonus entered from under the mesh"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus platform under mesh 2",
+   "to": "back to S3",
+   "boxes": 20,
+   "cumulative": null,
+   "notes": "header x20 boxes, x3 lives (three slots)"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 15,
+   "cumulative": null,
+   "derivedCumulative": 77,
+   "derivedCumulativeWithNitro": 78,
+   "notes": "14 + 1 Nitro; column puzzle, second hidden ?, end-hallway switches"
+  },
+  {
+   "id": "Y",
+   "route": "secret",
+   "from": "stage-27 portal (10 relics)",
+   "to": "joins S4 before the goal",
+   "boxes": 17,
+   "cumulative": null,
+   "notes": "17 Nitro, no checkpoints, yellow gem; counted in stage 7's 95 by reconstruction"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first platform beside the first sabre worker (start platform has two steel arrows)",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "sabre-worker"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "first crates next to the first enemy; attack him when his back is turned",
+   "evidence": "F3 p048L zoom; P3 p014R shot 20",
+   "confidence": "high",
+   "uncounted": {
+    "arrowSteel": 2
+   }
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "next platform",
+   "composition": {
+    "question": 2,
+    "wood": 2
+   },
+   "count": 4,
+   "arrangement": "2x2 flat block (diagonal ?s)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "TIME-TRIAL"
+   ],
+   "why": "the stage's unit block; TT Aku #1 inside",
+   "evidence": "F3 p048L 'A' bubble zoom",
+   "confidence": "high",
+   "timeTrial": "Aku #1 (one crate)"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "by the archway after the carpet researcher and a steel arrow",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "carpet-researcher"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing fruit; the arrow and the stompable researcher before it are the first vertical choice",
+   "evidence": "F3 p048L zoom; F3 p104L frame 06",
+   "confidence": "high",
+   "uncounted": {
+    "arrowSteel": 1
+   }
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "high at the mesh entrance",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single, high",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "mesh-1"
+   ],
+   "tags": [
+    "AKU",
+    "HIGH",
+    "TIME-TRIAL"
+   ],
+   "why": "mask handed out where the first hang section begins",
+   "evidence": "F3 p048 zoom (blue 2); P3 p014R shot 21; F3 p104L frames 07-08",
+   "confidence": "high",
+   "timeTrial": "2s"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "at the mesh exit (gutter)",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "mesh-1"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "landing reward after the first hang; blurred, count forced by label 11",
+   "evidence": "F3 p048 gutter (blurred)",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "after mesh 1",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "checkpoint after the first hang traverse",
+   "evidence": "F3 p048 '11コ'",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "beside the orangutan's plank",
+   "composition": {
+    "wood": 5,
+    "question": 1
+   },
+   "count": 6,
+   "arrangement": "stepped group: left W, centre ?/W, right-centre W/W, front-right W",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "enemy-bounce"
+   ],
+   "relations": [
+    "orangutan"
+   ],
+   "tags": [
+    "STACK",
+    "ENEMY-LINK",
+    "TIME-TRIAL"
+   ],
+   "why": "cluster beside an orangutan used as projectile (TT) or springboard; TT 2-s box hidden at the back",
+   "evidence": "F3 p048R zoom; F3 p104L frame 11; P3 p015R shot 32",
+   "confidence": "medium",
+   "timeTrial": "2s (back) + 1s"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "high above the second jump carpet, out of the default view",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single, floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "jump-carpet"
+   ],
+   "tags": [
+    "HIGH",
+    "HIDDEN",
+    "COUNT-TRAP",
+    "TOOL",
+    "TEACH",
+    "TIME-TRIAL"
+   ],
+   "why": "signature trap named by the header and mask hint 2: only a held straight-up carpet jump reaches it",
+   "evidence": "F3 p048R zoom; P3 p014R shot 22; F3 p104L frames 14-15",
+   "confidence": "high",
+   "timeTrial": "3s"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "platform after the orangutan",
+   "composition": {
+    "question": 3,
+    "wood": 2
+   },
+   "count": 5,
+   "arrangement": "2x2 block (?, W / W, ?) + one ? floating above-right",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "GRID",
+    "FLOAT-LINE",
+    "HIGH",
+    "TIME-TRIAL"
+   ],
+   "why": "ground block as the step to a floating crate; TT Aku #2 inside",
+   "evidence": "F3 p048R 'A' bubble zoom",
+   "confidence": "high",
+   "uncounted": {
+    "arrowSteel": 1
+   },
+   "timeTrial": "Aku #2 (one crate)"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "after the carpets and the archway",
+   "composition": {
+    "question": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "? floating above two separated wood crates",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "SANDWICH",
+    "HIGH",
+    "TIME-TRIAL"
+   ],
+   "why": "ground crates as steps under a floating reward",
+   "evidence": "F3 p048R '1' bubble zoom",
+   "confidence": "high",
+   "timeTrial": "1s (the ?)"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "right after the archway on p049L",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "checkpoint after the carpet run",
+   "evidence": "F3 p049L '27コ'",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "start of mesh 2",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "mesh-2"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "plain crate; TT Aku #3 (invincibility while traversing the mesh)",
+   "evidence": "F3 p049L zoom; F3 TA4",
+   "confidence": "high",
+   "timeTrial": "Aku #3"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "on mesh 2",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "mesh-2"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "hang-spin target",
+   "evidence": "F3 p049L zoom",
+   "confidence": "high",
+   "timeTrial": "2s"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "at the hole in mesh 2",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "mesh-hole"
+   ],
+   "tags": [
+    "EDGE-BAIT"
+   ],
+   "why": "collecting it means hanging beside the gap",
+   "evidence": "F3 p049L zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "above the mesh line",
+   "composition": {
+    "slot": 1
+   },
+   "count": 1,
+   "arrangement": "single, above",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "mesh-2"
+   ],
+   "tags": [
+    "HIGH",
+    "TIMED"
+   ],
+   "why": "slot crate where the player can't linger comfortably",
+   "evidence": "F3 p049L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "on the mesh after the carpet researcher",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "carpet-researcher"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "collected between a moving enemy and the scorpion",
+   "evidence": "F3 p049L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "on the mesh after the scorpion",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "scorpion"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TIME-TRIAL"
+   ],
+   "why": "TT 3-s box on the mesh",
+   "evidence": "F3 p049L zoom; P3 p015R shot 34",
+   "confidence": "high",
+   "timeTrial": "3s (one crate)"
+  },
+  {
+   "id": "S3-g",
+   "section": "S3",
+   "order": 7,
+   "where": "mesh end beside a steel arrow, hole ahead",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "group partly above the arrow",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "arrow",
+    "jump"
+   ],
+   "relations": [
+    "hole-ahead"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "TOOL",
+    "HIGH"
+   ],
+   "why": "arrow bounce plus stomp carries you into the hole (mask hint 4)",
+   "evidence": "F3 p049L zoom",
+   "confidence": "high",
+   "uncounted": {
+    "arrowSteel": 1
+   }
+  },
+  {
+   "id": "S3-h",
+   "section": "S3",
+   "order": 8,
+   "where": "after the landing and the moving platform",
+   "composition": {
+    "question": 1,
+    "wood": 3
+   },
+   "count": 4,
+   "arrangement": "2x2 block",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "GRID"
+   ],
+   "why": "unit block before the checkpoint",
+   "evidence": "F3 p049R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-i",
+   "section": "S3",
+   "order": 9,
+   "where": "end of S3",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "checkpoint after mesh 2 and the bonus; printed 64 vs 63 drawn",
+   "evidence": "F3 p049R '64コ'",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "right after C3 (C3 crate on the ground beside it)",
+   "composition": {
+    "nitro": 1,
+    "wood": 1,
+    "slot": 1
+   },
+   "count": 3,
+   "arrangement": "3-high column Nitro/W/slot (top first)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "slide",
+    "spin"
+   ],
+   "relations": [
+    "after-checkpoint"
+   ],
+   "tags": [
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "STACK",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "daruma-otoshi: slide the bottom out so the column drops without touching the Nitro (mask hint 5)",
+   "evidence": "F3 p049R zoom; P3 p015L shot 25; P3 p015R shot 35",
+   "confidence": "high",
+   "timeTrial": "1s (the wood)"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "after the sabre worker",
+   "composition": {
+    "wood": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "two 2-high columns (W/W behind, ?/W in front)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "unit block seen at an angle",
+   "evidence": "F3 p049R zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "high above a carpet's shadow",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single, floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "jump-carpet"
+   ],
+   "tags": [
+    "HIGH",
+    "HIDDEN",
+    "COUNT-TRAP",
+    "TEST",
+    "TIME-TRIAL"
+   ],
+   "why": "S2-b lesson repeated with only a quiet hint (mask hint 6)",
+   "evidence": "F3 p049R zoom; P3 p015L shot 26",
+   "confidence": "high",
+   "timeTrial": "2s"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "platform after the carpets and an orangutan",
+   "composition": {
+    "wood": 2,
+    "question": 2
+   },
+   "count": 4,
+   "arrangement": "2x2 block (W W / ? ?)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "GRID"
+   ],
+   "why": "last unit block",
+   "evidence": "F3 p049R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "end hallway after the power stone",
+   "composition": {
+    "outline": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "grey ! and green !, then two outline crates and a ?",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "spin"
+   ],
+   "relations": [
+    "goal",
+    "stage-27-join"
+   ],
+   "tags": [
+    "SWITCH",
+    "NITRO-SWITCH",
+    "OUTLINE",
+    "COUNT-TRAP",
+    "TIME-TRIAL"
+   ],
+   "why": "final switch check: outlines and the Nitro credit (incl. the stage-27 Nitros by the total)",
+   "evidence": "F3 p049R zoom; F3 p104L frames 29-30; P3 p015L shot 27",
+   "confidence": "high",
+   "uncounted": {
+    "switch": 1,
+    "switchGreen": 1
+   },
+   "timeTrial": "1s (the ?)"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 1,
+   "where": "first platform",
+   "composition": {
+    "slot": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "two slots side by side, wood on the right one",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "TIMED",
+    "LIFE",
+    "STACK",
+    "BONUS"
+   ],
+   "why": "slot lives; the ! hanging under the ledge reacts only to bazooka or TNT blast",
+   "evidence": "F3 p057L; P3 p015L shot 28",
+   "confidence": "high",
+   "uncounted": {
+    "switch": 1
+   }
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 2,
+   "where": "between the first platform and the pyramid",
+   "composition": {
+    "question": 4
+   },
+   "count": 4,
+   "arrangement": "floating arc rising diagonally",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "FLOAT-LINE",
+    "HIGH",
+    "BONUS"
+   ],
+   "why": "jump path written in crates",
+   "evidence": "F3 p057L",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 3,
+   "where": "raised platform",
+   "composition": {
+    "wood": 7,
+    "slot": 1
+   },
+   "count": 8,
+   "arrangement": "pyramid 4/3/1, slot in the bottom row",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "PYRAMID",
+    "TIMED",
+    "LIFE",
+    "BONUS"
+   ],
+   "why": "time the bottom slot for a life",
+   "evidence": "F3 p057L; P3 p015L shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 4,
+   "where": "platform after a bowl-shaped dip, before the walkway",
+   "composition": {
+    "outline": 1
+   },
+   "count": 1,
+   "arrangement": "single outline -> wooden arrow",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "backtrack"
+   ],
+   "relations": [
+    "tool-for-B-e"
+   ],
+   "tags": [
+    "OUTLINE",
+    "TOOL",
+    "BACKTRACK",
+    "BONUS"
+   ],
+   "why": "materialised by the ! under the walkway; becomes the arrow to B-e",
+   "evidence": "F3 p057L; P3 p015L shot 30",
+   "confidence": "high"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 5,
+   "where": "high, descending from a green ! toward B-d",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "floating diagonal line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "arrow"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "REWARD",
+    "BONUS"
+   ],
+   "why": "reachable only from the B-d arrow; the green ! has no Nitro to detonate here",
+   "evidence": "F3 p057L zoom",
+   "confidence": "high",
+   "uncounted": {
+    "switchGreen": 1
+   }
+  },
+  {
+   "id": "B-f",
+   "section": "B",
+   "order": 6,
+   "where": "on the steel exit walkway",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "TNT on steel above a switch",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "switch-below"
+   ],
+   "tags": [
+    "CHAIN",
+    "SWITCH",
+    "TOOL",
+    "EXPLOSIVE-MIX",
+    "BONUS"
+   ],
+   "why": "only the blast can press the ! under the walkway (stomp, never spin)",
+   "evidence": "F3 p057L hint; P3 p015L shot 29",
+   "confidence": "high",
+   "uncounted": {
+    "switch": 1
+   }
+  },
+  {
+   "id": "Y-a",
+   "section": "Y",
+   "order": 1,
+   "where": "below a platform edge after the first sabre worker (stage 27)",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "secret"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "first Nitros of the yellow-gem course",
+   "evidence": "F3 p056L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "Y-b",
+   "section": "Y",
+   "order": 2,
+   "where": "over carpets/platforms after the jump carpet (stage 27)",
+   "composition": {
+    "nitro": 15
+   },
+   "count": 15,
+   "arrangement": "five floating rows of three",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "secret",
+    "double-jump"
+   ],
+   "relations": [
+    "jump-carpet"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "HIGH",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "double-jump off the carpet and tornado-spin over them; shoot the right-hand ones while the bazooka works",
+   "evidence": "F3 p056R zoom",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "sabre worker",
+   "count": 1,
+   "where": "first platform",
+   "role": "attack when his back is turned; beside S1-a"
+  },
+  {
+   "section": "S1",
+   "kind": "magic-carpet researcher",
+   "count": 1,
+   "where": "near the first steel arrow",
+   "role": "TT: stomp him for the upper footing"
+  },
+  {
+   "section": "S2",
+   "kind": "orangutan",
+   "count": 2,
+   "where": "on a plank; on a platform",
+   "role": "projectile (slide) or springboard (after a spin) beside S2-a"
+  },
+  {
+   "section": "S2",
+   "kind": "magic-carpet researcher",
+   "count": 1,
+   "where": "beside the orangutan",
+   "role": "can be hit by the flung orangutan"
+  },
+  {
+   "section": "S3",
+   "kind": "magic-carpet researcher",
+   "count": 2,
+   "where": "riding along mesh 2; on a moving platform before C3",
+   "role": "moving obstacle"
+  },
+  {
+   "section": "S3",
+   "kind": "upside-down scorpion",
+   "count": 1,
+   "where": "on mesh 2",
+   "role": "spin from a distance; between S3-e and S3-f"
+  },
+  {
+   "section": "S4",
+   "kind": "sabre worker",
+   "count": 1,
+   "where": "after the column",
+   "role": "obstacle"
+  },
+  {
+   "section": "S4",
+   "kind": "orangutan",
+   "count": 1,
+   "where": "among the carpets",
+   "role": "obstacle/springboard"
+  },
+  {
+   "section": "S4",
+   "kind": "magic-carpet researcher",
+   "count": 1,
+   "where": "after the end hallway",
+   "role": "obstacle"
+  },
+  {
+   "section": "Y",
+   "kind": "sabre worker",
+   "count": 3,
+   "where": "stage-27 course",
+   "role": "bazooka targets"
+  },
+  {
+   "section": "Y",
+   "kind": "magic-carpet researcher",
+   "count": 1,
+   "where": "stage-27 course",
+   "role": "obstacle"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "rooftop gaps + mesh 1",
+   "where": "before C1",
+   "crates": [
+    "S1-d",
+    "S1-e"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "rooftop gaps bridged by jump carpets",
+   "where": "carpet run",
+   "crates": [
+    "S2-b",
+    "S2-c",
+    "S2-d"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "hole in the mesh",
+   "where": "near the start of mesh 2",
+   "crates": [
+    "S3-c"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "hole after the mesh end",
+   "where": "beyond the steel arrow",
+   "crates": [
+    "S3-g"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "rooftop gaps with carpets",
+   "where": "before the end hallway",
+   "crates": [
+    "S4-c"
+   ]
+  },
+  {
+   "section": "B",
+   "kind": "pits between ledges, bowl dip",
+   "where": "bonus",
+   "crates": [
+    "B-b",
+    "B-d"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S4-a"
+   ],
+   "summary": "Nitro on wood on a slot (daruma-otoshi)",
+   "solution": "slide or spin low into the bottom crate, repeat",
+   "wrongOrder": "jumping on it or attacking high",
+   "loss": "a life"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-b",
+    "S4-c"
+   ],
+   "summary": "? crates floating high above jump carpets",
+   "solution": "bounce straight up off the carpet holding jump",
+   "wrongOrder": "using the carpet only to travel",
+   "loss": "1 box each (all-box)"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "B-f",
+    "B-d",
+    "B-e"
+   ],
+   "summary": "TNT blast presses a ! under the walkway; outline becomes an arrow to three floating ?",
+   "solution": "pass the outline, stomp the TNT, step back, return and bounce",
+   "wrongOrder": "spinning the TNT",
+   "loss": "a life, or 4 boxes"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S3-g"
+   ],
+   "summary": "arrow + crate above it before a hole",
+   "solution": "stop and break the crates without riding the momentum",
+   "wrongOrder": "bounce and stomp in one motion",
+   "loss": "a life"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S4-e",
+    "Y-a",
+    "Y-b"
+   ],
+   "summary": "end-hallway switches credit outlines and all Nitros incl. the stage-27 ones",
+   "solution": "spin both switches",
+   "wrongOrder": "running past",
+   "loss": "2 outlines + 18 Nitros (reconstructed)"
+  }
+ ],
+ "timeTrial": {
+  "timeCrates": 10,
+  "seconds": 18,
+  "ttAkuCrates": [
+   "S1-b",
+   "S2-c",
+   "S3-a"
+  ],
+  "staffBest": "0:34:13",
+  "source": "F3 p104L + map badges"
+ },
+ "observations": [
+  "First-of-theme restraint: 1 Nitro in 58 main-route boxes; the only TNT is a tool in the bonus.",
+  "Vertical placement is the theme: crates above carpets, above ground pairs, above blocks, above the mesh.",
+  "One signature count trap (crate above a carpet) is announced, then repeated quietly.",
+  "Mesh crates teach hang discipline: grab first, then spin.",
+  "At the mesh end an arrow plus a crate above it turns a reward into a launch over a hole.",
+  "Enemies are tools placed beside crate groups: carpet researcher as a step, orangutan as projectile or springboard.",
+  "The 2x2 block appears five times as the rhythm unit.",
+  "The bonus holds 21% of the stage's boxes and all its lives; its puzzle is a TNT-switch-outline-arrow chain.",
+  "Reconstructed total: the stage-27 Nitros count for stage 7 and are credited by the green ! in the last hallway.",
+  "Checkpoints close traversal modes: mesh 1, carpet run, mesh 2 + bonus."
+ ]
+}

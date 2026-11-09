@@ -1,0 +1,984 @@
+{
+  "id": "c2-03-hang-eight",
+  "game": "Crash 2",
+  "stage": 3,
+  "name": "Hang Eight",
+  "nameJa": "テケテケかわのぼり",
+  "sources": [
+    "F2 p025R-p027L",
+    "F2 p093L",
+    "D2 p011-p012",
+    "gamepressure Hang Eight (web)"
+  ],
+  "camera": "into-screen; alternating on-foot and jet-board legs (vehicle); bonus side-scroll",
+  "totalBoxes": 74,
+  "totalSource": "F2 p025R header (superscript 51 = gem course 40 + bonus 11); gamepressure 74",
+  "headerCounts": {
+    "life": [
+      2,
+      1
+    ],
+    "aku": [
+      2,
+      0
+    ],
+    "checkpoint": [
+      4,
+      1
+    ],
+    "note": "[total, small subscript]; subscripts = share outside the main course"
+  },
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 23,
+      "basis": "74 - 51; matches the cluster tally exactly"
+    },
+    {
+      "id": "bonus",
+      "boxes": 11,
+      "basis": "D2 bonus HUD; gamepressure 'a total count of 11'"
+    },
+    {
+      "id": "gem",
+      "boxes": 40,
+      "basis": "51 - 11; 26 observed in D2, 14 residual (G-x)"
+    }
+  ],
+  "gems": [
+    {
+      "gem": "clear #1 (box)",
+      "condition": "all 74; start with the Turtle Woods blue gem; order normal -> bonus -> normal -> gem course -> normal"
+    },
+    {
+      "gem": "clear #2 (hidden)",
+      "condition": "no-miss clear within the time limit shown from C1 (about 1:00); ignore boxes and the bonus"
+    }
+  ],
+  "sections": [
+    {
+      "id": "F1",
+      "route": "main",
+      "from": "start (pipe)",
+      "to": "C1 / board dock",
+      "boxes": 5,
+      "cumulative": null,
+      "notes": "on foot over stepping-stone tiles and sinking pillars"
+    },
+    {
+      "id": "W1",
+      "route": "main",
+      "from": "C1",
+      "to": "C2 dock",
+      "boxes": 8,
+      "cumulative": null,
+      "notes": "first jet-board leg: stagger field, mine line, whirlpool gate, 1UP between mines"
+    },
+    {
+      "id": "F2",
+      "route": "main",
+      "from": "C2",
+      "to": "C3 dock",
+      "boxes": 3,
+      "cumulative": null,
+      "notes": "on foot; bonus plate and blue-gem plate branch off here"
+    },
+    {
+      "id": "B",
+      "route": "bonus",
+      "from": "green ? plate in F2",
+      "to": "elevator back to F2",
+      "boxes": 11,
+      "cumulative": null,
+      "notes": "side-scroll treetops; HUD 0 -> 6 -> 9 -> 11"
+    },
+    {
+      "id": "G",
+      "route": "gem",
+      "from": "blue-gem plate in F2",
+      "to": "gem elevator back to F2",
+      "boxes": 40,
+      "cumulative": null,
+      "notes": "needs the Turtle Woods blue gem; on foot then jet-board; own checkpoint; 26 boxes observed, 14 residual"
+    },
+    {
+      "id": "W2",
+      "route": "main",
+      "from": "C3",
+      "to": "goal",
+      "boxes": 7,
+      "cumulative": null,
+      "notes": "second jet-board leg: two ramps, moving mines, log wall"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "F1-a",
+      "section": "F1",
+      "order": 1,
+      "where": "raised tile right after the piranha",
+      "composition": {
+        "question": 3,
+        "aku": 1
+      },
+      "count": 4,
+      "arrangement": "2x2 block: top row ? Aku, bottom row ? ?",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "after-piranha"
+      ],
+      "tags": [
+        "ON-PATH",
+        "GRID",
+        "AKU",
+        "REWARD"
+      ],
+      "why": "mask handed out before the first board leg",
+      "evidence": "F2 p026L inset; D2 p011L shots 2-3",
+      "confidence": "high"
+    },
+    {
+      "id": "F1-b",
+      "section": "F1",
+      "order": 2,
+      "where": "last tile before the board dock, beside a flytrap",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "beside-flytrap",
+        "board-pickup"
+      ],
+      "tags": [
+        "CHECKPOINT",
+        "ENEMY-LINK",
+        "TIME-TRIAL"
+      ],
+      "why": "save at the board pickup; breaking it starts the time-trial clock",
+      "evidence": "F2 p026L POINT2; D2 p011L shots 5-6",
+      "confidence": "high"
+    },
+    {
+      "id": "W1-a",
+      "section": "W1",
+      "order": 1,
+      "where": "right after boarding",
+      "composition": {
+        "striped": 3,
+        "question": 1,
+        "aku": 1
+      },
+      "count": 5,
+      "arrangement": "staggered 2-1-2 across the channel",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [
+        "board-pickup"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SPEED-LINE",
+        "TEACH",
+        "AKU",
+        "GRID"
+      ],
+      "why": "teaches that floating boxes break by ramming; ramming a striped gives all 10 fruit; the stagger makes each box a steering choice",
+      "evidence": "F2 p026L POINT3 + zoom; D2 p011L shot 7",
+      "confidence": "high",
+      "typeConfidence": "medium"
+    },
+    {
+      "id": "W1-b",
+      "section": "W1",
+      "order": 2,
+      "where": "just past the whirlpool gate, inside the minefield",
+      "composition": {
+        "life": 1
+      },
+      "count": 1,
+      "arrangement": "single with two mines tight on its left",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [
+        "between-mines",
+        "after-boost-gate"
+      ],
+      "tags": [
+        "LIFE",
+        "EDGE-BAIT",
+        "SPEED-LINE",
+        "REWARD"
+      ],
+      "why": "a life used as bait inside the minefield",
+      "evidence": "F2 p026L zoom; D2 p011L shot 9",
+      "confidence": "high"
+    },
+    {
+      "id": "W1-c",
+      "section": "W1",
+      "order": 3,
+      "where": "last stretch before the dock, right half of the channel",
+      "composition": {
+        "striped": 2
+      },
+      "count": 2,
+      "arrangement": "single file; mines on the left",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [
+        "beside-mine-line"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SPEED-LINE",
+        "PAIR"
+      ],
+      "why": "boxes mark the safe lane, mines the danger lane",
+      "evidence": "F2 p026L zoom",
+      "confidence": "high",
+      "typeConfidence": "low"
+    },
+    {
+      "id": "F2-a",
+      "section": "F2",
+      "order": 1,
+      "where": "dock at the end of W1",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "board-drop"
+      ],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "save after the first board leg",
+      "evidence": "F2 p026R; D2 p011L shot 10",
+      "confidence": "high"
+    },
+    {
+      "id": "F2-b",
+      "section": "F2",
+      "order": 2,
+      "where": "tile right after the piranha",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "after-piranha"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "ENEMY-LINK"
+      ],
+      "why": "only box of the leg, after the piranha",
+      "evidence": "F2 p026R zoom; D2 p011R shot 13",
+      "confidence": "high"
+    },
+    {
+      "id": "F2-c",
+      "section": "F2",
+      "order": 3,
+      "where": "dock before W2",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "board-pickup"
+      ],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "save at the second board pickup",
+      "evidence": "F2 p026R; D2 p011R shot 17",
+      "confidence": "high"
+    },
+    {
+      "id": "W2-a",
+      "section": "W2",
+      "order": 1,
+      "where": "right after re-boarding, before the whirlpools",
+      "composition": {
+        "unknown": 1,
+        "question": 1
+      },
+      "count": 2,
+      "arrangement": "offset pair: left box past the dock, ? ahead-right",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [
+        "before-boost-gate"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SPEED-LINE",
+        "PAIR"
+      ],
+      "why": "warm-up targets before the boost gate; never inside the gate",
+      "evidence": "F2 p027L zooms; D2 p011R shots 17-18",
+      "confidence": "high"
+    },
+    {
+      "id": "W2-b",
+      "section": "W2",
+      "order": 2,
+      "where": "above the landing arc of ramp 1",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating high",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle",
+        "timed"
+      ],
+      "relations": [
+        "above-ramp-arc",
+        "moving-mine-beyond"
+      ],
+      "tags": [
+        "HIGH",
+        "TOOL",
+        "SPEED-LINE",
+        "TIMED"
+      ],
+      "why": "only a boost right before the ramp reaches it; a moving mine sweeps just beyond",
+      "evidence": "F2 p027L POINT10 + zoom; D2 p011R shot 20",
+      "confidence": "high"
+    },
+    {
+      "id": "W2-c",
+      "section": "W2",
+      "order": 3,
+      "where": "between ramp 1 and ramp 2",
+      "composition": {
+        "question": 1,
+        "unknown": 3
+      },
+      "count": 4,
+      "arrangement": "staggered 2x2",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle",
+        "timed"
+      ],
+      "relations": [
+        "moving-mine",
+        "before-wall-ramp"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SPEED-LINE",
+        "TIMED",
+        "GRID"
+      ],
+      "why": "last crate field in front of the wall ramp and a moving mine; turn sideways to stop if needed",
+      "evidence": "F2 p027L POINT11 + zoom; D2 p011R shot 21",
+      "confidence": "high",
+      "typeConfidence": "low"
+    },
+    {
+      "id": "B-a",
+      "section": "B",
+      "order": 1,
+      "where": "first mushroom platform",
+      "composition": {
+        "striped": 1,
+        "question": 1,
+        "wood": 2,
+        "tnt": 1,
+        "unknown": 1
+      },
+      "count": 6,
+      "arrangement": "striped single + 4-stack bottom->top ?, wood, TNT, wood (+1 unseen)",
+      "stackHeight": 4,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump",
+        "timed"
+      ],
+      "relations": [
+        "tnt-in-stack"
+      ],
+      "tags": [
+        "BONUS",
+        "STACK",
+        "SUPPORT-ORDER",
+        "EXPLOSIVE-MIX",
+        "TIMED"
+      ],
+      "why": "removing the base drops the column and lights the TNT; the upper box must be taken inside the 3-count",
+      "evidence": "D2 p012L shots 24-25; F2 p093L bonus note",
+      "confidence": "medium",
+      "countNote": "HUD 0 -> 6 across this platform; five boxes visible"
+    },
+    {
+      "id": "B-b",
+      "section": "B",
+      "order": 2,
+      "where": "platform after the steel-block crawlspace",
+      "composition": {
+        "wood": 1,
+        "striped": 1,
+        "question": 1
+      },
+      "count": 3,
+      "arrangement": "single + pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "after-crawlspace"
+      ],
+      "tags": [
+        "BONUS",
+        "ON-PATH"
+      ],
+      "why": "three boxes on one platform (HUD 6)",
+      "evidence": "D2 p012L shots 25-26",
+      "confidence": "high"
+    },
+    {
+      "id": "B-c",
+      "section": "B",
+      "order": 3,
+      "where": "last two mushrooms before the elevator",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "two singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "before-exit"
+      ],
+      "tags": [
+        "BONUS",
+        "EDGE-BAIT"
+      ],
+      "why": "HUD 9 -> 11 at the exit",
+      "evidence": "D2 p012L shot 27; gamepressure 11",
+      "confidence": "high"
+    },
+    {
+      "id": "G-a",
+      "section": "G",
+      "order": 1,
+      "where": "landing tile of the gem elevator",
+      "composition": {
+        "wood": 2,
+        "striped": 2
+      },
+      "count": 4,
+      "arrangement": "two columns: wood on the tile, striped floating high above each",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "bounce",
+        "jump"
+      ],
+      "relations": [
+        "gem-landing"
+      ],
+      "tags": [
+        "HIGH",
+        "TOOL",
+        "SANDWICH",
+        "ROUTE-SPLIT",
+        "SUPPORT-ORDER"
+      ],
+      "why": "the lower wood box is a single-use step up to the striped",
+      "evidence": "D2 p012L shot 29",
+      "confidence": "high"
+    },
+    {
+      "id": "G-b",
+      "section": "G",
+      "order": 2,
+      "where": "top of the stairs after the hippo, behind a flytrap",
+      "composition": {
+        "wood": 4
+      },
+      "count": 4,
+      "arrangement": "wall >=2x2",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "behind-flytrap"
+      ],
+      "tags": [
+        "WALL",
+        "ENEMY-LINK",
+        "ROUTE-SPLIT"
+      ],
+      "why": "the flytrap guards the wall",
+      "evidence": "D2 p012R shot 31",
+      "confidence": "medium",
+      "countNote": "minimum seen"
+    },
+    {
+      "id": "G-c",
+      "section": "G",
+      "order": 3,
+      "where": "open water after the wall",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "single-file floating boxes (bridge)",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "bounce",
+        "timed"
+      ],
+      "relations": [
+        "over-water"
+      ],
+      "tags": [
+        "BRIDGE",
+        "STEPPING",
+        "TIMED",
+        "ROUTE-SPLIT",
+        "TEST"
+      ],
+      "why": "footing consumed as you use it: each stomp breaks the box, so chain the jumps",
+      "evidence": "F2 p093L note 1; D2 p012R shot 32",
+      "confidence": "high",
+      "countNote": "2 seen; length unknown"
+    },
+    {
+      "id": "G-d",
+      "section": "G",
+      "order": 4,
+      "where": "tile causeway",
+      "composition": {
+        "nitro": 8,
+        "checkpoint": 1
+      },
+      "count": 9,
+      "arrangement": "row of 4 Nitro, C alone, row of 4 Nitro",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "nitro-rows-both-sides"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "CHECKPOINT",
+        "NITRO-SWITCH",
+        "TEST",
+        "ROUTE-SPLIT"
+      ],
+      "why": "the checkpoint is the only safe landing between two lethal rows",
+      "evidence": "D2 p012R shot 33; gamepressure ('surrounded by eight explosive chests')",
+      "confidence": "high"
+    },
+    {
+      "id": "G-e",
+      "section": "G",
+      "order": 5,
+      "where": "first stretch of the gem board leg",
+      "composition": {
+        "outline": 3,
+        "wood": 1
+      },
+      "count": 4,
+      "arrangement": "outlines along the channel + one real box by a ramp",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle",
+        "switch",
+        "backtrack"
+      ],
+      "relations": [
+        "switched-by-G-g"
+      ],
+      "tags": [
+        "OUTLINE",
+        "BACKTRACK",
+        "SPEED-LINE",
+        "ROUTE-SPLIT"
+      ],
+      "why": "outlines seen first; the switch is upstream",
+      "evidence": "D2 p012R shots 34, 36; F2 p093L note 2",
+      "confidence": "medium",
+      "materializesAs": {
+        "wood": 3
+      }
+    },
+    {
+      "id": "G-f",
+      "section": "G",
+      "order": 6,
+      "where": "upstream among mines",
+      "composition": {
+        "nitro": 3
+      },
+      "count": 3,
+      "arrangement": "single file mid-channel",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle"
+      ],
+      "relations": [
+        "among-mines"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "SPEED-LINE",
+        "ROUTE-SPLIT",
+        "NITRO-SWITCH"
+      ],
+      "why": "a Nitro slalom where ramming boxes has become a habit",
+      "evidence": "D2 p012R shot 35",
+      "confidence": "high",
+      "countNote": "minimum seen"
+    },
+    {
+      "id": "G-g",
+      "section": "G",
+      "order": 7,
+      "where": "upstream past the mines",
+      "composition": {
+        "switch": 1
+      },
+      "count": 0,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle",
+        "switch"
+      ],
+      "relations": [
+        "switches-G-e"
+      ],
+      "tags": [
+        "SWITCH",
+        "BACKTRACK",
+        "ROUTE-SPLIT"
+      ],
+      "why": "placed past its outlines so the player must turn the board round",
+      "evidence": "D2 p012R shots 35-36",
+      "confidence": "high",
+      "notCounted": [
+        "switch"
+      ]
+    },
+    {
+      "id": "G-h",
+      "section": "G",
+      "order": 8,
+      "where": "final pier",
+      "composition": {
+        "switchGreen": 1
+      },
+      "count": 0,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch"
+      ],
+      "relations": [
+        "switches-G-d",
+        "switches-G-f"
+      ],
+      "tags": [
+        "NITRO-SWITCH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "all gem-course Nitros count only once this is hit",
+      "evidence": "D2 p012R shot 37",
+      "confidence": "high",
+      "notCounted": [
+        "switchGreen"
+      ]
+    },
+    {
+      "id": "G-x",
+      "section": "G",
+      "order": 9,
+      "where": "not shown in the sources",
+      "composition": {
+        "life": 1,
+        "unknown": 13
+      },
+      "count": 14,
+      "arrangement": "unknown",
+      "stackHeight": null,
+      "floating": null,
+      "access": [],
+      "relations": [],
+      "tags": [
+        "ROUTE-SPLIT",
+        "COUNT-TRAP"
+      ],
+      "why": "residual so the gem course reaches 40 (= 51 - 11)",
+      "evidence": "derived",
+      "confidence": "low",
+      "countNote": "the life is the header's second 1UP if it is not the unseen B-a box"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "F1",
+      "kind": "piranha",
+      "count": 1,
+      "where": "between the pier steps and F1-a",
+      "role": "leaps between tiles; F1-a is the reward for passing"
+    },
+    {
+      "section": "F1",
+      "kind": "Venus flytrap",
+      "count": 1,
+      "where": "beside C1",
+      "role": "guards the checkpoint; jump-spin from range"
+    },
+    {
+      "section": "W1",
+      "kind": "floating mines",
+      "count": 10,
+      "where": "line of 6 after W1-a, 2 near the whirlpools, 2 beside W1-b (and 2 left of W1-c)",
+      "role": "mark the danger lane; flank the 1UP"
+    },
+    {
+      "section": "F2",
+      "kind": "Venus flytrap",
+      "count": 2,
+      "where": "after C2; the second beside the bonus plate",
+      "role": "learn the bite distance"
+    },
+    {
+      "section": "F2",
+      "kind": "piranha",
+      "count": 1,
+      "where": "before F2-b",
+      "role": "F2-b follows it"
+    },
+    {
+      "section": "F2",
+      "kind": "hippo",
+      "count": 3,
+      "where": "between F2-b and C3",
+      "role": "sinking stepping stones"
+    },
+    {
+      "section": "W2",
+      "kind": "floating mines",
+      "count": 7,
+      "where": "4 in a line after the whirlpools, 1 moving beyond W2-b, 2 moving past the wall",
+      "role": "dodge right after each crate target"
+    },
+    {
+      "section": "W2",
+      "kind": "Venus flytrap",
+      "count": 1,
+      "where": "on the tiles by the goal",
+      "role": "last enemy"
+    },
+    {
+      "section": "G",
+      "kind": "hippo, Venus flytrap",
+      "count": 2,
+      "where": "after the landing tile; at the wall G-b",
+      "role": "flytrap guards the wall"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "F1",
+      "kind": "water between tiles; sinking round pillars",
+      "where": "whole leg",
+      "crates": []
+    },
+    {
+      "section": "W1",
+      "kind": "whirlpool pair (boost gate)",
+      "where": "between the mine line and W1-b",
+      "crates": [
+        "W1-b"
+      ]
+    },
+    {
+      "section": "W2",
+      "kind": "whirlpool pair (boost gate)",
+      "where": "after W2-a",
+      "crates": [
+        "W2-a"
+      ]
+    },
+    {
+      "section": "W2",
+      "kind": "ramp 1 / ramp 2 + log wall",
+      "where": "W2-b; after W2-c",
+      "crates": [
+        "W2-b",
+        "W2-c"
+      ]
+    },
+    {
+      "section": "G",
+      "kind": "open water bridged by floating boxes",
+      "where": "G-c",
+      "crates": [
+        "G-c"
+      ]
+    },
+    {
+      "section": "G",
+      "kind": "Nitro rows across the causeway",
+      "where": "G-d",
+      "crates": [
+        "G-d"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "W2-b"
+      ],
+      "summary": "boosted ramp target",
+      "solution": "boost right before ramp 1, break the box at the top of the arc, dodge the moving mine",
+      "wrongOrder": "cruise-speed ramp jump passes underneath",
+      "loss": "one box; retry needs a board turnaround (costs the time gem)"
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "B-a"
+      ],
+      "summary": "4-stack with a TNT in it",
+      "solution": "break the bottom ?, then take the upper box during the TNT's 3-count (or back off)",
+      "wrongOrder": "spinning the TNT directly",
+      "loss": "a life; fruit of blasted boxes"
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "G-c"
+      ],
+      "summary": "consumable floating-box bridge",
+      "solution": "chain stomps from box to box without pausing",
+      "wrongOrder": "stopping on a box",
+      "loss": "a life (water)"
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "G-d",
+        "G-h"
+      ],
+      "summary": "checkpoint between two Nitro rows",
+      "solution": "dash-jump onto the C, break it, dash-jump over the second row; hit the green ! at the end pier",
+      "wrongOrder": "short jump into a row",
+      "loss": "a life; Nitro credit only after G-h"
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "G-e",
+        "G-g",
+        "G-h"
+      ],
+      "summary": "outline backtrack on the board",
+      "solution": "ram the real boxes, ride on to the !, turn round, break the three new boxes, return to the pier and hit the green !",
+      "wrongOrder": "riding straight to the pier",
+      "loss": "3 boxes and every gem-course Nitro"
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "F1-b",
+        "W1-a",
+        "W2-c"
+      ],
+      "summary": "time-trial vs all-box",
+      "solution": "time gem: never stop, use the boxes as a guide line, skip the bonus; box gem: a separate run with the blue gem",
+      "wrongOrder": "trying both in one run",
+      "loss": "the time limit"
+    }
+  ],
+  "observations": [
+    "On the board crates are steering targets: ramming breaks them, so placement alone sets the difficulty (2-1-2 stagger, single-file pairs, offset pairs, 2x2 stagger).",
+    "Every board crate is paired with a hazard decision; rhythm is collect -> dodge -> collect.",
+    "Boost gates (whirlpool pairs) are kept free of crates; crates sit just before or after them.",
+    "One vertical test per board leg at most: the boosted-ramp box.",
+    "Checkpoints sit at docks; on-foot legs carry the checkpoints, board legs carry 15 of 23 main boxes.",
+    "Main course is light (23 of 74) because of the time-trial gem; 69% of boxes are in the bonus and gem course.",
+    "Box lines on the water trace the safe lane between mines and double as a racing line.",
+    "The only main-course life on the water sits inside the minefield.",
+    "The gem course recombines earlier lessons: single-use stepping boxes (now over water), Nitro rows around a checkpoint, outline/switch with a vehicle backtrack, floating Nitros, green ! at the exit.",
+    "Explosives are kept out of the main course: TNT only in the bonus, Nitros only in the gem course."
+  ]
+}

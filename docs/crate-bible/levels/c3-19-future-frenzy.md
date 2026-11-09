@@ -22,7 +22,7 @@ Evidence level:
   blue 2 / green 3 = becomes a 1/2/3-second time crate in time trial; orange A = becomes an Aku box in time trial.
   The drawn icon is the normal-mode type.
 - Uncertain: the 2×2 start cluster (3 wood + 1 ? read at small scale; confirmed as 4 by the delta); exact float
-  heights; which crate of S2-d carries A and which 2; the precise order of the five under-platform bubbles in the
+  heights; which crate of S2-d carries A and which 2; the precise order of the six under-platform bubbles in the
   side-scroll (their counts are certain, the left–right order is not).
 
 ## At a glance
@@ -112,8 +112,8 @@ must ride — no crate here needs a detour, but almost every one needs a stop.
 | S2-e | above the pad before the saucer-over-treadmill | ?×1 [1] | single, floating | jump-spin | HIGH SINGLE TIME-TRIAL | A jump-height pickup right before a hazard you must not jump into (TA5: never take the spin-jump disc at the belt's end in TT) | F3 p088L zoom · high |
 | C2 | cross-shaped pad after spike + laser posts | C×1 | single | walk | CHECKPOINT ROUTE-SPLIT | Future Tense enters the map here (its C72(85)); the crates on both sides of this pad are counted by stage 29 in different passes | F3 p088L; F3 p093L zoom · high |
 
-S2 is sparse (6 crates + 2 C boxes over a long side-scroll) because the platforming — rotating discs, saucers,
-metalnics — is the content. Three of the eight placements are low (S2-b, S2-c) or under a ceiling (S2-a): in a
+S2 is sparse (9 crates in five clusters over a long side-scroll) because the platforming — rotating discs, saucers,
+metalnics — is the content. Three of the five clusters are low (S2-b, S2-c) or under a ceiling (S2-a): in a
 side view the camera shows everything, so the designers hide crates *vertically* instead of behind scenery.
 
 ### S3 — C2 → C3 (side-scroll; 20 boxes incl. C3; + bonus 19 → derived cumulative 74 (78))
@@ -166,7 +166,7 @@ side view the camera shows everything, so the designers hide crates *vertically*
 | id | position | composition | arrangement | access | tags | why it is here | evidence |
 |---|---|---|---|---|---|---|---|
 | S4-a | first pad after C3 | ?[2] (top) / W / Nitro (bottom) | 3-stack on a Nitro base | bounce the ?, then jump-spin the W at its own height — never land on the base | ON-PATH STACK EXPLOSIVE-MIX SUPPORT-ORDER TEST | The inverse of S1-e: the explosive is the foundation, so the safe "stomp down the stack" habit ends on a Nitro. The green ! clears the base later | F3 p088R zoom · medium-high |
-| S4-b | below the robot + green-disc pad | ?×1 | single, low | hop down and back | LOW HIDDEN SINGLE COUNT-TRAP | Fifth under-the-ledge crate of the side-scroll | F3 p088R zoom · medium |
+| S4-b | below the robot + green-disc pad | ?×1 | single, low | hop down and back | LOW HIDDEN SINGLE COUNT-TRAP | Sixth under-the-ledge placement of the side-scroll (after S2-b, S2-c, S3-b, S3-d, S3-g) | F3 p088R zoom · medium |
 | S4-c | over the gap after that pad | W×3 | floating, descending diagonal | bounce down them / jump-spin | FLOAT-LINE STEPPING EDGE-BAIT | A stair of crates over a pit: bouncing breaks your own footing, so they are a one-way descent | F3 p088R zoom · medium |
 | S4-d | above the saucer/metalnic stretch | ?[1], ?[1] | two floating singles | small jump-spins; saucer as a step | HIGH PAIR ENEMY-LINK TIME-TRIAL | TT takes both with small jump-spins and accepts a metalnic hit (fr. 26–27); the saucer is the footing across the hole (callout 7, fr. 28–30). TT target 1:25:00 | F3 p088R zoom; F3 p110L fr. 26–30 · high |
 | S4-e | under the last platform before the goal | green ! (block) | single, low | drop down to it | NITRO-SWITCH HIDDEN LOW COUNT-TRAP | Detonates the five Nitros (S1-f, S1-h, S4-a). Hidden below the final pad so a player running for the goal misses it — the all-box count depends on one off-line drop | F3 p088R zoom · high |
@@ -217,8 +217,8 @@ side view the camera shows everything, so the designers hide crates *vertically*
    later a Nitro foundation (S4-a). Each changes which approach direction is safe.
 5. **TNT as tool, wall and weapon:** TNT kills a robot (S3-b) and forms a wall that a spring clears (S3-f); only one TNT
    in eight is a pure hazard (S1-e's lid).
-6. **Vertical hiding in the side-scroll:** five clusters sit below platform lips (S2-b, S2-c, S3-d, S3-g, S4-b) plus
-   the green ! (S4-e). With nothing to hide behind in a side view, "below the ledge" is the count trap.
+6. **Vertical hiding in the side-scroll:** six clusters sit below platform lips (S2-b, S2-c, S3-b, S3-d, S3-g, S4-b)
+   plus the green ! (S4-e). With nothing to hide behind in a side view, "below the ledge" is the count trap.
 7. **One big reinforced deposit:** 8 of S1's 25 boxes are a single iron cube on a safe pad — a deliberate slow beat
    after the belt-and-fence rush.
 8. **Masks as rewards for flawless time trial:** two crates become Aku boxes only in TT; collecting all three masks by
@@ -255,6 +255,6 @@ side view the camera shows everything, so the designers hide crates *vertically*
   are confirmed through stage 29's counts and gamepressure's 133 for the stage-29 total.
 - The iron cube's 2×2×2 shape is read from small art; 8 is forced by the C47→C72 delta.
 - S2-d: which crate carries the A badge and which the 2 badge.
-- Order of the five low bubbles in the side-scroll (counts certain).
+- Order of the six low bubbles in the side-scroll (counts certain).
 - For the Future Tense mapper: F3 p094L lists stage 29 under the shared 17-box bonus (with stage 21), yet F3's
   stage-29 C72→C111 delta (39 = 20 + 19) and gamepressure's 133 imply the 19-box room. Not resolved here.
