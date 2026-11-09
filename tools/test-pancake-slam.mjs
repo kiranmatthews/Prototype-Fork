@@ -23,7 +23,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
       player.freeSkate=player.airFromSkate=false;player.airGrav='foot';player.vVel=0;
     });
     let flat=0,impactHead=Infinity,reboundHead=-Infinity,impactHip=Infinity,reboundHip=-Infinity,minClearance=Infinity,maxStep=0,previous=null,settled=0;
-    let minImpactLimbLength=Infinity,minImpactWidth=Infinity;
+    let minImpactLimbLength=Infinity,minImpactWidth=Infinity,bottomFrames=0,bottomMin=Infinity,bottomMax=-Infinity,rollWidth=Infinity;
     let held=null,holdFrames=0,lastPitch=null,forwardTurn=0,backwardTurn=0,inverted=false,feetFirst=false;
     for(let f=0;f<fps*2.5;f++){
       for(const player of players){player.step(1/fps,makeInput({grabHeld:f===0,grabPressed:f===0,moveY:running&&f>0?1:0}),level);player.commitRenderStep(level);}
@@ -50,9 +50,10 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
         clearance=p.interactionMeasure.sampledPlaneDistance(p.riderG,new THREE.Vector3(0,1,0),p.pos);
         minClearance=Math.min(minClearance,clearance);
         assert.ok(clearance>-.005,`slam penetrated the floor: ${clearance} (${fps}/${height}/${running}, age ${age}, body ${p.bodyGroup.position.y}, pos ${p.pos.y}, ground ${p.groundHit?.y}, root ${p.group.position.y})`);
+        if(age>=.035&&age<.43)assert.ok(clearance<.022,`recovery became an airborne flip instead of a contact roll: ${clearance}`);
         if(age>=.43&&age<=.48)assert.ok(clearance<.012,`finished roll did not plant its feet: ${clearance}`);
         if(previous)maxStep=Math.max(maxStep,hip.angleTo(previous)*fps/60);
-        if(age>=.035&&age<=.075){
+        if(age>=.035&&age<=.125){
           flat++;impactHead=Math.min(impactHead,head);
           impactHip=Math.min(impactHip,point('hips').y-p.pos.y);
           assert.ok(Math.abs(chestUp.y)<.4,'slam did not reach its falling/contact pose');
@@ -64,7 +65,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
             assert.ok(lengths[id]>1.2,`${id} shortened instead of stretching at impact: ${lengths[id]}`);
           }
         }
-        if(age>=.12&&age<.20){reboundHead=Math.max(reboundHead,head);reboundHip=Math.max(reboundHip,point('hips').y-p.pos.y);}
+        if(age>=.05&&age<=.125){bottomFrames++;bottomMin=Math.min(bottomMin,head);bottomMax=Math.max(bottomMax,head);}
+        if(age>=.20&&age<.32){reboundHead=Math.max(reboundHead,head);reboundHip=Math.max(reboundHip,point('hips').y-p.pos.y);rollWidth=Math.min(rollWidth,width);}
         if(age>=.035&&age<=.48){
           const local=p.animationRig.jointsById.get('hips').node.quaternion;
           const up=new THREE.Vector3(0,1,0).applyQuaternion(local),pitch=Math.atan2(up.z,up.y);
@@ -86,11 +88,13 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
     // The head moves down while the hips roll over it. Measure the rebound at
     // the pelvis, not by demanding the rejected high whole-body belly lift.
     assert.ok(reboundHip>impactHip+.15,`missing visible rebound: ${impactHip} -> ${reboundHip}`);
+    assert.ok(bottomFrames>=2&&bottomMax-bottomMin<.04,`no readable flat settle: ${bottomFrames} frames, ${bottomMax-bottomMin}m drift`);
+    assert.ok(rollWidth<minImpactWidth*.6,`roll did not gather the spread limbs: ${rollWidth}`);
     assert.ok(holdFrames>=3,'missing readable anticipation pause');
     assert.ok(inverted&&feetFirst&&forwardTurn>4.0,`rebound did not complete its forward flip onto the feet: ${JSON.stringify({fps,height,running,inverted,feetFirst,forwardTurn})}`);
     assert.ok(backwardTurn>-.07,'forward rebound reversed before landing');
     assert.ok(maxStep<.44,`recovery rotation snapped: ${maxStep} radians per 60 Hz frame`);
-    results.push({fps,height,running,impactHead,reboundHead,impactHip,reboundHip,minImpactLimbLength,minImpactWidth,minClearance,maxStep,holdFrames,forwardTurn,backwardTurn});
+    results.push({fps,height,running,impactHead,reboundHead,impactHip,reboundHip,minImpactLimbLength,minImpactWidth,minClearance,maxStep,holdFrames,bottomFrames,bottomDrift:bottomMax-bottomMin,rollWidth,forwardTurn,backwardTurn});
   }
   runtimes.forEach(r=>r.dispose());
   const report={status:'pass',frames,results,rows};

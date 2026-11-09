@@ -744,6 +744,17 @@ export class CharacterAnimationRuntime {
     }
 
     let motion = this.motionForClip(clip, intent.motion);
+    if (clip.metadata?.jakLooseJump && clip.id === 'player.jump' && this.manualClipId === null) {
+      // The first jump used to arrive at source frame 20: a rigid, fully
+      // gathered pose. Share the double jump's earlier loose gather, paced
+      // across this arc, then open continuously into the existing fall.
+      const frame = motion.inputs?.jakFrame ?? 0;
+      const apexFrame = 11 + 3 * MathUtils.clamp(motion.inputs?.jakJumpCharge ?? 1, 0, 1);
+      const sourceFrame = frame <= 2 ? frame : frame <= 20
+        ? 2 + (apexFrame - 2) * (frame - 2) / 18
+        : apexFrame + (40 - apexFrame) * (frame - 20) / 20;
+      motion = {...motion, inputs:{...motion.inputs, jakFrame:sourceFrame}};
+    }
     if (clip.metadata?.jakDirect && clip.id === 'player.double-jump' && this.manualClipId === null) {
       // The second arc is much shorter than the first. Pace the source's
       // extension and gather across that rise, then continue into descent.
@@ -1155,7 +1166,8 @@ export class CharacterAnimationRuntime {
     }
     if (clip.metadata?.jakDirect && (clip.id === 'player.jump' || clip.id === 'player.double-jump')) {
       const speed = motion.inputs?.footSpeed ?? 0;
-      const alternate = this.findPlayableClip('player.jak-jump-forward');
+      const alternate = this.findPlayableClip(typeof clip.metadata.jakForwardVariant==='string'
+        ? clip.metadata.jakForwardVariant : 'player.jak-jump-forward');
       if (!alternate) return pose;
       // The forward source holds a bent trailing leg at its final key. Open
       // both legs as the descent finishes instead of holding that tuck to impact.

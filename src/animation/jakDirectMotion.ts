@@ -166,6 +166,9 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     ['player.double-jump','jump',false],['player.fall','jump-loop',true],
     ['player.land','jump-land',false],['player.jak-run-land','run-squash',false],
     ['player.jak-run-land-weak','run-squash-weak',false],['player.jak-jump-forward','jump-forward',false],
+    // Keep the existing double-jump forward variant while giving the first
+    // jump the same editable independent-limb elastic accent.
+    ['player.jak-single-jump-forward','jump-forward',false],
     ['player.jak-short-land','jump-short-land',false],
     ['player.jak-soft-land','jump-land',false],
     ['player.jak-flip','wheel-flip',false],['player.jak-flip-land','wheel-flip-land',false],
@@ -237,7 +240,8 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
         }
       }
     }
-    const elasticProfile=id==='player.jak-flip'?'jak-flip':id==='player.double-jump'?'jak-double-jump':null;
+    const elasticProfile=id==='player.jak-flip'?'jak-flip':id==='player.double-jump'?'jak-double-jump'
+      :id==='player.jump'||id==='player.jak-single-jump-forward'?'jak-jump':null;
     if(elasticProfile) {
       const amplitudes=characterElasticityAmplitudes(elasticProfile);
       const beats=id==='player.jak-flip'?[[0,0],[.10,.65],[.26,-.9],[.58,-.65],[.76,.9],[.86,.9],[.95,-.10],[1,0]]
@@ -265,6 +269,7 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
       playbackSpeed,range:{start:0,end:duration},loop:{...original.loop,mode:loop?'loop':'once'},
       tracks,proceduralDrivers:[],contacts:[],events:[],markers:[],
       metadata:{jakDirect:true,jakSourceClip:name,jumpReferenceRevision:1,jakRootMode:rootMode,
+        ...(id==='player.jump'?{jakLooseJump:true,jakForwardVariant:'player.jak-single-jump-forward'}:{}),
         ...(ledge?{jakLedge:true}:{}),
         ...(catchMotion?{jakSourceTimeScale:timeScale,jakLedgeSettle:true,elasticityProfile:'jak-ledge-catch'}:{}),
         ...(id==='player.climb'?{elasticityProfile:'jak-ledge-climb'}:{}),

@@ -12,6 +12,11 @@ existing authority.
   and the existing 0.5-second grounded recovery. The low forward roll completes
   before the live idle/run handoff. Its rotation uses evenly sampled, eased
   keys to avoid acceleration changes at uneven pose-key intervals.
+- Follow-up polish holds the stretched flat pose for 100 ms, then gathers the
+  chin, arms and knees into a tighter roll. Actual posed-surface support keeps
+  contact through the turn, without extending the controller's recovery lock.
+  The single jump shares the double jump's independent-limb stretch and earlier
+  apex gather; its existing double-jump variant remains separate.
 - At the bottom of the slam, both arms and both legs stretch outward rather
   than shorten. The shared `pancake-slam-impact` profile authors 28–40% segment
   extension while the torso flattens. The impact unwinds into the recovery;
@@ -48,9 +53,15 @@ log/result for each. It is also part of `check:all`, not the Pages build path.
 
 The final slam regression covers 18 combinations of frame rate, drop height and
 stationary/running exit, totalling 3,150 frames. Movement and action clocks match
-the unmodified controller exactly. All impact limb lengths exceed 1.28× rest;
+the unmodified controller exactly. All impact limb lengths exceed 1.26× rest
+through the longer bottom settle, whose head drift stays below 1.5 mm;
 minimum sampled body clearance is 6 mm, the roll completes forward, and the
 grounded recovery returns to the requested locomotion.
+
+The follow-up passes nine rubber-motion cases, 18 double-jump transitions,
+12 UI-tuning configurations, source-retarget and precision-jump checks. Paired
+traces retain exact movement parity; the second jump still lifts the head by
+at least 0.39 m in its first three frames. The 8.85 m/s flip threshold is unchanged.
 
 The supplied Haunted Hassle replay covers 2,046 recorded controller frames and
 109 moving-pickup gait frames; the gait matches live locomotion without the old
@@ -80,6 +91,6 @@ no console errors or warnings. Captures are in this chat's visualization folder,
 `d-gameplay-scheme-2026-11-10/`.
 
 Node 22 production build and release-size check pass: 3,465 files,
-987,858,074 / 1,000,000,000 bytes. Deployment verification is recorded in the
+987,858,870 / 1,000,000,000 bytes after the bottom-settle/jump follow-up. Deployment verification is recorded in the
 completed release handoff. This is broad measured regression coverage, not a
 claim that every possible input sequence or user-authored level was exercised.

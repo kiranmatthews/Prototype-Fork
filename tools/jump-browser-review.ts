@@ -354,8 +354,8 @@ p.step = (dt: number, input: any, level: Level) => {
     if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT<.23&&p.slamHangT>.15 ||
       stopAt==='Slam spread'&&p.slamActive&&p.slamHangT<=0 ||
       stopAt==='Slam impact'&&age>=.04&&age<.08 ||
-      stopAt==='Slam rebound'&&age>=.14&&age<.18 ||
-      stopAt==='Slam inversion'&&age>=.18&&age<.22 ||
+      stopAt==='Slam rebound'&&age>=.18&&age<.22 ||
+      stopAt==='Slam inversion'&&age>=.24&&age<.28 ||
       stopAt==='Slam feet down'&&age>=PANCAKE_SLAM.feetDown-PANCAKE_SLAM.hang ||
       stopAt==='Slam settle'&&age>=.48 ||stopAt==='Run exit'&&frame>=140)frozen=true;
     if(frame>=210)resetInspector();return;

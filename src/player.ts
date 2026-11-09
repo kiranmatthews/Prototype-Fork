@@ -18667,9 +18667,9 @@ export class Player {
       !this.groundHit||!this.riderG||!this.bodyGroup.parent)return;
     const normal=this.groundHit.normal;
     if(normal.y<.3)return;
-    // Preserve the airborne recoil; only prevent penetration during the flip.
-    // Once the feet arrive, settle their actual soles onto the support plane.
-    // The segment compression/rebound remains articulated above those contacts.
+    // The tucked recovery rolls over its actual surface instead of lifting
+    // the entire body into a second airborne flip. Segment recoil remains
+    // articulated above that moving contact, including the stretched impact.
     this.group.updateMatrixWorld(true);
     const distance=this.interactionMeasure.sampledPlaneDistance(this.riderG,normal,
       REACH_C.set(this.pos.x,this.groundHit.y,this.pos.z));
@@ -18678,7 +18678,8 @@ export class Player {
     const time=CONST.slamHang+CONST.slamFlat-this.slamFlatT;
     const planted=Number.isFinite(feetDown)?THREE.MathUtils.smoothstep(time,feetDown-.05,feetDown):0;
     const target=THREE.MathUtils.lerp(.015,.006,planted);
-    const lift=(target-distance)*(distance>target?planted:1);
+    const contact=clip.metadata.pancakeContactRoll?1:planted;
+    const lift=(target-distance)*(distance>target?contact:1);
     if(Math.abs(lift)<1e-8)return;
     this.bodyGroup.parent.updateWorldMatrix(true,false);
     _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
