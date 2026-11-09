@@ -299,9 +299,170 @@ Sum 8 (97–104) = GR's "last seven on the wall" + C5.
    (reachable only with the held ×1.25 bounce, about 6.1 m; a plain bounce gives about 3.9 m). Teach it in the
    bonus first.
 
+## Geometry, obstacles and enemies
+
+Geometry pass (agent geo-G8): LP1 0:02:50–0:06:41 re-read for footing, gaps, hazards and enemies, from the first wave's 1 fps sheets plus fresh 0.5 s frames of the rolling wheels (0:03:42–0:03:45.5), the temple pillars and the double-jump ledge (0:04:12–0:04:17.5), the vine (0:04:39–0:04:46.5) and the sinking stones (0:05:12.5–0:05:16). GR 1-1 and GP 1-1 (gamepressure walkthrough) were re-fetched for enemy and hazard rules. **u = one crate edge.** Rulers: crates standing on the same surface (the exit wall is 5 u wide, the S7 pillar crates sit on ≈ 2 u tops) and Crash himself (≈ 1 u wide, ≈ 1.5 u tall). Every size is an estimate from 480p video (±0.5 u); heights are inferred from where Crash takes off and lands. Nobody falls or dies in this LP run, so lethality comes from GP/GR or is marked not visible.
+
+### Camera and route shape
+- **S1 (into-screen)** behind Crash: open beach hub, jungle corridor, a curved stone causeway, then the courtyard; the path bends but never turns back
+- **S2 (into-screen)** dark temple corridors, a chamber and the pillar pit, all seen from behind
+- **S3 (forced-motion chase)** camera behind and above Crash as he slides down the vine into the screen
+- **S4–S5 (into-screen / diagonal)** stilt-village decks and the river; the sinking stones are seen from a three-quarter side view
+- **B (side-scroll)** left to right over lily-pad water
+- **S6 (into-screen)** dark glyph cave
+- **S7 (into-screen / diagonal)** rope walkway and the round pillars in water
+- **S8 (side view, vertical climb)** the camera faces the ruin wall from C5 and follows the climb upward; into-screen again on the summit
+- Linear, no forks. The only off-line spaces are the crawl-space gem (S4) and the bonus (B), both entered from the line and returning to it.
+- Footing narrows across the level: hub ≥ 10 u → path 3–4 u → arch bridge 2 u → round pillars ≈ 2 u → village walkways ≈ 2 u → sinking blocks ≈ 2 u → wall ledges 2–3 u and crumbling skulls ≈ 2 u. Gap widths stay at 1.5–3 u throughout.
+
+### Platforms and gaps (section by section; table per section)
+
+Moves: plain, running, double (Crash 4 double jump), arrow (held = hold jump on contact), ride (forced motion), crawl. "Lethal" comes from GP/GR where the LP shows no fall.
+
+**S1 — start → C1**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | wide floor (enclosed beach hub) | ≈ 12–15 × 8–10 | 0 | — | walled by props and rocks; shallow walkable sea along the front | REST, TEACH | a no-fail room where the first crab and the first crates meet the player; Crash wades in the sea (0:03:11), so there is nowhere to fall | LP1 0:02:50–0:03:18 · medium |
+| P-S1-b | S1 | corridor (sand path between foliage walls) | 3–4 wide | 0 | — | walled (foliage) | CHOKE | a walled lane keeps the crab pair on the line, so the first fight cannot be walked around | LP1 0:03:19–0:03:27 · medium |
+| G-S1-a | S1 | step-up (low plank deck with rope-net rails) | 0 (step face); landing plank deck ≈ 3 wide; run-up ≈ 4–6 | +0.5 to +1 | plain | none; failure: bump the step and retry | gap (not lethal) | the JUMP prompt is shown at a non-lethal step: the first jump of the game has no pit under it | LP1 0:03:21–0:03:23 (JUMP prompt) · medium |
+| G-S1-b | S1 | floor hole (square pit with green water) beside the path | ≈ 2–3; landing path continues beside it; run-up — | not visible | plain | none; failure: not visible | gap (lethality not visible) | the first pit sits beside the line, not across it: the player sees a hole before ever being forced to jump one | LP1 0:03:31–0:03:32 · low |
+| P-S1-c | S1 | bridge (curved stone arch bridge with a low curb) | ≈ 2 wide × 6–8 long | 0 | — | low curb; green-water ravine below | CHOKE, STEPPING | the first narrow lane over a drop; its crate (S1-h) waits at the far end, after the narrow part | LP1 0:03:34–0:03:36 · medium |
+| P-S1-d | S1 | corridor between carved stone walls (TNT tutorial lane) | 3–4 wide | 0 | — | walled | CHOKE | the TNT pair sits in a walled lane, so the blast reach is easy to read and there is one way to walk away | LP1 0:03:39–0:03:42 · medium |
+| P-S1-e | S1 | causeway (curved stone path crossed by rolling wheels) | ≈ 3 wide | 0 | — | open sides (the wheels roll in from the side) | CHOKE, TIMING-STEP | the only timed hazard of S1 sits on a short lane between the TNT tutorial and the TNT test | LP1 0:03:42–0:03:45.5 (0.5 s frames) · medium |
+| P-S1-f | S1 | wide floor (temple courtyard) + staircase | ≈ 10 × 6; stairs ≈ 3 wide, ≈ 6 steps | +3 (stairs) | — | walled by statues and jungle | ARENA, REST, CHECKPOINT-PAD | the TNT triangle needs room to retreat in any direction; the Aku crate and C1 bracket the stairs into the temple | LP1 0:03:45–0:03:54 · medium |
+
+**S2 — C1 → temple exit**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | stairs + dark corridor (temple) | ≈ 3 wide | +2 (entrance stairs) | — | walled | CHOKE | a walled 3 u corridor puts every spider drop point on the line; green floor puddles mark the spots | LP1 0:03:55–0:04:04 · medium |
+| P-S2-b | S2 | room (chamber with a round central pedestal) | ≈ 6 wide | 0 | — | walled | ARENA | the spider hangs over the centre and the crates stand at the two walls, so the room is crossed along its sides | LP1 0:04:05–0:04:11 · medium |
+| P-S2-c | S2 | round pillars (stump-like stone columns) over a pit | tops ≈ 2 diameter; 2–3 pillars | 0 | — | open (misty pit) | STEPPING | the first lethal footing is generous: Crash fills about half of a top | LP1 0:04:12–0:04:13.5 (0.5 s frames) · medium |
+| G-S2-a | S2 | bottomless pit (pillar crossing) | ≈ 1.5–2 per jump (2–3 jumps); landing round top ≈ 2 diameter; run-up standing (pillar top) | 0 | plain | a spider hangs over the far landing; failure: death | gap (lethal) | the first forced lethal gap is a standing jump far shorter than a full jump onto a wide round top; the only extra pressure is the spider at the far end | LP1 0:04:12–0:04:14 (0.5 s frames); GP 1-1 · medium |
+| P-S2-d | S2 | corridor + low wooden ledge | ≈ 3 wide; ledge ≈ 1 high | +1 | — | walled | REST | a calm corridor between the pillar pit and the double-jump wall | LP1 0:04:14–0:04:16 · medium |
+| G-S2-b | S2 | step-up (raised floor under the exit arch) | 0 (wall face); landing raised floor ≈ 5 wide (holds the 5×3 crate wall); run-up ≈ 3–4 (corridor) | +2 to +3 | double | none; failure: fall back to the corridor floor | gap (not lethal) | the double jump is taught on a dead-end wall with no pit: the prompt appears, the only way on is up, and the crate wall waits on top | LP1 0:04:16.5–0:04:17.5 (DOUBLE JUMP prompt; 0.5 s frames) · medium |
+
+**S3 — vine slide**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | rail (vine, forced slide) | one line, ≈ 18 s ride | descending throughout (not measurable) | ride; jump to crates | cannot fall off the vine itself (GP); forced motion; curves left and right and sags | TIMING-STEP | the game's first ride: no lethal floor under the player (GP), only optional hops to crates above the line | LP1 0:04:36–0:04:54; GP 1-1 · medium |
+| G-S3-a | S3 | hop off a moving line (vine) over the river | 0 (vertical hop to a crate ≈ 1 jump above the vine); landing the vine itself; run-up forced motion | ≈ +2 to the crate, then back to the vine | plain, ride | forced speed: the crate has to be met near the apex; failure: GR: a missed jump falls to death; GP: you cannot fall off; LP: no vine break seen | gap (lethality not visible) | the hops are optional crate pickups, so the vine is a rhythm lesson more than a gap test | LP1 0:04:36–0:04:54 (0.5 s frames 0:04:39–0:04:46.5); GR 1-1; GP 1-1 · low |
+
+**S4 — C2 → village and hidden gem**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | deck (village deck at the vine end) | ≈ 4 × 4 | 0 | — | rope-net railings | CHECKPOINT-PAD, LANDING | the vine drops you onto a railed square with C2 on it | LP1 0:04:54–0:04:57 · medium |
+| P-S4-b | S4 | decks and narrow plank walkways (stilt village) | decks ≈ 3–4; walkways ≈ 2 wide | ±1 between decks | — | open edges over the river | STEPPING, CHOKE | throwers stand on the decks, so every walkway is a lane inside their range | LP1 0:04:58–0:05:02 · medium |
+| G-S4-a | S4 | gaps between village decks over the river | ≈ 1.5–2; landing deck ≈ 3 wide; run-up ≈ 2–4 | −1 to +1 | plain | thrower volleys (GP: wait for the pause); failure: not visible | gap (lethality not visible) | short hops whose difficulty comes from the throwers' rhythm, not from the width | LP1 0:04:58–0:05:03 · low |
+| P-S4-c | S4 | stepped platforms (wooden tiers) | ≈ 2–3 wide; ≈ 3 tiers | +1 per tier | — | open | STEPPING | a staircase of jumps after the walkways: height without risk | LP1 0:05:03–0:05:05 · low |
+| G-S4-b | S4 | crawl space under a stilt hut (gem route) | ≈ 1 high clearance; landing hidden space inside the hut; run-up — | then up into a hidden space (≈ +1–2) | crawl (not slide), plain | none; failure: sliding does not get in (GR) | gap (not lethal) | the CRAWL prompt is placed at the one spot where it matters, and only the hidden gem needs it | LP1 0:05:07–0:05:10 (HOLD O CRAWL prompt); GR 1-1 · medium |
+
+**S5 — gem → C3 → bonus pad**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S5-a | S5 | sinking stone blocks (carved, floating on the river) | tops ≈ 2–2.5 × 2; 2 blocks | 0 | — | open (river); shift and drop after landing (GP); no sinking visible at the LP pace of ≈ 1 s per block | TIMING-STEP | the level's first footing on a timer, after about two and a half minutes of static ground | LP1 0:05:12.5–0:05:16 (0.5 s frames); GP 1-1 · medium |
+| G-S5-a | S5 | lethal water (sinking-block crossing) | deck → block ≈ 2; block → block ≈ 3; block → landing ≈ 2; landing blocks ≈ 2 × 2; landing ≈ 4 wide; run-up ≈ 2 on the deck, then none | 0 | plain, running | sink timer of each block; failure: fall into the river: death (GP: the stones drop into the pit) | gap (lethal) | three jumps in ≈ 3 s; the widest gap of the level so far (≈ 3 u) is where stopping is not allowed, and it lands on the C3 floor | LP1 0:05:12.5–0:05:16 (0.5 s frames); GP 1-1 · medium |
+| P-S5-b | S5 | stone landing (C3) + cave floor with the bonus pad | ≈ 4 wide | 0 | — | walled (cave) | CHECKPOINT-PAD, BONUS-PAD | a rest floor right after the timed crossing, then the pad | LP1 0:05:16–0:05:21 · medium |
+
+**B — bonus round**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | stone pillars carrying broken bridge slabs | tops ≈ 1.5; one slab tilted | 0 to +1 | — | open (lily-pad water) | STEPPING | pillar tops are the crate stands: every landing is also a crate | LP1 0:05:23–0:05:29 · medium |
+| G-B-a | B | water gaps between bonus pillars | ≈ 1–2; landing pillar top ≈ 1.5; run-up short | 0 to ±1 | plain | none; failure: the bonus ends; no life is lost (GP) | gap (not lethal) | the narrowest tops of the level are in the room where a fall costs nothing | LP1 0:05:23–0:05:29; GP 1-1 · medium |
+| P-B-b | B | wooden deck with the arrow crate | ≈ 4–5 long | 0 | — | open | PERCH | a flat deck under the high crate lets you line up the held bounce | LP1 0:05:29–0:05:34 · medium |
+| G-B-b | B | vertical reach (held arrow bounce) | 0 (crate ≈ 1–2 to the side); landing back on the deck; run-up — | ≈ +5 to the floating crate | arrow (held) | none; failure: a short bounce: retry; the crate is lost only if the arrow is broken first | gap (not lethal) | the held bounce is taught where a miss is free | LP1 0:05:29–0:05:33 (prompt 'hold X for a bigger bounce') · high |
+
+**S6 — glyph cave → C4**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S6-a | S6 | cave floor with round flat stepping stones | floor ≈ 4–5 wide; stones ≈ 2 | 0 | — | walled (cave) | CHOKE | a dark, narrow cave with one spider: low light is the obstacle, not the footing | LP1 0:05:46–0:05:57 · low |
+
+**S7 — round stone pillars**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S7-a | S7 | bridge (plank walkway with rope rails) | ≈ 2 wide | 0 | — | rope rails | REST | a calm approach with a view of the storm tree before the last climb | LP1 0:05:58–0:06:01 · medium |
+| P-S7-b | S7 | round pillars (drum tops) in water, one crate on each | tops ≈ 2 diameter; 3 pillars | ±1 between tops | — | open | STEPPING | each landing holds a crate, so the free area is smaller than in the temple | LP1 0:06:02–0:06:05 · medium |
+| G-S7-a | S7 | water gaps between round pillars | ≈ 1–2; landing ≈ 2 diameter, partly taken by a crate; run-up standing | ±1 | plain | none; failure: not visible | gap (lethality not visible) | repeats the temple pillars with crates on the landings: same gap, less free landing area | LP1 0:06:02–0:06:05; GR 96 · medium |
+
+**S8 — C5 → wall climb → exit**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S8-a | S8 | ledge at the wall base (C5) | ≈ 3 wide | 0 | — | wall behind; plant holes above and below | CHECKPOINT-PAD | the checkpoint sits inside the plant zone, so a retry starts at the foot of the climb | LP1 0:06:06–0:06:11 · medium |
+| P-S8-b | S8 | narrow ledges (stone slabs) in a vertical lattice | ≈ 2–3 wide × 1 thick; ≈ 2 between tiers | +2 per tier | — | open (sky through the gaps) | STEPPING, REST | the stable slabs are the rests between crumbling skulls | LP1 0:06:11–0:06:25 · medium |
+| P-S8-c | S8 | crumbling platforms (tiki-skull ledges) | ≈ 2 wide | +2 | — | open; crumble after landing (GP; first wave); some platforms move on a timer near the top (GP) | TIMING-STEP | time pressure returns for the finale, on the narrowest platforms, in a view that shows the whole climb | LP1 0:06:12–0:06:31; GP 1-1 · low |
+| G-S8-a | S8 | climb gaps (ledge to ledge, side view) | ≈ 1–3 across; landing slab ≈ 2–3 or skull ≈ 2; run-up standing | ≈ +2 per tier | plain, double (margin) | skull crumble timer; plants biting from holes under the ledges; failure: fall to a lower ledge, or out of the level (not visible) | gap (lethality not visible) | ≈ 12–15 jumps stacked one full jump apart: the exam of the level | LP1 0:06:11–0:06:31 · low |
+| P-S8-d | S8 | summit floor between fire bowls | ≈ 4 wide | 0 | — | fire bowls at both sides | REST | the exit sits on flat ground; the last crates are off to the side and below it | LP1 0:06:32–0:06:35 · medium |
+
+### Jump sequences
+| id | section | count | moves | rhythm | widest gap (u) | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S2-a | S2 | 2–3 | plain | even | 2 | P-S2-d | no | standing jumps between static pillars: the first lethal sequence lets the player stop on every top | LP1 0:04:12–0:04:14 (0.5 s frames) |
+| J-S3-a | S3 | 8 | plain, ride | even (one hop per crate, ≈ 2 s apart) | 0 (vertical hops) | P-S4-a (C2 deck) | yes | forced motion: the player cannot stop, but no single hop is mandatory | LP1 0:04:36–0:04:54 |
+| J-S4-a | S4 | ≈ 6 | plain | syncopated (paced by the throwers) | 2 | decks (P-S4-a, P-S4-b) | no | short hops gated by the throwers' volleys rather than by distance | LP1 0:04:58–0:05:05 |
+| J-S5-a | S5 | 3 | plain, running | even, ≈ 1 s per jump | 3 | P-S5-b (C3) | yes | the first no-stop sequence: sinking blocks forbid waiting | LP1 0:05:12.5–0:05:16 (0.5 s frames) |
+| J-B-a | B | ≈ 6 | plain, arrow (held) | even | 2 | P-B-b | no | pillar hops in a no-fail room, ending with the held arrow bounce | LP1 0:05:23–0:05:38 |
+| J-S7-a | S7 | 3–4 | plain | even | 2 | P-S8-a (C5) | no | a short repeat of the temple pillars with crates on the landings | LP1 0:06:02–0:06:05 |
+| J-S8-a | S8 | ≈ 12–15 | plain, double | accelerating (crumbling skulls) | ≈ 2 up, 1–3 across | stone slabs (P-S8-b); summit P-S8-d | no | a vertical exam: a stable slab every second or third tier gives rests between the skulls | LP1 0:06:11–0:06:31 |
+
+### Obstacles and hazards
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1 | low carved stone wall across the path (hurdle, ≈ 1 u tall) (not lethal) | across path | static | jump over | S1-f (crate hidden behind it), E-S1-b (crabs before it) | TEACH | the first obstacle you jump also hides crate 8: clearing an obstacle carries you past what it conceals | LP1 0:03:28–0:03:29; GR 8 · medium |
+| O-S1-b | S1 | rolling stone wheels (2 carved discs, ≈ 2.5–3 u diameter) (lethal) | across path (curved causeway) | two wheels ≈ 1 s apart, visible as they roll in from the side | wait-and-go, jump over (GP) | S1-j (TNT pair before), S1-k (TNT triangle after) | TEACH, TIMING-GATE | the only timed hazard of S1 sits between the two TNT lessons, so explosives and timing are learned separately; GP: a hit sends you back | LP1 0:03:42–0:03:45.5 (0.5 s frames); GP 1-1 · medium |
+| O-S8-a | S8 | fire bowls (braziers) at the wall base and the summit (contact not shown) | flank | static flames | go around | P-S8-a (C5 ledge), P-S8-d (exit floor) | AREA-DENIAL | they frame the checkpoint and the exit; contact is never shown in the LP | LP1 0:06:09, 0:06:32–0:06:35; first-wave notes · low |
+
+### Enemies (detailed)
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | crab (beach hub) | patrol-1D | walks sideways along the waterline of the hub | spin, stomp | hub shore, off the main line | TEACH | yes | the first enemy is alone in a no-fail room with nothing else to watch | LP1 0:03:06–0:03:12 (spun at 0:03:10) · medium |
+| E-S1-b | S1 | crab pair (jungle path) | patrol-1D | two crabs ≈ 3–4 u apart walking sideways across the lane | spin, fling into (spin one into the other, GP), stomp | on line, with crate S1-d in front of them | TEST, TOOL/STEP | no | the second encounter doubles the enemy and adds the fling: one spin can clear the crate and both crabs | LP1 0:03:24–0:03:27; GP 1-1 · medium |
+| E-S1-c | S1 | boar (GP) | chaser | leaps out from around a corner and keeps chasing until it is hit (GP) | spin | S1 path (exact spot not seen) | AMBUSH, PURSUER | not visible | the first enemy that comes to the player; not caught in my frames | GP 1-1 only · low |
+| E-S2-a | S2, S6 | poison spider | burrower/ambusher (drops on a thread) | hangs from the ceiling and drops when Crash comes within reach (GP); green glowing puddles on the floor mark the drop spots before the spider is seen (0:03:59–0:04:00); ≥ 3 in the temple (totem corridor, chamber centre, far end of the pillar pit) and 1 in the cave | wait-and-go, go around (fails: walking under it as it drops (costs a life, GP)) | above the line: over a TNT (S2-c), the chamber centre, the pillar landing (G-S2-a) and mid-cave (S6-b) | TIMING-GATE, AMBUSH | no | an overhead threat telegraphed on the floor; each spider sits where the player must also do something else (light a TNT, land a jump, collect in the dark) | LP1 0:03:58–0:04:13.5 (0.5 s frames at 0:04:12), 0:05:50–0:05:53; GP 1-1 · medium |
+| E-S3-a | S3 | masked tribesman (thrower) on a rock beside the vine | projectile | stands at the side of the vine and throws as Crash slides past | avoid (time the hop) | flank of the forced line | PROJECTILE | yes | the thrower is previewed on the vine, where the player cannot reach it, before the village fights | LP1 0:04:43 (0.5 s frames) · medium |
+| E-S4-a | S4 | masked tribesmen (throwers) on the village decks | projectile | throw volleys, then pause to reload (GP) | wait out the volley, then spin (GP) (fails: advancing during a volley (a hit costs a life, GP)) | on the decks, in the walkway lanes | TIMING-GATE, GUARD | no | they set the village's rhythm: crates sit in their lanes and are taken in the reload pause | LP1 0:04:58–0:05:06; GP 1-1 · low |
+| E-S8-a | S8 | man-eating plant in a wall hole | burrower/ambusher | a long-necked plant head lunges out of a round hole, bites and withdraws; holes sit at the wall base and under climb ledges | avoid (pass while it is withdrawn) | wall base around C5; holes under the ledges you stand on | AMBUSH, TIMING-GATE | no | attacks come from below and behind the platform, so every ledge of the climb is also a timing problem | LP1 0:06:06–0:06:31 · medium |
+
+### Section beats
+- **S1** (gaps 2 · enemies 3 · hazards 2): hub (one crab alone, safe water) → path → JUMP step (+0.5–1 u, railed) → crab pair (fling) → low wall hurdle (crate behind it) → green floor hole beside the line → arch bridge (2 u lane) → 3×2 crate wall → TNT pair (prompt) → rolling wheels (2, ≈ 1 s apart) → courtyard TNT triangle → Aku crate → stairs → C1
+- **S2** (gaps 4 · enemies 3 · hazards 0): entrance stairs + floating crate → corridor with green drop marks → spider drops by the totem TNT → chamber with a spider (crates at the walls) → round pillars over a pit (2–3 jumps; spider at the far end) → corridor + ledge crates → DOUBLE JUMP step-up (+2–3 u) → 5×3 crate wall exit
+- **S3** (gaps 0 · enemies 1 · hazards 0): vine start → stump crate at vine height → 8 hops to floating crates → thrower on a rock → vine over a rope bridge → drop onto the village deck
+- **S4** (gaps 3 · enemies 2 · hazards 0): C2 deck → decks and 2 u walkways with throwers → deck hops (≈ 1.5–2 u) → tier steps (+1 u each) → CRAWL prompt at the hut, hidden gem
+- **S5** (gaps 3 · enemies 0 · hazards 0): crate by the gem hut → sinking blocks (3 jumps, no stop) → C3 landing → cave → bonus pad + 2 crates
+- **B** (gaps 5 · enemies 0 · hazards 0): ?/? stack on the start pillar → pillar and slab hops, a crate on each → tilted slab → deck with held arrow to the high crate → pillars → crate by the couch, exit
+- **S6** (gaps 0 · enemies 1 · hazards 0): cave floor crates → stepping stones → spider mid-cave → crates in the dark → C4
+- **S7** (gaps 3 · enemies 0 · hazards 0): rope walkway (vista) → 3 round pillars in water, a crate on each
+- **S8** (gaps 12 · enemies 3 · hazards 1): wall base: plant holes, fire bowl, C5 → side-view climb: stone slabs + crumbling skulls, plants under ledges → summit ledges with the last crates → exit between fire bowls
+
+### Geometry and enemy design logic
+1. Every traversal verb is taught on non-lethal geometry with a prompt: JUMP on a 0.5–1 u railed step (G-S1-a), DOUBLE JUMP up a 2–3 u dead-end wall (G-S2-b), CRAWL under the gem hut (G-S4-b), the held bounce in the bonus (G-B-b). Lethal gaps only follow once the verb exists.
+2. The first forced lethal gap comes ≈ 80 s in (temple pillars, G-S2-a): a standing jump of ≈ 1.5–2 u onto a ≈ 2 u round top. S1 has no forced pit: its floor hole (G-S1-b) lies beside the line and the arch bridge is a 2 u lane with a curb.
+3. Gap widths barely change (1.5–3 u all level); difficulty grows through smaller landings (hub → 2 u tops → crate-occupied tops → 2 u skulls), platform timers and enemies placed on landings.
+4. Timers arrive in the second half: sinking blocks (S5) after ≈ 2.5 min of static ground, crumbling skulls (S8) for the finale. Each timed crossing ends on a checkpoint floor (C3 landing) or the summit.
+5. One enemy type per biome: crabs on the beach and path, spiders in the temple and cave, throwers on the vine and in the village, plants on the wall. Each type first appears in a harmless form: the hub crab alone, spider puddles before the spider, the vine thrower out of reach before the village throwers.
+6. Telegraphs are physical and early: green puddles mark spider drops, the wheels are seen rolling in on a curved causeway, the plants live in visible holes.
+7. There is only one dedicated timed hazard (the rolling wheels). It sits between the two TNT lessons, so the player never times a hazard and handles an explosive at once.
+8. Rest floors bracket every challenge: courtyard (C1), chamber, C2 deck, C3 landing, cave floor (C4), wall base (C5), summit. No two hazard groups touch.
+9. The vine is a no-fail ride (GP) in the middle of the level: a rhythm break between the temple enemies and the village throwers, with crate hops as optional timing.
+10. Camera changes mark new grammar: side-scroll for the bonus pillars, a side view for the climb so tiers ≈ 2 u apart can be read, a chase camera for the vine.
+11. Enemies sit on landings and next to required actions: a spider over the pillar landing (G-S2-a), a spider over the TNT (S2-c), plants under climb ledges. The "do two things at once" pairing is introduced one pair at a time.
+12. The bonus has the hardest footing (≈ 1.5 u pillar tops, a tilted slab) because a fall there costs nothing.
+
+### Geometry transfer to the skate game
+1. First-jump lesson: a 0.6–1.2 m (½–1 crate) railed step across the corridor with a prompt and no pit. First lethal gap 1.7–2.3 m (1.5–2 crates) onto round tops 2.3 m across from a standing take-off, about a third of our 5.6 m running jump.
+2. Double-jump wall: a 2.3–3.5 m (2–3 crate) step-up at a corridor dead end with no pit; full jump 2.85 m + double 1.74 m reaches 4.6 m, so a 3-crate face (3.46 m) forces the double jump. Put the crate-wall gate on top.
+3. Sinking crossing: two `crumble` or `phasepad` blocks 2.3–2.9 m square with gaps of 2.3 m → 3.5 m → 2.3 m, ≈ 1 s per block, ending on a checkpoint floor ≥ 4.6 m wide.
+4. Spider analogue: a `floater` (no stomp) hanging over a landing pad, with a floor decal under its drop point visible 3–4 s before the player arrives; never over a take-off edge the first time.
+5. Side-view wall climb: ledges 2.3–3.5 m wide at 2.3 m vertical spacing (≈ 80 % of the 2.85 m full jump), alternating static slabs and `crumble` skulls so every second or third tier is stable; ambushers in holes under ledges (a `sentry` or plant-like prop); checkpoint at the base.
+6. Timed gate between two explosive lessons: two `stone` boulders crossing a 3.5 m causeway ≈ 1 s apart, with no explosive in the boulder lane.
+
 ## Open questions / uncertainties
 - About 8 crates are residual (S1-e, S1-n, S2-i, S5-b), and several village/cave/wall groups are counted by
   tally rather than seen one by one. Section totals are exact; the arrangements inside those groups are not.
 - The two red crates (chamber S2-e, summit S8-c) are probably TNT; I could not resolve the label.
 - GP mentions a boar; it is not in my sampled frames, so its relation to crates is unknown.
 - Whether the bonus arrow (B-d) is counted could not be isolated; the 8/8 total is certain.
+- Geometry: platform sizes are 480p estimates (±0.5 u); the ≈ 2 u tier spacing of the wall climb is inferred from where Crash lands.
+- Geometry: the vine is disputed: GR says a missed jump falls to death, GP says you cannot fall off; the 0.5 s frames show one continuous vine with no transfer breaks.
+- Geometry: whether the village gaps (G-S4-a), the S1 floor hole (G-S1-b) and the S7 water kill was not visible; nobody falls in this LP run.
+- Geometry: the boar (GP) and the second crab pair listed in the crate table were not seen in my frames.
+- Geometry: crumbling and moving skull platforms come from GP and the first-wave notes; the 1 fps sheets never show one collapsing. The temple pillar count (2–3) and the climb jump count (≈ 12–15) are approximate.
+- Geometry: fire-bowl contact is never shown, so O-S8-a is listed as probable damage only.
