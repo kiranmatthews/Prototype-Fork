@@ -1,0 +1,665 @@
+{
+ "id": "c2-05-crash-dash",
+ "game": "Crash 2",
+ "stage": 5,
+ "name": "Crash Dash",
+ "nameJa": "ゆきだまゴロゴロ",
+ "sources": [
+  "F2 p030L (header)",
+  "F2 p030R-p031R (map, POINT 1-12)",
+  "F2 p093R (perfect order, bonus cautions)",
+  "D2 p015-p016 (shots 1-35)"
+ ],
+ "camera": "toward-camera chase (bonus: side-scroll)",
+ "totalBoxes": 44,
+ "totalSource": "F2 p030L header (superscript 17 = bonus)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 27,
+   "basis": "counted from F2 icons, confirmed by D2 captions; = 44-17; includes 4 Nitro, 3 C, 1 life"
+  },
+  {
+   "id": "bonus",
+   "boxes": 17,
+   "basis": "D2 bonus HUD counter 0->1->2->5->15->17; equals header superscript"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start hut",
+   "to": "C1 (roof room 1)",
+   "boxes": 6,
+   "cumulative": 6,
+   "notes": "boulder 1; crates only in the hut and the room"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2 (roof room 2)",
+   "boxes": 3,
+   "cumulative": 9,
+   "notes": "boulder 2; mines, chasm, drop-offs, fences; crates only in the room"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "crystal / bonus plate",
+   "boxes": 5,
+   "cumulative": 14,
+   "notes": "boulder 3 falls at bridge 2; 4 Nitro on the left edge; lone W beside the crystal"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus plate after the crystal",
+   "to": "back to the path before room 3",
+   "boxes": 17,
+   "cumulative": 31,
+   "notes": "side-scroll; cumulative assumes the F2 perfect order"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3 (roof room 3)",
+   "to": "goal",
+   "boxes": 13,
+   "cumulative": 44,
+   "notes": "room 3 (4 incl. C) then boulder 4; lone edge crate + three fence groups; main-only cumulative 27"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "inside the roofed start hut before the boulder moves",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "2-high wood column beside a single ?",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "safe from the boulder"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "PAIR",
+    "TEACH"
+   ],
+   "why": "free crates in the only calm moment; collect before the chase starts",
+   "evidence": "F2 p030R bubble zoom; D2 p015L shot 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "roofed room 1 where boulder 1 stops",
+   "composition": {
+    "question": 2,
+    "checkpoint": 1
+   },
+   "count": 3,
+   "arrangement": "? stacked on ?, C crate in front",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "backtrack"
+   ],
+   "relations": [
+    "boulder impact can knock Crash past the ? crates onto C"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "STACK",
+    "BACKTRACK",
+    "REWARD"
+   ],
+   "why": "shelter reward for surviving; small step back needed after the impact",
+   "evidence": "F2 p030R bubble zoom; D2 p015L shot 4",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 3,
+   "where": "roofed room 2",
+   "composition": {
+    "striped": 1,
+    "question": 1,
+    "checkpoint": 1
+   },
+   "count": 3,
+   "arrangement": "striped and ? side by side, C in front",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "striped pays per stomp only because the boulder has stopped"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "PAIR",
+    "REWARD"
+   ],
+   "why": "same shelter grammar; striped crate rewards standing still where it is safe",
+   "evidence": "F2 p030R bubble zoom + p031L top; D2 p015R shot 10",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 4,
+   "where": "after bridge 1, between two pits, left edge of the path",
+   "composition": {
+    "nitro": 4
+   },
+   "count": 4,
+   "arrangement": "diagonal line hugging the left edge",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [],
+   "relations": [
+    "pit immediately after",
+    "no green ! in the stage"
+   ],
+   "tags": [
+    "ROW",
+    "CHASE",
+    "SPEED-LINE",
+    "TEST",
+    "COUNT-TRAP"
+   ],
+   "why": "lane restrictor at sprint speed: commit to the right lane before the following pit; F2 says memorise",
+   "evidence": "F2 p031L map + POINT 6; D2 p015R shot 15 (says three)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 5,
+   "where": "just past bridge 2 (boulder gone), right of the crystal",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "beside the crystal",
+    "no backtracking in the stage"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "REWARD"
+   ],
+   "why": "marks the end of the chase and makes the player slow down by the crystal",
+   "evidence": "F2 p031L zoom; D2 p016L shot 18",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 6,
+   "where": "start of the bonus steel walkway",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BONUS"
+   ],
+   "why": "starts the bonus counter",
+   "evidence": "D2 p016L shot 19 caption (HUD already 1)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 7,
+   "where": "steel walkway, in a vertical steel column",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "crate between a steel arrow block below and a steel block above (both uncounted)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "steel lid prevents a stomp"
+   ],
+   "tags": [
+    "SANDWICH",
+    "SINGLE",
+    "TEACH",
+    "BONUS"
+   ],
+   "why": "teaches spin-from-the-side safely, the move the final fences require",
+   "evidence": "D2 p016L shot 19 zoom + caption",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 8,
+   "where": "after two small platforms",
+   "composition": {
+    "tnt": 2,
+    "life": 1
+   },
+   "count": 3,
+   "arrangement": "3-high column TNT / 1UP / TNT",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "landing on the top TNT lights it"
+   ],
+   "tags": [
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "SANDWICH",
+    "LIFE",
+    "TEST",
+    "REWARD",
+    "SUPPORT-ORDER"
+   ],
+   "why": "mid-air spin on the middle crate wins the life; letting a TNT blast take it keeps the count but loses the life",
+   "evidence": "D2 p016L shot 21; F2 p093R caution 1",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 9,
+   "where": "across a gap",
+   "composition": {
+    "question": 6,
+    "striped": 4
+   },
+   "count": 10,
+   "arrangement": "two-tier row: 6 ? on top, 4 striped below as the only footing",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "bonus",
+    "jump",
+    "bounce",
+    "striped"
+   ],
+   "relations": [
+    "?6 is the launch to the far ledge",
+    "each striped needs 10 stomps"
+   ],
+   "tags": [
+    "ROW",
+    "STEPPING",
+    "BRIDGE",
+    "SUPPORT-ORDER",
+    "TOOL",
+    "TEST",
+    "BONUS"
+   ],
+   "why": "every crate is reward, footing and tool at once; order is the puzzle",
+   "evidence": "D2 p016L shot 22 (+10 on counter); F2 p093R caution 2",
+   "confidence": "high"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 10,
+   "where": "final red platform of the bonus",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "2-high column",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "REWARD",
+    "BONUS"
+   ],
+   "why": "easy closing pair",
+   "evidence": "D2 p016L shot 23 (15 -> 17)",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 11,
+   "where": "roofed room 3, start of the final chase",
+   "composition": {
+    "wood": 1,
+    "question": 2,
+    "checkpoint": 1
+   },
+   "count": 4,
+   "arrangement": "two 2-high columns: W on ?, C on ?",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "C crate rests on a ? crate"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "STACK",
+    "REWARD"
+   ],
+   "why": "last calm crates before the final boulder",
+   "evidence": "F2 p031R bubble; D2 p016L shot 25",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 12,
+   "where": "right edge of a narrow footing just past a pit",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "boulder behind",
+    "pit lip"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "SINGLE",
+    "CHASE",
+    "TIMED",
+    "COUNT-TRAP"
+   ],
+   "why": "first crate under pursuit: a sidestep at a pit lip costs lead; F2 flags it for perfect runs",
+   "evidence": "F2 p031R POINT 10; D2 p016R shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 13,
+   "where": "fence 1, left side",
+   "composition": {
+    "life": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair on the ground in front of the fence",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "lethal electric fence behind",
+    "boulder behind"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "LIFE",
+    "CHASE",
+    "TIMED",
+    "COUNT-TRAP"
+   ],
+   "why": "pass on the right, spin back left; only a banked lead buys the spin",
+   "evidence": "F2 p031R zoom + POINT 12; D2 p016R shot 33",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 14,
+   "where": "fence 2, right side",
+   "composition": {
+    "wood": 1,
+    "question": 2
+   },
+   "count": 3,
+   "arrangement": "three on the ground, L-shaped",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "fence alternates side"
+   ],
+   "tags": [
+    "ON-PATH",
+    "CHASE",
+    "TIMED",
+    "COUNT-TRAP"
+   ],
+   "why": "mirror of S4-c: opposite spin direction",
+   "evidence": "F2 p031R zoom; D2 p016R shot 34",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 15,
+   "where": "fence 3, left side, just before the goal",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "2-high ? column + one ? beside",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "goal right after"
+   ],
+   "tags": [
+    "STACK",
+    "CHASE",
+    "TIMED",
+    "COUNT-TRAP"
+   ],
+   "why": "final exam crate group, one crate high, a step before the goal",
+   "evidence": "F2 p031R zoom; D2 p016R shot 35",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "all",
+   "kind": "boulder (pursuer, x4 releases)",
+   "count": 4,
+   "where": "from the start hut and each roofed room; the third falls off bridge 2",
+   "role": "forces forward motion; crates are placed where it stops, except in S4"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "pits across the path",
+   "where": "after the start (POINT 2)",
+   "crates": []
+  },
+  {
+   "section": "S2",
+   "kind": "chasm + drop-offs",
+   "where": "after room 1",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "pit pair + pits around the Nitro line",
+   "where": "POINT 5 and POINT 6",
+   "crates": [
+    "S3-a"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "pits",
+   "where": "before the lone crate and before bridge 3",
+   "crates": [
+    "S4-b"
+   ]
+  },
+  {
+   "section": "B",
+   "kind": "bonus gap bridged by striped crates",
+   "where": "bonus middle",
+   "crates": [
+    "B-d"
+   ]
+  }
+ ],
+ "hazards": [
+  {
+   "section": "S1-S4",
+   "kind": "land mines",
+   "role": "non-lethal; launch and slow the player so the boulder gains"
+  },
+  {
+   "section": "S2-S4",
+   "kind": "electric fences",
+   "role": "lethal; alternate sides; in S4 they hold crate groups"
+  },
+  {
+   "section": "S3-S4",
+   "kind": "speed pads",
+   "role": "boost; bank lead for the S4 crates"
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "B-c"
+   ],
+   "summary": "1UP between two TNT in a 3-high column",
+   "solution": "land beside the column, jump and spin the middle crate",
+   "wrongOrder": "landing on the top TNT or spinning a TNT",
+   "loss": "life lost if a blast takes the 1UP crate (count kept)"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "B-d"
+   ],
+   "summary": "6 ? floating over 4 striped footing crates across a gap",
+   "solution": "break ?1-?5, clear striped crates with 10 stomps each, use ?6 last as the launch",
+   "wrongOrder": "breaking ?6 early or leaving a striped crate before it breaks",
+   "loss": "crate count (and possibly the exit launch)"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-b",
+    "S4-c",
+    "S4-d",
+    "S4-e"
+   ],
+   "summary": "final chase crates placed on the hazard side",
+   "solution": "take every speed pad, avoid mines, sidestep and spin back at each group",
+   "wrongOrder": "ignoring pads / touching mines",
+   "loss": "all-box gem only"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S4-a"
+   ],
+   "summary": "checkpoint crate resting on a ? crate",
+   "solution": "either order",
+   "wrongOrder": "none",
+   "loss": "none"
+  }
+ ],
+ "observations": [
+  "14 of 27 main crates sit where the pursuer cannot be (hut, three roofed rooms, after the boulder falls)",
+  "each boulder segment ends in a shelter holding a checkpoint plus 2-3 crates",
+  "main crates per section 6/3/5/13: only the last chase places crates in the danger lane",
+  "under pursuit every crate is off the safe line (pit lip, in front of fences on the avoided side)",
+  "speed pads and mines turn distance into the currency that buys the final crates",
+  "the only main-course explosives are 4 Nitro used as a lane restrictor; the explosive puzzle lives in the bonus",
+  "the bonus holds 39 % of all crates and teaches the side-spin used at the fences",
+  "no Aku crate in the stage",
+  "lives reward the two hardest crate spots (TNT sandwich, first fence)",
+  "no backtracking: missed chase crates are permanent for the run"
+ ],
+ "openQuestions": [
+  "how the 4 Nitro are counted/broken for the box gem (no green !)",
+  "D2 says 3 Nitro, F2 draws 4",
+  "B-a crate type",
+  "S4-d/S4-e footprint"
+ ]
+}

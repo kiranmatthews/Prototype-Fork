@@ -1,0 +1,1005 @@
+{
+ "id": "c3-03-orient-express",
+ "game": "Crash 3",
+ "stage": 3,
+ "name": "Orient Express",
+ "japaneseTitle": "ばんりの ちょうとっきゅう",
+ "sources": [
+  "F3 p027-p028",
+  "F3 p102L",
+  "F3 p006L",
+  "F3 p005R",
+  "F3 p011",
+  "P3 p007",
+  "gamepressure N. Sane Orient Express page"
+ ],
+ "camera": "vehicle (tiger ride, forced forward motion, camera behind)",
+ "totalBoxes": 51,
+ "totalSource": "F3 map cluster sum; reproduces F3 C1 12, C2 27, C3 44; gamepressure 'destroy all 51 crates'",
+ "countingRule": "F3 cumulative counts include the checkpoint crate (F3 p005R); C2 must be the first crate of the 5-crate slalom for 27 to hold",
+ "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = Aku crate in time trial (F3 p005R legend). Drawn icon = normal-mode type. Key 'wood?' = a counted crate whose type is hidden in the page fold (brown, no mark visible)",
+ "timeTrial": {
+  "crates": {
+   "1s": 17,
+   "2s": 3,
+   "3s": 2,
+   "aku": 2
+  },
+  "freezeSeconds": 29,
+  "staffRecord": "0:16:90 (F3 p102L; F3 p006L prints 0:16:30)",
+  "sapphire": "0:43:00",
+  "gold": "0:27:80"
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 51,
+   "basis": "single forced route; tower crates are on one line only"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 12,
+   "cumulative": 12,
+   "notes": "lane-alternating singles, holes + barrel tempo, floating life, dragon 1, W-C-W trio"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 15,
+   "cumulative": 27,
+   "notes": "tower A (don't bounce, 5 in the tunnel), life, dragons 2-4, floating life pair, 2x2 with striped, TT mask; C2 heads the slalom"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 17,
+   "cumulative": 44,
+   "notes": "slalom tail, dragons 5-11, tower B (bounce, 3 on the roof), crystal 2x2"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 7,
+   "cumulative": 51,
+   "notes": "tower C (jump over the springboard, 3 under the tower), elevated last box"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first metres after the start, left half of the road",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "walk"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TEACH",
+    "SPEED-LINE"
+   ],
+   "why": "a crate breaks on contact - the ride's first lesson",
+   "evidence": "F3 p027L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "after the road jog, right side",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "lane:R"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "first lane change: steer for crates",
+   "evidence": "F3 p027L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "next, left side, before the left/right holes",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "lane:L",
+    "before:holes+barrel"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "third lane change sets the left-right-left beat the holes and barrel then demand (F3 advice 1)",
+   "evidence": "F3 p027L zoom; F3 callout 1",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "after the barrel cart, against the left parapet",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "parapet"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "rewards committing to the parapet lane",
+   "evidence": "F3 p027L zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "past the two box-carrying workers",
+   "composition": {
+    "wood": 1,
+    "question": 2
+   },
+   "count": 3,
+   "arrangement": "triangle",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "after:workers"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SPEED-LINE",
+    "ENEMY-LINK",
+    "TIME-TRIAL"
+   ],
+   "why": "reward for threading the workers; first time-crate pair (TA1 target 0:06:00)",
+   "evidence": "F3 p027L zoom; F3 TA1",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 2
+   }
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "just after the page gutter, hanging above the road",
+   "composition": {
+    "life": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "shadow-drawn"
+   ],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "LIFE",
+    "COUNT-TRAP",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "levitating life crate: the reward for looking up; easy to miss (gamepressure)",
+   "evidence": "F3 p027R zoom x3; gamepressure OE",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S1-g",
+   "section": "S1",
+   "order": 7,
+   "where": "after dragon 1",
+   "composition": {
+    "wood": 2,
+    "checkpoint": 1
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:dragon-1"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "CHECKPOINT",
+    "TIME-TRIAL"
+   ],
+   "why": "C1 embedded between two crates so the collect beat carries the checkpoint; cumulative 12",
+   "evidence": "F3 p027R zoom",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 2
+   }
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "inside the tunnel of tower A (springboard held mid-road at the mouth)",
+   "composition": {
+    "wood": 4,
+    "question": 1
+   },
+   "count": 5,
+   "arrangement": "stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "tower:A",
+    "decoy:loose-life-on-roof"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "ROUTE-SPLIT",
+    "TIME-TRIAL",
+    "COUNT-TRAP"
+   ],
+   "why": "don't bounce (P3 s32): the springboard leads to a loose life on the roof and skips these five; time crates are the stack tops",
+   "evidence": "F3 p027R zoom; P3 p007L s32",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 2,
+    "A": 1
+   }
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "on the road after tower A and dragon 2",
+   "composition": {
+    "life": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:dragon-2"
+   ],
+   "tags": [
+    "ON-PATH",
+    "LIFE",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "life on the line before the dragon pair",
+   "evidence": "F3 p027R zoom x3.5",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "after dragon 3, left side",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:dragon-3"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "pick-up between dragon pair and workers",
+   "evidence": "F3 p027R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "hanging above the road past the pole and box workers",
+   "composition": {
+    "wood": 1,
+    "life": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "shadow-drawn",
+    "after:workers"
+   ],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "LIFE",
+    "COUNT-TRAP",
+    "TIME-TRIAL"
+   ],
+   "why": "easy-to-miss floating boxes, one is a life (P3 s38)",
+   "evidence": "F3 p027R zoom x3.5; P3 p007R s38; gamepressure OE",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1,
+    "2": 1
+   }
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "on the road after the floating pair",
+   "composition": {
+    "wood": 3,
+    "striped": 1
+   },
+   "count": 4,
+   "arrangement": "grid",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "before:barrels"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "STACK",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "2x2 block taller than the tiger: riding through takes the bottom row, the top needs a jump landing just before it (TT fr.10); target 0:07:00",
+   "evidence": "F3 p027R zoom x2.5; F3 p102L fr.10",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 6,
+   "where": "first thing on F3 p028L after dragon 4",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:dragon-4"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "becomes a mask in time trial before the dragon-dense S3 (TT fr.12)",
+   "evidence": "F3 p028L zoom; F3 p102L fr.12",
+   "confidence": "high",
+   "ttBadges": {
+    "A": 1
+   }
+  },
+  {
+   "id": "S2-C",
+   "section": "S2",
+   "order": 7,
+   "where": "head of the five-crate slalom",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "slalom-head"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "SPEED-LINE"
+   ],
+   "why": "C2, cumulative 27; the count requires it to be the first of the five",
+   "evidence": "F3 p028L; arithmetic",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "right after C2, zig-zag",
+   "composition": {
+    "wood": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "slalom",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:C2"
+   ],
+   "tags": [
+    "ON-PATH",
+    "CHECKPOINT",
+    "SPEED-LINE",
+    "TIME-TRIAL",
+    "TEST"
+   ],
+   "why": "slalom of five crates with the checkpoint at its head (gamepressure)",
+   "evidence": "F3 p028L zoom; gamepressure OE",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 2
+   }
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "roof of tower B, reached by the springboard after a hole",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "bounce"
+   ],
+   "relations": [
+    "tower:B",
+    "springboard"
+   ],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "ROUTE-SPLIT",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "the one tower where bouncing is right; stay right, the roof passes fast (P3 s34; F3 advice 4, TA3)",
+   "evidence": "F3 p028L zoom; F3 callout 4; F3 TA3; P3 p007L s34; gamepressure OE",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1,
+    "3": 1
+   }
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "after the tower, the workers and dragons 8-9",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:dragons-8-9"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "landing reward after the jump/duck alternation (F3 advice 5)",
+   "evidence": "F3 p028L zoom; F3 callout 5",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "beside the crystal",
+   "composition": {
+    "question": 2,
+    "wood": 2
+   },
+   "count": 4,
+   "arrangement": "grid",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "crystal"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "REWARD",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "aim at the centre of the stack to take all of it with the crystal (P3 s36)",
+   "evidence": "F3 p028L zoom; P3 p007L s36",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "after the crystal, right side",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:crystal"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "exit pick-up before the last barrels and dragons 10-11",
+   "evidence": "F3 p028L zoom",
+   "confidence": "medium",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "after dragons 10 (under) and 11 (over)",
+   "composition": {
+    "wood": 1,
+    "checkpoint": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "after:dragons-10-11"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "CHECKPOINT",
+    "TIME-TRIAL"
+   ],
+   "why": "C3, cumulative 44, again paired with a crate; target 0:16:00",
+   "evidence": "F3 p028L zoom",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "after the barrels, right parapet",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE"
+   ],
+   "why": "re-start beat after C3",
+   "evidence": "F3 p028L zoom (fold)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "before tower C, after the workers",
+   "composition": {
+    "wood": 1,
+    "wood?": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "before:tower-C"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "SPEED-LINE"
+   ],
+   "why": "lead-in to the last decision; second crate hidden in the page fold (type unread)",
+   "evidence": "F3 p028L zoom",
+   "confidence": "low"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "in the tunnel under tower C (hole + springboard at the mouth)",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [
+    "tower:C",
+    "decoy:loose-life-on-roof"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ROUTE-SPLIT",
+    "COUNT-TRAP",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "big jump over hole AND springboard or the boxes under the tower are lost (F3 advice 6); roof shows a loose life again - the inverse of tower B",
+   "evidence": "F3 p028L-p028R zoom; F3 callout 6; F3 TA4; F3 p102L fr.28; P3 p007R s37; gamepressure OE",
+   "confidence": "high",
+   "ttBadges": {
+    "3": 1
+   }
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "elevated road after tower C",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "before:goal"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "SPEED-LINE",
+    "TIME-TRIAL"
+   ],
+   "why": "last box; target 0:24:00",
+   "evidence": "F3 p028R zoom",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 1
+   }
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "festival dragon",
+   "count": 1,
+   "where": "before C1",
+   "role": "low: jump (P3)"
+  },
+  {
+   "section": "S2",
+   "kind": "festival dragon",
+   "count": 3,
+   "where": "after tower A, after the life, end of S2",
+   "role": "low: jump; at dash no jump needed (TA2)"
+  },
+  {
+   "section": "S3",
+   "kind": "festival dragon",
+   "count": 7,
+   "where": "5 low after C2; 6-7 high over a hill before tower B; 8 over / 9 under after tower B; 10 under / 11 over before C3",
+   "role": "jump/duck alternation (F3 advice 5)"
+  },
+  {
+   "section": "S1",
+   "kind": "rolling barrels / barrel carts",
+   "count": 4,
+   "where": "after the holes; before dragon 1",
+   "role": "break when dashing (F3 advice 2)"
+  },
+  {
+   "section": "S2",
+   "kind": "rolling barrels",
+   "count": 3,
+   "where": "after the 2x2 block",
+   "role": "lead into dragon 4"
+  },
+  {
+   "section": "S1",
+   "kind": "box-carrying workers",
+   "count": 2,
+   "where": "before S1-e",
+   "role": "threading test rewarded by the crate triangle"
+  },
+  {
+   "section": "S2",
+   "kind": "springboard worker (tower A)",
+   "count": 1,
+   "where": "tunnel mouth",
+   "role": "decoy tool - do not bounce"
+  },
+  {
+   "section": "S3",
+   "kind": "springboard worker (tower B)",
+   "count": 1,
+   "where": "after a hole",
+   "role": "tool - bounce to the roof crates"
+  },
+  {
+   "section": "S4",
+   "kind": "springboard worker (tower C)",
+   "count": 1,
+   "where": "after a hole",
+   "role": "decoy tool - jump over it"
+  },
+  {
+   "section": "S2-S4",
+   "kind": "pole workers",
+   "count": 3,
+   "where": "after S2-c, after tower B, before tower C",
+   "role": "steering obstacles beside crate pairs"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "holes in the paving (left then right)",
+   "where": "after S1-c",
+   "crates": [
+    "S1-c"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "road notch / holes",
+   "where": "between S2-b and dragon 3",
+   "crates": [
+    "S2-c"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "hole before tower B springboard",
+   "where": "after dragons 6-7",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "hole before tower C springboard",
+   "where": "tower C mouth",
+   "crates": [
+    "S4-c"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-a"
+   ],
+   "summary": "tower A springboard vs crates in the tunnel",
+   "solution": "stay on the road, break 2 stacks + single inside",
+   "wrongOrder": "bounce to the roof for the loose life",
+   "loss": "5 boxes, permanent (no backtracking)"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S3-b"
+   ],
+   "summary": "tower B springboard",
+   "solution": "small jump over the hole, land on the board, bounce, steer right on the roof",
+   "wrongOrder": "avoid the board",
+   "loss": "3 boxes"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-c"
+   ],
+   "summary": "tower C hole + springboard",
+   "solution": "one big jump over both, land in the tunnel",
+   "wrongOrder": "bounce (lose 3) or jump late into the stone wall",
+   "loss": "3 boxes or a life"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S1-f",
+    "S2-d"
+   ],
+   "summary": "floating life crates",
+   "solution": "jump while passing under them",
+   "wrongOrder": "watch only the road",
+   "loss": "3 boxes and 2 lives"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S1-g",
+    "S2-C",
+    "S3-a",
+    "S3-f"
+   ],
+   "summary": "checkpoints inside crate rhythms",
+   "solution": "carve through the group",
+   "wrongOrder": "steer around crates as obstacles",
+   "loss": "boxes and the respawn point"
+  }
+ ],
+ "observations": [
+  "Forced ride: steer/jump/dash only, no backtracking, so crate placement is lane choice plus jump timing and every miss is permanent.",
+  "Groups of 1-5 crates about one per screen, separated by hazard beats; per-section counts 12/15/17/7.",
+  "S1 alternates crate lanes L-R-L before the first two-sided hazard asks for the same tempo.",
+  "Three towers, one prop (worker-held springboard), three answers: ignore / bounce / jump over; crates sit in the tunnel / on the roof / under the tower; loose lives on the wrong-answer roofs are decoys.",
+  "Two of three life crates float above the road - the count traps of the stage.",
+  "Every checkpoint is embedded in a crate group (W-C-W, slalom head, W+C).",
+  "Time crates total 29 s against a 16.9 s record: in time trial the crates are the race.",
+  "Pura crouches before jumps and on landing: time crates on stack tops need a landing timed just before the stack (TT fr.10).",
+  "Dash dissolves hazards (barrels, low dragons, crevices) but not the steering demand of the crate lines."
+ ]
+}

@@ -1,0 +1,1206 @@
+{
+ "id": "c4-3-3-jetboard-jetty",
+ "game": "Crash 4",
+ "stage": "3-3",
+ "name": "Jetboard Jetty",
+ "sources": [
+  "GR 3-3 (gameranx.com features id 210355)",
+  "gamepressure.com Jetboard Jetty walkthrough",
+  "LP1 1:12:00-1:20:52 (archive.org PS4 longplay Part 1; 2 fps frames, HUD counter crops)"
+ ],
+ "camera": "mixed: into-screen on foot; side-view raft rides and bonus; behind-the-rider jetboard (vehicle)",
+ "totalBoxes": 196,
+ "totalSource": "HUD n/196 from LP1 1:12:21.5; ALL-boxes gem awarded LP1 1:20:52.5; gamepressure 196. GR's /197 is an off-by-one in its 194 entry.",
+ "typesNote": "Crash 4 composition keys: wood (plain), question (?), bounceWumpa (crate with a gold wumpa emblem; GR 'fruit/bounce crate'; pays fruit per bounce), reinforced (metal-banded X-frame 'strong crate'; body slam or blast), iron (pale unbreakable metal crate, NOT counted; listed only in 'arrangement'), tnt, nitro (counted; the green ! Nitro switch detonates all remaining Nitro and they are added to the count), switch (iron ! box, not counted), outline (wireframe crate materialised by a !), phase (translucent blue crate that is solid only in one Lani-Loli phase), phaseTnt, fire (dark crate with brass vents that jet flame; GR 'fire crate'), checkpoint (counted), aku, unknown (type not resolvable from frames).",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 145,
+   "basis": "196 minus bonus 29 minus green-gem path 22"
+  },
+  {
+   "id": "bonus",
+   "boxes": 29,
+   "basis": "bonus HUD 29/29 (LP1 1:14:00)"
+  },
+  {
+   "id": "gem-green",
+   "boxes": 22,
+   "basis": "GR 117->139; needs the Green Gem from 2-3 Hit the Road"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "jetboard 1",
+   "boxes": 33,
+   "cumulative": 33,
+   "notes": "on-foot cave docks; GR 33; HUD 3/196 at 1:12:22"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "jetboard 1 start",
+   "to": "pier",
+   "boxes": 8,
+   "cumulative": 41,
+   "notes": "8 floating crates over water (GR)"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "pier",
+   "to": "C1",
+   "boxes": 1,
+   "cumulative": 42,
+   "notes": "C1 beside the bonus pad; in the run it is broken after the bonus (70 -> 71 at 1:14:11)"
+  },
+  {
+   "id": "B1",
+   "route": "bonus",
+   "from": "bonus pad",
+   "to": "bonus exit",
+   "boxes": 29,
+   "cumulative": 71,
+   "notes": "side view; HUD 29/29; main counter 70 after transfer (1:14:02.5)"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C1",
+   "to": "raft end",
+   "boxes": 32,
+   "cumulative": 103,
+   "notes": "raft ride 1 (side view); C2 on a dock mid-ride; ! iron block materialises outline crates; GR 103"
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "pier",
+   "to": "jetboard 2",
+   "boxes": 5,
+   "cumulative": 108,
+   "notes": "C3 + 4 reinforced crates; hidden gem on the 6 iron blocks to the left; GR 108"
+  },
+  {
+   "id": "S6",
+   "route": "main",
+   "from": "jetboard 2",
+   "to": "C4 at green pad",
+   "boxes": 9,
+   "cumulative": 117,
+   "notes": "HUD 110 (1:15:21.5), 111, 115 (1:15:32.5); death at 1:15:35 on a sea mine; GR 117"
+  },
+  {
+   "id": "G",
+   "route": "gem-green",
+   "from": "green pad",
+   "to": "green pad return",
+   "boxes": 22,
+   "cumulative": 139,
+   "notes": "cannon-raft path LP1 1:16:20-1:17:20; GR 139"
+  },
+  {
+   "id": "S7",
+   "route": "main",
+   "from": "Lani-Loli mask",
+   "to": "dropping platforms",
+   "boxes": 11,
+   "cumulative": 150,
+   "notes": "phase intro; GR 147/149/150"
+  },
+  {
+   "id": "S8",
+   "route": "main",
+   "from": "dropping platforms",
+   "to": "dock before jetboard 3",
+   "boxes": 24,
+   "cumulative": 174,
+   "notes": "HUD 174/196 at 1:18:41 matches GR 174 exactly"
+  },
+  {
+   "id": "S9",
+   "route": "main",
+   "from": "dock before jetboard 3",
+   "to": "Louise arena",
+   "boxes": 19,
+   "cumulative": 193,
+   "notes": "HUD 175 (1:18:42.5), 176 (1:18:44.5); derived 193 = 196 - 3; GR says 194 (its +1)"
+  },
+  {
+   "id": "S10",
+   "route": "main",
+   "from": "Louise defeated",
+   "to": "exit",
+   "boxes": 3,
+   "cumulative": 196,
+   "notes": "Nitro detonator pays the last 3 (GR); ALL gem awarded"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first crates right of the start dock and on the plank walkway",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "single then pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TEACH"
+   ],
+   "why": "the counter reaches 3 within 5 s of control: the first input after moving is 'break the box'",
+   "evidence": "LP1 1:12:19-1:12:23 (HUD 1->3/196)",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "rock outcrop to the right of the walkway",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair on a raised rock",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "DETOUR",
+    "PAIR"
+   ],
+   "why": "a one-hop side step off the plank line: teaches that the route's edges hold crates too",
+   "evidence": "LP1 1:12:30-1:12:31",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "dock after the rolling-log hazard",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "row ? wood ?",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "TIMED"
+   ],
+   "why": "reward placed right after the first timed hazard; a spin takes the whole row",
+   "evidence": "LP1 1:12:51",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "rest of the opening: plank walkways with swinging hazards, rope climb, boulder path, dock to the ship-hull door",
+   "composition": {
+    "unknown": 25
+   },
+   "count": 25,
+   "arrangement": "several small groups (1-4) at walkway sides and dock centres",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "EDGE-BAIT"
+   ],
+   "why": "steady pacing crates along a hazard-dense walkway; individual groups not resolvable at 2.5-4 s sampling",
+   "evidence": "GR 3-3 (33); LP1 1:12:35-1:13:12",
+   "confidence": "low"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "over the water along the first jetboard run",
+   "composition": {
+    "unknown": 8
+   },
+   "count": 8,
+   "arrangement": "floating line on the boost line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "SPEED-LINE",
+    "FLOAT-LINE",
+    "ON-PATH"
+   ],
+   "why": "first vehicle crates are generous: all on the boost line, read from far away; teaches jumping the board into crates",
+   "evidence": "GR 3-3 (42 incl. C1); LP1 1:13:15-1:13:22",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "pier at the end of jetboard 1, beside the bonus pad and the Flashback tape",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "BONUS"
+   ],
+   "why": "checkpoint parked beside the bonus pad: a failed bonus costs nothing and the bonus doubles as a save point",
+   "evidence": "LP1 1:13:25-1:13:27.5 (tape found 1:13:27.5); HUD 70->71 at 1:14:11",
+   "confidence": "high"
+  },
+  {
+   "id": "B1-a",
+   "section": "B1",
+   "order": 1,
+   "where": "bonus start: stack on the left",
+   "composition": {
+    "tnt": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "STACK: TNT on wood on an iron ! box",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "SWITCH",
+    "EXPLOSIVE-MIX",
+    "TOOL",
+    "BONUS"
+   ],
+   "why": "the TNT is the key: its blast reaches the ! under it, materialising the outline row; GR: stay airborne by double-jumping off crates until it blows",
+   "evidence": "LP1 1:13:32-1:13:40; GR 3-3 (71)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B1-b",
+   "section": "B1",
+   "order": 2,
+   "where": "right of the stack, over water",
+   "composition": {
+    "outline": 9
+   },
+   "count": 9,
+   "arrangement": "ROW of outline crates (8-9 seen)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "OUTLINE",
+    "BRIDGE",
+    "BONUS"
+   ],
+   "why": "the reward of the switch puzzle is also the floor: the outline row is both the crates and the bridge",
+   "evidence": "LP1 1:13:35-1:13:45",
+   "confidence": "low"
+  },
+  {
+   "id": "B1-c",
+   "section": "B1",
+   "order": 3,
+   "where": "centre: TNT pyramid with fire crates on its flanks",
+   "composition": {
+    "tnt": 3,
+    "question": 2,
+    "wood": 2,
+    "fire": 2
+   },
+   "count": 9,
+   "arrangement": "PYRAMID: TNT top; TNT ? TNT; ? wood ...",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "BONUS"
+   ],
+   "why": "GR: break the side fire crates before lighting the TNT - the blast would otherwise destroy what you need or catch you between hazards",
+   "evidence": "LP1 1:13:45-1:13:55; GR 3-3",
+   "confidence": "low"
+  },
+  {
+   "id": "B1-d",
+   "section": "B1",
+   "order": 4,
+   "where": "floating pairs and the remaining crates to the bonus exit",
+   "composition": {
+    "unknown": 9
+   },
+   "count": 9,
+   "arrangement": "floating [wood/?] pairs",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "double-jump"
+   ],
+   "relations": [],
+   "tags": [
+    "FLOAT-LINE",
+    "BONUS"
+   ],
+   "why": "airborne pickups that reward the double jump; split of the 29 beyond B1-a is estimated",
+   "evidence": "LP1 1:13:50-1:14:00 (29/29 at 1:14:00)",
+   "confidence": "low"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "dock at the raft launch",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "launch-point pickup before the side-view ride begins",
+   "evidence": "LP1 1:14:14",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "dock beside the ship hull",
+   "composition": {
+    "question": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "STACK ? on wood + wood",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "must be hit while the raft passes - a timing check on a moving platform",
+   "evidence": "LP1 1:14:23",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "aboard the raft",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "STACK iron on wood (iron not counted)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "body-slam"
+   ],
+   "relations": [],
+   "tags": [
+    "TOOL",
+    "STACK",
+    "TIMED"
+   ],
+   "why": "iron crates riding on wood: break the wood and the iron drops into a step; the iron also marks the raft from afar",
+   "evidence": "LP1 1:14:26-1:14:38",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "dock beside the raft path, mid-ride",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "TIMED"
+   ],
+   "why": "a checkpoint you must hop off the moving raft to break: even saving is a timing test",
+   "evidence": "LP1 1:14:29-1:14:32 ('CHECKPOINT')",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "dock with spiked rollers",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED"
+   ],
+   "why": "TNT among rollers: the raft carries you out of the blast if you stomp it at the right moment",
+   "evidence": "LP1 1:14:32 (fuse '2')",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "aboard the raft under a Nitro 2-stack",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "STACK Nitro x2 on wood x2 (Nitro paid at the end)",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER"
+   ],
+   "why": "Nitro sitting on collectibles: spin the wood from the side and keep clear of the falling Nitro; the Nitro are deferred to the final detonator",
+   "evidence": "LP1 1:14:40-1:14:41",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-g",
+   "section": "S4",
+   "order": 7,
+   "where": "late raft ride: ! iron block, materialised outline crates, low barriers",
+   "composition": {
+    "unknown": 21
+   },
+   "count": 21,
+   "arrangement": "mixed groups on docks and raft",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "slide",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "SWITCH",
+    "OUTLINE",
+    "TIMED"
+   ],
+   "why": "GR: hit the ! to make more crates appear; slide-jump under barriers and spin the fruit crates to keep pace with the raft",
+   "evidence": "GR 3-3 (103); LP1 1:14:44 (outline crate visible)",
+   "confidence": "low"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 1,
+   "where": "pier before jetboard 2",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the second vehicle run",
+   "evidence": "LP1 1:15:10-1:15:20; GR 3-3",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-b",
+   "section": "S5",
+   "order": 2,
+   "where": "right of the pier checkpoint",
+   "composition": {
+    "reinforced": 4
+   },
+   "count": 4,
+   "arrangement": "ROW of 4 metal-banded crates",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "body-slam"
+   ],
+   "relations": [],
+   "tags": [
+    "REINFORCED",
+    "COUNT-TRAP"
+   ],
+   "why": "strong crates beside the checkpoint test the body slam on foot; the mirror-image 2x3 iron block on the left hides the gem",
+   "evidence": "GR 3-3 (108); gamepressure",
+   "confidence": "medium"
+  },
+  {
+   "id": "S6-a",
+   "section": "S6",
+   "order": 1,
+   "where": "over the water among sea mines and whirlpools",
+   "composition": {
+    "unknown": 8
+   },
+   "count": 8,
+   "arrangement": "floating line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "SPEED-LINE",
+    "FLOAT-LINE",
+    "TEST"
+   ],
+   "why": "same grammar as jetboard 1 but threaded between mines: the crate line is the safe line until it is not",
+   "evidence": "LP1 1:15:21.5-1:15:35 (HUD 110,111,115)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S6-b",
+   "section": "S6",
+   "order": 2,
+   "where": "dock with the green gem pad",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "ROUTE-SPLIT"
+   ],
+   "why": "checkpoint at the fork, so the optional path never costs progress",
+   "evidence": "LP1 1:16:12.5",
+   "confidence": "high"
+  },
+  {
+   "id": "G-a",
+   "section": "G",
+   "order": 1,
+   "where": "dock passed by the cannon raft",
+   "composition": {
+    "nitro": 1,
+    "tnt": 1,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "STACK Nitro on TNT on ?",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "timed",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "a collectible buried under both explosives: the bottom ? cannot be taken cleanly without a chain",
+   "evidence": "LP1 1:16:40",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-b",
+   "section": "G",
+   "order": 2,
+   "where": "among the cannons",
+   "composition": {
+    "nitro": 1,
+    "tnt": 2,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "STACK Nitro/TNT/? beside a loose TNT",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "CHAIN",
+    "TOOL",
+    "ROUTE-SPLIT"
+   ],
+   "why": "stomp the loose TNT and ride away: its blast chains through the stack and every crate counts",
+   "evidence": "LP1 1:16:55-1:16:57 (fuse '2')",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-c",
+   "section": "G",
+   "order": 3,
+   "where": "rest of the cannon-raft path",
+   "composition": {
+    "unknown": 15
+   },
+   "count": 15,
+   "arrangement": "groups on docks and the raft",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TIMED"
+   ],
+   "why": "remaining gem-path crates; split not resolvable",
+   "evidence": "GR 3-3 (139)",
+   "confidence": "low"
+  },
+  {
+   "id": "S7-a",
+   "section": "S7",
+   "order": 1,
+   "where": "on a phase platform after the Lani-Loli mask",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "TEACH",
+    "TIMED"
+   ],
+   "why": "first crate that only exists while phased in: teaches the mask on a safe pier",
+   "evidence": "GR 3-3 (147)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-b",
+   "section": "S7",
+   "order": 2,
+   "where": "along the pier to its end",
+   "composition": {
+    "unknown": 7
+   },
+   "count": 7,
+   "arrangement": "singles and pairs",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "pier crates incl. the one at the pier end",
+   "evidence": "GR 3-3 (147); LP1 1:17:32-1:17:50",
+   "confidence": "low"
+  },
+  {
+   "id": "S7-c",
+   "section": "S7",
+   "order": 3,
+   "where": "high above the end of the pier, off camera",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single, floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "HIDDEN",
+    "COUNT-TRAP",
+    "SUPPORT-ORDER"
+   ],
+   "why": "reachable only by bouncing on the phase bounce crate first - break the bounce crate early and this crate is lost",
+   "evidence": "GR 3-3 (149 easy-to-miss)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-d",
+   "section": "S7",
+   "order": 4,
+   "where": "end of the pier",
+   "composition": {
+    "bounceWumpa": 1
+   },
+   "count": 1,
+   "arrangement": "single (phase)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "TOOL",
+    "SUPPORT-ORDER"
+   ],
+   "why": "the tool crate of S7-c; break it last",
+   "evidence": "GR 3-3 (149)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-e",
+   "section": "S7",
+   "order": 5,
+   "where": "between two dropping platforms, iron ! crate underneath",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single over a switch",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "SWITCH",
+    "OUTLINE",
+    "TIMED"
+   ],
+   "why": "the ! below materialises crates further on (S8-d, S9-a): a cause placed one section before its effect",
+   "evidence": "GR 3-3 (150)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S8-a",
+   "section": "S8",
+   "order": 1,
+   "where": "phase docks",
+   "composition": {
+    "phase": 3,
+    "phaseTnt": 1
+   },
+   "count": 4,
+   "arrangement": "ROW of phase crates with a phase TNT",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED"
+   ],
+   "why": "an explosive that only exists in one phase: phase in, stomp, phase out to escape",
+   "evidence": "LP1 1:18:10-1:18:12.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "S8-b",
+   "section": "S8",
+   "order": 2,
+   "where": "phase dock",
+   "composition": {
+    "wood": 1,
+    "question": 1,
+    "phase": 1
+   },
+   "count": 3,
+   "arrangement": "ROW wood ? phase",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "mixed solid and phase crates in one row: half the row needs the mask",
+   "evidence": "LP1 1:18:20",
+   "confidence": "medium"
+  },
+  {
+   "id": "S8-c",
+   "section": "S8",
+   "order": 3,
+   "where": "path to jetboard 3",
+   "composition": {
+    "reinforced": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "body-slam"
+   ],
+   "relations": [],
+   "tags": [
+    "REINFORCED"
+   ],
+   "why": "GR's two strong crates",
+   "evidence": "GR 3-3 (174)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S8-d",
+   "section": "S8",
+   "order": 4,
+   "where": "last dock, right side",
+   "composition": {
+    "outline": 1
+   },
+   "count": 1,
+   "arrangement": "first of two outline crates",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "OUTLINE",
+    "COUNT-TRAP"
+   ],
+   "why": "payoff of the S7-e switch; missed if the ! was skipped",
+   "evidence": "LP1 1:18:39-1:18:41 (HUD 174)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S8-e",
+   "section": "S8",
+   "order": 5,
+   "where": "remaining docks and phase platforms",
+   "composition": {
+    "unknown": 14
+   },
+   "count": 14,
+   "arrangement": "small groups",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "split not resolvable",
+   "evidence": "GR 3-3 (174)",
+   "confidence": "low"
+  },
+  {
+   "id": "S9-a",
+   "section": "S9",
+   "order": 1,
+   "where": "last dock before jetboard 3",
+   "composition": {
+    "outline": 1,
+    "checkpoint": 1
+   },
+   "count": 2,
+   "arrangement": "outline crate + C",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "OUTLINE",
+    "CHECKPOINT"
+   ],
+   "why": "second materialised crate and the save before the final vehicle run",
+   "evidence": "LP1 1:18:42.5-1:18:44.5 (HUD 175, 176; 'CHECKPOINT')",
+   "confidence": "high"
+  },
+  {
+   "id": "S9-b",
+   "section": "S9",
+   "order": 2,
+   "where": "over the water on jetboard 3 and on the docks before the Louise arena",
+   "composition": {
+    "unknown": 17
+   },
+   "count": 17,
+   "arrangement": "floating line + dock groups",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "vehicle",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "SPEED-LINE",
+    "TEST"
+   ],
+   "why": "GR: none tricky but one miss means replaying from the jetboard start - the final run is an execution check, not a search",
+   "evidence": "GR 3-3 (194); LP1 1:18:45-1:19:50",
+   "confidence": "low"
+  },
+  {
+   "id": "S10-a",
+   "section": "S10",
+   "order": 1,
+   "where": "after the Louise fight",
+   "composition": {
+    "nitro": 3
+   },
+   "count": 3,
+   "arrangement": "Nitro detonated by the end switch",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "NITRO-SWITCH",
+    "REWARD"
+   ],
+   "why": "the Nitro you avoided all level (e.g. the raft stack S4-f) are paid out at the very end",
+   "evidence": "GR 3-3 (197); LP1 1:20:42.5",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "swinging/rolling dock hazards",
+   "count": null,
+   "where": "plank walkways",
+   "role": "timing hazards between crate groups"
+  },
+  {
+   "section": "S4",
+   "kind": "spiked rollers",
+   "count": null,
+   "where": "docks beside the raft path",
+   "role": "make dock crates a timed hop"
+  },
+  {
+   "section": "S6",
+   "kind": "sea mines, whirlpools",
+   "count": null,
+   "where": "jetboard 2 water",
+   "role": "the run's death at 1:15:35"
+  },
+  {
+   "section": "G",
+   "kind": "cannons",
+   "count": null,
+   "where": "green path",
+   "role": "fire across the raft; near the Nitro stacks"
+  },
+  {
+   "section": "S10",
+   "kind": "Louise (mini-boss)",
+   "count": 1,
+   "where": "end arena",
+   "role": "fight gates the Nitro detonator"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S2",
+   "kind": "open water (vehicle)",
+   "where": "jetboard 1",
+   "crates": [
+    "S2-a"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "water under a moving raft",
+   "where": "raft ride 1",
+   "crates": [
+    "S4-c",
+    "S4-f"
+   ]
+  },
+  {
+   "section": "B1",
+   "kind": "water",
+   "where": "bonus, bridged by outline crates",
+   "crates": [
+    "B1-b"
+   ]
+  },
+  {
+   "section": "S7",
+   "kind": "water between phase platforms",
+   "where": "phase intro",
+   "crates": [
+    "S7-a",
+    "S7-e"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "B1-a",
+    "B1-b"
+   ],
+   "summary": "TNT on wood on a ! box opens the outline bridge",
+   "solution": "stomp the TNT, keep airborne off nearby crates until it blows; the ! fires and the outline row becomes crates/footing",
+   "wrongOrder": "standing on the ground beside the TNT or breaking the wood first",
+   "loss": "bonus crates (outline row), not progress"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "G-b"
+   ],
+   "summary": "Nitro/TNT/? stack beside a loose TNT",
+   "solution": "light the loose TNT and let the chain take the stack",
+   "wrongOrder": "spinning the ? at the base drops TNT and Nitro onto the dock next to you",
+   "loss": "a life and the gem-path crates"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S7-c",
+    "S7-d"
+   ],
+   "summary": "phase bounce crate is the only way to a hidden crate",
+   "solution": "bounce up first, then break the bounce crate",
+   "wrongOrder": "break the bounce crate on arrival",
+   "loss": "1 crate (all-box)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S7-e",
+    "S8-d",
+    "S9-a"
+   ],
+   "summary": "! under the dropping platforms materialises crates on the last dock",
+   "solution": "hit the ! before the platforms fall",
+   "wrongOrder": "ride the platforms and skip the switch",
+   "loss": "2 crates, discovered only at the dock before jetboard 3"
+  }
+ ],
+ "observations": [
+  "Every vehicle run is preceded by a checkpoint (pier C1/C3, dock C5) and its crates sit on the boost line - high execution, no search.",
+  "The two count traps on foot are SUPPORT-ORDER problems (bounce crate before breaking it; ! before the platforms drop).",
+  "Nitro are part of the total: the ones the player avoids are paid by the detonator after the boss.",
+  "The optional green-gem path holds 22 of 196 crates (11 %) and the bonus 29 (15 %)."
+ ]
+}

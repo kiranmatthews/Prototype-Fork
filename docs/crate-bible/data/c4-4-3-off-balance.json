@@ -1,0 +1,1237 @@
+{
+ "id": "c4-4-3-off-balance",
+ "game": "Crash 4",
+ "stage": "4-3",
+ "name": "Off-Balance",
+ "sources": [
+  "GR 4-3 (gameranx.com features id 210437)",
+  "LP1 1:52:34-2:00:52 (archive.org PS4 longplay Part 1; 2 fps frames, HUD counter crops, exit crate sign)"
+ ],
+ "camera": "mixed: into-screen paths and wall-runs; side-view bonus and the Lani-Loli great-wall section",
+ "totalBoxes": 187,
+ "totalSource": "HUD 0/187 (LP1 1:53:01.5); exit sign 155/187 before the Nitro switch (LP1 2:00:40); ALL gem at 2:00:49. GR's /186 entries are typos.",
+ "typesNote": "Crash 4 composition keys: wood (plain), question (?), bounceWumpa (crate with a gold wumpa emblem; GR 'fruit/bounce crate'; pays fruit per bounce), reinforced (metal-banded X-frame 'strong crate'; body slam or blast), iron (pale unbreakable metal crate, NOT counted; listed only in 'arrangement'), tnt, nitro (counted; the green ! Nitro switch detonates all remaining Nitro and they are added to the count), switch (iron ! box, not counted), outline (wireframe crate materialised by a !), phase (translucent blue crate that is solid only in one Lani-Loli phase), phaseTnt, fire (dark crate with brass vents that jet flame; GR 'fire crate'), checkpoint (counted), aku, unknown (type not resolvable from frames).",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 160,
+   "basis": "187 minus bonus 27 (includes 32 Nitro paid by the exit switch)"
+  },
+  {
+   "id": "bonus",
+   "boxes": 27,
+   "basis": "bonus HUD n/27; main 90/187 after transfer (1:55:38)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 25,
+   "cumulative": 25,
+   "notes": "GR 25; HUD 3/187 at 1:53:04"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2+",
+   "boxes": 11,
+   "cumulative": 36,
+   "notes": "lily-pad pond; GR 26/35/36"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "Akano mask",
+   "boxes": 13,
+   "cumulative": 49,
+   "notes": "GR 42/46/49"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "Akano mask",
+   "to": "C3",
+   "boxes": 11,
+   "cumulative": 60,
+   "notes": "whirlwind; Flashback tape 1:54:35; GR 60"
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C3",
+   "to": "bonus pad",
+   "boxes": 3,
+   "cumulative": 63,
+   "notes": "GR 63"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus pad",
+   "to": "bonus exit",
+   "boxes": 27,
+   "cumulative": 90,
+   "notes": "HUD 81 -> 90/187 at 1:55:37-38"
+  },
+  {
+   "id": "S6",
+   "route": "main",
+   "from": "bonus exit",
+   "to": "C4",
+   "boxes": 6,
+   "cumulative": 96,
+   "notes": "GR 91/96; C4 at 1:56:02.5"
+  },
+  {
+   "id": "S7",
+   "route": "main",
+   "from": "C4",
+   "to": "C5",
+   "boxes": 10,
+   "cumulative": 106,
+   "notes": "wind tunnels, Nitro blocks, hidden-gem drop; GR 98/104/106"
+  },
+  {
+   "id": "S8",
+   "route": "main",
+   "from": "C5",
+   "to": "C6",
+   "boxes": 22,
+   "cumulative": 128,
+   "notes": "wall-run course; GR lists 16 (122); HUD anchors after C6 all equal GR + 6, so 6 crates GR omits fall between the bonus exit and C6"
+  },
+  {
+   "id": "S9",
+   "route": "main",
+   "from": "C6 (Lani-Loli)",
+   "to": "C7",
+   "boxes": 11,
+   "cumulative": 139,
+   "notes": "phase section; HUD 135 at 1:59:21.5, 136 at 1:59:23"
+  },
+  {
+   "id": "S10",
+   "route": "main",
+   "from": "C7",
+   "to": "ledge above C8",
+   "boxes": 8,
+   "cumulative": 147,
+   "notes": "HUD 143 (2:00:08.5), 144, 145 (2:00:12), 146 (2:00:18.5)"
+  },
+  {
+   "id": "S11",
+   "route": "main",
+   "from": "C8",
+   "to": "exit stairs",
+   "boxes": 8,
+   "cumulative": 155,
+   "notes": "exit sign 155/187 (2:00:40); GR says nine but its own 141 -> 149 is eight"
+  },
+  {
+   "id": "S12",
+   "route": "main",
+   "from": "exit stairs",
+   "to": "exit",
+   "boxes": 32,
+   "cumulative": 187,
+   "notes": "Nitro switch pays 32 (GR implies 37 from its wrong 149 -> 186)"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "courtyard beside the tree, right of the start",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TEACH"
+   ],
+   "why": "first crates in view of the spawn",
+   "evidence": "LP1 1:53:00-1:53:04 (HUD 0->3/187)",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "stone paths and first wall-run chevron walls",
+   "composition": {
+    "unknown": 17
+   },
+   "count": 17,
+   "arrangement": "groups along the path and wall-run landings",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TEACH"
+   ],
+   "why": "pacing crates on wall-run landings: each landing is rewarded",
+   "evidence": "GR 4-3 (25); LP1 1:53:07-1:53:22",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "boardwalk, left of C1",
+   "composition": {
+    "question": 1,
+    "unknown": 3
+   },
+   "count": 4,
+   "arrangement": "group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "DETOUR",
+    "COUNT-TRAP"
+   ],
+   "why": "GR: count includes crates to the checkpoint's left - behind the line of travel",
+   "evidence": "GR 4-3 (25); LP1 1:53:25",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "boardwalk",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the pond",
+   "evidence": "LP1 1:53:27.5",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "floating low over the pond water",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "slide",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "LOW",
+    "EDGE-BAIT",
+    "COUNT-TRAP"
+   ],
+   "why": "GR: slide-jump to reach it; a reach over water that risks a fall",
+   "evidence": "GR 4-3 (26)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "lily pads under the wall-run, bridge",
+   "composition": {
+    "unknown": 8
+   },
+   "count": 8,
+   "arrangement": "singles on lily pads",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STEPPING",
+    "TIMED"
+   ],
+   "why": "crates ride the stepping stones of the pond",
+   "evidence": "GR 4-3 (35); LP1 1:53:30-1:53:42",
+   "confidence": "low"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "after the bridge",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C2",
+   "evidence": "GR 4-3 (35)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "directly right of C2 against a wall",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "HIDDEN",
+    "COUNT-TRAP"
+   ],
+   "why": "tucked beside the checkpoint where the camera does not look",
+   "evidence": "GR 4-3 (36)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "stair landing in front of a broken wall",
+   "composition": {
+    "reinforced": 2,
+    "tnt": 1,
+    "unknown": 3
+   },
+   "count": 6,
+   "arrangement": "STACK reinforced on TNT, more strong crates beside",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "jump",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "TOOL",
+    "SUPPORT-ORDER"
+   ],
+   "why": "the TNT under a strong crate is both the key (blast breaks reinforced) and the step to the wall top; Crash stands on it during the fuse and hops up",
+   "evidence": "LP1 1:53:51-1:53:55.5 (fuse 3-2-1); GR 4-3 (42)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "alcove that opens in the wall-run",
+   "composition": {
+    "unknown": 4
+   },
+   "count": 4,
+   "arrangement": "group in an alcove",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIDDEN",
+    "DETOUR",
+    "REWARD"
+   ],
+   "why": "GR: alcove full of fruit opens as you pass",
+   "evidence": "GR 4-3 (46); LP1 1:54:02-1:54:05",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "ledge by the first flame totem before the Akano mask",
+   "composition": {
+    "question": 2,
+    "unknown": 1
+   },
+   "count": 3,
+   "arrangement": "group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "reward before the mask",
+   "evidence": "GR 4-3 (49); LP1 1:54:15-1:54:17",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "floating platforms between flame-jet totems",
+   "composition": {
+    "unknown": 5
+   },
+   "count": 5,
+   "arrangement": "singles/pairs on platforms",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "TIMED",
+    "HIGH"
+   ],
+   "why": "crates on whirlwind hover hops, timed against flame jets",
+   "evidence": "LP1 1:54:22-1:54:35",
+   "confidence": "low"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "landing after the totems",
+   "composition": {
+    "question": 2,
+    "tnt": 1,
+    "unknown": 1
+   },
+   "count": 4,
+   "arrangement": "group with a TNT",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "TNT mixed into a ? group",
+   "evidence": "LP1 1:54:40-1:54:47 (fuse '3')",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "before the two spectral dragons",
+   "composition": {
+    "checkpoint": 1,
+    "unknown": 1
+   },
+   "count": 2,
+   "arrangement": "C + one crate",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "GR: stop at the checkpoint and the crate before the dragons",
+   "evidence": "GR 4-3 (60)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 1,
+   "where": "right next to the bonus entrance",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "crates mark the bonus pad",
+   "evidence": "GR 4-3 (63); LP1 1:55:00",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 1,
+   "where": "left: 3x3 grid on the first three TNT of the bridge row",
+   "composition": {
+    "question": 4,
+    "wood": 4,
+    "bounceWumpa": 1
+   },
+   "count": 9,
+   "arrangement": "GRID 3x3 (? wood ? / wood wumpa wood / ? wood ?)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "GRID",
+    "SUPPORT-ORDER",
+    "BONUS"
+   ],
+   "why": "take the grid by hand (fruit) before the TNT under it is lit; the blast would take it for no fruit",
+   "evidence": "LP1 1:55:05-1:55:20 (2,5,8,11/27)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 2,
+   "where": "floating over the carved dragon bridge, first arc",
+   "composition": {
+    "question": 1,
+    "bounceWumpa": 1
+   },
+   "count": 2,
+   "arrangement": "PAIR floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "FLOAT-LINE",
+    "BONUS"
+   ],
+   "why": "airborne pair on the bridge's arc",
+   "evidence": "LP1 1:55:12.5-1:55:20",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 3,
+   "where": "long row under everything",
+   "composition": {
+    "tnt": 9
+   },
+   "count": 9,
+   "arrangement": "ROW TNT TNT TNT | iron iron | TNT | iron iron | TNT ... (iron not counted)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "BRIDGE",
+    "CHAIN",
+    "TIMED",
+    "BONUS"
+   ],
+   "why": "a bridge in which only the iron crates are safe footing: every TNT stepped on lights, so the player must keep moving; 9 counted crates",
+   "evidence": "LP1 1:55:12.5-1:55:25 (fuses '2','3','3'; 11->20/27); 7 TNT on screen, 2 inferred",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 4,
+   "where": "floating over the dragon bridge, second arc",
+   "composition": {
+    "question": 1,
+    "bounceWumpa": 1
+   },
+   "count": 2,
+   "arrangement": "PAIR floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "FLOAT-LINE",
+    "BONUS"
+   ],
+   "why": "",
+   "evidence": "LP1 1:55:22.5-1:55:27.5 (22/27)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 5,
+   "where": "pavilion at the end",
+   "composition": {
+    "question": 1,
+    "bounceWumpa": 1
+   },
+   "count": 2,
+   "arrangement": "STACK ? on wumpa",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "",
+   "evidence": "LP1 1:55:32.5-1:55:35 (24/27)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-f",
+   "section": "B",
+   "order": 6,
+   "where": "pavilion at the end",
+   "composition": {
+    "nitro": 3
+   },
+   "count": 3,
+   "arrangement": "STACK of Nitro beside B-e, green ! on the ledge to the right",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "NITRO-SWITCH",
+    "BONUS",
+    "REWARD"
+   ],
+   "why": "Nitro shoulder-to-shoulder with the last collectible; the green ! pays them (24 -> 27)",
+   "evidence": "LP1 1:55:30-1:55:37.5",
+   "confidence": "high"
+  },
+  {
+   "id": "S6-a",
+   "section": "S6",
+   "order": 1,
+   "where": "floating above the first flamethrower after the bonus",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "TIMED",
+    "COUNT-TRAP"
+   ],
+   "why": "GR: whirlwind up to it over the flames",
+   "evidence": "GR 4-3 (91)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S6-b",
+   "section": "S6",
+   "order": 2,
+   "where": "floor to C4 incl. TNT",
+   "composition": {
+    "tnt": 2,
+    "unknown": 2,
+    "checkpoint": 1
+   },
+   "count": 5,
+   "arrangement": "TNTs on the floor + crates + C",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "CHECKPOINT"
+   ],
+   "why": "GR: don't forget the TNT crates",
+   "evidence": "GR 4-3 (96); LP1 1:55:47-1:56:02.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-a",
+   "section": "S7",
+   "order": 1,
+   "where": "by the wind tunnel",
+   "composition": {
+    "unknown": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "marks the spot where the hidden-gem drop is (empty space to the right)",
+   "evidence": "GR 4-3 (98)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-b",
+   "section": "S7",
+   "order": 2,
+   "where": "high ledges right at the end of the wind tunnels, past the Nitro blocks",
+   "composition": {
+    "unknown": 4,
+    "tnt": 2
+   },
+   "count": 6,
+   "arrangement": "3 on a ledge + 3 (2 TNT) far upper right",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "DETOUR",
+    "COUNT-TRAP",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "whirlwind height gate after a Nitro corridor",
+   "evidence": "GR 4-3 (104)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-c",
+   "section": "S7",
+   "order": 3,
+   "where": "between two firetraps",
+   "composition": {
+    "aku": 1,
+    "checkpoint": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "AKU",
+    "CHECKPOINT"
+   ],
+   "why": "mask + save before the wall-run course",
+   "evidence": "GR 4-3 (106)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S8-a",
+   "section": "S8",
+   "order": 1,
+   "where": "wall-run obstacle course to C6",
+   "composition": {
+    "unknown": 15,
+    "checkpoint": 1
+   },
+   "count": 16,
+   "arrangement": "groups on wall-run landings and floating platforms",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "CHECKPOINT"
+   ],
+   "why": "crates on every landing of a chevron wall-run chain",
+   "evidence": "GR 4-3 (122); LP1 1:58:30-1:59:02.5",
+   "confidence": "low"
+  },
+  {
+   "id": "S8-x",
+   "section": "S8",
+   "order": 2,
+   "where": "unlocated: between the bonus exit and C6",
+   "composition": {
+    "unknown": 6
+   },
+   "count": 6,
+   "arrangement": "not located",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "COUNT-TRAP"
+   ],
+   "why": "GR omits them; every HUD anchor after C6 equals GR + 6",
+   "evidence": "HUD 135/143/144/145/146/155 vs GR 133/137/138/139/140/149",
+   "confidence": "low"
+  },
+  {
+   "id": "S9-a",
+   "section": "S9",
+   "order": 1,
+   "where": "first ledge after C6",
+   "composition": {
+    "phase": 2,
+    "phaseTnt": 1,
+    "wood": 2
+   },
+   "count": 5,
+   "arrangement": "ROW phase phase phaseTNT with a wood 2-stack on the first",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "switch",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TEACH",
+    "SUPPORT-ORDER"
+   ],
+   "why": "phase crates can carry real crates: phasing in turns the row solid, the spin lights the phase TNT",
+   "evidence": "LP1 1:59:02.5-1:59:07.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "S9-b",
+   "section": "S9",
+   "order": 2,
+   "where": "floating in front of the great wall",
+   "composition": {
+    "unknown": 2
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "TIMED"
+   ],
+   "why": "reached from phase platforms",
+   "evidence": "LP1 1:59:17.5-1:59:23 (HUD 135,136)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S9-c",
+   "section": "S9",
+   "order": 3,
+   "where": "above the floating platforms",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH"
+   ],
+   "why": "GR: set off the TNT and collect the crates above the platforms",
+   "evidence": "GR 4-3 (133)",
+   "confidence": "low"
+  },
+  {
+   "id": "S9-d",
+   "section": "S9",
+   "order": 4,
+   "where": "end of the wall section",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C7",
+   "evidence": "LP1 1:59:55",
+   "confidence": "high"
+  },
+  {
+   "id": "S10-a",
+   "section": "S10",
+   "order": 1,
+   "where": "on the wall-runs",
+   "composition": {
+    "unknown": 4
+   },
+   "count": 4,
+   "arrangement": "two pairs",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "SPEED-LINE",
+    "TIMED"
+   ],
+   "why": "pairs on wall-run lines",
+   "evidence": "GR 4-3 (137); LP1 2:00:00-2:00:08.5 (HUD 143)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S10-b",
+   "section": "S10",
+   "order": 2,
+   "where": "red-mat platform",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "TOOL",
+    "SUPPORT-ORDER"
+   ],
+   "why": "GR: break it only after using it for S10-c",
+   "evidence": "LP1 2:00:09-2:00:10 (HUD 144; fuse '2')",
+   "confidence": "high"
+  },
+  {
+   "id": "S10-c",
+   "section": "S10",
+   "order": 3,
+   "where": "high on the right wall, above the camera",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "HIDDEN",
+    "COUNT-TRAP",
+    "SUPPORT-ORDER"
+   ],
+   "why": "bounce off the TNT toward the right wall to reach an off-camera crate",
+   "evidence": "GR 4-3 (139); LP1 2:00:12 (HUD 145)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S10-d",
+   "section": "S10",
+   "order": 4,
+   "where": "start of the final whirlwind",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C8",
+   "evidence": "LP1 2:00:18.5 (HUD 146)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S10-e",
+   "section": "S10",
+   "order": 5,
+   "where": "ledge directly above C8",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "double-jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "COUNT-TRAP"
+   ],
+   "why": "GR: grab the mask, double-jump straight up",
+   "evidence": "GR 4-3 (141)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S11-a",
+   "section": "S11",
+   "order": 1,
+   "where": "final whirlwind: floating platforms with flame totems, two floating near the exit",
+   "composition": {
+    "unknown": 8
+   },
+   "count": 8,
+   "arrangement": "6 on platforms + 2 floating",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "TIMED",
+    "HIGH"
+   ],
+   "why": "last hover course",
+   "evidence": "GR 4-3 (149); LP1 2:00:22-2:00:39",
+   "confidence": "medium"
+  },
+  {
+   "id": "S12-a",
+   "section": "S12",
+   "order": 1,
+   "where": "Nitro switch in front of the exit crate sign",
+   "composition": {
+    "nitro": 32
+   },
+   "count": 32,
+   "arrangement": "every Nitro still standing in the level",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "NITRO-SWITCH",
+    "REWARD"
+   ],
+   "why": "the level's Nitro blocks (balcony rows, ledge stacks, tunnel blocks) are paid at the door",
+   "evidence": "LP1 2:00:36.5-2:00:41 (sign 155/187)",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1-S2",
+   "kind": "spirit lions (cyan ghosts)",
+   "count": null,
+   "where": "paths and boardwalks",
+   "role": "patrols near crate groups"
+  },
+  {
+   "section": "S6-S7",
+   "kind": "guardian lions (GR 'golem')",
+   "count": null,
+   "where": "corridors",
+   "role": "whirlwind targets before the wind tunnels"
+  },
+  {
+   "section": "S4, S11",
+   "kind": "flame-jet totems / firetraps",
+   "count": null,
+   "where": "between floating platforms",
+   "role": "time the hover pickups"
+  },
+  {
+   "section": "S4",
+   "kind": "spectral dragons",
+   "count": 2,
+   "where": "after C3",
+   "role": "sweeping hazard"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S2",
+   "kind": "pond with lily pads",
+   "where": "after C1",
+   "crates": [
+    "S2-a",
+    "S2-b"
+   ]
+  },
+  {
+   "section": "B",
+   "kind": "drop under the TNT/iron bridge",
+   "where": "bonus",
+   "crates": [
+    "B-c"
+   ]
+  },
+  {
+   "section": "S9",
+   "kind": "drop below the great wall",
+   "where": "phase section",
+   "crates": [
+    "S9-b",
+    "S9-c"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S3-a"
+   ],
+   "summary": "strong crate on a TNT at the foot of a ledge",
+   "solution": "light the TNT while standing on the strong crate, hop to the ledge before the blast; or body-slam the strong crates (GR)",
+   "wrongOrder": "spin the TNT",
+   "loss": "a life"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "B-a",
+    "B-c"
+   ],
+   "summary": "grid on a TNT bridge",
+   "solution": "empty the grid by hand, then cross the bridge stepping on iron, lighting TNT behind you",
+   "wrongOrder": "light the first TNT under the grid",
+   "loss": "fruit, possibly a life"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S10-b",
+    "S10-c"
+   ],
+   "summary": "TNT is the springboard to an off-camera crate",
+   "solution": "bounce off the TNT toward the right wall first",
+   "wrongOrder": "break or light the TNT on arrival",
+   "loss": "1 crate (all-box)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S12-a"
+   ],
+   "summary": "32 Nitro",
+   "solution": "avoid all of them; the exit switch pays them",
+   "wrongOrder": "Aku Aku or an enemy setting Nitro off early (GR warns this inflates the count)",
+   "loss": "nothing for the box total, but the count no longer reveals missed crates"
+  }
+ ],
+ "observations": [
+  "17 % of the total (32/187) is Nitro paid by one switch at the door.",
+  "The bonus is a TNT/iron bridge: iron = safe footing, TNT = counted crates that must be lit while crossing.",
+  "GR's tallies are exact up to 90 and exactly 6 low from C6 on; the HUD resolves every anchor."
+ ]
+}

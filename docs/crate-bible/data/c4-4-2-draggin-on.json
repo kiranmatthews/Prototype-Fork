@@ -1,0 +1,1019 @@
+{
+ "id": "c4-4-2-draggin-on",
+ "game": "Crash 4",
+ "stage": "4-2",
+ "name": "Draggin' On",
+ "sources": [
+  "GR 4-2 (gameranx.com features id 210422)",
+  "gamepressure.com Draggin' On walkthrough",
+  "LP1 1:46:25-1:52:08 (archive.org PS4 longplay Part 1; 2 fps frames, HUD counter crops)"
+ ],
+ "camera": "mixed: into-screen courtyards and stairs; side-view 2D tower-wall climbs (dragon wall, bonus, gold-band ledges)",
+ "totalBoxes": 139,
+ "totalSource": "HUD 0/139 (LP1 1:46:50); ALL gem + N. Sanely Perfect relic (0 deaths) at LP1 1:52:06-08; GR and gamepressure 139",
+ "typesNote": "Crash 4 composition keys: wood (plain), question (?), bounceWumpa (crate with a gold wumpa emblem; GR 'fruit/bounce crate'; pays fruit per bounce), reinforced (metal-banded X-frame 'strong crate'; body slam or blast), iron (pale unbreakable metal crate, NOT counted; listed only in 'arrangement'), tnt, nitro (counted; the green ! Nitro switch detonates all remaining Nitro and they are added to the count), switch (iron ! box, not counted), outline (wireframe crate materialised by a !), phase (translucent blue crate that is solid only in one Lani-Loli phase), phaseTnt, fire (dark crate with brass vents that jet flame; GR 'fire crate'), checkpoint (counted), aku, unknown (type not resolvable from frames). No grind rails exist in this level.",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 117,
+   "basis": "139 minus bonus 22 (includes the hidden-gem secret alcove, 12)"
+  },
+  {
+   "id": "bonus",
+   "boxes": 22,
+   "basis": "bonus HUD 22/22 (LP1 1:50:10)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 11,
+   "cumulative": 11,
+   "notes": "courtyard + stair; HUD 4/139 at 1:46:52"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 10,
+   "cumulative": 21,
+   "notes": "first wall climb; Akano whirlwind obtained (1:47:35)"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 30,
+   "cumulative": 51,
+   "notes": "plank ledges, rope climb, gong alcoves with whirlwind"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "C4",
+   "boxes": 16,
+   "cumulative": 67,
+   "notes": "gateway TNT row, guardian lions, dragon wall"
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C4",
+   "to": "C5 (bonus)",
+   "boxes": 16,
+   "cumulative": 83,
+   "notes": "lift, balcony; HUD 79/139 at 1:49:18; main 82 + C5 broken after the bonus"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus pad",
+   "to": "bonus exit",
+   "boxes": 22,
+   "cumulative": 105,
+   "notes": "transfer 98 -> 104/139 at 1:50:12-14, then C5 -> 105"
+  },
+  {
+   "id": "S6",
+   "route": "main",
+   "from": "C5",
+   "to": "C6",
+   "boxes": 20,
+   "cumulative": 125,
+   "notes": "lion archway, secret path behind the wall (hidden gem 1:50:36)"
+  },
+  {
+   "id": "S7",
+   "route": "main",
+   "from": "C6",
+   "to": "exit",
+   "boxes": 14,
+   "cumulative": 139,
+   "notes": "gong gauntlet, pagoda checkpoint, final wall"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "courtyard right after the start, centre of the path",
+   "composition": {
+    "tnt": 1,
+    "wood": 5
+   },
+   "count": 6,
+   "arrangement": "two 3-high columns side by side: TNT/wood/wood and crate/wood/wood",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "TEACH",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first view of the level is an explosive stack: spin the wood columns, let the TNT settle, stomp it and step away - TNT taught before any enemy",
+   "evidence": "LP1 1:46:50-1:46:58 (HUD 0->3->4/139; fuse '3' at 1:46:58)",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "beside the TNT column",
+   "composition": {
+    "bounceWumpa": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "REWARD"
+   ],
+   "why": "fruit-per-bounce crate placed next to the TNT so the player lingers and learns the fuse timing",
+   "evidence": "LP1 1:46:54-1:46:56",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "path and stone stair to the wall",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "singles on the stair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "pacing crates leading the eye up the stair",
+   "evidence": "LP1 1:47:05-1:47:14",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "foot of the first wall",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the first climb",
+   "evidence": "LP1 1:47:15-1:47:16; GR 4-2 (11)",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "ledge above C1",
+   "composition": {
+    "tnt": 1,
+    "unknown": 2
+   },
+   "count": 3,
+   "arrangement": "TNT on a ledge with 2 crates floating above it",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "TIMED",
+    "COUNT-TRAP",
+    "SANDWICH"
+   ],
+   "why": "stomp the TNT and use its bounce to break both floating crates inside the 3-s fuse; miss the timing and the blast takes the TNT before the crates",
+   "evidence": "GR 4-2 (14 easy-to-miss); LP1 1:47:17.5-1:47:20.5 (fuse '2')",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "floating to the right of the wall, before the gong monks",
+   "composition": {
+    "fire": 1,
+    "bounceWumpa": 1
+   },
+   "count": 2,
+   "arrangement": "SANDWICH: fire crate over fruit crate",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "DETOUR",
+    "HIGH",
+    "COUNT-TRAP"
+   ],
+   "why": "a hazard crate stacked on a fruit crate off the climbing line: bounce timing against the flame jets",
+   "evidence": "GR 4-2 (16); LP1 1:47:25-1:47:29 (fruit 56->91)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "roof, ? on a ledge, pavilion row up to C2 (one floating crate needs the whirlwind)",
+   "composition": {
+    "question": 1,
+    "unknown": 3,
+    "checkpoint": 1
+   },
+   "count": 5,
+   "arrangement": "single + ROW + floating single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "HIGH",
+    "TEACH"
+   ],
+   "why": "the first crate reachable only with the newly granted whirlwind hover - the mask is taught by a crate",
+   "evidence": "GR 4-2 (21); LP1 1:47:35-1:47:43",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "just right of C2",
+   "composition": {
+    "unknown": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "DETOUR",
+    "COUNT-TRAP"
+   ],
+   "why": "crates behind the checkpoint's sight line",
+   "evidence": "GR 4-2 (23)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "floating column right of the plank ledges, before the rope swing",
+   "composition": {
+    "fire": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "COLUMN: fire, fire over ?",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "DETOUR",
+    "HIGH",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "flame-venting crates guard a ? crate off the main ledge line",
+   "evidence": "GR 4-2 (26); LP1 1:47:48-1:47:52 (fruit 136->146)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "whirlwind run through the gong alcoves to C3",
+   "composition": {
+    "reinforced": 2,
+    "unknown": 22,
+    "checkpoint": 1
+   },
+   "count": 25,
+   "arrangement": "groups on ledges and walkways; X-frame crates on the left",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "ENEMY-LINK",
+    "CHECKPOINT"
+   ],
+   "why": "whirlwind smashes crates while the player must still dodge the monks' gong shockwaves",
+   "evidence": "GR 4-2 (51); LP1 1:48:00-1:48:12",
+   "confidence": "low"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "raised ledge under the gateway arch, then stair with guardian lions",
+   "composition": {
+    "tnt": 3,
+    "unknown": 5
+   },
+   "count": 8,
+   "arrangement": "ROW of 3 TNT, then groups",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "ENEMY-LINK"
+   ],
+   "why": "a TNT row on the line of travel: light one and all three chain; three lion 'golems' guard the stair crates",
+   "evidence": "LP1 1:48:14-1:48:26; GR 4-2 (59)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "left side while climbing the dragon wall",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "DETOUR",
+    "HIGH",
+    "TIMED"
+   ],
+   "why": "off-line crates timed against the dragons' sweeps",
+   "evidence": "GR 4-2 (62); LP1 1:48:28-1:48:44",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "top of the dragon wall",
+   "composition": {
+    "bounceWumpa": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "REWARD"
+   ],
+   "why": "GR's golden fruit crate: hit it with the whirlwind before the long jump to the background wall",
+   "evidence": "GR 4-2 (63)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "shrine before the lift",
+   "composition": {
+    "unknown": 3,
+    "checkpoint": 1
+   },
+   "count": 4,
+   "arrangement": "group + C",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "CHECKPOINT"
+   ],
+   "why": "reward/save before the lift",
+   "evidence": "GR 4-2 (67); LP1 1:48:58-1:49:04",
+   "confidence": "medium"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 1,
+   "where": "floating above the top of the lift",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "AKU",
+    "HIGH"
+   ],
+   "why": "mask before the dragon balcony",
+   "evidence": "GR 4-2 (68); LP1 1:49:06-1:49:10",
+   "confidence": "medium"
+  },
+  {
+   "id": "S5-b",
+   "section": "S5",
+   "order": 2,
+   "where": "balcony and ledges to C5 beside the bonus pad",
+   "composition": {
+    "unknown": 14,
+    "checkpoint": 1
+   },
+   "count": 15,
+   "arrangement": "groups on ledges",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "CHECKPOINT",
+    "BONUS"
+   ],
+   "why": "C5 placed next to the bonus pad (broken after the bonus in the run)",
+   "evidence": "GR 4-2 (83); LP1 1:49:12-1:49:34, HUD 79 at 1:49:18",
+   "confidence": "low"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 1,
+   "where": "first gap of the bonus",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "TEACH"
+   ],
+   "why": "first bonus crate floats over the gap: hover with the whirlwind",
+   "evidence": "LP1 1:49:38-1:49:43 (1/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 2,
+   "where": "first tower ledge",
+   "composition": {
+    "unknown": 2
+   },
+   "count": 2,
+   "arrangement": "pair beside a TNT and a Nitro stack",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "collectibles next to explosives",
+   "evidence": "LP1 1:49:45 (3/22)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 3,
+   "where": "first tower ledge",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "TIMED"
+   ],
+   "why": "lit and escaped",
+   "evidence": "LP1 1:49:48-1:49:50 (fuse '2'; 4/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 4,
+   "where": "second tower and posts",
+   "composition": {
+    "question": 1,
+    "unknown": 2
+   },
+   "count": 3,
+   "arrangement": "singles on posts",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "HIGH"
+   ],
+   "why": "post-top crates between dragon sweeps",
+   "evidence": "LP1 1:49:48-1:49:52 (7/22)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 5,
+   "where": "cloud platform",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "TIMED"
+   ],
+   "why": "on the moving cloud",
+   "evidence": "LP1 1:49:53 (8/22)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-f",
+   "section": "B",
+   "order": 6,
+   "where": "beyond the cloud",
+   "composition": {
+    "unknown": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "",
+   "evidence": "LP1 1:50:01 (10/22)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-g",
+   "section": "B",
+   "order": 7,
+   "where": "last tower",
+   "composition": {
+    "unknown": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "",
+   "evidence": "LP1 1:50:04 (12/22)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-h",
+   "section": "B",
+   "order": 8,
+   "where": "Nitro blocks on ledges throughout the bonus",
+   "composition": {
+    "nitro": 9
+   },
+   "count": 9,
+   "arrangement": "2x2 and 3x2 Nitro blocks, detonated by a green ! at the end",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "NITRO-SWITCH",
+    "BONUS",
+    "REWARD"
+   ],
+   "why": "the Nitro walls are obstacles first and 9 crates last: one switch pays them all (12 -> 21)",
+   "evidence": "LP1 1:49:46-1:49:58 (blocks), 1:50:06-07 (12->21/22)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-i",
+   "section": "B",
+   "order": 9,
+   "where": "bonus exit",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "the last crate after the switch",
+   "evidence": "LP1 1:50:10 (22/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S6-a",
+   "section": "S6",
+   "order": 1,
+   "where": "secret path behind the wall, entered past the lion in the archway",
+   "composition": {
+    "unknown": 12
+   },
+   "count": 12,
+   "arrangement": "groups along a hidden walkway",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "secret",
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "HIDDEN",
+    "ROUTE-SPLIT",
+    "COUNT-TRAP"
+   ],
+   "why": "the level's biggest count trap: 12 crates and the hidden gem behind scenery",
+   "evidence": "GR 4-2 (117); LP1 1:50:28-1:50:44 (HIDDEN GEM FOUND 1:50:36)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S6-b",
+   "section": "S6",
+   "order": 2,
+   "where": "gold-band ledges and rooftop to the gauntlet, incl. checkpoint(s)",
+   "composition": {
+    "question": 1,
+    "unknown": 6,
+    "checkpoint": 1
+   },
+   "count": 8,
+   "arrangement": "groups on ledges/rooftop",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "CHECKPOINT"
+   ],
+   "why": "GR 125 lists checkpoint crates (plural); one C counted here",
+   "evidence": "GR 4-2 (125); LP1 1:50:46-1:51:00",
+   "confidence": "low"
+  },
+  {
+   "id": "S7-a",
+   "section": "S7",
+   "order": 1,
+   "where": "floating past the gong trap",
+   "composition": {
+    "tnt": 4
+   },
+   "count": 4,
+   "arrangement": "ROW of 4 floating TNT",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "TIMED",
+    "COUNT-TRAP"
+   ],
+   "why": "GR: drop the whirlwind (regular Crash) and set one off - the spin would carry you into the chain",
+   "evidence": "GR 4-2 (129)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-b",
+   "section": "S7",
+   "order": 2,
+   "where": "alcove with a lion",
+   "composition": {
+    "unknown": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIDDEN",
+    "ENEMY-LINK",
+    "COUNT-TRAP"
+   ],
+   "why": "crate tucked into an enemy's alcove",
+   "evidence": "GR 4-2 (130); LP1 1:51:08-1:51:14",
+   "confidence": "medium"
+  },
+  {
+   "id": "S7-c",
+   "section": "S7",
+   "order": 3,
+   "where": "red pagoda balcony",
+   "composition": {
+    "question": 2,
+    "checkpoint": 1,
+    "unknown": 1
+   },
+   "count": 4,
+   "arrangement": "ROW ? ? C with a crate above",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "ROW"
+   ],
+   "why": "last save with a reward row",
+   "evidence": "GR 4-2 (134); LP1 1:51:30-1:51:36",
+   "confidence": "high"
+  },
+  {
+   "id": "S7-d",
+   "section": "S7",
+   "order": 4,
+   "where": "wall ledges after the pagoda",
+   "composition": {
+    "tnt": 2
+   },
+   "count": 2,
+   "arrangement": "one floating TNT, one TNT on a ledge",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "GR: don't miss them - explosives count",
+   "evidence": "GR 4-2 (136); LP1 1:51:42-1:51:46",
+   "confidence": "high"
+  },
+  {
+   "id": "S7-e",
+   "section": "S7",
+   "order": 5,
+   "where": "top of the last wall before two lions and the exit",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "ENEMY-LINK"
+   ],
+   "why": "closing crates guarded by two lions",
+   "evidence": "GR 4-2 (139); LP1 1:51:54-1:51:58",
+   "confidence": "low"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S2-S7",
+   "kind": "gong monks (spectral monk strikes a gong; ring shockwave)",
+   "count": null,
+   "where": "arched alcoves in the tower walls",
+   "role": "timed pushback hazard beside crate ledges"
+  },
+  {
+   "section": "S4-S7",
+   "kind": "guardian lions (GR 'golems')",
+   "count": null,
+   "where": "stairs, archways, alcoves",
+   "role": "whirlwind targets; guard crate groups and the secret path"
+  },
+  {
+   "section": "S4-S7, B",
+   "kind": "spectral dragons",
+   "count": null,
+   "where": "sweep across tower walls in fixed arcs",
+   "role": "timed hazard on the 2D wall climbs"
+  },
+  {
+   "section": "S2, S3",
+   "kind": "fire crates",
+   "count": 3,
+   "where": "floating beside the climb",
+   "role": "hazard crates stacked over collectibles"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S2-S7",
+   "kind": "open sky beside the tower",
+   "where": "2D wall climbs",
+   "crates": [
+    "S2-b",
+    "S3-b",
+    "S4-b",
+    "S7-a"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-a",
+    "S1-b"
+   ],
+   "summary": "opening TNT column next to wood columns",
+   "solution": "break the wood columns, stomp the TNT, step back",
+   "wrongOrder": "spin the TNT",
+   "loss": "a life"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-a"
+   ],
+   "summary": "TNT under two floating crates",
+   "solution": "stomp TNT, bounce up into both crates before the fuse ends",
+   "wrongOrder": "ignore the TNT or light it and leave",
+   "loss": "2 crates"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "B-h"
+   ],
+   "summary": "bonus Nitro walls",
+   "solution": "route around them; the green ! at the end pays 9",
+   "wrongOrder": "touch a Nitro",
+   "loss": "bonus attempt"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S7-a"
+   ],
+   "summary": "four floating TNT past a gong trap",
+   "solution": "switch the whirlwind off and light one",
+   "wrongOrder": "spin through",
+   "loss": "a life or 4 crates"
+  }
+ ],
+ "observations": [
+  "There are no grind rails: the 'dragon' is a sweeping hazard and the linear structures are plank ledges, gold-band ledges and ropes.",
+  "Whirlwind (Akano) defines HIGH: floating crates sit on hover arcs a normal jump cannot reach.",
+  "TNT is taught in the first 10 seconds (S1-a) and re-tested as a bounce tool (S2-a) and a chain (S4-a, S7-a).",
+  "Blue gem: finish without breaking any crate (checkpoints, TNT and Nitro included) - GR."
+ ]
+}

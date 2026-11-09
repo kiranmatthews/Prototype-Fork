@@ -1,0 +1,930 @@
+{
+ "id": "c3-01-toad-village",
+ "game": "Crash 3",
+ "stage": 1,
+ "name": "Toad Village",
+ "japaneseTitle": "ケロッパの じょうかまち",
+ "sources": [
+  "F3 p013-p014",
+  "F3 p019L",
+  "F3 p101L",
+  "F3 p006L",
+  "F3 p005R",
+  "F3 p011",
+  "P3 p004R-p005L",
+  "gamepressure N. Sane Toad Village page"
+ ],
+ "camera": "into-screen (gently curving road between runnable low walls)",
+ "totalBoxes": 42,
+ "totalSource": "F3 map cluster sum; reproduces F3 C1 12 and C2 32 (incl. 7 bonus); gamepressure 'destroy all 42 crates'",
+ "countingRule": "F3 cumulative counts include the checkpoint crate and the bonus-round boxes (F3 p005R legend + arithmetic)",
+ "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = Aku crate in time trial (F3 p005R legend). Drawn icon = normal-mode type",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 35,
+   "basis": "S1 12 + S2 13 + S3 10"
+  },
+  {
+   "id": "bonus",
+   "boxes": 7,
+   "basis": "F3 p019L header boxes x7 (1 of them a 1UP)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 12,
+   "cumulative": 12,
+   "notes": "tutorial strip: edge pair, striped sandwich, pond, first mask, 2x2 block"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 13,
+   "cumulative": 32,
+   "notes": "slot crate right after C1, 3-stack at a frog pond, knight, mask on bridge 1, bonus pad, 6-block in frog pond 1; cumulative includes the bonus"
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "? pad after stone bridge 1",
+   "to": "same spot",
+   "boxes": 7,
+   "cumulative": null,
+   "notes": "side-view walkway; only the opening steps can kill"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "goal",
+   "boxes": 10,
+   "cumulative": 42,
+   "notes": "row of three at frog pond 2, mixed 2x2, knight, crystal on bridge 2, slot pair at the gate"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first stretch after the stopwatch, left edge of the road",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "near-start",
+    "paired-with:S1-b"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TEACH"
+   ],
+   "why": "first box; set at the edge so the player learns the road is wider than the line of travel",
+   "evidence": "F3 p013L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "abreast of S1-a on the right edge",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "near-start",
+    "paired-with:S1-a"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TEACH"
+   ],
+   "why": "across the road from S1-a: getting both forces one full-width sweep",
+   "evidence": "F3 p013L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "after the first road-edge pits, right side",
+   "composition": {
+    "striped": 2
+   },
+   "count": 2,
+   "arrangement": "sandwich",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "pits-before"
+   ],
+   "tags": [
+    "SANDWICH",
+    "TEACH",
+    "REWARD",
+    "SUPPORT-ORDER",
+    "COUNT-TRAP"
+   ],
+   "why": "stand between and jump: 20 fruit; breaking the lower one first strands the upper (gamepressure) - first breaking-order lesson",
+   "evidence": "F3 p013L callout 1; gamepressure TV",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "just before the first plank bridge",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "before-plank"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "third striped box in a row reinforces bounce-on-these on safe ground",
+   "evidence": "F3 p013L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "after the plank and the first goat",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:goat"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "ENEMY-LINK"
+   ],
+   "why": "reward just past the first walking enemy",
+   "evidence": "F3 p013L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "far bank of the big wading pond (page gutter)",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-pond",
+    "before-pits"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "first mask before the pit stretch and C1; pits still kill with a mask (F3 intro)",
+   "evidence": "F3 p013R zoom",
+   "confidence": "high",
+   "ttBadges": {
+    "A": 1
+   }
+  },
+  {
+   "id": "S1-g",
+   "section": "S1",
+   "order": 7,
+   "where": "right edge after the Aku, before the last pit of S1",
+   "composition": {
+    "wood": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "grid",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "before-pit"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "first multi-crate block and first time crate; TT tip 3: small jump-spin takes only the top 2-s crate (target 0:19:00)",
+   "evidence": "F3 p013R zoom x3; F3 TA3",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S1-C",
+   "section": "S1",
+   "order": 8,
+   "where": "after the pit, start of the next straight",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C1, cumulative 12",
+   "evidence": "F3 p013R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "a few steps past C1, a goat in between",
+   "composition": {
+    "slot": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "after:C1",
+    "enemy:goat"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "LIFE",
+    "CHECKPOINT",
+    "COUNT-TRAP"
+   ],
+   "why": "dawdle at the C box and it turns to steel (F3 advice 2, P3 s3); punishes the pause players take at checkpoints",
+   "evidence": "F3 p013R callout 2; P3 p004R s3",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "after two plank bridges and the first frog pond",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "stack",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "enemy:frog-pond"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "ENEMY-LINK",
+    "TIME-TRIAL"
+   ],
+   "why": "a knocked-out monster flies and breaks boxes (F3 advice 3); top 2-s crate needs a dashing big jump in TT",
+   "evidence": "F3 p013R zoom; F3 TA4; F3 p101L fr.15",
+   "confidence": "high",
+   "ttBadges": {
+    "2": 1
+   }
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "just after the stack, before the first knight",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:knight"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "bait that draws the player into the knight's swing zone",
+   "evidence": "F3 p013R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "on stone bridge 1, after the knight",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after:knight",
+    "bridge"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "second mask, reward for passing the knight and insurance for ponds and knight 2",
+   "evidence": "F3 p013R zoom; P3 p004R s2",
+   "confidence": "high",
+   "ttBadges": {
+    "A": 1
+   }
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "first long walkway after the step gaps",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "REWARD",
+    "TEACH"
+   ],
+   "why": "jump on it for 10 fruit instead of spinning (F3 hint)",
+   "evidence": "F3 p019L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "middle of the walkway",
+   "composition": {
+    "wood": 1,
+    "life": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "bonus"
+   ],
+   "relations": [
+    "under:B-c"
+   ],
+   "tags": [
+    "BONUS",
+    "LIFE"
+   ],
+   "why": "the round's 1UP at walking height",
+   "evidence": "F3 p019L zoom; P3 p005L s8-s9",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "directly above B-b, one crate-gap up",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce",
+    "bonus"
+   ],
+   "relations": [
+    "over:B-b"
+   ],
+   "tags": [
+    "BONUS",
+    "HIGH",
+    "SANDWICH"
+   ],
+   "why": "floating crate over the pair, reached by a jump or a bounce",
+   "evidence": "F3 p019L zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "further along, 2-3 crates above the walkway",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "HIGH"
+   ],
+   "why": "only crate in the level needing a deliberate high jump",
+   "evidence": "F3 p019L zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 5,
+   "where": "on the walkway before the last step",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "ON-PATH"
+   ],
+   "why": "plain pick-up",
+   "evidence": "F3 p019L",
+   "confidence": "high"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 6,
+   "where": "on the raised last step before the exit pad",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "ON-PATH"
+   ],
+   "why": "last box before the exit",
+   "evidence": "F3 p019L",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "in frog pond 1, after the bonus pad, a plank and a goat",
+   "composition": {
+    "wood": 4,
+    "question": 1,
+    "striped": 1
+   },
+   "count": 6,
+   "arrangement": "wall",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "slide",
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "enemy:frog-pond",
+    "striped-on-top"
+   ],
+   "tags": [
+    "ON-PATH",
+    "WALL",
+    "GRID",
+    "SUPPORT-ORDER",
+    "ENEMY-LINK",
+    "TIME-TRIAL"
+   ],
+   "why": "3 wide x 2 high, striped on top: slide from a distance so it drops intact (F3 advice 5); three 1-s crates, one spin at the centre takes three (TT fr.20)",
+   "evidence": "F3 p014L zoom; F3 p014R callout 5; F3 p101L fr.20",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 3
+   }
+  },
+  {
+   "id": "S2-C",
+   "section": "S2",
+   "order": 6,
+   "where": "after the plank following frog pond 1",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C2, cumulative 32 including the 7 bonus boxes",
+   "evidence": "F3 p014L",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "frog pond 2, right after C2",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "enemy-bounce"
+   ],
+   "relations": [
+    "after:C2",
+    "enemy:frog-pond"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "ENEMY-LINK",
+    "TIME-TRIAL"
+   ],
+   "why": "spin the middle and all three break (TA5, target 0:34:00); record line flings the frog into the left one then jump-spins the rest onto the right wall - hardest spot (TT fr.21-22)",
+   "evidence": "F3 p014L zoom; F3 TA5; F3 p101L fr.21-22; P3 p005L s11",
+   "confidence": "high",
+   "ttBadges": {
+    "1": 3
+   }
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "after the pond, before the second knight",
+   "composition": {
+    "question": 2,
+    "wood": 1,
+    "striped": 1
+   },
+   "count": 4,
+   "arrangement": "grid",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before:knight"
+   ],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "SUPPORT-ORDER"
+   ],
+   "why": "2x2 footprint with the striped at the back right: don't spin carelessly (F3 advice 6)",
+   "evidence": "F3 p014R zoom; callout 6",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "after the crystal bridge, between two goats",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:goat"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "last ordinary box",
+   "evidence": "F3 p014R",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "after the last pond, in front of the castle gate",
+   "composition": {
+    "slot": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "before:goal"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "COUNT-TRAP",
+    "LIFE"
+   ],
+   "why": "take both fast or the gem is lost (F3 advice 7); 'the last two crates' (P3 s6); record line threads between them (TT fr.30)",
+   "evidence": "F3 p014R callout 7; P3 p004R s6; F3 p101L fr.30",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "goat",
+   "count": 1,
+   "where": "after the first plank",
+   "role": "first walking enemy, guards S1-e"
+  },
+  {
+   "section": "S2",
+   "kind": "goat",
+   "count": 1,
+   "where": "between C1 and the slot crate",
+   "role": "eats the slot crate's time window"
+  },
+  {
+   "section": "S2",
+   "kind": "frog",
+   "count": 2,
+   "where": "pond before the 3-stack; frog pond 1 at the 6-block",
+   "role": "projectile for the crate groups (F3 advice 3)"
+  },
+  {
+   "section": "S2",
+   "kind": "knight (berserker lab assistant)",
+   "count": 1,
+   "where": "before stone bridge 1",
+   "role": "main threat; spin from behind after the sword sticks (P3 s4)"
+  },
+  {
+   "section": "S2",
+   "kind": "goat",
+   "count": 1,
+   "where": "after the bonus pad",
+   "role": "escort to frog pond 1"
+  },
+  {
+   "section": "S3",
+   "kind": "frog",
+   "count": 1,
+   "where": "frog pond 2 at the row of three",
+   "role": "TT projectile for the left box"
+  },
+  {
+   "section": "S3",
+   "kind": "knight (berserker lab assistant)",
+   "count": 1,
+   "where": "after S3-b, before the crystal bridge",
+   "role": "guards the crystal"
+  },
+  {
+   "section": "S3",
+   "kind": "goat",
+   "count": 2,
+   "where": "either side of S3-c",
+   "role": "escort the last ordinary box"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "road-edge pits",
+   "where": "right edge before S1-c and before C1",
+   "crates": [
+    "S1-b",
+    "S1-g"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "wading pond (slows running)",
+   "where": "page gutter before S1-f",
+   "crates": [
+    "S1-f"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "trenches with plank bridges",
+   "where": "two after the slot crate, one after the bonus pad, one before C2",
+   "crates": [
+    "S2-b",
+    "S2-e"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "frog ponds",
+   "where": "before S2-b; frog pond 1 at S2-e",
+   "crates": [
+    "S2-b",
+    "S2-e"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "frog pond / last pond",
+   "where": "at S3-a; before the gate",
+   "crates": [
+    "S3-a",
+    "S3-d"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-c"
+   ],
+   "summary": "striped crate floating above a striped crate",
+   "solution": "stand between and keep jumping: 5 hits each, 20 fruit",
+   "wrongOrder": "spin the lower crate first",
+   "loss": "fruit; per gamepressure the upper crate becomes unreachable (all-box lost)"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-a"
+   ],
+   "summary": "slot crate a few steps past C1",
+   "solution": "keep moving, break it on the Crash face (life) before it turns steel",
+   "wrongOrder": "linger at C1 or fight the goat slowly",
+   "loss": "one box -> no clear gem"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S2-b",
+    "S2-e",
+    "S3-a"
+   ],
+   "summary": "every frog pond borders a crate group",
+   "solution": "spin the frog so it flies into the crates (optional; required trick in TT)",
+   "wrongOrder": "none - optional shortcut",
+   "loss": "time only"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S2-e",
+    "S3-b",
+    "B-a"
+   ],
+   "summary": "striped crate on top of / behind plain crates",
+   "solution": "slide the bottom row from a distance; avoid spinning the striped; jump on the bonus striped",
+   "wrongOrder": "spin attack",
+   "loss": "fruit only"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S3-d"
+   ],
+   "summary": "two slot crates at the goal gate",
+   "solution": "break both quickly",
+   "wrongOrder": "relax before the gate",
+   "loss": "two boxes -> no clear gem"
+  }
+ ],
+ "observations": [
+  "Flat density, no detours: 35 main-road boxes in groups of 1-6; all-box differs from clear only by the bonus (17%) and three slot crates.",
+  "Each idea appears once alone before it is combined: single, edge pair, sandwich, striped single, enemy, pond, mask, 2x2 block, checkpoint, timed crate.",
+  "Slot crates sit right after C1 and right before the goal - the two places players pause.",
+  "Both masks precede the next enemy cluster; pits are fatal regardless (F3 intro).",
+  "Every frog pond holds or borders a crate group: slowing water, enemy and reward share one spot.",
+  "Four separate striped-crate payout warnings in one stage: the series teaches that how you break a crate matters.",
+  "Main-road crates per section 12/13/10; the bonus inflates C2 to 32.",
+  "Time crates (10 s) sit on block tops, stack tops, inside the 6-block and in the row: the trial tests vertical precision; walls give the fast line."
+ ]
+}

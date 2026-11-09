@@ -1,0 +1,1406 @@
+{
+ "id": "c3-09-tomb-time",
+ "game": "Crash 3",
+ "stage": 9,
+ "name": "Tomb Time",
+ "japaneseTitle": "ピラミッド けんせつちゅう",
+ "sources": [
+  "F3 p068-p070",
+  "F3 p080L",
+  "F3 p105L",
+  "F3 p011",
+  "P3 p017-p018"
+ ],
+ "camera": "into-screen (right-angle zig-zag corridor)",
+ "totalBoxes": 98,
+ "totalSource": "F3 map cluster sum; reproduces F3 checkpoint counts C1 17, C2 52 (incl. 19 bonus), C3 82 (F3 purple-first route)",
+ "totalConflict": {
+  "value": 95,
+  "source": "P3 p017L shot 49 HUD 75/95; P3 text: 20 boxes missed until the purple gem",
+  "note": "unresolved; map gives 25 behind the fork (21 if P-a stands before the door)"
+ },
+ "countingRule": "F3 cumulative counts include the checkpoint crate and the bonus-round boxes; steel ! blocks are listed as clusters with count 0 (not boxes)",
+ "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 54,
+   "basis": "S1+S2+left-fork Aku+right course S3+S4"
+  },
+  {
+   "id": "bonus",
+   "boxes": 19,
+   "basis": "F3 p080L header boxes x19"
+  },
+  {
+   "id": "gem-purple",
+   "boxes": 25,
+   "basis": "F3 p069 map; 19 crates + 6 outline (2x3 inferred)"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "none"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 17,
+   "cumulative": 17,
+   "notes": "12-crate wall dominates; tar slide-dash and floor-button door taught"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 16,
+   "cumulative": 52,
+   "notes": "cumulative includes the 19 bonus boxes; scarab drop-floor, ! pad, pot enemies, light beams, double doors"
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S2-b tile",
+   "to": "S2",
+   "boxes": 19,
+   "cumulative": null,
+   "notes": "TNT starter, ? stepping row, 4-stack TNT drop puzzle, life ledge"
+  },
+  {
+   "id": "FORK",
+   "route": "main",
+   "from": "C2",
+   "to": "purple door",
+   "boxes": 1,
+   "cumulative": null,
+   "notes": "Aku crate on the left fork, reachable without the gem"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 16,
+   "cumulative": 82,
+   "notes": "forward cumulative would be 68/69; F3's 82 is on its purple-first route"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 4,
+   "cumulative": null,
+   "notes": "two floating ? over the tar slide, crystal, junction, final ! pads"
+  },
+  {
+   "id": "PURPLE",
+   "route": "gem-purple",
+   "from": "purple door",
+   "to": "junction before S4-d",
+   "boxes": 25,
+   "cumulative": null,
+   "notes": "needs purple gem; ! #1 outline bridge; ! #2 exit pads; secret clear gem near the end"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "just past the start and the time-trial stopwatch, beside the path",
+   "composition": {
+    "wood": 10,
+    "question": 2
+   },
+   "count": 12,
+   "arrangement": "wall/grid, front face 4 wide x 3 high, two ? on the top row",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "near-start",
+    "before-stopwatch"
+   ],
+   "tags": [
+    "ON-PATH",
+    "WALL",
+    "GRID",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "free 12-crate deposit at the start; in time trial break it before touching the stopwatch and start the clock with the bazooka from beyond",
+   "evidence": "F3 p068L zoom (descreened); count = C1 17 - 5; P3 p018R s68",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "far side of the first tar floor, beside the green guard",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:green-guard",
+    "after-tar"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "ENEMY-LINK"
+   ],
+   "why": "spin guard and box together; checks the tar slide-dash taught by POINT 1",
+   "evidence": "F3 p068L",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "raised path after the floor button and the two pillars (door)",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "spread triangle (two W above, ? below); r1 on a W, A on the ?",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump"
+   ],
+   "relations": [
+    "after-floor-switch-door"
+   ],
+   "tags": [
+    "ON-PATH",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "pay-off for the first floor-button door; TT first 1-s crate and first mask (target 0:10:00)",
+   "evidence": "F3 p068L zoom; P3 p018R s69",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-C",
+   "section": "S1",
+   "order": 4,
+   "where": "junction after two tall blocks, before the scarab floor",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C1, cumulative 17",
+   "evidence": "F3 p068R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "first framed (solid) tile at the start of the scarab drop-floor",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair side by side",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "safe-tile",
+    "drop-tiles"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TEACH",
+    "TIMED"
+   ],
+   "why": "marks the framed tiles as safe standing spots before the red scarab tiles that drop",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "framed corner tile mid scarab floor, sharing the tile with the bonus entrance",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "safe-tile",
+    "bonus-entrance"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TIMED",
+    "BONUS"
+   ],
+   "why": "second rest stop; whoever pauses for crates finds the bonus pad",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "end framed tile of the scarab floor beside a green pad",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "moves-platform"
+   ],
+   "tags": [
+    "SWITCH",
+    "TEACH"
+   ],
+   "why": "first Egypt ! that moves machinery (starts the pad to the stairs); steel, not counted",
+   "evidence": "F3 p068R zoom; P3 p017L s54",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "top of the stairs past four lab assistants in pots",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:pot-assistants"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "ENEMY-LINK"
+   ],
+   "why": "reward for clearing the pot enemies",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "after the switch operator's block beside the tar pit",
+   "composition": {
+    "striped": 2,
+    "aku": 1
+   },
+   "count": 3,
+   "arrangement": "sandwich: striped floating above striped, Aku beside",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "bounce",
+    "walk"
+   ],
+   "relations": [
+    "before-light-corridor"
+   ],
+   "tags": [
+    "SANDWICH",
+    "AKU",
+    "REWARD",
+    "TIME-TRIAL"
+   ],
+   "why": "mask before the dart/crusher corridor; striped pair pays per bounce; TT second mask",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 6,
+   "where": "ceiling-light (poison dart) corridor",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "spread triangle, r1 on one",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump"
+   ],
+   "relations": [
+    "hazard:light-beams"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "the one cluster inside a hazard's firing line: move between beams or slide under them (TT3)",
+   "evidence": "F3 p068R zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-g",
+   "section": "S2",
+   "order": 7,
+   "where": "upper corridor before the double doors",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "row running diagonally; A on the first, b2 on the last",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "tar-long-jump-landing"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "TIME-TRIAL"
+   ],
+   "why": "normal: pacing row; TT: land a tar long jump on the A crate (third mask) and the invincible hitbox also breaks the 2-s crate",
+   "evidence": "F3 p068R zoom; F3 p105L frames 16,19; P3 s71",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-h",
+   "section": "S2",
+   "order": 8,
+   "where": "just before C2, after the two consecutive doors",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-double-doors"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "reward for the double-door timing (POINT 4)",
+   "evidence": "F3 p068R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-C",
+   "section": "S2",
+   "order": 9,
+   "where": "route branch",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "branch"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C2 at the fork, cumulative 52 incl. bonus",
+   "evidence": "F3 p068R",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "first platform",
+   "composition": {
+    "tnt": 3
+   },
+   "count": 3,
+   "arrangement": "single + pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX",
+    "TEACH"
+   ],
+   "why": "starter TNT: stomp and move away",
+   "evidence": "F3 p080L; P3 p018L s65",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "second platform / gap",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "row used as stepping stones",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "ROW",
+    "STEPPING"
+   ],
+   "why": "one-two-three bounces across",
+   "evidence": "F3 p080L; P3 s66",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "third platform",
+   "composition": {
+    "tnt": 3
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "TNT row before the climb",
+   "evidence": "F3 p080L",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "first step",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "pyramid",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS",
+    "PYRAMID"
+   ],
+   "why": "simple stack on the way up",
+   "evidence": "F3 p080L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 5,
+   "where": "top step below the high ledge",
+   "composition": {
+    "question": 1,
+    "wood": 2,
+    "tnt": 1
+   },
+   "count": 4,
+   "arrangement": "stack of 4 (bottom->top ?, W, TNT, W)",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "bonus"
+   ],
+   "relations": [
+    "ledge-with-life"
+   ],
+   "tags": [
+    "BONUS",
+    "STACK",
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "TOOL"
+   ],
+   "why": "spin the bottom two; the falling TNT lights; jump from the top W to the ledge before it blows",
+   "evidence": "F3 p080L hint; P3 s67",
+   "confidence": "high"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 6,
+   "where": "high ledge and beneath it",
+   "composition": {
+    "life": 1,
+    "striped": 2
+   },
+   "count": 3,
+   "arrangement": "life on the ledge; striped floating above striped underneath",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce",
+    "bonus"
+   ],
+   "relations": [
+    "needs-B-e"
+   ],
+   "tags": [
+    "BONUS",
+    "LIFE",
+    "SANDWICH",
+    "REWARD"
+   ],
+   "why": "life reachable only through the B-e timing trick",
+   "evidence": "F3 p080L",
+   "confidence": "high"
+  },
+  {
+   "id": "F-a",
+   "section": "FORK",
+   "order": 1,
+   "where": "left fork just past C2, before the chasm and purple-gem door",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "purple-door"
+   ],
+   "tags": [
+    "DETOUR",
+    "AKU",
+    "COUNT-TRAP"
+   ],
+   "why": "bait toward the locked door; TT advice: ignore it, right fork is faster",
+   "evidence": "F3 p068R zoom; P3 p018R",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "start of the right fork",
+   "composition": {
+    "question": 1,
+    "wood": 1,
+    "striped": 2
+   },
+   "count": 4,
+   "arrangement": "loose diamond: striped above striped, ? (r1) left, W low",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "jump",
+    "bounce"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "opens the right course; striped pair doubles as a bounce perch",
+   "evidence": "F3 p068R zoom (descreened)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "after the first timed door / extending floor",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-floor-switch-door"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "TIMED"
+   ],
+   "why": "reward behind the door + floor-button puzzle (POINT 5)",
+   "evidence": "F3 p070L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "same corridor a little further",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing box before the second button",
+   "evidence": "F3 p070L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "beyond the second button, near the falling pillars and moving platforms",
+   "composition": {
+    "wood": 1,
+    "life": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2, 1UP on top (b2)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "after-moving-platforms",
+    "after-falling-pillars"
+   ],
+   "tags": [
+    "STACK",
+    "LIFE",
+    "REWARD",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "only main-route life, after the hardest timing section",
+   "evidence": "F3 p070L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "floor at the foot of the stairs",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "row side by side (one r1)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "ROW"
+   ],
+   "why": "pacing row; target 0:50:00 printed here",
+   "evidence": "F3 p070R zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "top of the stairs before C3",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "stack of 2 (? on W)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "last pair before the checkpoint",
+   "evidence": "F3 p070R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-C",
+   "section": "S3",
+   "order": 7,
+   "where": "top of the stairs",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "C3, printed 82 (F3 purple-first route)",
+   "evidence": "F3 p070R",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "high above the tar slide",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "tar-slide",
+    "switch-operator"
+   ],
+   "tags": [
+    "HIGH",
+    "FLOAT-LINE",
+    "COUNT-TRAP"
+   ],
+   "why": "slope momentum carries you past; kill the operator then come back (P3 s63)",
+   "evidence": "F3 p070R zoom; P3 p018L s63",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "further up the slide",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating (g3)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "tar-slide"
+   ],
+   "tags": [
+    "HIGH",
+    "COUNT-TRAP",
+    "TIME-TRIAL"
+   ],
+   "why": "TT: out of reach except with the invincible hitbox on a long jump (TT5)",
+   "evidence": "F3 p070R; F3 p105L frame 25",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "corridor after the switch operators",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "enemy:red-cobra"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "TT: jump the red cobra and land on it",
+   "evidence": "F3 p070R zoom; F3 p105L frame 28",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "framed tile at the cobra junction",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "route-junction"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "last box before the crystal and final !",
+   "evidence": "F3 p070R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "after the crystal, before the goal pads",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "moves-platform"
+   ],
+   "tags": [
+    "SWITCH"
+   ],
+   "why": "starts three pads (right, left, far) to the goal stairs (POINT 8); not counted",
+   "evidence": "F3 p070R; F3 p105L frames 29-31",
+   "confidence": "high"
+  },
+  {
+   "id": "P-a",
+   "section": "PURPLE",
+   "order": 1,
+   "where": "first corridor behind the purple door",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "two 2-stacks side by side, staggered (b2 on one)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "gem-path"
+   ],
+   "relations": [
+    "purple-door"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "STACK",
+    "BLUE-GEM"
+   ],
+   "why": "immediate pay-off for bringing the gem",
+   "evidence": "F3 p069L zoom (descreened)",
+   "confidence": "high"
+  },
+  {
+   "id": "P-b",
+   "section": "PURPLE",
+   "order": 2,
+   "where": "poison-light pit (POINT A)",
+   "composition": {
+    "question": 4
+   },
+   "count": 4,
+   "arrangement": "grid 2x2",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [
+    "hazard:light-beams"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "GRID",
+    "TIMED"
+   ],
+   "why": "inside the dart hazard zone; don't stop",
+   "evidence": "F3 p069L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "P-c",
+   "section": "PURPLE",
+   "order": 3,
+   "where": "below the stair top",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ROW"
+   ],
+   "why": "pacing after spears + tar",
+   "evidence": "F3 p069L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "P-d",
+   "section": "PURPLE",
+   "order": 4,
+   "where": "above the path at the stair top by the flamethrower worker",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "stepped row (two r1)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "gem-path"
+   ],
+   "relations": [
+    "enemy:flamethrower-worker"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ENEMY-LINK",
+    "HIGH"
+   ],
+   "why": "taken while dodging the flamethrower (POINT C)",
+   "evidence": "F3 p069L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "P-e",
+   "section": "PURPLE",
+   "order": 5,
+   "where": "further along the upper corridor",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "PAIR"
+   ],
+   "why": "pacing",
+   "evidence": "F3 p069L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-f",
+   "section": "PURPLE",
+   "order": 6,
+   "where": "end of the raised walkway",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "outline:P-g"
+   ],
+   "tags": [
+    "SWITCH",
+    "OUTLINE"
+   ],
+   "why": "materialises the outline bridge; not counted",
+   "evidence": "F3 p069R; P3 p018L CAUTION",
+   "confidence": "high"
+  },
+  {
+   "id": "P-g",
+   "section": "PURPLE",
+   "order": 7,
+   "where": "gap between the walkway and the paddle platform (spikes drawn through it)",
+   "composition": {
+    "outline": 6
+   },
+   "count": 6,
+   "arrangement": "2x3 bridge of outline crates",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "switch",
+    "walk",
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "needs-P-f"
+   ],
+   "tags": [
+    "OUTLINE",
+    "SWITCH",
+    "BRIDGE",
+    "SUPPORT-ORDER"
+   ],
+   "why": "the crossing is made of crates that must also be broken",
+   "evidence": "F3 p069R zoom (descreened); P3 p017R s60",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-h",
+   "section": "PURPLE",
+   "order": 8,
+   "where": "paddle platform",
+   "composition": {
+    "question": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "stack of 3 (? on W on W)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "STACK"
+   ],
+   "why": "P3: get the three wooden boxes before leaving",
+   "evidence": "F3 p069R zoom; P3 p018L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-i",
+   "section": "PURPLE",
+   "order": 9,
+   "where": "paddle platform",
+   "composition": {
+    "switch": 1
+   },
+   "count": 0,
+   "arrangement": "single steel !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "gem-path"
+   ],
+   "relations": [
+    "moves-platform"
+   ],
+   "tags": [
+    "SWITCH"
+   ],
+   "why": "starts pads that exit to the junction near the goal; not counted",
+   "evidence": "F3 p069R; P3 p018L",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "coiled cobra",
+   "count": 1,
+   "where": "near the start before the stopwatch",
+   "role": "first obstacle"
+  },
+  {
+   "section": "S1",
+   "kind": "green lizard-like guard",
+   "count": 1,
+   "where": "beside S1-b after the tar",
+   "role": "spin together with the box"
+  },
+  {
+   "section": "S2",
+   "kind": "lab assistants in pots",
+   "count": 4,
+   "where": "stairs after the ! pad ride",
+   "role": "gate before S2-d"
+  },
+  {
+   "section": "S2",
+   "kind": "switch operator",
+   "count": 1,
+   "where": "raised block beside the tar pit",
+   "role": "drops crushing blocks; POINT 3 target"
+  },
+  {
+   "section": "PURPLE",
+   "kind": "lab assistants in pots",
+   "count": 4,
+   "where": "after the tar hole",
+   "role": "obstacle"
+  },
+  {
+   "section": "PURPLE",
+   "kind": "flamethrower worker",
+   "count": 1,
+   "where": "stair top next to P-d",
+   "role": "guards P-d; attack from behind"
+  },
+  {
+   "section": "S4",
+   "kind": "switch operator / flamethrower worker",
+   "count": 2,
+   "where": "top of the tar slide",
+   "role": "P3: kill first, then return for S4-a/b"
+  },
+  {
+   "section": "S4",
+   "kind": "red cobra",
+   "count": 1,
+   "where": "route junction",
+   "role": "jumped onto S4-c in TT"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "hole before stairs",
+   "where": "after the wall",
+   "crates": []
+  },
+  {
+   "section": "S2",
+   "kind": "scarab drop-tiles",
+   "where": "C1 to the ! pad",
+   "crates": [
+    "S2-a",
+    "S2-b"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "tar pit",
+   "where": "switch operator block",
+   "crates": [
+    "S2-e"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "holes with moving platforms and falling pillars",
+   "where": "right course middle",
+   "crates": [
+    "S3-d"
+   ]
+  },
+  {
+   "section": "PURPLE",
+   "kind": "poison-dart pit",
+   "where": "corner",
+   "crates": [
+    "P-b"
+   ]
+  },
+  {
+   "section": "PURPLE",
+   "kind": "gap (spikes drawn) bridged by outline crates",
+   "where": "walkway end",
+   "crates": [
+    "P-g"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "B-e",
+    "B-f"
+   ],
+   "summary": "4-stack with TNT under a ledge holding a life",
+   "solution": "spin the bottom two, ride the drop, jump from the top W to the ledge before the TNT blows",
+   "wrongOrder": "stomp from the top or break the top first",
+   "loss": "bonus life (route unaffected)"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "P-f",
+    "P-g",
+    "P-h",
+    "P-i"
+   ],
+   "summary": "! #1 materialises a 2x3 outline bridge; ! #2 starts exit pads",
+   "solution": "! #1, cross, break the 3-stack and the bridge cells from an edge, then walk back (P3) or ride ! #2 pads and run the right course backwards (F3)",
+   "wrongOrder": "riding the ! #2 pads before breaking the bridge/stack",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-a",
+    "S4-b"
+   ],
+   "summary": "two ? floating high over a tar slide",
+   "solution": "clear the switch operator, walk back and jump for them",
+   "wrongOrder": "sliding straight through",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S3-a",
+    "S3-b",
+    "S3-c",
+    "S3-d",
+    "S3-e",
+    "S3-f",
+    "S4-a",
+    "S4-b",
+    "S4-c",
+    "S4-d"
+   ],
+   "summary": "F3 perfect route runs the right course backwards after the purple course",
+   "solution": "purple course -> pads -> junction -> reverse to the branch (go slowly at moving platforms, POINT 6) -> forward to the goal",
+   "wrongOrder": "n/a",
+   "loss": "time only"
+  }
+ ],
+ "observations": [
+  "12 of the first 17 boxes are one wall at the start: count is front-loaded and safe",
+  "on the scarab floor every crate sits on a framed solid tile: crates teach where it is safe to stand",
+  "each floor-button door or ! ride is followed within a few metres by a small reward cluster",
+  "only two clusters sit inside a hazard's firing line (S2-f light beams, P-b dart pit) - deliberate tests",
+  "three of four ! blocks move platforms; no main-route crate depends on a switch",
+  "the purple-gem course holds about a quarter of the boxes plus a secret clear gem; a visible Aku crate on the fork baits the locked door",
+  "the tar slide's momentum carries the player past two floating ? crates (return-trip count trap)",
+  "the only main-route 1UP follows the hardest timing section (pillars, moving platforms)",
+  "time trial re-reads the layout: A crates become masks so invincibility arrives exactly where a floating 3-s crate needs the big hitbox"
+ ]
+}
