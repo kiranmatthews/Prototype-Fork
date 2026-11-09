@@ -206,7 +206,7 @@ pyramid, which teaches the "inferno" crate: watch the flame cycle, then spin. Th
 | S6-d | stone pier on the left: wooden arrow crate between the pilings | ↑×1 = 1 | single | arrow | TOOL SINGLE | springboard to the high pair; break it only after using it | LP1 3:10:34-3:10:40 | high |
 | S6-e | two crates floating high above the arrow crate | x×2 = 2 | pair, high, floating | arrow | HIGH PAIR SANDWICH REWARD | classic arrow-and-floating-crate sandwich: only the full bounce reaches them | LP1 3:10:36-3:10:40 (fruit 343 -> 360); GR 93-97 | medium |
 | S6-f | hidden wooden room behind a waterfall on the left, before the checkpoint | x×7 = 7 | room cluster | walk, spin | DETOUR HIDDEN COUNT-TRAP | the largest count trap of the level (7) is behind scenery next to a checkpoint | LP1 3:10:46-3:10:52 (fruit 365 -> 402); GR 98-104 | medium |
-| S6-g | checkpoint on a stone pier | C×1 = 1 | single | walk | CHECKPOINT |  | LP1 3:10:56; GR 105 | high |
+| S6-g | checkpoint on a stone pier | C×1 = 1 | single | walk | CHECKPOINT | banks the lagoon's search area: all-box players reload here to retry the waterfall room and the gem pier | LP1 3:10:56; GR 105 | high |
 
 The lagoon is the level's search area. Three of its five clusters are count traps: a crate placed toward the camera, a
 pier reached only through a collapsing platform, and a room behind a waterfall. The other two are tool puzzles: the
@@ -227,7 +227,7 @@ gem stack used as a springboard, and an arrow crate under a floating pair. GR's 
 | S7-a | side view: red ! on the snow; pink outlines form a column/staircase up a tower | o(r)×5 = 5 | column / staircase, 3 high | switch, timed, jump | STEPPING SWITCH OUTLINE TIMED TEST | the materialised crates are the only stairs: break them as you climb or lose the way up | LP1 3:10:58-3:11:04 | low |
 | S7-b | a normal crate on top of the materialised column | x×1 = 1 | single, high | switch, timed, jump | HIGH TIMED COUNT-TRAP | the timed stairs lead to a permanent crate: miss the window and it is out of reach | LP1 3:11:02; GR 106-108 | medium |
 | S7-c | gold fruit crate on a raised ice ledge between two dark icefalls | Au×1 = 1 | single | jump, timed | DETOUR REWARD EDGE-BAIT | big fruit payout (fruit 413 -> 438) for a detour over falling ice | LP1 3:11:10-3:11:20; GR | high |
-| S7-d | checkpoint on a lamp-lit stone platform by the houses | C×1 = 1 | single | walk | CHECKPOINT |  | LP1 3:11:34 | high |
+| S7-d | checkpoint on a lamp-lit stone platform by the houses | C×1 = 1 | single | walk | CHECKPOINT | placed right after the icefall, the level's most dangerous stretch, so a death there costs only the gold-crate detour | LP1 3:11:34 | high |
 | S7-e | beside C4: two ? side by side with a ? above | ?×3 = 3 | pyramid, 2 high | spin | ON-PATH PYRAMID REWARD | reward at the checkpoint after the icefall | LP1 3:11:34-3:11:36 (HUD 116/153) | medium |
 
 ### S8 — C4 → C5 (cumulative 122)
@@ -237,7 +237,7 @@ gem stack used as a springboard, and an arrow crate under a floating pair. GR's 
 | S8-a | narrow snowy ledge under falling ice blocks: TNT with a crate stacked on top | T×1 + W×1 = 2 | stack, 2 high | jump, spin | STACK EXPLOSIVE-MIX SUPPORT-ORDER TIMED | jump-spin the upper crate: the TNT starts its fuse instead of going off under you (the fuse ran at 3:11:46) | LP1 3:11:38-3:11:46; GR 109-122 | high |
 | S8-b | fenced stone ledge after the falling-ice plank path | x×1 = 1 | single | spin | ON-PATH REWARD | landing reward after the slow-mo crossing | LP1 3:12:00-3:12:02 | low |
 | S8-c | unresolved crates on the falling-ice ledges | x×2 = 2 | unresolved | walk | ON-PATH | balance of GR 122 | GR 122 minus mapped | low |
-| S8-d | checkpoint on the wooden dock | C×1 = 1 | single | walk | CHECKPOINT |  | LP1 3:12:08-3:12:10 (CHECKPOINT text) | medium |
+| S8-d | checkpoint on the wooden dock | C×1 = 1 | single | walk | CHECKPOINT | checkpoints close up here (only 6 crates after C4) before the second floe field and the TNT gorge | LP1 3:12:08-3:12:10 (CHECKPOINT text) | medium |
 
 ### S9 — C5 → exit pier (cumulative 137)
 

@@ -3,7 +3,7 @@
  "game": "Crash 3",
  "stage": 6,
  "name": "Gee Wiz",
- "nameJa": "けんとまほうの けんきゅういん",
+ "japaneseTitle": "けんとまほうの けんきゅういん",
  "sources": [
   "F3 p015-p016",
   "F3 p019L",
@@ -192,7 +192,10 @@
    "why": "first mask, before the Nitro mixes and the first wizard",
    "evidence": "F3 p015L zoom; P3 p013L shot 2",
    "confidence": "high",
-   "timeTrial": "Aku #1"
+   "timeTrial": "Aku #1",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S1-e",
@@ -228,7 +231,7 @@
    "composition": {
     "wood": 2,
     "slot": 1,
-    "unknown": 1
+    "wood?": 1
    },
    "count": 4,
    "arrangement": "2x2 group",
@@ -248,7 +251,10 @@
    "why": "slot inside a group: break it early for a good face; TT 2-s box tucked between the crates (target 0:12:00)",
    "evidence": "F3 p015L zoom (4th crate behind the badge); P3 p014L shot 13",
    "confidence": "medium",
-   "timeTrial": "2s (hidden in the group)"
+   "timeTrial": "2s (hidden in the group)",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S1-g",
@@ -353,7 +359,10 @@
    "why": "fence of equal stacks beside the goat's patrol; normal play spins the bases; TT slides the goat into the stacks or uses it as a foothold",
    "evidence": "F3 p015R zoom; F3 p103R frames 08-09; P3 p014L shot 14",
    "confidence": "high",
-   "timeTrial": "1s on each top (3)"
+   "timeTrial": "1s on each top (3)",
+   "ttBadges": {
+    "1": 3
+   }
   },
   {
    "id": "S1-k",
@@ -413,7 +422,10 @@
    "why": "slam test: reward on iron, a Nitro beside it, and the slot ahead turns to steel if you dawdle (mask hint 4)",
    "evidence": "F3 p015R zoom; P3 p013L shot 4; P3 p014L shot 15",
    "confidence": "high",
-   "timeTrial": "3s (the 1UP position)"
+   "timeTrial": "3s (the 1UP position)",
+   "ttBadges": {
+    "3": 1
+   }
   },
   {
    "id": "S2-b",
@@ -445,7 +457,10 @@
    "why": "row of 2-stacks with the slot in the middle; TT Aku at the left end, hidden from the approach",
    "evidence": "F3 p015R 'A' bubble zoom; P3 p014L shot 15",
    "confidence": "high",
-   "timeTrial": "Aku #2 (left end)"
+   "timeTrial": "Aku #2 (left end)",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S2-c",
@@ -542,7 +557,10 @@
    "why": "pacing crate; TT 1-s box (target 0:44:00)",
    "evidence": "F3 p016L zoom; P3 p014L shot 16",
    "confidence": "high",
-   "timeTrial": "1s"
+   "timeTrial": "1s",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "S3-b",
@@ -563,9 +581,9 @@
     "berserker"
    ],
    "tags": [
-    "EDGE-BAIT",
     "ENEMY-LINK",
-    "EXPLOSIVE-MIX"
+    "EXPLOSIVE-MIX",
+    "TIMED"
    ],
    "why": "lane squeeze between a Nitro and a swinging berserker (mask hint 5)",
    "evidence": "F3 p016L zoom",
@@ -620,7 +638,10 @@
    "why": "mask right before the ? on TNT",
    "evidence": "F3 p016L zoom; P3 p013L shot 6",
    "confidence": "high",
-   "timeTrial": "Aku #3"
+   "timeTrial": "Aku #3",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S3-e",
@@ -651,7 +672,10 @@
    "why": "TNT must be broken for the perfect (stomp it); the ? on top lands you on the TNT; masked, it is harmless",
    "evidence": "F3 p016L zoom; P3 p014L shot 17",
    "confidence": "high",
-   "timeTrial": "2s (the ?)"
+   "timeTrial": "2s (the ?)",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S3-f",
@@ -733,7 +757,10 @@
    "why": "biggest pile of the stage, after the last checkpoint and before the Nitro gauntlet",
    "evidence": "F3 p016R zoom; P3 p014L shot 18",
    "confidence": "medium",
-   "timeTrial": "1s x2 (middle-row ends)"
+   "timeTrial": "1s x2 (middle-row ends)",
+   "ttBadges": {
+    "1": 2
+   }
   },
   {
    "id": "S4-b",
@@ -1223,15 +1250,21 @@
   }
  ],
  "timeTrial": {
-  "timeCrates": 9,
-  "seconds": 13,
-  "ttAkuCrates": [
+  "crates": {
+   "1s": 6,
+   "2s": 2,
+   "3s": 1,
+   "aku": 3
+  },
+  "freezeSeconds": 13,
+  "staffRecord": "0:58:23 (F3 p103R)",
+  "sapphire": "1:37:00",
+  "gold": "1:22:70",
+  "akuCrates": [
    "S1-d",
    "S2-b",
    "S3-d"
-  ],
-  "staffBest": "0:58:23",
-  "source": "F3 p103R + map badges"
+  ]
  },
  "observations": [
   "Iron-bound crates appear in a safe 2x2x2 cube right after the super body slam unlock, then as a column under a 1UP beside a Nitro.",
@@ -1243,5 +1276,11 @@
   "8 of 15 Nitros sit in the last two clusters: the biggest count trap is at the exit.",
   "Stacks are uniform 2- and 3-stacks; complexity comes from neighbours, not shapes.",
   "Bonus: striped sandwiches, arrow-to-floating-crate twice, outline exit with a pit crate before the switch."
- ]
+ ],
+ "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = crate that is an Aku crate in time trial. Drawn icon = normal-mode type. Key 'wood?' = a counted crate whose type cannot be read (gutter blur or hidden behind a badge)",
+ "countingRule": "F3 cumulative counts include the checkpoint crate; 'NN (MM)' = without (with) Nitro. After the green ! all 15 Nitro count. Steel arrows, steel ! and the green ! are listed under 'uncounted'. Bonus: only 4 of 10 outline icons are counted boxes (header x18); the other 6 are listed as uncounted 'outlineFooting'.",
+ "compositionKeysAdded": {
+  "wood?": "counted crate whose type cannot be read",
+  "outlineFooting": "outline cell that materialises as footing, not a box (uncounted)"
+ }
 }

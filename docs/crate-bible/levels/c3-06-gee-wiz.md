@@ -13,8 +13,8 @@ Evidence level:
 - **Derived:** the final section is unlabelled; its 11 crates + 10 Nitro come from its bubbles.
   Total 100 = 56 + 11 + 15 Nitro + 18 bonus = gamepressure's 100.
 - **Partly hidden:** the "2" group in S1 shows 2 wood + 1 slot; its fourth crate is behind the time
-  badge (count forced by the label; type `unknown`). The 10-crate stepped block in S4 is clear in
-  Prima shot 18, but crate types on the F3 icon are only partly readable (≈ 3 ? + 7 wood).
+  badge (count forced by the label; type unreadable, `wood?`). The 10-crate stepped block in S4
+  is clear in Prima shot 18, but crate types on the F3 icon are only partly readable (≈ 3 ? + 7 wood).
 - **Bonus outlines:** the diagram draws 10 outline icons but the header counts 18 boxes, which leaves
   room for only 4 outline crates; which 4 is inferred (see B-e).
 
@@ -34,15 +34,16 @@ Evidence level:
 | Iron-bound | **11** (a 2×2×2 cube of 8 in S1, a column of 3 under the 1UP in S2) — first use of the super body slam |
 | Arrows | 2 steel arrow blocks in the bonus (uncounted) |
 | Striped / slot | 10 striped (4 main, 6 bonus) / 3 slot |
-| ? / wood | 18 ? (13 main, 5 bonus) / 31 wood (28 main, 3 bonus) + 1 unknown |
+| ? / wood | 18 ? (13 main, 5 bonus) / 31 wood (28 main, 3 bonus) + 1 `wood?` (hidden behind a badge) |
 | Gems | clear gem only: all 100 boxes; the 15 Nitros require the green ! just before the goal |
 | Enemies | frogs (ケロッパ, hop and sidestep toward Crash), goats (ヤギッパ, fixed back-and-forth line), wizards (魔法研究員, slow homing beam; a spin erases it), berserkers (バーサーカー研究員, heavy sword swing that also hits behind them) |
 | Hazards | water channels with frogs, holes, raised curbs/walls (also safe running lines), boulders, homing beams |
 | Time trial | 9 time crates = 13 s; staff best 0:58:23 (F3 p103R); relic targets printed in the header: sapphire 1:37:00, gold 1:22:70 |
 | Difficulty notes | F3 intro: TNT and Nitro are slipped in among ordinary crates — slow down; break the slot early for its Aku |
 
-Composition keys: standard keys plus `unknown` (crate hidden behind a badge); `uncounted` lists
-steel/switch objects outside the box total.
+Composition keys: standard keys plus `wood?` (counted crate whose type is hidden behind a badge);
+`ttBadges` gives time-trial badges per cluster; `uncounted` lists steel/switch objects outside the
+box total.
 
 ## Route skeleton
 
@@ -156,7 +157,7 @@ striped fruit → the new iron-bound mechanic in a safe spot → the mask → Ni
 | id | position | composition | arrangement | access | tags | why it is here | evidence | conf. |
 |---|---|---|---|---|---|---|---|---|
 | S3-a | after the water | ?×1 (TT 1 s) | single | spin | ON-PATH SINGLE TIME-TRIAL | pacing crate; TT 1-s box on the line after C2 (F3 target 0:44:00) | F3 p016L zoom; P3 p014L shot 16 | high |
-| S3-b | right side, berserker on the path | N×1 | single | avoid | EDGE-BAIT ENEMY-LINK EXPLOSIVE-MIX | lane squeeze: a Nitro on the right and a sword-swinging berserker in the middle; F3 mask hint 5 — pass when he is not swinging | F3 p016L zoom; mask hint 5 | high |
+| S3-b | right side, berserker on the path | N×1 | single | avoid | ENEMY-LINK EXPLOSIVE-MIX TIMED | lane squeeze: a Nitro on the right and a sword-swinging berserker in the middle; F3 mask hint 5 — pass when he is not swinging | F3 p016L zoom; mask hint 5 | high |
 | S3-c | right | ?×1 | single | spin | ON-PATH SINGLE | bait just past the squeeze | F3 p016L | high |
 | S3-d | left, after a frog | A×1 | single | spin | AKU TIME-TRIAL | the mask right before the TNT (Prima 6: third Aku just past C2, TNT nearby) | F3 p016L zoom; P3 p013L shot 6 | high |
 | S3-e | next | ?×1 (TT 2 s), T×1 | 2-stack ? on TNT | stomp the ?, then stomp the TNT and get clear | STACK EXPLOSIVE-MIX SUPPORT-ORDER AKU TIME-TRIAL | the TNT must be broken for the perfect (F3 mask hint 6: stomp it); the ? on top means the first stomp lands you on the TNT. TA5: take the Aku first, then the 2-s box — with invincibility the TNT is harmless | F3 p016L zoom; mask hint 6; F3 TA5; P3 p014L shot 17 | high |
@@ -166,9 +167,9 @@ striped fruit → the new iron-bound mechanic in a safe spot → the mask → Ni
 ### S4 — C3 → Goal  (derived: 67 non-Nitro; 82 with Nitro) — includes the bonus lift
 
 ```
-   W W W? x  ← top 2
-   W¹ ? W ?¹  ← middle 4                  S4-a  stepped block (4/4/2), types approximate
-   ? W W ?    ← bottom 4
+        W  ?        ← top 2
+     W¹ W  W  W¹    ← middle 4 (end crates = TT 1 s)   S4-a  stepped block (4/4/2),
+     ?  W  W  ?     ← bottom 4                                types approximate
    ~purple water~ e:frog  N               S4-b
    e:goat
    N  [bonus lift ─► B (18) ─► back]      S4-c

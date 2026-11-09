@@ -1,0 +1,1198 @@
+{
+  "id": "c4-8-2-stowing-away",
+  "game": "Crash 4",
+  "stage": "8-2",
+  "name": "Stowing Away",
+  "sources": [
+    "GR 8-2 (gameranx.com features id 210873)",
+    "LP2 1:02:00-1:07:22 (archive.org PS4 longplay Part 2; frames every 1 s for 1:02:49-1:03:35, every 2 s after; HUD crops; bonus HUD)",
+    "gamepressure.com Stowing Away walkthrough (masks, UFO, bonus count corroboration)"
+  ],
+  "camera": "mixed: into-screen tubes and corridors; side view for laser-gate corridors, vents, the engine room, the ceiling walk, the bonus and the shifting-wall room",
+  "totalBoxes": 152,
+  "totalSource": "HUD 0/152 (LP2 1:02:46); bonus 0/34 -> 34/34 and main 97/152 (1:05:48); 98 (1:05:54); 121 (1:06:44); 123 (1:06:46); 148 (1:07:10); 152/152 (1:07:12)",
+  "typesNote": "Crash 4 keys: wood, question, bounceWumpa (crate with a gold wumpa emblem), arrowWood, reinforced (metal-banded strong crate), tnt, nitro (counted when exploded; the bonus Nitro switch pays its room's Nitro), timedOutline (pink crate made solid briefly by a red timed !), outline (wireframe crate made permanent by a !), checkpoint, unknown. Not counted: ! boxes, the green Nitro switch, iron crates and the 'invisible blocks' that turn to iron.",
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 118,
+      "basis": "152 minus bonus 34"
+    },
+    {
+      "id": "bonus",
+      "boxes": 34,
+      "basis": "bonus HUD n/34; main 97/152 after the transfer"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "C1",
+      "boxes": 16,
+      "cumulative": 16,
+      "notes": "GR 6 (first room) and 16; HUD 0/152 (LP2 1:02:46) and 1/152 (1:02:49). Oxide's cabin, side-view laser-gate corridor, two into-screen tubes."
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "C2 (vent checkpoint)",
+      "boxes": 16,
+      "cumulative": 32,
+      "notes": "GR 23/28/31 + the vent checkpoint. Gravity mask (Ika-Ika) at the end of the pink laser tunnel; red-! timed run; TNT stack room; hidden gem in the vent ceiling."
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "C2",
+      "to": "C3",
+      "boxes": 6,
+      "cumulative": 38,
+      "notes": "GR 38. Engine room (side view): heated pumps, shifting green-light blocks, laser cannon."
+    },
+    {
+      "id": "S4",
+      "route": "main",
+      "from": "C3",
+      "to": "C4",
+      "boxes": 11,
+      "cumulative": 49,
+      "notes": "GR 49. Ceiling walk over an electric floor with ? crates on the floor; vent; Akano whirlwind mask in the tunnel before C4."
+    },
+    {
+      "id": "S5",
+      "route": "main",
+      "from": "C4",
+      "to": "bonus pad",
+      "boxes": 14,
+      "cumulative": 63,
+      "notes": "HUD 97/152 after the 34-crate bonus implies 63 here; GR prints 62. Whirlwind hallway with shielded lab assistants; TNT under a strong crate at the pad."
+    },
+    {
+      "id": "B",
+      "route": "bonus",
+      "from": "bonus pad",
+      "to": "bonus exit",
+      "boxes": 34,
+      "cumulative": 97,
+      "notes": "HUD 0/34 (LP2 1:04:42) -> 34/34 (1:05:42); main 97/152 (1:05:48). Out, far-end Nitro switch, back to the entrance, out again."
+    },
+    {
+      "id": "S6",
+      "route": "main",
+      "from": "bonus exit",
+      "to": "shifting-wall room",
+      "boxes": 18,
+      "cumulative": 115,
+      "notes": "GR 115; HUD 98/152 at 1:05:54. Whirlwind corridor, X-door, side-view vent and vertical shaft."
+    },
+    {
+      "id": "S7",
+      "route": "main",
+      "from": "shifting-wall room",
+      "to": "control room",
+      "boxes": 8,
+      "cumulative": 123,
+      "notes": "GR 123; HUD 121 (1:06:44) and 123 (1:06:46). The shifting-wall room itself has no breakable crates."
+    },
+    {
+      "id": "S8",
+      "route": "main",
+      "from": "elevator (C5)",
+      "to": "escape pod",
+      "boxes": 29,
+      "cumulative": 152,
+      "notes": "GR 152; HUD 148 (1:07:10) and 152/152 (1:07:12). Whirlwind reacquired with the Flashback tape; final Nitro-capped TNT stack."
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "N. Oxide's cabin (the 'easter egg' room): a ?-on-? stack by the console, a TNT on the right, more crates around the room",
+      "composition": {
+        "question": 2,
+        "tnt": 1,
+        "unknown": 3
+      },
+      "count": 6,
+      "arrangement": "room cluster",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX",
+        "TEACH"
+      ],
+      "why": "six crates in a dead-end room before any hazard: the first TNT is shown in a room with space to back away",
+      "evidence": "LP2 1:02:46-1:02:52 (HUD 0 -> 1/152; TNT fuse 1:02:49); GR 6",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "side-view corridor: 2-stacks (? over wood) standing between blinking vertical laser gates",
+      "composition": {
+        "question": 2,
+        "wood": 2
+      },
+      "count": 4,
+      "arrangement": "stacks between gates",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "TIMED"
+      ],
+      "why": "each stack sits in the safe pocket between two laser gates: collect while waiting for the next gate to blink off",
+      "evidence": "LP2 1:02:51-1:02:58 (fruit 49 -> 69)",
+      "confidence": "low"
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "into-screen orange tube: ? crates on the floor between horizontal floor-level laser beams",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "singles between beams",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "TIMED"
+      ],
+      "why": "jump the beam, land, spin, jump the next beam: crates set the rhythm",
+      "evidence": "LP2 1:02:59-1:03:01",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "blue-floored tube: wooden arrow crate on the floor",
+      "composition": {
+        "arrowWood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "arrow"
+      ],
+      "relations": [],
+      "tags": [
+        "TOOL",
+        "SINGLE"
+      ],
+      "why": "springboard to the crates above; broken afterwards with a spin",
+      "evidence": "LP2 1:03:05-1:03:10",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-e",
+      "section": "S1",
+      "order": 5,
+      "where": "crates on a high ledge/column above the arrow crate",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair, high",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "arrow"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "SANDWICH",
+        "REWARD"
+      ],
+      "why": "arrow-then-high-crates sandwich (fruit 112 -> 141)",
+      "evidence": "LP2 1:03:06-1:03:08",
+      "confidence": "low"
+    },
+    {
+      "id": "S1-f",
+      "section": "S1",
+      "order": 6,
+      "where": "checkpoint at the end of the first vent",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "first checkpoint at the end of the first vent, before the mask",
+      "evidence": "LP2 1:03:11; GR 16",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "vent hallway and the entrance of the pink laser-ring tunnel, up to the red !",
+      "composition": {
+        "unknown": 7
+      },
+      "count": 7,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "GR: break everything until you reach the red ! and stop there",
+      "evidence": "GR 17-23; LP2 1:03:11-1:03:14",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "red timed ! run: five pink crates materialise along the path; Crash, now on the tunnel ceiling with the gravity mask, rushes to break them",
+      "composition": {
+        "timedOutline": 5
+      },
+      "count": 5,
+      "arrangement": "float-line along the tunnel",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "SWITCH",
+        "OUTLINE",
+        "TIMED",
+        "SPEED-LINE",
+        "TEST"
+      ],
+      "why": "a sprint test right after a new power: the five crates are spread to the far end of the path, so the timer only allows a clean run",
+      "evidence": "GR 24-28; LP2 1:03:14-1:03:18 (crates burst on walls and ceiling; location inferred)",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "green-lit room by a machine door: pale crate on top of a TNT on top of a crate",
+      "composition": {
+        "unknown": 2,
+        "tnt": 1
+      },
+      "count": 3,
+      "arrangement": "stack",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER"
+      ],
+      "why": "knock out the bottom crate: the TNT drops, lights, and its blast takes the top crate (fuse at 1:03:24)",
+      "evidence": "LP2 1:03:19-1:03:25; GR 29-31",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-d",
+      "section": "S2",
+      "order": 4,
+      "where": "checkpoint on the floor of the second vent, just past the laser gates and the hidden-gem ceiling pocket",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint just past the vent lasers, so the hidden-gem detour is cheap to retry",
+      "evidence": "LP2 1:03:34",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "engine room entrance: ? on the machinery",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "the first engine-room crate sits on the entry machinery, before the pumps start",
+      "evidence": "LP2 1:03:35",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "TNT low on the left among the heated pumps",
+      "composition": {
+        "tnt": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "TNT among the heated pumps: a second hazard beside the pistons",
+      "evidence": "LP2 1:03:36",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "? floating upper right above the shifting green-light blocks",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "TIMED"
+      ],
+      "why": "reached from a block that slides into range",
+      "evidence": "LP2 1:03:38-1:03:42",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-d",
+      "section": "S3",
+      "order": 4,
+      "where": "wood crate on the conveyor under the glowing heated pumps",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "TIMED",
+        "EDGE-BAIT"
+      ],
+      "why": "collected between pump strokes",
+      "evidence": "LP2 1:03:50-1:03:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-e",
+      "section": "S3",
+      "order": 5,
+      "where": "vertical tube: crate in the laser cannon's line",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "TIMED"
+      ],
+      "why": "the cannon's beam breaks it too (it still counts)",
+      "evidence": "LP2 1:03:54-1:03:56",
+      "confidence": "low"
+    },
+    {
+      "id": "S3-f",
+      "section": "S3",
+      "order": 6,
+      "where": "checkpoint after the vertical tube",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint after the engine room's timing puzzle",
+      "evidence": "LP2 1:03:58; GR 38",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-a",
+      "section": "S4",
+      "order": 1,
+      "where": "side view: ? crates on the floor below a ceiling path; the floor is electrified in segments",
+      "composition": {
+        "question": 4
+      },
+      "count": 4,
+      "arrangement": "singles on the floor",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "LOW",
+        "TIMED",
+        "TEACH"
+      ],
+      "why": "walk the ceiling, flip gravity down onto a crate between live floor segments, flip back up",
+      "evidence": "LP2 1:04:02-1:04:10",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-b",
+      "section": "S4",
+      "order": 2,
+      "where": "heated-pump cylinders and the vent before C4 (unresolved)",
+      "composition": {
+        "unknown": 6
+      },
+      "count": 6,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR 49",
+      "evidence": "GR 49 minus mapped; LP2 1:04:12-1:04:16",
+      "confidence": "low"
+    },
+    {
+      "id": "S4-c",
+      "section": "S4",
+      "order": 3,
+      "where": "checkpoint right after the Akano whirlwind mask",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint placed straight after the whirlwind pickup, so the dense half starts with the tool",
+      "evidence": "LP2 1:04:18; GR 49",
+      "confidence": "high"
+    },
+    {
+      "id": "S5-a",
+      "section": "S5",
+      "order": 1,
+      "where": "whirlwind hallway: crates and TNT stacks among shielded lab assistants",
+      "composition": {
+        "unknown": 10,
+        "tnt": 2
+      },
+      "count": 12,
+      "arrangement": "corridor groups",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX",
+        "ENEMY-LINK"
+      ],
+      "why": "density is safe with a multi-hit spin, except for TNT, which the whirlwind sets off",
+      "evidence": "LP2 1:04:20-1:04:28",
+      "confidence": "low"
+    },
+    {
+      "id": "S5-b",
+      "section": "S5",
+      "order": 2,
+      "where": "before the bonus pad: TNT on the floor with a metal-banded strong crate on top",
+      "composition": {
+        "tnt": 1,
+        "reinforced": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "REINFORCED",
+        "SUPPORT-ORDER",
+        "ENEMY-LINK"
+      ],
+      "why": "GR: whirlwind while jumping to break the strong crate without setting off the TNT under you",
+      "evidence": "LP2 1:04:30-1:04:36; GR 62",
+      "confidence": "high"
+    },
+    {
+      "id": "B-a",
+      "section": "B",
+      "order": 1,
+      "where": "entry saucer area: a TNT framed by outline blocks, and a ledge row TNT-?-TNT",
+      "composition": {
+        "tnt": 3,
+        "question": 1,
+        "unknown": 2
+      },
+      "count": 6,
+      "arrangement": "framed single + row",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ROW",
+        "EXPLOSIVE-MIX",
+        "OUTLINE",
+        "TIMED",
+        "TEACH"
+      ],
+      "why": "set the framed TNT off before its frame of outline blocks turns to iron, or it is sealed in (GR)",
+      "evidence": "LP2 1:04:42-1:05:00 (HUD 0 -> 1 -> 5 -> 6)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-b",
+      "section": "B",
+      "order": 2,
+      "where": "top of a tall pillar: TNT, a ! under a strong crate, TNT; ? crates floating and stacked to the left",
+      "composition": {
+        "tnt": 2,
+        "reinforced": 1,
+        "question": 2
+      },
+      "count": 5,
+      "arrangement": "row on a pillar top",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "bounce",
+        "timed",
+        "switch"
+      ],
+      "relations": [],
+      "tags": [
+        "ROW",
+        "EXPLOSIVE-MIX",
+        "REINFORCED",
+        "SWITCH",
+        "SUPPORT-ORDER"
+      ],
+      "why": "bounce onto the TNT from a bounce block, then reach the ! under the strong crate; the TNT blasts open the strong crate",
+      "evidence": "LP2 1:05:00-1:05:06 (HUD 6 -> 11); GR",
+      "confidence": "low"
+    },
+    {
+      "id": "B-c",
+      "section": "B",
+      "order": 3,
+      "where": "in front of a gear-shaped portal: two crates paired with Nitro (a crate floating on a Nitro)",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "floating pairs",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "FLOAT-LINE",
+        "EXPLOSIVE-MIX",
+        "TEST"
+      ],
+      "why": "GR's trickiest jump: through the Nitro/fruit pairs, touching only the fruit crates",
+      "evidence": "LP2 1:05:08-1:05:10 (HUD 11 -> 13)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-d",
+      "section": "B",
+      "order": 4,
+      "where": "Nitro switch on the far-right pedestal",
+      "composition": {
+        "nitro": 11
+      },
+      "count": 11,
+      "arrangement": "switch payout",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch"
+      ],
+      "relations": [],
+      "tags": [
+        "NITRO-SWITCH",
+        "CHAIN"
+      ],
+      "why": "the far end pays every Nitro in the room at once (HUD 13 -> 24) and opens the safe return",
+      "evidence": "LP2 1:05:10-1:05:12",
+      "confidence": "high"
+    },
+    {
+      "id": "B-e",
+      "section": "B",
+      "order": 5,
+      "where": "return sweep to the entrance: a ? stack on a pipe, two crates materialised from outlines, a crate on the left platform",
+      "composition": {
+        "question": 2,
+        "outline": 2,
+        "unknown": 3
+      },
+      "count": 7,
+      "arrangement": "groups along the return",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "backtrack",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "BACKTRACK",
+        "OUTLINE",
+        "COUNT-TRAP"
+      ],
+      "why": "crates that only become reachable or solid after the outward run: the room must be crossed twice",
+      "evidence": "LP2 1:05:20-1:05:28 (HUD 24 -> 26 -> 27 -> 29 -> 31)",
+      "confidence": "medium"
+    },
+    {
+      "id": "B-f",
+      "section": "B",
+      "order": 6,
+      "where": "back out to the pillar: a column on its right side (?, wumpa crate, ?)",
+      "composition": {
+        "question": 2,
+        "bounceWumpa": 1
+      },
+      "count": 3,
+      "arrangement": "column on the pillar's side",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "jump",
+        "bounce"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "COUNT-TRAP",
+        "BACKTRACK"
+      ],
+      "why": "the last three hang on the far side of the pillar from the outward line",
+      "evidence": "LP2 1:05:30-1:05:42 (HUD 31 -> 32 -> 34/34)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-a",
+      "section": "S6",
+      "order": 1,
+      "where": "whirlwind corridor straight after the bonus",
+      "composition": {
+        "unknown": 5,
+        "tnt": 1
+      },
+      "count": 6,
+      "arrangement": "corridor groups",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "corridor groups right after the bonus, cleared with the retained whirlwind",
+      "evidence": "LP2 1:05:54-1:05:58 (HUD 98)",
+      "confidence": "low"
+    },
+    {
+      "id": "S6-b",
+      "section": "S6",
+      "order": 2,
+      "where": "X-door: a crate on the wall, a TNT and a crate on the floor",
+      "composition": {
+        "unknown": 2,
+        "tnt": 1
+      },
+      "count": 3,
+      "arrangement": "singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "door cluster: a wall crate beside floor TNT, spin the crates and light the TNT from range",
+      "evidence": "LP2 1:06:00-1:06:02",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-c",
+      "section": "S6",
+      "order": 3,
+      "where": "square green vent, side-view crawl and the vertical green shaft",
+      "composition": {
+        "unknown": 9
+      },
+      "count": 9,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR 115",
+      "evidence": "GR 115 minus mapped; LP2 1:06:04-1:06:12",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-a",
+      "section": "S7",
+      "order": 1,
+      "where": "exit tube of the shifting-wall room: TNT on top of a ?, a wood crate beside",
+      "composition": {
+        "tnt": 1,
+        "question": 1,
+        "wood": 1
+      },
+      "count": 3,
+      "arrangement": "stack + single",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER"
+      ],
+      "why": "TNT on a ? in a narrow tube: knock the base, the TNT drops lit",
+      "evidence": "LP2 1:06:38-1:06:40",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-b",
+      "section": "S7",
+      "order": 2,
+      "where": "TNT on the tube floor",
+      "composition": {
+        "tnt": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "lone floor TNT in the tube: light it and back away",
+      "evidence": "LP2 1:06:42",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-c",
+      "section": "S7",
+      "order": 3,
+      "where": "unresolved, before HUD 121",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance to the HUD's 121",
+      "evidence": "LP2 1:06:38-1:06:44 (HUD 121)",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-d",
+      "section": "S7",
+      "order": 4,
+      "where": "hallway into the spaceship control room",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "last crates before the control-room cutscene",
+      "evidence": "LP2 1:06:44-1:06:46 (HUD 121 -> 123)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S8-a",
+      "section": "S8",
+      "order": 1,
+      "where": "checkpoint at the bottom of the elevator",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "checkpoint at the elevator's bottom, before the long final corridor",
+      "evidence": "LP2 1:06:54; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "S8-b",
+      "section": "S8",
+      "order": 2,
+      "where": "red corridor before the hull breach",
+      "composition": {
+        "unknown": 6
+      },
+      "count": 6,
+      "arrangement": "corridor groups",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "red-corridor crates before the hull breach: still on foot, whirlwind not yet back",
+      "evidence": "LP2 1:06:54-1:06:58",
+      "confidence": "low"
+    },
+    {
+      "id": "S8-c",
+      "section": "S8",
+      "order": 3,
+      "where": "corridor after the Flashback tape; whirlwind reacquired; crate stacks smashed on the run",
+      "composition": {
+        "unknown": 18
+      },
+      "count": 18,
+      "arrangement": "corridor groups",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "REWARD"
+      ],
+      "why": "GR: no tricky crates. A victory lap with the multi-hit tool",
+      "evidence": "LP2 1:07:00-1:07:08",
+      "confidence": "low"
+    },
+    {
+      "id": "S8-d",
+      "section": "S8",
+      "order": 4,
+      "where": "final tall stack: Nitro on top of TNT on top of another crate",
+      "composition": {
+        "nitro": 1,
+        "tnt": 2,
+        "unknown": 1
+      },
+      "count": 4,
+      "arrangement": "stack",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "CHAIN"
+      ],
+      "why": "light the TNT and back off: its blast takes the Nitro above it, the last 4 boxes in one chain",
+      "evidence": "LP2 1:07:06-1:07:12 (fuse 3 at 1:07:08; HUD 148 -> 152/152)",
+      "confidence": "low"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "S5, S6, S8",
+      "kind": "lab assistants with energy shields",
+      "count": 6,
+      "where": "whirlwind corridors",
+      "role": "stand among crate stacks; the whirlwind breaks both"
+    },
+    {
+      "section": "S8",
+      "kind": "UFO / saucer drone",
+      "count": 1,
+      "where": "late corridor (gamepressure)",
+      "role": "beam kills on contact"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "S1",
+      "kind": "blinking vertical laser gates (side view) and floor-level laser beams (into-screen tube)",
+      "where": "first vent",
+      "crates": [
+        "S1-b",
+        "S1-c"
+      ]
+    },
+    {
+      "section": "S2",
+      "kind": "laser gates in the second vent",
+      "where": "around the hidden gem",
+      "crates": []
+    },
+    {
+      "section": "S3",
+      "kind": "heated pumps, shifting green-light blocks, laser cannon",
+      "where": "engine room",
+      "crates": [
+        "S3-c",
+        "S3-d",
+        "S3-e"
+      ]
+    },
+    {
+      "section": "S4",
+      "kind": "segmented electric floor under a ceiling path",
+      "where": "after C3",
+      "crates": [
+        "S4-a"
+      ]
+    },
+    {
+      "section": "S7",
+      "kind": "shifting-wall room (iron footholds only)",
+      "where": "after the vertical shaft",
+      "crates": []
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S2-b"
+      ],
+      "summary": "Red timed ! run: five pink crates along the path after the switch.",
+      "solution": "Stop at the red ! (GR), hit it, sprint the path breaking all five before they fade.",
+      "wrongOrder": "Breaking the crates before the ! on the run, or detouring.",
+      "loss": "5 crates (all-box only)."
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "S2-c"
+      ],
+      "summary": "Three-high stack: pale crate on TNT on crate.",
+      "solution": "Knock out the bottom crate; the TNT drops lit; step away; the blast takes the top crate.",
+      "wrongOrder": "Spinning the TNT at chest height or standing beside it.",
+      "loss": "A life."
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "S5-b"
+      ],
+      "summary": "TNT under a strong crate at the bonus door, among shielded enemies.",
+      "solution": "Jump and whirlwind into the strong crate from above; leave the TNT for last and light it from range.",
+      "wrongOrder": "Whirlwinding into the stack at ground level sets the TNT off in contact.",
+      "loss": "A life (and the checkpoint is far back)."
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "B-a",
+        "B-b",
+        "B-c",
+        "B-d",
+        "B-e",
+        "B-f"
+      ],
+      "summary": "Bonus loop: framed TNT, pillar row with a ! under a strong crate, Nitro/fruit pairs, far-end Nitro switch, return sweep, final column.",
+      "solution": "Out: blow the framed TNT early, bounce to the pillar TNT, hit the ! under the strong crate, jump the pairs, press the Nitro switch. Back: sweep to the entrance (newly solid crates). Out again: the column on the pillar's far side, then the exit saucer.",
+      "wrongOrder": "Heading for the exit after the Nitro switch (the return sweep holds 7 + 3 crates); letting the outline frame close on the first TNT.",
+      "loss": "Up to 10 bonus crates for skipping the return; the framed TNT if sealed."
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "S8-d"
+      ],
+      "summary": "Final stack: Nitro on TNT.",
+      "solution": "Light the TNT and retreat; the blast takes the Nitro and the stack.",
+      "wrongOrder": "Whirlwinding into the stack.",
+      "loss": "A life at the end of a no-checkpoint corridor."
+    }
+  ],
+  "observations": [
+    "Two powers reshape the crate grammar. The Ika-Ika gravity mask, taken at crate ≈ 17, puts crates on a floor you can no longer stand on (S4-a). The Akano whirlwind, at C4, makes long corridors of stacks safe to clear at a run.",
+    "TNT is the counter-design to the whirlwind: every TNT in a whirlwind stretch sits under or beside crates (S5-a, S5-b, S6-b, S7-a, S8-d), so a spin through the stack is lethal and the player has to light TNT deliberately.",
+    "The 34-crate bonus (22 % of the level) is a loop: out to a far-end Nitro switch, back to the entrance for crates that only now exist, and out again for a column on the far side of a pillar. Ten of its crates are behind the player at the moment the room looks finished.",
+    "The bonus mixes two outline behaviours: outline crates that a ! turns into breakable crates (counted), and 'invisible blocks' that turn into iron after a delay. Iron can seal a TNT inside its frame, so the room's first lesson is to act before the frame closes.",
+    "The shifting-wall room has no breakable crates at all: iron crates are only footholds. A pure platforming beat between two dense stretches.",
+    "Laser architecture paces the early crates: 2-stacks stand in the safe pockets between blinking gates (S1-b), and ? crates sit between floor beams (S1-c), so crate rhythm equals hazard rhythm.",
+    "Density curve: 16 / 16 / 6 / 11 / 14 / bonus 34 / 18 / 8 / 29. The final 29 are a 'no tricky crates' victory lap with the reacquired whirlwind, ending on a Nitro-capped TNT stack that pays the last 4 in one chain.",
+    "Checkpoints at 16, 32, 38, 49 and ≈ 124: the front half is checkpointed every 6–16 crates, then 75 boxes (including the bonus) pass without one. That run is made survivable by the multi-hit tool rather than by checkpoints.",
+    "The hidden gem uses the new power immediately: flip gravity before the first laser of the second vent and fall into a ceiling pocket (LP2 1:03:31). No crates are tied to it."
+  ]
+}

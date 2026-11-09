@@ -3,7 +3,7 @@
  "game": "Crash 3",
  "stage": 4,
  "name": "Bone Yard",
- "nameJa": "どたばた ジュラシックぬま",
+ "japaneseTitle": "どたばた ジュラシックぬま",
  "sources": [
   "F3 p033-p035",
   "F3 p040L",
@@ -175,7 +175,10 @@
    "why": "the player stops to smash them and the triceratops bursts out of the cave behind him; in Time Trial one becomes the first Aku crate",
    "evidence": "F3 p033R 'A' bubble zoom; P3 p008R shot 49; F3 p102R frames 01-02",
    "confidence": "high",
-   "timeTrial": "one crate becomes Aku #1"
+   "timeTrial": "one crate becomes Aku #1",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S1-c",
@@ -200,13 +203,15 @@
     "ON-PATH",
     "SINGLE",
     "CHASE",
-    "EDGE-BAIT",
     "TIME-TRIAL"
    ],
    "why": "landing snag: a sloppy log jump runs into it (mask hint 1: spin crates blocking the line); multi-hit fruit the chase does not allow you to farm",
    "evidence": "F3 p033R zoom (green 3 badge)",
    "confidence": "high",
-   "timeTrial": "3s"
+   "timeTrial": "3s",
+   "ttBadges": {
+    "3": 1
+   }
   },
   {
    "id": "S1-d",
@@ -236,7 +241,10 @@
    "why": "slot crate turns to steel if not broken quickly; in a chase there is no time to wait for a good face",
    "evidence": "F3 p033R zoom (red 1 on the wood)",
    "confidence": "high",
-   "timeTrial": "1s (wood)"
+   "timeTrial": "1s (wood)",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "S1-e",
@@ -244,7 +252,7 @@
    "order": 5,
    "where": "beside the C1 crate (gutter bubble)",
    "composition": {
-    "unknown": 3
+    "wood?": 3
    },
    "count": 3,
    "arrangement": "2-stack + single",
@@ -399,7 +407,10 @@
    "why": "only Aku crate of the main course, floating so it is taken deliberately, right before three TNTs and the lava/grass strip",
    "evidence": "F3 p033L zoom; P3 p009L shot 53; F3 p102R frame 11",
    "confidence": "high",
-   "timeTrial": "Aku #2"
+   "timeTrial": "Aku #2",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S3-b",
@@ -479,7 +490,10 @@
    "why": "first tall stack, a ? reward right after the TNTs; TT 2-s box on the top tier",
    "evidence": "F3 p033L zoom (blue 2 on top); F3 p102R frames 13-14",
    "confidence": "high",
-   "timeTrial": "2s (top)"
+   "timeTrial": "2s (top)",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S3-e",
@@ -505,7 +519,10 @@
    "why": "plain crate; in TT the third Aku gives invincibility for the grass/magma strip",
    "evidence": "F3 p033L zoom ('A' badge); F3 p102R frames 13-14",
    "confidence": "high",
-   "timeTrial": "Aku #3"
+   "timeTrial": "Aku #3",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S3-f",
@@ -562,7 +579,10 @@
    "why": "first Nitro of the stage among ordinary crates right after a checkpoint (mask hint 3: careful spinning)",
    "evidence": "F3 p033R zoom; P3 p009R shot 64",
    "confidence": "high",
-   "timeTrial": "2s (the ?)"
+   "timeTrial": "2s (the ?)",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S4-b",
@@ -620,7 +640,10 @@
    "why": "pacing line steering to the right lane; TT 1-s box on the right",
    "evidence": "F3 p034R zoom; F3 p102R frame 22",
    "confidence": "high",
-   "timeTrial": "1s (last)"
+   "timeTrial": "1s (last)",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "S4-d",
@@ -650,7 +673,10 @@
    "why": "landing snag at a drop; TT: drop from the middle to avoid catching on the boxes",
    "evidence": "F3 p034R zoom; F3 p102R frame 23",
    "confidence": "high",
-   "timeTrial": "1s (top)"
+   "timeTrial": "1s (top)",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "S4-e",
@@ -728,7 +754,10 @@
    "why": "lone fruit crate in the chase; TT 2-s box needs a lead",
    "evidence": "F3 p034R zoom; P3 p009R shot 65",
    "confidence": "high",
-   "timeTrial": "2s"
+   "timeTrial": "2s",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S5-b",
@@ -778,9 +807,9 @@
     "lane-edge"
    ],
    "tags": [
-    "EDGE-BAIT",
     "CHASE",
-    "EXPLOSIVE-MIX"
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
    ],
    "why": "Nitros narrow the chase lane to the left half (mask hint 4); credited only via the green !",
    "evidence": "F3 p034L zoom",
@@ -1116,18 +1145,24 @@
   }
  ],
  "timeTrial": {
-  "timeCrates": 7,
-  "seconds": 12,
-  "ttAkuCrates": [
+  "crates": {
+   "1s": 3,
+   "2s": 3,
+   "3s": 1,
+   "aku": 3
+  },
+  "freezeSeconds": 12,
+  "staffRecord": "1:14:60 (F3 p102R)",
+  "sapphire": "1:47:00",
+  "gold": "1:40:20",
+  "akuCrates": [
    "S1-b",
    "S3-a",
    "S3-e"
-  ],
-  "staffBest": "1:14:60",
-  "source": "F3 p102R + map badges"
+  ]
  },
  "observations": [
-  "Chase 1 holds 17 crates + 2 C and no explosives; the free section holds all 3 TNT, the first Nitro, the only Aku, the ! group and the bonus; chase 2 holds 4 crates but 3 Nitros.",
+  "Chase 1 holds 17 crates + 2 C and no explosives; the free section holds 23 crates incl. all 3 TNT, the first Nitro, the only Aku, the ! group and the bonus; chase 2 holds 4 crates but 3 Nitros.",
   "Chase crates sit at landings (after the log, at the foot of drops) and work as snags; the guide says spin through or ignore.",
   "The chaser smashes and credits missed crates, so the all-box goal never forces a risky stop in a chase; the Aku must be broken by Crash, so it sits in the free section.",
   "The start trio triggers the chase: the player stops to smash it and the dinosaur bursts out behind him.",
@@ -1136,5 +1171,10 @@
   "Time Trial re-uses three ordinary crate positions as Aku crates so a clean run is invincible for the grass/magma strip.",
   "The red-gem secret course has no crates; the all-box total is independent of it.",
   "Bonus centrepiece: the tool (arrow) is on top of the stack you must dismantle."
- ]
+ ],
+ "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = crate that is an Aku crate in time trial. Drawn icon = normal-mode type. Key 'wood?' = a counted crate whose type cannot be read (gutter blur or hidden behind a badge)",
+ "countingRule": "F3 cumulative counts include the checkpoint crate; 'NN (MM)' = without (with) Nitro. After the green ! all 4 Nitro count. Steel !, green !, steel platform and steel C-blocks are not boxes: listed under 'uncounted' (count 0). The bonus (14) is inside the C58 count.",
+ "compositionKeysAdded": {
+  "wood?": "counted crate whose type cannot be read"
+ }
 }

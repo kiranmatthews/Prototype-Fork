@@ -3,7 +3,7 @@
  "game": "Crash 3",
  "stage": 7,
  "name": "Hang 'em High",
- "nameJa": "アラビアの あついぶらさがり",
+ "japaneseTitle": "アラビアの あついぶらさがり",
  "sources": [
   "F3 p048-p049",
   "F3 p057L",
@@ -41,6 +41,14 @@
  },
  "mismatches": [
   "C3 printed 64 vs drawn 63; total 95 agrees with the drawn crates"
+ ],
+ "uncountedFixtures": [
+  {
+   "section": "S3",
+   "kind": "arrowSteel",
+   "count": 1,
+   "where": "on the checkered bonus platform under mesh 2"
+  }
  ],
  "sections": [
   {
@@ -157,7 +165,10 @@
    "why": "the stage's unit block; TT Aku #1 inside",
    "evidence": "F3 p048L 'A' bubble zoom",
    "confidence": "high",
-   "timeTrial": "Aku #1 (one crate)"
+   "timeTrial": "Aku #1 (one crate)",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S1-c",
@@ -215,7 +226,10 @@
    "why": "mask handed out where the first hang section begins",
    "evidence": "F3 p048 zoom (blue 2); P3 p014R shot 21; F3 p104L frames 07-08",
    "confidence": "high",
-   "timeTrial": "2s"
+   "timeTrial": "2s",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S1-e",
@@ -295,7 +309,11 @@
    "why": "cluster beside an orangutan used as projectile (TT) or springboard; TT 2-s box hidden at the back",
    "evidence": "F3 p048R zoom; F3 p104L frame 11; P3 p015R shot 32",
    "confidence": "medium",
-   "timeTrial": "2s (back) + 1s"
+   "timeTrial": "2s (back) + 1s",
+   "ttBadges": {
+    "2": 1,
+    "1": 1
+   }
   },
   {
    "id": "S2-b",
@@ -326,7 +344,10 @@
    "why": "signature trap named by the header and mask hint 2: only a held straight-up carpet jump reaches it",
    "evidence": "F3 p048R zoom; P3 p014R shot 22; F3 p104L frames 14-15",
    "confidence": "high",
-   "timeTrial": "3s"
+   "timeTrial": "3s",
+   "ttBadges": {
+    "3": 1
+   }
   },
   {
    "id": "S2-c",
@@ -358,7 +379,10 @@
    "uncounted": {
     "arrowSteel": 1
    },
-   "timeTrial": "Aku #2 (one crate)"
+   "timeTrial": "Aku #2 (one crate)",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S2-d",
@@ -385,7 +409,10 @@
    "why": "ground crates as steps under a floating reward",
    "evidence": "F3 p048R '1' bubble zoom",
    "confidence": "high",
-   "timeTrial": "1s (the ?)"
+   "timeTrial": "1s (the ?)",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "S2-e",
@@ -436,7 +463,10 @@
    "why": "plain crate; TT Aku #3 (invincibility while traversing the mesh)",
    "evidence": "F3 p049L zoom; F3 TA4",
    "confidence": "high",
-   "timeTrial": "Aku #3"
+   "timeTrial": "Aku #3",
+   "ttBadges": {
+    "A": 1
+   }
   },
   {
    "id": "S3-b",
@@ -464,7 +494,10 @@
    "why": "hang-spin target",
    "evidence": "F3 p049L zoom",
    "confidence": "high",
-   "timeTrial": "2s"
+   "timeTrial": "2s",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S3-c",
@@ -569,7 +602,10 @@
    "why": "TT 3-s box on the mesh",
    "evidence": "F3 p049L zoom; P3 p015R shot 34",
    "confidence": "high",
-   "timeTrial": "3s (one crate)"
+   "timeTrial": "3s (one crate)",
+   "ttBadges": {
+    "3": 1
+   }
   },
   {
    "id": "S3-g",
@@ -682,7 +718,10 @@
    "why": "daruma-otoshi: slide the bottom out so the column drops without touching the Nitro (mask hint 5)",
    "evidence": "F3 p049R zoom; P3 p015L shot 25; P3 p015R shot 35",
    "confidence": "high",
-   "timeTrial": "1s (the wood)"
+   "timeTrial": "1s (the wood)",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "S4-b",
@@ -737,7 +776,10 @@
    "why": "S2-b lesson repeated with only a quiet hint (mask hint 6)",
    "evidence": "F3 p049R zoom; P3 p015L shot 26",
    "confidence": "high",
-   "timeTrial": "2s"
+   "timeTrial": "2s",
+   "ttBadges": {
+    "2": 1
+   }
   },
   {
    "id": "S4-d",
@@ -799,7 +841,10 @@
     "switch": 1,
     "switchGreen": 1
    },
-   "timeTrial": "1s (the ?)"
+   "timeTrial": "1s (the ?)",
+   "ttBadges": {
+    "1": 1
+   }
   },
   {
    "id": "B-a",
@@ -1217,15 +1262,21 @@
   }
  ],
  "timeTrial": {
-  "timeCrates": 10,
-  "seconds": 18,
-  "ttAkuCrates": [
+  "crates": {
+   "1s": 4,
+   "2s": 4,
+   "3s": 2,
+   "aku": 3
+  },
+  "freezeSeconds": 18,
+  "staffRecord": "0:34:13 (F3 p104L)",
+  "sapphire": "1:28:00",
+  "gold": "0:53:60",
+  "akuCrates": [
    "S1-b",
    "S2-c",
    "S3-a"
-  ],
-  "staffBest": "0:34:13",
-  "source": "F3 p104L + map badges"
+  ]
  },
  "observations": [
   "First-of-theme restraint: 1 Nitro in 58 main-route boxes; the only TNT is a tool in the bonus.",
@@ -1238,5 +1289,7 @@
   "The bonus holds 21% of the stage's boxes and all its lives; its puzzle is a TNT-switch-outline-arrow chain.",
   "Reconstructed total: the stage-27 Nitros count for stage 7 and are credited by the green ! in the last hallway.",
   "Checkpoints close traversal modes: mesh 1, carpet run, mesh 2 + bonus."
- ]
+ ],
+ "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = crate that is an Aku crate in time trial. Drawn icon = normal-mode type. Key 'wood?' = a counted crate whose type cannot be read (gutter blur or hidden behind a badge)",
+ "countingRule": "F3 cumulative counts include the checkpoint crate. C3 is printed 64 but the drawn crates give 63. The 17 Nitros of the stage-27 course (section Y) are counted in stage 7's total (95, gamepressure) and credited by the green ! in the end hallway (inferred). Steel arrows and switches are listed under 'uncounted' / 'uncountedFixtures'."
 }

@@ -1087,7 +1087,7 @@
       "tags": [
         "CHECKPOINT"
       ],
-      "why": "",
+      "why": "banks the lagoon's search area: all-box players reload here to retry the waterfall room and the gem pier",
       "evidence": "LP1 3:10:56; GR 105",
       "confidence": "high"
     },
@@ -1192,7 +1192,7 @@
       "tags": [
         "CHECKPOINT"
       ],
-      "why": "",
+      "why": "placed right after the icefall, the level's most dangerous stretch, so a death there costs only the gold-crate detour",
       "evidence": "LP1 3:11:34",
       "confidence": "high"
     },
@@ -1315,7 +1315,7 @@
       "tags": [
         "CHECKPOINT"
       ],
-      "why": "",
+      "why": "checkpoints close up here (only 6 crates after C4) before the second floe field and the TNT gorge",
       "evidence": "LP1 3:12:08-3:12:10 (CHECKPOINT text)",
       "confidence": "medium"
     },

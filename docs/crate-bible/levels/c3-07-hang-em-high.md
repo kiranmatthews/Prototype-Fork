@@ -41,7 +41,8 @@ Evidence level:
 | Hazards | gaps between rooftops, holes in the mesh, a hole right after the mesh end, moving platforms |
 | Time trial | 10 time crates = 18 s; staff best 0:34:13 (F3 p104L: the easiest Arabian stage); relic targets printed in the header: sapphire 1:28:00, gold 0:53:60 |
 
-`uncounted` in the JSON lists steel arrows and switches, which are not part of the box total.
+`uncounted` / `uncountedFixtures` in the JSON list steel arrows and switches, which are not part of
+the box total; `ttBadges` gives each cluster's time-trial badges ({"1": n} seconds, {"A": 1} = Aku).
 
 ## Route skeleton
 

@@ -14,7 +14,7 @@ Evidence level:
   Level total 66 = 58 (C58, Nitro excluded) + 4 + 4 Nitro; it matches gamepressure (66, bonus 14).
 - **Blurred / inferred:** the checkpoint-1 bubble sits in the book gutter and is motion-blurred: one
   tall (2-stack) shape, one single crate and the C crate are visible; the count (3 crates + C) is forced
-  by the "11" label, the crate types are unreadable (`unknown` below). Chase/free boundaries are
+  by the "11" label, the crate types are unreadable (`wood?` below). Chase/free boundaries are
   inferred from which F3 time-trial frames show the triceratops and from Prima captions.
 - **Unidentified map icons (not crates):** small dark "pedestal with raised arms" icons on the strip
   before C28, a red spiky figure on the diagonal before C58, red discs on the gem course.
@@ -34,15 +34,16 @@ Evidence level:
 | ! / outline | 1 steel ! (floating) + 5 outline crates (S4); 1 green ! at the very end (S5) |
 | Iron-bound / arrows | 0 iron-bound; 1 wooden arrow (bonus); steel-crate platform in the bonus (uncounted) |
 | Striped / slot | 9 striped (7 main, 2 bonus) / 2 slot (S1, S2) |
-| ? / wood | 12 ? (6 main, 6 bonus) / 21 wood (17 main, 4 bonus) + 3 unknown (CP1 bubble) |
+| ? / wood | 12 ? (6 main, 6 bonus) / 21 wood (17 main, 4 bonus) + 3 `wood?` (CP1 bubble, type unreadable) |
 | Gems | Clear gem: all 66 boxes (green ! must be pressed before the goal — it appears in front of you, Prima 59). Secret gem (ひみつダイヤ): finish the **red-gem course**, which needs the red gem from stage 12 Deep Trouble |
 | Enemies | Triceratops chaser (ドタバタトプス, invincible, smashes boxes); pterodactyls (バサバサプテラ, touch = carried off) |
 | Hazards | lava/magma pools and flame jets (left/right alternation, Prima 50), tar, clinging grass (slows you in a chase), logs, steps down, TNT, Nitro |
 | Time trial | 7 time crates = 12 s (3+1+2+2+1+1+2); 3 TT Aku crates; staff best 1:14:60 (F3 p102R); relic targets printed in the header: sapphire 1:47:00, gold 1:40:20 |
 | Difficulty notes | F3: the first chase stage of Crash 3 (the triceratops replaces Crash 2's polar bear; being caught is death). Perfect run is easier once the speed shoes are owned |
 
-Composition keys used in the JSON: standard keys, plus `unknown` = a crate whose type cannot be read
-(blurred icon); `uncounted` lists steel/switch objects that are not part of the box total.
+Composition keys used in the JSON: standard keys, plus `wood?` = a counted crate whose type cannot be
+read (blurred icon); `uncounted` lists steel/switch objects that are not part of the box total;
+`ttBadges` gives each cluster's time-trial badges ({"1": n} seconds, {"A": 1} = Aku in Time Trial).
 
 ## Route skeleton
 
@@ -101,9 +102,9 @@ superscript ¹²³ = time-crate value in Time Trial · `*` = becomes an Aku crat
 |---|---|---|---|---|---|---|---|---|
 | S1-a | first crate, just past the start | W×1 | single | walk, spin | ON-PATH SINGLE | a free first hit before anything is at stake; it pulls the player forward into the cave mouth where the trio waits | F3 p033R zoom | medium |
 | S1-b | cave mouth: two crates in front, one back-right | W×3 (one is a TT Aku) | loose trio | walk, spin | ON-PATH CHASE TEACH TIME-TRIAL | the chase trigger: the player stops to smash three crates and the triceratops breaks out of the cave behind him (Prima 49), so the first chase starts while the player is "looking down". In TT one of them is the first Aku crate, spun the instant the clock starts (F3 TT 02) | F3 p033R "A" bubble zoom; P3 p008R shot 49; F3 p102R 01–02 | high |
-| S1-c | right after the first fallen log | S×1 (TT 3 s) | single | spin (one hit) or leave to the dino | ON-PATH SINGLE CHASE EDGE-BAIT TIME-TRIAL | placed where the player lands after jumping the log, so a sloppy jump runs into it; F3 mask hint 1 says to spin crates that block the line. A striped crate's extra fruit is a temptation the chase forbids | F3 p033R zoom (green 3 badge), mask hint 1 | high |
+| S1-c | right after the first fallen log | S×1 (TT 3 s) | single | spin (one hit) or leave to the dino | ON-PATH SINGLE CHASE TIME-TRIAL | placed where the player lands after jumping the log, so a sloppy jump runs into it; F3 mask hint 1 says to spin crates that block the line. A striped crate's extra fruit is a temptation the chase forbids | F3 p033R zoom (green 3 badge), mask hint 1 | high |
 | S1-d | next on the line | W×1 (TT 1 s) + $×1 | pair | spin | ON-PATH PAIR CHASE TIMED TIME-TRIAL | a slot crate cycles its face and turns to steel if not broken quickly: in a chase there is no time to wait for a good face — a deliberate "you can't have everything" crate | F3 p033R zoom | high |
-| S1-e | beside the C1 crate | x×3 (a 2-stack + a single) | 2-stack + single | spin | ON-PATH CHASE STACK | crates next to the checkpoint reward a player who has built a lead; Prima calls this area a brief rest | F3 p033 gutter (blurred), forced by label 11 | low (types), medium (count) |
+| S1-e | beside the C1 crate | x×3 (`wood?`: a 2-stack + a single) | 2-stack + single | spin | ON-PATH CHASE STACK | crates next to the checkpoint reward a player who has built a lead; Prima calls this area a brief rest | F3 p033 gutter (blurred), forced by label 11 | low (types), medium (count) |
 | S1-f | on the chase path | C | single | spin/jump | CHECKPOINT CHASE | a checkpoint inside the chase so a death late in chase 1 does not restart the whole run | F3 p033 gutter "11コ"; P3 p008R shot 51 | high |
 
 Rhythm: S1 is a corridor of singles and pairs, every one on or beside the racing line, separated by
@@ -199,7 +200,7 @@ F3 sends the bonus to book p. 72 "from p. 61". The 14 bonus boxes are inside the
 |---|---|---|---|---|---|---|---|---|
 | S5-a | on the diagonal after the pterodactyls | ?×1 (TT 2 s) | single | spin | ON-PATH SINGLE CHASE TIME-TRIAL | a lone fruit crate inside the chase; Prima 65: the TT 2-s box here is easy only with a big lead on the dinosaur | F3 p034R zoom; P3 p009R shot 65 | high |
 | S5-b | inside a patch of clinging grass | S×1 | single | double jump onto it, or go round on the right | ON-PATH TOOL STEPPING CHASE TIME-TRIAL | a crate used as an island: the grass grabs Crash and costs lots of time (F3 TA4), standing on the crate skips it | F3 p034R zoom (TA4 bubble) | high |
-| S5-c | right edge, diagonal line | N×3 | loose diagonal line along the edge | avoid; detonated by S5-d | EDGE-BAIT CHASE EXPLOSIVE-MIX | Nitros narrow the chase lane to the left half; F3 mask hint 4: go left here, then jump the magma so as to avoid the grass. They only count via the green ! | F3 p034L zoom; mask hint 4 | high |
+| S5-c | right edge, diagonal line | N×3 | loose diagonal line along the edge | avoid; detonated by S5-d | CHASE EXPLOSIVE-MIX COUNT-TRAP | Nitros narrow the chase lane to the left half; F3 mask hint 4: go left here, then jump the magma so as to avoid the grass. They only count via the green ! | F3 p034L zoom; mask hint 4 | high |
 | S5-d | last crates before the goal | S×2; uncounted: green ! | ! and two striped spread on the path | spin the ! while running | NITRO-SWITCH ON-PATH CHASE COUNT-TRAP | the stage's final count check placed inside the chase: F3 mask hint 5 — for a perfect you must have shaken off the triceratops by here, otherwise there is no time to hit the green ! and collect the gem; Prima 59: spin it and the gem appears in front of you | F3 p034L zoom; mask hint 5; P3 p009R shot 59 | high |
 
 Chase 2 has the fewest collectible crates of any section (4) but the most dangerous ones (3 Nitro)
@@ -280,9 +281,9 @@ never demands a risky stop inside a chase; the free section and the bonus carry 
 ## Design logic of this level
 
 1. **Two-speed density curve.** Chase 1 holds 17 crates + 2 checkpoints and zero explosives; the free
-   section holds 20 crates + C28/C58, all 3 TNT, the first Nitro, the only Aku, the ! group and the
-   bonus (14); chase 2 holds only 4 crates but 3 Nitros. Risk moves out of the chase and into the
-   walking section, then comes back as lane hazards in the last chase.
+   section holds 23 crates (incl. all 3 TNT) + C28/C58 + 1 Nitro, with the only Aku and the ! group,
+   plus the 14-crate bonus; chase 2 holds only 4 crates but 3 Nitros. Risk moves out of the chase
+   and into the walking section, then comes back as lane hazards in the last chase.
 2. **Chase crates are snags, not rewards.** They sit at landings — after the log (S1-c), at the foot
    of drops (TT 05, S4-d) — so a careless jump runs into them. The guide's advice is spin through or
    ignore; nothing in a chase is behind a wall or on an edge.
@@ -304,9 +305,9 @@ never demands a risky stop inside a chase; the free section and the bonus carry 
    the right lane, steering the TT line.
 9. **Secret route without crates.** The red-gem course carries no boxes, so the secret gem is a pure
    speed/route reward and the all-box total is independent of it.
-10. **Sparse structures.** Only five multi-crate structures on the main course (2×2, TNT 2-stack,
-    two 3-stacks, the C28 striped pair); the rest are singles and pairs — consistent with a level in
-    which half the length is spent running from something.
+10. **Sparse structures.** Only six multi-crate structures on the main course (the blurred 2-stack
+    at C1, the 2×2, the TNT 2-stack, two 3-stacks, the C28 striped pair); the rest are singles and
+    pairs — consistent with a level in which half the length is spent running from something.
 11. **Bonus as a support-order lesson.** The bonus room's centrepiece puts the tool (arrow) on top of
     the stack that hides it, with the reward unreachable otherwise.
 

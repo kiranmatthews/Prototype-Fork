@@ -246,7 +246,7 @@
         "DETOUR",
         "SINGLE"
       ],
-      "why": "",
+      "why": "a small off-line pickup that rewards a glance left between the drone fights",
       "evidence": "LP1 3:31:28",
       "confidence": "medium"
     },
@@ -273,7 +273,7 @@
         "PAIR",
         "EXPLOSIVE-MIX"
       ],
-      "why": "",
+      "why": "second TNT, this time next to a crate: break the crate first or let the fuse take it",
       "evidence": "LP1 3:31:30",
       "confidence": "medium"
     },
@@ -298,7 +298,7 @@
         "ON-PATH",
         "STACK"
       ],
-      "why": "",
+      "why": "stack beside the fence: spin the base, the top drops into reach",
       "evidence": "LP1 3:31:32-3:31:34",
       "confidence": "medium"
     },
@@ -351,7 +351,7 @@
         "ON-PATH",
         "EXPLOSIVE-MIX"
       ],
-      "why": "",
+      "why": "TNT at the cave mouth beside a ? that doubles as a step to the higher ground",
       "evidence": "LP1 3:31:40",
       "confidence": "medium"
     },
@@ -430,7 +430,7 @@
         "CHECKPOINT",
         "PAIR"
       ],
-      "why": "",
+      "why": "the checkpoint sits above the densest block, so a fall during the block costs nothing after it",
       "evidence": "LP1 3:31:52; GR 46",
       "confidence": "high"
     },
@@ -477,7 +477,7 @@
         "ON-PATH",
         "SINGLE"
       ],
-      "why": "",
+      "why": "one easy crate to restart the rhythm after the checkpoint",
       "evidence": "LP1 3:31:54",
       "confidence": "medium"
     },
@@ -557,7 +557,7 @@
         "DETOUR",
         "SWITCH"
       ],
-      "why": "",
+      "why": "scaffold pickups off the line, next to a metal ! whose purpose the frames do not show",
       "evidence": "LP1 3:32:00-3:32:06",
       "confidence": "low"
     },
@@ -582,7 +582,7 @@
         "HIGH",
         "PAIR"
       ],
-      "why": "",
+      "why": "height check on a scaffold: the pair is only reachable from the tower's top deck",
       "evidence": "LP1 3:32:10",
       "confidence": "medium"
     },
@@ -607,7 +607,7 @@
         "ON-PATH",
         "GRID"
       ],
-      "why": "",
+      "why": "a dense 4-block on a platform: one stomp-and-spin sequence for four crates",
       "evidence": "LP1 3:32:12",
       "confidence": "medium"
     },
@@ -634,7 +634,7 @@
         "EXPLOSIVE-MIX",
         "HIGH"
       ],
-      "why": "",
+      "why": "the TNT high on a pole is out of jump reach: a hazard placed where a careless jump would hit it",
       "evidence": "LP1 3:32:14",
       "confidence": "low"
     },
@@ -731,7 +731,7 @@
       "tags": [
         "ON-PATH"
       ],
-      "why": "",
+      "why": "a bridge-deck crate taken mid-run while the camera faces the runner",
       "evidence": "LP1 3:32:48",
       "confidence": "low"
     },
@@ -803,7 +803,7 @@
         "HIGH",
         "SINGLE"
       ],
-      "why": "",
+      "why": "a shelf crate above an enemy: stomp the enemy, then jump",
       "evidence": "LP1 3:33:12-3:33:14",
       "confidence": "medium"
     },
@@ -851,7 +851,7 @@
         "STACK",
         "CHECKPOINT"
       ],
-      "why": "",
+      "why": "pacing pair beside the checkpoint, so the checkpoint area always rewards the player",
       "evidence": "LP1 3:33:16-3:33:18",
       "confidence": "medium"
     },
@@ -874,7 +874,7 @@
       "tags": [
         "CHECKPOINT"
       ],
-      "why": "",
+      "why": "checkpoint before the mask and the explosives room",
       "evidence": "LP1 3:33:18 (CHECKPOINT text)",
       "confidence": "high"
     },
@@ -898,7 +898,7 @@
         "ON-PATH",
         "EXPLOSIVE-MIX"
       ],
-      "why": "",
+      "why": "crate beside a TNT on a scaffold: spin the crate, not the TNT",
       "evidence": "LP1 3:33:26",
       "confidence": "low"
     },
@@ -923,7 +923,7 @@
         "HIGH",
         "SINGLE"
       ],
-      "why": "",
+      "why": "height check: the ? hangs on a beam above the scaffold route",
       "evidence": "LP1 3:33:28",
       "confidence": "medium"
     },
@@ -975,7 +975,7 @@
         "ON-PATH",
         "SINGLE"
       ],
-      "why": "",
+      "why": "post crate on the way to the mask",
       "evidence": "LP1 3:33:30-3:33:32",
       "confidence": "medium"
     },
@@ -1149,7 +1149,7 @@
       "tags": [
         "CHECKPOINT"
       ],
-      "why": "",
+      "why": "checkpoint right after the slow-mo explosives, before the bonus pad",
       "evidence": "LP1 3:34:14 (CHECKPOINT text)",
       "confidence": "high"
     },
@@ -1173,7 +1173,7 @@
         "ON-PATH",
         "PAIR"
       ],
-      "why": "",
+      "why": "two crates by the bonus pad so its approach carries a small reward",
       "evidence": "LP1 3:34:16 (fruit 470 -> 481); GR 136",
       "confidence": "medium"
     },
@@ -1280,7 +1280,7 @@
         "ON-PATH",
         "PAIR"
       ],
-      "why": "",
+      "why": "crates past the dock row so the sweep does not end exactly at the lid",
       "evidence": "LP1 3:34:43-3:34:45 (HUD 21 -> 23)",
       "confidence": "low"
     },
@@ -1333,7 +1333,7 @@
       "tags": [
         "ON-PATH"
       ],
-      "why": "",
+      "why": "the final crate sits on the far side of the now-solid iron row: it is collected by running on the lid",
       "evidence": "LP1 3:34:53-3:34:55 (HUD 26 -> 27)",
       "confidence": "low"
     },
@@ -1383,7 +1383,7 @@
         "SPEED-LINE",
         "ON-PATH"
       ],
-      "why": "",
+      "why": "arch crate on the fruit line: the fruit trail points the lane",
       "evidence": "LP1 3:35:14-3:35:16",
       "confidence": "medium"
     },
@@ -1459,7 +1459,7 @@
         "SPEED-LINE",
         "EDGE-BAIT"
       ],
-      "why": "",
+      "why": "crate beside a tree: a hazard and a crate share the beat",
       "evidence": "LP1 3:35:27-3:35:28",
       "confidence": "medium"
     },
@@ -1507,7 +1507,7 @@
         "SPEED-LINE",
         "ON-PATH"
       ],
-      "why": "",
+      "why": "the last centre-lane crate before the launch, timed to the rise",
       "evidence": "LP1 3:35:34",
       "confidence": "medium"
     },
@@ -1556,7 +1556,7 @@
         "SPEED-LINE",
         "ON-PATH"
       ],
-      "why": "",
+      "why": "head-on crate in a channel too narrow to steer around",
       "evidence": "LP1 3:35:38-3:35:40",
       "confidence": "medium"
     },
@@ -1581,7 +1581,7 @@
         "SPEED-LINE",
         "TIMED"
       ],
-      "why": "",
+      "why": "crate between falling ice pillars: a timing hazard beside a pickup",
       "evidence": "LP1 3:35:41-3:35:42",
       "confidence": "medium"
     },
@@ -1605,7 +1605,7 @@
       "tags": [
         "SPEED-LINE"
       ],
-      "why": "",
+      "why": "left-lane crate just after a ridge: steer during the landing",
       "evidence": "LP1 3:35:43",
       "confidence": "low"
     },
@@ -1652,7 +1652,7 @@
       "tags": [
         "SPEED-LINE"
       ],
-      "why": "",
+      "why": "a split beat: one lane each side, so both can only be taken with a hard steer",
       "evidence": "LP1 3:35:45-3:35:48",
       "confidence": "low"
     },
@@ -1701,7 +1701,7 @@
         "SPEED-LINE",
         "ENEMY-LINK"
       ],
-      "why": "",
+      "why": "centre crates among skiers: collect while dodging moving blockers",
       "evidence": "LP1 3:35:52-3:35:54",
       "confidence": "medium"
     },
@@ -1772,7 +1772,7 @@
         "EXPLOSIVE-MIX",
         "EDGE-BAIT"
       ],
-      "why": "",
+      "why": "a crate on the far side of two Nitro: commit to the lane past the Nitro",
       "evidence": "LP1 3:36:13-3:36:17",
       "confidence": "medium"
     },
@@ -1848,7 +1848,7 @@
         "STACK",
         "DETOUR"
       ],
-      "why": "",
+      "why": "an optional upper-left path carries its own stack",
       "evidence": "LP1 3:36:23",
       "confidence": "low"
     },
@@ -1872,7 +1872,7 @@
         "SPEED-LINE",
         "EDGE-BAIT"
       ],
-      "why": "",
+      "why": "fence-line crate before the end platform",
       "evidence": "LP1 3:36:23-3:36:25",
       "confidence": "low"
     },

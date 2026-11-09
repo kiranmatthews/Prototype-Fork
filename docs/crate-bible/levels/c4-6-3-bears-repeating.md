@@ -100,14 +100,14 @@ second half: [W] by N N ─ weave [W N N W] ─ [W/W/W] centre + [W/W] upper lef
 | S1-b | right foreground of the opening view: two ? on top of two wood | ?×2 + W×2 = 4 | 2 x 2 block, 2 high | spin, jump | ON-PATH GRID SUPPORT-ORDER | first stacked block: break the base and the ?s drop to hand height | LP1 3:31:12-3:31:14 | high |
 | S1-c | snow below the first ledge: TNT next to crates that float beside it | T×1 + x×2 = 3 | TNT + 2 floating, floating | jump, timed | ON-PATH EXPLOSIVE-MIX TOOL TEACH | GR: jump on the TNT and step back, and its blast takes the 2 floating crates. The first TNT is a tool | LP1 3:31:14-3:31:22 (HUD 1 -> 3; fuse at 3:31:22); GR | medium |
 | S1-d | around the first lab assistant and his two robot drones (fruit bursts right) | x×3 = 3 | group | spin | ON-PATH ENEMY-LINK | crates beside the first enemy pair; the robots can only be stopped by beating their owner | LP1 3:31:24-3:31:26 | low |
-| S1-e | wood crate on a ledge to the left | W×1 = 1 | single | jump | DETOUR SINGLE |  | LP1 3:31:28 | medium |
-| S1-f | bottom left: a crate beside a TNT | x×1 + T×1 = 2 | pair | spin, timed | ON-PATH PAIR EXPLOSIVE-MIX |  | LP1 3:31:30 | medium |
-| S1-g | left side of the fenced snow path: wood on top of a ? | W×1 + ?×1 = 2 | stack, 2 high | spin | ON-PATH STACK |  | LP1 3:31:32-3:31:34 | medium |
+| S1-e | wood crate on a ledge to the left | W×1 = 1 | single | jump | DETOUR SINGLE | a small off-line pickup that rewards a glance left between the drone fights | LP1 3:31:28 | medium |
+| S1-f | bottom left: a crate beside a TNT | x×1 + T×1 = 2 | pair | spin, timed | ON-PATH PAIR EXPLOSIVE-MIX | second TNT, this time next to a crate: break the crate first or let the fuse take it | LP1 3:31:30 | medium |
+| S1-g | left side of the fenced snow path: wood on top of a ? | W×1 + ?×1 = 2 | stack, 2 high | spin | ON-PATH STACK | stack beside the fence: spin the base, the top drops into reach | LP1 3:31:32-3:31:34 | medium |
 | S1-h | far shore of the plank-raft lake, with a lab assistant and two drones | x×2 = 2 | stack, 2 high | spin | ON-PATH STACK ENEMY-LINK | reward on the far shore, guarded by the drones' laser bolts | LP1 3:31:36-3:31:38 | medium |
-| S1-i | ice-cave mouth: TNT and wood at floor level, a ? used as a step | T×1 + W×1 + ?×1 = 3 | pair + single | jump, spin, timed | ON-PATH EXPLOSIVE-MIX |  | LP1 3:31:40 | medium |
+| S1-i | ice-cave mouth: TNT and wood at floor level, a ? used as a step | T×1 + W×1 + ?×1 = 3 | pair + single | jump, spin, timed | ON-PATH EXPLOSIVE-MIX | TNT at the cave mouth beside a ? that doubles as a step to the higher ground | LP1 3:31:40 | medium |
 | S1-j | first cable-car platform (hazard-striped, swinging) carrying two tall crate columns | x×7 = 7 | two columns (3 and 4 high), 4 high | bounce, spin | ON-PATH STACK COLUMN-BOUNCE TIMED | a column is a stomp chain: one entry, several crates; on a moving platform the player must commit (fruit 61 -> 93) | LP1 3:31:46-3:31:48 | medium |
 | S1-k | second cable-car platform: block 3 wide x 2 high of ? and wood | ?×3 + W×3 = 6 | 3 x 2 block, 2 high | spin, bounce | ON-PATH GRID REWARD | dense block right under the checkpoint | LP1 3:31:50-3:31:52 | medium |
-| S1-l | snow ledge above the block: checkpoint with a wood crate beside it | C×1 + W×1 = 2 | pair | jump | CHECKPOINT PAIR |  | LP1 3:31:52; GR 46 | high |
+| S1-l | snow ledge above the block: checkpoint with a wood crate beside it | C×1 + W×1 = 2 | pair | jump | CHECKPOINT PAIR | the checkpoint sits above the densest block, so a fall during the block costs nothing after it | LP1 3:31:52; GR 46 | high |
 | S1-m | unresolved crates of the snowfield and cable-car stretch | x×10 = 10 | unresolved | walk | ON-PATH | balance of GR's 46 | GR 46 minus mapped | low |
 
 The opening teaches the level's grammar in order: stacked block, TNT used as a tool, enemy-guarded crates, then
@@ -118,13 +118,13 @@ column is the efficient answer, and the platform's swing sets the timing.
 
 | id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | conf. |
 |---|---|---|---|---|---|---|---|---|
-| S2-a | snow platform after C1 | x×1 = 1 | single | spin | ON-PATH SINGLE |  | LP1 3:31:54 | medium |
+| S2-a | snow platform after C1 | x×1 = 1 | single | spin | ON-PATH SINGLE | one easy crate to restart the rhythm after the checkpoint | LP1 3:31:54 | medium |
 | S2-b | TNT standing on top of a wood crate | T×1 + W×1 = 2 | stack, 2 high | spin, timed | STACK EXPLOSIVE-MIX SUPPORT-ORDER | spin the base and the TNT drops, lit: step away | LP1 3:31:56 | medium |
 | S2-c | cable-car platform: dark metal-banded strong crate on top of a TNT | R×1 + T×1 = 2 | stack, 2 high | timed, body-slam | STACK EXPLOSIVE-MIX REINFORCED SUPPORT-ORDER | the TNT under it is the key to the strong crate: light it and leave the moving platform | LP1 3:31:58-3:32:00 | low |
-| S2-d | left of the route: ? on a wooden scaffold; a crate on an X-trestle (a metal ! on a post nearby, not counted) | ?×1 + x×1 = 2 | singles | jump | DETOUR SWITCH |  | LP1 3:32:00-3:32:06 | low |
-| S2-e | top level of a scaffold tower | ?×2 = 2 | pair, high | jump, double-jump | HIGH PAIR |  | LP1 3:32:10 | medium |
-| S2-f | scaffold platform: 2 x 2 block of ? | ?×4 = 4 | 2 x 2 block, 2 high | spin, bounce | ON-PATH GRID |  | LP1 3:32:12 | medium |
-| S2-g | chemical-tank yard: a crate by a lab assistant and robot; TNT high on a pole | T×1 + x×1 = 2 | singles | spin, jump | ENEMY-LINK EXPLOSIVE-MIX HIGH |  | LP1 3:32:14 | low |
+| S2-d | left of the route: ? on a wooden scaffold; a crate on an X-trestle (a metal ! on a post nearby, not counted) | ?×1 + x×1 = 2 | singles | jump | DETOUR SWITCH | scaffold pickups off the line, next to a metal ! whose purpose the frames do not show | LP1 3:32:00-3:32:06 | low |
+| S2-e | top level of a scaffold tower | ?×2 = 2 | pair, high | jump, double-jump | HIGH PAIR | height check on a scaffold: the pair is only reachable from the tower's top deck | LP1 3:32:10 | medium |
+| S2-f | scaffold platform: 2 x 2 block of ? | ?×4 = 4 | 2 x 2 block, 2 high | spin, bounce | ON-PATH GRID | a dense 4-block on a platform: one stomp-and-spin sequence for four crates | LP1 3:32:12 | medium |
+| S2-g | chemical-tank yard: a crate by a lab assistant and robot; TNT high on a pole | T×1 + x×1 = 2 | singles | spin, jump | ENEMY-LINK EXPLOSIVE-MIX HIGH | the TNT high on a pole is out of jump reach: a hazard placed where a careless jump would hit it | LP1 3:32:14 | low |
 | S2-h | walkway: wooden arrow crate, with a red lantern on the left rail | ↑×1 = 1 | single | arrow | TOOL SINGLE ROUTE-SPLIT | GR's 'bounce crate before the spinning platforms'; the red light beside it marks the hidden-gem drop | LP1 3:32:16-3:32:20 (HIDDEN GEM FOUND 3:32:20); GR 62 | high |
 
 Two TNT stacks frame this stretch. First, TNT on top of wood (break the base and the TNT drops lit). Then a strong crate
@@ -137,10 +137,10 @@ end is both a tool and a marker. The red lantern beside it is the only tell for 
 |---|---|---|---|---|---|---|---|---|
 | S3-a | side alcove right of the spinning discs: wood crate on the snow beside a lab assistant | W×1 = 1 | single | jump | DETOUR ENEMY-LINK | off-line pocket while the discs rotate | LP1 3:32:26-3:32:30 | medium |
 | S3-b | long rope suspension bridge run toward the camera: ? crates on bridge posts | ?×2 = 2 | singles on posts | spin | ON-PATH SINGLE CHASE | crates on the bridge line while drones flank it; camera faces the runner | LP1 3:32:40-3:32:52 | medium |
-| S3-c | bridge deck crate spun mid-run | x×1 = 1 | single | spin | ON-PATH |  | LP1 3:32:48 | low |
+| S3-c | bridge deck crate spun mid-run | x×1 = 1 | single | spin | ON-PATH | a bridge-deck crate taken mid-run while the camera faces the runner | LP1 3:32:48 | low |
 | S3-d | crate on a post flanked by two pink drones | x×1 = 1 | single | spin | ON-PATH ENEMY-LINK | the crate sits between the two drones' beams | LP1 3:32:58-3:33:00 | medium |
 | S3-e | crate on a post among the yellow bumper pads | x×1 = 1 | single | bounce | HIGH SINGLE | collected on the way up the bumper chain | LP1 3:33:04-3:33:06 | medium |
-| S3-f | dark cave: wood crate on the snow shelf above a lab assistant | W×1 = 1 | single | jump | HIGH SINGLE |  | LP1 3:33:12-3:33:14 | medium |
+| S3-f | dark cave: wood crate on the snow shelf above a lab assistant | W×1 = 1 | single | jump | HIGH SINGLE | a shelf crate above an enemy: stomp the enemy, then jump | LP1 3:33:12-3:33:14 | medium |
 | S3-g | unresolved | x×1 = 1 | unresolved | walk | ON-PATH | balance of GR 70 | GR 70 minus mapped | low |
 
 ### S4 — Yellow-gem plate → slow-mo mask (cumulative 80)
@@ -155,12 +155,12 @@ end is both a tool and a marker. The red lantern beside it is the only tell for 
 
 | id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | conf. |
 |---|---|---|---|---|---|---|---|---|
-| S4-a | snow path at the yellow-gem plate: wood on wood beside the checkpoint | W×2 = 2 | stack, 2 high | spin | ON-PATH STACK CHECKPOINT |  | LP1 3:33:16-3:33:18 | medium |
-| S4-b | checkpoint on the snow path | C×1 = 1 | single | walk | CHECKPOINT |  | LP1 3:33:18 (CHECKPOINT text) | high |
-| S4-c | machinery walkway: crate spun beside a TNT on a scaffold | x×1 = 1 | single | spin | ON-PATH EXPLOSIVE-MIX |  | LP1 3:33:26 | low |
-| S4-d | side-view scaffold room: ? hanging high on a beam, top left | ?×1 = 1 | single, high | jump, double-jump | HIGH SINGLE |  | LP1 3:33:28 | medium |
+| S4-a | snow path at the yellow-gem plate: wood on wood beside the checkpoint | W×2 = 2 | stack, 2 high | spin | ON-PATH STACK CHECKPOINT | pacing pair beside the checkpoint, so the checkpoint area always rewards the player | LP1 3:33:16-3:33:18 | medium |
+| S4-b | checkpoint on the snow path | C×1 = 1 | single | walk | CHECKPOINT | checkpoint before the mask and the explosives room | LP1 3:33:18 (CHECKPOINT text) | high |
+| S4-c | machinery walkway: crate spun beside a TNT on a scaffold | x×1 = 1 | single | spin | ON-PATH EXPLOSIVE-MIX | crate beside a TNT on a scaffold: spin the crate, not the TNT | LP1 3:33:26 | low |
+| S4-d | side-view scaffold room: ? hanging high on a beam, top left | ?×1 = 1 | single, high | jump, double-jump | HIGH SINGLE | height check: the ? hangs on a beam above the scaffold route | LP1 3:33:28 | medium |
 | S4-e | snowy ledge: TNT with two crates above it | T×1 + x×2 = 3 | TNT under a pair | timed, jump | SANDWICH EXPLOSIVE-MIX SUPPORT-ORDER COUNT-TRAP | GR's 'don't miss the 2 crates above the TNT': take them from above before lighting the TNT, or let the blast take them | LP1 3:33:28-3:33:30; GR 80 | medium |
-| S4-f | wood crate on a post (a metal ! crate on another post nearby, not counted) | W×1 = 1 | single | jump | ON-PATH SINGLE |  | LP1 3:33:30-3:33:32 | medium |
+| S4-f | wood crate on a post (a metal ! crate on another post nearby, not counted) | W×1 = 1 | single | jump | ON-PATH SINGLE | post crate on the way to the mask | LP1 3:33:30-3:33:32 | medium |
 | S4-g | unresolved | x×1 = 1 | unresolved | walk | ON-PATH | balance of GR 80 | GR 80 minus mapped | low |
 
 ### S5 — Slow-mo area (cumulative 133)
@@ -191,8 +191,8 @@ detonated for credit. Slow-mo turns a lethal chain into a timed escape. This is 
 
 | id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | conf. |
 |---|---|---|---|---|---|---|---|---|
-| S6-a | walkway past the chemical vents | C×1 = 1 | single | walk | CHECKPOINT |  | LP1 3:34:14 (CHECKPOINT text) | high |
-| S6-b | boardwalk by the bonus pad | x×2 = 2 | pair | spin | ON-PATH PAIR |  | LP1 3:34:16 (fruit 470 -> 481); GR 136 | medium |
+| S6-a | walkway past the chemical vents | C×1 = 1 | single | walk | CHECKPOINT | checkpoint right after the slow-mo explosives, before the bonus pad | LP1 3:34:14 (CHECKPOINT text) | high |
+| S6-b | boardwalk by the bonus pad | x×2 = 2 | pair | spin | ON-PATH PAIR | two crates by the bonus pad so its approach carries a small reward | LP1 3:34:16 (fruit 470 -> 481); GR 136 | medium |
 
 ### B — Bonus round (27; side view, harbour at dusk)
 
@@ -210,9 +210,9 @@ detonated for credit. Slow-mo turns a lethal chain into a timed escape. This is 
 | B-a | tower base (a floating metal timed ! above the entry pad starts the timer; a white outline column on the tower leg did not count) | x×1 = 1 | single | switch, jump | SWITCH TIMED | the first credit comes as the timer starts | LP1 3:34:21-3:34:29 (HUD 0 -> 1/27) | low |
 | B-b | row of 6 Nitro bridging from the scaffold tower to the next platform (3 iron arrow crates on the tower ledge beside it, not counted) | N×6 = 6 | row (bridge) | timed, arrow | BRIDGE EXPLOSIVE-MIX CHAIN | the Nitro bridge must be detonated, not crossed; the iron arrows launch Crash over it | LP1 3:34:27-3:34:33 (HUD 1 -> 7) | high |
 | B-c | dock level: a long row of crates (wood, ?, ?, wumpa crate ...) under a ~16-long row of outline blocks | ?×3 + B×1 + W×2 + x×8 = 14 | row under an outline lid | timed, spin, jump | ROW OUTLINE TIMED SWITCH TEST | the timed ! turns the outline row into solid iron after a delay; the crates below must be broken before the lid closes (slow-mo extends the window) | LP1 3:34:33-3:34:43 (HUD 7 -> 10 -> 13 -> 15 -> 18 -> 21) | medium |
-| B-d | crates past the end of the dock row | x×2 = 2 | pair | jump | ON-PATH PAIR |  | LP1 3:34:43-3:34:45 (HUD 21 -> 23) | low |
+| B-d | crates past the end of the dock row | x×2 = 2 | pair | jump | ON-PATH PAIR | crates past the dock row so the sweep does not end exactly at the lid | LP1 3:34:43-3:34:45 (HUD 21 -> 23) | low |
 | B-e | a floating pair over open water: metal ! on top of a Nitro, with crates | N×1 + x×2 = 3 | floating pair + singles, floating | switch, timed, jump | FLOAT-LINE SWITCH EXPLOSIVE-MIX TIMED HIGH | GR: set off the Nitro under slow-mo, hop over the invisible blocks, cancel slow-mo as it explodes | LP1 3:34:45-3:34:51 (HUD 23 -> 26) | low |
-| B-f | last crate before the exit pad (the outline row is solid iron by now) | x×1 = 1 | single | walk | ON-PATH |  | LP1 3:34:53-3:34:55 (HUD 26 -> 27) | low |
+| B-f | last crate before the exit pad (the outline row is solid iron by now) | x×1 = 1 | single | walk | ON-PATH | the final crate sits on the far side of the now-solid iron row: it is collected by running on the lid | LP1 3:34:53-3:34:55 (HUD 26 -> 27) | low |
 
 The bonus is a closing-lid puzzle. The floating timed ! starts a countdown. When it ends, a long row of outline blocks
 just above the dock turns to solid iron, sealing the crates beneath. Slow-mo stretches the window. The Nitro bridge is
@@ -246,20 +246,20 @@ off in slow-mo and clear it over the invisible blocks.
 | id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | conf. |
 |---|---|---|---|---|---|---|---|---|
 | S7-a | first metres of the ride: crate near a tree (left), 2-stack in the centre | W×3 = 3 | single + stack, 2 high | vehicle | SPEED-LINE ON-PATH STACK TEACH | first lane choice: left single or centre stack | LP1 3:35:09-3:35:13 | medium |
-| S7-b | under an ice arch on the fruit line | W×1 = 1 | single | vehicle | SPEED-LINE ON-PATH |  | LP1 3:35:14-3:35:16 | medium |
+| S7-b | under an ice arch on the fruit line | W×1 = 1 | single | vehicle | SPEED-LINE ON-PATH | arch crate on the fruit line: the fruit trail points the lane | LP1 3:35:14-3:35:16 | medium |
 | S7-c | 2-stack on the left behind rocks, single on the right, skier ahead | W×3 = 3 | stack + single, 2 high | vehicle | SPEED-LINE STACK EDGE-BAIT ENEMY-LINK | both sides of the lane in one beat: only one can be taken per pass | LP1 3:35:18 | medium |
 | S7-d | 2-stack dead centre on a snow lip, JUMP prompt on screen | W×2 = 2 | stack, 2 high | vehicle, jump | SPEED-LINE STACK TEST | jump into the stack at the lip to take both; running into the base drops the top behind the bear | LP1 3:35:21-3:35:23 | high |
-| S7-e | beside a tree on the right | W×1 = 1 | single | vehicle | SPEED-LINE EDGE-BAIT |  | LP1 3:35:27-3:35:28 | medium |
+| S7-e | beside a tree on the right | W×1 = 1 | single | vehicle | SPEED-LINE EDGE-BAIT | crate beside a tree: a hazard and a crate share the beat | LP1 3:35:27-3:35:28 | medium |
 | S7-f | ice cave after the bear smashes an ice wall: crate on the left | W×1 = 1 | single | vehicle | SPEED-LINE HIDDEN | placed just after a visual burst (the ice wall) | LP1 3:35:29-3:35:32 | medium |
-| S7-g | on the rise before the arrow wall | W×1 = 1 | single | vehicle | SPEED-LINE ON-PATH |  | LP1 3:35:34 | medium |
+| S7-g | on the rise before the arrow wall | W×1 = 1 | single | vehicle | SPEED-LINE ON-PATH | the last centre-lane crate before the launch, timed to the rise | LP1 3:35:34 | medium |
 | S7-h | right edge beside a fallen pine, just below a full-width wall of 6 iron arrow crates (not counted) | W×2 = 2 | stack, 2 high | vehicle | SPEED-LINE STACK EDGE-BAIT | the arrow wall launches the bear; the stack beside the fallen pine is the last pickup before the launch | LP1 3:35:34-3:35:36 | high |
-| S7-i | ice channel between two pillars, head-on | W×1 = 1 | single | vehicle | SPEED-LINE ON-PATH |  | LP1 3:35:38-3:35:40 | medium |
-| S7-j | between tall falling ice pillars | W×1 = 1 | single | vehicle, timed | SPEED-LINE TIMED |  | LP1 3:35:41-3:35:42 | medium |
-| S7-k | left side after a ridge jump | W×1 = 1 | single | vehicle, jump | SPEED-LINE |  | LP1 3:35:43 | low |
+| S7-i | ice channel between two pillars, head-on | W×1 = 1 | single | vehicle | SPEED-LINE ON-PATH | head-on crate in a channel too narrow to steer around | LP1 3:35:38-3:35:40 | medium |
+| S7-j | between tall falling ice pillars | W×1 = 1 | single | vehicle, timed | SPEED-LINE TIMED | crate between falling ice pillars: a timing hazard beside a pickup | LP1 3:35:41-3:35:42 | medium |
+| S7-k | left side after a ridge jump | W×1 = 1 | single | vehicle, jump | SPEED-LINE | left-lane crate just after a ridge: steer during the landing | LP1 3:35:43 | low |
 | S7-l | at the base of a tree beside a hole in the snow | W×1 = 1 | single | vehicle | SPEED-LINE EDGE-BAIT | pickup next to a pit | LP1 3:35:44 | medium |
-| S7-m | one left, one right | W×2 = 2 | pair split across lanes | vehicle | SPEED-LINE |  | LP1 3:35:45-3:35:48 | low |
+| S7-m | one left, one right | W×2 = 2 | pair split across lanes | vehicle | SPEED-LINE | a split beat: one lane each side, so both can only be taken with a hard steer | LP1 3:35:45-3:35:48 | low |
 | S7-n | cavern: two crates far left behind the ice pillars (GR: hug the left wall after the second ice block) | W×2 = 2 | pair against the wall | vehicle | SPEED-LINE HIDDEN COUNT-TRAP | the camera swings while the line stays straight: the pocket is behind the pillars | LP1 3:35:50; GR | medium |
-| S7-o | dead centre of the corridor among skiers | W×2 = 2 | singles | vehicle | SPEED-LINE ENEMY-LINK |  | LP1 3:35:52-3:35:54 | medium |
+| S7-o | dead centre of the corridor among skiers | W×2 = 2 | singles | vehicle | SPEED-LINE ENEMY-LINK | centre crates among skiers: collect while dodging moving blockers | LP1 3:35:52-3:35:54 | medium |
 | S7-p | unresolved crates of the first half (fruit bursts at 1 fps) | x×17 = 17 | unresolved | vehicle | SPEED-LINE | balance of GR 204 | GR 204 minus mapped | low |
 | S7-q | bear checkpoint near the tape jump | C×1 = 1 | single | vehicle | CHECKPOINT | locks in the hardest all-box stretch | LP1 3:36:03-3:36:07 (HUD 205/227) | medium |
 
@@ -281,11 +281,11 @@ left wall, out of the camera's focus.
 
 | id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | conf. |
 |---|---|---|---|---|---|---|---|---|
-| S8-a | right side of a slope beside two Nitro | W×1 = 1 | single | vehicle | SPEED-LINE EXPLOSIVE-MIX EDGE-BAIT |  | LP1 3:36:13-3:36:17 | medium |
+| S8-a | right side of a slope beside two Nitro | W×1 = 1 | single | vehicle | SPEED-LINE EXPLOSIVE-MIX EDGE-BAIT | a crate on the far side of two Nitro: commit to the lane past the Nitro | LP1 3:36:13-3:36:17 | medium |
 | S8-b | diagonal line across the run: wood, Nitro, Nitro, wood | W×2 = 2 | weave line | vehicle | SPEED-LINE EXPLOSIVE-MIX TEST | steer through the gaps: take the crates, miss the Nitros | LP1 3:36:21 | high |
 | S8-c | 3-stack dead centre before the end | W×3 = 3 | stack, 3 high | vehicle, jump | SPEED-LINE STACK TEST | the tallest stack of the ride, hit with a jump | LP1 3:36:23 | medium |
-| S8-d | 2-stack on the upper-left path | W×2 = 2 | stack, 2 high | vehicle | SPEED-LINE STACK DETOUR |  | LP1 3:36:23 | low |
-| S8-e | by the fence on the left before the end platform | x×1 = 1 | single | vehicle | SPEED-LINE EDGE-BAIT |  | LP1 3:36:23-3:36:25 | low |
+| S8-d | 2-stack on the upper-left path | W×2 = 2 | stack, 2 high | vehicle | SPEED-LINE STACK DETOUR | an optional upper-left path carries its own stack | LP1 3:36:23 | low |
+| S8-e | by the fence on the left before the end platform | x×1 = 1 | single | vehicle | SPEED-LINE EDGE-BAIT | fence-line crate before the end platform | LP1 3:36:23-3:36:25 | low |
 
 ### S9 — Exit (cumulative 227)
 
