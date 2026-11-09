@@ -94,4 +94,6 @@ Reference assets remain placeholders from the supplied game; this audit makes no
 - Visual review caught side-view overlap from world-axis spacing. The exhibits now separate in the selected camera plane, preserving both silhouettes. Source/current models remain independent and can be inspected alone.
 - Focused existing enemy polish and catalogue checks, TypeScript, production build and hosting-size check passed. No level data, enemy gameplay or movement tuning changed; no full suite was run.
 
-[Source verification](opengoal-enemy-audit/source-verification.json) · [All-asset browser audit](opengoal-enemy-audit/browser-all-assets.json) · [Final UI check](opengoal-enemy-audit/browser-ui-final.json) · [Native crab comparison](opengoal-enemy-audit/crab-comparison-native.png) · [Native side-view comparison](opengoal-enemy-audit/bat-side-native.png)
+[Production smoke test](opengoal-enemy-audit/production-smoke.json) · [Source verification](opengoal-enemy-audit/source-verification.json) · [All-asset browser audit](opengoal-enemy-audit/browser-all-assets.json) · [Final UI check](opengoal-enemy-audit/browser-ui-final.json) · [Native crab comparison](opengoal-enemy-audit/crab-comparison-native.png) · [Native side-view comparison](opengoal-enemy-audit/bat-side-native.png)
+
+The final integrated production build passes at **973,742,766 bytes / 1,000,000,000 bytes**. The production browser smoke test repeats filter/shortlist/export/lifecycle controls, all eight first-pass comparisons, the current lab and native/narrow presentation using the built assets.
