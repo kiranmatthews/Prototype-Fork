@@ -68,8 +68,8 @@ START → (stopwatch) → [W]······[?]  → pits at right edge → [S]  (s
       → [A] → [W][W2]   → pit → C1 → e:goat
               [W][? ]  (2 wide x 2 high, 2-s crate top right)
 ```
-| id | position (route order) | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S1-a | first stretch after the stopwatch, left edge of the road | wood ×1 | SINGLE | walk/spin | ON-PATH SINGLE TEACH | First input of the game world: hit the box. Set at the edge, not the centre, so the player learns the road is wider than the line of travel | F3 p013L zoom (tv_start) | high |
 | S1-b | abreast of S1-a on the right edge | ? ×1 | SINGLE | walk/spin | ON-PATH SINGLE TEACH | Paired across the road with S1-a: to get both you must cross the full width once — the opening teaches sweeping, not running straight | F3 p013L zoom | high |
 | S1-c | after the first edge pits, right side | striped ×2 | SANDWICH: one on the ground, one floating above with a gap | bounce | SANDWICH TEACH REWARD SUPPORT-ORDER COUNT-TRAP | F3 advice 1: stand between the two striped boxes and keep jumping — 20 fruit (2 per hit × 5 hits each). Gamepressure (N. Sane): if the lower one is destroyed first the upper one can no longer be reached, so the fruit lesson doubles as the game's first breaking-order lesson | F3 p013L callout 1; gamepressure TV | high (layout) / medium (unreachability claim) |
@@ -91,8 +91,8 @@ C1 → e:goat → [slot]! → ═plank═ ═plank═ → ~frog pond~ → [W2]  
    → (? pad → BONUS) → ═plank═ → e:goat → ~frog pond 1~ [W][W1][S]   → ═plank═ → C2
                                                          [?1][W][W1]  (3 wide x 2 high)
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S2-a | a few steps past C1 (goat in between) | slot ×1 | SINGLE | spin at the right moment | ON-PATH TIMED LIFE CHECKPOINT COUNT-TRAP | F3 advice 2: if you dawdle in front of the C box the slot crate can no longer be taken; P3 s3: slot boxes run on a timer and turn into unbreakable steel; break it on the Crash face for a life. Put right after the checkpoint so that a player who stops to admire C1 loses the all-box run | F3 p013R callout 2; P3 p004R s3 | high |
 | S2-b | after two plank bridges and the first frog pond | wood ×3 (2-s badge on the top crate) | STACK (3 high) | spin bottom; or a held jump for the top | ON-PATH STACK ENEMY-LINK TIME-TRIAL | F3 advice 3 (pointing at this pond): a monster you knock out flies, and a box in its path breaks — the frog is a projectile aimed at the stack. TT tip 4 / TT frame 15: the 2-s crate is on the third tier; a dashing big jump reaches it | F3 p013R zoom; F3 TA4; F3 p101L fr.15 | high |
 | S2-c | just after the stack, before the first knight | ? ×1 | SINGLE | walk | ON-PATH SINGLE | Bait before the knight: collecting it puts the player in the knight's swing zone | F3 p013R | high |
@@ -107,8 +107,8 @@ C1 → e:goat → [slot]! → ═plank═ ═plank═ → ~frog pond~ → [W2]  
                                                           (W floats one   (floats high)
                                                            crate above)
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | B-a | first long walkway after the step gaps | striped ×1 | SINGLE | bounce | BONUS REWARD TEACH | F3 hint: don't spin it — jump on it for 10 fruit | F3 p019L zoom | high |
 | B-b | middle of the walkway | wood ×1, 1UP ×1 | PAIR side by side | spin | BONUS LIFE | The life sits at walking height; P3 s9: "you should have seven lives by now" | F3 p019L zoom; P3 p005L s8–s9 | high |
 | B-c | directly above B-b, one crate-gap up | wood ×1 | SINGLE, floating | jump from B-b / bounce | BONUS HIGH SANDWICH | A floating crate over the pair: break the pair and the crate above is still reachable by a jump, or bounce on the pair first | F3 p019L zoom | medium (gap height) |
@@ -126,8 +126,8 @@ C2 → ~frog pond 2~ [W1][?1][W1] (row of three)  → [?][S]  → e:knight → s
    → e:goat → [?] → e:goat → ~last pond~ → [slot]       → castle gate = GOAL
                                                [slot]   (placed diagonally)
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S3-a | frog pond 2, right after C2 | wood ×2, ? ×1, all three 1-s badges | ROW (diagonal) | spin the middle | ON-PATH ROW ENEMY-LINK TIME-TRIAL | TT tip 5: spin the middle box and all three break — no need to step left and right (target 0:34:00). TT frames 21–22: spin the oncoming frog so it flies into the left box, jump-spin the other two and hop onto the right wall — "the hardest spot of the course". P3 s11 shows the three "1" crates in a row on a ledge | F3 p014L zoom; F3 TA5; F3 p101L fr.21–22; P3 p005L s11 | high |
 | S3-b | after the pond, before the second knight | ? ×2, wood ×1, striped ×1 (striped at the back right) | GRID 2 × 2 footprint | spin, but mind the striped | ON-PATH GRID SUPPORT-ORDER | F3 advice 6: the back-right box is striped — don't spin carelessly (spinning it breaks it for little fruit) | F3 p014R zoom; callout 6 | high |
 | S3-c | after the crystal bridge and a goat | ? ×1 | SINGLE | walk | ON-PATH SINGLE | Last ordinary box | F3 p014R | high |

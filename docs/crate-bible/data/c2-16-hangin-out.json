@@ -1,0 +1,89 @@
+{
+  "id": "c2-16-hangin-out",
+  "game": "Crash 2",
+  "stage": 16,
+  "name": "Hangin' Out",
+  "nameJa": "ぶらさがりん ちかどう",
+  "sources": ["F2 p062L", "F2 p062R", "F2 p063L", "F2 p063R", "F2 p091R", "F2 p098L (book p.188, stage 16 half)", "D2 p052-p053", "D2 p054L shots 39-42", "GP gamepressure N. Sane Hangin' Out (summary)"],
+  "camera": "into-screen",
+  "totalBoxes": 93,
+  "totalSource": "F2 p062L header (superscript 37 off the normal course); N. Sane 93 per GP",
+  "reconciliation": "Located 89 of 93: main 55 of 56 (header 93-37), bonus 34 of 37. Unlocated crates are most likely in the TNT wall/drop pile (main) and off-frame Nitro in the bonus Nitro carpet.",
+  "routes": [
+    {"id": "main", "boxes": 56, "located": 55, "basis": "header 93-37; located from F2 icons + D2 shots"},
+    {"id": "bonus", "boxes": 37, "located": 34, "basis": "F2 p098L says no hidden boxes/course, so the 37 off-course boxes are the bonus; GP gives 34 for the N. Sane bonus"},
+    {"id": "secret", "boxes": 0, "basis": "path to the Totally Fly vortex carries floating lives only (F2 p098L, D2 p054L)"}
+  ],
+  "sections": [
+    {"id": "S1", "route": "main", "from": "start", "to": "C1", "boxes": 11, "cumulative": 11, "notes": "?/? in the scrubber lane; 8-crate pyramid on drop hole #1; C1"},
+    {"id": "S2", "route": "main", "from": "C1", "to": "C2", "boxes": 18, "cumulative": 29, "notes": "3 hanging ? on mesh 1; ?+Aku stack; TNT wall (12); C2"},
+    {"id": "S3", "route": "main", "from": "C2", "to": "C3", "boxes": 3, "cumulative": 32, "notes": "2 hanging ? on mesh 2; C3"},
+    {"id": "S4", "route": "main", "from": "C3", "to": "C4", "boxes": 9, "cumulative": 41, "notes": "drop pile (8) on drop hole #2; C4 + crystal at the wide pool (secret fork)"},
+    {"id": "S5", "route": "main", "from": "C4", "to": "goal", "boxes": 14, "cumulative": 55, "notes": "Nitro row 4; ?/? stack; green !; Nitro wall 8"},
+    {"id": "B", "route": "bonus", "from": "? plate after C4", "to": "return before the Nitro row", "boxes": 34, "cumulative": null, "notes": "located 34 of 37: tower, Nitro (1+4+8), 2 unseen, 2 overhead, TNT row 5, striped 2+4"},
+    {"id": "X", "route": "secret", "from": "wide pool (toward camera)", "to": "Totally Fly vortex", "boxes": 0, "cumulative": null, "notes": "no crates"}
+  ],
+  "clusters": [
+    {"id": "S1-a", "section": "S1", "order": 1, "where": "after the first eel-water crossing, beside a scrubber's charge lane", "composition": {"question": 2}, "count": 2, "arrangement": "2-stack", "stackHeight": 2, "floating": false, "access": ["spin", "timed"], "relations": ["scrubbers charge down the lane"], "tags": ["STACK", "TIMED", "ENEMY-LINK", "ON-PATH"], "why": "break then step aside before the next charge", "evidence": "F2 p062R; D2 p052L shot 3", "confidence": "high"},
+    {"id": "S1-b", "section": "S1", "order": 2, "where": "room at the end of tube 1, on top of drop hole #1", "composition": {"wood": 5, "question": 3}, "count": 8, "arrangement": "stepped pyramid, columns 2-3-2-1", "stackHeight": 3, "floating": false, "access": ["spin", "jump"], "relations": ["drop hole under/behind it"], "tags": ["PYRAMID", "REWARD", "SUPPORT-ORDER"], "why": "pay-out at an apparent dead end; makes the player stop and find the hole", "evidence": "F2 p062R zoom; D2 shot 7 photo + caption", "confidence": "high"},
+    {"id": "S1-c", "section": "S1", "order": 3, "where": "landing after drop hole #1", "composition": {"checkpoint": 1}, "count": 1, "arrangement": "single", "stackHeight": 1, "floating": false, "access": ["walk"], "relations": [], "tags": ["CHECKPOINT"], "why": "save at the walking-to-hanging mode change", "evidence": "F2 p062R; D2 shot 8", "confidence": "high"},
+    {"id": "S2-a", "section": "S2", "order": 4, "where": "three spots along the first zig-zag ceiling mesh", "composition": {"question": 3}, "count": 3, "arrangement": "singles hanging beside the mesh", "stackHeight": 1, "floating": true, "access": ["spin", "timed"], "relations": ["on floating-mine patrol routes"], "tags": ["FLOAT-LINE", "TIMED", "HIGH", "TEACH"], "why": "teaches the hanging spin as a collecting tool inside mine windows", "evidence": "F2 p062R zoom; F2 p098L; D2 shot 11", "confidence": "high"},
+    {"id": "S2-b", "section": "S2", "order": 5, "where": "first floor grid after mesh 1", "composition": {"question": 1, "aku": 1}, "count": 2, "arrangement": "Aku on top of ?", "stackHeight": 2, "floating": false, "access": ["spin"], "relations": ["before bobbing mines and the TNT wall"], "tags": ["STACK", "AKU"], "why": "the only mask, right before the two lethal structures", "evidence": "F2 p063L zoom; D2 shot 14", "confidence": "high"},
+    {"id": "S2-c", "section": "S2", "order": 6, "where": "wall across the tube before C2 (POINT 5)", "composition": {"tnt": 5, "wood": 7}, "count": 12, "arrangement": "three 4-high piles; TNT in the upper halves", "stackHeight": 4, "floating": false, "access": ["spin"], "relations": ["knock out a bottom crate of the middle/right pile, retreat toward camera"], "tags": ["WALL", "STACK", "EXPLOSIVE-MIX", "CHAIN", "SUPPORT-ORDER", "TEST"], "why": "one support-order input lights a TNT and the chain clears the whole wall", "evidence": "F2 p063L POINT 5 photo + bubble icon + caption; D2 shot 15", "confidence": "medium"},
+    {"id": "S2-d", "section": "S2", "order": 7, "where": "after the TNT wall", "composition": {"checkpoint": 1}, "count": 1, "arrangement": "single", "stackHeight": 1, "floating": false, "access": ["walk"], "relations": [], "tags": ["CHECKPOINT"], "why": "save right after the explosive test", "evidence": "F2 p063L; D2 shot 17", "confidence": "high"},
+    {"id": "S3-a", "section": "S3", "order": 8, "where": "two spots along mesh 2 (counter-clockwise, then fast mines)", "composition": {"question": 2}, "count": 2, "arrangement": "hanging singles", "stackHeight": 1, "floating": true, "access": ["spin", "timed"], "relations": ["inside mine loops"], "tags": ["FLOAT-LINE", "TIMED", "HIGH"], "why": "same tool under faster patrols: a deliberate risk", "evidence": "F2 p063L zoom; D2 shots 18, 20", "confidence": "high"},
+    {"id": "S3-b", "section": "S3", "order": 9, "where": "end of mesh 2", "composition": {"checkpoint": 1}, "count": 1, "arrangement": "single", "stackHeight": 1, "floating": false, "access": ["walk"], "relations": [], "tags": ["CHECKPOINT"], "why": "save before the bobbing-mine run", "evidence": "F2 p063L", "confidence": "high"},
+    {"id": "S4-a", "section": "S4", "order": 10, "where": "platform at the end of mesh 3, over drop hole #2", "composition": {"question": 2, "wood": 6}, "count": 8, "arrangement": "4 wide x 2 high block", "stackHeight": 2, "floating": false, "access": ["spin"], "relations": ["drop hole #2 under it"], "tags": ["WALL", "REWARD"], "why": "second crate-marked drop; reward after the hardest mesh", "evidence": "F2 p063R zoom; D2 shots 23, 26-27", "confidence": "medium"},
+    {"id": "S4-b", "section": "S4", "order": 11, "where": "beside the wide pool after drop #2, with the crystal", "composition": {"checkpoint": 1}, "count": 1, "arrangement": "single", "stackHeight": 1, "floating": false, "access": ["walk"], "relations": ["secret fork toward the camera"], "tags": ["CHECKPOINT", "ROUTE-SPLIT"], "why": "save at the goal/secret fork", "evidence": "F2 p063R; D2 shot 28; F2 p091R", "confidence": "high"},
+    {"id": "S5-a", "section": "S5", "order": 12, "where": "just past the bonus plate", "composition": {"nitro": 4}, "count": 4, "arrangement": "row across the walkway", "stackHeight": 1, "floating": false, "access": ["jump", "switch"], "relations": ["credited by S5-c"], "tags": ["ROW", "EXPLOSIVE-MIX", "COUNT-TRAP"], "why": "a lethal hurdle the all-box player must leave for the switch", "evidence": "F2 p063R zoom; D2 shots 29, 35", "confidence": "high"},
+    {"id": "S5-b", "section": "S5", "order": 13, "where": "after spiky rats and a barrel", "composition": {"question": 2}, "count": 2, "arrangement": "2-stack", "stackHeight": 2, "floating": false, "access": ["spin", "enemy-bounce"], "relations": ["rat bounce toward the switch"], "tags": ["STACK", "ENEMY-LINK"], "why": "on the line to the switch, beside the rat used as a step", "evidence": "F2 p063R; D2 shot 37", "confidence": "high"},
+    {"id": "S5-c", "section": "S5", "order": 14, "where": "in front of the Nitro wall", "composition": {"switchGreen": 1}, "count": 0, "arrangement": "single green ! (uncounted)", "stackHeight": 1, "floating": false, "access": ["spin"], "relations": ["detonates S5-a, S5-d (and bonus Nitro, inferred)"], "tags": ["NITRO-SWITCH"], "why": "switch shown before the wall it clears", "evidence": "F2 p063R POINT 10; D2 shot 37", "confidence": "high"},
+    {"id": "S5-d", "section": "S5", "order": 15, "where": "blocking the tube after the switch", "composition": {"nitro": 8}, "count": 8, "arrangement": "wall 4 wide x 2 high", "stackHeight": 2, "floating": false, "access": ["switch"], "relations": ["cleared by S5-c"], "tags": ["WALL", "EXPLOSIVE-MIX", "NITRO-SWITCH"], "why": "impassable without the switch: explains the green !", "evidence": "F2 p063R bubble zoom + POINT 10 photo", "confidence": "medium"},
+    {"id": "B-a", "section": "B", "order": 16, "where": "start of the bonus", "composition": {"wood": 3, "ironBound": 1, "life": 1}, "count": 5, "arrangement": "tower (type split approximate)", "stackHeight": 4, "floating": false, "access": ["bonus", "body-slam", "jump"], "relations": ["life collected here per HUD"], "tags": ["STACK", "REINFORCED", "SUPPORT-ORDER", "LIFE", "TEACH", "BONUS"], "why": "slam from the top: breaks the iron-bound crates and pays more fruit", "evidence": "D2 shot 31 HUD (5 boxes, 1 life); F2 p098L tip 1; GP", "confidence": "medium"},
+    {"id": "B-b", "section": "B", "order": 17, "where": "upper platform reached by a steel arrow", "composition": {"nitro": 1}, "count": 1, "arrangement": "single", "stackHeight": 1, "floating": false, "access": ["bonus", "arrow"], "relations": ["arrow bounce lands beside it"], "tags": ["SINGLE", "EXPLOSIVE-MIX", "HIGH", "BONUS"], "why": "the high bounce must be aimed", "evidence": "D2 shot 31; GP", "confidence": "medium"},
+    {"id": "B-c", "section": "B", "order": 18, "where": "steel-block staircase on the right", "composition": {"nitro": 4}, "count": 4, "arrangement": "one Nitro per step", "stackHeight": 1, "floating": false, "access": ["bonus", "switch"], "relations": [], "tags": ["STEPPING", "EXPLOSIVE-MIX", "BONUS"], "why": "a mined staircase that is not the route", "evidence": "D2 shot 31", "confidence": "medium"},
+    {"id": "B-d", "section": "B", "order": 19, "where": "between the tower area and the Nitro carpet", "composition": {"wood": 2}, "count": 2, "arrangement": "unseen (HUD 5 to 7)", "stackHeight": 1, "floating": false, "access": ["bonus"], "relations": [], "tags": ["COUNT-TRAP", "BONUS"], "why": "accounted only by the HUD", "evidence": "D2 shots 31-32 HUD", "confidence": "low"},
+    {"id": "B-e", "section": "B", "order": 20, "where": "floor carpet around two steel arrow blocks", "composition": {"nitro": 9}, "count": 9, "arrangement": "rows either side of the arrows: 3 + 1 raised, 3 + 2 raised (visible count; frame cropped)", "stackHeight": 2, "floating": false, "access": ["bonus", "slide", "jump", "arrow"], "relations": ["arrows are the only footing"], "tags": ["ROW", "EXPLOSIVE-MIX", "TOOL", "BONUS"], "why": "arrows as safe islands in a Nitro carpet", "evidence": "D2 shot 32 + caption; F2 p098L tip 2", "confidence": "low"},
+    {"id": "B-f", "section": "B", "order": 21, "where": "overhead above the solid blocks", "composition": {"wood": 2}, "count": 2, "arrangement": "floating singles", "stackHeight": 1, "floating": true, "access": ["bonus", "jump"], "relations": ["head-bonk from below"], "tags": ["FLOAT-LINE", "HIGH", "BONUS"], "why": "reward for stopping on the safe blocks", "evidence": "D2 shot 33 caption + HUD 7 to 9", "confidence": "medium"},
+    {"id": "B-g", "section": "B", "order": 22, "where": "red ledge after the blocks", "composition": {"tnt": 5}, "count": 5, "arrangement": "row", "stackHeight": 1, "floating": false, "access": ["bonus", "timed"], "relations": ["landing lights a fuse"], "tags": ["ROW", "EXPLOSIVE-MIX", "TIMED", "BONUS"], "why": "forced detonation: stand, then leave within the count", "evidence": "D2 shot 33 photo + caption", "confidence": "high"},
+    {"id": "B-h", "section": "B", "order": 23, "where": "upper striped row over the pit", "composition": {"striped": 2}, "count": 2, "arrangement": "floating row", "stackHeight": 1, "floating": true, "access": ["bonus", "striped"], "relations": [], "tags": ["STEPPING", "TIMED", "COUNT-TRAP", "BONUS"], "why": "bouncy footing with limited bounces: count them", "evidence": "D2 shot 34; F2 p098L tip 3", "confidence": "medium"},
+    {"id": "B-i", "section": "B", "order": 24, "where": "lower striped row before the exit", "composition": {"striped": 4}, "count": 4, "arrangement": "floating row broken left to right", "stackHeight": 1, "floating": true, "access": ["bonus", "striped"], "relations": ["also the bridge to the exit"], "tags": ["STEPPING", "BRIDGE", "TIMED", "BONUS"], "why": "the last crates are the bridge; order matters", "evidence": "D2 shot 34 photo + caption", "confidence": "medium"}
+  ],
+  "enemies": [
+    {"section": "S1", "kind": "welder (flamethrower worker)", "count": 2, "where": "first walkway", "role": "kill first (POINT 1)"},
+    {"section": "S1", "kind": "scrubber robot", "count": 6, "where": "tube 1, charging at intervals", "role": "advance-spin-advance rhythm; S1-a in its lane"},
+    {"section": "S1", "kind": "rolling barrel", "count": 4, "where": "tube 1 walls", "role": "dodge"},
+    {"section": "S1", "kind": "electric eel", "count": 1, "where": "first water crossing", "role": "timing"},
+    {"section": "S2", "kind": "floating mine", "count": 11, "where": "mesh 1 and the floor grid", "role": "patrols around hanging crates"},
+    {"section": "S3", "kind": "floating mine", "count": 6, "where": "mesh 2 (counter-clockwise, then fast)", "role": "patrols around hanging crates"},
+    {"section": "S4", "kind": "floating mine", "count": 5, "where": "mesh 3 (bobbing)", "role": "long-jump timing"},
+    {"section": "S5", "kind": "spiky rat", "count": 6, "where": "bonus plate, after the Nitro row, near the goal", "role": "stomp/bounce targets"},
+    {"section": "S5", "kind": "electric eel", "count": 1, "where": "before the goal", "role": "timing"}
+  ],
+  "gaps": [
+    {"section": "S1", "kind": "electrified water", "where": "start", "crates": ["S1-a"]},
+    {"section": "S1", "kind": "drop hole #1", "where": "under the pyramid room", "crates": ["S1-b"]},
+    {"section": "S2", "kind": "lethal floor under ceiling mesh", "where": "mesh 1", "crates": ["S2-a"]},
+    {"section": "S3", "kind": "lethal floor under ceiling mesh", "where": "mesh 2", "crates": ["S3-a"]},
+    {"section": "S4", "kind": "lethal floor under ceiling mesh; drop hole #2", "where": "mesh 3", "crates": ["S4-a"]},
+    {"section": "S5", "kind": "electrified water + floating platform", "where": "before the goal", "crates": []},
+    {"section": "B", "kind": "pits under striped footing", "where": "bonus finale", "crates": ["B-h", "B-i"]}
+  ],
+  "puzzles": [
+    {"id": "P1", "clusters": ["S2-c", "S2-b"], "summary": "TNT wall of three 4-high piles", "solution": "spin a bottom crate of the middle/right pile, retreat toward the camera; chain clears all", "wrongOrder": "spinning a TNT or stomping the top", "loss": "a life (mask absorbs it)"},
+    {"id": "P2", "clusters": ["S5-a", "S5-c", "S5-d"], "summary": "Nitro row before the switch, Nitro wall after it", "solution": "jump the row, hit the green !, walk through", "wrongOrder": "touching the row", "loss": "a life"},
+    {"id": "P3", "clusters": ["B-g", "B-h", "B-i"], "summary": "TNT ledge then striped bridge", "solution": "land, leave immediately, bounce upper row, then lower row left to right", "wrongOrder": "lingering or breaking the bridge out of order", "loss": "the bonus run"},
+    {"id": "P4", "clusters": ["S4-b"], "summary": "secret exit behind the camera at the pool", "solution": "walk toward the camera across the pool", "wrongOrder": "n/a", "loss": "access to Totally Fly"}
+  ],
+  "observations": [
+    "Each mode change (walk, drop, hang, floor, pool) is marked by a crate cluster.",
+    "Crate piles signpost drop holes at apparent dead ends (S1-b, S4-a).",
+    "Hanging crates teach then test the hanging spin, one per patrol window.",
+    "Long hanging runs carry only 5 crates: timing is the challenge there.",
+    "The single mask sits right before the bobbing mines and the TNT wall.",
+    "TNT wall (support order) and Nitro wall (switch) are the same wall read two ways.",
+    "The green switch is shown before the wall it clears; a Nitro row earlier creates the need.",
+    "The bonus holds ~40% of the boxes and all the dense crate puzzles.",
+    "The secret exit has no boxes: box gem and secret never compete."
+  ]
+}

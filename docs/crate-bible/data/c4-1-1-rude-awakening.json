@@ -1,0 +1,1481 @@
+{
+ "id": "c4-1-1-rude-awakening",
+ "game": "Crash 4",
+ "stage": "1-1",
+ "name": "Rude Awakening",
+ "sources": [
+  "GR 1-1 (gameranx.com feature id 210262)",
+  "GP 1-1 (gamepressure.com Crash 4 walkthrough: Rude Awakening)",
+  "LP1 0:02:50-0:06:40 (archive.org PS4 longplay part 1; frames every 0.5 s)"
+ ],
+ "camera": "into-screen (vine = forced-motion chase; bonus = side-scroll; final wall = side-view climb)",
+ "totalBoxes": 104,
+ "totalSource": "GR 1-1 final tally; GP 'smash all 104 boxes'; HUD x/104 (LP1 0:02:50, 0:03:30, 0:05:40)",
+ "hudReadings": [
+  "0/104 @ LP1 0:02:50",
+  "8/104 @ LP1 0:03:30",
+  "80/104 (+3 transferring) @ LP1 0:05:39",
+  "83/104 @ LP1 0:05:40-0:05:46"
+ ],
+ "checkpoints": [
+  "C1 temple stair top LP1 0:03:54",
+  "C2 village deck after the vine 0:04:55",
+  "C3 stone landing before the cave 0:05:16",
+  "C4 cavern exit 0:05:57",
+  "C5 wall base 0:06:08-0:06:11"
+ ],
+ "gems": [
+  "40% Wumpa",
+  "60% Wumpa",
+  "80% Wumpa",
+  "all 104 boxes",
+  "die <= 3 times",
+  "hidden gem: crawl under a stilt hut in the upper village, jump up into a hidden space"
+ ],
+ "typeLegend": {
+  "wood": "basic crate",
+  "question": "? crate",
+  "tnt": "TNT (counted when it explodes)",
+  "aku": "Aku Aku crate",
+  "checkpoint": "checkpoint crate (counted)",
+  "arrowWood": "wooden arrow crate; hold jump for a bigger bounce"
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 96,
+   "basis": "GR total 104 minus the 8-crate bonus"
+  },
+  {
+   "id": "bonus",
+   "boxes": 8,
+   "basis": "GR 77->85; bonus HUD 8/8 (LP1 0:05:38)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start (beach hub)",
+   "to": "C1 (temple stair top)",
+   "boxes": 27,
+   "cumulative": 27,
+   "notes": "HUD 8/104 at LP1 0:03:30; TNT tutorial pair then courtyard triangle; Aku + C1 bracket the temple"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "temple exit (15-crate wall)",
+   "boxes": 26,
+   "cumulative": 53,
+   "notes": "spiders; W/? stack; exit blocked by a 5x3 wall with a centre ?"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "vine start",
+   "to": "vine end",
+   "boxes": 9,
+   "cumulative": 62,
+   "notes": "forced-motion vine slide; crates float ~1 jump above the vine"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C2 (vine end)",
+   "to": "hidden-gem hut",
+   "boxes": 10,
+   "cumulative": 72,
+   "notes": "stilt village; throwers"
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "gem hut",
+   "to": "bonus pad",
+   "boxes": 5,
+   "cumulative": 77,
+   "notes": "incl. C3 and the 2 crates beside the bonus pad (LP took them after the bonus)"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus pad",
+   "to": "bonus exit",
+   "boxes": 8,
+   "cumulative": 85,
+   "notes": "side-scroll; held arrow bounce taught here"
+  },
+  {
+   "id": "S6",
+   "route": "main",
+   "from": "bonus pad",
+   "to": "C4 (cavern exit)",
+   "boxes": 8,
+   "cumulative": 93,
+   "notes": "dark glyph cave with a spider"
+  },
+  {
+   "id": "S7",
+   "route": "main",
+   "from": "C4",
+   "to": "wall base",
+   "boxes": 3,
+   "cumulative": 96,
+   "notes": "three round stone pillars over water"
+  },
+  {
+   "id": "S8",
+   "route": "main",
+   "from": "C5 (wall base)",
+   "to": "exit",
+   "boxes": 8,
+   "cumulative": 104,
+   "notes": "side-view climb on crumbling skull platforms; GR text says 7 on the wall, +C5 = 8"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "beach hub, right of the TV beside the couch",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "near-start",
+    "prop-TV"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TEACH"
+   ],
+   "why": "first breakable object next to the first prop the player approaches",
+   "evidence": "LP1 0:03:14-0:03:18",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "hub background by a tiki",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "DETOUR",
+    "SINGLE"
+   ],
+   "why": "shows that the hub itself holds crates",
+   "evidence": "LP1 0:02:52",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "jungle path entrance beside a rock",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "rhythm crates on the first path",
+   "evidence": "LP1 0:03:20",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "on the path in front of the first crab pair, after the log jump",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "enemy:crab"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ENEMY-LINK"
+   ],
+   "why": "crate and crab share the lane; one spin handles both",
+   "evidence": "LP1 0:03:24",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "(residual) start stretch",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "needed to reach HUD 8 at 0:03:30",
+   "evidence": "HUD 8/104 LP1 0:03:30; GR 7",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "directly behind the low carved ruin wall jumped after the second crab pair",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "behind-obstacle"
+   ],
+   "tags": [
+    "HIDDEN",
+    "BACKTRACK",
+    "COUNT-TRAP",
+    "SINGLE"
+   ],
+   "why": "first count trap: crates hide behind the obstacle you clear; momentum carries you past",
+   "evidence": "GR 8 (easy to miss); HUD 8/104 LP1 0:03:30; wall LP1 0:03:29",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-g",
+   "section": "S1",
+   "order": 7,
+   "where": "path just after the ruin wall",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "reward on the far side",
+   "evidence": "LP1 0:03:33",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-h",
+   "section": "S1",
+   "order": 8,
+   "where": "right end of the stone arch bridge",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "edge"
+   ],
+   "tags": [
+    "EDGE-BAIT"
+   ],
+   "why": "first crate on an edge",
+   "evidence": "LP1 0:03:34-0:03:35",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-i",
+   "section": "S1",
+   "order": 9,
+   "where": "curved path after the bridge",
+   "composition": {
+    "wood": 4,
+    "question": 2
+   },
+   "count": 6,
+   "arrangement": "wall 3 wide x 2 high",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "WALL",
+    "ON-PATH",
+    "TEACH"
+   ],
+   "why": "first multi-crate block: break the bottom, the top drops",
+   "evidence": "LP1 0:03:35.5-0:03:36 zoom (? count approximate)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-j",
+   "section": "S1",
+   "order": 10,
+   "where": "on the path, side by side, with the TNT prompt",
+   "composition": {
+    "wood": 1,
+    "tnt": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk"
+   ],
+   "relations": [
+    "prompt:jump on TNT"
+   ],
+   "tags": [
+    "PAIR",
+    "TEACH",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "TNT tutorial; the blast takes the W and counts it",
+   "evidence": "LP1 0:03:39-0:03:42",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-k",
+   "section": "S1",
+   "order": 11,
+   "where": "temple courtyard: W left (skull), TNT centre, W right (plant statue), ~3 crate widths apart",
+   "composition": {
+    "wood": 2,
+    "tnt": 1
+   },
+   "count": 3,
+   "arrangement": "triangle",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "TEST",
+    "EXPLOSIVE-MIX",
+    "CHAIN"
+   ],
+   "why": "same TNT surrounded: plan the retreat",
+   "evidence": "LP1 0:03:45-0:03:52",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-l",
+   "section": "S1",
+   "order": 12,
+   "where": "foot of the temple stairs",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before:spider-temple"
+   ],
+   "tags": [
+    "AKU",
+    "ON-PATH"
+   ],
+   "why": "protection handed out right before the spider temple",
+   "evidence": "LP1 0:03:53",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-m",
+   "section": "S1",
+   "order": 13,
+   "where": "top of the temple stairs",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves the TNT/wheel stretch",
+   "evidence": "LP1 0:03:54",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-n",
+   "section": "S1",
+   "order": 14,
+   "where": "(residual) between the bridge and the TNT pair",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "Wumpa 33->59 off-frame; needed for GR 27",
+   "evidence": "GR 27",
+   "confidence": "low"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 15,
+   "where": "floating over the top step of the temple entrance",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "stairs"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "head-height crate on stairs",
+   "evidence": "LP1 0:03:55; GR 53 note",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 16,
+   "where": "second floating crate near the entrance",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "pairs with S2-a",
+   "evidence": "GR 53 note",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 17,
+   "where": "floor in front of a tiki totem under the first spider drop",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk"
+   ],
+   "relations": [
+    "enemy:spider"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "ENEMY-LINK"
+   ],
+   "why": "fuse timed against the spider's drop",
+   "evidence": "LP1 0:04:01-0:04:04",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 18,
+   "where": "first chamber, left wall",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "stack (W on ?)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first stack: base break drops the top",
+   "evidence": "LP1 0:04:06-0:04:11",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 19,
+   "where": "first chamber, right, by a pillar (red crate)",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "probable TNT across from the stack",
+   "evidence": "LP1 0:04:06-0:04:11",
+   "confidence": "low"
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 20,
+   "where": "corridor after the stepping pillars",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "breather after the pit",
+   "evidence": "LP1 0:04:14-0:04:15",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-g",
+   "section": "S2",
+   "order": 21,
+   "where": "low wooden ledge before the exit wall (GR: three under the set of 15)",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "double-jump"
+   ],
+   "relations": [
+    "prompt:double jump"
+   ],
+   "tags": [
+    "ROW",
+    "HIGH"
+   ],
+   "why": "double-jump prompt shown here",
+   "evidence": "LP1 0:04:16-0:04:17; GR 53",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-h",
+   "section": "S2",
+   "order": 22,
+   "where": "exit arch, blocked",
+   "composition": {
+    "wood": 14,
+    "question": 1
+   },
+   "count": 15,
+   "arrangement": "wall/grid 5x3, ? centre of middle row",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "slide",
+    "jump"
+   ],
+   "relations": [
+    "blocks-exit"
+   ],
+   "tags": [
+    "WALL",
+    "GRID",
+    "SUPPORT-ORDER",
+    "REWARD"
+   ],
+   "why": "unskippable gate and biggest payout; teaches that unsupported crates drop",
+   "evidence": "LP1 0:04:17.5-0:04:22 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-i",
+   "section": "S2",
+   "order": 23,
+   "where": "(residual) by the round stepping pillars",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "EDGE-BAIT"
+   ],
+   "why": "needed for GR 53",
+   "evidence": "GR 53",
+   "confidence": "low"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 24,
+   "where": "tree stump beside the vine at vine height",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "rail:beside-line"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SPEED-LINE",
+    "TEACH"
+   ],
+   "why": "first vine crate collects itself",
+   "evidence": "LP1 0:04:38.5 zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 25,
+   "where": "floating above the vine at the waterfall",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:above-line"
+   ],
+   "tags": [
+    "HIGH",
+    "SPEED-LINE"
+   ],
+   "why": "first jump off the moving line",
+   "evidence": "LP1 0:04:40.5 zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 26,
+   "where": "rest of the slide, spaced singly above the vine",
+   "composition": {
+    "wood": 7
+   },
+   "count": 7,
+   "arrangement": "float-line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:above-line",
+    "gap:pit"
+   ],
+   "tags": [
+    "FLOAT-LINE",
+    "SPEED-LINE",
+    "CHASE"
+   ],
+   "why": "rhythm jumps; drifting over a pit is fatal",
+   "evidence": "LP1 0:04:41-0:04:53; GR 62",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 27,
+   "where": "village deck at the vine's end",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves the vine",
+   "evidence": "LP1 0:04:55",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 28,
+   "where": "rope-net fence on the first deck",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "landing reward",
+   "evidence": "LP1 0:04:56",
+   "confidence": "low"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 29,
+   "where": "hut decks, singles and pairs among throwing tribesmen",
+   "composition": {
+    "wood": 7
+   },
+   "count": 7,
+   "arrangement": "singles/pairs",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "enemy:thrower"
+   ],
+   "tags": [
+    "ON-PATH",
+    "ENEMY-LINK"
+   ],
+   "why": "crates in the throwers' lanes; advance in the pauses",
+   "evidence": "LP1 0:04:58-0:05:06; GR 72",
+   "confidence": "low"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 30,
+   "where": "deck beside the hidden-gem hut",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "gem-hut"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "marks the hut with the crawl prompt",
+   "evidence": "LP1 0:05:10-0:05:11",
+   "confidence": "medium"
+  },
+  {
+   "id": "S5-b",
+   "section": "S5",
+   "order": 31,
+   "where": "(residual) undescribed by GR",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "GR's +5 step describes only 4",
+   "evidence": "GR 77",
+   "confidence": "low"
+  },
+  {
+   "id": "S5-c",
+   "section": "S5",
+   "order": 32,
+   "where": "stone landing after the sinking river platforms",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves the sinking-platform crossing",
+   "evidence": "LP1 0:05:16",
+   "confidence": "medium"
+  },
+  {
+   "id": "S5-d",
+   "section": "S5",
+   "order": 33,
+   "where": "cave floor beside the ? bonus pad",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "backtrack"
+   ],
+   "relations": [
+    "bonus-pad"
+   ],
+   "tags": [
+    "BACKTRACK",
+    "COUNT-TRAP",
+    "BONUS"
+   ],
+   "why": "the pad pulls you in first",
+   "evidence": "GR 77; LP1 0:05:19-0:05:21, 0:05:46-0:05:48; HUD 83 on return",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 34,
+   "where": "start ledge",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "BONUS"
+   ],
+   "why": "opening payout",
+   "evidence": "LP1 0:05:23-0:05:25 (2/8)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 35,
+   "where": "on stone pillars of a broken bridge",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "singles on pillars",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STEPPING",
+    "BONUS"
+   ],
+   "why": "jump targets that pay",
+   "evidence": "LP1 0:05:26-0:05:27 (4/8)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 36,
+   "where": "floating high above-left of a wooden arrow",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "arrow"
+   ],
+   "relations": [
+    "tool:arrowWood held"
+   ],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "TEACH",
+    "BONUS"
+   ],
+   "why": "held arrow bounce taught where lives cannot be lost",
+   "evidence": "LP1 0:05:29-0:05:33 (prompt; 5/8)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 37,
+   "where": "the wooden arrow itself + one more pillar crate",
+   "composition": {
+    "arrowWood": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "TOOL",
+    "BONUS",
+    "SUPPORT-ORDER"
+   ],
+   "why": "break the tool after use",
+   "evidence": "LP1 0:05:35-0:05:37 (6/8, 7/8)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 38,
+   "where": "beside the blue couch at the exit pad",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "exit-pad"
+   ],
+   "tags": [
+    "BONUS",
+    "COUNT-TRAP"
+   ],
+   "why": "last crate at the exit",
+   "evidence": "LP1 0:05:38 (8/8)",
+   "confidence": "high"
+  },
+  {
+   "id": "S6-a",
+   "section": "S6",
+   "order": 39,
+   "where": "cave floor after the pad; a ? against the right wall",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "scattered",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "lead into the dark",
+   "evidence": "LP1 0:05:47-0:05:49",
+   "confidence": "low"
+  },
+  {
+   "id": "S6-b",
+   "section": "S6",
+   "order": 40,
+   "where": "mid-cave in low light, under/past a hanging spider",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "scattered",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "enemy:spider",
+    "darkness"
+   ],
+   "tags": [
+    "HIDDEN",
+    "TIMED",
+    "ENEMY-LINK"
+   ],
+   "why": "collect between drops in darkness",
+   "evidence": "LP1 0:05:51-0:05:54; GR 93",
+   "confidence": "low"
+  },
+  {
+   "id": "S6-c",
+   "section": "S6",
+   "order": 41,
+   "where": "cavern exit",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves the cave",
+   "evidence": "LP1 0:05:57",
+   "confidence": "high"
+  },
+  {
+   "id": "S7-a",
+   "section": "S7",
+   "order": 42,
+   "where": "one crate on each of three round stone pillars over water",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "stepping",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "gap:water"
+   ],
+   "tags": [
+    "STEPPING",
+    "EDGE-BAIT"
+   ],
+   "why": "crates on the pillar tops you must land on anyway",
+   "evidence": "LP1 0:06:02-0:06:05; GR 96",
+   "confidence": "high"
+  },
+  {
+   "id": "S8-a",
+   "section": "S8",
+   "order": 43,
+   "where": "stone ledge at the wall base between plant mouths",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "enemy:plant"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "ENEMY-LINK"
+   ],
+   "why": "saves the final climb",
+   "evidence": "LP1 0:06:08-0:06:11",
+   "confidence": "high"
+  },
+  {
+   "id": "S8-b",
+   "section": "S8",
+   "order": 44,
+   "where": "ledges and crumbling skull platforms on the climb, one ? high",
+   "composition": {
+    "wood": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "crumbling-platform"
+   ],
+   "tags": [
+    "HIGH",
+    "TIMED"
+   ],
+   "why": "greed against the crumble timer",
+   "evidence": "LP1 0:06:12-0:06:25",
+   "confidence": "low"
+  },
+  {
+   "id": "S8-c",
+   "section": "S8",
+   "order": 45,
+   "where": "summit: ? on the left ledge, W on a small platform, red crate on the bottom-left skull platform",
+   "composition": {
+    "question": 1,
+    "wood": 1,
+    "tnt": 1
+   },
+   "count": 3,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "backtrack"
+   ],
+   "relations": [
+    "exit-in-view"
+   ],
+   "tags": [
+    "BACKTRACK",
+    "EDGE-BAIT",
+    "COUNT-TRAP"
+   ],
+   "why": "last crates off to the side and below the visible exit",
+   "evidence": "LP1 0:06:26-0:06:31 (red crate probably TNT)",
+   "confidence": "low"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "crab",
+   "count": 2,
+   "where": "path just after the start",
+   "role": "spin one into the other (GP); S1-d in the same lane"
+  },
+  {
+   "section": "S1",
+   "kind": "crab",
+   "count": 2,
+   "where": "before the low ruin wall",
+   "role": "draws attention forward past the hidden crate S1-f"
+  },
+  {
+   "section": "S1",
+   "kind": "boar",
+   "count": 1,
+   "where": "charges from around a corner (GP)",
+   "role": "not in sampled frames"
+  },
+  {
+   "section": "S1",
+   "kind": "rolling stone wheels",
+   "count": 2,
+   "where": "cross the path before the courtyard",
+   "role": "timed hazard between the TNT tutorial and the TNT test"
+  },
+  {
+   "section": "S2",
+   "kind": "poison spider",
+   "count": 2,
+   "where": "drop from the temple ceiling",
+   "role": "TNT S2-c sits in a drop zone"
+  },
+  {
+   "section": "S3",
+   "kind": "masked tribesman (thrower)",
+   "count": 1,
+   "where": "rock beside the vine",
+   "role": "pressure during the slide"
+  },
+  {
+   "section": "S4",
+   "kind": "masked tribesman (thrower)",
+   "count": 2,
+   "where": "village decks",
+   "role": "crates in their lanes (S4-c)"
+  },
+  {
+   "section": "S6",
+   "kind": "poison spider",
+   "count": 1,
+   "where": "hangs mid-cave",
+   "role": "dark crates S6-b collected between drops"
+  },
+  {
+   "section": "S8",
+   "kind": "man-eating plant",
+   "count": 2,
+   "where": "holes in the wall base",
+   "role": "C5 sits among them"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "low ruin wall (jump)",
+   "where": "after the second crab pair",
+   "crates": [
+    "S1-f"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "drop beside arch bridge",
+   "where": "stone arch bridge",
+   "crates": [
+    "S1-h"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "pit with round stepping pillars",
+   "where": "temple interior",
+   "crates": [
+    "S2-i"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "pit/river under the vine",
+   "where": "whole vine slide",
+   "crates": [
+    "S3-b",
+    "S3-c"
+   ]
+  },
+  {
+   "section": "S5",
+   "kind": "river with sinking stone platforms",
+   "where": "before C3",
+   "crates": []
+  },
+  {
+   "section": "S7",
+   "kind": "water between round pillars",
+   "where": "before the wall",
+   "crates": [
+    "S7-a"
+   ]
+  },
+  {
+   "section": "S8",
+   "kind": "drop below crumbling skull platforms",
+   "where": "wall climb",
+   "crates": [
+    "S8-b",
+    "S8-c"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-j",
+    "S1-k"
+   ],
+   "summary": "TNT pair with prompt, then a W-TNT-W courtyard triangle",
+   "solution": "stomp the TNT, walk away from the blast, collect the fragments",
+   "wrongOrder": "spinning the TNT detonates it at point-blank range",
+   "loss": "a life (matters for the <=3-death gem); no crates"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-h"
+   ],
+   "summary": "5x3 crate wall with a centre ? blocks the only exit",
+   "solution": "break the bottom row; upper crates settle into reach",
+   "wrongOrder": "none punished",
+   "loss": "nothing; teaches settling"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "B-c",
+    "B-d"
+   ],
+   "summary": "crate floats beyond a normal arrow bounce",
+   "solution": "hold jump on the arrow; break the arrow only afterwards",
+   "wrongOrder": "tap bounce falls short; breaking the arrow first strands the crate",
+   "loss": "one bonus crate (bonus retry costs no life)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S5-d"
+   ],
+   "summary": "two crates share the cave floor with the bonus pad",
+   "solution": "take them before or after the bonus",
+   "wrongOrder": "step on the pad and forget them",
+   "loss": "all-box gem"
+  }
+ ],
+ "observations": [
+  "53 of 104 crates (51%) sit before the vine: the first act teaches crates, later acts use 3-10 per section.",
+  "Teaching order: plain crate -> crab -> hidden crate behind a jumped wall (#8) -> TNT with prompt -> TNT triangle -> Aku -> checkpoint -> stack -> 15-crate exit wall.",
+  "The first count trap (crate 8) sits behind the low wall you just jumped, before the player cares about the all-box gem.",
+  "Protection before danger and saves after it: Aku at the foot of the spider temple, C1 at the top of its stairs; every checkpoint follows a new hazard.",
+  "The biggest cluster (15) is the temple exit itself, so every player sees unsupported crates settle.",
+  "Forced-motion vine: the first crate is beside the line at ride height (collects itself), the rest float one jump above it.",
+  "Enemies set the timing, not the location: crates sit in throwers' lanes and spiders' drop zones.",
+  "Bait clusters sit at bonus pads, bonus exits and the final summit, where attention is pulled to a goal.",
+  "No Nitro, !, iron-bound or bounce crate; the only tool crate (arrow) is in the death-free bonus.",
+  "The all-box goal costs only two deliberate turn-backs (#8 and the pad pair)."
+ ]
+}

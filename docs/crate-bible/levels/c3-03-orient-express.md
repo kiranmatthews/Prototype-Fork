@@ -67,8 +67,8 @@ START [W][W]L → (stopwatch) → road jog → [W]R → [?1]L → ~o~L  ~o~R  (+
   → [L2] floating (shadow drawn) → rolling barrels x2 → barrel cart → e:dragon 1 (low: jump)
   → [W1] [C] [W1]  → C1
 ```
-| id | position (route order) | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S1-a | first metres, left of the road | wood ×2 | PAIR | ride into them | ON-PATH PAIR TEACH SPEED-LINE | First lesson of the ride: a crate breaks on contact, no attack needed (P3 s76 says the same for the jet ski) | F3 p027L zoom | high |
 | S1-b | after the road jog, right side | wood ×1 | SINGLE | steer | ON-PATH SINGLE SPEED-LINE | Switches lane: the player learns to steer for crates | F3 p027L zoom | high |
 | S1-c | next, left side | ? ×1 (1-s) | SINGLE | steer | ON-PATH SINGLE SPEED-LINE TIME-TRIAL | Third lane change in a few seconds — the left/right beat that the holes and barrel then demand (advice 1: after the left hole don't drift right into the barrel; tempo left–right–left) | F3 p027L zoom; F3 callout 1 | high |
@@ -86,8 +86,8 @@ C1 → TOWER A: e:worker holding a springboard mid-road; loose life on the roof 
                                                                             [S ][W]  (2x2, target 0:07:00)
    → (page turn) → [W A] → C2 = first box of the slalom
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S2-a | inside the tunnel of tower A | wood ×4, ? ×1: two 2-stacks (W under W(1-s); ? under W(1-s)) + a single W(A) | STACK ×2 + SINGLE | stay on the road, jump into the tops | ON-PATH STACK ROUTE-SPLIT TIME-TRIAL COUNT-TRAP | P3 s32: no need to bounce on the springboard the worker holds — go for the boxes inside. The springboard leads to a loose life on the roof (F3) and skips all five crates: the obvious tool is the wrong answer. The time crates are the **tops** of the stacks (see speed-line analysis) | F3 p027R zoom; P3 p007L s32 | high |
 | S2-b | on the road after tower A and dragon 2 | 1UP ×1 (1-s) | SINGLE | steer | ON-PATH LIFE SPEED-LINE TIME-TRIAL | A life on the line, softening the dragon pair that follows | F3 p027R zoom ×3.5 | high |
 | S2-c | after dragon 3, left side | ? ×1 | SINGLE | steer | ON-PATH SINGLE SPEED-LINE | Small pick-up between the dragon pair and the worker group | F3 p027R zoom | high |
@@ -105,12 +105,12 @@ C2 → [W1] [?] [W1] [W]  (slalom tail) → e:dragons 5 (jump), 6-7 (duck, over 
      [W][? ]
    → e:dragon 10 (under), 11 (over) → [W1] [C]  → C3 (target 0:16:00)
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S3-a | right after C2 | wood ×3 (two 1-s), ? ×1 | slalom (zig-zag, with C2 at its head) | steer | ON-PATH CHECKPOINT SPEED-LINE TIME-TRIAL TEST | gamepressure: a slalom through five crates, one of them the checkpoint. The checkpoint is the first gate of a carve | F3 p028L zoom; gamepressure OE | high (crates) / medium (exact zig-zag) |
 | S3-b | roof of tower B, reached from the springboard after the hole | wood ×3 (1-s, plain, 3-s) | ROW on the roof slab | springboard bounce | HIGH TOOL ROUTE-SPLIT SPEED-LINE TIME-TRIAL | F3 advice 4: small jump over the hole, land straight on the springboard, don't miss the boxes on top. P3 s34: stay to the right, the area passes fast. TA3: at dash you won't fall in the hole; on the roof move from the centre to the right for both time crates. The **only** tower where bouncing is correct | F3 p028L zoom; F3 callout 4; F3 TA3; P3 p007L s34; gamepressure OE | high |
 | S3-c | after the tower, past a pole worker and a box worker and dragons 8–9 | wood ×1 (1-s), ? ×1 | PAIR | steer | ON-PATH PAIR SPEED-LINE TIME-TRIAL | Landing reward after the jump/duck dragon alternation (advice 5: dragons to jump and dragons to duck alternate — don't be fooled) | F3 p028L zoom; F3 callout 5 | high |
-| S3-d | beside the crystal | ? ×2, wood ×2 (top-right ? is 2-s) | GRID 2 × 2 | ride through its centre | ON-PATH GRID REWARD SPEED-LINE TIME-TRIAL | P3 s36: aim at the centre of the stack to get them all while taking the crystal — crate block and crystal share one line | F3 p028L zoom; P3 p007L s36 | high |
+| S3-d | beside the crystal | ? ×2, wood ×2 — top row ?, W(2-s); bottom row W, ? | GRID 2 × 2 | ride through its centre | ON-PATH GRID REWARD SPEED-LINE TIME-TRIAL | P3 s36: aim at the centre of the stack to get them all while taking the crystal — crate block and crystal share one line | F3 p028L zoom; P3 p007L s36 | high |
 | S3-e | after the crystal, right side | wood ×1, ? ×1 (1-s) | PAIR | steer | ON-PATH PAIR SPEED-LINE TIME-TRIAL | Exit pick-up before the last barrels and dragons 10–11. TT fr.22: a 2-s box on the slope is missed if you jump just before it — jump the moment Pura touches it to take it and the 1-s box after | F3 p028L zoom; F3 p102L fr.22 | medium (which pair fr.22 shows) |
 | S3-f | after dragons 10 (under) and 11 (over) | wood ×1 (1-s), checkpoint | PAIR | steer | ON-PATH PAIR CHECKPOINT TIME-TRIAL | C3 at 44 again paired with a crate; target 0:16:00 | F3 p028L zoom | high |
 
@@ -121,8 +121,8 @@ C3 → barrels → [W] → e:box worker, pole worker → [W][?]  (second crate h
         tunnel under the tower: [?] [W] [?3]   (advice 6: big jump over the hole AND the springboard)
    → elevated road [?1] (target 0:24:00) → gate building → GOAL building
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S4-a | after the barrels, by the right parapet | wood ×1 | SINGLE | steer | ON-PATH SINGLE SPEED-LINE | Re-start beat after C3 | F3 p028L zoom (fold) | medium |
 | S4-b | just before tower C, after the workers | wood ×1 + 1 crate of unreadable type (JSON `wood?`) | PAIR | steer | ON-PATH PAIR SPEED-LINE | Lead-in to the last decision | F3 p028L zoom (second crate in the fold) | medium (count needed for 51) / low (type) |
 | S4-c | in the tunnel under tower C | ? ×2 (one 3-s), wood ×1 | ROW | big jump over hole + springboard, stay low | ON-PATH ROUTE-SPLIT COUNT-TRAP SPEED-LINE TIME-TRIAL | Advice 6: ride the springboard here and the boxes under the watchtower are lost — clear the hole and the springboard together with a big jump. The roof again shows a loose life: the reverse of tower B. TA4 / TT fr.28: dash from well before, big jump to the right, avoid the tower's stone wall, take the time crate under the tower | F3 p028L–p028R zoom; F3 callout 6; F3 TA4; F3 p102L fr.28; P3 p007R s37; gamepressure OE | high |

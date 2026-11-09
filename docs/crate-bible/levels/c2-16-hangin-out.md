@@ -15,7 +15,7 @@ Evidence level: the main course is drawn crate by crate on the F2 map and confir
 | 1UP | 1, off-course (subscript 1) → in the bonus; the bonus HUD shows a life collected with the first tower (D2 shot 31) |
 | Aku Aku | 1, on course (subscript 0): top of a ?-plus-mask 2-stack before the TNT wall |
 | TNT | 5 in the main-course TNT wall + 5 in a bonus row = 10 |
-| Nitro | 12 on the main course (a row of 4 + a 4×2 wall) + ≈14–17 in the bonus |
+| Nitro | 12 on the main course (a row of 4 + a 4×2 wall) + 14 seen in the bonus (1 + 4 + 9; up to 3 more off-frame) |
 | ! switches | 1 green ! (S5), clears the Nitro wall in front of it (and the level's other Nitro) |
 | Outline / arrows / striped / iron-bound | outlines none; steel arrow blocks in the bonus (3, uncounted); striped crates in the bonus finale (≈6); iron-bound crates in the bonus tower (gamepressure) |
 | Gems | One clear gem = all 93 boxes; order (F2 p098L): normal → bonus → normal. Secret exit to Totally Fly (stage 27) from the pool after the second drop |
@@ -113,7 +113,7 @@ START tube 1 --S1-- 11 (?/? stack; 8-crate pyramid; drop hole #1) --------------
 | B-b | upper platform reached from a steel arrow | Nitro ×1 | single on the platform | jump over (arrow height) | SINGLE EXPLOSIVE-MIX HIGH | Lands the arrow bounce next to a Nitro: the high jump must be aimed | D2 shot 31; GP ("springboard over a single Nitro") | medium |
 | B-c | staircase of steel blocks to the right | Nitro ×4 | one Nitro on each step | not to be touched | STEPPING EXPLOSIVE-MIX | A staircase whose every step is mined: the player must use the other route | D2 shot 31 | medium |
 | B-d | between the tower area and the Nitro field | 2 crates (type unseen) | — | — | COUNT-TRAP | Accounted only by the HUD (5 → 7) | D2 shots 31–32 HUD | low |
-| B-e | floor field around two steel arrow blocks | Nitro ×8 visible (3 + 1 raised, 3 + 1–2 raised); likely more off-frame | rows either side of the arrows | slide-jump over the first, dash-jump onto the arrows | ROW EXPLOSIVE-MIX TOOL | The arrows are the only safe footing inside a Nitro carpet; F2 tip ② | D2 shot 32 + caption; F2 p098L ② | medium (visible), low (total) |
+| B-e | floor field around two steel arrow blocks | Nitro ×9 visible (3 + 1 raised, 3 + 2 raised); likely more off-frame | rows either side of the arrows | slide-jump over the first, dash-jump onto the arrows | ROW EXPLOSIVE-MIX TOOL | The arrows are the only safe footing inside a Nitro carpet; F2 tip ② | D2 shot 32 + caption; F2 p098L ② | medium (visible), low (total) |
 | B-f | over the solid blocks | 2 crates | floating singles overhead | run under, jump up into them | FLOAT-LINE HIGH | Head-bonk pickups that reward stopping on safe blocks (HUD 7 → 9) | D2 shot 33 caption + HUD | medium |
 | B-g | red ledge after the blocks | TNT ×5 | row | landing lights a fuse; jump off at once | ROW EXPLOSIVE-MIX TIMED | Forced detonation: you must stand on it to progress and leave within the count (all five count when they blow) | D2 shot 33 photo ("TNT TNT 3 TNT TNT") + caption | high |
 | B-h | upper striped row over the pit | striped ×2 | floating row | bounce until they break | STEPPING TIMED COUNT-TRAP | Bouncy footing with a limited number of bounces — F2 tip ③: count as you go | D2 shot 34 (HUD 16); F2 p098L ③ | medium |

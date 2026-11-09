@@ -67,8 +67,8 @@ START → /R/ → * → [W] [W] → * → /R/ /R/ → [W1]  (TA1: gentle S-bend;
                                                         ship stern: [W] (deck crate)
   → C1 at the top bend
 ```
-| id | position (route order) | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position (route order) | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S1-a | start channel, past the first ramp and mine, mid-channel | wood ×2 | PAIR side by side | drive into them | ON-PATH PAIR TEACH SPEED-LINE | P3 s76: just touch crates with the jet ski to break them. Two easy targets teach steering the vehicle onto crates | F3 p042L zoom | high |
 | S1-b | after the two side-by-side ramps at the S-bend | wood ×1 (1-s) | SINGLE | steer (slight detour) | DETOUR SINGLE SPEED-LINE TIME-TRIAL | TA1: drive the S-bend as straight as possible and don't detour for this 1-s box — a crate placed just off the racing line to create a time-trial choice | F3 p042L zoom; F3 TA1 | high |
 | S1-c | entry of the far-left channel (page fold) | ? ×1, likely ? ×1 (1-s) | PAIR (in line) | steer | ON-PATH PAIR SPEED-LINE TIME-TRIAL | Pick-ups at the turn north | F3 p042 fold zoom | medium (positions) / low (one type) |
@@ -88,8 +88,8 @@ C1 → PINK lane east of the ship: [W ]   → * * → /R/ → [?2] → e:sailor 
                                  * * *   (two staggered rows)
   → * * → cannon post → /R/ with [WA] tucked right behind its lip → ~*~ [?3] ~*~ → [?1] → C2
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S2-a | pink cannon lane east of the ship, next to the central island | wood ×3 (top 1-s) | STACK 3 high | drive into the base; top by jumping | ON-PATH STACK TIMED TIME-TRIAL | A tall stack in the second fire lane: hitting the base collapses it into reach; the time crate is the top one | F3 p042R zoom ×2.6 | high (stack) / medium (top-crate behaviour) |
 | S2-b | top channel, just past a ramp | ? ×1 (2-s) | SINGLE at the landing | ramp jump | ON-PATH SINGLE TOOL TIME-TRIAL | Ramp-then-crate again; gamepressure: after the checkpoint ramps start hiding bombs or boats behind them — the sailor right after this ramp is one | F3 p042R zoom; gamepressure MW | high |
 | S2-c | past the rowing sailor near the top-right corner | ? ×1, wood ×1 | PAIR | steer | ON-PATH PAIR ENEMY-LINK | Reward for clearing the sailor | F3 p042R zoom | high |
@@ -107,8 +107,8 @@ C2 → * * → /R/ → [W][?2]  (mines both sides) → bottom-left corner: /R/ [
   ↳ middle channel north-east: [?] among mine pairs → /R/ → [W1] [?2] [W3]  (rising line; 3rd is high)
      → e:sailor → * * * * → [W] [W] by the island → skull-rock cavern = GOAL
 ```
-| id | position | composition | arrangement | access | tags | why it is here | evidence |
-|---|---|---|---|---|---|---|---|
+| id | position | composition | arrangement | access | tags | why it is here | evidence | confidence |
+|---|---|---|---|---|---|---|---|---|
 | S3-a | bottom channel, just past a ramp, between two mines | wood ×1, ? ×1 (2-s) | PAIR at the landing | ramp jump | ON-PATH PAIR TOOL TIMED TIME-TRIAL | Landing zone flanked by mines: overshoot or drift and you hit one. TT fr.22 (likely here or S3-e): at record pace the swell is low when you hit the ramp and the time crate is out of reach — use a back-flip | F3 p042R zoom ×2; F3 p103L fr.22 | high (crates) / medium (fr.22 location) |
 | S3-b | bottom-left corner, after a ramp (page fold) | wood? ×1 (blurred blue badge, 2-s?) | SINGLE | steer | ON-PATH SINGLE TIME-TRIAL | Corner crate | F3 p042 fold zoom | low |
 | S3-c | mine channel at the far left (page fold) | wood? ×1 (1-s) | SINGLE among mines | steer | ON-PATH SINGLE TIMED TIME-TRIAL | TA3: dense floating-mine zone — skim the right-hand islet to avoid the mines, or with a mask accept one hit and go through the centre (target 0:47:00) | F3 p042 fold zoom; F3 TA3 | low (type) / medium (position) |
