@@ -24,7 +24,8 @@ await withBlockworksRuntime(async r=>{
   if(inSweep&&torch.p[1]<tiki.p[1]+1.5&&torch.p[1]>tiki.p[1]-4)hits.push({rule:'lamp in a flame',tiki:tiki.nm,torch:torch.nm,local:local(torch.p)});
  }
  // 3. No crate under a censer's swing.
- for(const pend of C.filter(c=>c.t==='pendulum'))for(const k of crates){const reach=(pend.len??5)*Math.sin(pend.amp??1)+1.2;if(Math.abs(k.p[2]-pend.p[2])<1.9&&Math.abs(k.p[0]-pend.p[0])<reach&&k.p[1]+SIZE>pend.p[1]-(pend.len??5)-1.1)hits.push({rule:'crate under a censer',crate:k.nm,local:local(k.p)});}
+ // The bob swings along the pendulum's local X, spun by its yaw: offset (swing·cos, -swing·sin) in world X/Z.
+ for(const pend of C.filter(c=>c.t==='pendulum'))for(const k of crates){const reach=(pend.len??5)*Math.sin(pend.amp??1)+1.2,yaw=(pend.yaw??0)*Math.PI/180,dx=k.p[0]-pend.p[0],dz=k.p[2]-pend.p[2],along=dx*Math.cos(yaw)-dz*Math.sin(yaw),across=dx*Math.sin(yaw)+dz*Math.cos(yaw);if(Math.abs(across)<1.9&&Math.abs(along)<reach&&k.p[1]+SIZE>pend.p[1]-(pend.len??5)-1.1)hits.push({rule:'crate under a censer',crate:k.nm,local:local(k.p)});}
  // 4. No crate inside a patrol's walk.
  for(const e of l.enemies)for(const k of crates){
   const axis=e.axis,along=axis==='z'?k.p[2]:k.p[0],cross=axis==='z'?k.p[0]:k.p[2],home=axis==='z'?e.group.position.x:e.group.position.z;

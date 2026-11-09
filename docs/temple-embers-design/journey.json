@@ -1,13 +1,13 @@
 {
   "state": "finished",
-  "seconds": 111.2,
+  "seconds": 134.4,
   "deaths": 0,
   "position": [
-    -0.5434417672669198,
+    107.4565721369298,
     30.73666666644315,
-    -860.7170658077317
+    -97.71706580773272
   ],
-  "frames": 6674,
+  "frames": 8066,
   "stations": [
     {
       "station": 0,
@@ -21,153 +21,218 @@
     },
     {
       "station": 200,
-      "frame": 1014,
-      "seconds": 16.9
+      "frame": 1626,
+      "seconds": 27.1
     },
     {
       "station": 300,
-      "frame": 2295,
-      "seconds": 38.3
+      "frame": 2965,
+      "seconds": 49.4
     },
     {
       "station": 400,
-      "frame": 3539,
-      "seconds": 59
+      "frame": 4272,
+      "seconds": 71.2
     },
     {
       "station": 500,
-      "frame": 3923,
-      "seconds": 65.4
+      "frame": 4652,
+      "seconds": 77.5
     },
     {
       "station": 600,
-      "frame": 4167,
-      "seconds": 69.5
+      "frame": 5019,
+      "seconds": 83.7
     },
     {
       "station": 700,
-      "frame": 4551,
-      "seconds": 75.8
+      "frame": 5693,
+      "seconds": 94.9
     },
     {
       "station": 800,
-      "frame": 5764,
-      "seconds": 96.1
+      "frame": 7204,
+      "seconds": 120.1
     }
   ],
-  "cratesBroken": 80,
+  "cratesBroken": 69,
   "beats": [
     {
       "name": "Ravine floor",
-      "station": 171.3,
-      "frame": 544
+      "station": 143,
+      "frame": 504
     },
     {
-      "name": "Gateway, first flight and the collapse",
-      "station": 238.7,
-      "frame": 1424
+      "name": "Pillar chain",
+      "station": 206.4,
+      "frame": 1743
     },
     {
-      "name": "First landing and the climb",
-      "station": 310.1,
-      "frame": 2508
+      "name": "Landing court",
+      "station": 234.4,
+      "frame": 2043
     },
     {
-      "name": "Fuse court and the narrow stair",
-      "station": 397.7,
-      "frame": 3440
+      "name": "Fallen ledges",
+      "station": 279.1,
+      "frame": 2836
+    },
+    {
+      "name": "Fuse court and the broken stair",
+      "station": 369.2,
+      "frame": 3982
     },
     {
       "name": "Stair top and the sluice",
-      "station": 476.3,
-      "frame": 3870
+      "station": 458.3,
+      "frame": 4553
     },
     {
-      "name": "Broken aqueduct and the abutment",
-      "station": 673.9,
-      "frame": 4442
+      "name": "Aqueduct and the abutment",
+      "station": 643.1,
+      "frame": 5520
     },
     {
       "name": "The Cistern",
-      "station": 738.6,
-      "frame": 4867
+      "station": 722.7,
+      "frame": 5981
     },
     {
       "name": "Sanctuary steps",
-      "station": 776.7,
-      "frame": 5572
+      "station": 760.7,
+      "frame": 6706
     },
     {
       "name": "Sanctuary terrace",
-      "station": 860.7,
-      "frame": 6674
+      "station": 844.7,
+      "frame": 8066
     }
   ],
   "evidence": [
     {
-      "action": "plinth one",
+      "action": "pillar one",
       "landing": {
-        "s": 202.92,
-        "x": -1.54,
-        "y": 3.1,
+        "s": 158.21,
+        "x": -1.46,
+        "y": 1,
         "state": "ride",
         "grounded": true,
         "board": false,
-        "speed": 6.36,
+        "speed": 6.3,
         "vVel": 0,
         "deaths": 0,
-        "frame": 1041
+        "frame": 862
       }
     },
     {
-      "action": "plinth two",
+      "action": "pillar two",
       "landing": {
-        "s": 208.01,
-        "x": 1.5,
-        "y": 3.6,
+        "s": 163.09,
+        "x": 1.53,
+        "y": 2,
         "state": "ride",
         "grounded": true,
         "board": false,
-        "speed": 5.28,
+        "speed": 5.03,
         "vVel": 0,
         "deaths": 0,
-        "frame": 1128
+        "frame": 948
       }
     },
     {
-      "action": "upper run",
+      "action": "the walkway",
       "landing": {
-        "s": 213.11,
-        "x": 1.51,
-        "y": 4.41,
+        "s": 167.91,
+        "x": 0,
+        "y": 3,
         "state": "ride",
         "grounded": true,
         "board": false,
-        "speed": -6.3,
+        "speed": 5.6,
         "vVel": 0,
         "deaths": 0,
-        "frame": 1214
+        "frame": 1034
+      }
+    },
+    {
+      "action": "the rest pad",
+      "landing": {
+        "s": 180.94,
+        "x": 0,
+        "y": 4,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.36,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1259
+      }
+    },
+    {
+      "action": "pillar three",
+      "landing": {
+        "s": 191.29,
+        "x": -1.36,
+        "y": 5.5,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 5.03,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1462
+      }
+    },
+    {
+      "action": "pillar four",
+      "landing": {
+        "s": 199.07,
+        "x": 1.58,
+        "y": 7,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -5.54,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1603
+      }
+    },
+    {
+      "action": "the landing court",
+      "landing": {
+        "s": 206.4,
+        "x": 0,
+        "y": 8,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 4.9,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1743
       }
     },
     {
       "action": "fallen ledge 1",
       "landing": {
-        "s": 270.58,
-        "x": -1.2,
+        "s": 239.68,
+        "x": -1.39,
         "y": 10,
         "state": "ride",
         "grounded": true,
         "board": false,
-        "speed": -6.24,
+        "speed": 6.3,
         "vVel": 0,
         "deaths": 0,
-        "frame": 1760
+        "frame": 2126
       }
     },
     {
       "action": "fallen ledge 2",
       "landing": {
-        "s": 278.15,
+        "s": 247.16,
         "x": 0.92,
         "y": 12,
         "state": "ride",
@@ -176,14 +241,14 @@
         "speed": 6.05,
         "vVel": 0,
         "deaths": 0,
-        "frame": 1897
+        "frame": 2263
       }
     },
     {
       "action": "fallen ledge 3",
       "landing": {
-        "s": 285.52,
-        "x": 1.1,
+        "s": 254.52,
+        "x": 1.09,
         "y": 14,
         "state": "ride",
         "grounded": true,
@@ -191,13 +256,13 @@
         "speed": -6.36,
         "vVel": 0,
         "deaths": 0,
-        "frame": 2034
+        "frame": 2400
       }
     },
     {
       "action": "fallen ledge 4",
       "landing": {
-        "s": 295.02,
+        "s": 264.02,
         "x": -0.87,
         "y": 15,
         "state": "ride",
@@ -206,13 +271,13 @@
         "speed": -5.85,
         "vVel": 0,
         "deaths": 0,
-        "frame": 2188
+        "frame": 2554
       }
     },
     {
       "action": "fallen ledge 5",
       "landing": {
-        "s": 302.54,
+        "s": 271.54,
         "x": 0.88,
         "y": 16,
         "state": "ride",
@@ -221,13 +286,13 @@
         "speed": -6.05,
         "vVel": 0,
         "deaths": 0,
-        "frame": 2366
+        "frame": 2694
       }
     },
     {
       "action": "fuse court",
       "landing": {
-        "s": 310.11,
+        "s": 279.11,
         "x": 0.99,
         "y": 16,
         "state": "ride",
@@ -236,58 +301,88 @@
         "speed": -6.36,
         "vVel": 0,
         "deaths": 0,
-        "frame": 2508
+        "frame": 2836
       }
     },
     {
-      "action": "sanctuary step 1",
+      "action": "over the first break",
       "landing": {
-        "s": 747.07,
-        "x": -2,
-        "y": 21.75,
+        "s": 332.61,
+        "x": -0.05,
+        "y": 18.9,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -5.6,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 3282
+      }
+    },
+    {
+      "action": "over the second break",
+      "landing": {
+        "s": 350.13,
+        "x": -0.03,
+        "y": 21.5,
         "state": "ride",
         "grounded": true,
         "board": false,
         "speed": 6.36,
         "vVel": 0,
         "deaths": 0,
-        "frame": 5025
+        "frame": 3676
+      }
+    },
+    {
+      "action": "sanctuary step 1",
+      "landing": {
+        "s": 730.93,
+        "x": -1.54,
+        "y": 21.75,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -5.47,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 6157
       }
     },
     {
       "action": "sanctuary step 2",
       "landing": {
-        "s": 754.78,
-        "x": 0.6,
+        "s": 738.73,
+        "x": 0.59,
         "y": 24,
         "state": "ride",
         "grounded": true,
         "board": false,
-        "speed": -6.17,
+        "speed": -6.3,
         "vVel": 0,
         "deaths": 0,
-        "frame": 5167
+        "frame": 6301
       }
     },
     {
       "action": "sanctuary step 3",
       "landing": {
-        "s": 762.76,
+        "s": 746.76,
         "x": -0.59,
         "y": 26.25,
         "state": "ride",
         "grounded": true,
         "board": false,
-        "speed": -6.17,
+        "speed": -6.24,
         "vVel": 0,
         "deaths": 0,
-        "frame": 5309
+        "frame": 6443
       }
     },
     {
       "action": "sanctuary step 4",
       "landing": {
-        "s": 770.76,
+        "s": 754.76,
         "x": 0.59,
         "y": 28.5,
         "state": "ride",
@@ -296,13 +391,13 @@
         "speed": -6.17,
         "vVel": 0,
         "deaths": 0,
-        "frame": 5451
+        "frame": 6585
       }
     },
     {
       "action": "onto the terrace",
       "landing": {
-        "s": 776.75,
+        "s": 760.75,
         "x": 1.01,
         "y": 30,
         "state": "ride",
@@ -311,7 +406,7 @@
         "speed": -6.17,
         "vVel": 0,
         "deaths": 0,
-        "frame": 5572
+        "frame": 6706
       }
     }
   ]

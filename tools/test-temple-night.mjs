@@ -14,7 +14,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(route.checks.length>=10,'the course must verify its own placement rules');
  assert.ok(route.countedCrates>=150&&route.countedCrates<=190,`counted crates ${route.countedCrates}`);
  assert.equal(route.rooms.length,7);
- for(const kind of ['pendulum','vertramp','firetiki','enemy','pit','rock'])assert.ok(route.data.components.some(c=>c.t===kind),`${kind} is missing`);
+ for(const kind of ['pendulum','crusher','vertramp','firetiki','enemy','pit','rock'])assert.ok(route.data.components.some(c=>c.t===kind),`${kind} is missing`);
  for(const kind of ['phasepad','crumble','trickgate','returnportal','speedpad','trampoline','mover','grindosaurus'])assert.ok(!route.data.components.some(c=>c.t===kind),`${kind} must not appear in the temple`);
  const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
  const floorAt=(q,up=.3,depth=1)=>{ray.set(new THREE.Vector3(...q).add(new THREE.Vector3(0,up,0)),down);ray.far=depth;return ray.intersectObjects(l.groundMeshes,false)[0]?.point.y;};

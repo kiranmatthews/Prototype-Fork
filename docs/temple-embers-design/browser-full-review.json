@@ -1,101 +1,134 @@
 {
-  "report": [
-    {
-      "label": "full-03-gutter-row",
-      "s": 82,
-      "x": 4,
-      "y": 0,
-      "pos": [
-        4,
-        0.12,
-        -82
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 171,
-      "tikis": 9,
-      "enemies": 12
-    },
-    {
-      "label": "full-10-landing-one",
-      "s": 251,
-      "x": 1,
-      "y": 8,
-      "pos": [
-        1,
-        8,
-        -251
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 171,
-      "tikis": 9,
-      "enemies": 12
-    },
-    {
-      "label": "full-15-fuse-court",
-      "s": 324,
-      "x": 0,
-      "y": 16,
-      "pos": [
-        0,
-        16,
-        -324
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 171,
-      "tikis": 9,
-      "enemies": 12
-    },
-    {
-      "label": "full-20-ravine-break",
-      "s": 514,
-      "x": 0,
-      "y": 16,
-      "pos": [
-        0,
-        16.12,
-        -514
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 171,
-      "tikis": 9,
-      "enemies": 12
-    },
-    {
-      "label": "full-25-promise-block",
-      "s": 704,
-      "x": 0,
-      "y": 16,
-      "pos": [
-        0,
-        16.12,
-        -704
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 171,
-      "tikis": 9,
-      "enemies": 12
-    },
-    {
-      "label": "full-31-nitro-rows",
-      "s": 835,
-      "x": 0,
-      "y": 32,
-      "pos": [
-        0,
-        31.62,
-        -835
-      ],
-      "state": "air",
-      "grounded": false,
-      "crates": 171,
-      "tikis": 9,
-      "enemies": 12
-    }
-  ],
-  "errors": []
+ "report": [
+  {
+   "label": "full-02-gutter-aqueduct",
+   "x": 0,
+   "y": 0,
+   "z": -90,
+   "pos": [
+    0,
+    0,
+    -90
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-06-walkway",
+   "x": -28,
+   "y": 2.24,
+   "z": -137,
+   "pos": [
+    -28,
+    2.36,
+    -137
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-13-side-scroll",
+   "x": -62,
+   "y": 16.7407,
+   "z": -206,
+   "pos": [
+    -62,
+    16.86,
+    -206
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-14b-stair-slab",
+   "x": -25,
+   "y": 22.2222,
+   "z": -206,
+   "pos": [
+    -25,
+    22.22,
+    -206
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-19-ravine-break",
+   "x": 16,
+   "y": 16,
+   "z": -106,
+   "pos": [
+    16,
+    16,
+    -106
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-21-abutment-court",
+   "x": 16,
+   "y": 16,
+   "z": 20,
+   "pos": [
+    16,
+    16.12,
+    20
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-22b-cistern-censer",
+   "x": 42,
+   "y": 16,
+   "z": 27,
+   "pos": [
+    42,
+    16,
+    27
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  },
+  {
+   "label": "full-28-nitro-rows",
+   "x": 108,
+   "y": 30,
+   "z": -73,
+   "pos": [
+    108,
+    30.12,
+    -73
+   ],
+   "state": "ride",
+   "grounded": true,
+   "crates": 168,
+   "tikis": 9,
+   "enemies": 12
+  }
+ ],
+ "errors": [],
+ "note": "the one hazard-asset console error of the first lite pass came from the slab's generated decor kind; it was re-shot clean after the slab took the mossy-rock model"
 }
