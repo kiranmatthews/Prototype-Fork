@@ -185,8 +185,8 @@ seven.
 
 A second pass re-read the same sources for every level's ground and threats and extended each level
 map with a "Geometry, obstacles and enemies" block and matching JSON records (schema in the folder
-[README](crate-bible/README.md)): **914 platforms, 489 gaps, 252 jump sequences, 352 obstacles
-and 352 enemy records in 223 sections**, each with an observation, a reason and a citation. They are
+[README](crate-bible/README.md)): **968 platforms, 517 gaps, 275 jump sequences, 379 obstacles
+and 375 enemy records in 236 sections**, each with an observation, a reason and a citation. They are
 aggregated in [`GEOMETRY_STATS.md`](crate-bible/GEOMETRY_STATS.md) (`node tools/crate-bible-geometry-stats.mjs`).
 
 - Sizes and widths are estimated in crates against crates visible in the same drawing or screenshot
@@ -1090,8 +1090,8 @@ floors (red-hot, shark sand). About three quarters are lethal. The remainder fai
 player falls out of a bonus, drops to a lower route and loses its crates, is trapped until a pit's
 enemies are dead, or is slowed by mud. **Soft failures are concentrated where a lesson is new**
 (Turtle Woods: two mud swamps and three rat pits turn failure into delay; Snow Biz: missed float-line
-crates cost a climb, not a life) **and where precision is the point** (Cold Hard Crash's post field
-and crate stair). Bonus rooms hold the widest gaps and the smallest tops because a fall there
+crates cost a climb, not a life) **and where precision is the point** (Cold Hard Crash's post field,
+Piston It Away's crate stair). Bonus rooms hold the widest gaps and the smallest tops because a fall there
 costs nothing (Rude Awakening, Snow Biz).
 
 ### X.2 Widths stay short
@@ -1360,7 +1360,7 @@ Every lethal timing hazard in the maps announces its next window, and most annou
 |---|---|
 | The hazard's own motion | a crusher's slow rise; a disc's position in its trough; pistons at full extension; barrels high on a pipe wall (The Eel Deal, Hangin' Out) |
 | Colour and light | flashing water when the eel is live (The Eel Deal); red-hot undersides on presses (Stowing Away); strobing phase objects |
-| Marks on the floor | green puddles where spiders drop (Rude Awakening); impact rings under falling objects and Louise's ≈ 2 s strips (Jetboard Jetty); shadows |
+| Marks on the floor | green puddles where spiders drop (Rude Awakening); red target rings under a bomber's strikes (A Real Grind); the boss's ≈ 2 s strips before a slam (Jetboard Jetty); shadows |
 | Visible approach | rolling wheels seen on a curved causeway (Rude Awakening); a cart visible ≈ 1.5 s ahead on a rail (A Real Grind) |
 | Wind-up | a drawn crossbow, harpoons already stuck in the boards (Snow Way Out); a TNT counting |
 | Prompts and signs | HANG, SWITCH and SWING prompts ≈ 2–3 s ahead (A Real Grind); neon signs where the camera cannot help (Crash Compactor) |
@@ -1479,8 +1479,10 @@ safe ground, holds for only about a quarter to a third of recorded debuts. The u
 - **alone on a wide floor**: Turtle Woods' turtle after C1; Draggin' On's first gong monk with a wall
   behind it; Jetboard Jetty's lone pirate on a wide dock; Rude Awakening's hub crab;
 - **with an opt-out**: Turtle Woods' ≈ 5–8 u lane lets the player steer around its early enemies, which its
-  guide says need not be killed;
-- **right after a mask**: Crash 2 often places an Aku Aku crate beside a debut (Snow Biz, Diggin' It);
+  guide says need not be killed; Diggin' It introduces its plant alone and its guide says it can simply be
+  ignored;
+- **with a mask at hand**: Snow Biz puts an Aku Aku crate between its first hedgehog and the next; Diggin'
+  It's first mines come right after a mask crate, so the first mistake is forgiven;
 - **right after the counter is given**: Crash 4 introduces mask-gated enemies immediately after their mask
   (Stowing Away's shielded lab assistants follow the whirlwind pickup; Off-Balance's mask enemies follow
   each mask), so the enemy and its answer are taught together;
@@ -1729,6 +1731,11 @@ floor-crate stomp + double ≈ 6.7 m; arrow ≈ 5.8 m; arrow + double ≈ 7.6 m;
 arrow + double ≈ 9.7 m. The engine's default "arrow + floating fruit crate" partner (bottom 3.2 m above
 the arrow's lid, ≈ 4.35 m above the floor) is therefore a reward pairing, not a gate.
 
+**Enemy bounces** (measured, `enemy-bounce` rows). Stomping a crab (`grunt`) bounces 2.67 m above its
+back, 3.77 m above the floor. Stomping a live turtle, or landing on the shell it leaves (belly 1.40 m),
+bounces 5.17 m above the floor; with Jump held 7.32 m; with a double jump 6.91 m, or 9.05 m held. Each
+enemy bounce re-arms the double jump, so an enemy is a launcher exactly like a crate (XVII.7).
+
 **Height-gate consequences.**
 
 1. Crash's "out of reach without a tool" (typically 3 crates up) is **inside** double-jump reach
@@ -1880,9 +1887,9 @@ are the defaults in the code; sizes are the hit box (width × height).
 
 | Engine kind (skin) | Behaviour and timing | Defeated by | What fails | Leaves | Box | Crash archetypes it can stand in for |
 |---|---|---|---|---|---|---|
-| `grunt` (Coral Crab) | 1-D patrol at `speed` | spin, stomp, slide or slam | — | a stomped carcass you can spin into crates as a projectile | 1.3 × 1.1 m | rats, armadillos, seals, penguins, lab workers, hedgehogs (rolled-up phase excepted) |
+| `grunt` (Coral Crab) | 1-D patrol at `speed` | spin, stomp, slide or slam | — | a stomped carcass you can spin into crates as a projectile; the stomp bounces 2.7 m above its back (3.8 m above the floor) | 1.3 × 1.1 m | rats, armadillos, seals, penguins, lab workers, hedgehogs (rolled-up phase excepted) |
 | `spiker` (Bristleback) | 1-D patrol | spin, slide or slam | **stomp** (the spikes hurt) | — | 1.3 × 1.1 m | porcupines (spiked phase), spiked shells, anything Crash teaches "don't jump on" |
-| `turtle` (Mossback) | patrol at 0.7 × `speed` | stomp, spin (ghost skins recoil spins) | spinning a ghost skin | a **shell trampoline** (bounce; higher with Jump held), flingable | 1.3 × 0.9 m | Turtle Woods' flip-and-step turtles; enemy-bounce steps |
+| `turtle` (Mossback) | patrol at 0.7 × `speed` | stomp, spin (ghost skins recoil spins) | spinning a ghost skin | a **shell trampoline** with a 1.40 m belly: stomping the live turtle or landing on the shell bounces to 5.2 m above the floor (7.3 m with Jump held; 6.9 / 9.1 m with a double jump); a spin flings it | 1.3 × 0.9 m | Turtle Woods' flip-and-step turtles; enemy-bounce steps |
 | `charger` (Russet Bull) | patrols at 0.25 × `speed`; when you are within 3.6 m of its lane and 2.5–26 m along it, it plants for a **0.70 s windup** (0.55 s for ghost skins), dashes at 3.4 × `speed` for up to 1.3 s or to its patrol end, then is **dizzy for 1.1 s** | anything during the windup, patrol or dizzy spell | anything during the dash (untouchable, lethal) | — | 2.6 × 2.0 m (bull ×1.8) | rhinos, bulls, ramming lab robots, any telegraphed charge |
 | `hopper` (Spring Frog) | crouches 0.45 s, then leaps (8.6 m/s up: ≈ 1.5 m high, ≈ 0.7 s in the air) moving forward at `speed` | stomp **only while grounded**, spin | stomp in the air (your feet pass under it) | — | 1.3 × 1.1 m | Toad Village frogs, leaping fish, bouncing enemies |
 | `floater` (Violet Watcher) | hovers 1.65 m up; if you are within 12 m along and 6 m across, swoops every 2.6 s, dipping to 0.35 m over 0.8 s | spin (a jump-spin while it hovers, or any spin during the swoop) | **stomp** | — | 1.3 × 1.1 m | bees, bats, vultures, pterodactyls, drones |
@@ -2214,14 +2221,17 @@ Three engine facts drive every pattern here:
 
 - **Precedent.** Turtle Woods teaches the turtle in four steps and ends with a turtle patrolling
   under a floating box that is above jump height (E-S3-b): the enemy is the step.
-- **Engine.** Defeating an ordinary `turtle` (Mossback) leaves a shell whose belly is 1.40 m high.
-  Landing on it bounces like an arrow crate: 3.77 m above the belly (≈ 5.2 m above the floor), or
-  5.92 m with Jump held (≈ 7.3 m); the bounce re-arms the double jump (+1.74 m). A spin flings it.
-  Ghost skins recoil spins and leave no shell.
-- **Recipe.** As a height tool: a floating target whose underside is 5.6–7.4 m up (the arrow-gate
-  window, XV.2) beside the turtle's patrol; or a landing 6–8 m up reached by held bounce plus double
-  jump. As a gap tool: the turtle on the take-off side of a gap wider than 8 m, its shell bounce
-  the only way across. Teach the shell bounce first on safe floor.
+- **Engine** (measured, `enemy-bounce` rows of the probe). Defeating an ordinary `turtle` (Mossback)
+  by spin or stomp leaves a shell whose belly is 1.40 m high. Landing on it bounces like an arrow
+  crate: 3.77 m above the belly, **5.17 m above the floor**; with Jump held 7.32 m; with a double jump
+  at the apex 6.91 m, or 9.05 m held. Stomping the live turtle already launches from the shell to the
+  same 5.17 m. A later spin flings the shell away. Ghost skins recoil spins and leave no shell. For
+  comparison, stomping a `grunt` bounces 2.67 m above its back (3.77 m above the floor).
+- **Recipe.** As a height tool: a floating target whose underside is 5.6–7.4 m up beside the turtle's
+  patrol (out of the floor double jump's 5.5 m head reach, inside the shell + double jump's 7.8 m);
+  or a landing 7–8.5 m up reached only by a held shell bounce plus double jump (feet 9.05 m). As a
+  gap tool: the turtle on the take-off side of a gap wider than 8 m, its shell bounce the only way
+  across. Teach the shell bounce first on safe floor.
 - **Wrong.** A turtle that can walk off its strip or into the gap removes the tool and soft-locks the
   route; give it terrain support or a short `range`. A height target low enough for a plain double
   jump makes the turtle decoration.
@@ -2767,7 +2777,8 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
   visible (or deliberately hidden with a signpost).
 - [ ] Count traps sit at attractors (IV.7), not in arbitrary corners.
 - [ ] Fast lines obey VIII.1: lanes as commands, no explosive on the forced line, boost gates clear.
-- [ ] `node tools/crate-placement-report.mjs --levels <id>` shows mean cluster size ≥ 2.5, single
+- [ ] `node tools/crate-placement-report.mjs --levels <id> --json <scratch>/crates.json --md <scratch>/crates.md`
+  (without `--json` and `--md` it overwrites the committed audit) shows mean cluster size ≥ 2.5, single
   crates ≤ 20 % of counted crates, no section without crates, no arrow without a target.
 - [ ] `npm run check:levels`, `npm run build`, and a browser pass (`/?lite` + one full render) with
   no console errors; checkpoint restore tested after every irreversible crate puzzle.
@@ -2818,7 +2829,8 @@ Run per cluster, gap, hazard, enemy, section and level. A level fails review on 
   placement ladder.
 - [ ] The main line is channelled; width serves arenas and optional routes; chokes sit before mode changes
   and in the finale.
-- [ ] `node tools/level-geometry-report.mjs --levels <id>` reports no unaided gap beyond the measured reach,
+- [ ] `node tools/level-geometry-report.mjs --levels <id> --json <scratch>/geo.json --md <scratch>/geo.md` (without
+  `--json` and `--md` it overwrites the committed audit) reports no unaided gap beyond the measured reach,
   no section without a gap, enemy or hazard unless declared a breather, no crumble warning under 0.5 s and
   no enemy first appearance at a lethal edge.
 
@@ -2889,6 +2901,8 @@ Geometry records per level (Part I.4; the "Geometry, obstacles and enemies" bloc
 | Crash 2 | [Piston It Away](crate-bible/levels/c2-21-piston-it-away.md) | 40 | 19 | 9 | 25 | 30 | 6 |
 | Crash 3 | [Gee Wiz](crate-bible/levels/c3-06-gee-wiz.md) | 24 | 15 | 5 | 9 | 19 | 5 |
 | Crash 3 | [Hang 'em High](crate-bible/levels/c3-07-hang-em-high.md) | 29 | 16 | 7 | 5 | 13 | 6 |
+| Crash 3 | [Tomb Time](crate-bible/levels/c3-09-tomb-time.md) | 34 | 16 | 15 | 14 | 9 | 7 |
+| Crash 3 | [Dino Might!](crate-bible/levels/c3-11-dino-might.md) | 20 | 12 | 8 | 13 | 14 | 6 |
 | Crash 3 | [Sphynxinator](crate-bible/levels/c3-16-sphynxinator.md) | 25 | 20 | 9 | 12 | 17 | 9 |
 | Crash 3 | [Future Frenzy](crate-bible/levels/c3-19-future-frenzy.md) | 27 | 8 | 9 | 8 | 17 | 5 |
 | Crash 3 | [Tomb Wader](crate-bible/levels/c3-20-tomb-wader.md) | 26 | 16 | 9 | 8 | 14 | 6 |
@@ -2902,7 +2916,7 @@ Geometry records per level (Part I.4; the "Geometry, obstacles and enemies" bloc
 | Crash 4 | [Snow Way Out](crate-bible/levels/c4-6-1-snow-way-out.md) | 58 | 22 | 15 | 14 | 10 | 11 |
 | Crash 4 | [Bears Repeating](crate-bible/levels/c4-6-3-bears-repeating.md) | 45 | 22 | 12 | 20 | 11 | 10 |
 | Crash 4 | [Stowing Away](crate-bible/levels/c4-8-2-stowing-away.md) | 33 | 7 | 6 | 15 | 5 | 9 |
-| **All** | **30 levels** | **914** | **489** | **252** | **352** | **352** | **223** |
+| **All** | **32 levels** | **968** | **517** | **275** | **379** | **375** | **236** |
 
 ## Appendix B — Design-function tags
 
