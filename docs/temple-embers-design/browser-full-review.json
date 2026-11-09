@@ -1,199 +1,117 @@
 {
-  "lite": false,
-  "stations": [
+  "report": [
     {
-      "s": 40,
-      "position": [
-        1.25,
-        0.12,
-        -60
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 190,
-      "position": [
-        75,
-        0.03500000014901161,
-        -133.75
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 290,
-      "position": [
-        175,
-        0.12,
-        -133.75
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 612,
-      "position": [
-        83,
-        12.03499984741211,
-        -236.25
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 760,
-      "position": [
-        1.25,
-        24.03499984741211,
-        -300
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 830,
-      "position": [
-        35,
-        24.03499984741211,
-        -333.75
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 1273,
-      "position": [
-        102,
-        36.12,
-        -436.25
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 1420,
-      "position": [
-        1.25,
-        41.12,
-        -480
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    },
-    {
-      "s": 1465,
-      "position": [
-        1.25,
-        46.03499984741211,
-        -525
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Temple of Embers",
-      "stamp": "Codex/sol fork · build 11-08 23:27 UTC",
-      "enemies": 7,
-      "tikis": 7,
-      "crates": 84
-    }
-  ],
-  "bonus": [
-    {
-      "x": 31,
-      "position": [
-        31,
-        0.12,
-        0
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Bonus: Ember Reliquary",
-      "tikis": 1,
-      "crates": 19,
-      "total": 17
-    },
-    {
-      "x": 52,
-      "position": [
-        52.106,
-        7.8,
-        0
-      ],
-      "state": "ride",
-      "grounded": true,
-      "level": "Bonus: Ember Reliquary",
-      "tikis": 1,
-      "crates": 19,
-      "total": 17
-    },
-    {
-      "x": 124,
-      "position": [
-        124,
+      "label": "full-02-carving-line",
+      "s": 44,
+      "x": 0,
+      "y": 0,
+      "pos": [
         0,
-        0
+        0.12,
+        -44
       ],
       "state": "ride",
       "grounded": true,
-      "level": "Bonus: Ember Reliquary",
-      "tikis": 1,
-      "crates": 19,
-      "total": 17
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
+    },
+    {
+      "label": "full-03-sleeping-sentinel",
+      "s": 64,
+      "x": -3,
+      "y": 0,
+      "pos": [
+        -3,
+        0,
+        -64
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
+    },
+    {
+      "label": "full-07-fallen-ledges",
+      "s": 266,
+      "x": 2,
+      "y": 10,
+      "pos": [
+        2,
+        10,
+        -266
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
+    },
+    {
+      "label": "full-11-sluice",
+      "s": 436,
+      "x": 2,
+      "y": 22.2,
+      "pos": [
+        2,
+        22.18,
+        -436
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
+    },
+    {
+      "label": "full-14-abutment-pair",
+      "s": 636,
+      "x": 0,
+      "y": 16,
+      "pos": [
+        0,
+        16.12,
+        -636
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
+    },
+    {
+      "label": "full-16-reservoir",
+      "s": 682,
+      "x": 0,
+      "y": 16,
+      "pos": [
+        0,
+        16,
+        -682
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
+    },
+    {
+      "label": "full-19-terrace",
+      "s": 798,
+      "x": 0,
+      "y": 30,
+      "pos": [
+        0,
+        30,
+        -798
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 65,
+      "tikis": 9,
+      "enemies": 10
     }
-  ],
-  "missing": [],
-  "checkpointWarps": [
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true
   ],
   "errors": []
 }

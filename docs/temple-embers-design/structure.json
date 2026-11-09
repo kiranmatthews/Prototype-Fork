@@ -1,207 +1,157 @@
 {
   "name": "Temple of Embers",
-  "probes": 3554,
-  "end": 1490,
-  "peak": 46,
-  "countedCrates": 83,
+  "probes": 2526,
+  "floors": 70,
+  "end": 876,
+  "peak": 32,
+  "countedCrates": 64,
   "checks": [
-    "rigid set pieces stay out of the bends",
-    "no rail or rope passes within a crate",
-    "no rail starts or ends over a chasm or void",
-    "crates stand inside a flame sweep only on purpose",
-    "no crate inside a censer swing",
-    "no crate on a breaking, phasing, moving or boosting pad",
-    "no rail through a piston",
     "every crate stands on authored floor",
-    "no crate inside a patrol",
-    "checkpoints respawn ten metres clear of every hazard",
+    "no rail passes within a crate",
+    "crates stand inside a flame sweep only on purpose",
+    "no hazard stands in scenery and no scenery stands on a pedestal",
+    "no crate inside a censer swing",
+    "no crate inside a patrol walk",
+    "patrols walk on floor",
+    "checkpoints respawn ten metres clear of flames, nitro, patrols and swings",
     "volatile crates keep their blast away from other boxes",
-    "set-piece frames stay out of the eight-metre lane"
+    "platforming gaps are within a single jump and ledges within a jump's height"
   ],
   "checkpoints": [
     {
-      "station": 58,
+      "station": 50,
       "position": [
-        1.1,
-        0.03500000014901161,
-        -77.99999999999999
+        0,
+        0,
+        -50
       ]
     },
     {
-      "station": 140,
+      "station": 165,
       "position": [
-        25,
-        0.03500000014901161,
-        -133.9
+        0,
+        0,
+        -165
       ]
     },
     {
-      "station": 252,
+      "station": 243,
       "position": [
-        137,
-        0.03500000014901161,
-        -133.9
+        -2,
+        8,
+        -243
       ]
     },
     {
-      "station": 474,
+      "station": 332,
       "position": [
-        221,
-        12.03499984741211,
-        -236.1
+        4,
+        16,
+        -332
       ]
     },
     {
-      "station": 592,
+      "station": 410,
       "position": [
-        103,
-        12.03499984741211,
-        -236.1
+        0,
+        24,
+        -410
       ]
     },
     {
-      "station": 756,
+      "station": 480,
       "position": [
-        1.1,
-        24.03499984741211,
-        -296
+        7.5,
+        16,
+        -480
       ]
     },
     {
-      "station": 814,
+      "station": 642,
       "position": [
-        19,
-        24.03499984741211,
-        -333.9
+        0,
+        16,
+        -642
       ]
     },
     {
-      "station": 930,
+      "station": 664,
       "position": [
-        135,
-        24.03499984741211,
-        -333.9
+        0,
+        16,
+        -664
       ]
     },
     {
-      "station": 1150,
+      "station": 738,
       "position": [
-        225,
-        36.03499984741211,
-        -436.1
+        0,
+        19.5,
+        -738
       ]
     },
     {
-      "station": 1238,
+      "station": 778,
       "position": [
-        137,
-        36.03499984741211,
-        -436.1
-      ]
-    },
-    {
-      "station": 1392,
-      "position": [
-        1.1,
-        36.03499984741211,
-        -452
+        0,
+        30,
+        -778
       ]
     }
   ],
-  "torches": 87,
-  "tikis": 7,
-  "chapters": [
+  "torches": 60,
+  "tikis": 9,
+  "enemies": 10,
+  "rooms": [
     {
-      "name": "Ravine rim and ash court",
-      "a": -24,
-      "b": 127,
-      "mode": "skate",
-      "lesson": "drop in, carve the weaving line, read the first flame from the right-hand lane"
+      "name": "Ravine floor",
+      "a": -16,
+      "b": 180,
+      "mode": "board",
+      "lesson": "carve the crate line, take the mask, read the sleeping flame, meet the crabs in the open"
     },
     {
-      "name": "Gallery of stones",
-      "a": 127,
-      "b": 250,
-      "mode": "platform",
-      "lesson": "wait for the lit stone or grind the rail that ignores the rhythm"
+      "name": "The Great Stair",
+      "a": 180,
+      "b": 420,
+      "mode": "foot",
+      "lesson": "hop the collapse, climb the fallen ledges, time the censer; crates on every landing"
     },
     {
-      "name": "Burning ropes",
-      "a": 250,
-      "b": 343,
-      "mode": "skate",
-      "lesson": "commit to the grind before the rope parts; the bellows floor forgives"
+      "name": "The sluice",
+      "a": 424,
+      "b": 476,
+      "mode": "board",
+      "lesson": "drop in, pump the bends, carry speed into the crossing"
     },
     {
-      "name": "Pilgrim bank",
-      "a": 343,
-      "b": 467,
-      "mode": "skate",
-      "lesson": "bank, stair or rail: three routes to the second storey"
+      "name": "Broken aqueduct",
+      "a": 476,
+      "b": 656,
+      "mode": "board",
+      "lesson": "Ravine Break and Far Break at speed; the colonnade on foot; cross the abutment as both sentinels exhale"
     },
     {
-      "name": "Ash gallery",
-      "a": 443,
-      "b": 590,
-      "mode": "platform",
-      "lesson": "keep moving on the ash, or boost across in one run"
+      "name": "The Cistern",
+      "a": 656,
+      "b": 740,
+      "mode": "foot",
+      "lesson": "drop in and pump, or climb the broken cornice over the drain; time the exit under the niche sentinel"
     },
     {
-      "name": "Censer hall",
-      "a": 590,
-      "b": 683,
-      "mode": "platform",
-      "lesson": "time the swings in side view, or grind the right-hand rail past them"
+      "name": "Sanctuary steps",
+      "a": 744,
+      "b": 772,
+      "mode": "foot",
+      "lesson": "four jumps up over the drain; the bristleback punishes a stomp"
     },
     {
-      "name": "Lift court",
-      "a": 683,
-      "b": 807,
-      "mode": "rest",
-      "lesson": "the bonus door, a burning lift, the cap-before-fuse lesson"
-    },
-    {
-      "name": "Serpent gallery",
-      "a": 807,
-      "b": 920,
-      "mode": "skate",
-      "lesson": "grind the serpent's spine, read the flame, dodge the bull on the left lane"
-    },
-    {
-      "name": "Sealed shrine",
-      "a": 920,
-      "b": 1023,
-      "mode": "platform",
-      "lesson": "a kickflip through the seal opens the shrine; jump the sentry's orb"
-    },
-    {
-      "name": "Flame climb",
-      "a": 1023,
-      "b": 1147,
-      "mode": "skate",
-      "lesson": "the bank's right half burns; the stair and the left rail are the safe routes"
-    },
-    {
-      "name": "Jade reservoir",
-      "a": 1123,
-      "b": 1240,
-      "mode": "skate",
-      "lesson": "pump the bowl for its caps; look at the nitro, never touch it"
-    },
-    {
-      "name": "Piston vault",
-      "a": 1240,
-      "b": 1363,
-      "mode": "platform",
-      "lesson": "boost through the hammers in one window, or time each; then the leap"
-    },
-    {
-      "name": "Ember Gauntlet and sanctuary",
-      "a": 1363,
-      "b": 1490,
-      "mode": "skate",
-      "lesson": "weave the three-flame wave; the green switch counts every nitro"
+      "name": "Sanctuary terrace",
+      "a": 774,
+      "b": 876,
+      "mode": "board",
+      "lesson": "build speed down the centre, launch off the bank onto the dais inside the nitro ring, drop off its back, hit the green switch last"
     }
   ],
-  "components": 6158
+  "components": 2974
 }

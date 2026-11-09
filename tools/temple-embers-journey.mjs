@@ -1,138 +1,185 @@
-// Temple of Embers · one continuous input-only journey from spawn to the gate.
-// Ordinary device samples shared by the Node runtime and a real browser.
-// The rider skates the whole course: it grinds the gold rails over the ember
-// stones and both burning ropes, boosts across the ash floor, rides the right
-// lane past the censers, waits for the brazier lift, keeps to the serpent's
-// and the bull's off-side lanes, pumps the bowl, times each piston, ollies
-// the leap, weaves the gauntlet and crosses the gate.
-export function* runEmberJourney(r){
- const route=r.route,p=r.p,l=r.l,sp=route.setPieces,THREE=r.THREE;
- const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
- // Grind crossings: approach lane, pop station, the line to balance along, exit.
- const grinds=[
-  {name:'first ember chasm rail',from:140,pop:151.5,a:156,b:184,side:3.6,exit:187},
-  {name:'second ember chasm rail',from:188,pop:191.5,a:196,b:235,side:3.6,exit:238},
-  {name:'first burning rope',from:244,pop:257.6,a:261.5,b:276.5,side:-1.6,exit:277.3},
-  {name:'second burning rope',from:277.3,pop:278.4,a:280.5,b:300.5,side:-1.6,exit:303},
- ];
- const popped=new Set(),jumps=route.gaps.filter(g=>g.b-g.a<9); // the seven-metre leap
- let braking=false,liftCommit=false,liftExit=false,liftPrevDeck=Infinity;const crusherPrev=new Map();
- const flames=route.tikiTrials;
- const laneFor=s=>{
-  const tiki=flames.find(q=>s>q.s-13&&s<q.s+5);
-  if(tiki)return -tiki.side*(s>1040&&s<1125?2.6:3.15); // the climb's rail is on the safe side
-  if(sp.serpent&&s>sp.serpent.s-sp.serpent.range-14&&s<sp.serpent.s+sp.serpent.range+4)return -3.15;
-  const bull=l.enemies.find(e=>e.alive&&e.kind==='charger');
-  if(bull){const q=route.toLocal(bull.group.position.toArray())[0];if(s>q-32&&s<q+14)return -3.15;}
-  if(sp.crumbles.length&&s>sp.crumbles[0].a-20&&s<sp.crumbles.at(-1).b+3)return 0; // the ash pads zigzag about the centre line
-  if(sp.zone&&s>sp.zone.a-8&&s<sp.zone.b+4)return 2.3; // censers swing down the centre
-  if(sp.speedPads.some(q=>Math.abs(s-q.s)<9&&q.s>1200))return -3.0; // keep off the vault boost, on the side away from the nitro
-  if(s>1205&&s<1240)return -1.25; // nitro glows on the right
-  return 1.25;
- };
- const speedCap=s=>{
-  const pipe=route.pipes.find(q=>s>q.a-55&&s<q.b+8);
-  if(pipe)return Math.sqrt(31.17*pipe.radius)+4.2;
-  const turn=route.frameAt(s),future=route.frameAt(s+10);
-  if(turn.fx*future.fx+turn.fz*future.fz<.985)return 11;
-  if(grinds.some(g=>s>g.from&&s<g.pop))return 12.5;
-  if(sp.crumbles.length&&s>sp.crumbles[0].a-14&&s<sp.crumbles.at(-1).b+6)return 40; // the boost carries the ash floor; never brake on it
-  if(sp.lift&&s>sp.lift.a-30&&s<sp.lift.a)return 7;
-  if(sp.crushers.length&&s>sp.crushers[0].s-24&&s<sp.crushers.at(-1).s+2)return 4.5;
-  if(s>1385&&s<1450)return 13; // the gauntlet weave
-  return 24;
- };
- for(let frame=0;frame<42000&&p.state!=='finished';frame++){
-  if(p.isBailing||['dead','gameover'].includes(p.state))throw Error('Temple journey lost control at '+JSON.stringify({frame,position:p.pos.toArray(),local:route.toLocal(p.pos.toArray()),state:p.state}));
-  if(r.nodeCamera){const camera=l.cameraDirAt(p.pos.x,p.pos.y,p.pos.z)??{x:0,z:-1};p.camDir.set(camera.x,0,camera.z);}
-  const local=route.toLocal(p.pos.toArray()),s=local[0],turn=route.frameAt(s);
-  const ahead=(d,side,y=p.pos.y)=>route.toWorld(Math.min(route.end-4,s+Math.min(d,d/turn.scale)),y,side);
-  const toward=(target,pace=1)=>{const d={x:target[0]-p.pos.x,z:target[2]-p.pos.z};return r.worldDirectionInput(d,pace);};
-  const sample=(()=>{
-   // Fell beneath the ropes: walk to the bellows under the landing and bounce back.
-   if(p.pos.y<-2&&s>255&&s<306){
-    const pad=sp.trampolines.find(q=>q.s===298);
-    if(p.grounded&&Math.hypot(...((q=>[q[0]-p.pos.x,q[2]-p.pos.z])(route.toWorld(pad.s,-5,0))))>.9)return {...toward(route.toWorld(pad.s,-5,0),.5)};
-    return {...toward(route.toWorld(304,0,0),.6),jumpHeld:p.grounded||p.vVel>0};
-   }
-   // Grind crossings: charge on the approach, release once at the pop station,
-   // hold grind only in the air and on the line, and never touch jump again
-   // until the far floor (a release while grinding is an ollie off the line).
-   const g=grinds.find(q=>s>=q.from&&s<q.exit);
-   if(g){
-    const launched=popped.has(g.pop);
-    if(p.state==='grind'){
-     const correction=clamp(-p.balance*5-p.balanceVel*.7,-1,1);
-     return {...toward(route.toWorld(g.b+6,p.pos.y,g.side),.9),moveX:correction,grindHeld:true};
-    }
-    const pop=!launched&&s>=g.pop&&p.grounded;
-    if(pop)popped.add(g.pop);
-    const target=ahead(p.grounded?6:3,g.side);
-    if(launched)return {...toward(target,1),grindHeld:!p.grounded};
-    return {...toward(target,1),jumpHeld:!pop,grabHeld:!pop&&p.grounded&&p.speed>speedCap(s)};
-   }
-   // The brazier lift: stop a metre short of the well, commit as the deck
-   // comes down through the floor height, board it and ride to the top.
-   if(sp.lift&&s>sp.lift.a-9&&s<sp.lift.b+1&&p.pos.y>sp.lift.low-1){
-    const lift=l.movers[0],deckY=lift.mesh.position.y+(lift.mesh.geometry?.parameters?.height??.85)/2,descending=deckY<liftPrevDeck-1e-4;liftPrevDeck=deckY;
-    const onLift=p.groundHit?.moverId!=null,centre=route.toWorld((sp.lift.a+sp.lift.b)/2,p.pos.y,0);
-    if(onLift){
-     // Push off as the deck nears the top, so the step onto the landing meets it level.
-     liftCommit=false;
-     if(!liftExit&&deckY>sp.lift.high-.7&&!descending)liftExit=true;
-     if(liftExit&&deckY<sp.lift.high-1.6)liftExit=false;
-     if(!liftExit)return {jumpHeld:true};
-     return {...toward(route.toWorld(sp.lift.b+6,sp.lift.high,0),1),jumpHeld:true};
-    }
-    liftExit=false;
-    if(!liftCommit&&deckY<sp.lift.low+.45&&descending)liftCommit=true;
-    if(liftCommit&&deckY>sp.lift.low+.9)liftCommit=false;
-    if(liftCommit)return {...toward(centre,1),jumpHeld:true};
-    const wait=route.toWorld(sp.lift.a-1,p.pos.y,0),d=Math.hypot(wait[0]-p.pos.x,wait[2]-p.pos.z);
-    return {grabHeld:p.speed>.3&&d<2.5,jumpHeld:true,...toward(wait,d>2.5?.6:d>.4?.2:0)};
-   }
-   // The piston vault: wait in front of each hammer and go the moment it
-   // lifts off the deck, so the whole rise and hang are the window.
-   const next=sp.crushers.find(c=>s<c.s+2.2);
-   if(next&&s>sp.crushers[0].s-14&&s<sp.crushers.at(-1).s+2.2){
-    const block=l.crushers[sp.crushers.indexOf(next)],y=block.mesh.position.y,prev=crusherPrev.get(next.s)??y;crusherPrev.set(next.s,y);
-    // Commit only as the block leaves the deck: the whole rise and hang are then ahead.
-    const liftingOff=y>prev+1e-4&&y<block.restY+1.2;
-    // The hammers span the whole floor, so the rider stops straight in its own
-    // lane (a board cannot slide sideways, and steering toward a centred
-    // target would arc it under the block), then pushes straight through.
-    const lane=clamp(local[2],-5,5);
-    if(crusherPrev.get('go')===next.s)return {...toward(route.toWorld(next.s+5,p.pos.y,lane),1),jumpHeld:true};
-    const inZone=s>next.s-7.5&&s<next.s-2.6;
-    if(inZone){
-     if(p.speed>.25)return {grabHeld:true,jumpHeld:true};
-     if(liftingOff)crusherPrev.set('go',next.s);
-     return {jumpHeld:true};
-    }
-    return {...toward(route.toWorld(next.s-5,p.pos.y,lane),.35),jumpHeld:true,grabHeld:p.speed>4.5};
-   }
-   // Ordinary skating: lane choice, speed cap, the seven-metre leap.
-   const jump=jumps.find(q=>!popped.has(q.a)&&s>=q.a-.35&&s<q.a);
-   const pop=!!jump&&p.grounded;if(pop)popped.add(jump.a);
-   const cap=speedCap(s);if(p.speed>cap)braking=true;else if(p.speed<cap-3)braking=false;
-   const corner=turn.fx*route.frameAt(s+10).fx+turn.fz*route.frameAt(s+10).fz<.985;
-   const target=ahead(corner?2.8:7,laneFor(s));
-   const move=!pop&&(p.grounded||!p.airFromSkate)?toward(target):{};
-   return {...move,jumpHeld:!pop,grabHeld:!pop&&braking&&p.grounded};
-  })();
-  // A grab is only ever a grounded brake; in the air it is a trick that bails on landing.
-  if(sample.grabHeld&&!p.grounded)sample.grabHeld=false;
-  // Spin anything spin-killable that comes close, and bank each checkpoint.
-  if(p.grounded&&p.state!=='grind'){
-   const checkpoint=l.checkpoints.some(cp=>!cp.active&&cp.box.distanceToPoint(p.pos)<3.5);
-   const enemy=l.enemies.some(e=>e.alive&&e.spinKill&&(e.kind!=='charger'||e.state==='recover'||e.state==='patrol')&&e.box.distanceToPoint(p.pos)<3.2);
-   const plainCrate=l.crates.some(c=>c.alive&&!c.pending&&!c.metal&&!c.metalBounce&&!c.bang&&!c.nitroBang&&!c.bouncy&&!c.tnt&&!c.nitro&&c.box.distanceToPoint(p.pos)<2.8);
-   const explosive=l.crates.some(c=>c.alive&&!c.pending&&(c.tnt||c.nitro)&&c.box.distanceToPoint(p.pos)<3.5);
-   if(checkpoint||(plainCrate||enemy)&&!explosive)sample.spinHeld=p.spinning||!r.lastInput.spinHeld;
-  }
-  void THREE;
-  yield sample;
- }
- if(p.state!=='finished')throw Error('Temple journey timed out at '+JSON.stringify(route.toLocal(p.pos.toArray())));
- return {state:p.state,deaths:p.totalDeaths,position:p.pos.toArray()};
+// Temple of Embers · one input-only journey from the spawn ledge to the sanctuary gate.
+// Ordinary device samples only: the rider skates the ravine floor and grinds the gutter
+// coping, walks and double-jumps the Great Stair, rides the sluice and ollies both
+// aqueduct breaks, waits out the abutment pair, drops into the reservoir and rides the
+// ramp to the gallery, climbs the sanctuary steps on foot, launches onto the dais, hits
+// the green switch and crosses the gate. Beats are keyed by station so a run can start
+// at any room boundary (TEMPLE_START).
+export async function runTempleJourney(r, { startStation = null } = {}) {
+  const { p, l } = r, route = r.route;
+  const { templeTikiPhase } = await r.server.ssrLoadModule('/src/templeBreath.ts');
+  const { templeFloorCentre } = await r.server.ssrLoadModule('/src/levels/temple-of-embers.ts');
+  const loc = () => route.toLocal(p.pos.toArray()), S = () => loc()[0], X = () => loc()[2];
+  const dead = () => p.isBailing || ['dead', 'gameover'].includes(p.state);
+  const pose = () => ({ s: +S().toFixed(2), x: +X().toFixed(2), y: +p.pos.y.toFixed(2), state: p.state, grounded: p.grounded, board: p.freeSkate, speed: +p.speed.toFixed(2), vVel: +p.vVel.toFixed(2), deaths: p.totalDeaths, frame: r.frame });
+  const fail = m => { throw new Error(`${m} at ${JSON.stringify(pose())}`); };
+  const camera = () => { const c = l.cameraDirAt(p.pos.x, p.pos.y, p.pos.z) ?? { x: 0, z: -1 }; p.camDir.set(c.x, 0, c.z); };
+  // Spin policy: bank checkpoints, break plain boxes, spin killable foes that come close; never spin beside TNT or nitro.
+  let lastSpin = false;
+  const autoSpin = sample => {
+    if (!p.grounded || p.state === 'grind' || 'spinHeld' in sample) return sample;
+    const cp = l.checkpoints.some(c => !c.active && c.box.distanceToPoint(p.pos) < 3.2);
+    const foe = l.enemies.some(e => e.alive && e.spinKill && (e.kind !== 'charger' || e.state === 'recover' || e.state === 'patrol') && e.box.distanceToPoint(p.pos) < 3);
+    const plain = l.crates.some(c => c.alive && !c.pending && !c.metal && !c.metalBounce && !c.bang && !c.nitroBang && !c.bouncy && !c.tnt && !c.nitro && c.box.distanceToPoint(p.pos) < 2.6);
+    const explosive = l.crates.some(c => c.alive && !c.pending && (c.tnt || c.nitro) && c.box.distanceToPoint(p.pos) < 3.6);
+    if (cp || ((plain || foe) && !explosive)) { const held = p.spinning || !lastSpin; lastSpin = held; return { ...sample, spinHeld: held }; }
+    lastSpin = false; return sample;
+  };
+  // TEMPLE_DEBUG="a,b" prints every frame between those stations.
+  const debug = (process.env.TEMPLE_DEBUG ?? '').split(',').map(Number);
+  const step = (sample, label) => {
+    if (r.nodeCamera) camera();
+    const out = autoSpin(sample);
+    if (out.grabHeld && !p.grounded) out.grabHeld = false; // a grab is only ever a grounded brake
+    r.tick(out);
+    if (debug.length === 2 && S() >= debug[0] && S() <= debug[1]) console.log('dbg', JSON.stringify({ ...pose(), in: [out.moveX, out.moveY, out.jumpHeld ? 'J' : '', out.grabHeld ? 'B' : '', out.spinHeld ? 'S' : '', out.grindHeld ? 'R' : ''].join(' '), bailDown: +(p.bailDownT ?? 0).toFixed(2), stepOff: p.stepOff, ride: p.rideNormal?.y?.toFixed(2), ground: p.groundHit?.name, label }));
+    if (dead()) fail(`${label}: lost control`);
+  };
+  const toward = (s, x, pace = 1) => { const t = route.toWorld(s, p.pos.y, x); return r.worldDirectionInput({ x: t[0] - p.pos.x, z: t[2] - p.pos.z }, pace); };
+  const dist = (s, x) => Math.hypot(s - S(), x - X());
+  // Predicates may be stateful, so each frame evaluates them exactly once.
+  const run = (label, pred, sampler, max) => { let done = pred(); for (let i = 0; i < max && !done; i++) { step(sampler(i), label); done = pred(); } if (!done) fail(`${label} timed out`); };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const channelCentre = s => { const f = route.floors.find(q => q.xa !== undefined && s >= q.a && s <= q.b); return f ? templeFloorCentre(f, s) : 0; };
+
+  // ---- board beats ----
+  /** Hold X to push, steer to the lane six metres ahead, brake to the cap, ollie at the pop stations, catch rails when launched for one. */
+  const skate = (to, { lane = () => 0, cap = 40, pops = [], grindPops = [], label = 'skate' } = {}) => {
+    const popped = new Set(); let braking = false;
+    run(label, () => S() >= to, () => {
+      const s = S(), x = typeof lane === 'function' ? lane(s) : lane;
+      if (p.state === 'grind') { const c = clamp(-p.balance * 5 - p.balanceVel * .7, -1, 1); return { moveY: 1, moveX: c, grindHeld: true }; }
+      const pop = [...pops, ...grindPops].find(q => !popped.has(q) && s >= q - .3 && s < q + 3 && p.grounded);
+      if (pop !== undefined) popped.add(pop);
+      if (p.speed > cap) braking = true; else if (p.speed < cap - 3) braking = false;
+      const launchedForRail = grindPops.some(q => popped.has(q) && s < q + 12) && !p.grounded;
+      const move = p.grounded || !p.airFromSkate || launchedForRail ? toward(Math.min(route.end - 2, s + 6), x, 1) : {};
+      return { ...move, jumpHeld: pop === undefined && !launchedForRail, grabHeld: pop === undefined && braking && p.grounded, grindHeld: launchedForRail };
+    }, Math.round((to - S() + 60) * 60 / 3) + 900);
+  };
+  /** Pull-back brake to a stop, then stand: the board is stowed once it stops rolling. */
+  const dismount = (label = 'dismount') => {
+    run(`${label} brake`, () => Math.abs(p.speed) < .3 && p.grounded, () => ({ grabHeld: p.grounded }), 420);
+    run(`${label} settle`, () => !p.freeSkate && p.grounded, () => ({}), 90);
+  };
+  const mount = (label = 'mount') => run(label, () => p.freeSkate, () => ({ ...toward(S() + 6, X(), 1), jumpHeld: true }), 240);
+
+  // ---- foot beats ----
+  const walk = (s, x, { tol = .3, label = 'walk', pace = 1, maxFrames = 1200 } = {}) => {
+    run(label, () => dist(s, x) < tol, () => { const d = dist(s, x); return toward(s, x, clamp((d - .15) / 1.4, .12, pace)); }, maxFrames);
+    run(`${label} stop`, () => p.grounded && Math.abs(p.speed) < .25 && p.walkVelocity.length() < .25, () => ({}), 90);
+  };
+  /** Standing charged jump toward a landing point; `double` pops the second jump at the apex; `spinAir` spins on the way down. */
+  const jump = (s, x, y, { double = false, label = 'jump', spinAir = false, charge = 24 } = {}) => {
+    for (let i = 0; i < charge; i++) step({ jumpHeld: true }, `${label} charge`);
+    step({ ...toward(s, x, 1), jumpHeld: false, jumpReleased: true }, `${label} release`);
+    if (p.state !== 'air') fail(`${label} did not launch`);
+    let doubled = false;
+    run(`${label} air`, () => p.grounded, () => {
+      const sample = { ...toward(s, x, 1), ...(spinAir && p.vVel < 0 ? { spinHeld: true } : {}) };
+      if (double && !doubled && p.vVel < 1.5) { doubled = true; return { ...sample, jumpHeld: true, jumpPressed: true }; }
+      if (double && doubled && p.vVel > 0) return { ...sample, jumpHeld: true };
+      return sample;
+    }, 300);
+    if (dist(s, x) > 1.7) fail(`${label} missed the target`);
+    if (Math.abs(p.pos.y - y) > .5) fail(`${label} landed at the wrong height`);
+    r.report?.evidence?.push({ action: label, landing: pose() });
+  };
+
+  // ---- hazards ----
+  const tikisNear = (s, x, radius = 12) => l.fireTikis.filter(t => { const q = route.toLocal(t.group.position.toArray()); return Math.hypot(q[0] - s, q[2] - x) < radius; });
+  const cool = (tikis, need) => tikis.every(t => { const c = t.spec.cycle ?? 7.8, ph = t.spec.phase ?? 0, amp = t.spec.amp ?? 28; return templeTikiPhase(l.time, c, ph, amp).phase === 'cool' && templeTikiPhase(l.time + need, c, ph, amp).phase === 'cool'; });
+  const waitCool = (tikis, need, label) => run(label, () => cool(tikis, need), () => ({}), 1200);
+  const censerAngle = pd => Math.sin(l.time * pd.speed + pd.phase) * pd.amp;
+  const waitCenser = (pd, label) => { let prev = Math.abs(censerAngle(pd)), n = 0; run(label, () => { const a = Math.abs(censerAngle(pd)); const ok = a > .5 && a > prev + 1e-6; if (debug.length === 2 && n++ < 4) console.log('censer', JSON.stringify({ time: l.time, a, prev, speed: pd.speed, amp: pd.amp, phase: pd.phase })); prev = a; return ok; }, () => ({}), 600); };
+  const enemyNear = (s, x, kind) => l.enemies.find(e => e.kind === kind && Math.hypot(route.toLocal(e.group.position.toArray())[0] - s, route.toLocal(e.group.position.toArray())[2] - x) < 4);
+
+  // ---- the course, as beats keyed by the station each ends at ----
+  const beats = [
+    { to: 172, name: 'Ravine floor', run() {
+      // Carve the floor, grind the gutter coping from 65 to 120, break the last offering, bank both checkpoints, stop at the stair.
+      skate(60, { lane: s => s < 30 ? 1.2 - 1.2 * s / 30 : s < 48 ? 0 : 5.9, cap: 15, label: 'ravine floor' });
+      skate(126, { lane: s => s < 64 ? 5.9 : 7, cap: 24, grindPops: [64.6], label: 'gutter coping grind' });
+      skate(172, { lane: 0, cap: s => 12, label: 'stair foot approach' });
+    } },
+    { to: 240, name: 'First flight and the collapse', run() {
+      if (p.freeSkate) dismount('stair foot');
+      walk(178, -6, { label: 'gateway' }); walk(199.2, -1.5, { label: 'edge of the collapse', tol: .25 });
+      jump(203.5, -1.5, 3.1, { label: 'plinth one' });
+      jump(208, 1.5, 3.6, { label: 'plinth two', double: true });
+      jump(213.2, 1.5, 4.43, { label: 'upper run', double: true });
+      walk(239, -3, { label: 'upper run' });
+    } },
+    { to: 322, name: 'First landing and the fallen ledges', run() {
+      walk(243.2, -2.2, { label: 'first landing checkpoint' }); walk(247, -4.5, { label: 'landing offerings' }); walk(255.4, -3, { label: 'landing edge', tol: .25 });
+      jump(259.4, -3, 9, { label: 'fallen ledge 1' });
+      // [station, x, top, depth]: land a metre inside the near edge, take off from the far corner nearest the next ledge.
+      const ledges = [[260, -3, 9, 4], [268, 2, 10, 4], [276, -2, 11, 6], [284, 3, 12, 4], [292, -1, 13, 4], [300, 2, 14, 4], [308, -3, 15, 4], [316, 0, 16, 4]];
+      for (let i = 0; i < ledges.length - 1; i++) {
+        const [s0, x0, , d0] = ledges[i], [s1, x1, y1, d1] = ledges[i + 1], side = Math.sign(x1 - x0) || 1;
+        // The big block's frog hops on its left; keep to the right edge on the way across.
+        walk(s0 + d0 / 2 - .6, d0 > 4 ? x0 + 2.2 : x0 + side * 1.2, { label: `ledge ${i + 1} far corner`, tol: .22 });
+        jump(s1 - d1 / 2 + 1.1, x1 - side * 1.1, y1, { label: `fallen ledge ${i + 2}`, double: true });
+      }
+      walk(317.4, 0, { label: 'last ledge edge', tol: .22 });
+      jump(323.2, 0, 16, { label: 'second landing', double: true });
+    } },
+    { to: 402, name: 'Fuse court and the narrow stair', run() {
+      walk(331, 3, { label: 'second landing checkpoint' }); walk(345, .5, { label: 'through the fuse court' }); walk(347.2, -2.3, { label: 'foot of the narrow stair' });
+      const turtle = enemyNear(350, 0, 'turtle');
+      if (turtle) run('wait for the mossback', () => { const q = route.toLocal(turtle.group.position.toArray()); return !turtle.alive || q[2] > .3; }, () => ({}), 600);
+      walk(353, -2.3, { label: 'past the mossback' }); walk(380, 0, { label: 'narrow stair' }); walk(382.6, 0, { label: 'before the censer', tol: .25 });
+      const pd = l.pendulums.find(q => Math.abs(route.toLocal(q.pivot.position.toArray())[0] - 386) < 1);
+      if (pd) waitCenser(pd, 'wait for the censer');
+      walk(391, 0, { label: 'under the censer', pace: 1 }); walk(402, 0, { label: 'stair top' });
+    } },
+    { to: 476, name: 'Sluice head and the sluice', run() {
+      walk(409.5, 0, { label: 'stair top checkpoint' });
+      mount('drop in'); skate(476, { lane: s => s < 424 ? 0 : channelCentre(s), label: 'the sluice' });
+    } },
+    { to: 660, name: 'Broken aqueduct and the abutment', run() {
+      skate(636, { lane: s => channelCentre(s), pops: [519.4, 589.4], label: 'aqueduct spans' });
+      skate(644.3, { lane: 0, cap: 11, label: 'abutment court checkpoint' });
+      dismount('before the abutment pair');
+      waitCool(tikisNear(649, 0, 10), 2.2, 'wait for both sentinels to breathe out');
+      mount('cross the abutment'); skate(660, { lane: 0, cap: 18, label: 'through the abutment' });
+    } },
+    { to: 742, name: 'The Cistern', run() {
+      // Drop in and cross at speed, trim to twelve before the ramp, climb, let the release hop land on the gallery, stop before the drain.
+      skate(708, { lane: 0, label: 'cistern: drop in and cross the basin' });
+      skate(720.5, { lane: 0, cap: 12, label: 'trim speed before the ramp' });
+      skate(732.2, { lane: 0, label: 'ramp up to the gallery' });
+      dismount('gallery');
+      walk(738.4, .9, { label: 'gallery checkpoint' });
+    } },
+    { to: 776, name: 'Sanctuary steps', run() {
+      walk(743.2, -2, { label: 'gallery edge', tol: .22 });
+      const steps = [[748, -2, 21.75], [756, 2, 24], [764, -2, 26.25], [772, 2, 28.5]];
+      jump(747, -2, steps[0][2], { label: 'sanctuary step 1', double: true });
+      for (let i = 0; i < steps.length - 1; i++) {
+        const [s0, x0] = steps[i], [s1, x1, y1] = steps[i + 1], side = Math.sign(x1 - x0) || 1;
+        walk(s0 + 1.8, x0 + side * 1.4, { label: `step ${i + 1} far corner`, tol: .22 });
+        jump(s1 - 1.2, x1 - side * 1.4, y1, { label: `sanctuary step ${i + 2}`, double: true, spinAir: !!enemyNear(s1, x1, 'spiker') });
+      }
+      walk(773.8, 2, { label: 'last step edge', tol: .22 }); jump(776.8, 1, 30, { label: 'onto the terrace' });
+    } },
+    { to: 876, name: 'Sanctuary terrace', run() {
+      walk(777.6, 0, { label: 'terrace checkpoint' });
+      // Push to the bank, let go of X in the air (a release on the ground would ollie), brake on the dais, then walk the rest.
+      mount('terrace'); skate(810.6, { lane: 0, label: 'launch off the bank' });
+      run('fly to the dais', () => p.grounded && S() > 812, () => ({}), 240);
+      run('brake on the dais', () => Math.abs(p.speed) < .3 && p.grounded, () => ({ grabHeld: p.grounded }), 420);
+      run('stow the board', () => !p.freeSkate, () => ({}), 90);
+      walk(823, 0, { label: 'crystal' }); walk(833.4, 1.5, { label: 'dais back edge', tol: .25 });
+      run('drop off the dais', () => p.grounded && S() > 834.6, () => toward(838, 2.5, .8), 240);
+      walk(848.6, 3.4, { label: 'first mystery' }); walk(850.6, -3.6, { label: 'green switch approach' });
+      const bang = l.crates.find(c => c.nitroBang);
+      if (bang && !bang.bangUsed) { let held = false; run('green switch', () => bang.bangUsed, () => { held = p.spinning || !held; return { ...toward(852, -6, .3), spinHeld: held }; }, 240); }
+      for (let i = 0; i < 90; i++) step({}, 'watch the ring go');
+      mount('to the gate'); run('cross the gate', () => p.state === 'finished', () => ({ ...toward(Math.min(route.end - 2, S() + 6), 0, 1), jumpHeld: true }), 900);
+    } },
+  ];
+  const first = startStation === null ? 0 : beats.findIndex(b => b.to > startStation);
+  for (const beat of beats.slice(first)) { r.report.stage = beat.name; beat.run(); r.report.actions.push({ name: beat.name, station: +S().toFixed(1), frame: r.frame }); }
+  return { state: p.state, deaths: p.totalDeaths, position: p.pos.toArray(), cratesBroken: p.cratesBroken };
 }

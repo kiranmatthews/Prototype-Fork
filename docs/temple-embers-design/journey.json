@@ -1,89 +1,363 @@
 {
   "state": "finished",
-  "seconds": 108,
+  "seconds": 120.4,
   "deaths": 0,
   "position": [
-    1.2338367508404067,
-    46.72666666915019,
-    -543.0134260037731
+    -0.8762843630993152,
+    30.73666666644315,
+    -860.9298231507173
   ],
-  "frames": 6477,
+  "frames": 7224,
   "stations": [
     {
       "station": 0,
-      "frame": 106,
-      "seconds": 1.8
+      "frame": 87,
+      "seconds": 1.4
     },
     {
       "station": 100,
-      "frame": 369,
-      "seconds": 6.2
+      "frame": 501,
+      "seconds": 8.3
     },
     {
       "station": 200,
-      "frame": 799,
-      "seconds": 13.3
+      "frame": 1216,
+      "seconds": 20.3
     },
     {
       "station": 300,
-      "frame": 1254,
-      "seconds": 20.9
+      "frame": 2727,
+      "seconds": 45.5
     },
     {
       "station": 400,
-      "frame": 1647,
-      "seconds": 27.4
+      "frame": 3987,
+      "seconds": 66.5
     },
     {
       "station": 500,
-      "frame": 2014,
-      "seconds": 33.6
+      "frame": 4393,
+      "seconds": 73.2
     },
     {
       "station": 600,
-      "frame": 2239,
-      "seconds": 37.3
+      "frame": 4649,
+      "seconds": 77.5
     },
     {
       "station": 700,
-      "frame": 2518,
-      "seconds": 42
+      "frame": 5056,
+      "seconds": 84.3
     },
     {
       "station": 800,
-      "frame": 3590,
-      "seconds": 59.8
-    },
-    {
-      "station": 900,
-      "frame": 3878,
-      "seconds": 64.6
-    },
-    {
-      "station": 1000,
-      "frame": 4137,
-      "seconds": 69
-    },
-    {
-      "station": 1100,
-      "frame": 4532,
-      "seconds": 75.5
-    },
-    {
-      "station": 1200,
-      "frame": 4929,
-      "seconds": 82.2
-    },
-    {
-      "station": 1300,
-      "frame": 5735,
-      "seconds": 95.6
-    },
-    {
-      "station": 1400,
-      "frame": 6078,
-      "seconds": 101.3
+      "frame": 6257,
+      "seconds": 104.3
     }
   ],
-  "cratesBroken": 38
+  "cratesBroken": 32,
+  "beats": [
+    {
+      "name": "Ravine floor",
+      "station": 172.1,
+      "frame": 720
+    },
+    {
+      "name": "First flight and the collapse",
+      "station": 238.7,
+      "frame": 1701
+    },
+    {
+      "name": "First landing and the fallen ledges",
+      "station": 323.3,
+      "frame": 3128
+    },
+    {
+      "name": "Fuse court and the narrow stair",
+      "station": 401.7,
+      "frame": 4013
+    },
+    {
+      "name": "Sluice head and the sluice",
+      "station": 476.4,
+      "frame": 4340
+    },
+    {
+      "name": "Broken aqueduct and the abutment",
+      "station": 661.1,
+      "frame": 4908
+    },
+    {
+      "name": "The Cistern",
+      "station": 738.6,
+      "frame": 5371
+    },
+    {
+      "name": "Sanctuary steps",
+      "station": 776.7,
+      "frame": 6076
+    },
+    {
+      "name": "Sanctuary terrace",
+      "station": 860.9,
+      "frame": 7224
+    }
+  ],
+  "evidence": [
+    {
+      "action": "plinth one",
+      "landing": {
+        "s": 203.55,
+        "x": -1.5,
+        "y": 3.1,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 6.36,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1281
+      }
+    },
+    {
+      "action": "plinth two",
+      "landing": {
+        "s": 208.08,
+        "x": 1.56,
+        "y": 3.6,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 5.09,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1406
+      }
+    },
+    {
+      "action": "upper run",
+      "landing": {
+        "s": 213.16,
+        "x": 1.51,
+        "y": 4.42,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.3,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1492
+      }
+    },
+    {
+      "action": "fallen ledge 1",
+      "landing": {
+        "s": 259.01,
+        "x": -3.03,
+        "y": 9,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 6.36,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 1990
+      }
+    },
+    {
+      "action": "fallen ledge 2",
+      "landing": {
+        "s": 267.07,
+        "x": 0.89,
+        "y": 10,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 5.79,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2132
+      }
+    },
+    {
+      "action": "fallen ledge 3",
+      "landing": {
+        "s": 274.12,
+        "x": -0.91,
+        "y": 11,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 5.98,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2272
+      }
+    },
+    {
+      "action": "fallen ledge 4",
+      "landing": {
+        "s": 283.11,
+        "x": 1.9,
+        "y": 12,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 5.92,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2426
+      }
+    },
+    {
+      "action": "fallen ledge 5",
+      "landing": {
+        "s": 291.02,
+        "x": 0.13,
+        "y": 13,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.11,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2566
+      }
+    },
+    {
+      "action": "fallen ledge 6",
+      "landing": {
+        "s": 299.19,
+        "x": 0.91,
+        "y": 14,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 6.3,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2706
+      }
+    },
+    {
+      "action": "fallen ledge 7",
+      "landing": {
+        "s": 307.09,
+        "x": -1.9,
+        "y": 15,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 5.79,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2845
+      }
+    },
+    {
+      "action": "fallen ledge 8",
+      "landing": {
+        "s": 315.2,
+        "x": -1.09,
+        "y": 16,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 6.3,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 2985
+      }
+    },
+    {
+      "action": "second landing",
+      "landing": {
+        "s": 323.28,
+        "x": 0,
+        "y": 16,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 6.36,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 3128
+      }
+    },
+    {
+      "action": "sanctuary step 1",
+      "landing": {
+        "s": 747.07,
+        "x": -2.01,
+        "y": 21.75,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": 6.24,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 5529
+      }
+    },
+    {
+      "action": "sanctuary step 2",
+      "landing": {
+        "s": 754.78,
+        "x": 0.59,
+        "y": 24,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.17,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 5671
+      }
+    },
+    {
+      "action": "sanctuary step 3",
+      "landing": {
+        "s": 762.76,
+        "x": -0.59,
+        "y": 26.25,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.17,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 5813
+      }
+    },
+    {
+      "action": "sanctuary step 4",
+      "landing": {
+        "s": 770.76,
+        "x": 0.59,
+        "y": 28.5,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.17,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 5955
+      }
+    },
+    {
+      "action": "onto the terrace",
+      "landing": {
+        "s": 776.75,
+        "x": 1.01,
+        "y": 30,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "speed": -6.17,
+        "vVel": 0,
+        "deaths": 0,
+        "frame": 6076
+      }
+    }
+  ]
 }
