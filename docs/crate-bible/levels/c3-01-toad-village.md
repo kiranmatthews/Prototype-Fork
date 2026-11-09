@@ -44,7 +44,7 @@ Evidence level:
 
 ## Route skeleton
 ```
-START ─ S1 (12 incl. C1) ─ C1 ─ S2 (13 main + bonus 7 + C2 = 20) ────────────── C2 ─ S3 (10) ─ GOAL gate
+START ─ S1 (12 incl. C1) ─ C1 ─ S2 (13 incl. C2, + bonus 7) ─────────────────── C2 ─ S3 (10) ─ GOAL gate
   W|? abreast, S/S sandwich,     slot!, 3-stack, ?, knight, [A] on bridge 1       row of 3 at frog pond,
   S, ?, ~pond~, A, 2x2 block       │                                              4-cluster, knight,
                                    └─ ? pad just past bridge 1 ─ BONUS (7) ─┐      crystal on bridge 2,

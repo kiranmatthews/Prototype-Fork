@@ -855,6 +855,7 @@
    "section": "S1",
    "kind": "rolling barrels / barrel carts",
    "count": 4,
+   "approx": true,
    "where": "after the holes; before dragon 1",
    "role": "break when dashing (F3 advice 2)"
   },
@@ -862,6 +863,7 @@
    "section": "S2",
    "kind": "rolling barrels",
    "count": 3,
+   "approx": true,
    "where": "after the 2x2 block",
    "role": "lead into dragon 4"
   },
@@ -897,6 +899,7 @@
    "section": "S2-S4",
    "kind": "pole workers",
    "count": 3,
+   "approx": true,
    "where": "after S2-c, after tower B, before tower C",
    "role": "steering obstacles beside crate pairs"
   }
