@@ -30,6 +30,22 @@ const pct = (a, b) => b ? `${(100 * a / b).toFixed(1)}%` : '—';
 const EXPLOSIVE = new Set(['tnt', 'nitro']);
 const ROUTE_TAGS = ['ON-PATH', 'EDGE-BAIT', 'DETOUR', 'BACKTRACK', 'HIDDEN', 'HIGH', 'LOW'];
 
+// Agents describe arrangements in free text; fold them into canonical shape
+// classes, preferring the standardised structure tags when present.
+const SHAPES = ['SANDWICH', 'BRIDGE', 'STEPPING', 'FLOAT-LINE', 'COLUMN-BOUNCE', 'PYRAMID', 'WALL', 'GRID', 'STACK', 'ROW', 'PAIR', 'SINGLE'];
+const shapeOf = c => {
+  const tags = new Set((c.tags ?? []).map(t => String(t).toUpperCase()));
+  for (const s of SHAPES) if (tags.has(s)) return s.toLowerCase();
+  const a = norm(c.arrangement);
+  const rules = [[/sandwich/, 'sandwich'], [/bridge/, 'bridge'], [/stepping|stepping-stone/, 'stepping'],
+    [/float|arc|trail|hover|in-the-air|mid-air/, 'float-line'], [/column|tower/, 'column-bounce'], [/pyramid/, 'pyramid'],
+    [/wall/, 'wall'], [/grid|block|\d+x\d+|×/, 'grid'], [/stack|\d-high|on-top|tall/, 'stack'],
+    [/row|line|slalom|chain/, 'row'], [/pair|two/, 'pair'], [/single|lone|solo/, 'single']];
+  for (const [re, k] of rules) if (re.test(a)) return k;
+  return clusterCount(c) === 1 ? 'single' : 'other';
+};
+const baseKind = k => norm(k).replace(/\?+$/, '');
+
 const clusterCount = c => {
   if (Number.isFinite(c.count)) return c.count;
   return Object.values(c.composition ?? {}).reduce((a, b) => a + (Number(b) || 0), 0);
@@ -53,12 +69,15 @@ for (const lv of levels) {
     const n = clusterCount(c);
     mapped += n;
     agg.sizes.push(n);
-    const a = norm(c.arrangement || 'unknown');
+    const a = shapeOf(c);
     count(arr, a); count(agg.arrangement, a);
     for (const t of c.tags ?? []) { const k = String(t).toUpperCase(); count(tags, k); count(agg.tags, k); }
     for (const acc of c.access ?? []) count(agg.access, norm(acc));
-    const kinds = Object.entries(c.composition ?? {}).filter(([, v]) => Number(v) > 0).map(([k]) => norm(k));
-    for (const [k, v] of Object.entries(c.composition ?? {})) count(agg.composition, norm(k), Number(v) || 0);
+    const kinds = Object.entries(c.composition ?? {}).filter(([, v]) => Number(v) > 0).map(([k]) => baseKind(k));
+    for (const [k, v] of Object.entries(c.composition ?? {})) {
+      count(agg.composition, baseKind(k), Number(v) || 0);
+      if (/\?$/.test(String(k))) count(agg.composition, '(of which uncertain type)', Number(v) || 0);
+    }
     if (kinds.some(k => EXPLOSIVE.has(k))) {
       explosive++;
       if (kinds.some(k => !EXPLOSIVE.has(k) && !['steel', 'arrowsteel', 'switch', 'switchgreen'].includes(k))) mixed++;
