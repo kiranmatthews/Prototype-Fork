@@ -2445,6 +2445,8 @@ export class Player {
         grounded: this.grounded,
         actionProgress,
         inputs: {
+          pancakeSlamTime:this.slamActive?CONST.slamHang-this.slamHangT:
+            CONST.slamHang+CONST.slamFlat-this.slamFlatT,
           boardAbandon: this.boardAbandonActive ? 1 : 0,
           nativeAir: this.nativeAirPresentation ? 1 : 0,
           jakFrame: this.footStudyFrame,
@@ -18654,6 +18656,26 @@ export class Player {
     this.riderG.position.add(_plantC);
   }
 
+  /** Support the articulated slam with its actual posed surface. */
+  private seatPancakeSlam():void {
+    if(!this.grounded||this.animationClipHint!=='player.slam'||!this.authoredClip('player.slam')?.metadata?.pancakeSlam||
+      !this.groundHit||!this.riderG||!this.bodyGroup.parent)return;
+    const normal=this.groundHit.normal;
+    if(normal.y<.3)return;
+    // The head, gloves and shoes keep their real dimensions. Correct only
+    // penetration after articulation and segment deformation, preserving the
+    // authored upward recoil instead of flattening the complete skeleton.
+    this.group.updateMatrixWorld(true);
+    const distance=this.interactionMeasure.sampledPlaneDistance(this.riderG,normal,
+      REACH_C.set(this.pos.x,this.groundHit.y,this.pos.z));
+    if(!Number.isFinite(distance)||distance>=.015)return;
+    this.bodyGroup.parent.updateWorldMatrix(true,false);
+    _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
+    _plantO.set(0,0,0).applyMatrix4(_plantInv);
+    _plantC.set(0,(.015-distance)/normal.y,0).applyMatrix4(_plantInv).sub(_plantO);
+    this.bodyGroup.position.add(_plantC);
+  }
+
   /** Seat idle and walking on their support plane. Fade out using the same
    * Walk/Run blend as animation, leaving the authored running pose intact.
    * The rider-only translation never moves collision, the board or the rig's
@@ -20184,7 +20206,8 @@ export class Player {
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     const launchOwnsBody = !this.airFromSkate && isLaunchClip(this.animationClipHint);
-    const directOwnsBody = this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
+    const pancakeSlam=this.animationClipHint==='player.slam'&&!!this.authoredClip('player.slam')?.metadata?.pancakeSlam;
+    const directOwnsBody = pancakeSlam || this.directFootStudy && ['player.idle','player.run','player.jump','player.fall','player.double-jump','player.hang','player.climb'].includes(this.animationClipHint);
     if ((this.state === 'dead' && this.bailing) || launchOwnsBody || directOwnsBody) {
       // Death01 owns the fall through its skeleton/root tracks. No second
       // rotation may keep turning that already-fallen body through the floor.
@@ -20254,7 +20277,7 @@ export class Player {
     // Impact squash right after a slam lands. Unity crouch/crawl own their
     // height through authored joints. A missing or preserved legacy low clip
     // keeps the original fallback compression instead.
-    const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
+    const squash = !pancakeSlam&&this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
     this.bodyGroup.scale.y =
       1.36 *
       (1 - 0.6 * squash) *
@@ -20742,6 +20765,7 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed && this.grounded)
       this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
+    this.seatPancakeSlam();
     const launchTurn=this.launchSomersaultProgress;
     if(launchTurn!==null&&launchTurn>0&&launchTurn<1){
       const turn=THREE.MathUtils.lerp(launchTurn,launchTurn*launchTurn*(3-2*launchTurn),

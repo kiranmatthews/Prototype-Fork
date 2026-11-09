@@ -775,6 +775,8 @@ export class CharacterAnimationRuntime {
       this.timelineTime = Math.min(clip.range.end, (motion.inputs?.jakFrame ?? 0) / 60);
     }
     if (directTime !== null) this.timelineTime = Math.min(clip.range.end, Math.max(clip.range.start, directTime));
+    if(clip.metadata?.pancakeSlam&&this.manualClipId===null)
+      this.timelineTime=MathUtils.clamp(motion.inputs?.pancakeSlamTime??0,clip.range.start,clip.range.end);
     if (this.manualClipId === null && this.transient?.kind === 'run-stop' && !clip.metadata?.jakDirect) {
       const span = Math.max(1e-6, clip.range.end - clip.range.start);
       const coasting = motion.normalizedSpeed > .005;
@@ -887,9 +889,9 @@ export class CharacterAnimationRuntime {
       this.pendingIdleHandoffOffset = null;
     }
     if (this.manualClipId === null && clip.metadata?.jakDirect &&
-        (this.transient?.kind === 'landing' || clip.id === 'player.climb')) {
+        (this.transient?.kind === 'landing' || clip.id === 'player.climb' || clip.metadata?.pancakeSlam&&motion.grounded)) {
       const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
-      const phase = clip.id === 'player.climb'
+      const phase = clip.metadata?.pancakeSlam ? MathUtils.clamp((this.timelineTime-.62)/.20,0,1) : clip.id === 'player.climb'
         ? recovery >= 0 ? .7 + recovery * .3 : motion.actionProgress * .7
         : (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
       pose = this.recoverDirectLocomotion(clip, pose, motion, phase, dt);

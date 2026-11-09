@@ -299,6 +299,21 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
   }
+  if(mode==='Pancake slam'||mode==='Slam and run'){
+    p.camDir.set(0,0,-1);
+    const slam=frame===48;
+    nativeStep(dt,{moveX:0,moveY:mode==='Slam and run'&&frame>48?1:0,
+      jumpHeld:frame>=20&&frame<30,jumpPressed:frame===20,jumpReleased:frame===30,
+      grabHeld:slam,grabPressed:slam},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    const age=p.slamFlatT>0?CONST.slamFlat-p.slamFlatT:-1;
+    if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT<.23&&p.slamHangT>.15 ||
+      stopAt==='Slam spread'&&p.slamActive&&p.slamHangT<=0 ||
+      stopAt==='Slam impact'&&age>=.04&&age<.08 ||
+      stopAt==='Slam rebound'&&age>=.14&&age<.18 ||
+      stopAt==='Slam settle'&&age>=.43 ||stopAt==='Run exit'&&frame>=140)frozen=true;
+    if(frame>=210)resetInspector();return;
+  }
   if (mode === 'Walk, run and turn') {
     p.camDir.set(0,0,-1);
     const demo = {moveX:frame>=210&&frame<285?-1:0,moveY:frame<90?.3:frame<210?1:0,
@@ -499,7 +514,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run',
   'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -516,7 +531,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam settle',
   'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
