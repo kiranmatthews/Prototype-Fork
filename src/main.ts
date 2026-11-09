@@ -1,4 +1,6 @@
 import { releaseImageUrl } from './releaseImageUrls';
+import {GameplayAnimationPresentation,gameplayAnimationDocument,prepareGameplayAnimationAssets,
+  type GameplayAnimationAssets} from './gameplayAnimationScheme';
 import { createSkystreamSun } from './skystreamSun';
 import { installBananaBaySkySun } from './bananaBaySkySun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
@@ -1261,6 +1263,8 @@ function drawPrimaryScene(
  * Developer/tool DOM stays outside this function and therefore remains sharp.
  */
 function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void {
+  gameplayAnimation?.prepareRender(camera);
+  p2GameplayAnimation?.prepareRender(camera);
   if (renderer.getContext().isContextLost()) return;
   // Game-owned UI shares the world resolution on every device.
   const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
@@ -1885,6 +1889,11 @@ try {
 const characterAnimationRuntime: CharacterAnimationRuntime =
   createCharacterAnimationRuntime(player, playerAnimationDocument);
 let p2CharacterAnimationRuntime: CharacterAnimationRuntime | null = null;
+let gameplayAnimation:GameplayAnimationPresentation|null=null;
+let p2GameplayAnimation:GameplayAnimationPresentation|null=null;
+let gameplayAnimationAssets:GameplayAnimationAssets|null=null;
+// The comparison lab owns A/B/C/D selection. Every ordinary game entry uses D.
+const comparisonAnimation=/\/(jump-review|skate-playtest)\.html$/.test(location.pathname);
 let animationPreparation: Promise<void> = Promise.resolve();
 try {
   const preferredAnimationDrafts = createPreferredDraftStore();
@@ -1905,6 +1914,18 @@ try {
     });
 } catch {
   // IndexedDB can be disabled independently of localStorage.
+}
+if(!comparisonAnimation){
+  animationPreparation=Promise.all([animationPreparation,prepareGameplayAnimationAssets()]).then(([,assets])=>{
+    gameplayAnimationAssets=assets;
+    playerAnimationDocument=gameplayAnimationDocument(playerAnimationDocument,playerAnimationBinding.definition,assets.jak);
+    characterAnimationRuntime.setDocument(playerAnimationDocument);
+    gameplayAnimation=new GameplayAnimationPresentation(player,scene,assets);
+    if(p2){
+      p2CharacterAnimationRuntime?.setDocument(playerAnimationDocument);
+      p2GameplayAnimation=new GameplayAnimationPresentation(p2,scene,assets);
+    }
+  });
 }
 
 // ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
@@ -2017,6 +2038,7 @@ function set2P(on: boolean, force = false): void {
         p2,
         playerAnimationDocument,
       );
+      if(gameplayAnimationAssets)p2GameplayAnimation=new GameplayAnimationPresentation(p2,scene,gameplayAnimationAssets);
       p2.endlessDeaths = endlessDeathsOn;
       // The second rider's fruit needs the same two wires P1 got, or its
       // collected wumpa are parked on a scene nothing renders and simply
@@ -5653,6 +5675,7 @@ function advanceFrame(nowMs: number): void {
       renderer.setViewport(0, dh / 2, dw, dh / 2);
       renderer.setScissor(0, dh / 2, dw, dh / 2);
       level.renderWarehouseReflection(renderer,camera);
+      gameplayAnimation?.prepareRender(camera);p2GameplayAnimation?.prepareRender(camera);
       if(!renderCloudPrimaryScene(renderer,scene,camera,renderer.getRenderTarget()))renderer.render(scene, camera);
       // Both cameras see the same light and pose. Keep the complete primary
       // shadow map instead of drawing every caster a second time for P2.
@@ -5660,6 +5683,7 @@ function advanceFrame(nowMs: number): void {
       renderer.setViewport(0, 0, dw, dh / 2);
       renderer.setScissor(0, 0, dw, dh / 2);
       level.renderWarehouseReflection(renderer,camera2);
+      gameplayAnimation?.prepareRender(camera2);p2GameplayAnimation?.prepareRender(camera2);
       if(!renderCloudPrimaryScene(renderer,scene,camera2,renderer.getRenderTarget()))renderer.render(scene, camera2);
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, dw, dh);

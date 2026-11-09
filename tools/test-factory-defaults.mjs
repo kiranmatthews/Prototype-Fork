@@ -30,6 +30,7 @@ try {
     trickLandBoost:1.25,trickLandBoostHold:4,trickLandBoostMax:5,
     camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75,
     doubleJumpHorizontalScale: 1, // v26: the second jump retains directional travel
+    jumpFlipMinSpeed: 8.85, // D chooses the roll from the authored takeoff-speed threshold
     boardAbandonSteering: 25, // v28: gentler steering after the deliberate board jump-off
     hugeDropDistance: 24, // v25: retain the historical capture while promoting forgiving drop judgement
     grindCalm:.5,balanceSpeedEffect:.75,balanceGrace:1,balanceRamp:.18,balanceRampMax:2.5,bailGrace:0,

@@ -3213,7 +3213,7 @@ export class Player {
 
   get vehicleVisualRoot():THREE.Group {return this.bodyGroup;}
 
-  /** Opt-in presentation after deck contacts; ordinary gameplay leaves it unset. */
+  /** Presentation after native actions and deck contacts have resolved. */
   setFinalPoseOverlay(overlay: PlayerAnimationOverlay | null): () => void {
     const dispose = this.playerAnimationBridge.setFinalOverlay(overlay);
     this.resetRenderInterpolation();
@@ -3672,6 +3672,9 @@ export class Player {
     }
   }
 
+  /** Discontinuities reset presentation clocks without changing their owner. */
+  animationResetVersion = 0;
+
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(
@@ -3680,6 +3683,7 @@ export class Player {
     preserveInventory = false,
     placement?: CampaignPortalReturnPose,
   ): void {
+    this.animationResetVersion++;
     this.fatalChaseBoulder=-1;
     this.kiteMotion.reset();
     this.kiteGrab.reset();this.kiteGrabBoost=this.kiteGrabBoostHold=0;

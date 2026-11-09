@@ -26,13 +26,15 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) =
     scene.updateMatrixWorld(true);
     const rail = rails[0], t = dir === 1 ? 20 : 80;
     const heading = rail.tangentAt(t).multiplyScalar(dir); heading.y = 0; heading.normalize();
-    const position = rail.pointAt(t).add(new THREE.Vector3(0, .25, 0));
+    const position = rail.pointAt(t).add(new THREE.Vector3(0, CONST.railRideHeight, 0));
     p.respawn(level, true, true, { position, heading });
     p.pos.copy(position); p.prevPos.copy(position); p.axisF.copy(heading); p.axisL.set(heading.z, 0, -heading.x);
     p.camDir.set(0, 0, -1); p.state = 'air'; p.grounded = false; p.freeSkate = p.airFromSkate = true;
-    p.speed = 12; p.vVel = 0;
-    step({ grindHeld: true, grindPressed: true });
-    assert.equal(p.grindRail, rail, 'fixture must catch through real grind input');
+    p.speed = 12; p.vVel = -1;
+    // Descend through the contact envelope; sloped rails may legitimately
+    // buffer Triangle until the deck reaches the moving rail-height sample.
+    for(let f=0;f<6&&p.state!=='grind';f++)step({grindHeld:true,grindPressed:f===0});
+    assert.ok(p.grindRail===rail,`fixture catch failed: ${JSON.stringify({park,yaw,dir,slope,state:p.state,pos:p.pos.toArray(),candidate:p.railCandidateDist,bailing:p.isBailing})}`);
     p.balanceBoostT = 10;
     for (let i = 0; i < 12; i++) step({ grindHeld: true });
     return rail;
@@ -65,7 +67,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) =
         spin = Math.max(spin, Math.abs(p.grabSpinAngle));
         return { moveX: i >= 1 && i < 23 ? 1 : 0, grindHeld: i >= 2, grindPressed: i === 2 };
       });
-      assert.equal(p.state, 'grind'); assert.equal(p.grindRail, rail);
+      assert.equal(p.state, 'grind'); assert.ok(p.grindRail===rail,'neutral ollie caught a different rail');
       assert.equal(p.isBailing, false); assert.ok(spin > Math.PI / 2);
       assert.ok(p.comboLabels.some(label => label.includes('180')), 'rotation scored on the rail');
       close(p.pos.clone().sub(start).cross(forward).y, 0, 'neutral ollie drifted off its line');
@@ -106,7 +108,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, CONST, TUNING }) =
         fixture({ park, dir, neighbours: true }); launch({ x: sign });
         finishAir(i => ({ moveX: sign, grindHeld: i >= 2, grindPressed: i === 2 }));
         assert.equal(p.state, 'grind', 'adjacent rail should catch');
-        assert.equal(p.grindRail, rails[sign < 0 ? 1 : 2]);
+        assert.ok(p.grindRail===rails[sign < 0 ? 1 : 2],'side transfer caught a different rail');
         assert.equal(p.isBailing, false); close(p.grabSpinAngle, 0, 'transfer unexpectedly rotated');
         assert.equal(p.grindAirLat, 0, 'rail catch leaked sideways velocity'); cases++;
       }

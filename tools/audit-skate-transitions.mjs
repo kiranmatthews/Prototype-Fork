@@ -23,8 +23,8 @@ await withBlockworksRuntime(async r=>{
   const point=id=>node(id).getWorldPosition(new r.THREE.Vector3());
   const snapshot=()=>({
     joints:Object.fromEntries(joints.map(id=>[id,node(id).quaternion.toArray()])),
-    hips:node('hips').getWorldQuaternion(new r.THREE.Quaternion()).toArray(),
-    chest:node('chest').getWorldQuaternion(new r.THREE.Quaternion()).toArray(),
+    hips:node('hips').getWorldQuaternion(new r.THREE.Quaternion()).normalize().toArray(),
+    chest:node('chest').getWorldQuaternion(new r.THREE.Quaternion()).normalize().toArray(),
     lead:point('ankleRight').sub(point('ankleLeft')).dot(p.axisF),
     feet:['Left','Right'].map(side=>point(`ankle${side}`).sub(p.pos).toArray()),
     bodyYaw:p.bodyGroup.rotation.y,
@@ -36,7 +36,7 @@ await withBlockworksRuntime(async r=>{
   take.begin(replay);
   try{for(let f=0;f<replay.frames;f++){
     take.feed(input,p.camDir);r.tick(input);
-    const pose=snapshot(),quat=a=>new r.THREE.Quaternion().fromArray(a);
+    const pose=snapshot(),quat=a=>new r.THREE.Quaternion().fromArray(a).normalize();
     const state=motion.phase+'/'+motion.diagnostics.nativeOwner+'/'+p.stance;
     if(!previous||state!==previous.state)events.push({f,state,source:motion.sourceName,clip:runtime.activeClipId});
     const legStep=previous?Math.max(...joints.slice(1).map(id=>quat(pose.joints[id]).angleTo(quat(previous.pose.joints[id])))):0;

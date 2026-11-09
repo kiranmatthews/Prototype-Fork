@@ -22,7 +22,8 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
       player.pos.y=height;player.prevPos.copy(player.pos);player.state='air';player.grounded=false;
       player.freeSkate=player.airFromSkate=false;player.airGrav='foot';player.vVel=0;
     });
-    let flat=0,impactHead=Infinity,reboundHead=-Infinity,minClearance=Infinity,maxStep=0,previous=null,settled=0;
+    let flat=0,impactHead=Infinity,reboundHead=-Infinity,impactHip=Infinity,reboundHip=-Infinity,minClearance=Infinity,maxStep=0,previous=null,settled=0;
+    let minImpactLimbLength=Infinity,minImpactWidth=Infinity;
     let held=null,holdFrames=0,lastPitch=null,forwardTurn=0,backwardTurn=0,inverted=false,feetFirst=false;
     for(let f=0;f<fps*2.5;f++){
       for(const player of players){player.step(1/fps,makeInput({grabHeld:f===0,grabPressed:f===0,moveY:running&&f>0?1:0}),level);player.commitRenderStep(level);}
@@ -32,7 +33,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
         assert.equal(p[key],control[key],`slam presentation changed ${key}`);
       assert.ok(Math.abs(p.bodyGroup.scale.y-1.36)<1e-8,'whole skeleton was squashed');
       for(const node of p.animationRig.joints)assert.ok(node.node.scale.toArray().every(v=>v>0),'invalid joint scale');
-      const hip=p.animationRig.jointsById.get('hips').node.getWorldQuaternion(new THREE.Quaternion());
+      const hip=p.animationRig.jointsById.get('hips').node.getWorldQuaternion(new THREE.Quaternion()).normalize();
       const head=point('head').y-p.pos.y,age=p.slamFlatT>0?CONST.slamFlat-p.slamFlatT:-1;
       const chestUp=new THREE.Vector3(0,1,0).applyQuaternion(p.animationRig.jointsById.get('chest').node.getWorldQuaternion(new THREE.Quaternion()));
       const width=point('wristLeft').distanceTo(point('wristRight'));
@@ -49,24 +50,29 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
         clearance=p.interactionMeasure.sampledPlaneDistance(p.riderG,new THREE.Vector3(0,1,0),p.pos);
         minClearance=Math.min(minClearance,clearance);
         assert.ok(clearance>-.005,`slam penetrated the floor: ${clearance} (${fps}/${height}/${running}, age ${age}, body ${p.bodyGroup.position.y}, pos ${p.pos.y}, ground ${p.groundHit?.y}, root ${p.group.position.y})`);
-        if(age>=.365&&age<=.48)assert.ok(clearance<.012,`finished flip did not plant its feet: ${clearance}`);
+        if(age>=.43&&age<=.48)assert.ok(clearance<.012,`finished roll did not plant its feet: ${clearance}`);
         if(previous)maxStep=Math.max(maxStep,hip.angleTo(previous)*fps/60);
         if(age>=.035&&age<=.075){
           flat++;impactHead=Math.min(impactHead,head);
-          assert.ok(Math.abs(chestUp.y)<.28,'impact chest is not flat');
-          assert.ok(width>1.6,`impact arms are not spread: ${width}`);
-          assert.ok(lengths['deform.torso.length']<.85,'impact torso did not compress');
-          assert.ok(lengths['deform.arm.lower.left.length']>1.1,'arms did not extend independently');
+          impactHip=Math.min(impactHip,point('hips').y-p.pos.y);
+          assert.ok(Math.abs(chestUp.y)<.4,'slam did not reach its falling/contact pose');
+          minImpactWidth=Math.min(minImpactWidth,width);
+          assert.ok(width>1.8,`pancake impact lost its outward limb stretch: ${width}`);
+          assert.ok(lengths['deform.torso.length']<1,'contact torso did not compress');
+          for(const [id,part]of ELASTIC_LENGTH_CONTROLS)if(part>0){
+            minImpactLimbLength=Math.min(minImpactLimbLength,lengths[id]);
+            assert.ok(lengths[id]>1.2,`${id} shortened instead of stretching at impact: ${lengths[id]}`);
+          }
         }
-        if(age>=.12&&age<.20)reboundHead=Math.max(reboundHead,head);
-        if(age>=.075&&age<=.40){
+        if(age>=.12&&age<.20){reboundHead=Math.max(reboundHead,head);reboundHip=Math.max(reboundHip,point('hips').y-p.pos.y);}
+        if(age>=.035&&age<=.48){
           const local=p.animationRig.jointsById.get('hips').node.quaternion;
           const up=new THREE.Vector3(0,1,0).applyQuaternion(local),pitch=Math.atan2(up.z,up.y);
           if(lastPitch!==null){const step=Math.atan2(Math.sin(pitch-lastPitch),Math.cos(pitch-lastPitch));
             forwardTurn+=Math.max(0,step);backwardTurn+=Math.min(0,step);}
           lastPitch=pitch;
           if(up.y<-.8)inverted=true;
-          if(age>=.35&&up.y>.96)feetFirst=true;
+          if(age>=.43&&up.y>.96)feetFirst=true;
         }
       }else if(f>fps*1.5){
         assert.ok(['player.idle','player.run'].includes(runtimes[0].activeClipId),'slam did not return to locomotion');settled++;
@@ -77,12 +83,14 @@ await withSkateRuntime(async({server,scene,level,Player,THREE,CONST})=>{
       previous=hip;
     }
     assert.ok(flat>0&&settled>0,'fixture missed impact or recovery');
-    assert.ok(reboundHead>impactHead+.10,`missing visible rebound: ${impactHead} -> ${reboundHead}`);
+    // The head moves down while the hips roll over it. Measure the rebound at
+    // the pelvis, not by demanding the rejected high whole-body belly lift.
+    assert.ok(reboundHip>impactHip+.15,`missing visible rebound: ${impactHip} -> ${reboundHip}`);
     assert.ok(holdFrames>=3,'missing readable anticipation pause');
-    assert.ok(inverted&&feetFirst&&forwardTurn>4.0,'rebound did not complete its forward flip onto the feet');
+    assert.ok(inverted&&feetFirst&&forwardTurn>4.0,`rebound did not complete its forward flip onto the feet: ${JSON.stringify({fps,height,running,inverted,feetFirst,forwardTurn})}`);
     assert.ok(backwardTurn>-.07,'forward rebound reversed before landing');
-    assert.ok(maxStep<.50,`recovery rotation snapped: ${maxStep} radians per 60 Hz frame`);
-    results.push({fps,height,running,impactHead,reboundHead,minClearance,maxStep,holdFrames,forwardTurn,backwardTurn});
+    assert.ok(maxStep<.44,`recovery rotation snapped: ${maxStep} radians per 60 Hz frame`);
+    results.push({fps,height,running,impactHead,reboundHead,impactHip,reboundHip,minImpactLimbLength,minImpactWidth,minClearance,maxStep,holdFrames,forwardTurn,backwardTurn});
   }
   runtimes.forEach(r=>r.dispose());
   const report={status:'pass',frames,results,rows};

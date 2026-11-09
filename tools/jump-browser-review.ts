@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Level } from '../src/level';
 import { LOCOMOTION_WALK_BLEND_INPUT, RigBinding, createPlayerStarterAnimationSuite } from '../src/animation';
 import type { AnimationClip } from '../src/animation';
+import {PANCAKE_SLAM} from '../src/animation/pancakeSlam';
 import previousClips from './fixtures/pre-reference-jump-clips.json';
 import { sfx } from '../src/audio';
 import { createJakStudySuite, JAK_JUMP_PHYSICS } from './jak-jump-variant';
@@ -210,6 +211,10 @@ function resetInspector() {
   if (!reviewLevel) return;
   frame = landFrame = doubleFrame = 0; frozen = hadAir = stepFrame = false; visited.clear();
   p.enterLevel('jump-review'); p.respawn(reviewLevel, true); p.freeSkate = false;
+  if(mode==='Slow X push'||mode==='Fakie slow X push'){
+    p.freeSkate=true;p.speed=18;p.lastPlanar=18;p.stance=mode==='Fakie slow X push'?1:-1;
+    p.grounded=true;p.state='ride';p.groundHit=p.queryGround(reviewLevel);
+  }
   if (mode==='Ice stance' || mode==='Fakie ice stance') {
     p.respawn(reviewLevel,true,true,{position:new THREE.Vector3(1080,.02,18)});
     p.freeSkate=true;p.speed=18;p.lastPlanar=18;p.stance=mode==='Fakie ice stance'?1:-1;
@@ -267,6 +272,15 @@ p.step = (dt: number, input: any, level: Level) => {
   if(mode==='Play ledges')p.camDir.set(-Math.sin(angle),0,-Math.cos(angle));
   if (!reviewLevel || frozen&&!stepFrame || slow&&!stepFrame&&++skips%3!==0) return;
   stepFrame=false;
+  if(mode==='Slow X push'||mode==='Fakie slow X push'){
+    p.camDir.set(0,0,-1);
+    if(frame===30)p.speed=p.lastPlanar=4;
+    nativeStep(dt,{moveX:0,moveY:0,jumpHeld:frame>=30&&frame<240,jumpPressed:frame===30,jumpReleased:frame===240},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    if(stopAt==='Push stroke'&&skateMotion?.phase==='push'&&skateMotion.time>=.35 ||
+      stopAt==='Speed recovered'&&frame>150&&!skateMotion?.diagnostics.speedRecoveryPush)frozen=true;
+    if(frame>=360)resetInspector();return;
+  }
   if (mode==='Ice stance' || mode==='Fakie ice stance') {
     p.camDir.set(0,0,-1);
     nativeStep(dt,{moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false},reviewLevel);
@@ -342,8 +356,8 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Slam impact'&&age>=.04&&age<.08 ||
       stopAt==='Slam rebound'&&age>=.14&&age<.18 ||
       stopAt==='Slam inversion'&&age>=.18&&age<.22 ||
-      stopAt==='Slam feet down'&&age>=.35&&age<.39 ||
-      stopAt==='Slam settle'&&age>=.43 ||stopAt==='Run exit'&&frame>=140)frozen=true;
+      stopAt==='Slam feet down'&&age>=PANCAKE_SLAM.feetDown-PANCAKE_SLAM.hang ||
+      stopAt==='Slam settle'&&age>=.48 ||stopAt==='Run exit'&&frame>=140)frozen=true;
     if(frame>=210)resetInspector();return;
   }
   if (mode === 'Walk, run and turn') {
@@ -547,7 +561,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
 const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run',
-  'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
+  'Skate flow','Mount cancel','Slow X push','Fakie slow X push','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
 viewSelect.value='Side';
@@ -564,7 +578,7 @@ const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
 select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam settle',
-  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
+  'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Push stroke','Speed recovered','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
 options.append(diagnostics); panel.append(options); document.body.append(panel);

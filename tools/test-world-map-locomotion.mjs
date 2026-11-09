@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
 import {runInThisContext} from 'node:vm';
 import {createServer} from 'vite';
 import * as THREE from 'three';
@@ -32,7 +33,15 @@ try{
     }
   }
   p.enterLevel(replay.level);p.respawn(level,true);
-  const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(a.RigBinding.fromSculptRuntime(p.animationRig.root).definition));
+  const rig=a.RigBinding.fromSculptRuntime(p.animationRig.root).definition;
+  let document=a.createPlayerStarterAnimationSuite(rig),presentation=null,ink=null;
+  if(process.env.GAMEPLAY_ANIMATION_SCHEME==='D'){
+    const {GameplayAnimationPresentation,gameplayAnimationDocument}=await server.ssrLoadModule('/src/gameplayAnimationScheme.ts');
+    const [jak,skate]=await Promise.all(['jak','skate'].map(async name=>JSON.parse(gunzipSync(await readFile(new URL(`../public/motion-study/${name}/motion.json.gz`,import.meta.url))))));
+    document=gameplayAnimationDocument(document,rig,jak);ink=new THREE.Texture();
+    presentation=new GameplayAnimationPresentation(p,scene,{jak,skate,ink});
+  }
+  const runtime=createCharacterAnimationRuntime(p,document);
   const input={moveX:0,moveY:0,mapDirectionX:0,mapDirectionY:0,consumeEdges(){}};
   // A fresh page activates the map before Player.step has received input.
   // Keep that cold-start path intact; seeding rawInput here hides boot crashes.
@@ -97,6 +106,6 @@ try{
   startGameplaySkid();
   for(let f=0;f<70;f++){p.step(1/60,input,flat);flat.update(1/60);}
   assert.equal(runtime.activeClipId,'player.idle');
-  runtime.dispose();flat.dispose();level.dispose();
+  presentation?.dispose();ink?.dispose();runtime.dispose();flat.dispose();level.dispose();
   console.log('PASS fresh startup without gameplay input, recorded map taps, island pan visibility and endings, active-skid entry, idle hold and restored gameplay skids');
 }finally{await server.close();console.warn=warn;console.error=error;}

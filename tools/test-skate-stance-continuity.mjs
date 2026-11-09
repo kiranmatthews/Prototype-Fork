@@ -66,7 +66,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
     }
     assert.ok(maxHipTurn<.16,`stance snapped on ice boundary: ${maxHipTurn}`);
     assert.ok(maxHeadStep<.07,`head snapped on ice boundary: ${maxHeadStep}`);
-    assert.ok(maxFootError<.004,`feet left their blended contacts: ${maxFootError}`);
+    assert.ok(maxFootError<.004,`feet left their blended contacts: ${maxFootError}, ${fps} Hz, stance ${stance}`);
     results.push({fps,stance,sourceFrames,iceFrames,returnedFrames,minLeadAgreement,maxHipTurn,maxHeadStep,maxFootError,entryFrames,exitFrames,blendReversals});
   }
   source.dispose();runtimes.forEach(r=>r.dispose());

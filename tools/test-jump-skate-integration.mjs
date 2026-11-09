@@ -34,7 +34,7 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
       assert.ok(player.pos.distanceTo(control.pos)<1e-9,`presentation moved physics at ${frames}`);
       for(const key of ['speed','vVel','grounded','state','freeSkate','airFromSkate'])assert.equal(player[key],control[key],`${key} at ${frames}`);
     }
-    if(!motion.active||(motion.phase==='foot'&&motion.fade>=1)){
+    if(!motion.active||(motion.phase==='foot'&&motion.fade>=1&&motion.mountPreparation===0)){
       const a=pose(p),b=pose(control);
       a.forEach((v,i)=>assert.ok(Math.abs(v-b[i])<1e-8,`native foot/disabled presentation changed transform ${i} at ${frames}`));
     }
@@ -90,7 +90,11 @@ await withSkateRuntime(async({server,scene,level,Player,THREE})=>{
   reset();step(makeInput());assert.equal(motion.phase,'foot');assert.equal(motion.boardScribble.active,false);
   for(const state of ['hang','grind','dead']){
     p.state=state;control.state=state;
-    p.playerAnimationBridge.prepareLegacyPose();control.playerAnimationBridge.prepareLegacyPose();
+    // Match Player's real pose boundary: persistent appearance offsets must
+    // be removed before restoring the bridge pose and applied exactly once.
+    for(const player of [p,control]){
+      player.clearCharacterAppearance();player.playerAnimationBridge.prepareLegacyPose();player.syncCharacterAppearance();
+    }
     motion.enter('mount','BR_STAND_0_INTO_MOUNT');
     const before=pose(p);p.playerAnimationBridge.applyFinalOverlay(1/60);
     const after=pose(p);before.forEach((v,i)=>assert.ok(Math.abs(v-after[i])<1e-8,`${state} lost pose ownership ${i}`));
