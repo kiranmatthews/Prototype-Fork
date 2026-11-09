@@ -207,11 +207,33 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     }
     if(id==='player.jak-flip') {
       // The source ends 23 degrees short of upright, expecting its ground
-      // recovery to finish the turn. Finish that last part in the air instead.
+      // recovery to finish the turn. Distribute that correction across the
+      // second half: a last-six-key correction accelerates into the finish.
       const open=q(retarget(neutral,'flip').locals.hips);
+      const finish=q(poses[poses.length-1].locals.hips).invert().multiply(open);
+      const turns=poses.map(pose=>q(pose.locals.hips));
+      const releaseIndex=Math.round((poses.length-1)*.60);
+      const tucked=structuredClone(poses[releaseIndex]), extended=poses[poses.length-1];
       for(let i=0;i<poses.length;i++) {
-        const weight=THREE.MathUtils.smoothstep(i/(poses.length-1),.82,1);
-        poses[i].locals.hips=q(poses[i].locals.hips).slerp(open,weight).toArray() as QuaternionTuple;
+        const phase=i/(poses.length-1);
+        const weight=THREE.MathUtils.smoothstep(phase,.52,1);
+        // Ease the source clock to zero velocity at the upright key. Its
+        // original ground-roll exit otherwise stops a moving airborne hip.
+        const tail=THREE.MathUtils.clamp((phase-.70)/.30,0,1);
+        const turnPhase=phase+.30*tail*tail*(1-tail);
+        const turnFrame=turnPhase*(poses.length-1), lo=Math.floor(turnFrame), hi=Math.min(lo+1,poses.length-1);
+        poses[i].locals.hips=turns[lo].clone().slerp(turns[hi],turnFrame-lo)
+          .multiply(new THREE.Quaternion().slerp(finish,weight)).toArray() as QuaternionTuple;
+        if(i>releaseIndex) {
+          // The short native jump arc compresses the source's late untuck to
+          // just a few ticks. Open the limbs progressively during the final
+          // third of the revolution instead of holding the ball then snapping.
+          const release=THREE.MathUtils.smootherstep(i,releaseIndex,poses.length-1);
+          for(const joint of Object.keys(poses[i].locals))if(joint!=='hips')
+            poses[i].locals[joint]=q(tucked.locals[joint]).slerp(q(extended.locals[joint]),release).toArray() as QuaternionTuple;
+          for(const joint of Object.keys(poses[i].translations))
+            poses[i].translations[joint]=v(tucked.translations[joint]).lerp(v(extended.translations[joint]),release).toArray() as Vec3Tuple;
+        }
       }
     }
     const elasticProfile=id==='player.jak-flip'?'jak-flip':id==='player.double-jump'?'jak-double-jump':null;
