@@ -10,7 +10,7 @@ Evidence level:
 - Read directly: every crate icon on F3 p036–p038 (zoomed and descreened); the four checkpoint counts C1 **10**,
   yellow-course C **30**, C2 **54** (F3 notes "if you came back after the yellow-gem course"), C3 **99**; the bonus
   strip (25 drawn crates counted one by one = header 25); P3 captions and screenshots.
-- **The six outline cells of the J-b ! puzzle materialise as grey steel, not boxes** — P3 p021R shot 6 shows the
+- **The six outline cells of the lava-area ! puzzle (S3-f) materialise as grey steel, not boxes** — P3 p021R shot 6 shows the
   row as a solid grey bar after the switch. With them excluded the map sums to **112**, equal to gamepressure's
   "all 112 crates". F3 draws steel-outlines and crate-outlines identically, so this is an important caution for
   every F3 map.
@@ -30,11 +30,11 @@ Evidence level:
 | 1UP | 3 crates (on a raised block near the start; top of a TNT stack on the yellow course; bonus pyramid) + 5 loose lives at the yellow-course exit (not boxes) |
 | Aku Aku | 1 crate (start). P3: none on the yellow path. Time trial adds a mask at the C3 cluster |
 | TNT / Nitro | TNT 4 (yellow course) / Nitro 10 (main 2 + 2, yellow 6) |
-| ! blocks | 1 steel ! (top of the J-b column; makes a steel bridge) + 1 green ! (end of the yellow course; detonates every Nitro) |
+| ! blocks | 1 steel ! (top of the S3-e column; makes a steel bridge) + 1 green ! (end of the yellow course; detonates every Nitro) |
 | Outline | 6 (become steel; not counted) |
 | Iron-bound | 22 (yellow course 5, bonus 17) |
-| Arrows | 1 steel arrow (J-b) |
-| Striped | 9 (S1 1, S2 1, M-a 1, J-a 2, chase 4) |
+| Arrows | 1 steel arrow (S3-e) |
+| Striped | 9 (S1-d 1, S2-c 1, S3-a 1, S3-d 2, chase 4) |
 | Gems | clear gem = all 112 (needs the yellow gem: the green ! is on the yellow course); secret clear gem at the end of the yellow course (P3 shot 14). F3 → yellow gem from book p.104 (stage 27); P3 "Level 27" |
 | Secret exit | let the pterodactyl carry you off on the yellow course → stage 32 (F3 p037R; P3 shot 13 hints at it) |
 | Trophies | sapphire 1:35:00, gold 1:25:70 (F3 p036L); F3 staff best 0:53:76 |
@@ -48,7 +48,7 @@ START ─S1 (10 incl. C1)─ C1 ══╦══ S2 Baby T stretch (10 incl. C2) 
  Aku, 1UP-on-block, 3 time    ║   ?, 3×1-s, W/S/W, Nitro×2                               │
  crates, binding crate        ║                                                          ▼
                               ║  YELLOW PLATFORM (yellow gem)                       LAVA AREA (side view)
-                              ╚═ Y: ??, W, ?, iron/TNT stacks ─ Yc(30) ─ Nitro×2 ─ ptera   ▲  J-a 7, J-b 6
+                              ╚═ Y: ??, W, ?, iron/TNT stacks ─ Yc(30) ─ Nitro×2 ─ ptera   ▲  S3-d 7, S3-e..g 6
                                   (stage-32 warp) ─ Nitro×4 ─ secret gem ─ GREEN ! ─ 5 lives ─┘  crystal
                                                                                               BONUS (25)
                                                      C3 cluster (4 incl. C3) ── TRICERATOPS CHASE (11) ── GOAL
@@ -224,8 +224,8 @@ C3 → [W][W] → water, grass, e:ptera → [S] → geyser → [?r1] → (cross 
 ## Design logic of this level
 1. **Two-visit level.** First visit: crystal and main path; the yellow gem course (26 boxes, secret gem, green !,
    stage-32 warp) is a return-visit route. Main-path Nitro make the all-box goal visibly incomplete until then.
-2. **The skill unlocked by the previous boss is the lesson.** The yellow course is iron-and-TNT stacks for the
-   super body slam; the bonus is 17 iron crates teaching slam radius and step-before-slam.
+2. **An earned power is the lesson.** The yellow course is iron-and-TNT stacks for the super body slam (the
+   first boss's reward); the bonus is 17 iron crates teaching slam radius and step-before-slam.
 3. **Stack grammar escalates:** striped-based 3-stacks (S1) → time-crate stacks (S2) → iron/TNT 3- and 4-stacks
    with a life on top (yellow) → floating column over an arrow (lava area).
 4. **Big fruit walls at section starts.** The 3×3 wall after C2 and the pyramid at the lava area repeat Tomb Time's

@@ -9,15 +9,16 @@
   "F3 p080L",
   "F3 p105L",
   "F3 p011",
-  "P3 p017-p018"
+  "P3 p017-p018",
+  "gamepressure Tomb Time (N. Sane total 95)"
  ],
  "camera": "into-screen (right-angle zig-zag corridor)",
  "totalBoxes": 98,
  "totalSource": "F3 map cluster sum; reproduces F3 checkpoint counts C1 17, C2 52 (incl. 19 bonus), C3 82 (F3 purple-first route)",
  "totalConflict": {
   "value": 95,
-  "source": "P3 p017L shot 49 HUD 75/95; P3 text: 20 boxes missed until the purple gem",
-  "note": "unresolved; map gives 25 behind the fork (21 if P-a stands before the door)"
+  "source": "P3 p017L shot 49 HUD 75/95; P3 text: 20 boxes missed until the purple gem; gamepressure (N. Sane) 95",
+  "note": "unresolved; map gives 25 behind the fork (21 if P-a stands before the door); possible regional build difference"
  },
  "countingRule": "F3 cumulative counts include the checkpoint crate and the bonus-round boxes; steel ! blocks are listed as clusters with count 0 (not boxes)",
  "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
@@ -852,7 +853,7 @@
    "id": "S4-a",
    "section": "S4",
    "order": 1,
-   "where": "high above the tar slide",
+   "where": "high above the tar slide, against the ceiling",
    "composition": {
     "question": 1
    },
@@ -862,19 +863,22 @@
    "floating": true,
    "access": [
     "jump",
-    "backtrack"
+    "backtrack",
+    "bounce"
    ],
    "relations": [
     "tar-slide",
-    "switch-operator"
+    "switch-operator",
+    "moving-stone-blocks"
    ],
    "tags": [
     "HIGH",
     "FLOAT-LINE",
-    "COUNT-TRAP"
+    "COUNT-TRAP",
+    "TOOL"
    ],
-   "why": "slope momentum carries you past; kill the operator then come back (P3 s63)",
-   "evidence": "F3 p070R zoom; P3 p018L s63",
+   "why": "slope momentum carries you past; kill the operator then come back (P3 s63); gamepressure: bounce off the moving stone blocks and spin in mid-air",
+   "evidence": "F3 p070R zoom; P3 p018L s63; gamepressure Tomb Time",
    "confidence": "high"
   },
   {

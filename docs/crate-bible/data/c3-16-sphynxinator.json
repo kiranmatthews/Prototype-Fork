@@ -9,23 +9,26 @@
   "F3 p080L",
   "F3 p108R",
   "F3 p011",
+  "F3 p005R",
   "P3 p030R-p032L",
   "gamepressure Sphynxinator (N. Sane total)"
  ],
  "camera": "into-screen corridors with right-angle turns; fork after the start",
  "totalBoxes": 107,
- "totalSource": "F3 map cluster sum with 3 crates behind the start as drawn; reproduces F3 base checkpoint numbers 6/17/25/47 (Nitro and plaza pair excluded)",
+ "totalSource": "F3 map icon sum (3 crates behind the start as drawn, plaza pair included)",
+ "totalLikelyInGame": 105,
+ "totalLikelyBasis": "F3 checkpoint numbers (rule F3 p005R: C box included, bracket adds Nitro) reproduce exactly without the plaza pair; carried to the goal the bracketed count is 54+22+28+1 = 105 = gamepressure",
  "totalConflict": [
   {
    "value": 105,
-   "source": "gamepressure (N. Sane)"
+   "source": "gamepressure (N. Sane) and F3 checkpoint arithmetic"
   },
   {
    "value": "4 crates behind the start",
    "source": "P3 p030R s2 caption; gamepressure"
   }
  ],
- "countingRule": "F3 checkpoint base numbers count the checkpoint crate and exclude Nitro and the plaza pair; bracketed numbers add the plaza pair and the Nitro met after the merge (left-route Nitro not included; unexplained); green ! listed with count 0",
+ "countingRule": "F3 p005R: checkpoint number = boxes appearing up to the checkpoint incl. the C box; bracket also counts Nitro. Reproduces 6(8), 17(19), 25(30), 47(54) exactly if the plaza pair S1-a is left out. Green ! listed with count 0",
  "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
  "checkpointsPrinted": {
   "upperC": "6 (8)",
@@ -198,9 +201,9 @@
     "PAIR",
     "SUPPORT-ORDER"
    ],
-   "why": "POINT 2: break before going left so the reverse run of the right route never crosses the hard hole twice",
+   "why": "POINT 2: break before going left so the reverse run of the right route never crosses the hard hole twice; never included in F3 checkpoint numbers",
    "evidence": "F3 p071L POINT 2 zoom",
-   "confidence": "high"
+   "confidence": "low"
   },
   {
    "id": "L-a",

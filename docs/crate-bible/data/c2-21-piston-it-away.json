@@ -1,0 +1,1093 @@
+{
+ "id": "c2-21-piston-it-away",
+ "game": "Crash 2",
+ "stage": 21,
+ "name": "Piston It Away",
+ "nameJa": "ピストンはつでんしょ",
+ "sources": [
+  "F2 p077-p080L",
+  "F2 p100R",
+  "F2 p015",
+  "D2 p069-p071"
+ ],
+ "camera": "side-scroll catwalk strips with short into-screen corridors",
+ "totalBoxes": 69,
+ "totalSource": "F2 p077L header (superscript 36 off-course)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 33,
+   "basis": "header 69 - 36",
+   "mapped": 31,
+   "unlocated": 2
+  },
+  {
+   "id": "bonus",
+   "boxes": 26,
+   "basis": "36 - 10 death-route boxes (derived); 23 identified in D2"
+  },
+  {
+   "id": "death",
+   "boxes": 10,
+   "basis": "counted from D2 shots 44-50"
+  }
+ ],
+ "specialCounts": {
+  "life": {
+   "total": 2,
+   "offCourse": 2,
+   "where": "bonus outlines"
+  },
+  "aku": {
+   "total": 2,
+   "offCourse": 0
+  },
+  "checkpoint": {
+   "total": 4,
+   "offCourse": 1,
+   "where": "death route D2 48"
+  },
+  "nitro": {
+   "main": 10,
+   "bonus": 6,
+   "death": 4
+  },
+  "tnt": 0,
+  "switches": "! at the bonus far end (fills outlines); green ! only at the death-route end"
+ },
+ "gems": [
+  {
+   "kind": "clear",
+   "condition": "all 69 boxes; order normal -> bonus -> normal to just before the goal -> back to the death route -> green ! last"
+  },
+  {
+   "kind": "clear",
+   "condition": "finish the death route; skull pad requires a deathless arrival"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "cumulative": null,
+   "notes": "Aku start, arrow puzzle",
+   "boxes": 12
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "cumulative": null,
+   "notes": "ISGN drill, staggered ? column with hidden Nitros",
+   "boxes": 7
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "cumulative": null,
+   "notes": "second Aku, skull pad, beam plates, bonus door",
+   "boxes": 3
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "cumulative": null,
+   "notes": "shield researchers, 8-Nitro dare, last main box",
+   "boxes": 9
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S3 bonus panel",
+   "to": "S3",
+   "cumulative": null,
+   "notes": "~26 by subtraction (23 identified + 3 placeholder)",
+   "boxes": 26
+  },
+  {
+   "id": "DEATH",
+   "route": "death",
+   "from": "S3 skull pad",
+   "to": "green ! exit",
+   "cumulative": null,
+   "notes": "~10 from D2; contains the only green ! and the off-course C",
+   "boxes": 10
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "catwalk right after the start",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "before-slide-only-robots"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU",
+    "TEACH"
+   ],
+   "why": "mask before the first slide-only walkers",
+   "evidence": "F2 p077R zoom; D2 p069 shot 1",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "beside the Aku box",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "L-shaped stack: 1 low in front, 2-high column behind",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "SUPPORT-ORDER"
+   ],
+   "why": "first payout; break the base and the top drops",
+   "evidence": "F2 p077R zoom; D2 shot 1",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "start of strip A beside a flat-armed ISGN (POINT5)",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "isgn-stomp"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "SINGLE"
+   ],
+   "why": "stand by the crate to read the robot's arm cycle, then stomp it",
+   "evidence": "F2 p078L strip A; D2 shot 5",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "arrow puzzle (POINT6)",
+   "composition": {
+    "arrowWood": 2,
+    "striped": 1,
+    "wood": 2,
+    "question": 1
+   },
+   "count": 6,
+   "arrangement": "left arrow + floating striped; right arrow on a step under a floating 3-crate column (? on top) with a gap",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce"
+   ],
+   "relations": [
+    "arrow-elevator",
+    "column-settles"
+   ],
+   "tags": [
+    "TOOL",
+    "HIGH",
+    "SANDWICH",
+    "COLUMN-BOUNCE",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "left arrow first to break the floating striped crate, then bounce up through the column from the gap above the right arrow",
+   "evidence": "F2 p078L POINT6 + zoom; D2 shot 7",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "start of strip C round a corner",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-arrow-puzzle"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save after the puzzle",
+   "evidence": "F2 p078R; D2 shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "strip B catwalk ahead of a YTYT and an ISGN",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "slide",
+    "timed"
+   ],
+   "relations": [
+    "walker-approaching"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "TIMED",
+    "SINGLE"
+   ],
+   "why": "breaking it costs time while the walker approaches; then slide to kill it and clear the pipe",
+   "evidence": "F2 p078L strip B zoom; D2 shots 13-14",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "end of strip B by a fan",
+   "composition": {
+    "question": 3
+   },
+   "count": 3,
+   "arrangement": "staggered 3-high column",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "hidden-nitro-behind"
+   ],
+   "tags": [
+    "STACK",
+    "EDGE-BAIT",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "the far crate leads your jump toward hidden Nitros",
+   "evidence": "F2 p078L zoom; D2 shot 16",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "directly behind the staggered column (F2 green bubble)",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "hidden pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "overshoot-trap",
+    "death-route-green-switch"
+   ],
+   "tags": [
+    "HIDDEN",
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH",
+    "COUNT-TRAP"
+   ],
+   "why": "punishes overshoot; counted only when the death-route green ! fires",
+   "evidence": "F2 p078R bubble; D2 shot 16",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "into-screen catwalk beside the level crystal",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "before-death-gate"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the skull pad",
+   "evidence": "D2 shots 19-20; F2 p079L",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "catwalk after C2 among cones and YTYTs",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-plates-and-pad"
+   ],
+   "tags": [
+    "ON-PATH",
+    "AKU"
+   ],
+   "why": "second mask before the beam plates, skull pad and bonus",
+   "evidence": "F2 p079L zoom (mask icon)",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "pedestal next to a beam-switch plate (POINT13)",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "shrink-ray-line"
+   ],
+   "tags": [
+    "TIMED",
+    "SINGLE"
+   ],
+   "why": "stopping to break it is the delay the shrink ray punishes; the ray can be spun away",
+   "evidence": "F2 p079R zoom; D2 shot 26",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "after the four beam plates (POINT16)",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-plate-run"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save after the plate gauntlet (the return-trip crux)",
+   "evidence": "F2 p079L bottom; D2 shot 34",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "upper catwalk by a piston",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "last-main-box",
+    "start-of-backtrack"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BACKTRACK"
+   ],
+   "why": "last main-route box on a box-gem run; walk back to the skull pad from here",
+   "evidence": "F2 p080L zoom; D2 shot 40",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "flanking a floating life item on the upper catwalk",
+   "composition": {
+    "nitro": 8
+   },
+   "count": 8,
+   "arrangement": "two 4-high Nitro columns with the life between",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "double-jump",
+    "switch"
+   ],
+   "relations": [
+    "life-item-dare"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "REWARD",
+    "HIGH",
+    "NITRO-SWITCH"
+   ],
+   "why": "a dare for a life item; all 8 Nitros count and need the death-route green !",
+   "evidence": "F2 p080L bubble; D2 shot 40",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "bonus entry",
+   "composition": {
+    "outline": 3
+   },
+   "count": 3,
+   "arrangement": "outline frames that become 1UP, 1UP, ?",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "switch",
+    "backtrack"
+   ],
+   "relations": [
+    "far-end-switch"
+   ],
+   "tags": [
+    "BONUS",
+    "OUTLINE",
+    "SWITCH",
+    "LIFE",
+    "BACKTRACK",
+    "COUNT-TRAP"
+   ],
+   "why": "both life boxes of the stage are locked behind the ! at the far end of the bonus",
+   "evidence": "D2 shot 28; F2 p100R bonus 1",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "beside the outlines",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "entry"
+   ],
+   "tags": [
+    "BONUS",
+    "SINGLE",
+    "ON-PATH"
+   ],
+   "why": "early payout",
+   "evidence": "D2 shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "first platform",
+   "composition": {
+    "question": 4,
+    "wood": 3
+   },
+   "count": 7,
+   "arrangement": "two 3-high towers (2 wide) + 1 more to reach counter 8",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "counter-0-to-8"
+   ],
+   "tags": [
+    "BONUS",
+    "STACK"
+   ],
+   "why": "payout; counter 0 to 8",
+   "evidence": "D2 shots 29-30",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "before the Nitro mountain",
+   "composition": {
+    "striped": 3
+   },
+   "count": 3,
+   "arrangement": "small staircase",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce",
+    "backtrack"
+   ],
+   "relations": [
+    "return-bridge"
+   ],
+   "tags": [
+    "BONUS",
+    "TOOL",
+    "SUPPORT-ORDER",
+    "STEPPING"
+   ],
+   "why": "footing to keep for the return; break on the way back",
+   "evidence": "D2 shot 30; F2 p100R bonus 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 5,
+   "where": "the Nitro mountain",
+   "composition": {
+    "nitro": 6
+   },
+   "count": 6,
+   "arrangement": "3-stack, 2-stack and a single by the !",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "jump",
+    "switch"
+   ],
+   "relations": [
+    "crossed-twice"
+   ],
+   "tags": [
+    "BONUS",
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH"
+   ],
+   "why": "the obstacle crossed twice; counted via the death-route green !",
+   "evidence": "D2 shots 30-31; F2 p100R",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 6,
+   "where": "far end beside the ! switch",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single next to the !",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "switch"
+   ],
+   "tags": [
+    "BONUS",
+    "SWITCH"
+   ],
+   "why": "marks the switch that fills the entry outlines",
+   "evidence": "D2 shot 31",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-g",
+   "section": "BONUS",
+   "order": 7,
+   "where": "before the exit lift",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "2-high stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "piston-long-jump"
+   ],
+   "tags": [
+    "BONUS",
+    "STACK"
+   ],
+   "why": "final payout before the piston long jump",
+   "evidence": "D2 shot 32",
+   "confidence": "medium-low"
+  },
+  {
+   "id": "B-x",
+   "section": "BONUS",
+   "order": 8,
+   "where": "unidentified",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "placeholder for the remainder of the 26 derived bonus boxes",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "needed to reach 36 off-course minus 10 death-route boxes",
+   "evidence": "derived",
+   "confidence": "low"
+  },
+  {
+   "id": "D-a",
+   "section": "DEATH",
+   "order": 1,
+   "where": "first platform after the skull pad",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "piston-timing"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "PAIR",
+    "TIMED"
+   ],
+   "why": "payout under piston timing",
+   "evidence": "D2 shot 44",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-b",
+   "section": "DEATH",
+   "order": 2,
+   "where": "blue-lit corridor",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "pair on the floor",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TEST"
+   ],
+   "why": "avoidance",
+   "evidence": "D2 shot 45",
+   "confidence": "high"
+  },
+  {
+   "id": "D-c",
+   "section": "DEATH",
+   "order": 3,
+   "where": "with a shield researcher",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "spin"
+   ],
+   "relations": [
+    "enemy-into-nitro"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ENEMY-LINK",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "spin the researcher back into it",
+   "evidence": "D2 shot 46",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-d",
+   "section": "DEATH",
+   "order": 4,
+   "where": "between two walkers",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "slide",
+    "jump"
+   ],
+   "relations": [
+    "slide-jump-slide"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TEST"
+   ],
+   "why": "rhythm test",
+   "evidence": "D2 shot 47",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-e",
+   "section": "DEATH",
+   "order": 5,
+   "where": "after bouncing off three robots",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "walk"
+   ],
+   "relations": [
+    "off-course-checkpoint"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "CHECKPOINT"
+   ],
+   "why": "the header's off-course C",
+   "evidence": "D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "D-f",
+   "section": "DEATH",
+   "order": 6,
+   "where": "past the ISGN step",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "stepped stair",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "death-route",
+    "spin",
+    "timed"
+   ],
+   "relations": [
+    "shrink-ray"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "STEPPING",
+    "TIMED"
+   ],
+   "why": "last crates before the bounce chain to the gem",
+   "evidence": "D2 shots 49-50",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "YTYT walker",
+   "count": 3,
+   "where": "start strip",
+   "role": "slide-only kills"
+  },
+  {
+   "section": "S1",
+   "kind": "ISGN",
+   "count": 2,
+   "where": "strip A",
+   "role": "stomp when arms flat"
+  },
+  {
+   "section": "S2",
+   "kind": "ISGN",
+   "count": 7,
+   "where": "strips C and D",
+   "role": "arm-state drill"
+  },
+  {
+   "section": "S2",
+   "kind": "YTYT walker",
+   "count": 2,
+   "where": "strip B",
+   "role": "slide under pistons/pipes"
+  },
+  {
+   "section": "S3",
+   "kind": "YTYT walker",
+   "count": 4,
+   "where": "after C2 and the plates",
+   "role": "slide"
+  },
+  {
+   "section": "S3",
+   "kind": "ISGN",
+   "count": 2,
+   "where": "before the turret",
+   "role": "keep one alive as the return step"
+  },
+  {
+   "section": "S4",
+   "kind": "shield researcher",
+   "count": 3,
+   "where": "catwalks",
+   "role": "spin while the shield is still"
+  },
+  {
+   "section": "S4",
+   "kind": "ISGN",
+   "count": 2,
+   "where": "piston catwalks",
+   "role": "slide when piston and arms are up"
+  },
+  {
+   "section": "S4",
+   "kind": "YTYT walker",
+   "count": 1,
+   "where": "before the goal",
+   "role": "slide"
+  },
+  {
+   "section": "DEATH",
+   "kind": "ISGN",
+   "count": 4,
+   "where": "bounce chains",
+   "role": "bounce steps (stomp just before arms close)"
+  },
+  {
+   "section": "DEATH",
+   "kind": "YTYT walker",
+   "count": 4,
+   "where": "throughout",
+   "role": "slide"
+  },
+  {
+   "section": "DEATH",
+   "kind": "shield researcher",
+   "count": 1,
+   "where": "by D-c",
+   "role": "spin into the Nitro"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "pistons over catwalk gaps",
+   "where": "start strip (POINT3-4)",
+   "crates": []
+  },
+  {
+   "section": "S1",
+   "kind": "arrow climb",
+   "where": "POINT6",
+   "crates": [
+    "S1-d"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "hot pillar",
+   "where": "strip D (POINT11)",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "beam-switch plates",
+   "where": "POINT13-16",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "piston gaps and ramp",
+   "where": "p080L",
+   "crates": [
+    "S4-a",
+    "S4-b"
+   ]
+  },
+  {
+   "section": "BONUS",
+   "kind": "Nitro mountain between pistons",
+   "where": "mid-bonus",
+   "crates": [
+    "B-d",
+    "B-e"
+   ]
+  },
+  {
+   "section": "DEATH",
+   "kind": "sequenced pistons, ISGN bounce chains",
+   "where": "whole route",
+   "crates": [
+    "D-a",
+    "D-f"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-d"
+   ],
+   "summary": "arrow-gap column",
+   "solution": "left arrow to the floating striped crate, then bounce up through the column from the gap above the right arrow",
+   "wrongOrder": "spinning an arrow first",
+   "loss": "up to 4 boxes"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "B-a",
+    "B-d",
+    "B-e",
+    "B-f"
+   ],
+   "summary": "bonus reverse trip",
+   "solution": "keep the striped steps, hit the far !, return for the two lives and ?, then break the steps",
+   "wrongOrder": "breaking the steps on the way out",
+   "loss": "must thread the Nitros twice; lives at risk"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-a",
+    "S3-b"
+   ],
+   "summary": "whole-level reverse run to the death route (only green ! is at its end)",
+   "solution": "deathless main route and bonus, skip the pad, break S4-a, walk back, use the surviving ISGN to climb the turret, take the pad",
+   "wrongOrder": "killing the return-step ISGN or dying anywhere",
+   "loss": "box gem and death-route gem"
+  }
+ ],
+ "observations": [
+  "Main-route crates are few (33) and sit where a robot pattern or beam makes collecting them a timing decision.",
+  "Hidden Nitros punish overshoot directly behind a staggered stack.",
+  "The only green ! is at the end of the death route, which forces the perfect order and a deathless reverse run.",
+  "Both life boxes are bonus outlines filled from the far end of the bonus, so collecting them requires a reverse trip over Nitros.",
+  "A crate can be both tool and reward: striped steps must survive until the return.",
+  "Main route: 31 of 33 boxes located."
+ ]
+}

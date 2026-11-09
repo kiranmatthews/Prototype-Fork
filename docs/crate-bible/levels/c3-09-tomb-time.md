@@ -3,7 +3,8 @@
 Sources: F3 p068–p070 (book pp.128–133; stage map, POINT 1–8 and A–E, time-attack tips 1–6, checkpoint
 counts), F3 p080L (Egypt bonus-round hint strip, stage 9: boxes ×19, 1UP ×1), F3 p105L (time-trial route
 "スゴイの09", frames 01–32, staff best 0:48:86), F3 p011 (box legend); P3 p017–p018 (book pp.30–33, shots
-49–72: crystal run, purple-gem run, CAUTION box, bonus area, time trial).
+49–72: crystal run, purple-gem run, CAUTION box, bonus area, time trial); gamepressure.com Tomb Time page (N. Sane
+total 95 and route notes, corroboration only).
 
 Evidence level:
 - Read directly: every crate icon on F3 p068–p070 (zoomed and descreened where icons were ambiguous); the three
@@ -24,7 +25,7 @@ Evidence level:
 |---|---|
 | Theme | Egypt pyramid under construction: tar floors, scarab drop-tiles, ceiling light beams firing poison darts, floor-switch doors, ! blocks that move platforms, falling stone pillars, crushing blocks worked by "switch operator" lab assistants |
 | Camera | into-screen corridor that zig-zags at right angles (diagonal double-jump shortcuts exist — F3 TT2) |
-| Total boxes | **98 by F3 map** (S1 17 + S2 16 + bonus 19 + fork Aku 1 + right course 20 + purple course 25). P3 p017L HUD: 95. Unresolved, see Open questions |
+| Total boxes | **98 by F3 map** (S1 17 + S2 16 + bonus 19 + fork Aku 1 + right course 20 + purple course 25). P3 p017L HUD and gamepressure (N. Sane): 95. Unresolved, see Open questions |
 | Boxes per route | main (start → right course → goal, no gem): 54 · bonus round: 19 · purple-gem course: 25 · death route: none |
 | Checkpoints (F3 cumulative) | C1 **17** · C2 **52** (incl. bonus) · C3 **82** (on F3's perfect route: purple course first, then the right course run backwards) |
 | 1UP | 2 (right course, on top of a wood crate; bonus round) |
@@ -155,7 +156,7 @@ C3 → ~~ TAR SLIDE (slope) ~~  [?]  (floating, shadow)   [? g3] (floating, shad
 ```
 | id | position | composition | arrangement | access | tags | why it is here | evidence |
 |---|---|---|---|---|---|---|---|
-| S4-a | high over the tar slide | ? ×1 | SINGLE floating | slide-long-jump, or come back after clearing the operator | HIGH FLOAT-LINE COUNT-TRAP | P3 s63: "run ahead, take out the switch operator, then return for the two boxes against the ceiling" — the slide carries you past them | F3 p070R zoom; P3 p018L s63 | high |
+| S4-a | high over the tar slide, against the ceiling | ? ×1 | SINGLE floating | come back after clearing the operator; gamepressure: bounce off the moving stone blocks and spin in mid-air | HIGH FLOAT-LINE COUNT-TRAP TOOL | P3 s63: "run ahead, take out the switch operator, then return for the two boxes against the ceiling" — the slide carries you past them, and the crusher blocks double as the step up | F3 p070R zoom; P3 p018L s63; gamepressure | high |
 | S4-b | further up the slide | ? ×1 (g3) | SINGLE floating | as S4-a | HIGH COUNT-TRAP TIME-TRIAL | TT: normally out of reach, but the invincible Aku hitbox breaks it on a long jump (F3 TT5, p105L frame 25) — the time-trial pay-off of the three masks | F3 p070R; F3 p105L | high |
 | S4-c | corridor after the operators | wood ×1 | SINGLE | walk | ON-PATH SINGLE | F3 p105L frame 28: jump the red cobra and land on the wood box beyond | F3 p070R zoom; F3 p105L | high |
 | S4-d | framed tile at the cobra junction | ? ×1 | SINGLE | walk | ON-PATH SINGLE | Last box before the crystal and the final ! | F3 p070R zoom | high |
@@ -272,4 +273,8 @@ door → [W][W] b2  → corner → poison-light pit (POINT A) [?][?]   → ~TAR~
 - Outline bridge size (6 assumed from a 2×3 wireframe; spikes are drawn through it).
 - Arrangement of S3-a (4 crates spread in a diamond) and exact heights of S4-a/b.
 - Identity of the green guard in S1 and the pot enemies (P3 jokes "spin the monkey").
-- Purple gem source stage: F3 points to book p.92 (stage 13 map) and P3 says "Level 13".
+- Purple gem source stage: F3 points to book p.92 (stage 13 map) and P3 says "Level 13" (gamepressure: High Time).
+- gamepressure (N. Sane) also puts a 1UP crate in the dart-trap corridor; F3 draws three plain wood crates there
+  (S2-f). Its total (95) matches P3, not F3's map.
+- F3's map may reflect the Japanese release while P3 and gamepressure reflect US / N. Sane builds; a regional
+  difference would explain a fixed offset, but this is not verified.

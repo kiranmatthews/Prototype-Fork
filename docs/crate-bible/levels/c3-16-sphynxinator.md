@@ -10,12 +10,15 @@ Evidence level:
 - Read directly: every crate icon on F3 p071–p072 (zoomed and descreened); the four checkpoint signs, each printed as
   a base number with a second number in brackets: upper C **6 (8)**, lower C **17 (19)** ("if the right-route reverse
   run is also done"), C3 **25 (30)**, C4 **47 (54)**; the bonus strip (28 drawn = header 28); P3 captions.
-- The base numbers reproduce exactly from the map if the checkpoint crate is counted, Nitro crates are left out and
-  the two plaza crates (POINT 2) are left out. The bracketed numbers add the plaza pair and, from the merge onward,
-  the Nitro crates met so far (3 by C3, 5 by C4) — but not the two Nitro on the left route. This is inferred and
-  only partly explained.
-- **Count conflicts:** F3 draws **3** crates behind the start; P3 ("four boxes stashed behind him") and gamepressure
-  ("four crates, one with an extra life") say **4**. F3's map totals **107**; gamepressure's N. Sane total is **105**.
+- Counting rule (F3 p005R, read directly): a checkpoint number counts the boxes that appear up to that checkpoint,
+  the C box included; the number in brackets also counts Nitro. Applied to the map, all eight numbers reproduce
+  exactly — base 6, 17, 25, 47 and brackets +2 (left-route Nitro), +2, +5 (3 more Nitro), +7 (2 more) — **but only
+  if the two plaza crates of POINT 2 are left out**. Carried on to the goal, the bracketed count is 54 + 22 (S4
+  non-Nitro) + 28 (bonus) + 1 (last Nitro) = **105**, exactly gamepressure's total.
+- **Count conflicts:** F3's icons sum to **107**; F3's own checkpoint numbers and gamepressure imply **105** — the
+  difference is exactly the plaza pair, which F3 draws (two clear wood icons) but never counts. Separately, F3 draws
+  **3** crates behind the start while P3 ("four boxes stashed behind him") and gamepressure ("four crates, one with
+  an extra life") say **4**.
 - The blue-gem course (F3 p073) has no boxes, only steel C-blocks (not counted) — P3 shot 12 agrees.
 
 ## At a glance
@@ -23,9 +26,9 @@ Evidence level:
 |---|---|
 | Theme | Egypt pyramid interior: greasy tar floors, spotlight poison-dart traps, auto-closing doors, stone pillars that crush, moving blocks over tar, lab assistants with spears in pots, flamethrower and gear-ratchet workers who drop stones |
 | Camera | into-screen corridors with right-angle turns; one fork right after the start that rejoins about a third of the way in |
-| Total boxes | **107 by F3 map** (crates behind the start as drawn = 3). P3/gamepressure say 4 behind the start; gamepressure total 105. Unresolved |
+| Total boxes | **105 most likely** (F3's own checkpoint numbers carried to the goal; = gamepressure). F3's icons sum to 107 because the plaza pair is drawn but never counted; P3/gamepressure put 4 crates behind the start where F3 draws 3 |
 | Boxes per route | behind the start 3 · plaza 2 · left route 5 (incl. 2 Nitro, upper C) · right route 11 (incl. lower C) · merge → C3 11 · C3 → C4 24 · C4 → goal 23 · bonus 28 · blue-gem course 0 |
-| Checkpoints (F3) | upper C 6 (8) · lower C 17 (19) · C3 25 (30) · C4 47 (54) |
+| Checkpoints (F3; bracket = with Nitro, F3 p005R) | upper C 6 (8) · lower C 17 (19) · C3 25 (30) · C4 47 (54) |
 | 1UP | 3 crates (behind the start; inside pile C of POINT 6; bonus) + 4 loose lives at the end of the left route |
 | Aku Aku | 1 crate (right route). Time trial: masks at the right-route cluster, POINT 6 pile C and the TA5 crate → invincibility for the last third |
 | TNT / Nitro | TNT 17 (main 7, bonus 10) / Nitro 8 (left 2, merge corridor 1, POINT 5 pit 2, before C4 2, goal area 1) |
@@ -76,7 +79,7 @@ MERGE → [? r1] → [?] → stairs, auto-door → spotlight corridor [W b2] + N
 | id | position | composition | arrangement | access | tags | why it is here | evidence |
 |---|---|---|---|---|---|---|---|
 | S0-a | behind the start point (camera side) | wood ×1, 1UP ×1, ? ×1 (F3 icons; P3/GP: 4 crates) | tight block | turn back, spin | BACKTRACK HIDDEN COUNT-TRAP LIFE TIME-TRIAL | The classic missed crates: behind the camera at the very start. P3: "Crash is trying to tell you something when he starts facing backward". TT: the two 3-s crates are here, so shoot the stopwatch with the bazooka from beside them (TA1, F3 p108R frames 01–02) | F3 p071L POINT 1 zoom; P3 p030R s2; GP | high (position), medium (count) |
-| S1-a | front edge of the junction plaza, on the right-route side of its hole | wood ×2 (one r1) | PAIR | walk/spin | ON-PATH PAIR SUPPORT-ORDER | POINT 2: break them first, then go left — on the later reverse run of the right route you then never need to cross its difficult hole twice to fetch them | F3 p071L POINT 2 zoom | high |
+| S1-a | front edge of the junction plaza, on the right-route side of its hole | wood ×2 (one r1) | PAIR | walk/spin | ON-PATH PAIR SUPPORT-ORDER | POINT 2: break them first, then go left — on the later reverse run of the right route you then never need to cross its difficult hole twice to fetch them. Never included in F3's checkpoint numbers (see Open questions) | F3 p071L POINT 2 zoom | high (drawn), low (in-game existence) |
 
 ### L — left route (upper corridor) → upper C  (F3 6 (8))
 ```
@@ -89,7 +92,7 @@ plaza ↑ hole (POINT 3: long double jump + tornado spin) → corner [?]  → sp
 |---|---|---|---|---|---|---|---|
 | L-a | corner just beyond the POINT 3 hole | ? on wood | STACK 2 | jump/spin | DETOUR STACK REWARD | Small pay-off for the hard long jump that opens the route | F3 p071L zoom (descreened) | high |
 | L-b | inside the spotlight (poison-dart) zone | Nitro ×2 | staggered, floating | green ! only | EXPLOSIVE-MIX NITRO-SWITCH TIMED | Nitro placed where you would normally slide under the lights, so you must double-jump through the beams instead (P3 s5 describes the same trick in the merge corridor) | F3 p071L zoom; GP "nitro near lit trap spots" | high |
-| L-C | ledge after the door | checkpoint | SINGLE | walk | CHECKPOINT | C "6 (8)" = 3 behind + 2 + C (+ plaza pair). 4 loose lives beside it (P3 s3: "at the end are four extra lives"; GP: "checkpoint … with four extra lives") | F3 p071R | high |
+| L-C | ledge after the door | checkpoint | SINGLE | walk | CHECKPOINT | C "6 (8)" = 3 behind + 2 + C; the bracket adds the two Nitro of L-b. 4 loose lives beside it (P3 s3: "at the end are four extra lives"; GP: "checkpoint … with four extra lives") | F3 p071R | high |
 
 P3 says there are no boxes down this hallway (its four loose lives are the reward); F3 draws the 2-stack and two
 Nitro. The route is a lives-and-skill detour that the all-box run must take, because it rejoins by a one-way drop.
@@ -107,7 +110,7 @@ plaza → difficult hole → [?] b2  → [?] → sarcophagus → floor spears �
 | R-b | further along | ? ×1 | SINGLE | walk | ON-PATH SINGLE | Pacing | F3 p071L zoom | high |
 | R-c | past the floor spears | wood ×2 (one r1), Aku ×1, ? ×1 | 2×2 GRID (back W, Aku; front ?, W) | spin | ON-PATH GRID AKU TIME-TRIAL | Mask before the flamethrower; TT mask too | F3 p071R zoom (descreened) | high (count), medium (Aku identity) |
 | R-d | before the flamethrower worker | TNT, wood, ? (b2) bottom → top | STACK 3 | spin the top only; or slam | STACK EXPLOSIVE-MIX SUPPORT-ORDER TIME-TRIAL | TA2: hop in the gap between the stack and the wall and spin only the 2-s crate; the TNT base punishes a careless spin. GP: "one TNT crate" on the right path | F3 p071R TA2 | high |
-| R-C | after the door | checkpoint | SINGLE | walk | CHECKPOINT | C "17 (19)". POINT 4: take it only after the reverse run, so a death restarts you with the right route already cleared | F3 p071R POINT 4 | high |
+| R-C | after the door | checkpoint | SINGLE | walk | CHECKPOINT | C "17 (19)" = 6 + right route 10 + C; bracket adds L-b's Nitro. POINT 4: take it only after the reverse run, so a death restarts you with the right route already cleared | F3 p071R POINT 4 | high |
 
 ### M — merge → C3  (F3 25 (30))
 ```
@@ -124,7 +127,7 @@ MERGE → [? r1] (framed tile) → sarcophagus → [?] (stair foot) → stairs �
 | M-e | greasy tar pit with stone pillars | Nitro ×2 | one each side | the pillars crush them | EXPLOSIVE-MIX TIMED CHAIN | POINT 5: if you hurry you are caught in the blast when the pillars smash the Nitro — wait for both (P3 s8; GP: "the first stone block detonates both") | F3 p072L POINT 5; P3 p031L s8 | high |
 | M-f | after the pit, by the flamethrower | wood (r1) on ? (r1) | STACK 2 | spin | ON-PATH STACK TIME-TRIAL | With M-g these are TT's "four 1-s crates in one place, one spin breaks all" (frames 16–18; the C crate is absent in TT) | F3 p072L zoom | high |
 | M-g | same spot | wood (r1) on wood (r1) | STACK 2 | spin | ON-PATH STACK TIME-TRIAL | as M-f | F3 p072L zoom | high |
-| M-C | between M-f and M-g | checkpoint | SINGLE | walk | CHECKPOINT | C3 "25 (30)": 17 + 1 + 1 + 1 + 2 + 2 + C = 25 | F3 p072L | high |
+| M-C | between M-f and M-g | checkpoint | SINGLE | walk | CHECKPOINT | C3 "25 (30)": 17 + 1 + 1 + 1 + 2 + 2 + C = 25; bracket +5 Nitro (L-b, M-d, M-e) | F3 p072L | high |
 
 ### S3 — C3 → C4  (F3 47 (54))
 ```
@@ -144,7 +147,7 @@ C3 → stairs (TA4: rhythmic hops; the inner door stays open if you are inside a
 | S3-d | above the path by a sarcophagus, past the blue-gem branch | wood ×1 (r1), ? ×2 | staggered trio | jump | HIGH TIME-TRIAL | Pacing reward after the piles | F3 p072L zoom (descreened) | high |
 | S3-e | floating over a round hole | Nitro ×1 | SINGLE floating | green ! only | EXPLOSIVE-MIX NITRO-SWITCH EDGE-BAIT | A Nitro over the hole you must jump | F3 p072L zoom | high |
 | S3-f | in the tar pit with two moving blocks | Nitro ×1 | SINGLE | green ! only | EXPLOSIVE-MIX NITRO-SWITCH TIMED | Beside the moving blocks (POINT 7: they don't come straight back; there is time to wait for the flamethrower to point away) | F3 p072L zoom | high |
-| S3-C | after the moving blocks | checkpoint | SINGLE | walk | CHECKPOINT | C4 "47 (54)": 25 + 18 + 3 + C = 47 | F3 p072L | high |
+| S3-C | after the moving blocks | checkpoint | SINGLE | walk | CHECKPOINT | C4 "47 (54)": 25 + 18 + 3 + C = 47; bracket +7 Nitro (adds S3-e, S3-f) | F3 p072L | high |
 
 ### S4 — C4 → goal  (23)
 ```
@@ -249,11 +252,14 @@ double jump).
    last third, after the last checkpoint, as the final test.
 
 ## Open questions / uncertainties
-- **Crates behind the start: 3 (F3 icons) vs 4 (P3, GP).** F3's checkpoint numbers reproduce with 3.
-- **Total 107 (F3 map) vs 105 (GP, N. Sane).** Possibly drawing errors in F3, a build difference (Japanese vs US
-  release) or N. Sane changes.
-- **Bracketed checkpoint numbers.** +2, +2, +5, +7 over the base: the plaza pair plus the Nitro after the merge fit,
-  but the two left-route Nitro are not included; F3 does not explain the brackets.
+- **Where the 2-box difference sits.** F3's numbers (rule on F3 p005R) reproduce exactly with 3 crates behind the
+  start and without the plaza pair, and lead to gamepressure's 105. Either the plaza pair is not a separate pair in
+  the game (F3 drawing error) or F3's tally skipped it and two other icons are wrong; the JSON keeps the pair as drawn
+  (icon sum 107) and records 105 as the likely in-game total.
+- **Crates behind the start: 3 (F3 icons and arithmetic) vs 4 (P3, GP).** If 4 is right, another F3 icon near the
+  start (the corner 2-stack on the left route, or R-c) must be one crate smaller for F3's 6 and 17 to hold.
+- R-c read as 4 crates after heavy descreening (W, Aku with feathers, ?, W); if it were 2 crates, F3's 17 would
+  instead include the plaza pair and the icon sum would also be 105.
 - P3 says the left hallway has no boxes; F3 draws a 2-stack and two Nitro there (GP also mentions Nitro there).
 - R-c: the crate with feathers is read as an Aku crate (also A-badged); medium confidence.
 - Bonus last column: GP describes "four crates on a TNT"; F3 draws three (?, ?, iron) on the TNT.

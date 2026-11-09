@@ -17,7 +17,7 @@ Evidence level:
 | Boxes per route | main **35** (all located) · bonus **49** · gem course **0** (F2 p099R) · no death or secret route |
 | Checkpoints | 4, all main route: C1 after the first pillar run; C2 beside the green-gem platform; C3 on the walled platform after the fire-statue lanes; C4 beside the floating green ! |
 | 1UP | 0 boxes in the whole stage |
-| Aku | 1 box (between two fire-statue pairs, before C3). Loose masks (not boxes) float above a steel arrow (S2), inside the gem-course "ape room", and after the green ! |
+| Aku | 1 box (between two fire-statue pairs, before C3). Loose masks (not boxes) float above a steel arrow (S2), inside the gem course's ape-face room, and after the green ! |
 | TNT | main 7 (two 2-high TNT stacks used as stepping platforms; 1 beside the steel arrow; 2 on the lizard ledge) · bonus ≈ 3 |
 | Nitro | main **12**: 1 hidden behind the start pile, 2 on a crumbling ledge, 7 in the ! room (1 solid + 6 outline that the ! turns into Nitro), 2 around the rat after C3. The **green !** after C4 (reached by bouncing off a rat) detonates them all |
 | ! switches | 1 plain ! in the Nitro room (main); 1 ! in the bonus (fills outline steps); green ! after C4 |
@@ -28,7 +28,7 @@ Evidence level:
 | Gems | **Clear gem (box)** = all 84 boxes (the gem course adds none). **Clear gem (hidden)** = finish the gem course, entered from the green-gem platform at C2 (needs the green gem from Stage 10, The Eel Deal) |
 | Enemies | rats チュール (bounce targets, stand guard by Nitros), frilled lizards トゲック (pace along narrow pillars; slide them lengthwise), monkeys モンプー (patrol between TNT stacks), gorilla ドンちゃん (throws logs from afar; jump-spin to beat) |
 | Hazards | fire statues (single and paired, POINT4/6), crumbling floors, 4 rotating platforms (POINT5), tilting pillars (POINT8), rolling logs (POINT9) |
-| Difficulty | F2 rating こりゃたいへん. F2 p099R calls the box perfect easy ("just clear the normal course properly") apart from the ! / green-! business. The gem course is "insanely hard" and has no boxes |
+| Difficulty | F2 rating こりゃたいへん. F2 p099R says the box perfect only needs a careful normal-course clear, apart from the ! / green-! business. It calls the gem course extremely hard and says it has no boxes |
 
 ## Route skeleton
 ```
@@ -52,7 +52,7 @@ F2 perfect order (p099R): normal → bonus → normal.
 ```
 | id | position | composition | arrangement | access | tags | why it is here | evidence |
 |---|---|---|---|---|---|---|---|
-| S1-a | first platform after the opening fire statue | wood ×4, Nitro ×1 (hidden behind) | 2×2 pile with a Nitro tucked behind it | spin from the front only; F2 forbids the body slam here | ON-PATH EXPLOSIVE-MIX HIDDEN SUPPORT-ORDER TEACH | The level's thesis in one pile: the box you want sits next to one you must not touch. A wide spin or a body slam next to the pile sets off the hidden Nitro. Breaking the pile from the front exposes it | F2 p071R POINT1 + screenshot; D2 shot 2 ("all four boxes … cleverly hidden Nitro") | high |
+| S1-a | first platform after the opening fire statue | wood ×4, Nitro ×1 (hidden behind) | 2×2 pile with a Nitro tucked behind it | spin from the front only; F2 forbids the body slam here | ON-PATH EXPLOSIVE-MIX HIDDEN SUPPORT-ORDER TEACH | The level's thesis in one pile: the box you want sits next to one you must not touch. A wide spin or a body slam next to the pile sets off the hidden Nitro. Breaking the pile from the front exposes it | F2 p071R POINT1 + screenshot; D2 shot 2 (four boxes with a Nitro hidden behind them) | high |
 | S1-b | on a pillar, next to a rat; lizards on the next pillars | ? ×1 | single | stomp the rat, then spin the box | ENEMY-LINK SINGLE ON-PATH | D2 adds a coupling: killing the rat sets the lizard pacing, so jumping the rat is safer. The crate tempts you into the fight | F2 p071R; D2 shots 3–4 | high |
 | S1-c | walled platform after the second fire statue | checkpoint ×1 | single | walk | CHECKPOINT | First save after two fire-timing jumps | F2 p071R; D2 shot 6 | high |
 
@@ -67,12 +67,12 @@ F2 perfect order (p099R): normal → bonus → normal.
 |---|---|---|---|---|---|---|---|
 | S2-a | long ledge, either side of a patrolling monkey | TNT ×4 | two 2-high TNT stacks, used as footing | jump onto a stack; when the monkey returns, jump on it and spin it; light the next stack and leave before it blows | ON-PATH EXPLOSIVE-MIX ENEMY-LINK STACK TIMED | Explosives are the floor here. Standing on a TNT stack lights a 3-count, so each stack is a timed step and the monkey patrols the gap between them | F2 p071R; D2 shots 7–8 (TNT stacks, one counting 3) | high |
 | S2-b | a crumbling ledge | Nitro ×2 | two singles spaced along the ledge | jump each without stopping | ON-PATH TIMED TEST | You can't wait and line up the jumps, because the floor gives way. The Nitros punish the panic jump | F2 p071R; D2 shot 9 | high |
-| S2-c | platform beside a steel arrow; a loose Aku mask floats above the arrow | TNT ×1 (F2 icon; D2 calls it "the box") | single next to the arrow block | break it, then bounce on the arrow to grab the mask | TOOL EXPLOSIVE-MIX AKU | The arrow is a tool to reach a mask that floats out of reach. The adjacent TNT means you mustn't linger while bouncing | F2 p071R zoom; D2 shot 10 | medium |
+| S2-c | platform beside a steel arrow; a loose Aku mask floats above the arrow | TNT ×1 (F2 icon; D2 calls it simply a box) | single next to the arrow block | break it, then bounce on the arrow to grab the mask | TOOL EXPLOSIVE-MIX AKU | The arrow is a tool to reach a mask that floats out of reach. The adjacent TNT means you mustn't linger while bouncing | F2 p071R zoom; D2 shot 10 | medium |
 | S2-d | the ! room (POINT3) | Nitro ×7 (1 solid + 6 outline that the ! turns into Nitro) | ring of outlines around the ! block | hit the ! only for the perfect; the green ! later destroys them | SWITCH OUTLINE NITRO-SWITCH EXPLOSIVE-MIX COUNT-TRAP | **A switch that makes the room more dangerous.** F2 and D2 both say don't press it unless you're going for all boxes. The outline Nitros count toward the total, so the perfect forces you to arm a trap, walk out of it, and detonate it with the green ! at the end | F2 p071R POINT3 + screenshot; D2 shot 11 | high |
 | S2-e | end of the monkey ledge | checkpoint ×1 | single, next to the green-gem platform | walk | CHECKPOINT ROUTE-SPLIT | The save sits at the gem-course entrance | F2 p071R; D2 shot 13; F2 p099R screenshot | high |
 
 ### GEM COURSE — green-gem platform at C2 (0 boxes; F2 p099R; D2 shots 13–30)
-No boxes (F2 p099R says so explicitly; D2 shots 14–29 show none). Contents: log-throwing gorillas at range, collapsing and tilting platforms, a fire run, and an "ape-faced room" with fruit and a loose Aku mask (D2 26). The hidden gem is near the end (D2 29). A return green-gem pad then drops you back on the main route beside the S4-d ?/? stack (D2 30, 52). For the bible: an optional route can be a pure skill test with **no** box obligation, so the all-box player has no reason to suffer it.
+No boxes (F2 p099R says so explicitly; D2 shots 14–29 show none). Contents: log-throwing gorillas at range, collapsing and tilting platforms, a fire run, and a room with an ape face holding fruit and a loose Aku mask (D2 26). The hidden gem is near the end (D2 29). A return green-gem pad then drops you back on the main route beside the S4-d ?/? stack (D2 30, 52). For the bible: an optional route can be a pure skill test with **no** box obligation, so the all-box player has no reason to suffer it.
 
 ### S3 — C2 → C3  (4; F2 p072L; D2 shots 36–48)
 ```
@@ -83,7 +83,7 @@ No boxes (F2 p099R says so explicitly; D2 shots 14–29 show none). Contents: lo
 |---|---|---|---|---|---|---|---|
 | S3-a | pillar next to the bonus pad, guarded by a monkey that hops pillar to pillar | ? ×2 | 2-high stack | follow the monkey, spin it, then the stack | ENEMY-LINK STACK ON-PATH | The crate pillar is also the monkey's route. Kill the monkey first or it knocks you off | F2 p072L; D2 shot 45 | high |
 | S3-b | small platform between two pairs of fire statues | Aku ×1 | single | jump in during a fire gap, grab, and jump on before the next burst | AKU TIMED ON-PATH | The only mask box in the stage, placed in the fire run where one burn would otherwise end the run. The Aku tip says to learn the statue timing | F2 p072L zoom (Aku-face box); D2 shot 47 | high |
-| S3-c | walled platform after the statue lanes | checkpoint ×1 | single (a Nitro sits at the platform edge, counted in S4-a) | walk | CHECKPOINT | Save before the Nitro/rat "mess" | F2 p072L; D2 shot 48 | high |
+| S3-c | walled platform after the statue lanes | checkpoint ×1 | single (a Nitro sits at the platform edge, counted in S4-a) | walk | CHECKPOINT | Save before the Nitro/rat walkway | F2 p072L; D2 shot 48 | high |
 
 ### S4 — C3 → C4  (9; F2 p072L top-right → p072R; D2 shots 48–52, 30–31)
 ```
@@ -164,5 +164,5 @@ The green ! floats in space. You reach it by **bouncing off one of four rats** c
 ## Open questions / uncertainties
 - Bonus internal split after counter 17 (B-d/B-e compositions are estimates; total 49 is firm).
 - Whether the bonus outline frames are boxes. Treated as footing because the counter does not rise when they appear.
-- Whether S2-c is a TNT (F2 icon) or a plain box (D2 caption "break the box").
+- Whether S2-c is a TNT (F2 icon) or a plain box (the D2 caption just calls it a box).
 - The exact count of outline Nitros (6 + 1 solid read from F2 icons; D2 shot 11 shows at least 1 solid Nitro + 6 frames).
