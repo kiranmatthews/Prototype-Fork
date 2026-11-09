@@ -31,6 +31,7 @@
 //     function of age. Re-randomising vertices per frame looks like static, not
 //     like smoke — this is the single easiest way to get this effect wrong.
 import * as THREE from 'three';
+import {FlameHeatSamples} from './flameHeatSource';
 
 // ---------------------------------------------------------------- types ----
 
@@ -85,6 +86,7 @@ export type Range = number | [number, number];
 export interface PuffPreset {
   blend?: BlendStyle;
   orient?: Orient;
+  heat?: number; // optical distortion for fire; ordinary smoke/dust stays cool
 
   // --- shape ---
   ring?: [number, number]; // outer vertex count range (clamped 5..8)
@@ -481,6 +483,7 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
   // nitro is the same bang gone radioactive — acid green down to a sickly
   // bottle-glass glow.
   boomTnt: {
+    heat: 1.4,
     blend: 'add', orient: 'billboard',
     ring: [5, 8], multiCentre: 0, halo: 0, haloAlpha: 1,
     size: [0.89, 1.26], aspect: [0.95, 1.2],
@@ -500,6 +503,7 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
   // count and heat — and differs only in the colour ramp, so the two read as
   // one explosion at two chemistries rather than two unrelated effects.
   boomNitro: {
+    heat: 1.4,
     blend: 'add', orient: 'billboard',
     ring: [5, 8], multiCentre: 0, halo: 0, haloAlpha: 1,
     size: [0.89, 1.26], aspect: [0.95, 1.2],
@@ -633,6 +637,7 @@ function lin(hex: number): THREE.Color {
 
 interface Puff {
   live: boolean;
+  heat: number;
   age: number;
   life: number;
   pos: THREE.Vector3;
@@ -708,7 +713,7 @@ interface Puff {
 function blankPuff(): Puff {
   const f = (n: number) => new Float32Array(n);
   return {
-    live: false, age: 0, life: 1,
+    live: false, heat: 0, age: 0, life: 1,
     pos: new THREE.Vector3(), vel: new THREE.Vector3(), seed: 1,
     blend: 'alpha', orient: 'billboard',
     n: 6, k: 1,
@@ -730,6 +735,7 @@ function blankPuff(): Puff {
 
 /** One dynamic buffer + mesh per blend style. Live meshes keep first-use order. */
 class Batch {
+  readonly heat: FlameHeatSamples;
   geo = new THREE.BufferGeometry();
   mesh!: THREE.Mesh;
   readonly material: THREE.MeshBasicMaterial;
@@ -750,6 +756,7 @@ class Batch {
   private ri = { start: 0, count: 0 };
 
   constructor(style: BlendStyle, cap: number, deferMesh = false) {
+    this.heat = new FlameHeatSamples(cap);
     this.premul = style === 'softAdd';
     this.pos = new Float32Array(cap * VERTS_MAX * 3);
     this.col = new Float32Array(cap * VERTS_MAX * 4); // rgba — the rim's fade
@@ -806,9 +813,11 @@ class Batch {
     this.mesh.renderOrder = 10; // after the world, before the HUD passes
     this.mesh.matrixAutoUpdate = false; // vertices are already in world space
     this.mesh.userData.shared = true; // Level.dispose() must not free this
+    this.heat.attach(this.mesh);
   }
 
   begin(): void {
+    this.heat.clear();
     this.vCount = 0;
     this.iCount = 0;
   }
@@ -991,6 +1000,7 @@ export class PuffSystem {
     const str = o.strength ?? 1;
 
     p.live = true;
+    p.heat = preset.heat ?? 0;
     p.age = 0;
     p.seed = seed;
     p.blend = preset.blend ?? 'alpha';
@@ -1424,6 +1434,7 @@ export class PuffSystem {
     const fin = p.fadeIn > 0 ? Math.min(1, t / p.fadeIn) : 1;
     const fout = 1 - Math.pow(t, 1.6);
     const a = p.alpha * fin * Math.max(0, fout);
+    if(p.heat>0)b.heat.add(p.pos.x,p.pos.y,p.pos.z,sx*1.15,sy*1.15,p.heat*a,p.seed);
     let cr = p.cCentre.r, cg = p.cCentre.g, cb = p.cCentre.b;
     let ir = p.cInner.r, ig = p.cInner.g, ib = p.cInner.b;
     if (p.cFade) {

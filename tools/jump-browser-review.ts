@@ -316,9 +316,10 @@ p.step = (dt: number, input: any, level: Level) => {
     if(frame>480)resetInspector();return;
   }
   const secondJump = mode === 'Double jump' || mode === 'Running double jump';
-  const running = mode === 'Running jump' || mode === 'Running double jump' || mode === 'Run and stop';
+  const running = mode === 'Running jump' || mode === 'Coasting jump' || mode === 'Running double jump' || mode === 'Run and stop';
   const hold = mode === 'Tap jump' ? 3 : running || mode === 'Precision jump' ? 18 : 35, release = 50 + hold;
-  const demo = {moveX: 0, moveY: mode === 'Precision jump' ? .2 : running && (mode !== 'Run and stop' || frame < 145) ? 1 : 0,
+  const demo = {moveX: 0, moveY: mode === 'Precision jump' ? .2 : running &&
+      (mode !== 'Run and stop' || frame < 145) && (mode !== 'Coasting jump' || frame < release) ? 1 : 0,
     jumpHeld: frame >= 50 && frame < release, jumpPressed: frame === 50, jumpReleased: frame === release};
   if (secondJump && hadAir && !doubleFrame && p.vVel < 2) {
     demo.jumpPressed = demo.jumpHeld = true; doubleFrame = frame;
@@ -456,7 +457,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
   'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -503,10 +504,13 @@ function report() {
   status.textContent = JSON.stringify({variant, mode: inspect ? mode : 'Live play', before, frame, frozen, slow, stopAt,
     audio, soundPlays, sourceFrame: p.footStudyFrame, sourceClip: runtime.document.clips.find((c: AnimationClip) => c.id === runtime.activeClipId)?.metadata?.jakSourceClip, skating: p.freeSkate, active: d.activeClipId, phase: d.timelineTime?.toFixed(3),
     rollProgress: d.motionContext?.inputs?.jakFlipProgress,
+    takeoff: {speed:d.motionContext?.inputs?.jakTakeoffSpeed,flipMinSpeed:d.motionContext?.inputs?.jakFlipMinSpeed,
+      flip:!!d.motionContext?.inputs?.jakRollLaunch},
     abandon:p.boardAbandonActive,abandonFlipRemaining:p.flipTimer,landingRoll:p.rollLandingT,
     spin:{active:p.spinning,attackAngle:p.spinAngle,airAngle:p.grabSpinAngle,stance:p.stance,grabPhase:p.grabPhase},
     tuning: {jumpMinVelocity:TUNING.jumpMinVelocity,jumpVelocity:TUNING.jumpVelocity,riseGravity:TUNING.riseGravity,
-      fallGravity:TUNING.fallGravity,doubleJumpVelocity:TUNING.doubleJumpVelocity,doubleJumpWindow:TUNING.doubleJumpWindow},
+      fallGravity:TUNING.fallGravity,doubleJumpVelocity:TUNING.doubleJumpVelocity,doubleJumpWindow:TUNING.doubleJumpWindow,
+      jumpFlipMinSpeed:TUNING.jumpFlipMinSpeed},
     position: p.pos.toArray().map((v: number) => +v.toFixed(3)), vVel: +p.vVel.toFixed(3), grounded: p.grounded,
     footSpeed:+p.walkVelocity.length().toFixed(3),turning:p.walkTurnaround,
     gaitSpeed:+(d.motionContext?.normalizedSpeed ?? 0).toFixed(3),

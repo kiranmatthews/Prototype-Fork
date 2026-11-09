@@ -1,0 +1,47 @@
+{
+  "base": "http://127.0.0.1:5298/",
+  "mode": "ui-only",
+  "rows": [
+    {
+      "phase": "native",
+      "candidate": "keira",
+      "variant": "village1/assistant-lod0",
+      "status": "ready",
+      "error": "",
+      "sourceTriangles": 5236,
+      "sourceJoints": 96,
+      "vertexFingerprint": 35839294.74601951,
+      "verticesFinite": true,
+      "morphTargets": 609,
+      "clipCount": 7,
+      "clip": "assistant-idle-leaning-right",
+      "time": 0,
+      "duration": 1.9999923706054688,
+      "poseFingerprint": -253884.58311835642,
+      "finite": true,
+      "modelCount": 1,
+      "resolution": [
+        2080,
+        1231
+      ],
+      "triangles": 5238,
+      "shortlist": []
+    },
+    {
+      "phase": "existing-roster",
+      "loaded": 9
+    }
+  ],
+  "issues": [],
+  "summary": {
+    "characters": 72,
+    "candidates": 72,
+    "playableModels": 111,
+    "exportedClips": 670,
+    "timedClips": 637,
+    "staticPoses": 33,
+    "recoveredClips": 95,
+    "removedWrongRigClips": 26,
+    "addedAssetBytes": 11637580
+  }
+}

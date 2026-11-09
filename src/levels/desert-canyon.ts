@@ -3,8 +3,7 @@ import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import type {CustomComponent,CustomLevelData,DecorKind} from '../level';
 import {lazySourceField} from './lazy-source';
 import {VISTA_KNOTS,vistaHeight,vistaColour,buildVista} from './desert-vista';
-import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
-import type {DesertHeatPatch} from '../desertHeatData';
+import {desertPlantSize,isDesertCactus,type DesertPlantKind} from '../desertPlants';
 import {desertRockFooting} from '../desertGrounding';
 import {stitchDesertTerrain} from '../desertTerrainSeams';
 import {DESERT_SUN_DIRECTION} from '../desertLighting';
@@ -175,8 +174,8 @@ let seed=71115;
 const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 const C:CustomComponent[]=[];
 const add=(c:CustomComponent)=>{C.push(c);return c;};
-const decorate=(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp=30,solid=false)=>add({t:'decor',dkind:kind,p:p.map(round) as Point,s:size,yaw,scenerySolid:solid,grp,nm});
-function groundedRock(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp:number,solid=false){
+const decorate=(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp=30,solid=false)=>add({t:'decor',dkind:kind,p:p.map(round) as Point,s:size,yaw,scenerySolid:isDesertCactus(kind)||solid,grp,nm});
+function groundedRock(kind:DecorKind,p:Point,size:Point,yaw:number,nm:string,grp:number,solid=true){
   const floor=desertRockFooting(desertGround,p[0],p[2],size[0],size[2],yaw);
   decorate(kind,[p[0],floor,p[2]],size,yaw,nm,grp,solid);
 }
@@ -266,12 +265,12 @@ for(const gap of DESERT_GAPS){const s=(gap.from+gap.to)/2,p=desertPoint(s);add({
 const kinds:DecorKind[]=['deserthoodoospire','deserthoodoocap','deserthoodoofluted','deserthoodooneedle','deserthoodootwins','deserthoodoofin'];
 // Native measured USGS terrain anchors the broad canyon silhouettes. Only
 // elevation geometry is reused; our surface, placement and route are authored.
-decorate('desertsurveyrim',[-246,95,-260],[320,138.12,320],-55,'Measured amphitheatre · west rim',21);
-decorate('desertsurveyrim',[267,25,-590],[320,138.12,320],120,'Measured amphitheatre · east rim',21);
+decorate('desertsurveyrim',[-246,95,-260],[320,138.12,320],-55,'Measured amphitheatre · west rim',21,true);
+decorate('desertsurveyrim',[267,25,-590],[320,138.12,320],120,'Measured amphitheatre · east rim',21,true);
 function tower(s:number,side:number,offset:number,h:number,w:number,index:number,depth=w*.8){
   s=core(s);
   const p=desertPoint(s,side*offset);
-  groundedRock(kinds[index%kinds.length],p,[w,h,depth],random()*360,'Eroded sandstone hoodoo',20,offset<26);
+  groundedRock(kinds[index%kinds.length],p,[w,h,depth],random()*360,'Eroded sandstone hoodoo',20);
 }
 // Tight slot (1:10–1:18): continuous close rock faces, daylight overhead.
 for(let s=100;s<380;s+=19){
@@ -399,7 +398,11 @@ function fence(a:number,b:number,side:number){
     box([p[0],p[1]+.72,p[2]],[.1,1.7,.1],'#644c39','Safety fence post');
     for(const h of [.25,.55,.85,1.15]){const c:Point=[(p[0]+q[0])/2,(p[1]+q[1])/2+h,(p[2]+q[2])/2];box(c,[.035,.035,Math.hypot(q[0]-p[0],q[2]-p[2])],'#6a6250','Woven safety fence strand',yaw);}
     for(let t=.2;t<1;t+=.2)box([mix(p[0],q[0],t),mix(p[1],q[1],t)+.7,mix(p[2],q[2],t)],[.025,1.15,.025],'#6a6250','Woven safety fence strand',yaw);
-    add({t:'wall',p,s:[.13,1.25,4],yaw,invisible:true,grp:40,nm:'Race fence contact'});
+    // One continuous sloping panel from this post to the next. The old box
+    // was centred on the first post, leaving holes at bends and on descents.
+    const dx=q[0]-p[0],dy=q[1]-p[1],dz=q[2]-p[2];
+    add({t:'mesh',p,vertices:[0,0,0,dx,dy,dz,dx,dy+1.25,dz,0,1.25,0],indices:[0,1,2,0,2,3],
+      solidSides:true,invisible:true,edgeGrinding:false,grp:40,nm:'Race fence contact'});
   }
 }
 fence(core(9),core(49),-1);fence(core(330),core(384),-1);fence(core(428),core(481),-1);fence(core(575),core(632),1);fence(core(745),core(780),-1);
@@ -430,30 +433,12 @@ add({t:'bonusplatform',p:[...DESERT_BONUS_ENTRANCE],to:bonusReturn,grp:50,nm:'Ca
 return C;
 }
 
-/** Low bands on exposed shelves seen ahead along the descending camera lane.
- * Keep the shaded slot and creek bridge quiet; widen the pockets where the
- * route opens onto sunlit talus and the final basin. Heights follow terrain. */
-function buildDesertHeat():DesertHeatPatch[]{
-  const patches:DesertHeatPatch[]=[];
-  for(const s of [190,390,640,core(250),core(520),core(930),valley(150),valley(450),
-    valley(1050),DESERT_VISTA_START+180,DESERT_VISTA_START+490,DESERT_VISTA_START+830,
-    DESERT_VISTA_START+1140,DESERT_LENGTH-100]){
-    const vista=s>DESERT_VISTA_START;
-    for(let i=0;i<3;i++){
-      const p=desertPoint(Math.min(DESERT_LENGTH,s+i*28),(i-1)*(vista?48:19));
-      p[1]=desertGround(p[0],p[2])+(vista?5:2.8);
-      patches.push({p,size:[(vista?33:19)+i*5,(vista?4.5:2.5)+i*.3],strength:1.45+i*.15});
-    }
-  }
-  return patches;
-}
-
 export const DESERT_CANYON_LEVEL:CustomLevelData={
   v:1,name:'Dusty Road',spawn:desertPoint(6).map((n,i)=>i===1?n+.35:n) as Point,startWarpPad:false,
   killY:-1700,sky:'bryce-golden-hour',jungleStyle:'painterly',hugeDropBail:false,
   keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.12,
   cameraRig:{camDist:8,camHeight:3.6,camPitch:9,camFov:70},
-  desertHeat:buildDesertHeat(),
+  desertHeat:[],
   atmosphere:{backdrop:'painted sky',fogEnabled:true,fogNear:650,fogFar:1850,fogColor:'#d7b4a7',
     drawDistance:2000,ambientSky:'#9aaece',ambientGround:'#9d6137',ambientIntensity:1.12,
     sunColor:'#ffdab0',sunIntensity:4.1,sunDirection:[...DESERT_SUN_DIRECTION],fillColor:'#98aad0',fillIntensity:.32,shadowStrength:1,

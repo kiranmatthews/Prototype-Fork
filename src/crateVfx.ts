@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { CrateArtKind } from './crateArt';
+import {FlameHeatSamples} from './flameHeatSource';
 
 type Particle = {
   position: THREE.Vector3; velocity: THREE.Vector3; tile: number; age: number;
@@ -17,6 +18,7 @@ const CAPACITY = 128;
 /** Painted dust, fire, smoke and directional brush accents in one bounded
  * billboard draw. Their opacity drops quickly enough to keep debris readable. */
 export class CrateVfx {
+  private readonly heat=new FlameHeatSamples(CAPACITY);
   readonly root = new THREE.Group();
   private mesh: THREE.InstancedMesh;
   private parameters: THREE.InstancedBufferAttribute;
@@ -62,6 +64,7 @@ export class CrateVfx {
     this.mesh.count = 0; this.mesh.frustumCulled = false; this.mesh.renderOrder = 11;
     this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.mesh.setColorAt(0, new THREE.Color(0xffffff)); this.root.add(this.mesh);
+    this.heat.attach(this.mesh);
   }
   private roll(): number { this.seed = (Math.imul(this.seed, 1664525) + 1013904223) >>> 0; return this.seed / 4294967296; }
   emit(kind: CrateArtKind, center: THREE.Vector3, size: number, groundY: number, explosion: boolean): void {
@@ -112,20 +115,21 @@ export class CrateVfx {
     this.particles = this.particles.filter(p => p.age < p.life); this.write();
   }
   private write(): void {
-    let count = 0;
+    let count = 0;this.heat.clear();
     for (const p of this.particles) {
       if (p.age < 0) continue;
       const t = p.age / p.life, enter = Math.min(1, p.age / .035);
       const opacity = enter * Math.pow(1 - t, p.tile === 2 ? .85 : 1.35) * (p.tile === 1 ? .66 : p.tile === 0 ? .65 : 1);
       const expansion = p.tile === 3 ? .7 + t * .8 : .4 + Math.pow(t, .38) * .95;
       this.scale.set(p.size * expansion, p.size * expansion * p.squash, 1);
+      if(p.tile===2)this.heat.add(p.position.x,p.position.y,p.position.z,this.scale.x*.7,this.scale.y*.7,opacity*1.6,p.rotation*7);
       this.matrix.compose(p.position, this.identity, this.scale); this.mesh.setMatrixAt(count, this.matrix);
       this.mesh.setColorAt(count, p.tint); this.parameters.setXYZW(count, p.tile, opacity, p.rotation, p.nitro); count++;
     }
     this.mesh.count = count; this.mesh.visible = count > 0;
     if (count) { this.mesh.instanceMatrix.needsUpdate = true; this.mesh.instanceColor!.needsUpdate = true; this.parameters.needsUpdate = true; }
   }
-  clear(): void { this.particles.length = 0; this.events.length = 0; this.mesh.count = 0; this.mesh.visible = false; }
+  clear(): void { this.heat.clear(); this.particles.length = 0; this.events.length = 0; this.mesh.count = 0; this.mesh.visible = false; }
   dispose(): void { this.clear(); this.mesh.geometry.dispose(); (this.mesh.material as THREE.Material).dispose(); this.mesh.dispose(); this.root.removeFromParent(); }
   get diagnostics(): { particles: number; bursts: number; draws: number } { return { particles: this.particles.length, bursts: this.events.length, draws: this.mesh.count ? 1 : 0 }; }
 }

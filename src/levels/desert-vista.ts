@@ -3,7 +3,7 @@ import {mergeVertices,toCreasedNormals} from 'three/examples/jsm/utils/BufferGeo
 import {SimplexNoise} from '../../vendor/rock-generator/noise.js';
 import type {CustomComponent,DecorKind} from '../level';
 import {VISTA_PLACEMENTS} from '../desertVistaCatalog';
-import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
+import {desertPlantSize,isDesertCactus,type DesertPlantKind} from '../desertPlants';
 import {desertRockFooting} from '../desertGrounding';
 import {stitchDesertTerrain} from '../desertTerrainSeams';
 
@@ -87,7 +87,7 @@ export function buildVista(options:{start:number;length:number;point:(s:number,u
   let seed=11072026;
   const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
   const decor=(kind:DecorKind,p:Point,size:Point,rotation:number,name:string,shadow=true,color?:string)=>{
-    C.push({t:'decor',dkind:kind,p:p.map(round) as Point,s:size,yaw:rotation,scenerySolid:false,
+    C.push({t:'decor',dkind:kind,p:p.map(round) as Point,s:size,yaw:rotation,scenerySolid:isDesertCactus(kind),
       castShadow:shadow,color,grp:61,nm:name});
   };
   function terrain(x0:number,x1:number,z0:number,z1:number,grid:number){

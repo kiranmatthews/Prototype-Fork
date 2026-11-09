@@ -1,5 +1,6 @@
 import {COLOURED_GEMS,colouredGemCollection,isColouredGemColour,type ColouredGemColour} from './colouredGems';
 import {createDesertMaterial} from './desertMaterials';
+import {attachFlameHeat} from './flameHeatSource';
 import './releaseImageUrls';
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
@@ -131,6 +132,7 @@ import {
 } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import {WorldSolids} from "./worldSolids";
+import {DesertContacts,hasDesertContacts,isDesertRock} from './desertContacts';
 import {MeshSideCollisions} from "./meshSideCollisions";
 import {WorldSurfaceBinding,meshScenerySolid} from "./worldSurfaceBinding";
 import { sfx } from "./audio";
@@ -4452,6 +4454,7 @@ export class Level {
   groundMeshes: THREE.Mesh[] = [];
   readonly carlisleScenery=new CarlisleSceneryCollision();
   readonly worldSolids=new WorldSolids();
+  readonly desertContacts:DesertContacts|null;
   readonly meshSideCollisions=new MeshSideCollisions();
   private readonly worldWallSources=new WeakMap<THREE.Box3,CustomComponent|THREE.Mesh>();
   private worldSurfaceBinding:WorldSurfaceBinding|null=null;
@@ -5622,6 +5625,7 @@ export class Level {
     if (!entry.data && isLegacySlipstreamId(entry.id))
       entry = { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL };
     this.scene = scene;
+    this.desertContacts=hasDesertContacts(entry.id)?new DesertContacts(this.worldSolids,entry.id==='bryce-canyon'):null;
     scene.add(this.root);
     this.root.add(this.discardedBoards.root, this.breakableScenery.root, this.crateEffects.root);
     this.discardedBoards.onImpact = (broken, speed) => sfx.play(broken ? 'crateBreak1' : 'crateBounce',
@@ -5768,6 +5772,7 @@ export class Level {
         // geometry remains available to debris, without becoming new floors
         // that compete with authored walking and skating surfaces.
         sceneryGround:false,
+        sceneryGroundFor:this.desertContacts?isDesertRock:undefined,
         ground:()=>this.groundMeshes,active:mesh=>{
           // Spin activation already retires the authored upright wall. The
           // swinging leaf becomes physical support only after it settles.
@@ -15443,6 +15448,7 @@ export class Level {
       // not cough in unison the moment the level loads.
       smokeT: (this.torches.length % 7) * 0.31,
     };
+    attachFlameHeat(group,emit=>emit(0,h+1.25*scale,0,.75*scale,1.2*scale,1.8*t.burn,t.seed),flames);
     this.torches.push(t);
     return t;
   }
