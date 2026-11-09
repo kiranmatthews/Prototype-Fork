@@ -1133,6 +1133,76 @@
     "doubled": true
   },
   {
+    "scenario": "range",
+    "lane": "run-tap-jump",
+    "speed": 0,
+    "distance": 4.95,
+    "apex": 2.11,
+    "takeoffSpeed": 9,
+    "doubled": false,
+    "movedToward": "-Z"
+  },
+  {
+    "scenario": "range",
+    "lane": "run-full-jump",
+    "speed": 0,
+    "distance": 5.85,
+    "apex": 2.85,
+    "takeoffSpeed": 9,
+    "doubled": false,
+    "movedToward": "-Z"
+  },
+  {
+    "scenario": "range",
+    "lane": "run-full-jump-plus-double",
+    "speed": 0,
+    "distance": 9.15,
+    "apex": 4.59,
+    "takeoffSpeed": 9,
+    "doubled": true,
+    "movedToward": "-Z"
+  },
+  {
+    "scenario": "range",
+    "lane": "board-tap-ollie-12",
+    "speed": 12,
+    "distance": 4.66,
+    "apex": 0.66,
+    "takeoffSpeed": 12.15,
+    "doubled": false,
+    "movedToward": "-Z"
+  },
+  {
+    "scenario": "range",
+    "lane": "board-full-ollie-12",
+    "speed": 12,
+    "distance": 9.36,
+    "apex": 1.78,
+    "takeoffSpeed": 15.6,
+    "doubled": false,
+    "movedToward": "-Z"
+  },
+  {
+    "scenario": "range",
+    "lane": "board-full-ollie-18",
+    "speed": 18,
+    "distance": 12.55,
+    "apex": 1.78,
+    "takeoffSpeed": 20.92,
+    "doubled": false,
+    "movedToward": "-Z"
+  },
+  {
+    "scenario": "range",
+    "lane": "board-full-ollie-23",
+    "speed": 23,
+    "distance": 13.83,
+    "apex": 1.78,
+    "takeoffSpeed": 23.06,
+    "doubled": false,
+    "movedToward": "-Z"
+  },
+  {
     "scenario": "board-land-on-lid",
     "lane": "board-stomp-wood",
     "speed": 6,

@@ -209,6 +209,49 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
     ['held-arrow-plus-double', lidOf('launch-arrow'), { doubleAtApex: true, held: true }],
   ]) results.push({ scenario: 'reach', lane: label, speed: 0, ...reach(setup, opts) });
 
+  // 4c. Horizontal range on flat ground with real inputs: take-off to touchdown
+  // distance and apex for running jumps (tap / full / + double jump) and board
+  // ollies (tap / full charge) at several entry speeds. Jumps fire on release.
+  const flatX = LANES['launch-wood'] + 10;
+  const range = ({ board = false, speed = 0, holdFrames = 1, doubleAtApex = false, runFrames = 45 }) => {
+    reset();
+    const start = new THREE.Vector3(flatX, 0.02, 5);
+    p.respawn(level, true, true, { position: start, heading: fwd });
+    p.pos.copy(start); p.prevPos.copy(start);
+    p.axisF.copy(fwd); p.axisL.set(fwd.z, 0, -fwd.x);
+    p.freeSkate = board; p.airFromSkate = false; p.state = 'ride'; p.grounded = true; p.vVel = 0; p.speed = speed;
+    const move = { moveY: 1 };
+    let takeoff = null, landing = null, apex = -Infinity, released = false, doubled = false, releaseAt = -1, vTake = null;
+    for (let i = 0; i < 400 && p.state !== 'dead'; i++) {
+      const t = i - runFrames; // run-up first, then the jump input
+      let input;
+      if (t < 0) input = makeInput(move);
+      else if (t < holdFrames) input = makeInput({ ...move, jumpHeld: true, jumpPressed: t === 0 });
+      else if (t === holdFrames) { input = makeInput({ ...move, jumpReleased: true }); released = true; }
+      else if (doubleAtApex && takeoff && !doubled && p.vVel <= 2.5) { input = makeInput({ ...move, jumpPressed: true, jumpHeld: true }); doubled = true; releaseAt = i + 3; }
+      else if (i === releaseAt) input = makeInput({ ...move, jumpReleased: true });
+      else if (doubled && i < releaseAt) input = makeInput({ ...move, jumpHeld: true });
+      else input = makeInput(move);
+      const wasGrounded = p.grounded;
+      step(input);
+      if (released && !takeoff && wasGrounded && !p.grounded) { takeoff = p.pos.clone(); vTake = Math.abs(p.speed); }
+      if (takeoff) apex = Math.max(apex, p.pos.y);
+      if (takeoff && !landing && p.grounded && i > runFrames + holdFrames + 2) { landing = p.pos.clone(); break; }
+    }
+    const d = takeoff && landing ? Math.hypot(landing.x - takeoff.x, landing.z - takeoff.z) : null;
+    return { distance: d === null ? null : +d.toFixed(2), apex: Number.isFinite(apex) ? +apex.toFixed(2) : null,
+      takeoffSpeed: vTake === null ? null : +vTake.toFixed(2), doubled, movedToward: takeoff ? (takeoff.z < start.z ? '-Z' : '+Z') : null };
+  };
+  for (const [label, opts] of [
+    ['run-tap-jump', { holdFrames: 1 }],
+    ['run-full-jump', { holdFrames: 24 }],
+    ['run-full-jump-plus-double', { holdFrames: 24, doubleAtApex: true }],
+    ['board-tap-ollie-12', { board: true, speed: 12, holdFrames: 1 }],
+    ['board-full-ollie-12', { board: true, speed: 12, holdFrames: 24 }],
+    ['board-full-ollie-18', { board: true, speed: 18, holdFrames: 24 }],
+    ['board-full-ollie-23', { board: true, speed: 23, holdFrames: 24 }],
+  ]) results.push({ scenario: 'range', lane: label, speed: opts.speed ?? 0, ...range(opts) });
+
   // 5. On the board, come down onto a crate lid from a board air while rolling
   // forward: does it count as a stomp (break + crate bounce / arrow launch)?
   for (const name of ['board-stomp-wood', 'board-stomp-arrow']) for (const speed of [6, 12]) {
