@@ -18658,22 +18658,32 @@ export class Player {
 
   /** Support the articulated slam with its actual posed surface. */
   private seatPancakeSlam():void {
-    if(!this.grounded||this.animationClipHint!=='player.slam'||!this.authoredClip('player.slam')?.metadata?.pancakeSlam||
+    const clip=this.animationClipHint==='player.slam'?this.authoredClip('player.slam'):null;
+    if(!this.grounded||!clip?.metadata?.pancakeSlam||
       !this.groundHit||!this.riderG||!this.bodyGroup.parent)return;
     const normal=this.groundHit.normal;
     if(normal.y<.3)return;
-    // The head, gloves and shoes keep their real dimensions. Correct only
-    // penetration after articulation and segment deformation, preserving the
-    // authored upward recoil instead of flattening the complete skeleton.
+    // Preserve the airborne recoil; only prevent penetration during the flip.
+    // Once the feet arrive, settle their actual soles onto the support plane.
+    // The segment compression/rebound remains articulated above those contacts.
     this.group.updateMatrixWorld(true);
     const distance=this.interactionMeasure.sampledPlaneDistance(this.riderG,normal,
       REACH_C.set(this.pos.x,this.groundHit.y,this.pos.z));
-    if(!Number.isFinite(distance)||distance>=.015)return;
+    if(!Number.isFinite(distance))return;
+    const feetDown=Number(clip.metadata.pancakeRecoveryStart??Infinity);
+    const time=CONST.slamHang+CONST.slamFlat-this.slamFlatT;
+    const planted=Number.isFinite(feetDown)?THREE.MathUtils.smoothstep(time,feetDown-.05,feetDown):0;
+    const target=THREE.MathUtils.lerp(.015,.006,planted);
+    const lift=(target-distance)*(distance>target?planted:1);
+    if(Math.abs(lift)<1e-8)return;
     this.bodyGroup.parent.updateWorldMatrix(true,false);
     _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
     _plantO.set(0,0,0).applyMatrix4(_plantInv);
-    _plantC.set(0,(.015-distance)/normal.y,0).applyMatrix4(_plantInv).sub(_plantO);
+    _plantC.set(0,lift/normal.y,0).applyMatrix4(_plantInv).sub(_plantO);
     this.bodyGroup.position.add(_plantC);
+    // Attached glove/head skins must refresh bind inverses as well as bones;
+    // otherwise the following bounds pass applies this root shift twice.
+    this.group.updateMatrixWorld(true);
   }
 
   /** Seat idle and walking on their support plane. Fade out using the same

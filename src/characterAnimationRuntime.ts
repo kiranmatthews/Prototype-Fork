@@ -891,7 +891,9 @@ export class CharacterAnimationRuntime {
     if (this.manualClipId === null && clip.metadata?.jakDirect &&
         (this.transient?.kind === 'landing' || clip.id === 'player.climb' || clip.metadata?.pancakeSlam&&motion.grounded)) {
       const recovery = motion.inputs?.jakLedgeClimbRecovery ?? -1;
-      const phase = clip.metadata?.pancakeSlam ? MathUtils.clamp((this.timelineTime-.62)/.20,0,1) : clip.id === 'player.climb'
+      const pancakeRecoveryStart=Number(clip.metadata?.pancakeRecoveryStart??.68);
+      const phase = clip.metadata?.pancakeSlam ? MathUtils.clamp((this.timelineTime-pancakeRecoveryStart)/
+        Math.max(.001,clip.range.end-pancakeRecoveryStart),0,1) : clip.id === 'player.climb'
         ? recovery >= 0 ? .7 + recovery * .3 : motion.actionProgress * .7
         : (this.timelineTime - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start);
       pose = this.recoverDirectLocomotion(clip, pose, motion, phase, dt);

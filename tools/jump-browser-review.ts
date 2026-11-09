@@ -118,6 +118,14 @@ function updateSource() {
     time += (Number(clip.metadata.jakSourceTailFrame) - Number(clip.metadata.jakSourceTailAt)) / 60;
   }
   time += Number(clip?.metadata?.jakSourceStartFrame ?? 0) / 60;
+  if(clip?.metadata?.pancakeSlam){
+    // The reference is the original moving flop recovery, aligned by action
+    // phase rather than pretending the adapted pancake uses identical keys.
+    name=p.slamActive?(p.slamHangT>0?'flop-down':'flop-down-loop'):'moving-flop-down-land';
+    time=p.slamActive?(p.slamHangT>0?(1-p.slamHangT/CONST.slamHang)*.25:0):
+      (1-p.slamFlatT/CONST.slamFlat)*.65;
+    sourceNote.textContent='Bone Man left · pancake adaptation · original Jak flop right';
+  }
   const poseFrame = runtime.diagnostics.motionContext?.inputs?.jakFrame ?? p.footStudyFrame;
   if (name === 'jump' && poseFrame > 40) {name = 'jump-loop'; time = ((poseFrame - 40) / 60) % (28 / 60);}
   for (const action of sourceActions.values()) action.weight = 0;
@@ -311,6 +319,8 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Slam spread'&&p.slamActive&&p.slamHangT<=0 ||
       stopAt==='Slam impact'&&age>=.04&&age<.08 ||
       stopAt==='Slam rebound'&&age>=.14&&age<.18 ||
+      stopAt==='Slam inversion'&&age>=.18&&age<.22 ||
+      stopAt==='Slam feet down'&&age>=.35&&age<.39 ||
       stopAt==='Slam settle'&&age>=.43 ||stopAt==='Run exit'&&frame>=140)frozen=true;
     if(frame>=210)resetInspector();return;
   }
@@ -531,7 +541,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam settle',
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam settle',
   'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);
