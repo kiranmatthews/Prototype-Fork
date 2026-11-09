@@ -1,0 +1,50 @@
+{
+  "base": "http://127.0.0.1:5297/",
+  "rows": [
+    {
+      "phase": "native",
+      "sourceTriangles": 1732,
+      "vertexFingerprint": 4491.325321166636,
+      "verticesFinite": true,
+      "clipCount": 8,
+      "candidate": "lurkercrab",
+      "status": "ready",
+      "clip": "lurkercrab-idle",
+      "time": 0,
+      "duration": 0.2999994158744812,
+      "sourceJoints": 25,
+      "poseFingerprint": 18182.209710742412,
+      "finite": true,
+      "ourKind": "grunt",
+      "ourStatus": "ready",
+      "ourState": "patrol",
+      "ourRootScale": [
+        1,
+        1,
+        1
+      ],
+      "resolution": [
+        2080,
+        1231
+      ],
+      "triangles": 10982,
+      "shortlist": []
+    },
+    {
+      "phase": "existing-roster",
+      "loaded": 9
+    }
+  ],
+  "issues": [],
+  "summary": {
+    "candidates": 61,
+    "playableModels": 28,
+    "exportedClips": 254,
+    "timedClips": 249,
+    "staticPoses": 5,
+    "inventoryOnly": 9,
+    "sourceOnly": 24,
+    "firstPass": 8
+  },
+  "mode": "ui-only"
+}

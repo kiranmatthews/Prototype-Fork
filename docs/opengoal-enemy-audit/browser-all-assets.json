@@ -1,0 +1,246 @@
+{
+  "base": "http://127.0.0.1:5297/",
+  "rows": [
+    {
+      "candidate": "babak",
+      "clips": 14,
+      "changingClips": 14,
+      "sourceTriangles": 3078,
+      "joints": 47
+    },
+    {
+      "candidate": "lurkercrab",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 1732,
+      "joints": 25
+    },
+    {
+      "candidate": "aphid",
+      "clips": 9,
+      "changingClips": 5,
+      "sourceTriangles": 1034,
+      "joints": 36
+    },
+    {
+      "candidate": "hopper",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 2510,
+      "joints": 39
+    },
+    {
+      "candidate": "quicksandlurker",
+      "clips": 8,
+      "changingClips": 7,
+      "sourceTriangles": 2510,
+      "joints": 49
+    },
+    {
+      "candidate": "swamp-bat",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 352,
+      "joints": 16
+    },
+    {
+      "candidate": "driller",
+      "clips": 12,
+      "changingClips": 12,
+      "sourceTriangles": 3043,
+      "joints": 67
+    },
+    {
+      "candidate": "bully",
+      "clips": 10,
+      "changingClips": 10,
+      "sourceTriangles": 3094,
+      "joints": 44
+    },
+    {
+      "candidate": "kermit",
+      "clips": 8,
+      "changingClips": 8,
+      "sourceTriangles": 2322,
+      "joints": 28
+    },
+    {
+      "candidate": "baby-spider",
+      "clips": 9,
+      "changingClips": 9,
+      "sourceTriangles": 1434,
+      "joints": 21
+    },
+    {
+      "candidate": "mother-spider",
+      "clips": 10,
+      "changingClips": 10,
+      "sourceTriangles": 1530,
+      "joints": 29
+    },
+    {
+      "candidate": "snake",
+      "clips": 6,
+      "changingClips": 6,
+      "sourceTriangles": 2784,
+      "joints": 26
+    },
+    {
+      "candidate": "worm",
+      "clips": 5,
+      "changingClips": 5,
+      "sourceTriangles": 2212,
+      "joints": 15
+    },
+    {
+      "candidate": "bonelurker",
+      "clips": 14,
+      "changingClips": 12,
+      "sourceTriangles": 3132,
+      "joints": 58
+    },
+    {
+      "candidate": "puppy",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 2568,
+      "joints": 31
+    },
+    {
+      "candidate": "gnawer",
+      "clips": 12,
+      "changingClips": 12,
+      "sourceTriangles": 2026,
+      "joints": 36
+    },
+    {
+      "candidate": "snow-bunny",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 332,
+      "joints": 21
+    },
+    {
+      "candidate": "citb-bunny",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 362,
+      "joints": 21
+    },
+    {
+      "candidate": "yeti",
+      "clips": 11,
+      "changingClips": 11,
+      "sourceTriangles": 3047,
+      "joints": 47
+    },
+    {
+      "candidate": "green-eco-lurker",
+      "clips": 9,
+      "changingClips": 9,
+      "sourceTriangles": 1507,
+      "joints": 49
+    },
+    {
+      "candidate": "swamp-rat",
+      "clips": 9,
+      "changingClips": 8,
+      "sourceTriangles": 500,
+      "joints": 16
+    },
+    {
+      "candidate": "double-lurker",
+      "clips": 14,
+      "changingClips": 14,
+      "sourceTriangles": 2678,
+      "joints": 32
+    },
+    {
+      "candidate": "double-lurker-top",
+      "clips": 14,
+      "changingClips": 14,
+      "sourceTriangles": 2232,
+      "joints": 30
+    },
+    {
+      "candidate": "ram-boss",
+      "clips": 21,
+      "changingClips": 21,
+      "sourceTriangles": 3000,
+      "joints": 44
+    },
+    {
+      "candidate": "balloonlurker",
+      "clips": 4,
+      "changingClips": 3,
+      "sourceTriangles": 1783,
+      "joints": 20
+    },
+    {
+      "candidate": "plunger-lurker",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 3255,
+      "joints": 65
+    },
+    {
+      "candidate": "robber",
+      "clips": 7,
+      "changingClips": 7,
+      "sourceTriangles": 2392,
+      "joints": 59
+    },
+    {
+      "candidate": "junglefish",
+      "clips": 3,
+      "changingClips": 3,
+      "sourceTriangles": 878,
+      "joints": 14
+    },
+    {
+      "phase": "native",
+      "sourceTriangles": 1732,
+      "vertexFingerprint": 4491.316733733611,
+      "verticesFinite": true,
+      "clipCount": 8,
+      "candidate": "lurkercrab",
+      "status": "ready",
+      "clip": "lurkercrab-idle",
+      "time": 0,
+      "duration": 0.2999994158744812,
+      "sourceJoints": 25,
+      "poseFingerprint": -419.7562019035822,
+      "finite": true,
+      "ourKind": "grunt",
+      "ourStatus": "ready",
+      "ourState": "patrol",
+      "ourRootScale": [
+        1,
+        1,
+        1
+      ],
+      "resolution": [
+        2080,
+        1231
+      ],
+      "triangles": 10982,
+      "shortlist": []
+    },
+    {
+      "phase": "existing-roster",
+      "loaded": 9
+    }
+  ],
+  "issues": [],
+  "summary": {
+    "candidates": 61,
+    "playableModels": 28,
+    "exportedClips": 254,
+    "timedClips": 249,
+    "staticPoses": 5,
+    "inventoryOnly": 9,
+    "sourceOnly": 24,
+    "firstPass": 8
+  },
+  "mode": "all-assets"
+}

@@ -7,6 +7,7 @@ export const siteEntries = {
   skatePlaytest: 'skate-playtest.html',
   skateReferenceLab: 'skate-reference-lab.html',
   golfCartLab: 'golf-cart-lab.html',
+  enemyReferenceReview: 'tools/enemies/reference-review.html',
   enemyMotionReview: 'tools/enemies/motion-review.html',
   crtReview: 'crt-review.html',
   skateboardLab: 'skateboard-lab.html',
