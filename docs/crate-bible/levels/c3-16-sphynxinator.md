@@ -2,7 +2,7 @@
 
 Sources: F3 p071–p073 (book pp.134–139: stage map, POINT 1–9 and A–F, time-attack tips 1–5, checkpoint counts,
 blue-gem course), F3 p080L (Egypt bonus-round hint strip, stage 16: boxes ×28, 1UP ×1), F3 p108R (time-trial route
-"スゴイの16", frames 01–32, staff best 0:45:96), F3 p011 (legend); P3 p030R–p032L (book pp.57–60, shots 1–24: main
+"スゴイの16", frames 01–32, staff best 0:45:96), F3 p011 (legend), F3 p005R (how to read the maps); P3 p030R–p032L (book pp.57–60, shots 1–24: main
 route, blue-gem path, bonus, time trial); gamepressure.com Sphynxinator page (N. Sane total and route notes,
 corroboration only).
 

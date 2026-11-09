@@ -2,7 +2,7 @@
 
 Sources: F3 p036–p038 (book pp.64–69: stage map, POINT 1–5 and A–C, time-attack tips 1–4, checkpoint counts),
 F3 p040L (prehistoric bonus-round hint strip, stage 11: boxes ×25, 1UP ×1), F3 p106L (time-trial route "スゴイの11",
-frames 01–32, staff best 0:53:76), F3 p011 (legend); P3 p021R–p023L (book pp.39–42, shots 1–24: crystal run,
+frames 01–32, staff best 0:53:76), F3 p011 (legend), F3 p005R (how to read the maps); P3 p021R–p023L (book pp.39–42, shots 1–24: crystal run,
 yellow-gem path, NOTE on route order, bonus area, time trial); gamepressure.com Dino Might! page (N. Sane Trilogy
 total, corroboration only).
 
@@ -14,8 +14,10 @@ Evidence level:
   row as a solid grey bar after the switch. With them excluded the map sums to **112**, equal to gamepressure's
   "all 112 crates". F3 draws steel-outlines and crate-outlines identically, so this is an important caution for
   every F3 map.
-- F3 cumulative counts include the checkpoint crate and, after the green ! is hit, **all ten Nitro crates in the
-  level** (inferred: 54 = 10 + 20 + 10 Nitro + 13 + C2 exactly).
+- Counting rule (F3 p005R, read directly): a checkpoint number counts the boxes that appear up to it, the C box
+  included; a bracketed number adds Nitro. Dino Might's signs carry no brackets: on F3's route the green ! (end of the
+  yellow course) is hit before C2, so all **ten Nitro are already counted** (54 = 10 + 20 + 10 Nitro + 13 + C2
+  exactly). Badges (same legend): red 1 / blue 2 / green 3 = time crates, orange A = Aku box in time trial.
 - Uncertain: one crate at S1 is cut by the book's binding (type unreadable); F3's C3 = 99 cannot be reproduced
   exactly (see Open questions).
 

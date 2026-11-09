@@ -9,17 +9,18 @@
   "F3 p040L",
   "F3 p106L",
   "F3 p011",
+  "F3 p005R",
   "P3 p021R-p023L",
   "gamepressure Dino Might! (N. Sane total)"
  ],
  "camera": "into-screen jungle; side-scroll lava area; toward-camera triceratops chase",
  "totalBoxes": 112,
  "totalSource": "F3 map cluster sum with the 6 J-b outline cells excluded (they materialise as steel: P3 p021R s6); equals gamepressure 112",
- "countingRule": "F3 cumulative counts include the checkpoint crate; after the green ! all 10 Nitro count; steel !, green !, steel arrow and steel outlines are listed with count 0",
+ "countingRule": "F3 p005R: checkpoint number = boxes appearing up to the checkpoint incl. the C box, bracket adds Nitro; no brackets here because the green ! precedes C2 on F3 route so all 10 Nitro are counted; steel !, green !, steel arrow and steel outlines are listed with count 0",
  "compositionKeysAdded": {
   "outlineSteel": "outline cell that materialises as an unbreakable steel block (not a box)"
  },
- "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
+ "badgeConvention": "F3 p005R legend: red 1 / blue 2 / green 3 = becomes a 1/2/3-second time crate in time trial; orange A = becomes an Aku box in time trial; drawn icon = normal-mode type",
  "checkpointsPrinted": {
   "C1": 10,
   "yellowC": 30,

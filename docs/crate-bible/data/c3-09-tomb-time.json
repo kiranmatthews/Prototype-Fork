@@ -9,6 +9,7 @@
   "F3 p080L",
   "F3 p105L",
   "F3 p011",
+  "F3 p005R",
   "P3 p017-p018",
   "gamepressure Tomb Time (N. Sane total 95)"
  ],
@@ -20,8 +21,8 @@
   "source": "P3 p017L shot 49 HUD 75/95; P3 text: 20 boxes missed until the purple gem; gamepressure (N. Sane) 95",
   "note": "unresolved; map gives 25 behind the fork (21 if P-a stands before the door); possible regional build difference"
  },
- "countingRule": "F3 cumulative counts include the checkpoint crate and the bonus-round boxes; steel ! blocks are listed as clusters with count 0 (not boxes)",
- "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
+ "countingRule": "F3 p005R: checkpoint number = boxes appearing up to the checkpoint incl. the C box (bracket would add Nitro; none here); C2 includes the 19 bonus boxes; steel ! blocks are listed as clusters with count 0 (not boxes)",
+ "badgeConvention": "F3 p005R legend: red 1 / blue 2 / green 3 = becomes a 1/2/3-second time crate in time trial; orange A = becomes an Aku box in time trial; drawn icon = normal-mode type",
  "routes": [
   {
    "id": "main",

@@ -2,19 +2,19 @@
 
 Sources: F3 p068–p070 (book pp.128–133; stage map, POINT 1–8 and A–E, time-attack tips 1–6, checkpoint
 counts), F3 p080L (Egypt bonus-round hint strip, stage 9: boxes ×19, 1UP ×1), F3 p105L (time-trial route
-"スゴイの09", frames 01–32, staff best 0:48:86), F3 p011 (box legend); P3 p017–p018 (book pp.30–33, shots
+"スゴイの09", frames 01–32, staff best 0:48:86), F3 p011 (box legend), F3 p005R (how to read the maps); P3 p017–p018 (book pp.30–33, shots
 49–72: crystal run, purple-gem run, CAUTION box, bonus area, time trial); gamepressure.com Tomb Time page (N. Sane
 total 95 and route notes, corroboration only).
 
 Evidence level:
 - Read directly: every crate icon on F3 p068–p070 (zoomed and descreened where icons were ambiguous); the three
   checkpoint counts C1 17, C2 52, C3 82; the bonus strip on F3 p080L; P3 HUD 75/95 in shot 49; P3 captions.
-- F3 cumulative counts **include the checkpoint crate itself and the 19 bonus boxes** — this is inferred from the
-  arithmetic and fits exactly: S1 = 12+1+3+C = 17; S2 = 15 + C2 + 19 bonus = 35 → 52.
-- Badge convention (inferred, high confidence): red 1 / blue 2 / green 3 squares beside a crate = it becomes a
-  1/2/3-second time crate in time trial; an orange **A** square = an Aku Aku mask is there in time trial (F3 p105L
-  frames 16/19 say "land on the Aku crate … the 2-second box on its right"; P3 p018R lists "first, second, third
-  mask"). The drawn icon is the normal-mode crate type.
+- Counting rule (F3 p005R, read directly): a checkpoint number counts every box that appears up to that checkpoint,
+  the C box included; a bracketed number would add Nitro (Tomb Time has none). The arithmetic also shows the 19
+  bonus boxes are inside C2: S1 = 12+1+3+C = 17; S2 = 15 + C2 + 19 bonus = 35 → 52.
+- Badge convention (F3 p005R legend): red 1 / blue 2 / green 3 squares beside a crate = it becomes a 1/2/3-second
+  time crate in time trial; an orange **A** square = it becomes an Aku box in time trial (F3 p105L frames 16/19 and
+  P3 p018R's "first, second, third mask" agree). The drawn icon is the normal-mode crate type.
 - Unreadable/uncertain: exact heights of floating crates; the outline group is drawn as a 2×3 wireframe block
   (6 assumed); the arrangement of the 4-crate group at the right fork.
 - **Count conflict:** my F3 map sum is **98** and reproduces all three F3 checkpoint counts; P3's in-game HUD shows
@@ -268,9 +268,10 @@ door → [W][W] b2  → corner → poison-light pit (POINT A) [?][?]   → ~TAR~
   course 25 + junction→C3 4 + C3 box; it becomes 83 if the left-fork Aku crate is broken on the way in rather than
   at the end of the reverse run). P3 p017L shows HUD 75/95 and says 20 boxes are missed without the purple gem
   (my map: 25 behind the fork; 21 if the four woods of P-a stand before the door). The 15 crates between the
-  branch and C3 are the only ones no printed number checks; if the in-game total is 95, three of them may not
+  branch and C3, plus the fork Aku, are the only ones no printed number checks; if the in-game total is 95, three of them may not
   exist in the US build. P3 may also have used a pre-release build.
-- Outline bridge size (6 assumed from a 2×3 wireframe; spikes are drawn through it).
+- Outline bridge size (6 assumed from F3's 2×3 wireframe; spikes are drawn through it). P3 shot 60 shows the
+  materialised wireframe two cells wide, its height hidden — 4 cells would give a 96 total, 3 would give 95.
 - Arrangement of S3-a (4 crates spread in a diamond) and exact heights of S4-a/b.
 - Identity of the green guard in S1 and the pot enemies (P3 jokes "spin the monkey").
 - Purple gem source stage: F3 points to book p.92 (stage 13 map) and P3 says "Level 13" (gamepressure: High Time).

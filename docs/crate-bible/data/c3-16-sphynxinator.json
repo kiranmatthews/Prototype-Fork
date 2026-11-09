@@ -29,7 +29,7 @@
   }
  ],
  "countingRule": "F3 p005R: checkpoint number = boxes appearing up to the checkpoint incl. the C box; bracket also counts Nitro. Reproduces 6(8), 17(19), 25(30), 47(54) exactly if the plaza pair S1-a is left out. Green ! listed with count 0",
- "badgeConvention": "red1/blue2/green3 = time-crate seconds in time trial; orange A = Aku mask present in time trial; drawn icon = normal-mode type",
+ "badgeConvention": "F3 p005R legend: red 1 / blue 2 / green 3 = becomes a 1/2/3-second time crate in time trial; orange A = becomes an Aku box in time trial; drawn icon = normal-mode type",
  "checkpointsPrinted": {
   "upperC": "6 (8)",
   "lowerC": "17 (19)",
