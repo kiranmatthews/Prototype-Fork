@@ -132,10 +132,10 @@
    "route": "bonus",
    "from": "S2 bonus platform",
    "to": "S2",
-   "boxes": 30,
+   "boxes": 31,
    "cumulative": null,
    "notes": "total from gamepressure (N. Sane); split estimated from D2 counters",
-   "mapped": 30
+   "mapped": 31
   },
   {
    "id": "DEATH",
@@ -144,7 +144,7 @@
    "to": "gem drop / back to C2",
    "boxes": 18,
    "cumulative": null,
-   "notes": "17 counted incl. 3 uncertain outline frames; 21 implied by 52-31",
+   "notes": "18 counted incl. 3 uncertain outline frames; 21 implied by 52-31",
    "mapped": 18
   }
  ],
@@ -1038,10 +1038,10 @@
    "composition": {
     "tnt": 4,
     "life": 1,
-    "wood": 1
+    "wood": 2
    },
-   "count": 6,
-   "arrangement": "row of TNT, TNT, TNT-on-TNT, then 1UP (+1 remaining pile crate est.)",
+   "count": 7,
+   "arrangement": "row of TNT, TNT, TNT-on-TNT, then 1UP (+2 remaining pile crates est.)",
    "stackHeight": 2,
    "floating": false,
    "access": [
