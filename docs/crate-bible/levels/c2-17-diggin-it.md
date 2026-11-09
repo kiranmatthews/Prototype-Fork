@@ -181,9 +181,161 @@ Perfect run: ... C2 -> bonus -> fork -> death route -> junction -> BACKTRACK S4/
 4. **Arrow + multi-hit crate sandwich**: a steel arrow (16 m/s bounce, ≈3.9 m) with a multi-hit crate floating 3–4 m above it; each bounce pays out until the fifth.
 5. **TNT tower with a life on top**: 4–6 crate towers (4.6–6.9 m) with TNT in the upper third; the life crate is reachable only by a double jump from the TNT top during its 3 s fuse.
 
+## Geometry, obstacles and enemies
+
+Geometry pass (agent geo-G3): F2 p064L–p066R and p098R re-read as half-page overviews with every POINT text; D2 p056L–p058R shots 1–55 re-read, with fresh crops of shots 3, 6, 10–13, 26, 28, 30–31, 34, 40 and 46 for path width, island and pit sizes. **u = one crate edge.** Rulers: the 4-crate cross (3 u wide) fills about two thirds of the path (D2 s3, so the path is ≈ 4–5 u); the Aku/Nitro bridge is ≈ 2–3 u (D2 s12); seed-targeted islands are ≈ 2×2 u (s6) to ≈ 3×3 u (s30) and round pillar islands ≈ 2 u (s26, s34), with ≈ 1–1.5 u gaps to the banks; square pits are ≈ 2–3 u (s28, s46). Pits are bottomless shafts between rock walls (lethal). The perfect run crosses S4 and part of S3 **backwards** (F2 p098R), so the geometry is read in both directions.
+
+### Camera and route shape
+- **Into-screen scroll** (F2 p064L おくスクロール) along a winding snowy jungle path between rock walls, ≈ 4–5 u wide and narrowing to ≈ 2–3 u bridges and ledges; pits are square or rectangular shafts across or beside the path, often with a stone island in the middle.
+- The route forks after the C2 speed-pad run: the skull lift on the left (death route, no-death runs only), the normal path on the right; they rejoin at the C4 junction. For the perfect, the player rides the death route, then walks the normal path backwards from C4 to the fork and forward again (F2 p098R) — bees then arrive from the camera side and speed pads push the wrong way (D2 s38).
+- The bonus is a side-scroll room (D2 s18–s22). S4 adds a second layer: red ground you can burrow under (F2 POINT 14).
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — start → C1**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | snowy path between rock walls with the two start crates | ≈ 4-5 wide | 0 | walk | — | REST | A quiet run-in: two crates before the first plant | D2 p056L s1, s3 (medium) |
+| P-S1-b | S1 | path with plant 1 and the 4-crate cross, then a plant pair | ≈ 4-5 | 0 | body-slam the curled plant or ignore it; dodge the far plant's seeds | seed landing spots | ARENA | The plant is introduced alone with an opt-out (F2 POINT 1: 'or just ignore it') | F2 p064R POINT 1-2; D2 p056L s2-s4 (medium) |
+| P-S1-c | S1 | mine field 1 (≈ 4 mines) beside plant 2 and the Aku crate | ≈ 4-5 | 0 | take the mask, then run round or over the mines | mine contact = explosion | ARENA | The first mines come right after the mask, so the first mistake is forgiven | F2 p064R; D2 p056L s5 (medium) |
+| G-S1-a | S1 | pit across the path with a square stone island in the middle (POINT 3 爆発してから) (lethal) | ≈ 1 each side; island ≈ 2×2; landing ≈ 2×2 island, then the far bank; run-up ≈ 2-3 | 0 | plain, plain | the plant aims seeds at the island; land right after the burst / death (pit or seed blast) | chasm with island (TIMING-STEP) | Trivial gap widths make the seed the whole test: the island is a timing step | F2 p064R POINT 3; D2 p056L s6 (medium) |
+| P-S1-d | S1 | stone-head zone 1 (a moving stone head on the path, POINT 4) | ≈ 4-5 | 0 | pass beside the head right after a diagonal move | random but never-repeating moves | CHOKE | Wide enough to pass on either side once the head has committed | F2 p064R POINT 4; D2 p056L s7 (medium) |
+| G-S1-b | S1 | pit after the first speed pad (lethal) | ≈ 2-3; landing path with mine field 2; run-up speed-pad boost | 0 | running (boosted) jump | speed pad / death (bottomless shaft) | — | The first speed pad delivers you to a pit edge: boost, then jump | D2 p056R s8; F2 p064R (medium) |
+| P-S1-e | S1 | mine field 2 (≈ 5-7 mines) + plant, then a speed pad aimed at the ??? row and stone head 2 | ≈ 4 | 0 | jump the mines; ride the pad through the crate row; dodge the head | the pad's line points at the stone head | ARENA | The pad's line breaks the crates and aims you at the next hazard | F2 p064R; D2 p056R s9-s10 (medium) |
+| G-S1-c | S1 | pit before C1: narrow ledge with a deep shaft on the left (lethal) | ≈ 2-3; landing C1 ledge ≈ 2 wide; run-up ≈ 3-4 | 0 | plain | none / death (bottomless shaft) | — | A narrow landing for the checkpoint after the stone head | D2 p056R s11 (medium) |
+
+**S2 — C1 → C2**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | narrow snow bridge with walled chasms on both sides; Aku crate in front of a Nitro pair (POINT 5) | ≈ 2-3 wide | 0 | jump onto the mask crate (no spin); run round the Nitro | a spin can clip the Nitro; drift = fall | CHOKE | The narrowest footing hosts the most careful verb | F2 p065L POINT 5; D2 p056R s12 (medium) |
+| G-S2-a | S2 | walled chasms flanking the bridge (lethal) | flank; landing —; run-up — | down (deep) | stay on the bridge | Nitro pair in the lane / death (bottomless shaft) | — | Lethal flanks remove the lateral escape round the Nitro | D2 p056R s12 (medium) |
+| P-S2-b | S2 | fence zone: a double electric fence across the path, a ? between fences, another fence; plants behind them | ≈ 4 wide; fences ≈ 4-6 apart (estimate) | 0 | wait for the current to cut, cross, wait again between fences while dodging seeds | fence cycle + seeds | TIMING-STEP | The space between two fences is a trap cell: you wait inside it under fire (POINT 7) | F2 p065L POINT 6-7; D2 p056R s13-s15 (medium) |
+| P-S2-c | S2 | path with stone head 3, rocks, then dense plants in a narrow place (POINT 8) | ≈ 3-4 | 0 | zip round the head; small hops left and right through the plants | seed density | CHOKE | The narrowing makes many small dodges the answer | F2 p065L POINT 8; D2 p057L s16-s17 (medium) |
+| P-S2-d | S2 | C2 + bonus plate area | ≈ 4-5 | 0 | hit C2 first, then drop into the bonus | — | CHECKPOINT-PAD, BONUS-PAD | Checkpoint and bonus share one safe pad | F2 p065L; D2 p057L s17 (medium) |
+
+**B — bonus round (side-scroll)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | floating ledge with crates overhead | not measurable | +2-3 (overhead) | run underneath, bounce up | — | ARENA | Opens with 'hit from below' | D2 p057L s18 (medium) |
+| P-B-b | B | ground with the iron-bound plus pile; steel arrow block with two crates above | not measurable | +3-4 (arrow) | body-slam the pile; arrow bounce with jump held | — | ARENA | Two verb checks in a row: slam, then held bounce | D2 p057L s19-s20 (medium) |
+| G-B-a | B | arrow super-jump to tower 1, held jump to tower 2, then to the steel-crate platform (non-lethal) | ≈ 3-4 between towers (estimate); landing tower tops ≈ 1; steel platform; run-up arrow | +4 to +6 | arrow (held), plain from a tower top | TNT near the tower tops / fall = start over / bonus lost (no life lost) | — | Vertical traversal on crate tops; the TNT is both hazard and step | D2 p057L s21; F2 p098R ①, ③ (low) |
+| P-B-c | B | steel blocks above the Nitro zone (floating lives on top) | ≈ 1-2 each | +2-3 | ride the blocks above the Nitro | falling = Nitro below | BONUS-PAD | A safe upper road over a lethal floor, paved with lives (F2 ②) | F2 p098R ② (medium) |
+| G-B-b | B | Nitro row on the floor at the exit (hurdle) (lethal) | ≈ 3-6 long (estimate); landing exit; run-up floor | +1 (hurdle) | plain (hurdle) | none / Nitro = death | — | The bonus's last beat: a hurdle that the main-course switch credits | D2 p057L s22 (medium) |
+
+**S3 — C2 → C3 (fork; normal path)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | speed-pad run to the fork (skull lift on the left, normal path on the right) | ≈ 4 | uphill (D2: 'drives you up the pathway') | ride the pads through the ?? crates | the pad line reveals the skull lift | ARENA | The boost ends exactly where the fork comes into view | D2 p057L s23-s24; F2 p065R (medium) |
+| G-S3-a | S3 | series of 3-4 pits after the first hive (lethal) | ≈ 2-3 each; landing short path segments; run-up ≈ 2-4 | 0 | plain ×3-4 | bee chase (kill one first) / death (bottomless shaft) | — | A pit series right after a hive punishes jumping with a bee on your back (POINT 10) | F2 p065R POINT 10; D2 p058R s49 (backtrack view) (medium) |
+| P-S3-b | S3 | steel arrow block with a striped crate floating above, beside a hive | ≈ 1 | +3-4 (bounce) | wait before the hive, bounce for fruit | each bounce costs time next to the hive | PERCH | A reward that tempts the player to stay next to a spawner | F2 p065R; D2 p058R s49 (medium) |
+| P-S3-c | S3 | mine field 3 (≈ 3 dense mines) | ≈ 4 | 0 | kill a bee first, then cross | bees catch up in the mines (POINT 11) | CHOKE | Mines slow you; the bee exploits it | F2 p065R POINT 11 (medium) |
+| G-S3-b | S3 | pit before the speed pads and the 2×2 crate block (lethal) | ≈ 2-3; landing path with two speed pads; run-up short | 0 | plain | none / death (bottomless shaft) | — | A plain jump between the mines and the boost | F2 p065R (low) |
+| P-S3-d | S3 | fence + hive with a hidden pit right behind the current (POINT 12-13) | ≈ 4 | 0 | stop before the hive, time the fence, start just before it opens | fence cycle + bee | PERCH | F2 tells the player where to stand and when to go | F2 p065R POINT 12 (medium) |
+| G-S3-c | S3 | pit hidden behind the fence current (POINT 13 あっと、穴が!) (lethal) | ≈ 3 (square; D2 s46 backtrack view); landing path, then another fence and C3; run-up ≈ 1-2 (fence line) | 0 | slide-jump | fence cycle / death (bottomless shaft) | — | A visibility trap with a named answer: the slide-jump carries through the window and over the hole | F2 p065R POINT 13; D2 p058L s46 (medium) |
+
+**D — death route (skull lift at the fork; no-death runs only)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-D-a | D | skull lift on a pillar (moving platform; active only with no deaths) | ≈ 2 | up/down (not visible) | ride | — | BONUS-PAD | The no-death condition is a physical gate | D2 p057L s24 (medium) |
+| P-D-b | D | Nitro field (≈ 8) | ≈ 4 | 0 | go left, jump to the end of the row | Nitro = death | CHOKE | Opens the route with instant death on the floor | D2 p057L s25; F2 p098R skull ① (medium) |
+| G-D-a | D | round pillar island in a walled trench, after two striped crates (lethal) | ≈ 1 each side; pillar ≈ 2; landing ≈ 2 round top; run-up short | 0 | plain, plain | seed: land right after the burst / death (bottomless shaft) | — | S1's island lesson on a smaller, round top | D2 p057R s26 (medium) |
+| G-D-b | D | square pit ≈ 2×2 after a mine group, with a bee coming (lethal) | ≈ 2; landing path; run-up after the mines | 0 | plain (mines, to the left), plain (pit) | bee / death (bottomless shaft) | — | Mines, then a pit before the bee arrives | D2 p057R s28 (medium) |
+| G-D-c | D | chamfered square island ≈ 3×3 in a deep pit (lethal) | ≈ 1 each side; landing ≈ 3×3; run-up short | 0 | plain (just before the seed explodes) | seed / death (bottomless shaft) | — | The same timing with the opposite instruction: jump just BEFORE the burst (D2 s30) | D2 p057R s30 (medium) |
+| G-D-d | D | square pillar ≈ 2×2 with gaps before and after (lethal) | ≈ 1-1.5; landing ≈ 2×2; run-up short | 0 | plain, plain | bees on both sides / death (bottomless shaft) | — | Spin the bee, jump; the same on the next side | D2 p057R s31 (medium) |
+| P-D-c | D | death-route checkpoint pad (C + ? + floating life) | ≈ 4 | 0 | walk | — | CHECKPOINT-PAD | Halves the route for retries | D2 p057R s32 (high) |
+| G-D-e | D | round pillar ≈ 2 in a ≈ 4×4 pit; one more pit before the lift (lethal) | ≈ 1-1.5; landing ≈ 2 round top; run-up short | 0 | plain, plain | bee after landing / death (bottomless shaft) | — | The last island, then a plain pit to the lift | D2 p057R s34-s35 (medium) |
+
+**S4 — C3 → C4 (red burrow ground)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | red burrowable ground between rock walls (POINT 14 もぐれ!クラッシュ) | ≈ 4-5 wide | 0 | burrow: immune to seeds; break crates from below; spin up under enemies | — | ARENA | A second layer under the path: a safe teaching floor for the new verb | F2 p066L POINT 14-16; D2 p058L s41-s43 (medium) |
+| G-S4-a | S4 | rock-walled pits between red-ground stretches (≈ 3-4) (lethal) | ≈ 2-3; landing red ground; run-up ≈ 2-4 | 0 | plain | bees, plants / death (bottomless shaft) | — | Short pits break the burrow runs into segments; in the perfect run each is crossed in both directions | F2 p066L; D2 p058L s43-s45 (medium) |
+| G-S4-b | S4 | red-topped square pillar ≈ 2.5 in a deep pit beside the path (bee) (lethal) | ≈ 1-1.5; landing ≈ 2.5 top; run-up short | 0 | plain, plain | bee / death (bottomless shaft) | — | A burrowable island: dig to dodge the bee (POINT 17) | D2 p058L s40; F2 p066L POINT 17 (medium) |
+| P-S4-b | S4 | four speed pads in a row to the junction (C4 and a ?) | ≈ 4 | 0 | ride forward; work round them when going back | — | CHECKPOINT-PAD | The junction is reached at speed; in reverse the pads become obstacles (D2 s38) | F2 p066L-R; D2 p058L s36-s38 (medium) |
+
+**S5 — C4 → goal**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S5-a | S5 | round stone platform at the left edge holding the warp plant | ≈ 2-3 | 0 | jump over, body-slam the plant | — | BONUS-PAD | A separate pad reads as 'go here' for the secret warp | D2 p058R s55; F2 p066R Aku (medium) |
+| G-S5-a | S5 | mine field (≈ 5) with a pit right behind it (POINT 19 落ちて行くー!) (lethal) | pit ≈ 2-3; landing path; run-up mines | 0 | plain (clear the mines and the pit) | a mine blast throws you into the hole / death (bottomless shaft) | — | Mines as a take-off hazard: the knock-back is the danger | F2 p066R POINT 19 (medium) |
+| G-S5-b | S5 | second mine field + pit, then more mines on a narrow road (POINT 21) (lethal) | pit ≈ 2-3; road ≈ 2-3; landing narrow road; run-up mines | 0 | plain | bees from behind / death (bottomless shaft) | — | The finale stacks mines, a pit and pursuers on a narrow road | F2 p066R POINT 21; D2 p058R s53-s54 (medium) |
+| P-S5-b | S5 | narrow road before the goal (bees from behind; plant + hammer worker) | ≈ 2-3 | 0 | stop and kill the bees first | bees from both directions | CHOKE | No room to dodge: kill first | F2 p066R POINT 21 (medium) |
+
+### Jump sequences
+| id | section | count | moves | rhythm | widest gap | rest | no-stop? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 2 | plain onto the island (after the burst), plain to the bank | phase-locked to the seed | ≈ 1 | far bank (? + plant) | no | Two trivial jumps; the timing is the seed | F2 p064R POINT 3; D2 p056L s6 |
+| J-S1-b | S1 | 2 | running (boosted) jump over the pit, jumps over mines | boost-driven | ≈ 2-3 | speed pad / crate row | no | Speed pad → pit: the pad sets the take-off speed | D2 p056R s8-s9 |
+| J-S3-a | S3 | 4 | plain ×3-4 (pit series) | even | ≈ 2-3 | arrow + striped perch | no | With a bee behind you every touchdown is a decision: kill it or keep going | F2 p065R POINT 10; D2 p058R s49 |
+| J-S3-b | S3 | 1 | slide-jump through the fence window over the hidden pit | single, timed | ≈ 3 | C3 | yes | One long move answers both the fence timing and the hidden pit | F2 p065R POINT 13 |
+| J-D-a | D | 10 | plain (islands, pillars, pits) | syncopated (seed and bee timing) | ≈ 2 | death-route C (mid-route) | no | A long no-death chain split by its own checkpoint | D2 p057R s26-s35 |
+| J-S5-a | S5 | 2 | plain over the mines, plain over the pit | short-short (one long jump if possible) | ≈ 2-3 | ? + W pad | yes | A tripped mine throws you into the hole: clear both | F2 p066R POINT 19 |
+
+### Obstacles and hazards
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1, S3, S5, D | landmine fields (ドッカン地雷) (lethal) | on path, in fields of 3-8 | static; explode on contact | jump over, go around | E-S3-a, G-S5-a, S1-c (mask) | AREA-DENIAL | They slow the player where bees and pits make slowness costly | F2 p064R, p065R POINT 11, p066R POINT 19, 21; D2 s5, s9, s28, s53-s54 |
+| O-S1-b | S1-S4 | speed pads (blue turbo arrows on the floor) (non-lethal) | on path, aimed along the line | instant boost | ride (forward), go around (backtracking) | S1-e, S2-b, S3-a, S3-d, E-S1-d | RHYTHM | Aimed boosts: they break crate rows and deliver the player to the next hazard; in reverse they are obstacles | F2 map tiles; D2 p056R s8, s10, s14; p057L s16, s23; p058L s38 |
+| O-S2-a | S2, S3 | electric fences (timed current across the path) (lethal) | across path, often in pairs | current on/off on a cycle; telegraph = visible current (D2 s13 shows two beams at knee and waist height) | wait-and-go, slide-jump (hidden pit) | S2-b, S3-d, E-S2-a, E-S3-a, G-S3-c | TIMING-GATE | A gate the level couples in turn to seeds, crates, bees and a hidden pit | F2 p065L POINT 6-7, p065R POINT 12-13; D2 p056R s13-s15; p058L s46; p058R s47 |
+| O-S4-a | S4 | red burrow ground (non-lethal) | on path | — | burrow | S4-a, S4-b, S4-c, S4-d | TEACH | A safety layer that also breaks crates from below | F2 p066L POINT 14-17 |
+| O-S2-b | S2, D, B | Nitro (a pair on the bridge, a field at the death-route start, the bonus exit row) (lethal) | on path / across path | static | jump on the mask crate, run round the Nitro, go left, jump to the end of the row, jump over | S2-a, D-a, B-g | LANE-BLOCK, AREA-DENIAL | Each Nitro group asks for a different careful answer | F2 p065L POINT 5; D2 s12, s22, s25 |
+| O-B-a | B | TNT towers + steel arrow (lethal) | on platform | 3 s fuse | use the TNT top as a step, then get clear | B-d, B-e | TEST | Explosives as footing for the 1UP | F2 p098R ③; D2 p057L s21 |
+
+### Enemies (detailed)
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | bomb-seed plant (プックン), first | projectile | lobs seeds that burst after landing; curls up when you approach | body slam from directly above (9 fruit), ignore it (fails: spin (D2: only a body slam kills it)) | flank, right after the start crates | PROJECTILE, TEACH | yes | Introduced alone with an opt-out | F2 p064R POINT 1; D2 p056L s2 (high) |
+| E-S1-b | S1 | plant pairs (near + far) | projectile | the far plant keeps firing while the near one is curled | dodge, then slam (fails: assuming a curled near plant makes the area safe) | flank, staggered | TEST | no | Overlapping fire teaches reading two sources | F2 p064R POINT 2; D2 p056L s4 (medium) |
+| E-S1-c | S1 | plant aiming at the pit island (POINT 3) | projectile | targets the middle platform | land right after the seed bursts, body slam after crossing (fails: landing as it bursts) | beyond the pit, aiming at the island | TIMING-GATE | no | Turns a static island into a timed step | F2 p064R POINT 3; D2 p056L s6 (high) |
+| E-S1-d | S1-S2 | moving stone heads ×3 | shielded/armored (indestructible mover, telegraphed) | random moves, never the same twice; diagonal when the angry face is forward, side to side when the happy face shows | avoid: pass beside it right after a diagonal move (fails: attacking it, following a speed pad straight into it) | on line, at the end of speed-pad lines | TIMING-GATE, AMBUSH | yes (the first follows a single ? on open path) | The face is the telegraph; the speed pads point straight at the second and third heads | F2 p064R POINT 4; D2 p056L s7, p056R s10, p057L s16 (high) |
+| E-S2-a | S2 | plants by the fences and in a dense patch | projectile | seeds reach up to the fence and keep landing between fences; packed in a narrow place before C2 | dodge left and right in small hops, slam (fails: standing still while waiting for the current) | behind and between fences; narrow passage | PROJECTILE, TEST | no | Fire from behind a gate makes waiting dangerous | F2 p065L POINT 6-8 + Aku; D2 p056R s13 (medium) |
+| E-S3-a | S3-S5, D | bees (チックン) from hives | chaser (homing) | leave the hive one at a time and home in with an audible buzz; arrive from the camera side when backtracking | spin when they arrive (listen), kill one before advancing (fails: running on with a bee behind you) | hives beside crate groups, mine fields, fences and pits | PURSUER | yes (first hive right after the W + ? pair on the normal path; F2 says kill one before moving on) | Every stop (crate, fence, mine) lets a bee arrive | D2 p056L intro; F2 p065R POINT 10-12, p066L POINT 17, p066R POINT 21, p098R (high) |
+| E-S4-a | S4 | plants on red ground | projectile | as above; harmless to a burrowed player | spin up from below (1 fruit), body slam (9 fruit) (fails: walking above ground through the seeds) | flank, around crate groups | TEACH | no | Burrow economics: safety costs fruit | F2 p066L POINT 15; D2 p058L s41, s44 (medium) |
+| E-S4-b | S4 | bees on red ground (POINT 17) | chaser (homing) | home in | burrow once, spin up under the bee (fails: fighting on the narrow pillar top) | near a pit and a pillar island | TEST | no | The new verb used against the pursuer | F2 p066L POINT 17; D2 p058L s40 (medium) |
+| E-S5-a | S5 | hammer workers (ドカドカ作業員) ×2 | static (ground pounder) | hammer the ground; dangerous to a burrowed player (inferred from the POINT 20 title 'glad you're above ground') | spin above ground (fails: meeting it while burrowed (inferred)) | on line, after the last crates and at the goal | GATEKEEPER | yes | Closes the level by reversing the burrow's safety | F2 p066R POINT 20; D2 p058R s53-s54 (low) |
+| E-S5-b | S5 | bees from behind on the narrow road (POINT 21) | chaser (homing) | approach from behind as well as ahead | stop and kill first (fails: running on) | narrow road before the goal | PURSUER, TEST | no | Pursuit from both directions on a road with no room | F2 p066R POINT 21 (medium) |
+| E-D-a | D | plants and bees on the death route | projectile + chaser | seeds target the islands; bees attack on the pillars | time the landing to the burst, spin the bee, then jump (fails: jumping with a bee closing in) | around islands and pillars | TIMING-GATE, PURSUER | no | The main-course enemies recombined on smaller footing | D2 p057R s26-s35; F2 p098R skull ② (medium) |
+
+### Section beats
+- **S1**: two crates → plant (slam or ignore) → 4-crate cross → plant pair → mask + 4 mines + plant → island pit (land after the burst) → ? + plant → stone head 1 → speed pad → pit → 5-7 mines + plant → speed pad through ??? → stone head 2 → pit → C1. *Gaps 3, enemies 7, hazards 3.* (enemies = 5 plants + 2 stone heads; hazards = two mine fields, speed pads)
+- **S2**: narrow bridge: mask crate in front of 2 Nitro (jump on it) → 2 speed pads → double fence (seeds reach it) → ? between fences (trapped, dodge seeds) → fence → plant + speed pad → stone head 3 → dense plants (small hops) → bonus plate + C2. *Gaps 1, enemies 6, hazards 3.* (gaps = the bridge's flank chasms; enemies = ≈ 5 plants + 1 stone head; hazards = Nitro pair, fences, speed pads)
+- **B**: overhead ledge crates (run under, bounce) → iron-bound plus (slam) → arrow + two crates (held jump) → TNT towers (super-jump, hold) → steel platform with lives / blocks over the Nitro zone → Nitro hurdle → exit. *Gaps 2, enemies 0, hazards 2.*
+- **S3**: speed-pad run → ?? → fork (skull lift on the left) → W + ? → hive (kill a bee) → 3-4 pits → arrow + striped beside a hive → 3 mines (kill a bee first) → pit → 2 speed pads → 2×2 block → fence + hive (time it) → hidden pit behind the current (slide-jump) → fence → C3. *Gaps 6, enemies 3, hazards 4.* (enemies = 3 hives; hazards = mines, speed pads, fences, hidden pit)
+- **D**: skull lift → Nitro field (left, jump to the end) → 2 striped → pillar island (seed) → plant → mines → pit (bee) → pit → speed pad → island (seed) → pillar (bees) → C + ? + life → 3 plants + bee → island (bee) → plant → pit → lift to the junction. *Gaps 8, enemies 8, hazards 3.* (enemies ≈ plants and bees; hazards = Nitro field, mines, speed pad)
+- **S4**: red ground (burrow: seeds cannot hit) → 2 plants → 4 crates (break from below) → 4 crates → 2 plants + ? (kill from below) → hive → pits → burrowable pillar (kill the bee from below) → 3 crates → 4 speed pads → junction: ? + C4. *Gaps 4, enemies 6, hazards 2.* (enemies = ≈ 4 plants + 2 hives; hazards = burrow ground, speed pads)
+- **S5**: warp plant on a round side pad (body slam = warp) + plant → speed pad → ? + green ! → hive → 5 mines with a pit behind (clear both) → ? + W → hammer worker → hive → mines + pit → narrow road, bees from behind → plant + hammer worker → goal. *Gaps 2, enemies 6, hazards 2.* (enemies = 2 plants, 2 hammer workers, 2 hives; hazards = mines, pits)
+
+### Geometry and enemy design logic
+1. **Seeds turn static islands into timing steps.** Islands (≈ 2-3 u) sit in pits that plants target; the safe moment is right after the burst (POINT 3; D2 s6, s26, s30). The gaps are trivial (≈ 1-1.5 u), so the timing is the whole test.
+2. **Speed pads are aimed.** Each pad breaks a crate row and then points the player straight at the next hazard (stone head, fork, fence) — the pad's direction is a designed line (S1-e, S2, S3-a). Walking back, the pads push the wrong way (D2 s38).
+3. **Fences are stacked one coupling at a time**: a double fence (POINT 6) → trapped between fences with seeds still landing (POINT 7) → fence + hive (POINT 12) → a pit hidden behind the current (POINT 13).
+4. **The hidden pit behind a fence** (POINT 13) is a deliberate visibility trap with a named answer: the slide-jump, a long jump through the gate window.
+5. **Mines escalate from avoidance to knock-back**: fields to jump or skirt (S1) → dense mines where bees catch up (S3 POINT 11) → mines on the lip of a pit, where a blast knocks you in (S5 POINT 19).
+6. **Bees are pursuers that punish stopping**: hives sit next to crates, mine fields and fences, so every stop to break a crate or wait for a fence lets a bee arrive; F2 says kill one first.
+7. **The burrow is taught on a wide, walled, crate-filled stretch** (crates break from below, POINT 16) before it is used against bees (POINT 17) and plants (POINT 15: from below = 1 fruit, a slam = 9).
+8. **Path width is a dial**: ≈ 4-5 u main path; a ≈ 2-3 u bridge with chasms on both sides for the mask-in-front-of-Nitro beat (the careful verb); a narrow road at the end where bees come from behind (POINT 21).
+9. **The death route compresses the main course**: ≈ 2 u pillar islands in deep pits with seeds and bees, a Nitro field at the entrance, and its own checkpoint halfway.
+10. **The perfect run walks the course backwards** (F2 p098R: S4 → S3b → fork → junction), so the geometry has to work both ways: pits are symmetric, speed pads become obstacles, bees arrive from the camera side.
+11. **Every enemy has its own verb**: plants (body slam or underground spin), bees (spin on arrival), stone heads (avoid; read the face), hammer workers (spin above ground), mines (jump).
+12. **Rest pads are explicit**: the bonus plate + C2 and the C4 junction are wide, enemy-free pads, and the checkpoint after the hidden pit (C3) is the 'very welcome' save for the backtrack.
+
+### Geometry transfer to the skate game
+1. **Seed-timed island.** A 2.3 × 2.3 m island in a `pit` with 1.2-1.7 m gaps to the banks, targeted by a `sentry` whose projectile bursts on the island; on foot the jump is trivial and the burst window is the test. Repeat it later with the opposite instruction (jump just before the burst).
+2. **Aimed speed pad.** A `speedpad` that lifts the board above the 12.5 m/s smash threshold, pointed at a 3-crate row along the line, with a `charger` or `pendulum` 10-15 m beyond — the pad commits the line. Keep plain crates ≥ 5 m apart if the row should be smashed in one pass.
+3. **Gate with a hidden pit.** A timed barrier (`firetiki` jet or `phasepad`) across the path with a ≈ 3 m `pit` just behind it, readable only when the barrier is off; the answer is a long jump (5.6 m on foot) through the off window.
+4. **Mines on a pit lip.** A field of explosive hazards on the take-off of a 2.5-3 m `pit`, so a triggered blast pushes the player in; make field + pit one jump (6.6 m board ollie at cruise).
+5. **Pursuer that punishes stopping.** A homing `hopper` released from a hive-like spawner next to every crate cluster; the player has to kill it before collecting.
+6. **Reverse-rideable branch.** If the perfect route requires backtracking, keep the bypassed half symmetric (no one-way drops) and place `speedpad`s to the side of the line, so that ridden backwards they are avoidable rather than walls.
+
 ## Open questions / uncertainties
 - **Main course 44 located vs 55 by header (gap 11).** Candidate locations: the burrow section (D2's "four" groups may hide more, and gamepressure and ludo both warn about Nitro or green crates while burrowing, though F2 draws none); the space between the electric fences (D2 says "boxes"); S5 (D2 "smack the boxes"). Not resolved.
 - **Bonus**: 22 crates are certain from the HUD at shot 22. The 6 exit Nitro are inferred so that bonus + death route = 40. The shot-19 HUD reads 8 or 3, so the order of B-a–B-d is uncertain.
 - **Death-route Nitro field**: ≈8 counted from one photo (D2 shot 25); the field may be larger.
 - **POINT 18**: the F2 map shows a ? icon where the photo shows the C4 crate; both are counted (risk of double counting one crate).
 - The green ! is assumed to clear the bonus and death-route Nitro as well (observed elsewhere in Crash 2; not stated for this stage).
+- **Geometry (geo-G3):** Island and pit sizes (≈ 2-3 u) and the ≈ 1-1.5 u gaps are estimated from oblique D2 shots; the number of pits per section is read from F2's stylised drawing (≈ 3-4 in S3, ≈ 3-4 in S4).
+- **Geometry:** Fence timing is not stated. D2 s13 says 'duck under the two electric fences' and shows two beams at knee and waist height, while F2 always says wait for the current to cut; whether ducking works at some phase is unconfirmed.
+- **Geometry:** F2 p066R POINT numbers are read here as 19 (mines with a pit behind), 20 (hammer worker above ground) and 21 (bees from behind); the crate map cites the mine note as POINT 20.
+- **Geometry:** The hammer worker's threat to a burrowed player is inferred from the POINT 20 title only.
+- **Geometry:** Stone-head speed and range of movement are not measurable; F2 and D2 describe the pattern only.
+- **Geometry:** Bonus distances (tower spacing, Nitro-zone length) are not measurable from the side-view shots.

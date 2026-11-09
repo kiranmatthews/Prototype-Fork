@@ -162,8 +162,153 @@ No crates (F2 p098L). Walk toward the camera across the pool (F2 p063R Aku hint,
 4. **Sparse rail-run pickups**: on long grind lines with moving hazards, place single crates on the rail line only where the patrol window allows; at ≥ 12.5 m/s they smash without bailing — one per window.
 5. **Striped bridge**: a floating row of multi-hit crates over a pit as a one-way bridge, with a TNT row right before it that must be crossed fast (≥ 7 m/s outruns the blast).
 
+## Geometry, obstacles and enemies
+
+Geometry pass (agent geo-G3): F2 p062L–p063R and the stage-16 half of p098L re-read as half-page overviews with every POINT photo; D2 p052L–p054L shots 1–42 re-read (fresh crops of shots 2, 7, 10–11, 14, 16, 18, 20 and 23–34). **u = one crate edge.** Rulers: a hanging ? crate fills about a third of the ceiling mesh's width (D2 s11, so the mesh is ≈ 3 u); the floor pad after mesh 1 holds a 2-stack with room to spare (≈ 4 u, D2 s14); the S4 catwalk is ≈ 2–3 u (D2 s24–s25); the TNT wall is three piles wide (≈ 3–4 u) and four high (F2 POINT 5 photo). Lethal surfaces: the red-hot floor under the meshes and catwalks (F2 header: 'the floor is burning bright red') and electrified water. **Note on the crate map's wording:** S4 is a walking grid catwalk with bobbing mines, not a third hanging mesh (F2 POINT 8 photo; D2 s24–s26).
+
+### Camera and route shape
+- **Into-screen scroll** (F2 p062L おくスクロール) through sewer tubes, as a chain of mode changes: walking tube (S1) → drop hole → hanging mesh 1 (S2) → floor pads and a catwalk (S2) → hanging mesh 2 (S3) → walking catwalk (S4) → drop hole → shallow pool → walking tube (S5) → drifting platform over electrified water → goal.
+- Both meshes are zig-zag strips: F2 draws them as rectangular panels offset alternately left and right, so the route staircases sideways while it scrolls inward, and every offset leaves a notch.
+- The bonus is a side-scroll room (D2 s30–s34). The secret path reverses the direction: from the pool after drop 2 you walk TOWARD the camera, drop, and hang along an aisle to the Totally Fly vortex (F2 p063R Aku tip, p091R; D2 s40–s42).
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — start → C1 (walking tube)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | grated walkway inside a cylindrical tube; welder on a raised step, scrubber beside | grating ≈ 2-3 wide; tube ≈ 5-6 | 0 | wait for the flame to die, spin the welder, then the scrubber | flame cycle | ARENA | The level opens with its two attackable enemies side by side and F2 gives the order (POINT 1) | F2 p062R POINT 1; D2 p052L s1 (medium) |
+| G-S1-a | S1 | electrified-water crossing with a moving disc platform (lethal) | not measurable (pool ≈ 4-6 estimated); landing moving disc ≈ 2, then a doorway; run-up walkway end | 0 | plain (onto the moving disc), plain (into the doorway) | disc travel; eel in the water / death (electric water) | moving-platform crossing | The first water crossing is a short moving-platform hop with a doorway as the target | F2 p062R; D2 p052L s2 (low) |
+| P-S1-b | S1 | half-pipe tube: blue stream down the middle, barrels rolling up and down the curved walls, scrubbers charging down the centre | floor ≈ 3-4 usable | 0 | advance, spin, advance; pass the barrels at their highest point | scrubber interval + barrel swing | CHOKE | The tube's curve is the timing problem: the barrels share the lane at the bottom of their swing and leave it at the top | F2 p062R POINT 2; D2 p052L s3-s6 (medium) |
+| P-S1-c | S1 | grated room at the tube's dead end with the crate pyramid over a floor hole | ≈ 5-6 wide | 0 | break the pyramid, drop | — | REST | A dead end signposted by crates; the hole is the way on (Aku: 'jump boldly into the hole') | F2 p062R + Aku; D2 p052L s7 (medium) |
+| G-S1-b | S1 | drop hole 1 to the lower tube (non-lethal) | ≈ 2 (hole); landing grated floor with C1; run-up — | down (not visible) | drop-down | none / none (one-way) | drop-down | A one-way mode change: the lower tube is where hanging starts | F2 p062R (つづく arrow down); D2 p052L s7-s8 (medium) |
+| P-S1-d | S1 | landing floor with C1 below the first mesh | ≈ 4-5 | 0 | walk, jump up to grab the ceiling | — | CHECKPOINT-PAD | Checkpoint at the change from walking to hanging | F2 p062R; D2 p052L s8 (medium) |
+
+**S2 — C1 → C2 (mesh 1, floor pads, TNT wall)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | ceiling mesh 1: zig-zag of ≈ 8 offset panels over the red-hot floor; 3 ? crates hang beside it | ≈ 3 wide; panels ≈ 4-5 long, offset ≈ 1.5 | +2-3 (hanging height) | hang and move hand over hand; wait in a notch until a mine passes | mine patrols; letting go = fall | CHOKE, SAFE-ISLAND | The offset panels create refuges, so the geometry turns a patrol into a wait-and-go gate | F2 p062R POINT 3-4; D2 p052R s9-s13 (medium) |
+| G-S2-a | S2 | red-hot floor under mesh 1 (its whole length) (lethal) | ≈ 25-35 long (estimate); landing —; run-up — | -2-3 | hang (hold on) | mine patrols / death | — | The floor is the pit: hanging is the only way across | F2 p062L intro; D2 p052R s9 (medium) |
+| P-S2-b | S2 | floor grid pad after mesh 1 with the ?+Aku stack and two bobbing mines | ≈ 4 wide | -2-3 (drop from the mesh) | break the stack, jump the mines at their lowest point | mine bob cycle | LANDING, REST | A walking pause between hanging runs, with the mask first | F2 p063L; D2 p052R s14 (medium) |
+| P-S2-c | S2 | narrow grid catwalk over the red floor with moving and stationary mines | ≈ 2-3 wide | 0 | jump the moving mines on the right to dodge the stationary one on the left | mine positions | CHOKE | A lateral choice on a narrow walkway: the stationary mine fixes the side | D2 p052R s16; F2 p063L (medium) |
+| P-S2-d | S2 | catwalk before the TNT wall (run-back space toward the camera) | ≈ 3-4 wide × ≥ 6 long (estimate) | 0 | spin the bottom crate of the middle or right pile, flee toward the camera | TNT chain | ARENA | The wall needs space behind the player; F2 says flee toward the front | F2 p063L POINT 5; D2 p052R s15 (medium) |
+| P-S2-e | S2 | C2 grid pad at the start of mesh 2 | ≈ 3-4 | 0 | walk, jump up to the ceiling | — | CHECKPOINT-PAD | Checkpoint right after the explosive test, at the next hanging start | F2 p063L; D2 p052R s17 (medium) |
+
+**S3 — C2 → C3 (mesh 2)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | ceiling mesh 2: zig-zag of ≈ 10 offset panels; 2 ? crates beside it | ≈ 3 wide | +2-3 | follow behind a looping mine; later commit quickly; duck into corner notches | mine loops, then fast patrols | CHOKE, SAFE-ISLAND | Same geometry as mesh 1, harder patrols, so the notches matter more (D2 s22 'duck into the right corner') | F2 p063L POINT 6-7; D2 p053L s18-s23 (medium) |
+| G-S3-a | S3 | red-hot floor under mesh 2 (lethal) | ≈ 30-40 long (estimate); landing —; run-up — | -2-3 | hang | fast mines / death | — | The longest hanging run of the level | F2 p063L; D2 p053L (low) |
+| P-S3-b | S3 | C3 grid pad at the end of mesh 2 | ≈ 3-4 | -2-3 | drop off the mesh | — | CHECKPOINT-PAD | Saves after the fastest patrols | F2 p063L; D2 p053L s23 (medium) |
+
+**S4 — C3 → C4 (walking catwalk, drop 2, pool)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | walking grid catwalk over the red floor with one stationary and several bobbing mines (POINT 8) | ≈ 2-3 wide | 0 | jump right past the stationary mine; long-jump the bobbing pair just before they come down; jump left to avoid the next | mine bob cycle | CHOKE | The bobbing mines become hurdles on foot: a long jump timed to their descent | F2 p063R POINT 8; D2 p053L s24-s26 (medium) |
+| P-S4-b | S4 | doorway blocked by the 4×2 crate wall over drop hole 2 | ≈ 3-4 wide | 0 | break the wall, drop | — | REST | The second dead end signposted by crates | F2 p063R; D2 p053L s27 (medium) |
+| G-S4-a | S4 | drop hole 2 into a wide shallow pool (non-lethal) | ≈ 2 (hole); landing shallow water (safe); run-up — | down (not visible) | drop-down | none / none (one-way) | drop-down | A non-lethal drop into safe water ends the dangerous half | F2 p063R; D2 p053L s27-s28 (medium) |
+| P-S4-c | S4 | wide shallow pool (safe water) with C4 + crystal on a ledge at the far end | wide (not measurable) | 0 | wade forward (or toward the camera for the secret) | — | CHECKPOINT-PAD | A calm arena that hides a reversed-direction secret | F2 p063R + Aku; D2 p053L s28 (medium) |
+
+**S5 — C4 → goal**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S5-a | S5 | grid floor with the bonus ? plate and two spiky rats circling it | ≈ 4-5 | 0 | wait on their track and stomp them at your feet | rat loop | BONUS-PAD | The bonus entrance is guarded by circling enemies, and their track is the place to stand (POINT 9) | F2 p063R POINT 9; D2 p053R s29 (medium) |
+| G-S5-a | S5 | Nitro row across the walkway at the tube mouth (hurdle) (lethal) | 1 deep × 4 wide; landing tube floor; run-up pad | +1 (hurdle) | plain jump over | none / touch = death | — | A hurdle now, credit later via the switch | F2 p063R; D2 p053R s29, s35 (high) |
+| P-S5-b | S5 | tube with spiky rats and rolling barrels | ≈ 3-4 | 0 | bounce off the rats, run around the barrels | barrel paths | CHOKE | Enemies are the steps toward the switch | F2 p063R; D2 p053R s36, s38 (medium) |
+| P-S5-c | S5 | Nitro wall (4×2) across the tube with the green ! in front | ≈ 4 wide | 0 | hit the ! | — | CHOKE | Impassable until the switch: the wall explains the switch | F2 p063R POINT 10; D2 p053R s37 (medium) |
+| G-S5-b | S5 | electrified water crossed on a drifting round stone platform; wide last jump to the exit (POINT 11 と、遠い…) (lethal) | board when near (≈ 2-3); exit jump from the far point ≈ 4-5 (estimate); landing drifting platform ≈ 2-3, then the doorway; run-up platform | 0 | plain (when it is close), running (dash) jump from the far point | platform drift cycle / death (electric water) | moving-platform crossing | The level ends with its widest jump: F2 'so far…', D2 'when it drifts to the farthest side, dash-jump out the door' | F2 p063R POINT 11; D2 p054L s39 (medium) |
+| P-S5-d | S5 | drifting round stone platform (プカプカ) | ≈ 2-3 round | 0 | ride to the far point, then dash-jump | drift cycle | TIMING-STEP | The platform carries you toward the exit: patience shortens the final gap | F2 p063R POINT 11; D2 p054L s39 (medium) |
+
+**B — bonus round (side-scroll)**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | start: crate tower on a floor slab | not measurable | 0 | ride on top and body-press (more fruit) | — | ARENA | The bonus's first verb: slam from the top | F2 p098L ①; D2 p053R s31 (medium) |
+| P-B-b | B | steel ↑ arrow block, upper slab with one Nitro, staircase of four steel blocks with a Nitro on each step | blocks ≈ 1 | +1 to +4 (stairs) | use the arrow; avoid the mined steps | a Nitro on every step | STEPPING | A staircase you must not climb: the arrow is the real route | D2 p053R s31 (medium) |
+| G-B-a | B | Nitro carpet with two steel arrow blocks in the middle (lethal) | ≈ 6-8 (estimate); landing arrow blocks ≈ 1; run-up slab edge | + (arrow bounce) | slide-jump over the first Nitro, arrow bounce | none / Nitro = death (bonus lost) | chasm with bounce | The arrows are the only safe footing inside the carpet (F2 ②) | F2 p098L ②; D2 p053R s32 (medium) |
+| P-B-c | B | solid blocks with two crates floating overhead | ≈ 2-3 | 0 | run under, jump up into them | — | REST | Safe footing for head-bonk pickups | D2 p053R s33 (medium) |
+| P-B-d | B | red ledge holding the TNT row (landing lights the fuses) | ≈ 5-6 long | 0 | land and leave within the fuse | TNT fuse | TIMING-STEP | You must stand on it to progress: a forced fuse | D2 p053R s33 (high) |
+| G-B-b | B | striped-crate bridge over a pit (upper row, then the lower row broken left to right) (non-lethal) | ≈ 6-8 (estimate); landing exit ledge; run-up TNT ledge | 0 to +2 (two rows) | crate-bounce (count the bounces) | crates break after their bounces / fall = bonus lost (no life lost) | crumble run | The last crates are also the bridge (F2 ③: count as you go) | F2 p098L ③; D2 p053R s34 (medium) |
+
+**X — secret path to Totally Fly**
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| G-X-a | X | walk toward the camera across the pool, then drop to a lower corridor (non-lethal) | —; landing hanging aisle (ceiling); run-up pool | down (not visible) | walk (reverse direction), drop-down, jump up to hang | none / none known | drop-down | A spatial secret: the only place where going backwards is right | F2 p063R Aku, p091R; D2 p054L s40 (medium) |
+| P-X-a | X | hanging aisle with floating extra lives; fast fliers swoop underneath | not measurable | +2-3 | hang; press the button to lift the feet as fliers pass | flier passes | BONUS-PAD | A reward corridor that reuses the hanging verb with one new input | D2 p054L s41-s42 (medium) |
+
+### Jump sequences
+| id | section | count | moves | rhythm | widest gap | rest | no-stop? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 2 | plain onto the moving disc, plain into the doorway | phase-locked to the disc | not measurable | tube floor | no | The first water crossing: two hops timed to one platform | D2 p052L s2 |
+| J-S2-a | S2 | 2 | jump over bobbing mine 1 at its lowest point, jump over bobbing mine 2 | phase-locked | mine ≈ 1-1.5 above the pad | floor pad | no | Bobbing mines are hurdles only at their low point | D2 p052R s14 |
+| J-S2-b | S2 | 2 | plain, plain | even | ≈ 1-2 | catwalk before the TNT wall | no | Jump the moving mines on the right to avoid the stationary one on the left | D2 p052R s16 |
+| J-S4-a | S4 | 3 | plain (right, past the stationary mine), long jump over two bobbing mines as they descend, plain (left) | syncopated | ≈ 3-4 (two mines) | crate-wall doorway | no | POINT 8: the long jump must start just before the mines come down | F2 p063R POINT 8; D2 p053L s24-s26 |
+| J-S5-a | S5 | 2 | plain onto the drifting platform (near point), running (dash) jump to the door (far point) | wait-then-commit | ≈ 4-5 (estimate) | goal | no | The final pair: patience on the platform, then the longest jump | F2 p063R POINT 11; D2 p054L s39 |
+| J-B-a | B | 3 | slide-jump, arrow bounce, arrow bounce | chained | Nitro carpet | solid blocks | yes | The arrows are the only footing in the carpet | F2 p098L ②; D2 p053R s32 |
+| J-B-b | B | 6 | crate-bounce ×N, plain to the exit | counted | ≈ 1-2 between crates | exit | yes | Bridge crates break after their bounces: count as you go (F2 ③) | F2 p098L ③; D2 p053R s34 |
+
+### Obstacles and hazards
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1, S5 | electrified water with an eel (ビリール) (lethal) | across path | static water; eel motion not visible | jump over (via moving platforms) | P-S1-a, P-S5-d | AREA-DENIAL | Only at the start and the finish, each crossed on a moving platform | F2 p062L monsters, p062R, p063R POINT 11; D2 p052L intro, s2; p054L s39 |
+| O-S1-b | S1 | barrels rolling up and down the curved tube walls (both sides) (lethal) | flank, crossing the lane at the bottom of their swing | regular swing; telegraph = visible motion; safe window when both are high on the walls | wait-and-go | E-S1-b, S1-a | TIMING-GATE, RHYTHM | Uses the half-pipe shape: the hazard leaves the lane only at the top of its swing | F2 p062R; D2 p052L s4-s6 |
+| O-S2-a | S2-S4 | red-hot floor under the meshes and catwalks (lethal) | everywhere below | static | hang, stay on the catwalk | E-S2-a, E-S3-a, E-S4-a | AREA-DENIAL | Makes every mine encounter lethal by position, not only by contact | F2 p062L intro; D2 p052R s9, s16 |
+| O-S2-b | S2 | TNT wall (three 4-high piles) (lethal) | across path | 3 s fuse once a dropped crate lands on a TNT | destroy (spin the bottom crate of the middle or right pile), outrun (flee toward the camera) | S2-c, S2-b (mask) | TEST | The crate structure is the hazard; the mask before it forgives one mistake | F2 p063L POINT 5; D2 p052R s15 |
+| O-S5-a | S5 | Nitro row (hurdle) and Nitro wall (switch-gated) (lethal) | across path | static | jump over (row), destroy via the green ! (wall) | S5-a, S5-c, S5-d | LANE-BLOCK, TEACH | The same hazard read twice: hurdle first, wall second | F2 p063R POINT 10; D2 p053R s35, s37 |
+| O-S5-b | S5 | barrels rolling along the tube floor (lethal) | across path | regular | go around | E-S5-a | LANE-BLOCK | They share the lane with the rats you must bounce on | F2 p063R; D2 p053R s36, s38 |
+| O-B-a | B | Nitro carpet, mined staircase and TNT ledge (lethal) | on platform | static / 3 s fuse on landing | arrow bounce, slide-jump, outrun | B-b, B-c, B-e, B-g | TEST | The bonus's footing is made of explosives | F2 p098L ②; D2 p053R s31-s33 |
+| O-B-b | B | striped-crate bridge (limited bounces) (non-lethal) | on platform (over a pit) | breaks after its bounces | count the bounces, break the lower row left to right | B-h, B-i | TEST | A crumble run made of crates | F2 p098L ③; D2 p053R s34 |
+
+### Enemies (detailed)
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | welders (ボワボワ作業員) ×2 | sentry (flamethrower) | stand on a raised step and blast flame in bursts | wait for the flame to die, then spin (fails: attacking during the burst) | flank, first walkway | GATEKEEPER, TEACH | no (with a scrubber; F2 says beat the welder first) | Teaches wait-then-attack before the timing-heavy tube | F2 p062R POINT 1; D2 p052L s1 (medium) |
+| E-S1-b | S1 | scrubbers (バボー) ≈ 6 | charger | wind-up robots that charge down the narrow tube at regular intervals; the first comes down the right side | advance a little, spin, advance again (fails: standing still in the lane, running ahead blindly) | on line (head-on down the tube) | TIMING-GATE, TEST | no | A head-on rhythm enemy in a lane shared with swinging barrels | F2 p062R POINT 2; D2 p052L s3-s6 (medium) |
+| E-S1-c | S1, S5 | electric eels (ビリール) ×2 | swimmer | in the electrified water crossings | avoid (stay on the platforms) (fails: any water contact) | in pit (water) | GUARD | yes | Make the water crossings lethal | F2 p062L monsters; D2 p052L intro (low) |
+| E-S2-a | S2 | floating mines (浮遊機雷) on mesh 1 | patrol-1D | glide back and forth along the mesh panels at hanging height; pairs separate to opposite sides (D2 s10) | avoid: wait in a notch until one has passed in front, then hurry (fails: moving into its row, touching it) | on line (the mesh), next to the hanging crates | TIMING-GATE, TEACH | yes (a single mine passes first, D2 s9) | The wait-and-go is taught on the mesh with one mine before pairs | F2 p062R POINT 3-4; D2 p052R s9-s13 (medium) |
+| E-S2-b | S2 | bobbing mines over the floor pad and catwalk | patrol-1D (vertical) | bob up and down, ≈ 1-1.5 u above the floor at their lowest; one stationary on the catwalk | jump over at their lowest point, avoid the stationary one (fails: jumping while they are high) | landing platform (pad) and catwalk | HURDLE, TIMING-GATE | no (right after the mask crate, which protects the first try) | The same enemy becomes a hurdle once the player walks | D2 p052R s14, s16; F2 p063L (medium) |
+| E-S3-a | S3 | floating mines circling counter-clockwise (POINT 6) | patrol-loop | loop round the mesh panels | follow behind a mine (fails: moving against the loop) | on line (mesh 2) | TIMING-GATE | no | A loop is solved by chasing it: a new read | F2 p063L POINT 6; D2 p053L s19, s21 (medium) |
+| E-S3-b | S3 | fast floating mines (POINT 7) | patrol-1D (fast) | fast back-and-forth runs along rows | get close, then commit without hesitating; duck into corner notches (fails: hesitating mid-row) | on line (mesh 2), near the last crate | TEST | no | Speed removes the reaction margin, so commitment becomes the skill | F2 p063L POINT 7; D2 p053L s20-s23 (medium) |
+| E-S4-a | S4 | catwalk mines: one stationary, bobbing pairs | patrol-1D (vertical) + static | bob up and down over the catwalk | long jump just before they come down, go round the stationary one (fails: jumping late (they rise into you)) | on line (catwalk) | HURDLE, TEST | no | Bobbing mines on a walking catwalk combine S2's hurdle with a long-jump timing | F2 p063R POINT 8; D2 p053L s24-s26 (medium) |
+| E-S5-a | S5 | spiky rats (トゲチュール) ≈ 6 | patrol-loop | circle the bonus plate; later stand in the tube | stomp (bounce off them) (fails: walking into the circle) | around the bonus plate; on line in the tube | TOOL/STEP, TEACH | yes (the circling pair at the bonus plate, with room to wait on their track) | Their heads are the steps toward the switch | F2 p063R POINT 9; D2 p053R s29, s36-s38 (medium) |
+| E-X-a | X | swooping fliers under the hanging aisle | flier | fast passes underneath | lift the feet (button) as they pass (fails: hanging still) | below the hanging aisle | TIMING-GATE | yes | A new input on the old verb, in a reward corridor | D2 p054L s41 (medium) |
+
+### Section beats
+- **S1**: welder (wait for the flame, spin) + scrubber → electrified water: hop onto the moving disc, then the doorway → ?/? in the charge lane → half-pipe tube: scrubbers charge at intervals (advance, spin, advance), barrels swing on the walls (pass at their high point) → grated room: crate pyramid → drop hole 1 → C1. *Gaps 2, enemies 9, hazards 2.* (enemies = 2 welders, ≈ 6 scrubbers, 1 eel; hazards = barrels, electrified water)
+- **S2**: jump up to the mesh → zig-zag mesh 1 (a single mine, then a separating pair; 3 hanging ?) → floor pad: ? + mask → bobbing mines (jump at their lowest) → narrow catwalk (jump the moving mines, avoid the stationary one) → TNT wall (spin the bottom, flee toward the camera) → C2. *Gaps 1, enemies 11, hazards 2.* (gaps = the lethal floor; enemies = mines; hazards = hot floor, TNT wall)
+- **S3**: jump up to mesh 2 → counter-clockwise loops (follow a mine) → fast mines (commit, use the corner notches; 2 hanging ?) → C3 on the end pad. *Gaps 1, enemies 6, hazards 1.*
+- **S4**: walking catwalk: stationary mine (pass right) → bobbing pair (long jump as they descend) → mine on the other side (go left) → crate wall in a doorway → drop hole 2 → shallow pool → C4 + crystal (secret: walk toward the camera). *Gaps 2, enemies 5, hazards 1.* (gaps = catwalk edges over the hot floor, drop 2)
+- **S5**: bonus plate with circling spiky rats (stomp) → Nitro row (jump) → tube: rats + barrel → ?/? → green ! → Nitro wall cleared → rats + barrel → electrified water: board the drifting platform when near, dash-jump to the door at its far point → goal. *Gaps 2, enemies 7, hazards 3.* (enemies = ≈ 6 rats, 1 eel; hazards = Nitro row and wall, barrels, electrified water)
+- **B**: crate tower (ride on top, body-press) → steel arrow; Nitro on the upper slab; mined staircase → Nitro carpet with two arrows (slide-jump, land on the arrows) → solid blocks (head-bonk two floating crates) → TNT ledge (land, leave at once) → striped bridge (upper, then lower row left to right) → exit. *Gaps 2, enemies 0, hazards 4.*
+- **X**: walk back across the pool toward the camera → drop → hang along an aisle of floating lives while fliers swoop under (lift the feet) → vortex. *Gaps 1, enemies 1, hazards 0.*
+
+### Geometry and enemy design logic
+1. **Mode changes are the structure**: walk (tube) → drop → hang (mesh 1) → walk (pads, catwalk) → hang (mesh 2) → walk (catwalk) → drop → wade (pool) → walk (tube) → drifting platform. Each change is marked by a pad, a crate cluster or a checkpoint.
+2. **Zig-zag meshes supply refuges.** Both meshes are ≈ 3 u strips whose offset panels leave notches where the player waits for a mine to pass; the geometry provides the safe pocket that turns a patrol into a timing gate (D2 s22 'duck into the right corner').
+3. **The mine curriculum escalates the movement pattern, not the count**: one passing mine (s9) → two mines that separate (s10, go down the middle) → bobbing mines over a floor (jump at their lowest) → counter-clockwise loops (follow a mine) → fast mines (commit early) → bobbing mines on a walking catwalk (long-jump just before they descend). Each step changes the read.
+4. **Static footing, moving enemies.** The floor under the meshes is lethal, but the meshes and catwalks never move: difficulty comes only from enemy timing, never from the footing (the opposite of Road to Ruin).
+5. **Drop holes are signposted and forgiving**: crate walls mark both dead ends (S1, S4), the Aku tip names the move, the drops are one-way and non-lethal, and the second lands in safe shallow water.
+6. **The S1 tube is a half-pipe timing problem**: scrubbers charge down the centre at regular intervals while barrels roll up and down the curved walls; the lane is free only when the barrels are high ('shoot between the barrels at their highest point').
+7. **Lethal water bookends the level**: a short hop onto a moving disc at the start, and at the end a drifting platform with the level's widest jump to the door (POINT 11 'so far…'). The last gap is the longest.
+8. **Most enemies are avoid-only** (mines, eels, barrels); the attackable ones are each taught with an explicit method: welder (wait for the flame, then spin), scrubbers (advance, spin, advance), spiky rats (wait on their track and stomp at your feet).
+9. **One hazard, two readings**: the Nitro row before the switch is a hurdle, the Nitro wall after it is a wall that only the switch removes.
+10. **The bonus inverts the main course**: a vertical tool course (arrow blocks, a mined staircase, a Nitro carpet with arrows as the only footing, a TNT ledge with a forced fuse, a striped bridge that breaks under you) instead of horizontal timing.
+11. **Checkpoints sit on pads at mode changes**: C1 after drop 1 (before hanging), C2 after the TNT wall (before mesh 2), C3 at the end of mesh 2, C4 in the pool after drop 2.
+12. **The secret reverses the camera direction**: walking toward the camera across the pool is the only place where going backwards is right — a spatial secret that needs no hidden crate.
+
+### Geometry transfer to the skate game
+1. **Zig-zag line with refuges.** An overhead `rope` or `rail` line (or a grind rail on the board) laid in 4-5 m segments offset by 1.5-2 m, with a small ledge at every offset where the player can stop. `floater` enemies (no stomp) patrol the segments; one crate per patrol window, placed at a refuge.
+2. **Bobbing hurdle on a catwalk.** `floater` enemies bobbing between ≈ 0.6 m and ≈ 2.5 m above a 2.3-3.5 m catwalk over a `pit`; the on-foot full jump (apex 2.85 m) clears one at its low point. A stationary one on the opposite edge fixes the side.
+3. **Half-pipe tube with swinging hazards.** A curved-wall corridor (a natural wallride for the board) where barrels roll up and down both walls on a shared cycle (`pendulum`-like) while a `charger` comes down the centre at a fixed interval; the safe window is when both barrels are high.
+4. **Signposted drop.** A 2-3-2-1 crate pyramid at a dead end with the floor hole right in front of it; the one-way drop lands on a checkpoint pad.
+5. **Drifting-platform finale.** A `mover` platform drifting 3-5 m back and forth over a lethal pool; set the exit gap from its far point to the full on-foot jump (≈ 5.6 m at 9 m/s), so the player must board at the near point, ride, and jump at the far point.
+
 ## Open questions / uncertainties
 - **Main course 55 located vs 56 by header.** Most likely place for the missing crate: the TNT wall (12 read from an icon and a partial photo) or the drop pile (8 read from the drawing).
 - **Bonus 34 located vs 37 by header.** The Nitro carpet photo is cropped (a partial Nitro at the left edge), so the 3 missing are most likely Nitro there. Gamepressure's "34 crates" for the N. Sane bonus may exclude Nitro or use a different count; not verified.
 - Bonus crate types (tower, B-d) are not readable; the life crate is placed in the tower only from the HUD (lives 0 → 1 by shot 31). A second life appears by shot 34 (from a ? crate, presumably).
 - Whether the main-course green ! also credits the bonus Nitro (the F2 Un-Bearable note implies the level switch clears bonus Nitro there) is inferred, not observed for this stage.
+- **Geometry (geo-G3):** Mesh width (≈ 3 u) rests on one screenshot (D2 s11), where the hanging ? fills about a third of the strip; panel lengths and offsets come from F2's stylised drawing.
+- **Geometry:** The crate map calls S4 'mesh 3'; F2 POINT 8's photo and D2 s24-s26 show Crash walking and jumping on a grid catwalk. Recorded here as a catwalk.
+- **Geometry:** Mine speeds and loop sizes are not given; F2 only says 'moving', 'counter-clockwise' and 'fast'.
+- **Geometry:** Drop heights of the two holes and the size of the shallow pool are not visible.
+- **Geometry:** The start's electrified-water crossing (D2 s2) shows a moving platform; its travel and the eel's behaviour are not described.
+- **Geometry:** Bonus distances (Nitro carpet, striped bridge) are not measurable from the side-view shots.
