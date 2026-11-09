@@ -1176,5 +1176,1494 @@
  "countingRule": "F3 cumulative counts include the checkpoint crate; 'NN (MM)' = without (with) Nitro. After the green ! all 4 Nitro count. Steel !, green !, steel platform and steel C-blocks are not boxes: listed under 'uncounted' (count 0). The bonus (14) is inside the C58 count.",
  "compositionKeysAdded": {
   "wood?": "counted crate whose type cannot be read"
- }
+ },
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "toward-camera chase",
+   "notes": "cave mouth, then a ≈3–5 u corridor toward the camera; triceratops released by the start trio"
+  },
+  {
+   "section": "S2",
+   "mode": "toward-camera chase",
+   "notes": "chase continues past perched pterodactyls and a step-down to the curve at C19"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "free walking section: flat band (TNT ladder), then strip 2 into the screen"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "free section; lava-river area seen side-on; upper path turns and descends a diagonal toward the camera"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "bonus ledges left to right"
+  },
+  {
+   "section": "S5",
+   "mode": "toward-camera chase",
+   "notes": "step-down at C58 starts chase 2 down the diagonal to the goal"
+  },
+  {
+   "section": "G",
+   "mode": "toward-camera chase",
+   "notes": "red-gem course: narrow diagonal chase strip with water currents"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "wide floor: cave mouth at the start, yellow dirt path between root and rock walls",
+   "size": "≈4–5 wide (P3 s49: three crates fill about half of it)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static until the trio is broken; move: walk, spin",
+   "roles": [
+    "REST"
+   ],
+   "why": "The only calm ground before the chase: breaking the trio here releases the triceratops from the cave behind you (P3 s49), so the player starts the chase while looking down at crates",
+   "evidence": "P3 p008R s49; F3 p033R strip 1 (stopwatch on a raised ledge; triceratops drawn at the mouth)",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1, S2",
+   "shape": "corridor: chase path running toward the camera between wavy rock and bark walls",
+   "size": "≈3–5 wide (P3 s51 ≈3–4; TT 05 ≈3); map ≈3 crate icons",
+   "heightDelta": "0, with step-downs",
+   "edges": "walled",
+   "behaviour": "static; the pursuer runs behind; move: run toward the camera",
+   "roles": [],
+   "why": "A narrow lane where every hazard is met head-on and nothing can be revisited; the wumpa trail points the way (P3 s50)",
+   "evidence": "P3 p008R s50–s52; F3 p033R strip 1; F3 p102R fr.05",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "corridor: checkpoint stretch (C1)",
+   "size": "≈3–4 wide (P3 s51)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: run",
+   "roles": [
+    "CHECKPOINT-PAD",
+    "REST"
+   ],
+   "why": "P3 s51: rest briefly in these areas; the respawn sits inside the chase so a late death does not replay the whole run",
+   "evidence": "P3 p008R s51; F3 p033 gutter (CP1 bubble)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "wide floor: long darker grey stretch (unlabelled)",
+   "size": "path width × several screens",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "not stated (the first-wave map read called it tar; F3 does not label it); move: run",
+   "roles": [],
+   "why": "A plain run between the 2×2 and the curve to C19",
+   "evidence": "F3 p033L route",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "wide floor: curve to the left ending at C19 on a tan band with grass edges",
+   "size": "band ≈4–5 wide",
+   "heightDelta": "0",
+   "edges": "grass edges",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "The chase ends at the curve; the route turns back along the band into the screen, so the checkpoint marks the change of camera and pace",
+   "evidence": "F3 p033L route; P3 p009L s53",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "wide floor: flat dirt band (into the screen) holding the floating Aku, the TNT single, the TNT 2-stack and the 3-stack",
+   "size": "≈4–5 wide (P3 s53)",
+   "heightDelta": "0",
+   "edges": "grass edges",
+   "behaviour": "static; move: walk, stomp, back off",
+   "roles": [
+    "ARENA",
+    "TEACH"
+   ],
+   "why": "Open ground with room to back away from a lit TNT: the explosive ladder is taught where escape is easy. TT 12 shows a tall flame pillar behind the TNT 2-stack, so the open side is in front",
+   "evidence": "P3 p009L s53; F3 p033L route; F3 p102R fr./cap. 11–14",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "corridor: strip 2 (into the screen) with lava patches, grass clumps, two fallen logs and two wave-assistant puddles",
+   "size": "≈3–4 wide (map)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk, jump",
+   "roles": [],
+   "why": "A free-walking gauntlet of every obstacle type with no crates on it: the strip itself is the content (first-wave reading)",
+   "evidence": "F3 p033R strip 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "red-gem pad (faceted disc) on the ground beside log 2",
+   "size": "≈1 across",
+   "heightDelta": "0",
+   "edges": "open",
+   "behaviour": "inactive until the red gem from stage 12 is owned; then it carries Crash to the gem course; move: stand on it",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "A route split marked by geometry the player already reads (a log)",
+   "evidence": "P3 p009L s54, p010L s66",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "wide floor: C28 floor at the top of strip 2 (Nitro and striped pair beside the checkpoint)",
+   "size": "path width",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "The respawn is placed right after the gem branch and right before the first Nitro",
+   "evidence": "F3 p033R (C28 bubble)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "tree-stump platform (bonus lift) at the path edge",
+   "size": "≈1.5 across",
+   "heightDelta": "+≈0.5 (not measured)",
+   "edges": "open",
+   "behaviour": "lift to the bonus; move: jump on",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "A raised stump beside lava and a grass strip; a wave assistant stands next to it on F3",
+   "evidence": "P3 p009L s55, p009R s60; F3 p034R top",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "wide floor: flowing-lava area — dark ground crossed by bands of flowing lava, with the floating ! and five outlines",
+   "size": "not measurable (side-on view in P3 s56 and TT 21)",
+   "heightDelta": "0",
+   "edges": "open to the lava streams",
+   "behaviour": "static ground; lava flows in the bands; move: jump between bands",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "The switch puzzle is staged over lethal ground: hitting the floating ! from below means jumping on footing between lava bands (Prima: body slam for height if the boxes are out of reach)",
+   "evidence": "P3 p009L s56; F3 p034R; F3 p102R fr.21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "corridor: upper path past the power stone (crystal), turning at its right end and descending a diagonal toward the camera",
+   "size": "path ≈3–4 wide (map)",
+   "heightDelta": "0, then down the diagonal",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [],
+   "why": "The turn brings the camera back to a toward-camera view right before chase 2",
+   "evidence": "F3 p034R top and middle",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "wide floor: C58 floor at the foot of the drop",
+   "size": "path width",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: land, run",
+   "roles": [
+    "CHECKPOINT-PAD",
+    "LANDING"
+   ],
+   "why": "The respawn of chase 2 is the landing of the drop, among crates; the dinosaur reappears about two seconds after it in the TT frames",
+   "evidence": "F3 p034R (C58 bubble); F3 p102R fr.23–24",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-a",
+   "section": "S5",
+   "shape": "corridor: chase-2 diagonal running toward the camera, with grass bands, lava patches and pterodactyl perches at its edges",
+   "size": "≈3–4 wide (map ≈4 crate icons)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; the pursuer runs behind; move: run toward the camera",
+   "roles": [],
+   "why": "The same corridor as chase 1 but with full-width bands and a three-way choke: chase 2 is the test of what the free section taught",
+   "evidence": "F3 p034R–p034L routes; P3 p009L s57–s58",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-b",
+   "section": "S5",
+   "shape": "wide floor: grass-free safe zone along the right side of the grass field",
+   "size": "≈1–1.5 wide (estimate)",
+   "heightDelta": "0",
+   "edges": "wall on the right",
+   "behaviour": "static; move: two small jumps",
+   "roles": [
+    "SAFE-ISLAND"
+   ],
+   "why": "A narrow clean lane beside the slow patch: the expert line, readable in advance (TT 26: change to the right line a little before)",
+   "evidence": "F3 p102R cap. 26–27",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-c",
+   "section": "S5",
+   "shape": "crate-built: the striped crate as a stepping box in the grass",
+   "size": "1 × 1, top ≈1",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "breakable; move: double jump onto it",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "A crate used as footing over slow ground (TA4: double-jump onto the box)",
+   "evidence": "F3 p034R TA4 bubble",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "wide floor: first bonus deck, holding the striped sandwich (ground striped near its far end, its twin floating above)",
+   "size": "≈7.5 long; floating crate’s underside ≈3.9 above the ledge",
+   "heightDelta": "0",
+   "edges": "open front edge",
+   "behaviour": "static; move: walk, bounce",
+   "roles": [
+    "REST"
+   ],
+   "why": "The striped crate is the high-bounce footing that reaches its floating twin",
+   "evidence": "F3 p040L diagram",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "stairs: three overlapping slabs each ≈0.5 higher, rising from ledge 2 to the top slab",
+   "size": "≈1.5 each",
+   "heightDelta": "+0.5 ×3",
+   "edges": "open",
+   "behaviour": "static; move: plain hops",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "A climb to the tool: the 5-stack with the arrow on top stands on the top slab",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "top slab holding the 5-stack ?/W/?/W/arrow (arrow top ≈4.8 above the slab)",
+   "size": "≈2",
+   "heightDelta": "+1.5 above ledge 2",
+   "edges": "open",
+   "behaviour": "static; move: slide the bottom crates, then jump on the arrow",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "The arrow is out of reach until the stack below it is dismantled (F3 hint: slide from a little further away to break only the bottom crate)",
+   "evidence": "F3 p040L diagram + hint",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-d",
+   "section": "B",
+   "shape": "wide floor: fourth bonus deck, under the floating steel shelf",
+   "size": "≈6 long",
+   "heightDelta": "0",
+   "edges": "open",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "The reward block hangs over it, out of reach from its floor",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-e",
+   "section": "B",
+   "shape": "steel block (reward shelf) floating above ledge 4, carrying the 1UP and a ?",
+   "size": "3 wide × ≈1.8 tall, notched at its lower left; underside ≈0.7 and top ≈2.5 above ledge 4",
+   "heightDelta": "+2.5",
+   "edges": "open",
+   "behaviour": "static, unbreakable; move: arrow bounce",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "Only the arrow bounce reaches its top; the notch and the gap under it show it floats, so it cannot be climbed",
+   "evidence": "F3 p040L diagram; P3 p009R s62",
+   "confidence": "high"
+  },
+  {
+   "id": "P-G-a",
+   "section": "G",
+   "shape": "corridor: narrow diagonal chase strip toward the camera with steel C markers",
+   "size": "narrower than the main chases (map ≈2–3 crate icons)",
+   "heightDelta": "0, with steps near the end",
+   "edges": "walled",
+   "behaviour": "static; the pursuer runs behind; move: run toward the camera",
+   "roles": [],
+   "why": "The secret route squeezes the chase lane and fills it with every hazard; it holds no crates",
+   "evidence": "F3 p035R–p035L; P3 p010L s66–s69",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-G-b",
+   "section": "G",
+   "shape": "water current strips (blue streams) along the strip",
+   "size": "stream ≈1 wide × ≈2–3 long (map)",
+   "heightDelta": "0",
+   "edges": "open",
+   "behaviour": "moving: the current carries Crash and speeds him up; move: run in the current",
+   "roles": [],
+   "why": "Hint C / P3 s69: ride the current to speed up and outrun the dinosaur — a speed boost placed inside the chase",
+   "evidence": "F3 p035R hint C; P3 p010L s69",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "hurdle: fallen log across the full path",
+   "width": "log ≈1 thick across the full width",
+   "heightDelta": "0 (clear a log ≈1 high; not measured)",
+   "landing": "path with the striped crate S1-c at the landing",
+   "lethal": false,
+   "runUp": "cave-mouth run-up (several u)",
+   "move": [
+    "plain"
+   ],
+   "coupling": "chaser (triceratops) behind",
+   "failure": "snag = the triceratops catches you (death)",
+   "nearby": [
+    "S1-c",
+    "E-S1-a"
+   ],
+   "why": "The first chase obstacle spans the width, so it must be jumped; the striped crate waits at the landing, so a sloppy jump runs into a snag",
+   "evidence": "F3 p033R strip 1; F3 p032L tip 2",
+   "confidence": "medium",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "lava patches on alternating edges of the chase path (left, right, left)",
+   "width": "≈1–2 across (a third to half of the path) × ≈1–2 along",
+   "heightDelta": "0",
+   "landing": "the open side of the path",
+   "lethal": true,
+   "runUp": "continuous run",
+   "move": [
+    "walk",
+    "plain"
+   ],
+   "coupling": "chaser behind; flame geyser at the edge (P3 s50)",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [
+    "S1-c",
+    "S1-d",
+    "O-S1-b"
+   ],
+   "why": "P3 s50: without guiding fruit, an obstacle on the left usually follows one on the right — the chase is a slalom, never a full-width block in chase 1. Crates S1-c and S1-d sit beside two of the patches",
+   "evidence": "F3 p033R strip 1; P3 p008R s50",
+   "confidence": "medium",
+   "moveNote": "steer to the open side; hop if late",
+   "roles": [
+    "RHYTHM"
+   ]
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "drop-down: raised slab ending in a step down across the path, with grass patches and the CP1 crates below",
+   "width": "full width",
+   "heightDelta": "≈−1 (not measured)",
+   "landing": "tan ground with clinging-grass patches and the CP1 crates (landing snags)",
+   "lethal": false,
+   "runUp": "chase run",
+   "move": [
+    "drop"
+   ],
+   "coupling": "chaser behind",
+   "failure": "caught by the triceratops if you snag on landing (death)",
+   "nearby": [
+    "S1-e",
+    "S1-f"
+   ],
+   "why": "TT 05: at a step, don’t jump — just drop, and don’t snag on the boxes after landing. A crate stands at the foot of the drop",
+   "evidence": "F3 p033R strip 1; F3 p102R fr./cap. 05",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "lava patch at one edge of a grey stretch",
+   "width": "≈1–2 across",
+   "heightDelta": "0",
+   "landing": "the open side",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "walk",
+    "plain"
+   ],
+   "coupling": "two perched pterodactyls just before; chaser behind",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [
+    "E-S2-a"
+   ],
+   "why": "A single edge patch after the bird ambush",
+   "evidence": "F3 p033L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "drop-down: raised tan block ending in a step across the path, the 2×2 block below",
+   "width": "full width",
+   "heightDelta": "≈−1 (not measured)",
+   "landing": "tan ground with the 2×2 block S2-b on it (landing snag)",
+   "lethal": false,
+   "runUp": "chase run",
+   "move": [
+    "drop"
+   ],
+   "coupling": "chaser behind",
+   "failure": "caught by the triceratops if you snag on the block (death)",
+   "nearby": [
+    "S2-b"
+   ],
+   "why": "The only multi-row crate structure of chase 1 stands at the foot of a drop (TT 10 shows it right below the raised step): stop and break it, or steer past while the dinosaur credits it",
+   "evidence": "F3 p033L route; F3 p102R fr.10",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "hurdle: fallen log lying diagonally across the path beside a lava patch",
+   "width": "log ≈1 thick across the path",
+   "heightDelta": "0 (clear a log ≈1 high; not measured)",
+   "landing": "path beside a lava patch",
+   "lethal": false,
+   "runUp": "≈3–5",
+   "move": [
+    "plain"
+   ],
+   "coupling": "lava patch at its side",
+   "failure": "blocked (no death); a stray jump can land in the lava beside it",
+   "nearby": [
+    "E-S3-a"
+   ],
+   "why": "The diagonal log pushes the jump toward the lava side",
+   "evidence": "F3 p033R strip 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "lava patches at the edges of strip 2",
+   "width": "≈1–2 across",
+   "heightDelta": "0",
+   "landing": "the open side",
+   "lethal": true,
+   "runUp": "walking pace",
+   "move": [
+    "walk",
+    "plain"
+   ],
+   "coupling": "logs and grass nearby",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [],
+   "why": "At walking pace the same patches that formed the chase slalom are easy: the free section rehearses the vocabulary",
+   "evidence": "F3 p033R strip 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "clinging-grass patches (まとわり草) across the path (slows; catches the feet)",
+   "width": "≈2–4 along (the TT frames show the path carpeted)",
+   "heightDelta": "0",
+   "landing": "path beyond",
+   "lethal": false,
+   "runUp": "walking pace",
+   "move": [
+    "plain",
+    "spin-extended"
+   ],
+   "coupling": "none here (no chaser)",
+   "failure": "slowed, no death in the free section",
+   "nearby": [],
+   "why": "F3 tip 1: jump over the grass in one go or mow it with the tornado spin; in the free section it only costs time, so it is learned before chase 2",
+   "evidence": "F3 p032L tip 1; F3 p033R strip 2; F3 p102R fr.15–16",
+   "confidence": "medium",
+   "moveNote": "one jump over it, or spin through (P3: jump and spin)"
+  },
+  {
+   "id": "G-S3-d",
+   "section": "S3",
+   "kind": "hurdle: second fallen log across the path, with the red-gem pad beside it",
+   "width": "log ≈1 thick",
+   "heightDelta": "0 (clear a log ≈1 high; not measured)",
+   "landing": "path to C28",
+   "lethal": false,
+   "runUp": "≈3–5",
+   "move": [
+    "plain"
+   ],
+   "coupling": "red-gem pad (secret route) beside it",
+   "failure": "blocked (no death)",
+   "nearby": [
+    "S3-f",
+    "P-S3-c"
+   ],
+   "why": "The secret route leaves from a log: a landmark the player has already learned to read as \"jump here\"",
+   "evidence": "F3 p033R strip 2 (red-gem leader); P3 p009L s54, p010L s66",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "lava stream bands crossing the ground of the flowing-lava area",
+   "width": "≈1–2 each (not measured)",
+   "heightDelta": "0",
+   "landing": "dark ground between bands",
+   "lethal": true,
+   "runUp": "walking pace",
+   "move": [
+    "plain"
+   ],
+   "coupling": "floating ! above the area",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [
+    "S4-b"
+   ],
+   "why": "Bands, not patches: the first full-width lava in the level is met at walking pace before chase 2 uses it",
+   "evidence": "P3 p009L s56; F3 p102R fr.21",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "drop-down: raised dark ledge ending in a step across the diagonal; the triceratops is drawn at its foot",
+   "width": "full width",
+   "heightDelta": "≈−1 to −2 (not measured)",
+   "landing": "C58 floor with a 3-stack and a single crate (landing snags)",
+   "lethal": false,
+   "runUp": "diagonal walk",
+   "move": [
+    "drop"
+   ],
+   "coupling": "chase 2 begins at the drop",
+   "failure": "caught by the triceratops if you snag on landing (death)",
+   "nearby": [
+    "S4-d",
+    "S4-e",
+    "S4-f"
+   ],
+   "why": "TT 23: when dropping, fall from the centre so you do not snag on the boxes. The mode change is a one-way drop into the chase, with crates on the landing",
+   "evidence": "F3 p034R middle (triceratops icon at the step); F3 p102R fr./cap. 23–24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S5-a",
+   "section": "S5",
+   "kind": "lava band across the path",
+   "width": "≈1 along (TT frame twenty-five; P3 shots fifty-seven and sixty-five)",
+   "heightDelta": "0",
+   "landing": "path beyond, often with a crate on it",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "plain"
+   ],
+   "coupling": "chaser behind",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [
+    "S5-a"
+   ],
+   "why": "The first full-width lava in a chase: a small hop is enough, but the crate behind it is a snag",
+   "evidence": "F3 p102R fr.25; P3 p009L s57, p009R s65",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S5-b",
+   "section": "S5",
+   "kind": "clinging-grass patch across most of the path (slows; caught = death), with the striped crate standing in it and a safe zone on the right",
+   "width": "≈3–5 along (a wide grass field in TT frames twenty-six and twenty-seven)",
+   "heightDelta": "0",
+   "landing": "safe zone on the right (P-S5-b) or the striped crate (P-S5-c)",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "plain",
+    "double"
+   ],
+   "coupling": "chaser behind",
+   "failure": "death: the triceratops catches you in the grass (F3 tip 1)",
+   "nearby": [
+    "S5-b",
+    "P-S5-b",
+    "P-S5-c"
+   ],
+   "why": "TA4: the grass costs a lot of time — go right, or double-jump onto the box. TT 26–27: move right a little early and avoid the grass with two small jumps in the safe zone. The crate is an island over slow ground",
+   "evidence": "F3 p034R TA4; F3 p102R fr./cap. 26–27; F3 p032L tip 1",
+   "confidence": "medium",
+   "moveNote": "two small jumps through the right safe zone, or a double jump onto the striped crate"
+  },
+  {
+   "id": "G-S5-c",
+   "section": "S5",
+   "kind": "big lava patch over the right two thirds of the path, followed by three Nitros along the right edge",
+   "width": "≈2–3 across (two thirds of the path)",
+   "heightDelta": "0",
+   "landing": "the left third of the path (≈1–1.5)",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "walk"
+   ],
+   "coupling": "chaser behind; Nitro line S5-c",
+   "failure": "death (lava or Nitro)",
+   "nearby": [
+    "S5-c",
+    "O-S5-a"
+   ],
+   "why": "Mask hint 4: pass on the left here. The lane shrinks to one third of the path for several u, the narrowest point of the chases",
+   "evidence": "F3 p034L route + mask hint 4",
+   "confidence": "medium",
+   "moveNote": "hold the left third"
+  },
+  {
+   "id": "G-S5-d",
+   "section": "S5",
+   "kind": "three-way choke: lava on the left edge, lava on the right edge, a clinging-grass clump between them",
+   "width": "≈1–2 each (map)",
+   "heightDelta": "0",
+   "landing": "path beyond the choke",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "plain"
+   ],
+   "coupling": "chaser behind",
+   "failure": "death in the lava; caught in the grass",
+   "nearby": [
+    "S5-d"
+   ],
+   "why": "Mask hint 4: jump over the magma so as to avoid the grass; TT 29: small-jumping the magma from left to right is faster than a big jump over the grass. Two wrong answers and one right one, at chase speed",
+   "evidence": "F3 p034L route + mask hint 4; F3 p102R cap. 29",
+   "confidence": "medium",
+   "moveNote": "small jumps over the magma, left to right"
+  },
+  {
+   "id": "G-S5-e",
+   "section": "S5",
+   "kind": "wide lava patch across the full path",
+   "width": "≈2–3 along (TT frame twenty-eight)",
+   "heightDelta": "0",
+   "landing": "path to the green ! and the goal",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "running"
+   ],
+   "coupling": "chaser behind",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [
+    "S5-d"
+   ],
+   "why": "The widest chase gap comes last, after the lane-narrowing beats",
+   "evidence": "F3 p102R fr.28",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "drop-down: step down to ledge 2 (no gap)",
+   "width": "0",
+   "heightDelta": "−0.5",
+   "landing": "ledge 2 (≈4.3) with the 3-stack",
+   "lethal": false,
+   "runUp": "≈7",
+   "move": [
+    "drop"
+   ],
+   "coupling": "none",
+   "failure": "not a failure (it is the route)",
+   "nearby": [],
+   "why": "A plain step down",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-b",
+   "section": "B",
+   "kind": "short gap to ledge 4",
+   "width": "≈0.4–0.5",
+   "heightDelta": "0",
+   "landing": "ledge 4 (≈6)",
+   "lethal": false,
+   "runUp": "top slab",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "falling ends the bonus (no life lost)",
+   "nearby": [],
+   "why": "A token gap between the tool and the reward",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-c",
+   "section": "B",
+   "kind": "two short gaps down to ledge 5 (W resting on a ?) and the exit ledge",
+   "width": "≈0.4 and ≈0.9",
+   "heightDelta": "−1, then −0.5",
+   "landing": "ledge 5 (≈4), exit ledge (≈6)",
+   "lethal": false,
+   "runUp": "ledge 4",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "falling ends the bonus (no life lost)",
+   "nearby": [],
+   "why": "Two easy steps down to the exit stump",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-G-a",
+   "section": "G",
+   "kind": "lava basins across the strip",
+   "width": "≈3–4 along (a curved lava band across the path in P3 shot sixty-eight)",
+   "heightDelta": "0",
+   "landing": "path beyond",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "double"
+   ],
+   "coupling": "chaser behind",
+   "failure": "death unless protected (TT 19–20)",
+   "nearby": [],
+   "why": "P3 s68: the super double jump (earned with the red gem in stage 12) clears obstacles like this — the secret route assumes the new move",
+   "evidence": "P3 p010L s68; F3 p035R hint A",
+   "confidence": "medium",
+   "moveNote": "super double jump"
+  },
+  {
+   "id": "G-G-b",
+   "section": "G",
+   "kind": "clinging-grass clumps across the strip (slows)",
+   "width": "≈1–3",
+   "heightDelta": "0",
+   "landing": "path beyond",
+   "lethal": true,
+   "runUp": "chase run",
+   "move": [
+    "spin-extended",
+    "plain"
+   ],
+   "coupling": "chaser behind",
+   "failure": "death: caught by the triceratops in the grass",
+   "nearby": [],
+   "why": "Hint A: the course is all magma and clinging grass; come back after learning the tornado spin",
+   "evidence": "F3 p035R hint A; P3 p010L intro",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 4,
+   "moves": [
+    "plain",
+    "walk",
+    "drop"
+   ],
+   "rhythm": "even (alternating sides)",
+   "maxGap": "≈1–2",
+   "rest": "C1 stretch (P3 s51: rest briefly)",
+   "noStop": true,
+   "why": "Log, lava left, lava right, step down onto grass and crates: one beat per obstacle, sides alternating, with the pursuer forbidding a stop",
+   "evidence": "F3 p033R strip 1; P3 p008R s50–s52; F3 p102R cap. 05"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "plain",
+    "drop"
+   ],
+   "rhythm": "syncopated (bird swoops)",
+   "maxGap": "≈1–2",
+   "rest": "C19 (the chase ends)",
+   "noStop": true,
+   "why": "Pterodactyl swoops are dodged left or right (TT 06), then a lava patch and a drop onto the 2×2 block",
+   "evidence": "F3 p033L route; F3 p102R fr./cap. 06–10"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 4,
+   "moves": [
+    "plain",
+    "slide-jump",
+    "spin"
+   ],
+   "rhythm": "even",
+   "maxGap": "— (crate hurdles)",
+   "rest": "band after the 3-stack",
+   "noStop": false,
+   "why": "TT line: small jump over the near crate, small jump again into the floating Aku, slide then long jump over the TNT 2-stack, small jump-spin into the 3-stack top",
+   "evidence": "F3 p102R cap. 11–14"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 4,
+   "moves": [
+    "plain",
+    "spin"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈2–4 (grass patch)",
+   "rest": "C28",
+   "noStop": false,
+   "why": "Strip 2: log, lava, grass (one jump or a spin), log with the red-gem pad — the chase vocabulary at walking pace",
+   "evidence": "F3 p033R strip 2; F3 p032L tip 1"
+  },
+  {
+   "id": "J-S5-a",
+   "section": "S5",
+   "count": 6,
+   "moves": [
+    "drop",
+    "plain",
+    "double"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "≈2–3 (lava patch)",
+   "rest": "none until the goal",
+   "noStop": true,
+   "why": "Drop from the centre at C58, hop the lava band, two small jumps through the right safe zone (or a double jump onto the striped crate), hold the left third past the lava and Nitros, small jumps over the magma left to right, a wide pool, then the green !",
+   "evidence": "F3 p034R TA4; F3 p034L mask hint 4; F3 p102R cap. 23–29"
+  },
+  {
+   "id": "J-B-a",
+   "section": "B",
+   "count": 6,
+   "moves": [
+    "plain",
+    "drop",
+    "arrow"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈1",
+   "rest": "ledge 4 and the steel shelf",
+   "noStop": false,
+   "why": "Step down, three slab hops, dismantle the stack, arrow bounce onto the steel shelf, two short gaps to the exit: the bonus tests order, not jumping",
+   "evidence": "F3 p040L; P3 p009R s61–s62"
+  },
+  {
+   "id": "J-G-a",
+   "section": "G",
+   "count": 5,
+   "moves": [
+    "double",
+    "spin-extended",
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈3–4 (lava band)",
+   "rest": "steel C markers",
+   "noStop": true,
+   "why": "Estimated from the map: lava pools across the strip need the super double jump while chased, grass the tornado spin; the count is a map estimate",
+   "evidence": "F3 p035R–p035L; P3 p010L s68"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1, S2, S3, S4, S5, G",
+   "kind": "lava / magma: patches at the path edges, bands across the path, flowing stream bands, basins",
+   "placement": "flank in chase 1 (alternating sides); across path in chase 2, the lava river and the gem course",
+   "timing": "static (the lava river flows)",
+   "counter": [
+    "go around (steer to the open side)",
+    "jump over",
+    "walk through while masked (TT 19–20)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "chaser",
+    "clinging grass",
+    "Nitro line",
+    "crates at landings"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "RHYTHM",
+    "TEST"
+   ],
+   "why": "Escalates from edge patches you steer round (chase 1) to full-width bands you must hop (lava river, chase 2) to pools that need the super double jump (gem course)",
+   "evidence": "F3 p033–p035 maps; F3 p102R fr.19–20, 25, 28 + cap. 19–20; P3 p008R s50, p009L s56–s58, p010L s68"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1, S3, S5",
+   "kind": "flame geysers at the path edge (and a tall flame pillar behind the TNT 2-stack)",
+   "placement": "flank: at one edge of the path",
+   "timing": "erupt (cycle not stated); P3 s50: a left obstacle usually follows a right one",
+   "counter": [
+    "go around on the far side",
+    "wait for the eruption to end"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "lava patches",
+    "TNT 2-stack (TT 12)",
+    "grass (P3 s58)"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TIMING-GATE"
+   ],
+   "why": "Side hazards that keep the line in the middle third and alternate sides",
+   "evidence": "P3 p008R s50, p009L s58; F3 p102R fr.12, 18"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1, S3, G",
+   "kind": "fallen logs across the path (static blocker)",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "striped crate at the landing (S1)",
+    "lava beside a diagonal log (S3)",
+    "red-gem pad (S3)"
+   ],
+   "roles": [
+    "RHYTHM",
+    "TEACH"
+   ],
+   "why": "The one full-width obstacle of chase 1, then reused as landmarks in the free strip and to mark the secret route",
+   "evidence": "F3 p033R strips 1–2; F3 p035; P3 p009L s54"
+  },
+  {
+   "id": "O-S1-d",
+   "section": "S1, S2, S4, S5",
+   "kind": "crates as static blockers (snags) at landings and on the chase line",
+   "placement": "on platform: at the foot of drops and just past logs",
+   "timing": "static",
+   "counter": [
+    "spin it",
+    "jump over",
+    "drop from the centre (TT 23)",
+    "leave it to the triceratops (credited)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "step-downs",
+    "logs",
+    "chaser"
+   ],
+   "roles": [
+    "TEST",
+    "LANE-BLOCK"
+   ],
+   "why": "F3 tip 2: a box on the path snags Crash so he cannot advance. Because the pursuer breaks and credits missed crates, crates can sit on landings as obstacles without making the all-box goal a death trap",
+   "evidence": "F3 p032L tip 2; F3 p102R cap. 04–05, 23; P3 p008R s52"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S1, S3, S5, G",
+   "kind": "clinging grass (まとわり草)",
+   "placement": "across path: patches at the S1 step foot, carpets in strip 2, a field in chase 2, the middle of the final choke",
+   "timing": "static; catches the feet and slows",
+   "counter": [
+    "jump over in one go",
+    "tornado spin through",
+    "jump and spin (P3)",
+    "safe zone on the right (TT 26–27)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "chaser (caught = death)",
+    "striped stepping crate",
+    "lava on both sides (final choke)"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEST"
+   ],
+   "why": "Harmless at walking pace, deadly in a chase: it is shown as small patches, rehearsed in the free strip, then tested with the pursuer behind",
+   "evidence": "F3 p032L tip 1; F3 p034R TA4; F3 p102R fr.15–16, 26–27; P3 p008R intro, p009L s58"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "TNT ladder: a TNT, then a TNT 2-stack, on open floor",
+   "placement": "on path, on the flat band",
+   "timing": "3-s fuse after a stomp",
+   "counter": [
+    "stomp and back off",
+    "slide then long-jump over the 2-stack (TT 12)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "floating Aku just before",
+    "flame pillar behind the 2-stack"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST"
+   ],
+   "why": "Explosives are taught on the widest flat floor, with a mask placed right before them",
+   "evidence": "F3 p033L route; F3 p102R cap. 12; F3 mask hint 2 (first-wave reading)"
+  },
+  {
+   "id": "O-S5-a",
+   "section": "S5",
+   "kind": "Nitro line: three Nitros along the right edge of the chase lane",
+   "placement": "flank: right edge, after the big lava patch",
+   "timing": "static",
+   "counter": [
+    "keep left (mask hint 4)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "big lava patch",
+    "chaser"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "Crates as walls: the Nitros and the lava leave one third of the lane at chase speed",
+   "evidence": "F3 p034L route + mask hint 4"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "triceratops (ドタバタトプス)",
+   "archetype": "pursuer",
+   "behaviour": "bursts out of the cave when the start trio is broken and runs behind Crash toward the camera until C19 (through S2); smashes every crate it reaches (credited); cannot be beaten",
+   "counter": [
+    "outrun (avoid)"
+   ],
+   "fails": [
+    "stopping to spin all the crates (P3 s52)",
+    "getting caught in clinging grass (F3 tip 1)",
+    "snagging on a crate after a drop (TT 05)"
+   ],
+   "placement": "behind (pursuer), released at the cave mouth",
+   "roles": [
+    "PURSUER"
+   ],
+   "firstAlone": true,
+   "why": "The chase is triggered by crates, so it begins while the player is looking down",
+   "evidence": "F3 p032R; P3 p008R s49, s52; F3 p033R strip 1",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "pterodactyl (バサバサプテラ; two, perched)",
+   "archetype": "flier (perches, then swoops across the path)",
+   "behaviour": "perched on wooden perches at the path edge; in the chase they swoop low across the path at head height in front of Crash (TT 06–09: wingspan about the path width)",
+   "counter": [
+    "jump-spin",
+    "dodge left or right",
+    "double-jump over (P3 s70)"
+   ],
+   "fails": [
+    "touching one: carried off = death"
+   ],
+   "placement": "flank: perched at the corridor edge, swooping across the line",
+   "roles": [
+    "AMBUSH",
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "A flank ambusher that crosses the lane while the chaser removes the option to wait",
+   "evidence": "F3 p032R; F3 p033L route; F3 p102R fr./cap. 06–09",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "wave lab assistant (ウェーブ研究員; in a dark puddle)",
+   "archetype": "burrower/ambusher (rises out of a puddle)",
+   "behaviour": "approaches with only its head above the surface, then suddenly rears up and covers you",
+   "counter": [
+    "spin when its head comes near",
+    "stomp (jump on it)",
+    "body slam",
+    "dash past (TA)"
+   ],
+   "fails": [
+    "walking into it as it rears up"
+   ],
+   "placement": "on line: puddle in the middle of strip 2, grass either side",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": true,
+   "why": "Met alone, at walking pace, in the free section; never in a chase on the map",
+   "evidence": "F3 p032R; F3 p033R strip 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "wave lab assistant",
+   "archetype": "burrower/ambusher (rises out of a puddle)",
+   "behaviour": "as E-S3-a",
+   "counter": [
+    "spin when its head comes near",
+    "stomp (jump on it)",
+    "body slam",
+    "dash past (TA)"
+   ],
+   "fails": [
+    "walking into it as it rears up"
+   ],
+   "placement": "on line between log 2 (red-gem pad) and C28",
+   "roles": [
+    "AMBUSH"
+   ],
+   "firstAlone": false,
+   "why": "Repeats the ambush beside the secret-route landmark",
+   "evidence": "F3 p033R strip 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "wave lab assistant",
+   "archetype": "burrower/ambusher (rises out of a puddle)",
+   "behaviour": "as E-S3-a",
+   "counter": [
+    "spin when its head comes near",
+    "stomp (jump on it)",
+    "body slam"
+   ],
+   "fails": [
+    "walking into it as it rears up"
+   ],
+   "placement": "guarding the bonus lift (beside the stump platform)",
+   "roles": [
+    "GUARD",
+    "AMBUSH"
+   ],
+   "firstAlone": false,
+   "why": "Guards the bonus entrance",
+   "evidence": "F3 p034R top",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "wave lab assistant",
+   "archetype": "burrower/ambusher (rises out of a puddle)",
+   "behaviour": "as E-S3-a",
+   "counter": [
+    "spin when its head comes near",
+    "stomp (jump on it)",
+    "body slam"
+   ],
+   "fails": [
+    "walking into it as it rears up"
+   ],
+   "placement": "on line on the upper path near the power stone",
+   "roles": [
+    "GUARD",
+    "AMBUSH"
+   ],
+   "firstAlone": false,
+   "why": "Guards the crystal path",
+   "evidence": "F3 p034R top and middle",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S5-a",
+   "section": "S5",
+   "kind": "triceratops",
+   "archetype": "pursuer",
+   "behaviour": "reappears at the step-down above C58 and chases to the goal (TT 24: back about two seconds after the drop)",
+   "counter": [
+    "outrun (avoid)"
+   ],
+   "fails": [
+    "arriving at the green ! with the triceratops on your heels (mask hint 5: no time to hit it)",
+    "grass",
+    "snagging after the drop"
+   ],
+   "placement": "behind (pursuer), from the drop above C58",
+   "roles": [
+    "PURSUER"
+   ],
+   "firstAlone": false,
+   "why": "Its return is tied to a geometry change (a one-way drop) and its pressure is what makes the green ! a count trap",
+   "evidence": "F3 p034R middle (icon at the step); F3 p102R fr.24; F3 p034L mask hint 5",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S5-b",
+   "section": "S5",
+   "kind": "pterodactyl (four, on perches along the chase-2 diagonal)",
+   "archetype": "flier (perches, then swoops across the path)",
+   "behaviour": "as E-S2-a; one at the left edge just after C58, two at the right edge further down, one at the right edge near the end",
+   "counter": [
+    "jump-spin",
+    "dodge left or right",
+    "double-jump over"
+   ],
+   "fails": [
+    "touching one: carried off = death"
+   ],
+   "placement": "flank: perches at alternating edges of the chase lane",
+   "roles": [
+    "AMBUSH",
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "More birds than chase 1, spread along the whole run",
+   "evidence": "F3 p034R lower part; F3 p034L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-G-a",
+   "section": "G",
+   "kind": "triceratops",
+   "archetype": "pursuer",
+   "behaviour": "chases the length of the secret strip",
+   "counter": [
+    "outrun",
+    "outrun by riding the water currents (hint C)"
+   ],
+   "fails": [
+    "grass",
+    "lava"
+   ],
+   "placement": "behind (pursuer)",
+   "roles": [
+    "PURSUER"
+   ],
+   "firstAlone": false,
+   "why": "The secret route is one long chase",
+   "evidence": "F3 p035R; P3 p010L s68–s69",
+   "confidence": "high"
+  },
+  {
+   "id": "E-G-b",
+   "section": "G",
+   "kind": "pterodactyl (≈6 on perches; one stretch with three perches in a row at alternating edges)",
+   "archetype": "flier (perches, then swoops across the path)",
+   "behaviour": "as E-S2-a",
+   "counter": [
+    "go round on the right",
+    "jump-spin (hint B)",
+    "double-jump over (P3 s70)"
+   ],
+   "fails": [
+    "touching one"
+   ],
+   "placement": "flank: perches on both edges of the narrow strip",
+   "roles": [
+    "AMBUSH",
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "The densest bird placement, on the narrowest lane",
+   "evidence": "F3 p035R–p035L, hint B; P3 p010R s70",
+   "confidence": "low"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "cave mouth: W, then the trio (chase trigger)",
+    "triceratops bursts out",
+    "log (jump), striped at the landing",
+    "lava left",
+    "lava right",
+    "W + slot",
+    "step down onto grass and crates",
+    "C1 (\"rest briefly\")"
+   ],
+   "gaps": 3,
+   "enemies": 1,
+   "hazards": 5
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "W + striped + slot",
+    "two perched pterodactyls swoop",
+    "lava patch",
+    "step down onto the 2×2 block",
+    "long grey stretch",
+    "curve",
+    "C19 (chase ends)"
+   ],
+   "gaps": 2,
+   "enemies": 3,
+   "hazards": 2
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "floating Aku",
+    "TNT",
+    "TNT 2-stack (flame pillar behind)",
+    "3-stack",
+    "A-wood",
+    "strip 2: lava",
+    "diagonal log by lava",
+    "wave assistant",
+    "grass",
+    "log + red-gem pad",
+    "wave assistant",
+    "C28"
+   ],
+   "gaps": 4,
+   "enemies": 2,
+   "hazards": 5
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "? + Nitro + striped pair at C28",
+    "bonus lift (wave assistant beside it)",
+    "lava-river bands + floating ! + 5 outlines",
+    "upper path, wave assistant, crystal",
+    "turn and descend the diagonal",
+    "3-wood line",
+    "step down (the triceratops appears)",
+    "C58 crates at the landing"
+   ],
+   "gaps": 2,
+   "enemies": 2,
+   "hazards": 2
+  },
+  {
+   "section": "S5",
+   "beats": [
+    "pterodactyl perches",
+    "lava band + ?(2)",
+    "grass field: right safe zone or striped stepping crate",
+    "big lava right + three Nitros (keep left)",
+    "lava | grass | lava choke",
+    "wide lava pool",
+    "green ! + two striped",
+    "goal"
+   ],
+   "gaps": 5,
+   "enemies": 5,
+   "hazards": 5
+  },
+  {
+   "section": "B",
+   "beats": [
+    "stump",
+    "ledge with the striped sandwich",
+    "step down",
+    "3-stack",
+    "three rising slabs",
+    "5-stack with the arrow on top (dismantle)",
+    "arrow bounce to the steel shelf (1UP + ?)",
+    "two short gaps",
+    "exit stump"
+   ],
+   "gaps": 3,
+   "enemies": 0,
+   "hazards": 0
+  },
+  {
+   "section": "G",
+   "beats": [
+    "red-gem pad by the log",
+    "chase strip with a steel C",
+    "grass and lava alternating",
+    "log",
+    "water currents (speed)",
+    "three perches in a row",
+    "lava pools (super double jump)",
+    "steel C",
+    "steps",
+    "secret gem"
+   ],
+   "gaps": 2,
+   "enemies": 7,
+   "hazards": 3
+  }
+ ],
+ "geometryObservations": [
+  "**Two speeds, two geometries.** The chases run down narrow ≈3–5 u corridors toward the camera with hazards at the edges; the free section uses wider flat floors for explosives (the TNT ladder) and a switch puzzle over the lava river.",
+  "**Chase 1 never closes the lane except with a log.** Lava patches and geysers alternate sides (P3 s50) and leave half the path open; the only full-width obstacles are a fallen log and step-downs, both answered by one short move.",
+  "**Drops commit the player and carry crates on the landing.** Every step-down (S1, S2, the C58 drop) has crates at its foot; TT 05 and 23: drop without jumping, from the centre, and do not snag. The landing snag is the chase’s typical crate placement.",
+  "**The pursuer makes crate snags fair.** Missed crates are smashed and credited by the triceratops (F3 tip 2), so crates can stand on the chase line as obstacles, and the all-box goal never forces a stop inside a chase.",
+  "**Clinging grass is taught in the order slow → deadly.** Small patches at the S1 step, carpets in the free strip (harmless at walking pace), a field in chase 2 with a stepping crate and a safe lane, the middle of the final choke, and the whole gem course.",
+  "**The free section rehearses the chase vocabulary at walking pace.** Strip 2 holds lava patches, logs, grass and ambushers and no crates, so the obstacle language is learned where failure is cheap.",
+  "**Full-width lava appears late.** Bands are first met at walking pace in the lava-river area, then in chase 2 (a ≈1 u band, a ≈2–3 u pool), then as pools needing the super double jump on the secret course.",
+  "**Enemies match the pace.** Pterodactyls (flank ambushers that swoop across the lane) live in the chases, the wave assistants (puddle ambushers) only in the free section, and the invincible triceratops supplies the pressure.",
+  "**Mode changes are geometry changes.** Chase 1 ends at the C19 curve where the route turns back into the screen; chase 2 starts at a one-way step-down above C58. Both are checkpoints.",
+  "**The finale narrows the lane.** A big lava patch and three Nitros leave one third of the path, then a lava | grass | lava choke offers two wrong answers and one right one, followed by the green ! — the stage’s count check placed at its tightest point.",
+  "**The bonus is safe geometry around an order puzzle.** Steps of ≈0.5 u, gaps under 1 u and a floating steel shelf reachable only by the arrow once the stack below it is dismantled.",
+  "**The secret course is harder geometry, not more crates:** a narrower strip, more birds, water currents as speed boosts, steel checkpoints and pools that assume the super double jump from stage 12.",
+  "**Time-trial masks are placed as geometry keys.** Three crates become Aku crates so that invincibility covers exactly the grass and magma stretch after the TNT ladder (TT 13–20: landing in magma is fine while masked)."
+ ],
+ "geometryTransfer": [
+  "**Pursuer runs with a walking break.** Use the level-data `boulderChase` with two runs separated by `shelters`: run 1 down a 3.5–6 m (3–5 u) corridor with hazards on alternating edges and one full-width hurdle; a free section with the explosives and the switch puzzle; run 2 starting with a one-way 1.2–2.3 m drop. Missed crates should be credited when the pursuer breaks them, or kept off the chase line.",
+  "**Landing snags at drops.** Put one crate on the landing of each 1.2–2.3 m step-down, slightly off-centre: on foot it teaches \"drop, don’t jump\"; on the board a plow at ≥ 13 m/s costs ≈ 20 % speed, so a chase line should hold at most two in a row.",
+  "**Slow patch with an island and a safe lane.** In a chase, cover two thirds of the lane with slow ground, stand a crate in it as an island (top 1.15 m: inside a full ollie’s 1.78 m apex and a plain jump on foot), and leave a 1.2–1.5 m clean lane along one wall, visible early.",
+  "**Perched flank ambusher.** A `floater` (hovers 1.65 m, swoops every 2.6 s within 12 m along and 6 m across) on a perch at the corridor edge plays the pterodactyl; place them on alternating edges, never on the landing of a drop.",
+  "**Final squeeze before the goal.** Lava `pit`s on both edges with a slow patch between them, and a Nitro line along one edge after a wide lava patch, 2–3 s before the `nitrobang` and the gate: the lane narrows to ≈1.2 m at chase speed, and the count check sits at the tightest point.",
+  "**Arrow-on-tower bonus geometry.** Keep the bonus footing trivial (0.5 m steps, gaps ≤ 1 m) and put the difficulty in the order. Build the reward shelf from steel crates (crate tops cannot be ledge-grabbed, unlike platforms) with its top 5–5.8 m above the floor, inside the arrow-gate window (4.7–6.6 m, bible XV.2): an arrow resting on one crate (lid 2.30 m) launches ≈ 3.77 m above its lid (≈ 6.1 m), while the arrow on top of a 5-stack (lid 5.76 m) is above the floor double jump (4.59 m) until the stack below it is reduced."
+ ]
 }

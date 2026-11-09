@@ -926,5 +926,1133 @@
   "Four separate striped-crate payout warnings in one stage: the series teaches that how you break a crate matters.",
   "Main-road crates per section 12/13/10; the bonus inflates C2 to 32.",
   "Time crates (10 s) sit on block tops, stack tops, inside the 6-block and in the row: the trial tests vertical precision; walls give the fast line."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "wide walled road (≈6–9 u), gentle right curve; wall tops runnable as a second lane"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "same road; narrows to ≈3–4 u at stone bridge 1 (gate posts, knight)"
+  },
+  {
+   "section": "BONUS",
+   "mode": "side-scroll",
+   "notes": "plank walkway along the castle wall, left to right"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "road through ponds to stone bridge 2 and the castle gate; the last stretch has an open left edge"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "wide floor: sandy walled avenue between low stone walls",
+   "size": "≈6–9 wide (P3 s2: a crate is a small fraction of the road); start straight several screens long",
+   "heightDelta": "0",
+   "edges": "walled: stone walls ≈1 high, ≈1 thick, runnable",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "REST",
+    "TEACH"
+   ],
+   "why": "A wide, flat, enemy-free opening: the W and ? stand on opposite edges, so the first thing learned is that the road is wider than the line of travel",
+   "evidence": "P3 p004R s2; F3 p013L; F3 p101L fr.01–04",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1, S2, S3",
+   "shape": "narrow ledge: the tops of both side walls",
+   "size": "≈1 wide, ≈1 high, the full length of the road except where a hole or house breaks it",
+   "heightDelta": "+1",
+   "edges": "open wall top",
+   "behaviour": "static; the expert lane; move: jump up (≈1) and run; drop down, do not jump (cap. 10); a house doorway snags the feet on the right wall (cap. 13)",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "A second lane above the road: the record line rides the wall tops to skip ponds and enemies and switches walls at holes (TT caption 02: run the right wall, move to the left wall at the hole). The level offers a skill lane without a fork",
+   "evidence": "F3 p101L intro, fr./cap. 02–03, 06–07, 10, 14, 17–18, 22–24, 27–30; F3 p013R TA2",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "bridge/plank laid across a trench (brown band across the full width)",
+   "size": "full road width × ≈1–1.5 along",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [],
+   "why": "One of five plank crossings that punctuate the road at fairly even intervals: a visual beat with no risk (whether the trench beside a plank can be fallen into is not shown)",
+   "evidence": "F3 p013L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "wide floor: dry ground with C1",
+   "size": "≈6–8 wide",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "C1 stands on dry road just after the pond and the block, but the next hole is only a few steps ahead (G-S2-a)",
+   "evidence": "F3 p013R; callout 2 screenshot",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "bridge/plank: two plank crossings close together after the slot",
+   "size": "full road width each, ≈1–1.5 along, ≈2–4 apart",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [],
+   "why": "A double beat right after the timed crate",
+   "evidence": "F3 p013R; P3 p004R s3 (dark trench behind the slot crate)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "stone bridge 1: a narrower stone causeway entered between two tall gate posts",
+   "size": "≈3–4 wide (P3 s5 shows bridge 2) × ≈1–1.5 road widths long",
+   "heightDelta": "0",
+   "edges": "low parapets and gate posts",
+   "behaviour": "static; move: walk; pass the knight after his swing",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "The road narrows from ≈6–9 to ≈3–4 exactly where the knight stands, so the first real enemy cannot be bypassed widely; the mask S2-d waits on the bridge as the reward",
+   "evidence": "F3 p013R route (knight on the bridge); F3 p101L fr.16 (gate posts); P3 p004R s4–s5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "round woven bonus pad standing in the avenue just past the first knight",
+   "size": "≈1.5 across",
+   "heightDelta": "not visible (a low drum)",
+   "edges": "open",
+   "behaviour": "static (jump on it to enter the bonus); move: jump on",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "Placed right after the first knight as a breather; P3 calls it an unusual platform in the middle of the path",
+   "evidence": "P3 p005L s7, s12; F3 p014L; F3 p101L fr.17",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "bridge/plank across a trench after the bonus pad",
+   "size": "full road width × ≈1–1.5",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [],
+   "why": "Fourth plank beat",
+   "evidence": "F3 p014L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "plank walkway along one side of the 6-block pond",
+   "size": "≈1 wide × pond length",
+   "heightDelta": "0",
+   "edges": "open: water on one side",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "SAFE-ISLAND"
+   ],
+   "why": "A dry lane beside slow water: wading to the block and walking past it are both offered",
+   "evidence": "F3 p101L fr.20",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S2-f",
+   "section": "S2",
+   "shape": "wide floor: dry ground with C2",
+   "size": "≈6–8 wide",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "C2 sits right at the pond exit; a plank and the next pond follow at once",
+   "evidence": "F3 p014L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-a",
+   "section": "BONUS",
+   "shape": "bridge/plank walkway along a castle wall (side view): entry ? pad, a curved plank ramp up ≈1, a walkway ≈4 long",
+   "size": "≈4 long",
+   "heightDelta": "+1 (ramp)",
+   "edges": "open front edge",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "A calm start before the only spot where one can fall",
+   "evidence": "F3 p019L diagram; P3 p005L s8",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-b",
+   "section": "BONUS",
+   "shape": "raised walkway",
+   "size": "≈2.5 long, ≈0.8 above the first walkway",
+   "heightDelta": "+0.8",
+   "edges": "open",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "Landing for the slab hops",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "BONUS",
+   "shape": "wide floor: long low walkway holding the striped, the W + 1UP pair and a W drawn on top of the 1UP",
+   "size": "≈6 long",
+   "heightDelta": "0",
+   "edges": "open",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "The reward sits on flat footing right after the drop",
+   "evidence": "F3 p019L; P3 p005L s8",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-e",
+   "section": "BONUS",
+   "shape": "walkway ≈4 long, a slight step (≈0.2) below the previous one, with a ? on it and a ? floating ≈3 above it",
+   "size": "≈4 long",
+   "heightDelta": "−0.2",
+   "edges": "open",
+   "behaviour": "static; move: walk, high jump",
+   "roles": [
+    "REST"
+   ],
+   "why": "The floating ? is the only crate in the level that needs a deliberate high jump (≈3 up) or a bounce",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-d",
+   "section": "BONUS",
+   "shape": "stairs: two slabs rising ≈0.6 and ≈0.4 with a ? on the second, then a walkway ≈2.5 sloping down to the exit ? pad",
+   "size": "≈1 slabs; walkway ≈2.5",
+   "heightDelta": "+0.6, +0.4, then down",
+   "edges": "open",
+   "behaviour": "static; move: plain hops",
+   "roles": [
+    "STEPPING",
+    "BONUS-PAD"
+   ],
+   "why": "A last pair of hops collects the last ?; the slope returns to the road",
+   "evidence": "F3 p019L; P3 p005L s9",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "narrow ledge: raised stone bank carrying the row of three",
+   "size": "≈3 long × ≈1 deep, ≈1–1.5 high (about Crash’s head)",
+   "heightDelta": "+1 to +1.5",
+   "edges": "open",
+   "behaviour": "static; move: jump-spin",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "A raised shelf beside the road turns the crate row into a step up to the wall line",
+   "evidence": "P3 p005L s11; F3 p101L fr.22",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "stone bridge 2 entered between tall gate posts (crystal on it)",
+   "size": "≈3–4 wide × ≈1.5 road widths long",
+   "heightDelta": "0",
+   "edges": "low parapets, gate posts",
+   "behaviour": "static; move: walk",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "Same choke as bridge 1, again guarded by a knight at the posts; the crystal is the reward instead of a mask",
+   "evidence": "F3 p014R route; P3 p004R s5; F3 p101L fr.26",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "wide floor: last stretch along the castle with a dark drop along its left edge",
+   "size": "≈6–8 wide",
+   "heightDelta": "0",
+   "edges": "right wall; left edge open to a drop, TT 27, 29",
+   "behaviour": "static; move: walk",
+   "roles": [],
+   "why": "The run-in to the gate loses its left wall: the last part of the road has an open edge (what lies below is not visible)",
+   "evidence": "F3 p101L fr.27, 29",
+   "confidence": "low"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "floor hole notched into the right edge (the first hole)",
+   "width": "≈2–3 across (one third to half of the road) × ≈2–3 along",
+   "heightDelta": "0",
+   "landing": "the open left half of the road",
+   "lethal": true,
+   "runUp": "start straight (long)",
+   "move": [
+    "walk"
+   ],
+   "coupling": "none",
+   "failure": "death (no protection helps: F3 intro)",
+   "nearby": [
+    "S1-b",
+    "S1-c"
+   ],
+   "why": "Observed: the first lethal geometry is a partial-width notch on the side the player just swept to for the ? (S1-b). Inferred: \"edges kill\" is taught without forcing a jump; it also ends the right wall-top line, so the expert switches walls here (cap. 02)",
+   "evidence": "F3 p013L zoom; F3 p013L intro; F3 p101L cap. 02",
+   "confidence": "medium",
+   "moveNote": "step round it on the open half; no jump needed",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "floor hole notched into the left edge (the second hole)",
+   "width": "≈2 across (about a third of the road) × ≈2 along",
+   "heightDelta": "0",
+   "landing": "the open right part of the road",
+   "lethal": true,
+   "runUp": "≈5–8 after pit 1",
+   "move": [
+    "walk"
+   ],
+   "coupling": "none",
+   "failure": "death",
+   "nearby": [
+    "S1-c",
+    "S1-d"
+   ],
+   "why": "Holes alternate sides, so the road becomes a gentle slalom; the striped sandwich S1-c stands between the two notches, so the bouncing lesson happens between two lethal edges",
+   "evidence": "F3 p013L zoom",
+   "confidence": "medium",
+   "moveNote": "step round it"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "wading pond (safe water) across the full road at the page fold: the big pond",
+   "width": "full width × ≈1.5 road widths along (≈9–13 at map scale)",
+   "heightDelta": "0 (sunken, wade in and out)",
+   "landing": "road beyond, with the Aku crate S1-f",
+   "lethal": false,
+   "runUp": "goat stretch",
+   "move": [
+    "wade",
+    "running"
+   ],
+   "coupling": "none",
+   "failure": "slowed, no death (TA2: running speed drops inside the pond)",
+   "nearby": [
+    "S1-e",
+    "S1-f"
+   ],
+   "why": "Water that cannot kill comes before any jump test, and it slows the approach to the first mask and the first block. The record line jumps along the curve onto the right wall instead (cap. 06; TA2)",
+   "evidence": "F3 p013L–p013R; F3 p013R TA2; F3 p101L fr./cap. 05–07",
+   "confidence": "low",
+   "moveNote": "wade, or run the right wall top (TA2)"
+  },
+  {
+   "id": "G-S1-d",
+   "section": "S1",
+   "kind": "small floor hole notched into the left edge near the Aku and the 2×2 block",
+   "width": "≈1–2 across × ≈1–2 along",
+   "heightDelta": "0",
+   "landing": "road",
+   "lethal": true,
+   "runUp": "not visible",
+   "move": [
+    "walk"
+   ],
+   "coupling": "none",
+   "failure": "death",
+   "nearby": [
+    "S1-f",
+    "S1-g"
+   ],
+   "why": "A last edge reminder before C1; it sits on the side away from the 2×2 block, so a slide or spin into the block does not end in it",
+   "evidence": "F3 p013R route",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "floor hole: dark rectangular hole with earth sides in the right half of the avenue just past C1",
+   "width": "≈2–3 across (a third of the road) × ≈1.5–3 along",
+   "heightDelta": "0",
+   "landing": "the open left half",
+   "lethal": true,
+   "runUp": "≈2–4 from C1",
+   "move": [
+    "walk"
+   ],
+   "coupling": "goat just beyond, then the slot crate",
+   "failure": "death",
+   "nearby": [
+    "S1-C",
+    "S2-a",
+    "E-S2-a"
+   ],
+   "why": "The respawn point faces a lethal hole; the goat and the slot crate behind it make the player hurry past it (callout 2: dawdle at C1 and the slot crate is lost)",
+   "evidence": "F3 p013R route + callout 2 screenshot; F3 p101L fr.09",
+   "confidence": "medium",
+   "moveNote": "pass on the left half"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "frog pond (safe water) on one half of the road, beside a giant boulder",
+   "width": "≈3–4 across (half the road) × ≈3–4 along",
+   "heightDelta": "0 (sunken)",
+   "landing": "dry strip between the pond and the boulder, where the 3-stack S2-b stands",
+   "lethal": false,
+   "runUp": "after the planks",
+   "move": [
+    "wade",
+    "walk"
+   ],
+   "coupling": "frog E-S2-b inside",
+   "failure": "slowed, no death",
+   "nearby": [
+    "S2-b",
+    "E-S2-b",
+    "O-S2-a"
+   ],
+   "why": "Pond, boulder, crate stack and frog share one spot: the dry strip is a choke, and advice 3 wants the frog flung into the stack",
+   "evidence": "F3 p013R route; F3 p101L fr./cap. 14–15",
+   "confidence": "medium",
+   "moveNote": "walk the dry strip or wade; TT jumps from the boulder side onto the stack (cap. 15)"
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "floor hole notched into the right edge after the 3-stack",
+   "width": "≈1–2 across",
+   "heightDelta": "0",
+   "landing": "road",
+   "lethal": true,
+   "runUp": "not visible",
+   "move": [
+    "walk"
+   ],
+   "coupling": "none",
+   "failure": "death",
+   "nearby": [
+    "S2-c",
+    "E-S2-c"
+   ],
+   "why": "An edge notch right before the ? crate that baits the player toward the knight",
+   "evidence": "F3 p013R route",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S2-d",
+   "section": "S2",
+   "kind": "pond (safe water) spanning nearly the whole road, with the 6-block standing in it (frog pond 1)",
+   "width": "nearly full width × ≈4–6 along (map: about one road width)",
+   "heightDelta": "0 (sunken)",
+   "landing": "C2 on dry road just beyond",
+   "lethal": false,
+   "runUp": "goat stretch",
+   "move": [
+    "wade",
+    "walk"
+   ],
+   "coupling": "frog E-S2-e on the far rim; the 6-block S2-e stands in the water",
+   "failure": "slowed, no death",
+   "nearby": [
+    "S2-e",
+    "E-S2-e",
+    "S2-C"
+   ],
+   "why": "The biggest crate block stands in slow water, so the slide that advice 5 asks for is set up from the bank. TT 20 shows a plank walkway along one side of the pool: a dry lane past the block",
+   "evidence": "F3 p014L route; F3 p101L fr./cap. 20",
+   "confidence": "medium",
+   "moveNote": "wade, or take the plank walkway along its side"
+  },
+  {
+   "id": "G-B-a",
+   "section": "BONUS",
+   "kind": "stepping slabs: two short slabs (≈1 long, each ≈0.3 higher) and then the raised walkway, separated by hairline gaps",
+   "width": "<0.5 each",
+   "heightDelta": "+0.3, +0.3, +≈0.2",
+   "landing": "≈1 slabs, then the raised walkway (≈2.5)",
+   "lethal": false,
+   "runUp": "≈4 (walkway)",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "falling ends the bonus (no life lost)",
+   "nearby": [],
+   "why": "F3 hint: unless you fall at the start, nothing can fail — these tiny gaps are the only test in the strip",
+   "evidence": "F3 p019L diagram + hint",
+   "confidence": "medium",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-B-b",
+   "section": "BONUS",
+   "kind": "drop-down (step off the raised walkway, no gap)",
+   "width": "0",
+   "heightDelta": "−1",
+   "landing": "the long low walkway",
+   "lethal": false,
+   "runUp": "≈2.5",
+   "move": [
+    "drop"
+   ],
+   "coupling": "none",
+   "failure": "not a failure (it is the route)",
+   "nearby": [],
+   "why": "A one-step drop onto the crate walkway",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "pond (safe water) around the plank right after C2 (frog pond 2); the row of three stands on a raised stone ledge at its far edge",
+   "width": "about the full width (wall to wall in TT frame twenty-one) × ≈6–8 along",
+   "heightDelta": "0 (sunken), ledge +≈1",
+   "landing": "the raised stone ledge with the row of three, then the right wall",
+   "lethal": false,
+   "runUp": "C2 floor",
+   "move": [
+    "wade",
+    "walk"
+   ],
+   "coupling": "frog flung from the front (E-S3-a)",
+   "failure": "slowed, no death",
+   "nearby": [
+    "S3-a",
+    "E-S3-a"
+   ],
+   "why": "The row of three stands on a ledge at Crash-head height above slow water: TA5 spins the middle one, TT 21–22 flings the frog into the left end, jump-spins the rest and jumps straight onto the right wall — \"the hardest spot of the course\"",
+   "evidence": "F3 p014L–gutter route; F3 p101L fr./cap. 21–22; P3 p005L s11",
+   "confidence": "medium",
+   "moveNote": "wade or cross on the plank; TT: jump-spin from the water onto the ledge and the wall"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "pond (safe water) along the left edge with a frog in it",
+   "width": "≈half the road × ≈5–8 along",
+   "heightDelta": "0",
+   "landing": "road beside it",
+   "lethal": false,
+   "runUp": "after the row",
+   "move": [
+    "wade",
+    "walk"
+   ],
+   "coupling": "frog E-S3-a",
+   "failure": "slowed, no death",
+   "nearby": [
+    "S3-a",
+    "S3-b"
+   ],
+   "why": "The frog that is flung into the row lives here, coming toward the player; the record line runs the right wall beside the pond (TT 23–24)",
+   "evidence": "F3 p014 gutter route; F3 p101L fr.23–24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "two floor holes notched into the right edge one after the other",
+   "width": "≈1–2 across each",
+   "heightDelta": "0",
+   "landing": "road",
+   "lethal": true,
+   "runUp": "after the ? crate",
+   "move": [
+    "walk"
+   ],
+   "coupling": "goats before and after",
+   "failure": "death",
+   "nearby": [
+    "S3-c",
+    "E-S3-d"
+   ],
+   "why": "The last lethal edges, flanked by the last two goats; the record line hops from the very edge of the hole onto the right wall (cap. 27–28)",
+   "evidence": "F3 p014R route; F3 p101L fr./cap. 27–28",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-d",
+   "section": "S3",
+   "kind": "last pond (safe water) on the right before the slot pair",
+   "width": "≈half the road",
+   "heightDelta": "0",
+   "landing": "road with the two slot crates",
+   "lethal": false,
+   "runUp": "not visible",
+   "move": [
+    "walk"
+   ],
+   "coupling": "none",
+   "failure": "slowed, no death",
+   "nearby": [
+    "S3-d"
+   ],
+   "why": "A last slow patch beside the final crates; P3 s6 shows the slot crates at a dark water edge in front of the castle door",
+   "evidence": "F3 p014R route; P3 p004R s6",
+   "confidence": "low"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain",
+    "running",
+    "drop"
+   ],
+   "rhythm": "syncopated (wall hop, long curved jump, drop)",
+   "maxGap": "not visible (a long jump along the curve onto the right wall)",
+   "rest": "wall tops (P-S1-b)",
+   "noStop": false,
+   "why": "Time-trial line only: hop to the left wall at pit 1, big jump along the curve over the big pond onto the right wall, drop (not jump) back to the road. Normal play needs none of these jumps",
+   "evidence": "F3 p101L cap. 02, 06, 07, 10"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 1,
+   "moves": [
+    "running",
+    "held/high"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "— (height: third tier of the stack)",
+   "rest": "dry strip by the boulder",
+   "noStop": false,
+   "why": "A single dash big jump reaches the 2-s crate on the third tier; the only height test of the main road",
+   "evidence": "F3 p101L cap. 15; F3 p013R TA4 (first-wave reading)"
+  },
+  {
+   "id": "J-B-a",
+   "section": "BONUS",
+   "count": 4,
+   "moves": [
+    "plain",
+    "drop"
+   ],
+   "rhythm": "even",
+   "maxGap": "<0.5",
+   "rest": "raised walkway P-B-b",
+   "noStop": false,
+   "why": "Three hops over hairline gaps and a drop: the only places to fall in the bonus, as the hint says",
+   "evidence": "F3 p019L"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "spin",
+    "plain"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "≈1 (ledge to wall top)",
+   "rest": "right wall top",
+   "noStop": true,
+   "why": "TT hardest spot: spin the oncoming frog into the row, jump-spin the two remaining crates from the water, then jump straight onto the right wall while the frog and the clock press",
+   "evidence": "F3 p101L cap. 21–22"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 2,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈1 (hole edge to wall top)",
+   "rest": "right wall top",
+   "noStop": false,
+   "why": "Pass behind the W to the right wall, hop from the last spot before the hole onto the wall, run to the gate between the slot crates",
+   "evidence": "F3 p101L cap. 27–28, 30"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1, S2, S3",
+   "kind": "floor holes (穴) notched into the road edges or one half of the road",
+   "placement": "flank: cut from the road edge; never across the full width",
+   "timing": "static",
+   "counter": [
+    "go around on the open half",
+    "wall-top line switches walls at a hole"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "edge crates S1-b, S1-g",
+    "C1 (G-S2-a)",
+    "goats (G-S3-c)"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEACH"
+   ],
+   "why": "The intro states the level rule: holes are out even with Aku, so the mask is for enemies only; partial width keeps the stage-1 road jump-free",
+   "evidence": "F3 p013L intro; F3 p013L–p014R maps; F3 p101L cap. 02, 27–28"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1, S2, S3",
+   "kind": "wading ponds (池): five or six sunken water patches, one across the full road",
+   "placement": "across path (the big pond, frog ponds) or on one half",
+   "timing": "static; running speed drops inside (TA2)",
+   "counter": [
+    "wade through",
+    "run the wall top beside it (TA2)",
+    "jump along the curve onto the wall (cap. 06)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "frogs",
+    "crate groups S2-b, S2-e, S3-a"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "RHYTHM"
+   ],
+   "why": "Slow ground instead of lethal ground: each pond is a crate station with its frog, and the wall tops give the fast way past",
+   "evidence": "F3 p013R TA2; F3 p013–p014 maps; F3 p101L fr.05–07, 14, 20–24"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "giant rock beside a pond (static blocker)",
+   "placement": "flank: on the road opposite the pond",
+   "timing": "static",
+   "counter": [
+    "take the dry strip between boulder and pond",
+    "TT: left part of the wall until the pond (cap. 14)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "pond G-S2-b",
+    "3-stack S2-b",
+    "frog E-S2-b"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "Boulder and pond squeeze the road to a strip where the stack stands, so the stack and the frog cannot be skirted widely",
+   "evidence": "F3 p101L fr./cap. 14–15"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "house entrance beside the right wall-top lane (snags the feet)",
+   "placement": "flank: on the wall-top lane",
+   "timing": "static",
+   "counter": [
+    "jump past it (cap. 13)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "wall-top line"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "A snag that exists only for the expert lane: the wall line has its own small obstacles",
+   "evidence": "F3 p101L fr./cap. 11–13"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "goat (ヤギッパ)",
+   "archetype": "patrol-1D",
+   "behaviour": "walks a fixed straight line back and forth (left–right or front–back); fixed route, so it can be bypassed without fighting",
+   "counter": [
+    "stomp (jump on it)",
+    "spin",
+    "slide",
+    "body slam",
+    "avoid (fixed route)"
+   ],
+   "fails": [],
+   "placement": "on line just past the first plank, on wide road",
+   "roles": [
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "The first enemy is alone on the widest, flattest ground with room to sidestep; the ? S1-e behind it is its reward",
+   "evidence": "F3 p012R; F3 p013L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "goat",
+   "archetype": "patrol-1D",
+   "behaviour": "as E-S1-a, between C1 and the slot crate",
+   "counter": [
+    "stomp (jump on it)",
+    "spin",
+    "slide",
+    "body slam",
+    "avoid (fixed route)"
+   ],
+   "fails": [
+    "dawdling: the slot crate turns to steel"
+   ],
+   "placement": "on line between C1 (with its hole G-S2-a) and the slot crate",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "Dealing with it eats the slot crate’s window: the enemy is a timer for a crate",
+   "evidence": "F3 p013R route + callout 2",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "frog (ケロッパ)",
+   "archetype": "hopper (hops; shuttles front–back in its pond)",
+   "behaviour": "keeps a fixed front–back range like the goat, but steps sideways toward an approaching Crash and attacks; hops intermittently, so it is hard to approach at first",
+   "counter": [
+    "spin",
+    "stomp (jump on it)",
+    "slide",
+    "body slam",
+    "fling into the stack (advice 3)"
+   ],
+   "fails": [
+    "walking straight in while it hops"
+   ],
+   "placement": "in the pond beside the 3-stack (in water)",
+   "roles": [
+    "PROJECTILE",
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "Debuts alone in its own pond; advice 3 turns it into a projectile aimed at the stack beside it",
+   "evidence": "F3 p012R; F3 p013R route + advice 3",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-c",
+   "section": "S2",
+   "kind": "knight (berserker lab assistant バーサーカー研究員, heavy sword)",
+   "archetype": "static (telegraphed sword swing)",
+   "behaviour": "strains to lift the heavy sword (opening), swings a full turn that also covers his back, and the tip can stick in the ground (P3: then run behind him and spin); a missed opening sends the blade tip flying at you",
+   "counter": [
+    "spin from behind after the tip sticks (P3 s4)",
+    "spin or stomp while he strains to lift (F3)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [
+    "frontal approach during the swing",
+    "passing beside him late (pass a little early)"
+   ],
+   "placement": "on stone bridge 1, between the gate posts",
+   "roles": [
+    "GATEKEEPER",
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "The only threat F3 names; he stands where the road narrows to ≈3–4 u, and the mask S2-d is directly behind him",
+   "evidence": "F3 p012R; F3 p013L intro; F3 p013R route; P3 p004R s4; F3 p101L fr.16",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-d",
+   "section": "S2",
+   "kind": "goat",
+   "archetype": "patrol-1D",
+   "behaviour": "as E-S1-a",
+   "counter": [
+    "stomp (jump on it)",
+    "spin",
+    "slide",
+    "body slam",
+    "avoid (fixed route)"
+   ],
+   "fails": [],
+   "placement": "on line after the bonus pad and plank",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Keeps the stretch between the bonus and the 6-block from being empty",
+   "evidence": "F3 p014L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-e",
+   "section": "S2",
+   "kind": "frog",
+   "archetype": "hopper (hops; shuttles front–back in its pond)",
+   "behaviour": "as E-S2-b, on the far rim of the 6-block pond",
+   "counter": [
+    "spin",
+    "stomp (jump on it)",
+    "slide",
+    "body slam",
+    "fling into the block"
+   ],
+   "fails": [
+    "walking straight in while it hops"
+   ],
+   "placement": "in the pond with the 6-block (in water)",
+   "roles": [
+    "PROJECTILE",
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "The biggest crate block shares its pond with a frog",
+   "evidence": "F3 p014L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "frog",
+   "archetype": "hopper (hops; shuttles front–back in its pond)",
+   "behaviour": "comes from the front toward the player in the pond just past the row of three",
+   "counter": [
+    "spin it into the row (TT 21)",
+    "stomp (jump on it)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [
+    "a slide flings it in a hard-to-aim direction (cap. 21)"
+   ],
+   "placement": "in water, in front of the row of three",
+   "roles": [
+    "PROJECTILE",
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "Placed so a spun frog flies into the left end of the row; the time trial makes this a required trick",
+   "evidence": "F3 p014 gutter route; F3 p101L cap. 21–24",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "knight (berserker lab assistant, heavy sword)",
+   "archetype": "static (telegraphed sword swing)",
+   "behaviour": "as E-S2-c, between the gate posts of bridge 2",
+   "counter": [
+    "spin from behind after the tip sticks (P3 s4)",
+    "spin or stomp while he strains to lift (F3)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [
+    "frontal approach during the swing"
+   ],
+   "placement": "at the entrance of stone bridge 2 (crystal)",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "The same choke and gatekeeper as bridge 1, now guarding the crystal",
+   "evidence": "F3 p014R route; F3 p101L fr.26",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-c",
+   "section": "S3",
+   "kind": "goat",
+   "archetype": "patrol-1D",
+   "behaviour": "as E-S1-a",
+   "counter": [
+    "stomp (jump on it)",
+    "spin",
+    "slide",
+    "body slam",
+    "avoid (fixed route)"
+   ],
+   "fails": [],
+   "placement": "on line after bridge 2, before the ? S3-c",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Escort for the last ordinary crate",
+   "evidence": "F3 p014R route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-d",
+   "section": "S3",
+   "kind": "goat",
+   "archetype": "patrol-1D",
+   "behaviour": "as E-S1-a",
+   "counter": [
+    "stomp (jump on it)",
+    "spin",
+    "slide",
+    "body slam",
+    "avoid (fixed route)"
+   ],
+   "fails": [],
+   "placement": "between hazards: after the two edge holes, before the last pond",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "The last enemy walks between lethal edges and the final crates",
+   "evidence": "F3 p014R route",
+   "confidence": "high"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "wide straight: W and ? on opposite edges",
+    "edge hole (right)",
+    "striped sandwich",
+    "edge hole (left)",
+    "striped",
+    "plank",
+    "goat (alone)",
+    "?",
+    "big pond (wade, or wall-run)",
+    "Aku",
+    "small left notch",
+    "2×2 block",
+    "C1"
+   ],
+   "gaps": 4,
+   "enemies": 1,
+   "hazards": 2
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "hole in the right half just past C1",
+    "goat",
+    "slot crate",
+    "two planks",
+    "pond + giant boulder + 3-stack + frog (choke)",
+    "?",
+    "edge notch",
+    "knight on stone bridge 1 (narrow)",
+    "Aku",
+    "bonus pad",
+    "plank",
+    "goat",
+    "pond with the 6-block + frog (plank walkway beside it)",
+    "C2"
+   ],
+   "gaps": 4,
+   "enemies": 5,
+   "hazards": 4
+  },
+  {
+   "section": "BONUS",
+   "beats": [
+    "entry pad",
+    "plank ramp",
+    "three tiny slab gaps",
+    "raised walkway",
+    "drop",
+    "crate walkway (striped, W + 1UP + W, high ?)",
+    "?",
+    "two slab hops with ?",
+    "slope to the exit pad"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 0
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "plank over pond 2",
+    "row of three on a raised ledge (frog projectile)",
+    "frog pond on the left",
+    "4-cluster",
+    "knight at stone bridge 2 (crystal)",
+    "goat",
+    "?",
+    "two right-edge holes",
+    "goat",
+    "last pond",
+    "slot pair placed diagonally",
+    "castle gate"
+   ],
+   "gaps": 4,
+   "enemies": 5,
+   "hazards": 2
+  }
+ ],
+ "geometryObservations": [
+  "**No mandatory jump on the main road.** Every hole is a notch from one edge or a pit in one half, the ponds can be waded, the trenches are planked and the bridges are walked (inferred from the map). Stage 1 teaches jumping with crates (the striped sandwich, the stack) and leaves gaps out.",
+  "**Lethal geometry lives at the edges.** Holes are cut from the road edge; the centre line is always safe. The risk comes from sweeping to an edge crate (S1-b, S1-g), and the intro states the rule plainly: a hole kills even with Aku.",
+  "**Water is the terrain variable.** Five or six ponds slow running but never kill; the first one spans the whole road before any lethal test. Water is shown harmless first, as Crash 2 does with mud (bible IX.4).",
+  "**Ponds are stations.** Each frog pond holds or borders a crate group (3-stack, 6-block, row of three), so slow ground, an enemy and a reward share one spot, and the frog is a projectile aimed at the crates.",
+  "**The walls are a second lane.** ≈1-high walls on both sides are runnable; the record line rides them past ponds and enemies and switches walls at holes. A skill route without a fork, with its own small snags (house doorway, hole edges).",
+  "**Every enemy keeps a territory.** Goats walk fixed straight lines, frogs stay in their ponds, knights stand at bridge entrances; nothing chases. The player decides when to engage, which suits a first stage.",
+  "**Knights guard chokes.** Both stand where the road narrows from ≈6–9 to ≈3–4 u between gate posts; the telegraph (the strain to lift, the tip stuck in the ground) gives a safe window, and the first knight is followed at once by a mask.",
+  "**Each enemy kind debuts alone.** Goat on wide flat road → frog alone in its pond → knight alone on a bridge → only then combinations (a goat between C1 and the slot crate, frogs as projectiles).",
+  "**Checkpoints on dry ground at a hazard exit.** C1 follows the big pond and the block, C2 the 6-block pond; but a hole waits a few steps past C1, so the calm respawn leads straight into the next decision.",
+  "**Plank crossings are the metronome.** Five full-width planks (1 + 2 + 1 in the main road + 1 after C2) punctuate the road at fairly even intervals, as visual beats with no risk.",
+  "**The bonus repeats the rule in side view:** the only falls are three tiny slab gaps at the start (the F3 hint says so), then flat walkways and a one-step drop to the crates.",
+  "**The time trial turns geometry into skill:** walls, holes and ponds become a wall-hopping line, and its hardest spot combines a frog projectile, a crate row on a raised ledge and an immediate jump onto the wall."
+ ],
+ "geometryTransfer": [
+  "**Edge notches as the first lethal geometry.** On a 7–10 m (6–9 u) road, cut a `pit` 2.3–3.5 m into one edge and 2.3–3.5 m long, the next one 6–9 m further on the other edge; keep the centre line open. On foot nothing needs a jump; at board cruise the notches make a gentle carve. Put the first edge crate right beside the first notch.",
+  "**Walls as the skill lane.** Line the road with 1.15 m `wall`s on both sides (a full jump apex is 2.85 m; a grind jump 2.4 m): edges grind by default, so a skater rides the wall tops past slow ground and enemies. Break the wall at a notch so the line must switch sides, as the time-trial line does.",
+  "**Safe-failure water before lethal edges.** Without a slow-water surface, model a pond as a 0.5–0.8 m sunken dip in the road (terrain, no kill) that costs a jump to leave; put the first one across the full width before any lethal notch, and put a crate group and an enemy beside each later one.",
+  "**Gatekeeper at a bridge choke.** Narrow the road from 8–10 m to 3.5–4.5 m (3–4 u) between two posts and stand a telegraphed enemy there: a `charger` (0.70 s windup) or a `moa` (0.62 s wind-up, 0.9 s harmless recovery) plays the knight. Put a mask crate just past it, and repeat the choke once later with the level’s collectible behind it.",
+  "**Enemy beside crates as a projectile.** Patrol a `grunt` 2–3 m from a crate row; its carcass can be spun into the crates, the frog trick. Keep it on a short line so the player chooses when to engage.",
+  "**A hole a few metres past the checkpoint.** Place a 2.3 m wide notch in one half of the road 3–5 m past a checkpoint, with an enemy and a timed reward behind it, so the respawn is calm but the first move is a decision."
  ]
 }

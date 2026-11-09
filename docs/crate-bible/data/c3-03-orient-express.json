@@ -1004,5 +1004,1166 @@
   "Time crates total 29 s against a 16.9 s record: in time trial the crates are the race.",
   "Pura crouches before jumps and on landing: time crates on stack tops need a landing timed just before the stack (TT fr.10).",
   "Dash dissolves hazards (barrels, low dragons, crevices) but not the steering demand of the crate lines."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "vehicle",
+   "notes": "tiger ride, camera behind, forced forward; lateral jog at the start, staggered holes, one bend"
+  },
+  {
+   "section": "S2",
+   "mode": "vehicle",
+   "notes": "tower A tunnel, dragon–hole–dragon, descending stepped road under the floating pair"
+  },
+  {
+   "section": "S3",
+   "mode": "vehicle",
+   "notes": "uphill to a blind crest, tower B climbed by springboard (roof under an eave), bends at the crystal and before C3"
+  },
+  {
+   "section": "S4",
+   "mode": "vehicle",
+   "notes": "tower C jumped into, narrow raised causeway, gate tunnel to the goal"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1, S2, S3, S4",
+   "shape": "vehicle lane: the paved Great Wall road",
+   "size": "≈4–6 wide (P3 s32, s36, s40; F3 TT frames); long straights, bends, uphill and downhill runs",
+   "heightDelta": "0 (slopes up and down)",
+   "edges": "walled: crenellated parapets ≈0.7–1 high on both sides",
+   "behaviour": "forced forward ride (Pura cannot stop or turn back: F3 p026L tip 3); move: steer, jump, dash",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "A narrow lane for a forced ride: about one tiger-width of steering either side of the centre, so every crate and hazard is a lane choice",
+   "evidence": "P3 p007L s32–s36, p007R s40; F3 p102L fr.02–05; F3 p026L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1, S2, S3, S4",
+   "shape": "narrow ledge: the parapet tops",
+   "size": "≈0.7–1 wide, ≈0.7–1 high",
+   "heightDelta": "+0.7 to +1",
+   "edges": "open",
+   "behaviour": "static; the record line lands on them; move: big jump up, jump again on landing",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "The time-trial line jumps onto the wall top to pass holes and barrels (cap. 03: big jump from the right side, land on the wall, jump again; cap. 11: jump right over the hole and land on the wall)",
+   "evidence": "F3 p102L intro, cap. 03, 11, 26",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "corridor: lateral jog at the stopwatch, into a narrower walled stretch",
+   "size": "the road shifts ≈half its width sideways; the next stretch is narrower (map)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: steer",
+   "roles": [
+    "CHOKE",
+    "TEACH"
+   ],
+   "why": "The first input of the ride is a steer, before any hazard; the W (right) and ?1 (left) in the narrow stretch then ask for the left–right beat the holes repeat",
+   "evidence": "F3 p027L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "vehicle lane: straight with C1 embedded in a W–C–W row",
+   "size": "≈4–6 wide",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: steer through",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "A clean straight after dragon 1: the checkpoint is collected by the same carve as the crates",
+   "evidence": "F3 p027R route",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "corridor: tunnel through tower A, which straddles the way",
+   "size": "arch ≈3–4 wide × ≈3–4 high (P3 s32); the worker’s board ≈1.2–1.5 square covers one side of the mouth, leaving ≈2–3 open",
+   "heightDelta": "0",
+   "edges": "walled tunnel",
+   "behaviour": "static; move: steer into the open part of the mouth",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "The lane narrows to the open part of the mouth, beside the springboard: the two 2-stacks and the single are inside, on the low line",
+   "evidence": "F3 p027R route; P3 p007L s32, p007R s41; F3 p102L fr.16",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "rooftop platform: tower A roof (reached only via the springboard)",
+   "size": "not visible",
+   "heightDelta": "+≈3–4 (above the road; not measurable)",
+   "edges": "open",
+   "behaviour": "static; holds only a loose life (drawn without a crate); move: springboard bounce",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "A decoy landing: the obvious tool leads to a life and skips five crates (P3 s32: no need to bounce)",
+   "evidence": "F3 p027R (life icon on the roof); P3 p007L s32",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "ramp/slope: a stretch of the wall-top descending in steps beside a banner, under the floating pair",
+   "size": "road ≈4–5 wide; the pair floats ≈2–3 above it (P3 s38)",
+   "heightDelta": "downhill (−, steps)",
+   "edges": "walled",
+   "behaviour": "static; move: jump as you pass under",
+   "roles": [],
+   "why": "The floating life pair hangs over a downhill, where the ground falls away under a jump; looking up while the road drops is the test",
+   "evidence": "P3 p007R s38; F3 p027R (shadow ellipse)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "ramp/slope: uphill run to a hill crest after dragon 5",
+   "size": "road ≈4–6 wide",
+   "heightDelta": "uphill (+), then a crest",
+   "edges": "walled",
+   "behaviour": "static; move: ride",
+   "roles": [],
+   "why": "The crest hides what follows: the first high dragons (6–7) come right after it (P3 s33)",
+   "evidence": "P3 p007L s33–s34; F3 p028L route (road climbs)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "rooftop platform: tower B roof under an ornate eave",
+   "size": "about the road width × ≈3–4 deep (not measurable)",
+   "heightDelta": "+≈3–5",
+   "edges": "open edges; ceiling above",
+   "behaviour": "static; move: steer right, big jump off",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "Three crates on a short roof: TA3 says move from the centre to the right for both time crates; TT 19 warns not to hit the ceiling when jumping off",
+   "evidence": "F3 p028L route, TA3; F3 p102L fr./cap. 18–19",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "vehicle lane: left bend with the 2×2 block at its right edge (crystal beside it)",
+   "size": "road ≈4–5 wide (P3 s36)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: steer to the right edge",
+   "roles": [],
+   "why": "The crystal and the block share the outside of a bend: aim at the centre of the stack (P3 s36)",
+   "evidence": "P3 p007L s36; F3 p028L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "ramp/slope: uphill stretch (contact-timed pickup on the slope)",
+   "size": "road ≈4–5 wide",
+   "heightDelta": "uphill (+)",
+   "edges": "walled",
+   "behaviour": "static; move: jump at contact",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "TT 22: jump just before the crate and you miss it; jump at the instant Pura touches it to take it and the next one. Slopes change jump timing",
+   "evidence": "F3 p102L fr./cap. 22",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "vehicle lane: straight with C3 paired with a crate after dragons 10–11",
+   "size": "≈4–6 wide",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: steer through",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "The respawn follows the hardest dragon read (10 under, 11 over)",
+   "evidence": "F3 p028L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "corridor: tunnel under tower C",
+   "size": "≈3–4 wide",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: land, steer",
+   "roles": [
+    "CHOKE",
+    "LANDING"
+   ],
+   "why": "The landing of the big jump is inside a tunnel: overshoot sideways and you hit the wall",
+   "evidence": "F3 p028 gutter (under-tower bubble); P3 p007R s37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "bridge/walkway: raised walled causeway after tower C, bending right then left",
+   "size": "narrower than the main road (map); ≈3–4 wide (estimate)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: steer",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "The run-out narrows; a pole worker and a barrel cart stand side by side on it, so the last obstacle pair fills most of the width",
+   "evidence": "F3 p028 gutter",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "corridor: gate block with a tunnel, then a narrow walled walkway to the goal building",
+   "size": "≈2–3 wide (map)",
+   "heightDelta": "0",
+   "edges": "walled",
+   "behaviour": "static; move: steer",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "A last squeeze: the goal is reached through a tunnel and a narrow walkway",
+   "evidence": "F3 p028 gutter",
+   "confidence": "low"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "floor hole: jagged gap cut in from the right parapet",
+   "width": "≈2–3 across (about half the road) × ≈1–2 along",
+   "heightDelta": "0",
+   "landing": "the open left half",
+   "lethal": true,
+   "runUp": "narrow stretch after the jog",
+   "move": [
+    "ride",
+    "plain"
+   ],
+   "coupling": "the second hole and a barrel cart follow within a few u",
+   "failure": "death (falling off the wall; assumed — the guides only say to dodge it)",
+   "nearby": [
+    "S1-c",
+    "G-S1-b",
+    "O-S1-c"
+   ],
+   "why": "Callout 1: dodge the hole, then don’t drift right into the barrel — left, right, left. Each hole leaves half the road open, so steering is the default answer and a jump the fallback",
+   "evidence": "F3 p027L route + callout 1; P3 p007R TT text",
+   "confidence": "medium",
+   "moveNote": "steer to the open half; TT jumps onto the wall",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "floor hole: jagged gap cut in from the left parapet, a few u after G-S1-a",
+   "width": "≈2–3 across × ≈1–2 along",
+   "heightDelta": "0",
+   "landing": "the open right half — where the barrel cart stands next",
+   "lethal": true,
+   "runUp": "≈3–5 after G-S1-a",
+   "move": [
+    "ride"
+   ],
+   "coupling": "barrel cart in the right half just beyond",
+   "failure": "death (assumed)",
+   "nearby": [
+    "G-S1-a",
+    "O-S1-c",
+    "S1-d"
+   ],
+   "why": "The staggered pair forces a zig-zag; the barrel cart beyond the second hole punishes the over-steer",
+   "evidence": "F3 p027L route + callout 1",
+   "confidence": "medium",
+   "roles": [
+    "TEACH"
+   ]
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "floor hole on the approach to tower A, just past the C1 row (TT caption only)",
+   "width": "not visible (small)",
+   "heightDelta": "0",
+   "landing": "road before the tunnel mouth",
+   "lethal": true,
+   "runUp": "C1 straight",
+   "move": [
+    "plain"
+   ],
+   "coupling": "tower A’s springboard right after it (ignore it, keep slightly left of centre)",
+   "failure": "death (assumed)",
+   "nearby": [
+    "S1-g",
+    "S2-a"
+   ],
+   "why": "TT 15–16: jump as you take the 1-s crate to clear the hole, then aim slightly left of centre and ignore the pad — a hole sets up the first springboard decision",
+   "evidence": "F3 p102L cap. 15–16",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "floor hole: jagged gap from the right parapet across most of the road, right after dragon 2",
+   "width": "≈2–4 across (half to two thirds of the road) × ≈1–2 along",
+   "heightDelta": "0",
+   "landing": "the open left part, with dragon 3 just beyond",
+   "lethal": true,
+   "runUp": "after the tower",
+   "move": [
+    "plain",
+    "ride"
+   ],
+   "coupling": "dragons 2 and 3 on either side (callout 3)",
+   "failure": "death (assumed)",
+   "nearby": [
+    "S2-b",
+    "E-S2-b"
+   ],
+   "why": "Callout 3: consecutive dragons — no careless big jump, watch the holes in the ground, small jumps. The hole sits where a big jump over dragon 2 would land; the 1UP crate beside it is the bait",
+   "evidence": "F3 p027R route + callout 3",
+   "confidence": "medium",
+   "roles": [
+    "TEST"
+   ]
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "floor hole: jagged crack running from the left parapet toward the middle, in front of tower B",
+   "width": "≈1–2 along × about half the road across",
+   "heightDelta": "0",
+   "landing": "the springboard at the tunnel mouth",
+   "lethal": true,
+   "runUp": "uphill run after the crest",
+   "move": [
+    "plain"
+   ],
+   "coupling": "high dragons 6–7 overhead at the crack; the springboard right after",
+   "failure": "death (assumed); at dash no problem (TA3)",
+   "nearby": [
+    "E-S3-b",
+    "E-S3-c",
+    "S3-b"
+   ],
+   "why": "Three decisions in one spot: duck the high dragons, hop the crack, land on the board. Callout 4: small jump over the hole and straight onto the jump pad",
+   "evidence": "F3 p028L route, TA3, callout 4; P3 p007L s34",
+   "confidence": "medium",
+   "roles": [
+    "TEST"
+   ]
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "springboard launch (chasm with bounce): the worker’s board bounces Pura from the road onto tower B’s roof",
+   "width": "vertical gap; height ≈3–5 (not measurable)",
+   "heightDelta": "+≈3–5",
+   "landing": "tower B roof (P-S3-b)",
+   "lethal": false,
+   "runUp": "the crack hop",
+   "move": [
+    "ride",
+    "bounce pad (spring)"
+   ],
+   "coupling": "the crack right before it",
+   "failure": "boxes lost: the 3 roof crates are skipped if the board is missed",
+   "nearby": [
+    "S3-b"
+   ],
+   "why": "The only tower where the tool is the answer; P3: stay right, the area passes fast",
+   "evidence": "F3 p028L callout 4, TA3; P3 p007L s34; F3 p102L fr./cap. 17–18",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "drop-down from tower B’s roof back to the road",
+   "width": "—",
+   "heightDelta": "−≈3–5 (not measurable)",
+   "landing": "road with a pole worker right after",
+   "lethal": false,
+   "runUp": "roof",
+   "move": [
+    "drop",
+    "plain"
+   ],
+   "coupling": "pole worker on the road after the tower",
+   "failure": "not a failure (it is the route)",
+   "nearby": [
+    "S3-c",
+    "E-S3-d"
+   ],
+   "why": "TT 20: steer in the air to land on the 1-s crate; the landing road holds the first pole worker, so the drop is aimed",
+   "evidence": "F3 p028L route; F3 p102L cap. 19–20",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-d",
+   "section": "S3",
+   "kind": "step across the road at the next bend (dark ledge line above a lighter slab)",
+   "width": "full width; size not visible",
+   "heightDelta": "not visible (step down or up)",
+   "landing": "road",
+   "lethal": false,
+   "runUp": "not visible",
+   "move": [
+    "ride"
+   ],
+   "coupling": "barrel cart and dragons 10–11 just beyond",
+   "failure": "not visible",
+   "nearby": [
+    "S3-e"
+   ],
+   "why": "A level change right before the last dragon pair; how the ride takes it is not shown",
+   "evidence": "F3 p028L route",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "floor hole with tower C’s springboard right behind it, both to be cleared in one jump",
+   "width": "≈3–5 along for hole + board (not measurable; needs a dash big jump)",
+   "heightDelta": "0",
+   "landing": "the tunnel under tower C",
+   "lethal": true,
+   "runUp": "from well before (TA4)",
+   "move": [
+    "running",
+    "held/high"
+   ],
+   "coupling": "springboard (bounce = wrong answer) and the tower’s stone wall",
+   "failure": "death in the hole; bouncing skips the 3 crates under the tower (roof life only); a late jump hits the tower wall (consequence not stated)",
+   "nearby": [
+    "S4-c",
+    "E-S4-b"
+   ],
+   "why": "Advice 6 / TA4: dash from far, big jump to the right over the hole and the jump pad together, avoid the stone wall, take the crates under the tower. The third answer to the same prop",
+   "evidence": "F3 p028L TA4 (+ callout 6 per first wave); F3 p102L cap. 28; P3 p007R s37",
+   "confidence": "high",
+   "moveNote": "dash big jump from well before, to the right",
+   "roles": [
+    "TEST"
+   ]
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "ride",
+    "plain"
+   ],
+   "rhythm": "even (\"left, right, left\")",
+   "maxGap": "≈2–3 (half-width hole)",
+   "rest": "none on the ride; the next calm stretch is the W at the left parapet",
+   "noStop": true,
+   "why": "Hole right, hole left, barrel cart right: the first combination is a steering slalom whose beat the three crates before it already set (S1-a…c)",
+   "evidence": "F3 p027L route + callout 1"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even (small hops)",
+   "maxGap": "≈2–4 (hole across half to two thirds of the road)",
+   "rest": "the ? and worker stretch after dragon 3",
+   "noStop": true,
+   "why": "Dragon 2, hole, dragon 3: small hops are safe, a big jump lands in the hole or on the next dragon (callout 3)",
+   "evidence": "F3 p027R route + callout 3"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 5,
+   "moves": [
+    "plain",
+    "ride",
+    "bounce pad",
+    "drop"
+   ],
+   "rhythm": "syncopated (jump, duck, hop, bounce, drop)",
+   "maxGap": "≈1–2 (crack)",
+   "rest": "tower B roof",
+   "noStop": true,
+   "why": "Dragon 5 low (jump), crest, dragons 6–7 high (duck), hop the crack, bounce on the board to the roof, drop back to the road: the level’s densest stretch, built from short beats",
+   "evidence": "P3 p007L s33–s34; F3 p028L route, TA3, callout 4; F3 p102L cap. 17–20"
+  },
+  {
+   "id": "J-S3-b",
+   "section": "S3",
+   "count": 4,
+   "moves": [
+    "plain",
+    "ride"
+   ],
+   "rhythm": "syncopated (over, under, under, over)",
+   "maxGap": "— (no gaps; dragon heights)",
+   "rest": "C3 straight",
+   "noStop": true,
+   "why": "Dragons 8 (jump), 9 (duck), crystal, 10 (duck), 11 (jump): the height code alternates so the player must read each dragon (callout 5: do not be fooled)",
+   "evidence": "P3 p007L intro, s35; F3 p028L route"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 3,
+   "moves": [
+    "running",
+    "held/high",
+    "plain"
+   ],
+   "rhythm": "isolated, then even",
+   "maxGap": "≈3–5 (hole + board)",
+   "rest": "tunnel under tower C",
+   "noStop": true,
+   "why": "One committed dash big jump over the hole and the springboard into the tunnel, then hops to the goal (TT 28: jump-jump)",
+   "evidence": "F3 p028L TA4; F3 p102L cap. 28"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1, S2, S3, S4",
+   "kind": "holes in the paving (jagged gaps)",
+   "placement": "flank: cut in from one parapet across half to two thirds of the road (one crack runs to the middle)",
+   "timing": "static",
+   "counter": [
+    "steer to the open side",
+    "small jump",
+    "cross at full dash (P3: small crevices need no jump; TA3)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "barrel cart (S1)",
+    "dragons 2–3 (S2)",
+    "high dragons 6–7 + springboard (S3)",
+    "springboard + tower wall (S4)"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST",
+    "LANE-BLOCK"
+   ],
+   "why": "Taught as a staggered left–right pair, then each later hole is coupled to a dragon pair or a springboard; speed removes them, so the time trial ignores what normal play steers round",
+   "evidence": "F3 p027L–p028L routes; callouts 1, 3, 4; TA3, TA4; P3 p007R TT text"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1, S2, S4",
+   "kind": "rolling barrels coming down the road",
+   "placement": "across path, rolling toward Pura (down slopes)",
+   "timing": "roll toward you; TT 05 shows one rolling down a long uphill",
+   "counter": [
+    "jump over",
+    "dash through (they break at speed: P3 TT text)",
+    "steer around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "uphill slopes",
+    "barrel carts"
+   ],
+   "roles": [
+    "RHYTHM",
+    "TEACH"
+   ],
+   "why": "The moving version of the barrel carts, met on slopes where the jump is short (cap. 05: uphill jumps are short, but still jump)",
+   "evidence": "F3 p027R route; F3 p102L fr./cap. 05, 25; P3 p007R TT text; first-wave map reading (three barrels in S2)"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1, S2, S3, S4",
+   "kind": "parked carts loaded with casks (static blocker)",
+   "placement": "flank: against one parapet, often staggered left then right",
+   "timing": "static",
+   "counter": [
+    "steer around",
+    "jump over (TT 03, 12)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "hole pair (S1)",
+    "dragon 4 (S2)",
+    "dragons 10–11 (S3)",
+    "pole worker on the causeway (S4)"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "Parked lane blocks that narrow the road to one side, right after holes or beside dragons; collision is assumed fatal",
+   "evidence": "F3 p027L–p028 gutter routes; F3 p102L fr.03, 06, 11–12"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2, S3, S4",
+   "kind": "watchtowers straddling the road (stone walls, tunnel mouths, springboards)",
+   "placement": "across path: the road passes through a tunnel; the board covers one side of the mouth",
+   "timing": "static",
+   "counter": [
+    "A: steer into the open part (ignore the board)",
+    "B: hop the crack and ride the board",
+    "C: big jump over hole and board from well before"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "holes before B and C",
+    "springboard workers",
+    "crates in the tunnel, on the roof, under the tower"
+   ],
+   "roles": [
+    "TEST",
+    "LANE-BLOCK"
+   ],
+   "why": "The same structure asks three different things; TA4 warns that a late jump at tower C hits the stone wall (consequence not stated)",
+   "evidence": "F3 p027R–p028L routes, TA3, TA4; P3 p007L s32, s34, p007R s37"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "blind hill crest",
+   "placement": "across path: uphill run with the high dragons just beyond",
+   "timing": "static",
+   "counter": [
+    "count the dragons: 6 and 7 fly high, go under (P3)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "dragons 6–7",
+    "crack before tower B"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "Terrain hides the first change of the dragon code: a player still jumping (dragons 1–5 were all low) jumps into a high one",
+   "evidence": "P3 p007L s33–s34"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "low ceiling: ornate eave over tower B’s roof",
+   "placement": "overhead",
+   "timing": "static",
+   "counter": [
+    "big jump off the roof timed so as not to hit the ceiling (TT 19)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "roof crates (3-s on the right)"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "The roof is short and roofed: crates, ceiling and edge share 3–4 u",
+   "evidence": "F3 p102L fr./cap. 18–19"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "block-lifting worker (つんジャイナ作業員; two side by side)",
+   "archetype": "static (lifts blocks in place)",
+   "behaviour": "stand in the right half lifting green blocks with a shout; cannot be beaten",
+   "counter": [
+    "avoid: dodge sideways",
+    "jump over"
+   ],
+   "fails": [
+    "attacking: nothing on the ride can beat them"
+   ],
+   "placement": "flank: right half, between the W at the left parapet and the crate trio",
+   "roles": [
+    "HURDLE",
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "The first enemies are static and stand to one side: a pure steering read before anything moves",
+   "evidence": "F3 p026R; F3 p027L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "Banzai dragon (萬歳龍; dragon 1, low)",
+   "archetype": "flier (flies in from the side; invulnerable)",
+   "behaviour": "flies in suddenly from the side and lies across the road at ground level as a chain of golden segments spanning the full width",
+   "counter": [
+    "jump over"
+   ],
+   "fails": [
+    "steering round it: it spans the road",
+    "a big jump where hazards follow (F3 p026L tip 1)"
+   ],
+   "placement": "on line, on a straight before C1",
+   "roles": [
+    "HURDLE",
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "The first full-width hurdle is met alone, right before the checkpoint",
+   "evidence": "F3 p026R; F3 p027R route; P3 p007L intro, s33",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "springboard worker (はねチャイナ作業員; tower A)",
+   "archetype": "static",
+   "behaviour": "hides behind a striped board at the tunnel mouth; ramming the board bounces Pura onto the roof",
+   "counter": [
+    "avoid: pass beside it, slightly left of centre (TT 16)"
+   ],
+   "fails": [
+    "riding into the board: Pura is launched to the roof and the five tunnel crates are lost (P3 s32)"
+   ],
+   "placement": "take-off edge: at the tunnel mouth, covering one side",
+   "roles": [
+    "TOOL/STEP",
+    "BAIT"
+   ],
+   "firstAlone": true,
+   "why": "The first springboard is a decoy: the obvious tool is the wrong answer",
+   "evidence": "F3 p026R; F3 p027R route; P3 p007L s32; F3 p102L cap. 15–16",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "Banzai dragon (dragons 2 and 3, low)",
+   "archetype": "flier (flies in from the side; invulnerable)",
+   "behaviour": "as E-S1-b, one each side of a jagged hole",
+   "counter": [
+    "small jump over each"
+   ],
+   "fails": [
+    "a careless big jump: you land in the hole or on the next dragon (callout 3)"
+   ],
+   "placement": "between hazards: either side of the hole G-S2-b",
+   "roles": [
+    "TEST",
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "The first combination: hurdle, gap, hurdle at small-hop spacing",
+   "evidence": "F3 p027R route + callout 3",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-c",
+   "section": "S2",
+   "kind": "block-lifting worker (alone)",
+   "archetype": "static (lifts blocks in place)",
+   "behaviour": "as E-S1-a, alone at the road centre",
+   "counter": [
+    "avoid: dodge sideways",
+    "jump over"
+   ],
+   "fails": [],
+   "placement": "on line at the centre, before the floating pair",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "A centre blocker that pushes the line to one side right before the crates float overhead",
+   "evidence": "F3 p027R route",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-d",
+   "section": "S2",
+   "kind": "Banzai dragon (dragon 4, low)",
+   "archetype": "flier (flies in from the side; invulnerable)",
+   "behaviour": "as E-S1-b, after two staggered barrel carts",
+   "counter": [
+    "jump over"
+   ],
+   "fails": [],
+   "placement": "on line at the end of S2",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Closes S2 after a cart slalom; P3 s33 shows 4 and 5 as a low pair",
+   "evidence": "F3 p027R route; P3 p007L s33",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "Banzai dragon (dragon 5, low)",
+   "archetype": "flier (flies in from the side; invulnerable)",
+   "behaviour": "as E-S1-b, after the slalom tail",
+   "counter": [
+    "jump over"
+   ],
+   "fails": [],
+   "placement": "on line before the uphill",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "The fifth and last low dragon before the code changes",
+   "evidence": "F3 p028L route; P3 p007L intro",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "Banzai dragon (dragons 6 and 7, high)",
+   "archetype": "flier (flies in high; invulnerable)",
+   "behaviour": "arch over the road about ≈2 above it (P3 s34), one each side of the crack",
+   "counter": [
+    "avoid: go under (do not jump)"
+   ],
+   "fails": [
+    "jumping into them",
+    "a big jump over the crack"
+   ],
+   "placement": "overhead, at the crack in front of tower B, right after a hill crest",
+   "roles": [
+    "TEST",
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "The height code changes behind a blind crest, and the duck coincides with a hop over the crack",
+   "evidence": "P3 p007L intro, s33–s34; F3 p028L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-c",
+   "section": "S3",
+   "kind": "springboard worker (tower B)",
+   "archetype": "static",
+   "behaviour": "as E-S2-a, right behind the crack",
+   "counter": [
+    "bounce off it as a step: small jump over the hole and onto it (callout 4)"
+   ],
+   "fails": [
+    "avoiding it: the three roof crates are lost"
+   ],
+   "placement": "take-off edge at the tunnel mouth, right after the crack",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "The same prop, now the correct tool",
+   "evidence": "F3 p028L route + callout 4; P3 p007L s34",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-d",
+   "section": "S3",
+   "kind": "pole assistant (棒術研究員)",
+   "archetype": "static (twirls a pole as Pura passes)",
+   "behaviour": "twirls his pole to obstruct as Coco passes; the pole reaches surprisingly far",
+   "counter": [
+    "avoid with a wide berth"
+   ],
+   "fails": [
+    "dodging sideways close to him"
+   ],
+   "placement": "on line just after the drop from tower B",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": true,
+   "why": "The long-reach blocker debuts alone on the landing road of the roof drop",
+   "evidence": "F3 p026R; F3 p028L route; P3 p007L s35",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-e",
+   "section": "S3",
+   "kind": "block-lifting worker (after tower B)",
+   "archetype": "static (lifts blocks in place)",
+   "behaviour": "as E-S1-a, in the right half after the tower",
+   "counter": [
+    "avoid: dodge sideways",
+    "jump over"
+   ],
+   "fails": [],
+   "placement": "flank: right half, beside the W1 + ? pair",
+   "roles": [
+    "HURDLE",
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "Shares the stretch with the pole assistant, so both sides are briefly occupied",
+   "evidence": "F3 p028L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-f",
+   "section": "S3",
+   "kind": "Banzai dragon (dragons 8 low and 9 high)",
+   "archetype": "flier (alternating heights; invulnerable)",
+   "behaviour": "a low dragon then a high one, before the crystal",
+   "counter": [
+    "jump over 8",
+    "avoid 9: go under"
+   ],
+   "fails": [
+    "reading one height for both (callout 5: do not be fooled)"
+   ],
+   "placement": "on line before the crystal and the 2×2 block",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "Alternation replaces the simple code: each dragon must be read",
+   "evidence": "P3 p007L intro, s35; F3 p028L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-g",
+   "section": "S3",
+   "kind": "Banzai dragon (dragons 10 high and 11 low)",
+   "archetype": "flier (alternating heights; invulnerable)",
+   "behaviour": "a high dragon then a low one, close together near the bend before C3",
+   "counter": [
+    "avoid 10: go under",
+    "jump over 11"
+   ],
+   "fails": [
+    "jumping 10"
+   ],
+   "placement": "on line before C3, after a barrel cart at the left parapet",
+   "roles": [
+    "TEST",
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "The last read guards the checkpoint",
+   "evidence": "P3 p007L intro; F3 p028L route",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-h",
+   "section": "S3",
+   "kind": "pole assistant (beside dragons 10–11)",
+   "archetype": "static (twirls a pole as Pura passes)",
+   "behaviour": "as E-S3-d, at the left parapet beside dragons 10–11",
+   "counter": [
+    "avoid with a wide berth"
+   ],
+   "fails": [
+    "dodging sideways close to him"
+   ],
+   "placement": "flank: left parapet beside the last dragon pair",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Narrows the lane while the dragon read is happening",
+   "evidence": "F3 p028L route",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "block-lifting worker (with a pole assistant side by side)",
+   "archetype": "static (pair)",
+   "behaviour": "stand together in the right half after C3",
+   "counter": [
+    "avoid: steer left of both"
+   ],
+   "fails": [
+    "passing between or beside them closely: the pole reaches far"
+   ],
+   "placement": "flank: right half, beside the W crates S4-a/S4-b",
+   "roles": [
+    "HURDLE",
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "A paired blocker fills one half of the run-out",
+   "evidence": "F3 p028L route; F3 p028 gutter",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "springboard worker (tower C)",
+   "archetype": "static",
+   "behaviour": "as E-S2-a, right behind a hole",
+   "counter": [
+    "jump over it and the hole together (dash big jump from well before, to the right: TA4)"
+   ],
+   "fails": [
+    "riding the board: roof life only, the three crates under the tower are lost",
+    "jumping late: hit the tower wall"
+   ],
+   "placement": "take-off edge right behind the hole at the tower mouth",
+   "roles": [
+    "BAIT",
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "The third answer to the same prop; the roof life is the bait again",
+   "evidence": "F3 p028L TA4; P3 p007R s37; F3 p102L cap. 28",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "pole assistant (beside a barrel cart on the raised causeway)",
+   "archetype": "static (twirls a pole as Pura passes)",
+   "behaviour": "as E-S3-d",
+   "counter": [
+    "avoid with a wide berth"
+   ],
+   "fails": [
+    "dodging sideways close to him"
+   ],
+   "placement": "flank: on the narrow causeway, beside a barrel cart",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "Worker and cart side by side leave one narrow lane right before the gate",
+   "evidence": "F3 p028 gutter",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "W pair at the start",
+    "lateral jog (steer)",
+    "W right, ?1 left",
+    "hole from the right",
+    "hole from the left",
+    "barrel cart (right)",
+    "W at the left parapet",
+    "two block-lifters (right)",
+    "crate trio",
+    "floating life crate",
+    "two rolling barrels",
+    "barrel cart (left)",
+    "dragon 1 (low, alone)",
+    "W–C–W row (C1)"
+   ],
+   "gaps": 2,
+   "enemies": 3,
+   "hazards": 3
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "hole",
+    "tower A: springboard decoy, crates in the tunnel",
+    "dragon 2",
+    "hole from the right + 1UP crate",
+    "dragon 3",
+    "?",
+    "block-lifter",
+    "floating pair over a descending stepped road",
+    "2×2 block",
+    "two barrel carts staggered",
+    "barrels",
+    "dragon 4",
+    "W(A) and C2 at the head of the slalom"
+   ],
+   "gaps": 2,
+   "enemies": 5,
+   "hazards": 4
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "slalom tail",
+    "dragon 5 (low)",
+    "uphill to a blind crest",
+    "dragons 6–7 (high) at a crack",
+    "springboard to tower B’s roof (3 crates, eave)",
+    "drop to the road",
+    "pole assistant",
+    "W1 + ?",
+    "block-lifter",
+    "dragon 8 (low)",
+    "dragon 9 (high)",
+    "2×2 + crystal on a left bend",
+    "W + ?1 on an uphill",
+    "step at the bend",
+    "barrel cart (left)",
+    "dragons 10 (high), 11 (low) + pole assistant",
+    "W1 + C3"
+   ],
+   "gaps": 4,
+   "enemies": 11,
+   "hazards": 5
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "barrel cart (right) + W",
+    "block-lifter + pole assistant (right)",
+    "W + ?",
+    "hole + springboard: dash big jump into tower C",
+    "3 crates in the tunnel",
+    "raised narrow causeway",
+    "?1",
+    "pole assistant + barrel cart",
+    "gate tunnel",
+    "narrow walkway to the goal"
+   ],
+   "gaps": 1,
+   "enemies": 4,
+   "hazards": 4
+  }
+ ],
+ "geometryObservations": [
+  "**A reading test on a forced ride.** Steer, jump and dash are the only verbs, and nothing can be beaten (F3 p026R: dodge only; dodging sideways is more reliable than jumping). Geometry and enemies are hurdles to read, not fights.",
+  "**Holes never close the road.** Each break is cut from one parapet across half to two thirds of the width, so steering is the default answer and a jump the fallback; at full dash small crevices need no jump at all (P3), so speed removes the geometry.",
+  "**Teaching order:** a lateral jog (steer) → crates alternating sides → a staggered hole pair with a cart after it → static workers to one side → dragon 1 alone → dragon–hole–dragon → high dragons behind a crest → alternating heights near the crystal.",
+  "**The dragon height code.** Dragons 1–5 lie low (jump), 6–7 fly high (duck), then 8 over, 9 under, 10 under, 11 over. The first switch hides behind a blind hill crest; the alternation comes where the crystal distracts.",
+  "**Over-jumping is punished as much as under-jumping.** F3 forbids big jumps where traps follow each other (a monster may wait on the landing), and callout 3 places a hole exactly where a big jump over dragon 2 lands. Small hops are the norm.",
+  "**Combinations are short and spaced.** Hole + cart (S1), dragon + hole + dragon (S2), crest + high dragons + crack + springboard (S3), hole + springboard + tower wall (S4); clean stretches with crate groups lie between them.",
+  "**Towers are chokes and decision props.** Each squeezes the lane into a ≈3–4 u tunnel with a board on one side; B and C put a hole right before the board, so the decision is made while recovering from a hop.",
+  "**Static blockers stand beside crates.** Block-lifters and pole assistants occupy one half of the road next to crate pairs; the pole’s long reach makes a close sideways dodge the danger.",
+  "**Barrels come parked and rolling.** Carts are lane blocks against one parapet, often staggered left then right; loose barrels roll down slopes at you, and the dash breaks them.",
+  "**Slopes change timing.** Floating crates hang over a descending stepped road, a crate on an uphill must be jumped at the moment of contact (TT 22), and uphill jumps are short (cap. 05).",
+  "**Checkpoints on clean straights right after a read:** C1 after dragon 1, C2 after dragon 4 at the head of the slalom, C3 after dragons 10–11, each embedded in a crate row.",
+  "**The record line uses the same geometry differently:** parapet tops as landing strips over holes (cap. 03, 11), barrels blasted at speed, and the tower roof as the place of the 3-s crate."
+ ],
+ "geometryTransfer": [
+  "**Half-width breaks on a fast lane.** On a 5–7 m road (4–6 u) with 0.8–1.15 m parapets, cut `pit` notches 2.5–3.5 m across and 1.2–2.3 m along from alternate sides, 4–6 m apart, with a parked obstacle beyond the second: at cruise a carve clears them, and a full ollie (9.4 m from cruise) is the fallback. Keep the parapets grindable as the expert line.",
+  "**Height-coded hurdles after a crest.** Use a low full-width sweeper (jump) five times, then, just past a blind crest, a `pendulum` or bar whose bob passes 2–3 m up — above head height (0.92 m) but inside a full-jump arc (2.85 m), so jumping into it is the mistake. Then alternate low and high.",
+  "**One prop, three answers.** Three `trampoline` towers on one line: A — crates in the low tunnel lane and a decoy pickup on the roof; B — a short hole, the trampoline (16 m/s launch, ≈3.8 m apex; ≈5.9 m held) and three crates on a roof 3.5–4.5 m up; C — a hole plus trampoline that a dash or charged ollie clears in one go, with crates in the tunnel beyond.",
+  "**Rolling barrels on slopes.** A `stone` (radius ≤ 0.7 m, so a full ollie at 1.78 m clears it) rolling down an uphill lane toward the rider, with parked blocks staggered left and right 10–15 m apart on the flat after it.",
+  "**Long-reach static guards beside crate pairs.** A `spinner` (2.1 m wide when its blades are out, 2.2 s out / 1.35 s in) 1.5–2 m from a crate pair at the road edge plays the pole assistant: a close pass times the blades, a wide pass leaves the crates."
  ]
 }
