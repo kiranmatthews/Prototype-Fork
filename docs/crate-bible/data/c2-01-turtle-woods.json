@@ -1096,5 +1096,1386 @@
     "Checkpoints: C1 where the secret rejoins, C2 directly before the wall, the secret C after its easy first third.",
     "Count traps concentrate in the optional route: arrow box, timed ostrich ledges, ground trio passed underneath.",
     "The blue gem turns the wall from 'break' into 'avoid'; a striped crate in its top row is the intended stepping stone and the court prevents bypassing."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "into-screen",
+      "notes": "walled jungle corridor ≈5–8 u wide winding up the map; no side falls; ends in a totem plaza (C1) where the secret lift returns"
+    },
+    {
+      "section": "X",
+      "mode": "side-scroll",
+      "notes": "left → right along a waterfall cliff: separate grassy ledges over a bottomless drop; exits by lift into the S1 plaza"
+    },
+    {
+      "section": "B",
+      "mode": "side-scroll",
+      "notes": "floating green platforms over a void; the exit pad returns the player to S2 in front of the mud boxes"
+    },
+    {
+      "section": "S2",
+      "mode": "into-screen",
+      "notes": "corridor with a mud swamp; ends in an enclosed court between two totems (C2 + crate wall)"
+    },
+    {
+      "section": "S3",
+      "mode": "into-screen",
+      "notes": "rat pits along the path, one turn (D2 shot 36), a rock perch, the last mud, a final pit, the exit"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "corridor",
+      "kind": "start corridor (wide floor, walled)",
+      "size": "5–8 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "REST",
+        "TEACH"
+      ],
+      "why": "the first box and the first enemy meet the player on ground they cannot fall off",
+      "evidence": "F2 p021R; D2 p006L shots 1–2, p006R shot 8 (width)",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "corridor",
+      "kind": "long straight runway",
+      "size": "5–8 wide × ≈10+ long",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "run; practise the dash (slide) jump",
+      "roles": [
+        "REST",
+        "TEACH"
+      ],
+      "why": "D2 calls it a long safe stretch to practise the dash-jump; it ends at the first unavoidable pit",
+      "evidence": "D2 p006R shot 7",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "plaza",
+      "kind": "plaza between two stone totems, closed by a stone arch",
+      "size": "≈8 × 8",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk; body-slam the stone face",
+      "roles": [
+        "CHECKPOINT-PAD",
+        "REST"
+      ],
+      "why": "the secret entrance, the mask, C1 and the secret return share one safe floor, so the optional route starts and ends at a save",
+      "evidence": "F2 p021R top; D2 p006R shots 9–11, p007R shots 23–24",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-a",
+      "section": "X",
+      "shape": "ledge",
+      "kind": "drop-in ledge",
+      "size": "≈6 long",
+      "heightDelta": "drop in from above",
+      "edges": "open (bottomless)",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "REST",
+        "BONUS-PAD"
+      ],
+      "why": "the first secret screen pays 4 boxes on safe footing before any side-scroll gap",
+      "evidence": "D2 p006R shot 12",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-b",
+      "section": "X",
+      "shape": "ledge",
+      "kind": "checkpoint ledge",
+      "size": "≈3–4 long",
+      "heightDelta": 0,
+      "edges": "open (bottomless)",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "save after the opening hops, before the vulture / Nitro / ostrich half",
+      "evidence": "D2 p007L shot 15",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-c",
+      "section": "X",
+      "shape": "long ledge",
+      "kind": "long platform with a vulture at its far end",
+      "size": "≈10+ long",
+      "heightDelta": 0,
+      "edges": "open (bottomless)",
+      "behaviour": "static",
+      "move": "run; hop the swoop",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the runway length is what gives reaction distance for the flier",
+      "evidence": "D2 p007L shot 16",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-d",
+      "section": "X",
+      "shape": "small ledges",
+      "kind": "two small ledges (1 box, then 2 boxes)",
+      "size": "≈2–3 each",
+      "heightDelta": 0,
+      "edges": "open (bottomless)",
+      "behaviour": "static",
+      "move": "plain jumps",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "pacing hops that line up the jump to the perch",
+      "evidence": "ludo steps 5–6 (no D2 shot)",
+      "confidence": "low"
+    },
+    {
+      "id": "P-X-e",
+      "section": "X",
+      "shape": "floating slab",
+      "kind": "floating perch over the Nitro floor",
+      "size": "≈3 × 2, ≈4 above the floor",
+      "heightDelta": "+4 above the Nitro floor",
+      "edges": "open (over Nitro)",
+      "behaviour": "static",
+      "move": "stand; head-bonk the upper ? from below",
+      "roles": [
+        "PERCH",
+        "REWARD"
+      ],
+      "why": "a stable footing over the hazard, where the lives are",
+      "evidence": "D2 p007L shots 17–18 (Nitro crates as ruler)",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-f",
+      "section": "X",
+      "shape": "floor + high ledge",
+      "kind": "ostrich floor below high ledge 1",
+      "size": "ledge ≈3 wide, ≈4–4.5 above the floor",
+      "heightDelta": "+4 to +4.5",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "enemy-bounce on the ostrich's back (≈2.5–3 high), then jump to the ledge",
+      "roles": [
+        "PERCH",
+        "TIMING-STEP"
+      ],
+      "why": "a target above jump height, reachable only by a living step that removes itself",
+      "evidence": "F2 p092L shot 2 + note 2; D2 p007L shots 19–20",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-g",
+      "section": "X",
+      "shape": "floor",
+      "kind": "floor between the ostriches + a lower platform",
+      "size": "not visible",
+      "heightDelta": "below the ledge line",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "drop down",
+      "roles": [
+        "BACKTRACK"
+      ],
+      "why": "boxes are placed under the jump line and collected by dropping back",
+      "evidence": "D2 p007L shot 20",
+      "confidence": "low"
+    },
+    {
+      "id": "P-X-h",
+      "section": "X",
+      "shape": "long ledge",
+      "kind": "long platform 2 with vulture 2",
+      "size": "≈10+ long",
+      "heightDelta": 0,
+      "edges": "open (bottomless)",
+      "behaviour": "static",
+      "move": "run; hop the swoop",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a repeat of the flier runway just before the exit",
+      "evidence": "D2 p007R shot 21",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-X-i",
+      "section": "X",
+      "shape": "ledge + lift",
+      "kind": "exit platform: green ! + round lift",
+      "size": "≈4 + lift disc",
+      "heightDelta": "lift rises to the S1 plaza",
+      "edges": "open",
+      "behaviour": "lift (vertical mover)",
+      "move": "ride",
+      "roles": [
+        "REST"
+      ],
+      "why": "the exit is a lift, so the secret cannot be re-entered from its end",
+      "evidence": "D2 p007R shot 22",
+      "confidence": "high"
+    },
+    {
+      "id": "P-B-a",
+      "section": "B",
+      "shape": "floating platforms",
+      "kind": "floating green platforms",
+      "size": "≈3–4 each",
+      "heightDelta": "0 to ±1",
+      "edges": "open (void)",
+      "behaviour": "static",
+      "move": "plain jumps",
+      "roles": [
+        "STEPPING",
+        "BONUS-PAD"
+      ],
+      "why": "calm side-on footing for the five bonus boxes",
+      "evidence": "D2 p007R shot 27, p008L shots 28–30",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "B",
+      "shape": "platform",
+      "kind": "lower platform before the exit pad",
+      "size": "not visible",
+      "heightDelta": "−1 to −2",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "drop down",
+      "roles": [
+        "DETOUR"
+      ],
+      "why": "the last box sits below the exit line",
+      "evidence": "D2 p008L shot 30",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "corridor",
+      "kind": "corridor after C1 (first main-course turtle)",
+      "size": "≈5–6 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "ARENA",
+        "TEACH"
+      ],
+      "why": "the turtle debuts alone on flat ground straight after a save",
+      "evidence": "F2 p022L POINT5; D2 p007R shot 25",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "pad",
+      "kind": "green ? bonus pad on the right edge",
+      "size": "≈2",
+      "heightDelta": "raised pad",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "step on",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "why": "the bonus entrance follows the turtle pair, so it rewards the chain-stomp lesson",
+      "evidence": "F2 p022L; D2 p007R shot 26",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "court",
+      "kind": "enclosed court between two totems",
+      "size": "≈5 wide, closed both sides",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "CHOKE",
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the closed court turns the wall into a pure skill gate (vault or break)",
+      "evidence": "F2 p022L POINT8; D2 p008L shot 33, p008R shot 42",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "floor",
+      "kind": "turn + floor under the floating ? (turtle pacing below it)",
+      "size": "≈5 wide; the ? ≈4–5 up",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "stomp the turtle once, bounce off its belly",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the springboard enemy patrols directly under its target, just past a turn",
+      "evidence": "D2 p008R shot 36; F2 p022R POINT10",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "rock",
+      "kind": "big rock perch (left) before the last mud",
+      "size": "≈2, ≈1–2 high",
+      "heightDelta": "+1 to +2",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "jump from the rock to the box in the mud",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "a raised take-off makes the lone mud box a one-hop target",
+      "evidence": "D2 p008R shot 39; F2 p022R POINT11",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S1-a",
+      "section": "S1",
+      "kind": "safe mud patch",
+      "width": "3–4",
+      "heightDelta": 0,
+      "landing": "corridor floor",
+      "lethal": false,
+      "runUp": "≥4",
+      "move": [
+        "wade",
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "slowed, spin disabled, no death",
+      "nearby": [
+        "S1-b"
+      ],
+      "roles": [
+        "TEACH"
+      ],
+      "why": "the first floor hazard costs only speed and the spin, and sits beside the striped sandwich, so the lesson is free",
+      "evidence": "F2 p021R; D2 p006L shot 4 (\"you don't drown\")",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S1-b",
+      "section": "S1",
+      "kind": "edge pit beside the path (not across it)",
+      "width": "2–3 (hole beside the line)",
+      "heightDelta": "drop",
+      "landing": "not crossed",
+      "lethal": true,
+      "runUp": "n/a",
+      "move": [
+        "avoid"
+      ],
+      "coupling": "none",
+      "failure": "death if walked into",
+      "nearby": [
+        "S1-c"
+      ],
+      "roles": [
+        "EDGE-BAIT",
+        "TEACH"
+      ],
+      "why": "the first lethal hole is shown beside the route, with a ? box at its lip, before any hole has to be jumped",
+      "evidence": "D2 p006L shot 5 (\"a pit on the left (don't jump in)\"); F2 p021R draws S1-c on the right",
+      "confidence": "medium (side conflicts)"
+    },
+    {
+      "id": "G-S1-c",
+      "section": "S1",
+      "kind": "full-width pit 1",
+      "width": "2–3",
+      "heightDelta": 0,
+      "landing": "corridor floor; the W/W/S stack S1-d just beyond",
+      "lethal": true,
+      "runUp": "≈10 (the runway)",
+      "move": [
+        "running",
+        "slide-jump (advised)"
+      ],
+      "coupling": "none",
+      "failure": "death",
+      "nearby": [
+        "S1-d"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the first gap that must be jumped follows its practice runway, and nothing else competes for attention",
+      "evidence": "D2 p006R shot 8 (span estimated; no crate in frame)",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S1-d",
+      "section": "S1",
+      "kind": "pit 2 before the stone face (F2 draws a plank bridge here)",
+      "width": "2–3",
+      "heightDelta": 0,
+      "landing": "floor with armadillo 3, then the stone face",
+      "lethal": true,
+      "runUp": "≈4–6",
+      "move": [
+        "plain",
+        "running"
+      ],
+      "coupling": "enemy waiting on the landing (E-S1-c)",
+      "failure": "death",
+      "nearby": [
+        "E-S1-c",
+        "S1-e"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the first combination of two known lessons: a gap whose landing holds an enemy",
+      "evidence": "D2 p006R shot 10 (\"jump the pit, atomize the armadillo\"); F2 p021R",
+      "confidence": "low (plank vs jump unresolved)"
+    },
+    {
+      "id": "G-X-a",
+      "section": "X",
+      "kind": "bottomless gaps between cliff ledges (×2), a turtle crawling on each landing",
+      "width": "1.5–2",
+      "heightDelta": "0 (±1)",
+      "landing": "ledge ≈3 long with a crawling turtle",
+      "lethal": true,
+      "runUp": "2–4",
+      "move": [
+        "plain",
+        "stomp on landing"
+      ],
+      "coupling": "turtle patrol on the landing ledge: jump when it is at the far end, or land on it (stomp)",
+      "failure": "fall = death",
+      "nearby": [
+        "E-X-a",
+        "X-b"
+      ],
+      "roles": [
+        "TEST",
+        "TIMING-STEP"
+      ],
+      "why": "the first gap coupled to an enemy's position (D2: \"jump across when the time is right\")",
+      "evidence": "D2 p006R shot 13, p007L shot 14",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-X-b",
+      "section": "X",
+      "kind": "gap onto a floating perch above a Nitro floor",
+      "width": "2–3",
+      "heightDelta": 0,
+      "landing": "perch ≈3 × 2 carrying the ?/? stack (X-e)",
+      "lethal": true,
+      "runUp": "≈2–3 (short ledge)",
+      "move": [
+        "slide-jump (D2 explains the dash-jump here)"
+      ],
+      "coupling": "none",
+      "failure": "fall onto 3 Nitro = death",
+      "nearby": [
+        "X-e",
+        "X-f"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the dash-jump practised on S1's safe runway is now demanded over explosives",
+      "evidence": "D2 p007L shots 17–18",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-X-c",
+      "section": "X",
+      "kind": "drop from the perch to the arrow ledge",
+      "width": "≈3",
+      "heightDelta": -2,
+      "landing": "ledge ≈2–3 with the wooden ↑ (X-g)",
+      "lethal": true,
+      "runUp": "perch",
+      "move": [
+        "plain (down)"
+      ],
+      "coupling": "none",
+      "failure": "fall onto the Nitro floor",
+      "nearby": [
+        "X-g"
+      ],
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a short downward hop to the tool keeps the Nitro floor under every move",
+      "evidence": "D2 p007L shot 18",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-X-d",
+      "section": "X",
+      "kind": "arrow bounce, then a dash-jump to a small platform",
+      "width": "2–3",
+      "heightDelta": "up via the arrow, then level",
+      "landing": "small platform before the ostriches",
+      "lethal": true,
+      "runUp": "arrow ledge",
+      "move": [
+        "arrow",
+        "slide-jump"
+      ],
+      "coupling": "none",
+      "failure": "fall",
+      "nearby": [
+        "X-g"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the arrow lifts the player to the next tier of ledges; the dash-jump is needed again",
+      "evidence": "D2 p007L shots 17, 19",
+      "confidence": "low"
+    },
+    {
+      "id": "G-X-e",
+      "section": "X",
+      "kind": "ledge 1 → ostrich 2's back → ledge 2",
+      "width": "≈3 per hop",
+      "heightDelta": "level, then up",
+      "landing": "ledge 2 (X-i)",
+      "lethal": false,
+      "runUp": "ledge 1",
+      "move": [
+        "slide-jump",
+        "enemy-bounce"
+      ],
+      "coupling": "ostrich 2 ducks when approached",
+      "failure": "drop to the floor; the ledge boxes are lost for this attempt",
+      "nearby": [
+        "X-i",
+        "E-X-c"
+      ],
+      "roles": [
+        "TEST",
+        "TIMING-STEP"
+      ],
+      "why": "the same living step becomes a moving stepping stone between two ledges",
+      "evidence": "D2 p007L shot 20",
+      "confidence": "low"
+    },
+    {
+      "id": "G-B-a",
+      "section": "B",
+      "kind": "gaps between bonus platforms",
+      "width": "2–3",
+      "heightDelta": "0 to −1",
+      "landing": "platform ≈3–4",
+      "lethal": null,
+      "runUp": "platform",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "falls out of the bonus (consequence not stated on these pages)",
+      "nearby": [
+        "B-a",
+        "B-b"
+      ],
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "low-pressure side-on jumps between payouts",
+      "evidence": "D2 p008L shots 28, 30",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "safe mud swamp crossed on 3 ? boxes",
+      "width": "6–8 (boxes ≈2 apart)",
+      "heightDelta": "0 (boxes up to +1)",
+      "landing": "far bank",
+      "lethal": false,
+      "runUp": "bank",
+      "move": [
+        "crate-bounce chain"
+      ],
+      "coupling": "each stomp breaks the box under you: keep moving",
+      "failure": "fall into the mud: slowed, no spin; body-slam the box from inside; no death",
+      "nearby": [
+        "S2-a"
+      ],
+      "roles": [
+        "TEACH",
+        "STEPPING"
+      ],
+      "why": "the first consumable footing, laid over a gap that cannot kill",
+      "evidence": "F2 p022L POINT7; D2 p008L shot 31",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "rat pit 1: sunken walled square (2 moles)",
+      "width": "5–6 square",
+      "heightDelta": "−2 to −3 (walls)",
+      "landing": "pit floor",
+      "lethal": false,
+      "runUp": "n/a (cannot be jumped)",
+      "move": [
+        "drop-down",
+        "spin the moles",
+        "mushroom trampoline out"
+      ],
+      "coupling": "moles pop up from the floor; the trampoline exit appears when both are dead",
+      "failure": "trapped until the moles are killed; no death",
+      "nearby": [
+        "E-S3-a",
+        "S3-a"
+      ],
+      "roles": [
+        "TEACH",
+        "CHOKE"
+      ],
+      "why": "an enforced descent: too wide to jump (D2), not lethal, and the exit is earned by beating the enemies inside",
+      "evidence": "D2 p008L shot 35; F2 p022R POINT9 (×2)",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-b",
+      "section": "S3",
+      "kind": "rat pit 2 (4 moles)",
+      "width": "5–6 square",
+      "heightDelta": "−2 to −3",
+      "landing": "pit floor",
+      "lethal": false,
+      "runUp": "n/a",
+      "move": [
+        "drop-down",
+        "spin the moles",
+        "trampoline out"
+      ],
+      "coupling": "4 moles",
+      "failure": "trapped until the moles are killed",
+      "nearby": [
+        "E-S3-c"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the same trap with twice the moles",
+      "evidence": "D2 p008R shot 38; F2 p022R (×4)",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-c",
+      "section": "S3",
+      "kind": "last mud swamp with one ? box",
+      "width": "4–5",
+      "heightDelta": 0,
+      "landing": "far bank",
+      "lethal": false,
+      "runUp": "rock perch",
+      "move": [
+        "crate-bounce"
+      ],
+      "coupling": "single box that breaks",
+      "failure": "mud: body-slam the box from inside",
+      "nearby": [
+        "S3-d"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the S2 lesson with one box and no spare",
+      "evidence": "F2 p022R POINT11; D2 p008R shot 39",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-d",
+      "section": "S3",
+      "kind": "rat pit 3 (4 moles) beside the crystal",
+      "width": "5–6 square",
+      "heightDelta": "−2 to −3",
+      "landing": "pit floor",
+      "lethal": false,
+      "runUp": "n/a",
+      "move": [
+        "drop-down",
+        "spin the moles",
+        "trampoline out"
+      ],
+      "coupling": "4 moles; the crystal sits at its edge",
+      "failure": "trapped until the moles are killed",
+      "nearby": [
+        "E-S3-d"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the crystal pulls the player to the lip",
+      "evidence": "D2 p008R shot 40; F2 p022R POINT12 (×4)",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-e",
+      "section": "S3",
+      "kind": "final pit before the exit (on the left)",
+      "width": "≈2 (not measurable)",
+      "heightDelta": 0,
+      "landing": "exit floor",
+      "lethal": true,
+      "runUp": "short",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "not stated (assumed death)",
+      "nearby": [],
+      "roles": [
+        "TEST"
+      ],
+      "why": "one last plain jump into the exit",
+      "evidence": "D2 p008R shot 41 (\"jump over the pit to the left\")",
+      "confidence": "low"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": 3,
+      "moves": [
+        "plain (low wall)",
+        "running",
+        "plain"
+      ],
+      "rhythm": "isolated: one jump per screen",
+      "maxGap": "2–3",
+      "rest": "≥4–6 u of flat floor before each",
+      "noStop": false,
+      "why": "a teaching section separates every jump with flat ground, so each can be attempted from a standstill",
+      "evidence": "F2 p021R; D2 p006L shot 3, p006R shots 7–10"
+    },
+    {
+      "id": "J-X-a",
+      "section": "X",
+      "count": 3,
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even, timed to the turtle patrols",
+      "maxGap": "1.5–2",
+      "rest": "P-X-b (checkpoint ledge)",
+      "noStop": false,
+      "why": "short hops whose only difficulty is the occupant of each landing",
+      "evidence": "D2 p006R shot 13, p007L shots 14–15"
+    },
+    {
+      "id": "J-X-b",
+      "section": "X",
+      "count": 5,
+      "moves": [
+        "plain",
+        "slide-jump",
+        "plain (down)",
+        "arrow",
+        "slide-jump"
+      ],
+      "rhythm": "syncopated: up, across, down, bounce, across",
+      "maxGap": "2–3",
+      "rest": "ostrich floor (P-X-f)",
+      "noStop": false,
+      "why": "each hop changes height around a perch over Nitro; pausing is possible, but every pause is above a lethal floor",
+      "evidence": "D2 p007L shots 17–19"
+    },
+    {
+      "id": "J-X-c",
+      "section": "X",
+      "count": 4,
+      "moves": [
+        "enemy-bounce",
+        "plain",
+        "slide-jump",
+        "enemy-bounce"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "≈3",
+      "rest": "ledge 2 or the floor",
+      "noStop": true,
+      "why": "the ostriches duck when approached, so the climb must be done in one go",
+      "evidence": "F2 p092L note 2; D2 p007L shots 19–20"
+    },
+    {
+      "id": "J-B-a",
+      "section": "B",
+      "count": "≈4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even",
+      "maxGap": "2–3",
+      "rest": "every platform",
+      "noStop": false,
+      "why": "the bonus is a calm run of side-on hops",
+      "evidence": "D2 p008L shots 28–30"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": 3,
+      "moves": [
+        "crate-bounce"
+      ],
+      "rhythm": "even, fast",
+      "maxGap": "≈2",
+      "rest": "far bank",
+      "noStop": true,
+      "why": "each stomp breaks the box under you, so the crossing cannot pause",
+      "evidence": "F2 p022L POINT7; D2 p008L shot 31"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": 2,
+      "moves": [
+        "plain (from the perch)",
+        "crate-bounce"
+      ],
+      "rhythm": "even",
+      "maxGap": "≈2",
+      "rest": "far bank",
+      "noStop": true,
+      "why": "rock → box → bank; the box breaks under you",
+      "evidence": "D2 p008R shot 39"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-S1-a",
+      "section": "S1",
+      "kind": "low stone wall across the path (hurdle, ≈0.5–1 u high, estimated)",
+      "placement": "across path",
+      "timing": "static",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S1-b striped sandwich just beyond"
+      ],
+      "roles": [
+        "TEACH"
+      ],
+      "why": "the game's first required jump has no failure state, and its reward waits on the far side",
+      "evidence": "F2 p021R (slab row); D2 p006L shot 3 (\"over the wall\")"
+    },
+    {
+      "id": "O-X-a",
+      "section": "X",
+      "kind": "Nitro floor (3 Nitro) under the perch",
+      "placement": "in pit (floor of the gap)",
+      "timing": "static",
+      "counter": [
+        "do not fall",
+        "detonated later by the green ! (X-l)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-X-b",
+        "X-e lives above"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "turns an ordinary ledge-to-ledge hop into a lethal one without any enemy; the lives sit right above it",
+      "evidence": "D2 p007L shots 17–18"
+    },
+    {
+      "id": "O-S2-a",
+      "section": "S2",
+      "kind": "low stone wall with two turtles on its far side",
+      "placement": "across path",
+      "timing": "static",
+      "counter": [
+        "jump over, then stomp / spin"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "E-S2-d"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the hurdle hides the landing's occupants until the jump",
+      "evidence": "D2 p008L shot 32"
+    },
+    {
+      "id": "O-S2-b",
+      "section": "S2",
+      "kind": "crate wall 2 high × 5 wide closing the court (the blue-gem vault)",
+      "placement": "across path (wall to wall)",
+      "timing": "static",
+      "counter": [
+        "break it (all-box)",
+        "slide-jump over (D2)",
+        "one stomp on the top-row striped (F2)"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S2-b checkpoint",
+        "S2-c crates"
+      ],
+      "roles": [
+        "TEST",
+        "LANE-BLOCK"
+      ],
+      "why": "D2: a plain jump clips the top row, so only the slide-jump or the striped foothold clears it untouched — the advanced move is the intended answer",
+      "evidence": "D2 p008R shot 42; F2 p092L blue-gem note; F2 p022L POINT8"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S1-a",
+      "section": "S1",
+      "kind": "armadillo (アル) #1",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "walks side to side across the corridor right after the first box",
+      "counter": [
+        "spin",
+        "stomp",
+        "avoid (F2: no need to kill)"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "TEACH",
+        "HURDLE"
+      ],
+      "firstAlone": true,
+      "why": "the first enemy can be dodged by timing as well as attacked, on walled ground with nothing else near",
+      "evidence": "F2 p021R POINT1; D2 p006L shot 2",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S1-b",
+      "section": "S1",
+      "kind": "armadillo #2",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "runs along the route axis, toward and away from the camera (\"more aggressive\")",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "a patrol along the travel line cannot be passed with a side step; it must be engaged",
+      "evidence": "D2 p006L shot 6",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S1-c",
+      "section": "S1",
+      "kind": "armadillo #3",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "waits on the landing side of pit 2, before the stone face",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [],
+      "placement": "landing platform",
+      "roles": [
+        "TEST",
+        "GUARD"
+      ],
+      "firstAlone": null,
+      "why": "the first enemy at a landing: jump and fight in one motion",
+      "evidence": "D2 p006R shot 10",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-X-a",
+      "section": "X",
+      "kind": "spiked turtle (トゲ・デ・カメンデス)",
+      "count": 2,
+      "archetype": "patrol-1D",
+      "behaviour": "crawls along the small landing ledges",
+      "counter": [
+        "stomp (flips it)",
+        "flip-then-spin"
+      ],
+      "fails": [
+        "a spin sends it flying (D2 shot 13)"
+      ],
+      "placement": "landing platform",
+      "roles": [
+        "TIMING-GATE",
+        "TEACH"
+      ],
+      "firstAlone": false,
+      "why": "in the secret course the turtle debuts on a narrow ledge over a void, harder than its main-course debut in S2; D2 says its belly will later be a trampoline",
+      "evidence": "D2 p006R shot 13, p007L shot 14",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-X-b",
+      "section": "X",
+      "kind": "vulture (パープー)",
+      "count": 2,
+      "archetype": "flier",
+      "behaviour": "waits at the far end of a long platform and swoops low along it",
+      "counter": [
+        "jump over"
+      ],
+      "fails": [],
+      "placement": "end of a long platform",
+      "roles": [
+        "HURDLE",
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "the platform's length gives reaction distance; the flier is the only hazard on it",
+      "evidence": "D2 p007L shot 16, p007R shot 21",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-X-c",
+      "section": "X",
+      "kind": "pink ostrich (ピンクー)",
+      "count": 2,
+      "archetype": "static (reactive: ducks when approached)",
+      "behaviour": "stands under a high ledge and buries its head (crouches) as the player comes near",
+      "counter": [
+        "enemy-bounce (use its back as a step)",
+        "avoid"
+      ],
+      "fails": [
+        "a slow approach — it ducks and the step is gone"
+      ],
+      "placement": "below high ledges",
+      "roles": [
+        "TOOL/STEP",
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "a living step with a closing window; failure costs boxes, not a life",
+      "evidence": "F2 p092L note 2; D2 p007L shots 19–20",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-a",
+      "section": "S2",
+      "kind": "spiked turtle (main-course debut)",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "walks the flat corridor just after C1",
+      "counter": [
+        "stomp, then spin (POINT5)"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": true,
+      "why": "stomp-then-spin is taught on safe ground straight after a save",
+      "evidence": "F2 p022L POINT5; D2 p007R shot 25",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-b",
+      "section": "S2",
+      "kind": "spiked turtles in a row",
+      "count": 2,
+      "archetype": "patrol-1D",
+      "behaviour": "two consecutive turtles on the corridor",
+      "counter": [
+        "chain stomp (POINT6: fruit)"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "a pair invites the chained stomp; the bonus pad follows it",
+      "evidence": "F2 p022L POINT6",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-c",
+      "section": "S2",
+      "kind": "armadillo",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "walks past the mud, by a leaning log",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": null,
+      "why": "a pacing enemy between the mud and the court",
+      "evidence": "F2 p022L",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S2-d",
+      "section": "S2",
+      "kind": "spiked turtles beyond the low wall",
+      "count": 2,
+      "archetype": "patrol-1D",
+      "behaviour": "walk on the far side of the low stone wall",
+      "counter": [
+        "stomp",
+        "flip-then-spin"
+      ],
+      "fails": [],
+      "placement": "landing (behind a hurdle)",
+      "roles": [
+        "GUARD",
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "they guard the court and are hidden until the hop over the wall",
+      "evidence": "D2 p008L shot 32",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-a",
+      "section": "S3",
+      "kind": "moles (アナチュール) in rat pit 1",
+      "count": 2,
+      "archetype": "burrower/ambusher",
+      "behaviour": "pop up from the pit floor",
+      "counter": [
+        "spin (POINT9)",
+        "bounce off one by the far wall to climb out (D2)"
+      ],
+      "fails": [],
+      "placement": "in pit",
+      "roles": [
+        "GATEKEEPER",
+        "TOOL/STEP"
+      ],
+      "firstAlone": false,
+      "why": "killing every mole opens the exit; their heads are also a step",
+      "evidence": "D2 p008L shot 35; F2 p022R POINT9",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-b",
+      "section": "S3",
+      "kind": "spiked turtle under the floating ?",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "paces underneath the floating ? box",
+      "counter": [
+        "stomp once, then bounce off its belly"
+      ],
+      "fails": [
+        "spin — sends it flying and the springboard is gone (D2: \"without spinning it\")"
+      ],
+      "placement": "below a floating crate",
+      "roles": [
+        "TOOL/STEP"
+      ],
+      "firstAlone": null,
+      "why": "the enemy is the only way up, so its placement is the puzzle",
+      "evidence": "D2 p008R shot 36; F2 p022R POINT10",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-c",
+      "section": "S3",
+      "kind": "moles in rat pit 2",
+      "count": 4,
+      "archetype": "burrower/ambusher",
+      "behaviour": "pop up from the pit floor",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "in pit",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": null,
+      "why": "the trap repeated with four moles",
+      "evidence": "D2 p008R shot 38; F2 p022R (×4)",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-d",
+      "section": "S3",
+      "kind": "moles in rat pit 3 (beside the crystal)",
+      "count": 4,
+      "archetype": "burrower/ambusher",
+      "behaviour": "pop up from the pit floor",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "in pit",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": null,
+      "why": "the crystal draws the player to the pit edge",
+      "evidence": "D2 p008R shot 40; F2 p022R POINT12 (×4)",
+      "confidence": "medium"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "? box at spawn",
+        "armadillo crossing the path",
+        "low wall hop",
+        "striped sandwich",
+        "mud patch",
+        "edge pit + ? box",
+        "armadillo on the route axis",
+        "long runway",
+        "full-width pit (dash-jump)",
+        "W/W/S stack",
+        "pit 2 + armadillo on the landing",
+        "stone face (secret)",
+        "plaza: ?, Aku, C1"
+      ],
+      "gaps": 4,
+      "enemies": 3,
+      "hazards": 1
+    },
+    {
+      "section": "X",
+      "beats": [
+        "drop-in ledge (4 boxes)",
+        "gap + crawling turtle",
+        "gap + crawling turtle",
+        "C ledge",
+        "long platform + vulture",
+        "two small ledges",
+        "slide-jump to the ?/? perch over 3 Nitro",
+        "drop to the arrow ledge",
+        "arrow + slide-jump",
+        "ostrich 1 back → high ledge",
+        "ostrich 2 back → high ledge",
+        "drop: ground trio, lower platform",
+        "long platform + vulture",
+        "green ! + lift"
+      ],
+      "gaps": 8,
+      "enemies": 6,
+      "hazards": 1
+    },
+    {
+      "section": "B",
+      "beats": [
+        "platform: 3 boxes",
+        "gap",
+        "? box (life)",
+        "gap",
+        "lower-platform box",
+        "exit pad"
+      ],
+      "gaps": 3,
+      "enemies": 0,
+      "hazards": 0
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "turtle alone",
+        "turtle pair (chain stomp)",
+        "bonus pad",
+        "mud swamp: 3 ? stepping boxes",
+        "armadillo",
+        "low wall + 2 turtles beyond",
+        "court: C2",
+        "2 × 5 crate wall (vault or break)"
+      ],
+      "gaps": 1,
+      "enemies": 6,
+      "hazards": 2
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "Aku",
+        "rat pit (2 moles)",
+        "turn: turtle under the floating ?",
+        "3 ? boxes",
+        "rat pit (4 moles)",
+        "rock perch → mud ?",
+        "crystal + rat pit (4 moles)",
+        "final pit",
+        "exit"
+      ],
+      "gaps": 5,
+      "enemies": 11,
+      "hazards": 0
+    }
+  ],
+  "geometryObservations": [
+    "Lethality ramps one step per encounter: a hurdle that cannot fail (O-S1-a) → mud that only slows (G-S1-a) → a lethal hole beside the path with a box at its lip (G-S1-b) → a full-width pit after a practice runway (P-S1-b, G-S1-c) → a pit with an enemy on its landing (G-S1-d).",
+    "Main-course gaps are short and generous: about three lethal pits of ≈2–3 u, each with ≥4 u of run-up; every other \"gap\" (two mud swamps, three rat pits) turns failure into delay. The first level punishes with time, not lives.",
+    "Rat pits are enforced descents and enemy locks: ≈5–6 u walled squares too wide to jump, which the player must enter; the trampoline exit appears only when every mole is dead. Mole count rises 2 → 4 → 4 (G-S3-a, G-S3-b, G-S3-d).",
+    "Enemy patrol axes escalate: across the path, so it can be timed past (E-S1-a) → along the path, so it must be engaged (E-S1-b) → waiting on a landing, engaged while landing (E-S1-c).",
+    "The turtle is taught in four steps: alone after C1 (E-S2-a) → a pair for the chain stomp (E-S2-b) → a pair hidden behind a hurdle (E-S2-d) → a springboard under a floating box (E-S3-b).",
+    "Targets above jump height are reached only with living steps — the turtle's belly in S3 and the ostriches' backs in the secret (P-X-f). The height ceiling is enforced by placing targets just above the jump, not by walls.",
+    "Timed living steps (the ostriches duck when approached) teach \"use it now\" with a soft failure: missed boxes and a retry, never a death.",
+    "The optional side-scroll secret holds every coupled challenge — occupied landings (G-X-a), a flier on a runway (P-X-c), a perch over Nitro (G-X-b), an enemy ladder (J-X-c). The main course keeps its hazards uncoupled.",
+    "Platform length is set by the enemy on it: the vulture runways are ≈10+ u for reaction distance; the turtle landing ledges are ≈3 u, just long enough to land beside a crawling turtle.",
+    "Walled corridors remove side falls from the main course, and the ≈5–8 u lane leaves room to steer around enemies, which is why the early enemies are optional (F2 POINT1: no need to kill).",
+    "Perches appear exactly where precision is needed: the ?/? perch over the Nitro floor and the rock before the last mud box give a stable take-off for a one-shot jump.",
+    "The closed court makes the 2 × 5 wall unavoidable, and its 2 u height is just above a clean plain jump (D2), so the no-break goal needs the slide-jump or the striped foothold (O-S2-b).",
+    "Checkpoints sit on wide enclosed floors (plaza, court) or on the secret's first safe ledge after its opening hops — never on a narrow ledge, a mud crossing or inside a pit."
+  ],
+  "geometryTransfer": [
+    "Opening debut strip: a walled corridor 6–8 m wide (`wall` / `coastwall` sides), a 0.6–1.0 m `platform` hurdle across it as the first jump, then a soft strip (`groundSpeedLimit`, 3–4 m) beside the first multi-hit sandwich, an edge `pit` beside — not across — the path with a crate at its lip, and only then a full-width `pit` 2.3–3.5 m long after ≥10 m of runway (the running full jump covers ≈5.6 m, so the first gap is forgiving by design).",
+    "Enforced-descent trap pit: a sunken square 6–7 m across whose walls stand more than 7 m above the pit floor (beyond the ≈7.0 m double-jump ledge-grab reach) or end in an overhanging lip, two `grunt`s inside (four in the repeat) and a `trampoline` in a corner as the only exit. It never kills; clearing the enemies is the practical requirement for using the trampoline.",
+    "Living step to a height target: a `turtle` patrolling ±1–1.5 m directly under a crate whose underside is above ≈5.5 m (beyond double-jump head reach). Valid only if this engine's stomp bounce off a `turtle` plus the double jump reaches it — measure that bounce before authoring; Part IX gives crate and arrow bounces only.",
+    "Side-scroll secret with occupied landings (`zone` dir E): 3–4 m ledges with 2–3 m gaps (well inside the 5.6 m jump), each landing patrolled by a `turtle` with range 1–1.5 m so the jump is timed to its phase; then a ≥12 m runway with a `floater` swooping from its far end (≈1.3 s of warning at 9 m/s), a checkpoint after the first three hops, and a `mover` lift (axis y) as the one-way exit.",
+    "No-break vault gate: Crash's 2-high wall (2.30 m) is below our 2.85 m full jump, so use a 3-high wall (3.46 m, needs the double jump) spanning a closed 5–6 m court right after a checkpoint, with one multi-hit crate in its top row as the stepping stone.",
+    "Perch over a hazard: a 3 × 2 m floating `platform` 4.6 m (4 crates) above a floor of Nitro, reached by a ≈3 m jump, holding the life crates; a ledge 2.3 m lower and 3 m on carries the arrow that lifts the player to the next tier."
   ]
 }

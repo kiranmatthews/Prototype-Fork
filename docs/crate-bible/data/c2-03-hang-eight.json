@@ -980,5 +980,1300 @@
     "The only main-course life on the water sits inside the minefield.",
     "The gem course recombines earlier lessons: single-use stepping boxes (now over water), Nitro rows around a checkpoint, outline/switch with a vehicle backtrack, floating Nitros, green ! at the exit.",
     "Explosives are kept out of the main course: TNT only in the bonus, Nitros only in the gem course."
+  ],
+  "cameraSections": [
+    {
+      "section": "F1",
+      "mode": "into-screen",
+      "notes": "on foot up a causeway of square tiles in a ≈6–8 u river channel; water is lethal; sinking pillars bridge the wider gaps"
+    },
+    {
+      "section": "W1",
+      "mode": "vehicle",
+      "notes": "jet board upstream, into-screen; the whole channel is the lane; static mines divide it"
+    },
+    {
+      "section": "F2",
+      "mode": "into-screen",
+      "notes": "on foot: tiles, a waterfall step with posts, hippos; ≈10 s from the gem plate to C3 in the D2 timer run"
+    },
+    {
+      "section": "B",
+      "mode": "side-scroll",
+      "notes": "red mushroom platforms on tree trunks; a steel-block crawlspace"
+    },
+    {
+      "section": "G",
+      "mode": "into-screen",
+      "notes": "gem course: on foot (moving island, hippo, crate bridge, Nitro causeway), then jet board with an about-face (rides back toward the camera)"
+    },
+    {
+      "section": "W2",
+      "mode": "vehicle",
+      "notes": "jet board: whirlpool gate, mine slalom, two ramps, moving mines; ≈19–21 s in the D2 timer run (0:27 → 0:06)"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-F1-a",
+      "section": "F1",
+      "shape": "pier",
+      "kind": "pipe start + stone pier with three steps up",
+      "size": "≈3 wide",
+      "heightDelta": "+1 to +3 (steps)",
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "walk; plain jumps up",
+      "roles": [
+        "REST"
+      ],
+      "why": "a safe pier to start from, already surrounded by lethal water",
+      "evidence": "F2 p026L; D2 p011L shots 1–2",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-F1-b",
+      "section": "F1",
+      "shape": "stepping stones",
+      "kind": "square slab tiles in a line",
+      "size": "≈2.5–3 square, 1–2 apart",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "plain jumps",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "fixed tiles are the rests between timed crossings",
+      "evidence": "D2 p011L shots 1–4",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-F1-c",
+      "section": "F1",
+      "shape": "square pad",
+      "kind": "raised tile carrying the 2 × 2 crate block",
+      "size": "≈3",
+      "heightDelta": "+1",
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "jump up",
+      "roles": [
+        "REST",
+        "BONUS-PAD"
+      ],
+      "why": "reward and rest right after the piranha",
+      "evidence": "D2 p011L shot 3; F2 p026L inset",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-F1-d",
+      "section": "F1",
+      "shape": "tiles",
+      "kind": "L-shaped tile run + C1 tile beside a flytrap",
+      "size": "tiles ≈2.5 wide",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "walk; jump-spin the flytrap from range (POINT2)",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the first flytrap is met guarding the checkpoint",
+      "evidence": "F2 p026L POINT2; D2 p011L shots 5–6",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-F1-e",
+      "section": "F1",
+      "shape": "dock",
+      "kind": "plank dock with the board",
+      "size": "≈4",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "board pickup",
+      "roles": [
+        "REST"
+      ],
+      "why": "a dock is the hinge between the two locomotion modes",
+      "evidence": "D2 p011L shot 6",
+      "confidence": "high"
+    },
+    {
+      "id": "P-W1-a",
+      "section": "W1",
+      "shape": "vehicle lane",
+      "kind": "river channel (board lane)",
+      "size": "≈6–8 wide",
+      "heightDelta": 0,
+      "edges": "banks (walled)",
+      "behaviour": "water surface",
+      "move": "steer; boost",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the whole channel is open, so lanes are defined only by hazards",
+      "evidence": "F2 p026L; D2 p011L shots 7–9",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-W1-b",
+      "section": "W1",
+      "shape": "dock",
+      "kind": "dock C2",
+      "size": "≈4",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "dismount",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "save at the mode change",
+      "evidence": "D2 p011L shot 10",
+      "confidence": "high"
+    },
+    {
+      "id": "P-F2-a",
+      "section": "F2",
+      "shape": "tiles",
+      "kind": "dock + tile path past two flytraps",
+      "size": "tiles ≈2.5–3",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "pass the first without getting close (POINT5)",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a path to learn a planted enemy's reach",
+      "evidence": "F2 p026R POINT5; D2 p011R shot 11",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-F2-b",
+      "section": "F2",
+      "shape": "posts",
+      "kind": "waterfall step with three stone posts",
+      "size": "posts ≈1",
+      "heightDelta": "+2 to +3 in total",
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "plain jumps up",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "the narrowest footing in the stage, but static",
+      "evidence": "F2 p026R; D2 p011R shot 12",
+      "confidence": "low"
+    },
+    {
+      "id": "P-F2-c",
+      "section": "F2",
+      "shape": "pad",
+      "kind": "gem plate (hex) at the waterfall top",
+      "size": "≈2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "move": "stand on it (with the blue gem)",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "why": "the optional route starts from the highest point of the leg",
+      "evidence": "F2 p026R; D2 p011R shot 12",
+      "confidence": "high"
+    },
+    {
+      "id": "P-F2-d",
+      "section": "F2",
+      "shape": "dock",
+      "kind": "tile path + dock C3",
+      "size": "≈4",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "save at the second board pickup",
+      "evidence": "F2 p026R; D2 p011R shot 17",
+      "confidence": "high"
+    },
+    {
+      "id": "P-B-a",
+      "section": "B",
+      "shape": "round pads",
+      "kind": "red mushroom platforms on tree trunks",
+      "size": "≈3–4",
+      "heightDelta": "±1",
+      "edges": "open (void)",
+      "behaviour": "static",
+      "move": "plain jumps",
+      "roles": [
+        "STEPPING",
+        "BONUS-PAD"
+      ],
+      "why": "calm side-on footing for the bonus crates",
+      "evidence": "D2 p012L shots 24–27",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "B",
+      "shape": "crawlspace",
+      "kind": "steel-block ceiling over a platform (crawlspace)",
+      "size": "clearance ≈1",
+      "heightDelta": 0,
+      "edges": "roofed",
+      "behaviour": "static",
+      "move": "crawl or slide under (D2)",
+      "roles": [
+        "CHOKE",
+        "TEACH"
+      ],
+      "why": "the only place in the stage where the slide-under is required",
+      "evidence": "D2 p012L shot 25",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-G-a",
+      "section": "G",
+      "shape": "square pad",
+      "kind": "gem landing tile (two sandwich columns)",
+      "size": "≈3–4",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "stomp the lower boxes to reach the striped",
+      "roles": [
+        "REST",
+        "BONUS-PAD"
+      ],
+      "why": "a safe arrival before the gem course's hardest footing",
+      "evidence": "D2 p012L shot 29",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-G-b",
+      "section": "G",
+      "shape": "moving platform",
+      "kind": "moving island",
+      "size": "≈2",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "moving (toward the player)",
+      "move": "wait for it to come toward you, jump on, then on to the hippo (D2)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "the gem course adds a moving platform to the stepping-stone grammar",
+      "evidence": "D2 p012L shot 30",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-G-c",
+      "section": "G",
+      "shape": "stairs",
+      "kind": "stairs to the flytrap and the crate wall",
+      "size": "≈3 wide",
+      "heightDelta": "+1 to +2",
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "kill the flytrap, break through the wall",
+      "roles": [
+        "CHOKE",
+        "ARENA"
+      ],
+      "why": "the guard stands where the path narrows",
+      "evidence": "D2 p012R shot 31",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-G-d",
+      "section": "G",
+      "shape": "vehicle lane",
+      "kind": "pier → gem board leg (outlines, floating Nitros, mines, upstream !)",
+      "size": "channel ≈6",
+      "heightDelta": 0,
+      "edges": "banks (walled)",
+      "behaviour": "water surface",
+      "move": "ride; turn round after the ! and ride back",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a board leg built for an about-face",
+      "evidence": "D2 p012R shots 34–36",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-G-e",
+      "section": "G",
+      "shape": "dock",
+      "kind": "final pier: green ! + gem elevator",
+      "size": "≈4",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "jump off the board, hit the green !",
+      "roles": [
+        "REST"
+      ],
+      "why": "the course ends on a dock, like every other mode change",
+      "evidence": "D2 p012R shots 37–38",
+      "confidence": "high"
+    },
+    {
+      "id": "P-W2-a",
+      "section": "W2",
+      "shape": "ramp",
+      "kind": "yellow jump ramp 1",
+      "size": "≈1.5–2",
+      "heightDelta": "launch",
+      "edges": "n/a",
+      "behaviour": "static",
+      "move": "boost just before it for a high arc (POINT10)",
+      "roles": [
+        "TOOL"
+      ],
+      "why": "the board's vertical test, where maximum speed is rewarded",
+      "evidence": "F2 p027L POINT10; D2 p011R shot 20",
+      "confidence": "high"
+    },
+    {
+      "id": "P-W2-b",
+      "section": "W2",
+      "shape": "ramp + wall",
+      "kind": "yellow jump ramp 2 + log wall across the channel",
+      "size": "ramp ≈1.5–2; wall height not visible",
+      "heightDelta": "launch over the wall",
+      "edges": "n/a",
+      "behaviour": "static",
+      "move": "a normal ramp jump (POINT12)",
+      "roles": [
+        "TEST"
+      ],
+      "why": "the same object as ramp 1 now asks for restraint",
+      "evidence": "F2 p027L POINT12; D2 p011R shot 21",
+      "confidence": "high"
+    },
+    {
+      "id": "P-W2-c",
+      "section": "W2",
+      "shape": "dock + tiles",
+      "kind": "dock + tile path to the goal (flytrap)",
+      "size": "≈3–4",
+      "heightDelta": 0,
+      "edges": "open (water)",
+      "behaviour": "static",
+      "move": "walk; spin the flytrap",
+      "roles": [
+        "REST"
+      ],
+      "why": "the stage ends on foot, past one last guard",
+      "evidence": "F2 p027L; D2 p011R shot 22",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-F1-a",
+      "section": "F1",
+      "kind": "water gap bridged by a sinking round pillar",
+      "width": "2.5–3.5 (pillar ≈1.5 wide in the middle)",
+      "heightDelta": 0,
+      "landing": "slab ≈2.5–3",
+      "lethal": true,
+      "runUp": "pier ≈3–4",
+      "move": [
+        "plain ×2 via the pillar",
+        "slide-jump across without waiting (D2)"
+      ],
+      "coupling": "the pillar sinks after a while and resurfaces (POINT1); cycle not stated",
+      "failure": "water = death",
+      "nearby": [
+        "P-F1-a"
+      ],
+      "roles": [
+        "TEACH",
+        "TIMING-STEP"
+      ],
+      "why": "the first timed footing, but one long jump bypasses the rhythm — a cautious line and a fast line",
+      "evidence": "F2 p026L POINT1; D2 p011L shot 1",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-F1-b",
+      "section": "F1",
+      "kind": "piranha gap between two blocks",
+      "width": "2–3",
+      "heightDelta": 0,
+      "landing": "block ≈2.5–3",
+      "lethal": true,
+      "runUp": "block",
+      "move": [
+        "plain (timed)",
+        "jump-spin in rhythm"
+      ],
+      "coupling": "the piranha leaps out of the gap on a cycle (D2: wait for it to jump, then go)",
+      "failure": "bitten or drowned",
+      "nearby": [
+        "E-F1-a",
+        "F1-a"
+      ],
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "an enemy occupies the gap itself rather than a platform",
+      "evidence": "D2 p011L shot 2; F2 p026L",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-F1-c",
+      "section": "F1",
+      "kind": "second sinking-pillar gap",
+      "width": "2.5–3.5",
+      "heightDelta": 0,
+      "landing": "slab",
+      "lethal": true,
+      "runUp": "tile",
+      "move": [
+        "plain via the pillar",
+        "slide-jump"
+      ],
+      "coupling": "pillar cycle",
+      "failure": "water = death",
+      "nearby": [],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the pillar lesson repeated without a caption",
+      "evidence": "D2 p011L shot 4; F2 p026L",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-W1-a",
+      "section": "W1",
+      "kind": "whirlpool gate: two pools side by side",
+      "width": "gap ≈2–3 between the pools",
+      "heightDelta": 0,
+      "landing": "channel",
+      "lethal": true,
+      "runUp": "channel",
+      "move": [
+        "boost through the middle (POINT4)"
+      ],
+      "coupling": "the pools pull the board in",
+      "failure": "sucked in (D2 \"flushed\": death implied)",
+      "nearby": [
+        "W1-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a boost gate: the board's one special move is required here",
+      "evidence": "F2 p026L POINT4; D2 p011L shot 8, p011R shot 18",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-F2-a",
+      "section": "F2",
+      "kind": "piranha gap",
+      "width": "2–3",
+      "heightDelta": 0,
+      "landing": "tile with the ? box",
+      "lethal": true,
+      "runUp": "tile",
+      "move": [
+        "jump-spin in rhythm",
+        "pass while it is under water (POINT6)"
+      ],
+      "coupling": "piranha cycle",
+      "failure": "bitten or drowned",
+      "nearby": [
+        "E-F2-b",
+        "F2-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the F1 piranha repeated, now with a box as the landing reward",
+      "evidence": "F2 p026R POINT6; D2 p011R shot 13",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-F2-b",
+      "section": "F2",
+      "kind": "hippo stepping stone",
+      "width": "≈2–3 each side",
+      "heightDelta": 0,
+      "landing": "hippo back ≈2",
+      "lethal": true,
+      "runUp": "tile",
+      "move": [
+        "plain ×2 (land and leave at once)"
+      ],
+      "coupling": "the hippo sinks soon after you land (POINT7; D2: \"not a lot of time\")",
+      "failure": "water = death",
+      "nearby": [
+        "E-F2-c"
+      ],
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "the enemy is the platform, and its timer starts when you land",
+      "evidence": "F2 p026R POINT7; D2 p011R shot 14",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-F2-c",
+      "section": "F2",
+      "kind": "two hippos, offset (zig-zag)",
+      "width": "≈2–3 per hop",
+      "heightDelta": 0,
+      "landing": "hippo, hippo, tile",
+      "lethal": true,
+      "runUp": "tile",
+      "move": [
+        "plain ×3, turning between the hippos"
+      ],
+      "coupling": "both sink",
+      "failure": "water = death",
+      "nearby": [
+        "E-F2-d"
+      ],
+      "roles": [
+        "TEST",
+        "TIMING-STEP"
+      ],
+      "why": "the single hippo doubled and offset: rhythm plus a change of direction (D2: hop on, turn, jump to the next)",
+      "evidence": "F2 p026R POINT8; D2 p011R shot 16",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-B-a",
+      "section": "B",
+      "kind": "gaps between mushrooms",
+      "width": "2–3",
+      "heightDelta": "±1",
+      "landing": "mushroom ≈3",
+      "lethal": null,
+      "runUp": "mushroom",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "falls out of the bonus (consequence not stated)",
+      "nearby": [
+        "B-b",
+        "B-c"
+      ],
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "low-pressure hops between payouts",
+      "evidence": "D2 p012L shots 25–27",
+      "confidence": "low"
+    },
+    {
+      "id": "G-G-a",
+      "section": "G",
+      "kind": "island → hippo → stairs",
+      "width": "≈2–3 per hop",
+      "heightDelta": "0, then +1–2 (stairs)",
+      "landing": "stairs",
+      "lethal": true,
+      "runUp": "island",
+      "move": [
+        "plain ×2 (timed)"
+      ],
+      "coupling": "island travel + hippo sink",
+      "failure": "water = death",
+      "nearby": [
+        "E-G-a"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "two kinds of timed footing back to back",
+      "evidence": "D2 p012L shot 30, p012R shot 31",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-G-b",
+      "section": "G",
+      "kind": "consumable crate bridge over open water",
+      "width": "≈6–8 overall; crates ≈1 apart",
+      "heightDelta": 0,
+      "landing": "next tile",
+      "lethal": true,
+      "runUp": "tile",
+      "move": [
+        "crate-bounce chain"
+      ],
+      "coupling": "each stomp breaks the crate — jump to the next at once (F2)",
+      "failure": "water = death",
+      "nearby": [
+        "G-c"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "footing consumed as it is used: no-stop by construction, the Turtle Woods mud chain made lethal",
+      "evidence": "F2 p093L note 1; D2 p012R shot 32",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-G-c",
+      "section": "G",
+      "kind": "Nitro rows around the checkpoint (tile causeway)",
+      "width": "row of 4 Nitro ≈1 deep; C strip ≈2 deep; second row ≈1 deep",
+      "heightDelta": 0,
+      "landing": "C strip ≈2 × 4, then the pier",
+      "lethal": true,
+      "runUp": "≈4–6 of causeway",
+      "move": [
+        "slide-jump ×2 (D2)"
+      ],
+      "coupling": "none",
+      "failure": "Nitro = death",
+      "nearby": [
+        "G-d"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the only safe landing between two lethal rows is the save itself",
+      "evidence": "D2 p012R shot 33",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-W2-a",
+      "section": "W2",
+      "kind": "whirlpool gate 2, right after re-boarding",
+      "width": "gap ≈2–3",
+      "heightDelta": 0,
+      "landing": "channel",
+      "lethal": true,
+      "runUp": "dock",
+      "move": [
+        "boost through the middle (POINT9)"
+      ],
+      "coupling": "the pools pull the board in",
+      "failure": "sucked in",
+      "nearby": [
+        "W2-a"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the boost gate returns as the leg's first hazard",
+      "evidence": "F2 p027L POINT9; D2 p011R shot 18",
+      "confidence": "medium"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-F1-a",
+      "section": "F1",
+      "count": "6–7",
+      "moves": [
+        "plain (steps)",
+        "plain via the sinking pillar or slide-jump",
+        "timed plain (piranha)",
+        "plain",
+        "plain via the pillar",
+        "plain"
+      ],
+      "rhythm": "syncopated: waits for the pillar and the piranha",
+      "maxGap": "2.5–3.5",
+      "rest": "P-F1-c (crate tile), P-F1-d (C1)",
+      "noStop": false,
+      "why": "the causeway alternates fixed tiles (rests) with timed crossings",
+      "evidence": "F2 p026L; D2 p011L shots 1–5"
+    },
+    {
+      "id": "J-F2-a",
+      "section": "F2",
+      "count": 4,
+      "moves": [
+        "timed plain (piranha)",
+        "plain onto the hippo",
+        "plain onto hippo 2 (turn)",
+        "plain to the tile"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "2–3",
+      "rest": "tile before C3",
+      "noStop": true,
+      "why": "sinking footing removes the option to stop; D2's timer shows ≈1.5–2 s per beat (0:35 → 0:30)",
+      "evidence": "F2 p026R POINT6–8; D2 p011R shots 13–16"
+    },
+    {
+      "id": "J-G-a",
+      "section": "G",
+      "count": 3,
+      "moves": [
+        "plain onto the moving island",
+        "plain onto the hippo",
+        "plain to the stairs"
+      ],
+      "rhythm": "timed",
+      "maxGap": "2–3",
+      "rest": "top of the stairs",
+      "noStop": true,
+      "why": "a mover then a sinker: both set the timing",
+      "evidence": "D2 p012L shot 30, p012R shot 31"
+    },
+    {
+      "id": "J-G-b",
+      "section": "G",
+      "count": "≈3–4",
+      "moves": [
+        "crate-bounce"
+      ],
+      "rhythm": "even, fast",
+      "maxGap": "≈1",
+      "rest": "far tile",
+      "noStop": true,
+      "why": "a consumable bridge cannot be paused",
+      "evidence": "F2 p093L note 1; D2 p012R shot 32"
+    },
+    {
+      "id": "J-G-c",
+      "section": "G",
+      "count": 2,
+      "moves": [
+        "slide-jump",
+        "slide-jump"
+      ],
+      "rhythm": "jump – stop – jump",
+      "maxGap": "≈2–3 (over a 1 u row onto a 2 u strip)",
+      "rest": "the C strip",
+      "noStop": false,
+      "why": "the checkpoint strip is the rest between two lethal rows",
+      "evidence": "D2 p012R shot 33"
+    },
+    {
+      "id": "J-W2-a",
+      "section": "W2",
+      "count": 2,
+      "moves": [
+        "ramp (boosted)",
+        "ramp (normal speed)"
+      ],
+      "rhythm": "board cadence ≈2–3 s per event (D2 timer: whirlpools 0:23, mines 0:21, ramp 1 0:18, field 0:16)",
+      "maxGap": "ramp arcs (not measurable)",
+      "rest": "C3 dock before, goal dock after",
+      "noStop": false,
+      "why": "two ramp jumps with opposite speed demands; the board can stop by turning sideways (POINT11)",
+      "evidence": "F2 p027L POINT10–12; D2 p011R shots 18–21"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-W1-a",
+      "section": "W1",
+      "kind": "single-file line of 6 floating spiked mines up the middle-left, then mine pairs",
+      "placement": "across path (lane divider)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "W1-a field before it",
+        "W1-c boxes in the safe lane"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "the mines mark the danger lane and the boxes the safe lane",
+      "evidence": "F2 p026L; D2 p011L shots 8–9"
+    },
+    {
+      "id": "O-W1-b",
+      "section": "W1",
+      "kind": "whirlpool pair (boost gate)",
+      "placement": "flank pair with a central gap",
+      "timing": "constant pull",
+      "counter": [
+        "boost through the middle (POINT4)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "W1-b 1UP just past it"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a gate that can only be passed with the board's boost",
+      "evidence": "F2 p026L POINT4; D2 p011L shot 8"
+    },
+    {
+      "id": "O-W1-c",
+      "section": "W1",
+      "kind": "two mines flanking the 1UP",
+      "placement": "flank",
+      "timing": "static",
+      "counter": [
+        "thread the gap"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "W1-b 1UP"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a life used as bait between two hazards",
+      "evidence": "F2 p026L zoom; D2 p011L shot 9"
+    },
+    {
+      "id": "O-W2-a",
+      "section": "W2",
+      "kind": "whirlpool pair 2",
+      "placement": "flank pair with a central gap",
+      "timing": "constant pull",
+      "counter": [
+        "dash through the middle (POINT9)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "W2-a boxes just before it"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "boxes before the gate, never inside it, keep collecting and boosting separate",
+      "evidence": "F2 p027L POINT9; D2 p011R shot 18"
+    },
+    {
+      "id": "O-W2-b",
+      "section": "W2",
+      "kind": "diagonal line of 4–5 mines",
+      "placement": "across path (diagonal)",
+      "timing": "static",
+      "counter": [
+        "slalom: left, then right, then straight (D2)"
+      ],
+      "lethal": true,
+      "combinedWith": [],
+      "roles": [
+        "RHYTHM",
+        "LANE-BLOCK"
+      ],
+      "why": "a diagonal line turns a straight channel into a slalom",
+      "evidence": "F2 p027L; D2 p011R shot 19"
+    },
+    {
+      "id": "O-W2-c",
+      "section": "W2",
+      "kind": "moving mine sweeping left–right beyond ramp 1's landing",
+      "placement": "across path (patrol)",
+      "timing": "continuous sweep (period not stated)",
+      "counter": [
+        "wait (turn the board sideways to stop, POINT11)",
+        "time the pass"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "W2-b floating ?",
+        "W2-c field"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "a timing gate on a forced-motion vehicle is fair only because the board can stop",
+      "evidence": "F2 p027L POINT11; D2 p011R shot 20"
+    },
+    {
+      "id": "O-W2-d",
+      "section": "W2",
+      "kind": "log wall across the channel",
+      "placement": "across path",
+      "timing": "static",
+      "counter": [
+        "jump it from ramp 2 at normal speed (POINT12)"
+      ],
+      "lethal": null,
+      "combinedWith": [
+        "O-W2-e mines beyond"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a speed-control test: overshooting lands in the mines",
+      "evidence": "F2 p027L POINT12; D2 p011R shot 21"
+    },
+    {
+      "id": "O-W2-e",
+      "section": "W2",
+      "kind": "two moving mines past the wall",
+      "placement": "across path (patrol)",
+      "timing": "sweeping (period not stated)",
+      "counter": [
+        "jam left or right, then turbo past them (D2)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "O-W2-d"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "the landing zone of the wall jump is itself a timing gate",
+      "evidence": "F2 p027L; D2 p011R shot 21"
+    },
+    {
+      "id": "O-G-a",
+      "section": "G",
+      "kind": "floating Nitros and mines on the gem board leg",
+      "placement": "on line",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-e outlines",
+        "G-g switch upstream"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "Nitros float where crates usually do, so the ramming habit becomes lethal",
+      "evidence": "D2 p012R shots 35–36"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-F1-a",
+      "section": "F1",
+      "kind": "piranha (ピラーニャ)",
+      "count": 1,
+      "archetype": "swimmer (leaps across the gap on a cycle)",
+      "behaviour": "jumps out of the water between two blocks and drops back",
+      "counter": [
+        "wait for its leap, then cross (D2)",
+        "jump-spin in rhythm (POINT6)"
+      ],
+      "fails": [
+        "jumping into its arc"
+      ],
+      "placement": "in pit (the gap between tiles)",
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "the first enemy is a moving gap occupant on otherwise static footing",
+      "evidence": "D2 p011L shot 2; F2 p026L",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-F1-b",
+      "section": "F1",
+      "kind": "Venus flytrap (ゴックン)",
+      "count": 1,
+      "archetype": "static (planted; lunges)",
+      "behaviour": "lunges and bites at short range",
+      "counter": [
+        "jump-spin from a distance (POINT2)",
+        "spin when it lunges (D2)"
+      ],
+      "fails": [
+        "walking up to it"
+      ],
+      "placement": "beside the checkpoint tile (guarding crate)",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": true,
+      "why": "a planted enemy teaches reach; it is met alone, at the save",
+      "evidence": "F2 p026L POINT2; D2 p011L shot 5",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-F2-a",
+      "section": "F2",
+      "kind": "Venus flytraps in a row",
+      "count": 2,
+      "archetype": "static (planted; lunges)",
+      "behaviour": "two planted beside the tile path",
+      "counter": [
+        "pass the first without approaching (POINT5)",
+        "jump-spin"
+      ],
+      "fails": [
+        "walking into bite range"
+      ],
+      "placement": "flank of the tile path",
+      "roles": [
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "learn the bite distance on the first, use it on the second",
+      "evidence": "F2 p026R POINT5; D2 p011R shot 11",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-F2-b",
+      "section": "F2",
+      "kind": "piranha",
+      "count": 1,
+      "archetype": "swimmer (leaps across the gap on a cycle)",
+      "behaviour": "leaps between tiles",
+      "counter": [
+        "jump-spin in rhythm",
+        "pass while it is under water (POINT6)"
+      ],
+      "fails": [
+        "jumping into its arc"
+      ],
+      "placement": "in pit",
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "firstAlone": null,
+      "why": "the F1 lesson repeated with a box as the landing reward",
+      "evidence": "F2 p026R POINT6; D2 p011R shot 13",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-F2-c",
+      "section": "F2",
+      "kind": "hippo (ターマス)",
+      "count": 1,
+      "archetype": "static (living platform; sinks after you land)",
+      "behaviour": "floats in the river and plunges soon after being stood on",
+      "counter": [
+        "land and leave at once (POINT7)"
+      ],
+      "fails": [
+        "staying on it"
+      ],
+      "placement": "in water as a stepping stone",
+      "roles": [
+        "TOOL/STEP",
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "the enemy is footing with a fuse; it is met single before the pair",
+      "evidence": "F2 p026R POINT7; D2 p011R shot 14",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-F2-d",
+      "section": "F2",
+      "kind": "hippos, offset",
+      "count": 2,
+      "archetype": "static (living platform; sinks after you land)",
+      "behaviour": "two in a row, offset sideways",
+      "counter": [
+        "rhythmic double hop with a turn (POINT8, D2)"
+      ],
+      "fails": [
+        "pausing on either"
+      ],
+      "placement": "in water as stepping stones",
+      "roles": [
+        "TEST",
+        "TOOL/STEP"
+      ],
+      "firstAlone": null,
+      "why": "the single hippo doubled and offset",
+      "evidence": "F2 p026R POINT8; D2 p011R shot 16",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-G-a",
+      "section": "G",
+      "kind": "hippo after the moving island",
+      "count": 1,
+      "archetype": "static (living platform; sinks after you land)",
+      "behaviour": "stepping stone between the island and the stairs",
+      "counter": [
+        "land and leave at once"
+      ],
+      "fails": [
+        "staying on it"
+      ],
+      "placement": "in water as a stepping stone",
+      "roles": [
+        "TOOL/STEP"
+      ],
+      "firstAlone": null,
+      "why": "the sinker follows a mover",
+      "evidence": "D2 p012L shot 30",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-G-b",
+      "section": "G",
+      "kind": "Venus flytrap at the top of the stairs",
+      "count": 1,
+      "archetype": "static (planted; lunges)",
+      "behaviour": "guards the crate wall",
+      "counter": [
+        "spin it (D2)"
+      ],
+      "fails": [
+        "walking up to it"
+      ],
+      "placement": "guarding crate (the wall)",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": null,
+      "why": "the guard stands where the path narrows to the wall",
+      "evidence": "D2 p012R shot 31",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-W2-a",
+      "section": "W2",
+      "kind": "Venus flytrap by the goal",
+      "count": 1,
+      "archetype": "static (planted; lunges)",
+      "behaviour": "stands on the tiles before the exit",
+      "counter": [
+        "spin it (D2)",
+        "jump-spin from range"
+      ],
+      "fails": [
+        "walking up to it"
+      ],
+      "placement": "exit",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": null,
+      "why": "the stage ends with the enemy it began with",
+      "evidence": "F2 p027L; D2 p011R shot 22",
+      "confidence": "medium"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "F1",
+      "beats": [
+        "pipe + pier steps",
+        "sinking-pillar gap",
+        "piranha gap",
+        "2 × 2 crate tile (mask)",
+        "sinking-pillar gap",
+        "L tiles",
+        "C1 + flytrap",
+        "dock: board"
+      ],
+      "gaps": 3,
+      "enemies": 2,
+      "hazards": 0
+    },
+    {
+      "section": "W1",
+      "beats": [
+        "staggered 5-crate field",
+        "single-file mine line",
+        "whirlpool gate (boost)",
+        "1UP between two mines",
+        "two striped in the safe lane, mines on the left",
+        "dock C2"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 3
+    },
+    {
+      "section": "F2",
+      "beats": [
+        "dock C2",
+        "two flytraps",
+        "bonus pad",
+        "waterfall posts",
+        "gem plate",
+        "piranha gap",
+        "? tile",
+        "hippo",
+        "crystal",
+        "two hippos (zig-zag)",
+        "dock C3"
+      ],
+      "gaps": 3,
+      "enemies": 6,
+      "hazards": 0
+    },
+    {
+      "section": "B",
+      "beats": [
+        "TNT stack on a mushroom",
+        "slide under the steel ceiling",
+        "3 boxes",
+        "2 boxes",
+        "elevator"
+      ],
+      "gaps": 3,
+      "enemies": 0,
+      "hazards": 1
+    },
+    {
+      "section": "G",
+      "beats": [
+        "landing tile: sandwiches",
+        "moving island",
+        "hippo",
+        "stairs: flytrap + crate wall",
+        "consumable crate bridge",
+        "Nitro row / C / Nitro row",
+        "board: outlines + a box by a ramp",
+        "floating Nitros + mines",
+        "upstream ! → about-face → ride back",
+        "pier: green ! → elevator"
+      ],
+      "gaps": 3,
+      "enemies": 2,
+      "hazards": 2
+    },
+    {
+      "section": "W2",
+      "beats": [
+        "re-board: 2 boxes",
+        "whirlpool gate",
+        "diagonal mine line",
+        "ramp 1 (boost) → floating ?",
+        "moving mine",
+        "2 × 2 field",
+        "ramp 2 → log wall",
+        "two moving mines",
+        "dock → flytrap → goal"
+      ],
+      "gaps": 1,
+      "enemies": 1,
+      "hazards": 5
+    }
+  ],
+  "geometryObservations": [
+    "Two locomotion modes alternate with docks as hinges, and every dock carries a checkpoint (C1 at the first board, C2 and C3 at the next two docks); no checkpoint sits on timed footing or on the board.",
+    "On foot the geometry is stepping stones over lethal water: ≈2.5–3 u slabs with 1–3.5 u gaps. Jump length alone is never the test; the coupling is — a sinking pillar (G-F1-a), a piranha in the gap (G-F1-b), a hippo that sinks on landing (G-F2-b), a flytrap's reach (P-F1-d).",
+    "Each coupling debuts once in a mild form and is then doubled: pillar ×1 → ×2; one flytrap at C1 → two in a row; one hippo → two offset; a piranha in F1 → again in F2.",
+    "Timed footing can be bypassed by skill: D2 dash-jumps the pillar gap without waiting, and F2's time-trial advice is not to wait for footholds — every timed crossing has a slow safe line and a fast line.",
+    "Board legs are slaloms on a ≈6–8 u channel: static mine lines are lane dividers (O-W1-a), whirlpool pairs are boost gates (O-W1-b), moving mines are timing gates (O-W2-c), and ramps add the vertical axis (P-W2-a, P-W2-b).",
+    "The board has a stop verb (turn sideways, POINT11), which is what makes moving-mine timing gates fair on a forced-motion vehicle.",
+    "Ramp 1 rewards maximum boost (the ? above its arc) and ramp 2 punishes it (mines beyond the log wall): the same object with opposite speed demands, 2–3 s apart.",
+    "Event cadence from D2's timer: on the board one decision every ≈2–3 s (whirlpools 0:23, mine line 0:21, ramp 1 0:18, field 0:16); on foot through the hippos one beat every ≈1.5–2 s (0:35 → 0:30).",
+    "The enemies behave as platforms and timers rather than fighters: flytraps are planted, piranhas leap on a cycle inside gaps, hippos are footing with a fuse. Nothing chases.",
+    "The gem course escalates both grammars: on foot a moving island, a hippo, a consumable crate bridge over lethal water and a checkpoint between two Nitro rows; on the board Nitros floating where crates usually are and an upstream switch that forces an about-face.",
+    "The bonus teaches a move the main course never needs (sliding under a steel ceiling, P-B-b): side skills live in side rooms.",
+    "Water is the only killer on foot and the banks wall the board legs, so every hazard is in the channel itself; there are no side drops to manage."
+  ],
+  "geometryTransfer": [
+    "Causeway over `lethal` water: 3 m square `platform` tiles with 1.2–3.5 m gaps (1–3 crates); bridge one 3.5 m gap with a 1.7 m `phasepad` (cycle 3–4 s, on-share 0.5) — the 5.6 m running jump also clears the whole gap, which keeps a fast line for time trials.",
+    "Hippo steps: `crumble` pads (shake 0.3–0.5 s, ≈2.3 m wide) standing in the water, first one alone, then two offset 2.5 m sideways and 3 m apart for the zig-zag double; they return after 10 s, so a failed attempt can be retried without a checkpoint.",
+    "Gap occupant without a new system: a `firetiki` beside a 2.5 m water gap whose sweep crosses the gap every 2–3 s plays the piranha — the jump is timed to its cycle while the tiles stay static.",
+    "Board slalom on a 7–9 m lane: a single-file row of 6 Nitro crates down the left third as the lane divider (never on the racing line), a boost gate of two `pit`s with a 2.5–3 m gap and a `speedpad` in the gap, and a `stone` patrolling across the lane (axis x) 6–8 m past a kicker's landing as the moving mine; the brake is the stop verb that makes it fair.",
+    "Ramp pair with opposite demands: kicker 1 with a crate floating above its landing arc that only a near-charged approach (≈23 m/s) reaches; kicker 2 in front of a 1.5–2 m wall with Nitro 10–12 m past it, so a charged launch overshoots into it and a cruise launch (12 m/s, ≈6.6 m of air) lands short.",
+    "Put a checkpoint on every dock-like transition between foot and board, never on timed footing; keep the board leg itself free of saves (≈20 s per leg, as in W2)."
   ]
 }

@@ -661,5 +661,975 @@
   "D2 says 3 Nitro, F2 draws 4",
   "B-a crate type",
   "S4-d/S4-e footprint"
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "toward-camera chase",
+   "notes": "from the roofed start hut to room 1; ≈5 u lane; boulder 1 behind; partial-width holes and mines"
+  },
+  {
+   "section": "S2",
+   "mode": "toward-camera chase",
+   "notes": "room 1 → room 2; boulder 2; chasm, zig-zag drop-offs, a mine row, alternating fences"
+  },
+  {
+   "section": "S3",
+   "mode": "toward-camera chase",
+   "notes": "room 2 → plank bridge 2 (boulder 3 falls off), then a calm stretch: crystal, bonus pad, two speed pads"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "steel walkway, small red mushroom platforms, a crate bridge over a gap"
+  },
+  {
+   "section": "S4",
+   "mode": "toward-camera chase",
+   "notes": "room 3 → goal; boulder 4; slab islands between full-width pits; speed pads; the fence gauntlet"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "roofed corridor",
+   "kind": "roofed start hut",
+   "size": "≈4–5 wide",
+   "heightDelta": 0,
+   "edges": "walled + roof",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "SAFE-ISLAND",
+    "REST"
+   ],
+   "why": "the only calm place before the first chase, and where the first crates live",
+   "evidence": "F2 p030R; D2 p015L shot 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "chase lane",
+   "kind": "chase lane (snow path)",
+   "size": "≈5 wide",
+   "heightDelta": "not visible (no climbs drawn)",
+   "edges": "wall / open edge",
+   "behaviour": "static",
+   "move": "run; never stop (POINT1)",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "a lane barely wider than the boulder leaves forward as the only escape",
+   "evidence": "F2 p030R; D2 p015L shots 2–3, p016R shot 28 (width)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "roofed corridor",
+   "kind": "roofed room 1",
+   "size": "≈4 wide",
+   "heightDelta": 0,
+   "edges": "walled + roof",
+   "behaviour": "static",
+   "move": "enter; break the boxes; hit C1",
+   "roles": [
+    "SAFE-ISLAND",
+    "CHECKPOINT-PAD"
+   ],
+   "why": "every chase segment ends in a shelter that is also the save",
+   "evidence": "F2 p030R; D2 p015L shot 4",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "roofed corridor",
+   "kind": "roofed room 2",
+   "size": "≈4 wide",
+   "heightDelta": 0,
+   "edges": "walled + roof",
+   "behaviour": "static",
+   "move": "break the boxes, hit C2",
+   "roles": [
+    "SAFE-ISLAND",
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the shelter-save grammar repeated",
+   "evidence": "D2 p015R shot 10; F2 p031L top",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "bridge/plank",
+   "kind": "plank bridge 1",
+   "size": "≈4 wide × ≈6–8 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "destroyed behind the player",
+   "move": "run",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "collapsing scenery removes any way back",
+   "evidence": "D2 p015R shot 14; F2 p031L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "bridge/plank",
+   "kind": "plank bridge 2 (the boulder falls off)",
+   "size": "≈4 × ≈8",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "run",
+   "roles": [
+    "SAFE-ISLAND"
+   ],
+   "why": "a bridge is the chase's end condition",
+   "evidence": "F2 p031L POINT7; D2 p016L shot 17",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "path",
+   "kind": "calm path: crystal, box, bonus pad",
+   "size": "≈5 wide",
+   "heightDelta": 0,
+   "edges": "wall / open edge",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST",
+    "BONUS-PAD"
+   ],
+   "why": "the stage forbids backtracking (POINT8), so the crystal sits where the player has just slowed down",
+   "evidence": "F2 p031L; D2 p016L shot 18",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "speed pad",
+   "kind": "two speed pads before room 3",
+   "size": "≈1 each (floor plates)",
+   "heightDelta": 0,
+   "edges": "n/a",
+   "behaviour": "boost",
+   "move": "step on them (a split-second of turbo, D2)",
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the speed tool is introduced where nothing chases",
+   "evidence": "F2 p031L; D2 p016L shot 24",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "walkway",
+   "kind": "steel walkway with a crate between a steel block and a steel arrow",
+   "size": "≈8 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "spin the sandwiched crate, time it, jump through (D2)",
+   "roles": [
+    "CHOKE",
+    "TEACH"
+   ],
+   "why": "teaches the side spin on a crate that cannot be stomped",
+   "evidence": "D2 p016L shot 19",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "round pads",
+   "kind": "small red mushroom platforms",
+   "size": "≈2–3",
+   "heightDelta": "±1",
+   "edges": "open (void)",
+   "behaviour": "static",
+   "move": "hop two small platforms, then jump across (D2)",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "short hops to the TNT column",
+   "evidence": "D2 p016L shots 20–21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "round pad",
+   "kind": "final red platform + exit",
+   "size": "≈4",
+   "heightDelta": 0,
+   "edges": "open (void)",
+   "behaviour": "static",
+   "move": "break the 2-stack, exit",
+   "roles": [
+    "REST"
+   ],
+   "why": "the round ends on easy ground",
+   "evidence": "D2 p016L shot 23",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "roofed corridor",
+   "kind": "roofed room 3",
+   "size": "≈4 wide",
+   "heightDelta": 0,
+   "edges": "walled + roof",
+   "behaviour": "static",
+   "move": "hit C3, break the boxes, run (D2)",
+   "roles": [
+    "SAFE-ISLAND",
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the last shelter before the crate exam",
+   "evidence": "D2 p016L shot 25; F2 p031R",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "slabs",
+   "kind": "slab islands between full-width pits",
+   "size": "slabs ≈4–6 long, ≈5 wide",
+   "heightDelta": 0,
+   "edges": "open edges",
+   "behaviour": "static",
+   "move": "running jumps from slab to slab",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the final chase is a pit rhythm with the lane hazards placed on the islands",
+   "evidence": "F2 p031R; D2 p016L shot 26, p016R shots 28, 30–31",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "speed pad",
+   "kind": "two speed pads over fruit, aimed at a mine",
+   "size": "pads ≈1",
+   "heightDelta": 0,
+   "edges": "n/a",
+   "behaviour": "boost",
+   "move": "take the pads, then steer off the line (D2)",
+   "roles": [
+    "TEST"
+   ],
+   "why": "the tool and the trap are one object",
+   "evidence": "D2 p016R shot 29; F2 p031R POINT9, POINT11",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "bridge/plank",
+   "kind": "plank bridge 3",
+   "size": "≈4 × ≈8",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "run",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the last bridge does not end this chase; the goal does",
+   "evidence": "D2 p016R shot 32; F2 p031R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "chase lane",
+   "kind": "fence gauntlet before the goal",
+   "size": "lane ≈5 with three half-width fences (L, R, L)",
+   "heightDelta": 0,
+   "edges": "wall / open edge",
+   "behaviour": "static",
+   "move": "pass on the free side, spin back toward the crates (D2)",
+   "roles": [
+    "TEST"
+   ],
+   "why": "the crates stand on the dangerous side of each fence",
+   "evidence": "F2 p031R POINT12; D2 p016R shots 33–35",
+   "confidence": "high"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "partial-width holes (≈5–7 drawn), alternating sides",
+   "width": "≈2 along travel, ≈60–70% of the lane",
+   "heightDelta": 0,
+   "landing": "lane",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "sidestep",
+    "running"
+   ],
+   "coupling": "boulder behind",
+   "failure": "death",
+   "nearby": [
+    "O-S1-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the first holes can be steered around or jumped (D2: head left to avoid the pit, then jump across) — two answers under pressure",
+   "evidence": "F2 p030R POINT2; D2 p015L shot 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "full-width chasm",
+   "width": "≈2",
+   "heightDelta": 0,
+   "landing": "lane",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running"
+   ],
+   "coupling": "boulder behind",
+   "failure": "death",
+   "nearby": [],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the first gap that cannot be steered around",
+   "evidence": "D2 p015L shot 6",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "drop-off zig-zag (holes cut in from alternating edges)",
+   "width": "necks of land ≈2 wide",
+   "heightDelta": 0,
+   "landing": "lane",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "steer left and right (no jump)"
+   ],
+   "coupling": "boulder behind",
+   "failure": "death",
+   "nearby": [],
+   "roles": [
+    "TEST",
+    "RHYTHM"
+   ],
+   "why": "lateral steering at full speed, with the next hole always on the other side",
+   "evidence": "D2 p015L shot 7; F2 p030R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "two quick full-width pits with a short strip between",
+   "width": "≈1.5–2 each; strip ≈2–3",
+   "heightDelta": 0,
+   "landing": "strip ≈2–3, then the lane",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running ×2, the second aimed left"
+   ],
+   "coupling": "a fence follows, so the second jump must land on the left (POINT5)",
+   "failure": "death",
+   "nearby": [
+    "O-S3-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the next hazard dictates where to land",
+   "evidence": "F2 p031L POINT5; D2 p015R shot 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "pit right after the Nitro lane",
+   "width": "≈2",
+   "heightDelta": 0,
+   "landing": "lane",
+   "lethal": true,
+   "runUp": "Nitro lane (right side)",
+   "move": [
+    "running"
+   ],
+   "coupling": "Nitro ×4 along the left edge before it (POINT6)",
+   "failure": "death",
+   "nearby": [
+    "S3-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "hold a memorised lane, then jump",
+   "evidence": "F2 p031L POINT6; D2 p015R shot 15",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "lengthwise trench (\"run between the pits\")",
+   "width": "trench ≈ left half; edge lane ≈1.5–2",
+   "heightDelta": 0,
+   "landing": "n/a",
+   "lethal": true,
+   "runUp": "n/a",
+   "move": [
+    "run the narrow lane"
+   ],
+   "coupling": "boulder behind",
+   "failure": "death",
+   "nearby": [],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a gap that runs along the route narrows the lane to ≈1.5–2 u instead of demanding a jump",
+   "evidence": "D2 p015R shot 16",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "gap bridged by four striped crates (six ? above)",
+   "width": "≈4–5",
+   "heightDelta": 0,
+   "landing": "far ledge (held jump from the last ?)",
+   "lethal": null,
+   "runUp": "mushroom",
+   "move": [
+    "crate-bounce chain",
+    "held jump"
+   ],
+   "coupling": "breaking order (the last ? is the launch)",
+   "failure": "falls out of the bonus (consequence not stated)",
+   "nearby": [
+    "B-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the crates are the floor and the launch",
+   "evidence": "D2 p016L shot 22",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "two small pits, a mine on the left",
+   "width": "≈1.5",
+   "heightDelta": 0,
+   "landing": "slab",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running ×2"
+   ],
+   "coupling": "mine on the left (O-S4-a)",
+   "failure": "death",
+   "nearby": [],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the rhythm starts with a double",
+   "evidence": "D2 p016L shot 26",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "pit with the lone crate on the right lip of a narrow landing",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "narrow footing (F2 狭い足場) with the crate on its right edge",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running",
+    "sidestep + spin"
+   ],
+   "coupling": "boulder behind",
+   "failure": "death",
+   "nearby": [
+    "S4-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the first crate under pursuit sits where the landing is narrowest",
+   "evidence": "F2 p031R POINT10; D2 p016R shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S4-c",
+   "section": "S4",
+   "kind": "pit with a fence on the left half of the landing",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "right half of the next slab",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running, on the right side (D2)"
+   ],
+   "coupling": "fence (lethal) on the landing's left",
+   "failure": "death",
+   "nearby": [
+    "O-S4-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the landing side is forced by the hazard standing on it",
+   "evidence": "D2 p016R shot 30; F2 p031R",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S4-d",
+   "section": "S4",
+   "kind": "two more pits",
+   "width": "≈1.5–2",
+   "heightDelta": 0,
+   "landing": "slab",
+   "lethal": true,
+   "runUp": "continuous",
+   "move": [
+    "running ×2"
+   ],
+   "coupling": "boulder behind",
+   "failure": "death",
+   "nearby": [],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the rhythm continues to the last bridge",
+   "evidence": "D2 p016R shot 31; F2 p031R (three holes drawn)",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": "≈3–5",
+   "moves": [
+    "running",
+    "sidestep"
+   ],
+   "rhythm": "irregular",
+   "maxGap": "≈2",
+   "rest": "room 1",
+   "noStop": true,
+   "why": "the first chase mixes holes to jump and holes to steer around",
+   "evidence": "F2 p030R; D2 p015L shots 2–3"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 2,
+   "moves": [
+    "running (chasm)",
+    "hurdle over the 3-mine row"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈2",
+   "rest": "room 2",
+   "noStop": true,
+   "why": "one gap and one hurdle between steering passages",
+   "evidence": "D2 p015L shots 6–8"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 3,
+   "moves": [
+    "running",
+    "running (land left)",
+    "running"
+   ],
+   "rhythm": "syncopated: a double, then fences, then the pit after the Nitro lane",
+   "maxGap": "≈2",
+   "rest": "plank bridge 2 (end of chase)",
+   "noStop": true,
+   "why": "each jump's landing is set by the hazard after it",
+   "evidence": "F2 p031L POINT5–6; D2 p015R shots 12–16"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": "≈7",
+   "moves": [
+    "running"
+   ],
+   "rhythm": "even and fast (slab rhythm)",
+   "maxGap": "≈2",
+   "rest": "goal",
+   "noStop": true,
+   "why": "the longest no-stop run of the stage, with crates added on the way",
+   "evidence": "F2 p031R; D2 p016L shot 26 – p016R shot 35"
+  },
+  {
+   "id": "J-B-a",
+   "section": "B",
+   "count": "≈5",
+   "moves": [
+    "plain",
+    "crate-bounce",
+    "held jump"
+   ],
+   "rhythm": "even",
+   "maxGap": "≈4–5 (the crate bridge)",
+   "rest": "every platform",
+   "noStop": false,
+   "why": "a calm precision room between chases",
+   "evidence": "D2 p016L shots 19–23"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-ALL-a",
+   "section": "all",
+   "kind": "giant snowball boulder (×4 releases)",
+   "placement": "pursuer",
+   "timing": "rolls after the player (speed not stated); gains when the player is slowed (POINT3); stops in front of each roofed room (Aku tip); rips up bridge 1; falls off bridge 2 (POINT7)",
+   "counter": [
+    "outrun",
+    "never stop (POINT1)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "every pit, mine and fence"
+   ],
+   "roles": [
+    "PURSUIT"
+   ],
+   "why": "a ≈4 u ball on a ≈5 u lane removes sidestepping and stopping, so every hazard must be passed forward",
+   "evidence": "F2 p030R POINT1 + Aku tip; F2 p031L POINT7; D2 p015L intro, shots 2–8"
+  },
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "land mines (singles and pairs)",
+   "placement": "on path",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "G-S1-a holes"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "a delayed-lethal hazard: it launches and slows the player, and the boulder does the killing",
+   "evidence": "F2 p030R POINT3; D2 p015L intro, shots 3, 5"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "row of three mines across the lane",
+   "placement": "across path",
+   "timing": "static",
+   "counter": [
+    "jump over, then bear right (D2)"
+   ],
+   "lethal": false,
+   "combinedWith": [],
+   "roles": [
+    "HURDLE"
+   ],
+   "why": "a hurdle whose failure costs distance, not a life",
+   "evidence": "D2 p015L shot 8"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "electric fences ×3, alternating sides",
+   "placement": "half-width gates",
+   "timing": "static",
+   "counter": [
+    "zig-zag (POINT4)"
+   ],
+   "lethal": true,
+   "combinedWith": [],
+   "roles": [
+    "LANE-BLOCK",
+    "RHYTHM"
+   ],
+   "why": "fences set a left–right cadence at full speed",
+   "evidence": "F2 p030R POINT4; D2 p015R shot 9"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "fences ×3, left–right–left, after the double pit",
+   "placement": "half-width gates",
+   "timing": "static",
+   "counter": [
+    "left, right, left (D2)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S3-a"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "the double pit hands the player straight into the cadence",
+   "evidence": "F2 p031L; D2 p015R shot 13"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "plank bridge 1 destroyed behind the player",
+   "placement": "pursuer (collapsing scenery)",
+   "timing": "as the boulder crosses",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-ALL-a"
+   ],
+   "roles": [
+    "PURSUIT"
+   ],
+   "why": "the pursuer also removes the route behind it",
+   "evidence": "D2 p015R shot 14"
+  },
+  {
+   "id": "O-S3-c",
+   "section": "S3",
+   "kind": "Nitro ×4 along the left edge (crate cluster S3-a)",
+   "placement": "flank",
+   "timing": "static",
+   "counter": [
+    "keep right (POINT6)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S3-b pit just ahead"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "crates used as a lane restriction, memorised before a pit",
+   "evidence": "F2 p031L POINT6; D2 p015R shot 15"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "mines on the slabs (two left, one right; one left by the small pits)",
+   "placement": "on path",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "P-S4-b slabs"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "mines between pits cost the distance the crates need",
+   "evidence": "D2 p016L shot 26, p016R shot 27"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "fence on the landing of a pit",
+   "placement": "landing (half-width)",
+   "timing": "static",
+   "counter": [
+    "jump on the right side (D2)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a hazard that chooses the landing",
+   "evidence": "D2 p016R shot 30"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "final fence gauntlet (L, R, L) with crate groups in front",
+   "placement": "half-width gates",
+   "timing": "static",
+   "counter": [
+    "pass on the free side, spin back toward the fence"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-c, S4-d, S4-e crates"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the clear needs only the cadence; the crates demand a spin toward the danger",
+   "evidence": "F2 p031R POINT12; D2 p016R shots 33–35"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-ALL-a",
+   "section": "all",
+   "kind": "giant snowball (same object as O-ALL-a)",
+   "count": 4,
+   "archetype": "pursuer",
+   "behaviour": "released from each roofed shelter, follows the lane, stops at the next roof, falls off bridge 2",
+   "counter": [
+    "outrun"
+   ],
+   "fails": [
+    "stopping",
+    "mines (they slow you so it catches up)"
+   ],
+   "placement": "behind the player",
+   "roles": [
+    "PURSUER"
+   ],
+   "firstAlone": false,
+   "why": "the first boulder starts with holes and mines already ahead, so the pursuer never appears alone; it carries all of the threat",
+   "evidence": "F2 p030R POINT1, POINT3; D2 p015L intro",
+   "confidence": "high"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start hut: 3 crates",
+    "boulder 1 released",
+    "partial holes (steer or jump)",
+    "mines (run right)",
+    "room 1: ?/?, C1"
+   ],
+   "gaps": 5,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "boulder 2",
+    "mine in the centre, bear right",
+    "full-width chasm",
+    "zig-zag drop-offs",
+    "row of 3 mines (hurdle)",
+    "3 fences alternating",
+    "room 2: S, ?, C2"
+   ],
+   "gaps": 3,
+   "enemies": 0,
+   "hazards": 3
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "boulder 3",
+    "mines",
+    "two quick pits (land left)",
+    "3 fences L-R-L",
+    "plank bridge 1 ripped up behind",
+    "Nitro ×4 on the left",
+    "pit",
+    "trench: narrow right lane",
+    "pits",
+    "plank bridge 2: boulder falls",
+    "crystal + box",
+    "bonus pad",
+    "2 speed pads"
+   ],
+   "gaps": 5,
+   "enemies": 0,
+   "hazards": 5
+  },
+  {
+   "section": "B",
+   "beats": [
+    "first box",
+    "steel sandwich walkway (spin through)",
+    "fruit column",
+    "two small platforms",
+    "TNT / 1UP / TNT column",
+    "6 ? over 4 striped crate bridge",
+    "2-stack",
+    "exit"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "room 3: 4 crates, C3",
+    "boulder 4",
+    "two small pits + mine",
+    "mines (2 left, 1 right)",
+    "pit → lone crate on the right lip",
+    "2 speed pads aimed at a mine",
+    "pit with a fence on the landing's left",
+    "two pits",
+    "plank bridge 3",
+    "fence L + 2 crates",
+    "fence R + 3 crates",
+    "fence L + 3 crates",
+    "goal"
+   ],
+   "gaps": 7,
+   "enemies": 0,
+   "hazards": 4
+  }
+ ],
+ "geometryObservations": [
+  "Chase geometry is built from four primitives on a ≈5 u lane: partial-width holes (steer or jump, G-S1-a), full-width pits (must jump, G-S2-a), half-width fences (must steer, O-S2-b) and mines (avoid; they cost distance, O-S1-a). Every hazard asks for a lateral move or a jump, never a stop.",
+  "The boulder (≈4 u) nearly fills the ≈5 u lane, so it can never be sidestepped or let past; the geometry's only exit is forward (O-ALL-a).",
+  "Lethality is split by kind: fences and pits kill on contact, mines only launch and slow — they are delayed-lethal, paid in distance to the pursuer (F2 POINT3).",
+  "Alternation is the rhythm: holes cut in from alternating edges (G-S2-b), fences alternate L-R-L (O-S2-b, O-S3-a, O-S4-c) — the player reads a left–right cadence rather than individual hazards.",
+  "Combined hazards dictate the landing: two quick pits then a fence, so land left (G-S3-a); a pit with a fence on the landing's left, so jump on the right (G-S4-c); a Nitro lane then a pit (G-S3-b).",
+  "Lane width narrows late: a lengthwise trench leaves ≈1.5–2 u (G-S3-c) and the Nitros hug one edge — narrow lanes appear only after the wide-lane lessons.",
+  "Shelters split the run into four short chases: every roofed room stops the boulder, holds the checkpoint and releases a fresh boulder when the player leaves (P-S1-c, P-S2-a, P-S4-a).",
+  "Chase endings are geometric: bridge 1 is destroyed behind the player (O-S3-b), bridge 2 drops the boulder (P-S3-b), and the final chase ends only at the goal.",
+  "Speed pads appear only after the first-half chase (P-S3-d) and in the final one, and one pair is aimed at a mine (P-S4-c): the tool that buys distance is also a steering test.",
+  "The final chase is a rhythm of slab islands separated by full-width pits (P-S4-b) with mines and fences standing on the islands — a jump every slab, the longest no-stop sequence in the stage (J-S4-a).",
+  "There are no creatures and no mask: the pursuer and the geometry carry all of the danger, and distance is the only safety.",
+  "The bonus is the opposite register — a calm side-scroll with precision geometry (steel sandwich walkway, crate bridge, TNT column) — a rest between chases that also rehearses the side spin needed at the final fences."
+ ],
+ "geometryTransfer": [
+  "Chase lane: a 6 m-wide lane with a `zone` dir N (run at the camera) and a `stone` with `chase: true` and radius ≈2.3 m — a 4.6 m ball leaves ≤1.5 m beside it, so it cannot be sidestepped; a `wall` on one side and an open drop on the other.",
+  "Hazard cadence at 9 m/s on foot: partial-width `pit`s 2–2.5 m long covering 60–70 % of the lane, alternating sides every 10–15 m (≈1.1–1.7 s); full-width `pit`s ≈2 m with ≥3 m landing strips. The 5.6 m running jump clears them with margin, so the difficulty is the cadence, not the length.",
+  "Mines as non-lethal costs: 1 m `tumblezone` triggers (they knock the rider down without killing, and the chase stone gains) in singles, pairs and one row of three across the lane as a hurdle.",
+  "Landing-dictating combos: a 2 m `pit` followed by a half-width lethal barrier (a Nitro row or a lethal collider) on the left half of its landing; two 2 m pits with a 2.5 m strip between them and a barrier after, so the second jump must be aimed.",
+  "Shelters: a roofed room with a `checkpoint` every 120–200 m; end each chase stone's travel at the room entrance and start a new one when the player leaves; end the first-half chase on a bridge where the stone's travel stops and drops away.",
+  "On the board the same lane at cruise (12 m/s) cuts reaction time by a quarter and the full ollie (≈6.6 m) makes 2 m pits trivial, so add hazards rather than gap length; put one `speedpad` pair (board boost) before the hardest segment, aimed at a hazard 8–10 m ahead, so steering after the boost is mandatory."
  ]
 }

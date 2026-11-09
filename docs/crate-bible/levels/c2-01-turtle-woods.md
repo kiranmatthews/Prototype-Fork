@@ -274,6 +274,157 @@ Main tally: S1 10 + S2 14 + S3 6 = 30 = 62 − 32.
 7. **Hidden side route ≈ 45 % of crates,** entered by a body-slam on a marked floor tile, side-scroll
    camera, with its own checkpoint after the first third and a nitrobang at its exit.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: F2 p021R, p022L, p022R, p092L (topology, POINT texts); D2 p006L–p008R shots 1–42 (sizes, behaviour, captions). Widths and heights are estimates in u (one crate), read against crates in the same screenshot where possible (Crash stands ≈ 1.3–1.5 u tall); F2 maps are used for topology only. "Not visible" marks values no source shows.
+
+### Camera and route shape
+
+The main course is into-screen (F2 「おくスクロール」) along a walled jungle corridor about 5–8 u wide (D2 p006R shots 8–9): stone walls and foliage on both sides, so the only ways to die are holes drawn across or beside the path. It winds gently up the F2 pages and turns once in S3 (D2 shot 36, "round the turn"). The secret course and the bonus are side-scroll: the secret runs left → right along a waterfall cliff of separate ledges over a bottomless drop and exits by a one-way lift into the S1 plaza; the bonus is a short run of floating platforms. Every checkpoint sits on a wide enclosed floor (plaza, court) or on a ledge after the secret's opening hops.
+
+- **S1** — into-screen: walled jungle corridor ≈5–8 u wide winding up the map; no side falls; ends in a totem plaza (C1) where the secret lift returns
+- **X** — side-scroll: left → right along a waterfall cliff: separate grassy ledges over a bottomless drop; exits by lift into the S1 plaza
+- **B** — side-scroll: floating green platforms over a void; the exit pad returns the player to S2 in front of the mud boxes
+- **S2** — into-screen: corridor with a mud swamp; ends in an enclosed court between two totems (C2 + crate wall)
+- **S3** — into-screen: rat pits along the path, one turn (D2 shot 36), a rock perch, the last mud, a final pit, the exit
+
+### Platforms and gaps (section by section; table per section)
+
+Columns *kind* to *coupling / failure* and *evidence* are observations; *why* is design inference. Platforms are `P-…`, gaps `G-…`; size is width × length (u) where both are visible.
+
+#### S1 — Start → C1 (into-screen walled corridor)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | start corridor (wide floor, walled) | 5–8 wide | 0 | walk | walled both sides; no side falls | REST, TEACH | the first box and the first enemy meet the player on ground they cannot fall off | F2 p021R; D2 p006L shots 1–2, p006R shot 8 (width) — conf. medium |
+| G-S1-a | S1 | safe mud patch | 3–4; landing corridor floor | 0 | wade, plain | none / slowed, spin disabled, no death (non-lethal; run-up ≥4) | TEACH | the first floor hazard costs only speed and the spin, and sits beside the striped sandwich, so the lesson is free | F2 p021R; D2 p006L shot 4 ("you don't drown") — conf. medium |
+| G-S1-b | S1 | edge pit beside the path (not across it) | 2–3 (hole beside the line); landing not crossed | drop | avoid | none / death if walked into (lethal; run-up n/a) | EDGE-BAIT, TEACH | the first lethal hole is shown beside the route, with a ? box at its lip, before any hole has to be jumped | D2 p006L shot 5 ("a pit on the left (don't jump in)"); F2 p021R draws S1-c on the right — conf. medium (side conflicts) |
+| P-S1-b | S1 | long straight runway | 5–8 wide × ≈10+ long | 0 | run; practise the dash (slide) jump | walled | REST, TEACH | D2 calls it a long safe stretch to practise the dash-jump; it ends at the first unavoidable pit | D2 p006R shot 7 — conf. medium |
+| G-S1-c | S1 | full-width pit 1 | 2–3; landing corridor floor; the W/W/S stack S1-d just beyond | 0 | running, slide-jump (advised) | none / death (lethal; run-up ≈10 (the runway)) | TEST | the first gap that must be jumped follows its practice runway, and nothing else competes for attention | D2 p006R shot 8 (span estimated; no crate in frame) — conf. low |
+| G-S1-d | S1 | pit 2 before the stone face (F2 draws a plank bridge here) | 2–3; landing floor with armadillo 3, then the stone face | 0 | plain, running | enemy waiting on the landing (E-S1-c) / death (lethal; run-up ≈4–6) | TEST | the first combination of two known lessons: a gap whose landing holds an enemy | D2 p006R shot 10 ("jump the pit, atomize the armadillo"); F2 p021R — conf. low (plank vs jump unresolved) |
+| P-S1-c | S1 | plaza between two stone totems, closed by a stone arch | ≈8 × 8 | 0 | walk; body-slam the stone face | walled; the secret lift arrives here | CHECKPOINT-PAD, REST | the secret entrance, the mask, C1 and the secret return share one safe floor, so the optional route starts and ends at a save | F2 p021R top; D2 p006R shots 9–11, p007R shots 23–24 — conf. medium |
+
+#### X — Secret course (side-scroll cliff ledges)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-X-a | X | drop-in ledge | ≈6 long | drop in from above | walk | bottomless drop past its edge | REST, BONUS-PAD | the first secret screen pays 4 boxes on safe footing before any side-scroll gap | D2 p006R shot 12 — conf. medium |
+| G-X-a | X | bottomless gaps between cliff ledges (×2), a turtle crawling on each landing | 1.5–2; landing ledge ≈3 long with a crawling turtle | 0 (±1) | plain, stomp on landing | turtle patrol on the landing ledge: jump when it is at the far end, or land on it (stomp) / fall = death (lethal; run-up 2–4) | TEST, TIMING-STEP | the first gap coupled to an enemy's position (D2: "jump across when the time is right") | D2 p006R shot 13, p007L shot 14 — conf. medium |
+| P-X-b | X | checkpoint ledge | ≈3–4 long | 0 | walk | bottomless both ends | CHECKPOINT-PAD | save after the opening hops, before the vulture / Nitro / ostrich half | D2 p007L shot 15 — conf. medium |
+| P-X-c | X | long platform with a vulture at its far end | ≈10+ long | 0 | run; hop the swoop | vulture swoops along it from the far end (E-X-b) | ARENA | the runway length is what gives reaction distance for the flier | D2 p007L shot 16 — conf. medium |
+| P-X-d | X | two small ledges (1 box, then 2 boxes) | ≈2–3 each | 0 | plain jumps | bottomless | STEPPING | pacing hops that line up the jump to the perch | ludo steps 5–6 (no D2 shot) — conf. low |
+| G-X-b | X | gap onto a floating perch above a Nitro floor | 2–3; landing perch ≈3 × 2 carrying the ?/? stack (X-e) | 0 | slide-jump (D2 explains the dash-jump here) | none / fall onto 3 Nitro = death (lethal; run-up ≈2–3 (short ledge)) | TEST | the dash-jump practised on S1's safe runway is now demanded over explosives | D2 p007L shots 17–18 — conf. medium |
+| P-X-e | X | floating perch over the Nitro floor | ≈3 × 2, ≈4 above the floor | +4 above the Nitro floor | stand; head-bonk the upper ? from below | Nitro floor below | PERCH, REWARD | a stable footing over the hazard, where the lives are | D2 p007L shots 17–18 (Nitro crates as ruler) — conf. medium |
+| G-X-c | X | drop from the perch to the arrow ledge | ≈3; landing ledge ≈2–3 with the wooden ↑ (X-g) | −2 | plain (down) | none / fall onto the Nitro floor (lethal; run-up perch) | STEPPING | a short downward hop to the tool keeps the Nitro floor under every move | D2 p007L shot 18 — conf. medium |
+| G-X-d | X | arrow bounce, then a dash-jump to a small platform | 2–3; landing small platform before the ostriches | up via the arrow, then level | arrow, slide-jump | none / fall (lethal; run-up arrow ledge) | TEST | the arrow lifts the player to the next tier of ledges; the dash-jump is needed again | D2 p007L shots 17, 19 — conf. low |
+| P-X-f | X | ostrich floor below high ledge 1 | ledge ≈3 wide, ≈4–4.5 above the floor | +4 to +4.5 | enemy-bounce on the ostrich's back (≈2.5–3 high), then jump to the ledge | the ostrich ducks when approached (closing window) | PERCH, TIMING-STEP | a target above jump height, reachable only by a living step that removes itself | F2 p092L shot 2 + note 2; D2 p007L shots 19–20 — conf. medium |
+| G-X-e | X | ledge 1 → ostrich 2's back → ledge 2 | ≈3 per hop; landing ledge 2 (X-i) | level, then up | slide-jump, enemy-bounce | ostrich 2 ducks when approached / drop to the floor; the ledge boxes are lost for this attempt (non-lethal; run-up ledge 1) | TEST, TIMING-STEP | the same living step becomes a moving stepping stone between two ledges | D2 p007L shot 20 — conf. low |
+| P-X-g | X | floor between the ostriches + a lower platform | not visible | below the ledge line | drop down | none | BACKTRACK | boxes are placed under the jump line and collected by dropping back | D2 p007L shot 20 — conf. low |
+| P-X-h | X | long platform 2 with vulture 2 | ≈10+ long | 0 | run; hop the swoop | vulture swoop | ARENA | a repeat of the flier runway just before the exit | D2 p007R shot 21 — conf. medium |
+| P-X-i | X | exit platform: green ! + round lift | ≈4 + lift disc | lift rises to the S1 plaza | ride | one-way lift | REST | the exit is a lift, so the secret cannot be re-entered from its end | D2 p007R shot 22 — conf. high |
+
+#### B — Bonus (side-scroll floating platforms)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | floating green platforms | ≈3–4 each | 0 to ±1 | plain jumps | void below | STEPPING, BONUS-PAD | calm side-on footing for the five bonus boxes | D2 p007R shot 27, p008L shots 28–30 — conf. medium |
+| G-B-a | B | gaps between bonus platforms | 2–3; landing platform ≈3–4 | 0 to −1 | plain | none / falls out of the bonus (consequence not stated on these pages) (lethality not stated; run-up platform) | STEPPING | low-pressure side-on jumps between payouts | D2 p008L shots 28, 30 — conf. low |
+| P-B-b | B | lower platform before the exit pad | not visible | −1 to −2 | drop down | none | DETOUR | the last box sits below the exit line | D2 p008L shot 30 — conf. medium |
+
+#### S2 — C1 → C2 (into-screen; mud and the closed court)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | corridor after C1 (first main-course turtle) | ≈5–6 wide | 0 | walk | walled | ARENA, TEACH | the turtle debuts alone on flat ground straight after a save | F2 p022L POINT5; D2 p007R shot 25 — conf. medium |
+| P-S2-b | S2 | green ? bonus pad on the right edge | ≈2 | raised pad | step on | none | BONUS-PAD | the bonus entrance follows the turtle pair, so it rewards the chain-stomp lesson | F2 p022L; D2 p007R shot 26 — conf. high |
+| G-S2-a | S2 | safe mud swamp crossed on 3 ? boxes | 6–8 (boxes ≈2 apart); landing far bank | 0 (boxes up to +1) | crate-bounce chain | each stomp breaks the box under you: keep moving / fall into the mud: slowed, no spin; body-slam the box from inside; no death (non-lethal; run-up bank) | TEACH, STEPPING | the first consumable footing, laid over a gap that cannot kill | F2 p022L POINT7; D2 p008L shot 31 — conf. medium |
+| P-S2-c | S2 | enclosed court between two totems | ≈5 wide, closed both sides | 0 | walk | no way around the 2 × 5 crate wall | CHOKE, CHECKPOINT-PAD | the closed court turns the wall into a pure skill gate (vault or break) | F2 p022L POINT8; D2 p008L shot 33, p008R shot 42 — conf. medium |
+
+#### S3 — C2 → Goal (into-screen; rat pits)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| G-S3-a | S3 | rat pit 1: sunken walled square (2 moles) | 5–6 square; landing pit floor | −2 to −3 (walls) | drop-down, spin the moles, mushroom trampoline out | moles pop up from the floor; the trampoline exit appears when both are dead / trapped until the moles are killed; no death (non-lethal; run-up n/a (cannot be jumped)) | TEACH, CHOKE | an enforced descent: too wide to jump (D2), not lethal, and the exit is earned by beating the enemies inside | D2 p008L shot 35; F2 p022R POINT9 (×2) — conf. medium |
+| P-S3-a | S3 | turn + floor under the floating ? (turtle pacing below it) | ≈5 wide; the ? ≈4–5 up | 0 | stomp the turtle once, bounce off its belly | a spin sends the turtle away and the springboard is gone | ARENA | the springboard enemy patrols directly under its target, just past a turn | D2 p008R shot 36; F2 p022R POINT10 — conf. medium |
+| G-S3-b | S3 | rat pit 2 (4 moles) | 5–6 square; landing pit floor | −2 to −3 | drop-down, spin the moles, trampoline out | 4 moles / trapped until the moles are killed (non-lethal; run-up n/a) | TEST | the same trap with twice the moles | D2 p008R shot 38; F2 p022R (×4) — conf. medium |
+| P-S3-b | S3 | big rock perch (left) before the last mud | ≈2, ≈1–2 high | +1 to +2 | jump from the rock to the box in the mud | a miss lands in the mud (body-slam fallback, POINT11) | PERCH | a raised take-off makes the lone mud box a one-hop target | D2 p008R shot 39; F2 p022R POINT11 — conf. medium |
+| G-S3-c | S3 | last mud swamp with one ? box | 4–5; landing far bank | 0 | crate-bounce | single box that breaks / mud: body-slam the box from inside (non-lethal; run-up rock perch) | TEST | the S2 lesson with one box and no spare | F2 p022R POINT11; D2 p008R shot 39 — conf. medium |
+| G-S3-d | S3 | rat pit 3 (4 moles) beside the crystal | 5–6 square; landing pit floor | −2 to −3 | drop-down, spin the moles, trampoline out | 4 moles; the crystal sits at its edge / trapped until the moles are killed (non-lethal; run-up n/a) | TEST | the crystal pulls the player to the lip | D2 p008R shot 40; F2 p022R POINT12 (×4) — conf. medium |
+| G-S3-e | S3 | final pit before the exit (on the left) | ≈2 (not measurable); landing exit floor | 0 | plain | none / not stated (assumed death) (lethal; run-up short) | TEST | one last plain jump into the exit | D2 p008R shot 41 ("jump over the pit to the left") — conf. low |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | max gap (u) | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 3 | plain (low wall), running, plain | isolated: one jump per screen | 2–3 | ≥4–6 u of flat floor before each | no | a teaching section separates every jump with flat ground, so each can be attempted from a standstill | F2 p021R; D2 p006L shot 3, p006R shots 7–10 |
+| J-X-a | X | 3 | plain | even, timed to the turtle patrols | 1.5–2 | P-X-b (checkpoint ledge) | no | short hops whose only difficulty is the occupant of each landing | D2 p006R shot 13, p007L shots 14–15 |
+| J-X-b | X | 5 | plain, slide-jump, plain (down), arrow, slide-jump | syncopated: up, across, down, bounce, across | 2–3 | ostrich floor (P-X-f) | no | each hop changes height around a perch over Nitro; pausing is possible, but every pause is above a lethal floor | D2 p007L shots 17–19 |
+| J-X-c | X | 4 | enemy-bounce, plain, slide-jump, enemy-bounce | accelerating | ≈3 | ledge 2 or the floor | yes | the ostriches duck when approached, so the climb must be done in one go | F2 p092L note 2; D2 p007L shots 19–20 |
+| J-B-a | B | ≈4 | plain | even | 2–3 | every platform | no | the bonus is a calm run of side-on hops | D2 p008L shots 28–30 |
+| J-S2-a | S2 | 3 | crate-bounce | even, fast | ≈2 | far bank | yes | each stomp breaks the box under you, so the crossing cannot pause | F2 p022L POINT7; D2 p008L shot 31 |
+| J-S3-a | S3 | 2 | plain (from the perch), crate-bounce | even | ≈2 | far bank | yes | rock → box → bank; the box breaks under you | D2 p008R shot 39 |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1 | low stone wall across the path (hurdle, ≈0.5–1 u high, estimated) (non-lethal) | across path | static | jump over | S1-b striped sandwich just beyond | TEACH | the game's first required jump has no failure state, and its reward waits on the far side | F2 p021R (slab row); D2 p006L shot 3 ("over the wall") |
+| O-X-a | X | Nitro floor (3 Nitro) under the perch (lethal) | in pit (floor of the gap) | static | do not fall, detonated later by the green ! (X-l) | G-X-b, X-e lives above | AREA-DENIAL | turns an ordinary ledge-to-ledge hop into a lethal one without any enemy; the lives sit right above it | D2 p007L shots 17–18 |
+| O-S2-a | S2 | low stone wall with two turtles on its far side (non-lethal) | across path | static | jump over, then stomp / spin | E-S2-d | TEST | the hurdle hides the landing's occupants until the jump | D2 p008L shot 32 |
+| O-S2-b | S2 | crate wall 2 high × 5 wide closing the court (the blue-gem vault) (non-lethal) | across path (wall to wall) | static | break it (all-box), slide-jump over (D2), one stomp on the top-row striped (F2) | S2-b checkpoint, S2-c crates | TEST, LANE-BLOCK | D2: a plain jump clips the top row, so only the slide-jump or the striped foothold clears it untouched — the advanced move is the intended answer | D2 p008R shot 42; F2 p092L blue-gem note; F2 p022L POINT8 |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | armadillo (アル) #1 | patrol-1D | walks side to side across the corridor right after the first box | spin, stomp, avoid (F2: no need to kill) | on line | TEACH, HURDLE | yes | the first enemy can be dodged by timing as well as attacked, on walled ground with nothing else near | F2 p021R POINT1; D2 p006L shot 2 — conf. medium |
+| E-S1-b | S1 | armadillo #2 | patrol-1D | runs along the route axis, toward and away from the camera ("more aggressive") | spin, stomp | on line | TEST | — (repeat) | a patrol along the travel line cannot be passed with a side step; it must be engaged | D2 p006L shot 6 — conf. medium |
+| E-S1-c | S1 | armadillo #3 | patrol-1D | waits on the landing side of pit 2, before the stone face | spin, stomp | landing platform | TEST, GUARD | — (repeat) | the first enemy at a landing: jump and fight in one motion | D2 p006R shot 10 — conf. medium |
+| E-X-a | X | spiked turtle (トゲ・デ・カメンデス) | patrol-1D | crawls along the small landing ledges | stomp (flips it), flip-then-spin (fails: a spin sends it flying (D2 shot 13)) | landing platform | TIMING-GATE, TEACH | no | in the secret course the turtle debuts on a narrow ledge over a void, harder than its main-course debut in S2; D2 says its belly will later be a trampoline | D2 p006R shot 13, p007L shot 14 — conf. medium |
+| E-X-b | X | vulture (パープー) | flier | waits at the far end of a long platform and swoops low along it | jump over | end of a long platform | HURDLE, TIMING-GATE | yes | the platform's length gives reaction distance; the flier is the only hazard on it | D2 p007L shot 16, p007R shot 21 — conf. medium |
+| E-X-c | X | pink ostrich (ピンクー) | static (reactive: ducks when approached) | stands under a high ledge and buries its head (crouches) as the player comes near | enemy-bounce (use its back as a step), avoid (fails: a slow approach — it ducks and the step is gone) | below high ledges | TOOL/STEP, TIMING-GATE | yes | a living step with a closing window; failure costs boxes, not a life | F2 p092L note 2; D2 p007L shots 19–20 — conf. medium |
+| E-S2-a | S2 | spiked turtle (main-course debut) | patrol-1D | walks the flat corridor just after C1 | stomp, then spin (POINT5) | on line | TEACH | yes | stomp-then-spin is taught on safe ground straight after a save | F2 p022L POINT5; D2 p007R shot 25 — conf. medium |
+| E-S2-b | S2 | spiked turtles in a row | patrol-1D | two consecutive turtles on the corridor | chain stomp (POINT6: fruit) | on line | TEST | — (repeat) | a pair invites the chained stomp; the bonus pad follows it | F2 p022L POINT6 — conf. medium |
+| E-S2-c | S2 | armadillo | patrol-1D | walks past the mud, by a leaning log | spin, stomp | on line | HURDLE | — (repeat) | a pacing enemy between the mud and the court | F2 p022L — conf. low |
+| E-S2-d | S2 | spiked turtles beyond the low wall | patrol-1D | walk on the far side of the low stone wall | stomp, flip-then-spin | landing (behind a hurdle) | GUARD, TEST | — (repeat) | they guard the court and are hidden until the hop over the wall | D2 p008L shot 32 — conf. medium |
+| E-S3-a | S3 | moles (アナチュール) in rat pit 1 | burrower/ambusher | pop up from the pit floor | spin (POINT9), bounce off one by the far wall to climb out (D2) | in pit | GATEKEEPER, TOOL/STEP | no | killing every mole opens the exit; their heads are also a step | D2 p008L shot 35; F2 p022R POINT9 — conf. medium |
+| E-S3-b | S3 | spiked turtle under the floating ? | patrol-1D | paces underneath the floating ? box | stomp once, then bounce off its belly (fails: spin — sends it flying and the springboard is gone (D2: "without spinning it")) | below a floating crate | TOOL/STEP | — (repeat) | the enemy is the only way up, so its placement is the puzzle | D2 p008R shot 36; F2 p022R POINT10 — conf. medium |
+| E-S3-c | S3 | moles in rat pit 2 | burrower/ambusher | pop up from the pit floor | spin | in pit | GATEKEEPER | — (repeat) | the trap repeated with four moles | D2 p008R shot 38; F2 p022R (×4) — conf. medium |
+| E-S3-d | S3 | moles in rat pit 3 (beside the crystal) | burrower/ambusher | pop up from the pit floor | spin | in pit | GATEKEEPER | — (repeat) | the crystal draws the player to the pit edge | D2 p008R shot 40; F2 p022R POINT12 (×4) — conf. medium |
+
+### Section beats
+
+- **S1** (gaps 4, enemies 3, hazards 1): ? box at spawn → armadillo crossing the path → low wall hop → striped sandwich → mud patch → edge pit + ? box → armadillo on the route axis → long runway → full-width pit (dash-jump) → W/W/S stack → pit 2 + armadillo on the landing → stone face (secret) → plaza: ?, Aku, C1
+- **X** (gaps 8, enemies 6, hazards 1): drop-in ledge (4 boxes) → gap + crawling turtle → gap + crawling turtle → C ledge → long platform + vulture → two small ledges → slide-jump to the ?/? perch over 3 Nitro → drop to the arrow ledge → arrow + slide-jump → ostrich 1 back → high ledge → ostrich 2 back → high ledge → drop: ground trio, lower platform → long platform + vulture → green ! + lift
+- **B** (gaps 3, enemies 0, hazards 0): platform: 3 boxes → gap → ? box (life) → gap → lower-platform box → exit pad
+- **S2** (gaps 1, enemies 6, hazards 2): turtle alone → turtle pair (chain stomp) → bonus pad → mud swamp: 3 ? stepping boxes → armadillo → low wall + 2 turtles beyond → court: C2 → 2 × 5 crate wall (vault or break)
+- **S3** (gaps 5, enemies 11, hazards 0): Aku → rat pit (2 moles) → turn: turtle under the floating ? → 3 ? boxes → rat pit (4 moles) → rock perch → mud ? → crystal + rat pit (4 moles) → final pit → exit
+
+### Geometry and enemy design logic
+
+1. Lethality ramps one step per encounter: a hurdle that cannot fail (O-S1-a) → mud that only slows (G-S1-a) → a lethal hole beside the path with a box at its lip (G-S1-b) → a full-width pit after a practice runway (P-S1-b, G-S1-c) → a pit with an enemy on its landing (G-S1-d).
+2. Main-course gaps are short and generous: about three lethal pits of ≈2–3 u, each with ≥4 u of run-up; every other "gap" (two mud swamps, three rat pits) turns failure into delay. The first level punishes with time, not lives.
+3. Rat pits are enforced descents and enemy locks: ≈5–6 u walled squares too wide to jump, which the player must enter; the trampoline exit appears only when every mole is dead. Mole count rises 2 → 4 → 4 (G-S3-a, G-S3-b, G-S3-d).
+4. Enemy patrol axes escalate: across the path, so it can be timed past (E-S1-a) → along the path, so it must be engaged (E-S1-b) → waiting on a landing, engaged while landing (E-S1-c).
+5. The turtle is taught in four steps: alone after C1 (E-S2-a) → a pair for the chain stomp (E-S2-b) → a pair hidden behind a hurdle (E-S2-d) → a springboard under a floating box (E-S3-b).
+6. Targets above jump height are reached only with living steps — the turtle's belly in S3 and the ostriches' backs in the secret (P-X-f). The height ceiling is enforced by placing targets just above the jump, not by walls.
+7. Timed living steps (the ostriches duck when approached) teach "use it now" with a soft failure: missed boxes and a retry, never a death.
+8. The optional side-scroll secret holds every coupled challenge — occupied landings (G-X-a), a flier on a runway (P-X-c), a perch over Nitro (G-X-b), an enemy ladder (J-X-c). The main course keeps its hazards uncoupled.
+9. Platform length is set by the enemy on it: the vulture runways are ≈10+ u for reaction distance; the turtle landing ledges are ≈3 u, just long enough to land beside a crawling turtle.
+10. Walled corridors remove side falls from the main course, and the ≈5–8 u lane leaves room to steer around enemies, which is why the early enemies are optional (F2 POINT1: no need to kill).
+11. Perches appear exactly where precision is needed: the ?/? perch over the Nitro floor and the rock before the last mud box give a stable take-off for a one-shot jump.
+12. The closed court makes the 2 × 5 wall unavoidable, and its 2 u height is just above a clean plain jump (D2), so the no-break goal needs the slide-jump or the striped foothold (O-S2-b).
+13. Checkpoints sit on wide enclosed floors (plaza, court) or on the secret's first safe ledge after its opening hops — never on a narrow ledge, a mud crossing or inside a pit.
+
+### Geometry transfer to the skate game
+
+1. Opening debut strip: a walled corridor 6–8 m wide (`wall` / `coastwall` sides), a 0.6–1.0 m `platform` hurdle across it as the first jump, then a soft strip (`groundSpeedLimit`, 3–4 m) beside the first multi-hit sandwich, an edge `pit` beside — not across — the path with a crate at its lip, and only then a full-width `pit` 2.3–3.5 m long after ≥10 m of runway (the running full jump covers ≈5.6 m, so the first gap is forgiving by design).
+2. Enforced-descent trap pit: a sunken square 6–7 m across whose walls stand more than 7 m above the pit floor (beyond the ≈7.0 m double-jump ledge-grab reach) or end in an overhanging lip, two `grunt`s inside (four in the repeat) and a `trampoline` in a corner as the only exit. It never kills; clearing the enemies is the practical requirement for using the trampoline.
+3. Living step to a height target: a `turtle` patrolling ±1–1.5 m directly under a crate whose underside is above ≈5.5 m (beyond double-jump head reach). Valid only if this engine's stomp bounce off a `turtle` plus the double jump reaches it — measure that bounce before authoring; Part IX gives crate and arrow bounces only.
+4. Side-scroll secret with occupied landings (`zone` dir E): 3–4 m ledges with 2–3 m gaps (well inside the 5.6 m jump), each landing patrolled by a `turtle` with range 1–1.5 m so the jump is timed to its phase; then a ≥12 m runway with a `floater` swooping from its far end (≈1.3 s of warning at 9 m/s), a checkpoint after the first three hops, and a `mover` lift (axis y) as the one-way exit.
+5. No-break vault gate: Crash's 2-high wall (2.30 m) is below our 2.85 m full jump, so use a 3-high wall (3.46 m, needs the double jump) spanning a closed 5–6 m court right after a checkpoint, with one multi-hit crate in its top row as the stepping stone.
+6. Perch over a hazard: a 3 × 2 m floating `platform` 4.6 m (4 crates) above a floor of Nitro, reached by a ≈3 m jump, holding the life crates; a ledge 2.3 m lower and 3 m on carries the arrow that lifts the player to the next tier.
+
 ## Open questions / uncertainties
 
 - Wall S2-c: 2×5 = 10 is the reading that makes main = 30; one D2 shot alone could also be read as 2×4.
@@ -282,3 +433,10 @@ Main tally: S1 10 + S2 14 + S3 6 = 30 = 62 − 32.
 - S1-c side of the path (F2 draws it right of the route, D2 says the pit is on the left).
 - Whether the S1-e ? stands just before or just after the stone face (sources order it differently; it is
   adjacent either way).
+- Geometry: all widths and heights in the geometry block are estimates read against crates and Crash in D2 screenshots; F2 maps were used for topology only.
+- Geometry: pit 2 before the stone face: D2 shot 10 says "jump the pit", F2 draws a plank bridge — possibly a bridge over a pit.
+- Geometry: rat pits: F2 marks the mole icons ×2, ×4, ×4 and D2 shots 38 and 40 each say "four moles", so this pass reads 3 pits with 2 + 4 + 4 = 10 moles; the first-wave enemy record (4 pits, 12 moles) is left unchanged.
+- Geometry: the final pit (D2 shot 41) may be part of rat pit 3's surround rather than a separate hole.
+- Geometry: whether spinning an unflipped spiked turtle hurts the player is not stated (F2: stomp, then spin; D2: a spin sends it flying).
+- Geometry: ostrich duck timing and the ledge heights (≈4–4.5 u) are estimates; the lower-platform height in the secret is not visible.
+- Geometry: the consequence of falling in the bonus is not stated on these pages.

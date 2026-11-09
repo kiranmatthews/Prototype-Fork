@@ -986,5 +986,1287 @@
     "The big payout (the wall) is late and guarded by ice momentum plus a penguin.",
     "The only main 1UP is behind the hardest hidden switch.",
     "The optional red-gem course does not add to the box total."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "into-screen",
+      "notes": "walled ice canyon ≈5–6 u wide at the start (D2 shots 1–2), cliff steps, one bend (D2 shot 7), two ice floors; ends on a round lift"
+    },
+    {
+      "section": "S2",
+      "mode": "side-scroll",
+      "notes": "left → right along snow ledges over drops, with two green drop-pillars"
+    },
+    {
+      "section": "S3",
+      "mode": "side-scroll",
+      "notes": "continues left → right: twin log smashers, the bonus hole, the outline-staircase ledge, a seal pillar, a free-fall shaft down to S4 (one-way)"
+    },
+    {
+      "section": "B",
+      "mode": "side-scroll",
+      "notes": "icy cavern ledges and a float line; exit lift back to S3"
+    },
+    {
+      "section": "S4",
+      "mode": "into-screen",
+      "notes": "lands at C3 facing forward with the green ! behind (toward the camera); the path climbs a cliff diagonally through ledges joined by plank bridges"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "corridor",
+      "kind": "start floor in the ice canyon (explosive trio at the start ring)",
+      "size": "≈5–6 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "REST",
+        "TEACH"
+      ],
+      "why": "the explosive lesson happens on a walled floor, before any jump",
+      "evidence": "D2 p009L shots 1–2",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "narrow ledges",
+      "kind": "narrow ledges and cliff steps (two penguins)",
+      "size": "≈3–4 wide (not measurable)",
+      "heightDelta": "±1 (steps)",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "plain jumps; attack the penguins when they stop spinning",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the spinning enemy is met on footing narrow enough that waiting for it is the safe choice",
+      "evidence": "F2 p023R (hatched cliff steps); D2 p009L shot 3",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "arrow block",
+      "kind": "steel arrow pad under a floating striped crate",
+      "size": "arrow (1)",
+      "heightDelta": "arrow bounce to the striped (≈+3)",
+      "edges": "n/a",
+      "behaviour": "static",
+      "move": "arrow bounce",
+      "roles": [
+        "TOOL",
+        "TEACH"
+      ],
+      "why": "the vertical tool is shown on the line, with its reward above it",
+      "evidence": "F2 p023R; D2 p009L shot 4",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S1-d",
+      "section": "S1",
+      "shape": "ice floor",
+      "kind": "ice field around a steel pillar",
+      "size": "≈8 × 8, walled; pillar 3–4 blocks high",
+      "heightDelta": "pillar top +3 to +4",
+      "edges": "walled",
+      "behaviour": "slippery",
+      "move": "slide to attack; bounce the low ? with jump held to reach the pillar top",
+      "roles": [
+        "ARENA",
+        "TEACH"
+      ],
+      "why": "the first ice floor is wide and walled, so momentum can push the player into a TNT but never off a ledge",
+      "evidence": "F2 p023R POINT2; D2 p009L intro, shots 5–6",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-e",
+      "section": "S1",
+      "shape": "ice floor",
+      "kind": "Nitro ice approach to the lift",
+      "size": "≈5–6 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "slippery",
+      "move": "walk slowly (POINT4: step onto the ice gently)",
+      "roles": [
+        "TEST"
+      ],
+      "why": "precision on ice with lethal obstacles, ending at a lift that forces a stop",
+      "evidence": "F2 p023R POINT4; D2 p009L shot 8",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-f",
+      "section": "S1",
+      "shape": "lift",
+      "kind": "round lift",
+      "size": "≈2 (disc)",
+      "heightDelta": "rises to S2",
+      "edges": "open",
+      "behaviour": "lift (vertical mover)",
+      "move": "ride",
+      "roles": [
+        "REST"
+      ],
+      "why": "marks the change into side-scroll",
+      "evidence": "F2 p023R; D2 p009L shot 8",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "ledge",
+      "kind": "C1 ledge at the lift top (L of 3 boxes)",
+      "size": "≈5–6 long",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "save at the mode change",
+      "evidence": "F2 p024L; D2 p009L shot 9",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "long ledge",
+      "kind": "long snow ledge (penguin, seal pair, broken-ice wall)",
+      "size": "≈10–12 long",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "move": "walk; slide the penguin (POINT5); chain-stomp the seals (POINT6)",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a long flat for two enemy lessons before the first crusher",
+      "evidence": "F2 p024L",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "block",
+      "kind": "raised block under green drop-pillar 1",
+      "size": "≈2–3",
+      "heightDelta": "0 to +1",
+      "edges": "open",
+      "behaviour": "static (crusher above)",
+      "move": "dash through while the pillar is up (POINT7)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "the crusher stands at the end of the long ledge, right before a gap",
+      "evidence": "F2 p024L POINT7; D2 p009R shot 11",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-d",
+      "section": "S2",
+      "shape": "ledge",
+      "kind": "ledge with drop-pillar 2 directly before C2",
+      "size": "≈4–5 long",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static (crusher above)",
+      "move": "dash under the pillar, then hit C2",
+      "roles": [
+        "TIMING-STEP",
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the save is the reward for the timing",
+      "evidence": "F2 p024R; D2 p009R shot 13",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "ledge",
+      "kind": "step up to a low ledge with a steel arrow (red-gem tease)",
+      "size": "≈3",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "step up",
+      "roles": [
+        "REST"
+      ],
+      "why": "a visible but impossible target advertises the secret route",
+      "evidence": "F2 p024L strip B; D2 p009R shot 14",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "platform",
+      "kind": "raised platform under two wooden log smashers moving in unison",
+      "size": "≈6–8 long; smashers ≈2 apart",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "static (crushers above)",
+      "move": "wait right in front, dash when they rise (POINT9), or pause in the pocket between them (D2)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "a timing gate with two accepted solutions",
+      "evidence": "F2 p024L POINT9; D2 p009R shot 15",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-c",
+      "section": "S3",
+      "shape": "long ledge",
+      "kind": "long ! ledge with the outline staircase floating above it",
+      "size": "≈8–10 long",
+      "heightDelta": "boxes rise ≈+1 per step above the ledge",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "press !, head-butt the boxes from below (F2)",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the staircase floats over floor, so the safe method (from below) and the risky one (on top) both exist",
+      "evidence": "F2 p024R + POINT10 screenshot (Crash on the floor under the first box); D2 p010L shots 24–25",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-a",
+      "section": "B",
+      "shape": "icy ledge",
+      "kind": "blue ice ledge",
+      "size": "≈3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "slippery",
+      "move": "careful jump; the landing slides",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a slippery landing turns a short hop into a precision test",
+      "evidence": "D2 p010L shot 19",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "B",
+      "shape": "ledge",
+      "kind": "ledge under the diagonal float line",
+      "size": "≈3–4",
+      "heightDelta": "boxes ≈+2 to +4 above",
+      "edges": "open",
+      "behaviour": "static",
+      "move": "crouch-jump from below",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "the floor under the float line is where the head-butt is taught",
+      "evidence": "D2 p010L shots 20–21",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-c",
+      "section": "B",
+      "shape": "ledge + lift",
+      "kind": "exit ledge + elevator",
+      "size": "≈4",
+      "heightDelta": "lift up",
+      "edges": "open",
+      "behaviour": "lift (vertical mover)",
+      "move": "ride",
+      "roles": [
+        "REST"
+      ],
+      "why": "the bonus ends on solid ground",
+      "evidence": "D2 p010L shot 23",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S4-a",
+      "section": "S4",
+      "shape": "corridor",
+      "kind": "C3 landing floor (bottom of the shaft)",
+      "size": "≈5 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk; turn back toward the camera for the green !",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the save is at the arrival point, and the only backward content of S4 sits behind it",
+      "evidence": "F2 p025L POINT12; D2 p010L shots 28–29",
+      "confidence": "high"
+    },
+    {
+      "id": "P-S4-b",
+      "section": "S4",
+      "shape": "ice floor",
+      "kind": "ice approach to the crate wall (penguin beside it)",
+      "size": "≈5–6 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "slippery",
+      "move": "approach slowly",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "ice in front of an enemy converts over-speed into damage",
+      "evidence": "F2 p025L POINT13; D2 p010R shot 30",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-c",
+      "section": "S4",
+      "shape": "corridor",
+      "kind": "corridor ledge with the outline 2-stack",
+      "size": "≈3–4 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "walk",
+      "roles": [
+        "REST"
+      ],
+      "why": "the outline promise sits on a quiet stretch so it is noticed",
+      "evidence": "D2 p010R shot 34; F2 p025L POINT14",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-d",
+      "section": "S4",
+      "shape": "arrow block",
+      "kind": "steel arrow as a stair up a cliff ledge",
+      "size": "arrow (1)",
+      "heightDelta": "next ledge ≈+2 to +3",
+      "edges": "n/a",
+      "behaviour": "static",
+      "move": "arrow bounce",
+      "roles": [
+        "TOOL"
+      ],
+      "why": "vertical progress uses a crate tool instead of a slope",
+      "evidence": "F2 p025L",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S4-e",
+      "section": "S4",
+      "shape": "arrow block",
+      "kind": "second steel arrow under the striped (hidden ! above)",
+      "size": "arrow (1)",
+      "heightDelta": "striped ≈+3; ! ≈+6 above the frame",
+      "edges": "n/a",
+      "behaviour": "static",
+      "move": "arrow, head-bonk the striped, keep jump held",
+      "roles": [
+        "TOOL"
+      ],
+      "why": "the stair pattern repeated with a switch hidden above the camera",
+      "evidence": "F2 p025L POINT15; D2 p010R shot 35",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-f",
+      "section": "S4",
+      "shape": "corridor",
+      "kind": "final corridor (three seals) + plank bridge + goal",
+      "size": "≈4–5 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "move": "spin the first seal",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the seal group is the last exam before the goal",
+      "evidence": "F2 p025L; D2 p010R shots 36–37",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S1-a",
+      "section": "S1",
+      "kind": "first pit (opening in the canyon floor beyond the trio)",
+      "width": "≈2 (extent not clear)",
+      "heightDelta": 0,
+      "landing": "canyon floor",
+      "lethal": true,
+      "runUp": "≈3–4",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "death (assumed)",
+      "nearby": [
+        "S1-a"
+      ],
+      "roles": [
+        "TEACH"
+      ],
+      "why": "leaving the trio needs a jump: explosives first, then a gap, never both in one move",
+      "evidence": "D2 p009L shots 1–2; F2 p023R",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S1-b",
+      "section": "S1",
+      "kind": "gap after the seal trio (\"bounce off that seal, cross the gap\")",
+      "width": "2–3",
+      "heightDelta": "not visible",
+      "landing": "ledge round a bend",
+      "lethal": true,
+      "runUp": "slope",
+      "move": [
+        "enemy-bounce",
+        "running"
+      ],
+      "coupling": "seal trio coming down the slope toward the gap",
+      "failure": "death (assumed)",
+      "nearby": [
+        "E-S1-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the first gap with an enemy-bounce option: the threat is also the step",
+      "evidence": "D2 p009L shot 7; F2 p023R POINT3",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "gap straight after drop-pillar 1 onto a small occupied ledge",
+      "width": "≈2",
+      "heightDelta": 0,
+      "landing": "ledge ≈3–4 with the ?-stack and a seal",
+      "lethal": true,
+      "runUp": "crusher block (short)",
+      "move": [
+        "plain",
+        "spin on landing"
+      ],
+      "coupling": "crusher behind, seal on the landing",
+      "failure": "death",
+      "nearby": [
+        "S2-c",
+        "E-S2-c"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "crusher → gap → occupied landing, three demands with no rest (D2: jump, spin the boxes, spin the seal, jump again)",
+      "evidence": "F2 p024L; D2 p009R shot 12",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S2-b",
+      "section": "S2",
+      "kind": "gap to the corridor ledge (seals)",
+      "width": "≈2",
+      "heightDelta": 0,
+      "landing": "narrow corridor ledge",
+      "lethal": true,
+      "runUp": "small ledge",
+      "move": [
+        "plain"
+      ],
+      "coupling": "seals coming along the corridor (POINT8)",
+      "failure": "death",
+      "nearby": [
+        "E-S2-d"
+      ],
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a plain hop whose landing leads straight into enemies",
+      "evidence": "F2 p024L–p024R; D2 p009R shot 12",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "gap to the penguin + ? ledge",
+      "width": "≈2",
+      "heightDelta": 0,
+      "landing": "ledge ≈3 with a penguin",
+      "lethal": true,
+      "runUp": "smasher platform",
+      "move": [
+        "plain"
+      ],
+      "coupling": "penguin on the landing",
+      "failure": "death",
+      "nearby": [
+        "S3-a",
+        "E-S3-a"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the timing gate is followed at once by an occupied landing",
+      "evidence": "F2 p024L; D2 p009R shot 16",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-b",
+      "section": "S3",
+      "kind": "bonus hole marked by a big floating ? (between the Nitro ledge and the ! ledge)",
+      "width": "≈2–3",
+      "heightDelta": "drop into the bonus",
+      "landing": "bonus round",
+      "lethal": false,
+      "runUp": "Nitro ledge",
+      "move": [
+        "drop-down"
+      ],
+      "coupling": "Nitro on the take-off ledge",
+      "failure": "not a failure: it is the bonus entrance; jumping it continues the course",
+      "nearby": [
+        "S3-b",
+        "O-S3-b"
+      ],
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "why": "the one gap the player is meant to fall into is marked with a floating ?",
+      "evidence": "F2 p024R; D2 p009R shots 17–18",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-c",
+      "section": "S3",
+      "kind": "gap to a pillar ledge occupied by a seal",
+      "width": "≈2",
+      "heightDelta": 0,
+      "landing": "pillar top ≈2",
+      "lethal": true,
+      "runUp": "! ledge",
+      "move": [
+        "plain",
+        "spin before landing (POINT11)"
+      ],
+      "coupling": "seal on the landing",
+      "failure": "death",
+      "nearby": [
+        "E-S3-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a landing too small to share, so the attack has to happen in the air",
+      "evidence": "F2 p024R POINT11; D2 p010L shot 25",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S3-d",
+      "section": "S3",
+      "kind": "gap to the rising snow ledge under the floating Aku",
+      "width": "2–3",
+      "heightDelta": "+1 (ramp)",
+      "landing": "snow ramp ≈6+",
+      "lethal": true,
+      "runUp": "pillar",
+      "move": [
+        "plain",
+        "jump from the ramp to the mask"
+      ],
+      "coupling": "none",
+      "failure": "death",
+      "nearby": [
+        "S3-d"
+      ],
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "the mask is placed where the side-scroll ends, before the drop into the hardest section",
+      "evidence": "F2 p024R; D2 p010L shot 26",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-e",
+      "section": "S3",
+      "kind": "free-fall shaft into S4",
+      "width": "shaft",
+      "heightDelta": "large drop (not measurable)",
+      "landing": "C3 floor",
+      "lethal": false,
+      "runUp": "n/a",
+      "move": [
+        "drop-down"
+      ],
+      "coupling": "none",
+      "failure": "not a failure: it is the route (D2: \"the subtle arrow on the wall points the way\")",
+      "nearby": [
+        "S4-a"
+      ],
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "a one-way descent: S3 cannot be re-entered from S4",
+      "evidence": "D2 p010L shots 27–28",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-B-a",
+      "section": "B",
+      "kind": "jumps between icy ledges",
+      "width": "2–3",
+      "heightDelta": "±1",
+      "landing": "icy ledges ≈3–4",
+      "lethal": null,
+      "runUp": "ice run",
+      "move": [
+        "plain",
+        "time the take-off for the speed lost on ice (D2)"
+      ],
+      "coupling": "ice changes the run-up speed",
+      "failure": "falls out of the bonus (consequence not stated)",
+      "nearby": [
+        "B-a",
+        "B-c"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the same gap needs different timing depending on how fast the player is skating",
+      "evidence": "D2 p010L shots 19–22",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-a",
+      "section": "S4",
+      "kind": "plank bridges across gaps between cliff ledges (×4 drawn)",
+      "width": "spans ≈3–4; bridges ≈2 wide",
+      "heightDelta": 0,
+      "landing": "cliff ledges",
+      "lethal": true,
+      "runUp": "n/a",
+      "move": [
+        "walk"
+      ],
+      "coupling": "none",
+      "failure": "side fall (assumed death)",
+      "nearby": [],
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "narrow bridges split S4 into ledges; enemies and crates sit on the ledges, never on the bridges",
+      "evidence": "F2 p025L",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-b",
+      "section": "S4",
+      "kind": "pit before the ?/? stack and two penguins",
+      "width": "2–3",
+      "heightDelta": 0,
+      "landing": "ledge with the ?/? stack + penguins",
+      "lethal": true,
+      "runUp": "≈4",
+      "move": [
+        "running"
+      ],
+      "coupling": "penguins on the landing",
+      "failure": "death",
+      "nearby": [
+        "S4-d",
+        "E-S4-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "a jump into an occupied landing, late in the stage",
+      "evidence": "D2 p010R shots 32–33",
+      "confidence": "medium"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": 3,
+      "moves": [
+        "plain",
+        "enemy-bounce or running"
+      ],
+      "rhythm": "isolated",
+      "maxGap": "2–3",
+      "rest": "ice field, lift",
+      "noStop": false,
+      "why": "S1's few jumps are separated by floors; its difficulty is ice, not gaps",
+      "evidence": "D2 p009L shots 1–8"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": 2,
+      "moves": [
+        "timed dash (crusher)",
+        "plain",
+        "spin on landing",
+        "plain"
+      ],
+      "rhythm": "syncopated",
+      "maxGap": "≈2",
+      "rest": "P-S2-d (C2 ledge)",
+      "noStop": true,
+      "why": "the crusher pushes the player into the gap and the seal waits on the small ledge, so there is no safe stop until C2",
+      "evidence": "F2 p024L–p024R; D2 p009R shots 11–13"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": 4,
+      "moves": [
+        "plain",
+        "spin before landing",
+        "plain",
+        "drop-down"
+      ],
+      "rhythm": "accelerating toward the shaft",
+      "maxGap": "2–3",
+      "rest": "C3 at the bottom",
+      "noStop": false,
+      "why": "after the staircase ledge the footing shrinks to a pillar and ends in a one-way drop",
+      "evidence": "F2 p024R; D2 p010L shots 25–28"
+    },
+    {
+      "id": "J-B-a",
+      "section": "B",
+      "count": "≈4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "uneven (depends on ice speed)",
+      "maxGap": "2–3",
+      "rest": "exit ledge",
+      "noStop": false,
+      "why": "ice changes the take-off speed, so the same gap needs different timing each time",
+      "evidence": "D2 p010L shots 19–23"
+    },
+    {
+      "id": "J-S4-a",
+      "section": "S4",
+      "count": 3,
+      "moves": [
+        "arrow",
+        "arrow",
+        "held arrow"
+      ],
+      "rhythm": "vertical",
+      "maxGap": "+3 up per bounce",
+      "rest": "cliff ledges",
+      "noStop": false,
+      "why": "the climb is a vertical chain of tools that ends at the off-screen switch",
+      "evidence": "F2 p025L POINT15; D2 p010R shot 35"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-S1-a",
+      "section": "S1",
+      "kind": "ice floor (field)",
+      "placement": "on platform",
+      "timing": "constant: momentum; a jump straight up cancels forward speed (D2 intro)",
+      "counter": [
+        "walk slowly",
+        "jump straight up to stop",
+        "slide as the attack (POINT2)"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S1-c TNT among the slide targets",
+        "S1-d Nitros"
+      ],
+      "roles": [
+        "TEACH"
+      ],
+      "why": "ice changes stopping, not jumping, and is first shown on a walled floor",
+      "evidence": "D2 p009L intro, shots 5–6, 8; F2 p023R POINT2, POINT4"
+    },
+    {
+      "id": "O-S2-a",
+      "section": "S2",
+      "kind": "green stone drop-pillar 1 (crusher)",
+      "placement": "overhead (on the ledge)",
+      "timing": "rises and drops on a cycle (seconds not stated); telegraph: the raised block is visible",
+      "counter": [
+        "wait-and-go (dash while it is up)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-S2-a gap",
+        "E-S2-c seal on the landing"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "the reward for the timing is flow, not a rest on the far side",
+      "evidence": "F2 p024L POINT7; D2 p009R shot 11"
+    },
+    {
+      "id": "O-S2-b",
+      "section": "S2",
+      "kind": "green drop-pillar 2 directly before C2",
+      "placement": "overhead",
+      "timing": "as drop-pillar 1",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "C2 (S2-d)"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "the checkpoint is the reward for the timing",
+      "evidence": "F2 p024R; D2 p009R shot 13"
+    },
+    {
+      "id": "O-S3-a",
+      "section": "S3",
+      "kind": "twin wooden log smashers in unison",
+      "placement": "overhead",
+      "timing": "both rise and fall together; a safe pocket between them",
+      "counter": [
+        "wait-and-go (one dash)",
+        "pause in the pocket (two half-dashes)"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-S3-a gap + penguin"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "RHYTHM"
+      ],
+      "why": "two acceptable strategies for one gate",
+      "evidence": "F2 p024L POINT9; D2 p009R shot 15"
+    },
+    {
+      "id": "O-S3-b",
+      "section": "S3",
+      "kind": "Nitro beside the bonus hole",
+      "placement": "take-off edge",
+      "timing": "static",
+      "counter": [
+        "avoid"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-S3-b bonus hole"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "the one hole the player is meant to drop into is guarded by the one thing they must not touch",
+      "evidence": "D2 p009R shots 17–18; F2 p024R"
+    },
+    {
+      "id": "O-S4-a",
+      "section": "S4",
+      "kind": "ice before the crate wall, with a penguin beside it",
+      "placement": "on platform",
+      "timing": "constant momentum",
+      "counter": [
+        "approach slowly"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "S4-c wall",
+        "E-S4-a"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the ice lesson returns with an enemy at the end of the slide",
+      "evidence": "F2 p025L POINT13; D2 p010R shot 30"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S1-a",
+      "section": "S1",
+      "kind": "penguin (グリン)",
+      "count": 2,
+      "archetype": "static (periodic spin)",
+      "behaviour": "spins in place, then stops and is vulnerable",
+      "counter": [
+        "stomp (POINT1: jump on its head)",
+        "spin",
+        "slide (POINT5)"
+      ],
+      "fails": [
+        "touching it while it spins"
+      ],
+      "placement": "on line (narrow ledges)",
+      "roles": [
+        "TEACH",
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "a timing enemy: the safe play is to wait for its spin to end, which narrow footing encourages",
+      "evidence": "F2 p023R POINT1; D2 p009L shot 3",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S1-b",
+      "section": "S1",
+      "kind": "seal (ジョー) trio",
+      "count": 3,
+      "archetype": "patrol-1D (group of three in single file)",
+      "behaviour": "move as a line; F2 POINT3: hit the first and the other two die (title 穴に落ちていく, \"falling into the hole\")",
+      "counter": [
+        "spin the first",
+        "stomp-bounce (D2: bounce off a seal to cross the gap)"
+      ],
+      "fails": [],
+      "placement": "on line before a gap, round a bend",
+      "roles": [
+        "TEACH",
+        "TOOL/STEP"
+      ],
+      "firstAlone": false,
+      "why": "a group that dies as one teaches that the first hit matters; a seal's head is also the step over the gap",
+      "evidence": "F2 p023R POINT3; D2 p009L shot 7",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S2-a",
+      "section": "S2",
+      "kind": "penguin on the long ledge",
+      "count": 1,
+      "archetype": "static (periodic spin)",
+      "behaviour": "spins, then stops",
+      "counter": [
+        "slide (POINT5)",
+        "spin"
+      ],
+      "fails": [
+        "touching it while it spins"
+      ],
+      "placement": "on line",
+      "roles": [
+        "TEACH"
+      ],
+      "firstAlone": null,
+      "why": "the slide is taught as an attack on a long flat",
+      "evidence": "F2 p024L POINT5",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-b",
+      "section": "S2",
+      "kind": "seal pair",
+      "count": 2,
+      "archetype": "patrol-1D (pair)",
+      "behaviour": "two seals together",
+      "counter": [
+        "chain stomp (POINT6: fruit)"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "the pair invites the one-two stomp",
+      "evidence": "F2 p024L POINT6",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-c",
+      "section": "S2",
+      "kind": "seal on the small ledge after drop-pillar 1",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "moves on a ≈3–4 u ledge",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "landing platform",
+      "roles": [
+        "GUARD",
+        "TIMING-GATE"
+      ],
+      "firstAlone": null,
+      "why": "the occupied landing behind a crusher",
+      "evidence": "D2 p009R shot 12",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-d",
+      "section": "S2",
+      "kind": "seals in the narrow corridors around C2",
+      "count": 2,
+      "archetype": "patrol-1D",
+      "behaviour": "come along the corridor toward the player",
+      "counter": [
+        "spin",
+        "slide",
+        "wait for them to come (POINT8)"
+      ],
+      "fails": [],
+      "placement": "corridor",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": null,
+      "why": "in a corridor the enemy cannot be passed, so the guide teaches waiting",
+      "evidence": "F2 p024R POINT8",
+      "confidence": "medium (count)"
+    },
+    {
+      "id": "E-S3-a",
+      "section": "S3",
+      "kind": "penguin on the ledge after the log smashers",
+      "count": 1,
+      "archetype": "static (periodic spin)",
+      "behaviour": "spins, then stops",
+      "counter": [
+        "stomp",
+        "spin"
+      ],
+      "fails": [
+        "touching it while it spins"
+      ],
+      "placement": "landing platform",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": null,
+      "why": "the timing gate is followed by a timing enemy on the landing",
+      "evidence": "F2 p024L; D2 p009R shot 16",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S3-b",
+      "section": "S3",
+      "kind": "seal on the pillar ledge",
+      "count": 1,
+      "archetype": "patrol-1D (short)",
+      "behaviour": "occupies a ≈2 u pillar top",
+      "counter": [
+        "spin before landing (POINT11)"
+      ],
+      "fails": [
+        "landing first and attacking after — there is no room"
+      ],
+      "placement": "landing platform (pillar)",
+      "roles": [
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "teaches the air spin onto an occupied landing",
+      "evidence": "F2 p024R POINT11; D2 p010L shot 25",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-a",
+      "section": "S4",
+      "kind": "penguin beside the crate wall",
+      "count": 1,
+      "archetype": "static (periodic spin)",
+      "behaviour": "stands at the end of the ice approach",
+      "counter": [
+        "approach slowly, then stomp or spin"
+      ],
+      "fails": [
+        "arriving with momentum (POINT13)"
+      ],
+      "placement": "end of an ice slide",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": null,
+      "why": "ice plus a timing enemy: speed control is the counter",
+      "evidence": "F2 p025L POINT13; D2 p010R shot 30",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-b",
+      "section": "S4",
+      "kind": "penguins by the ?/? stack beyond the pit",
+      "count": 2,
+      "archetype": "static (periodic spin)",
+      "behaviour": "stand on the landing ledge",
+      "counter": [
+        "stomp",
+        "spin"
+      ],
+      "fails": [
+        "touching one while it spins"
+      ],
+      "placement": "landing platform",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": null,
+      "why": "the late occupied landing doubles the enemy",
+      "evidence": "F2 p025L; D2 p010R shots 32–33",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-c",
+      "section": "S4",
+      "kind": "seal before the second steel arrow",
+      "count": 1,
+      "archetype": "patrol-1D",
+      "behaviour": "on the path just before the tool",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "on line (before a tool)",
+      "roles": [
+        "HURDLE"
+      ],
+      "firstAlone": null,
+      "why": "clears the space in which the arrow climb is done",
+      "evidence": "D2 p010R shot 35",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S4-d",
+      "section": "S4",
+      "kind": "seals in the final corridor",
+      "count": 3,
+      "archetype": "patrol-1D (group of three)",
+      "behaviour": "come down the corridor in a line",
+      "counter": [
+        "spin the first"
+      ],
+      "fails": [],
+      "placement": "corridor",
+      "roles": [
+        "TEST"
+      ],
+      "firstAlone": null,
+      "why": "the S1 group lesson returns as the last exam",
+      "evidence": "F2 p025L; D2 p010R shot 36",
+      "confidence": "medium"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "Nitro / Aku / TNT trio at the start",
+        "pit",
+        "two penguins (spin cycle)",
+        "steel arrow + striped",
+        "ice field + pillar-top ?",
+        "seal trio",
+        "gap (seal bounce)",
+        "Nitro pairs on ice",
+        "lift"
+      ],
+      "gaps": 2,
+      "enemies": 5,
+      "hazards": 2
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "C1 + 3 boxes",
+        "penguin (slide)",
+        "seal pair (chain stomp)",
+        "drop-pillar 1",
+        "gap → small ledge: boxes + seal",
+        "gap → seal corridor",
+        "drop-pillar 2",
+        "C2"
+      ],
+      "gaps": 2,
+      "enemies": 6,
+      "hazards": 2
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "steel arrow ledge (red-gem tease)",
+        "twin log smashers",
+        "gap → penguin + ?",
+        "Nitro by the bonus hole",
+        "bonus hole",
+        "! ledge: outline staircase",
+        "gap → seal pillar (spin before landing)",
+        "gap → ramp + floating Aku",
+        "free-fall shaft"
+      ],
+      "gaps": 5,
+      "enemies": 2,
+      "hazards": 2
+    },
+    {
+      "section": "B",
+      "beats": [
+        "icy ledge: 2 boxes",
+        "float line (crouch-jump from below)",
+        "ice run (timed jump)",
+        "3 boxes",
+        "2-stack + exit lift"
+      ],
+      "gaps": 4,
+      "enemies": 0,
+      "hazards": 1
+    },
+    {
+      "section": "S4",
+      "beats": [
+        "C3 (green ! behind)",
+        "plank bridge",
+        "ice → crate wall + penguin",
+        "pit → ?/? + two penguins",
+        "plank bridge",
+        "outline 2-stack",
+        "steel arrow climb",
+        "seal",
+        "steel arrow + striped + hidden !",
+        "plank bridge",
+        "three seals",
+        "end boxes",
+        "goal"
+      ],
+      "gaps": 6,
+      "enemies": 7,
+      "hazards": 1
+    }
+  ],
+  "geometryObservations": [
+    "Mode changes happen at one-way transitions (lift, free-fall shaft), and each camera mode has its own geometry grammar: into-screen sections are wide walled floors and ice fields (≈5–8 u); side-scroll sections are separate ledges (≈2–12 u) with ≈2 u gaps and crushers.",
+    "Ice escalates in four steps: a walled field with one TNT, where nothing can fall (P-S1-d) → a field with Nitro pairs, where contact kills (P-S1-e) → narrow icy bonus ledges, where sliding off is a fall (P-B-a) → ice in front of an enemy (P-S4-b).",
+    "Every crusher is followed at once by a demand — drop-pillar 1 → gap → occupied landing; drop-pillar 2 → checkpoint; log smashers → gap → penguin — so the reward for timing is flow, never a rest on the far side.",
+    "Small landings are occupied: seals and penguins wait on ≈2–4 u ledges after gaps (G-S2-a, G-S3-a, G-S3-c). F2 POINT11 names the counter — spin in the air before landing.",
+    "The two enemy kinds complement each other: penguins are timing enemies (attack when the spin stops; the slide also works), seals are group enemies (hit the first and all die) that double as bounce steps.",
+    "The twin log smashers move in unison and leave a pocket between them, so the gate accepts both a single dash and two half-dashes (O-S3-a).",
+    "The bonus entrance is a hole: the one gap meant to be fallen into is marked by a floating ? and guarded by a Nitro on its take-off edge (G-S3-b, O-S3-b).",
+    "The outline staircase floats over floor, not over a pit (F2 POINT10 screenshot): the guide's safe method (break from below) works because there is floor; climbing on top is the risky option.",
+    "S4 is a chain of cliff ledges joined by narrow plank bridges (G-S4-a); enemies, crates and arrows sit on the ledges and the bridges are pure chokes.",
+    "Vertical progress in S4 uses steel arrows as stairs (P-S4-d), then hides a switch above the camera frame (P-S4-e): the vertical framing limit is used as a design tool.",
+    "The free-fall shaft makes S4 a no-return section, so the only backward content (the green !) is placed directly behind the arrival point.",
+    "Checkpoints sit at transitions: the lift top (C1), right after drop-pillar 2 (C2) and the shaft bottom (C3)."
+  ],
+  "geometryTransfer": [
+    "Ice escalation with `slip` floors: (a) a walled 8 × 8 m slip field holding crates and one TNT; (b) a 6 m-wide slip approach with two staggered Nitro pairs ending at a `mover` lift (axis y) as a forced stop; (c) 3 m icy ledges with 2–3 m gaps in a side room; (d) a slip strip whose end, 1–2 m past a crate wall, holds an enemy.",
+    "Crusher → demand: a `crusher` over a 2–3 m raised block, then within 3 m a 2–2.5 m gap (well inside the 5.6 m running jump) onto a 3–4 m ledge holding a `grunt` with range ≤1 m, so neither the crusher block nor the landing is a place to stop; put the checkpoint straight after the second crusher.",
+    "Twin crushers in phase: two `crusher`s with the same cycle and phase, 2.5–3 m apart, leaving a ≥1.5 m pocket between them — one dash or two half-dashes both work.",
+    "Occupied pillar landing: a 2.3 m-wide pillar `platform` after a 2.5 m gap with an enemy on it (range ≤0.5 m); the counter is our air spin (0.3 s, +0.8 m reach) before touchdown, as in POINT11.",
+    "Marked drop-in bonus: in a side-scroll run (`zone` dir E), a 2.5 m hole between two ledges with a floating marker above it and a `returnportal` (airOnly) inside as the bonus entrance; one Nitro on the take-off edge.",
+    "Ledge-and-bridge cliff for a late section: 6–10 m ledges joined by 2 m-wide, 3–5 m-long bridges (`woodpath` or narrow `platform`), with enemies and crates only on the ledges; steel arrows as stairs to ledges 2.3–3.5 m higher (arrow apex 3.77 m above its lid)."
   ]
 }
