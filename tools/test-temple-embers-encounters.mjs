@@ -7,7 +7,7 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
  const {p,l,THREE}=r,route=r.sourceModule.JUNGLE_TERRACES_ROUTE,report=[];
  const specs=route.data.components.filter(c=>c.t==='enemy'),ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
- assert.equal(specs.length,10);
+ assert.equal(specs.length,12);
  assert.deepEqual([...new Set(specs.map(c=>c.foe))].sort(),['charger','grunt','hopper','sentry','spiker','turtle'],'six enemy kinds');
  for(let index=0;index<specs.length;index++){
   const spec=specs[index],enemy=l.enemies[index],[s,,x]=route.toLocal(spec.p);

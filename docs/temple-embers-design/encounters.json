@@ -1,1 +1,134 @@
-[{"s":95,"x":0,"foe":"grunt","frames":87,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":120,"x":3,"foe":"grunt","frames":88,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":190,"x":0,"foe":"grunt","frames":67,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":254,"x":4,"foe":"turtle","frames":87,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":277.6,"x":-3.4,"foe":"hopper","frames":98,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":350,"x":0,"foe":"turtle","frames":31,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":560,"x":12,"foe":"hopper","frames":98,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":697,"x":16,"foe":"sentry","frames":70,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":756,"x":2,"foe":"spiker","frames":60,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"},{"s":812,"x":18.2,"foe":"charger","frames":219,"deaths":0,"defeated":true,"bailing":false,"grounded":true,"state":"ride"}]
+[
+  {
+    "s": 95,
+    "x": 0,
+    "foe": "grunt",
+    "frames": 87,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 120,
+    "x": 3,
+    "foe": "grunt",
+    "frames": 88,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 181,
+    "x": 0,
+    "foe": "grunt",
+    "frames": 64,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 245,
+    "x": 5.5,
+    "foe": "turtle",
+    "frames": 86,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 303.5,
+    "x": 2,
+    "foe": "grunt",
+    "frames": 60,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 346,
+    "x": 0,
+    "foe": "turtle",
+    "frames": 31,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 401,
+    "x": 0,
+    "foe": "spiker",
+    "frames": 87,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 560,
+    "x": 12,
+    "foe": "hopper",
+    "frames": 98,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 478,
+    "x": 7,
+    "foe": "hopper",
+    "frames": 98,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 697,
+    "x": 16,
+    "foe": "sentry",
+    "frames": 69,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 756,
+    "x": 2,
+    "foe": "spiker",
+    "frames": 60,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  },
+  {
+    "s": 812,
+    "x": 18.2,
+    "foe": "charger",
+    "frames": 219,
+    "deaths": 0,
+    "defeated": true,
+    "bailing": false,
+    "grounded": true,
+    "state": "ride"
+  }
+]

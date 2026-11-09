@@ -1,55 +1,87 @@
 {
   "report": [
     {
-      "label": "01-arrival-ledge",
-      "s": -6,
-      "x": 1.2,
-      "y": 4,
-      "pos": [
-        1.2,
-        4,
-        6
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 65,
-      "tikis": 9,
-      "enemies": 10
-    },
-    {
-      "label": "02-carving-line-and-shrine",
-      "s": 44,
+      "label": "01-smash-stagger",
+      "s": 34,
       "x": 0,
       "y": 0,
       "pos": [
         0,
         0,
-        -44
+        -34
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "03-gutter-and-sleeping-sentinel",
-      "s": 66,
-      "x": 5.9,
+      "label": "02-shrine-and-lane",
+      "s": 46,
+      "x": 0,
       "y": 0,
       "pos": [
-        5.9,
         0,
-        -66
+        0,
+        -46
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "04-stair-foot",
+      "label": "03-gutter-row-and-coping",
+      "s": 82,
+      "x": 4,
+      "y": 0,
+      "pos": [
+        4,
+        0,
+        -82
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "04-sleeping-sentinel",
+      "s": 70,
+      "x": -2,
+      "y": 0,
+      "pos": [
+        -2,
+        0,
+        -70
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "05-crabs-and-bait-block",
+      "s": 100,
+      "x": 0,
+      "y": 0,
+      "pos": [
+        0,
+        0,
+        -100
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "06-stair-foot-tower",
       "s": 150,
       "x": 0,
       "y": 0,
@@ -60,156 +92,268 @@
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "05-first-flight-collapse",
-      "s": 196,
-      "x": -2,
-      "y": 2.1,
+      "label": "07-gateway-crab-and-wall",
+      "s": 178,
+      "x": -5,
+      "y": 0,
       "pos": [
-        -2,
-        2.13,
-        -196
+        -5,
+        0,
+        -178
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "06-first-landing",
-      "s": 242,
+      "label": "08-collapse",
+      "s": 199,
+      "x": 0,
+      "y": 2.5,
+      "pos": [
+        0,
+        2.48,
+        -199
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "09-landing-one-checkpoint",
+      "s": 241,
+      "x": 0,
+      "y": 8,
+      "pos": [
+        0,
+        8,
+        -241
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "10-turtle-tnt-arrow",
+      "s": 251,
+      "x": 1,
+      "y": 8,
+      "pos": [
+        1,
+        8,
+        -251
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "11-sentinel-and-balcony",
+      "s": 259,
       "x": -2,
       "y": 8,
       "pos": [
         -2,
         8,
-        -241.89
+        -259
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "07-fallen-ledges",
-      "s": 266,
-      "x": 2,
+      "label": "12-climb-first-ledge",
+      "s": 271.5,
+      "x": -2,
       "y": 10,
       "pos": [
-        2,
+        -2,
         10,
-        -266
+        -271.5
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "08-fuse-court",
-      "s": 330,
-      "x": 3,
+      "label": "13-rest-tier-block",
+      "s": 287.5,
+      "x": 1,
+      "y": 14,
+      "pos": [
+        1,
+        14,
+        -287.5
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "14-fuse-court-checkpoint",
+      "s": 311,
+      "x": 1,
       "y": 16,
       "pos": [
-        3,
+        1,
         16,
-        -330
+        -311
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "09-narrow-stair-censer",
-      "s": 376,
+      "label": "15-court-tnt-mask-pyramid",
+      "s": 324,
       "x": 0,
-      "y": 20.4,
+      "y": 16,
       "pos": [
         0,
-        20.44,
-        -376
+        16,
+        -324
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "10-sluice-head",
-      "s": 412,
+      "label": "16-narrow-stair",
+      "s": 360,
       "x": 0,
+      "y": 18.7,
+      "pos": [
+        0,
+        18.67,
+        -360
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "17-stair-top-sandwich",
+      "s": 398,
+      "x": 2,
       "y": 24,
       "pos": [
-        0,
-        24.12,
-        -412
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 65,
-      "tikis": 9,
-      "enemies": 10
-    },
-    {
-      "label": "11-sluice",
-      "s": 436,
-      "x": 2,
-      "y": 22.2,
-      "pos": [
         2,
-        22.18,
-        -436
+        24,
+        -398
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "12-aqueduct-ravine-break",
-      "s": 512,
+      "label": "18-sluice-smash-lane",
+      "s": 430,
+      "x": 0,
+      "y": 23.1,
+      "pos": [
+        0,
+        23.12,
+        -430
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "19-aqueduct-head-frog",
+      "s": 480,
       "x": 0,
       "y": 16,
       "pos": [
         0,
         16,
-        -512
+        -480
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "13-colonnade",
-      "s": 560,
-      "x": 12,
+      "label": "20-ravine-break-bridge",
+      "s": 514,
+      "x": 0,
       "y": 16,
       "pos": [
-        12,
+        0,
         16,
-        -560
+        -514
       ],
-      "state": "dead",
+      "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "14-abutment-pair",
+      "label": "21-far-break",
+      "s": 585,
+      "x": 0,
+      "y": 16,
+      "pos": [
+        0,
+        16,
+        -585
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "22-third-span",
+      "s": 612,
+      "x": 0,
+      "y": 16,
+      "pos": [
+        0,
+        16,
+        -612
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "23-abutment-court",
       "s": 640,
       "x": 0,
       "y": 16,
@@ -220,137 +364,153 @@
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "15-cistern-entry",
-      "s": 676,
+      "label": "24-cistern-lane",
+      "s": 660,
       "x": 0,
       "y": 16,
       "pos": [
         0,
         16,
-        -676
+        -660
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "16-reservoir",
-      "s": 690,
-      "x": 0,
-      "y": 13.95,
-      "pos": [
-        0,
-        13.95,
-        -690
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 65,
-      "tikis": 9,
-      "enemies": 10
-    },
-    {
-      "label": "17-cistern-ramp",
-      "s": 716,
+      "label": "25-promise-block-and-cover",
+      "s": 704,
       "x": 0,
       "y": 16,
       "pos": [
         0,
-        16,
-        -716
+        14.63,
+        -704
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "18-gallery-steps",
-      "s": 742,
+      "label": "26-gallery-stacks",
+      "s": 736,
       "x": 0,
       "y": 19.5,
       "pos": [
         0,
         19.5,
-        -742
+        -736
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "19-terrace-approach",
-      "s": 790,
+      "label": "27-sanctuary-steps",
+      "s": 745,
+      "x": 0,
+      "y": 19.5,
+      "pos": [
+        0,
+        20.3,
+        -744.95
+      ],
+      "state": "hang",
+      "grounded": false,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "28-terrace-lane",
+      "s": 777,
       "x": 0,
       "y": 30,
       "pos": [
         0,
         30,
-        -790
+        -777
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "20-dais-launch",
-      "s": 811,
+      "label": "29-wall-and-wave",
+      "s": 786,
+      "x": -6,
+      "y": 30,
+      "pos": [
+        -6,
+        30,
+        -786
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "30-dais",
+      "s": 823,
+      "x": 0,
+      "y": 32,
+      "pos": [
+        0,
+        32,
+        -823
+      ],
+      "state": "ride",
+      "grounded": true,
+      "crates": 171,
+      "tikis": 9,
+      "enemies": 12
+    },
+    {
+      "label": "31-nitro-rows-and-budget",
+      "s": 835,
       "x": 0,
       "y": 32,
       "pos": [
         0,
         30,
-        -811
+        -835
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     },
     {
-      "label": "21-behind-the-dais",
-      "s": 840,
-      "x": 0,
+      "label": "32-green-switch-and-gate",
+      "s": 849,
+      "x": -1,
       "y": 30,
       "pos": [
-        0,
+        -1,
         30,
-        -840
+        -849
       ],
       "state": "ride",
       "grounded": true,
-      "crates": 65,
+      "crates": 171,
       "tikis": 9,
-      "enemies": 10
-    },
-    {
-      "label": "22-sanctuary-gate",
-      "s": 856,
-      "x": 0,
-      "y": 30,
-      "pos": [
-        0,
-        30,
-        -856
-      ],
-      "state": "ride",
-      "grounded": true,
-      "crates": 65,
-      "tikis": 9,
-      "enemies": 10
+      "enemies": 12
     }
   ],
   "errors": []

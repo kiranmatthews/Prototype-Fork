@@ -1,21 +1,27 @@
 {
   "name": "Temple of Embers",
-  "probes": 2526,
-  "floors": 70,
+  "probes": 2569,
+  "floors": 67,
   "end": 876,
   "peak": 32,
-  "countedCrates": 64,
+  "countedCrates": 168,
   "checks": [
     "every crate stands on authored floor",
-    "no rail passes within a crate",
+    "no rail passes through a crate",
     "crates stand inside a flame sweep only on purpose",
     "no hazard stands in scenery and no scenery stands on a pedestal",
     "no crate inside a censer swing",
     "no crate inside a patrol walk",
     "patrols walk on floor",
-    "checkpoints respawn ten metres clear of flames, nitro, patrols and swings",
-    "volatile crates keep their blast away from other boxes",
-    "platforming gaps are within a single jump and ledges within a jump's height"
+    "checkpoints respawn ten metres clear of flames, nitro, patrols and swings, on floors six metres deep",
+    "volatile crates keep their blast away from boxes that are not meant to pay out",
+    "platforming gaps are within a single jump and ledges within a jump's height",
+    "no crate stands on a stepping stone (ledges and plinths under six metres deep)",
+    "clusters, not sprinkles: mean cluster size at least 2.5 and singles at most a fifth of counted crates",
+    "every section carries eight to twenty-four counted crates, except the declared timing peak of the abutment",
+    "outline crates belong to the cornice switch group alone, and that group has exactly one switch",
+    "every arrow has a target that only its bounce reaches",
+    "a board charge gap has thirty clear metres of run-up and a checkpoint one beat before it"
   ],
   "checkpoints": [
     {
@@ -35,19 +41,19 @@
       ]
     },
     {
-      "station": 243,
+      "station": 241.5,
       "position": [
-        -2,
+        -3,
         8,
-        -243
+        -241.5
       ]
     },
     {
-      "station": 332,
+      "station": 315,
       "position": [
         4,
         16,
-        -332
+        -315
       ]
     },
     {
@@ -59,11 +65,19 @@
       ]
     },
     {
-      "station": 480,
+      "station": 486,
       "position": [
-        7.5,
+        0,
         16,
-        -480
+        -486
+      ]
+    },
+    {
+      "station": 548,
+      "position": [
+        0,
+        16,
+        -548
       ]
     },
     {
@@ -75,83 +89,83 @@
       ]
     },
     {
-      "station": 664,
+      "station": 665,
       "position": [
         0,
         16,
-        -664
+        -665
       ]
     },
     {
-      "station": 738,
+      "station": 739,
       "position": [
         0,
         19.5,
-        -738
+        -739
       ]
     },
     {
-      "station": 778,
+      "station": 781,
       "position": [
         0,
         30,
-        -778
+        -781
       ]
     }
   ],
-  "torches": 60,
+  "torches": 62,
   "tikis": 9,
-  "enemies": 10,
+  "enemies": 12,
   "rooms": [
     {
       "name": "Ravine floor",
       "a": -16,
-      "b": 180,
+      "b": 186,
       "mode": "board",
       "lesson": "carve the crate line, take the mask, read the sleeping flame, meet the crabs in the open"
     },
     {
       "name": "The Great Stair",
-      "a": 180,
-      "b": 420,
+      "a": 186,
+      "b": 424,
       "mode": "foot",
-      "lesson": "hop the collapse, climb the fallen ledges, time the censer; crates on every landing"
+      "lesson": "TNT, arrow and double jump taught alone on the landing; six short hops with a rest; the fuse court tests them"
     },
     {
       "name": "The sluice",
       "a": 424,
       "b": 476,
       "mode": "board",
-      "lesson": "drop in, pump the bends, carry speed into the crossing"
+      "lesson": "drop in, charge the descent, smash the three stacks, carry speed into the crossing"
     },
     {
       "name": "Broken aqueduct",
       "a": 476,
-      "b": 656,
+      "b": 658,
       "mode": "board",
-      "lesson": "Ravine Break and Far Break at speed; the colonnade on foot; cross the abutment as both sentinels exhale"
+      "lesson": "ollie or grind the crate bridge; charge the Far Break; the colonnade on foot; cross the abutment in the cool phase"
     },
     {
       "name": "The Cistern",
       "a": 656,
-      "b": 740,
+      "b": 744,
       "mode": "foot",
-      "lesson": "drop in and pump, or climb the broken cornice over the drain; time the exit under the niche sentinel"
+      "lesson": "cross the basin at speed or climb the cornice to the switch; the block it fills waits on the hall floor; time the exit under the niche sentinel"
     },
     {
       "name": "Sanctuary steps",
       "a": 744,
       "b": 772,
       "mode": "foot",
-      "lesson": "four jumps up over the drain; the bristleback punishes a stomp"
+      "lesson": "four jumps up over the drain; the bristleback on the second step punishes a stomp"
     },
     {
       "name": "Sanctuary terrace",
       "a": 774,
       "b": 876,
       "mode": "board",
-      "lesson": "build speed down the centre, launch off the bank onto the dais inside the nitro ring, drop off its back, hit the green switch last"
+      "lesson": "hold cruise through the wave, launch onto the dais, drop straight between the Nitro rows, spend the height budget once, hit the green switch last"
     }
   ],
-  "components": 2974
+  "components": 3006
 }

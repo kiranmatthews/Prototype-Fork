@@ -12,7 +12,7 @@ await withBlockworksRuntime(async r=>{
  assert.equal(route.data.components.filter(c=>c.t==='bonusplatform').length,1);assert.equal(route.data.components.filter(c=>c.t==='crystal').length,1);
  assert.equal(l.fireTikis.length,9);assert.ok(l.torches.length>=40);assert.ok(route.end>850);
  assert.ok(route.checks.length>=10,'the course must verify its own placement rules');
- assert.ok(route.countedCrates>=60&&route.countedCrates<=110,`counted crates ${route.countedCrates}`);
+ assert.ok(route.countedCrates>=150&&route.countedCrates<=190,`counted crates ${route.countedCrates}`);
  assert.equal(route.rooms.length,7);
  for(const kind of ['pendulum','vertramp','firetiki','enemy','pit','rock'])assert.ok(route.data.components.some(c=>c.t===kind),`${kind} is missing`);
  for(const kind of ['phasepad','crumble','trickgate','returnportal','speedpad','trampoline','mover','grindosaurus'])assert.ok(!route.data.components.some(c=>c.t===kind),`${kind} must not appear in the temple`);
@@ -41,7 +41,7 @@ await withBlockworksRuntime(async r=>{
  p.respawn(l,true,false);r.stepFor(25);assert.ok(p.grounded&&!p.isBailing);
  const checkpoints=[];
  for(const cp of l.checkpoints){assert.ok(p.warpCheckpoint(l,1));r.stepFor(25);assert.ok(p.grounded&&!p.isBailing,`checkpoint ${checkpoints.length+1} must be a safe warp`);checkpoints.push({station:+route.toLocal(p.pos.toArray())[0].toFixed(1),position:p.pos.toArray().map(n=>+n.toFixed(2))});void cp;}
- assert.equal(checkpoints.length,10);
+ assert.equal(checkpoints.length,11);
  const saved=l.currentSpawn.clone(),deaths=p.totalDeaths;p.respawn(l,false,true,{position:new THREE.Vector3(saved.x,l.killY-1,saved.z)});
  r.until(()=>p.totalDeaths>deaths,{}, {allowDeath:true,maxFrames:180});r.until(()=>p.grounded&&p.state==='ride',{}, {allowDeath:true,maxFrames:480});assert.ok(p.pos.distanceTo(saved)<.5);
  const {templeTikiPhase}=await r.server.ssrLoadModule('/src/templeFireTiki.ts');

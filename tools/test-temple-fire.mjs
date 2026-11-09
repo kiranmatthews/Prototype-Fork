@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {withTempleRuntime} from './temple-test-runtime.mjs';
-// Stand in the sleeping sentinel's sigh (station 70; the head on the left faces across the floor).
+// Stand in the sleeping sentinel's sigh (station 70; the head on the left faces across the floor), beside the stack inside it.
 for(const masks of [0,1])await withTempleRuntime(async r=>{
  // The sleeping sentinel breathes on a fourteen-second cycle: cool for the first 7.5 s, then a warning, then fire.
  r.p.masks=masks;r.stepFor(420);assert.equal(r.p.totalDeaths,0,'warning and cool phases must be safe');
  if(masks){r.until(()=>r.p.masks===0,{}, {maxFrames:420});assert.equal(r.p.totalDeaths,0,'a mask absorbs the fire');}
  else {r.until(()=>r.p.totalDeaths>0,{}, {maxFrames:420,allowDeath:true});assert.equal(r.p.state,'dead','unprotected contact burns');}
  console.log('PASS native tiki contact',masks?'mask absorbed':'bare contact death');
-},{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',start:[70,.12,-5],endlessDeaths:true});
+},{modulePath:'/src/levels/jungle-sequels.ts',levelId:'jungle-terraces',start:[70,.12,-6.6],endlessDeaths:true});
 
 await withBlockworksRuntime(async r=>{
  // The sleeping sentinel breathes on its own slow cycle: sample it three quarters of the way round, in the fire phase.

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {runTempleJourney} from './temple-embers-journey.mjs';
-// TEMPLE_START=<station> begins the journey at a room boundary (172, 402, 660, 742, 776) instead of the spawn.
+// TEMPLE_START=<station> begins the journey at a room boundary (172, 240, 309, 398, 476, 660, 742, 776) instead of the spawn.
 import {createServer} from 'vite';
 const startStation=process.env.TEMPLE_START?Number(process.env.TEMPLE_START):null;
 let start;

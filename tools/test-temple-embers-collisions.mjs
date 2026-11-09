@@ -30,13 +30,14 @@ await withBlockworksRuntime(async r=>{
   const axis=e.axis,along=axis==='z'?k.p[2]:k.p[0],cross=axis==='z'?k.p[0]:k.p[2],home=axis==='z'?e.group.position.x:e.group.position.z;
   if(along>Math.min(e.x0,e.x1)-1.3&&along<Math.max(e.x0,e.x1)+1.3&&Math.abs(cross-home)<1.6&&Math.abs(k.p[1]-e.group.position.y)<2)hits.push({rule:'crate in a patrol',enemy:e.kind,crate:k.nm,local:local(k.p)});
  }
- // 5. Every crate has floor under it within five metres (caps above the bowl lips included).
+ // 5. Every crate has floor under it within nine metres (floating rewards included); the crate bridge over the Ravine Break is the one row over a void.
  const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);l.root.updateMatrixWorld(true);
  // Transitions are ridden by the pipe physics, not the ground raycast, so caps above the bowl lips are checked against the bowl's footprint instead.
  const bowl=C.find(c=>c.t==='vertramp'&&c.vkind==='half'&&(c.rise??0)>=5);
  for(const k of crates){
   if(bowl&&Math.abs(k.p[2]-bowl.p[2])<(bowl.w??0)+(bowl.rise??0)+(bowl.deck??0)&&Math.abs(k.p[0]-bowl.p[0])<(bowl.len??0)/2&&k.p[1]>bowl.p[1])continue;
-  ray.set(new THREE.Vector3(k.p[0],k.p[1]+.4,k.p[2]),down);ray.far=5.2;if(!ray.intersectObjects(l.groundMeshes,false)[0])hits.push({rule:'crate without floor',crate:k.nm,local:local(k.p)});
+  if(k.nm?.includes('Crate bridge'))continue;
+  ray.set(new THREE.Vector3(k.p[0],k.p[1]+.4,k.p[2]),down);ray.far=9.2;if(!ray.intersectObjects(l.groundMeshes,false)[0])hits.push({rule:'crate without floor',crate:k.nm,local:local(k.p)});
  }
  // 6. Every sentinel head stands on its pedestal with nothing else inside its head volume.
  for(const tiki of C.filter(c=>c.t==='firetiki')){

@@ -1,10 +1,11 @@
 // Temple of Embers · one input-only journey from the spawn ledge to the sanctuary gate.
-// Ordinary device samples only: the rider skates the ravine floor and grinds the gutter
-// coping, walks and double-jumps the Great Stair, rides the sluice and ollies both
-// aqueduct breaks, waits out the abutment pair, drops into the reservoir and rides the
-// ramp to the gallery, climbs the sanctuary steps on foot, launches onto the dais, hits
-// the green switch and crosses the gate. Beats are keyed by station so a run can start
-// at any room boundary (TEMPLE_START).
+// Ordinary device samples only: the rider charges the smash stagger and grinds the gutter
+// coping, walks the Great Stair and its six short hops, rides the sluice's smash lane, ollies
+// the Ravine Break and charges the Far Break, waits out the abutment pair, drops into the
+// reservoir and rides the ramp to the gallery, climbs the sanctuary steps on foot, rides the
+// sentinel wave onto the dais, drops between the Nitro rows, hits the green switch and
+// crosses the gate. Beats are keyed by station so a run can start at any room boundary
+// (TEMPLE_START: 172, 240, 309, 398, 476, 660, 742, 776).
 export async function runTempleJourney(r, { startStation = null } = {}) {
   const { p, l } = r, route = r.route;
   const { templeTikiPhase } = await r.server.ssrLoadModule('/src/templeBreath.ts');
@@ -97,55 +98,63 @@ export async function runTempleJourney(r, { startStation = null } = {}) {
   // ---- the course, as beats keyed by the station each ends at ----
   const beats = [
     { to: 172, name: 'Ravine floor', run() {
-      // Carve the floor, grind the gutter coping from 65 to 120, break the last offering, bank both checkpoints, stop at the stair.
-      skate(60, { lane: s => s < 30 ? 1.2 - 1.2 * s / 30 : s < 48 ? 0 : 5.9, cap: 15, label: 'ravine floor' });
+      // Charge down the bank and through the smash stagger (whole stacks clear at smash speed), thread the checkpoint lane,
+      // grind the gutter coping from 65 to 120, charge the stair-foot stack, thread the lane at speed, then brake for the stair.
+      skate(60, { lane: s => s < 30 ? 1.2 - 1.2 * s / 30 : s < 56 ? 0 : 5.9, cap: 30, label: 'ravine floor and the smash stagger' });
       skate(126, { lane: s => s < 64 ? 5.9 : 7, cap: 24, grindPops: [64.6], label: 'gutter coping grind' });
-      skate(172, { lane: 0, cap: s => 12, label: 'stair foot approach' });
+      skate(166.5, { lane: 0, cap: 30, label: 'charge the stair foot stack and the lane' });
+      skate(171, { lane: 0, cap: 9, label: 'brake before the gateway' });
     } },
-    { to: 240, name: 'First flight and the collapse', run() {
+    { to: 240, name: 'Gateway, first flight and the collapse', run() {
       if (p.freeSkate) dismount('stair foot');
-      walk(178, -6, { label: 'gateway' }); walk(199.2, -1.5, { label: 'edge of the collapse', tol: .25 });
+      // The crab paces the lane's centre toward you: pass it wide on the left, clear of the wall at the flight's foot.
+      walk(178, -6, { label: 'gateway' }); walk(190, -4.5, { label: 'lower run' }); walk(199.2, -1.5, { label: 'edge of the collapse', tol: .25 });
       jump(203.5, -1.5, 3.1, { label: 'plinth one' });
       jump(208, 1.5, 3.6, { label: 'plinth two', double: true });
       jump(213.2, 1.5, 4.43, { label: 'upper run', double: true });
       walk(239, -3, { label: 'upper run' });
     } },
-    { to: 322, name: 'First landing and the fallen ledges', run() {
-      walk(243.2, -2.2, { label: 'first landing checkpoint' }); walk(247, -4.5, { label: 'landing offerings' }); walk(255.4, -3, { label: 'landing edge', tol: .25 });
-      jump(259.4, -3, 9, { label: 'fallen ledge 1' });
-      // [station, x, top, depth]: land a metre inside the near edge, take off from the far corner nearest the next ledge.
-      const ledges = [[260, -3, 9, 4], [268, 2, 10, 4], [276, -2, 11, 6], [284, 3, 12, 4], [292, -1, 13, 4], [300, 2, 14, 4], [308, -3, 15, 4], [316, 0, 16, 4]];
+    { to: 309, name: 'First landing and the climb', run() {
+      walk(241.7, -2.4, { label: 'first landing checkpoint' });
+      // The turtle and the TNT are on the right, the sentinel's sweep on the left: walk the centre to the landing's edge.
+      walk(265.4, 0, { label: 'landing edge', tol: .25 });
+      // [station, x, top, depth]: land a metre inside the near edge, take off from the far corner nearest the next ledge; the last entry is the fuse court.
+      const ledges = [[271.5, -2, 10, 4], [279, 2, 12, 4], [287.5, 0, 14, 6], [296, -2, 15, 4], [303.5, 2, 16, 4], [310.2, 1, 16, 4]];
+      jump(ledges[0][0] - ledges[0][3] / 2 + 1.1, -1.2, 10, { label: 'fallen ledge 1', double: true });
       for (let i = 0; i < ledges.length - 1; i++) {
-        const [s0, x0, , d0] = ledges[i], [s1, x1, y1, d1] = ledges[i + 1], side = Math.sign(x1 - x0) || 1;
-        // The big block's frog hops on its left; keep to the right edge on the way across.
-        walk(s0 + d0 / 2 - .6, d0 > 4 ? x0 + 2.2 : x0 + side * 1.2, { label: `ledge ${i + 1} far corner`, tol: .22 });
-        jump(s1 - d1 / 2 + 1.1, x1 - side * 1.1, y1, { label: `fallen ledge ${i + 2}`, double: true });
+        const [s0, x0, , d0] = ledges[i], [s1, x1, y1, d1] = ledges[i + 1], side = Math.sign(x1 - x0) || 1, last = i === ledges.length - 2;
+        // The rest tier's block stands at its back left: cross it on the right. The crab on the fifth landing is spun on the way down.
+        walk(s0 + d0 / 2 - .6, d0 > 4 ? x0 + 1.6 : x0 + side * 1.2, { label: `ledge ${i + 1} far corner`, tol: .22 });
+        jump(last ? s1 : s1 - d1 / 2 + 1.1, last ? x1 : x1 - side * 1.1, y1, { label: last ? 'fuse court' : `fallen ledge ${i + 2}`, double: true, spinAir: !!enemyNear(s1, x1, 'grunt') });
       }
-      walk(317.4, 0, { label: 'last ledge edge', tol: .22 });
-      jump(323.2, 0, 16, { label: 'second landing', double: true });
     } },
-    { to: 402, name: 'Fuse court and the narrow stair', run() {
-      walk(331, 3, { label: 'second landing checkpoint' }); walk(345, .5, { label: 'through the fuse court' }); walk(347.2, -2.3, { label: 'foot of the narrow stair' });
-      const turtle = enemyNear(350, 0, 'turtle');
+    { to: 398, name: 'Fuse court and the narrow stair', run() {
+      walk(315.3, 2.8, { label: 'fuse court checkpoint' }); walk(339, 1, { label: 'through the fuse court' }); walk(343.2, -2.3, { label: 'foot of the narrow stair' });
+      const turtle = enemyNear(346, 0, 'turtle');
       if (turtle) run('wait for the mossback', () => { const q = route.toLocal(turtle.group.position.toArray()); return !turtle.alive || q[2] > .3; }, () => ({}), 600);
-      walk(353, -2.3, { label: 'past the mossback' }); walk(380, 0, { label: 'narrow stair' }); walk(382.6, 0, { label: 'before the censer', tol: .25 });
-      const pd = l.pendulums.find(q => Math.abs(route.toLocal(q.pivot.position.toArray())[0] - 386) < 1);
+      walk(349, -2.3, { label: 'past the mossback' }); walk(366, -1.2, { label: 'past the stair stack' }); walk(376, 0, { label: 'narrow stair' }); walk(378.6, 0, { label: 'before the censer', tol: .25 });
+      const pd = l.pendulums.find(q => Math.abs(route.toLocal(q.pivot.position.toArray())[0] - 382) < 1);
       if (pd) waitCenser(pd, 'wait for the censer');
-      walk(391, 0, { label: 'under the censer', pace: 1 }); walk(402, 0, { label: 'stair top' });
+      walk(387, 0, { label: 'under the censer', pace: 1 }); walk(398, 0, { label: 'stair top' });
     } },
-    { to: 476, name: 'Sluice head and the sluice', run() {
-      walk(409.5, 0, { label: 'stair top checkpoint' });
-      mount('drop in'); skate(476, { lane: s => s < 424 ? 0 : channelCentre(s), label: 'the sluice' });
+    { to: 476, name: 'Stair top and the sluice', run() {
+      // The bristleback patrols the stair top's centre line: round it on the right, take the checkpoint, drop in.
+      walk(399.5, 6.6, { label: 'round the bristleback' }); walk(409.4, 1.2, { label: 'stair top checkpoint' });
+      mount('drop in');
+      // The smash lane: skirt the first stack while speed is still building, smash the second and third.
+      skate(476, { lane: s => s < 424 ? 0 : channelCentre(s) + (s > 429 && s < 438 ? -1.5 : 0), label: 'the sluice' });
     } },
     { to: 660, name: 'Broken aqueduct and the abutment', run() {
+      // Hold charge through the lane group and both checkpoints, ollie the Ravine Break and the Far Break, smash the third span's stacks.
       skate(636, { lane: s => channelCentre(s), pops: [519.4, 589.4], label: 'aqueduct spans' });
       skate(644.3, { lane: 0, cap: 11, label: 'abutment court checkpoint' });
       dismount('before the abutment pair');
-      waitCool(tikisNear(649, 0, 10), 2.2, 'wait for both sentinels to breathe out');
-      mount('cross the abutment'); skate(660, { lane: 0, cap: 18, label: 'through the abutment' });
+      waitCool(tikisNear(649, 0, 10), 2.6, 'wait for both sentinels to breathe out');
+      // Skirt the stack beyond the sweep, then come back to the line for the cistern's lane stacks.
+      mount('cross the abutment'); skate(660, { lane: s => s > 650 && s < 656 ? 1.9 : 0, cap: 18, label: 'through the abutment' });
     } },
     { to: 742, name: 'The Cistern', run() {
-      // Drop in and cross at speed, trim to twelve before the ramp, climb, let the release hop land on the gallery, stop before the drain.
+      // Charge the entry lane and bank its checkpoint, drop in and cross at speed, trim to twelve before the ramp, climb, land on the gallery, stop before the drain.
       skate(708, { lane: 0, label: 'cistern: drop in and cross the basin' });
       skate(720.5, { lane: 0, cap: 12, label: 'trim speed before the ramp' });
       skate(732.2, { lane: 0, label: 'ramp up to the gallery' });
@@ -164,18 +173,20 @@ export async function runTempleJourney(r, { startStation = null } = {}) {
       walk(773.8, 2, { label: 'last step edge', tol: .22 }); jump(776.8, 1, 30, { label: 'onto the terrace' });
     } },
     { to: 876, name: 'Sanctuary terrace', run() {
-      walk(777.6, 0, { label: 'terrace checkpoint' });
-      // Push to the bank, let go of X in the air (a release on the ground would ollie), brake on the dais, then walk the rest.
+      walk(781.2, .7, { label: 'terrace checkpoint' });
+      // The wave: wait until both heads are cool for the run, push through them and up the bank; let go of X in the air, brake on the dais.
+      waitCool(tikisNear(796, 0, 8), 3.2, 'wait for the wave');
       mount('terrace'); skate(810.6, { lane: 0, label: 'launch off the bank' });
       run('fly to the dais', () => p.grounded && S() > 812, () => ({}), 240);
       run('brake on the dais', () => Math.abs(p.speed) < .3 && p.grounded, () => ({ grabHeld: p.grounded }), 420);
       run('stow the board', () => !p.freeSkate, () => ({}), 90);
-      walk(823, 0, { label: 'crystal' }); walk(833.4, 1.5, { label: 'dais back edge', tol: .25 });
-      run('drop off the dais', () => p.grounded && S() > 834.6, () => toward(838, 2.5, .8), 240);
-      walk(848.6, 3.4, { label: 'first mystery' }); walk(850.6, -3.6, { label: 'green switch approach' });
+      walk(823, 0, { label: 'crystal' }); walk(833.4, 2.2, { label: 'dais back edge', tol: .25 });
+      // Drop straight between the Nitro rows, stay right of the third head's sweep, then cut behind the height budget stack to the green switch.
+      run('drop off the dais', () => p.grounded && S() > 834.6, () => toward(839, 2.5, .8), 240);
+      walk(847.2, 2.4, { label: 'past the third sentinel' }); walk(851.4, -2.2, { label: 'green switch approach' });
       const bang = l.crates.find(c => c.nitroBang);
-      if (bang && !bang.bangUsed) { let held = false; run('green switch', () => bang.bangUsed, () => { held = p.spinning || !held; return { ...toward(852, -6, .3), spinHeld: held }; }, 240); }
-      for (let i = 0; i < 90; i++) step({}, 'watch the ring go');
+      if (bang && !bang.bangUsed) { let held = false; run('green switch', () => bang.bangUsed, () => { held = p.spinning || !held; return { ...toward(853, -4, .3), spinHeld: held }; }, 240); }
+      for (let i = 0; i < 90; i++) step({}, 'watch the rows go');
       mount('to the gate'); run('cross the gate', () => p.state === 'finished', () => ({ ...toward(Math.min(route.end - 2, S() + 6), 0, 1), jumpHeld: true }), 900);
     } },
   ];
