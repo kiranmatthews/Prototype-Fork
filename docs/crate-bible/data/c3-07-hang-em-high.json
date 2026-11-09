@@ -1291,5 +1291,1618 @@
   "Checkpoints close traversal modes: mesh 1, carpet run, mesh 2 + bonus."
  ],
  "badgeConvention": "ttBadges: red 1 / blue 2 / green 3 = time-stop crate seconds in time trial; A = crate that is an Aku crate in time trial. Drawn icon = normal-mode type. Key 'wood?' = a counted crate whose type cannot be read (gutter blur or hidden behind a badge)",
- "countingRule": "F3 cumulative counts include the checkpoint crate. C3 is printed 64 but the drawn crates give 63. The 17 Nitros of the stage-27 course (section Y) are counted in stage 7's total (95, gamepressure) and credited by the green ! in the end hallway (inferred). Steel arrows and switches are listed under 'uncounted' / 'uncountedFixtures'."
+ "countingRule": "F3 cumulative counts include the checkpoint crate. C3 is printed 64 but the drawn crates give 63. The 17 Nitros of the stage-27 course (section Y) are counted in stage 7's total (95, gamepressure) and credited by the green ! in the end hallway (inferred). Steel arrows and switches are listed under 'uncounted' / 'uncountedFixtures'.",
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "start slab, two rising slabs, two walled rooms linked by a plank and a slab, an upper ledge, then mesh 1 (short hang traverse into the screen) to C1"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "plank with an orangutan, two pairs of jump carpets (mask hint 3: into-screen distances are hard to judge), an L-room and a U-room, archway, C2"
+  },
+  {
+   "section": "S3",
+   "mode": "side-scroll along mesh 2, then into-screen",
+   "notes": "long zig-zag mesh seen side-on (TT 21–23; P3 shots 23–24) with a hole, a riding enemy, a scorpion and the bonus platform hanging below; then a landing, a hole, a moving slab and a room to C3"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "left → right: walkway, rising crate arc, pyramid platform, steps, a bowl-shaped gap, outline platform, steel walkway"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "raised step with the Nitro column, a slab held by a sabre worker, jump carpets, a room, the end hallway (stairs), the stage-27 drop-in, goal arch"
+  },
+  {
+   "section": "Y",
+   "mode": "into-screen",
+   "notes": "stage-27 course (the Nitro stretch is shown from the flank in hint 3): walled pads, single slabs, carpets under floating Nitro rows; no checkpoints; drops into S4 before the goal"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "wide floor (start slab)",
+   "kind": "flat roof slab with an L-shaped raised step and two steel arrows side by side",
+   "size": "≈5×5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "a broad, enemy-free start; the arrows are the first vertical tool (their use is not stated — inference: a bounce up the first rise)",
+   "evidence": "F3 p048L (two arrow bubbles at the start slab)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "wide floor (walled roof room 1)",
+   "kind": "sabre worker, stopwatch, two wood crates",
+   "size": "≈4×5",
+   "heightDelta": 0,
+   "edges": "walled (low parapet ≈0.5–1)",
+   "behaviour": "static",
+   "move": "walk; spin the worker from behind",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the first enemy is met inside walls, so its sabre is the only danger",
+   "evidence": "F3 p048L; P3 p014R shot 20; F3 p104L 01–03",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "bridge/plank (wooden)",
+   "kind": "plank from room 1 to the U-room",
+   "size": "≈2×5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "a narrow crossing with open edges between two safe rooms",
+   "evidence": "F3 p048L; F3 p104L 02 (plank floor)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "wide floor (walled U-shaped roof room)",
+   "kind": "two plank ends with a wall stub between them",
+   "size": "≈4×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "turns the route and resets the player between crossings",
+   "evidence": "F3 p048L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "wide floor (walled L-shaped roof room 2)",
+   "kind": "carpet researcher floating at the far corner, 2×2 crate block, steel arrow by the back wall",
+   "size": "≈6×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the room holds both tools for the climb ahead: the arrow and the floating enemy",
+   "evidence": "F3 p048L; TA1",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-f",
+   "section": "S1",
+   "shape": "narrow ledge (upper footing with an archway)",
+   "kind": "? by the arch; the Aku crate floats at the mesh entrance",
+   "size": "≈2–3 wide",
+   "heightDelta": "+2 to +3 (estimate)",
+   "edges": "walled on one side",
+   "behaviour": "static",
+   "move": "arrow, or enemy-bounce (stomp the carpet researcher, TT 06)",
+   "roles": [
+    "PERCH"
+   ],
+   "why": "the first height step is offered with two tools, one of them an enemy",
+   "evidence": "F3 p048L TA1; F3 p104L 06",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-g",
+   "section": "S1",
+   "shape": "square pad (walled mesh-exit pad)",
+   "kind": "W W, then the C1 crate",
+   "size": "≈3×3",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the save closes the first traversal mode",
+   "evidence": "F3 p048R (\"11コ\")",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "bridge/plank (wooden)",
+   "kind": "plank from C1 with an orangutan on it; a carpet researcher hovers beside it; stepped crate group",
+   "size": "≈2×5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk; slide the orangutan (TA2)",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "an enemy that is also a tool, placed where it cannot be walked around",
+   "evidence": "F3 p048R; F3 p104L 11–13",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "square pad (jump carpet)",
+   "kind": "patterned carpet pads, used in pairs",
+   "size": "≈2×2 each (P3 shot 22)",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "bouncy (bounces on landing; holding jump gives a high bounce)",
+   "move": "bounce pad",
+   "roles": [
+    "STEPPING",
+    "TIMING-STEP"
+   ],
+   "why": "a forced step: it moves you on whether you are ready or not",
+   "evidence": "P3 p014R shot 22; F3 p046 tips; F3 p104L 14–17",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "wide floor (walled L-shaped roof room)",
+   "kind": "orangutan, steel arrow in the inner corner, 2×2 block with a ? floating above-right",
+   "size": "≈5×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; arrow to the floater",
+   "roles": [
+    "ARENA",
+    "REST"
+   ],
+   "why": "the landing room after the first carpets holds a second springboard-enemy and an arrow",
+   "evidence": "F3 p048R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "wide floor (walled U-shaped roof room)",
+   "kind": "open-fronted room before the second carpets",
+   "size": "≈4×3",
+   "heightDelta": 0,
+   "edges": "walled on three sides",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "a rest right before the carpet run that mask hint 3 warns about",
+   "evidence": "F3 p048R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "wide floor (landing and archway before C2)",
+   "kind": "floating ? over two wood crates beyond the arch; C2 right after",
+   "size": "≈3×4",
+   "heightDelta": 0,
+   "edges": "walled (arch block)",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the save sits behind a doorway after the carpets",
+   "evidence": "F3 p048R–p049L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "square pad (walled bonus platform under mesh 2)",
+   "kind": "checkered floor, steel arrow",
+   "size": "≈3×3",
+   "heightDelta": "−3 to −4 below the mesh",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "drop in; arrow back up (inferred)",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "the only rest along the long mesh",
+   "evidence": "F3 p049L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "square pad (wooden landing at the mesh end)",
+   "kind": "steel arrow with W W ? partly above it; a hole just ahead",
+   "size": "≈3×3",
+   "heightDelta": 0,
+   "edges": "open on the hole side",
+   "behaviour": "static",
+   "move": "stop, then break the crates",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "the reward over the arrow turns the bounce into a launch toward the hole (mask hint 4)",
+   "evidence": "F3 p049L mask hint 4",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "square pad (moving slab)",
+   "kind": "white slab that moves, with a carpet researcher on or beside it",
+   "size": "≈2×2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "moving (axis and cycle not visible)",
+   "move": "ride",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "the stage's only moving footing, shared with a floating enemy",
+   "evidence": "F3 p049R (blurred: researcher on a slab)",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "wide floor (walled roof room)",
+   "kind": "2×2 crate block, then C3",
+   "size": "≈4×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the save closes mesh 2 and the bonus",
+   "evidence": "F3 p049R (\"64コ\")",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "bridge/plank (long wooden walkway)",
+   "kind": "two slot crates and a wood crate; a steel ! hangs below the first ledge",
+   "size": "≈10 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "a long safe floor for the slot lives; the ! under the ledge is out of reach by hand (F3 hint: bazooka or TNT blast)",
+   "evidence": "F3 p057L; P3 p015L shot 28",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "wide floor (raised deck with the pyramid)",
+   "kind": "pyramid 4/3/1 with a slot in the bottom row",
+   "size": "≈5 long",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "step up",
+   "roles": [
+    "REST"
+   ],
+   "why": "the big crate pile sits on its own raised deck",
+   "evidence": "F3 p057L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "stairs (two small steps down)",
+   "kind": "two short blocks stepping down",
+   "size": "≈1–2 each",
+   "heightDelta": "−1 per step",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "hop down",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a short descent before the gap",
+   "evidence": "F3 p057L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-d",
+   "section": "B",
+   "shape": "square pad (wooden outline platform)",
+   "kind": "outline crate that becomes a wooden arrow",
+   "size": "≈4 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static; switch-made arrow",
+   "move": "walk past, come back after the !",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the tool for the high crates is built here only after the switch beyond is pressed",
+   "evidence": "F3 p057L; P3 p015L shot 30",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-e",
+   "section": "B",
+   "shape": "bridge/plank (steel walkway)",
+   "kind": "TNT on top; steel ! directly below the walkway; exit pad beyond",
+   "size": "≈6 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "stomp the TNT, step back",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the blast reaches through the walkway to the switch",
+   "evidence": "F3 p057L; P3 p015L shot 29",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "wide floor (walled roof room; raised wooden stage at one side)",
+   "kind": "C3 crate on the floor; Nitro/W/slot column on the step",
+   "size": "≈4×4; step ≈2 wide",
+   "heightDelta": "+1 (step)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "slide or spin low",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the puzzle column stands where the player lands from the save",
+   "evidence": "F3 p049R; P3 p015L shot 25",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "bridge/plank (wooden)",
+   "kind": "plank toward the sabre worker's slab",
+   "size": "≈2×3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "lines up the jump to the occupied slab",
+   "evidence": "F3 p049R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "square pad (single floating slab)",
+   "kind": "the sabre worker stands on it",
+   "size": "≈2×2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "land, spin him from behind",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "the smallest footing in the stage carries an enemy",
+   "evidence": "F3 p049R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "wide floor (walled roof room)",
+   "kind": "orangutan and a 2×2 block; power stone beside",
+   "size": "≈4×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "last plain room before the switch hallway",
+   "evidence": "F3 p049R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "stairs (end hallway)",
+   "kind": "grey ! and green !, two outline crates and a ?",
+   "size": "≈2–3 wide",
+   "heightDelta": "+2 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; spin-touch the ! in mid-jump (TA6)",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "a narrow indoor hallway focuses the player on the switches",
+   "evidence": "F3 p049R; P3 p015L shot 27; F3 p104L 29–30",
+   "confidence": "high"
+  },
+  {
+   "id": "P-Y-a",
+   "section": "Y",
+   "shape": "wide floor (walled roof rooms)",
+   "kind": "start pads; three sabre workers across the course",
+   "size": "≈4×4 each",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; bazooka the distant worker (hint 1)",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "the same rooms as stage 7, more enemies",
+   "evidence": "F3 p056L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-Y-b",
+   "section": "Y",
+   "shape": "stepping stones (three slabs descending)",
+   "kind": "slab chain between two walled pads",
+   "size": "≈2×2 each",
+   "heightDelta": "−0.5 per slab (estimate)",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "plain hops",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a calmer chain between the Nitro carpet stretches",
+   "evidence": "F3 p056R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-Y-c",
+   "section": "Y",
+   "shape": "wide floor (walled roof room with the yellow gem)",
+   "kind": "last pad; the course then drops into stage 7 before its goal",
+   "size": "≈4×4",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "the reward pad ends the no-checkpoint run",
+   "evidence": "F3 p056R hint 4",
+   "confidence": "high"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "bottomless pit between rooftops (two stepping slabs)",
+   "width": "≈1 between slabs",
+   "heightDelta": "+0.5 to +1 per slab (rising)",
+   "landing": "floating slab ≈2×2, then walled room 1",
+   "lethal": true,
+   "runUp": "≈3",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "death (fall between roofs)",
+   "nearby": [
+    "S1-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "first gaps are short, rising steps onto square slabs — the stage's basic crossing shown with nothing else in it",
+   "evidence": "F3 p048L (two white slabs between the start and room 1)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "bottomless pit between rooftops (single stepping slab)",
+   "width": "≈1–1.5 on each side of the slab",
+   "heightDelta": 0,
+   "landing": "slab ≈2×2, then room 2",
+   "lethal": true,
+   "runUp": "end of a plank",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "death (fall between roofs)",
+   "nearby": [
+    "P-S1-d",
+    "P-S1-e"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "two hops with a one-slab stop in the middle: the rhythm unit of the rooftops",
+   "evidence": "F3 p048L (white slab between the plank and room 2)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "monkey-bar mesh (swing/vine-type hang traverse) over a void — mesh 1",
+   "width": "not visible (≈4–8 long; drawn across the gutter)",
+   "heightDelta": 0,
+   "landing": "walled pad with W W, then C1",
+   "lethal": true,
+   "runUp": "jump from the upper ledge",
+   "move": [
+    "climb (jump-grab the mesh, hang-move)",
+    "spin while hanging"
+   ],
+   "coupling": "grab first, then spin — spinning at the moment of grabbing drops you (mask hint 1)",
+   "failure": "death (fall into the void)",
+   "nearby": [
+    "S1-d",
+    "S1-e"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the new traversal is short, into the screen and enemy-free; its one rule is the input order",
+   "evidence": "F3 p048L–p048R mask hint 1; F3 p104L 07–10; P3 p014R shot 21",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "chasm with bounce (two jump carpets)",
+   "width": "≈1–2 between plank, carpets and room",
+   "heightDelta": 0,
+   "landing": "carpet ≈2×2, carpet, then the L-room",
+   "lethal": true,
+   "runUp": "end of the plank",
+   "move": [
+    "bounce pad (jump carpet)",
+    "held/high (straight-up bounce for the hidden ?)"
+   ],
+   "coupling": "carpets bounce you on landing, so the run cannot stop until the room (inferred)",
+   "failure": "death (fall between roofs)",
+   "nearby": [
+    "S2-a",
+    "S2-b"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the bounce pad is taught as a pair; the high bounce it gives is also how the hidden crate is reached",
+   "evidence": "F3 p048R (two carpets, the 3-badge ? above the second); P3 p014R shot 22; F3 p104L 14–15",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "chasm with bounce (two jump carpets rising to the archway)",
+   "width": "≈1–2",
+   "heightDelta": "+1 to +2 overall (estimate)",
+   "landing": "wooden landing in front of the archway",
+   "lethal": true,
+   "runUp": "U-room edge",
+   "move": [
+    "bounce pad (jump carpet)",
+    "plain"
+   ],
+   "coupling": "no stop on the carpets (inferred)",
+   "failure": "death (fall between roofs)",
+   "nearby": [
+    "S2-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "mask hint 3: into the screen, carpet distances are hard to judge — take them one at a time with big jumps",
+   "evidence": "F3 p048R mask hint 3",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "monkey-bar mesh (swing/vine-type hang traverse) over a void — mesh 2, long zig-zag",
+   "width": "≈25–35 long (estimate from crate spacing); strip ≈2–3 wide",
+   "heightDelta": 0,
+   "landing": "wooden landing at the far end",
+   "lethal": true,
+   "runUp": "jump from the C2 ledge",
+   "move": [
+    "climb (hang-move)",
+    "spin while hanging"
+   ],
+   "coupling": "carpet researcher rides along it; scorpion clings under it",
+   "failure": "death (fall into the void)",
+   "nearby": [
+    "S3-a",
+    "S3-b",
+    "S3-d",
+    "S3-e",
+    "S3-f",
+    "E-S3-a",
+    "E-S3-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the short lesson of mesh 1 becomes a long side-on traverse with two moving enemies and crates spun while hanging",
+   "evidence": "F3 p049L; F3 p104L 19–23; P3 p014R shots 23–24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "floor hole in the mesh (missing panel) near its start",
+   "width": "≈2×1 (one panel; estimate)",
+   "heightDelta": 0,
+   "landing": "mesh beyond: the strips on both sides go round the hole",
+   "lethal": true,
+   "runUp": "—",
+   "move": [
+    "climb (route round the hole)"
+   ],
+   "coupling": "a ? floats at the hole (S3-c)",
+   "failure": "death (fall through)",
+   "nearby": [
+    "S3-c"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the climbing surface itself has a gap: the player must read the mesh as terrain",
+   "evidence": "F3 p049L (rectangular opening in the mesh)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "drop-down from the mesh to the bonus platform",
+   "width": "n/a",
+   "heightDelta": "−3 to −4 (estimate)",
+   "landing": "checkered walled pad ≈3×3 with a steel arrow",
+   "lethal": false,
+   "runUp": "—",
+   "move": [
+    "drop (let go)"
+   ],
+   "coupling": "the arrow on the pad leads back up (inferred from the arrow bubble)",
+   "failure": "not a failure (it is the route into the bonus)",
+   "nearby": [
+    "B"
+   ],
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "the optional room hangs directly under the route: letting go is the entrance",
+   "evidence": "F3 p049L (bonus pad under the mesh, arrow bubble, \"P.106\")",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-d",
+   "section": "S3",
+   "kind": "floor hole just past the mesh-end landing",
+   "width": "not visible (≈2)",
+   "heightDelta": 0,
+   "landing": "archway and the next roof",
+   "lethal": true,
+   "runUp": "from the landing",
+   "move": [
+    "plain (after stopping)"
+   ],
+   "coupling": "the arrow bounce + stomp carries a moving player into it",
+   "failure": "death (fall)",
+   "nearby": [
+    "S3-g"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a gap that only kills the player who keeps the tool's momentum",
+   "evidence": "F3 p049L mask hint 4 (screenshot: arrow, crate, hole ahead)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-e",
+   "section": "S3",
+   "kind": "moving-platform crossing (slab with a carpet researcher)",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "walled room with the 2×2",
+   "lethal": true,
+   "runUp": "not visible",
+   "move": [
+    "ride",
+    "plain"
+   ],
+   "coupling": "platform cycle and the hovering enemy",
+   "failure": "death (fall)",
+   "nearby": [
+    "S3-h",
+    "E-S3-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "a timing crossing right before the save",
+   "evidence": "F3 p049R",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "bottomless pit holding a bowl-shaped object",
+   "width": "≈2–3",
+   "heightDelta": 0,
+   "landing": "wooden platform with the outline crate",
+   "lethal": true,
+   "runUp": "short",
+   "move": [
+    "plain"
+   ],
+   "coupling": "function of the bowl not stated",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-d"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the only gap of the bonus sits between the stair and the switch puzzle",
+   "evidence": "F3 p057L (grey bowl between two platforms)",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "bottomless pit to a single slab held by a sabre worker",
+   "width": "≈1–2",
+   "heightDelta": 0,
+   "landing": "slab ≈2×2 with the worker on it",
+   "lethal": true,
+   "runUp": "end of the plank",
+   "move": [
+    "plain"
+   ],
+   "coupling": "the worker swings when facing you; jump when his back is turned",
+   "failure": "death (fall), or a hit from the sabre",
+   "nearby": [
+    "E-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "an occupied landing: the stop before the jump is where the timing is read",
+   "evidence": "F3 p049R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "chasm with bounce (jump carpets in a line)",
+   "width": "≈1–2",
+   "heightDelta": 0,
+   "landing": "walled room with the orangutan",
+   "lethal": true,
+   "runUp": "from the slab",
+   "move": [
+    "bounce pad (jump carpet)",
+    "held/high (straight up for the hidden ?, mask hint 6)"
+   ],
+   "coupling": "no stop on the carpets (inferred)",
+   "failure": "death (fall between roofs)",
+   "nearby": [
+    "S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the S2 lesson repeated without the header warning: the crate above a carpet",
+   "evidence": "F3 p049R mask hint 6; P3 p015L shot 26; F3 p104L 25–28",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-c",
+   "section": "S4",
+   "kind": "bottomless pit before the goal arch (plank and a slab with a carpet researcher)",
+   "width": "not visible",
+   "heightDelta": 0,
+   "landing": "goal arch",
+   "lethal": true,
+   "runUp": "not visible",
+   "move": [
+    "plain"
+   ],
+   "coupling": "the floating enemy on the slab",
+   "failure": "death (fall)",
+   "nearby": [
+    "E-S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "one more occupied crossing after the stage-27 course rejoins",
+   "evidence": "F3 p049R",
+   "confidence": "low"
+  },
+  {
+   "id": "G-Y-a",
+   "section": "Y",
+   "kind": "bottomless pit between rooftops (single slabs and planks)",
+   "width": "≈1–2",
+   "heightDelta": 0,
+   "landing": "slabs and pads",
+   "lethal": true,
+   "runUp": "short",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "death — restart the course (no checkpoints)",
+   "nearby": [
+    "Y-a"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "known crossings, but every fall costs the whole course",
+   "evidence": "F3 p056L–p056R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-Y-b",
+   "section": "Y",
+   "kind": "chasm with bounce (jump carpets under floating Nitro rows)",
+   "width": "≈1–2",
+   "heightDelta": 0,
+   "landing": "slabs and walled pads",
+   "lethal": true,
+   "runUp": "from the pads",
+   "move": [
+    "bounce pad (jump carpet)",
+    "double (high off the carpet)",
+    "spin-extended (tornado spin over the Nitros)"
+   ],
+   "coupling": "five floating rows of three Nitros above the line",
+   "failure": "death — restart the course (no checkpoints)",
+   "nearby": [
+    "Y-b",
+    "O-Y-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the carpet bounce now has to clear explosives: same geometry, harder air",
+   "evidence": "F3 p056R hints 2–3",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 5,
+   "moves": [
+    "plain",
+    "plain",
+    "plain",
+    "arrow or enemy-bounce",
+    "climb (jump-grab the mesh)"
+   ],
+   "rhythm": "even hops, then one vertical",
+   "maxGap": "≈1–1.5",
+   "rest": "P-S1-b, P-S1-e (walled rooms)",
+   "noStop": false,
+   "why": "slab hops between rooms, a height step with two tools, then the first grab: each new move appears once, in order",
+   "evidence": "F3 p048L; F3 p104L 06–08"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "plain (onto carpet 1)",
+    "bounce pad",
+    "held/high (for the hidden ?)"
+   ],
+   "rhythm": "even (one bounce per beat)",
+   "maxGap": "≈1–2",
+   "rest": "P-S2-c (L-room)",
+   "noStop": true,
+   "why": "carpets bounce on landing, so a carpet pair is a forced two-beat sequence between rooms (inferred from the carpet behaviour)",
+   "evidence": "F3 p048R; P3 p014R shot 22; F3 p104L 14–15"
+  },
+  {
+   "id": "J-S2-b",
+   "section": "S2",
+   "count": 3,
+   "moves": [
+    "bounce pad",
+    "bounce pad",
+    "plain (onto the landing)"
+   ],
+   "rhythm": "even (one carpet at a time, big jumps — mask hint 3)",
+   "maxGap": "≈1–2",
+   "rest": "P-S2-e (C2)",
+   "noStop": true,
+   "why": "the second pair rises toward the arch; the guide asks for one carpet per jump because into-screen distance misleads",
+   "evidence": "F3 p048R mask hint 3; F3 p104L 17"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 2,
+   "moves": [
+    "arrow (stopped)",
+    "plain (over the hole)"
+   ],
+   "rhythm": "stop-and-go",
+   "maxGap": "not visible (≈2)",
+   "rest": "P-S3-d (C3 room)",
+   "noStop": false,
+   "why": "the mesh-end landing asks the player to stop before using the arrow, then jump the hole as a separate beat",
+   "evidence": "F3 p049L mask hint 4"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "plain (onto the guarded slab)",
+    "plain",
+    "bounce pad",
+    "held/high"
+   ],
+   "rhythm": "syncopated (wait for the worker's back, then bounce)",
+   "maxGap": "≈1–2",
+   "rest": "P-S4-d",
+   "noStop": false,
+   "why": "the occupied slab forces a pause that the carpets then remove: wait, then commit",
+   "evidence": "F3 p049R; F3 p104L 25–28"
+  },
+  {
+   "id": "J-B-a",
+   "section": "B",
+   "count": 8,
+   "moves": [
+    "crate-bounce (rising arc of four ?)",
+    "plain",
+    "plain",
+    "plain",
+    "plain",
+    "arrow (materialised wooden arrow)",
+    "crate-bounce (three ? descending)",
+    "plain"
+   ],
+   "rhythm": "accelerating up the arc, then stop-and-go at the switch puzzle",
+   "maxGap": "≈2–3",
+   "rest": "exit pad",
+   "noStop": false,
+   "why": "the bonus writes its jump path in crates (the arc), then makes the player backtrack to a tool they built",
+   "evidence": "F3 p057L; P3 p015L shots 28–30"
+  },
+  {
+   "id": "J-Y-a",
+   "section": "Y",
+   "count": 8,
+   "moves": [
+    "plain",
+    "bounce pad",
+    "double (high off the carpet)",
+    "spin-extended (tornado float over Nitros)",
+    "plain",
+    "plain",
+    "bounce pad",
+    "bounce pad"
+   ],
+   "rhythm": "even, with no checkpoint to break it",
+   "maxGap": "≈1–2",
+   "rest": "walled pads (no checkpoints)",
+   "noStop": true,
+   "why": "the hardest air of the stage family: carpet bounces that must clear floating Nitro rows, one life per attempt",
+   "evidence": "F3 p056R hints 2–3"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "launch trap before a hole (arrow block with crates above it)",
+   "placement": "on platform (mesh-end landing); hole across the path ahead",
+   "timing": "static; the bounce is player-triggered; the hole is visible from the landing",
+   "counter": [
+    "wait-and-go (stop and look first)",
+    "avoid (do not stomp with the bounce momentum)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-g",
+    "G-S3-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "turns a reward and a tool into the danger: the momentum, not the hole, is the obstacle (mask hint 4)",
+   "evidence": "F3 p049L mask hint 4",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "Nitro on top of a wood/slot column (daruma-otoshi)",
+   "placement": "on platform (raised step beside C3)",
+   "timing": "static; the slot crate cycles and turns to steel if left — the countdown pushes the player",
+   "counter": [
+    "slide under (take the slot out)",
+    "destroy low (spin low)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-a",
+    "C3"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST"
+   ],
+   "why": "removal order is the whole puzzle; a jump or high spin reaches the Nitro",
+   "evidence": "F3 p049R mask hint 5; P3 p015L shot 25",
+   "confidence": "high"
+  },
+  {
+   "id": "O-B-a",
+   "section": "B",
+   "kind": "TNT on the metal walkway above a ! switch (blast switch)",
+   "placement": "on platform (walkway); switch below",
+   "timing": "3 s fuse after a stomp; a spin blows it at once (F3 hint) — the count is the warning",
+   "counter": [
+    "destroy (stomp, then step back)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "B-f",
+    "B-d outline → wooden arrow"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the blast is the only way to press the switch under the walkway",
+   "evidence": "F3 p057L hint; P3 p015L shot 29",
+   "confidence": "high"
+  },
+  {
+   "id": "O-Y-a",
+   "section": "Y",
+   "kind": "Nitro 2-stack under a platform edge",
+   "placement": "below (under the take-off edge)",
+   "timing": "static",
+   "counter": [
+    "avoid",
+    "shoot (bazooka)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-Y-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "punishes a short jump off the pad",
+   "evidence": "F3 p056L",
+   "confidence": "high"
+  },
+  {
+   "id": "O-Y-b",
+   "section": "Y",
+   "kind": "floating Nitro rows (five rows of three) above the carpet line",
+   "placement": "overhead / across the path (inside the jump arc)",
+   "timing": "static; visible ahead",
+   "counter": [
+    "jump over (double jump high off the carpet, then tornado-spin float)",
+    "shoot (bazooka, only up to the hint-2 platform)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-Y-b carpets"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEST"
+   ],
+   "why": "explosives placed in the space a carpet bounce passes through",
+   "evidence": "F3 p056R hints 2–3",
+   "confidence": "high"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "sabre worker (サーベル作業員)",
+   "count": 1,
+   "archetype": "patrol-1D (paces a fixed spot; swinging type)",
+   "behaviour": "walks away and back; swings the sabre when facing Crash; the swishing sound marks the swing (TT 03)",
+   "counter": [
+    "spin (when he shows his back)",
+    "shoot (bazooka as he turns, TT 01–02)"
+   ],
+   "fails": [
+    "approaching from the front"
+   ],
+   "placement": "on line in walled room 1",
+   "roles": [
+    "TEACH",
+    "TIMING-GATE"
+   ],
+   "firstAlone": true,
+   "firstAloneNote": "inside a walled room, no gap beside him",
+   "why": "a turn-your-back timing enemy taught where only the sword can hurt",
+   "evidence": "F3 p048L; F3 p047R; P3 p014R shot 20; F3 p104L 01–03",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "magic-carpet researcher (魔法のカーペット研究員)",
+   "count": 1,
+   "archetype": "flier (floats slowly back and forth on a fixed route)",
+   "behaviour": "the least dangerous Arabian monster; wait for it to come close (F3 p047R)",
+   "counter": [
+    "spin",
+    "stomp (jump on; doubles as a step to the upper footing, TT 06)",
+    "body slam"
+   ],
+   "fails": [],
+   "placement": "flank (far corner of room 2)",
+   "roles": [
+    "TOOL/STEP",
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "why": "the first height step can be climbed off this enemy",
+   "evidence": "F3 p048L TA1; F3 p047R; F3 p104L 06",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "pot-carrying orangutan (オットトウータン)",
+   "count": 1,
+   "archetype": "patrol-1D (staggers along the plank carrying pots)",
+   "behaviour": "a spin knocks a pot onto its head and it reels — it can then be stood on to jump higher than normal; a slide at its feet kills it at once",
+   "counter": [
+    "slide (fling into the 1-s box, TA2)",
+    "spin (turns it into a springboard)",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "on line on the plank (choke), next to the stepped crate group",
+   "roles": [
+    "TOOL/STEP",
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "on a narrow plank with a carpet researcher hovering beside it",
+   "why": "an enemy designed to be used: projectile (slide) or springboard (spin)",
+   "evidence": "F3 p048R TA2; F3 p047R; F3 p104L 11",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "magic-carpet researcher (魔法のカーペット研究員)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "hovers beside the plank",
+   "counter": [
+    "spin",
+    "fling into (a slid orangutan can take it out, TA2)"
+   ],
+   "fails": [],
+   "placement": "flank of the plank",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "a second target that rewards the orangutan fling",
+   "evidence": "F3 p048R TA2",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-c",
+   "section": "S2",
+   "kind": "pot-carrying orangutan (オットトウータン)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "on the L-room beside a steel arrow",
+   "counter": [
+    "slide",
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "on line in the L-room",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": null,
+   "why": "a springboard next to an arrow: two ways to the floating ?",
+   "evidence": "F3 p048R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "magic-carpet researcher (魔法のカーペット研究員)",
+   "count": 1,
+   "archetype": "flier (moves along the mesh line)",
+   "behaviour": "rides along mesh 2 near its first peak",
+   "counter": [
+    "spin (while hanging)",
+    "avoid"
+   ],
+   "fails": [
+    "stomp (not possible while hanging)"
+   ],
+   "placement": "on the mesh line (moving)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "a moving blocker on the hang path forces a spin or a wait mid-traverse",
+   "evidence": "F3 p049L; F3 p104L 19–20",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "upside-down scorpion (サカサソリン)",
+   "count": 1,
+   "archetype": "chaser (clings under the mesh and crawls toward Crash with a rustle)",
+   "behaviour": "touch = hit; F3: spin it from as far away as possible",
+   "counter": [
+    "spin (from a distance)"
+   ],
+   "fails": [
+    "touching it",
+    "stomp (impossible while hanging)"
+   ],
+   "placement": "on the mesh line (mid-traverse)",
+   "roles": [
+    "GUARD",
+    "HURDLE"
+   ],
+   "firstAlone": true,
+   "firstAloneNote": "alone on its leg of the mesh, but over a void",
+   "why": "the mesh-only enemy, spin-only: the hang traverse gets its own threat",
+   "evidence": "F3 p049L; F3 p047R; P3 p014R shot 23",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-c",
+   "section": "S3",
+   "kind": "magic-carpet researcher (魔法のカーペット研究員)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "on or beside the moving slab before C3",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "moving platform",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": null,
+   "why": "two cycles on one crossing: the slab and the enemy",
+   "evidence": "F3 p049R",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "sabre worker (サーベル作業員)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "paces on a single small slab",
+   "counter": [
+    "spin (when he shows his back)"
+   ],
+   "fails": [
+    "landing in front of him"
+   ],
+   "placement": "landing platform (single slab)",
+   "roles": [
+    "GUARD",
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "the S1 timing enemy returns on the smallest footing of the stage",
+   "evidence": "F3 p049R",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "pot-carrying orangutan (オットトウータン)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "in the room after the carpets",
+   "counter": [
+    "slide",
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "on line in the room",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": null,
+   "why": "a last springboard beside the 2×2 block",
+   "evidence": "F3 p049R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "magic-carpet researcher (魔法のカーペット研究員)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "on the last slab before the goal arch",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "landing platform (last slab)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "keeps the very last crossing occupied",
+   "evidence": "F3 p049R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-Y-a",
+   "section": "Y",
+   "kind": "sabre worker (サーベル作業員)",
+   "count": 3,
+   "archetype": "patrol-1D",
+   "behaviour": "one on an early pad, two together on a later pad",
+   "counter": [
+    "shoot (bazooka from just within range, hint 1)",
+    "spin"
+   ],
+   "fails": [
+    "approaching from the front"
+   ],
+   "placement": "on line on walled pads",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": null,
+   "why": "more of the known enemy on a course without checkpoints",
+   "evidence": "F3 p056L hint 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-Y-b",
+   "section": "Y",
+   "kind": "magic-carpet researcher (魔法のカーペット研究員)",
+   "count": 1,
+   "archetype": "flier",
+   "behaviour": "on a slab after the archway",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "occupied slab, as in S3/S4",
+   "evidence": "F3 p056L",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start slab (two steel arrows)",
+    "two rising slabs",
+    "room 1: sabre worker + W W (wait for his back)",
+    "plank",
+    "U-room",
+    "plank + single slab",
+    "room 2: carpet researcher + 2×2 + steel arrow",
+    "arrow or enemy bounce to the upper ledge",
+    "? by the arch",
+    "Aku high at the mesh entrance",
+    "mesh 1 (grab, then spin)",
+    "exit pad: W W",
+    "C1"
+   ],
+   "gaps": 3,
+   "enemies": 2,
+   "hazards": 0
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "plank: orangutan + carpet researcher + stepped group",
+    "carpet",
+    "carpet (hidden ? above: straight-up held bounce)",
+    "L-room: orangutan + steel arrow + 2×2 + floater",
+    "U-room",
+    "carpet",
+    "carpet (mask hint 3)",
+    "landing + archway",
+    "floating ? over W W",
+    "C2"
+   ],
+   "gaps": 2,
+   "enemies": 3,
+   "hazards": 0
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "mesh 2 (side view): W, ?",
+    "mesh hole (route round; ? at the hole)",
+    "slot above the mesh",
+    "carpet researcher riding the mesh",
+    "W W",
+    "scorpion (spin from afar)",
+    "W W",
+    "[drop to the bonus platform → B → arrow back up]",
+    "mesh-end landing: steel arrow + W W ?",
+    "stop",
+    "hole",
+    "archway",
+    "moving slab + carpet researcher",
+    "room: 2×2",
+    "C3"
+   ],
+   "gaps": 5,
+   "enemies": 3,
+   "hazards": 1
+  },
+  {
+   "section": "B",
+   "beats": [
+    "walkway: 2 slots + W; ! hangs below the ledge",
+    "rising arc of four ?",
+    "raised platform: pyramid 4/3/1 with slot",
+    "two steps down",
+    "gap with a bowl",
+    "outline platform",
+    "steel walkway: TNT over the ! (stomp, step back)",
+    "back to the outline (now a wooden arrow)",
+    "three ? descending from the green !",
+    "exit pad"
+   ],
+   "gaps": 1,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "raised step: Nitro/W/slot column (slide)",
+    "sabre worker",
+    "plank",
+    "slab held by a sabre worker",
+    "carpets (hidden ? above: straight up)",
+    "room: orangutan + 2×2",
+    "power stone",
+    "end hallway (stairs): grey ! + green !",
+    "outlines + ?",
+    "(stage-27 drop-in)",
+    "plank + slab with a carpet researcher",
+    "goal arch"
+   ],
+   "gaps": 3,
+   "enemies": 3,
+   "hazards": 1
+  },
+  {
+   "section": "Y",
+   "beats": [
+    "walled pads + sabre worker",
+    "slab",
+    "pad (Nitro 2-stack under its edge)",
+    "plank + arch",
+    "carpet researcher on a slab",
+    "pad with two sabre workers",
+    "carpet",
+    "carpet + slab",
+    "pad (bazooka limit; Nitros on the right)",
+    "three slabs descending",
+    "pad",
+    "two carpets under Nitro rows",
+    "yellow-gem pad",
+    "drop into S4"
+   ],
+   "gaps": 2,
+   "enemies": 4,
+   "hazards": 2
+  }
+ ],
+ "geometryObservations": [
+  "Rest/test alternation is literal: every walled roof room is a rest or an arena, every crossing between rooms (plank, slab, carpet pair, mesh, moving slab) is the test. The F3 theme tip — stop on each foothold at first — describes this rhythm.",
+  "Each crossing type is shown once in a calm form and then reused harder: slab hops (S1) → an occupied slab (G-S4-a); mesh 1, short and into the screen (G-S1-c) → mesh 2, long, side-on, with a hole and two enemies (G-S3-a/b); carpets as a pair (G-S2-a) → carpets after a guarded slab (G-S4-b) → carpets under Nitro rows (G-Y-b).",
+  "Jump carpets are forced steps: they bounce on landing, so a carpet pair is a no-stop two-beat sequence (J-S2-a/b). Pairs are short and always end on a walled room, which keeps the forced part brief.",
+  "The carpet's high bounce is reused as a vertical reward: the hidden ? above a carpet (S2-b, S4-c) costs no extra tool, only the decision to bounce straight up and to look above the frame.",
+  "Mesh rules escalate from input to terrain to enemies: grab-then-spin (mask hint 1), a hole in the mesh to route around (G-S3-b), a rider on the line and a spin-only scorpion under it (E-S3-a/b).",
+  "Enemies here are mostly tools or timing checks, not threats: the carpet researcher is a step (TT 06), the orangutan a projectile or springboard (TA2, F3 p047R); only the sabre worker attacks, and only when facing you.",
+  "Occupied landings are the main enemy placement: a sabre worker on a single slab (E-S4-a), carpet researchers on the moving slab and the last slab (E-S3-c, E-S4-c). The player must read the enemy from the previous footing.",
+  "Tools can push the player into gaps: the arrow-plus-crate launch toward the hole at the mesh end (O-S3-a) is the stage's one momentum trap, placed after several safe arrows.",
+  "The bonus hangs directly under the route (G-S3-c): letting go of the mesh is the entrance and an arrow is the way back, so the optional room costs no detour on the map.",
+  "Checkpoints close traversal modes — C1 after mesh 1, C2 after the carpets, C3 after mesh 2 and the moving slab — while the stage-27 course (Y) uses the same parts with no checkpoint at all: the hardest air has the least recovery.",
+  "Hazard count is tiny on the main route (one Nitro column, one launch trap): the stage's danger is the fall, and its escalation comes from footing size and forced bounces rather than from obstacles.",
+  "The time-trial line is a vertical line: hold-jump high bounces, spins at the apex to extend air, catching the mesh out of a jump-spin (TT 07–08, 14–15, 27) — the geometry rewards height control more than speed."
+ ],
+ "geometryTransfer": [
+  "Rooftop rooms and crossings: walled 5×6 m `platform` rooms with 0.6–1.2 m parapets, linked by 2.3 m-wide planks and single 2.3 m slabs over a `pit` (gaps 1.2–1.7 m, far inside the 5.6 m running jump). Rooms carry checkpoints and enemies; plank and parapet edges grind by default, so a skater gets ledge lines across the same course.",
+  "Carpet pairs as `trampoline` decks (≈2.3×2.3 m) 1.2–2.3 m apart, always two per run and always ending on a room; put one crate high above the second deck, reachable only with the held-jump bounce (`amp`), outside the default framing; show one such crate openly first, then hide the second (S2-b → S4-c).",
+  "Mesh analog: we have no hang mesh, so use an authored `rail` or `rope` across a void as the traversal line, with one break to hop (the mesh hole), one `floater` patrolling along it (no stomp, like the spin-only scorpion), crates on the line ≥5 m apart (smashed at ≥12.5 m/s), and a `bonusplatform` below the line that the player reaches by dropping off it.",
+  "Occupied slab: a single 2.3 m slab after a 1.5 m gap with a `charger` on it; the counter is to wait on the previous room for its telegraphed dash to pass, then jump — the Hang 'em High sabre-worker timing.",
+  "Launch trap: a steel arrow with a crate floating above it, 3–5 m before a `pit`: arrow (3.77 m) plus stomp (2.87 m) with forward speed carries a running player several metres on, so the reward becomes the fall. Place it only after two safe arrows.",
+  "Hard variant without checkpoints: reuse the same rooms, slabs and trampolines with floating Nitro rows one crate above the bounce apex; the double jump (+1.74 m) is the counter, as the stage-27 tornado float was in Crash 3."
+ ]
 }

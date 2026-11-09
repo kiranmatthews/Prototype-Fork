@@ -329,6 +329,173 @@ Loss: 2 outline crates and every Nitro (1 + 17 by the reconstructed total).
    ollie (1.7 m); each exposed edge pair is a 2-crate grind row (2.3 m) that consumes its crates.
    Repeating this unit once per platform gives skaters and walkers the same predictable fruit beat.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: F3 p048L–p049R (rooftop topology: walled roof rooms, planks, slabs, jump carpets, the two meshes, mask hints 1–6, time-attack boxes 1–6), F3 p104L (time-trial frames 01–32 and captions), F3 p046–p047 (Arabian tips: stages built like an athletic course, stop on each foothold at first; monster list with behaviour), F3 p057L (bonus side view and hint), F3 p056 (stage-27 course: pads, slabs, carpets, floating Nitro rows); P3 p014R–p015R shots 19–36 (scale: carpets, mesh, column, hallway). Sizes are estimates in u read against crates and Crash in the TT frames and Prima shots; the Famitsu strips give order and topology. "Not visible" marks values no source shows.
+
+### Camera and route shape
+
+An athletic course across rooftops (F3 p046: cloth roofs and carpets as trampolines, unstable footing, "stop on each foothold at first"). The route is a chain of small walled roof rooms — the rests — joined by crossings that are the tests: narrow planks, single floating slabs, pairs of jump carpets, a moving slab and two overhead wire meshes that Crash crosses hanging. Falling between rooftops is death. The camera runs into the screen except along the long second mesh, which TT frames 21–23 and Prima shots 23–24 show side-on, and in the side-view bonus.
+
+- **S1** — into-screen: start slab, two rising slabs, two walled rooms linked by a plank and a slab, an upper ledge, then mesh 1 (short hang traverse into the screen) to C1
+- **S2** — into-screen: plank with an orangutan, two pairs of jump carpets (mask hint 3: into-screen distances are hard to judge), an L-room and a U-room, archway, C2
+- **S3** — side-scroll along mesh 2, then into-screen: long zig-zag mesh seen side-on (TT 21–23; P3 shots 23–24) with a hole, a riding enemy, a scorpion and the bonus platform hanging below; then a landing, a hole, a moving slab and a room to C3
+- **B** — side-scroll: left → right: walkway, rising crate arc, pyramid platform, steps, a bowl-shaped gap, outline platform, steel walkway
+- **S4** — into-screen: raised step with the Nitro column, a slab held by a sabre worker, jump carpets, a room, the end hallway (stairs), the stage-27 drop-in, goal arch
+- **Y** — into-screen: stage-27 course (the Nitro stretch is shown from the flank in hint 3): walled pads, single slabs, carpets under floating Nitro rows; no checkpoints; drops into S4 before the goal
+
+### Platforms and gaps (section by section; table per section)
+
+Columns *kind* to *coupling / failure* and *evidence* are observations; *why* is design inference. Platforms are `P-…`, gaps `G-…`; sizes are width × length in u (one crate) where visible, and every number is an estimate read against crates or the character in the same picture.
+
+#### S1 — Start → C1 (rooftops, mesh 1)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | wide floor (start slab): flat roof slab with an L-shaped raised step and two steel arrows side by side | ≈5×5 | 0 | walk | edges open; static | REST | a broad, enemy-free start; the arrows are the first vertical tool (their use is not stated — inference: a bounce up the first rise) | F3 p048L (two arrow bubbles at the start slab) — conf. medium |
+| G-S1-a | S1 | bottomless pit between rooftops (two stepping slabs) | ≈1 between slabs; landing floating slab ≈2×2, then walled room 1 | +0.5 to +1 per slab (rising) | plain | none / death (fall between roofs) (lethal; run-up ≈3); nearby S1-a | TEACH | first gaps are short, rising steps onto square slabs — the stage's basic crossing shown with nothing else in it | F3 p048L (two white slabs between the start and room 1) — conf. medium |
+| P-S1-b | S1 | wide floor (walled roof room 1): sabre worker, stopwatch, two wood crates | ≈4×5 | 0 | walk; spin the worker from behind | edges walled (low parapet ≈0.5–1); static | ARENA | the first enemy is met inside walls, so its sabre is the only danger | F3 p048L; P3 p014R shot 20; F3 p104L 01–03 — conf. medium |
+| P-S1-c | S1 | bridge/plank (wooden): plank from room 1 to the U-room | ≈2×5 | 0 | walk | edges open; static | CHOKE | a narrow crossing with open edges between two safe rooms | F3 p048L; F3 p104L 02 (plank floor) — conf. medium |
+| P-S1-d | S1 | wide floor (walled U-shaped roof room): two plank ends with a wall stub between them | ≈4×4 | 0 | walk | edges walled; static | REST | turns the route and resets the player between crossings | F3 p048L — conf. medium |
+| G-S1-b | S1 | bottomless pit between rooftops (single stepping slab) | ≈1–1.5 on each side of the slab; landing slab ≈2×2, then room 2 | 0 | plain | none / death (fall between roofs) (lethal; run-up end of a plank); nearby P-S1-d, P-S1-e | STEPPING | two hops with a one-slab stop in the middle: the rhythm unit of the rooftops | F3 p048L (white slab between the plank and room 2) — conf. medium |
+| P-S1-e | S1 | wide floor (walled L-shaped roof room 2): carpet researcher floating at the far corner, 2×2 crate block, steel arrow by the back wall | ≈6×4 | 0 | walk | edges walled; static | ARENA | the room holds both tools for the climb ahead: the arrow and the floating enemy | F3 p048L; TA1 — conf. medium |
+| P-S1-f | S1 | narrow ledge (upper footing with an archway): ? by the arch; the Aku crate floats at the mesh entrance | ≈2–3 wide | +2 to +3 (estimate) | arrow, or enemy-bounce (stomp the carpet researcher, TT 06) | edges walled on one side; static | PERCH | the first height step is offered with two tools, one of them an enemy | F3 p048L TA1; F3 p104L 06 — conf. medium |
+| G-S1-c | S1 | monkey-bar mesh (swing/vine-type hang traverse) over a void — mesh 1 | not visible (≈4–8 long; drawn across the gutter); landing walled pad with W W, then C1 | 0 | climb (jump-grab the mesh, hang-move), spin while hanging | grab first, then spin — spinning at the moment of grabbing drops you (mask hint 1) / death (fall into the void) (lethal; run-up jump from the upper ledge); nearby S1-d, S1-e | TEACH | the new traversal is short, into the screen and enemy-free; its one rule is the input order | F3 p048L–p048R mask hint 1; F3 p104L 07–10; P3 p014R shot 21 — conf. medium |
+| P-S1-g | S1 | square pad (walled mesh-exit pad): W W, then the C1 crate | ≈3×3 | 0 | walk | edges walled; static | CHECKPOINT-PAD | the save closes the first traversal mode | F3 p048R ("11コ") — conf. high |
+
+#### S2 — C1 → C2 (jump carpets)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | bridge/plank (wooden): plank from C1 with an orangutan on it; a carpet researcher hovers beside it; stepped crate group | ≈2×5 | 0 | walk; slide the orangutan (TA2) | edges open; static | CHOKE | an enemy that is also a tool, placed where it cannot be walked around | F3 p048R; F3 p104L 11–13 — conf. medium |
+| G-S2-a | S2 | chasm with bounce (two jump carpets) | ≈1–2 between plank, carpets and room; landing carpet ≈2×2, carpet, then the L-room | 0 | bounce pad (jump carpet), held/high (straight-up bounce for the hidden ?) | carpets bounce you on landing, so the run cannot stop until the room (inferred) / death (fall between roofs) (lethal; run-up end of the plank); nearby S2-a, S2-b | TEACH | the bounce pad is taught as a pair; the high bounce it gives is also how the hidden crate is reached | F3 p048R (two carpets, the 3-badge ? above the second); P3 p014R shot 22; F3 p104L 14–15 — conf. medium |
+| P-S2-b | S2 | square pad (jump carpet): patterned carpet pads, used in pairs | ≈2×2 each (P3 shot 22) | 0 | bounce pad | edges open; bouncy (bounces on landing; holding jump gives a high bounce) | STEPPING, TIMING-STEP | a forced step: it moves you on whether you are ready or not | P3 p014R shot 22; F3 p046 tips; F3 p104L 14–17 — conf. high |
+| P-S2-c | S2 | wide floor (walled L-shaped roof room): orangutan, steel arrow in the inner corner, 2×2 block with a ? floating above-right | ≈5×4 | 0 | walk; arrow to the floater | edges walled; static | ARENA, REST | the landing room after the first carpets holds a second springboard-enemy and an arrow | F3 p048R — conf. medium |
+| P-S2-d | S2 | wide floor (walled U-shaped roof room): open-fronted room before the second carpets | ≈4×3 | 0 | walk | edges walled on three sides; static | REST | a rest right before the carpet run that mask hint 3 warns about | F3 p048R — conf. medium |
+| G-S2-b | S2 | chasm with bounce (two jump carpets rising to the archway) | ≈1–2; landing wooden landing in front of the archway | +1 to +2 overall (estimate) | bounce pad (jump carpet), plain | no stop on the carpets (inferred) / death (fall between roofs) (lethal; run-up U-room edge); nearby S2-d | TEST | mask hint 3: into the screen, carpet distances are hard to judge — take them one at a time with big jumps | F3 p048R mask hint 3 — conf. medium |
+| P-S2-e | S2 | wide floor (landing and archway before C2): floating ? over two wood crates beyond the arch; C2 right after | ≈3×4 | 0 | walk | edges walled (arch block); static | CHECKPOINT-PAD | the save sits behind a doorway after the carpets | F3 p048R–p049L — conf. high |
+
+#### S3 — C2 → C3 (mesh 2, side view)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| G-S3-a | S3 | monkey-bar mesh (swing/vine-type hang traverse) over a void — mesh 2, long zig-zag | ≈25–35 long (estimate from crate spacing); strip ≈2–3 wide; landing wooden landing at the far end | 0 | climb (hang-move), spin while hanging | carpet researcher rides along it; scorpion clings under it / death (fall into the void) (lethal; run-up jump from the C2 ledge); nearby S3-a, S3-b, S3-d, S3-e, S3-f, E-S3-a, E-S3-b | TEST | the short lesson of mesh 1 becomes a long side-on traverse with two moving enemies and crates spun while hanging | F3 p049L; F3 p104L 19–23; P3 p014R shots 23–24 — conf. medium |
+| G-S3-b | S3 | floor hole in the mesh (missing panel) near its start | ≈2×1 (one panel; estimate); landing mesh beyond: the strips on both sides go round the hole | 0 | climb (route round the hole) | a ? floats at the hole (S3-c) / death (fall through) (lethal; run-up —); nearby S3-c | TEACH | the climbing surface itself has a gap: the player must read the mesh as terrain | F3 p049L (rectangular opening in the mesh) — conf. medium |
+| G-S3-c | S3 | drop-down from the mesh to the bonus platform | n/a; landing checkered walled pad ≈3×3 with a steel arrow | −3 to −4 (estimate) | drop (let go) | the arrow on the pad leads back up (inferred from the arrow bubble) / not a failure (it is the route into the bonus) (non-lethal; run-up —); nearby B | BONUS-PAD | the optional room hangs directly under the route: letting go is the entrance | F3 p049L (bonus pad under the mesh, arrow bubble, "P.106") — conf. medium |
+| P-S3-a | S3 | square pad (walled bonus platform under mesh 2): checkered floor, steel arrow | ≈3×3 | −3 to −4 below the mesh | drop in; arrow back up (inferred) | edges walled; static | BONUS-PAD | the only rest along the long mesh | F3 p049L — conf. medium |
+| P-S3-b | S3 | square pad (wooden landing at the mesh end): steel arrow with W W ? partly above it; a hole just ahead | ≈3×3 | 0 | stop, then break the crates | edges open on the hole side; static | LANDING | the reward over the arrow turns the bounce into a launch toward the hole (mask hint 4) | F3 p049L mask hint 4 — conf. high |
+| G-S3-d | S3 | floor hole just past the mesh-end landing | not visible (≈2); landing archway and the next roof | 0 | plain (after stopping) | the arrow bounce + stomp carries a moving player into it / death (fall) (lethal; run-up from the landing); nearby S3-g | TEST | a gap that only kills the player who keeps the tool's momentum | F3 p049L mask hint 4 (screenshot: arrow, crate, hole ahead) — conf. medium |
+| P-S3-c | S3 | square pad (moving slab): white slab that moves, with a carpet researcher on or beside it | ≈2×2 | 0 | ride | edges open; moving (axis and cycle not visible) | TIMING-STEP | the stage's only moving footing, shared with a floating enemy | F3 p049R (blurred: researcher on a slab) — conf. low |
+| G-S3-e | S3 | moving-platform crossing (slab with a carpet researcher) | not visible; landing walled room with the 2×2 | 0 | ride, plain | platform cycle and the hovering enemy / death (fall) (lethal; run-up not visible); nearby S3-h, E-S3-c | TEST | a timing crossing right before the save | F3 p049R — conf. low |
+| P-S3-d | S3 | wide floor (walled roof room): 2×2 crate block, then C3 | ≈4×4 | 0 | walk | edges walled; static | CHECKPOINT-PAD | the save closes mesh 2 and the bonus | F3 p049R ("64コ") — conf. high |
+
+#### B — Bonus (side view, under mesh 2)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | bridge/plank (long wooden walkway): two slot crates and a wood crate; a steel ! hangs below the first ledge | ≈10 long | 0 | walk | edges open; static | REST | a long safe floor for the slot lives; the ! under the ledge is out of reach by hand (F3 hint: bazooka or TNT blast) | F3 p057L; P3 p015L shot 28 — conf. high |
+| P-B-b | B | wide floor (raised deck with the pyramid): pyramid 4/3/1 with a slot in the bottom row | ≈5 long | +1 | step up | edges open; static | REST | the big crate pile sits on its own raised deck | F3 p057L — conf. high |
+| P-B-c | B | stairs (two small steps down): two short blocks stepping down | ≈1–2 each | −1 per step | hop down | edges open; static | STEPPING | a short descent before the gap | F3 p057L — conf. medium |
+| G-B-a | B | bottomless pit holding a bowl-shaped object | ≈2–3; landing wooden platform with the outline crate | 0 | plain | function of the bowl not stated / ejected from the bonus (series rule) (lethal; run-up short); nearby B-d | STEPPING | the only gap of the bonus sits between the stair and the switch puzzle | F3 p057L (grey bowl between two platforms) — conf. low |
+| P-B-d | B | square pad (wooden outline platform): outline crate that becomes a wooden arrow | ≈4 long | 0 | walk past, come back after the ! | edges open; static; switch-made arrow | STEPPING | the tool for the high crates is built here only after the switch beyond is pressed | F3 p057L; P3 p015L shot 30 — conf. high |
+| P-B-e | B | bridge/plank (steel walkway): TNT on top; steel ! directly below the walkway; exit pad beyond | ≈6 long | 0 | stomp the TNT, step back | edges open; static | STEPPING | the blast reaches through the walkway to the switch | F3 p057L; P3 p015L shot 29 — conf. high |
+
+#### S4 — C3 → goal
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | wide floor (walled roof room; raised wooden stage at one side): C3 crate on the floor; Nitro/W/slot column on the step | ≈4×4; step ≈2 wide | +1 (step) | slide or spin low | edges walled; static | ARENA | the puzzle column stands where the player lands from the save | F3 p049R; P3 p015L shot 25 — conf. high |
+| P-S4-b | S4 | bridge/plank (wooden): plank toward the sabre worker's slab | ≈2×3 | 0 | walk | edges open; static | CHOKE | lines up the jump to the occupied slab | F3 p049R — conf. medium |
+| G-S4-a | S4 | bottomless pit to a single slab held by a sabre worker | ≈1–2; landing slab ≈2×2 with the worker on it | 0 | plain | the worker swings when facing you; jump when his back is turned / death (fall), or a hit from the sabre (lethal; run-up end of the plank); nearby E-S4-a | TEST | an occupied landing: the stop before the jump is where the timing is read | F3 p049R — conf. medium |
+| P-S4-c | S4 | square pad (single floating slab): the sabre worker stands on it | ≈2×2 | 0 | land, spin him from behind | edges open; static | LANDING | the smallest footing in the stage carries an enemy | F3 p049R — conf. medium |
+| G-S4-b | S4 | chasm with bounce (jump carpets in a line) | ≈1–2; landing walled room with the orangutan | 0 | bounce pad (jump carpet), held/high (straight up for the hidden ?, mask hint 6) | no stop on the carpets (inferred) / death (fall between roofs) (lethal; run-up from the slab); nearby S4-c | TEST | the S2 lesson repeated without the header warning: the crate above a carpet | F3 p049R mask hint 6; P3 p015L shot 26; F3 p104L 25–28 — conf. medium |
+| P-S4-d | S4 | wide floor (walled roof room): orangutan and a 2×2 block; power stone beside | ≈4×4 | 0 | walk | edges walled; static | REST | last plain room before the switch hallway | F3 p049R — conf. medium |
+| P-S4-e | S4 | stairs (end hallway): grey ! and green !, two outline crates and a ? | ≈2–3 wide | +2 (estimate) | walk; spin-touch the ! in mid-jump (TA6) | edges walled; static | CHOKE | a narrow indoor hallway focuses the player on the switches | F3 p049R; P3 p015L shot 27; F3 p104L 29–30 — conf. high |
+| G-S4-c | S4 | bottomless pit before the goal arch (plank and a slab with a carpet researcher) | not visible; landing goal arch | 0 | plain | the floating enemy on the slab / death (fall) (lethal; run-up not visible); nearby E-S4-c | TEST | one more occupied crossing after the stage-27 course rejoins | F3 p049R — conf. low |
+
+#### Y — Stage-27 course (yellow gem)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-Y-a | Y | wide floor (walled roof rooms): start pads; three sabre workers across the course | ≈4×4 each | 0 | walk; bazooka the distant worker (hint 1) | edges walled; static | ARENA | the same rooms as stage 7, more enemies | F3 p056L — conf. medium |
+| G-Y-a | Y | bottomless pit between rooftops (single slabs and planks) | ≈1–2; landing slabs and pads | 0 | plain | none / death — restart the course (no checkpoints) (lethal; run-up short); nearby Y-a | STEPPING | known crossings, but every fall costs the whole course | F3 p056L–p056R — conf. medium |
+| G-Y-b | Y | chasm with bounce (jump carpets under floating Nitro rows) | ≈1–2; landing slabs and walled pads | 0 | bounce pad (jump carpet), double (high off the carpet), spin-extended (tornado spin over the Nitros) | five floating rows of three Nitros above the line / death — restart the course (no checkpoints) (lethal; run-up from the pads); nearby Y-b, O-Y-b | TEST | the carpet bounce now has to clear explosives: same geometry, harder air | F3 p056R hints 2–3 — conf. medium |
+| P-Y-b | Y | stepping stones (three slabs descending): slab chain between two walled pads | ≈2×2 each | −0.5 per slab (estimate) | plain hops | edges open; static | STEPPING | a calmer chain between the Nitro carpet stretches | F3 p056R — conf. medium |
+| P-Y-c | Y | wide floor (walled roof room with the yellow gem): last pad; the course then drops into stage 7 before its goal | ≈4×4 | 0 | walk | edges walled; static | REST | the reward pad ends the no-checkpoint run | F3 p056R hint 4 — conf. high |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | max gap (u) | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 5 | plain, plain, plain, arrow or enemy-bounce, climb (jump-grab the mesh) | even hops, then one vertical | ≈1–1.5 | P-S1-b, P-S1-e (walled rooms) | no | slab hops between rooms, a height step with two tools, then the first grab: each new move appears once, in order | F3 p048L; F3 p104L 06–08 |
+| J-S2-a | S2 | 3 | plain (onto carpet 1), bounce pad, held/high (for the hidden ?) | even (one bounce per beat) | ≈1–2 | P-S2-c (L-room) | yes | carpets bounce on landing, so a carpet pair is a forced two-beat sequence between rooms (inferred from the carpet behaviour) | F3 p048R; P3 p014R shot 22; F3 p104L 14–15 |
+| J-S2-b | S2 | 3 | bounce pad, bounce pad, plain (onto the landing) | even (one carpet at a time, big jumps — mask hint 3) | ≈1–2 | P-S2-e (C2) | yes | the second pair rises toward the arch; the guide asks for one carpet per jump because into-screen distance misleads | F3 p048R mask hint 3; F3 p104L 17 |
+| J-S3-a | S3 | 2 | arrow (stopped), plain (over the hole) | stop-and-go | not visible (≈2) | P-S3-d (C3 room) | no | the mesh-end landing asks the player to stop before using the arrow, then jump the hole as a separate beat | F3 p049L mask hint 4 |
+| J-S4-a | S4 | 4 | plain (onto the guarded slab), plain, bounce pad, held/high | syncopated (wait for the worker's back, then bounce) | ≈1–2 | P-S4-d | no | the occupied slab forces a pause that the carpets then remove: wait, then commit | F3 p049R; F3 p104L 25–28 |
+| J-B-a | B | 8 | crate-bounce (rising arc of four ?), plain, plain, plain, plain, arrow (materialised wooden arrow), crate-bounce (three ? descending), plain | accelerating up the arc, then stop-and-go at the switch puzzle | ≈2–3 | exit pad | no | the bonus writes its jump path in crates (the arc), then makes the player backtrack to a tool they built | F3 p057L; P3 p015L shots 28–30 |
+| J-Y-a | Y | 8 | plain, bounce pad, double (high off the carpet), spin-extended (tornado float over Nitros), plain, plain, bounce pad, bounce pad | even, with no checkpoint to break it | ≈1–2 | walled pads (no checkpoints) | yes | the hardest air of the stage family: carpet bounces that must clear floating Nitro rows, one life per attempt | F3 p056R hints 2–3 |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S3-a | S3 | launch trap before a hole (arrow block with crates above it) (lethal) | on platform (mesh-end landing); hole across the path ahead | static; the bounce is player-triggered; the hole is visible from the landing | wait-and-go (stop and look first), avoid (do not stomp with the bounce momentum) | S3-g, G-S3-d | TEST | turns a reward and a tool into the danger: the momentum, not the hole, is the obstacle (mask hint 4) | F3 p049L mask hint 4 — conf. high |
+| O-S4-a | S4 | Nitro on top of a wood/slot column (daruma-otoshi) (lethal) | on platform (raised step beside C3) | static; the slot crate cycles and turns to steel if left — the countdown pushes the player | slide under (take the slot out), destroy low (spin low) | S4-a, C3 | TEACH, TEST | removal order is the whole puzzle; a jump or high spin reaches the Nitro | F3 p049R mask hint 5; P3 p015L shot 25 — conf. high |
+| O-B-a | B | TNT on the metal walkway above a ! switch (blast switch) (lethal) | on platform (walkway); switch below | 3 s fuse after a stomp; a spin blows it at once (F3 hint) — the count is the warning | destroy (stomp, then step back) | B-f, B-d outline → wooden arrow | TEST | the blast is the only way to press the switch under the walkway | F3 p057L hint; P3 p015L shot 29 — conf. high |
+| O-Y-a | Y | Nitro 2-stack under a platform edge (lethal) | below (under the take-off edge) | static | avoid, shoot (bazooka) | G-Y-a | AREA-DENIAL | punishes a short jump off the pad | F3 p056L — conf. high |
+| O-Y-b | Y | floating Nitro rows (five rows of three) above the carpet line (lethal) | overhead / across the path (inside the jump arc) | static; visible ahead | jump over (double jump high off the carpet, then tornado-spin float), shoot (bazooka, only up to the hint-2 platform) | G-Y-b carpets | AREA-DENIAL, TEST | explosives placed in the space a carpet bounce passes through | F3 p056R hints 2–3 — conf. high |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | sabre worker (サーベル作業員) | patrol-1D (paces a fixed spot; swinging type) | walks away and back; swings the sabre when facing Crash; the swishing sound marks the swing (TT 03) | spin (when he shows his back), shoot (bazooka as he turns, TT 01–02) (fails: approaching from the front) | on line in walled room 1 | TEACH, TIMING-GATE | yes (inside a walled room, no gap beside him) | a turn-your-back timing enemy taught where only the sword can hurt | F3 p048L; F3 p047R; P3 p014R shot 20; F3 p104L 01–03 — conf. high |
+| E-S1-b | S1 | magic-carpet researcher (魔法のカーペット研究員) | flier (floats slowly back and forth on a fixed route) | the least dangerous Arabian monster; wait for it to come close (F3 p047R) | spin, stomp (jump on; doubles as a step to the upper footing, TT 06), body slam | flank (far corner of room 2) | TOOL/STEP, TEACH | yes | the first height step can be climbed off this enemy | F3 p048L TA1; F3 p047R; F3 p104L 06 — conf. high |
+| E-S2-a | S2 | pot-carrying orangutan (オットトウータン) | patrol-1D (staggers along the plank carrying pots) | a spin knocks a pot onto its head and it reels — it can then be stood on to jump higher than normal; a slide at its feet kills it at once | slide (fling into the 1-s box, TA2), spin (turns it into a springboard), stomp (jump on) | on line on the plank (choke), next to the stepped crate group | TOOL/STEP, GUARD | no (on a narrow plank with a carpet researcher hovering beside it) | an enemy designed to be used: projectile (slide) or springboard (spin) | F3 p048R TA2; F3 p047R; F3 p104L 11 — conf. high |
+| E-S2-b | S2 | magic-carpet researcher (魔法のカーペット研究員) | flier | hovers beside the plank | spin, fling into (a slid orangutan can take it out, TA2) | flank of the plank | HURDLE | — (repeat) | a second target that rewards the orangutan fling | F3 p048R TA2 — conf. medium |
+| E-S2-c | S2 | pot-carrying orangutan (オットトウータン) | patrol-1D | on the L-room beside a steel arrow | slide, spin, stomp (jump on) | on line in the L-room | TOOL/STEP | — (repeat) | a springboard next to an arrow: two ways to the floating ? | F3 p048R — conf. medium |
+| E-S3-a | S3 | magic-carpet researcher (魔法のカーペット研究員) | flier (moves along the mesh line) | rides along mesh 2 near its first peak | spin (while hanging), avoid (fails: stomp (not possible while hanging)) | on the mesh line (moving) | HURDLE | — (repeat) | a moving blocker on the hang path forces a spin or a wait mid-traverse | F3 p049L; F3 p104L 19–20 — conf. high |
+| E-S3-b | S3 | upside-down scorpion (サカサソリン) | chaser (clings under the mesh and crawls toward Crash with a rustle) | touch = hit; F3: spin it from as far away as possible | spin (from a distance) (fails: touching it; stomp (impossible while hanging)) | on the mesh line (mid-traverse) | GUARD, HURDLE | yes (alone on its leg of the mesh, but over a void) | the mesh-only enemy, spin-only: the hang traverse gets its own threat | F3 p049L; F3 p047R; P3 p014R shot 23 — conf. high |
+| E-S3-c | S3 | magic-carpet researcher (魔法のカーペット研究員) | flier | on or beside the moving slab before C3 | spin, stomp (jump on) | moving platform | TIMING-GATE | — (repeat) | two cycles on one crossing: the slab and the enemy | F3 p049R — conf. low |
+| E-S4-a | S4 | sabre worker (サーベル作業員) | patrol-1D | paces on a single small slab | spin (when he shows his back) (fails: landing in front of him) | landing platform (single slab) | GUARD, TEST | — (repeat) | the S1 timing enemy returns on the smallest footing of the stage | F3 p049R — conf. high |
+| E-S4-b | S4 | pot-carrying orangutan (オットトウータン) | patrol-1D | in the room after the carpets | slide, spin, stomp (jump on) | on line in the room | TOOL/STEP | — (repeat) | a last springboard beside the 2×2 block | F3 p049R — conf. medium |
+| E-S4-c | S4 | magic-carpet researcher (魔法のカーペット研究員) | flier | on the last slab before the goal arch | spin, stomp (jump on) | landing platform (last slab) | HURDLE | — (repeat) | keeps the very last crossing occupied | F3 p049R — conf. medium |
+| E-Y-a | Y | sabre worker (サーベル作業員) ×3 | patrol-1D | one on an early pad, two together on a later pad | shoot (bazooka from just within range, hint 1), spin (fails: approaching from the front) | on line on walled pads | GUARD | — (repeat) | more of the known enemy on a course without checkpoints | F3 p056L hint 1 — conf. medium |
+| E-Y-b | Y | magic-carpet researcher (魔法のカーペット研究員) | flier | on a slab after the archway | spin, stomp (jump on) | landing platform | HURDLE | — (repeat) | occupied slab, as in S3/S4 | F3 p056L — conf. medium |
+
+### Section beats
+
+- **S1** (gaps 3, enemies 2, hazards 0): start slab (two steel arrows) → two rising slabs → room 1: sabre worker + W W (wait for his back) → plank → U-room → plank + single slab → room 2: carpet researcher + 2×2 + steel arrow → arrow or enemy bounce to the upper ledge → ? by the arch → Aku high at the mesh entrance → mesh 1 (grab, then spin) → exit pad: W W → C1
+- **S2** (gaps 2, enemies 3, hazards 0): plank: orangutan + carpet researcher + stepped group → carpet → carpet (hidden ? above: straight-up held bounce) → L-room: orangutan + steel arrow + 2×2 + floater → U-room → carpet → carpet (mask hint 3) → landing + archway → floating ? over W W → C2
+- **S3** (gaps 5, enemies 3, hazards 1): mesh 2 (side view): W, ? → mesh hole (route round; ? at the hole) → slot above the mesh → carpet researcher riding the mesh → W W → scorpion (spin from afar) → W W → [drop to the bonus platform → B → arrow back up] → mesh-end landing: steel arrow + W W ? → stop → hole → archway → moving slab + carpet researcher → room: 2×2 → C3
+- **B** (gaps 1, enemies 0, hazards 1): walkway: 2 slots + W; ! hangs below the ledge → rising arc of four ? → raised platform: pyramid 4/3/1 with slot → two steps down → gap with a bowl → outline platform → steel walkway: TNT over the ! (stomp, step back) → back to the outline (now a wooden arrow) → three ? descending from the green ! → exit pad
+- **S4** (gaps 3, enemies 3, hazards 1): raised step: Nitro/W/slot column (slide) → sabre worker → plank → slab held by a sabre worker → carpets (hidden ? above: straight up) → room: orangutan + 2×2 → power stone → end hallway (stairs): grey ! + green ! → outlines + ? → (stage-27 drop-in) → plank + slab with a carpet researcher → goal arch
+- **Y** (gaps 2, enemies 4, hazards 2): walled pads + sabre worker → slab → pad (Nitro 2-stack under its edge) → plank + arch → carpet researcher on a slab → pad with two sabre workers → carpet → carpet + slab → pad (bazooka limit; Nitros on the right) → three slabs descending → pad → two carpets under Nitro rows → yellow-gem pad → drop into S4
+
+### Geometry and enemy design logic
+
+1. Rest/test alternation is literal: every walled roof room is a rest or an arena, every crossing between rooms (plank, slab, carpet pair, mesh, moving slab) is the test. The F3 theme tip — stop on each foothold at first — describes this rhythm.
+2. Each crossing type is shown once in a calm form and then reused harder: slab hops (S1) → an occupied slab (G-S4-a); mesh 1, short and into the screen (G-S1-c) → mesh 2, long, side-on, with a hole and two enemies (G-S3-a/b); carpets as a pair (G-S2-a) → carpets after a guarded slab (G-S4-b) → carpets under Nitro rows (G-Y-b).
+3. Jump carpets are forced steps: they bounce on landing, so a carpet pair is a no-stop two-beat sequence (J-S2-a/b). Pairs are short and always end on a walled room, which keeps the forced part brief.
+4. The carpet's high bounce is reused as a vertical reward: the hidden ? above a carpet (S2-b, S4-c) costs no extra tool, only the decision to bounce straight up and to look above the frame.
+5. Mesh rules escalate from input to terrain to enemies: grab-then-spin (mask hint 1), a hole in the mesh to route around (G-S3-b), a rider on the line and a spin-only scorpion under it (E-S3-a/b).
+6. Enemies here are mostly tools or timing checks, not threats: the carpet researcher is a step (TT 06), the orangutan a projectile or springboard (TA2, F3 p047R); only the sabre worker attacks, and only when facing you.
+7. Occupied landings are the main enemy placement: a sabre worker on a single slab (E-S4-a), carpet researchers on the moving slab and the last slab (E-S3-c, E-S4-c). The player must read the enemy from the previous footing.
+8. Tools can push the player into gaps: the arrow-plus-crate launch toward the hole at the mesh end (O-S3-a) is the stage's one momentum trap, placed after several safe arrows.
+9. The bonus hangs directly under the route (G-S3-c): letting go of the mesh is the entrance and an arrow is the way back, so the optional room costs no detour on the map.
+10. Checkpoints close traversal modes — C1 after mesh 1, C2 after the carpets, C3 after mesh 2 and the moving slab — while the stage-27 course (Y) uses the same parts with no checkpoint at all: the hardest air has the least recovery.
+11. Hazard count is tiny on the main route (one Nitro column, one launch trap): the stage's danger is the fall, and its escalation comes from footing size and forced bounces rather than from obstacles.
+12. The time-trial line is a vertical line: hold-jump high bounces, spins at the apex to extend air, catching the mesh out of a jump-spin (TT 07–08, 14–15, 27) — the geometry rewards height control more than speed.
+
+### Geometry transfer to the skate game
+
+1. Rooftop rooms and crossings: walled 5×6 m `platform` rooms with 0.6–1.2 m parapets, linked by 2.3 m-wide planks and single 2.3 m slabs over a `pit` (gaps 1.2–1.7 m, far inside the 5.6 m running jump). Rooms carry checkpoints and enemies; plank and parapet edges grind by default, so a skater gets ledge lines across the same course.
+2. Carpet pairs as `trampoline` decks (≈2.3×2.3 m) 1.2–2.3 m apart, always two per run and always ending on a room; put one crate high above the second deck, reachable only with the held-jump bounce (`amp`), outside the default framing; show one such crate openly first, then hide the second (S2-b → S4-c).
+3. Mesh analog: we have no hang mesh, so use an authored `rail` or `rope` across a void as the traversal line, with one break to hop (the mesh hole), one `floater` patrolling along it (no stomp, like the spin-only scorpion), crates on the line ≥5 m apart (smashed at ≥12.5 m/s), and a `bonusplatform` below the line that the player reaches by dropping off it.
+4. Occupied slab: a single 2.3 m slab after a 1.5 m gap with a `charger` on it; the counter is to wait on the previous room for its telegraphed dash to pass, then jump — the Hang 'em High sabre-worker timing.
+5. Launch trap: a steel arrow with a crate floating above it, 3–5 m before a `pit`: arrow (3.77 m) plus stomp (2.87 m) with forward speed carries a running player several metres on, so the reward becomes the fall. Place it only after two safe arrows.
+6. Hard variant without checkpoints: reuse the same rooms, slabs and trampolines with floating Nitro rows one crate above the bounce apex; the double jump (+1.74 m) is the counter, as the stage-27 tornado float was in Crash 3.
+
 ## Open questions / uncertainties
 
 - C3: printed 64, drawn 63; total 95 (gamepressure) agrees with the drawn crates plus the stage-27
@@ -340,3 +507,9 @@ Loss: 2 outline crates and every Nitro (1 + 17 by the reconstructed total).
 - The green ! in the bonus (no Nitros there) — role unknown.
 - S3-c geometry (on the mesh at the hole or below it).
 - Prima recommends a super body slam for S4-c, which conflicts with F3's straight-up carpet jump.
+- Geometry: jump carpets are assumed to bounce automatically on landing (no-stop); no source states it in those words.
+- Geometry: mesh 1 length is hidden in the page gutter; mesh 2 length (≈25–35 u) is estimated from crate spacing.
+- Geometry: the moving slab before C3 (P-S3-c, G-S3-e) is blurred in the gutter: axis, cycle and whether the carpet researcher rides it are not visible.
+- Geometry: the bowl-shaped object in the bonus gap (G-B-a) is unexplained by both guides.
+- Geometry: the two steel arrows on the start slab have no stated use.
+- Geometry: the return from the bonus platform to the mesh by its steel arrow is inferred from the arrow bubble.

@@ -1282,5 +1282,1679 @@
  "compositionKeysAdded": {
   "wood?": "counted crate whose type cannot be read",
   "outlineFooting": "outline cell that materialises as footing, not a box (uncounted)"
- }
+ },
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "walled path ≈4–6 u wide from the castle start gate; water band, a fallen log, a hole at a right-hand bend, a second water band; ends at C1 after the goat and the three 3-stacks"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "steps down through a castle arch, S-bend, long water band, then a narrowing stepped passage up to a raised end where a wizard stands; C2 after a goat"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "hole by C2, two water bands, a lane squeeze (water left, Nitro right, berserker centre), a castle arch tunnel, wizard beyond it; C3"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "slope with the reward block, a pond, the bonus pad, two water bands, a two-berserker blockade, a hole and a bridge, then a narrow gate passage to the goal"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "left → right over three plank walkways and an outline staircase above a pit (P3 shots 10–12)"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "corridor (walled dirt path)",
+   "kind": "main floor from the castle start gate, winding in S-bends",
+   "size": "≈4–6 wide (5–6 crates fit across the water band in P3 shot 2)",
+   "heightDelta": 0,
+   "edges": "walled both sides (low stone walls)",
+   "behaviour": "static",
+   "move": "walk / run",
+   "roles": [
+    "REST",
+    "TEACH"
+   ],
+   "why": "a wide, pit-free floor lets the first crates, frogs and the iron cube be met without fall risk",
+   "evidence": "F3 p015L; P3 p013L shot 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "narrow ledge (raised curb wall along both path edges, whole level)",
+   "kind": "walkable stone walls (石塀) — the second and third lanes",
+   "size": "≈1 wide; length = the path",
+   "heightDelta": "+1 (wall top above the floor; estimate)",
+   "edges": "open on the outer side",
+   "behaviour": "static; interrupted by big rocks and holes",
+   "move": "hop up, run along, drop off",
+   "roles": [
+    "PERCH",
+    "REST"
+   ],
+   "why": "a safe lane past floor enemies, Nitros and wizard beams; rocks and holes break it so the player must come down at chosen points (TT 02, 05, 13, 18, 24, 29)",
+   "evidence": "F3 p012L (TT tip: run on the stone walls at both edges); F3 p015R TA4; F3 p103R 02, 04, 13–14, 26–27; P3 p013R shot 8",
+   "confidence": "high (walkable), medium (height)"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "log (fallen across the path)",
+   "kind": "step from the floor onto the left wall",
+   "size": "≈1 high bar across the full width",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "hop onto it, then onto the left wall",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a built-in step that invites the wall lane right after the first water",
+   "evidence": "F3 p015L (bar across the path); F3 p103R 04",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "corridor (path segment beside the stacks)",
+   "kind": "goat patrol beside three 3-stacks; C1 just after",
+   "size": "≈4–5 wide; ≈8–10 long",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "ARENA",
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the section closes on flat ground: one goat, a crate fence, then the save",
+   "evidence": "F3 p015R (goat, stacks, C bubble); F3 p103R 09; P3 p014L shot 14",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "stairs (2–3 steps down, then a castle arch tunnel)",
+   "kind": "stepped notches and an arch between C1 and the iron column",
+   "size": "arch ≈3–4 wide",
+   "heightDelta": "−1 to −2 (steps), then level",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk down",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "a framed threshold after the save: the section starts in a narrow arch and opens onto the iron column",
+   "evidence": "F3 p015R (stepped bands, grey arch); F3 p103R 09–10 (castle wall and arch)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "corridor (S-bend)",
+   "kind": "iron column at the right edge, then frog and goat side by side, then the 7-crate row",
+   "size": "≈4–5 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; super body slam the column",
+   "roles": [
+    "ARENA"
+   ],
+   "why": "two enemies stand between the iron column and the slot crate that turns to steel if you dawdle (mask hint 4)",
+   "evidence": "F3 p015R; P3 p013L shot 4; P3 p014L shot 15",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "corridor (stepped passage rising to a raised end)",
+   "kind": "berserker in the narrow part, wizard on the raised end",
+   "size": "≈3 wide (narrowest point)",
+   "heightDelta": "+1 to +2 (steps up to the wizard)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; right-wall lane (TA4)",
+   "roles": [
+    "CHOKE",
+    "ARENA"
+   ],
+   "why": "melee enemy in the choke, ranged enemy above it: the beam covers the whole passage; the right wall is the safe lane",
+   "evidence": "F3 p015R (narrowing, steps, figures); TA4; F3 p103R 15–17",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "corridor (path segment before C2)",
+   "kind": "one goat on the floor, then C2",
+   "size": "≈4–5 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "why": "a single hurdle enemy right before the save",
+   "evidence": "F3 p016L (goat, C bubble)",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "stairs (one raised grey step across the path)",
+   "kind": "flat raised slab between the two water bands",
+   "size": "≈2 long; full width",
+   "heightDelta": "+0.5 (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a dry step that sets up the lane squeeze beyond",
+   "evidence": "F3 p016L (grey slab)",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "corridor (three-lane squeeze)",
+   "kind": "water strip on the left half, berserker in the centre, Nitro on the right",
+   "size": "≈4–5 wide; each lane ≈1.5–2",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "jump past the berserker when his sword is still (mask hint 5)",
+   "roles": [
+    "CHOKE",
+    "TIMING-STEP"
+   ],
+   "why": "every lane has a cost (water, sword, Nitro); the guide's answer is a timed jump past the enemy",
+   "evidence": "F3 p016L (berserker, water, Nitro bubble right); mask hint 5",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "corridor (castle arch tunnel)",
+   "kind": "arch through the castle wall with a goat at its mouth",
+   "size": "≈3 wide; ≈3–4 long",
+   "heightDelta": 0,
+   "edges": "walled (tunnel)",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "one enemy in a choke cannot be bypassed: forced engagement before the wizard",
+   "evidence": "F3 p016L (arch, goat); P3 p013L shot 6",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "corridor (path beyond the arch)",
+   "kind": "W on slot, wizard, then C3",
+   "size": "≈4 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "ARENA",
+    "CHECKPOINT-PAD"
+   ],
+   "why": "the slot timer runs while the wizard's beam homes in",
+   "evidence": "F3 p016L–p016R",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "slope (rising path after C3)",
+   "kind": "the 10-crate stepped block stands on it",
+   "size": "≈4–5 wide; ≈6 long",
+   "heightDelta": "+1 to +2 over the slope (estimate)",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "the last rest: a big reward on a calm slope before the final gauntlet (TT 23: two 1-s boxes on the slope)",
+   "evidence": "F3 p016R; F3 p103R 23; P3 p014L shot 18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "pad (bonus entrance on the path)",
+   "kind": "bonus lift with a Nitro beside it",
+   "size": "≈2 (pad)",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "step on",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "why": "the optional room starts from the floor, guarded by one explosive",
+   "evidence": "F3 p016R (ボーナスチャレンジ arrow, Nitro bubble)",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "stairs (one step up across the path)",
+   "kind": "step with a goat just beyond",
+   "size": "full width",
+   "heightDelta": "+1",
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "hop",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a step and an enemy one beat apart",
+   "evidence": "F3 p016R (dark band, goat)",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "corridor (blockade stretch)",
+   "kind": "two berserkers side by side across the path; a step beyond",
+   "size": "≈4–5 wide; ≈1 free strip on the right",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "pass on the right side quickly (mask hint 8)",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "the path is literally blocked (とおせんぼ); the gap on the right is the designed lane",
+   "evidence": "F3 p016R (two figures with swords); mask hint 8; F3 p103R 28",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "bridge (after the hole)",
+   "kind": "short bridge leading to the gate passage",
+   "size": "≈2–3 wide (estimate)",
+   "heightDelta": 0,
+   "edges": "open (assumed)",
+   "behaviour": "static",
+   "move": "walk; keep left (TT 30)",
+   "roles": [
+    "LANDING"
+   ],
+   "why": "landing target for the long jump; lines the player up for the left side of the last berserker",
+   "evidence": "F3 p103R 30",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S4-f",
+   "section": "S4",
+   "shape": "corridor (gate passage, ≈3 wide)",
+   "kind": "green ! with two Nitros, berserker in the gate arch, 2×3 Nitro columns flanking the portal",
+   "size": "≈3 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "move": "walk; pass the berserker on his left (TA7)",
+   "roles": [
+    "CHOKE"
+   ],
+   "why": "the narrowest space holds the last enemy and 8 of the 15 Nitros: a count trap and a combat choke at once",
+   "evidence": "F3 p016R; TA7; F3 p103R 30–31",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "stairs (entry steps rising to the first deck)",
+   "kind": "entry pad, then curved stair planks",
+   "size": "≈2 wide",
+   "heightDelta": "+1 to +2",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk up",
+   "roles": [
+    "REST"
+   ],
+   "why": "a calm start to a jumping room",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "bridge (plank walkway 1)",
+   "kind": "three striped crates on it, three floating striped above them",
+   "size": "≈6–7 long",
+   "heightDelta": 0,
+   "edges": "open (pit below)",
+   "behaviour": "static",
+   "move": "bounce between each striped pair",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "F3 hint: land on a floating box and use it as footing for consecutive jumps — the floaters are the footholds",
+   "evidence": "F3 p019L; P3 p013R shots 10–11",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "bridge (plank walkway 2)",
+   "kind": "steel arrow under a ? floating high above",
+   "size": "≈3–4 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "arrow bounce",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the vertical tool on its own small walkway",
+   "evidence": "F3 p019L",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-d",
+   "section": "B",
+   "shape": "bridge (plank walkway 3)",
+   "kind": "steel arrow under a floating 2×3 block; steel ! floating beside it",
+   "size": "≈6 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "move": "arrow bounce into the block",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the arrow lesson against a bigger target; the switch for the way out hangs here",
+   "evidence": "F3 p019L; P3 p013R shot 11",
+   "confidence": "high"
+  },
+  {
+   "id": "P-B-e",
+   "section": "B",
+   "shape": "stairs of outline crates (3 rising + a row of 3)",
+   "kind": "materialised by the steel ! into the way out",
+   "size": "≈6 cells",
+   "heightDelta": "+3 over the stair",
+   "edges": "open",
+   "behaviour": "switch-made (outline → solid)",
+   "move": "walk up after the !",
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "the reward of the room is its own exit",
+   "evidence": "F3 p019L; P3 p013R shots 10–12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-f",
+   "section": "B",
+   "shape": "bridge (exit walkway, descending planks to the exit pad)",
+   "kind": "3-high outline column at its start",
+   "size": "≈7 long",
+   "heightDelta": "+3, then down to the pad",
+   "edges": "open",
+   "behaviour": "static",
+   "move": "walk",
+   "roles": [
+    "REST"
+   ],
+   "why": "ends the room level with the entry",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "safe water (shallow stream, wadable) crossing the path",
+   "width": "≈3–4 along the path; full width",
+   "heightDelta": 0,
+   "landing": "path beyond (iron cube right, Aku left)",
+   "lethal": false,
+   "runUp": "from the start, ≈6–8",
+   "move": [
+    "walk/wade"
+   ],
+   "coupling": "two frogs hop in it",
+   "failure": "no death by itself (inferred: frogs sit in it and the route crosses it on foot)",
+   "nearby": [
+    "S1-b",
+    "S1-c",
+    "S1-d",
+    "E-S1-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the water marks the frog zone; the first frogs are met where falling is impossible",
+   "evidence": "F3 p015L (water band, two frogs); P3 p013L shot 2",
+   "confidence": "medium (non-lethal is inferred)"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "floor hole beside the right edge at the bend",
+   "width": "not visible (≈2; part of the width only)",
+   "heightDelta": "not visible",
+   "landing": "path past the bend (2×2 slot group)",
+   "lethal": true,
+   "runUp": "wall lane ends at the hole",
+   "move": [
+    "plain",
+    "running"
+   ],
+   "coupling": "the first wizard stands just beyond; his homing beam reaches the player as they cross",
+   "failure": "death (pit, assumed)",
+   "nearby": [
+    "S1-f",
+    "E-S1-c"
+   ],
+   "roles": [
+    "LANE-BLOCK",
+    "TEACH"
+   ],
+   "why": "cuts the right-wall lane (TT 05: drop off before the hole), so the player meets the new wizard on the floor",
+   "evidence": "F3 p015L (dark notch at the bend); F3 p103R 05–06",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "safe water (shallow band) across the path",
+   "width": "≈4–5 along the path; full width",
+   "heightDelta": 0,
+   "landing": "far bank with ?, W+N, ?+W+W+N",
+   "lethal": false,
+   "runUp": "not visible",
+   "move": [
+    "walk/wade"
+   ],
+   "coupling": "the wizard's beam can follow you across",
+   "failure": "no death by itself (inferred)",
+   "nearby": [
+    "S1-g",
+    "S1-h",
+    "S1-i"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the Nitro-mixed crates wait on the far bank, so the crossing ends in careful crate work",
+   "evidence": "F3 p015R (water band, crate bubbles on its far edge)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "floor hole beside the left edge",
+   "width": "not visible",
+   "heightDelta": "not visible",
+   "landing": "path beyond",
+   "lethal": true,
+   "runUp": "not visible",
+   "move": [
+    "plain",
+    "running"
+   ],
+   "coupling": "none",
+   "failure": "death (pit, assumed)",
+   "nearby": [
+    "S2-b",
+    "S2-c"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "TT 13–14: after the second time-trial mask, climb the left wall at the hole and run it — the hole is passed on the wall lane",
+   "evidence": "F3 p103R 13–14 (caption only; not located on the map)",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "safe water (long shallow band) along the path",
+   "width": "≈6–8 along the path; most of the width",
+   "heightDelta": 0,
+   "landing": "dry strip with W/W",
+   "lethal": false,
+   "runUp": "not visible",
+   "move": [
+    "walk/wade"
+   ],
+   "coupling": "none",
+   "failure": "no death by itself (inferred)",
+   "nearby": [
+    "S2-d"
+   ],
+   "roles": [
+    "REST"
+   ],
+   "why": "a long, safe stretch before the berserker/wizard passage",
+   "evidence": "F3 p015R (long purple band)",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "floor hole (broken floor) just past C2",
+   "width": "≈2–3; covers the left two thirds of the width",
+   "heightDelta": "not visible",
+   "landing": "path; a strip on the right stays walkable (map)",
+   "lethal": true,
+   "runUp": "≈2–3 from C2",
+   "move": [
+    "plain",
+    "walk around (right)"
+   ],
+   "coupling": "none",
+   "failure": "death (pit, assumed)",
+   "nearby": [
+    "S2-e"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "a hole right after the save, with a way round it: first fall risk of the section at no time pressure",
+   "evidence": "F3 p016L (jagged grey hole beside C2)",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "safe water (wide shallow band) across the path",
+   "width": "≈4–5 along the path; full width",
+   "heightDelta": 0,
+   "landing": "? (S3-a) on the far edge",
+   "lethal": false,
+   "runUp": "from the hole",
+   "move": [
+    "walk/wade"
+   ],
+   "coupling": "none",
+   "failure": "no death by itself (inferred)",
+   "nearby": [
+    "S3-a"
+   ],
+   "roles": [
+    "REST"
+   ],
+   "why": "the time-trial 1-s box sits on the far edge: the crossing ends in a pickup",
+   "evidence": "F3 p016L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-c",
+   "section": "S3",
+   "kind": "floor hole in the right edge beside a frog",
+   "width": "not visible (≈1–2)",
+   "heightDelta": "not visible",
+   "landing": "path",
+   "lethal": true,
+   "runUp": "not visible",
+   "move": [
+    "plain",
+    "walk around"
+   ],
+   "coupling": "frog patrols beside it",
+   "failure": "death (pit, assumed)",
+   "nearby": [
+    "S3-c",
+    "E-S3-b"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "a frog that sidesteps toward Crash next to a hole: the enemy's lateral move is the risk",
+   "evidence": "F3 p016L (dark notch, frog)",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "safe water (shallow pond) filling the path",
+   "width": "≈5–6 along the path; full width",
+   "heightDelta": 0,
+   "landing": "path beyond the bend",
+   "lethal": false,
+   "runUp": "from the slope",
+   "move": [
+    "walk/wade",
+    "walk the left wall (mask hint 7)"
+   ],
+   "coupling": "frog in the pond beside a Nitro",
+   "failure": "no death by itself; fighting the frog may set off the Nitro",
+   "nearby": [
+    "S4-b",
+    "E-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the wall lane is offered as the way to skip a frog-and-Nitro fight",
+   "evidence": "F3 p016R; mask hint 7",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "safe water (shallow band) across the path",
+   "width": "≈3–4; full width",
+   "heightDelta": 0,
+   "landing": "path with W (S4-d)",
+   "lethal": false,
+   "runUp": "short",
+   "move": [
+    "walk/wade"
+   ],
+   "coupling": "none",
+   "failure": "no death by itself (inferred)",
+   "nearby": [
+    "S4-d"
+   ],
+   "roles": [
+    "REST"
+   ],
+   "why": "breath before the berserker blockade",
+   "evidence": "F3 p016R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-c",
+   "section": "S4",
+   "kind": "safe water (shallow patch) on the left of the path",
+   "width": "≈2–3; half width",
+   "heightDelta": 0,
+   "landing": "path",
+   "lethal": false,
+   "runUp": "not visible",
+   "move": [
+    "walk/wade"
+   ],
+   "coupling": "frog and goat stand in it",
+   "failure": "no death by itself (inferred)",
+   "nearby": [
+    "E-S4-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "two weak enemies on the side lane after the blockade",
+   "evidence": "F3 p016R",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-d",
+   "section": "S4",
+   "kind": "floor hole across the path before the bridge",
+   "width": "≈3–4 (needs the longest running jump; estimate)",
+   "heightDelta": "not visible",
+   "landing": "bridge",
+   "lethal": true,
+   "runUp": "from before the big rock",
+   "move": [
+    "running",
+    "plain"
+   ],
+   "coupling": "none (time pressure only in TT)",
+   "failure": "death (pit, assumed)",
+   "nearby": [
+    "P-S4-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the only real long jump of the course comes last, after all enemy tests",
+   "evidence": "F3 p103R 29 (cross the hole from before the big rock, jump as far as possible)",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "bottomless pit (bonus gap 1)",
+   "width": "≈1–2",
+   "heightDelta": 0,
+   "landing": "walkway 2 (≈3–4 long)",
+   "lethal": true,
+   "runUp": "≈2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-a"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "a short gap between bounce lessons",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-b",
+   "section": "B",
+   "kind": "bottomless pit (bonus gap 2)",
+   "width": "≈2",
+   "heightDelta": 0,
+   "landing": "walkway 3",
+   "lethal": true,
+   "runUp": "≈1–2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-b"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "second gap, same size: rhythm, not escalation",
+   "evidence": "F3 p019L",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B-c",
+   "section": "B",
+   "kind": "bottomless pit under the outline staircase",
+   "width": "≈4–5",
+   "heightDelta": "+3 (exit walkway above walkway 3; estimate)",
+   "landing": "exit walkway; a ? floats low in the pit",
+   "lethal": true,
+   "runUp": "walkway 3",
+   "move": [
+    "held/high",
+    "arrow",
+    "plain"
+   ],
+   "coupling": "the ! closes the pit with outline blocks",
+   "failure": "ejected from the bonus (series rule)",
+   "nearby": [
+    "B-d",
+    "B-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the pit holds a crate that must be taken before the switch fills the space (Prima: bounce across, take the box between the ledges, then hit the !)",
+   "evidence": "F3 p019L; P3 p013R shots 11–12",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain (log)",
+    "plain (onto the wall)",
+    "drop (before the hole)"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "not visible (hole ≈2)",
+   "rest": "P-S1-d (crate fence)",
+   "noStop": false,
+   "why": "S1 is a walking section; its few jumps only change lanes (floor ↔ wall) and pass the hole at the bend",
+   "evidence": "F3 p103R 02–06; F3 p015L"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 2,
+   "moves": [
+    "plain (onto the left wall at the hole)",
+    "drop"
+   ],
+   "rhythm": "isolated",
+   "maxGap": "not visible",
+   "rest": "P-S2-d (C2)",
+   "noStop": false,
+   "why": "the hole is crossed by the wall lane rather than a long jump",
+   "evidence": "F3 p103R 13–14"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 1,
+   "moves": [
+    "plain (over / past the berserker)"
+   ],
+   "rhythm": "timed",
+   "maxGap": "≈1–2 (enemy width)",
+   "rest": "P-S3-d",
+   "noStop": false,
+   "why": "the single required jump of the section is a timed hurdle over an enemy, not a gap",
+   "evidence": "F3 p016L mask hint 5"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "plain (small hops along the wall)",
+    "running (long jump over the hole)",
+    "plain"
+   ],
+   "rhythm": "even hops, then one long jump",
+   "maxGap": "≈3–4",
+   "rest": "P-S4-e (bridge)",
+   "noStop": false,
+   "why": "the course saves its only long jump for the end, after a run of small hops that avoid the wall's snags",
+   "evidence": "F3 p103R 24, 26–27, 29–30"
+  },
+  {
+   "id": "J-B-a",
+   "section": "B",
+   "count": 7,
+   "moves": [
+    "crate-bounce (striped sandwiches)",
+    "plain",
+    "arrow",
+    "plain",
+    "arrow",
+    "held/high (across the pit)",
+    "drop (pit crate)"
+   ],
+   "rhythm": "syncopated (vertical bounces between horizontal hops)",
+   "maxGap": "≈4–5 (pit)",
+   "rest": "P-B-f (exit walkway)",
+   "noStop": false,
+   "why": "the bonus is where Gee Wiz keeps its jumping: bounce, gap, arrow, gap, arrow, pit",
+   "evidence": "F3 p019L; P3 p013R shots 10–12"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "big rocks on the wall line (static blocker)",
+   "placement": "flank (on the wall lanes)",
+   "timing": "static; visible from afar",
+   "counter": [
+    "go around (drop to the floor before it)",
+    "jump over (TT 18: the rock jutting from the wall)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "P-S1-b wall lanes"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "rocks end the safe wall lane at chosen points so the player re-enters the floor where the designers want",
+   "evidence": "F3 p103R 02, 18, 24, 29; P3 p013L shot 2 (large pale rock on the right wall)",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1",
+   "kind": "Nitro beside a frog",
+   "placement": "on the path, beside an enemy",
+   "timing": "static; the frog's sidestep is the moving part",
+   "counter": [
+    "avoid",
+    "go around (wall)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S1-b frog",
+    "S1-e"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "a frog sidesteps toward Crash, so fighting it near the Nitro pushes the player into the blast",
+   "evidence": "F3 p015L (Nitro bubble by the third frog)",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S1-c",
+   "section": "S1",
+   "kind": "Nitro mixed into crate groups on the far bank (two Nitros)",
+   "placement": "on the path, touching ordinary crates",
+   "timing": "static",
+   "counter": [
+    "avoid",
+    "break the neighbours carefully"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S1-h",
+    "S1-i",
+    "E-S1-c wizard beam"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the stage theme (F3 intro): explosives hidden among normal crates, here met while the wizard's beam homes in",
+   "evidence": "F3 p015R",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "Nitro beside the iron column",
+   "placement": "on the path, flank of the column",
+   "timing": "static",
+   "counter": [
+    "avoid",
+    "slam from the other side"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-a",
+    "slot timer S2-b"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "punishes a careless super body slam at the new move's first real test",
+   "evidence": "F3 p015R; P3 p013L shot 4",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "Nitro in the right lane of the squeeze",
+   "placement": "across path (right lane)",
+   "timing": "static",
+   "counter": [
+    "avoid",
+    "jump past the berserker instead (mask hint 5)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S3-a berserker",
+    "water strip left"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "closes the right lane so the berserker must be faced or jumped",
+   "evidence": "F3 p016L; mask hint 5",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "TNT under a ? crate (3 s fuse)",
+   "placement": "on the path",
+   "timing": "3 s after a stomp (legend); a spin from the side blows it at once; the fuse count is the warning",
+   "counter": [
+    "destroy (stomp, then leave)",
+    "mask first (TA5)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-d Aku",
+    "S3-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the only TNT, placed one beat after the mask",
+   "evidence": "F3 p016L mask hint 6; F3 p011",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "Nitro in the pond beside a frog",
+   "placement": "on the path (in the water)",
+   "timing": "static",
+   "counter": [
+    "go around (left wall, mask hint 7)",
+    "avoid"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-a frog",
+    "G-S4-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "repeats the S1 frog-and-Nitro test, now with the wall bypass named by the guide",
+   "evidence": "F3 p016R; mask hint 7",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "Nitro beside the bonus pad",
+   "placement": "flank of the bonus entrance",
+   "timing": "static",
+   "counter": [
+    "avoid"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S4-b"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "a careless approach to the optional room costs a life",
+   "evidence": "F3 p016R",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "Nitro columns flanking the goal portal (2×3) and two Nitros by the green !",
+   "placement": "flank (gate passage)",
+   "timing": "static; cleared only by the green !",
+   "counter": [
+    "avoid",
+    "destroy via green !"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S4-f berserker in the gate",
+    "S4-e green !"
+   ],
+   "roles": [
+    "LANE-BLOCK",
+    "TEST"
+   ],
+   "why": "narrows the last passage and doubles as the count reminder at the exit",
+   "evidence": "F3 p016R; F3 p103R 31",
+   "confidence": "high"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "frog (ケロッパ)",
+   "count": 2,
+   "archetype": "hopper (paces a fixed front-back range; sidesteps toward Crash when close)",
+   "behaviour": "hops intermittently, so the approach timing is awkward (F3 p012R)",
+   "counter": [
+    "spin",
+    "stomp (jump on)",
+    "slide",
+    "body slam"
+   ],
+   "fails": [
+    "approaching head-on while it hops (it steps into you)"
+   ],
+   "placement": "in the first water band",
+   "roles": [
+    "TEACH"
+   ],
+   "firstAlone": true,
+   "firstAloneNote": "pair, but on shallow water with nothing lethal near",
+   "why": "the frog's lateral lunge is learned where a mistake costs only a life to the frog, not a fall",
+   "evidence": "F3 p015L; F3 p012R; F3 p103R 01 (the far frog is a timing cue)",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "frog (ケロッパ)",
+   "count": 1,
+   "archetype": "hopper",
+   "behaviour": "as E-S1-a, next to a Nitro",
+   "counter": [
+    "spin",
+    "stomp (jump on)",
+    "avoid (wall lane)"
+   ],
+   "fails": [
+    "fighting it beside the Nitro"
+   ],
+   "placement": "on line, beside a Nitro",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "second frog adds an explosive to the known enemy",
+   "evidence": "F3 p015L",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-c",
+   "section": "S1",
+   "kind": "wizard (魔法研究員)",
+   "count": 1,
+   "archetype": "projectile (stationary caster with a slow homing beam)",
+   "behaviour": "swings his staff and fires a slow beam that follows Crash; open to attack right after firing",
+   "counter": [
+    "spin (erases the beam, then spin him)",
+    "avoid (side to side)",
+    "shoot (bazooka only strips his robe)"
+   ],
+   "fails": [
+    "running straight away (the beam homes)",
+    "bazooka from range (no kill)"
+   ],
+   "placement": "on line just past the hole at the bend",
+   "roles": [
+    "TEACH",
+    "PROJECTILE"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "only enemy in view, but a hole lies just before him and Nitro-mixed crates just after",
+   "why": "the stage's new enemy type; the player crosses a hole and then the beam arrives (TT 05–06: pass on his right)",
+   "evidence": "F3 p015L; F3 p012R; F3 p015R mask hint 3; F3 p103R 05–06; P3 p013L shot 5",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S1-d",
+   "section": "S1",
+   "kind": "goat (ヤギッパ)",
+   "count": 1,
+   "archetype": "patrol-1D (paces a fixed straight line, side to side or front-back)",
+   "behaviour": "fixed route, can be dodged without fighting (F3 p012R)",
+   "counter": [
+    "spin",
+    "stomp (jump on; also a foothold)",
+    "slide (fling into the stacks)",
+    "body slam"
+   ],
+   "fails": [],
+   "placement": "on line, guarding the three 3-stacks",
+   "roles": [
+    "TOOL/STEP",
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "a predictable patrol beside a crate fence: the goat is the TT tool (slide it into the stacks; stand on it to spin the tops)",
+   "evidence": "F3 p015R TA2; F3 p012R; F3 p103R 08–09",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "frog (ケロッパ)",
+   "count": 1,
+   "archetype": "hopper",
+   "behaviour": "stands with a goat on the S-bend",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "on line (S-bend after the iron column)",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": null,
+   "why": "costs time while the slot crate ahead counts down (mask hint 4) — inference",
+   "evidence": "F3 p015R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-b",
+   "section": "S2",
+   "kind": "goat (ヤギッパ)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "paces beside the frog",
+   "counter": [
+    "spin",
+    "slide",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": null,
+   "why": "pairs a patrol with a hopper: two rhythms to read at once",
+   "evidence": "F3 p015R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S2-c",
+   "section": "S2",
+   "kind": "berserker (バーサーカー研究員)",
+   "count": 1,
+   "archetype": "static (heavy sword sweep with a wind-up)",
+   "behaviour": "braces to lift the sword (the opening); a missed swing sends the blade tip at you; after one full turn the sword also hits behind him",
+   "counter": [
+    "spin (during the wind-up)",
+    "stomp (jump on)",
+    "slide",
+    "avoid (pass a little early when dodging sideways)"
+   ],
+   "fails": [
+    "spinning into the swing",
+    "standing behind him after a full turn"
+   ],
+   "placement": "on line in the narrow stepped passage",
+   "roles": [
+    "GATEKEEPER",
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "firstAloneNote": "a wizard covers the passage from the raised end; berserkers were met in stage 1",
+   "why": "a melee blocker in the choke while a ranged enemy watches it",
+   "evidence": "F3 p015R; F3 p012R; F3 p103R 15–17",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-d",
+   "section": "S2",
+   "kind": "wizard (魔法研究員)",
+   "count": 1,
+   "archetype": "projectile",
+   "behaviour": "fires down the passage from the raised end",
+   "counter": [
+    "avoid (right-wall lane, TA4)",
+    "spin"
+   ],
+   "fails": [
+    "walking the floor of the passage"
+   ],
+   "placement": "above (raised end of the passage)",
+   "roles": [
+    "PROJECTILE"
+   ],
+   "firstAlone": null,
+   "why": "height plus a homing beam makes the floor the dangerous lane; the wall lane is the answer",
+   "evidence": "F3 p015R TA4; F3 p103R 15–17",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S2-e",
+   "section": "S2",
+   "kind": "goat (ヤギッパ)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "paces before C2",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line before the checkpoint",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "a last, easy hurdle before the save",
+   "evidence": "F3 p016L",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "berserker (バーサーカー研究員)",
+   "count": 1,
+   "archetype": "static (sword sweep)",
+   "behaviour": "swings in the centre lane of the squeeze",
+   "counter": [
+    "avoid (jump past when he is not swinging)",
+    "spin (wind-up)"
+   ],
+   "fails": [
+    "side-stepping into the Nitro lane",
+    "passing during the swing"
+   ],
+   "placement": "between hazards (water left, Nitro right)",
+   "roles": [
+    "TIMING-GATE",
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "mask hint 5 names the counter: jump over him while the sword is still",
+   "evidence": "F3 p016L mask hint 5; P3 p014L shot 16 (lane after C2)",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "frog (ケロッパ)",
+   "count": 1,
+   "archetype": "hopper",
+   "behaviour": "beside a hole in the right edge",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [
+    "letting it push you toward the hole"
+   ],
+   "placement": "flank, beside a hole",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "its sidestep and the hole share a lane — inference",
+   "evidence": "F3 p016L",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-c",
+   "section": "S3",
+   "kind": "goat (ヤギッパ)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "paces in the mouth of the castle arch",
+   "counter": [
+    "spin",
+    "slide",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "on line in a choke (arch)",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": null,
+   "why": "a patrol enemy that cannot be walked around inside the tunnel",
+   "evidence": "F3 p016L",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S3-d",
+   "section": "S3",
+   "kind": "wizard (魔法研究員)",
+   "count": 1,
+   "archetype": "projectile",
+   "behaviour": "stands beyond the arch near the W-on-slot",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line after the choke",
+   "roles": [
+    "PROJECTILE"
+   ],
+   "firstAlone": null,
+   "why": "the slot timer runs while the beam homes in — two clocks at once",
+   "evidence": "F3 p016L",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "frog (ケロッパ)",
+   "count": 1,
+   "archetype": "hopper",
+   "behaviour": "in the pond beside a Nitro",
+   "counter": [
+    "avoid (walk the left wall)",
+    "spin from the far side"
+   ],
+   "fails": [
+    "defeating it next to the Nitro (mask hint 7)"
+   ],
+   "placement": "in water beside a Nitro",
+   "roles": [
+    "BAIT",
+    "TEST"
+   ],
+   "firstAlone": null,
+   "why": "an enemy you should not fight: skipping it is the skill",
+   "evidence": "F3 p016R mask hint 7",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-b",
+   "section": "S4",
+   "kind": "goat (ヤギッパ)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "paces just past the bonus step",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "keeps the post-bonus stretch from being free",
+   "evidence": "F3 p016R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-c",
+   "section": "S4",
+   "kind": "berserker (バーサーカー研究員)",
+   "count": 2,
+   "archetype": "static (sword sweep)",
+   "behaviour": "stand side by side across the path (blocking)",
+   "counter": [
+    "avoid (pass on the right side quickly, mask hint 8)",
+    "spin (wind-up)"
+   ],
+   "fails": [
+    "passing between or on the left"
+   ],
+   "placement": "on line (blockade)",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": null,
+   "why": "two sweeps leave one designed gap; the guide even apologises for the blockade",
+   "evidence": "F3 p016R mask hint 8; F3 p103R 28; P3 p013R shot 8",
+   "confidence": "high"
+  },
+  {
+   "id": "E-S4-d",
+   "section": "S4",
+   "kind": "frog (ケロッパ)",
+   "count": 1,
+   "archetype": "hopper",
+   "behaviour": "with a goat in the water patch",
+   "counter": [
+    "spin",
+    "stomp (jump on)"
+   ],
+   "fails": [],
+   "placement": "in water (side)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "filler pressure before the power stone",
+   "evidence": "F3 p016R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-e",
+   "section": "S4",
+   "kind": "goat (ヤギッパ)",
+   "count": 1,
+   "archetype": "patrol-1D",
+   "behaviour": "paces beside the frog in the water patch",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "in water (side)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": null,
+   "why": "the frog-and-goat pair of S2 returns as the last weak pair before the gate",
+   "evidence": "F3 p016R",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-f",
+   "section": "S4",
+   "kind": "berserker (バーサーカー研究員)",
+   "count": 1,
+   "archetype": "static (sword sweep)",
+   "behaviour": "stands in the goal-gate arch",
+   "counter": [
+    "avoid (run past on his left, TA7)",
+    "spin (wind-up)"
+   ],
+   "fails": [
+    "stopping in front of him"
+   ],
+   "placement": "on line in the gate choke",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": null,
+   "why": "the last enemy guards both the exit and the green ! in front of it",
+   "evidence": "F3 p016R TA7; F3 p103R 30",
+   "confidence": "high"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "start gate",
+    "W/W, S",
+    "water band + 2 frogs + iron cube + Aku",
+    "log (step to the left wall)",
+    "frog + Nitro",
+    "hole at the bend + slot group",
+    "wizard (homing beam)",
+    "water band: ?, W+N, ?+W+W+N",
+    "goat + three 3-stacks",
+    "C1"
+   ],
+   "gaps": 3,
+   "enemies": 5,
+   "hazards": 3
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "steps + castle arch",
+    "iron column (1UP) + Nitro + 2 striped",
+    "frog + goat",
+    "7-crate row with slot",
+    "?",
+    "hole (left-wall lane)",
+    "long water band",
+    "W/W",
+    "berserker in the narrow stepped passage",
+    "wizard on the raised end",
+    "goat",
+    "C2"
+   ],
+   "gaps": 2,
+   "enemies": 5,
+   "hazards": 1
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "hole beside C2",
+    "water band",
+    "? (TT 1 s)",
+    "grey step",
+    "squeeze: water left, berserker centre, Nitro right",
+    "?",
+    "frog + hole",
+    "Aku",
+    "? on TNT",
+    "goat in the castle arch",
+    "tunnel",
+    "W on slot",
+    "wizard",
+    "C3"
+   ],
+   "gaps": 3,
+   "enemies": 4,
+   "hazards": 2
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "slope + 10-crate stepped block",
+    "pond: frog + Nitro (left wall)",
+    "bonus pad + Nitro",
+    "step + goat",
+    "water band",
+    "W",
+    "two berserkers blocking (pass right)",
+    "frog + goat in water",
+    "power stone",
+    "hole (long jump from before the rock)",
+    "bridge",
+    "green ! + 2 Nitro",
+    "berserker in the gate arch (pass left)",
+    "2×3 Nitro columns",
+    "goal"
+   ],
+   "gaps": 4,
+   "enemies": 7,
+   "hazards": 3
+  },
+  {
+   "section": "B",
+   "beats": [
+    "entry planks",
+    "walkway 1: three striped sandwiches",
+    "gap",
+    "walkway 2: steel arrow + high ?",
+    "gap",
+    "walkway 3: arrow + floating 2×3 block + steel !",
+    "pit: low ? (take it first)",
+    "!",
+    "outline staircase",
+    "exit walkway (3-high outline column)",
+    "exit pad"
+   ],
+   "gaps": 3,
+   "enemies": 0,
+   "hazards": 0
+  }
+ ],
+ "geometryObservations": [
+  "A walking stage: the main course has no full-width chasm until the hole near the goal (G-S4-d). Its gaps are shallow water bands (G-S1-a, G-S1-c, G-S2-b, G-S3-b, G-S4-a/b/c) and holes that take only part of the width (G-S1-b, G-S3-a, G-S3-c), so difficulty comes from enemies and hidden explosives, not from jumping.",
+  "Three lanes by construction: the low stone walls on both edges are walkable (F3 p012L), and the guide uses them as the answer to almost every threat — wizard beams (TA4), the frog beside a Nitro (mask hint 7), the berserker blockade (mask hint 8 uses the right side) — while big rocks and holes end the wall lanes at chosen points (O-S1-a, G-S1-b, G-S2-a).",
+  "The new enemy (wizard) debuts right after a hole (G-S1-b → E-S1-c), and each later wizard is paired with a different space: above a narrow passage behind a berserker (E-S2-c/d), and beyond a tunnel with a slot crate timing out (E-S3-d).",
+  "Known enemies from stage 1 (frogs, goats, berserkers) are recombined with explosives: frog + Nitro twice (E-S1-b, E-S4-a), berserker + Nitro lane (E-S3-a + O-S3-a), berserker pair before the green ! and a berserker in front of the Nitro gate (E-S4-c, E-S4-f).",
+  "Water is the frog habitat: four of five frog records stand in or at a water band, so a purple band on screen reads as \"a hopper will cut across here\" before the frog is visible.",
+  "Chokes hold exactly one enemy each — the S2 stepped passage (berserker), the S3 castle arch (goat), the goal gate (berserker) — so a choke always means a forced engagement or a timed pass, never a free walk.",
+  "The S3 lane squeeze (P-S3-b) is a three-option test: water (safe but where the frogs come from), sword (timed), Nitro (lethal); the guide's solution is a timed jump past the enemy rather than a lane.",
+  "Enemy density stays level (5, 5, 4, 7 enemies per section) while crate density falls (31, 17, 8, 11 boxes): the late sections are combat-led, and the reward block sits on the calm slope right after C3 (P-S4-a) as the last rest.",
+  "The final stretch stacks one blocker per beat: blockade → hole → bridge → green ! with Nitros → berserker in the gate → Nitro columns around the portal. Escalation at the exit is done with blockers, not with longer gaps.",
+  "The only long jump (G-S4-d) comes last and is set up by a run-up from a rock; everything else is a hop (log, wall, step).",
+  "The time-trial line is the walls plus diagonal cuts (TT 02, 15–17, 26–27): the course is built so the shortest-looking line is not the fastest (F3 p103R intro) — useful geometry for a skate line, which also wants raised edges.",
+  "The bonus is the stage's jump room: three walkways with 1–2 u gaps, steel arrows as the vertical tool, and a pit under an outline staircase whose crate must be taken before the switch fills the space (G-B-c)."
+ ],
+ "geometryTransfer": [
+  "Walkable curbs as skate lanes: line a 5–7 m path with 1-crate-high (≈1.15 m), ≈1 m-wide walls; ordinary platform edges already grind, so a rider at 12 m/s cruise gets two grind lanes that bypass floor enemies. End each wall run with a `rock` or a `pit` notch every 15–25 m so the player has to drop to the floor where you want them (the Gee Wiz rock/hole rhythm).",
+  "Projectile enemy after a hole: a `sentry` 6–10 m past a 2–2.5 m `pit` notch (well inside the 5.6 m running jump) so the player lands into its fire; give the projectile a slow speed and let a spin destroy it (wizard beam), and keep the wall lane beside it as the safe answer.",
+  "Three-lane squeeze: on a 5 m path put soft ground (`groundSpeedLimit`, e.g. 2.4 m/s) on the left 1.7 m, a `spinner` in the centre, a Nitro on the right; the intended counter is a timed full jump over the centre enemy (2.85 m apex) or a charged ollie (1.7 m) — check the enemy hitbox height against the ollie before relying on it.",
+  "Blockade choke: two `charger`s or `spinner`s side by side across a 5 m path, leaving one 1.2–1.5 m gap on one side; on the board the gap is a line choice at cruise speed, on foot a timed run past.",
+  "End-of-level long jump: a 3–4 m `pit` across the full width with a rock as the run-up marker and a 2.3 m-wide bridge as the landing, placed after the last checkpoint; on foot it is a real jump (5.6 m reach), on the board an easy ollie (≈6.6 m at cruise), so it rewards skaters without blocking walkers.",
+  "Bonus jump room: three 6–8 m walkways with 1.2–2.3 m gaps, a steel arrow under a floating block on each, and a pit under an outline staircase with one crate low in the pit that must be taken before the `bang` materialises the stairs."
+ ]
 }

@@ -257,6 +257,170 @@ C3 → [W][W] → water, grass, e:ptera → [S] → geyser → [?r1] → (cross 
 6. **Life on a plinth.** A single 1UP on a 1-crate-high block beside the line, reachable with a full ollie
    (1.7 m) or a hop, early in the level.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: F3 p036–p038 (path topology with lava patches, geyser vents, grass, logs, enemies, POINT 1–5 and A–C, time-attack boxes 1–4), F3 p106L (time-trial frames 01–32 and captions), F3 p032L (prehistoric tips: clinging grass, the triceratops breaks what you leave, crates on the path snag you), F3 p032R (prehistoric monster list), F3 p040L (bonus side view and hint); P3 p021R–p023L shots 2–24 (scale and captions). Sizes are estimates in u read against crates and Crash in TT frames and Prima shots; the map gives order and topology. "Not visible" marks values no source shows.
+
+### Camera and route shape
+
+A narrow jungle path (≈3–4 u) seen into the screen, with no bottomless chasm across it: the gaps are lava patches that cover part of the width (left half, right half, alternating) or a whole band, laid among steam-geyser vents, clinging grass and fallen trees. The lava area before C3 is a side-view earth ledge above lava (P3 shots 5–6, 21–22), and the last section is a downhill triceratops chase running toward the camera (P3 shot 9). The yellow-gem course leaves from the C1 platform, crosses a sand strip above lava and drops the player back at the lava area.
+
+- **S1** — into-screen: jungle path from the stopwatch: pedestal with the 1UP, lava patches at the edges, grass, two Crafish, a wave researcher; C1 on the yellow platform
+- **S2** — into-screen: lava slalom with two Crafish, Baby T nest (optional ride), geysers and grass, a Nitro pair, a fallen tree, two wave researchers; C2
+- **YELLOW** — into-screen: lava patches and water streams, a U-turn onto a sand strip above lava with iron/TNT stacks, its own checkpoint, grass bands flanked by Nitros, two pterodactyls; ends on a platform ride to the lava area
+- **S3** — into-screen, then side-scroll in the lava area: clearing with the 3×3 wall, lava patches, then a side-view earth ledge above lava: stepped pyramid, arrow column, steel bar over two Nitros; descent to the bonus entrance and C3
+- **BONUS** — side-scroll: left → right over thin earth slabs with 1–2 u gaps; iron-crate slam lessons
+- **S4** — toward-camera chase: downhill path run toward the camera with the triceratops behind: water patches, grass, geysers, pterodactyls, lava bands, a spreading lava band, then a drop into the goal
+
+### Platforms and gaps (section by section; table per section)
+
+Columns *kind* to *coupling / failure* and *evidence* are observations; *why* is design inference. Platforms are `P-…`, gaps `G-…`; sizes are width × length in u (one crate) where visible, and every number is an estimate read against crates or the character in the same picture.
+
+#### S1 — Start → C1
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | corridor (jungle path): start with the stopwatch, a geyser vent and the Aku crate on the left | ≈3–4 wide | 0 | walk | edges jungle sides (no drop visible in TT frames); static | REST | a flat start before the first lava and Crafish | F3 p036L; F3 p106L 01 — conf. medium |
+| P-S1-b | S1 | pillar (white pedestal block at the left edge): the 1UP sits on top (a 3-s box in time trial) | ≈1×1 top | +1 to +2 (estimate; TT frames show a tall white block) | jump onto it (TT: long jump to the box on top) | edges open; static | PERCH | a single deliberate jump to a displayed reward, beside the first lava | F3 p036L; F3 p106L 01–03 — conf. medium |
+| G-S1-a | S1 | lava patch on the right half of the path | ≈2×1.5; landing path (the left half stays dry) | 0 | walk (keep left) | none / death (lava) (lethal; run-up from the start); nearby S1-b | TEACH | the first lava is a lane hazard to walk past, not a jump | F3 p036L — conf. medium |
+| G-S1-b | S1 | lava band along the right side of the path | ≈1.5 wide × 4–5 long; landing dry left side with the crates | 0 | walk (keep left), plain | a Crafish and a geyser stand just before it / death (lava) (lethal; run-up path); nearby S1-c, S1-d, S1-e, E-S1-a | TEST | narrows the dry path to ≈2 u exactly where the crates and the first Crafish are | F3 p036L — conf. medium |
+| P-S1-c | S1 | square pad (yellow-gem platform): C1 on the platform where the yellow course leaves | ≈3×3 | 0 | walk | edges open; static (rides to the yellow course when you hold the gem) | CHECKPOINT-PAD | both routes restart from the same save | F3 p036R ("10コ"); P3 p022L shot 10 — conf. high |
+
+#### S2 — C1 → C2 (Baby T stretch)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| G-S2-a | S2 | lava patches alternating left and right | ≈1.5–2 each; landing path | 0 | walk (weave), plain | two Crafish stand between the patches; a spin into a spinning Crafish throws you far (F3 p032R) / death (lava) (lethal; run-up from C1); nearby E-S2-a | TEST | a slalom where the enemy's knock-back points at the lava | F3 p036R — conf. medium |
+| P-S2-a | S2 | vehicle lane (Baby T ride, optional): nest at the left edge; a second Baby T comes later; the ride ends where P3 shot 4 says Baby T goes no further | ≈3–4 wide path | 0 | ride (TT: dash on foot instead, faster) | edges jungle sides; ride: Baby T jumps high (clears geysers) and smashes crates and grass; O dismounts | TEACH | the ally's jump is matched to the stretch's hazard (geysers); riding is safe, walking is fast | F3 p036R POINT 3, TA2; P3 p021R shots 3–4; F3 p106L 12, 16 — conf. high |
+| G-S2-b | S2 | lava patches after the nest (alternating) | ≈1.5–2; landing path | 0 | ride (Baby T jump), plain | a geyser vent and a grass bush sit between them / death (lava) (lethal; run-up path); nearby S2-b, S2-c | TEST | lava, geyser and grass in one stretch, which the Baby T clears | F3 p036R; P3 p021R shot 3 — conf. medium |
+| P-S2-b | S2 | corridor (path before C2): Nitro pair on the right, a fallen tree, two wave researchers, then C2 | ≈3 wide | 0 | walk; jump the tree | edges jungle sides; static | CHECKPOINT-PAD | three different blockers just before the save | F3 p036R — conf. medium |
+
+#### YELLOW — yellow-gem course (from the C1 platform)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-YELLOW-a | YELLOW | square pad (yellow-gem platform ride): carries Crash from C1 to the yellow course | ≈3×3 | 0 | ride | edges open; moving (platform ride) | STEPPING | a one-way entry to the return-visit route | F3 p036R; P3 p022L shot 10 — conf. high |
+| G-YELLOW-a | YELLOW | lava patches on the first stretch — blue streams run between the patches (effect not stated) | ≈1.5–2; landing path | 0 | plain, walk (weave) | a Crafish stands on a lava patch (POINT A) / death (lava) (lethal; run-up from the platform); nearby Y-a, E-YELLOW-b | TEST | P3: the first stretch is the hardest, the nearest checkpoint is far and there is no mask | F3 p037L POINT A; P3 p022L — conf. medium |
+| P-YELLOW-b | YELLOW | narrow ledge (sand strip above lava): beige strip with grassy edges after a U-turn; iron/TNT stacks on it | ≈3 wide × ≈12 long | 0 | walk; slam the stacks from a distance | edges open to lava (POINT B screenshot); static | ARENA | the slam lesson happens on a strip with little room to back away from the blast | F3 p037R POINT B; P3 p022L shot 12 — conf. medium |
+| P-YELLOW-c | YELLOW | corridor (path past the yellow-course checkpoint): checkpoint (30) with a wave researcher beside it, grass rows, Nitro singles | ≈3 wide | 0 | walk; tornado-spin through the grass | edges jungle sides; static | CHECKPOINT-PAD | the course's own save comes after its hardest stacks | F3 p037R ("30コ"); P3 p022R shot 13 — conf. medium |
+| G-YELLOW-b | YELLOW | lava patches on the final strip — grass clumps and blue streams between the patches | ≈1.5–2; landing path | 0 | plain | pterodactyls swoop over the strip / death (lava) (lethal; run-up path); nearby Y-i, E-YELLOW-e | TEST | the last stretch mixes every hazard of the course before the green ! | F3 p037L — conf. medium |
+| P-YELLOW-d | YELLOW | square pad (exit platform): after the secret gem, the green ! and five loose lives; rides to the lava area | ≈3×3 | 0 | ride | edges open; moving (platform ride) | REST | drops the player at the lava area, past S2 and S3's jungle (P3 NOTE) | F3 p037L; P3 p022R shot 14 — conf. medium |
+
+#### S3 — C2 → C3 (jungle, then the side-view lava area)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | wide floor (clearing with the 3×3 wall): clearing after fallen trees and two wave researchers | ≈4×5 | 0 | walk | edges jungle sides; static | REST | a big crate deposit in an open space before the lava area | F3 p038L — conf. medium |
+| G-S3-a | S3 | lava patches before the lava area | ≈1.5–2; landing path | 0 | plain, walk (weave) | none / death (lava) (lethal; run-up path); nearby S3-b, S3-c | STEPPING | pacing hazards between the clearing and the junction | F3 p038L–p038R — conf. low |
+| P-S3-b | S3 | narrow ledge (earth ledge above lava, side view): grass-topped ledge running left → right; the yellow course arrives here | ≈2–3 deep; long | 0 | walk (side-scroll) | edges open to lava in front and behind; static | ARENA | the side view turns the lava from patches into a floor you must not leave | F3 p038R; P3 p021R shot 6; F3 p106L 20–24 — conf. medium |
+| P-S3-c | S3 | crate-built stairs (stepped pyramid 3-2-1 used as steps up the bank): striped crate floating above the top step | 3 wide at the base | +1 per step | climb, bounce, spin | edges open; breakable (crates) | STEPPING | crates as the staircase: climbing and collecting are one action | F3 p038R; P3 p023L shot 21; F3 p106L 20 — conf. medium |
+| G-S3-b | S3 | chasm with bounce (vertical: arrow block under a floating crate column) | n/a (vertical); landing steel bar built by the ! at the top | +3 to +4 (estimate) | arrow, held/high, double (TT 21–22) | each bounce breaks the lowest crate; the last bounce hits the ! (TA3) / drops back onto the ledge (climb or walk back; mines sit under the bar's ends) (non-lethal; run-up ledge); nearby S3-e, S3-f, S3-g | TEST | a height gap climbed by consuming the crates that block it | F3 p038R TA3; P3 p021R shot 6; F3 p106L 21–24 — conf. high |
+| P-S3-d | S3 | bridge (steel bar made from the outline row): six outline cells become a grey steel bar over two Nitros, leading to a floating ? | ≈6 long | +2 to +3 above the ledge (estimate) | walk across from the column top | edges open; switch-made (outline → steel) | STEPPING | the switch builds terrain, not crates: a raised path over a mine pair | P3 p021R shot 6; F3 p038R — conf. high |
+| P-S3-e | S3 | corridor (descending path to C3): power stone, bonus entrance, a gully between two jagged rock jaws where the triceratops waits, C3 on grass | ≈3 wide | −2 (descent; estimate) | walk | edges jungle sides; static | CHECKPOINT-PAD | the pursuer is shown waiting before the save that starts the chase | F3 p038R ("99コ"); P3 p022L shot 8 — conf. high |
+
+#### BONUS — side view (entered before C3)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-BONUS-a | BONUS | square pad (earth slab, wood on iron): first slab after the stump | ≈5 long | 0 | walk; slam | edges open; static | TEACH | the first iron crate is met on a wide slab | F3 p040L — conf. medium |
+| G-BONUS-a | BONUS | bottomless pit (bonus gaps between earth slabs) | ≈1–2; landing earth slabs ≈3–5 long | −0.5 to +0.5 | plain | none / ejected from the bonus (series rule) (lethal; run-up short); nearby B-a, B-b, B-c, B-d | STEPPING | small gaps between slam stations: the room is about the slam, not the jumps | F3 p040L — conf. medium |
+| P-BONUS-b | BONUS | square pad (short slab with the iron 3-stack): iron / ? / iron | ≈3 long | −0.5 | slam | edges open; static | STEPPING | a single stack per slab | F3 p040L — conf. medium |
+| P-BONUS-c | BONUS | square pad (stepped double slab with the 2×4 iron group): iron block with a wood and two ? | ≈5 long | +0.5 | slam (one slam clears the block) | edges open; static | ARENA | the widest slab holds the biggest block | F3 p040L — conf. medium |
+| P-BONUS-d | BONUS | square pad (slab with the iron pyramid and the life): iron pyramid with the 1UP in the base | ≈5 long | 0 | slam | edges open; static | ARENA | the life is locked inside iron | F3 p040L — conf. medium |
+| P-BONUS-e | BONUS | square pad (short slab with the 2×2 iron block): a ? floats high above it | ≈3 long | 0 | use the block as a step to the floating ?, then slam it (P3 shot 16) | edges open; static | PERCH | the step must be used before it is destroyed | F3 p040L; P3 p022R shot 16 — conf. high |
+| G-BONUS-b | BONUS | bottomless pit (last gap) with two iron crates floating over it | ≈2; landing raised exit slab with the stump | +0.5 (exit slab) | body-slam drop (slam from the edge: the radius reaches the floating irons), plain | none / ejected from the bonus (series rule) (lethal; run-up end of the short slab); nearby B-g | TEST | teaches the slam's reach: you need not be above the crates (P3 shot 18, F3 hint) | F3 p040L hint; P3 p022R shot 18 — conf. high |
+
+#### S4 — C3 → goal (triceratops chase toward the camera)
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | slope (downhill chase path toward the camera): path with water patches, grass, geysers, lava bands; ends in a drop into the goal | ≈3–4 wide | −4 to −6 over the chase (estimate) | run; jump the lava | edges jungle sides; forced: pursuer behind | TEST | the camera faces the player, so hazards appear late: a chase built on short, readable obstacles | F3 p038L–p038R; P3 p022L shot 9; F3 p106L 25–31 — conf. medium |
+| G-S4-a | S4 | lava band across the chase path | ≈2; landing path beyond | 0 | running | the triceratops behind leaves no time to stop / death (lava or caught) (lethal; run-up running); nearby S4-d, E-S4-a | TEST | a full-width lava band appears only in the chase, where the run-up is guaranteed | F3 p038L; F3 p106L 29 — conf. medium |
+| G-S4-b | S4 | spreading lava band (grows across the path) | ≈2–3 and growing; landing path near the goal | 0 | running (big jump, early) | spreads as the player arrives; pursuer behind (TA4) / death (lava or caught) (lethal; run-up running); nearby S4-e, O-S4-c | TEST | the last gap moves: the player must commit before it widens | F3 p038L POINT 5 screenshot; F3 p038R TA4 — conf. medium |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | max gap (u) | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 4 | running (long jump to the pedestal top, TT), plain (off the block, left side), plain (small hop over the grass), spin-extended (jump-spin the three crates) | syncopated | ≈2 | P-S1-c (C1) | no | the opening mixes a height jump, a hazard hop and a jump-spin: the stage's verbs in order | F3 p106L 02–05 |
+| J-S2-a | S2 | 3 | walk (weave), plain, plain | stop-and-go (wait for each Crafish to stop spinning) | ≈1.5–2 | Baby T nest | no | the lava slalom is paced by the enemies, not by the gaps | F3 p036R; F3 p032R |
+| J-S2-b | S2 | 3 | ride (Baby T jump over a geyser), ride, ride | even | ≈2 | P-S2-b | no | the ride turns the hazard stretch into evenly spaced jumps | P3 p021R shot 3; F3 p036R POINT 3 |
+| J-YELLOW-a | YELLOW | 4 | plain, plain, walk (wait for the Crafish), plain | stop-and-go | ≈2 | P-YELLOW-c (yellow checkpoint, far) | no | the first stretch has no mask and a distant checkpoint (P3), so each hop is a full-risk decision | F3 p037L POINT A; P3 p022L |
+| J-YELLOW-b | YELLOW | 4 | spin-extended (tornado spin through the grass), plain, spin-extended (jump-spin over the ptera), plain | even | ≈2 | P-YELLOW-d (exit platform) | no | grass bands and fliers between Nitros: the course's exam | F3 p037L POINT C; P3 p022R shot 13 |
+| J-S3-a | S3 | 5 | plain (pyramid step), plain (pyramid step), arrow, arrow, arrow (last bounce hits the !) | vertical (repeated bounces) | +3 to +4 (column height) | P-S3-e | no | the lava area converts jumping into climbing: steps up, then bounces up (TT skips with a double jump) | F3 p038R TA3; F3 p106L 20–24 |
+| J-BONUS-a | BONUS | 5 | plain, plain, plain, plain, body-slam drop (reach slam from the edge) | stop-and-go (slam at each slab) | ≈2 | exit slab | no | every slab is a slam station; jumps only connect them | F3 p040L; P3 p022R shots 16–18 |
+| J-S4-a | S4 | 4 | running (lava band), plain (over a crate snag), spin-extended (big-jump tornado spin for the high ?), running (big jump over the spreading lava) | accelerating (pursuer behind) | ≈2–3 | goal | yes | a chase: every jump is taken at full speed with the chaser behind | F3 p038R TA4; F3 p106L 25–31 |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1 | clinging grass (slows Crash; mown by the tornado spin or the bazooka) (non-lethal) | across path | static; the bush is visible ahead | jump over (small hop, TT 03), destroy (tornado spin, bazooka) | S1-b pedestal | TEACH | the slowing surface is met first where slowness costs nothing | F3 p036L; F3 p032L tip 1; F3 p106L 03 — conf. high |
+| O-S1-b | S1 | steam geyser vents on the line (lethal) | across path (red discs on the floor) | erupt periodically; the steam is the warning (TT 01: fire when the right-hand geyser steams) | wait-and-go, go around | G-S1-b lava band, S1-c | TIMING-GATE | a timed hazard placed on the dry lane next to the lava band | F3 p036L; F3 p106L 01; P3 p021R shot 3 — conf. medium |
+| O-S2-a | S2 | Nitro pair at the right edge (lethal) | flank (right side of the path) | static | avoid | S2-d, green ! on the yellow course | AREA-DENIAL | narrows the path and stays as a visible unfinished count until the yellow course | F3 p036R — conf. high |
+| O-S2-b | S2 | fallen tree across the path (static blocker) (non-lethal) | across path | static | jump over | E-S2-b wave researchers | LANE-BLOCK | a hurdle that snags runners (TT2: avoid crates and fallen trees) | F3 p036R; F3 p036R TA2 — conf. medium |
+| O-YELLOW-a | YELLOW | iron/TNT stacks on the sand strip (TNT falls and lights when the iron below breaks) (lethal) | on platform (narrow strip) | 3 s fuse once the TNT drops; the count is the warning | destroy (super body slam from a distance, then step away — POINT B), jump (take the 1UP from the top first) | Y-d, Y-f, Y-g, P-YELLOW-b | TEACH, TEST | explosive stacks on a narrow strip make retreat distance part of the puzzle | F3 p037R POINT B; P3 p022L shot 12 — conf. high |
+| O-YELLOW-b | YELLOW | Nitro singles flanking a band of tall grass (lethal) | flank (left and right of the grass) | static | destroy (tornado-spin through the grass), avoid (stay centred) | Y-h, clinging grass | LANE-BLOCK | the slow band cannot be bypassed sideways | F3 p037R; P3 p022R shot 13 — conf. high |
+| O-YELLOW-c | YELLOW | Nitro diamond (two left, two right) at the last pterodactyl (lethal) | flank (both sides of the path) | static | go around (walk the gap between them, POINT C), jump over (jump-spin over and take out the ptera) | Y-i, E-YELLOW-e | AREA-DENIAL, TEST | a flier that pushes you sideways, with mines on both sides | F3 p037L POINT C — conf. high |
+| O-S3-a | S3 | fallen trees across the path after C2 (static blockers) (non-lethal) | across path | static | jump over | E-S3-a wave researchers | LANE-BLOCK | hurdles next to ambushers: a jump at the wrong moment meets a rising researcher | F3 p036R–p038L — conf. medium |
+| O-S3-b | S3 | Nitro pair on the ledge under the ends of the metal bar (lethal) | on platform (ledge), below the bar | static | avoid (use the bar above them) | S3-f, P-S3-d | AREA-DENIAL | makes the switch-built bar the safe route instead of a shortcut | F3 p038R; P3 p021R shot 6 — conf. high |
+| O-S4-a | S4 | steam geyser vent on the chase path (lethal) | across path | erupts periodically; steam warns | outrun (pass between eruptions), go around | E-S4-a triceratops | TIMING-GATE | a timed gate inside a no-stop section: timing must be read from a distance | F3 p038R — conf. medium |
+| O-S4-b | S4 | clinging grass in the chase (caught = caught up instantly) (non-lethal) | across path | static | jump over (in one go), destroy (tornado spin) | E-S4-a triceratops | TEST | the harmless S1 surface becomes deadly when a pursuer is behind (F3 p032L tip 1) | F3 p038R; F3 p032L — conf. high |
+| O-S4-c | S4 | spreading lava band (grows across the path) (lethal) | across path | grows as the player arrives (TA4); the glow is visible | jump over (big jump early) | E-S4-a triceratops, S4-e floating ? | PURSUIT, TEST | the only moving gap of the stage is kept for the chase finale | F3 p038L POINT 5; F3 p038R TA4 — conf. medium |
+| O-S4-d | S4 | crates on the line that snag Crash (snag) (non-lethal) | across path | static | destroy (spin through), jump over | E-S4-a triceratops (breaks what you leave) | TEST | F3 p032L tip 2: crates on the path stop you; in a chase a stop is a catch | F3 p032L tip 2 — conf. medium |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | Crafish (クラフィッシュ) | shielded/armored (invulnerable while spinning; open when it flops) | spins in place; its clumsy hit throws Crash far toward the screen (F3 p032R); POINT 1: wait, then attack | spin (after it stops), stomp (jump on, after it stops), shoot (bazooka), avoid (double jump past, TT) (fails: spinning into it while it spins (you are thrown — into the lava on the yellow course, POINT A)) | on line beside a lava patch | TEACH, TIMING-GATE | no (a lava patch lies right beside it) | the stage's own enemy is taught next to the hazard its knock-back aims at | F3 p036L POINT 1; F3 p032R; F3 p106L 04 — conf. high |
+| E-S1-b | S1 | Crafish (クラフィッシュ) | shielded/armored | at the right edge beside a lava patch, after the crates | spin (after it stops), avoid (fails: spinning into it while it spins) | flank, beside lava | TEST | — (repeat) | the second Crafish stands at the edge of the dry lane | F3 p036L — conf. medium |
+| E-S1-c | S1 | wave researcher (ウェーブ研究員) | burrower/ambusher (comes with only its head above ground, then rears up and covers Crash) | rises from a ground hole as Crash passes | spin (when the head comes near), avoid (dash past, tap left just before — TT 09) (fails: walking into it as it rears up) | on line just before C1 | AMBUSH | yes (flat path by the save, no lava beside it) | the ambusher sits on the approach to the checkpoint, where players hurry | F3 p036R; F3 p032R; F3 p106L 09 — conf. medium |
+| E-S2-a | S2 | Crafish (クラフィッシュ) ×2 | shielded/armored | stand between alternating lava patches | spin (after it stops), avoid (TT 08: bump one on purpose to get past) (fails: spinning into a spinning Crafish beside the lava) | between hazards (lava patches) | TEST | — (repeat) | two invulnerable phases to wait out inside a lava slalom | F3 p036R; F3 p106L 08 — conf. medium |
+| E-S2-b | S2 | wave researcher (ウェーブ研究員) ×2 | burrower/ambusher | two holes on the path just before C2 | spin, avoid (dash past) | on line before the checkpoint | AMBUSH | — (repeat) | again guards the run-in to a save | F3 p036R — conf. medium |
+| E-YELLOW-a | YELLOW | wave researcher (ウェーブ研究員) | burrower/ambusher | by the first crate pair of the course | spin, avoid | on line | AMBUSH | — (repeat) | greets the player right off the platform | F3 p037L — conf. medium |
+| E-YELLOW-b | YELLOW | Crafish (クラフィッシュ) | shielded/armored | on a lava patch | shoot (bazooka, POINT A), avoid (wait until it stops) (fails: spinning into it while it spins (thrown into the fire, POINT A)) | in the lava stretch (between hazards) | TEST | — (repeat) | the knock-back lesson of S1 is now lethal | F3 p037L POINT A — conf. high |
+| E-YELLOW-c | YELLOW | wave researcher (ウェーブ研究員) | burrower/ambusher | beside the yellow-course checkpoint | spin, avoid | on line by the checkpoint | AMBUSH | — (repeat) | the save is guarded as in S1 and S2 | F3 p037R — conf. medium |
+| E-YELLOW-d | YELLOW | pterodactyl (バサバサプテラ) | flier (swoops low; touch = carried off) | perches at the path edge; letting it carry Crash off warps to stage 32 | spin (jump-spin), avoid (dodge left or right) (fails: being touched (carried off — a miss elsewhere, the warp here)) | flank (path edge) | BAIT | no (just past the grass band flanked by Nitros) | the same enemy is a hazard in the chase and a secret exit here | F3 p037R (stage-32 arrow); F3 p032R; P3 p022R shot 13 — conf. high |
+| E-YELLOW-e | YELLOW | pterodactyl (バサバサプテラ) | flier | the last one, among four Nitros | spin (jump-spin over the Nitros and take it out, POINT C), avoid (fails: dodging sideways into a Nitro) | between hazards (Nitro diamond) | TEST | — (repeat) | a flier whose dodge direction is blocked by mines | F3 p037L POINT C — conf. high |
+| E-S3-a | S3 | wave researcher (ウェーブ研究員) ×2 | burrower/ambusher | among fallen trees after C2 | spin, avoid | on line between hurdles | AMBUSH | — (repeat) | ambush plus hurdles | F3 p036R–p038L — conf. medium |
+| E-S4-a | S4 | triceratops (ドタバタトプス) | pursuer (chases from behind; invincible) | waits in a rock gully before C3, then chases down the path; smashes every crate the player leaves, floating ones too | avoid (outrun; never stop) (fails: stopping; getting slowed by grass (caught at once)) | on line behind the player (pursuer) | PURSUER | yes (shown waiting in its gully while the player stands safely before C3) | a telegraphed pursuer that also collects the crates, so the chase tests movement, not counting | F3 p038R; F3 p032L tip 2; F3 p032R; P3 p022L shot 9 — conf. high |
+| E-S4-b | S4 | pterodactyl (バサバサプテラ) | flier | perched on a lava rock beside the chase path | avoid (dodge left or right), spin (jump-spin) (fails: being touched) | flank (lava rock) | HURDLE | no (first main-route pterodactyl, met inside the chase beside lava) | a side threat in a no-stop run | F3 p038R — conf. medium |
+| E-S4-c | S4 | pterodactyl (バサバサプテラ) | flier | on the lower slope by the striped pair | avoid, spin (jump-spin) (fails: being touched) | flank | HURDLE | — (repeat) | the second flier keeps the lane choice alive | F3 p038L — conf. medium |
+
+### Section beats
+
+- **S1** (gaps 2, enemies 3, hazards 2): start (stopwatch, geyser) → Aku → pedestal + 1UP (lava patch on the right) → clinging grass → Crafish beside lava (POINT 1) → geyser → lava band (right) → W, S/W/?, ?/W → Crafish (right edge, lava) → gutter crate → wave researcher → C1 on the yellow platform
+- **S2** (gaps 2, enemies 4, hazards 2): lava patches L/R + 2 Crafish → ? + Baby T nest (ride) → three 1-s crates → lava + geyser (Baby T jumps it) → grass → W/S/W → second Baby T → Nitro pair (right) → fallen tree → two wave researchers → C2
+- **YELLOW** (gaps 2, enemies 5, hazards 3): platform ride → wave researcher + ?? → lava patches + water streams + Crafish (POINT A) → U-turn onto the sand strip above lava → W, ? → iron/W/TNT + TNT → W → ?/W/TNT/1UP + W → iron/iron/TNT/iron + iron (POINT B) → checkpoint (30) + wave researcher → Nitro pair flanking grass → stage-32 pterodactyl → lava, grass, water strip → Nitro diamond + last pterodactyl (POINT C) → secret gem → green ! → five lives → platform ride to the lava area
+- **S3** (gaps 2, enemies 2, hazards 2): fallen trees + two wave researchers → 3×3 wall clearing → W, ? → ?/W → lava patches → junction (yellow course arrives) → side-view ledge above lava → stepped pyramid 3-2-1 + floating S → arrow column (3 W) + ! → steel bar over two Nitros → floating ? → power stone → descent → bonus entrance → triceratops waiting in the gully → C3 (+3 crates)
+- **BONUS** (gaps 2, enemies 0, hazards 0): stump → W on iron → gap → iron/?/iron → step → 2×4 iron block → gap → iron pyramid + life → gap → 2×2 iron block (step to the floating ?, then slam) → edge iron → two floating irons over the last gap (slam from the edge) → exit slab
+- **S4** (gaps 2, enemies 3, hazards 4): triceratops chase starts → W W → water patches → grass → pterodactyl on a lava rock → S → geyser → ? (1:14 target) → S S + pterodactyl → lava band → floating ? over lava → spreading lava band → 2×2 → drop into the goal
+
+### Geometry and enemy design logic
+
+1. No bottomless pits on the jungle path: every gap is lava on part of the path (G-S1-a, G-S1-b, G-S2-a, G-S2-b, G-S3-a) or, only in the chase, a full band (G-S4-a, G-S4-b). The path stays continuous, so lava acts as lane denial and death comes from being pushed or hurried into it.
+2. Enemy and lava are paired on purpose: Crafish stand beside lava patches and their counter-hit throws Crash far (F3 p032R); POINT 1 teaches waiting next to lava in S1, and POINT A on the yellow course spells out that a wrong spin ends in the fire (E-S1-a → E-YELLOW-b).
+3. Timed vents (geysers) sit on the dry lane next to the lava (O-S1-b), so the safe lane is also the timed lane; the Baby T's high jump is designed for exactly that stretch, and its ride ends where the hazard mix changes (P-S2-a, P3 shot 4).
+4. Clinging grass is a speed gate whose cost depends on context: free in S1 (O-S1-a), unavoidable between Nitros on the yellow course (O-YELLOW-b), and deadly in the chase (O-S4-b) — one surface, three difficulty levels.
+5. Ambushers guard checkpoints: wave researchers rise from holes just before C1, before C2, after C2 and beside the yellow checkpoint (E-S1-c, E-S2-b, E-S3-a, E-YELLOW-c), punishing a sprint to the save.
+6. Explosive stacks are placed on the narrowest footing (the sand strip above lava, P-YELLOW-b): the super body slam's reach and the retreat distance from the TNT become part of the geometry (POINT B: slam from a distance, step away).
+7. The side-view lava area replaces horizontal gaps with vertical ones: a crate staircase (P-S3-c), an arrow column that is eaten bounce by bounce (G-S3-b), and a switch-built steel bar over a mine pair (P-S3-d).
+8. The chase is run toward the camera, so obstacles appear late; it uses short, readable hazards (lava bands, a geyser, grass, two fliers) and saves the only moving gap — the spreading lava band — for the end (O-S4-c).
+9. The pursuer is telegraphed: the triceratops waits in a gully before C3 (E-S4-a), the save sits between the reveal and the chase, and the chaser breaks every crate left behind, so the chase tests movement and never the box count.
+10. Pterodactyls carry two roles: a secret exit when they pick you up on the yellow course (E-YELLOW-d) and a side hazard in the chase (E-S4-b/c); the same touch rule reads as reward or punishment depending on placement.
+11. Rest spaces are clearings with big crate structures (the 3×3 wall clearing, the lava-area pyramid); the narrow corridors between them carry the lava, enemies and grass.
+12. The bonus uses thin slabs with 1–2 u gaps purely as slam stations, and ends with the slam's reach over a gap (G-BONUS-b): the geometry exists to demonstrate the move's radius.
+
+### Geometry transfer to the skate game
+
+1. Lava as lane denial: on a 4–5 m path, `pit` patches (lava look) 2–3 m long covering half the width, alternating sides every 6–10 m; skaters weave at cruise, walkers keep to the dry half. Put a `spinner` beside each patch so a careless spin or knock-back leads into it.
+2. Clinging grass with `groundSpeedLimit` (≈2.4 m/s) patches across the path: harmless early, flanked by Nitros later so it cannot be bypassed, and inside a pursuit last; a full jump (≈5.6 m) clears a 2.3–3.5 m patch and gives the speed-keeping answer.
+3. Geyser stand-in: no vent primitive exists, so use a short-cycle `crusher` or `firetiki` placed on the dry lane next to a lava patch, and give a rideable/ally section (or the skateboard) the jump that clears it.
+4. Chase toward the camera: a `zone` with dir N and a `stone` pursuer; lava `pit` bands 2–2.5 m every 12–18 m (inside the 5.6 m running jump), one grass patch, and crates kept off the racing line (on the board they trip the rider below 12.5 m/s); end with the widest band.
+5. Side-view ledge above lava: `zone` E over a `pit`, a 2.3 m-deep earth ledge, a crate pyramid as stairs, a steel arrow under three floating crates with a `bang` on top that materialises a steel ledge over two Nitros (arrow 3.77 m, held 5.92 m above its lid).
+6. Explosive stack on narrow footing: a 3 m strip with an iron/TNT stack; our slam radius is 3.4 m and the blast 2.75 m, so leave at least 4 m of strip behind the slam point for the retreat, and never put the stack on the only lane of a board line.
+
 ## Open questions / uncertainties
 - **C3 = 99 cannot be reproduced exactly.** From C2's 54, the lava area (7 + 4 non-Nitro) + bonus 25 + C3 cluster 4
   give 94; adding the Baby T stretch (7, which POINT 4's "walk back for the remaining boxes" implies) gives 101.
@@ -265,3 +429,8 @@ C3 → [W][W] → water, grass, e:ptera → [S] → geyser → [?r1] → (cross 
 - S1-f type (cut by the binding).
 - Whether F3's yellow-course 1UP on the TNT stack is reachable from the top before the stack is touched (inferred).
 - The second Baby T (F3 p106L frame 12) is not drawn on the map.
+- Geometry: Crafish and wave-researcher counts in S1/S2: the map and the TT captions (the "third Crafish", frame 08) do not line up exactly near the page gutter.
+- Geometry: whether the blue water streams on the yellow course and in the chase speed Crash up or slow him (not stated for this stage).
+- Geometry: geyser lethality is assumed (Baby T jumps them; no caption says they kill on foot).
+- Geometry: pedestal height (P-S1-b): TT frames suggest a tall block, the map a low one.
+- Geometry: the spreading lava band (G-S4-b) is inferred from TA4 and the POINT 5 screenshot; its growth speed is not stated.
