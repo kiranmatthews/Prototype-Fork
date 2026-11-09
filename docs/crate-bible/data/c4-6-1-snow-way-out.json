@@ -1,0 +1,1827 @@
+{
+  "id": "c4-6-1-snow-way-out",
+  "game": "Crash 4",
+  "stage": "6-1",
+  "name": "Snow Way Out",
+  "sources": [
+    "GR 6-1 (gameranx.com features id 210742)",
+    "LP1 3:07:14-3:13:44 (archive.org PS4 longplay Part 1; frames every 2 s at 854x480, 0.5 s in the bonus; HUD crops; exit crate sign)",
+    "gamepressure.com Snow Way Out walkthrough (enemy/hazard corroboration only)"
+  ],
+  "camera": "mixed: into-screen harbour paths and floe fields; side view for the timed-! climbs, the bonus, icefalls and the waterfall gorge",
+  "totalBoxes": 153,
+  "totalSource": "HUD 0/153 (LP1 3:07:16); bonus 0/33 -> 33/33 and main 68/153 (3:09:06); 116 (3:11:36); 133 (3:12:54); exit sign 147 then 151/153 (3:13:24-28); ALL gem at 3:13:38",
+  "typesNote": "Crash 4 keys: wood, question, arrowWood (wooden arrow crate), reinforced (metal-banded X-frame 'strong crate', body slam or blast), tnt, nitro (counted; any left standing are paid by the exit Nitro switch), timedOutline (pink outline crate made solid for a few seconds by a red timed ! box; counted when broken), goldFruit (gold crate with a wumpa emblem, one hit, large fruit payout), fire ('inferno' crate that jets flame on a cycle), checkpoint (counted), unknown. Red timed ! boxes, iron blocks and the green Nitro switch are not counted.",
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 120,
+      "basis": "153 minus bonus 33; includes 2 Nitro paid by the exit switch"
+    },
+    {
+      "id": "bonus",
+      "boxes": 33,
+      "basis": "bonus HUD n/33; transfer 57 + 11 -> 68 (LP1 3:09:04-06)"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "C1",
+      "boxes": 17,
+      "cumulative": 17,
+      "notes": "GR 17; HUD 0 (LP1 3:07:16) and 2 (3:07:18). Three timed red-! groups taught under slow-mo."
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "bonus pad",
+      "boxes": 18,
+      "cumulative": 35,
+      "notes": "GR 35; LP transfer 57 + 11 -> 68 after the bonus confirms 35 before it. Crossbow longshoremen, boats, TNT, one strong crate."
+    },
+    {
+      "id": "B",
+      "route": "bonus",
+      "from": "bonus pad",
+      "to": "bonus exit",
+      "boxes": 33,
+      "cumulative": 68,
+      "notes": "HUD 0/33 (LP1 3:08:22) -> 33/33; main 68/153 at 3:09:06. Side view; two Nitro lids and three red-! groups."
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "bonus exit",
+      "to": "ship explosion",
+      "boxes": 6,
+      "cumulative": 74,
+      "notes": "GR 74. Narrow wall-top boardwalk along the ice canyon; cutscene at LP1 3:09:26."
+    },
+    {
+      "id": "S4",
+      "route": "main",
+      "from": "ship explosion",
+      "to": "C2",
+      "boxes": 5,
+      "cumulative": 79,
+      "notes": "GR 75 (tower, easy to miss) and 79 (C2 with the crates before the falling ice)."
+    },
+    {
+      "id": "S5",
+      "route": "main",
+      "from": "C2",
+      "to": "floating-ice lagoon",
+      "boxes": 6,
+      "cumulative": 85,
+      "notes": "GR 85. Falling ice slabs (slow-mo), lit dock, flame-jetting crate pyramid; Flashback tape at LP1 3:10:00."
+    },
+    {
+      "id": "S6",
+      "route": "main",
+      "from": "lagoon",
+      "to": "C3",
+      "boxes": 20,
+      "cumulative": 105,
+      "notes": "GR 86/92/97/104/105. Floe crate toward camera, hidden-gem springboard stack, boat, arrow to two high crates, waterfall room."
+    },
+    {
+      "id": "S7",
+      "route": "main",
+      "from": "C3",
+      "to": "C4",
+      "boxes": 11,
+      "cumulative": 116,
+      "notes": "HUD 116/153 at LP1 3:11:36 (just after C4). GR says 108 here; GR's next figure (122 at C5) is consistent with 116 + 6."
+    },
+    {
+      "id": "S8",
+      "route": "main",
+      "from": "C4",
+      "to": "C5",
+      "boxes": 6,
+      "cumulative": 122,
+      "notes": "GR 122. Falling ice blocks on a narrow ledge; TNT under a higher crate."
+    },
+    {
+      "id": "S9",
+      "route": "main",
+      "from": "C5",
+      "to": "exit pier",
+      "boxes": 15,
+      "cumulative": 137,
+      "notes": "GR 124/125/137; HUD 133/153 at LP1 3:12:54 (on the motorboat, before the exit pier's 4)."
+    },
+    {
+      "id": "S10",
+      "route": "main",
+      "from": "exit pier",
+      "to": "exit + Nitro switch",
+      "boxes": 16,
+      "cumulative": 153,
+      "notes": "GR 141/151/153. Exit crate sign reads 147/153 (LP1 3:13:24-26) then 151/153 (3:13:28); the Nitro switch pays 2."
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "on the snowy stone path at the spawn, in the first camera view",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "TEACH"
+      ],
+      "why": "first input of the level is a spin on two crates; the HUD ticks 0 -> 2",
+      "evidence": "LP1 3:07:16-3:07:18 (HUD 0/153 -> 2/153)",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "village path: a red timed ! beside the path; its crates materialise floating left and right of the path by the lantern posts",
+      "composition": {
+        "timedOutline": 3
+      },
+      "count": 3,
+      "arrangement": "float-line around posts",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "FLOAT-LINE",
+        "SWITCH",
+        "OUTLINE",
+        "TIMED",
+        "TEACH"
+      ],
+      "why": "the 'R2/Triangle: slow time' prompt appears exactly here: the first timed group is the mask's tutorial, on safe ground",
+      "evidence": "LP1 3:07:18-3:07:24",
+      "confidence": "low"
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "crate column on a stone pillar beside ice blocks",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK"
+      ],
+      "why": "pacing pair between two switch puzzles",
+      "evidence": "LP1 3:07:28-3:07:30",
+      "confidence": "low"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "two wood crates on a stone block under icicles",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR"
+      ],
+      "why": "rhythm crates before the camera turns to side view",
+      "evidence": "LP1 3:07:32",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-e",
+      "section": "S1",
+      "order": 5,
+      "where": "side view: second red ! on the left ledge; an arc of pink outlines over the icy walkway turns solid",
+      "composition": {
+        "timedOutline": 4
+      },
+      "count": 4,
+      "arrangement": "arc (float-line)",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "FLOAT-LINE",
+        "SWITCH",
+        "OUTLINE",
+        "TIMED",
+        "TEST"
+      ],
+      "why": "same device, longer reach: the arc is broken in sequence while slow-mo lasts. Stencilled shipping crates nearby are scenery, not boxes",
+      "evidence": "LP1 3:07:34-3:07:38",
+      "confidence": "low"
+    },
+    {
+      "id": "S1-f",
+      "section": "S1",
+      "order": 6,
+      "where": "third red ! on a higher ledge; two pink outlines float high on the right",
+      "composition": {
+        "timedOutline": 2
+      },
+      "count": 2,
+      "arrangement": "pair, high",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "timed",
+        "jump",
+        "double-jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "PAIR",
+        "SWITCH",
+        "OUTLINE",
+        "TIMED",
+        "TEST"
+      ],
+      "why": "distance and height combined: hit the switch, then climb to the pair before the timer ends",
+      "evidence": "LP1 3:07:38-3:07:44",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-g",
+      "section": "S1",
+      "order": 7,
+      "where": "wood crate on a scaffold ledge to the right",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "landing reward after the timed climb",
+      "evidence": "LP1 3:07:46",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-h",
+      "section": "S1",
+      "order": 8,
+      "where": "checkpoint on the harbour boardwalk",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "banks the switch tutorial",
+      "evidence": "LP1 3:07:48 (CHECKPOINT text); GR 17",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "harbour under a crossbow longshoreman on a tower: ? on top of a stack far right, a ?? pair on a top-right ledge, a ? on a pillar",
+      "composition": {
+        "question": 4,
+        "wood": 1
+      },
+      "count": 5,
+      "arrangement": "stack + pair + single, high on the right",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "double-jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "DETOUR",
+        "ENEMY-LINK"
+      ],
+      "why": "the crates sit on the far side of the harpoon line: collecting them means crossing the sniper's field of fire (slow-mo helps)",
+      "evidence": "LP1 3:07:50-3:07:54",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "deck of a moored fishing boat beside the cabin door",
+      "composition": {
+        "tnt": 1,
+        "question": 1,
+        "wood": 1
+      },
+      "count": 3,
+      "arrangement": "row on deck",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "ROW",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "first TNT of the level, next to collectibles: spin the ? and wood first, or stomp the TNT and step away so its blast takes them",
+      "evidence": "LP1 3:07:56-3:08:02 (TNT counting at 3:08:02)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "boat-to-boat hops and a crane load; TNT on a snowy dock",
+      "composition": {
+        "tnt": 1,
+        "unknown": 3
+      },
+      "count": 4,
+      "arrangement": "scattered on boats and dock",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "pacing crates on the hop targets",
+      "evidence": "LP1 3:08:04-3:08:12",
+      "confidence": "low"
+    },
+    {
+      "id": "S2-d",
+      "section": "S2",
+      "order": 4,
+      "where": "stone steps up to the bonus platform",
+      "composition": {
+        "reinforced": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "body-slam"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "REINFORCED"
+      ],
+      "why": "the metal-banded strong crate GR flags: it needs a body slam (or a blast)",
+      "evidence": "LP1 3:08:14-3:08:18",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-e",
+      "section": "S2",
+      "order": 5,
+      "where": "unresolved crates of the boat stretch (seen only as fruit bursts at 1 frame per 2 s)",
+      "composition": {
+        "unknown": 5
+      },
+      "count": 5,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR's 35",
+      "evidence": "GR 35 minus mapped clusters",
+      "confidence": "low"
+    },
+    {
+      "id": "B-a",
+      "section": "B",
+      "order": 1,
+      "where": "start of the bonus: a bridge carrying 7 Nitro directly above a row of iron blocks with a red ! in the middle",
+      "composition": {
+        "nitro": 7
+      },
+      "count": 7,
+      "arrangement": "row (lid over the switch row)",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ROW",
+        "EXPLOSIVE-MIX",
+        "CHAIN",
+        "SWITCH",
+        "TEACH"
+      ],
+      "why": "the Nitro row is a lid: the red ! beneath cannot be reached until the whole row is chain-detonated from a safe spot. Nitros count when they explode (HUD 0 -> 4 -> 7)",
+      "evidence": "LP1 3:08:22-3:08:30 (HUD 0/33 -> 7/33)",
+      "confidence": "high"
+    },
+    {
+      "id": "B-b",
+      "section": "B",
+      "order": 2,
+      "where": "pink outlines at dock level and high right, solid while the bonus red ! runs",
+      "composition": {
+        "timedOutline": 2
+      },
+      "count": 2,
+      "arrangement": "pair, floating",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "FLOAT-LINE",
+        "SWITCH",
+        "OUTLINE",
+        "TIMED"
+      ],
+      "why": "the reward the Nitro lid was guarding",
+      "evidence": "LP1 3:08:30-3:08:34 (HUD 7 -> 9)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-c",
+      "section": "B",
+      "order": 3,
+      "where": "? on top of the right-hand tower",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, high",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "double-jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "SINGLE"
+      ],
+      "why": "a height check in slow-mo",
+      "evidence": "LP1 3:08:34-3:08:36 (HUD 9 -> 10)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-d",
+      "section": "B",
+      "order": 4,
+      "where": "lower right: a Nitro pair, and a Nitro standing on a crate stack",
+      "composition": {
+        "nitro": 3,
+        "wood": 1
+      },
+      "count": 4,
+      "arrangement": "pair + stack",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "CHAIN"
+      ],
+      "why": "a crate wearing a Nitro hat: detonate from range, the blast takes the crate",
+      "evidence": "LP1 3:08:34-3:08:40 (blast at 3:08:38, HUD 10 -> 14)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-e",
+      "section": "B",
+      "order": 5,
+      "where": "high ledge: column of a ? on top of two strong (X-braced) crates",
+      "composition": {
+        "question": 1,
+        "reinforced": 2
+      },
+      "count": 3,
+      "arrangement": "stack",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "jump",
+        "body-slam"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "REINFORCED",
+        "SUPPORT-ORDER",
+        "HIGH"
+      ],
+      "why": "take the ? first, then body-slam the strong crates; the column is visible for several seconds before it is reachable",
+      "evidence": "LP1 3:08:36-3:08:46 (HUD 14 -> 17 by 3:08:48)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-f",
+      "section": "B",
+      "order": 6,
+      "where": "second red ! on a post; two pink crates materialise at floor level, plus one more crate",
+      "composition": {
+        "timedOutline": 2,
+        "unknown": 1
+      },
+      "count": 3,
+      "arrangement": "pair at floor level",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "SWITCH",
+        "OUTLINE",
+        "TIMED"
+      ],
+      "why": "short-range timed pair, done with the slow-mo still charged",
+      "evidence": "LP1 3:08:48-3:08:54 (HUD 17 -> 20)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-g",
+      "section": "B",
+      "order": 7,
+      "where": "arched snowy bridge with a fruit arc",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "pacing crate on the bridge apex",
+      "evidence": "LP1 3:08:56-3:08:58 (HUD 20 -> 21)",
+      "confidence": "low"
+    },
+    {
+      "id": "B-h",
+      "section": "B",
+      "order": 8,
+      "where": "snowy platform: a row of 6 Nitro with a column of 3 ? standing at its right end",
+      "composition": {
+        "question": 3,
+        "nitro": 6
+      },
+      "count": 9,
+      "arrangement": "column on the end of a Nitro row",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "bounce",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "CHAIN",
+        "SUPPORT-ORDER",
+        "TEST"
+      ],
+      "why": "the ? column can only be taken from above (stomp down it) because its sides touch Nitro; then the row is chain-detonated (HUD 21 -> 24 -> 30)",
+      "evidence": "LP1 3:08:58-3:09:02.5",
+      "confidence": "medium"
+    },
+    {
+      "id": "B-i",
+      "section": "B",
+      "order": 9,
+      "where": "last crates before the exit pad (not resolved in frames)",
+      "composition": {
+        "unknown": 3
+      },
+      "count": 3,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance to 33",
+      "evidence": "LP1 3:09:02.5-3:09:04 (HUD 30 -> 33)",
+      "confidence": "low"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "left ledge at the bonus exit pad among the stone ruins",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "SINGLE"
+      ],
+      "why": "a crate behind the exit pad, easy to leave behind",
+      "evidence": "LP1 3:09:08-3:09:10",
+      "confidence": "low"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "narrow wall-top and plank boardwalk along the ice canyon: single crates in the walking line",
+      "composition": {
+        "wood": 2,
+        "question": 1,
+        "unknown": 1
+      },
+      "count": 4,
+      "arrangement": "singles in file",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE"
+      ],
+      "why": "rhythm crates on a 1-crate-wide path; missing one means a fall",
+      "evidence": "LP1 3:09:12-3:09:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "small crate on a post, top left, before the moored ship",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "EDGE-BAIT",
+        "SINGLE"
+      ],
+      "why": "on a post over the water: a small-risk jump",
+      "evidence": "LP1 3:09:22-3:09:24",
+      "confidence": "low"
+    },
+    {
+      "id": "S4-a",
+      "section": "S4",
+      "order": 1,
+      "where": "after the ship explodes: turn left and slide-jump onto the stone tower",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "slide",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "BACKTRACK",
+        "HIDDEN",
+        "COUNT-TRAP"
+      ],
+      "why": "placed right after a cutscene, off to the side the camera does not favour",
+      "evidence": "LP1 3:09:34-3:09:38; GR 75",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-b",
+      "section": "S4",
+      "order": 2,
+      "where": "snow-capped crates on the tower ledge, one at the ledge edge",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "row + edge single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "EDGE-BAIT"
+      ],
+      "why": "breaks the last crate on the lip just before the falling-ice jump",
+      "evidence": "LP1 3:09:34-3:09:44",
+      "confidence": "medium"
+    },
+    {
+      "id": "S4-c",
+      "section": "S4",
+      "order": 3,
+      "where": "checkpoint on the tower ledge (gold halo)",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "banks progress before the first falling-ice crossing",
+      "evidence": "LP1 3:09:34; GR 79",
+      "confidence": "medium"
+    },
+    {
+      "id": "S5-a",
+      "section": "S5",
+      "order": 1,
+      "where": "lit wooden dock after the falling-ice crossing, bottom right",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "REWARD"
+      ],
+      "why": "landing reward after the slow-mo crossing",
+      "evidence": "LP1 3:09:54",
+      "confidence": "medium"
+    },
+    {
+      "id": "S5-b",
+      "section": "S5",
+      "order": 2,
+      "where": "stone pier: crate pyramid (3 at the base, 1, 1) with flame jets bursting from some crates",
+      "composition": {
+        "question": 2,
+        "fire": 2,
+        "wood": 1
+      },
+      "count": 5,
+      "arrangement": "pyramid",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "timed",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PYRAMID",
+        "TIMED",
+        "TEACH"
+      ],
+      "why": "the 'inferno' crates breathe fire on a cycle: wait for the flame to stop, then spin. The Flashback tape is beside them",
+      "evidence": "LP1 3:09:58-3:10:02 (tape 3:10:00)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-a",
+      "section": "S6",
+      "order": 1,
+      "where": "a single wood crate bobbing in the water, right of the floes, reached by riding a floe toward the camera",
+      "composition": {
+        "wood": 1
+      },
+      "count": 1,
+      "arrangement": "single, in water",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "vehicle",
+        "backtrack",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "BACKTRACK",
+        "LOW",
+        "COUNT-TRAP"
+      ],
+      "why": "the drift of the floe, not a jump, decides reachability; it sits behind the player's line of sight",
+      "evidence": "LP1 3:10:10; GR 86",
+      "confidence": "high"
+    },
+    {
+      "id": "S6-b",
+      "section": "S6",
+      "order": 2,
+      "where": "right of the floes: a collapsing platform leads behind a moored hull to a solid pier with a crate stack",
+      "composition": {
+        "question": 3,
+        "wood": 3
+      },
+      "count": 6,
+      "arrangement": "stack (2 x 2 base plus top)",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "bounce",
+        "spin",
+        "body-slam"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "STACK",
+        "TOOL",
+        "SUPPORT-ORDER",
+        "ROUTE-SPLIT"
+      ],
+      "why": "the stack is a springboard: bounce off the TOP crate to reach the hidden gem, then smash the stack (6 per GR; about 5 visible)",
+      "evidence": "LP1 3:10:16-3:10:24 (HIDDEN GEM FOUND 3:10:22); GR 87-92",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-c",
+      "section": "S6",
+      "order": 3,
+      "where": "small fisherman's boat on the right (lantern enemy aboard)",
+      "composition": {
+        "wood": 1,
+        "unknown": 1
+      },
+      "count": 2,
+      "arrangement": "pair on deck",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "ENEMY-LINK"
+      ],
+      "why": "crates share a tiny deck with an enemy",
+      "evidence": "LP1 3:10:26-3:10:30; GR 93-97",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-d",
+      "section": "S6",
+      "order": 4,
+      "where": "stone pier on the left: wooden arrow crate between the pilings",
+      "composition": {
+        "arrowWood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "arrow"
+      ],
+      "relations": [],
+      "tags": [
+        "TOOL",
+        "SINGLE"
+      ],
+      "why": "springboard to the high pair; break it only after using it",
+      "evidence": "LP1 3:10:34-3:10:40",
+      "confidence": "high"
+    },
+    {
+      "id": "S6-e",
+      "section": "S6",
+      "order": 5,
+      "where": "two crates floating high above the arrow crate",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair, high",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "arrow"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "PAIR",
+        "SANDWICH",
+        "REWARD"
+      ],
+      "why": "classic arrow-and-floating-crate sandwich: only the full bounce reaches them",
+      "evidence": "LP1 3:10:36-3:10:40 (fruit 343 -> 360); GR 93-97",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-f",
+      "section": "S6",
+      "order": 6,
+      "where": "hidden wooden room behind a waterfall on the left, before the checkpoint",
+      "composition": {
+        "unknown": 7
+      },
+      "count": 7,
+      "arrangement": "room cluster",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "HIDDEN",
+        "COUNT-TRAP"
+      ],
+      "why": "the largest count trap of the level (7) is behind scenery next to a checkpoint",
+      "evidence": "LP1 3:10:46-3:10:52 (fruit 365 -> 402); GR 98-104",
+      "confidence": "medium"
+    },
+    {
+      "id": "S6-g",
+      "section": "S6",
+      "order": 7,
+      "where": "checkpoint on a stone pier",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "",
+      "evidence": "LP1 3:10:56; GR 105",
+      "confidence": "high"
+    },
+    {
+      "id": "S7-a",
+      "section": "S7",
+      "order": 1,
+      "where": "side view: red ! on the snow; pink outlines form a column/staircase up a tower",
+      "composition": {
+        "timedOutline": 5
+      },
+      "count": 5,
+      "arrangement": "column / staircase",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "switch",
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "STEPPING",
+        "SWITCH",
+        "OUTLINE",
+        "TIMED",
+        "TEST"
+      ],
+      "why": "the materialised crates are the only stairs: break them as you climb or lose the way up",
+      "evidence": "LP1 3:10:58-3:11:04",
+      "confidence": "low"
+    },
+    {
+      "id": "S7-b",
+      "section": "S7",
+      "order": 2,
+      "where": "a normal crate on top of the materialised column",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single, high",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch",
+        "timed",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIGH",
+        "TIMED",
+        "COUNT-TRAP"
+      ],
+      "why": "the timed stairs lead to a permanent crate: miss the window and it is out of reach",
+      "evidence": "LP1 3:11:02; GR 106-108",
+      "confidence": "medium"
+    },
+    {
+      "id": "S7-c",
+      "section": "S7",
+      "order": 3,
+      "where": "gold fruit crate on a raised ice ledge between two dark icefalls",
+      "composition": {
+        "goldFruit": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "REWARD",
+        "EDGE-BAIT"
+      ],
+      "why": "big fruit payout (fruit 413 -> 438) for a detour over falling ice",
+      "evidence": "LP1 3:11:10-3:11:20; GR",
+      "confidence": "high"
+    },
+    {
+      "id": "S7-d",
+      "section": "S7",
+      "order": 4,
+      "where": "checkpoint on a lamp-lit stone platform by the houses",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "",
+      "evidence": "LP1 3:11:34",
+      "confidence": "high"
+    },
+    {
+      "id": "S7-e",
+      "section": "S7",
+      "order": 5,
+      "where": "beside C4: two ? side by side with a ? above",
+      "composition": {
+        "question": 3
+      },
+      "count": 3,
+      "arrangement": "pyramid",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PYRAMID",
+        "REWARD"
+      ],
+      "why": "reward at the checkpoint after the icefall",
+      "evidence": "LP1 3:11:34-3:11:36 (HUD 116/153)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S8-a",
+      "section": "S8",
+      "order": 1,
+      "where": "narrow snowy ledge under falling ice blocks: TNT with a crate stacked on top",
+      "composition": {
+        "tnt": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "SUPPORT-ORDER",
+        "TIMED"
+      ],
+      "why": "jump-spin the upper crate: the TNT starts its fuse instead of going off under you (the fuse ran at 3:11:46)",
+      "evidence": "LP1 3:11:38-3:11:46; GR 109-122",
+      "confidence": "high"
+    },
+    {
+      "id": "S8-b",
+      "section": "S8",
+      "order": 2,
+      "where": "fenced stone ledge after the falling-ice plank path",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "REWARD"
+      ],
+      "why": "landing reward after the slow-mo crossing",
+      "evidence": "LP1 3:12:00-3:12:02",
+      "confidence": "low"
+    },
+    {
+      "id": "S8-c",
+      "section": "S8",
+      "order": 3,
+      "where": "unresolved crates on the falling-ice ledges",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "unresolved",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "balance of GR 122",
+      "evidence": "GR 122 minus mapped",
+      "confidence": "low"
+    },
+    {
+      "id": "S8-d",
+      "section": "S8",
+      "order": 4,
+      "where": "checkpoint on the wooden dock",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "",
+      "evidence": "LP1 3:12:08-3:12:10 (CHECKPOINT text)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S9-a",
+      "section": "S9",
+      "order": 1,
+      "where": "fisherman's boat beside the dock: 2-stack on the deck next to the enemy",
+      "composition": {
+        "question": 1,
+        "unknown": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "STACK",
+        "ENEMY-LINK"
+      ],
+      "why": "deck crates shared with an enemy at the start of the second floe field",
+      "evidence": "LP1 3:12:10-3:12:14; GR 123-124",
+      "confidence": "high"
+    },
+    {
+      "id": "S9-b",
+      "section": "S9",
+      "order": 2,
+      "where": "a single crate riding a floe to the right, drifting toward the foreground",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, on a floe",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "vehicle",
+        "backtrack",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "BACKTRACK",
+        "COUNT-TRAP",
+        "TIMED"
+      ],
+      "why": "repeat of S6-a with a moving target: ride with it, don't chase it",
+      "evidence": "LP1 3:12:16-3:12:20; GR 125",
+      "confidence": "high"
+    },
+    {
+      "id": "S9-c",
+      "section": "S9",
+      "order": 3,
+      "where": "glowing ? on the pilings above a moored boat on the left",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "SINGLE"
+      ],
+      "why": "a reason to leave the floes for the moored boat",
+      "evidence": "LP1 3:12:28",
+      "confidence": "medium"
+    },
+    {
+      "id": "S9-d",
+      "section": "S9",
+      "order": 4,
+      "where": "small floating raft-dock: column of wood over ? beside a TNT and a wood crate",
+      "composition": {
+        "wood": 2,
+        "question": 1,
+        "tnt": 1
+      },
+      "count": 4,
+      "arrangement": "L-shaped group",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "DETOUR",
+        "EXPLOSIVE-MIX",
+        "STACK"
+      ],
+      "why": "TNT inside a tight group on a raft with no room to retreat: stomp-and-leap timing",
+      "evidence": "LP1 3:12:42-3:12:44",
+      "confidence": "medium"
+    },
+    {
+      "id": "S9-e",
+      "section": "S9",
+      "order": 5,
+      "where": "same raft area: TNT and two wood in a row",
+      "composition": {
+        "tnt": 1,
+        "wood": 2
+      },
+      "count": 3,
+      "arrangement": "row",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "ROW",
+        "EXPLOSIVE-MIX"
+      ],
+      "why": "second TNT group on the raft",
+      "evidence": "LP1 3:12:46-3:12:48 (HUD 133 at 3:12:54)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S9-f",
+      "section": "S9",
+      "order": 6,
+      "where": "exit pier at the far side of the floe field: crate stack on a snow-capped platform",
+      "composition": {
+        "unknown": 4
+      },
+      "count": 4,
+      "arrangement": "stack/group",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "GR's 4 crates on the exit pier",
+      "evidence": "LP1 3:12:58-3:13:02; GR 137",
+      "confidence": "low"
+    },
+    {
+      "id": "S10-a",
+      "section": "S10",
+      "order": 1,
+      "where": "side view: behind the waterfall on the pier, crates on a ledge",
+      "composition": {
+        "unknown": 4
+      },
+      "count": 4,
+      "arrangement": "pair + pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "HIDDEN",
+        "DETOUR",
+        "COUNT-TRAP"
+      ],
+      "why": "second waterfall cache: GR's 4 easy-to-miss crates",
+      "evidence": "LP1 3:13:04-3:13:10; GR 138-141",
+      "confidence": "low"
+    },
+    {
+      "id": "S10-b",
+      "section": "S10",
+      "order": 2,
+      "where": "ledge with a stocky longshoreman: 3-high column with TNT on top of two wood",
+      "composition": {
+        "tnt": 1,
+        "wood": 2
+      },
+      "count": 3,
+      "arrangement": "stack",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "ENEMY-LINK",
+        "SUPPORT-ORDER"
+      ],
+      "why": "TNT crowns the column next to an enemy: clear the enemy, then let the TNT drop and blow, or spin from below and run",
+      "evidence": "LP1 3:13:12-3:13:14",
+      "confidence": "medium"
+    },
+    {
+      "id": "S10-c",
+      "section": "S10",
+      "order": 3,
+      "where": "small ledge under a house: TNT on top of a wood crate",
+      "composition": {
+        "tnt": 1,
+        "wood": 1
+      },
+      "count": 2,
+      "arrangement": "stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "STACK",
+        "EXPLOSIVE-MIX",
+        "EDGE-BAIT"
+      ],
+      "why": "TNT lit (3) on a ledge above the gorge; leap away to the swinging platforms",
+      "evidence": "LP1 3:13:16",
+      "confidence": "medium"
+    },
+    {
+      "id": "S10-d",
+      "section": "S10",
+      "order": 4,
+      "where": "TNT on a rope-hung platform",
+      "composition": {
+        "tnt": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "TIMED"
+      ],
+      "why": "TNT on a swinging footing: light it and leave before the swing brings you back",
+      "evidence": "LP1 3:13:22 (sign 147/153 at 3:13:24)",
+      "confidence": "medium"
+    },
+    {
+      "id": "S10-e",
+      "section": "S10",
+      "order": 5,
+      "where": "TNTs on the swinging platform and on a corner platform",
+      "composition": {
+        "tnt": 2
+      },
+      "count": 2,
+      "arrangement": "singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "timed"
+      ],
+      "relations": [],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "TIMED"
+      ],
+      "why": "the final gauntlet is TNT on moving footholds",
+      "evidence": "LP1 3:13:24-3:13:26",
+      "confidence": "medium"
+    },
+    {
+      "id": "S10-f",
+      "section": "S10",
+      "order": 6,
+      "where": "boardwalk before the exit sign",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PAIR"
+      ],
+      "why": "last crates in front of the sign (sign 147 -> 151)",
+      "evidence": "LP1 3:13:26-3:13:28",
+      "confidence": "low"
+    },
+    {
+      "id": "S10-g",
+      "section": "S10",
+      "order": 7,
+      "where": "Nitro switch (green !) in front of the exit crate sign: pays the Nitros left in the level",
+      "composition": {
+        "nitro": 2
+      },
+      "count": 2,
+      "arrangement": "switch payout",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch"
+      ],
+      "relations": [],
+      "tags": [
+        "NITRO-SWITCH"
+      ],
+      "why": "2 Nitro credited at the exit (151 -> 153)",
+      "evidence": "LP1 3:13:28-3:13:30; GR 153",
+      "confidence": "high"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "S2",
+      "kind": "crossbow longshoreman",
+      "count": 2,
+      "where": "towers and piers over the harbour",
+      "role": "fires fish harpoons across the route; the far-right crates (S2-a) sit in his field of fire"
+    },
+    {
+      "section": "S6",
+      "kind": "fisherman on a small boat",
+      "count": 1,
+      "where": "boat right of the floes",
+      "role": "shares the deck with crates S6-c"
+    },
+    {
+      "section": "S7",
+      "kind": "helmeted stocky longshoreman",
+      "count": 2,
+      "where": "tower top and stone steps",
+      "role": "throws objects; must be attacked from above"
+    },
+    {
+      "section": "S9",
+      "kind": "fisherman / crossbow longshoreman",
+      "count": 3,
+      "where": "boats and the pier in the second floe field",
+      "role": "guards the deck stack S9-a and the pier"
+    },
+    {
+      "section": "S10",
+      "kind": "stocky longshoreman",
+      "count": 1,
+      "where": "ledge beside the TNT column",
+      "role": "stands next to S10-b"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "S5",
+      "kind": "falling ice slabs over a waterfall chasm",
+      "where": "after C2",
+      "crates": [
+        "S4-b",
+        "S5-a"
+      ]
+    },
+    {
+      "section": "S6",
+      "kind": "dark water with drifting ice floes (clear floes slippery, cracked floes break)",
+      "where": "first lagoon",
+      "crates": [
+        "S6-a",
+        "S6-b"
+      ]
+    },
+    {
+      "section": "S7",
+      "kind": "icefall with small and falling ice platforms",
+      "where": "after the timed column",
+      "crates": [
+        "S7-c"
+      ]
+    },
+    {
+      "section": "S8",
+      "kind": "narrow ledges with falling ice blocks",
+      "where": "after C4",
+      "crates": [
+        "S8-a"
+      ]
+    },
+    {
+      "section": "S9",
+      "kind": "second floe field, moving boats",
+      "where": "after C5",
+      "crates": [
+        "S9-b",
+        "S9-d",
+        "S9-e"
+      ]
+    },
+    {
+      "section": "S10",
+      "kind": "waterfall gorge with rope-hung swinging platforms",
+      "where": "end",
+      "crates": [
+        "S10-d",
+        "S10-e"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S1-b",
+        "S1-e",
+        "S1-f",
+        "S7-a",
+        "S7-b"
+      ],
+      "summary": "Red timed ! groups: pink outline crates become solid for a few seconds; three teaching instances in S1, then a staircase in S7 whose top holds a permanent crate.",
+      "solution": "Hit the !, switch slow-mo on, and take the crates in path order; in S7 climb the materialised column and break the top crate before the stairs vanish.",
+      "wrongOrder": "Breaking the lowest materialised crates first in S7 removes the stairs; spending the slow-mo meter before hitting the switch.",
+      "loss": "All-box only: the materialised crates and the S7 top crate count, the route does not need them."
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "B-a",
+        "B-b"
+      ],
+      "summary": "Bonus opener: 7 Nitro lie on a bridge directly above an iron row with a red ! in the middle.",
+      "solution": "Detonate the Nitro row from the start ledge in slow-mo and stay out of the chain; then hit the exposed red ! and collect its outlines.",
+      "wrongOrder": "Walking under the bridge to reach the ! first: any jump touches a Nitro.",
+      "loss": "Death (bonus restarts) or the bonus count; the Nitros themselves are 7 of the 33."
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "B-h"
+      ],
+      "summary": "A column of three ? stands at the end of a 6-Nitro row.",
+      "solution": "Land on top of the column and stomp down through it, then chain-detonate the row from a distance.",
+      "wrongOrder": "Spinning the column from the side touches the Nitro beside it.",
+      "loss": "Death or 9 bonus crates."
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "S8-a"
+      ],
+      "summary": "TNT with a crate stacked on top, on a narrow ledge under falling ice.",
+      "solution": "Jump and spin into the top crate: it breaks and the TNT starts its fuse; step back along the ledge.",
+      "wrongOrder": "Spinning the TNT at ground level, or standing on it for the top crate.",
+      "loss": "A life (the fuse or the falling ice), not crates: the blast still breaks the top crate."
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "S6-b"
+      ],
+      "summary": "Hidden-gem stack on a pier behind a collapsing platform.",
+      "solution": "Bounce off the top crate to reach the hidden gem first, then smash the stack.",
+      "wrongOrder": "Smashing the stack first removes the only springboard.",
+      "loss": "The hidden gem (crates are kept either way)."
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "S10-g"
+      ],
+      "summary": "Exit crate sign plus Nitro switch.",
+      "solution": "Check the sign (151/153 here); press the green ! to credit the 2 Nitros you avoided.",
+      "wrongOrder": "Leaving through the exit without pressing the switch.",
+      "loss": "2 crates of the all-box gem."
+    }
+  ],
+  "observations": [
+    "Mask first: the slow-time mask is given at the spawn and the first three red-! groups (S1) are its tutorial on safe ground, before any enemy can punish a slow line.",
+    "Density curve: 17 / 18 / bonus 33 / 6 / 5 / 6 / 20 / 11 / 6 / 15 / 16. The bonus is 22 % of the level in about 40 s; the stretch after the bonus is deliberately thin while the set pieces (ship explosion, falling ice) play.",
+    "Seven count traps (35 crates) are off the forward line: tower after a cutscene (S4-a), floe crates that drift toward the camera (S6-a, S9-b), the gem pier (S6-b), two waterfall caches (S6-f, S10-a) and the crate above the timed stairs (S7-b).",
+    "Water crates are reached by riding a drifting floe, not by jumping: their placement teaches reading the current.",
+    "Explosive grammar escalates: TNT on a boat deck beside collectibles (S2-b), TNT under a crate (S8-a), TNT crowning a column next to an enemy (S10-b), TNT on swinging platforms (S10-d/e). The main route uses TNT only; Nitro appears in the bonus and as 2 hidden Nitros paid by the exit switch.",
+    "In the bonus, Nitro is used as a lid: a 7-Nitro bridge over the switch row (B-a) and a 6-Nitro row under a ? column (B-h). Nitros count when they explode, so clearing the lid is itself box credit.",
+    "Crates as tools: the gem stack is a springboard (S6-b), the arrow crate reaches a floating pair (S6-d/e), and the timed stairs are made of crates (S7-a).",
+    "Fruit-heavy rewards (gold fruit crate S7-c, flame pyramid S5-b) sit on detours that feed the 80 % fruit gem rather than the box gem.",
+    "Checkpoints close up late in the level (cumulative 17, 79, 105, 116, 122): the icefall and falling-ice ledges are the death-heavy part, and C4/C5 sit 11 and 6 crates apart.",
+    "The exit crate sign shows n/153 before the Nitro switch, so a player sees exactly what is missing before committing to the finish."
+  ]
+}

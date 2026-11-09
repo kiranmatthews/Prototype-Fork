@@ -1,0 +1,1140 @@
+{
+ "id": "c3-04-bone-yard",
+ "game": "Crash 3",
+ "stage": 4,
+ "name": "Bone Yard",
+ "nameJa": "どたばた ジュラシックぬま",
+ "sources": [
+  "F3 p033-p035",
+  "F3 p040L",
+  "F3 p102R",
+  "F3 p032",
+  "F3 p011",
+  "P3 p008R-p010L",
+  "gamepressure N. Sane Bone Yard (corroboration)"
+ ],
+ "camera": "mixed: toward-camera chase (start-C19, C58-goal) + into-screen free section (C19-C58); side-view bonus",
+ "totalBoxes": 66,
+ "totalSource": "derived: F3 C58 label 58 (59 with Nitro) + final section 4 + 3 Nitro; matches gamepressure 66 (bonus 14)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 52,
+   "basis": "S1-S5 clusters: 48 non-Nitro + 4 Nitro"
+  },
+  {
+   "id": "bonus",
+   "boxes": 14,
+   "basis": "F3 p040L header x14"
+  },
+  {
+   "id": "gem",
+   "boxes": 0,
+   "basis": "F3 p035: red-gem course has no crate bubbles"
+  },
+  {
+   "id": "death",
+   "boxes": 0,
+   "basis": "no death route"
+  }
+ ],
+ "checkpointCounts": {
+  "C1": 11,
+  "C19": 19,
+  "C28": 28,
+  "C58": "58 (59 with Nitro)"
+ },
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 11,
+   "cumulative": 11,
+   "mode": "toward-camera chase",
+   "notes": "chase 1; singles/pairs as landing snags; no explosives"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C19",
+   "boxes": 8,
+   "cumulative": 19,
+   "mode": "toward-camera chase",
+   "notes": "chase 1 continued; pterodactyls over tar; one 2x2 block"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C19",
+   "to": "C28",
+   "boxes": 9,
+   "cumulative": 28,
+   "mode": "into-screen free",
+   "notes": "Aku then TNT single, TNT 2-stack, 3-stack; red-gem branch before C28"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C28",
+   "to": "C58",
+   "boxes": 17,
+   "cumulative": 58,
+   "cumulativeWithNitro": 59,
+   "mode": "into-screen free, then diagonal",
+   "notes": "16 non-Nitro + 1 Nitro; the bonus (14) is entered here and is inside the 58"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus lift in S4",
+   "to": "back to S4",
+   "boxes": 14,
+   "cumulative": null,
+   "mode": "side view",
+   "notes": "header x14 boxes, x2 lives"
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C58",
+   "to": "goal",
+   "boxes": 7,
+   "cumulative": null,
+   "derivedCumulative": 62,
+   "derivedCumulativeWithNitro": 66,
+   "mode": "toward-camera chase",
+   "notes": "4 non-Nitro + 3 Nitro; green ! at the end"
+  },
+  {
+   "id": "G",
+   "route": "gem",
+   "from": "log before C28 (red-gem pad)",
+   "to": "own goal (secret gem)",
+   "boxes": 0,
+   "cumulative": null,
+   "mode": "toward-camera chase",
+   "notes": "no crates; 2 steel C-blocks (uncounted); needs the red gem from stage 12"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first crate just past the start, on the line",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "free first hit; pulls the player into the cave mouth where the chase-trigger trio waits",
+   "evidence": "F3 p033R zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "cave mouth: two crates in front, one back-right",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "loose trio",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "chase-trigger"
+   ],
+   "tags": [
+    "ON-PATH",
+    "CHASE",
+    "TEACH",
+    "TIME-TRIAL"
+   ],
+   "why": "the player stops to smash them and the triceratops bursts out of the cave behind him; in Time Trial one becomes the first Aku crate",
+   "evidence": "F3 p033R 'A' bubble zoom; P3 p008R shot 49; F3 p102R frames 01-02",
+   "confidence": "high",
+   "timeTrial": "one crate becomes Aku #1"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "landing spot right after the first fallen log",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "chaser-breaks"
+   ],
+   "relations": [
+    "after-log"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "CHASE",
+    "EDGE-BAIT",
+    "TIME-TRIAL"
+   ],
+   "why": "landing snag: a sloppy log jump runs into it (mask hint 1: spin crates blocking the line); multi-hit fruit the chase does not allow you to farm",
+   "evidence": "F3 p033R zoom (green 3 badge)",
+   "confidence": "high",
+   "timeTrial": "3s"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "next on the chase line",
+   "composition": {
+    "wood": 1,
+    "slot": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "chaser-breaks"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "CHASE",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "slot crate turns to steel if not broken quickly; in a chase there is no time to wait for a good face",
+   "evidence": "F3 p033R zoom (red 1 on the wood)",
+   "confidence": "high",
+   "timeTrial": "1s (wood)"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "beside the C1 crate (gutter bubble)",
+   "composition": {
+    "unknown": 3
+   },
+   "count": 3,
+   "arrangement": "2-stack + single",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "checkpoint"
+   ],
+   "tags": [
+    "ON-PATH",
+    "CHASE",
+    "STACK"
+   ],
+   "why": "crates next to the checkpoint reward a player with a lead; types unreadable (motion blur), count forced by the '11' label",
+   "evidence": "F3 p033 gutter (blurred), label 11",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "C1 on the chase path",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "CHASE"
+   ],
+   "why": "checkpoint inside chase 1; Prima calls the area a place to catch your breath",
+   "evidence": "F3 p033 gutter '11コ'; P3 p008R shot 51",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "entering the second strip (top-right of p033L)",
+   "composition": {
+    "wood": 1,
+    "striped": 1,
+    "slot": 1
+   },
+   "count": 3,
+   "arrangement": "loose group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "chaser-breaks"
+   ],
+   "relations": [
+    "pterodactyls"
+   ],
+   "tags": [
+    "ON-PATH",
+    "CHASE",
+    "TIMED"
+   ],
+   "why": "S1 vocabulary repeated under pterodactyl attack; TT 06: sidestep crates and pterodactyls",
+   "evidence": "F3 p033L route crop",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "on sand/grass after the tar stretch",
+   "composition": {
+    "wood": 2,
+    "question": 2
+   },
+   "count": 4,
+   "arrangement": "2x2 block (top W ?, bottom ? W)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "chaser-breaks"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "GRID",
+    "STACK",
+    "CHASE"
+   ],
+   "why": "the only multi-row structure of chase 1: one stop-or-skip decision; its ? crates are the chase's best fruit and the dino credits it if skipped",
+   "evidence": "F3 p033L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "left end of the curve; end of chase 1",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "ends chase 1 and is the respawn for the explosive free section",
+   "evidence": "F3 p033L '19コ'; P3 p009L shot 53",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "immediately after C19",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "floating single (shadow drawn)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "before-TNT"
+   ],
+   "tags": [
+    "AKU",
+    "HIGH",
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "only Aku crate of the main course, floating so it is taken deliberately, right before three TNTs and the lava/grass strip",
+   "evidence": "F3 p033L zoom; P3 p009L shot 53; F3 p102R frame 11",
+   "confidence": "high",
+   "timeTrial": "Aku #2"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "next, open ground",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TEACH",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "first TNT, alone with room to escape: stomp, never slide or spin (mask hint 2)",
+   "evidence": "F3 p033L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "next",
+   "composition": {
+    "tnt": 2
+   },
+   "count": 2,
+   "arrangement": "2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TEST",
+    "CHAIN"
+   ],
+   "why": "same mechanic doubled; TT long-jumps over it",
+   "evidence": "F3 p033L zoom; F3 p102R frame 12",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "next",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "3-stack W/?/W (top first)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "first tall stack, a ? reward right after the TNTs; TT 2-s box on the top tier",
+   "evidence": "F3 p033L zoom (blue 2 on top); F3 p102R frames 13-14",
+   "confidence": "high",
+   "timeTrial": "2s (top)"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "near the gutter before the lava strip",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "plain crate; in TT the third Aku gives invincibility for the grass/magma strip",
+   "evidence": "F3 p033L zoom ('A' badge); F3 p102R frames 13-14",
+   "confidence": "high",
+   "timeTrial": "Aku #3"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "top of the strip after the last log (red-gem branch point just before it)",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "route-split"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "ROUTE-SPLIT"
+   ],
+   "why": "checkpoint right after the red-gem branch",
+   "evidence": "F3 p033R '28コ'",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "beside the C28 crate",
+   "composition": {
+    "question": 1,
+    "striped": 2,
+    "nitro": 1
+   },
+   "count": 4,
+   "arrangement": "? beside a Nitro; two striped one above the other",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "after-checkpoint"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EXPLOSIVE-MIX",
+    "TIME-TRIAL"
+   ],
+   "why": "first Nitro of the stage among ordinary crates right after a checkpoint (mask hint 3: careful spinning)",
+   "evidence": "F3 p033R zoom; P3 p009R shot 64",
+   "confidence": "high",
+   "timeTrial": "2s (the ?)"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "lava-river area after the bonus lift and the power stone",
+   "composition": {
+    "outline": 5
+   },
+   "count": 5,
+   "arrangement": "floating steel ! + loose floating cluster of 5 outlines",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "switch"
+   ],
+   "relations": [
+    "lava"
+   ],
+   "tags": [
+    "SWITCH",
+    "OUTLINE",
+    "HIGH",
+    "DETOUR"
+   ],
+   "why": "switch puzzle over lava: hit the floating ! from below and five crates materialise in the air; TT ignores it",
+   "evidence": "F3 p034R zoom; P3 p009L shot 56; F3 p102R frame 21",
+   "confidence": "high",
+   "uncounted": {
+    "switch": 1
+   }
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "diagonal run, right side",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "loose diagonal line",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "ROW",
+    "TIME-TRIAL"
+   ],
+   "why": "pacing line steering to the right lane; TT 1-s box on the right",
+   "evidence": "F3 p034R zoom; F3 p102R frame 22",
+   "confidence": "high",
+   "timeTrial": "1s (last)"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "at a step down",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "3-stack W/W/? (top first)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "drop-landing"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK",
+    "TIME-TRIAL"
+   ],
+   "why": "landing snag at a drop; TT: drop from the middle to avoid catching on the boxes",
+   "evidence": "F3 p034R zoom; F3 p102R frame 23",
+   "confidence": "high",
+   "timeTrial": "1s (top)"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "beside S4-d",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "drop-landing"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "fills the landing so a sideways drop also meets a crate",
+   "evidence": "F3 p034R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "C58, start of chase 2",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "CHASE"
+   ],
+   "why": "respawn immediately before chase 2",
+   "evidence": "F3 p034R '58コ (59コ)'; F3 p102R frames 23-24",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 1,
+   "where": "chase-2 diagonal after the pterodactyls",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "chaser-breaks"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "CHASE",
+    "TIME-TRIAL"
+   ],
+   "why": "lone fruit crate in the chase; TT 2-s box needs a lead",
+   "evidence": "F3 p034R zoom; P3 p009R shot 65",
+   "confidence": "high",
+   "timeTrial": "2s"
+  },
+  {
+   "id": "S5-b",
+   "section": "S5",
+   "order": 2,
+   "where": "inside a patch of clinging grass",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "double-jump"
+   ],
+   "relations": [
+    "clinging-grass"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TOOL",
+    "STEPPING",
+    "CHASE",
+    "TIME-TRIAL"
+   ],
+   "why": "crate as an island above time-wasting grass; or go round on the right",
+   "evidence": "F3 p034R zoom (TA4 bubble)",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-c",
+   "section": "S5",
+   "order": 3,
+   "where": "right edge, diagonal line",
+   "composition": {
+    "nitro": 3
+   },
+   "count": 3,
+   "arrangement": "loose diagonal line along the edge",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "lane-edge"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "CHASE",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "Nitros narrow the chase lane to the left half (mask hint 4); credited only via the green !",
+   "evidence": "F3 p034L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-d",
+   "section": "S5",
+   "order": 4,
+   "where": "last objects before the goal",
+   "composition": {
+    "striped": 2
+   },
+   "count": 2,
+   "arrangement": "green ! and two striped on the path",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "goal"
+   ],
+   "tags": [
+    "NITRO-SWITCH",
+    "ON-PATH",
+    "CHASE",
+    "COUNT-TRAP"
+   ],
+   "why": "final count check inside the chase: must have a lead to spin the green ! (mask hint 5); gem appears in front of you",
+   "evidence": "F3 p034L zoom; P3 p009R shot 59",
+   "confidence": "high",
+   "uncounted": {
+    "switchGreen": 1
+   }
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 1,
+   "where": "first ledge",
+   "composition": {
+    "striped": 2
+   },
+   "count": 2,
+   "arrangement": "one on the ground, one floating ~4 crate-heights above",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce",
+    "striped"
+   ],
+   "relations": [],
+   "tags": [
+    "SANDWICH",
+    "COLUMN-BOUNCE",
+    "TEACH",
+    "BONUS"
+   ],
+   "why": "striped crate as high-bounce footing toward its floating twin; fruit on every stomp",
+   "evidence": "F3 p040L diagram",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 2,
+   "where": "lower ledge",
+   "composition": {
+    "wood": 1,
+    "question": 2
+   },
+   "count": 3,
+   "arrangement": "3-stack W/?/?",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "BONUS"
+   ],
+   "why": "easy fruit stack",
+   "evidence": "F3 p040L",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 3,
+   "where": "top of three rising steps",
+   "composition": {
+    "arrowWood": 1,
+    "wood": 2,
+    "question": 2
+   },
+   "count": 5,
+   "arrangement": "5-stack arrow/W/?/W/?",
+   "stackHeight": 5,
+   "floating": false,
+   "access": [
+    "spin",
+    "arrow"
+   ],
+   "relations": [
+    "tool-for-B-d"
+   ],
+   "tags": [
+    "STACK",
+    "TOOL",
+    "SUPPORT-ORDER",
+    "BONUS"
+   ],
+   "why": "the tool sits on top of the stack: remove lower crates until the arrow rests on one crate, then bounce",
+   "evidence": "F3 p040L; P3 p009R shots 61-62",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 4,
+   "where": "raised steel platform",
+   "composition": {
+    "life": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "pair on steel",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "arrow"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "REWARD",
+    "LIFE",
+    "BONUS"
+   ],
+   "why": "payoff for solving B-c",
+   "evidence": "F3 p040L; P3 p009R shot 62",
+   "confidence": "high",
+   "uncounted": {
+    "steel": "platform"
+   }
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 5,
+   "where": "last ledge",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "wood just above a ? (2-stack, drawn with a gap)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "SANDWICH",
+    "BONUS"
+   ],
+   "why": "last easy pair",
+   "evidence": "F3 p040L",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "triceratops (chaser)",
+   "count": 1,
+   "where": "bursts out of the start cave after the S1-b trio; chases through S2",
+   "role": "forced motion; smashes and credits missed crates (not the Aku mask)"
+  },
+  {
+   "section": "S2",
+   "kind": "pterodactyl",
+   "count": 2,
+   "where": "over the tar stretch",
+   "role": "lane hazard sharing the line with S2-a crates"
+  },
+  {
+   "section": "S4",
+   "kind": "pterodactyl",
+   "count": 2,
+   "where": "perched on ledges on the diagonal before S5",
+   "role": "hazard"
+  },
+  {
+   "section": "S5",
+   "kind": "triceratops (chaser)",
+   "count": 1,
+   "where": "returns at the C58 drop",
+   "role": "forced motion; the green ! needs a lead"
+  },
+  {
+   "section": "S5",
+   "kind": "pterodactyl",
+   "count": 1,
+   "where": "on a ledge before the Nitros",
+   "role": "hazard"
+  },
+  {
+   "section": "G",
+   "kind": "pterodactyl",
+   "count": 5,
+   "where": "on ledges along the gem course (approximate count)",
+   "role": "hazard"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "fallen log",
+   "where": "after S1-b",
+   "crates": [
+    "S1-c"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "step down",
+   "where": "before the CP1 bubble (TT 05)",
+   "crates": [
+    "S1-e"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "tar + lava patch",
+   "where": "before S2-b",
+   "crates": [
+    "S2-a",
+    "S2-b"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "lava patches, logs, grass tufts",
+   "where": "strip between S3-e and C28",
+   "crates": []
+  },
+  {
+   "section": "S4",
+   "kind": "lava river",
+   "where": "around the ! and outlines",
+   "crates": [
+    "S4-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "step down",
+   "where": "at the C58 stack",
+   "crates": [
+    "S4-d",
+    "S4-e"
+   ]
+  },
+  {
+   "section": "S5",
+   "kind": "clinging grass",
+   "where": "chase-2 lane",
+   "crates": [
+    "S5-b"
+   ]
+  },
+  {
+   "section": "S5",
+   "kind": "magma patches",
+   "where": "beside the Nitro line",
+   "crates": [
+    "S5-c"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "B-c",
+    "B-d"
+   ],
+   "summary": "arrow crate on top of a 5-stack; reward on a high steel platform",
+   "solution": "break lower crates until the arrow rests on one crate; bounce (hold jump) to the platform",
+   "wrongOrder": "destroying the arrow or trying to use it while high",
+   "loss": "1UP + ? (2 boxes) for that attempt"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S5-c",
+    "S5-d"
+   ],
+   "summary": "green ! at the end of chase 2",
+   "solution": "survive chase 2 with a lead and spin the ! in passing",
+   "wrongOrder": "arriving with the dino on your heels",
+   "loss": "4 Nitro (all-box gem only)"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S3-a",
+    "S3-b",
+    "S3-c"
+   ],
+   "summary": "Aku then TNT single then TNT 2-stack",
+   "solution": "take the mask, stomp each TNT and back off",
+   "wrongOrder": "spinning or sliding a TNT",
+   "loss": "a life (the mask absorbs one)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S4-b"
+   ],
+   "summary": "floating steel ! materialises 5 outlines over lava",
+   "solution": "jump into the ! from below, then collect",
+   "wrongOrder": "skipping it",
+   "loss": "5 boxes (all-box only)"
+  }
+ ],
+ "timeTrial": {
+  "timeCrates": 7,
+  "seconds": 12,
+  "ttAkuCrates": [
+   "S1-b",
+   "S3-a",
+   "S3-e"
+  ],
+  "staffBest": "1:14:60",
+  "source": "F3 p102R + map badges"
+ },
+ "observations": [
+  "Chase 1 holds 17 crates + 2 C and no explosives; the free section holds all 3 TNT, the first Nitro, the only Aku, the ! group and the bonus; chase 2 holds 4 crates but 3 Nitros.",
+  "Chase crates sit at landings (after the log, at the foot of drops) and work as snags; the guide says spin through or ignore.",
+  "The chaser smashes and credits missed crates, so the all-box goal never forces a risky stop in a chase; the Aku must be broken by Crash, so it sits in the free section.",
+  "The start trio triggers the chase: the player stops to smash it and the dinosaur bursts out behind him.",
+  "Checkpoints mark mode changes: C1 breather in chase 1, C19 ends it, C28 after the explosives, C58 at the drop that starts chase 2.",
+  "Explosive teaching order: TNT single, TNT 2-stack, Nitro inside a normal group, Nitro lane line in a chase, green ! at the exit.",
+  "Time Trial re-uses three ordinary crate positions as Aku crates so a clean run is invincible for the grass/magma strip.",
+  "The red-gem secret course has no crates; the all-box total is independent of it.",
+  "Bonus centrepiece: the tool (arrow) is on top of the stack you must dismantle."
+ ]
+}

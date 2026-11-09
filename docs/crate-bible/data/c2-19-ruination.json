@@ -1,0 +1,917 @@
+{
+ "id": "c2-19-ruination",
+ "game": "Crash 2",
+ "stage": 19,
+ "name": "Ruination",
+ "nameJa": "からくりのはいきょ",
+ "sources": [
+  "F2 p071-p072",
+  "F2 p099R",
+  "F2 p015",
+  "D2 p062-p064"
+ ],
+ "camera": "into-screen (bonus side-scroll)",
+ "totalBoxes": 84,
+ "totalSource": "F2 p071L header (superscript 49 off-course)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 35,
+   "basis": "header 84 - 49; every cluster located"
+  },
+  {
+   "id": "bonus",
+   "boxes": 49,
+   "basis": "all off-course boxes; D2 HUD counters 1/16/17/22/28/36"
+  },
+  {
+   "id": "gem",
+   "boxes": 0,
+   "basis": "F2 p099R: the gem course has no boxes"
+  }
+ ],
+ "specialCounts": {
+  "life": {
+   "total": 0,
+   "offCourse": 0
+  },
+  "aku": {
+   "total": 1,
+   "offCourse": 0,
+   "note": "loose masks above the steel arrow, in the gem course and after the green ! are not boxes"
+  },
+  "checkpoint": {
+   "total": 4,
+   "offCourse": 0,
+   "note": "F2 p072R '?/C' is ?/? (D2 30, 52)"
+  },
+  "tnt": {
+   "main": 7,
+   "bonus": 3
+  },
+  "nitro": {
+   "main": 12,
+   "bonus": 0
+  },
+  "ironBound": {
+   "bonus": 29
+  },
+  "switches": "! in the Nitro room (arms 6 outline Nitros); ! in the bonus (fills footing frames); green ! after C4 reached by rat bounce"
+ },
+ "gems": [
+  {
+   "kind": "clear",
+   "condition": "all 84 boxes"
+  },
+  {
+   "kind": "clear",
+   "condition": "finish the gem course from the green-gem platform at C2 (needs the Stage 10 green gem)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "cumulative": null,
+   "notes": "hidden-Nitro pile, rat/lizard pillars",
+   "boxes": 7
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "cumulative": null,
+   "notes": "TNT-stack ledge, crumbling Nitro ledge, steel arrow, ! Nitro room",
+   "boxes": 15
+  },
+  {
+   "id": "GEM",
+   "route": "gem",
+   "from": "C2 green-gem platform",
+   "to": "S4-d return pad",
+   "cumulative": null,
+   "notes": "0 boxes (F2 p099R)",
+   "boxes": 0
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "cumulative": null,
+   "notes": "fire statues, rotating platforms (bonus pad), crumbling platforms, Aku box",
+   "boxes": 4
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "C4",
+   "cumulative": null,
+   "notes": "Nitro-rat walkway, lizard TNT ledge, tilting pillars",
+   "boxes": 9
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C4",
+   "to": "goal",
+   "cumulative": null,
+   "notes": "green ! via rat bounce, log gorilla; 0 boxes",
+   "boxes": 0
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S3 bonus pad",
+   "to": "S3",
+   "cumulative": null,
+   "notes": "iron-bound demolition; counters 1/16/17/22/28/36 -> 49",
+   "boxes": 49
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first platform after the opening fire statue",
+   "composition": {
+    "wood": 4,
+    "nitro": 1
+   },
+   "count": 5,
+   "arrangement": "2x2 wood pile with a Nitro tucked behind",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "hidden-nitro",
+    "no-body-slam"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EXPLOSIVE-MIX",
+    "HIDDEN",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "the wanted boxes sit against a hidden Nitro; spin from the front, never body-slam",
+   "evidence": "F2 p071R POINT1 + screenshot; D2 p062 shot 2",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "pillar beside a rat; lizards on the next pillars",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "rat-guard",
+    "killing-rat-frees-lizard"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "SINGLE",
+    "ON-PATH"
+   ],
+   "why": "tempts a fight; killing the rat sets the lizard pacing",
+   "evidence": "F2 p071R; D2 shots 3-4",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "walled platform after the second fire statue",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-fire-statue"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "first save",
+   "evidence": "F2 p071R; D2 shot 6",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "long ledge either side of a patrolling monkey",
+   "composition": {
+    "tnt": 4
+   },
+   "count": 4,
+   "arrangement": "two 2-high TNT stacks used as footing",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "enemy-bounce",
+    "timed"
+   ],
+   "relations": [
+    "monkey-patrol-between"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "STACK",
+    "TIMED"
+   ],
+   "why": "each stack is a 3-count step; stomp the monkey from a stack, light the next and leave",
+   "evidence": "F2 p071R; D2 shots 7-8",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "crumbling ledge",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "two spaced singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "crumbling-floor"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED",
+    "TEST"
+   ],
+   "why": "no time to line up jumps; punishes panic",
+   "evidence": "F2 p071R; D2 shot 9",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "platform beside a steel arrow with a loose Aku mask floating above",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single next to the arrow",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "arrow"
+   ],
+   "relations": [
+    "steel-arrow",
+    "floating-mask"
+   ],
+   "tags": [
+    "TOOL",
+    "EXPLOSIVE-MIX",
+    "AKU"
+   ],
+   "why": "arrow reaches the mask; the adjacent TNT forbids lingering",
+   "evidence": "F2 p071R zoom; D2 shot 10 (calls it the box)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "the ! room (POINT3)",
+   "composition": {
+    "nitro": 7
+   },
+   "count": 7,
+   "arrangement": "1 solid Nitro + 6 outlines around a ! that turns them into Nitro",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "switch-arms-trap",
+    "green-switch-clears"
+   ],
+   "tags": [
+    "SWITCH",
+    "OUTLINE",
+    "NITRO-SWITCH",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "pressing the ! makes the room deadlier; required only for the perfect, cleared by the green ! after C4",
+   "evidence": "F2 p071R POINT3 + screenshot; D2 shot 11",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "end of the monkey ledge beside the green-gem platform",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "gem-course-entrance"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "ROUTE-SPLIT"
+   ],
+   "why": "save at the gem-course entrance",
+   "evidence": "F2 p071R; D2 shot 13; F2 p099R screenshot",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "pillar next to the bonus pad, guarded by a hopping monkey",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "2-high stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "monkey-route"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "STACK",
+    "ON-PATH"
+   ],
+   "why": "the monkey uses the crate pillar; kill it first",
+   "evidence": "F2 p072L; D2 shot 45",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "small platform between two pairs of fire statues",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "fire-gap"
+   ],
+   "tags": [
+    "AKU",
+    "TIMED",
+    "ON-PATH"
+   ],
+   "why": "only mask box, inside the fire run",
+   "evidence": "F2 p072L zoom; D2 shot 47",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "walled platform after the statue lanes",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "before-nitro-rat"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the Nitro/rat walkway",
+   "evidence": "F2 p072L; D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "either side of a rat right after C3",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "Nitro - rat - Nitro on a narrow walkway",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "enemy-bounce"
+   ],
+   "relations": [
+    "rat-as-step"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "STEPPING",
+    "EXPLOSIVE-MIX",
+    "TEST"
+   ],
+   "why": "jump the Nitro, stomp the rat as a step, jump the next",
+   "evidence": "F2 p072L/R POINT7; D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "narrow ledge with a pacing lizard",
+   "composition": {
+    "tnt": 2
+   },
+   "count": 2,
+   "arrangement": "one TNT at each end of the lizard's beat",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "timed"
+   ],
+   "relations": [
+    "lizard-trap"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "TIMED",
+    "CHAIN"
+   ],
+   "why": "light the near TNT as the lizard reaches the far end so the blast kills it",
+   "evidence": "F2 p072R; D2 shot 49",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "platform before the tilting pillars",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "two singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-perspective-test"
+   ],
+   "tags": [
+    "PAIR",
+    "ON-PATH",
+    "REWARD"
+   ],
+   "why": "breather payout",
+   "evidence": "F2 p072R; D2 shot 50",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "platform after the tilting pillars beside the gem-course return pad",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "2-high stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "gem-course-rejoin"
+   ],
+   "tags": [
+    "STACK",
+    "ON-PATH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "marks where the optional route rejoins",
+   "evidence": "D2 shots 30, 52; F2 p072R (misdrawn as ?/C)",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "platform beside the floating green !",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "green-switch"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "NITRO-SWITCH"
+   ],
+   "why": "save beside the rat-bounce switch",
+   "evidence": "D2 shot 31; F2 p072R",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "bonus entry",
+   "composition": {
+    "ironBound": 15,
+    "wood": 1
+   },
+   "count": 16,
+   "arrangement": "4x4 block; the wood box fills one top notch",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "body-slam"
+   ],
+   "relations": [
+    "slam-order"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "GRID",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "spin the wood box, climb into the notch, body-slam down the middle; never slam the bottom row first",
+   "evidence": "D2 p064 shot 39 (counted at zoom), counter 16 at shot 40; F2 p099R caution 1",
+   "confidence": "high"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 2,
+   "where": "steel slab after the outline steps",
+   "composition": {
+    "question": 1,
+    "ironBound": 3
+   },
+   "count": 4,
+   "arrangement": "? on top of 3 iron-bound",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "body-slam"
+   ],
+   "relations": [
+    "cap-then-slam"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "STACK",
+    "SUPPORT-ORDER"
+   ],
+   "why": "spin the ? cap, then slam down",
+   "evidence": "D2 shot 41 (counter 17)",
+   "confidence": "high"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 3,
+   "where": "tower with a TNT pair at its foot",
+   "composition": {
+    "tnt": 2,
+    "ironBound": 6
+   },
+   "count": 8,
+   "arrangement": "iron tower + 2-high TNT stack (split estimated)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce",
+    "body-slam"
+   ],
+   "relations": [
+    "stand-on-target"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "TOOL"
+   ],
+   "why": "high-jump off the TNT onto the iron boxes and wait for the blast; slam the rest",
+   "evidence": "D2 shot 42 (counter 22); F2 p099R caution 2",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "BONUS",
+   "order": 4,
+   "where": "tall tower and wood steps",
+   "composition": {
+    "tnt": 1,
+    "ironBound": 5,
+    "wood": 2
+   },
+   "count": 8,
+   "arrangement": "5-high iron column with TNT at the foot, then wood steps",
+   "stackHeight": 5,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce",
+    "body-slam"
+   ],
+   "relations": [
+    "must-be-on-top"
+   ],
+   "tags": [
+    "BONUS",
+    "REINFORCED",
+    "EXPLOSIVE-MIX",
+    "TOOL",
+    "SUPPORT-ORDER"
+   ],
+   "why": "bounce up from the TNT and wait on top or the way is blocked",
+   "evidence": "D2 shot 43 (counter 28) to shot 44 (36)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-f",
+   "section": "BONUS",
+   "order": 5,
+   "where": "exit pyramid",
+   "composition": {
+    "striped": 2,
+    "question": 2,
+    "wood": 9
+   },
+   "count": 13,
+   "arrangement": "6-wide bar on two feet with 2 striped on top",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "exit"
+   ],
+   "tags": [
+    "BONUS",
+    "PYRAMID",
+    "ROW",
+    "REWARD"
+   ],
+   "why": "plain payout; 49 - 36 = 13 remaining at shot 44",
+   "evidence": "D2 shot 44",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "rat",
+   "count": 1,
+   "where": "pillar beside the ?",
+   "role": "guard; killing it frees a lizard"
+  },
+  {
+   "section": "S1",
+   "kind": "frilled lizard",
+   "count": 2,
+   "where": "narrow pillars",
+   "role": "slide lengthwise (POINT2)"
+  },
+  {
+   "section": "S2",
+   "kind": "monkey",
+   "count": 2,
+   "where": "between TNT stacks; ledge before C2",
+   "role": "patrol; stomp from a stack"
+  },
+  {
+   "section": "S3",
+   "kind": "monkey",
+   "count": 1,
+   "where": "?/? pillar",
+   "role": "hops pillar to pillar"
+  },
+  {
+   "section": "S4",
+   "kind": "rat",
+   "count": 1,
+   "where": "between two Nitros",
+   "role": "stepping stone"
+  },
+  {
+   "section": "S4",
+   "kind": "frilled lizard",
+   "count": 1,
+   "where": "TNT ledge",
+   "role": "TNT trap target"
+  },
+  {
+   "section": "S5",
+   "kind": "rat",
+   "count": 4,
+   "where": "circling the floating green !",
+   "role": "bounce launcher"
+  },
+  {
+   "section": "S5",
+   "kind": "gorilla (log thrower)",
+   "count": 1,
+   "where": "final stretch",
+   "role": "logs; jump-spin to beat"
+  },
+  {
+   "section": "GEM",
+   "kind": "gorilla (log thrower)",
+   "count": 3,
+   "where": "gem course",
+   "role": "logs across platforms"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "fire-statue gaps between platforms",
+   "where": "start and before C1",
+   "crates": [
+    "S1-a"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "crumbling ledge",
+   "where": "after the TNT ledge",
+   "crates": [
+    "S2-b"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "rotating platforms (POINT5)",
+   "where": "to the bonus pad",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "crumbling platforms between fire-statue pairs (POINT6)",
+   "where": "before C3",
+   "crates": [
+    "S3-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "tilting pillars (POINT8)",
+   "where": "between S4-c and S4-d",
+   "crates": []
+  },
+  {
+   "section": "S5",
+   "kind": "open space under the floating green !",
+   "where": "after C4",
+   "crates": []
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-a"
+   ],
+   "summary": "2x2 wood pile with a Nitro hidden behind",
+   "solution": "spin from the front",
+   "wrongOrder": "body slam or angled spin into the back",
+   "loss": "life"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-d"
+   ],
+   "summary": "! that turns six outlines into Nitro",
+   "solution": "press it only for the perfect, walk out cleanly, detonate with the green ! after C4",
+   "wrongOrder": "pressing it on a clear run, or touching the new Nitros",
+   "loss": "6 boxes on the all-box count / a life"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-e"
+   ],
+   "summary": "green ! floats out of jump reach above rats",
+   "solution": "bounce off a circling rat and steer onto the switch",
+   "wrongOrder": "plain jumps",
+   "loss": "all 12 Nitros stay uncounted"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S4-b"
+   ],
+   "summary": "lizard paces between two TNTs",
+   "solution": "light the near TNT as it reaches the far end",
+   "wrongOrder": "lighting early or spinning a TNT",
+   "loss": "life"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "B-a",
+    "B-c",
+    "B-d",
+    "B-e"
+   ],
+   "summary": "iron-bound demolition chain",
+   "solution": "wood notch first, slam down the middle; spin ? caps then slam; light TNT and wait on top",
+   "wrongOrder": "slamming the bottom row first",
+   "loss": "stranded iron boxes; must die to retry"
+  }
+ ],
+ "observations": [
+  "Main route has only 35 boxes, 19 of them explosives; the bonus holds 49 (29 iron-bound).",
+  "Every enemy is paired with an explosive or a box.",
+  "The only Aku box is inside the hardest fire-timing stretch.",
+  "A ! that arms Nitros and a green ! reachable only by enemy bounce make the perfect a behavioural count trap.",
+  "The optional gem course has zero boxes, separating completionist and gem goals.",
+  "Bonus is a slam-order puzzle: notch entry, ? caps, TNT lit from the top of what it clears."
+ ]
+}

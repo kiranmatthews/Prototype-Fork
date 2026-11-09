@@ -1,0 +1,990 @@
+{
+  "id": "c2-02-snow-go",
+  "game": "Crash 2",
+  "stage": 2,
+  "name": "Snow Go",
+  "nameJa": "ツルピカのゆきやま",
+  "sources": [
+    "F2 p023-p025L",
+    "F2 p092R",
+    "D2 p009-p010",
+    "gamepressure Snow Go (web)",
+    "ludo.guide Snow Go (web)"
+  ],
+  "camera": "into-screen (S1, S4) and side-scroll (S2, S3, bonus)",
+  "totalBoxes": 74,
+  "totalSource": "F2 p023L header (superscript 10 = bonus); gamepressure 74",
+  "headerCounts": {
+    "life": [
+      2,
+      1
+    ],
+    "aku": [
+      2,
+      0
+    ],
+    "checkpoint": [
+      3,
+      0
+    ],
+    "note": "[total, small subscript]; subscripts = share outside the main course"
+  },
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 64,
+      "basis": "74 - 10; cluster tally needs the wall S4-c = 24 (12 seen)"
+    },
+    {
+      "id": "bonus",
+      "boxes": 10,
+      "basis": "F2 superscript; gamepressure 'a total of 10'; D2 HUD"
+    },
+    {
+      "id": "red-gem course",
+      "boxes": 0,
+      "basis": "outside the 74 (F2 p092R: perfect order normal -> bonus -> normal; boxes there need not be broken)"
+    }
+  ],
+  "gems": [
+    {
+      "gem": "clear (box)",
+      "condition": "all 74, order normal -> bonus -> normal; press the hidden green ! (S4-b) and the hidden ! (S4-f); break both TNT"
+    },
+    {
+      "gem": "red",
+      "condition": "Air Crash (stage 7) -> secret warp room -> Snow Go alternate entrance (S3 keyhole) -> hidden ice course -> rejoin normal course"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "lift (C1)",
+      "boxes": 15,
+      "cumulative": null,
+      "notes": "into-screen ice; 5 of the 15 are Nitro (count only after the green ! at C3)"
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "C2",
+      "boxes": 7,
+      "cumulative": null,
+      "notes": "side-scroll; two green drop-pillar crushers"
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "C2",
+      "to": "free-fall to C3",
+      "boxes": 7,
+      "cumulative": 32,
+      "notes": "side-scroll; bonus hole; cumulative = D2 HUD 32 at S3-c (includes the 10 bonus boxes; F2-drawn total at that point is 28)"
+    },
+    {
+      "id": "B",
+      "route": "bonus",
+      "from": "big ? hole in S3",
+      "to": "exit lift",
+      "boxes": 10,
+      "cumulative": null,
+      "notes": "side-scroll icy cavern; HUD 0 -> 2 -> 5 -> 8 -> 10"
+    },
+    {
+      "id": "S4",
+      "route": "main",
+      "from": "C3",
+      "to": "goal",
+      "boxes": 35,
+      "cumulative": null,
+      "notes": "into-screen after the warp-drop; green ! behind the arrival point; 35 assumes the wall holds 24"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "start ring, in front of the first pit",
+      "composition": {
+        "nitro": 1,
+        "aku": 1,
+        "tnt": 1
+      },
+      "count": 3,
+      "arrangement": "row of three: Nitro left, Aku centre, TNT right",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "at-spawn",
+        "before-pit"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "TEACH",
+        "AKU",
+        "CHAIN",
+        "ON-PATH"
+      ],
+      "why": "the stage's explosive vocabulary on screen one: set off the TNT, take the mask, never touch the Nitro",
+      "evidence": "F2 p023R; D2 p009L shots 1-2; ludo step 1",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "after two penguins",
+      "composition": {
+        "striped": 1,
+        "arrowSteel": 1
+      },
+      "count": 1,
+      "arrangement": "striped floating high over a steel arrow",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "arrow"
+      ],
+      "relations": [
+        "steel-arrow-below"
+      ],
+      "tags": [
+        "HIGH",
+        "TOOL",
+        "SANDWICH",
+        "TEACH"
+      ],
+      "why": "arrow bounce into the striped's underside; first half of the pattern that returns in S4-f with a hidden !",
+      "evidence": "F2 p023R; D2 p009L shot 4",
+      "confidence": "high",
+      "notCounted": [
+        "arrowSteel"
+      ]
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "ice field around a 3-4 block steel pillar",
+      "composition": {
+        "question": 3,
+        "wood": 2,
+        "unknown": 1,
+        "tnt": 1
+      },
+      "count": 7,
+      "arrangement": "scattered on ice; one ? on the pillar top",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "slide",
+        "bounce",
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "on-ice",
+        "steel-pillar",
+        "tnt-among-targets"
+      ],
+      "tags": [
+        "ON-PATH",
+        "HIGH",
+        "TOOL",
+        "SUPPORT-ORDER",
+        "EXPLOSIVE-MIX",
+        "LIFE"
+      ],
+      "why": "slide is the attack on ice; the low ? is the step to the pillar-top ? (plow it first and the easy route is gone); a TNT among the slide targets punishes blind sliding",
+      "evidence": "F2 p023R POINT2 + zoom; D2 p009L shots 5-6; ludo step 3",
+      "confidence": "high",
+      "typeConfidence": "medium"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "ice approach to the lift",
+      "composition": {
+        "nitro": 4
+      },
+      "count": 4,
+      "arrangement": "two side-by-side pairs, staggered",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [
+        "on-ice",
+        "before-lift"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "TIMED",
+        "ON-PATH",
+        "NITRO-SWITCH"
+      ],
+      "why": "Nitros on ice as a movement-precision test; counted only via the green ! at C3",
+      "evidence": "F2 p023R POINT4; D2 p009L shot 8",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "top of the lift, start of the side-scroll",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT",
+        "ON-PATH"
+      ],
+      "why": "save after the ice lesson",
+      "evidence": "F2 p024L; D2 p009L shot 9",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "right of C1",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "L: 2-stack + 1",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "after-checkpoint"
+      ],
+      "tags": [
+        "ON-PATH",
+        "TEACH"
+      ],
+      "why": "first side-on crates",
+      "evidence": "F2 p024L; D2 p009L shot 9",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "ledge just past the first green drop-pillar; a seal right behind",
+      "composition": {
+        "wood": 1,
+        "question": 1
+      },
+      "count": 2,
+      "arrangement": "2-stack, wood on top of ?",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "after-crusher",
+        "seal-behind"
+      ],
+      "tags": [
+        "ON-PATH",
+        "ENEMY-LINK",
+        "TIMED"
+      ],
+      "why": "boxes immediately past a crusher with a seal behind: stopping is a timing decision",
+      "evidence": "F2 p024L; D2 p009R shot 12",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-d",
+      "section": "S2",
+      "order": 4,
+      "where": "directly after the second drop-pillar",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "after-crusher"
+      ],
+      "tags": [
+        "CHECKPOINT"
+      ],
+      "why": "'another crusher, right in front of your next checkpoint'",
+      "evidence": "F2 p024R; D2 p009R shot 13",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "after the two log smashers, beyond a penguin",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single on a small ledge",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "after-penguin"
+      ],
+      "tags": [
+        "ON-PATH",
+        "ENEMY-LINK"
+      ],
+      "why": "reward after the penguin ('a present')",
+      "evidence": "F2 p024L; D2 p009R shot 16",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "floor just before the bonus hole",
+      "composition": {
+        "nitro": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch"
+      ],
+      "relations": [
+        "before-bonus-hole"
+      ],
+      "tags": [
+        "EXPLOSIVE-MIX",
+        "NITRO-SWITCH"
+      ],
+      "why": "a Nitro guarding the hole you must drop into",
+      "evidence": "F2 p024R; D2 p009R shot 17",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "after the bonus exit, over ice spikes",
+      "composition": {
+        "outline": 4,
+        "switch": 1
+      },
+      "count": 4,
+      "arrangement": "rising diagonal staircase of 4 outlines; ! on the ground in front",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "switch",
+        "jump"
+      ],
+      "relations": [
+        "over-spikes",
+        "after-bonus"
+      ],
+      "tags": [
+        "SWITCH",
+        "OUTLINE",
+        "FLOAT-LINE",
+        "HIGH",
+        "TEACH"
+      ],
+      "why": "first outline puzzle with the switch beside its boxes; boxes hang over spikes so they are broken from below, the move the bonus just taught",
+      "evidence": "F2 p024L POINT10 + screenshot; F2 p024R; D2 p010L shots 24-25",
+      "confidence": "high",
+      "notCounted": [
+        "switch"
+      ],
+      "materializesAs": {
+        "wood": 3,
+        "question": 1
+      }
+    },
+    {
+      "id": "S3-d",
+      "section": "S3",
+      "order": 4,
+      "where": "raised ledge / gap after the staircase",
+      "composition": {
+        "aku": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating over a gap",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "before-free-fall"
+      ],
+      "tags": [
+        "AKU",
+        "EDGE-BAIT",
+        "HIGH"
+      ],
+      "why": "mask before the drop into the hardest section",
+      "evidence": "F2 p024R; D2 p010L shot 26",
+      "confidence": "high"
+    },
+    {
+      "id": "B-a",
+      "section": "B",
+      "order": 1,
+      "where": "first icy ledge",
+      "composition": {
+        "wood": 1,
+        "unknown": 1
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "on-ice",
+        "ledge-edge"
+      ],
+      "tags": [
+        "BONUS",
+        "EDGE-BAIT"
+      ],
+      "why": "boxes on a slippery ledge over a fall (HUD 0 -> 2)",
+      "evidence": "D2 p010L shots 19, 21; ludo bonus",
+      "confidence": "high"
+    },
+    {
+      "id": "B-b",
+      "section": "B",
+      "order": 2,
+      "where": "above an icy ledge",
+      "composition": {
+        "question": 2,
+        "life": 1
+      },
+      "count": 3,
+      "arrangement": "diagonal float line ?, 1UP, ?",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "BONUS",
+        "HIGH",
+        "LIFE",
+        "TEACH",
+        "FLOAT-LINE"
+      ],
+      "why": "the two highest need a crouch-jump from below - rehearses the head-butt needed at S3-c (HUD 2 -> 5)",
+      "evidence": "D2 p010L shots 20-21; F2 p092R bonus note",
+      "confidence": "high"
+    },
+    {
+      "id": "B-c",
+      "section": "B",
+      "order": 3,
+      "where": "after the ice run",
+      "composition": {
+        "unknown": 3
+      },
+      "count": 3,
+      "arrangement": "group",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "BONUS"
+      ],
+      "why": "'break all the boxes here' (HUD 5 -> 8)",
+      "evidence": "D2 p010L shots 22-23 (HUD); ludo",
+      "confidence": "low"
+    },
+    {
+      "id": "B-d",
+      "section": "B",
+      "order": 4,
+      "where": "beside the exit lift",
+      "composition": {
+        "wood": 2
+      },
+      "count": 2,
+      "arrangement": "2-stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "at-exit"
+      ],
+      "tags": [
+        "BONUS",
+        "ON-PATH"
+      ],
+      "why": "last boxes before the elevator",
+      "evidence": "D2 p010L shot 23",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-a",
+      "section": "S4",
+      "order": 1,
+      "where": "landing point of the free-fall",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "CHECKPOINT",
+        "ON-PATH"
+      ],
+      "why": "save at the start of the longest section",
+      "evidence": "F2 p025L; D2 p010L shot 28",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-b",
+      "section": "S4",
+      "order": 2,
+      "where": "behind the arrival point, toward the camera",
+      "composition": {
+        "switchGreen": 1
+      },
+      "count": 0,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "backtrack",
+        "switch"
+      ],
+      "relations": [
+        "behind-camera",
+        "behind-checkpoint"
+      ],
+      "tags": [
+        "NITRO-SWITCH",
+        "BACKTRACK",
+        "HIDDEN",
+        "COUNT-TRAP"
+      ],
+      "why": "without it the 6 Nitros never count; it sits behind the camera, off the forward line",
+      "evidence": "F2 p025L POINT12; F2 p092R; D2 p010L shot 29",
+      "confidence": "high",
+      "notCounted": [
+        "switchGreen"
+      ]
+    },
+    {
+      "id": "S4-c",
+      "section": "S4",
+      "order": 3,
+      "where": "ice cave after the first penguin",
+      "composition": {
+        "wood": 10,
+        "striped": 1,
+        "question": 1,
+        "unknown": 12
+      },
+      "count": 24,
+      "arrangement": "wall: wood face 4 wide x 3 high (row 2: striped col 1, ? col 3), at least 2 deep, steel 2x3 column on its left",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "spin",
+        "slide"
+      ],
+      "relations": [
+        "on-ice",
+        "penguin-behind",
+        "steel-column"
+      ],
+      "tags": [
+        "WALL",
+        "GRID",
+        "ON-PATH",
+        "REWARD",
+        "TIMED",
+        "COUNT-TRAP"
+      ],
+      "why": "the stage's big payout, guarded by ice momentum and a penguin behind; inner boxes are easy to leave",
+      "evidence": "F2 p025L POINT13 + inset; D2 p010R shots 30-31",
+      "confidence": "low",
+      "countNote": "12 face boxes seen; 12 more by subtraction (64 - all other main boxes). If the D2 HUD excess of 4 before S3-c is real, the wall holds ~20"
+    },
+    {
+      "id": "S4-d",
+      "section": "S4",
+      "order": 4,
+      "where": "beyond a pit, beside the second penguin",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "2-stack",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "jump",
+        "spin"
+      ],
+      "relations": [
+        "beyond-pit",
+        "penguin-beside"
+      ],
+      "tags": [
+        "ENEMY-LINK",
+        "EDGE-BAIT",
+        "ON-PATH"
+      ],
+      "why": "'jump across the pit, smash the boxes and take out the penguin'",
+      "evidence": "F2 p025L; D2 p010R shots 32-33",
+      "confidence": "high"
+    },
+    {
+      "id": "S4-e",
+      "section": "S4",
+      "order": 5,
+      "where": "ledge after the planked bridge",
+      "composition": {
+        "outline": 2
+      },
+      "count": 2,
+      "arrangement": "2-stack of outlines",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "switch",
+        "backtrack"
+      ],
+      "relations": [
+        "switched-by-S4-f"
+      ],
+      "tags": [
+        "OUTLINE",
+        "LIFE",
+        "BACKTRACK",
+        "COUNT-TRAP"
+      ],
+      "why": "visible promise before its switch; contains the only main-course 1UP",
+      "evidence": "F2 p025L POINT14 + zoom; D2 p010R shot 34; ludo step 23",
+      "confidence": "high",
+      "materializesAs": {
+        "wood": 1,
+        "life": 1
+      },
+      "typeConfidence": "medium"
+    },
+    {
+      "id": "S4-f",
+      "section": "S4",
+      "order": 6,
+      "where": "second steel arrow after a seal",
+      "composition": {
+        "striped": 1,
+        "arrowSteel": 1,
+        "switch": 1
+      },
+      "count": 1,
+      "arrangement": "striped floating over a steel arrow; ! hidden higher above it",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "arrow",
+        "bounce"
+      ],
+      "relations": [
+        "steel-arrow-below",
+        "switch-above-offscreen",
+        "switches-S4-e"
+      ],
+      "tags": [
+        "HIGH",
+        "TOOL",
+        "SWITCH",
+        "HIDDEN",
+        "COUNT-TRAP",
+        "TEST",
+        "SANDWICH",
+        "COLUMN-BOUNCE"
+      ],
+      "why": "S1-b repeated with a twist: after head-bonking the striped, keep holding jump to rise to an off-screen ! that fills S4-e",
+      "evidence": "F2 p025L POINT15; F2 p092R note; D2 p010R shot 35",
+      "confidence": "high",
+      "notCounted": [
+        "arrowSteel",
+        "switch"
+      ]
+    },
+    {
+      "id": "S4-g",
+      "section": "S4",
+      "order": 7,
+      "where": "final stretch after three seals",
+      "composition": {
+        "unknown": 5
+      },
+      "count": 5,
+      "arrangement": "single, L-block (2 + 1 on top), single at the goal ring",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "at-goal"
+      ],
+      "tags": [
+        "ON-PATH"
+      ],
+      "why": "closing payout before the goal",
+      "evidence": "F2 p025L goal zoom; D2 p010R shot 37",
+      "confidence": "medium"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "S1",
+      "kind": "penguin",
+      "count": 2,
+      "where": "between S1-a and S1-b",
+      "role": "hit only when it stops spinning"
+    },
+    {
+      "section": "S1",
+      "kind": "seal",
+      "count": 3,
+      "where": "between S1-c and S1-d",
+      "role": "come in threes; spin the first"
+    },
+    {
+      "section": "S2",
+      "kind": "penguin",
+      "count": 1,
+      "where": "after S2-b",
+      "role": "slide also kills it"
+    },
+    {
+      "section": "S2",
+      "kind": "seal",
+      "count": 4,
+      "where": "2 before the first crusher, 1 behind S2-c, 1 before the second crusher",
+      "role": "chain-stomp fruit; guards S2-c"
+    },
+    {
+      "section": "S3",
+      "kind": "penguin",
+      "count": 1,
+      "where": "before S3-a",
+      "role": "guards the ? box"
+    },
+    {
+      "section": "S3",
+      "kind": "seal",
+      "count": 1,
+      "where": "after S3-c",
+      "role": "spin before landing (POINT11)"
+    },
+    {
+      "section": "S4",
+      "kind": "penguin",
+      "count": 3,
+      "where": "before and behind the wall, beside S4-d",
+      "role": "punishes sliding through the wall"
+    },
+    {
+      "section": "S4",
+      "kind": "seal",
+      "count": 4,
+      "where": "1 between the steel arrows, 3 before the end group",
+      "role": "lengthen the switch backtrack"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "S1",
+      "kind": "pit",
+      "where": "in front of the start trio",
+      "crates": [
+        "S1-a"
+      ]
+    },
+    {
+      "section": "S1",
+      "kind": "ice field",
+      "where": "S1-c and S1-d",
+      "crates": [
+        "S1-c",
+        "S1-d"
+      ]
+    },
+    {
+      "section": "S2",
+      "kind": "green drop-pillar crushers x2",
+      "where": "before S2-c and before C2",
+      "crates": [
+        "S2-c",
+        "S2-d"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "wooden log smashers x2",
+      "where": "before S3-a",
+      "crates": [
+        "S3-a"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "ice spikes",
+      "where": "under the outline staircase",
+      "crates": [
+        "S3-c"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "free-fall shaft",
+      "where": "after S3-d",
+      "crates": [
+        "S3-d"
+      ]
+    },
+    {
+      "section": "S4",
+      "kind": "pit",
+      "where": "before S4-d",
+      "crates": [
+        "S4-d"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S1-a"
+      ],
+      "summary": "start trio Nitro / Aku / TNT",
+      "solution": "jump on the TNT and step away, take the mask, never touch the Nitro",
+      "wrongOrder": "spinning through the row (TNT blasts at once; Nitro kills)",
+      "loss": "a life"
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "S1-c"
+      ],
+      "summary": "pillar-top ? reached from the low ?",
+      "solution": "stomp the low ? holding jump to reach the pillar top, then slide-plow the rest (avoid the TNT)",
+      "wrongOrder": "sliding through everything first (step gone; TNT on the slide line)",
+      "loss": "easy route to the pillar box"
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "S3-c"
+      ],
+      "summary": "outline staircase over spikes",
+      "solution": "press the ! and head-butt each materialised box from below",
+      "wrongOrder": "jumping on top of them over the spikes",
+      "loss": "a life"
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "S4-e",
+        "S4-f"
+      ],
+      "summary": "remote off-screen ! above a striped box",
+      "solution": "steel arrow -> head-bonk the striped -> keep holding jump -> hit the ! -> walk back to S4-e",
+      "wrongOrder": "breaking the striped and moving on",
+      "loss": "2 boxes incl. the only main 1UP (all-box only)"
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "S4-b",
+        "S1-a",
+        "S1-d",
+        "S3-b"
+      ],
+      "summary": "green ! behind the camera at C3",
+      "solution": "turn back toward the camera on landing at C3 and press it",
+      "wrongOrder": "running forward",
+      "loss": "the 6 Nitros never count: perfect impossible"
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "S4-c"
+      ],
+      "summary": "wall on ice with a penguin behind",
+      "solution": "approach slowly and break it layer by layer",
+      "wrongOrder": "running start: slide into the penguin",
+      "loss": "a life; inner boxes easily left"
+    }
+  ],
+  "observations": [
+    "Explosive vocabulary is taught on the first screen (Nitro, Aku, TNT in one row).",
+    "On ice, sliding is the crate attack; one TNT among slide targets punishes blind sliding.",
+    "Teach then twist: arrow + floating striped (S1-b) returns with an off-screen ! above it (S4-f); the bonus rehearses the head-butt that S3-c needs.",
+    "Both remote switches need backtracking and both are outside the default camera view (behind the arrival point; above the screen top).",
+    "Outline boxes placed before their switch (S4-e) are a visible promise; the first outline set (S3-c) has its switch beside it.",
+    "Checkpoints sit right after timed hazards or at the bottom of the free-fall.",
+    "The big payout (the wall) is late and guarded by ice momentum plus a penguin.",
+    "The only main 1UP is behind the hardest hidden switch.",
+    "The optional red-gem course does not add to the box total."
+  ]
+}

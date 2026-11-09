@@ -1,0 +1,1247 @@
+{
+ "id": "c3-06-gee-wiz",
+ "game": "Crash 3",
+ "stage": 6,
+ "name": "Gee Wiz",
+ "nameJa": "けんとまほうの けんきゅういん",
+ "sources": [
+  "F3 p015-p016",
+  "F3 p019L",
+  "F3 p103R",
+  "F3 p012R",
+  "F3 p095L",
+  "F3 p011",
+  "P3 p013L-p014L",
+  "gamepressure N. Sane Gee Wiz (corroboration)"
+ ],
+ "camera": "into-screen corridor; side-view bonus",
+ "totalBoxes": 100,
+ "totalSource": "derived: F3 C3 56 (61) + final section 11 + 10 Nitro + bonus x18 (F3 p019L); matches gamepressure 100",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 82,
+   "basis": "67 non-Nitro + 15 Nitro"
+  },
+  {
+   "id": "bonus",
+   "boxes": 18,
+   "basis": "F3 p019L header x18"
+  }
+ ],
+ "checkpointCounts": {
+  "C1": "31 (34)",
+  "C2": "48 (52)",
+  "C3": "56 (61)"
+ },
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1",
+   "boxes": 34,
+   "cumulative": 31,
+   "cumulativeWithNitro": 34,
+   "notes": "31 non-Nitro + 3 Nitro; iron cube, Nitro mixes, three stacks by a goat"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 18,
+   "cumulative": 48,
+   "cumulativeWithNitro": 52,
+   "notes": "17 + 1 Nitro; iron column with 1UP, slot row"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 9,
+   "cumulative": 56,
+   "cumulativeWithNitro": 61,
+   "notes": "8 + 1 Nitro; Aku then ? on TNT"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "goal",
+   "boxes": 21,
+   "cumulative": null,
+   "derivedCumulative": 67,
+   "derivedCumulativeWithNitro": 82,
+   "notes": "11 + 10 Nitro; reward block then Nitro gauntlet, green !, Nitro gate"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus lift in S4",
+   "to": "back to S4",
+   "boxes": 18,
+   "cumulative": null,
+   "notes": "header x18 boxes, x0 lives"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "right of the path just past the start arch",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "near-start"
+   ],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "first crates; TT clears them with the bazooka before the clock starts",
+   "evidence": "F3 p015L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "left, before the first water",
+   "composition": {
+    "striped": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "striped"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "striped crate in a safe spot: repeated bounces pay fruit before any danger",
+   "evidence": "F3 p015L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "right of the path at the first water (two frogs in the channel)",
+   "composition": {
+    "ironBound": 8
+   },
+   "count": 8,
+   "arrangement": "2x2x2 cube",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "body-slam"
+   ],
+   "relations": [
+    "frogs"
+   ],
+   "tags": [
+    "REINFORCED",
+    "GRID",
+    "TEACH",
+    "DETOUR"
+   ],
+   "why": "first iron-bound crates right after boss 1 grants the super body slam; safe sandbox beside the path; 8 boxes make skipping it costly",
+   "evidence": "F3 p015L zoom; P3 p013L shot 2; F3 p095L",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "left, past the water",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-Nitro-mixes"
+   ],
+   "tags": [
+    "AKU",
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "first mask, before the Nitro mixes and the first wizard",
+   "evidence": "F3 p015L zoom; P3 p013L shot 2",
+   "confidence": "high",
+   "timeTrial": "Aku #1"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "left, beside a frog",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "frog"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK"
+   ],
+   "why": "frogs sidestep toward Crash, so fighting one here risks touching the Nitro",
+   "evidence": "F3 p015L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "at the turn before the wizard",
+   "composition": {
+    "wood": 2,
+    "slot": 1,
+    "unknown": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "wizard"
+   ],
+   "tags": [
+    "GRID",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "slot inside a group: break it early for a good face; TT 2-s box tucked between the crates (target 0:12:00)",
+   "evidence": "F3 p015L zoom (4th crate behind the badge); P3 p014L shot 13",
+   "confidence": "medium",
+   "timeTrial": "2s (hidden in the group)"
+  },
+  {
+   "id": "S1-g",
+   "section": "S1",
+   "order": 7,
+   "where": "at the water edge after the wizard turn",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "fruit beat after the wizard",
+   "evidence": "F3 p015R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-h",
+   "section": "S1",
+   "order": 8,
+   "where": "water section",
+   "composition": {
+    "wood": 1,
+    "nitro": 1
+   },
+   "count": 2,
+   "arrangement": "pair, touching",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "PAIR"
+   ],
+   "why": "Nitro pressed against an ordinary crate: the stage theme",
+   "evidence": "F3 p015R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-i",
+   "section": "S1",
+   "order": 9,
+   "where": "next",
+   "composition": {
+    "question": 1,
+    "wood": 2,
+    "nitro": 1
+   },
+   "count": 4,
+   "arrangement": "loose group",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "larger mix with the ? as bait beside the Nitro",
+   "evidence": "F3 p015R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-j",
+   "section": "S1",
+   "order": 10,
+   "where": "beside a pacing goat",
+   "composition": {
+    "wood": 6,
+    "question": 3
+   },
+   "count": 9,
+   "arrangement": "three 3-stacks in a row: W/W/W, W/?/W, ?/W/? (top first)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "enemy-bounce"
+   ],
+   "relations": [
+    "goat"
+   ],
+   "tags": [
+    "STACK",
+    "ROW",
+    "ENEMY-LINK",
+    "TIME-TRIAL"
+   ],
+   "why": "fence of equal stacks beside the goat's patrol; normal play spins the bases; TT slides the goat into the stacks or uses it as a foothold",
+   "evidence": "F3 p015R zoom; F3 p103R frames 08-09; P3 p014L shot 14",
+   "confidence": "high",
+   "timeTrial": "1s on each top (3)"
+  },
+  {
+   "id": "S1-k",
+   "section": "S1",
+   "order": 11,
+   "where": "end of S1",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "checkpoint after the densest crate run",
+   "evidence": "F3 p015R '31コ (34コ)'",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "just after C1",
+   "composition": {
+    "life": 1,
+    "ironBound": 3,
+    "nitro": 1,
+    "striped": 2
+   },
+   "count": 7,
+   "arrangement": "column: 1UP on 3 iron; Nitro left; 2 striped lower right",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "body-slam",
+    "double-jump"
+   ],
+   "relations": [
+    "timer-to-S2-b"
+   ],
+   "tags": [
+    "REINFORCED",
+    "STACK",
+    "HIGH",
+    "LIFE",
+    "TEST",
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "slam test: reward on iron, a Nitro beside it, and the slot ahead turns to steel if you dawdle (mask hint 4)",
+   "evidence": "F3 p015R zoom; P3 p013L shot 4; P3 p014L shot 15",
+   "confidence": "high",
+   "timeTrial": "3s (the 1UP position)"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "after a frog and a goat",
+   "composition": {
+    "wood": 4,
+    "slot": 1,
+    "striped": 1,
+    "question": 1
+   },
+   "count": 7,
+   "arrangement": "row: W/W, slot, W/W, S/?",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "timer-from-S2-a"
+   ],
+   "tags": [
+    "ROW",
+    "STACK",
+    "TIMED",
+    "TIME-TRIAL"
+   ],
+   "why": "row of 2-stacks with the slot in the middle; TT Aku at the left end, hidden from the approach",
+   "evidence": "F3 p015R 'A' bubble zoom; P3 p014L shot 15",
+   "confidence": "high",
+   "timeTrial": "Aku #2 (left end)"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "next",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "pacing fruit before the water",
+   "evidence": "F3 p015R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "top right of p015R",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "STACK"
+   ],
+   "why": "last crates before the berserker/wizard pair",
+   "evidence": "F3 p015R",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "p016L after the page join, by a goat",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "checkpoint after the berserker and wizard",
+   "evidence": "F3 p016L '48コ (52コ)'",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "after the water",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "TIME-TRIAL"
+   ],
+   "why": "pacing crate; TT 1-s box (target 0:44:00)",
+   "evidence": "F3 p016L zoom; P3 p014L shot 16",
+   "confidence": "high",
+   "timeTrial": "1s"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "right side, berserker on the path",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "berserker"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "ENEMY-LINK",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "lane squeeze between a Nitro and a swinging berserker (mask hint 5)",
+   "evidence": "F3 p016L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "right",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "bait just past the squeeze",
+   "evidence": "F3 p016L",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "left, after a frog",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "before-TNT"
+   ],
+   "tags": [
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "mask right before the ? on TNT",
+   "evidence": "F3 p016L zoom; P3 p013L shot 6",
+   "confidence": "high",
+   "timeTrial": "Aku #3"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "next",
+   "composition": {
+    "question": 1,
+    "tnt": 1
+   },
+   "count": 2,
+   "arrangement": "2-stack ? on TNT",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "after-Aku"
+   ],
+   "tags": [
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "AKU",
+    "TIME-TRIAL"
+   ],
+   "why": "TNT must be broken for the perfect (stomp it); the ? on top lands you on the TNT; masked, it is harmless",
+   "evidence": "F3 p016L zoom; P3 p014L shot 17",
+   "confidence": "high",
+   "timeTrial": "2s (the ?)"
+  },
+  {
+   "id": "S3-f",
+   "section": "S3",
+   "order": 6,
+   "where": "top right of p016L past the archway",
+   "composition": {
+    "wood": 1,
+    "slot": 1
+   },
+   "count": 2,
+   "arrangement": "wood on a slot",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "wizard"
+   ],
+   "tags": [
+    "STACK",
+    "TIMED"
+   ],
+   "why": "slot under a crate; its timer runs while you deal with the wizard",
+   "evidence": "F3 p016L zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-g",
+   "section": "S3",
+   "order": 7,
+   "where": "p016R left",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "last checkpoint before the Nitro gauntlet",
+   "evidence": "F3 p016R '56コ (61コ)'",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "right after C3",
+   "composition": {
+    "wood": 7,
+    "question": 3
+   },
+   "count": 10,
+   "arrangement": "stepped block 10: bottom 4, middle 4, top 2",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "after-checkpoint"
+   ],
+   "tags": [
+    "PYRAMID",
+    "STACK",
+    "REWARD",
+    "ON-PATH",
+    "TIME-TRIAL"
+   ],
+   "why": "biggest pile of the stage, after the last checkpoint and before the Nitro gauntlet",
+   "evidence": "F3 p016R zoom; P3 p014L shot 18",
+   "confidence": "medium",
+   "timeTrial": "1s x2 (middle-row ends)"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "in purple water beside a frog",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "frog"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK"
+   ],
+   "why": "defeating the frog beside the Nitro can set it off; walk the left wall (mask hint 7)",
+   "evidence": "F3 p016R",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "beside the bonus lift",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "bonus-lift"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "DETOUR"
+   ],
+   "why": "guards the bonus entrance",
+   "evidence": "F3 p016R zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "after the bonus, by the water",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "lone crate before the berserker pair",
+   "evidence": "F3 p016R",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "after the power stone",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "green ! with two Nitros",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "berserkers"
+   ],
+   "tags": [
+    "NITRO-SWITCH",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "green ! detonates all 15 Nitros (box completion); TT skips it",
+   "evidence": "F3 p016R zoom; P3 p013R shot 9",
+   "confidence": "high",
+   "uncounted": {
+    "switchGreen": 1
+   }
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "the goal gate",
+   "composition": {
+    "nitro": 6
+   },
+   "count": 6,
+   "arrangement": "2x3 block = two 3-high columns flanking the portal",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "goal"
+   ],
+   "tags": [
+    "WALL",
+    "EXPLOSIVE-MIX",
+    "COUNT-TRAP"
+   ],
+   "why": "6 Nitros frame the exit: forgetting the green ! is punished at the goal",
+   "evidence": "F3 p016R zoom; F3 p103R frame 31",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 1,
+   "where": "first walkway",
+   "composition": {
+    "striped": 6
+   },
+   "count": 6,
+   "arrangement": "3 striped on the walkway + 3 floating high above",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce",
+    "striped"
+   ],
+   "relations": [],
+   "tags": [
+    "SANDWICH",
+    "COLUMN-BOUNCE",
+    "REWARD",
+    "BONUS"
+   ],
+   "why": "three sandwiches; floating crates as footing for consecutive jumps",
+   "evidence": "F3 p019L; P3 p013R shots 10-11",
+   "confidence": "high"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 2,
+   "where": "second walkway",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "? floating high above a steel arrow",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "arrow"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "BONUS"
+   ],
+   "why": "first arrow-to-floating-crate",
+   "evidence": "F3 p019L",
+   "confidence": "high",
+   "uncounted": {
+    "arrowSteel": 1
+   }
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 3,
+   "where": "third walkway",
+   "composition": {
+    "wood": 3,
+    "question": 3
+   },
+   "count": 6,
+   "arrangement": "floating 2x3 block (top W ?, mid W ?, bottom ? W) above a steel arrow; steel ! beside",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "arrow"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "SWITCH",
+    "BONUS"
+   ],
+   "why": "same tool against a bigger target; the ! is the outline trigger",
+   "evidence": "F3 p019L",
+   "confidence": "high",
+   "uncounted": {
+    "arrowSteel": 1,
+    "switch": 1
+   }
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 4,
+   "where": "low in the pit under the outline staircase",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single below the route",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "backtrack"
+   ],
+   "relations": [
+    "before-switch"
+   ],
+   "tags": [
+    "LOW",
+    "HIDDEN",
+    "SUPPORT-ORDER",
+    "BONUS"
+   ],
+   "why": "take it before hitting the ! or the materialised blocks cover it",
+   "evidence": "F3 p019L; P3 p013R shot 12",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 5,
+   "where": "walkway end to the exit walkway",
+   "composition": {
+    "outline": 4
+   },
+   "count": 4,
+   "arrangement": "10 outline icons: staircase 6, lone floating 1, 3-high column 3; 4 counted",
+   "stackHeight": 3,
+   "floating": true,
+   "access": [
+    "switch"
+   ],
+   "relations": [],
+   "tags": [
+    "OUTLINE",
+    "SWITCH",
+    "BONUS"
+   ],
+   "why": "switch builds the exit; header x18 allows only 4 counted outline crates (best guess: column + lone)",
+   "evidence": "F3 p019L; header x18",
+   "confidence": "low",
+   "uncounted": {
+    "outlineFooting": 6,
+    "switch": 1
+   }
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "frog",
+   "count": 2,
+   "where": "first water channel",
+   "role": "sidesteps toward Crash; next to the Nitro S1-e"
+  },
+  {
+   "section": "S1",
+   "kind": "wizard",
+   "count": 1,
+   "where": "at the turn",
+   "role": "slow homing beam (spin erases it)"
+  },
+  {
+   "section": "S1",
+   "kind": "goat",
+   "count": 1,
+   "where": "paces beside the three stacks",
+   "role": "TT projectile/foothold for the 1-s tops"
+  },
+  {
+   "section": "S2",
+   "kind": "frog",
+   "count": 1,
+   "where": "after the iron column",
+   "role": "obstacle between column and timed slot"
+  },
+  {
+   "section": "S2",
+   "kind": "goat",
+   "count": 1,
+   "where": "after the iron column",
+   "role": "obstacle"
+  },
+  {
+   "section": "S2",
+   "kind": "berserker",
+   "count": 1,
+   "where": "end of S2",
+   "role": "crate-free fight zone"
+  },
+  {
+   "section": "S2",
+   "kind": "wizard",
+   "count": 1,
+   "where": "end of S2",
+   "role": "beam; TA4 walks the right wall"
+  },
+  {
+   "section": "S3",
+   "kind": "berserker",
+   "count": 1,
+   "where": "on the path beside the Nitro S3-b",
+   "role": "lane squeeze"
+  },
+  {
+   "section": "S3",
+   "kind": "frog",
+   "count": 1,
+   "where": "before the Aku",
+   "role": "obstacle"
+  },
+  {
+   "section": "S3",
+   "kind": "wizard",
+   "count": 1,
+   "where": "before C3",
+   "role": "beam near the slot S3-f"
+  },
+  {
+   "section": "S4",
+   "kind": "frog",
+   "count": 2,
+   "where": "in purple water beside a Nitro; before the power stone",
+   "role": "mask hint 7: don't fight next to the Nitro"
+  },
+  {
+   "section": "S4",
+   "kind": "goat",
+   "count": 3,
+   "where": "around the bonus lift and the power stone",
+   "role": "obstacle"
+  },
+  {
+   "section": "S4",
+   "kind": "berserker",
+   "count": 3,
+   "where": "two side by side before the power stone, one in the gate arch",
+   "role": "guards the green ! run"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "water channel",
+   "where": "first water with frogs",
+   "crates": [
+    "S1-c",
+    "S1-b",
+    "S1-d"
+   ]
+  },
+  {
+   "section": "S1",
+   "kind": "water channel",
+   "where": "after the wizard turn",
+   "crates": [
+    "S1-g",
+    "S1-h",
+    "S1-i"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "water channel",
+   "where": "before S2-d",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "water channel",
+   "where": "after C2",
+   "crates": [
+    "S3-a"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "purple water",
+   "where": "after the stepped block",
+   "crates": [
+    "S4-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "hole",
+   "where": "before the bridge near the goal (TT 29)",
+   "crates": []
+  },
+  {
+   "section": "B",
+   "kind": "pit",
+   "where": "between the walkways and under the outline staircase",
+   "crates": [
+    "B-d"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S3-d",
+    "S3-e"
+   ],
+   "summary": "Aku then a ? sitting on a TNT",
+   "solution": "take the mask; stomp the ?, stomp the TNT, get clear",
+   "wrongOrder": "spinning the stack from the side hits the TNT",
+   "loss": "a life; the TNT must be broken for the all-box gem"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S2-a",
+    "S2-b"
+   ],
+   "summary": "1UP on an iron column beside a Nitro; slot ahead on a timer",
+   "solution": "slam the column cleanly, move on and break the slot before it turns to steel",
+   "wrongOrder": "lingering at the column",
+   "loss": "the slot's reward; a careless slam beside the Nitro costs a life"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-b",
+    "S4-c",
+    "S4-e",
+    "S4-f"
+   ],
+   "summary": "Nitro gauntlet with the green ! behind berserkers",
+   "solution": "avoid all Nitros, spin the green ! after the power stone",
+   "wrongOrder": "running for the goal",
+   "loss": "all 15 Nitros"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "B-d",
+    "B-e"
+   ],
+   "summary": "pit crate under outline crates",
+   "solution": "drop for the ? first, then hit the !",
+   "wrongOrder": "hitting the ! first",
+   "loss": "1 box"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S1-j"
+   ],
+   "summary": "three 3-stacks beside a goat",
+   "solution": "normal: spin the bases; TT: slide the goat into the stacks or stand on it",
+   "wrongOrder": "n/a",
+   "loss": "none (time only)"
+  }
+ ],
+ "timeTrial": {
+  "timeCrates": 9,
+  "seconds": 13,
+  "ttAkuCrates": [
+   "S1-d",
+   "S2-b",
+   "S3-d"
+  ],
+  "staffBest": "0:58:23",
+  "source": "F3 p103R + map badges"
+ },
+ "observations": [
+  "Iron-bound crates appear in a safe 2x2x2 cube right after the super body slam unlock, then as a column under a 1UP beside a Nitro.",
+  "15 Nitros and 1 TNT are mostly mixed into ordinary groups rather than standing alone.",
+  "Nitros sit next to frogs and a berserker, so the fight pushes the player toward the explosive.",
+  "Masks precede hazards: S1-d before the Nitro mixes, S3-d before the ? on TNT.",
+  "Three slot crates act as timers; one is explicitly coupled to the iron column.",
+  "Density: S1 31, S2 17, S3 8, S4 a 10-crate reward block then a 10-Nitro gauntlet.",
+  "8 of 15 Nitros sit in the last two clusters: the biggest count trap is at the exit.",
+  "Stacks are uniform 2- and 3-stacks; complexity comes from neighbours, not shapes.",
+  "Bonus: striped sandwiches, arrow-to-floating-crate twice, outline exit with a pit crate before the switch."
+ ]
+}

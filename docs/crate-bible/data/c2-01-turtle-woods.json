@@ -1,0 +1,1100 @@
+{
+  "id": "c2-01-turtle-woods",
+  "game": "Crash 2",
+  "stage": 1,
+  "name": "Turtle Woods",
+  "nameJa": "あめのジャングル",
+  "sources": [
+    "F2 p021-p022",
+    "F2 p092L",
+    "D2 p006-p008",
+    "ludo.guide Turtle Woods (web)",
+    "gamepressure Turtle Woods (web)"
+  ],
+  "camera": "into-screen (main); side-scroll (secret course, bonus)",
+  "totalBoxes": 62,
+  "totalSource": "F2 p021L header (superscript 32 = secret + bonus)",
+  "headerCounts": {
+    "life": [
+      0,
+      0
+    ],
+    "aku": [
+      2,
+      0
+    ],
+    "checkpoint": [
+      3,
+      1
+    ],
+    "note": "[total, small subscript]; subscripts = share outside the main course"
+  },
+  "routes": [
+    {
+      "id": "main",
+      "boxes": 30,
+      "basis": "62 - 32; matches the cluster tally"
+    },
+    {
+      "id": "secret",
+      "boxes": 27,
+      "basis": "32 - bonus 5; cluster tally assumes X-h + X-k = 6"
+    },
+    {
+      "id": "bonus",
+      "boxes": 5,
+      "basis": "D2 in-bonus HUD 0 -> 3 -> 5; gamepressure 'five'"
+    }
+  ],
+  "gems": [
+    {
+      "gem": "clear (box)",
+      "condition": "break all 62; order normal -> secret -> bonus -> normal"
+    },
+    {
+      "gem": "blue",
+      "condition": "finish without breaking any box incl. C and Aku (one-life run, skip bonus; secret not needed); crux S2-c"
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "route": "main",
+      "from": "start",
+      "to": "C1",
+      "boxes": 10,
+      "cumulative": null,
+      "notes": "into-screen; ends at the plaza (Aku + C1) where the secret course rejoins"
+    },
+    {
+      "id": "X",
+      "route": "secret",
+      "from": "stone face (body slam)",
+      "to": "lift to S1 plaza",
+      "boxes": 27,
+      "cumulative": null,
+      "notes": "side-scroll waterfall cliff; own checkpoint (X-b); 3 Nitro + green ! at the end"
+    },
+    {
+      "id": "B",
+      "route": "bonus",
+      "from": "green ? pad in S2",
+      "to": "exit lift (returns before S2-a)",
+      "boxes": 5,
+      "cumulative": null,
+      "notes": "side-scroll; D2 HUD 0 -> 3 -> 5"
+    },
+    {
+      "id": "S2",
+      "route": "main",
+      "from": "C1",
+      "to": "C2 + wall",
+      "boxes": 14,
+      "cumulative": null,
+      "notes": "turtles, bonus pad, mud stepping boxes, C2 and the 10-box wall in a closed court"
+    },
+    {
+      "id": "S3",
+      "route": "main",
+      "from": "C2 court",
+      "to": "goal",
+      "boxes": 6,
+      "cumulative": null,
+      "notes": "rat pits, turtle springboard, last mud box"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "S1-a",
+      "section": "S1",
+      "order": 1,
+      "where": "right after spawn, left-centre of the path",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "jump"
+      ],
+      "relations": [
+        "near-start"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "TEACH"
+      ],
+      "why": "first input of the game is 'hit the box'; placed on the line of travel",
+      "evidence": "F2 p021R; D2 p006L shot 1",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-b",
+      "section": "S1",
+      "order": 2,
+      "where": "over the low stone wall, beside the first mud patch",
+      "composition": {
+        "striped": 2
+      },
+      "count": 2,
+      "arrangement": "sandwich: one striped on the ground, one floating directly above",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "jump",
+        "bounce"
+      ],
+      "relations": [
+        "after-low-wall",
+        "beside-mud"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SANDWICH",
+        "TOOL",
+        "TEACH",
+        "REWARD"
+      ],
+      "why": "jumping between them bonks the upper and lands on the lower: 20 fruit; teaches the striped per-hit payout on safe ground",
+      "evidence": "F2 p021R POINT2 + screenshot; D2 p006L shot 3",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-c",
+      "section": "S1",
+      "order": 3,
+      "where": "after the mud, beside the first pit (D2: pit on the left; F2 draws the box right of the route)",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single at a pit edge",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [
+        "pit-edge"
+      ],
+      "tags": [
+        "ON-PATH",
+        "EDGE-BAIT",
+        "SINGLE",
+        "LIFE"
+      ],
+      "why": "first box next to a fall; fruit trail leads the eye to it; ? may hold a life",
+      "evidence": "F2 p021R; D2 p006L shot 5",
+      "confidence": "medium"
+    },
+    {
+      "id": "S1-d",
+      "section": "S1",
+      "order": 4,
+      "where": "just before the plank bridge over a pit",
+      "composition": {
+        "wood": 2,
+        "striped": 1
+      },
+      "count": 3,
+      "arrangement": "stack bottom->top W W S",
+      "stackHeight": 3,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump",
+        "bounce"
+      ],
+      "relations": [
+        "before-pit",
+        "before-bridge"
+      ],
+      "tags": [
+        "STACK",
+        "SUPPORT-ORDER",
+        "TOOL",
+        "TEACH",
+        "REWARD"
+      ],
+      "why": "spin only the middle box so the striped drops onto the base and becomes a raised bouncer; breaking the striped from the side wastes its fruit",
+      "evidence": "F2 p021R POINT3 + inset; D2 p006R shot 9; ludo step 6",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-e",
+      "section": "S1",
+      "order": 5,
+      "where": "plaza beside the stone face (secret entrance), right side",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [
+        "next-to-secret-entrance"
+      ],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "LIFE"
+      ],
+      "why": "reward right beside the secret entrance ('did you get a free life?')",
+      "evidence": "F2 p021R top; D2 p006R shot 10",
+      "confidence": "high"
+    },
+    {
+      "id": "S1-f",
+      "section": "S1",
+      "order": 6,
+      "where": "plaza, left and back against a stone arch; the secret course exits here",
+      "composition": {
+        "aku": 1,
+        "checkpoint": 1
+      },
+      "count": 2,
+      "arrangement": "two singles",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [
+        "secret-exit",
+        "before-C1-section"
+      ],
+      "tags": [
+        "ON-PATH",
+        "AKU",
+        "CHECKPOINT"
+      ],
+      "why": "mask and save where the secret course rejoins; D2 asks here whether all secret boxes were broken",
+      "evidence": "F2 p021R top POINT4; D2 p007R shots 23-24",
+      "confidence": "high"
+    },
+    {
+      "id": "X-a",
+      "section": "X",
+      "order": 1,
+      "where": "first platform after dropping into the secret course",
+      "composition": {
+        "wood": 4
+      },
+      "count": 4,
+      "arrangement": "single, 2-stack, single",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [
+        "secret-start"
+      ],
+      "tags": [
+        "ON-PATH",
+        "ROW",
+        "TEACH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "instant payoff for finding the secret",
+      "evidence": "D2 p006R shot 12; ludo secret step 1",
+      "confidence": "high",
+      "typeConfidence": "medium"
+    },
+    {
+      "id": "X-b",
+      "section": "X",
+      "order": 2,
+      "where": "platform after two spiked-turtle platforms",
+      "composition": {
+        "wood": 2,
+        "checkpoint": 1
+      },
+      "count": 3,
+      "arrangement": "wood 2-stack beside a C box",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "after-turtles"
+      ],
+      "tags": [
+        "ON-PATH",
+        "CHECKPOINT",
+        "ROUTE-SPLIT"
+      ],
+      "why": "first checkpoint of the game, before the vulture / Nitro / ostrich half of the course",
+      "evidence": "D2 p007L shots 14-15; ludo step 3",
+      "confidence": "high"
+    },
+    {
+      "id": "X-c",
+      "section": "X",
+      "order": 3,
+      "where": "next platform after the vulture's long platform",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "SINGLE",
+        "ROUTE-SPLIT"
+      ],
+      "why": "pacing box between jumps",
+      "evidence": "ludo step 5",
+      "confidence": "medium"
+    },
+    {
+      "id": "X-d",
+      "section": "X",
+      "order": 4,
+      "where": "the following platform",
+      "composition": {
+        "unknown": 2
+      },
+      "count": 2,
+      "arrangement": "pair",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "before-nitro-gap"
+      ],
+      "tags": [
+        "ON-PATH",
+        "PAIR",
+        "ROUTE-SPLIT"
+      ],
+      "why": "pacing; sets up the slide-jump to the Nitro platform",
+      "evidence": "ludo step 6",
+      "confidence": "medium"
+    },
+    {
+      "id": "X-e",
+      "section": "X",
+      "order": 5,
+      "where": "small floating platform above the Nitro floor",
+      "composition": {
+        "question": 2
+      },
+      "count": 2,
+      "arrangement": "two ? one above the other; the upper one is head-bonked from below",
+      "stackHeight": 2,
+      "floating": true,
+      "access": [
+        "jump"
+      ],
+      "relations": [
+        "above-nitro"
+      ],
+      "tags": [
+        "EDGE-BAIT",
+        "LIFE",
+        "REWARD",
+        "HIGH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "lives placed exactly where the player is likely to die (D2: to make up for the Nitros)",
+      "evidence": "D2 p007L shots 17-18; ludo step 6",
+      "confidence": "high"
+    },
+    {
+      "id": "X-f",
+      "section": "X",
+      "order": 6,
+      "where": "floor of the gap beneath X-e",
+      "composition": {
+        "nitro": 3
+      },
+      "count": 3,
+      "arrangement": "row of three on the floor",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "switch"
+      ],
+      "relations": [
+        "below-X-e",
+        "switched-by-X-l"
+      ],
+      "tags": [
+        "LOW",
+        "EXPLOSIVE-MIX",
+        "NITRO-SWITCH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "first Nitros of the game form a floor you must not fall onto; counted only when the green ! fires",
+      "evidence": "D2 p007L shot 18; D2 p007R shot 22",
+      "confidence": "high"
+    },
+    {
+      "id": "X-g",
+      "section": "X",
+      "order": 7,
+      "where": "platform to the right of X-e",
+      "composition": {
+        "arrowWood": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "arrow",
+        "spin"
+      ],
+      "relations": [
+        "springboard-to-next-ledge"
+      ],
+      "tags": [
+        "TOOL",
+        "COUNT-TRAP",
+        "TEACH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "needed as a springboard but bouncing does not break it; F2 and D2 both remind you to break it",
+      "evidence": "D2 p007L shots 17, 19; F2 p092L note 1; ludo step 7",
+      "confidence": "high"
+    },
+    {
+      "id": "X-h",
+      "section": "X",
+      "order": 8,
+      "where": "high pillar ledge reached from ostrich 1's back",
+      "composition": {
+        "unknown": 3
+      },
+      "count": 3,
+      "arrangement": "L/step group on a ledge (>=3 seen, top cut off)",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "enemy-bounce",
+        "timed"
+      ],
+      "relations": [
+        "ostrich-1"
+      ],
+      "tags": [
+        "HIGH",
+        "ENEMY-LINK",
+        "TIMED",
+        "COUNT-TRAP",
+        "ROUTE-SPLIT"
+      ],
+      "why": "reachable only in the moment before the ostrich ducks; a miss costs a life for the perfect",
+      "evidence": "F2 p092L shot 2 + note 2; D2 p007L shot 19; ludo step 8",
+      "confidence": "low",
+      "countNote": "X-h + X-k = 6 by subtraction (27 minus every other secret cluster); if X-k is the same group as X-j, X-h holds 6"
+    },
+    {
+      "id": "X-i",
+      "section": "X",
+      "order": 9,
+      "where": "high ledge reached from ostrich 2's back",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "enemy-bounce",
+        "timed"
+      ],
+      "relations": [
+        "ostrich-2"
+      ],
+      "tags": [
+        "HIGH",
+        "ENEMY-LINK",
+        "LIFE",
+        "REWARD",
+        "ROUTE-SPLIT"
+      ],
+      "why": "a life as payoff for the second ostrich jump",
+      "evidence": "D2 p007L shot 20; ludo step 9",
+      "confidence": "medium"
+    },
+    {
+      "id": "X-j",
+      "section": "X",
+      "order": 10,
+      "where": "ground between the two ostriches",
+      "composition": {
+        "unknown": 3
+      },
+      "count": 3,
+      "arrangement": "row of three",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "backtrack"
+      ],
+      "relations": [
+        "between-ostriches"
+      ],
+      "tags": [
+        "BACKTRACK",
+        "LOW",
+        "COUNT-TRAP",
+        "ROUTE-SPLIT"
+      ],
+      "why": "passed underneath while focusing on the ostrich jumps; D2: 'go back and break the three boxes'",
+      "evidence": "D2 p007L shot 20; ludo step 10",
+      "confidence": "medium"
+    },
+    {
+      "id": "X-k",
+      "section": "X",
+      "order": 11,
+      "where": "lower platform past the ostriches",
+      "composition": {
+        "unknown": 3
+      },
+      "count": 3,
+      "arrangement": "group",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk"
+      ],
+      "relations": [],
+      "tags": [
+        "LOW",
+        "DETOUR",
+        "ROUTE-SPLIT"
+      ],
+      "why": "detour box group below the main line",
+      "evidence": "D2 p007L shot 20 ('go to the lower platform and break the boxes down there')",
+      "confidence": "low",
+      "countNote": "derived; see X-h"
+    },
+    {
+      "id": "X-l",
+      "section": "X",
+      "order": 12,
+      "where": "final platform before the lift back to the main course",
+      "composition": {
+        "switchGreen": 1,
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "green ! beside one box",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin",
+        "switch"
+      ],
+      "relations": [
+        "secret-exit",
+        "switches-X-f"
+      ],
+      "tags": [
+        "NITRO-SWITCH",
+        "SWITCH",
+        "ON-PATH",
+        "ROUTE-SPLIT"
+      ],
+      "why": "switch placed after the Nitros, so their credit is earned only by surviving them",
+      "evidence": "D2 p007R shot 22; ludo step 12",
+      "confidence": "high",
+      "notCounted": [
+        "switchGreen"
+      ]
+    },
+    {
+      "id": "B-a",
+      "section": "B",
+      "order": 1,
+      "where": "first bonus platform",
+      "composition": {
+        "wood": 3
+      },
+      "count": 3,
+      "arrangement": "L: 2-stack plus one beside",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "BONUS"
+      ],
+      "why": "opening payout of the bonus (HUD 0 -> 3)",
+      "evidence": "D2 p007R shot 27; F2 p092L bonus shot",
+      "confidence": "high"
+    },
+    {
+      "id": "B-b",
+      "section": "B",
+      "order": 2,
+      "where": "a later floating platform",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "BONUS",
+        "LIFE",
+        "REWARD"
+      ],
+      "why": "'pray for more lives' - it gave a life (8 -> 9)",
+      "evidence": "D2 p008L shots 29-30",
+      "confidence": "high"
+    },
+    {
+      "id": "B-c",
+      "section": "B",
+      "order": 3,
+      "where": "lower platform before the exit lift",
+      "composition": {
+        "unknown": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "walk",
+        "spin"
+      ],
+      "relations": [],
+      "tags": [
+        "BONUS",
+        "DETOUR"
+      ],
+      "why": "last box below the exit line (HUD 5 at the exit)",
+      "evidence": "D2 p008L shot 30; ludo bonus step 4",
+      "confidence": "medium"
+    },
+    {
+      "id": "S2-a",
+      "section": "S2",
+      "order": 1,
+      "where": "mud swamp right where the bonus exit drops you",
+      "composition": {
+        "question": 3
+      },
+      "count": 3,
+      "arrangement": "stepping line: one on the bank, two half-sunk in the mud",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "body-slam"
+      ],
+      "relations": [
+        "after-bonus-exit",
+        "in-mud"
+      ],
+      "tags": [
+        "STEPPING",
+        "TOOL",
+        "ON-PATH",
+        "TEACH"
+      ],
+      "why": "you cannot spin in mud, so the boxes are the crossing; each stomp breaks one",
+      "evidence": "F2 p022L POINT7; D2 p008L shot 31; ludo steps 12-13",
+      "confidence": "high",
+      "typeConfidence": "medium"
+    },
+    {
+      "id": "S2-b",
+      "section": "S2",
+      "order": 2,
+      "where": "enclosed court between two totems, directly in front of the wall",
+      "composition": {
+        "checkpoint": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "before-wall"
+      ],
+      "tags": [
+        "CHECKPOINT",
+        "ON-PATH",
+        "BLUE-GEM"
+      ],
+      "why": "save placed right before the blue-gem crux (a blue-gem run must leave it intact)",
+      "evidence": "D2 p008L shot 33; F2 p022L",
+      "confidence": "high"
+    },
+    {
+      "id": "S2-c",
+      "section": "S2",
+      "order": 3,
+      "where": "wall closing the court",
+      "composition": {
+        "wood": 8,
+        "striped": 1,
+        "question": 1
+      },
+      "count": 10,
+      "arrangement": "wall 2 high x 5 wide: top W S W W W, bottom W W W W ?",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump",
+        "slide"
+      ],
+      "relations": [
+        "closed-court",
+        "after-checkpoint"
+      ],
+      "tags": [
+        "WALL",
+        "BLUE-GEM",
+        "TOOL",
+        "ON-PATH"
+      ],
+      "why": "all-box: break all; blue gem: break none - big jump over or one step on the top-row striped",
+      "evidence": "F2 p022L POINT8 + inset; F2 p092L blue-gem note; D2 p008L shot 33; D2 p008R shot 42",
+      "confidence": "medium",
+      "countNote": "10 derived as 30 minus the other 20 main boxes; screenshots show 2 rows and 5 top faces"
+    },
+    {
+      "id": "S3-a",
+      "section": "S3",
+      "order": 1,
+      "where": "right after the wall court",
+      "composition": {
+        "aku": 1
+      },
+      "count": 1,
+      "arrangement": "single",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "spin"
+      ],
+      "relations": [
+        "before-rat-pits"
+      ],
+      "tags": [
+        "AKU",
+        "ON-PATH"
+      ],
+      "why": "mask before the rat pits",
+      "evidence": "F2 p022R; D2 p008L shot 34",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-b",
+      "section": "S3",
+      "order": 2,
+      "where": "floating above a spiked turtle after the first rat pit",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single, floating out of normal reach",
+      "stackHeight": 1,
+      "floating": true,
+      "access": [
+        "enemy-bounce"
+      ],
+      "relations": [
+        "above-turtle"
+      ],
+      "tags": [
+        "HIGH",
+        "ENEMY-LINK",
+        "TOOL",
+        "TEACH",
+        "LIFE"
+      ],
+      "why": "only the stomped (flipped) turtle gives the height; spinning it away removes the tool",
+      "evidence": "F2 p022R POINT10; F2 p092L note; ludo step 19",
+      "confidence": "high"
+    },
+    {
+      "id": "S3-c",
+      "section": "S3",
+      "order": 3,
+      "where": "after the springboard turtle",
+      "composition": {
+        "question": 3
+      },
+      "count": 3,
+      "arrangement": "L/step: one over a pair",
+      "stackHeight": 2,
+      "floating": false,
+      "access": [
+        "spin",
+        "jump"
+      ],
+      "relations": [],
+      "tags": [
+        "ON-PATH",
+        "PYRAMID"
+      ],
+      "why": "pacing payout between rat pits",
+      "evidence": "F2 p022R; ludo step 20",
+      "confidence": "medium"
+    },
+    {
+      "id": "S3-d",
+      "section": "S3",
+      "order": 4,
+      "where": "last mud swamp before the goal",
+      "composition": {
+        "question": 1
+      },
+      "count": 1,
+      "arrangement": "single half-sunk in mud",
+      "stackHeight": 1,
+      "floating": false,
+      "access": [
+        "jump",
+        "body-slam"
+      ],
+      "relations": [
+        "in-mud"
+      ],
+      "tags": [
+        "LOW",
+        "STEPPING"
+      ],
+      "why": "the mud-stepping lesson repeated with one box; body-slam from inside the mud is the fallback",
+      "evidence": "F2 p022R POINT11",
+      "confidence": "high"
+    }
+  ],
+  "enemies": [
+    {
+      "section": "S1",
+      "kind": "armadillo",
+      "count": 3,
+      "where": "after S1-a, after the mud, before the stone face",
+      "role": "first spin/jump targets"
+    },
+    {
+      "section": "X",
+      "kind": "spiked turtle",
+      "count": 2,
+      "where": "platforms after X-a",
+      "role": "stomp to flip; foreshadows the trampoline use"
+    },
+    {
+      "section": "X",
+      "kind": "vulture",
+      "count": 2,
+      "where": "ends of long platforms before X-c and before X-l",
+      "role": "timing hazard"
+    },
+    {
+      "section": "X",
+      "kind": "pink ostrich",
+      "count": 2,
+      "where": "between X-g and X-l",
+      "role": "living springboards to ledges X-h and X-i; duck when approached"
+    },
+    {
+      "section": "S2",
+      "kind": "spiked turtle",
+      "count": 5,
+      "where": "1 after C1, 2 before the bonus pad, 2 before the C2 court",
+      "role": "stomp-then-spin; chain-stomp fruit"
+    },
+    {
+      "section": "S2",
+      "kind": "armadillo",
+      "count": 1,
+      "where": "after the mud boxes",
+      "role": "pacing"
+    },
+    {
+      "section": "S3",
+      "kind": "rat/mole (in pits)",
+      "count": 12,
+      "where": "rat pits: 1 with 2 moles before S3-b, then 1 more and 4 more pits (F2 marks x2 and x4)",
+      "role": "kill the moles to spawn the mushroom exit"
+    },
+    {
+      "section": "S3",
+      "kind": "spiked turtle",
+      "count": 1,
+      "where": "under S3-b",
+      "role": "springboard to the floating ? box"
+    }
+  ],
+  "gaps": [
+    {
+      "section": "S1",
+      "kind": "mud-swamp",
+      "where": "after S1-b",
+      "crates": [
+        "S1-b"
+      ]
+    },
+    {
+      "section": "S1",
+      "kind": "pit",
+      "where": "beside S1-c",
+      "crates": [
+        "S1-c"
+      ]
+    },
+    {
+      "section": "S1",
+      "kind": "pit + plank bridge",
+      "where": "after S1-d",
+      "crates": [
+        "S1-d"
+      ]
+    },
+    {
+      "section": "X",
+      "kind": "bottomless gaps between platforms; Nitro floor",
+      "where": "whole secret course",
+      "crates": [
+        "X-e",
+        "X-f",
+        "X-g"
+      ]
+    },
+    {
+      "section": "S2",
+      "kind": "mud-swamp",
+      "where": "after the bonus pad",
+      "crates": [
+        "S2-a"
+      ]
+    },
+    {
+      "section": "S3",
+      "kind": "rat pits",
+      "where": "before and after S3-b",
+      "crates": []
+    },
+    {
+      "section": "S3",
+      "kind": "mud-swamp",
+      "where": "before the goal",
+      "crates": [
+        "S3-d"
+      ]
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "P1",
+      "clusters": [
+        "S1-d"
+      ],
+      "summary": "W/W/S support-order stack",
+      "solution": "spin only the middle box so the striped drops onto the base; bounce it for fruit, then break the base",
+      "wrongOrder": "letting the striped come low and spinning it from the side",
+      "loss": "up to 10 fruit; box count unaffected"
+    },
+    {
+      "id": "P2",
+      "clusters": [
+        "S2-b",
+        "S2-c"
+      ],
+      "summary": "closed-court wall with opposite instructions per goal",
+      "solution": "all-box: break all 10; blue gem: dash-jump over or bounce once on the top-row striped",
+      "wrongOrder": "a short jump that clips the wall during a blue-gem run",
+      "loss": "blue gem attempt (no checkpoints allowed)"
+    },
+    {
+      "id": "P3",
+      "clusters": [
+        "S3-b"
+      ],
+      "summary": "enemy as springboard",
+      "solution": "stomp the turtle to flip it, jump on its belly, spin at the apex",
+      "wrongOrder": "spinning the turtle (hurt by spikes, or it flies away once flipped)",
+      "loss": "one box (all-box needs a retry)"
+    },
+    {
+      "id": "P4",
+      "clusters": [
+        "X-g"
+      ],
+      "summary": "arrow box count trap",
+      "solution": "use the bounce, then spin the arrow box",
+      "wrongOrder": "bouncing on it and moving on",
+      "loss": "one box"
+    },
+    {
+      "id": "P5",
+      "clusters": [
+        "X-h",
+        "X-i",
+        "X-j"
+      ],
+      "summary": "ostrich ledges and the ground trio",
+      "solution": "dash-jump onto each ostrich before it ducks, take the ledge boxes, then drop back for the three ground boxes",
+      "wrongOrder": "approaching slowly (ostrich ducks) or forgetting the ground trio",
+      "loss": "ledge boxes for this attempt; D2 advises losing a life to retry from X-b"
+    },
+    {
+      "id": "P6",
+      "clusters": [
+        "X-f",
+        "X-l"
+      ],
+      "summary": "Nitro credit from the green switch at the course end",
+      "solution": "survive past the Nitros and stomp the green ! on the final platform",
+      "wrongOrder": "dying before the switch",
+      "loss": "3 Nitro boxes for this attempt"
+    }
+  ],
+  "observations": [
+    "Every new crate behaviour first appears alone on solid ground: ? box, striped sandwich, stack, then mud stepping boxes.",
+    "Main course density 10/14/6; the 10-box wall is a third of the main count; the secret course (27) nearly equals the main course (30).",
+    "No 1UP boxes: every life is in a ? box at a risky or hidden place (over Nitros, ostrich ledge, above a turtle, in the bonus).",
+    "Crates double as traversal tools: mud stepping boxes, the stack's striped top, the secret arrow.",
+    "Enemies are placed as tools next to crates (turtle springboard, ostrich platforms).",
+    "Explosives are confined to the optional secret course, with the green switch at its exit.",
+    "Checkpoints: C1 where the secret rejoins, C2 directly before the wall, the secret C after its easy first third.",
+    "Count traps concentrate in the optional route: arrow box, timed ostrich ledges, ground trio passed underneath.",
+    "The blue gem turns the wall from 'break' into 'avoid'; a striped crate in its top row is the intended stepping stone and the court prevents bypassing."
+  ]
+}
