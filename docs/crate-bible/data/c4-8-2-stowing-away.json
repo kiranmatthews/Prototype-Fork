@@ -1194,5 +1194,1405 @@
     "Density curve: 16 / 16 / 6 / 11 / 14 / bonus 34 / 18 / 8 / 29. The final 29 are a 'no tricky crates' victory lap with the reacquired whirlwind, ending on a Nitro-capped TNT stack that pays the last 4 in one chain.",
     "Checkpoints at 16, 32, 38, 49 and ≈ 124: the front half is checkpointed every 6–16 crates, then 75 boxes (including the bonus) pass without one. That run is made survivable by the multi-hit tool rather than by checkpoints.",
     "The hidden gem uses the new power immediately: flip gravity before the first laser of the second vent and fall into a ceiling pocket (LP2 1:03:31). No crates are tied to it."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "fixed room → side view → into-screen",
+      "notes": "N. Oxide's cabin (LP2 1:02:49–1:02:50), side-view laser-gate corridor (1:02:51–1:02:58), into-screen tubes with floor beams and the arrow crate (1:02:59–1:03:12)."
+    },
+    {
+      "section": "S2",
+      "mode": "into-screen → side view",
+      "notes": "Into-screen vent hall and pink-ring tunnel where the gravity mask puts Crash on the ceiling (1:03:12–1:03:18); green room (1:03:19–1:03:25); side-view vent with the ceiling pocket and laser gates (1:03:26–1:03:34)."
+    },
+    {
+      "section": "S3",
+      "mode": "side view",
+      "notes": "Engine room: moving blocks under lasers, heated presses and a vertical lift tube (1:03:35–1:03:58)."
+    },
+    {
+      "section": "S4",
+      "mode": "side view → into-screen",
+      "notes": "Two-sided electric hall with a laser drum and pump pistons (1:04:00–1:04:16); into-screen tube to the Akano mask and C4 (1:04:16–1:04:18)."
+    },
+    {
+      "section": "S5",
+      "mode": "into-screen",
+      "notes": "Round corridors and octagonal doorways with shielded lab assistants (1:04:20–1:04:40)."
+    },
+    {
+      "section": "B",
+      "mode": "side view",
+      "notes": "Space-station interior over an electrified void (1:04:42–1:05:46)."
+    },
+    {
+      "section": "S6",
+      "mode": "into-screen → side view",
+      "notes": "Whirlwind corridor and X-door (1:05:54–1:06:04); side-view green vent and lift shaft (1:06:06–1:06:12)."
+    },
+    {
+      "section": "S7",
+      "mode": "side view → into-screen",
+      "notes": "Shifting-wall room (1:06:14–1:06:36); exit tube to the control room (1:06:38–1:06:46)."
+    },
+    {
+      "section": "S8",
+      "mode": "into-screen",
+      "notes": "Elevator (1:06:50–1:06:52), red corridor and the final whirlwind corridor to the escape pod (1:06:54–1:07:18)."
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "wide floor (N. Oxide's round cabin)",
+      "size": "~8-10 across",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "ARENA",
+        "REST"
+      ],
+      "why": "a closed room with space to back away from the first TNT",
+      "evidence": "LP2 1:02:49-1:02:50",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "corridor (side-view vent corridor between laser-gate posts)",
+      "size": "continuous floor; pockets ~3-4 long between gates",
+      "heightDelta": 0,
+      "edges": "walled (floor and ceiling)",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "the floor never breaks: the challenge is the gate timing, and the 2-stacks stand in the pockets",
+      "evidence": "LP2 1:02:51-1:02:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "corridor (into-screen orange tube)",
+      "size": "~4-5 wide",
+      "heightDelta": 0,
+      "edges": "walled (round tube)",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "a tube too narrow to dodge sideways, so floor beams must be jumped",
+      "evidence": "LP2 1:02:59-1:03:04",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-d",
+      "section": "S1",
+      "shape": "corridor (blue-floored tube with the arrow crate)",
+      "size": "~5 wide; ceiling high enough for an arrow bounce",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "the arrow crate reaches crates high in the tube",
+      "evidence": "LP2 1:03:05-1:03:10",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-e",
+      "section": "S1",
+      "shape": "corridor (hallway with C1)",
+      "size": "~4 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "checkpoint at the end of the first vent",
+      "evidence": "LP2 1:03:11",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "corridor (pink-ring laser tunnel whose ceiling becomes walkable with the gravity mask)",
+      "size": "~4-5 wide",
+      "heightDelta": "0 (ceiling = floor)",
+      "edges": "walled",
+      "behaviour": "gravity flip: Crash runs on the ceiling",
+      "roles": [
+        "TEACH",
+        "CHOKE"
+      ],
+      "move": [
+        "gravity flip",
+        "running"
+      ],
+      "why": "the mask is taken at the tunnel and used at once: the ceiling becomes the floor for the timed run",
+      "evidence": "LP2 1:03:13-1:03:18",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "wide floor (green-lit room by a machine door)",
+      "size": "~5x5",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a room around the 3-high TNT stack",
+      "evidence": "LP2 1:03:19-1:03:25",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "corridor (side-view vent: floor walkway plus ceiling)",
+      "size": "floor and ceiling ~3-4 apart",
+      "heightDelta": "0 / flip",
+      "edges": "walled",
+      "behaviour": "both surfaces walkable with the mask",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "gravity flip"
+      ],
+      "why": "the vent teaches flipping between two surfaces; a pocket in the ceiling clutter hides the gem",
+      "evidence": "LP2 1:03:26-1:03:34",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-d",
+      "section": "S2",
+      "shape": "narrow ledge (hidden ceiling pocket in the pipe clutter)",
+      "size": "~2 (not fully visible)",
+      "heightDelta": "+3 to +4 (ceiling side)",
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "move": [
+        "gravity flip"
+      ],
+      "why": "the hidden gem: flip before the first laser and fall \"up\" into the pocket",
+      "evidence": "LP2 1:03:28-1:03:31; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-e",
+      "section": "S2",
+      "shape": "corridor (vent floor with C2)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "checkpoint just past the vent lasers",
+      "evidence": "LP2 1:03:33-1:03:34",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "moving platform (green-light machine blocks)",
+      "size": "1x1 to 2x1",
+      "heightDelta": "0 to +2",
+      "edges": "open",
+      "behaviour": "slide along the machinery (gamepressure's \"mechanism ride\")",
+      "roles": [
+        "TIMING-STEP",
+        "STEPPING"
+      ],
+      "move": [
+        "plain",
+        "crouch"
+      ],
+      "why": "riding blocks under horizontal lasers: crouch at the right moment (gamepressure)",
+      "evidence": "LP2 1:03:36-1:03:46; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "conveyor (grate floor under the heated presses)",
+      "size": "~4 drums long; each drum ~3 wide",
+      "heightDelta": 0,
+      "edges": "open under the presses",
+      "behaviour": "grate floor (whether it moves was not resolved)",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "the floor under the presses is crossed in the up-window",
+      "evidence": "LP2 1:03:48-1:03:52",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-c",
+      "section": "S3",
+      "shape": "moving platform (green vertical lift tube)",
+      "size": "~2 wide",
+      "heightDelta": "+6 to +10",
+      "edges": "walled",
+      "behaviour": "carries Crash upward",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "a vertical transition to C3, with a laser cannon in the shaft",
+      "evidence": "LP2 1:03:53-1:03:56",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-d",
+      "section": "S3",
+      "shape": "corridor (landing with C3)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "checkpoint after the engine room",
+      "evidence": "LP2 1:03:56-1:03:58",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-a",
+      "section": "S4",
+      "shape": "narrow ledge (safe grate pads in the electrified floor)",
+      "size": "~2-3 long",
+      "heightDelta": 0,
+      "edges": "electric strips on both sides",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "move": [
+        "gravity flip"
+      ],
+      "why": "each ? crate sits on a short safe pad in a live floor: flip down, spin, flip up",
+      "evidence": "LP2 1:04:01-1:04:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-b",
+      "section": "S4",
+      "shape": "corridor (ceiling path, electrified in segments)",
+      "size": "continuous; live stretches ~3-6",
+      "heightDelta": "+3 to +4 (ceiling side)",
+      "edges": "electric strips",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "gravity flip"
+      ],
+      "why": "the ceiling is the main path, but it too has live stretches, so the safe surface alternates",
+      "evidence": "LP2 1:04:01-1:04:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-c",
+      "section": "S4",
+      "shape": "square pad (green-light blocks hanging at mid-height)",
+      "size": "1x1 to 3x1",
+      "heightDelta": "+1.5 to +2",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING",
+        "PERCH"
+      ],
+      "why": "footholds between floor and ceiling",
+      "evidence": "LP2 1:04:01-1:04:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-d",
+      "section": "S4",
+      "shape": "moving platform (pump pistons whose red-hot tops rise toward the ceiling on pink beams)",
+      "size": "~2 across, three in a row",
+      "heightDelta": "rise from the floor to just under the ceiling",
+      "edges": "open",
+      "behaviour": "piston stroke (period not measured)",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "the ceiling walker crosses above pistons that rise into the path",
+      "evidence": "LP2 1:04:10-1:04:15",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S4-e",
+      "section": "S4",
+      "shape": "corridor (tube with the Akano mask and C4)",
+      "size": "~4 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "checkpoint right after the whirlwind pickup",
+      "evidence": "LP2 1:04:16-1:04:18",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S5-a",
+      "section": "S5",
+      "shape": "corridor (round whirlwind corridors with octagonal doorways)",
+      "size": "~4-5 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "ARENA",
+        "CHOKE"
+      ],
+      "why": "no gaps at all: shielded enemies and crate stacks fill a straight corridor",
+      "evidence": "LP2 1:04:20-1:04:40",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S5-b",
+      "section": "S5",
+      "shape": "square pad (bonus saucer in a left alcove)",
+      "size": "~2 across",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "why": "the bonus entrance sits off the corridor",
+      "evidence": "LP2 1:04:40",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-a",
+      "section": "B",
+      "shape": "moving platform (entry saucer, a hover pad)",
+      "size": "~3 across",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hovering (static during play)",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "a start perch with the framed TNT and the outline grids in view",
+      "evidence": "LP2 1:04:42-1:04:48",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "B",
+      "shape": "narrow ledge (small ledges on pipes and brackets)",
+      "size": "~2-3 long",
+      "heightDelta": "-1 to +2",
+      "edges": "open (void below)",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "double"
+      ],
+      "why": "small footholds reused by the outward run, the return sweep and the second outward run",
+      "evidence": "LP2 1:04:48-1:05:06, 1:05:20-1:05:30",
+      "confidence": "low"
+    },
+    {
+      "id": "P-B-c",
+      "section": "B",
+      "shape": "bouncy (bounce block)",
+      "size": "1x1",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "launches upward (GR)",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "crate-bounce"
+      ],
+      "why": "a springboard onto the second TNT and toward the pillar top (GR)",
+      "evidence": "GR 8-2 (bonus)",
+      "confidence": "low"
+    },
+    {
+      "id": "P-B-d",
+      "section": "B",
+      "shape": "round/hex pillar (tall central column)",
+      "size": "~3 across; top row ~3x1",
+      "heightDelta": "+4 to +6",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "ARENA",
+        "PERCH"
+      ],
+      "move": [
+        "crate-bounce",
+        "double"
+      ],
+      "why": "its top holds T-(strong crate over !)-T, and its far side hides a 3-crate column",
+      "evidence": "LP2 1:05:00-1:05:06, 1:05:30-1:05:42",
+      "confidence": "low"
+    },
+    {
+      "id": "P-B-e",
+      "section": "B",
+      "shape": "narrow ledge (Nitro-switch pedestal and exit saucer, far right)",
+      "size": "~2-3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "the far end pays the room's Nitro and turns the player round",
+      "evidence": "LP2 1:05:10-1:05:14, 1:05:44-1:05:46",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S6-a",
+      "section": "S6",
+      "shape": "corridor (whirlwind corridor and X-door)",
+      "size": "~4-5 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "corridor groups straight after the bonus",
+      "evidence": "LP2 1:05:54-1:06:04",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-b",
+      "section": "S6",
+      "shape": "moving platform (green lift tubes in the side-view vent shaft)",
+      "size": "~2 wide",
+      "heightDelta": "+6 to +10",
+      "edges": "walled",
+      "behaviour": "carry Crash upward",
+      "roles": [
+        "STEPPING"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "a vertical transition to the shifting-wall room",
+      "evidence": "LP2 1:06:06-1:06:12",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-a",
+      "section": "S7",
+      "shape": "moving platform (shifting wall of green-light blocks)",
+      "size": "blocks 1x1 to 2x1; room ~12-15 tall",
+      "heightDelta": "+12 to +15 in total",
+      "edges": "open (dark void behind)",
+      "behaviour": "blocks slide in response to the player (gamepressure: moved at your own pace)",
+      "roles": [
+        "STEPPING",
+        "REST"
+      ],
+      "move": [
+        "plain",
+        "double"
+      ],
+      "why": "a player-paced vertical puzzle with no hazard and no crate",
+      "evidence": "LP2 1:06:14-1:06:36; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-b",
+      "section": "S7",
+      "shape": "square pad (grey steel crates as fixed footholds)",
+      "size": "1x1",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "uncounted steel crates are the room's only fixed footing",
+      "evidence": "LP2 1:06:14-1:06:36",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S7-c",
+      "section": "S7",
+      "shape": "corridor (exit tube and control-room hall)",
+      "size": "~4 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "TNT stacks in the tube, then the control-room cutscene",
+      "evidence": "LP2 1:06:38-1:06:46",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S8-a",
+      "section": "S8",
+      "shape": "moving platform (elevator)",
+      "size": "~4x4",
+      "heightDelta": "descends several storeys",
+      "edges": "walled",
+      "behaviour": "scripted descent",
+      "roles": [
+        "REST"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "the transition to the final corridor; C5 at its foot",
+      "evidence": "LP2 1:06:50-1:06:54",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S8-b",
+      "section": "S8",
+      "shape": "corridor (red corridor, then the final whirlwind corridor)",
+      "size": "~4-5 wide",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "no gaps: a victory lap",
+      "evidence": "LP2 1:06:54-1:07:18",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "drop-down (gravity flip into the ceiling pocket)",
+      "width": "0 (vertical)",
+      "heightDelta": "+3 to +4 (upward, by gravity)",
+      "landing": "~2-wide pocket",
+      "lethal": false,
+      "runUp": "0",
+      "move": [
+        "gravity flip"
+      ],
+      "coupling": "flip before the first laser gate",
+      "failure": "the gem is missed (no death)",
+      "nearby": [
+        "P-S2-d",
+        "O-S2-a"
+      ],
+      "why": "the hidden gem uses the new power at once",
+      "evidence": "LP2 1:03:28-1:03:31; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "bottomless pit (electrified floor under the moving-block ride)",
+      "width": "2-3",
+      "heightDelta": "0 to +2",
+      "landing": "1x1 to 2x1 blocks",
+      "lethal": true,
+      "runUp": "1-2",
+      "move": [
+        "plain",
+        "crouch"
+      ],
+      "coupling": "the blocks move; horizontal lasers force a crouch",
+      "failure": "death",
+      "nearby": [
+        "S3-c"
+      ],
+      "why": "a moving-platform crossing over a live floor",
+      "evidence": "LP2 1:03:36-1:03:46; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-a",
+      "section": "S4",
+      "kind": "lethal floor (electric strips between the safe pads)",
+      "width": "3-6",
+      "heightDelta": "flip between floor and ceiling (~3-4)",
+      "landing": "2-3 safe pads, or the ceiling",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "gravity flip"
+      ],
+      "coupling": "the ceiling is also live in stretches; a laser drum sweeps the floor",
+      "failure": "death",
+      "nearby": [
+        "S4-a"
+      ],
+      "why": "a gap made of live floor: the answer is to change surface, not to jump",
+      "evidence": "LP2 1:04:01-1:04:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S4-b",
+      "section": "S4",
+      "kind": "moving-platform crossing (above the pump pistons, on the ceiling)",
+      "width": "~6 (three pistons)",
+      "heightDelta": 0,
+      "landing": "the ceiling",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "gravity flip",
+        "plain"
+      ],
+      "coupling": "piston stroke",
+      "failure": "death (hot piston top)",
+      "nearby": [
+        "O-S4-c"
+      ],
+      "why": "a timing gate for the ceiling walker",
+      "evidence": "LP2 1:04:10-1:04:15",
+      "confidence": "low"
+    },
+    {
+      "id": "G-B-a",
+      "section": "B",
+      "kind": "bottomless pit (electrified void between the small ledges)",
+      "width": "3-5",
+      "heightDelta": "-1 to +2",
+      "landing": "2-3 ledges, the bounce block, the pillar top",
+      "lethal": true,
+      "runUp": "0-1",
+      "move": [
+        "double",
+        "crate-bounce"
+      ],
+      "coupling": "invisible-block frames turn to iron after a delay; TNT fuses",
+      "failure": "death",
+      "nearby": [
+        "B-a",
+        "B-b"
+      ],
+      "why": "the bonus is the level's main jumping test",
+      "evidence": "LP2 1:04:48-1:05:06; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "G-B-b",
+      "section": "B",
+      "kind": "bottomless pit (through the floating Nitro/fruit pairs)",
+      "width": "4-6",
+      "heightDelta": "0 to +1",
+      "landing": "far ledge",
+      "lethal": true,
+      "runUp": "1",
+      "move": [
+        "double"
+      ],
+      "coupling": "a Nitro under each fruit crate",
+      "failure": "death",
+      "nearby": [
+        "B-c"
+      ],
+      "why": "GR's trickiest jump: touch only the fruit crates",
+      "evidence": "LP2 1:05:08-1:05:10; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S7-a",
+      "section": "S7",
+      "kind": "chasm (between sliding blocks in the shifting-wall room)",
+      "width": "2-4",
+      "heightDelta": "+1 to +2 per step",
+      "landing": "1x1 to 2x1 blocks or steel crates",
+      "lethal": null,
+      "runUp": "0",
+      "move": [
+        "plain",
+        "double"
+      ],
+      "coupling": "block positions set by the player",
+      "failure": "not visible (probably a fall to a lower block)",
+      "nearby": [
+        "P-S7-b"
+      ],
+      "why": "a pressure-free climb",
+      "evidence": "LP2 1:06:14-1:06:36",
+      "confidence": "low"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": "3-4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even (beam, crate, beam)",
+      "maxGap": "floor beams (low)",
+      "rest": "P-S1-d",
+      "noStop": false,
+      "why": "jump each floor beam, spin the ? between them",
+      "evidence": "LP2 1:02:59-1:03:02"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": 5,
+      "moves": [
+        "running",
+        "gravity flip"
+      ],
+      "rhythm": "even",
+      "maxGap": "n/a",
+      "rest": "P-S2-b",
+      "noStop": true,
+      "why": "the five timed crates are spread to the tunnel's end",
+      "evidence": "LP2 1:03:14-1:03:18; GR 24-28"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": "4-6",
+      "moves": [
+        "plain",
+        "crouch"
+      ],
+      "rhythm": "syncopated (wait for blocks and lasers)",
+      "maxGap": "3",
+      "rest": "P-S3-b",
+      "noStop": false,
+      "why": "moving blocks plus crouch lasers",
+      "evidence": "LP2 1:03:36-1:03:46"
+    },
+    {
+      "id": "J-S4-a",
+      "section": "S4",
+      "count": "4 drops and returns",
+      "moves": [
+        "gravity flip"
+      ],
+      "rhythm": "even (one pad per live stretch)",
+      "maxGap": "3-6 of live floor",
+      "rest": "the hanging blocks (P-S4-c)",
+      "noStop": false,
+      "why": "flip down to each safe pad, then back up",
+      "evidence": "LP2 1:04:01-1:04:08"
+    },
+    {
+      "id": "J-B-a",
+      "section": "B",
+      "count": "6-8 out, 5-6 back, 3-4 out again",
+      "moves": [
+        "double",
+        "crate-bounce",
+        "plain"
+      ],
+      "rhythm": "accelerating outward; even on the sweeps",
+      "maxGap": "4-6",
+      "rest": "P-B-e, P-B-a",
+      "noStop": "no-stop near the iron frames",
+      "why": "the room is crossed three times",
+      "evidence": "LP2 1:04:48-1:05:46"
+    },
+    {
+      "id": "J-S7-a",
+      "section": "S7",
+      "count": "8-12",
+      "moves": [
+        "plain",
+        "double"
+      ],
+      "rhythm": "player-paced",
+      "maxGap": "4",
+      "rest": "steel crates (P-S7-b)",
+      "noStop": false,
+      "why": "a breather climb",
+      "evidence": "LP2 1:06:14-1:06:36"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-S1-a",
+      "section": "S1",
+      "kind": "laser gates between wall posts (pink beams)",
+      "placement": "across path",
+      "timing": "blinking (cycle not measurable at 1 s)",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S1-b stacks in the pockets"
+      ],
+      "roles": [
+        "RHYTHM",
+        "TIMING-GATE"
+      ],
+      "why": "the gate rhythm is the crate rhythm: collect in the pocket while the next gate is live",
+      "evidence": "LP2 1:02:51-1:02:58",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S1-b",
+      "section": "S1",
+      "kind": "floor-level laser beams across the tube",
+      "placement": "across path (floor)",
+      "timing": "static (always on)",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S1-c"
+      ],
+      "roles": [
+        "RHYTHM",
+        "TEACH"
+      ],
+      "why": "beam, crate, beam: an even rhythm of jumps in a tube too narrow to dodge",
+      "evidence": "LP2 1:02:59-1:03:02",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S1-c",
+      "section": "S1",
+      "kind": "swinging green door panels in the tubes",
+      "placement": "flank (swinging into the tube)",
+      "timing": "not measured",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": null,
+      "combinedWith": [],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "function not resolved (pusher or blocker)",
+      "evidence": "LP2 1:03:03-1:03:04, 1:03:14, 1:03:18",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S2-a",
+      "section": "S2",
+      "kind": "laser gates across the second vent",
+      "placement": "across path (head height)",
+      "timing": "not measured",
+      "counter": [
+        "wait-and-go",
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-S2-a (hidden gem)"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "the gem pocket sits just before the first gate",
+      "evidence": "LP2 1:03:32-1:03:34; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S3-a",
+      "section": "S3",
+      "kind": "horizontal lasers over the moving blocks",
+      "placement": "across path (body height)",
+      "timing": "fixed beams; the blocks carry you into them",
+      "counter": [
+        "slide under"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "P-S3-a"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "gamepressure: crouch at the right moment; the ride sets the timing",
+      "evidence": "LP2 1:03:36-1:03:46; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S3-b",
+      "section": "S3",
+      "kind": "electric floor strip under the block ride",
+      "placement": "in pit",
+      "timing": "static",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-S3-a"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "turns the engine-room floor into a pit",
+      "evidence": "LP2 1:03:38-1:03:42",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S3-c",
+      "section": "S3",
+      "kind": "crusher: heated presses slamming onto the grate floor",
+      "placement": "overhead",
+      "timing": "slam with a red-hot underside as the warning; up-window about 1 s (from 0.5 s frames)",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S3-d crate under the presses"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "the crate under the presses is taken in the up-window",
+      "evidence": "LP2 1:03:48-1:03:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S3-d",
+      "section": "S3",
+      "kind": "turret: laser cannon in the lift shaft",
+      "placement": "across path",
+      "timing": "periodic beam",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S3-e crate (the beam breaks it too)"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "a hazard that also collects a crate for you",
+      "evidence": "LP2 1:03:55-1:03:58",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S4-a",
+      "section": "S4",
+      "kind": "electric strips on floor and ceiling (segmented)",
+      "placement": "on platform (both surfaces)",
+      "timing": "static",
+      "counter": [
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S4-a crates on the safe pads"
+      ],
+      "roles": [
+        "AREA-DENIAL",
+        "TEACH"
+      ],
+      "why": "two-surface navigation is the gravity mask's main test: pick the safe surface for each stretch",
+      "evidence": "LP2 1:04:01-1:04:08",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S4-b",
+      "section": "S4",
+      "kind": "turret: rolling-drum laser cannon firing along the floor",
+      "placement": "flank (floor level)",
+      "timing": "fires a horizontal beam (cycle not measured)",
+      "counter": [
+        "wait-and-go",
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "O-S4-a"
+      ],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "keeps the floor dangerous even on the safe pads",
+      "evidence": "LP2 1:04:01-1:04:04",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S4-c",
+      "section": "S4",
+      "kind": "piston: pump pistons with red-hot tops rising toward the ceiling path",
+      "placement": "across path (rising into the ceiling route)",
+      "timing": "piston stroke; the red top is the warning",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [],
+      "roles": [
+        "TIMING-GATE"
+      ],
+      "why": "GR's \"red heated pumps\" theme reused against the ceiling walker",
+      "evidence": "LP2 1:04:10-1:04:15",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S5-a",
+      "section": "S5",
+      "kind": "TNT inside the whirlwind stacks (including a strong crate on a TNT)",
+      "placement": "on line",
+      "timing": "fuse or blast",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S5-a",
+        "S5-b"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the counter-design to the multi-hit tool: light TNT deliberately and leave",
+      "evidence": "LP2 1:04:20-1:04:36; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-B-a",
+      "section": "B",
+      "kind": "closing frames: invisible blocks that turn to iron after a delay",
+      "placement": "on platform (around a TNT and in grids)",
+      "timing": "delay after they appear (GR)",
+      "counter": [
+        "outrun"
+      ],
+      "lethal": false,
+      "combinedWith": [
+        "B-a framed TNT"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "TEACH"
+      ],
+      "why": "act before the frame closes, or the TNT is sealed in",
+      "evidence": "LP2 1:04:42-1:05:00; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-B-b",
+      "section": "B",
+      "kind": "mines: floating Nitro under fruit crates",
+      "placement": "on path (mid-air)",
+      "timing": "static",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "B-c"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "touch only the fruit crates",
+      "evidence": "LP2 1:05:08-1:05:10; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-B-c",
+      "section": "B",
+      "kind": "electrified void floor (purple lightning at the bottom)",
+      "placement": "in pit",
+      "timing": "static",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-B-a"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "makes every bonus gap lethal",
+      "evidence": "LP2 1:05:06-1:05:14",
+      "confidence": "low"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S5-a",
+      "section": "S5",
+      "kind": "lab assistants with energy shields",
+      "archetype": "shielded/armored",
+      "behaviour": "stand in the corridor among crate stacks, holding glowing shields or blasters",
+      "counter": [
+        "spin"
+      ],
+      "fails": [
+        "a normal spin into the shield (assumed from the shield)"
+      ],
+      "placement": "on line, between stacks",
+      "roles": [
+        "GATEKEEPER",
+        "TEST"
+      ],
+      "firstAlone": false,
+      "why": "tool and enemy arrive together: the whirlwind is taken just before them, and the stacks around them hide TNT",
+      "evidence": "LP2 1:04:20-1:04:36; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S5-b",
+      "section": "S5",
+      "kind": "lab assistant beside the strong-crate-on-TNT stack",
+      "archetype": "shielded/armored",
+      "behaviour": "stands next to the stack at the bonus door",
+      "counter": [
+        "spin"
+      ],
+      "fails": [
+        "whirlwinding into the stack at ground level (TNT)"
+      ],
+      "placement": "guarding crate",
+      "roles": [
+        "GUARD",
+        "BAIT"
+      ],
+      "firstAlone": false,
+      "why": "pulls a whirlwind toward the stack whose TNT kills a careless spinner",
+      "evidence": "LP2 1:04:30-1:04:36",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S6-a",
+      "section": "S6",
+      "kind": "lab assistants in the post-bonus corridor",
+      "archetype": "shielded/armored",
+      "behaviour": "groups among stacks",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "the whirlwind carries over from before the bonus",
+      "evidence": "LP2 1:05:54-1:05:58",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S8-a",
+      "section": "S8",
+      "kind": "lab assistants in the final corridor",
+      "archetype": "shielded/armored",
+      "behaviour": "groups among the last stacks",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "on line",
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "a victory lap with the reacquired whirlwind",
+      "evidence": "LP2 1:07:00-1:07:14",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S8-b",
+      "section": "S8",
+      "kind": "UFO (small saucer) with a lethal beam",
+      "archetype": "flier",
+      "behaviour": "hovers and projects a beam that kills on contact (gamepressure)",
+      "counter": [
+        "avoid",
+        "spin"
+      ],
+      "fails": [
+        "walking into the beam"
+      ],
+      "placement": "above",
+      "roles": [
+        "PROJECTILE"
+      ],
+      "firstAlone": null,
+      "why": "gamepressure: avoid it or attack it at once; a saucer may be the shape at the top right at 1:07:08",
+      "evidence": "gamepressure; LP2 1:07:08 (possible)",
+      "confidence": "low"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "cabin: 6 crates + first TNT (closed room)",
+        "side-view gate corridor: stacks in the pockets",
+        "orange tube: beam, ?, beam, ?",
+        "swinging panels",
+        "blue tube: arrow crate to the high pair",
+        "C1"
+      ],
+      "gaps": 0,
+      "enemies": 0,
+      "hazards": 3
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "vent hall crates",
+        "pink tunnel: gravity mask, ceiling run + red-! timed 5",
+        "green room: 3-high TNT stack",
+        "side-view vent: flip into the ceiling pocket (gem)",
+        "laser gates",
+        "C2"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 1
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "engine-room entry ?",
+        "TNT low",
+        "moving-block ride + crouch lasers (floating ?)",
+        "electric floor below",
+        "heated presses over the grate floor (crate underneath)",
+        "lift tube with a laser cannon",
+        "C3"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 4
+    },
+    {
+      "section": "S4",
+      "beats": [
+        "two-sided electric hall: flip to safe pads for 4 ?",
+        "laser drum",
+        "hanging blocks",
+        "pump pistons under the ceiling path",
+        "vent crates",
+        "Akano mask",
+        "C4"
+      ],
+      "gaps": 2,
+      "enemies": 0,
+      "hazards": 3
+    },
+    {
+      "section": "S5",
+      "beats": [
+        "whirlwind corridor: shielded lab assistants + stacks + TNT",
+        "strong crate on TNT beside an enemy",
+        "bonus saucer"
+      ],
+      "gaps": 0,
+      "enemies": 2,
+      "hazards": 1
+    },
+    {
+      "section": "B",
+      "beats": [
+        "entry saucer",
+        "framed TNT (the frame closes)",
+        "TNT-?-TNT ledge",
+        "bounce block to the pillar top: T-(strong over !)-T",
+        "floating ?s",
+        "Nitro/fruit pairs (the hardest jump)",
+        "Nitro switch",
+        "return sweep (outlines now solid)",
+        "out again: the pillar's far column",
+        "exit saucer"
+      ],
+      "gaps": 2,
+      "enemies": 0,
+      "hazards": 3
+    },
+    {
+      "section": "S6",
+      "beats": [
+        "whirlwind corridor + enemies",
+        "X-door crates + TNT",
+        "green vent + lift shaft"
+      ],
+      "gaps": 0,
+      "enemies": 1,
+      "hazards": 0
+    },
+    {
+      "section": "S7",
+      "beats": [
+        "shifting-wall climb (steel crates only; no crates, no hazards)",
+        "exit tube TNT stacks",
+        "control-room hall"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 0
+    },
+    {
+      "section": "S8",
+      "beats": [
+        "elevator",
+        "C5",
+        "red corridor",
+        "hull-hit set piece",
+        "tape + whirlwind",
+        "stacks",
+        "Nitro-capped TNT stack",
+        "escape pod"
+      ],
+      "gaps": 0,
+      "enemies": 2,
+      "hazards": 0
+    }
+  ],
+  "geometryObservations": [
+    "Corridors, not gaps. Into-screen tubes are 4-5 u wide and walled, and the floor is continuous through most of the level. Difficulty comes from across-path hazards (gates, beams, presses, pistons, strips), not from jump distance.",
+    "Hazard rhythm equals crate rhythm. 2-stacks stand in the 3-4 u pockets between laser gates (S1-b), and single ? crates sit between floor beams (S1-c), so the player's beat is jump, spin, jump.",
+    "The gravity mask doubles the floor plan. A ceiling becomes a second walkable surface, and S4 builds a two-sided hall: electric strips run on both floor and ceiling in stretches, with 2-3 u safe pads and mid-height blocks. Crossing a \"gap\" means choosing the safe surface, not jumping.",
+    "New powers are used immediately. The gravity mask is taken at the pink tunnel and tested at once by the red-! timed run on the ceiling, then by the hidden gem (flip into a ceiling pocket before the first laser).",
+    "The engine room is a gallery of timing gates with no enemies. Moving blocks under crouch-height lasers, presses with a red-hot warning, and a laser cannon in the lift shaft. Every one is lethal and every one is wait-and-go.",
+    "Vertical movement is tool-assisted. Lift tubes (S3, S6) and the elevator (S8) carry the player between floors; the only jump climbs are inside the bonus and the shifting-wall room.",
+    "Enemies arrive with their counter. No enemy appears in S1-S4. Shielded lab assistants come only after the whirlwind pickup at C4, in corridors where the multi-hit spin beats them, and TNT hidden in the stacks keeps the tool from being thoughtless.",
+    "The bonus concentrates the level's gaps. Small 2-3 u ledges hang over an electrified void, with a tall central pillar, a bounce block and floating Nitro/fruit pairs. The same ledges are crossed out, back and out again as outlines solidify.",
+    "Closing geometry is a timer: invisible-block frames turn to iron after a delay (bonus), which teaches acting before the frame closes, much like the red-! timed crates in S2.",
+    "The shifting-wall room is a deliberate breather. It is player-paced (blocks slide in response to the player), has no hazard and no crate, and steel crates are its only fixed footing, set between the dense bonus or whirlwind stretch and the final corridors.",
+    "The finale has no geometry challenge at all. A red corridor and a whirlwind corridor with stacks and a Nitro-capped TNT stack make the end a reward run.",
+    "Slide and crouch are used as obstacle counters (the block ride's horizontal lasers), not as distance moves. No slide-jump gap was seen."
+  ],
+  "geometryTransfer": [
+    "Laser-gate pockets: in a 4-5 u (4.6-5.8 m) walled corridor, put timed `phasepad`-style gates (or a `crusher` line if no beam primitive exists) every 4-5 u with a 2-stack in each pocket. On the board at 12 m/s, a 5 m pocket lasts 0.4 s, too short, so for skate lines stretch pockets to 15-20 m and sync the gate cycle to cruise speed.",
+    "Floor beams to ollie: low across-path hazards (≤ 0.5 m) every 5-7 m in a tube, with a single crate between each pair. A tap ollie peaks at about 0.56 m and a full ollie at about 1.7 m, so a floor-level bar is a tap-ollie test, and a crate between bars must be passed beside or smashed at ≥ 12.5 m/s.",
+    "Two-surface hall without gravity flip: give a side-scroll zone two lines, a lower floor and an upper ledge or grind rail 3-4 m above it, and alternate a hazard strip between them every 6-8 m. The rider must switch lines with ollies (up, a 1.7 m apex onto a ledge lip or rail) and drops, and the crates sit on the short safe pads of the lower line.",
+    "Heated presses: a row of `crusher`s with a visible glow about 0.5 s before each slam and a crate on the floor beneath. On foot at 9 m/s a 3 m press is crossed in about 0.35 s; on the board at 12 m/s in about 0.25 s. Make the up-window at least 1 s and phase the presses so a cruising rider passes them all in one window.",
+    "Breather room: after a dense crate or enemy stretch, add a crate-free, hazard-free climbing room of `mover` blocks and steel footholds. It lets intensity drop before the last stretch without breaking the flow.",
+    "Enemy plus counter tool together: put the first group of `spinner` or `charger` enemies right after the board pickup, on a straight where plowing at ≥ 13 m/s is the intended answer. Seed one TNT under a multi-hit crate among them, so the plow line needs a slow, deliberate pass there."
   ]
 }

@@ -1823,5 +1823,2407 @@
     "Fruit-heavy rewards (gold fruit crate S7-c, flame pyramid S5-b) sit on detours that feed the 80 % fruit gem rather than the box gem.",
     "Checkpoints close up late in the level (cumulative 17, 79, 105, 116, 122): the icefall and falling-ice ledges are the death-heavy part, and C4/C5 sit 11 and 6 crates apart.",
     "The exit crate sign shows n/153 before the Nitro switch, so a player sees exactly what is missing before committing to the finish."
+  ],
+  "cameraSections": [
+    {
+      "section": "S1",
+      "mode": "into-screen → side view",
+      "notes": "Into-screen causeway and stepping stones from the spawn (LP1 3:07:14–3:07:32); the camera swings to a side view for the icy walkway and the two timed-! groups (3:07:34–3:07:46); C1 at the turn (3:07:48)."
+    },
+    {
+      "section": "S2",
+      "mode": "side view",
+      "notes": "Side-scrolling harbour, left to right, with depth for the sniper towers and two moored boats (3:07:50–3:08:20)."
+    },
+    {
+      "section": "B",
+      "mode": "side view",
+      "notes": "Side-scrolling cave dock (3:08:22–3:09:04)."
+    },
+    {
+      "section": "S3",
+      "mode": "into-screen",
+      "notes": "One-crate-wide wall-top path over an ice canyon, then a boardwalk to the moored ship (3:09:08–3:09:24)."
+    },
+    {
+      "section": "S4",
+      "mode": "cutscene → into-screen → side view",
+      "notes": "Ship-explosion cutscene (3:09:26–3:09:30); the camera follows the boardwalk to the stone tower, then shows the tower ledge from the side (3:09:31–3:09:38)."
+    },
+    {
+      "section": "S5",
+      "mode": "side view → into-screen",
+      "notes": "Side-view waterfall gorge crossed on falling slabs (3:09:40–3:09:54); into-screen dock, single floe and pier (3:09:56–3:10:02)."
+    },
+    {
+      "section": "S6",
+      "mode": "into-screen (+ toward-camera detour)",
+      "notes": "Into-screen floe lagoon; the S6-a crate requires riding a floe back toward the camera; waterfall room on the left (3:10:04–3:10:56)."
+    },
+    {
+      "section": "S7",
+      "mode": "side view",
+      "notes": "Timed-! tower climb and the icefall (3:10:58–3:11:32); C4 on a platform by the houses (3:11:34)."
+    },
+    {
+      "section": "S8",
+      "mode": "into-screen → high angle",
+      "notes": "Into-screen narrow ledges under falling ice (3:11:38–3:11:46); a high, near top-down angle on the plank path with falling cubes (3:11:48–3:11:58); oblique ledges to the C5 dock (3:12:00–3:12:08)."
+    },
+    {
+      "section": "S9",
+      "mode": "into-screen",
+      "notes": "Second floe field with motorboats crossing in lanes (3:12:10–3:12:58)."
+    },
+    {
+      "section": "S10",
+      "mode": "side view",
+      "notes": "Waterfall gorge with rope swings to the exit (3:13:00–3:13:30)."
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P-S1-a",
+      "section": "S1",
+      "shape": "wide floor (snowy cobble causeway over dark water)",
+      "size": "3-4 wide x ~15 long",
+      "heightDelta": 0,
+      "edges": "open (water both sides)",
+      "behaviour": "static",
+      "roles": [
+        "REST",
+        "TEACH"
+      ],
+      "why": "a wide, safe strip for the slow-time prompt and the first spin before any gap",
+      "evidence": "LP1 3:07:14-3:07:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-b",
+      "section": "S1",
+      "shape": "stepping stones (snow-capped stone block on posts, then a small floating plank raft)",
+      "size": "block ~2x2; raft ~1.5x1.5",
+      "heightDelta": "0 to +1",
+      "edges": "open",
+      "behaviour": "block static; raft floats (bob not measurable)",
+      "roles": [
+        "STEPPING",
+        "TEACH"
+      ],
+      "why": "the first gaps are two short hops over water onto pieces that read as solid; no enemy or timer here",
+      "evidence": "LP1 3:07:22-3:07:24",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-c",
+      "section": "S1",
+      "shape": "square pad (snow-topped stone pillar)",
+      "size": "~2.5x2.5",
+      "heightDelta": "+0.5 to +1",
+      "edges": "open (ice spikes in the water to the right)",
+      "behaviour": "static",
+      "roles": [
+        "LANDING",
+        "STEPPING"
+      ],
+      "move": [
+        "running"
+      ],
+      "why": "the longest S1 jump; the run used slow-mo here, so the mask gets its first practical use on a static gap",
+      "evidence": "LP1 3:07:28-3:07:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-d",
+      "section": "S1",
+      "shape": "stepped stone tiers",
+      "size": "~3 wide; risers ~1",
+      "heightDelta": "+1 per tier (2 tiers)",
+      "edges": "open on the water side",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "a short climb carrying the 2-high crate column; recovers the meter between timed groups",
+      "evidence": "LP1 3:07:30-3:07:32",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-e",
+      "section": "S1",
+      "shape": "corridor (icy walkway on wooden trestles, two decks)",
+      "size": "upper deck ~8-10 long x ~2 deep; lower deck one step down",
+      "heightDelta": -1,
+      "edges": "railed",
+      "behaviour": "static; icy look (no sliding seen)",
+      "roles": [
+        "ARENA",
+        "TEACH"
+      ],
+      "why": "a railed floor under the 4-crate timed arc: the only skill tested is the timer, not the footing",
+      "evidence": "LP1 3:07:34-3:07:38",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S1-f",
+      "section": "S1",
+      "shape": "perch (scenery pile of stencilled shipping crates, a barrel and a tyre)",
+      "size": "~2 wide x ~1.5 high",
+      "heightDelta": "+1.5",
+      "edges": "open",
+      "behaviour": "static (not breakable)",
+      "roles": [
+        "PERCH",
+        "STEPPING"
+      ],
+      "move": [
+        "plain"
+      ],
+      "why": "a step that brings the high outline pair (3-4 u above the walkway) into double-jump range during the timer",
+      "evidence": "LP1 3:07:40-3:07:43",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S1-g",
+      "section": "S1",
+      "shape": "narrow ledge (wooden scaffold) leading to the C1 ledge",
+      "size": "scaffold ~2x2; C1 ledge ~3x3",
+      "heightDelta": "-2 (below the walkway end)",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING",
+        "CHECKPOINT-PAD"
+      ],
+      "why": "a drop landing ends the timed run on a wide pad under the first crossbow tower",
+      "evidence": "LP1 3:07:44-3:07:48",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-a",
+      "section": "S2",
+      "shape": "round/hex pillar (narrow snow-capped posts)",
+      "size": "tops 1-1.5",
+      "heightDelta": "0 to +1",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING",
+        "CHOKE"
+      ],
+      "why": "tiny tops directly under a sniper tower: every landing is inside the harpoon field, so hops are timed to the volleys",
+      "evidence": "LP1 3:07:50-3:07:54",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-b",
+      "section": "S2",
+      "shape": "wide floor (moored fishing-boat deck)",
+      "size": "~10 long x ~3 deep; cabin ~3 high",
+      "heightDelta": 0,
+      "edges": "railed (gunwales)",
+      "behaviour": "static (moored)",
+      "roles": [
+        "REST",
+        "ARENA"
+      ],
+      "why": "the first long rest of S2, shared with a crossbow man on the cabin roof and the first TNT row",
+      "evidence": "LP1 3:07:56-3:08:02",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S2-c",
+      "section": "S2",
+      "shape": "square pad (pole-hung red-plank pads)",
+      "size": "~1.5x1.5",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "hung from poles; the first pass reports one swinging",
+      "roles": [
+        "STEPPING",
+        "TIMING-STEP"
+      ],
+      "why": "two small pads between long decks, under the next tower",
+      "evidence": "LP1 3:08:02-3:08:04, 3:08:10-3:08:12",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-d",
+      "section": "S2",
+      "shape": "wide floor (second moored boat, deck and cabin roof)",
+      "size": "~8 long",
+      "heightDelta": "0 to +2 (roof)",
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "a rest between the two pad sets",
+      "evidence": "LP1 3:08:04-3:08:06",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-e",
+      "section": "S2",
+      "shape": "square pad (snowy stone pillar beside the TNT ledge)",
+      "size": "~2x2",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING",
+        "CHOKE"
+      ],
+      "why": "a landing under a second tower, with two harpoon ropes staked into its own top",
+      "evidence": "LP1 3:08:06-3:08:10",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S2-f",
+      "section": "S2",
+      "shape": "stone steps up to the round bonus pad",
+      "size": "steps ~2 wide, risers ~1; pad ~2 across",
+      "heightDelta": "+2 to +3 in total",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "why": "the strong crate sits on the steps just before the pad",
+      "evidence": "LP1 3:08:12-3:08:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-a",
+      "section": "B",
+      "shape": "wide floor (start ledge of wood and snow)",
+      "size": "~5 wide",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "PERCH",
+        "SAFE-ISLAND"
+      ],
+      "why": "the safe spot from which the 7-Nitro lid is set off: the bonus opens with a look-before-acting perch",
+      "evidence": "LP1 3:08:22-3:08:28",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-b",
+      "section": "B",
+      "shape": "narrow ledge (iron row M r! M under the Nitro lid)",
+      "size": "3x1",
+      "heightDelta": "-1 to -1.5",
+      "edges": "open",
+      "behaviour": "static (iron)",
+      "roles": [
+        "TIMING-STEP",
+        "SAFE-ISLAND"
+      ],
+      "why": "it carries the switch and sits directly under the lid, so it cannot be reached until the lid is gone",
+      "evidence": "LP1 3:08:22-3:08:32",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-B-c",
+      "section": "B",
+      "shape": "perch (high ledge by the waterfall with the ?/R/R column; tower top with a ?)",
+      "size": "~2-3 wide",
+      "heightDelta": "+3 to +5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "PERCH"
+      ],
+      "move": [
+        "double"
+      ],
+      "why": "height checks reached with double jumps inside the slow-mo window",
+      "evidence": "LP1 3:08:34-3:08:46",
+      "confidence": "low"
+    },
+    {
+      "id": "P-B-d",
+      "section": "B",
+      "shape": "bridge/plank (arched snow bridge)",
+      "size": "~8 span, apex ~2 above its ends",
+      "heightDelta": "+2 then -2",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a breather arc with a fruit trail between the two Nitro set pieces",
+      "evidence": "LP1 3:08:38, 3:08:56",
+      "confidence": "low"
+    },
+    {
+      "id": "P-B-e",
+      "section": "B",
+      "shape": "wide floor (snowy platform with the 6-Nitro row and the ? column)",
+      "size": "~8 wide",
+      "heightDelta": -2,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the second lid puzzle: the row fills most of the platform, so the column must be taken from above",
+      "evidence": "LP1 3:08:58-3:09:02",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S3-a",
+      "section": "S3",
+      "shape": "corridor (narrow wall-top and plank tops on posts over an ice canyon)",
+      "size": "1-1.5 wide; segments ~2-4 long",
+      "heightDelta": "0 (small steps)",
+      "edges": "open (deep canyon both sides)",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING",
+        "CHOKE"
+      ],
+      "why": "a balance beam with single crates in file: the crate line and the walking line are the same line",
+      "evidence": "LP1 3:09:12-3:09:20",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S3-b",
+      "section": "S3",
+      "shape": "corridor (boardwalk to the moored ship)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "railed in part",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "widens before the cutscene",
+      "evidence": "LP1 3:09:22-3:09:24",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S4-a",
+      "section": "S4",
+      "shape": "square pad (stone tower top beside the boardwalk end)",
+      "size": "~3x2, with a ~1-wide ledge on the gorge side",
+      "heightDelta": "+1",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD",
+        "LANDING"
+      ],
+      "move": [
+        "slide-jump"
+      ],
+      "why": "a pad off to the left right after the cutscene, holding C2 and three crates; its gorge-side ledge is the launch point for the falling slabs",
+      "evidence": "LP1 3:09:31-3:09:38; GR 75-79",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S5-a",
+      "section": "S5",
+      "shape": "sinking/floating (falling ice slabs descending through the waterfalls)",
+      "size": "~1.5-2 wide",
+      "heightDelta": "falling (continuous)",
+      "edges": "open",
+      "behaviour": "descend continuously; new slabs replace them",
+      "roles": [
+        "TIMING-STEP",
+        "STEPPING"
+      ],
+      "move": [
+        "running",
+        "double"
+      ],
+      "why": "the first falling-ice crossing; slow-mo turns a stream of falling footholds into readable steps",
+      "evidence": "LP1 3:09:40-3:09:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S5-b",
+      "section": "S5",
+      "shape": "round/hex pillar (ice pillar mid-gorge)",
+      "size": "~2 wide",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND",
+        "REST"
+      ],
+      "why": "the one static rest in the gorge, splitting the crossing into two short no-stop runs",
+      "evidence": "LP1 3:09:46-3:09:48",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-c",
+      "section": "S5",
+      "shape": "wide floor (lit house balcony, then a railed dock)",
+      "size": "balcony ~4x3; dock ~3 wide",
+      "heightDelta": "-1 to -2 (landing)",
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "LANDING",
+        "REST"
+      ],
+      "why": "a large landing after the gorge, paid with one crate",
+      "evidence": "LP1 3:09:54-3:09:56",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S5-d",
+      "section": "S5",
+      "shape": "ice (single floe between the dock and the pier)",
+      "size": "~2x2",
+      "heightDelta": -0.5,
+      "edges": "open",
+      "behaviour": "floating; cracked surface",
+      "roles": [
+        "TEACH",
+        "STEPPING"
+      ],
+      "why": "one floe on its own with solid ground on both sides: the ice rule is shown once before the floe field",
+      "evidence": "LP1 3:09:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S5-e",
+      "section": "S5",
+      "shape": "square pad (stone pier with the flame pyramid)",
+      "size": "~4x3",
+      "heightDelta": "+0.5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "REST",
+        "ARENA"
+      ],
+      "why": "a solid rest that holds the inferno-crate lesson and the Flashback tape",
+      "evidence": "LP1 3:09:58-3:10:02",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-a",
+      "section": "S6",
+      "shape": "ice (frosted floes in drifting rows)",
+      "size": "2x2 to 3x2; rows 5-6 floes wide",
+      "heightDelta": "0 (bob)",
+      "edges": "open",
+      "behaviour": "drift sideways in lanes; frosted surface is safe footing",
+      "roles": [
+        "STEPPING",
+        "REST"
+      ],
+      "why": "frosted floes are the only safe rests in the lagoon, and the drift decides what is reachable",
+      "evidence": "LP1 3:10:04-3:10:18; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-b",
+      "section": "S6",
+      "shape": "ice (clear, slippery floes)",
+      "size": "~2x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "slippery: Crash keeps sliding after landing",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "a landing that keeps moving, so the next jump comes almost at once",
+      "evidence": "LP1 3:10:14; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-c",
+      "section": "S6",
+      "shape": "crumbling (cracked floes)",
+      "size": "~2x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "break shortly after landing",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "why": "forces a no-stop line through mixed floes",
+      "evidence": "LP1 3:10:12-3:10:18 (cracks visible); gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S6-d",
+      "section": "S6",
+      "shape": "crumbling (collapsing wooden pallet behind the moored hull)",
+      "size": "~1.5x1",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "collapses after landing (GR)",
+      "roles": [
+        "STEPPING",
+        "BONUS-PAD"
+      ],
+      "why": "the only way to the gem pier: a one-shot step hidden behind the hull",
+      "evidence": "LP1 3:10:16-3:10:20; GR",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-e",
+      "section": "S6",
+      "shape": "narrow ledge (railed pier behind the moored hull)",
+      "size": "~4x2",
+      "heightDelta": "+0.5",
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND",
+        "BONUS-PAD"
+      ],
+      "why": "solid ground for the springboard stack and the hidden gem",
+      "evidence": "LP1 3:10:20-3:10:24",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-f",
+      "section": "S6",
+      "shape": "moving platform (small rowboat with a lantern fisherman)",
+      "size": "~3x2",
+      "heightDelta": 0,
+      "edges": "gunwales",
+      "behaviour": "floating (drift not measurable)",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a tiny deck shared by an enemy and a crate",
+      "evidence": "LP1 3:10:26-3:10:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-g",
+      "section": "S6",
+      "shape": "square pad (small stone pier between pilings)",
+      "size": "~2x3",
+      "heightDelta": "+0.5",
+      "edges": "pilings",
+      "behaviour": "static",
+      "roles": [
+        "PERCH"
+      ],
+      "why": "holds the arrow crate under the high floating pair",
+      "evidence": "LP1 3:10:34-3:10:44",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S6-h",
+      "section": "S6",
+      "shape": "wide floor (shallow shelf, waterfall curtain and hidden wooden room)",
+      "size": "room ~4x4 (estimate)",
+      "heightDelta": 0,
+      "edges": "walled",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "a walled room behind a waterfall: the largest cache sits off the floe line next to the checkpoint",
+      "evidence": "LP1 3:10:46-3:10:52",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S6-i",
+      "section": "S6",
+      "shape": "square pad (stone pier with C3)",
+      "size": "~3x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the checkpoint after the lagoon search area",
+      "evidence": "LP1 3:10:56",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S7-a",
+      "section": "S7",
+      "shape": "stepped stone steps to a stone hut tower",
+      "size": "~2 wide, risers ~1",
+      "heightDelta": "+2 to +3",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "approach to the timed column, with the red ! on a step",
+      "evidence": "LP1 3:10:57-3:11:00",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-b",
+      "section": "S7",
+      "shape": "phase/timed (outline column, 3 high, solid only while the red ! runs)",
+      "size": "1x1 x 3 high; permanent ? floating above",
+      "heightDelta": "+3",
+      "edges": "open",
+      "behaviour": "timed: solid for a few seconds",
+      "roles": [
+        "TIMING-STEP",
+        "STEPPING"
+      ],
+      "move": [
+        "crate-bounce",
+        "double"
+      ],
+      "why": "the only stairs to a permanent crate exist only while the timer runs",
+      "evidence": "LP1 3:11:00-3:11:03",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-c",
+      "section": "S7",
+      "shape": "round/hex pillar (narrow stone and wood pillars in the icefall)",
+      "size": "tops ~1x1; spaced 6-8",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "PERCH",
+        "SAFE-ISLAND"
+      ],
+      "why": "observation posts between streams of falling slabs",
+      "evidence": "LP1 3:11:08-3:11:32",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-d",
+      "section": "S7",
+      "shape": "sinking/floating (falling ice slabs in the icefall streams)",
+      "size": "~1.5 wide",
+      "heightDelta": "falling",
+      "edges": "open",
+      "behaviour": "continuous descent",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "move": [
+        "running",
+        "double"
+      ],
+      "why": "the bridges between pillars are moving downward; slow-mo makes them usable",
+      "evidence": "LP1 3:11:10-3:11:32",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-e",
+      "section": "S7",
+      "shape": "narrow ledge (raised ice ledge with the gold crate)",
+      "size": "~1.5 wide",
+      "heightDelta": "+2 to +3 above a slab; ~4-5 above the pillar tops",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "move": [
+        "double"
+      ],
+      "why": "a fruit detour above the falling ice, reached from a slab with a double jump",
+      "evidence": "LP1 3:11:10-3:11:20",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S7-f",
+      "section": "S7",
+      "shape": "square pad (lamp-lit stone platform with C4)",
+      "size": "~4x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD",
+        "REST"
+      ],
+      "why": "a wide pad straight after the icefall",
+      "evidence": "LP1 3:11:34-3:11:36",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S8-a",
+      "section": "S8",
+      "shape": "narrow ledge (snowy cliff ledges)",
+      "size": "1.5-2 wide",
+      "heightDelta": "0 to -1",
+      "edges": "open (cliff drop on one side)",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE"
+      ],
+      "why": "a narrow ledge under falling ice blocks, with the TNT-under-crate stack placed on it",
+      "evidence": "LP1 3:11:38-3:11:46",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S8-b",
+      "section": "S8",
+      "shape": "bridge/plank (one-plank path along the cliff, high above the harbour)",
+      "size": "~1.2 wide; broken by 2-3 gaps",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHOKE",
+        "STEPPING"
+      ],
+      "why": "a one-crate-wide path whose gaps are bridged only by falling ice cubes",
+      "evidence": "LP1 3:11:48-3:11:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S8-c",
+      "section": "S8",
+      "shape": "sinking/floating (falling ice cubes)",
+      "size": "~1x1",
+      "heightDelta": "falling",
+      "edges": "open",
+      "behaviour": "drop through the gaps in sequence",
+      "roles": [
+        "TIMING-STEP"
+      ],
+      "move": [
+        "plain"
+      ],
+      "why": "a stepping stone you land on while it falls: the hardest slow-mo crossing",
+      "evidence": "LP1 3:11:48-3:11:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S8-d",
+      "section": "S8",
+      "shape": "narrow ledge (fenced stone ledge, then a stone ledge by the houses)",
+      "size": "~2-3 wide",
+      "heightDelta": 0,
+      "edges": "fenced",
+      "behaviour": "static",
+      "roles": [
+        "REST",
+        "ARENA"
+      ],
+      "why": "a rest, then a bomb thrower's ledge",
+      "evidence": "LP1 3:12:00-3:12:06",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S8-e",
+      "section": "S8",
+      "shape": "wide floor (wooden dock with C5)",
+      "size": "~6x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "CHECKPOINT-PAD"
+      ],
+      "why": "the checkpoint at the mouth of the second floe field",
+      "evidence": "LP1 3:12:08-3:12:10",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S9-a",
+      "section": "S9",
+      "shape": "moving platform (fisherman's boat beside the dock)",
+      "size": "~3x2",
+      "heightDelta": 0,
+      "edges": "gunwales",
+      "behaviour": "floating",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "the first step of the floe field is an enemy-held deck with a 2-stack",
+      "evidence": "LP1 3:12:10-3:12:14",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S9-b",
+      "section": "S9",
+      "shape": "ice (frosted and clear floes)",
+      "size": "~2x2",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "drifting; clear ones slippery",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a repeat of S6 with tighter gaps",
+      "evidence": "LP1 3:12:14-3:12:26",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S9-c",
+      "section": "S9",
+      "shape": "moving platform (white motorboats)",
+      "size": "~1.5x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "travel in lanes across the field",
+      "roles": [
+        "STEPPING",
+        "TIMING-STEP"
+      ],
+      "move": [
+        "ride"
+      ],
+      "why": "rides between distant piers: the player waits for a boat and boards it",
+      "evidence": "LP1 3:12:22-3:12:26, 3:12:40, 3:12:54-3:12:56",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S9-d",
+      "section": "S9",
+      "shape": "narrow ledge (floating plank pier held by a crossbow man)",
+      "size": "~2.5x6",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "floating",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "a long, narrow pier inside a sniper's line",
+      "evidence": "LP1 3:12:30-3:12:36",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S9-e",
+      "section": "S9",
+      "shape": "square pad (raft-dock)",
+      "size": "~4x3",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "floating",
+      "roles": [
+        "REST"
+      ],
+      "why": "a small floating dock carrying two TNT groups, with no room to retreat",
+      "evidence": "LP1 3:12:42-3:12:48",
+      "confidence": "medium"
+    },
+    {
+      "id": "P-S9-f",
+      "section": "S9",
+      "shape": "square pad (exit pier)",
+      "size": "~3x3",
+      "heightDelta": "+0.5",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "LANDING"
+      ],
+      "why": "the end of the floe field and of the motorboat ride",
+      "evidence": "LP1 3:12:56-3:12:58",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S10-a",
+      "section": "S10",
+      "shape": "narrow ledge (wooden pier platforms and scaffold)",
+      "size": "~3 wide",
+      "heightDelta": "0 to +2",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "STEPPING"
+      ],
+      "why": "a side-view climb into the gorge",
+      "evidence": "LP1 3:13:00-3:13:06",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S10-b",
+      "section": "S10",
+      "shape": "narrow ledge (bracket ledge behind the waterfall)",
+      "size": "~2 wide",
+      "heightDelta": "+2 to +3",
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "BONUS-PAD"
+      ],
+      "move": [
+        "double"
+      ],
+      "why": "the hidden cache ledge, reached by a big jump through the falling water",
+      "evidence": "LP1 3:13:06-3:13:10",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S10-c",
+      "section": "S10",
+      "shape": "narrow ledge (ledge with a stocky longshoreman and the TNT column)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "ARENA"
+      ],
+      "why": "an enemy and a TNT-topped column share a short ledge",
+      "evidence": "LP1 3:13:12-3:13:14",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S10-d",
+      "section": "S10",
+      "shape": "moving platform (rope-hung swinging snow-plank platforms)",
+      "size": "~2x2",
+      "heightDelta": "0 to -1",
+      "edges": "open",
+      "behaviour": "swing on long ropes (period not measured)",
+      "roles": [
+        "TIMING-STEP",
+        "STEPPING"
+      ],
+      "move": [
+        "running"
+      ],
+      "why": "the finale's footing moves, and each platform carries a TNT",
+      "evidence": "LP1 3:13:16-3:13:24",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S10-e",
+      "section": "S10",
+      "shape": "narrow ledge (small broken bracket ledges and a corner platform)",
+      "size": "~1.5",
+      "heightDelta": 0,
+      "edges": "open",
+      "behaviour": "static",
+      "roles": [
+        "SAFE-ISLAND"
+      ],
+      "why": "short rests between swings",
+      "evidence": "LP1 3:13:18-3:13:26",
+      "confidence": "low"
+    },
+    {
+      "id": "P-S10-f",
+      "section": "S10",
+      "shape": "wide floor (exit boardwalk with the crate sign and Nitro switch)",
+      "size": "~3 wide",
+      "heightDelta": 0,
+      "edges": "railed",
+      "behaviour": "static",
+      "roles": [
+        "REST"
+      ],
+      "why": "the end of the level",
+      "evidence": "LP1 3:13:26-3:13:30",
+      "confidence": "medium"
+    }
+  ],
+  "gapsDetailed": [
+    {
+      "id": "G-S1-a",
+      "section": "S1",
+      "kind": "lethal water (causeway to the stepping stones)",
+      "width": "2-3",
+      "heightDelta": "0 to +1",
+      "landing": "2x2 block, then a 1.5x1.5 raft",
+      "lethal": true,
+      "runUp": "3-5",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "death (assumed; the run never touches the water)",
+      "nearby": [
+        "S1-b"
+      ],
+      "why": "the first gaps are short and static, set before any timer or enemy",
+      "evidence": "LP1 3:07:22-3:07:24",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S1-b",
+      "section": "S1",
+      "kind": "lethal water (cobble path to the stone pillar)",
+      "width": "3-4",
+      "heightDelta": "+0.5 to +1",
+      "landing": "2.5x2.5 pillar",
+      "lethal": true,
+      "runUp": "2-3",
+      "move": [
+        "running"
+      ],
+      "coupling": "none (the run used slow-mo anyway)",
+      "failure": "death",
+      "nearby": [
+        "S1-c"
+      ],
+      "why": "the longest jump of S1 is still static; using slow-mo here rehearses the mask on a gap that does not need it",
+      "evidence": "LP1 3:07:28-3:07:30",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S1-c",
+      "section": "S1",
+      "kind": "drop-down (walkway end to the scaffold)",
+      "width": "~3",
+      "heightDelta": -2,
+      "landing": "~2x2 scaffold",
+      "lethal": null,
+      "runUp": "8-10 (walkway)",
+      "move": [
+        "running"
+      ],
+      "coupling": "the second timed group is still running",
+      "failure": "not visible",
+      "nearby": [
+        "S1-g"
+      ],
+      "why": "ends the timed run on a lower pad that leads to C1",
+      "evidence": "LP1 3:07:44-3:07:46",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-a",
+      "section": "S2",
+      "kind": "lethal water (post to post)",
+      "width": "2-3",
+      "heightDelta": "0 to +1",
+      "landing": "1-1.5 post tops",
+      "lethal": true,
+      "runUp": "1-2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "crossbow volleys from the tower above",
+      "failure": "death",
+      "nearby": [
+        "S2-a",
+        "E-S2-a",
+        "O-S2-a"
+      ],
+      "why": "small landings inside a sniper's field: the jump is easy, its timing is not",
+      "evidence": "LP1 3:07:50-3:07:54",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-b",
+      "section": "S2",
+      "kind": "lethal water (boat deck to pole pads to boat deck)",
+      "width": "2-3",
+      "heightDelta": 0,
+      "landing": "1.5x1.5 pads",
+      "lethal": true,
+      "runUp": "3-8 (deck)",
+      "move": [
+        "plain"
+      ],
+      "coupling": "pads may swing; a crossbow covers the next tower",
+      "failure": "death",
+      "nearby": [
+        "S2-c",
+        "S2-e"
+      ],
+      "why": "long deck, short pad, short pad, long deck",
+      "evidence": "LP1 3:08:02-3:08:06",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S2-c",
+      "section": "S2",
+      "kind": "chasm (snow gap under the rope-hung pads)",
+      "width": "2-3",
+      "heightDelta": 0,
+      "landing": "1.5-2 pads",
+      "lethal": null,
+      "runUp": "1-2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "pad swing",
+      "failure": "not visible",
+      "nearby": [
+        "S2-d"
+      ],
+      "why": "the last hops before the stone steps and the bonus pad",
+      "evidence": "LP1 3:08:10-3:08:12",
+      "confidence": "low"
+    },
+    {
+      "id": "G-B-a",
+      "section": "B",
+      "kind": "chasm spanned by a Nitro row (the lid over the switch row)",
+      "width": "~7",
+      "heightDelta": "-1 to -1.5 (onto the iron row once the lid is gone)",
+      "landing": "3x1 iron row",
+      "lethal": true,
+      "runUp": "n/a",
+      "move": [
+        "plain"
+      ],
+      "coupling": "the 7-Nitro lid must be detonated from the start ledge first",
+      "failure": "death (touching Nitro)",
+      "nearby": [
+        "B-a",
+        "B-b"
+      ],
+      "why": "the bonus's first gap is a lid: clear it, then drop onto the switch row",
+      "evidence": "LP1 3:08:22-3:08:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-B-b",
+      "section": "B",
+      "kind": "chasm (up to the high ledges and the tower top)",
+      "width": "3-5",
+      "heightDelta": "+3 to +5",
+      "landing": "2-3 wide ledges",
+      "lethal": null,
+      "runUp": "short",
+      "move": [
+        "double"
+      ],
+      "coupling": "red-! timer",
+      "failure": "the timed crates fade; fall back to dock level",
+      "nearby": [
+        "B-b",
+        "B-c",
+        "B-e"
+      ],
+      "why": "height under a timer",
+      "evidence": "LP1 3:08:32-3:08:48",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S3-a",
+      "section": "S3",
+      "kind": "chasm (ice canyon between plank tops)",
+      "width": "~1",
+      "heightDelta": 0,
+      "landing": "1-1.5-wide plank",
+      "lethal": true,
+      "runUp": "2-4",
+      "move": [
+        "plain"
+      ],
+      "coupling": "none",
+      "failure": "death",
+      "nearby": [
+        "S3-b"
+      ],
+      "why": "short gaps on a one-crate-wide line: the risk is sideways, not distance",
+      "evidence": "LP1 3:09:12-3:09:20",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S4-a",
+      "section": "S4",
+      "kind": "chasm (boardwalk end to the stone tower on the left)",
+      "width": "2-3",
+      "heightDelta": "+1",
+      "landing": "~3x2 tower top",
+      "lethal": true,
+      "runUp": "6-10 (boardwalk)",
+      "move": [
+        "slide-jump"
+      ],
+      "coupling": "none (right after a cutscene)",
+      "failure": "death (gorge)",
+      "nearby": [
+        "S4-a",
+        "S4-b",
+        "S4-c"
+      ],
+      "why": "GR names a slide-jump: its extra distance reaches the tower straight off the boardwalk",
+      "evidence": "LP1 3:09:31-3:09:33; GR 75",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S5-a",
+      "section": "S5",
+      "kind": "moving-platform crossing (waterfall gorge on falling slabs)",
+      "width": "~12-16 in all; slab spacing 2-3",
+      "heightDelta": "net -1 to -2",
+      "landing": "1.5-2 slabs; one ~2-wide pillar halfway",
+      "lethal": true,
+      "runUp": "1 (tower ledge)",
+      "move": [
+        "running",
+        "double"
+      ],
+      "coupling": "slabs descend continuously; slow-mo",
+      "failure": "death",
+      "nearby": [
+        "S5-a"
+      ],
+      "why": "the first falling-ice set piece, halved by a static pillar",
+      "evidence": "LP1 3:09:40-3:09:54",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S5-b",
+      "section": "S5",
+      "kind": "lethal water (dock to pier across one floe)",
+      "width": "1-2",
+      "heightDelta": "-0.5 / +0.5",
+      "landing": "2x2 floe, then a 4x3 pier",
+      "lethal": true,
+      "runUp": "3",
+      "move": [
+        "plain"
+      ],
+      "coupling": "floe drift; cracked surface",
+      "failure": "death",
+      "nearby": [
+        "S5-b"
+      ],
+      "why": "a single-floe preview of the lagoon",
+      "evidence": "LP1 3:09:58",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S6-a",
+      "section": "S6",
+      "kind": "lethal water (floe to floe)",
+      "width": "1-2",
+      "heightDelta": 0,
+      "landing": "2x2 to 3x2 floes",
+      "lethal": true,
+      "runUp": "0-2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "sideways drift; cracked floes break; clear floes slide",
+      "failure": "death",
+      "nearby": [
+        "S6-a",
+        "S6-c"
+      ],
+      "why": "small gaps whose difficulty is the footing and the drift, not the distance",
+      "evidence": "LP1 3:10:04-3:10:18; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S6-b",
+      "section": "S6",
+      "kind": "crumble run (pallet to the gem pier)",
+      "width": "1-2",
+      "heightDelta": "+0.5",
+      "landing": "4x2 pier",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "plain"
+      ],
+      "coupling": "the pallet collapses",
+      "failure": "death",
+      "nearby": [
+        "S6-b"
+      ],
+      "why": "one-way access to the gem: a crumbling step behind a hull",
+      "evidence": "LP1 3:10:16-3:10:20; GR",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S6-c",
+      "section": "S6",
+      "kind": "moving-platform crossing (riding a floe back toward the camera)",
+      "width": "n/a (drift)",
+      "heightDelta": 0,
+      "landing": "the floe itself",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "ride"
+      ],
+      "coupling": "floe drift",
+      "failure": "death if you jump off early",
+      "nearby": [
+        "S6-a"
+      ],
+      "why": "the S6-a crate is reached by riding, not by jumping",
+      "evidence": "LP1 3:10:10; GR 86",
+      "confidence": "medium"
+    },
+    {
+      "id": "G-S7-a",
+      "section": "S7",
+      "kind": "moving-platform crossing (icefall: pillar to pillar on falling slabs)",
+      "width": "6-8 between pillars",
+      "heightDelta": "0 net; slabs fall",
+      "landing": "1x1 pillar tops",
+      "lethal": true,
+      "runUp": "0-1",
+      "move": [
+        "running",
+        "double"
+      ],
+      "coupling": "slab streams; slow-mo",
+      "failure": "death",
+      "nearby": [
+        "S7-c"
+      ],
+      "why": "the longest gaps of the level, made of moving footing",
+      "evidence": "LP1 3:11:08-3:11:32",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S7-b",
+      "section": "S7",
+      "kind": "chasm (slab to the gold-crate ledge)",
+      "width": "2-3",
+      "heightDelta": "+2 to +3 (from a slab)",
+      "landing": "~1.5-wide ledge",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "double"
+      ],
+      "coupling": "slab descent",
+      "failure": "death",
+      "nearby": [
+        "S7-c"
+      ],
+      "why": "an optional fruit detour that costs a life if missed",
+      "evidence": "LP1 3:11:10-3:11:20",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S8-a",
+      "section": "S8",
+      "kind": "moving-platform crossing (plank-path gaps bridged by falling cubes)",
+      "width": "2-3 per gap; 2-3 gaps",
+      "heightDelta": "0 to -1 (the cube is falling)",
+      "landing": "1x1 cube",
+      "lethal": true,
+      "runUp": "1-3",
+      "move": [
+        "plain"
+      ],
+      "coupling": "cubes fall in sequence; slow-mo",
+      "failure": "death",
+      "nearby": [
+        "S8-b"
+      ],
+      "why": "the smallest landing in the level, and it is moving down",
+      "evidence": "LP1 3:11:48-3:11:58",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S9-a",
+      "section": "S9",
+      "kind": "lethal water (floe to floe)",
+      "width": "1-1.5",
+      "heightDelta": 0,
+      "landing": "~2x2 floes",
+      "lethal": true,
+      "runUp": "0-2",
+      "move": [
+        "plain"
+      ],
+      "coupling": "drift; clear floes slide",
+      "failure": "death",
+      "nearby": [
+        "S9-b"
+      ],
+      "why": "the S6 rules again with tighter gaps",
+      "evidence": "LP1 3:12:14-3:12:26",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S9-b",
+      "section": "S9",
+      "kind": "moving-platform crossing (motorboat rides)",
+      "width": "~10-20 of water crossed while riding",
+      "heightDelta": 0,
+      "landing": "~1.5x3 boat",
+      "lethal": true,
+      "runUp": "0",
+      "move": [
+        "ride"
+      ],
+      "coupling": "boat lanes: wait for a boat, then board",
+      "failure": "death",
+      "nearby": [
+        "S9-d",
+        "S9-e"
+      ],
+      "why": "the crossing is a wait-and-board decision, not a jump",
+      "evidence": "LP1 3:12:38-3:12:42, 3:12:54-3:12:58",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S10-a",
+      "section": "S10",
+      "kind": "chasm (pier to the bracket ledge behind the waterfall)",
+      "width": "3-4",
+      "heightDelta": "+2 to +3",
+      "landing": "~2-wide ledge",
+      "lethal": null,
+      "runUp": "2-3",
+      "move": [
+        "double"
+      ],
+      "coupling": "none",
+      "failure": "fall into the gorge (not visible)",
+      "nearby": [
+        "S10-a"
+      ],
+      "why": "the hidden-cache jump goes through the falling water",
+      "evidence": "LP1 3:13:06-3:13:10",
+      "confidence": "low"
+    },
+    {
+      "id": "G-S10-b",
+      "section": "S10",
+      "kind": "swing/vine (rope-hung platforms over the gorge)",
+      "width": "2-4",
+      "heightDelta": "0 to -1",
+      "landing": "~2x2 swinging platforms",
+      "lethal": true,
+      "runUp": "1-2",
+      "move": [
+        "running"
+      ],
+      "coupling": "swing phase plus a lit TNT on the platform",
+      "failure": "death",
+      "nearby": [
+        "S10-d",
+        "S10-e"
+      ],
+      "why": "moving footing combined with an explosive timer",
+      "evidence": "LP1 3:13:16-3:13:24",
+      "confidence": "low"
+    }
+  ],
+  "jumpSequences": [
+    {
+      "id": "J-S1-a",
+      "section": "S1",
+      "count": 3,
+      "moves": [
+        "plain",
+        "running"
+      ],
+      "rhythm": "even",
+      "maxGap": "3-4",
+      "rest": "P-S1-c, then P-S1-d",
+      "noStop": false,
+      "why": "three hops over water before any hazard; every landing is a place to stop",
+      "evidence": "LP1 3:07:22-3:07:30"
+    },
+    {
+      "id": "J-S1-b",
+      "section": "S1",
+      "count": 4,
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even",
+      "maxGap": "n/a (above the walkway)",
+      "rest": "P-S1-e",
+      "noStop": true,
+      "why": "a timed arc broken in sequence while slow-mo lasts",
+      "evidence": "LP1 3:07:34-3:07:38"
+    },
+    {
+      "id": "J-S1-c",
+      "section": "S1",
+      "count": 3,
+      "moves": [
+        "plain",
+        "double",
+        "running"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "3-4 (up)",
+      "rest": "P-S1-g, then C1",
+      "noStop": true,
+      "why": "hit the switch, climb the pile, double-jump to the high pair and drop to the scaffold inside one timer",
+      "evidence": "LP1 3:07:38-3:07:46"
+    },
+    {
+      "id": "J-S2-a",
+      "section": "S2",
+      "count": "3-4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "syncopated (wait for the volleys)",
+      "maxGap": "3",
+      "rest": "P-S2-b",
+      "noStop": false,
+      "why": "hops timed to the harpoon volleys from the tower",
+      "evidence": "LP1 3:07:50-3:07:56"
+    },
+    {
+      "id": "J-S2-b",
+      "section": "S2",
+      "count": "5-6",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "long-short-short-long (deck, pad, pad, deck)",
+      "maxGap": "3",
+      "rest": "P-S2-d, then P-S2-f",
+      "noStop": false,
+      "why": "decks and small pads alternate",
+      "evidence": "LP1 3:08:02-3:08:12"
+    },
+    {
+      "id": "J-B-a",
+      "section": "B",
+      "count": "5-7",
+      "moves": [
+        "plain",
+        "double"
+      ],
+      "rhythm": "accelerating",
+      "maxGap": "3-5 (up)",
+      "rest": "P-B-c",
+      "noStop": true,
+      "why": "the timed outlines and the high column are taken in one slow-mo window",
+      "evidence": "LP1 3:08:30-3:08:48"
+    },
+    {
+      "id": "J-B-b",
+      "section": "B",
+      "count": 3,
+      "moves": [
+        "crate-bounce"
+      ],
+      "rhythm": "even",
+      "maxGap": "0 (one column)",
+      "rest": "P-B-e",
+      "noStop": true,
+      "why": "stomp down the ? column whose sides touch Nitro",
+      "evidence": "LP1 3:08:58-3:09:01"
+    },
+    {
+      "id": "J-S3-a",
+      "section": "S3",
+      "count": "5-7",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even",
+      "maxGap": "~1",
+      "rest": "P-S3-b",
+      "noStop": false,
+      "why": "balance-beam hops with single crates in file",
+      "evidence": "LP1 3:09:12-3:09:20"
+    },
+    {
+      "id": "J-S5-a",
+      "section": "S5",
+      "count": "4-6",
+      "moves": [
+        "running",
+        "double"
+      ],
+      "rhythm": "accelerating (the slabs keep falling)",
+      "maxGap": "2-3",
+      "rest": "P-S5-b halfway, then P-S5-c",
+      "noStop": true,
+      "why": "two no-stop halves split by the ice pillar",
+      "evidence": "LP1 3:09:40-3:09:54"
+    },
+    {
+      "id": "J-S6-a",
+      "section": "S6",
+      "count": "8-12",
+      "moves": [
+        "plain",
+        "ride"
+      ],
+      "rhythm": "syncopated (wait for floes to line up)",
+      "maxGap": "2",
+      "rest": "frosted floes, P-S6-e, P-S6-g, P-S6-i",
+      "noStop": false,
+      "why": "a search field: many short hops with optional detours",
+      "evidence": "LP1 3:10:04-3:10:56"
+    },
+    {
+      "id": "J-S7-a",
+      "section": "S7",
+      "count": 4,
+      "moves": [
+        "crate-bounce",
+        "double"
+      ],
+      "rhythm": "even",
+      "maxGap": "0 (vertical)",
+      "rest": "tower top",
+      "noStop": true,
+      "why": "bounce up the timed column and take the permanent ? before the stairs fade",
+      "evidence": "LP1 3:11:00-3:11:03"
+    },
+    {
+      "id": "J-S7-b",
+      "section": "S7",
+      "count": "6-8",
+      "moves": [
+        "running",
+        "double"
+      ],
+      "rhythm": "syncopated (perch, read, go)",
+      "maxGap": "6-8 via slabs",
+      "rest": "pillar tops (P-S7-c), then P-S7-f",
+      "noStop": "no-stop between pillar perches",
+      "why": "perch-and-go across the icefall",
+      "evidence": "LP1 3:11:08-3:11:32"
+    },
+    {
+      "id": "J-S8-a",
+      "section": "S8",
+      "count": "3-4",
+      "moves": [
+        "plain"
+      ],
+      "rhythm": "even (the cube cadence)",
+      "maxGap": "2-3",
+      "rest": "P-S8-d",
+      "noStop": true,
+      "why": "the cubes fall in sequence, so the hops follow their cadence",
+      "evidence": "LP1 3:11:48-3:12:00"
+    },
+    {
+      "id": "J-S9-a",
+      "section": "S9",
+      "count": "6-10",
+      "moves": [
+        "plain",
+        "ride"
+      ],
+      "rhythm": "syncopated",
+      "maxGap": "1.5 (plus rides)",
+      "rest": "P-S9-d, P-S9-e, P-S9-f",
+      "noStop": false,
+      "why": "floe hops plus waits for motorboats",
+      "evidence": "LP1 3:12:14-3:12:58"
+    },
+    {
+      "id": "J-S10-a",
+      "section": "S10",
+      "count": "4-5",
+      "moves": [
+        "running",
+        "double"
+      ],
+      "rhythm": "syncopated (swing phase) under a 3 s fuse",
+      "maxGap": "3-4",
+      "rest": "P-S10-e brackets, then P-S10-f",
+      "noStop": true,
+      "why": "each lit TNT on a swing forces the next jump inside its fuse",
+      "evidence": "LP1 3:13:16-3:13:28"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "O-S2-a",
+      "section": "S2",
+      "kind": "turret: crossbow longshoremen firing fish harpoons",
+      "placement": "overhead and flank (two tower tops and a boat-cabin roof) firing across the path",
+      "timing": "periodic volleys; warning: harpoons already stuck in the boards at C1, and the crossbow is drawn before each shot",
+      "counter": [
+        "wait-and-go",
+        "outrun"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "P-S2-a posts",
+        "S2-a crates",
+        "S2-b TNT row"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "AREA-DENIAL"
+      ],
+      "why": "a projectile field over small footing: read the volley rhythm, then hop; gamepressure: stop time while the fish are in the air and run under them",
+      "evidence": "LP1 3:07:48-3:08:10; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S2-b",
+      "section": "S2",
+      "kind": "tripwire: harpoon ropes left stretched from the towers to the ground and pillar tops",
+      "placement": "across path (diagonal lines)",
+      "timing": "static once fired",
+      "counter": [
+        "jump over",
+        "go around"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "P-S2-e"
+      ],
+      "roles": [
+        "LANE-BLOCK"
+      ],
+      "why": "every volley leaves lines across the landing space, so the field changes as the sniper fires (gamepressure: touching the string kills)",
+      "evidence": "LP1 3:07:50-3:07:52, 3:08:06-3:08:10; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "O-B-a",
+      "section": "B",
+      "kind": "explosive lid: a 7-Nitro row bridging the gap directly above the iron switch row",
+      "placement": "across path (at ledge level, over the switch)",
+      "timing": "static until set off; the chain runs along the row in about a second (HUD 0 -> 4 -> 7)",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "B-a",
+        "B-b",
+        "P-B-b"
+      ],
+      "roles": [
+        "LANE-BLOCK",
+        "TEACH"
+      ],
+      "why": "the hazard is also the door: it must be chain-detonated from the start perch before the switch below can be reached",
+      "evidence": "LP1 3:08:22-3:08:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-B-b",
+      "section": "B",
+      "kind": "explosive lid: a 6-Nitro row under the end of a 3-high ? column",
+      "placement": "on platform",
+      "timing": "static until set off",
+      "counter": [
+        "destroy"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "B-h",
+        "P-B-e"
+      ],
+      "roles": [
+        "TEST"
+      ],
+      "why": "the column must be stomped down from above before the row is chained from range, because its sides touch Nitro",
+      "evidence": "LP1 3:08:58-3:09:02",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S5-a",
+      "section": "S5",
+      "kind": "falling object: ice slabs falling through the waterfalls (they are also the footholds)",
+      "placement": "on platform",
+      "timing": "continuous stream at medium speed (not measured)",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S5-a landing crate"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "TEST"
+      ],
+      "why": "the slow-time mask turns a stream of falling footholds into steps; one static pillar halves the crossing",
+      "evidence": "LP1 3:09:40-3:09:52",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S5-b",
+      "section": "S5",
+      "kind": "flame jet: inferno crates breathing fire",
+      "placement": "on platform (the crate pyramid on the pier)",
+      "timing": "cycle of a few seconds; the flame itself is the telegraph",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S5-b pyramid",
+        "Flashback tape"
+      ],
+      "roles": [
+        "TEACH",
+        "RHYTHM"
+      ],
+      "why": "hazard and reward are the same object: wait for the flame to stop, then spin",
+      "evidence": "LP1 3:09:58-3:10:02; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S6-a",
+      "section": "S6",
+      "kind": "collapsing scenery and slippery ice: cracked floes break, clear floes slide",
+      "placement": "on platform",
+      "timing": "cracked: shortly after landing; clear: on landing",
+      "counter": [
+        "go around",
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "G-S6-a",
+        "S6-a crate"
+      ],
+      "roles": [
+        "TEACH",
+        "AREA-DENIAL"
+      ],
+      "why": "a legible surface code (frosted safe, clear slippery, cracked breaks) taught on a field you can stop in",
+      "evidence": "LP1 3:10:12-3:10:18; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S6-b",
+      "section": "S6",
+      "kind": "floating fire: a frozen fish in an ice block with a flame on top",
+      "placement": "in pit (drifting among the floes)",
+      "timing": "drifts",
+      "counter": [
+        "go around"
+      ],
+      "lethal": null,
+      "combinedWith": [
+        "S6-c boat"
+      ],
+      "roles": [
+        "AREA-DENIAL"
+      ],
+      "why": "a drifting obstacle beside the fisherman's boat; its damage was not shown",
+      "evidence": "LP1 3:10:30-3:10:32",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S7-a",
+      "section": "S7",
+      "kind": "falling object: icefall slab streams between the pillars",
+      "placement": "between pillars (they are also the footholds)",
+      "timing": "continuous",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S7-c gold crate"
+      ],
+      "roles": [
+        "TIMING-GATE",
+        "TEST"
+      ],
+      "why": "perch on a pillar, watch a stream, then go",
+      "evidence": "LP1 3:11:08-3:11:32",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S8-a",
+      "section": "S8",
+      "kind": "falling object: ice blocks crashing onto the narrow ledge",
+      "placement": "overhead (onto the path)",
+      "timing": "in sequence; warning not visible at a 2 s cadence",
+      "counter": [
+        "outrun"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S8-a TNT under a crate"
+      ],
+      "roles": [
+        "PURSUIT",
+        "TIMING-GATE"
+      ],
+      "why": "the TNT stack sits exactly where lingering is dangerous",
+      "evidence": "LP1 3:11:38-3:11:46",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S8-b",
+      "section": "S8",
+      "kind": "falling object: ice cubes dropping through the plank-path gaps (also the footholds)",
+      "placement": "on path",
+      "timing": "in sequence; slow-mo",
+      "counter": [
+        "wait-and-go"
+      ],
+      "lethal": true,
+      "combinedWith": [],
+      "roles": [
+        "TIMING-GATE",
+        "TEST"
+      ],
+      "why": "the cubes are the only bridges, and they are moving",
+      "evidence": "LP1 3:11:48-3:11:58",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S8-c",
+      "section": "S8",
+      "kind": "collapsing scenery: an enemy destroys the path ahead (location unconfirmed)",
+      "placement": "across path",
+      "timing": "triggered as you approach",
+      "counter": [
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [],
+      "roles": [
+        "TEST"
+      ],
+      "why": "gamepressure: slow time at the right moment to jump the broken path; not located in the frames (S2 or S8 likely)",
+      "evidence": "gamepressure only",
+      "confidence": "low"
+    },
+    {
+      "id": "O-S9-a",
+      "section": "S9",
+      "kind": "turret: crossbow longshoreman on the floating plank pier",
+      "placement": "on platform (fires along the pier)",
+      "timing": "volleys",
+      "counter": [
+        "wait-and-go",
+        "destroy"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "P-S9-d"
+      ],
+      "roles": [
+        "GATEKEEPER"
+      ],
+      "why": "the pier is a narrow line straight into his aim; the run spins him",
+      "evidence": "LP1 3:12:30-3:12:36",
+      "confidence": "medium"
+    },
+    {
+      "id": "O-S10-a",
+      "section": "S10",
+      "kind": "swinging platforms carrying TNT",
+      "placement": "on platform",
+      "timing": "swing (period not measured) plus the 3 s TNT fuse",
+      "counter": [
+        "wait-and-go",
+        "jump over"
+      ],
+      "lethal": true,
+      "combinedWith": [
+        "S10-d",
+        "S10-e TNT"
+      ],
+      "roles": [
+        "RHYTHM",
+        "TEST"
+      ],
+      "why": "two clocks on one footing: the swing says when you can jump, the fuse says when you must",
+      "evidence": "LP1 3:13:16-3:13:26",
+      "confidence": "low"
+    }
+  ],
+  "enemiesDetailed": [
+    {
+      "id": "E-S2-a",
+      "section": "S2",
+      "kind": "crossbow longshoreman (fish-harpoon sniper)",
+      "archetype": "projectile",
+      "behaviour": "perched on a tower above C1 and the posts; fires fish harpoons trailing ropes down across the path at intervals",
+      "counter": [
+        "avoid"
+      ],
+      "fails": [
+        "standing in the firing line",
+        "touching a harpoon rope"
+      ],
+      "placement": "above",
+      "roles": [
+        "PROJECTILE",
+        "TIMING-GATE"
+      ],
+      "firstAlone": true,
+      "why": "introduces the sniper from a safe pad, with stuck harpoons as the warning",
+      "evidence": "LP1 3:07:48-3:07:54; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S2-b",
+      "section": "S2",
+      "kind": "crossbow longshoreman on the moored boat's cabin roof",
+      "archetype": "projectile",
+      "behaviour": "fires along the deck that holds the TNT row",
+      "counter": [
+        "avoid",
+        "spin"
+      ],
+      "fails": [
+        "standing in the firing line"
+      ],
+      "placement": "above (cabin roof over the deck)",
+      "roles": [
+        "PROJECTILE",
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "turns the S2 rest deck into a timed space",
+      "evidence": "LP1 3:07:56-3:08:02",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S2-c",
+      "section": "S2",
+      "kind": "crossbow longshoreman on the second tower",
+      "archetype": "projectile",
+      "behaviour": "covers the stone pillar and the TNT ledge; two of his ropes are staked into the pillar top",
+      "counter": [
+        "avoid"
+      ],
+      "fails": [
+        "touching the ropes on the landing"
+      ],
+      "placement": "above",
+      "roles": [
+        "PROJECTILE",
+        "AREA-DENIAL"
+      ],
+      "firstAlone": false,
+      "why": "combines projectile timing with a cluttered landing",
+      "evidence": "LP1 3:08:06-3:08:10",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S6-a",
+      "section": "S6",
+      "kind": "fisherman with a lantern",
+      "archetype": "static",
+      "behaviour": "stands on a tiny drifting rowboat beside a crate",
+      "counter": [
+        "spin"
+      ],
+      "fails": [],
+      "placement": "moving platform",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": true,
+      "why": "occupies the only standing space next to the crate, so the crate costs a fight on a small deck",
+      "evidence": "LP1 3:10:26-3:10:30",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S7-a",
+      "section": "S7",
+      "kind": "bomb-throwing longshoreman (yellow coat, blue helmet, lit black bomb)",
+      "archetype": "projectile",
+      "behaviour": "stands on the ledge right of the timed tower and lobs bombs with a smoke trail",
+      "counter": [
+        "spin"
+      ],
+      "fails": [
+        "approaching mid-throw"
+      ],
+      "placement": "landing platform (top of the climb)",
+      "roles": [
+        "GATEKEEPER",
+        "PROJECTILE"
+      ],
+      "firstAlone": true,
+      "why": "gamepressure: approach while he winds up to throw, then attack",
+      "evidence": "LP1 3:11:04-3:11:06; gamepressure",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S7-b",
+      "section": "S7",
+      "kind": "helmeted longshoreman",
+      "archetype": "shielded/armored",
+      "behaviour": "a stationary blocker on the steps beside C4",
+      "counter": [
+        "stomp"
+      ],
+      "fails": [
+        "attacking from the front"
+      ],
+      "placement": "on line (steps)",
+      "roles": [
+        "GATEKEEPER",
+        "TEACH"
+      ],
+      "firstAlone": true,
+      "why": "met on a checkpoint pad, so the stomp-only rule is learned where a mistake costs little (gamepressure: hit them from above)",
+      "evidence": "LP1 3:11:36; gamepressure",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S8-a",
+      "section": "S8",
+      "kind": "bomb-throwing longshoreman",
+      "archetype": "projectile",
+      "behaviour": "lobs bombs from a stone ledge by the houses",
+      "counter": [
+        "spin"
+      ],
+      "fails": [
+        "approaching mid-throw"
+      ],
+      "placement": "landing platform",
+      "roles": [
+        "PROJECTILE",
+        "GATEKEEPER"
+      ],
+      "firstAlone": false,
+      "why": "a second thrower guards the approach to C5",
+      "evidence": "LP1 3:12:04-3:12:06",
+      "confidence": "low"
+    },
+    {
+      "id": "E-S9-a",
+      "section": "S9",
+      "kind": "fisherman on the boat beside the C5 dock",
+      "archetype": "static",
+      "behaviour": "stands next to the 2-stack on the deck",
+      "counter": [
+        "stomp",
+        "spin"
+      ],
+      "fails": [],
+      "placement": "moving platform",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "the first step of the second floe field is an enemy-held deck",
+      "evidence": "LP1 3:12:10-3:12:14",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S9-b",
+      "section": "S9",
+      "kind": "crossbow longshoreman on the floating plank pier",
+      "archetype": "projectile",
+      "behaviour": "fires along the narrow pier",
+      "counter": [
+        "spin"
+      ],
+      "fails": [
+        "approaching in the firing line"
+      ],
+      "placement": "on line (pier)",
+      "roles": [
+        "GATEKEEPER",
+        "PROJECTILE"
+      ],
+      "firstAlone": false,
+      "why": "a sniper met at close range: the run closes the distance and spins him",
+      "evidence": "LP1 3:12:30-3:12:36",
+      "confidence": "medium"
+    },
+    {
+      "id": "E-S10-a",
+      "section": "S10",
+      "kind": "stocky longshoreman (helmet or thrower type not resolvable)",
+      "archetype": "static",
+      "behaviour": "holds a ~3 u ledge beside the TNT-topped column",
+      "counter": [
+        "spin",
+        "stomp"
+      ],
+      "fails": [
+        "spinning the column while he stands beside it"
+      ],
+      "placement": "guarding crate",
+      "roles": [
+        "GUARD"
+      ],
+      "firstAlone": false,
+      "why": "enemy and explosive on one ledge: clear him first, then deal with the TNT",
+      "evidence": "LP1 3:13:12-3:13:14",
+      "confidence": "low"
+    }
+  ],
+  "sectionBeats": [
+    {
+      "section": "S1",
+      "beats": [
+        "spawn floor + 2 crates",
+        "slow-mo prompt + timed trio",
+        "stepping stones (2 hops over 2-3 u of water)",
+        "running jump to a pillar (3-4 u)",
+        "stone tiers + crate column",
+        "side view: timed arc of 4 over a railed walkway",
+        "timed high pair via a scenery pile + double jump",
+        "drop to the scaffold",
+        "C1"
+      ],
+      "gaps": 3,
+      "enemies": 0,
+      "hazards": 0
+    },
+    {
+      "section": "S2",
+      "beats": [
+        "sniper tower above C1 (stuck harpoons as warning)",
+        "posts 1-1.5 u under volleys",
+        "? on a pillar",
+        "boat deck: TNT row + sniper on the cabin",
+        "pole pads x2",
+        "second boat",
+        "pillar under a second tower (harpoon ropes)",
+        "rope-hung pads",
+        "stone steps + strong crate",
+        "bonus pad"
+      ],
+      "gaps": 3,
+      "enemies": 3,
+      "hazards": 2
+    },
+    {
+      "section": "B",
+      "beats": [
+        "perch: detonate the 7-Nitro lid",
+        "drop onto the iron switch row (red !)",
+        "timed outlines + high column (double jumps)",
+        "Nitro pair, Nitro on a crate",
+        "second red ! pair at floor level",
+        "arched bridge",
+        "? column on the 6-Nitro row (stomp down, chain)",
+        "exit pad"
+      ],
+      "gaps": 2,
+      "enemies": 0,
+      "hazards": 2
+    },
+    {
+      "section": "S3",
+      "beats": [
+        "exit pad + ledge crate",
+        "wall-top balance beam (1-1.5 u) with crates in file",
+        "boardwalk",
+        "post crate",
+        "ship-explosion cutscene"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 0
+    },
+    {
+      "section": "S4",
+      "beats": [
+        "slide-jump left to the tower (2-3 u, +1)",
+        "count-trap crate",
+        "C2 + edge crates"
+      ],
+      "gaps": 1,
+      "enemies": 0,
+      "hazards": 0
+    },
+    {
+      "section": "S5",
+      "beats": [
+        "side view: falling-slab gorge (two halves, pillar rest)",
+        "house balcony landing + crate",
+        "dock, single floe",
+        "inferno-crate pyramid + tape"
+      ],
+      "gaps": 2,
+      "enemies": 0,
+      "hazards": 2
+    },
+    {
+      "section": "S6",
+      "beats": [
+        "floe field (frosted / clear / cracked)",
+        "ride a floe toward the camera for a crate",
+        "collapsing pallet to the gem pier (springboard stack)",
+        "rowboat fisherman + crate",
+        "burning ice block",
+        "arrow pier + high pair",
+        "waterfall room (7)",
+        "C3"
+      ],
+      "gaps": 3,
+      "enemies": 1,
+      "hazards": 2
+    },
+    {
+      "section": "S7",
+      "beats": [
+        "stone steps + red !",
+        "timed column bounce to a permanent crate",
+        "bomb thrower on the ledge",
+        "icefall: pillar perches + falling slabs",
+        "gold-crate ledge detour",
+        "C4 + ? trio",
+        "helmeted blocker on the steps"
+      ],
+      "gaps": 2,
+      "enemies": 2,
+      "hazards": 1
+    },
+    {
+      "section": "S8",
+      "beats": [
+        "narrow ledge under falling ice blocks + TNT under a crate",
+        "plank path with falling-cube gaps (slow-mo)",
+        "fenced ledge rest",
+        "bomb thrower's ledge",
+        "C5 dock"
+      ],
+      "gaps": 1,
+      "enemies": 1,
+      "hazards": 3
+    },
+    {
+      "section": "S9",
+      "beats": [
+        "fisherman's boat + 2-stack",
+        "floes (tighter gaps)",
+        "floe-riding crate toward the camera",
+        "moored boat + ? on pilings",
+        "sniper on the floating pier",
+        "motorboat ride",
+        "raft-dock TNT groups",
+        "motorboat ride",
+        "exit-pier crates"
+      ],
+      "gaps": 2,
+      "enemies": 2,
+      "hazards": 1
+    },
+    {
+      "section": "S10",
+      "beats": [
+        "side-view gorge piers",
+        "waterfall-ledge cache (double jump)",
+        "stocky enemy + TNT column",
+        "TNT on a ledge",
+        "three swinging platforms with TNT",
+        "boardwalk, crate sign, Nitro switch"
+      ],
+      "gaps": 2,
+      "enemies": 1,
+      "hazards": 1
+    }
+  ],
+  "geometryObservations": [
+    "The mask defines the level's gap vocabulary. Static gaps are short (1-4 u). Every long or hard crossing is a moving-platform crossing whose footing falls or drifts: slabs (S5), slab streams (S7), cubes (S8), floes (S6, S9), boats (S9) and swings (S10). Slow-mo converts a timing problem into a reading problem.",
+    "The three falling-ice set pieces escalate in a clean order. The gorge (G-S5-a) is 2-3 u slab spacing with a static pillar halfway. The icefall (G-S7-a) has pillars 6-8 u apart and an optional ledge above. The plank path (G-S8-a) is 1x1 cubes on a 1.2 u path with no rest at all.",
+    "Gaps arrive before enemies. S1 teaches water gaps, the first long jump and two timed groups with no enemy in sight. The first sniper is then shown from the C1 pad, with harpoons already stuck in the boards.",
+    "Snipers create timed space over small footing. Posts of 1-1.5 u sit directly under the crossbow tower (P-S2-a). The harpoon ropes left after each volley clutter the next landing (O-S2-b).",
+    "Enemy archetypes are sorted by stretch: projectiles in S2 and S9, deck guards on boats (S6, S9), throwers and a helmeted stomp-only blocker around C4-C5. The helmeted blocker first appears on the checkpoint pad itself (E-S7-b).",
+    "The floe fields teach a surface code and then test it. A single cracked floe between two piers comes first (P-S5-d). The full field follows, where frosted floes are rests, clear ones slide and cracked ones break. The second field tightens gaps to 1-1.5 u and adds motorboat rides.",
+    "Rest spacing is short. A solid pier, deck, pillar or boat comes every 2-5 jumps. Every checkpoint sits on a wide pad (3x3 to 6x3 u), and the late checkpoints come close together because the falling-ice stretches kill most.",
+    "Side view is used for timing and height (timed-! climbs, the gorge, the icefall, the swings); into-screen for lateral choice (floes, the wall-top path). Toward-camera drift is reserved for count traps.",
+    "Balance beams carry crates but no enemies or timers. The 1-1.5 u wall-top (S3) and the 1.2 u plank path (S8) are the narrowest footing in the level. S3 has single crates in file and nothing else; S8 replaces crates with falling cubes.",
+    "Hazards and crates share objects. Inferno crates are the hazard (O-S5-b), the S10 swings carry TNT, and the gem stack is a springboard. The geometry around them is plain so the object is the lesson.",
+    "Height gating stays modest because the double jump is assumed. The high outline pair (3-4 u up) needs a scenery step first. The tallest reaches use tools: the arrow on the stone pier and the bounce off the gem stack.",
+    "The finale combines two clocks on one footing. Each rope swing has its own phase, and the TNT on it gives a 3 s fuse, so S10 is the only no-stop stretch that is not falling ice.",
+    "The run never doubles back. Search content is lateral (floe fields) or hidden behind waterfalls next to rests, so the main line stays a single readable path."
+  ],
+  "geometryTransfer": [
+    "Falling-footing crossing without slow-mo: build it from `mover` platforms that descend at ~1.5 m/s. Space them at most 3 u (≈ 3.5 m) apart, well inside the 5.6 m full jump, and put a static `platform` rest after every 3 movers (the S5 pillar). Do not copy the 6-8 u icefall spacing: it depends on slow-mo and on double jumps from moving footing.",
+    "Floe field as a skate-free search zone: a 20-30 m wide water `pit` with 2x2 u (2.3 m) `mover` floes drifting sideways at 1-2 m/s. Make 1 in 4 a `crumble` (cracked) and some slippery (clear), with surface colour as the code. Hide one crate on a floe that drifts toward the camera, beside the main −Z line.",
+    "Sniper over small footing: a `sentry` on a raised tower 6-8 m above a side-scroll zone of 1-1.5 u `platform` posts (1.2-1.7 m tops) spaced 2.3-3.5 m. Show the first sentry from a checkpoint pad with spent projectiles already stuck in the scenery, and keep crates on the far side of its lane.",
+    "Balance-beam grind line: the 1-1.5 u wall-top maps to a grindable ledge or `rail` 1.2-1.7 m wide over a `pit`. Single crates in file on an authored rail break only at ≥ 12.5 m/s and knock a slower rider off, so put a `speedpad` or downhill before the line, or keep the crates beside the rail rather than on it.",
+    "Swing finale: three `ropeswing` or `pendulum` platforms (2x2 u) each carrying a TNT. The 3 s fuse forces the player on, and the 2.75 m blast fits inside a 2.3 m platform plus margin. Give each swing a static bracket ledge between them so the fuse is the only pressure.",
+    "Stomp-only blocker on a checkpoint pad: use a `turtle` (stomp-favoured) or `spiker` variant on the checkpoint platform itself, where a failed spin costs nothing. Only later put one on steps with a drop behind them."
   ]
 }
