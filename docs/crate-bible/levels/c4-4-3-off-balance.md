@@ -291,6 +291,255 @@ it as an explicit unlocated cluster (S8-x) rather than spreading it over section
 5. **Door payout.** Put the green `nitrobang` at the end gate and show the n/total at the gate before it is pressed,
    as Crash 4's exit sign does.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: the 2 fps LP1 frames of the first wave (agent-C2), re-read for geometry (1:53:00–2:00:46), GR 4-3. Sizes are in crates (u), estimated against crates and Crash in the same frame. Flame-totem and dragon cycles were read from 0.5–1 s frames and are approximate. GR's 'wind tunnel' is matched to the updraft columns seen in the frames with low confidence.
+
+### Camera and route shape
+
+Into-screen paths with wall-runs and a lily pond, then a side-view tower climb, a hover course over a purple void, the bonus, a long mixed stretch of tower faces, corridors and shafts, a wall-run course, a side-view phase section along a broken great wall, phase wall-runs and a final hover course to the exit stairs. Linear; the hidden-gem path drops below the main line after the flame shaft and rejoins it.
+
+| section | mode | notes |
+|---|---|---|
+| S1 | into-screen | courtyard and stone paths; the camera stays behind Crash on wall-runs to the left and right |
+| S2 | into-screen | lily pond flanked by wall-run walls; arched bridge |
+| S3 | side-scroll | into-screen stair and broken wall, then a side-view tower-face climb (bottom to top) |
+| S4 | into-screen | balcony walkway, then a hover course over floating platforms with the camera behind and slightly to the side |
+| S5 | into-screen | bonus pad |
+| B | side-scroll | bonus: house, carved dragon bridge, TNT/iron row, left to right |
+| S6 | side-scroll | plaza, side-view flamethrower corridor, square pillars over the void |
+| S7 | side-scroll | tower face with Nitro shelves; into-screen corridors (lions, red carpet); vertical shafts seen from behind; hidden-gem drop |
+| S8 | into-screen | wall-run course with alternating walls; narrow plank bridge |
+| S9 | side-scroll | great wall, left to right, with phase platforms |
+| S10 | into-screen | phase wall-runs; TNT springboard landing; C8 |
+| S11 | into-screen | final hover course past flame totems to the exit stairs |
+| S12 | into-screen | exit sign and Nitro switch |
+
+### Platforms and gaps (section by section; table per section)
+
+Platforms (`P-`) and gaps (`G-`) share each table. For a platform, "coupling / failure" gives its behaviour and edges. For a gap, it gives what couples it in time and what happens on failure. The evidence column ends with the confidence.
+
+**S1**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | wide floor (courtyard with a tree) | ~8 × 6 | 0 | walk | static; edges: walled | REST | the first crates beside the spawn | LP1 1:53:00–04 · medium |
+| P-S1-b | S1 | corridor (stone path along the pond) | ~3 wide | 0 to -1 (steps) | walk | static; edges: open on the water side | CHOKE | a spirit lion drifts on it (E-S1-a) | LP1 1:53:06–12 · medium |
+| P-S1-c | S1 | bridge/plank (boardwalk) | ~2 wide | 0 | walk | static; edges: open | LANDING | landing of the first wall-run, with a second spirit lion | LP1 1:53:16–18 · medium |
+| P-S1-d | S1 | square pad (stone pad between wall-runs) | ~2 × 2 | 0 | wall-run | static; edges: open | LANDING REST | a stop between two walls | LP1 1:53:19 · low |
+| P-S1-e | S1 | round/hex pillar (round stone well with a red mat) | ~3 across | 0 | wall-run | static; edges: open | LANDING REST | landing with a crate on it | LP1 1:53:21–22 · medium |
+| P-S1-f | S1 | wide floor (wooden dock) | ~5 wide | 0 | walk | static; edges: open | CHECKPOINT-PAD | C1 with crates to its left (S1-c) | LP1 1:53:24–27.5 · medium |
+| G-S1-a | S1 | water crossed by the first wall-run; lethal | 6–8 (wall length); landing ~2-wide boardwalk; run-up 2–3 | 0 | wall-run | on-screen prompt 'JUMP TO WALL RUN'; failure: fall into the water (death inferred); near P-S1-c, E-S1-b | TEACH | a new verb taught over the level's only water, with a prompt | LP1 1:53:13–16 · medium |
+| G-S1-b | S1 | water crossed by a wall-run chain (wall, pad, wall, pillar, wall); lethal | 6–8 per wall; landing 2 × 2 pad; 3-across pillar; dock; run-up 1–2 | 0 | wall-run | a solid landing between every wall; failure: fall into the water; near S1-b, S1-c | TEST | the verb repeats three times with rests between | LP1 1:53:18–24 · medium |
+
+**S2**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | stepping stones (lily pads) | 2–2.5 across | 0 | jump | static (no sinking seen); edges: open | STEPPING | crates ride the pads (S2-b) | LP1 1:53:28–42 · medium |
+| P-S2-b | S2 | square pad (low stone pads) | ~2 × 2 | 0 | jump | static; edges: open | STEPPING LANDING | each holds a crate | LP1 1:53:30–39 · medium |
+| P-S2-c | S2 | bridge/plank (arched wooden bridge) | ~3 wide | +1 | walk | static; edges: railed | CHECKPOINT-PAD | leads to C2 | LP1 1:53:40–45 · medium |
+| P-S2-d | S2 | corridor (path and railed stair) | ~3 wide | +2 to +3 | walk | static; edges: railed | CHOKE | two spirit lions on the line | LP1 1:53:45–50 · medium |
+| G-S2-a | S2 | water between pond pads (lethality not observed); lethality unknown | 2–3; landing lily pad 2–2.5 or stone pad 2 × 2; run-up 1–2 | 0 | plain | flank wall-runs offer alternative lines; failure: not observed; near S2-b | STEPPING | an even stepping course carrying crates | LP1 1:53:28–42 · low |
+| G-S2-b | S2 | water reach to a floating crate; lethality unknown | not visible; landing none (crate only); run-up 2–3 | -1 (low over the water) | slide-jump | none; failure: miss the crate, or fall; near S2-a | TEST | GR: reach it with a slide-jump | GR 26 · medium |
+
+**S3**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | wide floor (landing under the broken wall) | ~5 × 3 | 0 | walk | static; edges: railed | ARENA | stage for the strong-crate-on-TNT step (S3-a) | LP1 1:53:51–56 · high |
+| P-S3-b | S3 | narrow ledge (tower-face plank shelves) | 1.5–2 × 1 | +1.5 to +2 each | jump, double | static; edges: open | STEPPING | the side-view climb to the mask | LP1 1:53:58–1:54:13 · medium |
+| P-S3-c | S3 | square pad (alcove behind a spiral seal) | ~3 × 2 | 0 | walk | opens as the player passes; edges: walled | BONUS-PAD | four crates and fruit in a niche (S3-b) | LP1 1:54:01.5–05 · medium |
+| P-S3-d | S3 | corridor (balcony walkway) | ~3 wide | 0 | walk | static; edges: railed | PERCH | the first flame totem fires across it from a floating island | LP1 1:54:15–21 · medium |
+| G-S3-a | S3 | climb (strong crate on TNT as a step up the broken wall); not lethal | 0; landing wall top | +3 | plain, crate-bounce | TNT under the strong crate (fuse 3 s); the player stands on the strong crate during the count; failure: caught in the blast; near S3-a | TEACH | the crate puzzle is the climbing step | LP1 1:53:51–55.5 · high |
+| G-S3-b | S3 | bottomless pit (shelf to shelf on the tower face); lethal | 2–3; landing 1.5–2 × 1 shelf; run-up 1 | +1.5 to +2 | plain, double | none; failure: fall into the void; near S3-b | RHYTHM | an even climb with no hazard: the calm before the mask | LP1 1:54:00–13 · low |
+
+**S4**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | floating platform (stone) | ~4 × 3 | -1 to +1 | spin-extended | static; edges: open | STEPPING LANDING | hover targets between flame totems; the tape sits on one | LP1 1:54:22–35 · medium |
+| P-S4-b | S4 | round/hex pillar (round platform) | ~5 across | 0 | walk | static; edges: open | ARENA | ?/T/? cluster and a spirit lion | LP1 1:54:40–47 · medium |
+| P-S4-c | S4 | floating platform (around a broken arch) | 3–4 across | ±1 | spin-extended | static; edges: open | STEPPING CHECKPOINT-PAD | two dragons sweep here; C3 and one crate before them (S4-c) | LP1 1:54:50–1:55:00 · low |
+| G-S4-a | S4 | bottomless pit (hover gaps between floating platforms); lethal | 4–6; landing ~4 × 3; run-up 2–3 | -1 to +1 | spin-extended | flame-totem jets cross the gaps (O-S4-a); failure: fall into the void; near S4-a | TEACH TEST | the hover is taught on wide landings; the jets add timing | LP1 1:54:22–35 · medium |
+| G-S4-b | S4 | bottomless pit (hover gaps around the broken arch); lethal | 4–6; landing 3–4 across; run-up 2 | ±1 | spin-extended | two dragons sweeping (O-S4-c); failure: fall into the void; near S4-c | TEST | the hover meets the dragons | LP1 1:54:50–57 · low |
+
+**B**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | wide floor (wooden house deck) | 4–5 × 2 | 0 | walk | static; edges: open | REST | bonus start beside the 3x3 grid | LP1 1:55:04.5–10 · medium |
+| P-B-b | B | bridge/plank (row of TNT and iron crates) | ~20 × 1 | 0 | running | each TNT stepped on lights (fuses 2–3 s); iron is solid; edges: open | TIMING-STEP | the floor is the timer and 9 crates | LP1 1:55:12.5–25 · medium |
+| P-B-c | B | square pad (pavilion) | ~3 × 2 | +1 | jump | static; edges: railed | LANDING | Nitro stack, ? on B and the green ! beside it | LP1 1:55:30–37 · medium |
+| G-B-a | B | void under the TNT/iron row (bonus); not lethal | ~20 (row length); landing pavilion | 0 | running | every TNT stepped on lights; only iron is safe to stop on; failure: leave the bonus (no life lost); near B-a, B-c | TEST | keep moving over explosives | LP1 1:55:12.5–25 · medium |
+
+**S6**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S6-a | S6 | wide floor (plaza after the bonus) | ~6 × 5 | 0 | walk | static; edges: open | REST | Akano orb | LP1 1:55:41–45 · medium |
+| P-S6-b | S6 | corridor (flamethrower corridor, side view) | ~3 deep | 0 | walk, spin-extended | static; edges: walled behind | CHOKE | a flame totem fires left and right in its middle, with a crate above it (S6-a) | LP1 1:55:47–54.5 · medium |
+| P-S6-c | S6 | round/hex pillar (square pillars with red mats) | ~1.5 × 1.5 | 0 | jump | static; edges: open | STEPPING | the smallest pads so far, over the void | LP1 1:55:56–57.5 · low |
+| P-S6-d | S6 | wide floor (balcony walkway) | ~3 wide | 0 | walk | static; edges: railed | CHECKPOINT-PAD | C4 | LP1 1:56:00–02 · medium |
+| G-S6-a | S6 | bottomless pit (square-pillar hops); lethal | 2–3; landing ~1.5 × 1.5; run-up 1 | 0 | plain | a cyan spirit floats beside the line; a flame jet from the left; failure: death; near E-S6-b | TEST | small landings and a floater between them | LP1 1:55:56–59 · low |
+
+**S7**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S7-a | S7 | narrow ledge (tower-face balconies and shelves) | ~2 × 1 | +1.5 to +2 each | double, spin-extended | static; edges: open | STEPPING | Nitro rows share the shelves (O-S7-a) | LP1 1:56:03–12 · medium |
+| P-S7-b | S7 | crumbling (stone ledge) | ~2 wide | +1 | running | breaks up under the player; edges: open | TIMING-STEP | keep moving | LP1 1:56:12–17 · low |
+| P-S7-c | S7 | corridor (corridor with two guardian lions) | ~3 wide | 0 | walk | static; edges: walled | ARENA CHOKE | a gatekeeper pair before the updraft | LP1 1:56:22–23, 1:57:02–07 · medium |
+| P-S7-d | S7 | corridor (red-carpet corridor ending in an updraft) | ~3 wide | up (the whirling Crash rises) | spin-extended | a column at the end lifts the spinning player (1:56:25–26); edges: railed | STEPPING | GR's 'wind tunnel', most likely | LP1 1:56:24–27; GR 98 · low |
+| P-S7-e | S7 | narrow ledge (Nitro balcony, side view) | ~3 deep | 0 | walk | static; edges: open | STEPPING | Nitro stacks 2-3 high line the balcony | LP1 1:56:27–30 · medium |
+| P-S7-f | S7 | square pad (stone block with a red mat) | ~3 × 2 | +1 | jump | static; edges: open | LANDING | a lion is met near it (E-S7-b) | LP1 1:56:37–41 · low |
+| P-S7-g | S7 | corridor (red-carpet corridor with three mid-height flame jets) | ~3 wide | 0 | walk, slide | static; edges: walled | CHOKE | the jets cross at chest height; Crash passes under them | LP1 1:56:43–44 · low |
+| P-S7-h | S7 | round/hex pillar (round platform at the end of the walkway, over the void) | ~4 across | 0 | walk | static; edges: open | PERCH | the edge you drop from to the hidden gem | LP1 1:57:37–42; GR 98 · medium |
+| P-S7-i | S7 | floating platform (broken-stone pieces on the gem path) | ~2 × 2 | ±1 | jump, double | static; edges: open | STEPPING | the 'tricky path' of GR's hidden-gem route | LP1 1:57:39.5–47; GR · low |
+| P-S7-j | S7 | narrow ledge (high ledges right of the end of the wind tunnels) | not visible | up (whirlwind height) | spin-extended | static; edges: open | BONUS-PAD | 3 + 3 crates (2 TNT) reachable only with the hover (S7-b) | GR 104 · low |
+| P-S7-k | S7 | wide floor (landing between two firetraps) | ~4 × 3 | 0 | walk | static; edges: open | CHECKPOINT-PAD | Aku and C5 | LP1 1:58:24.5–29.5; GR 106 · medium |
+| G-S7-a | S7 | bottomless pit (shelf climb past Nitro rows); lethal | 2–3; landing ~2 × 1 shelf; run-up 1 | +1.5 to +2 | double, spin-extended | Nitro rows on neighbouring shelves; failure: death (fall or Nitro); near O-S7-a | TEST | the Nitro make the shelves narrower than they look | LP1 1:56:03–12 · low |
+| G-S7-b | S7 | drop-down (vertical flame shaft); lethal | -; landing red-carpet walkway | -4 to -6 | spin-extended | totem jets alternate at two heights across the shaft; failure: burned: the run's first death (1:56:49.5); near O-S7-f | TEST | the descent is timed against the jets | LP1 1:56:45–49.5, 1:57:31.5–35 · medium |
+| G-S7-c | S7 | drop-down (hidden-gem drop from the round platform); lethal | -; landing ~2 × 2 floating piece | -3 to -5 | plain | none; failure: fall into the void; near P-S7-h, S7-a | TEST | GR: an empty space right of the wind tunnel; drop into it for the gem | LP1 1:57:37–40; GR 98 · medium |
+
+**S8**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S8-a | S8 | bridge/plank (narrow plank bridge into the screen) | ~1 wide | 0 | walk | static; edges: open | CHOKE | the narrowest footing of the level, with dragons arching over it | LP1 1:58:34 · medium |
+| P-S8-b | S8 | floating platform (between flame totems) | ~3 × 3 | 0 | jump, spin-extended | static; edges: open | STEPPING | landings between jets | LP1 1:58:35.5–37 · low |
+| P-S8-c | S8 | wall (chevron wall-run walls on alternating sides) | 6–10 long | 0 | wall-run | wall-run surface; edges: - | STEPPING | a chain with no floor below | LP1 1:58:39.5–59.5 · medium |
+| P-S8-d | S8 | round/hex pillar (1 u posts between wall-runs) | ~1 × 1 | 0 | jump | static; edges: open | LANDING | crates on posts between walls (S8-a) | LP1 1:58:43–47.5 · low |
+| G-S8-a | S8 | bottomless pit (wall-run chain); lethal | 2–4 between walls; landing next wall or a 1 × 1 post; run-up 1–2 | 0 | wall-run, double | a spirit floats in a gap; flame jets on the platforms between; failure: death; near S8-a, E-S8-a | TEST | wall to wall with almost no landings | LP1 1:58:39.5–59.5 · low |
+
+**S9**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S9-a | S9 | corridor (plank walkway along the base of the great wall) | ~2 deep | ±1 | walk, jump | static, broken into segments; edges: open | STEPPING | the main line of the phase section | LP1 1:59:04–15 · medium |
+| P-S9-b | S9 | phase/timed (phase planks) | ~2 × 1 | 0 to +1 | phase, jump | solid only in one Lani-Loli phase; edges: open | TIMING-STEP | fill the holes in the base walkway | LP1 1:59:08–11 · medium |
+| P-S9-c | S9 | narrow ledge (crenellated wall top) | 1–2 deep | +2 to +3 | jump | static; edges: open | STEPPING | crates and a spirit lion use the wall top | LP1 1:59:12–42 · low |
+| G-S9-a | S9 | bottomless pit (holes in the base walkway bridged by phase planks); lethal | 2–4; landing phase plank ~2 × 1; run-up 1–2 | 0 to +1 | phase, plain | plank solidity follows the player's phase; failure: fall; near S9-a, S9-b | TEACH | the mask's footing rule taught in side view, where both states are visible | LP1 1:59:04–40 · medium |
+
+**S10**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S10-a | S10 | square pad (C7 stone pad) | ~4 × 4 | 0 | walk | static; edges: open | CHECKPOINT-PAD REST | two spirits hover here; the respawn point for the wall-runs | LP1 1:59:54–2:00:03 · medium |
+| P-S10-b | S10 | wall (wall-run walls, some phase-translucent) | 6–10 long | 0 | wall-run, phase | wall-run surface; one wall shows blue and translucent at 2:00:06; edges: - | TIMING-STEP | the mask's phase rule applied to wall-runs | LP1 1:59:56–2:00:12 · low |
+| P-S10-c | S10 | wide floor (red-mat landing) | ~4 × 3 | 0 | walk | static; edges: open | LANDING | the TNT springboard (S10-b) under flame jets | LP1 2:00:09–10.5 · medium |
+| P-S10-d | S10 | wide floor (stone landing between walls) | ~4 × 4 | 0 | walk | static; edges: walled both sides | CHECKPOINT-PAD | C8 and the Akano orb before the finale | LP1 2:00:13.5–21 · medium |
+| G-S10-a | S10 | bottomless pit (phase wall-run chain); lethal | 2–4 between walls; landing next wall; run-up 1–2 | 0 | wall-run, phase, double | wall solidity appears to follow the phase (inferred); failure: fell from a wall-run: the run's third death (1:59:58.5); near S10-a | TEST | two verbs at once; C7 sits right before it | LP1 1:59:56–2:00:12 · low |
+| G-S10-b | S10 | chasm with bounce (TNT springboard up to an off-camera crate); not lethal | 0; landing none | up (above the camera) | crate-bounce | the TNT must survive until after the bounce; failure: crate lost (all-box only); near S10-b, S10-c | TEST | GR: bounce toward the right wall first, then break the TNT | LP1 2:00:09–12; GR 139 · medium |
+| G-S10-c | S10 | climb (ledge directly above C8); not lethal | 0; landing ledge | up | double | none; failure: crate lost; near S10-e | TEST | GR: take the mask and double-jump straight up | GR 141 · medium |
+
+**S11**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S11-a | S11 | floating platform (between flame totems) | 3–4 across | ±1 | spin-extended | static; edges: open | STEPPING | the last hover course | LP1 2:00:22–37 · medium |
+| P-S11-b | S11 | wide floor (exit stairs) | ~6 wide | +2 to +3 | walk | static; edges: railed | REST | exit sign 155/187 and the Nitro switch | LP1 2:00:36–42 · medium |
+| G-S11-a | S11 | bottomless pit (hover gaps through double flame jets); lethal | 4–6; landing 3–4 across; run-up 2 | ±1 | spin-extended | two jets at different heights cross each gap; failure: death; near S11-a | TEST | the S4 course at its hardest | LP1 2:00:15–37 · medium |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | widest gap (u) | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 3 | wall-run | even | 6–8 (wall) | P-S1-f | no | wall, pad, wall, pillar, wall: a landing after every wall | LP1 1:53:18–24 |
+| J-S2-a | S2 | 6 | plain | even | 3 | P-S2-c | no | pad hops carrying crates; flank wall-runs as optional lines | LP1 1:53:28–42 |
+| J-S3-a | S3 | 9 | plain, double | even | 3 | P-S3-d | no | a hazard-free climb past the opening alcove | LP1 1:54:00–15 |
+| J-S4-a | S4 | 4 | spin-extended | syncopated | 6 | P-S4-b | no | hover hops timed between totem bursts | LP1 1:54:22–40 |
+| J-S6-a | S6 | 3 | plain | even | 3 | P-S6-d | no | the smallest pads, with a floater beside them | LP1 1:55:56–1:56:00 |
+| J-S7-a | S7 | 5 | double, spin-extended | even | 3 | P-S7-e | no | Nitro-shelf climb then a crumbling ledge | LP1 1:56:03–17 |
+| J-S8-a | S8 | 7 | wall-run, double | syncopated | 4 | C6 platform | yes | alternating walls; a wall-run cannot stop | LP1 1:58:39–59 |
+| J-S9-a | S9 | 7 | phase, plain | syncopated | 4 | C7 pad (P-S10-a) | no | phase toggles and a leaping spirit lion set the beat | LP1 1:59:04–52 |
+| J-S10-a | S10 | 4 | wall-run, phase, double | even | 4 | P-S10-c | yes | phase wall-runs: the run's third death | LP1 1:59:56–2:00:12 |
+| J-S11-a | S11 | 4 | spin-extended | syncopated | 6 | P-S11-b | no | hover hops through double jets | LP1 2:00:22–39 |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S2-a | S2 | splashes from the pond beside the pads (fish or spouts; not resolved) | flank | intermittent (1:53:38, 1:53:43.5) | wait-and-go; lethality unknown | P-S2-a | AREA-DENIAL | something leaps or spouts beside the stepping line | LP1 1:53:38, 1:53:43.5 · low |
+| O-S3-a | S3 | TNT under a strong crate | on platform | fuse 3 s (2 at 1:53:54) | destroy (light it, hop to the wall top); lethal | G-S3-a, S3-a | TEACH | the explosive is the way up and the way through | LP1 1:53:51–55.5; GR 42 · high |
+| O-S4-a | S4 | flame-jet totems on floating islands (two horizontal jets at two heights) | across path | bursts of about 1–2 s with pauses (1:54:18–21) | wait-and-go; lethal | P-S3-d, G-S4-a | TEACH TIMING-GATE | first seen across a solid balcony before the mask, then across hover gaps | LP1 1:54:15–35 · medium |
+| O-S4-b | S4 | diagonal flame jet on the tape platform | on platform | intermittent | wait-and-go; lethal | S4-a crates | AREA-DENIAL | guards the crates and the tape | LP1 1:54:33–40 · medium |
+| O-S4-c | S4 | two spectral dragons sweeping around a broken arch | across path | continuous sweeps | wait-and-go; lethality unknown | G-S4-b | TIMING-GATE | GR places a checkpoint and a crate just before them | LP1 1:54:50–57; GR 60 · low |
+| O-B-a | B | TNT row as the bridge (lit when stepped on) | on platform | fuses 2–3 s | outrun; lethal | P-B-b | TIMING-GATE RHYTHM | only the iron is safe to stand on; in a bonus a death ends the attempt without costing a life | LP1 1:55:12.5–25 · medium |
+| O-B-b | B | Nitro stack (3) beside the last crate | on platform | static | go around; lethal | B-e | AREA-DENIAL | paid by the bonus's own green !; touching it ends the bonus attempt | LP1 1:55:30–37.5 · high |
+| O-S6-a | S6 | flamethrower totem in the corridor (fires left and right in turn) | across path | alternating bursts | wait-and-go, jump over (hover up to the crate, GR); lethal | E-S6-a, S6-a | TIMING-GATE | one crate floats directly above it (GR 91) | LP1 1:55:47–54.5; GR 91 · medium |
+| O-S6-b | S6 | TNT pair on the floor | on platform | fuse 3 s | destroy (light and step away); lethal | O-S6-a | AREA-DENIAL | GR: don't forget the TNT crates | LP1 1:55:48.5–50; GR 96 · medium |
+| O-S7-a | S7 | Nitro rows and Nitro blocks on shelves and balconies | on platform / flank | static | go around; lethal | G-S7-a, P-S7-e | LANE-BLOCK AREA-DENIAL | 32 Nitro narrow the climbing line and are paid at the exit | LP1 1:56:03–30, 1:58:09–25 · high |
+| O-S7-b | S7 | crumbling stone ledge | on platform | breaks up under the player | outrun; lethal | P-S7-b | RHYTHM | a keep-moving beat between Nitro shelves and the lions | LP1 1:56:12–17 · low |
+| O-S7-c | S7 | updraft columns (GR 'wind tunnels', inferred) | across path | constant | ride the updraft (whirlwind active); not lethal | P-S7-d | TEACH | a whirling Crash rises at the end of the corridor and again past the wall flames | LP1 1:56:25–26, 1:56:42; GR 98/104 · low |
+| O-S7-d | S7 | flame totem with two horizontal jets across the balcony, plus a dragon | across path | bursts | wait-and-go; lethal | O-S7-a | TIMING-GATE | totem and dragon combined for the first time | LP1 1:56:31–34 · medium |
+| O-S7-e | S7 | wall flame jets beside the second updraft; three mid-height jets across the red-carpet corridor | across path | bursts | wait-and-go, slide under; lethal | P-S7-g | TIMING-GATE | the jets sit at chest height and Crash passes beneath them | LP1 1:56:42–44 · low |
+| O-S7-f | S7 | flame shaft: totem jets at two heights across a vertical drop | across path | alternating bursts | wait-and-go; lethal | G-S7-b | TEST | the run died here once | LP1 1:56:45–49.5, 1:57:31.5–35 · medium |
+| O-S7-g | S7 | firetraps flanking the C5 landing | flank | bursts | wait-and-go; lethal | P-S7-k | AREA-DENIAL | GR: Aku and the checkpoint sit between two firetraps | LP1 1:58:24.5–29.5; GR 106 · medium |
+| O-S8-a | S8 | flame totems flanking the floating platforms and the plank bridge (double jets) | across path | bursts | wait-and-go; lethal | P-S8-a, P-S8-b | TIMING-GATE | totems on both sides of the course | LP1 1:58:31–37 · low |
+| O-S8-b | S8 | dragons arching over the walkway and the plank bridge | overhead / across path | continuous | wait-and-go; lethality unknown | P-S8-a | TIMING-GATE | a sweep over the narrowest footing | LP1 1:58:32.5–34 · low |
+| O-S9-a | S9 | phase TNT in the first phase row | on platform | fuse 3 s (3 at 1:59:07.5) | destroy (phase in, spin, step away); lethal | S9-a | TEACH | an explosive that exists in one phase only | LP1 1:59:02.5–07.5 · medium |
+| O-S10-a | S10 | flame-totem jets over the TNT springboard landing | flank / overhead | bursts | wait-and-go; lethal | G-S10-b | TIMING-GATE | the springboard trick is done between bursts | LP1 2:00:09–10.5 · medium |
+| O-S11-a | S11 | double flame jets across every hover gap | across path | bursts of about 2–3 s | wait-and-go; lethal | G-S11-a | TEST | the level's metronome at its hardest | LP1 2:00:15–37 · medium |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | spirit lion (cyan ghost) | flier | drifts along the stone path | spin | on line | TEACH HURDLE | yes | the first enemy is alone on a 3 u path | LP1 1:53:06–10 · medium |
+| E-S1-b | S1 | spirit lion | flier | on the boardwalk where the first wall-run lands | spin | landing platform | TEST | no | an enemy at the landing of a new verb | LP1 1:53:16–18 · low |
+| E-S2-a | S2 | spirit lions x2 | flier | drift on the path after the bridge | spin | on line | TEST HURDLE | no | two at once after C2 | LP1 1:53:45–49.5 · medium |
+| E-S4-a | S4 | spirit lion | flier | on the round platform beside the ?/T/? cluster | spin (whirlwind) (fails: spinning into the TNT) | guarding crate | GUARD | no | enemy and TNT share the landing | LP1 1:54:42–46 · low |
+| E-S6-a | S6 | white guardian lion (GR 'golem') | chaser | charges along the corridor | spin (whirlwind) | between hazards (flamethrower and TNT pair) | TEST | no | the heavy enemy arrives only after the mask | LP1 1:55:51.5–53 · medium |
+| E-S6-b | S6 | cyan spirit | flier | hovers beside the pillar line and on the C4 walkway | spin | between hazards | HURDLE | no | a floater next to 1.5 u pads | LP1 1:55:56–59 · low |
+| E-S7-a | S7 | guardian lions x2 (golden-green; GR 'golem') | chaser | stand in a corridor and charge | spin (whirlwind) | on line (corridor before the updraft) | GATEKEEPER | no | GR: pass the golem before the Nitro blocks | LP1 1:56:22–23, 1:57:02–07; GR 104 · medium |
+| E-S7-b | S7 | guardian lion | chaser | on a ledge after a dragon-swept gap | spin (whirlwind) | landing platform | GUARD | yes | a landing that must be cleared | LP1 1:56:37–38, 1:57:24.5 · low |
+| E-S7-c | S7 | guardian lion on the hidden-gem path | static | on a ledge above a blue roof | spin | landing platform | GUARD | yes | guards the way back from the gem | LP1 1:57:49.5 · low |
+| E-S8-a | S8 | cyan spirits | flier | hover on a ledge and in a gap between wall-runs | avoid, spin (fails: wall-running into it) | between hazards (in the gap) | HURDLE | no | a floater placed in the air the player must cross | LP1 1:58:38.5–41.5 · low |
+| E-S9-a | S9 | spirit lion | hopper | leaps in arcs between the wall top and the phase planks | spin, avoid | on line | TIMING-GATE | yes | its arcs set the timing of the phase hops | LP1 1:59:12–14 · medium |
+| E-S10-a | S10 | cyan spirits x2 | flier | hover over the C7 pad | spin | landing platform (checkpoint pad) | GUARD | no | enemies on the respawn pad before the hardest wall-runs | LP1 1:59:54–2:00:03 · low |
+
+### Section beats
+
+- **S1** (gaps 4 · enemies 2 · hazards 0): courtyard [W ? W] → path + spirit lion (spin) → wall-run 1 with a prompt → boardwalk + spirit lion → wall-run, pad, wall-run, round pillar (crate), wall-run → dock [? x x x] → C1
+- **S2** (gaps 7 · enemies 2 · hazards 1): lily pads and stone pads with crates; flank wall-runs; splashes → floating water crate (slide-jump) → arched bridge → C2 → crate right of C2 → path with 2 spirit lions
+- **S3** (gaps 10 · enemies 0 · hazards 2): railed stair → broken wall: strong crate on TNT as the step (3 s) → wall top → tower-face shelf climb → alcove opens (4 crates) → balcony: first flame totem + [? ? x] → Akano
+- **S4** (gaps 6 · enemies 1 · hazards 3): hover off the balcony → floating platforms between flame totems (tape) → round platform ?/T/? + spirit lion → dragons round the broken arch → C3 + 1 crate
+- **S5** (gaps 0 · enemies 0 · hazards 0): bonus pad + 3 crates
+- **B** (gaps 1 · enemies 0 · hazards 2): house deck → 3x3 grid on TNT → TNT/iron row (keep moving) → floating pairs over the bridge arcs → pavilion [? on B] + [N N N] → green !
+- **S6** (gaps 3 · enemies 2 · hazards 2): plaza (Akano) → flamethrower corridor (crate above) → TNT pair → charging lion → square pillars over the void + spirit → C4
+- **S7** (gaps 8 · enemies 4 · hazards 7): Nitro-shelf climb → crumbling ledge → lion pair → red-carpet corridor + updraft → Nitro balcony → totem + dragon → lion on a ledge → wall jets + updraft → corridor jets (pass under) → flame shaft (death) → round platform: hidden-gem drop → Nitro blocks → high ledges 3 + 3 (2 T) → firetraps, Aku, C5
+- **S8** (gaps 7 · enemies 1 · hazards 2): plank bridge 1 u + dragons → floating platforms between totems → wall-run chain with a spirit in a gap; crates on posts → C6 + Lani-Loli
+- **S9** (gaps 6 · enemies 1 · hazards 1): phase row carrying W/W, phase TNT → base walkway with phase planks; spirit lion leaping → floating crates → wall top → C7
+- **S10** (gaps 5 · enemies 2 · hazards 1): C7 pad with 2 spirits → phase wall-runs (death) → red-mat landing: TNT springboard to an off-camera crate → C8 → ledge above C8 (double jump)
+- **S11** (gaps 4 · enemies 0 · hazards 1): hover course: floating platforms and double flame jets → 2 floating crates → exit stairs, sign 155/187
+- **S12** (gaps 0 · enemies 0 · hazards 0): green ! at the sign: +32 Nitro
+
+### Geometry and enemy design logic
+
+1. Three traversal verbs are taught in order, each alone first: wall-run in S1 (with an on-screen prompt over water, G-S1-a), Akano hover in S4 (wide landings, G-S4-a) and Lani-Loli phase in S9 (side view, G-S9-a). Later they recombine: wall-runs with hover gaps and totems (S8), wall-runs with phase walls (S10), and hover with double jets (S11).
+2. Wall-run rest spacing shrinks. In S1 a solid landing (pad, round pillar, dock) separates every wall. In S8 and S10 the walls run back to back over the void with only 1 × 1 posts between them, and S10 killed the player.
+3. Flame totems are the level's metronome. They first cross a solid balcony before the mask (O-S4-a, wait-and-go on safe ground), then cross the hover gaps (S4), then line a vertical shaft (O-S7-f, the first death), and finally fire at two heights across every gap of the finale (O-S11-a).
+4. Landing size shrinks across the level: round pillar 3 u (S1), pond pads 2–2.5 u (S2), square pillars 1.5 u (S6), crate posts 1 u (S8). The narrowest footing is a 1 u plank bridge under dragons (P-S8-a).
+5. Enemies are mostly light. Spirit lions drift on the line and die to a spin, so they test attack timing between jumps (E-S1-a, E-S2-a). Heavier guardian lions appear only after the mask, as whirlwind gatekeepers in corridors and on landings (E-S6-a, E-S7-a).
+6. Enemies are placed where a new verb lands. A spirit lion waits at the first wall-run landing (E-S1-b), one hovers in a gap of the wall-run chain (E-S8-a), one leaps through the phase walkway (E-S9-a), and two hover on the C7 pad before the phase wall-runs (E-S10-a).
+7. The 32 Nitro are geometry. They line shelves and balconies (O-S7-a) and narrow the climbing line to 1–2 u, but never stand on the required line.
+8. Crate puzzles double as terrain. The strong crate on TNT is the +3 u step up the broken wall (G-S3-a), the bonus TNT row is the floor (P-B-b), and a TNT is the springboard to an off-camera crate (G-S10-b).
+9. The secret hangs off the void. The hidden-gem path is a drop from a round platform at the end of the flame shaft (G-S7-c), into the space the level has taught the player to fear.
+10. Water appears only in S1–S2. Everything after the mask is a void, so falls become certain death as the level goes on. Pond lethality was not observed.
+11. The camera follows the verb: into-screen for wall-runs and corridors, where wall length and the next wall read best, and side view for tower climbs and the phase wall, where both phase states and the shelf spacing show.
+12. Every hazard appears alone before it is paired. Totems are alone at the balcony and then joined by dragons (O-S7-d), spirits (S6) and the TNT springboard (O-S10-a). Dragons appear alone at the arch (O-S4-c) before they cross the plank bridge (O-S8-b).
+13. Checkpoints get denser where the verbs combine: C7 to C8 is about 20 s around the phase wall-runs, and C5 sits between two firetraps right before the wall-run course.
+
+### Geometry transfer to the skate game
+
+1. Wall-run analogue. Use a `rail` along a wall (or a `vertramp` wall ride) 7–11 m long over a `pit`. In the first chain, put a 2.3 m landing pad after every rail. In the later chain, run the rails back to back with only 1.2 m posts between them, and place a checkpoint before it.
+2. Totem metronome. Introduce the `firetiki` across a solid 3.5 m walkway (cycle 2–3 s), then across 5–7 m board gaps, then as a pair at two heights. Never pair it with a new enemy in its first appearance.
+3. Phase walkway. A side-view stretch of 2.3 m `phasepad` planks over 2.3–4.6 m holes, with one `hopper` arcing between the wall top and the planks to set the beat.
+4. Nitro as lane geometry. Put Nitro on the outer half of 1.2–2.3 m shelves so the line narrows to one crate, always off the required line, and pay them at the gate with the green `nitrobang`.
+5. Strong crate on TNT as a step. Here a double jump plus a ledge grab reaches lips at about 7.0 m. To make the stack required, put the wall lip 7.2–9 m up with `multi-hit on tnt` below it. From the multi-hit top (2.30 m), a double jump and grab reach about 9.3 m, and the blast clears the multi-hit behind the player. With a lower lip the stack is optional, which still works when it only guards crates.
+6. Hidden drop. A round platform (4–5 m) at the end of a hazard corridor with a lower floating path 3.5–6 m below for a secret. Mark it with two crates at the edge, as GR's 'two crates by the wind tunnel' does.
+
 ## Open questions / uncertainties
 
 - **Six unlocated crates** (S8-x) between the bonus exit and C6. The 2.5 s frames of the Nitro balcony and the
@@ -299,3 +548,8 @@ it as an explicit unlocated cluster (S8-x) rather than spreading it over section
 - The S3-a composition beyond "reinforced on TNT" (6 crates per GR) is partly inferred.
 - I take "32 Nitro in the level" to equal the switch payout, because the run showed no early Nitro explosions.
   If any blew early, they are inside the 155 and the level holds slightly more than 32.
+- Geometry: GR's 'wind tunnel(s)' are matched to the updraft columns where a whirling Crash rises (LP1 1:56:25–26, 1:56:42) with low confidence; no wind effect is visible on screen.
+- Geometry: the pond's lethality, the splashes beside the pads (1:53:38, 1:53:43.5) and the pond's floating crate position (GR 26) were not resolved.
+- Geometry: the phase wall at LP1 2:00:06 (blue and translucent) suggests that some S10 wall-run walls are phase objects; not confirmed. The third death (1:59:58.5) is a fall between walls.
+- Geometry: the order of the hidden-gem path, the second death (≈1:57:59.5) and the respawn is not clear from the frames; the frames after 1:58:02 show side-view rooftops with Nitro that GR places before C5.
+- Geometry: flame-totem and dragon cycles are approximate (0.5–1 s frames); the dragons were never touched, so whether they kill or knock back is unknown.

@@ -1015,5 +1015,1790 @@
   "Whirlwind (Akano) defines HIGH: floating crates sit on hover arcs a normal jump cannot reach.",
   "TNT is taught in the first 10 seconds (S1-a) and re-tested as a bounce tool (S2-a) and a chain (S4-a, S7-a).",
   "Blue gem: finish without breaking any crate (checkpoints, TNT and Nitro included) - GR."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "hex-paved courtyard, garden path, arched bridge and stair, bending right then into the screen"
+  },
+  {
+   "section": "S2",
+   "mode": "side-scroll",
+   "notes": "2D tower wall climbed left to right and upward; roof walkway; then an into-screen cliff pavilion"
+  },
+  {
+   "section": "S3",
+   "mode": "side-scroll",
+   "notes": "plank walkway past a big gong alcove, rope climb, whirlwind run through a gong gallery (left to right)"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "gateway and lion stair; then side-scroll vertical climb of the dragon wall, ending with a long jump into the background"
+  },
+  {
+   "section": "S5",
+   "mode": "side-scroll",
+   "notes": "vertical lift; post platforms circling a tower (the camera turns around it); rope swings into the screen to floating courtyards"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "bonus over the town, left to right"
+  },
+  {
+   "section": "S6",
+   "mode": "side-scroll",
+   "notes": "tower face with a gold band; the secret walkway runs behind the wall while the camera stays outside"
+  },
+  {
+   "section": "S7",
+   "mode": "side-scroll",
+   "notes": "gong gauntlet, red pagoda scaffold, final wall; ends in a side-view final court"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "wide floor (hex-paved courtyard)",
+   "size": "8-10 wide",
+   "heightDelta": 0,
+   "edges": "walled by pavilions",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the TNT column is taught on a flat floor with room to back away",
+   "evidence": "LP1 1:46:50-58",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "bridge/plank (arched stone bridge)",
+   "size": "~3 wide",
+   "heightDelta": "+1 (arch)",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "funnels the camera turn toward the stair",
+   "evidence": "LP1 1:47:06-10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "corridor (stone stair)",
+   "size": "~4 wide",
+   "heightDelta": "+4 to +6 overall",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "crates lead up it to C1 at the foot of the first wall",
+   "evidence": "LP1 1:47:13-16",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "narrow ledge (walkway at the foot of the wall)",
+   "size": "~2 deep",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the TNT step (S2-a) stands on it",
+   "evidence": "LP1 1:47:16-20",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "narrow ledge (raised brick swirl band on the wall)",
+   "size": "~1 deep, winding",
+   "heightDelta": "+2 to +3",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "decor that is also footing: the player stands on the swirl band",
+   "evidence": "LP1 1:47:18-20",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "crumbling (plank shelves in wall slots)",
+   "size": "~2 x 1",
+   "heightDelta": "+2 to +3 each",
+   "edges": "open",
+   "behaviour": "give way after use (one is broken by 1:47:21.5; GP: climbing platforms vanish or crumble)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "the first wall forbids waiting: keep climbing",
+   "evidence": "LP1 1:47:20-23; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "narrow ledge (roof walkway past a gong alcove)",
+   "size": "~2 deep",
+   "heightDelta": "+1",
+   "edges": "tiled roof below",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the first gong wave sweeps this walkway (O-S2-c)",
+   "evidence": "LP1 1:47:24-33",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-e",
+   "section": "S2",
+   "shape": "wide floor (cliff pavilion)",
+   "size": "5-6 x 4",
+   "heightDelta": 0,
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "Akano is granted on the way here; C2 follows the first hover crate",
+   "evidence": "LP1 1:47:35-43",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "narrow ledge (plank walkway in front of the big oval gong alcove)",
+   "size": "~1 deep x 6 long",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "a 1-deep walkway inside the wave lane: there is nowhere to stand aside",
+   "evidence": "LP1 1:47:44-47",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "narrow ledge (staggered plank shelves)",
+   "size": "1.5-2 x 1",
+   "heightDelta": "+1 to +2",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "climb toward the rope beside the fire-crate column",
+   "evidence": "LP1 1:47:47-52",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "rope (vertical climb)",
+   "size": "1",
+   "heightDelta": "+4 to +6",
+   "edges": "-",
+   "behaviour": "climb",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "climb"
+   ],
+   "why": "a hazard-free ascent between two gong sections",
+   "evidence": "LP1 1:47:52-55",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "corridor (whirlwind gallery behind arches)",
+   "size": "~2 deep x 15+",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "3-4 monks with gongs in one long alcove; the whirlwind carries the player through",
+   "evidence": "LP1 1:48:02-10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-e",
+   "section": "S3",
+   "shape": "wide floor (walkway)",
+   "size": "4-5 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C3",
+   "evidence": "LP1 1:48:10-12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "wide floor (gateway landing with a raised ledge)",
+   "size": "6-8 wide; ledge ~1 high",
+   "heightDelta": "+1",
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk",
+    "jump"
+   ],
+   "why": "the TNT row sits on the raised ledge under the big bell",
+   "evidence": "LP1 1:48:14-18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "corridor (lion stair)",
+   "size": "~4 wide",
+   "heightDelta": "+4 to +6",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "lions wait at the top (E-S4-a)",
+   "evidence": "LP1 1:48:20-25",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "wide floor (landing under the dragon wall)",
+   "size": "~5 x 4",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "PERCH",
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "watch the dragon arcs before climbing",
+   "evidence": "LP1 1:48:25-28",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-d",
+   "section": "S4",
+   "shape": "narrow ledge (dragon-wall plank shelves)",
+   "size": "~2 x 1",
+   "heightDelta": "+3 to +4 each",
+   "edges": "open",
+   "behaviour": "static (no crumbling seen here)",
+   "roles": [
+    "STEPPING",
+    "TIMING-STEP"
+   ],
+   "move": [
+    "double",
+    "spin-extended"
+   ],
+   "why": "each shelf is a waiting spot between dragon sweeps",
+   "evidence": "LP1 1:48:28-52",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-e",
+   "section": "S4",
+   "shape": "square pad (shrine-door platform in the background)",
+   "size": "~3 x 2",
+   "heightDelta": "0 to -1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "target of the long hover jump; shrine crates and C4",
+   "evidence": "LP1 1:48:54-1:49:03",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-a",
+   "section": "S5",
+   "shape": "moving platform (wooden lift)",
+   "size": "~3 x 3",
+   "heightDelta": "+8 or more",
+   "edges": "open",
+   "behaviour": "rises along the wall",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "a free ascent; the Aku crate floats at its top (S5-a)",
+   "evidence": "LP1 1:49:04-10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-b",
+   "section": "S5",
+   "shape": "square pad (plank platforms circling a tower)",
+   "size": "~2 x 2",
+   "heightDelta": "+1 to +2 each",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "a dragon loops around them (O-S5-a)",
+   "evidence": "LP1 1:49:12-21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-c",
+   "section": "S5",
+   "shape": "wide floor (pink courtyard in the sky)",
+   "size": "~6 x 5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "rest between the two rope swings",
+   "evidence": "LP1 1:49:24-28",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-d",
+   "section": "S5",
+   "shape": "wide floor (C5 courtyard with the bonus entrance)",
+   "size": "~5 x 4",
+   "heightDelta": "+1 to +2",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD",
+    "BONUS-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C5 beside the bonus pad",
+   "evidence": "LP1 1:49:33-36",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "narrow ledge (tower ledges with railings)",
+   "size": "3-4 x 1",
+   "heightDelta": "+/-1",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "Nitro blocks stand at their ends as walls (O-B-a)",
+   "evidence": "LP1 1:49:40-50",
+   "confidence": "low"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "round/hex pillar (narrow posts)",
+   "size": "1 x 1",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "a single crate tops each post; taken between dragon sweeps",
+   "evidence": "LP1 1:49:48-52",
+   "confidence": "low"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "moving platform (cloud)",
+   "size": "~5 x 1",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "moves horizontally",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "the bonus's only moving platform",
+   "evidence": "LP1 1:49:50-55",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S6-a",
+   "section": "S6",
+   "shape": "narrow ledge (walkway past the lion's archway)",
+   "size": "~2 deep",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the lion comes out of the archway onto it (E-S6-a)",
+   "evidence": "LP1 1:50:20-31",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S6-b",
+   "section": "S6",
+   "shape": "corridor (hidden walkway behind the wall)",
+   "size": "1-2 deep",
+   "heightDelta": 0,
+   "edges": "walled (out of sight)",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "12 crates and the hidden gem behind scenery (S6-a)",
+   "evidence": "LP1 1:50:32-45; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S6-c",
+   "section": "S6",
+   "shape": "narrow ledge (gold band and plank shelves)",
+   "size": "band ~1 deep; shelves 1.5-2 x 1",
+   "heightDelta": "+1 to +2",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "single-file crates on the band (S6-b)",
+   "evidence": "LP1 1:50:46-56, 1:51:43-50",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S6-d",
+   "section": "S6",
+   "shape": "wide floor (rooftop)",
+   "size": "4-5 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C6 before the gauntlet",
+   "evidence": "LP1 1:50:55-1:51:01",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-a",
+   "section": "S7",
+   "shape": "narrow ledge (plank shelves between gong alcoves)",
+   "size": "~1.5 x 1",
+   "heightDelta": "0 to +2",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "shelves sit inside the wave lanes; GP: wait for both bells, then move",
+   "evidence": "LP1 1:51:02-28; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-b",
+   "section": "S7",
+   "shape": "square pad (red pagoda scaffold)",
+   "size": "~3 x 2",
+   "heightDelta": "+1",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C7 and a reward row before the final wall",
+   "evidence": "LP1 1:51:30-38.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-c",
+   "section": "S7",
+   "shape": "narrow ledge (final wall: gold band and shelves)",
+   "size": "band ~1 deep; shelves ~1.5 x 1",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "double",
+    "spin-extended"
+   ],
+   "why": "the last climb, with TNT floating and on a ledge (S7-d)",
+   "evidence": "LP1 1:51:40-50",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-d",
+   "section": "S7",
+   "shape": "wide floor (final court)",
+   "size": "~8 x 4",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "two lions guard the closing crates",
+   "evidence": "LP1 1:51:52-58",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "chasm with bounce (climb from the walkway to the swirl band via the TNT)",
+   "width": "0",
+   "heightDelta": "+2 to +3",
+   "landing": "swirl band ~1 deep",
+   "lethal": false,
+   "runUp": "1-2",
+   "move": [
+    "crate-bounce",
+    "double"
+   ],
+   "coupling": "TNT fuse 3 s once stomped",
+   "failure": "land back on the walkway",
+   "nearby": [
+    "S2-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the TNT is the first step of the climb",
+   "evidence": "LP1 1:47:17-20",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "bottomless pit (open sky below the shelves)",
+   "width": "2-3",
+   "heightDelta": "+2 to +3",
+   "landing": "shelf ~2 x 1",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "double"
+   ],
+   "coupling": "shelves crumble behind the player",
+   "failure": "fall to the walkway or off the cliff",
+   "nearby": [
+    "S2-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "vertical hops that must be chained before the footing goes",
+   "evidence": "LP1 1:47:20-24",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S2-c",
+   "section": "S2",
+   "kind": "bottomless pit (detour to the floating F over B)",
+   "width": "2-3",
+   "heightDelta": "0 to +1",
+   "landing": "crate top",
+   "lethal": true,
+   "runUp": "2-3",
+   "move": [
+    "plain",
+    "crate-bounce"
+   ],
+   "coupling": "fire-crate vents",
+   "failure": "fall",
+   "nearby": [
+    "S2-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "an optional reach off the climbing line",
+   "evidence": "LP1 1:47:25-29",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "bottomless pit (staggered shelves)",
+   "width": "2-3",
+   "heightDelta": "+1 to +2",
+   "landing": "shelf 1.5-2 x 1",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "plain",
+    "double"
+   ],
+   "coupling": "gong wave lane (O-S3-a)",
+   "failure": "pushed off and fall (GP: a wave hit makes you fall)",
+   "nearby": [
+    "S3-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the knockback hazard is placed where a fall is possible",
+   "evidence": "LP1 1:47:44-52; GP",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "bottomless pit (dragon-wall shelf to shelf)",
+   "width": "3-5 across, 3-4 up",
+   "heightDelta": "+3 to +4",
+   "landing": "shelf ~2 x 1",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "double",
+    "spin-extended"
+   ],
+   "coupling": "dragon sweeps every ~2-3 s (O-S4-b)",
+   "failure": "fall to a lower shelf or the landing; off the wall = death",
+   "nearby": [
+    "S4-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "each hop is short; the cadence of the sweeps is the test",
+   "evidence": "LP1 1:48:28-52",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "bottomless pit (long jump from the wall top into the background)",
+   "width": "5-6",
+   "heightDelta": "0 to -1",
+   "landing": "~3 x 2 shrine platform",
+   "lethal": true,
+   "runUp": "2-3",
+   "move": [
+    "spin-extended"
+   ],
+   "coupling": "dragons cross the gap; GR: whirlwind the golden fruit crate first",
+   "failure": "death",
+   "nearby": [
+    "S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the widest gap so far, possible only with the hover",
+   "evidence": "LP1 1:48:52-56; GR 63",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S5-a",
+   "section": "S5",
+   "kind": "bottomless pit (post-platform hops around the tower)",
+   "width": "2-3",
+   "heightDelta": "+1 to +2",
+   "landing": "~2 x 2",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "plain",
+    "double"
+   ],
+   "coupling": "a dragon loops around the posts",
+   "failure": "death",
+   "nearby": [
+    "S5-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "an even climb under one looping hazard",
+   "evidence": "LP1 1:49:12-21",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S5-b",
+   "section": "S5",
+   "kind": "swing/vine (rope swing to the floating courtyard)",
+   "width": "6-8",
+   "heightDelta": 0,
+   "landing": "~6 x 5",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "swing"
+   ],
+   "coupling": "rope pendulum; a dragon passes overhead",
+   "failure": "death",
+   "nearby": [],
+   "roles": [
+    "REST"
+   ],
+   "why": "a device carries the player across the biggest void",
+   "evidence": "LP1 1:49:22-24",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S5-c",
+   "section": "S5",
+   "kind": "swing/vine (rope swing to a raised block)",
+   "width": "5-7",
+   "heightDelta": "+1 to +2",
+   "landing": "~3 x 3",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "swing"
+   ],
+   "coupling": "rope pendulum",
+   "failure": "death",
+   "nearby": [
+    "S5-b"
+   ],
+   "roles": [
+    "REST"
+   ],
+   "why": "the second swing lands on the C5 courtyard approach",
+   "evidence": "LP1 1:49:30",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "bottomless pit (bonus: first gap under a floating ?)",
+   "width": "3-4",
+   "heightDelta": 0,
+   "landing": "tower ledge",
+   "lethal": false,
+   "runUp": "2",
+   "move": [
+    "spin-extended"
+   ],
+   "coupling": "none",
+   "failure": "leave the bonus (no life lost)",
+   "nearby": [
+    "B-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the hover is asked for at once, with a crate on its arc",
+   "evidence": "LP1 1:49:38-43",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B-b",
+   "section": "B",
+   "kind": "bottomless pit (bonus: tower to tower)",
+   "width": "4-6",
+   "heightDelta": "+/-1",
+   "landing": "ledge, post or cloud",
+   "lethal": false,
+   "runUp": "1-3",
+   "move": [
+    "spin-extended",
+    "double"
+   ],
+   "coupling": "horizontal dragon sweeps at jump height; Nitro blocks as walls",
+   "failure": "leave the bonus",
+   "nearby": [
+    "B-d",
+    "B-e",
+    "B-h"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "main-route hazards recombined over hover gaps",
+   "evidence": "LP1 1:49:45-1:50:05",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S6-a",
+   "section": "S6",
+   "kind": "bottomless pit (gold-band shelf hops)",
+   "width": "2-4",
+   "heightDelta": "+1 to +2",
+   "landing": "band or shelf ~1 deep",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "double",
+    "spin-extended"
+   ],
+   "coupling": "vertical dragon arc (O-S6-a)",
+   "failure": "death",
+   "nearby": [
+    "S6-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "narrow footing and one sweep",
+   "evidence": "LP1 1:50:46-56",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S7-a",
+   "section": "S7",
+   "kind": "bottomless pit (shelf hops through the gong gauntlet)",
+   "width": "2-4",
+   "heightDelta": "0 to +2",
+   "landing": "shelf ~1.5 x 1",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "plain",
+    "double",
+    "spin-extended"
+   ],
+   "coupling": "two gongs side by side (GP) and dragons",
+   "failure": "pushed off and fall",
+   "nearby": [
+    "S7-a",
+    "S7-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the level's final combination of knockback lanes and gaps",
+   "evidence": "LP1 1:51:02-28; GP",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S7-b",
+   "section": "S7",
+   "kind": "bottomless pit (final wall hops)",
+   "width": "2-4",
+   "heightDelta": "+1",
+   "landing": "band or shelf",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "double",
+    "spin-extended"
+   ],
+   "coupling": "vertical dragon dive (1:51:49)",
+   "failure": "death",
+   "nearby": [
+    "S7-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the last climb repeats the dragon rule once",
+   "evidence": "LP1 1:51:42-50",
+   "confidence": "low"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 5,
+   "moves": [
+    "crate-bounce",
+    "double"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "3",
+   "rest": "P-S2-d",
+   "noStop": true,
+   "why": "TNT step, swirl band, then crumbling shelves: the footing gives way, so the climb cannot pause",
+   "evidence": "LP1 1:47:17-24; GP"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 4,
+   "moves": [
+    "plain",
+    "double"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "3",
+   "rest": "P-S3-c",
+   "noStop": false,
+   "why": "cross the gong walkway during the windup, then climb toward the rope",
+   "evidence": "LP1 1:47:44-52"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 9,
+   "moves": [
+    "double",
+    "spin-extended"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "5-6",
+   "rest": "P-S4-c",
+   "noStop": false,
+   "why": "wait on each shelf for a sweep to pass, ending in the long hover jump",
+   "evidence": "LP1 1:48:28-56"
+  },
+  {
+   "id": "J-S5-a",
+   "section": "S5",
+   "count": 6,
+   "moves": [
+    "plain",
+    "double"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "P-S5-c",
+   "noStop": false,
+   "why": "even hops around the tower under one looping dragon",
+   "evidence": "LP1 1:49:12-21"
+  },
+  {
+   "id": "J-S6-a",
+   "section": "S6",
+   "count": 6,
+   "moves": [
+    "double",
+    "spin-extended"
+   ],
+   "rhythm": "even",
+   "maxGap": "4",
+   "rest": "P-S6-d",
+   "noStop": false,
+   "why": "gold-band ledges to the rooftop checkpoint",
+   "evidence": "LP1 1:50:46-56"
+  },
+  {
+   "id": "J-S7-a",
+   "section": "S7",
+   "count": 9,
+   "moves": [
+    "plain",
+    "double",
+    "spin-extended"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "4",
+   "rest": "P-S7-b",
+   "noStop": false,
+   "why": "GP: wait until two neighbouring bells have struck, then move in the lull",
+   "evidence": "LP1 1:51:02-30; GP"
+  },
+  {
+   "id": "J-S7-b",
+   "section": "S7",
+   "count": 5,
+   "moves": [
+    "double",
+    "spin-extended"
+   ],
+   "rhythm": "even",
+   "maxGap": "4",
+   "rest": "P-S7-d",
+   "noStop": false,
+   "why": "the final wall to the final court",
+   "evidence": "LP1 1:51:40-52"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "spectral dragon fly-over (no contact)",
+   "placement": "overhead (above the garden path)",
+   "timing": "one pass",
+   "counter": [
+    "none needed"
+   ],
+   "lethal": false,
+   "combinedWith": [],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the signature hazard is shown flying harmlessly about 1.5 minutes before it sweeps a wall the player climbs",
+   "evidence": "LP1 1:46:59-1:47:04",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "crumbling plank shelves",
+   "placement": "on platform",
+   "timing": "give way shortly after use",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "G-S2-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "GP: platforms vanish or crumble, keep moving",
+   "evidence": "LP1 1:47:21.5; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-b",
+   "section": "S2",
+   "kind": "fire crate (floating F over B)",
+   "placement": "flank of the climb",
+   "timing": "vents on ~1-2 s, off ~1 s (cycle read on the S3 column)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-b crates"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the hazard is a crate stacked on the reward",
+   "evidence": "LP1 1:47:25-29",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S2-c",
+   "section": "S2",
+   "kind": "gong wave (first monk, roof walkway)",
+   "placement": "across path",
+   "timing": "mallet raised, then a ring wave and green cloud on the strike",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knockback; lethal when it pushes the player off a ledge (GP)",
+   "combinedWith": [
+    "E-S2-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "first wave on a walkway with a wall behind it",
+   "evidence": "LP1 1:47:29-33; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "gong wave (big oval alcove)",
+   "placement": "across path",
+   "timing": "strike at 1:47:44, mallet back up 1:47:44.5-46.5, crossed 1:47:46-47: about 3 s per cycle",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knockback (GP: hit = fall)",
+   "combinedWith": [
+    "P-S3-a",
+    "G-S3-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the wave lane covers the whole 1-deep walkway",
+   "evidence": "LP1 1:47:43.5-47",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S3-b",
+   "section": "S3",
+   "kind": "fire-crate column (F F ?) floating right of the shelves",
+   "placement": "flank",
+   "timing": "vents on 1:47:48-49, off 1:47:50",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S3-b crates"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the ? is taken in the off window",
+   "evidence": "LP1 1:47:48-52",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S3-c",
+   "section": "S3",
+   "kind": "gong gallery (3-4 monks in one long alcove)",
+   "placement": "across path",
+   "timing": "staggered strikes",
+   "counter": [
+    "spin (whirlwind through)",
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knockback",
+   "combinedWith": [
+    "E-S3-b",
+    "S3-c crates"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the first stretch where the mask meets the monks",
+   "evidence": "LP1 1:48:02-10",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "TNT row (3) on the raised ledge",
+   "placement": "on platform",
+   "timing": "fuse 3 s",
+   "counter": [
+    "destroy (light one, wait for the chain)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "a chain row blocks the ledge until it is set off",
+   "evidence": "LP1 1:48:14-18",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "spectral dragon sweeps on the dragon wall",
+   "placement": "across path (arcs over the wall face)",
+   "timing": "about every 2-3 s on alternating arcs (1:48:39, 41-42, 43-44, 46-48, 50-51); the glowing body is visible as it enters",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knock-off (GP: magical creatures try to push you off)",
+   "combinedWith": [
+    "G-S4-a",
+    "O-S4-c"
+   ],
+   "roles": [
+    "TIMING-GATE",
+    "TEST"
+   ],
+   "why": "the climb is paced by the sweeps, not by the jumps",
+   "evidence": "LP1 1:48:28-52; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "floating fire crates (left side of the dragon wall)",
+   "placement": "flank",
+   "timing": "vent cycle ~1-2 s",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-b crates"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "off-line crates add a second cycle",
+   "evidence": "LP1 1:48:28-44",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S5-a",
+   "section": "S5",
+   "kind": "dragon loop around the post platforms; horizontal streak at Crash height",
+   "placement": "across path",
+   "timing": "continuous loop",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knock-off",
+   "combinedWith": [
+    "G-S5-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "one looping hazard over an even climb",
+   "evidence": "LP1 1:49:10.5-21",
+   "confidence": "low"
+  },
+  {
+   "id": "O-B-a",
+   "section": "B",
+   "kind": "Nitro blocks (2x2 and 3x2) on ledges",
+   "placement": "on platform",
+   "timing": "static",
+   "counter": [
+    "go around",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-B-b"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "walls first, 9 crates last (green !)",
+   "evidence": "LP1 1:49:46-58, 1:50:06-07",
+   "confidence": "high"
+  },
+  {
+   "id": "O-B-b",
+   "section": "B",
+   "kind": "horizontal dragon sweeps at jump height",
+   "placement": "across path",
+   "timing": "~2-3 s",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": null,
+   "combinedWith": [
+    "O-B-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the main route's sweep rule over hover gaps",
+   "evidence": "LP1 1:49:47.5-57.5",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S6-a",
+   "section": "S6",
+   "kind": "vertical dragon arc across the gold-band wall",
+   "placement": "across path",
+   "timing": "single arc",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knock-off",
+   "combinedWith": [
+    "G-S6-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the band is the only footing under the arc",
+   "evidence": "LP1 1:50:50",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S7-a",
+   "section": "S7",
+   "kind": "gong waves in the gauntlet (horizontal green stream; ring shockwave)",
+   "placement": "across path",
+   "timing": "two bells side by side strike in turn (GP); stream 1:51:10, ring 1:51:25",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knockback (fall = death)",
+   "combinedWith": [
+    "E-S7-a",
+    "G-S7-a"
+   ],
+   "roles": [
+    "TIMING-GATE",
+    "TEST"
+   ],
+   "why": "GP: wait for the opponents to strike both bells, then move during the lull",
+   "evidence": "LP1 1:51:02-28; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S7-b",
+   "section": "S7",
+   "kind": "floating TNT row (4) past the gong trap",
+   "placement": "flank",
+   "timing": "fuse 3 s",
+   "counter": [
+    "destroy (drop the whirlwind and set one off, GR)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S7-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "spinning into it would carry the player into the chain (GR)",
+   "evidence": "GR 129",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S7-c",
+   "section": "S7",
+   "kind": "dragons near the alcoves; vertical dive on the final wall",
+   "placement": "across path",
+   "timing": "intermittent",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": false,
+   "effect": "knock-off",
+   "combinedWith": [
+    "O-S7-a",
+    "G-S7-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the dragon rule returns with the gong rule",
+   "evidence": "LP1 1:51:19, 1:51:22, 1:51:26.5, 1:51:49",
+   "confidence": "low"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "gong monk (spectral monk with a mallet), first alcove",
+   "archetype": "projectile",
+   "behaviour": "raises the mallet and strikes the gong; a ring wave and green cloud travel along the walkway and push Crash back",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "standing in the wave lane at the strike"
+   ],
+   "placement": "flank (alcove beside the roof walkway)",
+   "roles": [
+    "TEACH",
+    "TIMING-GATE"
+   ],
+   "firstAlone": true,
+   "why": "the first monk is alone, on a walkway backed by a wall",
+   "evidence": "LP1 1:47:29-33; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-a",
+   "section": "S3",
+   "kind": "gong monk, big oval alcove",
+   "archetype": "projectile",
+   "behaviour": "strike, then about 3 s of windup",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "crossing during the strike"
+   ],
+   "placement": "flank (alcove over a 1-deep walkway)",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "the same monk where the walkway leaves no room to dodge",
+   "evidence": "LP1 1:47:43.5-47",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S3-b",
+   "section": "S3",
+   "kind": "gong monks x3-4 (gallery)",
+   "archetype": "projectile",
+   "behaviour": "staggered strikes along one alcove",
+   "counter": [
+    "avoid",
+    "spin (whirlwind through; effect on the monks not resolved)"
+   ],
+   "fails": [
+    "stopping inside the gallery"
+   ],
+   "placement": "on line",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "the mask's dense crate run (S3-c) shares the gallery with the monks",
+   "evidence": "LP1 1:48:02-10",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "guardian lions x2-3 (GR 'golems')",
+   "archetype": "chaser",
+   "behaviour": "wait at the top of the stair and charge",
+   "counter": [
+    "spin (Akano whirlwind)"
+   ],
+   "fails": [],
+   "placement": "landing platform (stair top)",
+   "roles": [
+    "GUARD",
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "the first lions test the whirlwind on a wide stair right after the TNT row; probably the pair that guards the tape in front of the big bell (GP)",
+   "evidence": "LP1 1:48:20-25; GR 59; GP",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S6-a",
+   "section": "S6",
+   "kind": "white guardian lion",
+   "archetype": "burrower/ambusher",
+   "behaviour": "steps out of an archway onto the walkway and charges",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [],
+   "placement": "guarding the archway in front of the secret walkway",
+   "roles": [
+    "GUARD",
+    "AMBUSH"
+   ],
+   "firstAlone": true,
+   "why": "the enemy marks the secret: the gem is in a cavity directly behind a lion (GP)",
+   "evidence": "LP1 1:50:25.5-31; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S7-a",
+   "section": "S7",
+   "kind": "gong monks x3+ (gauntlet)",
+   "archetype": "projectile",
+   "behaviour": "pairs of bells side by side",
+   "counter": [
+    "avoid (move in the lull after both strikes)"
+   ],
+   "fails": [
+    "moving after only one strike"
+   ],
+   "placement": "flank (alcoves along the shelves)",
+   "roles": [
+    "TEST",
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "the final exam of the knockback rule",
+   "evidence": "LP1 1:51:02-28; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S7-b",
+   "section": "S7",
+   "kind": "red guardian lion in a doorway",
+   "archetype": "burrower/ambusher",
+   "behaviour": "stands in an alcove beside a floating crate and charges",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [],
+   "placement": "guarding crate (S7-b)",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "a crate tucked into an enemy's alcove",
+   "evidence": "LP1 1:51:08-14; GR 130",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S7-c",
+   "section": "S7",
+   "kind": "white guardian lions x2 (final court)",
+   "archetype": "chaser",
+   "behaviour": "charge across the court",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [],
+   "placement": "landing platform (final court)",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "the closing crates (S7-e) are behind a pair on a wide floor",
+   "evidence": "LP1 1:51:52-56; GR 139",
+   "confidence": "medium"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "courtyard: TNT column + bounce crate (TNT taught)",
+    "dragon fly-over, no contact",
+    "garden path",
+    "arched bridge",
+    "stair crates",
+    "C1"
+   ],
+   "gaps": 0,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "TNT step (3 s)",
+    "swirl band",
+    "crumbling shelves (keep moving)",
+    "floating F over B (detour)",
+    "roof walkway: gong monk 1 (wait)",
+    "Akano orb",
+    "roof ?",
+    "pavilion row",
+    "first hover crate",
+    "C2"
+   ],
+   "gaps": 4,
+   "enemies": 1,
+   "hazards": 3
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "2 crates right of C2 (count trap)",
+    "1-deep walkway at the big gong (cross in the windup)",
+    "staggered shelves",
+    "floating F F ? column (off window)",
+    "rope climb",
+    "Akano orb on the roof ridge",
+    "whirlwind gallery: 3-4 monks + R crates",
+    "C3"
+   ],
+   "gaps": 2,
+   "enemies": 4,
+   "hazards": 3
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "gateway TNT row (chain)",
+    "lion stair (2-3 lions)",
+    "landing (perch)",
+    "dragon wall: ~8 shelves, sweeps every 2-3 s, fire crates",
+    "gold fruit crate at the top",
+    "5-6 u hover jump to the shrine",
+    "shrine crates",
+    "C4"
+   ],
+   "gaps": 9,
+   "enemies": 2,
+   "hazards": 3
+  },
+  {
+   "section": "S5",
+   "beats": [
+    "lift (Aku above)",
+    "walkway, dragon streak",
+    "post platforms around the tower (dragon loop)",
+    "rope swing",
+    "floating courtyard",
+    "rope swing",
+    "C5 + bonus pad"
+   ],
+   "gaps": 4,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "B",
+   "beats": [
+    "floating ? over the first gap",
+    "tower ledge: T + Nitro",
+    "posts",
+    "moving cloud",
+    "towers with Nitro walls and dragon sweeps",
+    "green !",
+    "exit"
+   ],
+   "gaps": 5,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S6",
+   "beats": [
+    "C5",
+    "lion steps out of an archway (spin)",
+    "secret walkway behind the wall: 12 crates + gem",
+    "gold-band ledges + dragon arc",
+    "rooftop [? x x]",
+    "C6"
+   ],
+   "gaps": 4,
+   "enemies": 1,
+   "hazards": 1
+  },
+  {
+   "section": "S7",
+   "beats": [
+    "gong alcoves with shelves (two bells side by side)",
+    "floating TNT row",
+    "red lion in an alcove (crate)",
+    "dragons",
+    "red pagoda [? ? C] + 1",
+    "floating T + T on a ledge",
+    "final wall (dragon dive)",
+    "final court: 2 lions",
+    "exit"
+   ],
+   "gaps": 9,
+   "enemies": 6,
+   "hazards": 3
+  }
+ ],
+ "geometryObservations": [
+  "The signature hazard is shown before it is dangerous. A spectral dragon flies over the garden path at 1:46:59-1:47:04 without touching Crash (O-S1-a), and the first dragon-swept wall comes about 1.5 minutes later (O-S4-b).",
+  "Floors and walls alternate. Every 2D climb starts from a wide floor that works as a perch (stair top, landing P-S4-c, floating courtyard P-S5-c), and most climbs end on a checkpoint floor (C2, C4, C6, C7).",
+  "Wall climbs use one shelf module of about 2 x 1 u, spaced 2-5 u apart. The first wall's shelves crumble, so the player must keep moving (P-S2-c, GP). The dragon wall's shelves are static but swept, so the player must wait (P-S4-d). The two rules never share a wall.",
+  "Gong monks follow teach, test, combine. The first monk is alone on a walkway backed by a wall (E-S2-a). The second sits over a 1-deep walkway (E-S3-a), then 3-4 monks fill a gallery the whirlwind crosses (E-S3-b), and the final gauntlet pairs bells side by side (E-S7-a, GP).",
+  "The mask sets the gap scale. Before Akano, gaps are 2-3 u (double-jump scale). Right after it, the level opens 5-6 u hover gaps (G-S4-b, bonus G-B-a), and the first floating crate after the pickup teaches the hover.",
+  "Guardian lions appear only at the ends of transitions and always on wide floors: the stair top, the archway, an alcove and the final court. They test the whirlwind attack, never the jump.",
+  "The secret is marked by an enemy. A lion steps out of the archway in front of the hidden walkway (E-S6-a), and GP describes the gem as directly behind a lion.",
+  "Every hazard cycles at about 2-3 s (dragon sweeps, gong windups, fire vents). That is slow enough to watch one cycle from a safe shelf; the difficulty comes from chaining cycles over consecutive shelves (J-S4-a, J-S7-a).",
+  "There are no holes inside floors. All lethal space is the sky beside the walls, and most falls come from knockback (gong waves, dragons per GP), not from short jumps.",
+  "Devices handle the big transitions between towers: a rope climb, the lift and two rope swings (P-S3-c, P-S5-a, G-S5-b/c). They are hazard-light rests, with at most one dragon passing.",
+  "Gap widths barely grow (2-4 u on most walls). Difficulty rises by adding cycles: crumble, then one wave, then sweeps, then waves plus sweeps, while the shelf module stays the same.",
+  "The bonus adds only the moving cloud and the Nitro walls to the main route's hover gaps and horizontal sweeps (P-B-c, O-B-a/b)."
+ ],
+ "geometryTransfer": [
+  "Teach by fly-over. Show a sweeping hazard (`pendulum` or orbiting `mover`) passing harmlessly behind the playfield in the opening, then gate the first climb with it.",
+  "Wall-climb module. Use 2.3 m wide x 1.15 m deep plank `platform`s with 2.3-4.0 m rises and 2.3-5.8 m horizontal spacing. A full jump lands on a 2.3 m shelf; a double jump, or a ledge grab (lips up to about 5.2 m from a full jump), covers 4 m. Use `crumble` for the first wall and static shelves swept by a `pendulum` (2-3 s period) for the second, never both on one wall.",
+  "Knockback lane. A gong-style `sentry` sends a pushback wave along a 1.2 m deep ledge every ~3 s. Back the first one with a wall, then put one over a pit, then pair two side by side so the player must wait for both.",
+  "Hover gaps become board air. Turn 5-6 u (5.8-6.9 m) hover gaps into full-ollie gaps taken at or above cruise (6.6 m at 12 m/s, up to 12.7 m at full charge), and keep on-foot gaps <= 4.8 crates (5.6 m) unless a launcher is present.",
+  "Use lions as `charger`s at the far end of wide floors (>= 6 m deep), so the telegraphed dash can be read and spun. Use one in front of a hidden route as its signpost.",
+  "Tower transitions. Use `ropeswing`s between floating islands 7-9 m apart and a `mover` lift as rest beats between hazard walls, with at most one sweep over them."
  ]
 }

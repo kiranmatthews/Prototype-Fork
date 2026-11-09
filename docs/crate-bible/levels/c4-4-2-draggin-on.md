@@ -256,6 +256,198 @@ double jump) is one of B-d…B-g. I could not tell which from the frames.
 4. **Ledge single-files.** On narrow ledges (≤ 1.2 m), put crates in a single file 2–3 crates long. These are
    equal-height rows, so they become grind ledges in our game. A skater can grind-collect what the Crash player walks through.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: the 2 fps LP1 frames of the first wave (agent-C2), re-read for geometry (1:46:45–1:51:58), GR 4-2, GP = gamepressure.com Draggin' On walkthrough. Sizes are in crates (u), estimated against crates and Crash in the same frame; wall-climb spacings are side-view estimates. Hazard cycles were timed from consecutive 0.5–1 s frames and are approximate.
+
+### Camera and route shape
+
+A vertical climb up a temple town: into-screen floors (courtyards, stairs, floating courtyards) alternate with 2D wall faces climbed on plank shelves, a rope, a lift and rope swings. The route spirals up and around towers but never crosses itself. All lethal space is the open sky beside the walls; there are no holes inside floors.
+
+| section | mode | notes |
+|---|---|---|
+| S1 | into-screen | hex-paved courtyard, garden path, arched bridge and stair, bending right then into the screen |
+| S2 | side-scroll | 2D tower wall climbed left to right and upward; roof walkway; then an into-screen cliff pavilion |
+| S3 | side-scroll | plank walkway past a big gong alcove, rope climb, whirlwind run through a gong gallery (left to right) |
+| S4 | into-screen | gateway and lion stair; then side-scroll vertical climb of the dragon wall, ending with a long jump into the background |
+| S5 | side-scroll | vertical lift; post platforms circling a tower (the camera turns around it); rope swings into the screen to floating courtyards |
+| B | side-scroll | bonus over the town, left to right |
+| S6 | side-scroll | tower face with a gold band; the secret walkway runs behind the wall while the camera stays outside |
+| S7 | side-scroll | gong gauntlet, red pagoda scaffold, final wall; ends in a side-view final court |
+
+### Platforms and gaps (section by section; table per section)
+
+Platforms (`P-`) and gaps (`G-`) share each table. For a platform, "coupling / failure" gives its behaviour and edges. For a gap, it gives what couples it in time and what happens on failure. The evidence column ends with the confidence.
+
+**S1**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | wide floor (hex-paved courtyard) | 8–10 wide | 0 | walk | static; edges: walled by pavilions | REST ARENA | the TNT column is taught on a flat floor with room to back away | LP1 1:46:50–58 · medium |
+| P-S1-b | S1 | bridge/plank (arched stone bridge) | ~3 wide | +1 (arch) | walk | static; edges: railed | CHOKE | funnels the camera turn toward the stair | LP1 1:47:06–10 · medium |
+| P-S1-c | S1 | corridor (stone stair) | ~4 wide | +4 to +6 overall | walk | static; edges: railed | CHECKPOINT-PAD | crates lead up it to C1 at the foot of the first wall | LP1 1:47:13–16 · medium |
+
+**S2**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | narrow ledge (walkway at the foot of the wall) | ~2 deep | 0 | walk | static; edges: open | REST | the TNT step (S2-a) stands on it | LP1 1:47:16–20 · medium |
+| P-S2-b | S2 | narrow ledge (raised brick swirl band on the wall) | ~1 deep, winding | +2 to +3 | jump | static; edges: open | STEPPING | decor that is also footing: the player stands on the swirl band | LP1 1:47:18–20 · medium |
+| P-S2-c | S2 | crumbling (plank shelves in wall slots) | ~2 × 1 | +2 to +3 each | jump, double | give way after use (one is broken by 1:47:21.5; GP: climbing platforms vanish or crumble); edges: open | TIMING-STEP | the first wall forbids waiting: keep climbing | LP1 1:47:20–23; GP · medium |
+| P-S2-d | S2 | narrow ledge (roof walkway past a gong alcove) | ~2 deep | +1 | walk | static; edges: tiled roof below | CHOKE | the first gong wave sweeps this walkway (O-S2-c) | LP1 1:47:24–33 · medium |
+| P-S2-e | S2 | wide floor (cliff pavilion) | 5–6 × 4 | 0 | walk | static; edges: railed | REST CHECKPOINT-PAD | Akano is granted on the way here; C2 follows the first hover crate | LP1 1:47:35–43 · medium |
+| G-S2-a | S2 | chasm with bounce (climb from the walkway to the swirl band via the TNT); not lethal | 0; landing swirl band ~1 deep; run-up 1–2 | +2 to +3 | crate-bounce, double | TNT fuse 3 s once stomped; failure: land back on the walkway; near S2-a | TEACH | the TNT is the first step of the climb | LP1 1:47:17–20 · medium |
+| G-S2-b | S2 | bottomless pit (open sky below the shelves); lethal | 2–3; landing shelf ~2 × 1; run-up 1 | +2 to +3 | double | shelves crumble behind the player; failure: fall to the walkway or off the cliff; near S2-b | TEST | vertical hops that must be chained before the footing goes | LP1 1:47:20–24 · low |
+| G-S2-c | S2 | bottomless pit (detour to the floating F over B); lethal | 2–3; landing crate top; run-up 2–3 | 0 to +1 | plain, crate-bounce | fire-crate vents; failure: fall; near S2-b | TEST | an optional reach off the climbing line | LP1 1:47:25–29 · low |
+
+**S3**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | narrow ledge (plank walkway in front of the big oval gong alcove) | ~1 deep × 6 long | 0 | walk | static; edges: open | CHOKE | a 1-deep walkway inside the wave lane: there is nowhere to stand aside | LP1 1:47:44–47 · medium |
+| P-S3-b | S3 | narrow ledge (staggered plank shelves) | 1.5–2 × 1 | +1 to +2 | jump, double | static; edges: open | STEPPING | climb toward the rope beside the fire-crate column | LP1 1:47:47–52 · medium |
+| P-S3-c | S3 | rope (vertical climb) | 1 | +4 to +6 | climb | climb; edges: - | REST | a hazard-free ascent between two gong sections | LP1 1:47:52–55 · medium |
+| P-S3-d | S3 | corridor (whirlwind gallery behind arches) | ~2 deep × 15+ | 0 | spin-extended | static; edges: walled | CHOKE | 3–4 monks with gongs in one long alcove; the whirlwind carries the player through | LP1 1:48:02–10 · medium |
+| P-S3-e | S3 | wide floor (walkway) | 4–5 × 3 | 0 | walk | static; edges: open | CHECKPOINT-PAD | C3 | LP1 1:48:10–12 · medium |
+| G-S3-a | S3 | bottomless pit (staggered shelves); lethal | 2–3; landing shelf 1.5–2 × 1; run-up 1 | +1 to +2 | plain, double | gong wave lane (O-S3-a); failure: pushed off and fall (GP: a wave hit makes you fall); near S3-b | TEST | the knockback hazard is placed where a fall is possible | LP1 1:47:44–52; GP · low |
+
+**S4**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | wide floor (gateway landing with a raised ledge) | 6–8 wide; ledge ~1 high | +1 | walk, jump | static; edges: walled | ARENA | the TNT row sits on the raised ledge under the big bell | LP1 1:48:14–18 · medium |
+| P-S4-b | S4 | corridor (lion stair) | ~4 wide | +4 to +6 | walk | static; edges: railed | ARENA | lions wait at the top (E-S4-a) | LP1 1:48:20–25 · medium |
+| P-S4-c | S4 | wide floor (landing under the dragon wall) | ~5 × 4 | 0 | walk | static; edges: open | PERCH REST | watch the dragon arcs before climbing | LP1 1:48:25–28 · medium |
+| P-S4-d | S4 | narrow ledge (dragon-wall plank shelves) | ~2 × 1 | +3 to +4 each | double, spin-extended | static (no crumbling seen here); edges: open | STEPPING TIMING-STEP | each shelf is a waiting spot between dragon sweeps | LP1 1:48:28–52 · medium |
+| P-S4-e | S4 | square pad (shrine-door platform in the background) | ~3 × 2 | 0 to -1 | spin-extended | static; edges: open | LANDING CHECKPOINT-PAD | target of the long hover jump; shrine crates and C4 | LP1 1:48:54–1:49:03 · medium |
+| G-S4-a | S4 | bottomless pit (dragon-wall shelf to shelf); lethal | 3–5 across, 3–4 up; landing shelf ~2 × 1; run-up 1–2 | +3 to +4 | double, spin-extended | dragon sweeps every ~2–3 s (O-S4-b); failure: fall to a lower shelf or the landing; off the wall = death; near S4-b | TEST | each hop is short; the cadence of the sweeps is the test | LP1 1:48:28–52 · medium |
+| G-S4-b | S4 | bottomless pit (long jump from the wall top into the background); lethal | 5–6; landing ~3 × 2 shrine platform; run-up 2–3 | 0 to -1 | spin-extended | dragons cross the gap; GR: whirlwind the golden fruit crate first; failure: death; near S4-c | TEST | the widest gap so far, possible only with the hover | LP1 1:48:52–56; GR 63 · medium |
+
+**S5**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S5-a | S5 | moving platform (wooden lift) | ~3 × 3 | +8 or more | ride | rises along the wall; edges: open | REST | a free ascent; the Aku crate floats at its top (S5-a) | LP1 1:49:04–10 · medium |
+| P-S5-b | S5 | square pad (plank platforms circling a tower) | ~2 × 2 | +1 to +2 each | jump, double | static; edges: open | STEPPING | a dragon loops around them (O-S5-a) | LP1 1:49:12–21 · medium |
+| P-S5-c | S5 | wide floor (pink courtyard in the sky) | ~6 × 5 | 0 | walk | static; edges: open | REST | rest between the two rope swings | LP1 1:49:24–28 · medium |
+| P-S5-d | S5 | wide floor (C5 courtyard with the bonus entrance) | ~5 × 4 | +1 to +2 | walk | static; edges: open | REST CHECKPOINT-PAD BONUS-PAD | C5 beside the bonus pad | LP1 1:49:33–36 · medium |
+| G-S5-a | S5 | bottomless pit (post-platform hops around the tower); lethal | 2–3; landing ~2 × 2; run-up 1 | +1 to +2 | plain, double | a dragon loops around the posts; failure: death; near S5-b | RHYTHM | an even climb under one looping hazard | LP1 1:49:12–21 · low |
+| G-S5-b | S5 | swing/vine (rope swing to the floating courtyard); lethal | 6–8; landing ~6 × 5; run-up 1–2 | 0 | swing | rope pendulum; a dragon passes overhead; failure: death | REST | a device carries the player across the biggest void | LP1 1:49:22–24 · low |
+| G-S5-c | S5 | swing/vine (rope swing to a raised block); lethal | 5–7; landing ~3 × 3; run-up 1–2 | +1 to +2 | swing | rope pendulum; failure: death; near S5-b | REST | the second swing lands on the C5 courtyard approach | LP1 1:49:30 · low |
+
+**B**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | B | narrow ledge (tower ledges with railings) | 3–4 × 1 | ±1 | jump | static; edges: railed | STEPPING | Nitro blocks stand at their ends as walls (O-B-a) | LP1 1:49:40–50 · low |
+| P-B-b | B | round/hex pillar (narrow posts) | 1 × 1 | +1 | jump | static; edges: open | STEPPING | a single crate tops each post; taken between dragon sweeps | LP1 1:49:48–52 · low |
+| P-B-c | B | moving platform (cloud) | ~5 × 1 | 0 | jump | moves horizontally; edges: open | TIMING-STEP | the bonus's only moving platform | LP1 1:49:50–55 · low |
+| G-B-a | B | bottomless pit (bonus: first gap under a floating ?); not lethal | 3–4; landing tower ledge; run-up 2 | 0 | spin-extended | none; failure: leave the bonus (no life lost); near B-a | TEACH | the hover is asked for at once, with a crate on its arc | LP1 1:49:38–43 · low |
+| G-B-b | B | bottomless pit (bonus: tower to tower); not lethal | 4–6; landing ledge, post or cloud; run-up 1–3 | ±1 | spin-extended, double | horizontal dragon sweeps at jump height; Nitro blocks as walls; failure: leave the bonus; near B-d, B-e, B-h | TEST | main-route hazards recombined over hover gaps | LP1 1:49:45–1:50:05 · low |
+
+**S6**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S6-a | S6 | narrow ledge (walkway past the lion's archway) | ~2 deep | 0 | walk | static; edges: open | ARENA | the lion comes out of the archway onto it (E-S6-a) | LP1 1:50:20–31 · medium |
+| P-S6-b | S6 | corridor (hidden walkway behind the wall) | 1–2 deep | 0 | walk | static; edges: walled (out of sight) | BONUS-PAD | 12 crates and the hidden gem behind scenery (S6-a) | LP1 1:50:32–45; GP · medium |
+| P-S6-c | S6 | narrow ledge (gold band and plank shelves) | band ~1 deep; shelves 1.5–2 × 1 | +1 to +2 | jump, double | static; edges: open | STEPPING | single-file crates on the band (S6-b) | LP1 1:50:46–56, 1:51:43–50 · low |
+| P-S6-d | S6 | wide floor (rooftop) | 4–5 × 3 | 0 | walk | static; edges: open | CHECKPOINT-PAD | C6 before the gauntlet | LP1 1:50:55–1:51:01 · medium |
+| G-S6-a | S6 | bottomless pit (gold-band shelf hops); lethal | 2–4; landing band or shelf ~1 deep; run-up 1 | +1 to +2 | double, spin-extended | vertical dragon arc (O-S6-a); failure: death; near S6-b | TEST | narrow footing and one sweep | LP1 1:50:46–56 · low |
+
+**S7**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S7-a | S7 | narrow ledge (plank shelves between gong alcoves) | ~1.5 × 1 | 0 to +2 | jump, double | static; edges: open | TIMING-STEP | shelves sit inside the wave lanes; GP: wait for both bells, then move | LP1 1:51:02–28; GP · medium |
+| P-S7-b | S7 | square pad (red pagoda scaffold) | ~3 × 2 | +1 | walk | static; edges: railed | REST CHECKPOINT-PAD | C7 and a reward row before the final wall | LP1 1:51:30–38.5 · medium |
+| P-S7-c | S7 | narrow ledge (final wall: gold band and shelves) | band ~1 deep; shelves ~1.5 × 1 | +1 | jump, double, spin-extended | static; edges: open | STEPPING | the last climb, with TNT floating and on a ledge (S7-d) | LP1 1:51:40–50 · low |
+| P-S7-d | S7 | wide floor (final court) | ~8 × 4 | 0 | walk | static; edges: open | ARENA | two lions guard the closing crates | LP1 1:51:52–58 · medium |
+| G-S7-a | S7 | bottomless pit (shelf hops through the gong gauntlet); lethal | 2–4; landing shelf ~1.5 × 1; run-up 1 | 0 to +2 | plain, double, spin-extended | two gongs side by side (GP) and dragons; failure: pushed off and fall; near S7-a, S7-b | TEST | the level's final combination of knockback lanes and gaps | LP1 1:51:02–28; GP · low |
+| G-S7-b | S7 | bottomless pit (final wall hops); lethal | 2–4; landing band or shelf; run-up 1 | +1 | double, spin-extended | vertical dragon dive (1:51:49); failure: death; near S7-d | TEST | the last climb repeats the dragon rule once | LP1 1:51:42–50 · low |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | widest gap (u) | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S2-a | S2 | 5 | crate-bounce, double | accelerating | 3 | P-S2-d | yes | TNT step, swirl band, then crumbling shelves: the footing gives way, so the climb cannot pause | LP1 1:47:17–24; GP |
+| J-S3-a | S3 | 4 | plain, double | syncopated | 3 | P-S3-c | no | cross the gong walkway during the windup, then climb toward the rope | LP1 1:47:44–52 |
+| J-S4-a | S4 | 9 | double, spin-extended | syncopated | 5–6 | P-S4-c | no | wait on each shelf for a sweep to pass, ending in the long hover jump | LP1 1:48:28–56 |
+| J-S5-a | S5 | 6 | plain, double | even | 3 | P-S5-c | no | even hops around the tower under one looping dragon | LP1 1:49:12–21 |
+| J-S6-a | S6 | 6 | double, spin-extended | even | 4 | P-S6-d | no | gold-band ledges to the rooftop checkpoint | LP1 1:50:46–56 |
+| J-S7-a | S7 | 9 | plain, double, spin-extended | syncopated | 4 | P-S7-b | no | GP: wait until two neighbouring bells have struck, then move in the lull | LP1 1:51:02–30; GP |
+| J-S7-b | S7 | 5 | double, spin-extended | even | 4 | P-S7-d | no | the final wall to the final court | LP1 1:51:40–52 |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1 | spectral dragon fly-over (no contact) | overhead (above the garden path) | one pass | none needed; not lethal | — | TEACH | the signature hazard is shown flying harmlessly about 1.5 minutes before it sweeps a wall the player climbs | LP1 1:46:59–1:47:04 · medium |
+| O-S2-a | S2 | crumbling plank shelves | on platform | give way shortly after use | outrun; not lethal | G-S2-b | RHYTHM | GP: platforms vanish or crumble, keep moving | LP1 1:47:21.5; GP · medium |
+| O-S2-b | S2 | fire crate (floating F over B) | flank of the climb | vents on ~1–2 s, off ~1 s (cycle read on the S3 column) | wait-and-go; lethal | S2-b crates | TIMING-GATE | the hazard is a crate stacked on the reward | LP1 1:47:25–29 · low |
+| O-S2-c | S2 | gong wave (first monk, roof walkway) | across path | mallet raised, then a ring wave and green cloud on the strike | wait-and-go; knockback; lethal when it pushes the player off a ledge (GP) | E-S2-a | TEACH | first wave on a walkway with a wall behind it | LP1 1:47:29–33; GP · medium |
+| O-S3-a | S3 | gong wave (big oval alcove) | across path | strike at 1:47:44, mallet back up 1:47:44.5–46.5, crossed 1:47:46–47: about 3 s per cycle | wait-and-go; knockback (GP: hit = fall) | P-S3-a, G-S3-a | TIMING-GATE | the wave lane covers the whole 1-deep walkway | LP1 1:47:43.5–47 · medium |
+| O-S3-b | S3 | fire-crate column (F F ?) floating right of the shelves | flank | vents on 1:47:48–49, off 1:47:50 | wait-and-go; lethal | S3-b crates | TIMING-GATE | the ? is taken in the off window | LP1 1:47:48–52 · medium |
+| O-S3-c | S3 | gong gallery (3–4 monks in one long alcove) | across path | staggered strikes | spin (whirlwind through), wait-and-go; knockback | E-S3-b, S3-c crates | TEST | the first stretch where the mask meets the monks | LP1 1:48:02–10 · medium |
+| O-S4-a | S4 | TNT row (3) on the raised ledge | on platform | fuse 3 s | destroy (light one, wait for the chain); lethal | S4-a | AREA-DENIAL | a chain row blocks the ledge until it is set off | LP1 1:48:14–18 · medium |
+| O-S4-b | S4 | spectral dragon sweeps on the dragon wall | across path (arcs over the wall face) | about every 2–3 s on alternating arcs (1:48:39, 41–42, 43–44, 46–48, 50–51); the glowing body is visible as it enters | wait-and-go; knock-off (GP: magical creatures try to push you off) | G-S4-a, O-S4-c | TIMING-GATE TEST | the climb is paced by the sweeps, not by the jumps | LP1 1:48:28–52; GP · medium |
+| O-S4-c | S4 | floating fire crates (left side of the dragon wall) | flank | vent cycle ~1–2 s | wait-and-go; lethal | S4-b crates | AREA-DENIAL | off-line crates add a second cycle | LP1 1:48:28–44 · low |
+| O-S5-a | S5 | dragon loop around the post platforms; horizontal streak at Crash height | across path | continuous loop | wait-and-go; knock-off | G-S5-a | TIMING-GATE | one looping hazard over an even climb | LP1 1:49:10.5–21 · low |
+| O-B-a | B | Nitro blocks (2x2 and 3x2) on ledges | on platform | static | go around, jump over; lethal | O-B-b | LANE-BLOCK | walls first, 9 crates last (green !) | LP1 1:49:46–58, 1:50:06–07 · high |
+| O-B-b | B | horizontal dragon sweeps at jump height | across path | ~2–3 s | wait-and-go; lethality unknown | O-B-a | TIMING-GATE | the main route's sweep rule over hover gaps | LP1 1:49:47.5–57.5 · low |
+| O-S6-a | S6 | vertical dragon arc across the gold-band wall | across path | single arc | wait-and-go; knock-off | G-S6-a | TIMING-GATE | the band is the only footing under the arc | LP1 1:50:50 · low |
+| O-S7-a | S7 | gong waves in the gauntlet (horizontal green stream; ring shockwave) | across path | two bells side by side strike in turn (GP); stream 1:51:10, ring 1:51:25 | wait-and-go; knockback (fall = death) | E-S7-a, G-S7-a | TIMING-GATE TEST | GP: wait for the opponents to strike both bells, then move during the lull | LP1 1:51:02–28; GP · medium |
+| O-S7-b | S7 | floating TNT row (4) past the gong trap | flank | fuse 3 s | destroy (drop the whirlwind and set one off, GR); lethal | O-S7-a | AREA-DENIAL | spinning into it would carry the player into the chain (GR) | GR 129 · medium |
+| O-S7-c | S7 | dragons near the alcoves; vertical dive on the final wall | across path | intermittent | wait-and-go; knock-off | O-S7-a, G-S7-b | TIMING-GATE | the dragon rule returns with the gong rule | LP1 1:51:19, 1:51:22, 1:51:26.5, 1:51:49 · low |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S2-a | S2 | gong monk (spectral monk with a mallet), first alcove | projectile | raises the mallet and strikes the gong; a ring wave and green cloud travel along the walkway and push Crash back | avoid (fails: standing in the wave lane at the strike) | flank (alcove beside the roof walkway) | TEACH TIMING-GATE | yes | the first monk is alone, on a walkway backed by a wall | LP1 1:47:29–33; GP · medium |
+| E-S3-a | S3 | gong monk, big oval alcove | projectile | strike, then about 3 s of windup | avoid (fails: crossing during the strike) | flank (alcove over a 1-deep walkway) | TIMING-GATE | no | the same monk where the walkway leaves no room to dodge | LP1 1:47:43.5–47 · medium |
+| E-S3-b | S3 | gong monks x3–4 (gallery) | projectile | staggered strikes along one alcove | avoid, spin (whirlwind through; effect on the monks not resolved) (fails: stopping inside the gallery) | on line | TEST | no | the mask's dense crate run (S3-c) shares the gallery with the monks | LP1 1:48:02–10 · low |
+| E-S4-a | S4 | guardian lions x2–3 (GR 'golems') | chaser | wait at the top of the stair and charge | spin (Akano whirlwind) | landing platform (stair top) | GUARD GATEKEEPER | no | the first lions test the whirlwind on a wide stair right after the TNT row; probably the pair that guards the tape in front of the big bell (GP) | LP1 1:48:20–25; GR 59; GP · low |
+| E-S6-a | S6 | white guardian lion | burrower/ambusher | steps out of an archway onto the walkway and charges | spin (whirlwind) | guarding the archway in front of the secret walkway | GUARD AMBUSH | yes | the enemy marks the secret: the gem is in a cavity directly behind a lion (GP) | LP1 1:50:25.5–31; GP · medium |
+| E-S7-a | S7 | gong monks x3+ (gauntlet) | projectile | pairs of bells side by side | avoid (move in the lull after both strikes) (fails: moving after only one strike) | flank (alcoves along the shelves) | TEST TIMING-GATE | no | the final exam of the knockback rule | LP1 1:51:02–28; GP · medium |
+| E-S7-b | S7 | red guardian lion in a doorway | burrower/ambusher | stands in an alcove beside a floating crate and charges | spin (whirlwind) | guarding crate (S7-b) | GUARD | yes | a crate tucked into an enemy's alcove | LP1 1:51:08–14; GR 130 · medium |
+| E-S7-c | S7 | white guardian lions x2 (final court) | chaser | charge across the court | spin (whirlwind) | landing platform (final court) | GATEKEEPER | no | the closing crates (S7-e) are behind a pair on a wide floor | LP1 1:51:52–56; GR 139 · medium |
+
+### Section beats
+
+- **S1** (gaps 0 · enemies 0 · hazards 1): courtyard: TNT column + bounce crate (TNT taught) → dragon fly-over, no contact → garden path → arched bridge → stair crates → C1
+- **S2** (gaps 4 · enemies 1 · hazards 3): TNT step (3 s) → swirl band → crumbling shelves (keep moving) → floating F over B (detour) → roof walkway: gong monk 1 (wait) → Akano orb → roof ? → pavilion row → first hover crate → C2
+- **S3** (gaps 2 · enemies 4 · hazards 3): 2 crates right of C2 (count trap) → 1-deep walkway at the big gong (cross in the windup) → staggered shelves → floating F F ? column (off window) → rope climb → Akano orb on the roof ridge → whirlwind gallery: 3–4 monks + R crates → C3
+- **S4** (gaps 9 · enemies 2 · hazards 3): gateway TNT row (chain) → lion stair (2–3 lions) → landing (perch) → dragon wall: ~8 shelves, sweeps every 2–3 s, fire crates → gold fruit crate at the top → 5–6 u hover jump to the shrine → shrine crates → C4
+- **S5** (gaps 4 · enemies 0 · hazards 1): lift (Aku above) → walkway, dragon streak → post platforms around the tower (dragon loop) → rope swing → floating courtyard → rope swing → C5 + bonus pad
+- **B** (gaps 5 · enemies 0 · hazards 2): floating ? over the first gap → tower ledge: T + Nitro → posts → moving cloud → towers with Nitro walls and dragon sweeps → green ! → exit
+- **S6** (gaps 4 · enemies 1 · hazards 1): C5 → lion steps out of an archway (spin) → secret walkway behind the wall: 12 crates + gem → gold-band ledges + dragon arc → rooftop [? x x] → C6
+- **S7** (gaps 9 · enemies 6 · hazards 3): gong alcoves with shelves (two bells side by side) → floating TNT row → red lion in an alcove (crate) → dragons → red pagoda [? ? C] + 1 → floating T + T on a ledge → final wall (dragon dive) → final court: 2 lions → exit
+
+### Geometry and enemy design logic
+
+1. The signature hazard is shown before it is dangerous. A spectral dragon flies over the garden path at 1:46:59–1:47:04 without touching Crash (O-S1-a), and the first dragon-swept wall comes about 1.5 minutes later (O-S4-b).
+2. Floors and walls alternate. Every 2D climb starts from a wide floor that works as a perch (stair top, landing P-S4-c, floating courtyard P-S5-c), and most climbs end on a checkpoint floor (C2, C4, C6, C7).
+3. Wall climbs use one shelf module of about 2 × 1 u, spaced 2–5 u apart. The first wall's shelves crumble, so the player must keep moving (P-S2-c, GP). The dragon wall's shelves are static but swept, so the player must wait (P-S4-d). The two rules never share a wall.
+4. Gong monks follow teach, test, combine. The first monk is alone on a walkway backed by a wall (E-S2-a). The second sits over a 1-deep walkway (E-S3-a), then 3–4 monks fill a gallery the whirlwind crosses (E-S3-b), and the final gauntlet pairs bells side by side (E-S7-a, GP).
+5. The mask sets the gap scale. Before Akano, gaps are 2–3 u (double-jump scale). Right after it, the level opens 5–6 u hover gaps (G-S4-b, bonus G-B-a), and the first floating crate after the pickup teaches the hover.
+6. Guardian lions appear only at the ends of transitions and always on wide floors: the stair top, the archway, an alcove and the final court. They test the whirlwind attack, never the jump.
+7. The secret is marked by an enemy. A lion steps out of the archway in front of the hidden walkway (E-S6-a), and GP describes the gem as directly behind a lion.
+8. Every hazard cycles at about 2–3 s (dragon sweeps, gong windups, fire vents). That is slow enough to watch one cycle from a safe shelf; the difficulty comes from chaining cycles over consecutive shelves (J-S4-a, J-S7-a).
+9. There are no holes inside floors. All lethal space is the sky beside the walls, and most falls come from knockback (gong waves, dragons per GP), not from short jumps.
+10. Devices handle the big transitions between towers: a rope climb, the lift and two rope swings (P-S3-c, P-S5-a, G-S5-b/c). They are hazard-light rests, with at most one dragon passing.
+11. Gap widths barely grow (2–4 u on most walls). Difficulty rises by adding cycles: crumble, then one wave, then sweeps, then waves plus sweeps, while the shelf module stays the same.
+12. The bonus adds only the moving cloud and the Nitro walls to the main route's hover gaps and horizontal sweeps (P-B-c, O-B-a/b).
+
+### Geometry transfer to the skate game
+
+1. Teach by fly-over. Show a sweeping hazard (`pendulum` or orbiting `mover`) passing harmlessly behind the playfield in the opening, then gate the first climb with it.
+2. Wall-climb module. Use 2.3 m wide × 1.15 m deep plank `platform`s with 2.3–4.0 m rises and 2.3–5.8 m horizontal spacing. A full jump lands on a 2.3 m shelf; a double jump, or a ledge grab (lips up to about 5.2 m from a full jump), covers 4 m. Use `crumble` for the first wall and static shelves swept by a `pendulum` (2–3 s period) for the second, never both on one wall.
+3. Knockback lane. A gong-style `sentry` sends a pushback wave along a 1.2 m deep ledge every ~3 s. Back the first one with a wall, then put one over a pit, then pair two side by side so the player must wait for both.
+4. Hover gaps become board air. Turn 5–6 u (5.8–6.9 m) hover gaps into full-ollie gaps taken at or above cruise (6.6 m at 12 m/s, up to 12.7 m at full charge), and keep on-foot gaps ≤ 4.8 crates (5.6 m) unless a launcher is present.
+5. Use lions as `charger`s at the far end of wide floors (≥ 6 m deep), so the telegraphed dash can be read and spun. Use one in front of a hidden route as its signpost.
+6. Tower transitions. Use `ropeswing`s between floating islands 7–9 m apart and a `mover` lift as rest beats between hazard walls, with at most one sweep over them.
+
 ## Open questions / uncertainties
 
 - Group composition is unresolved in S3-c (22 x), S5-b (14 x) and S6-a (12 x). The counts are GR's and agree with the HUD anchors.
@@ -263,3 +455,7 @@ double jump) is one of B-d…B-g. I could not tell which from the frames.
   consistent with that, but I did not count every block.
 - GR's "checkpoint crates" (plural) before the final gauntlet. I counted one C in S6-b.
 - The exact location of GR's hard bonus ledge crate.
+- Geometry: shelf spacings and the rope-swing spans are side-view estimates without a crate in the same plane; the dragon and gong cycles come from 0.5–1 s frames and are approximate.
+- Geometry: whether dragons kill on contact or only knock Crash off is not visible (GP speaks of pushing off the map); the run never touched one.
+- Geometry: whether the whirlwind defeats gong monks or only passes them is unresolved; lions were always beaten with the whirlwind.
+- Geometry: the lion pair guarding the tape in front of the big bell (GP) is taken to be the lion-stair pair under the gateway bell; not confirmed in the frames.

@@ -1202,5 +1202,1896 @@
   "The two count traps on foot are SUPPORT-ORDER problems (bounce crate before breaking it; ! before the platforms drop).",
   "Nitro are part of the total: the ones the player avoids are paid by the detonator after the boss.",
   "The optional green-gem path holds 22 of 196 crates (11 %) and the bonus 29 (15 %)."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "cave plank walkways heading into the screen with gentle bends; two rope swings carry the camera forward; ends in the ship-hull room at the jetboard launch"
+  },
+  {
+   "section": "S2",
+   "mode": "vehicle",
+   "notes": "behind-the-rider jetboard on a river lane between rock walls (forced forward, steer, boost, jump)"
+  },
+  {
+   "section": "S3",
+   "mode": "into-screen",
+   "notes": "short pier hub (checkpoint, tape, bonus pad)"
+  },
+  {
+   "section": "B1",
+   "mode": "side-scroll",
+   "notes": "left to right over water"
+  },
+  {
+   "section": "S4",
+   "mode": "side-scroll",
+   "notes": "raft ride left to right; the camera tracks the raft and the docks pass in the same plane"
+  },
+  {
+   "section": "S5",
+   "mode": "into-screen",
+   "notes": "pier before jetboard 2"
+  },
+  {
+   "section": "S6",
+   "mode": "vehicle",
+   "notes": "lane between ship hulls and wreckage"
+  },
+  {
+   "section": "G",
+   "mode": "side-scroll",
+   "notes": "green-gem raft past cannon heaps, out and back through green pads"
+  },
+  {
+   "section": "S7",
+   "mode": "into-screen",
+   "notes": "Lani-Loli pier: pillar line and phase pads over water"
+  },
+  {
+   "section": "S8",
+   "mode": "into-screen",
+   "notes": "phase docks and a narrow stone causeway"
+  },
+  {
+   "section": "S9",
+   "mode": "vehicle",
+   "notes": "fenced channel with bends and turns past wrecks and docks"
+  },
+  {
+   "section": "S10",
+   "mode": "vehicle",
+   "notes": "open oval pool where the camera frees up for the Louise fight; then the detonator dock on foot (into-screen)"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "wide floor (round spawn deck)",
+   "size": "5-6 across",
+   "heightDelta": 0,
+   "edges": "railed (rope nets)",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "safe start with the first crates (S1-a) in view",
+   "evidence": "LP1 1:12:17-23",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "corridor (plank walkway over water)",
+   "size": "3-4 wide",
+   "heightDelta": "+1 (step up to a raised deck)",
+   "edges": "open over water; support posts, lanterns",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk",
+    "jump"
+   ],
+   "why": "a 3-4 u lane lets every hazard (anchor, spiked roller) span the full width, so each one must be timed, not side-stepped",
+   "evidence": "LP1 1:12:25-47",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "wide floor (dock)",
+   "size": "5-6 x 4-5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "ARENA",
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "square dock with room to dodge the first cutlass slash; the reward row [? W ?] (S1-c) stands behind the pirate",
+   "evidence": "LP1 1:12:48-51",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "bridge/plank (narrow bridge into the hull)",
+   "size": "~2 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static, broken into segments",
+   "roles": [
+    "CHOKE",
+    "STEPPING"
+   ],
+   "move": [
+    "walk",
+    "jump"
+   ],
+   "why": "the narrowest walkway of the level points straight at the hull door; one crate sits on it",
+   "evidence": "LP1 1:13:00-05",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "wide floor (ship-hull room) + launch ramp",
+   "size": "5-6 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "last crates of the leg; a CHECKPOINT text shows at the launch (1:13:12), so the first vehicle run starts from a save",
+   "evidence": "LP1 1:13:06-12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "vehicle lane (river between rock walls)",
+   "size": "8-12 wide",
+   "heightDelta": 0,
+   "edges": "rock walls; whirlpools on the flanks",
+   "behaviour": "forced forward (jetboard)",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "the widest lane of the three runs: hazards stay at the edges and the 8 crates float on the centre line",
+   "evidence": "LP1 1:13:13-24",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "wide floor (pier)",
+   "size": "6-8 x 4-5",
+   "heightDelta": 0,
+   "edges": "open to water",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD",
+    "BONUS-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "checkpoint, bonus pad and tape share one safe floor right after the first vehicle run",
+   "evidence": "LP1 1:13:25-28",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B1-a",
+   "section": "B1",
+   "shape": "wide floor (plank deck)",
+   "size": "4-5 x 2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "bonus start",
+   "evidence": "LP1 1:13:32",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B1-b",
+   "section": "B1",
+   "shape": "moving platform (small hovering raft)",
+   "size": "~2 x 1",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "moves; axis not resolved",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "lifts the player toward the TNT/W/! tower",
+   "evidence": "LP1 1:13:32-36.5",
+   "confidence": "low"
+  },
+  {
+   "id": "P-B1-c",
+   "section": "B1",
+   "shape": "bridge/plank (row of outline crates made solid)",
+   "size": "8-9 x 1",
+   "heightDelta": 0,
+   "edges": "open over water",
+   "behaviour": "appears when the ! under the TNT fires",
+   "roles": [
+    "LANDING"
+   ],
+   "move": [
+    "switch",
+    "walk"
+   ],
+   "why": "the bridge over the water is the reward row itself",
+   "evidence": "LP1 1:13:38-45",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B1-d",
+   "section": "B1",
+   "shape": "wide floor (deck under the TNT pyramid)",
+   "size": "5-6 x 2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "holds the TNT pyramid with fire crates on its flanks (B1-c)",
+   "evidence": "LP1 1:13:45-50",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "moving platform (raft)",
+   "size": "4-5 x 1.5-2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "raft on barrels; carries the player left to right at about walking pace past the docks (speed not measured)",
+   "roles": [
+    "SAFE-ISLAND",
+    "TIMING-STEP"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "the only safe floor of the ride; the player hops off to docks and must be back before it passes",
+   "evidence": "LP1 1:14:14-1:15:07",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "narrow ledge (docks and hull ledges level with the raft)",
+   "size": "2-4 long x 1-2 deep",
+   "heightDelta": "0 to +1",
+   "edges": "open",
+   "behaviour": "static (passes by)",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "each dock holds crates (S4-a, S4-b, C2 S4-d, TNT S4-e) and is reachable only for a few seconds of raft travel",
+   "evidence": "LP1 1:14:14-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-a",
+   "section": "S5",
+   "shape": "wide floor (pier)",
+   "size": "6-8 x 4",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "save between the raft and jetboard 2; the R row and the iron block flank the checkpoint",
+   "evidence": "LP1 1:15:10-20",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-b",
+   "section": "S5",
+   "shape": "crate-built (uncounted iron crates, 2 wide x 3 high)",
+   "size": "2 x ? footprint, 3 high",
+   "heightDelta": "+2 to +3 above the raft deck",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "the tallest climb of the level carries the hidden gem; it stands in the water where the raft ride ends",
+   "evidence": "LP1 1:15:06.5-12.5; GR 108",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S5-c",
+   "section": "S5",
+   "shape": "square pad (raised launch platform)",
+   "size": "~3 x 2",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "a pirate stands on it, so the jetboard launch is gated by one spin",
+   "evidence": "LP1 1:15:13-20",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S6-a",
+   "section": "S6",
+   "shape": "vehicle lane (between ship hulls)",
+   "size": "~10 wide; 2-4 channels between mines",
+   "heightDelta": 0,
+   "edges": "hull walls",
+   "behaviour": "forced forward (jetboard)",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "the lane is as wide as run 1, but mine fields cut it into 2-4 u channels",
+   "evidence": "LP1 1:15:20-36, 1:15:50-1:16:10",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S6-b",
+   "section": "S6",
+   "shape": "wide floor (dock with the green pad)",
+   "size": "5-6 x 4",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "checkpoint at the route split",
+   "evidence": "LP1 1:16:12.5-20",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-G-a",
+   "section": "G",
+   "shape": "moving platform (raft)",
+   "size": "4-5 x 2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "carries the player left to right past cannon heaps",
+   "roles": [
+    "SAFE-ISLAND",
+    "TIMING-STEP"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "same device as S4, now under cannon fire",
+   "evidence": "LP1 1:16:27-1:17:01",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-G-b",
+   "section": "G",
+   "shape": "narrow ledge (docks beside the raft line)",
+   "size": "2-4 x 1-2",
+   "heightDelta": "0 to +1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "carry the N/T/? stacks (G-a, G-b) and one pirate",
+   "evidence": "LP1 1:16:39-57",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-a",
+   "section": "S7",
+   "shape": "stepping stones (square stone-capped pillars)",
+   "size": "~2 x 2, in a line",
+   "heightDelta": 0,
+   "edges": "open over water",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING",
+    "TIMING-STEP"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "the only stepping-stone gauntlet of the level, crossed by swinging anchors and leaping fish",
+   "evidence": "LP1 1:17:22-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-b",
+   "section": "S7",
+   "shape": "phase/timed (phase platforms and round grated pads)",
+   "size": "~2 planks; pads 1.5-2 across",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "solid in one Lani-Loli phase only",
+   "roles": [
+    "STEPPING",
+    "TIMING-STEP"
+   ],
+   "move": [
+    "phase",
+    "jump"
+   ],
+   "why": "the mask's footing rule is taught on short gaps over water",
+   "evidence": "LP1 1:17:35-55; GP",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-c",
+   "section": "S7",
+   "shape": "wide floor (pier end)",
+   "size": "4-5 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "holds the bounce crate under an off-camera crate (S7-c/d)",
+   "evidence": "LP1 1:17:55-59",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-d",
+   "section": "S7",
+   "shape": "crumbling (two dropping platforms)",
+   "size": "~2 x 2 each",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "drop when stood on (GR); a crate sits between them over an iron !",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "phase",
+    "jump"
+   ],
+   "why": "a drop-away pair with the switch underneath (S7-e)",
+   "evidence": "GR 150",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S8-a",
+   "section": "S8",
+   "shape": "wide floor (stone docks)",
+   "size": "3-4 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "walk",
+    "phase"
+   ],
+   "why": "carry the phase crates and phase TNT (S8-a/b)",
+   "evidence": "LP1 1:18:05-27",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S8-b",
+   "section": "S8",
+   "shape": "stepping stones (square pillar + round pad)",
+   "size": "~2 x 2 + 1.5-2 round",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "a two-hop reminder of the S7 gauntlet",
+   "evidence": "LP1 1:18:27-31",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S8-c",
+   "section": "S8",
+   "shape": "corridor (stone causeway with low railings)",
+   "size": "~3 wide",
+   "heightDelta": 0,
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "two pirates advance down it toward a TNT placed in front of the player",
+   "evidence": "LP1 1:18:34-37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S8-d",
+   "section": "S8",
+   "shape": "wide floor (plank dock)",
+   "size": "5-6 x 4",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "outline and strong crates, then C5 before the last vehicle run",
+   "evidence": "LP1 1:18:38-44.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S9-a",
+   "section": "S9",
+   "shape": "vehicle lane (fenced channel)",
+   "size": "6-8 wide; 2-3 between paired whirlpools",
+   "heightDelta": 0,
+   "edges": "wooden fences, wreck walls",
+   "behaviour": "forced forward (jetboard)",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "the narrowest lane of the three runs",
+   "evidence": "LP1 1:18:44-1:19:50",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S9-b",
+   "section": "S9",
+   "shape": "bouncy (jump ramp with an arrow sign)",
+   "size": "~2 wide",
+   "heightDelta": "up",
+   "edges": "open",
+   "behaviour": "static launcher",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "the only authored launch of the runs, over a floating trunk",
+   "evidence": "LP1 1:19:26",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S10-a",
+   "section": "S10",
+   "shape": "vehicle lane (oval boss pool)",
+   "size": "~20-25 across",
+   "heightDelta": 0,
+   "edges": "wreck walls",
+   "behaviour": "free steering",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "ride"
+   ],
+   "why": "open water so the player can drag chasers into Louise's tentacle slams",
+   "evidence": "LP1 1:19:52-1:20:42; PS",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S10-b",
+   "section": "S10",
+   "shape": "wide floor (dock with the green ! detonator)",
+   "size": "4-5 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "payout of the avoided Nitro after the fight",
+   "evidence": "LP1 1:20:42.5",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "lethal water (stepping slabs)",
+   "width": "1-2",
+   "heightDelta": 0,
+   "landing": "rock slabs 2-3 x 2-3",
+   "lethal": true,
+   "runUp": "2-3",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "fall into the water (death inferred, not observed)",
+   "nearby": [
+    "S1-b"
+   ],
+   "roles": [
+    "TEACH",
+    "STEPPING"
+   ],
+   "why": "the first gaps are short and static, on slabs that also carry the W pair (S1-b)",
+   "evidence": "LP1 1:12:30-34",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "swing/vine (rope swing 1 over water)",
+   "width": "5-8",
+   "heightDelta": "0 to +1",
+   "landing": "scaffold ~3 x 3",
+   "lethal": true,
+   "runUp": "1-2 to the rope",
+   "move": [
+    "swing"
+   ],
+   "coupling": "rope pendulum: release on the forward arc",
+   "failure": "fall into the water",
+   "nearby": [],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the first long gap is a device crossing, not a jump test",
+   "evidence": "LP1 1:12:36-37.5",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S1-c",
+   "section": "S1",
+   "kind": "swing/vine (rope swing 2 to a raised scaffold tower)",
+   "width": "5-8",
+   "heightDelta": "+1 to +2",
+   "landing": "scaffold top ~3 x 3",
+   "lethal": true,
+   "runUp": "~2",
+   "move": [
+    "swing"
+   ],
+   "coupling": "rope pendulum",
+   "failure": "fall into the water",
+   "nearby": [
+    "S1-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the device repeats with more height after one hazard set",
+   "evidence": "LP1 1:12:54-55.5",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S1-d",
+   "section": "S1",
+   "kind": "lethal water (segment holes in the plank bridge)",
+   "width": "~1",
+   "heightDelta": 0,
+   "landing": "plank segment ~2 wide",
+   "lethal": true,
+   "runUp": "3+",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "fall into the water",
+   "nearby": [
+    "S1-d"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "small hops on a narrow line just before the vehicle keep the eye on the centre",
+   "evidence": "LP1 1:13:00-03",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B1-a",
+   "section": "B1",
+   "kind": "water under the outline row (bonus)",
+   "width": "8-9",
+   "heightDelta": 0,
+   "landing": "next deck",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "crate-bounce",
+    "double"
+   ],
+   "coupling": "the TNT on the W on the ! must blow (3 s) to solidify the row; GR: stay airborne off nearby crates until it does",
+   "failure": "drop out of the bonus (no life lost, GP)",
+   "nearby": [
+    "B1-a",
+    "B1-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the gap closes only through the explosive switch",
+   "evidence": "LP1 1:13:35-44; GR 71",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-B1-b",
+   "section": "B1",
+   "kind": "water bridged by the second outline row (bonus)",
+   "width": "~8",
+   "heightDelta": 0,
+   "landing": "exit deck",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "crate-bounce",
+    "double"
+   ],
+   "coupling": "second TNT/W/! tower (fuse 3)",
+   "failure": "drop out of the bonus",
+   "nearby": [
+    "B1-d"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the switch-bridge is repeated once in the same room",
+   "evidence": "LP1 1:13:48.5-54.5",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "moving-platform crossing (raft to dock and back)",
+   "width": "1-2",
+   "heightDelta": "0 to +1",
+   "landing": "dock 2-4 x 1-2",
+   "lethal": true,
+   "runUp": "raft length 4-5",
+   "move": [
+    "plain"
+   ],
+   "coupling": "raft travel: return before the raft has passed",
+   "failure": "fall into the water (death)",
+   "nearby": [
+    "S4-a",
+    "S4-b",
+    "S4-d",
+    "S4-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the gap stays short; the difficulty is the moving reference frame",
+   "evidence": "LP1 1:14:14-40",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S5-a",
+   "section": "S5",
+   "kind": "moving-platform crossing (raft to the top of the iron block)",
+   "width": "1",
+   "heightDelta": "+2 to +3",
+   "landing": "2-wide iron top",
+   "lethal": true,
+   "runUp": "raft length",
+   "move": [
+    "running",
+    "double"
+   ],
+   "coupling": "raft passes the block once",
+   "failure": "fall into the water; or miss the gem and ride on",
+   "nearby": [
+    "P-S5-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the hidden gem is a vertical test timed by the raft",
+   "evidence": "LP1 1:15:06.5-12.5",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S7-a",
+   "section": "S7",
+   "kind": "lethal water (pillar gaps)",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "pillar top ~2 x 2",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "plain",
+    "running"
+   ],
+   "coupling": "swinging anchors and leaping fish cross the line",
+   "failure": "fall or hit: death (the run died here, 1:17:27.5)",
+   "nearby": [
+    "S7-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "short gaps with two crossing hazards: the timing, not the distance, is the test",
+   "evidence": "LP1 1:17:22-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S7-b",
+   "section": "S7",
+   "kind": "lethal water (phase-platform gaps)",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "phase plank or round pad 1.5-2",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "phase",
+    "plain"
+   ],
+   "coupling": "platform solidity follows the player's phase",
+   "failure": "fall into the water",
+   "nearby": [
+    "S7-a",
+    "S7-e"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the mask is taught on gaps no wider than the pillar gaps before it",
+   "evidence": "LP1 1:17:35-55; GP",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S8-a",
+   "section": "S8",
+   "kind": "lethal water (pillar + pad hops)",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "2 x 2 / 1.5-2 round",
+   "lethal": true,
+   "runUp": "2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "anchors swing on both flanks just before",
+   "failure": "fall into the water",
+   "nearby": [
+    "S8-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "two hops recall the S7 gauntlet without new elements",
+   "evidence": "LP1 1:18:27-31",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S9-a",
+   "section": "S9",
+   "kind": "vehicle gate between two whirlpools",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "lane",
+   "lethal": true,
+   "runUp": "n/a",
+   "move": [
+    "ride"
+   ],
+   "coupling": "whirlpools pull at both sides",
+   "failure": "death; restart from C5 (GP: any hit restarts the run)",
+   "nearby": [
+    "O-S9-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the tightest steering gate of the level comes in the last run",
+   "evidence": "LP1 1:19:36.5",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S9-b",
+   "section": "S9",
+   "kind": "chasm with bounce (ramp jump over a floating trunk)",
+   "width": "2-4",
+   "heightDelta": 0,
+   "landing": "lane",
+   "lethal": false,
+   "runUp": "vehicle speed",
+   "move": [
+    "ride"
+   ],
+   "coupling": "ramp at 1:19:26",
+   "failure": "crash into the trunk (not observed)",
+   "nearby": [
+    "P-S9-b"
+   ],
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "why": "one authored air in a run otherwise flat",
+   "evidence": "LP1 1:19:26",
+   "confidence": "low"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "2",
+   "rest": "P-S1-b",
+   "noStop": false,
+   "why": "slab hops teach the water gap at its shortest",
+   "evidence": "LP1 1:12:30-34"
+  },
+  {
+   "id": "J-S1-b",
+   "section": "S1",
+   "count": 4,
+   "moves": [
+    "plain",
+    "swing"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "5-8 (swing)",
+   "rest": "P-S1-c",
+   "noStop": false,
+   "why": "rope swing, spiked roller, anchor, roller: each beat is a different verb",
+   "evidence": "LP1 1:12:36-47"
+  },
+  {
+   "id": "J-S1-c",
+   "section": "S1",
+   "count": 4,
+   "moves": [
+    "swing",
+    "plain"
+   ],
+   "rhythm": "accelerating",
+   "maxGap": "5-8 (swing)",
+   "rest": "P-S1-e",
+   "noStop": false,
+   "why": "swing up, then short plank hops into the hull: the leg speeds up toward the vehicle",
+   "evidence": "LP1 1:12:54-1:13:05"
+  },
+  {
+   "id": "J-B1-a",
+   "section": "B1",
+   "count": 4,
+   "moves": [
+    "crate-bounce",
+    "double"
+   ],
+   "rhythm": "even",
+   "maxGap": "-",
+   "rest": "P-B1-c",
+   "noStop": true,
+   "why": "GR: stay airborne off nearby crates until the TNT fires the ! and the bridge forms",
+   "evidence": "GR 71; LP1 1:13:38-42"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 8,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "2",
+   "rest": "P-S4-a",
+   "noStop": true,
+   "why": "off the raft, break, back on: the raft sets a beat the player cannot pause",
+   "evidence": "LP1 1:14:14-1:15:07"
+  },
+  {
+   "id": "J-S7-a",
+   "section": "S7",
+   "count": 6,
+   "moves": [
+    "plain",
+    "running"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "3",
+   "rest": "P-S7-c",
+   "noStop": false,
+   "why": "the player can wait on a pillar for an anchor or a fish to pass",
+   "evidence": "LP1 1:17:22-35"
+  },
+  {
+   "id": "J-S7-b",
+   "section": "S7",
+   "count": 5,
+   "moves": [
+    "phase",
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "P-S7-c",
+   "noStop": false,
+   "why": "phase and jump in alternation",
+   "evidence": "LP1 1:17:35-55"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S1-a",
+   "section": "S1",
+   "kind": "swinging anchor on a chain",
+   "placement": "flank, swinging into the walkway",
+   "timing": "pendulum; period not measured",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S1-b",
+    "O-S1-b"
+   ],
+   "roles": [
+    "TEACH",
+    "TIMING-GATE"
+   ],
+   "why": "GP: some anchors carry a slashing pirate; touching the pirate, the anchor or the chain kills. Seen first on the flank before any roller",
+   "evidence": "LP1 1:12:28.5, 1:12:39.5-43; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S1-b",
+   "section": "S1",
+   "kind": "spiked roller (horizontal spiked log between posts)",
+   "placement": "across path, ~1 u above the planks",
+   "timing": "spins in place",
+   "counter": [
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S1-a"
+   ],
+   "roles": [
+    "RHYTHM",
+    "TEACH"
+   ],
+   "why": "two rollers in ~6 s: the first alone, the second with an anchor beside it",
+   "evidence": "LP1 1:12:39.5-41, 1:12:45-47.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "whirlpool",
+   "placement": "flank of the river lane",
+   "timing": "constant",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S2-a"
+   ],
+   "roles": [
+    "TEACH",
+    "AREA-DENIAL"
+   ],
+   "why": "shown at the edges of the widest lane, where staying central avoids it",
+   "evidence": "LP1 1:13:13-24",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "spiked rollers lying along dock tops",
+   "placement": "on platform",
+   "timing": "static or spinning (not resolved)",
+   "counter": [
+    "jump over",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-e TNT"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "turns dock crates and the TNT (S4-e) into short timed hops",
+   "evidence": "LP1 1:14:31-34",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "low booms across the raft line",
+   "placement": "across path, ~1 u above the raft deck",
+   "timing": "static; approach set by the raft",
+   "counter": [
+    "slide under"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S4-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the only slide check of the level; GR pairs it with crates (slide-jump under the lower barriers)",
+   "evidence": "LP1 1:14:40-43; GR 103",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "spiked maces sliding in vertical slots along the raft line",
+   "placement": "across path",
+   "timing": "cycling up/down; period not measured",
+   "counter": [
+    "wait-and-go",
+    "slide under",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S4-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "GP: moving spikes, pass by jumping, crouching or sliding as you prefer",
+   "evidence": "LP1 1:14:54-58; GP",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S6-a",
+   "section": "S6",
+   "kind": "sea mines (spiked balls ~1.5-2 u) in fields of 5-8",
+   "placement": "in the lane",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S6-b",
+    "S6-a crates"
+   ],
+   "roles": [
+    "LANE-BLOCK",
+    "TEST"
+   ],
+   "why": "the mines break the crate line: safe line and crate line diverge for the first time",
+   "evidence": "LP1 1:15:20-36",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S6-b",
+   "section": "S6",
+   "kind": "whirlpools 3-4 u in the lane",
+   "placement": "in the lane",
+   "timing": "constant pull",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S6-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "the run's first death (1:15:36) reads as being pulled into a whirlpool",
+   "evidence": "LP1 1:15:33-36",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S6-c",
+   "section": "S6",
+   "kind": "fallen mast across the lane",
+   "placement": "overhead",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": false,
+   "combinedWith": [],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "first overhead object; passes above the rider",
+   "evidence": "LP1 1:15:26",
+   "confidence": "low"
+  },
+  {
+   "id": "O-G-a",
+   "section": "G",
+   "kind": "cannons firing balls across the raft line",
+   "placement": "flank (heaps beside the raft path)",
+   "timing": "periodic; muzzle flash before the ball",
+   "counter": [
+    "wait-and-go",
+    "jump over"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-a",
+    "G-b stacks"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a ball lands on the raft line at 1:16:34.5 and 1:16:46.5; the cannons share space with the Nitro/TNT stacks",
+   "evidence": "LP1 1:16:27-57",
+   "confidence": "low"
+  },
+  {
+   "id": "O-G-b",
+   "section": "G",
+   "kind": "swinging anchors",
+   "placement": "across path",
+   "timing": "pendulum",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-G-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the S1 hazard returns on the moving raft",
+   "evidence": "LP1 1:16:43.5, 1:17:05",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S7-a",
+   "section": "S7",
+   "kind": "swinging anchors over the pillar line",
+   "placement": "across path",
+   "timing": "pendulum",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S7-b",
+    "P-S7-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the stepping line is timed by the anchors",
+   "evidence": "LP1 1:17:22-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S7-b",
+   "section": "S7",
+   "kind": "leaping fish crossing the path",
+   "placement": "across path (from the water)",
+   "timing": "intermittent leaps",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S7-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a second crossing rhythm on the same gaps; the run died here once",
+   "evidence": "LP1 1:17:25-29, 1:17:49-55",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S8-a",
+   "section": "S8",
+   "kind": "swinging anchors on both flanks of the docks",
+   "placement": "flank",
+   "timing": "pendulum",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S8-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a paired version of the S1 anchor",
+   "evidence": "LP1 1:18:19-27",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S9-a",
+   "section": "S9",
+   "kind": "falling shot with impact rings on the water (mortar/cannon)",
+   "placement": "in the lane",
+   "timing": "ring marks the landing spot before the splash",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S9-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "anything that falls from above is marked on the water first",
+   "evidence": "LP1 1:18:47.5, 1:19:08.5",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S9-b",
+   "section": "S9",
+   "kind": "sea mines",
+   "placement": "in the lane",
+   "timing": "static",
+   "counter": [
+    "go around",
+    "fling into (lure a chaser, GP)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S9-a"
+   ],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "GP: lure the pirates into the bombs so one enemy removes two hazards",
+   "evidence": "LP1 1:19:02-13; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S9-c",
+   "section": "S9",
+   "kind": "whirlpool field (4) and a whirlpool pair",
+   "placement": "in the lane",
+   "timing": "constant pull",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S9-a"
+   ],
+   "roles": [
+    "AREA-DENIAL",
+    "TEST"
+   ],
+   "why": "the pair leaves a 2-3 u gate (G-S9-a)",
+   "evidence": "LP1 1:18:56-58, 1:19:36.5",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S9-d",
+   "section": "S9",
+   "kind": "cannon battery on the right dock firing across the lane",
+   "placement": "flank",
+   "timing": "periodic",
+   "counter": [
+    "wait-and-go",
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S9-b crates"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the run ends with the green path's cannons, now facing the rider",
+   "evidence": "LP1 1:19:38-42.5",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S9-e",
+   "section": "S9",
+   "kind": "floating logs and wreck debris; ropes across the lane",
+   "placement": "in the lane; overhead",
+   "timing": "static",
+   "counter": [
+    "go around",
+    "jump over"
+   ],
+   "lethal": false,
+   "combinedWith": [],
+   "roles": [
+    "LANE-BLOCK"
+   ],
+   "why": "clutter that narrows the lane between the bigger hazards",
+   "evidence": "LP1 1:18:59.5, 1:19:14-19, 1:19:30.5",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S10-a",
+   "section": "S10",
+   "kind": "Louise's tentacle slams",
+   "placement": "across path (arena)",
+   "timing": "highlighted strip about 2 s before the slam (PS)",
+   "counter": [
+    "go around",
+    "fling into (lure chasers under the slam)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S10-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the boss's attack is the player's weapon when an enemy is dragged under it",
+   "evidence": "LP1 1:19:55-1:20:11; PS",
+   "confidence": "medium"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "cutlass pirate (fish-faced pirate with a cutlass)",
+   "archetype": "static",
+   "behaviour": "stands on the dock, raises the cutlass and slashes an arc in front (slash at 1:12:49)",
+   "counter": [
+    "spin"
+   ],
+   "fails": [
+    "walking into the slash arc"
+   ],
+   "placement": "landing platform (dock P-S1-c)",
+   "roles": [
+    "TEACH",
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "the first enemy is alone on a wide dock with the reward row behind it",
+   "evidence": "LP1 1:12:48-50",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "anchor-riding pirate (GP)",
+   "archetype": "patrol-1D",
+   "behaviour": "rides a swinging anchor and slashes; contact with pirate, anchor or chain kills (GP)",
+   "counter": [
+    "avoid"
+   ],
+   "fails": [
+    "touching the chain"
+   ],
+   "placement": "above / flank",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "an enemy fused with a pendulum hazard",
+   "evidence": "GP",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "cutlass pirate",
+   "archetype": "static",
+   "behaviour": "on a short dock the raft passes; slashes",
+   "counter": [
+    "spin"
+   ],
+   "fails": [
+    "staying on the raft past the dock"
+   ],
+   "placement": "landing platform (dock beside the raft line)",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": false,
+   "why": "the S1 enemy reused as a timing check from a moving platform",
+   "evidence": "LP1 1:14:33-35.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S5-a",
+   "section": "S5",
+   "kind": "cutlass pirate",
+   "archetype": "static",
+   "behaviour": "stands on the raised launch platform",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "take-off edge (jetboard launch)",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": true,
+   "why": "one spin opens the second vehicle run",
+   "evidence": "LP1 1:15:14.5",
+   "confidence": "low"
+  },
+  {
+   "id": "E-G-a",
+   "section": "G",
+   "kind": "cutlass pirate",
+   "archetype": "static",
+   "behaviour": "on a dock beside the N/T/? stack",
+   "counter": [
+    "spin"
+   ],
+   "fails": [
+    "spinning the stack beside it"
+   ],
+   "placement": "guarding crate",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "enemy and explosive stack share one small dock",
+   "evidence": "LP1 1:16:40-42",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S8-a",
+   "section": "S8",
+   "kind": "cutlass pirates x2 (yellow coats)",
+   "archetype": "patrol-1D",
+   "behaviour": "walk down the causeway toward the player, swords out",
+   "counter": [
+    "TNT/blast"
+   ],
+   "fails": [
+    "walking into them"
+   ],
+   "placement": "on line (causeway P-S8-c)",
+   "roles": [
+    "BAIT"
+   ],
+   "firstAlone": false,
+   "why": "a lit TNT stands between player and pirates; they walk into the blast (1:18:37)",
+   "evidence": "LP1 1:18:34-37",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S9-a",
+   "section": "S9",
+   "kind": "jetboard pirates",
+   "archetype": "chaser",
+   "behaviour": "ride boards behind or beside the player",
+   "counter": [
+    "fling into (lure into mines, GP)",
+    "avoid"
+   ],
+   "fails": [
+    "letting them ram"
+   ],
+   "placement": "on line",
+   "roles": [
+    "PURSUER",
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "the chaser is a weapon against the mines, and next against the boss",
+   "evidence": "LP1 1:19:05-07, 1:19:27-35; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S10-a",
+   "section": "S10",
+   "kind": "Louise (sea monster mini-boss)",
+   "archetype": "mini-boss",
+   "behaviour": "tentacle slams with a ~2 s highlighted warning; health bar of 6 segments",
+   "counter": [
+    "fling into (lure chasers under the slams, PS)"
+   ],
+   "fails": [
+    "attacking her directly, which the board does not allow"
+   ],
+   "placement": "arena",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": true,
+   "why": "gates the Nitro detonator (S10-a crates on P-S10-b)",
+   "evidence": "LP1 1:19:52-1:20:42; PS",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S10-b",
+   "section": "S10",
+   "kind": "slow chasers in the arena",
+   "archetype": "chaser",
+   "behaviour": "follow the player slowly (PS)",
+   "counter": [
+    "fling into"
+   ],
+   "fails": [],
+   "placement": "arena",
+   "roles": [
+    "TOOL/STEP"
+   ],
+   "firstAlone": false,
+   "why": "the boss's damage source",
+   "evidence": "PS",
+   "confidence": "low"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "spawn deck + 3 crates",
+    "step up",
+    "anchor (flank)",
+    "slab hops 1-2 u + W pair",
+    "rope swing",
+    "spiked roller",
+    "anchor + roller",
+    "cutlass pirate (dock)",
+    "[? W ?] row",
+    "rope swing up",
+    "scaffold crates",
+    "plank bridge 1 u holes",
+    "hull-room crates",
+    "launch (CHECKPOINT text)"
+   ],
+   "gaps": 6,
+   "enemies": 1,
+   "hazards": 4
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "launch",
+    "8 floating crates on the centre line",
+    "flank whirlpools",
+    "pier"
+   ],
+   "gaps": 0,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "pier: C1 + tape + bonus pad"
+   ],
+   "gaps": 0,
+   "enemies": 0,
+   "hazards": 0
+  },
+  {
+   "section": "B1",
+   "beats": [
+    "deck",
+    "moving platform",
+    "TNT/W/! tower (stay airborne)",
+    "outline bridge 8-9 u",
+    "TNT pyramid + fire crates",
+    "second tower",
+    "second outline bridge",
+    "exit"
+   ],
+   "gaps": 2,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "raft launch dock",
+    "raft",
+    "dock hops with crates",
+    "C2 on a passing dock",
+    "spiked rollers + TNT",
+    "pirate on a short dock",
+    "N/N stack on the raft",
+    "low booms (slide)",
+    "sliding maces",
+    "! + outline crates",
+    "iron block climb (hidden gem)",
+    "pier"
+   ],
+   "gaps": 8,
+   "enemies": 1,
+   "hazards": 3
+  },
+  {
+   "section": "S5",
+   "beats": [
+    "C3",
+    "R x4",
+    "pirate on the launch platform"
+   ],
+   "gaps": 0,
+   "enemies": 1,
+   "hazards": 0
+  },
+  {
+   "section": "S6",
+   "beats": [
+    "mine fields",
+    "whirlpools (death)",
+    "mast overhead",
+    "8 crates",
+    "dock: C4 + green pad"
+   ],
+   "gaps": 0,
+   "enemies": 0,
+   "hazards": 3
+  },
+  {
+   "section": "G",
+   "beats": [
+    "green pad",
+    "raft past cannon heaps",
+    "N/T/? stack + pirate",
+    "anchors",
+    "N/T/T/? among cannons, loose TNT",
+    "green pad back"
+   ],
+   "gaps": 4,
+   "enemies": 1,
+   "hazards": 2
+  },
+  {
+   "section": "S7",
+   "beats": [
+    "mask (CHECKPOINT text)",
+    "pillar line with anchors + leaping fish (death)",
+    "phase platforms",
+    "round phase pads",
+    "pier end: bounce crate under the off-camera crate",
+    "dropping platforms over a !"
+   ],
+   "gaps": 8,
+   "enemies": 0,
+   "hazards": 3
+  },
+  {
+   "section": "S8",
+   "beats": [
+    "phase docks + phase TNT",
+    "anchors on both flanks",
+    "pillar + round pad",
+    "causeway: 2 pirates walk into a lit TNT",
+    "dock: outline + strong crates",
+    "C5"
+   ],
+   "gaps": 2,
+   "enemies": 2,
+   "hazards": 2
+  },
+  {
+   "section": "S9",
+   "beats": [
+    "impact rings",
+    "mines",
+    "whirlpool field",
+    "ropes overhead",
+    "chasers (lure into mines)",
+    "debris",
+    "ramp jump",
+    "whirlpool pair (2-3 u gate)",
+    "cannon battery",
+    "dock crates before the arena"
+   ],
+   "gaps": 2,
+   "enemies": 1,
+   "hazards": 5
+  },
+  {
+   "section": "S10",
+   "beats": [
+    "oval pool: Louise tentacle slams (~2 s warning)",
+    "lure the slow chasers under the slams",
+    "boss down",
+    "green ! detonator: +3 Nitro"
+   ],
+   "gaps": 0,
+   "enemies": 2,
+   "hazards": 1
+  }
+ ],
+ "geometryObservations": [
+  "Each jetboard run adds one hazard family. J1 has whirlpools only at the flanks of an 8-12 u lane (O-S2-a). J2 puts mines and whirlpools inside a ~10 u lane, cutting 2-4 u channels (O-S6-a/b); the run's first death came here. J3 adds telegraphed impact rings, cannons and chasers in a 6-8 u channel with a 2-3 u whirlpool gate (G-S9-a), and ends in an arena that reuses the chasers as the boss weapon.",
+  "On foot, every hazard first appears alone on plain planks. An anchor hangs on the flank (1:12:28.5), then a spiked roller stands alone (1:12:39.5), then a roller comes with an anchor (1:12:42-47), and then a lone pirate waits on a wide dock (E-S1-a). Only after that do hazards combine.",
+  "Water is the only gap type, and on foot it is never crossed by a plain jump longer than about 3 u. Long crossings use devices: rope swings (G-S1-b/c), rafts (P-S4-a, P-G-a), phase platforms (P-S7-b) and the jetboard. Plain jumps stay at 1-3 u (slabs, plank holes, pillars).",
+  "The raft rides are side views. Gap widths stay fixed at 1-2 u (G-S4-a), and the raft supplies the challenge: it sets a no-stop beat (J-S4-a), and the camera shows each dock before it arrives.",
+  "Vertical clearance is introduced only on the raft. Booms about 1 u above the deck (O-S4-b) are the level's single slide check, and GR ties crates to them (slide-jump under the lower barriers).",
+  "The tallest climb is optional. The hidden gem sits on an uncounted 2x3 iron block, 2-3 u above the passing raft (P-S5-b, G-S5-a), so it tests vertical timing from a moving platform without blocking the clear.",
+  "The S7 pillar line is the only stepping-stone gauntlet. It stacks two crossing rhythms (anchors O-S7-a, leaping fish O-S7-b) on 2-3 u gaps, and it killed the player once. It starts right after the mask pickup, which also saves (CHECKPOINT text 1:17:22), so a retry is cheap.",
+  "Enemy roles escalate. The S1 pirate teaches (E-S1-a) and the raft pirate gates timing (E-S4-a). The launch pirate keeps the gate (E-S5-a), two causeway pirates walk into a TNT as bait (E-S8-a), and in the last run the chasers become tools against mines and against Louise (E-S9-a, E-S10-b).",
+  "The vehicle runs telegraph everything that comes from above. Mortar or cannon shots ring the water before they land (O-S9-a), and Louise highlights her slam strip about 2 s ahead (O-S10-a, PS).",
+  "Lanes narrow run by run while run length grows: about 11 s for J1, about 20 s for J2 (the clean retry) and about 66 s for J3, before the arena. The checkpoint before each run (CHECKPOINT text 1:13:12, C3, C5) pays for the restart that any jetboard hit causes (GP).",
+  "Crates and geometry agree in J1 and S4, where crates float on the safe line or sit on reachable docks. In J2 the mines push the crate line off the safe line, and in S8 a TNT doubles as the trap for the advancing enemies.",
+  "Hazards are recycled across modes. The anchor appears on foot (S1), on the raft (G) and over pillars (S7, S8). Cannons fire at the raft (G) and then at the jetboard (S9). Spikes are rollers on foot (S1), logs on the docks (S4) and maces on the raft (S4)."
+ ],
+ "geometryTransfer": [
+  "Three-run skate lane. Run 1 is 10-14 m wide (9-12 crates) with hazards only at the edges and 8 single crates 1.2-1.6 m above the deck on the centre line. Run 2 is the same width with `pit` discs or mine-like hazards that leave 2.5-4.5 m channels. Run 3 is 7-9 m wide with a hazard pair leaving one 2.5-3.5 m gate. At cruise (12 m/s), runs of about 11, 20 and 66 s, as in Crash, are about 130, 240 and 790 m long. Put a checkpoint before each run.",
+  "Raft section as a `mover`. A 5 x 2 m platform travels at walking pace beside a row of 2.3-4.6 m docks set 1.2-2.3 m from its edge. Docks hold crates, one `grunt` and one TNT, and the player hops off and back in under 2 s. Add a boom with its underside 0.6-0.8 m above the mover deck (below the 0.92 m player box) as the slide check, and never a gap wider than one full jump (5.6 m).",
+  "Pillar gauntlet. Use 2.3 m square pillars with 2.3-3.5 m gaps over a `pit`, crossed by two `pendulum`s with different periods. Place it right after a checkpoint, since it is the only stepping-stone test of the level.",
+  "Chaser-as-tool. On the board, a `charger` that follows the rider and dies on contact with a hazard, together with a mine field where luring it clears both, gives the rider a reason to steer near danger on purpose.",
+  "Enemy walks into TNT. On a 3.5 m causeway, two `grunt`s patrol toward the player with a TNT between them. Stomping the TNT (3 s fuse, 2.75 m blast) while they close in teaches the blast radius without risk to the player.",
+  "Telegraph everything that falls: ring decals on the deck 1-2 s before an impact (mortar shots, slams), matching the ~2 s warning of Louise."
  ]
 }

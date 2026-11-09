@@ -1233,5 +1233,2444 @@
   "17 % of the total (32/187) is Nitro paid by one switch at the door.",
   "The bonus is a TNT/iron bridge: iron = safe footing, TNT = counted crates that must be lit while crossing.",
   "GR's tallies are exact up to 90 and exactly 6 low from C6 on; the HUD resolves every anchor."
+ ],
+ "cameraSections": [
+  {
+   "section": "S1",
+   "mode": "into-screen",
+   "notes": "courtyard and stone paths; the camera stays behind Crash on wall-runs to the left and right"
+  },
+  {
+   "section": "S2",
+   "mode": "into-screen",
+   "notes": "lily pond flanked by wall-run walls; arched bridge"
+  },
+  {
+   "section": "S3",
+   "mode": "side-scroll",
+   "notes": "into-screen stair and broken wall, then a side-view tower-face climb (bottom to top)"
+  },
+  {
+   "section": "S4",
+   "mode": "into-screen",
+   "notes": "balcony walkway, then a hover course over floating platforms with the camera behind and slightly to the side"
+  },
+  {
+   "section": "S5",
+   "mode": "into-screen",
+   "notes": "bonus pad"
+  },
+  {
+   "section": "B",
+   "mode": "side-scroll",
+   "notes": "bonus: house, carved dragon bridge, TNT/iron row, left to right"
+  },
+  {
+   "section": "S6",
+   "mode": "side-scroll",
+   "notes": "plaza, side-view flamethrower corridor, square pillars over the void"
+  },
+  {
+   "section": "S7",
+   "mode": "side-scroll",
+   "notes": "tower face with Nitro shelves; into-screen corridors (lions, red carpet); vertical shafts seen from behind; hidden-gem drop"
+  },
+  {
+   "section": "S8",
+   "mode": "into-screen",
+   "notes": "wall-run course with alternating walls; narrow plank bridge"
+  },
+  {
+   "section": "S9",
+   "mode": "side-scroll",
+   "notes": "great wall, left to right, with phase platforms"
+  },
+  {
+   "section": "S10",
+   "mode": "into-screen",
+   "notes": "phase wall-runs; TNT springboard landing; C8"
+  },
+  {
+   "section": "S11",
+   "mode": "into-screen",
+   "notes": "final hover course past flame totems to the exit stairs"
+  },
+  {
+   "section": "S12",
+   "mode": "into-screen",
+   "notes": "exit sign and Nitro switch"
+  }
+ ],
+ "platforms": [
+  {
+   "id": "P-S1-a",
+   "section": "S1",
+   "shape": "wide floor (courtyard with a tree)",
+   "size": "~8 x 6",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the first crates beside the spawn",
+   "evidence": "LP1 1:53:00-04",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-b",
+   "section": "S1",
+   "shape": "corridor (stone path along the pond)",
+   "size": "~3 wide",
+   "heightDelta": "0 to -1 (steps)",
+   "edges": "open on the water side",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "a spirit lion drifts on it (E-S1-a)",
+   "evidence": "LP1 1:53:06-12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-c",
+   "section": "S1",
+   "shape": "bridge/plank (boardwalk)",
+   "size": "~2 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "landing of the first wall-run, with a second spirit lion",
+   "evidence": "LP1 1:53:16-18",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-d",
+   "section": "S1",
+   "shape": "square pad (stone pad between wall-runs)",
+   "size": "~2 x 2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING",
+    "REST"
+   ],
+   "move": [
+    "wall-run"
+   ],
+   "why": "a stop between two walls",
+   "evidence": "LP1 1:53:19",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S1-e",
+   "section": "S1",
+   "shape": "round/hex pillar (round stone well with a red mat)",
+   "size": "~3 across",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING",
+    "REST"
+   ],
+   "move": [
+    "wall-run"
+   ],
+   "why": "landing with a crate on it",
+   "evidence": "LP1 1:53:21-22",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S1-f",
+   "section": "S1",
+   "shape": "wide floor (wooden dock)",
+   "size": "~5 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C1 with crates to its left (S1-c)",
+   "evidence": "LP1 1:53:24-27.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-a",
+   "section": "S2",
+   "shape": "stepping stones (lily pads)",
+   "size": "2-2.5 across",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static (no sinking seen)",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "crates ride the pads (S2-b)",
+   "evidence": "LP1 1:53:28-42",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-b",
+   "section": "S2",
+   "shape": "square pad (low stone pads)",
+   "size": "~2 x 2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING",
+    "LANDING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "each holds a crate",
+   "evidence": "LP1 1:53:30-39",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-c",
+   "section": "S2",
+   "shape": "bridge/plank (arched wooden bridge)",
+   "size": "~3 wide",
+   "heightDelta": "+1",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "leads to C2",
+   "evidence": "LP1 1:53:40-45",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S2-d",
+   "section": "S2",
+   "shape": "corridor (path and railed stair)",
+   "size": "~3 wide",
+   "heightDelta": "+2 to +3",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "two spirit lions on the line",
+   "evidence": "LP1 1:53:45-50",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-a",
+   "section": "S3",
+   "shape": "wide floor (landing under the broken wall)",
+   "size": "~5 x 3",
+   "heightDelta": 0,
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "stage for the strong-crate-on-TNT step (S3-a)",
+   "evidence": "LP1 1:53:51-56",
+   "confidence": "high"
+  },
+  {
+   "id": "P-S3-b",
+   "section": "S3",
+   "shape": "narrow ledge (tower-face plank shelves)",
+   "size": "1.5-2 x 1",
+   "heightDelta": "+1.5 to +2 each",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "the side-view climb to the mask",
+   "evidence": "LP1 1:53:58-1:54:13",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-c",
+   "section": "S3",
+   "shape": "square pad (alcove behind a spiral seal)",
+   "size": "~3 x 2",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "opens as the player passes",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "four crates and fruit in a niche (S3-b)",
+   "evidence": "LP1 1:54:01.5-05",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S3-d",
+   "section": "S3",
+   "shape": "corridor (balcony walkway)",
+   "size": "~3 wide",
+   "heightDelta": 0,
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the first flame totem fires across it from a floating island",
+   "evidence": "LP1 1:54:15-21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-a",
+   "section": "S4",
+   "shape": "floating platform (stone)",
+   "size": "~4 x 3",
+   "heightDelta": "-1 to +1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING",
+    "LANDING"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "hover targets between flame totems; the tape sits on one",
+   "evidence": "LP1 1:54:22-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-b",
+   "section": "S4",
+   "shape": "round/hex pillar (round platform)",
+   "size": "~5 across",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "ARENA"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "?/T/? cluster and a spirit lion",
+   "evidence": "LP1 1:54:40-47",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S4-c",
+   "section": "S4",
+   "shape": "floating platform (around a broken arch)",
+   "size": "3-4 across",
+   "heightDelta": "+/-1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING",
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "two dragons sweep here; C3 and one crate before them (S4-c)",
+   "evidence": "LP1 1:54:50-1:55:00",
+   "confidence": "low"
+  },
+  {
+   "id": "P-B-a",
+   "section": "B",
+   "shape": "wide floor (wooden house deck)",
+   "size": "4-5 x 2",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "bonus start beside the 3x3 grid",
+   "evidence": "LP1 1:55:04.5-10",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-b",
+   "section": "B",
+   "shape": "bridge/plank (row of TNT and iron crates)",
+   "size": "~20 x 1",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "each TNT stepped on lights (fuses 2-3 s); iron is solid",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "running"
+   ],
+   "why": "the floor is the timer and 9 crates",
+   "evidence": "LP1 1:55:12.5-25",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-B-c",
+   "section": "B",
+   "shape": "square pad (pavilion)",
+   "size": "~3 x 2",
+   "heightDelta": "+1",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "LANDING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "Nitro stack, ? on B and the green ! beside it",
+   "evidence": "LP1 1:55:30-37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S6-a",
+   "section": "S6",
+   "shape": "wide floor (plaza after the bonus)",
+   "size": "~6 x 5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "Akano orb",
+   "evidence": "LP1 1:55:41-45",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S6-b",
+   "section": "S6",
+   "shape": "corridor (flamethrower corridor, side view)",
+   "size": "~3 deep",
+   "heightDelta": 0,
+   "edges": "walled behind",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk",
+    "spin-extended"
+   ],
+   "why": "a flame totem fires left and right in its middle, with a crate above it (S6-a)",
+   "evidence": "LP1 1:55:47-54.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S6-c",
+   "section": "S6",
+   "shape": "round/hex pillar (square pillars with red mats)",
+   "size": "~1.5 x 1.5",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "the smallest pads so far, over the void",
+   "evidence": "LP1 1:55:56-57.5",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S6-d",
+   "section": "S6",
+   "shape": "wide floor (balcony walkway)",
+   "size": "~3 wide",
+   "heightDelta": 0,
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C4",
+   "evidence": "LP1 1:56:00-02",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-a",
+   "section": "S7",
+   "shape": "narrow ledge (tower-face balconies and shelves)",
+   "size": "~2 x 1",
+   "heightDelta": "+1.5 to +2 each",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "double",
+    "spin-extended"
+   ],
+   "why": "Nitro rows share the shelves (O-S7-a)",
+   "evidence": "LP1 1:56:03-12",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-b",
+   "section": "S7",
+   "shape": "crumbling (stone ledge)",
+   "size": "~2 wide",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "breaks up under the player",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "running"
+   ],
+   "why": "keep moving",
+   "evidence": "LP1 1:56:12-17",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-c",
+   "section": "S7",
+   "shape": "corridor (corridor with two guardian lions)",
+   "size": "~3 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "ARENA",
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "a gatekeeper pair before the updraft",
+   "evidence": "LP1 1:56:22-23, 1:57:02-07",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-d",
+   "section": "S7",
+   "shape": "corridor (red-carpet corridor ending in an updraft)",
+   "size": "~3 wide",
+   "heightDelta": "up (the whirling Crash rises)",
+   "edges": "railed",
+   "behaviour": "a column at the end lifts the spinning player (1:56:25-26)",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "GR's 'wind tunnel', most likely",
+   "evidence": "LP1 1:56:24-27; GR 98",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-e",
+   "section": "S7",
+   "shape": "narrow ledge (Nitro balcony, side view)",
+   "size": "~3 deep",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "Nitro stacks 2-3 high line the balcony",
+   "evidence": "LP1 1:56:27-30",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-f",
+   "section": "S7",
+   "shape": "square pad (stone block with a red mat)",
+   "size": "~3 x 2",
+   "heightDelta": "+1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "a lion is met near it (E-S7-b)",
+   "evidence": "LP1 1:56:37-41",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-g",
+   "section": "S7",
+   "shape": "corridor (red-carpet corridor with three mid-height flame jets)",
+   "size": "~3 wide",
+   "heightDelta": 0,
+   "edges": "walled",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk",
+    "slide"
+   ],
+   "why": "the jets cross at chest height; Crash passes under them",
+   "evidence": "LP1 1:56:43-44",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-h",
+   "section": "S7",
+   "shape": "round/hex pillar (round platform at the end of the walkway, over the void)",
+   "size": "~4 across",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "PERCH"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the edge you drop from to the hidden gem",
+   "evidence": "LP1 1:57:37-42; GR 98",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S7-i",
+   "section": "S7",
+   "shape": "floating platform (broken-stone pieces on the gem path)",
+   "size": "~2 x 2",
+   "heightDelta": "+/-1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "double"
+   ],
+   "why": "the 'tricky path' of GR's hidden-gem route",
+   "evidence": "LP1 1:57:39.5-47; GR",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-j",
+   "section": "S7",
+   "shape": "narrow ledge (high ledges right of the end of the wind tunnels)",
+   "size": "not visible",
+   "heightDelta": "up (whirlwind height)",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "BONUS-PAD"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "3 + 3 crates (2 TNT) reachable only with the hover (S7-b)",
+   "evidence": "GR 104",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S7-k",
+   "section": "S7",
+   "shape": "wide floor (landing between two firetraps)",
+   "size": "~4 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "Aku and C5",
+   "evidence": "LP1 1:58:24.5-29.5; GR 106",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S8-a",
+   "section": "S8",
+   "shape": "bridge/plank (narrow plank bridge into the screen)",
+   "size": "~1 wide",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHOKE"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the narrowest footing of the level, with dragons arching over it",
+   "evidence": "LP1 1:58:34",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S8-b",
+   "section": "S8",
+   "shape": "floating platform (between flame totems)",
+   "size": "~3 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump",
+    "spin-extended"
+   ],
+   "why": "landings between jets",
+   "evidence": "LP1 1:58:35.5-37",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S8-c",
+   "section": "S8",
+   "shape": "wall (chevron wall-run walls on alternating sides)",
+   "size": "6-10 long",
+   "heightDelta": 0,
+   "edges": "-",
+   "behaviour": "wall-run surface",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "wall-run"
+   ],
+   "why": "a chain with no floor below",
+   "evidence": "LP1 1:58:39.5-59.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S8-d",
+   "section": "S8",
+   "shape": "round/hex pillar (1 u posts between wall-runs)",
+   "size": "~1 x 1",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "crates on posts between walls (S8-a)",
+   "evidence": "LP1 1:58:43-47.5",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S9-a",
+   "section": "S9",
+   "shape": "corridor (plank walkway along the base of the great wall)",
+   "size": "~2 deep",
+   "heightDelta": "+/-1",
+   "edges": "open",
+   "behaviour": "static, broken into segments",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "walk",
+    "jump"
+   ],
+   "why": "the main line of the phase section",
+   "evidence": "LP1 1:59:04-15",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S9-b",
+   "section": "S9",
+   "shape": "phase/timed (phase planks)",
+   "size": "~2 x 1",
+   "heightDelta": "0 to +1",
+   "edges": "open",
+   "behaviour": "solid only in one Lani-Loli phase",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "phase",
+    "jump"
+   ],
+   "why": "fill the holes in the base walkway",
+   "evidence": "LP1 1:59:08-11",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S9-c",
+   "section": "S9",
+   "shape": "narrow ledge (crenellated wall top)",
+   "size": "1-2 deep",
+   "heightDelta": "+2 to +3",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "jump"
+   ],
+   "why": "crates and a spirit lion use the wall top",
+   "evidence": "LP1 1:59:12-42",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S10-a",
+   "section": "S10",
+   "shape": "square pad (C7 stone pad)",
+   "size": "~4 x 4",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD",
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "two spirits hover here; the respawn point for the wall-runs",
+   "evidence": "LP1 1:59:54-2:00:03",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S10-b",
+   "section": "S10",
+   "shape": "wall (wall-run walls, some phase-translucent)",
+   "size": "6-10 long",
+   "heightDelta": 0,
+   "edges": "-",
+   "behaviour": "wall-run surface; one wall shows blue and translucent at 2:00:06",
+   "roles": [
+    "TIMING-STEP"
+   ],
+   "move": [
+    "wall-run",
+    "phase"
+   ],
+   "why": "the mask's phase rule applied to wall-runs",
+   "evidence": "LP1 1:59:56-2:00:12",
+   "confidence": "low"
+  },
+  {
+   "id": "P-S10-c",
+   "section": "S10",
+   "shape": "wide floor (red-mat landing)",
+   "size": "~4 x 3",
+   "heightDelta": 0,
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "LANDING"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "the TNT springboard (S10-b) under flame jets",
+   "evidence": "LP1 2:00:09-10.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S10-d",
+   "section": "S10",
+   "shape": "wide floor (stone landing between walls)",
+   "size": "~4 x 4",
+   "heightDelta": 0,
+   "edges": "walled both sides",
+   "behaviour": "static",
+   "roles": [
+    "CHECKPOINT-PAD"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "C8 and the Akano orb before the finale",
+   "evidence": "LP1 2:00:13.5-21",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S11-a",
+   "section": "S11",
+   "shape": "floating platform (between flame totems)",
+   "size": "3-4 across",
+   "heightDelta": "+/-1",
+   "edges": "open",
+   "behaviour": "static",
+   "roles": [
+    "STEPPING"
+   ],
+   "move": [
+    "spin-extended"
+   ],
+   "why": "the last hover course",
+   "evidence": "LP1 2:00:22-37",
+   "confidence": "medium"
+  },
+  {
+   "id": "P-S11-b",
+   "section": "S11",
+   "shape": "wide floor (exit stairs)",
+   "size": "~6 wide",
+   "heightDelta": "+2 to +3",
+   "edges": "railed",
+   "behaviour": "static",
+   "roles": [
+    "REST"
+   ],
+   "move": [
+    "walk"
+   ],
+   "why": "exit sign 155/187 and the Nitro switch",
+   "evidence": "LP1 2:00:36-42",
+   "confidence": "medium"
+  }
+ ],
+ "gapsDetailed": [
+  {
+   "id": "G-S1-a",
+   "section": "S1",
+   "kind": "water crossed by the first wall-run",
+   "width": "6-8 (wall length)",
+   "heightDelta": 0,
+   "landing": "~2-wide boardwalk",
+   "lethal": true,
+   "runUp": "2-3",
+   "move": [
+    "wall-run"
+   ],
+   "coupling": "on-screen prompt 'JUMP TO WALL RUN'",
+   "failure": "fall into the water (death inferred)",
+   "nearby": [
+    "P-S1-c",
+    "E-S1-b"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "a new verb taught over the level's only water, with a prompt",
+   "evidence": "LP1 1:53:13-16",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S1-b",
+   "section": "S1",
+   "kind": "water crossed by a wall-run chain (wall, pad, wall, pillar, wall)",
+   "width": "6-8 per wall",
+   "heightDelta": 0,
+   "landing": "2 x 2 pad; 3-across pillar; dock",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "wall-run"
+   ],
+   "coupling": "a solid landing between every wall",
+   "failure": "fall into the water",
+   "nearby": [
+    "S1-b",
+    "S1-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the verb repeats three times with rests between",
+   "evidence": "LP1 1:53:18-24",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S2-a",
+   "section": "S2",
+   "kind": "water between pond pads (lethality not observed)",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "lily pad 2-2.5 or stone pad 2 x 2",
+   "lethal": null,
+   "runUp": "1-2",
+   "move": [
+    "plain"
+   ],
+   "coupling": "flank wall-runs offer alternative lines",
+   "failure": "not observed",
+   "nearby": [
+    "S2-b"
+   ],
+   "roles": [
+    "STEPPING"
+   ],
+   "why": "an even stepping course carrying crates",
+   "evidence": "LP1 1:53:28-42",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S2-b",
+   "section": "S2",
+   "kind": "water reach to a floating crate",
+   "width": "not visible",
+   "heightDelta": "-1 (low over the water)",
+   "landing": "none (crate only)",
+   "lethal": null,
+   "runUp": "2-3",
+   "move": [
+    "slide-jump"
+   ],
+   "coupling": "none",
+   "failure": "miss the crate, or fall",
+   "nearby": [
+    "S2-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "GR: reach it with a slide-jump",
+   "evidence": "GR 26",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S3-a",
+   "section": "S3",
+   "kind": "climb (strong crate on TNT as a step up the broken wall)",
+   "width": "0",
+   "heightDelta": "+3",
+   "landing": "wall top",
+   "lethal": false,
+   "runUp": "0",
+   "move": [
+    "plain",
+    "crate-bounce"
+   ],
+   "coupling": "TNT under the strong crate (fuse 3 s); the player stands on the strong crate during the count",
+   "failure": "caught in the blast",
+   "nearby": [
+    "S3-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the crate puzzle is the climbing step",
+   "evidence": "LP1 1:53:51-55.5",
+   "confidence": "high"
+  },
+  {
+   "id": "G-S3-b",
+   "section": "S3",
+   "kind": "bottomless pit (shelf to shelf on the tower face)",
+   "width": "2-3",
+   "heightDelta": "+1.5 to +2",
+   "landing": "1.5-2 x 1 shelf",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "plain",
+    "double"
+   ],
+   "coupling": "none",
+   "failure": "fall into the void",
+   "nearby": [
+    "S3-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "an even climb with no hazard: the calm before the mask",
+   "evidence": "LP1 1:54:00-13",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S4-a",
+   "section": "S4",
+   "kind": "bottomless pit (hover gaps between floating platforms)",
+   "width": "4-6",
+   "heightDelta": "-1 to +1",
+   "landing": "~4 x 3",
+   "lethal": true,
+   "runUp": "2-3",
+   "move": [
+    "spin-extended"
+   ],
+   "coupling": "flame-totem jets cross the gaps (O-S4-a)",
+   "failure": "fall into the void",
+   "nearby": [
+    "S4-a"
+   ],
+   "roles": [
+    "TEACH",
+    "TEST"
+   ],
+   "why": "the hover is taught on wide landings; the jets add timing",
+   "evidence": "LP1 1:54:22-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S4-b",
+   "section": "S4",
+   "kind": "bottomless pit (hover gaps around the broken arch)",
+   "width": "4-6",
+   "heightDelta": "+/-1",
+   "landing": "3-4 across",
+   "lethal": true,
+   "runUp": "2",
+   "move": [
+    "spin-extended"
+   ],
+   "coupling": "two dragons sweeping (O-S4-c)",
+   "failure": "fall into the void",
+   "nearby": [
+    "S4-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the hover meets the dragons",
+   "evidence": "LP1 1:54:50-57",
+   "confidence": "low"
+  },
+  {
+   "id": "G-B-a",
+   "section": "B",
+   "kind": "void under the TNT/iron row (bonus)",
+   "width": "~20 (row length)",
+   "heightDelta": 0,
+   "landing": "pavilion",
+   "lethal": false,
+   "runUp": "-",
+   "move": [
+    "running"
+   ],
+   "coupling": "every TNT stepped on lights; only iron is safe to stop on",
+   "failure": "leave the bonus (no life lost)",
+   "nearby": [
+    "B-a",
+    "B-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "keep moving over explosives",
+   "evidence": "LP1 1:55:12.5-25",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S6-a",
+   "section": "S6",
+   "kind": "bottomless pit (square-pillar hops)",
+   "width": "2-3",
+   "heightDelta": 0,
+   "landing": "~1.5 x 1.5",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "plain"
+   ],
+   "coupling": "a cyan spirit floats beside the line; a flame jet from the left",
+   "failure": "death",
+   "nearby": [
+    "E-S6-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "small landings and a floater between them",
+   "evidence": "LP1 1:55:56-59",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S7-a",
+   "section": "S7",
+   "kind": "bottomless pit (shelf climb past Nitro rows)",
+   "width": "2-3",
+   "heightDelta": "+1.5 to +2",
+   "landing": "~2 x 1 shelf",
+   "lethal": true,
+   "runUp": "1",
+   "move": [
+    "double",
+    "spin-extended"
+   ],
+   "coupling": "Nitro rows on neighbouring shelves",
+   "failure": "death (fall or Nitro)",
+   "nearby": [
+    "O-S7-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the Nitro make the shelves narrower than they look",
+   "evidence": "LP1 1:56:03-12",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S7-b",
+   "section": "S7",
+   "kind": "drop-down (vertical flame shaft)",
+   "width": "-",
+   "heightDelta": "-4 to -6",
+   "landing": "red-carpet walkway",
+   "lethal": true,
+   "runUp": "-",
+   "move": [
+    "spin-extended"
+   ],
+   "coupling": "totem jets alternate at two heights across the shaft",
+   "failure": "burned: the run's first death (1:56:49.5)",
+   "nearby": [
+    "O-S7-f"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the descent is timed against the jets",
+   "evidence": "LP1 1:56:45-49.5, 1:57:31.5-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S7-c",
+   "section": "S7",
+   "kind": "drop-down (hidden-gem drop from the round platform)",
+   "width": "-",
+   "heightDelta": "-3 to -5",
+   "landing": "~2 x 2 floating piece",
+   "lethal": true,
+   "runUp": "-",
+   "move": [
+    "plain"
+   ],
+   "coupling": "none",
+   "failure": "fall into the void",
+   "nearby": [
+    "P-S7-h",
+    "S7-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "GR: an empty space right of the wind tunnel; drop into it for the gem",
+   "evidence": "LP1 1:57:37-40; GR 98",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S8-a",
+   "section": "S8",
+   "kind": "bottomless pit (wall-run chain)",
+   "width": "2-4 between walls",
+   "heightDelta": 0,
+   "landing": "next wall or a 1 x 1 post",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "wall-run",
+    "double"
+   ],
+   "coupling": "a spirit floats in a gap; flame jets on the platforms between",
+   "failure": "death",
+   "nearby": [
+    "S8-a",
+    "E-S8-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "wall to wall with almost no landings",
+   "evidence": "LP1 1:58:39.5-59.5",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S9-a",
+   "section": "S9",
+   "kind": "bottomless pit (holes in the base walkway bridged by phase planks)",
+   "width": "2-4",
+   "heightDelta": "0 to +1",
+   "landing": "phase plank ~2 x 1",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "phase",
+    "plain"
+   ],
+   "coupling": "plank solidity follows the player's phase",
+   "failure": "fall",
+   "nearby": [
+    "S9-a",
+    "S9-b"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the mask's footing rule taught in side view, where both states are visible",
+   "evidence": "LP1 1:59:04-40",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S10-a",
+   "section": "S10",
+   "kind": "bottomless pit (phase wall-run chain)",
+   "width": "2-4 between walls",
+   "heightDelta": 0,
+   "landing": "next wall",
+   "lethal": true,
+   "runUp": "1-2",
+   "move": [
+    "wall-run",
+    "phase",
+    "double"
+   ],
+   "coupling": "wall solidity appears to follow the phase (inferred)",
+   "failure": "fell from a wall-run: the run's third death (1:59:58.5)",
+   "nearby": [
+    "S10-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "two verbs at once; C7 sits right before it",
+   "evidence": "LP1 1:59:56-2:00:12",
+   "confidence": "low"
+  },
+  {
+   "id": "G-S10-b",
+   "section": "S10",
+   "kind": "chasm with bounce (TNT springboard up to an off-camera crate)",
+   "width": "0",
+   "heightDelta": "up (above the camera)",
+   "landing": "none",
+   "lethal": false,
+   "runUp": "0",
+   "move": [
+    "crate-bounce"
+   ],
+   "coupling": "the TNT must survive until after the bounce",
+   "failure": "crate lost (all-box only)",
+   "nearby": [
+    "S10-b",
+    "S10-c"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "GR: bounce toward the right wall first, then break the TNT",
+   "evidence": "LP1 2:00:09-12; GR 139",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S10-c",
+   "section": "S10",
+   "kind": "climb (ledge directly above C8)",
+   "width": "0",
+   "heightDelta": "up",
+   "landing": "ledge",
+   "lethal": false,
+   "runUp": "0",
+   "move": [
+    "double"
+   ],
+   "coupling": "none",
+   "failure": "crate lost",
+   "nearby": [
+    "S10-e"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "GR: take the mask and double-jump straight up",
+   "evidence": "GR 141",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-S11-a",
+   "section": "S11",
+   "kind": "bottomless pit (hover gaps through double flame jets)",
+   "width": "4-6",
+   "heightDelta": "+/-1",
+   "landing": "3-4 across",
+   "lethal": true,
+   "runUp": "2",
+   "move": [
+    "spin-extended"
+   ],
+   "coupling": "two jets at different heights cross each gap",
+   "failure": "death",
+   "nearby": [
+    "S11-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the S4 course at its hardest",
+   "evidence": "LP1 2:00:15-37",
+   "confidence": "medium"
+  }
+ ],
+ "jumpSequences": [
+  {
+   "id": "J-S1-a",
+   "section": "S1",
+   "count": 3,
+   "moves": [
+    "wall-run"
+   ],
+   "rhythm": "even",
+   "maxGap": "6-8 (wall)",
+   "rest": "P-S1-f",
+   "noStop": false,
+   "why": "wall, pad, wall, pillar, wall: a landing after every wall",
+   "evidence": "LP1 1:53:18-24"
+  },
+  {
+   "id": "J-S2-a",
+   "section": "S2",
+   "count": 6,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "P-S2-c",
+   "noStop": false,
+   "why": "pad hops carrying crates; flank wall-runs as optional lines",
+   "evidence": "LP1 1:53:28-42"
+  },
+  {
+   "id": "J-S3-a",
+   "section": "S3",
+   "count": 9,
+   "moves": [
+    "plain",
+    "double"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "P-S3-d",
+   "noStop": false,
+   "why": "a hazard-free climb past the opening alcove",
+   "evidence": "LP1 1:54:00-15"
+  },
+  {
+   "id": "J-S4-a",
+   "section": "S4",
+   "count": 4,
+   "moves": [
+    "spin-extended"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "6",
+   "rest": "P-S4-b",
+   "noStop": false,
+   "why": "hover hops timed between totem bursts",
+   "evidence": "LP1 1:54:22-40"
+  },
+  {
+   "id": "J-S6-a",
+   "section": "S6",
+   "count": 3,
+   "moves": [
+    "plain"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "P-S6-d",
+   "noStop": false,
+   "why": "the smallest pads, with a floater beside them",
+   "evidence": "LP1 1:55:56-1:56:00"
+  },
+  {
+   "id": "J-S7-a",
+   "section": "S7",
+   "count": 5,
+   "moves": [
+    "double",
+    "spin-extended"
+   ],
+   "rhythm": "even",
+   "maxGap": "3",
+   "rest": "P-S7-e",
+   "noStop": false,
+   "why": "Nitro-shelf climb then a crumbling ledge",
+   "evidence": "LP1 1:56:03-17"
+  },
+  {
+   "id": "J-S8-a",
+   "section": "S8",
+   "count": 7,
+   "moves": [
+    "wall-run",
+    "double"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "4",
+   "rest": "C6 platform",
+   "noStop": true,
+   "why": "alternating walls; a wall-run cannot stop",
+   "evidence": "LP1 1:58:39-59"
+  },
+  {
+   "id": "J-S9-a",
+   "section": "S9",
+   "count": 7,
+   "moves": [
+    "phase",
+    "plain"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "4",
+   "rest": "C7 pad (P-S10-a)",
+   "noStop": false,
+   "why": "phase toggles and a leaping spirit lion set the beat",
+   "evidence": "LP1 1:59:04-52"
+  },
+  {
+   "id": "J-S10-a",
+   "section": "S10",
+   "count": 4,
+   "moves": [
+    "wall-run",
+    "phase",
+    "double"
+   ],
+   "rhythm": "even",
+   "maxGap": "4",
+   "rest": "P-S10-c",
+   "noStop": true,
+   "why": "phase wall-runs: the run's third death",
+   "evidence": "LP1 1:59:56-2:00:12"
+  },
+  {
+   "id": "J-S11-a",
+   "section": "S11",
+   "count": 4,
+   "moves": [
+    "spin-extended"
+   ],
+   "rhythm": "syncopated",
+   "maxGap": "6",
+   "rest": "P-S11-b",
+   "noStop": false,
+   "why": "hover hops through double jets",
+   "evidence": "LP1 2:00:22-39"
+  }
+ ],
+ "obstacles": [
+  {
+   "id": "O-S2-a",
+   "section": "S2",
+   "kind": "splashes from the pond beside the pads (fish or spouts; not resolved)",
+   "placement": "flank",
+   "timing": "intermittent (1:53:38, 1:53:43.5)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": null,
+   "combinedWith": [
+    "P-S2-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "something leaps or spouts beside the stepping line",
+   "evidence": "LP1 1:53:38, 1:53:43.5",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S3-a",
+   "section": "S3",
+   "kind": "TNT under a strong crate",
+   "placement": "on platform",
+   "timing": "fuse 3 s (2 at 1:53:54)",
+   "counter": [
+    "destroy (light it, hop to the wall top)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S3-a",
+    "S3-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "the explosive is the way up and the way through",
+   "evidence": "LP1 1:53:51-55.5; GR 42",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S4-a",
+   "section": "S4",
+   "kind": "flame-jet totems on floating islands (two horizontal jets at two heights)",
+   "placement": "across path",
+   "timing": "bursts of about 1-2 s with pauses (1:54:18-21)",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S3-d",
+    "G-S4-a"
+   ],
+   "roles": [
+    "TEACH",
+    "TIMING-GATE"
+   ],
+   "why": "first seen across a solid balcony before the mask, then across hover gaps",
+   "evidence": "LP1 1:54:15-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-b",
+   "section": "S4",
+   "kind": "diagonal flame jet on the tape platform",
+   "placement": "on platform",
+   "timing": "intermittent",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S4-a crates"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "guards the crates and the tape",
+   "evidence": "LP1 1:54:33-40",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S4-c",
+   "section": "S4",
+   "kind": "two spectral dragons sweeping around a broken arch",
+   "placement": "across path",
+   "timing": "continuous sweeps",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": null,
+   "combinedWith": [
+    "G-S4-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "GR places a checkpoint and a crate just before them",
+   "evidence": "LP1 1:54:50-57; GR 60",
+   "confidence": "low"
+  },
+  {
+   "id": "O-B-a",
+   "section": "B",
+   "kind": "TNT row as the bridge (lit when stepped on)",
+   "placement": "on platform",
+   "timing": "fuses 2-3 s",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-B-b"
+   ],
+   "roles": [
+    "TIMING-GATE",
+    "RHYTHM"
+   ],
+   "why": "only the iron is safe to stand on; in a bonus a death ends the attempt without costing a life",
+   "evidence": "LP1 1:55:12.5-25",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-B-b",
+   "section": "B",
+   "kind": "Nitro stack (3) beside the last crate",
+   "placement": "on platform",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "B-e"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "paid by the bonus's own green !; touching it ends the bonus attempt",
+   "evidence": "LP1 1:55:30-37.5",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S6-a",
+   "section": "S6",
+   "kind": "flamethrower totem in the corridor (fires left and right in turn)",
+   "placement": "across path",
+   "timing": "alternating bursts",
+   "counter": [
+    "wait-and-go",
+    "jump over (hover up to the crate, GR)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "E-S6-a",
+    "S6-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "one crate floats directly above it (GR 91)",
+   "evidence": "LP1 1:55:47-54.5; GR 91",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S6-b",
+   "section": "S6",
+   "kind": "TNT pair on the floor",
+   "placement": "on platform",
+   "timing": "fuse 3 s",
+   "counter": [
+    "destroy (light and step away)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S6-a"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "GR: don't forget the TNT crates",
+   "evidence": "LP1 1:55:48.5-50; GR 96",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S7-a",
+   "section": "S7",
+   "kind": "Nitro rows and Nitro blocks on shelves and balconies",
+   "placement": "on platform / flank",
+   "timing": "static",
+   "counter": [
+    "go around"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S7-a",
+    "P-S7-e"
+   ],
+   "roles": [
+    "LANE-BLOCK",
+    "AREA-DENIAL"
+   ],
+   "why": "32 Nitro narrow the climbing line and are paid at the exit",
+   "evidence": "LP1 1:56:03-30, 1:58:09-25",
+   "confidence": "high"
+  },
+  {
+   "id": "O-S7-b",
+   "section": "S7",
+   "kind": "crumbling stone ledge",
+   "placement": "on platform",
+   "timing": "breaks up under the player",
+   "counter": [
+    "outrun"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S7-b"
+   ],
+   "roles": [
+    "RHYTHM"
+   ],
+   "why": "a keep-moving beat between Nitro shelves and the lions",
+   "evidence": "LP1 1:56:12-17",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S7-c",
+   "section": "S7",
+   "kind": "updraft columns (GR 'wind tunnels', inferred)",
+   "placement": "across path",
+   "timing": "constant",
+   "counter": [
+    "ride the updraft (whirlwind active)"
+   ],
+   "lethal": false,
+   "combinedWith": [
+    "P-S7-d"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "a whirling Crash rises at the end of the corridor and again past the wall flames",
+   "evidence": "LP1 1:56:25-26, 1:56:42; GR 98/104",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S7-d",
+   "section": "S7",
+   "kind": "flame totem with two horizontal jets across the balcony, plus a dragon",
+   "placement": "across path",
+   "timing": "bursts",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "O-S7-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "totem and dragon combined for the first time",
+   "evidence": "LP1 1:56:31-34",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S7-e",
+   "section": "S7",
+   "kind": "wall flame jets beside the second updraft; three mid-height jets across the red-carpet corridor",
+   "placement": "across path",
+   "timing": "bursts",
+   "counter": [
+    "wait-and-go",
+    "slide under"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S7-g"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the jets sit at chest height and Crash passes beneath them",
+   "evidence": "LP1 1:56:42-44",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S7-f",
+   "section": "S7",
+   "kind": "flame shaft: totem jets at two heights across a vertical drop",
+   "placement": "across path",
+   "timing": "alternating bursts",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S7-b"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the run died here once",
+   "evidence": "LP1 1:56:45-49.5, 1:57:31.5-35",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S7-g",
+   "section": "S7",
+   "kind": "firetraps flanking the C5 landing",
+   "placement": "flank",
+   "timing": "bursts",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S7-k"
+   ],
+   "roles": [
+    "AREA-DENIAL"
+   ],
+   "why": "GR: Aku and the checkpoint sit between two firetraps",
+   "evidence": "LP1 1:58:24.5-29.5; GR 106",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S8-a",
+   "section": "S8",
+   "kind": "flame totems flanking the floating platforms and the plank bridge (double jets)",
+   "placement": "across path",
+   "timing": "bursts",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "P-S8-a",
+    "P-S8-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "totems on both sides of the course",
+   "evidence": "LP1 1:58:31-37",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S8-b",
+   "section": "S8",
+   "kind": "dragons arching over the walkway and the plank bridge",
+   "placement": "overhead / across path",
+   "timing": "continuous",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": null,
+   "combinedWith": [
+    "P-S8-a"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "a sweep over the narrowest footing",
+   "evidence": "LP1 1:58:32.5-34",
+   "confidence": "low"
+  },
+  {
+   "id": "O-S9-a",
+   "section": "S9",
+   "kind": "phase TNT in the first phase row",
+   "placement": "on platform",
+   "timing": "fuse 3 s (3 at 1:59:07.5)",
+   "counter": [
+    "destroy (phase in, spin, step away)"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "S9-a"
+   ],
+   "roles": [
+    "TEACH"
+   ],
+   "why": "an explosive that exists in one phase only",
+   "evidence": "LP1 1:59:02.5-07.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S10-a",
+   "section": "S10",
+   "kind": "flame-totem jets over the TNT springboard landing",
+   "placement": "flank / overhead",
+   "timing": "bursts",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S10-b"
+   ],
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "why": "the springboard trick is done between bursts",
+   "evidence": "LP1 2:00:09-10.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "O-S11-a",
+   "section": "S11",
+   "kind": "double flame jets across every hover gap",
+   "placement": "across path",
+   "timing": "bursts of about 2-3 s",
+   "counter": [
+    "wait-and-go"
+   ],
+   "lethal": true,
+   "combinedWith": [
+    "G-S11-a"
+   ],
+   "roles": [
+    "TEST"
+   ],
+   "why": "the level's metronome at its hardest",
+   "evidence": "LP1 2:00:15-37",
+   "confidence": "medium"
+  }
+ ],
+ "enemiesDetailed": [
+  {
+   "id": "E-S1-a",
+   "section": "S1",
+   "kind": "spirit lion (cyan ghost)",
+   "archetype": "flier",
+   "behaviour": "drifts along the stone path",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TEACH",
+    "HURDLE"
+   ],
+   "firstAlone": true,
+   "why": "the first enemy is alone on a 3 u path",
+   "evidence": "LP1 1:53:06-10",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S1-b",
+   "section": "S1",
+   "kind": "spirit lion",
+   "archetype": "flier",
+   "behaviour": "on the boardwalk where the first wall-run lands",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "an enemy at the landing of a new verb",
+   "evidence": "LP1 1:53:16-18",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S2-a",
+   "section": "S2",
+   "kind": "spirit lions x2",
+   "archetype": "flier",
+   "behaviour": "drift on the path after the bridge",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TEST",
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "two at once after C2",
+   "evidence": "LP1 1:53:45-49.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S4-a",
+   "section": "S4",
+   "kind": "spirit lion",
+   "archetype": "flier",
+   "behaviour": "on the round platform beside the ?/T/? cluster",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [
+    "spinning into the TNT"
+   ],
+   "placement": "guarding crate",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "enemy and TNT share the landing",
+   "evidence": "LP1 1:54:42-46",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S6-a",
+   "section": "S6",
+   "kind": "white guardian lion (GR 'golem')",
+   "archetype": "chaser",
+   "behaviour": "charges along the corridor",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [],
+   "placement": "between hazards (flamethrower and TNT pair)",
+   "roles": [
+    "TEST"
+   ],
+   "firstAlone": false,
+   "why": "the heavy enemy arrives only after the mask",
+   "evidence": "LP1 1:55:51.5-53",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S6-b",
+   "section": "S6",
+   "kind": "cyan spirit",
+   "archetype": "flier",
+   "behaviour": "hovers beside the pillar line and on the C4 walkway",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "between hazards",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "a floater next to 1.5 u pads",
+   "evidence": "LP1 1:55:56-59",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S7-a",
+   "section": "S7",
+   "kind": "guardian lions x2 (golden-green; GR 'golem')",
+   "archetype": "chaser",
+   "behaviour": "stand in a corridor and charge",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [],
+   "placement": "on line (corridor before the updraft)",
+   "roles": [
+    "GATEKEEPER"
+   ],
+   "firstAlone": false,
+   "why": "GR: pass the golem before the Nitro blocks",
+   "evidence": "LP1 1:56:22-23, 1:57:02-07; GR 104",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S7-b",
+   "section": "S7",
+   "kind": "guardian lion",
+   "archetype": "chaser",
+   "behaviour": "on a ledge after a dragon-swept gap",
+   "counter": [
+    "spin (whirlwind)"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "a landing that must be cleared",
+   "evidence": "LP1 1:56:37-38, 1:57:24.5",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S7-c",
+   "section": "S7",
+   "kind": "guardian lion on the hidden-gem path",
+   "archetype": "static",
+   "behaviour": "on a ledge above a blue roof",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "landing platform",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": true,
+   "why": "guards the way back from the gem",
+   "evidence": "LP1 1:57:49.5",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S8-a",
+   "section": "S8",
+   "kind": "cyan spirits",
+   "archetype": "flier",
+   "behaviour": "hover on a ledge and in a gap between wall-runs",
+   "counter": [
+    "avoid",
+    "spin"
+   ],
+   "fails": [
+    "wall-running into it"
+   ],
+   "placement": "between hazards (in the gap)",
+   "roles": [
+    "HURDLE"
+   ],
+   "firstAlone": false,
+   "why": "a floater placed in the air the player must cross",
+   "evidence": "LP1 1:58:38.5-41.5",
+   "confidence": "low"
+  },
+  {
+   "id": "E-S9-a",
+   "section": "S9",
+   "kind": "spirit lion",
+   "archetype": "hopper",
+   "behaviour": "leaps in arcs between the wall top and the phase planks",
+   "counter": [
+    "spin",
+    "avoid"
+   ],
+   "fails": [],
+   "placement": "on line",
+   "roles": [
+    "TIMING-GATE"
+   ],
+   "firstAlone": true,
+   "why": "its arcs set the timing of the phase hops",
+   "evidence": "LP1 1:59:12-14",
+   "confidence": "medium"
+  },
+  {
+   "id": "E-S10-a",
+   "section": "S10",
+   "kind": "cyan spirits x2",
+   "archetype": "flier",
+   "behaviour": "hover over the C7 pad",
+   "counter": [
+    "spin"
+   ],
+   "fails": [],
+   "placement": "landing platform (checkpoint pad)",
+   "roles": [
+    "GUARD"
+   ],
+   "firstAlone": false,
+   "why": "enemies on the respawn pad before the hardest wall-runs",
+   "evidence": "LP1 1:59:54-2:00:03",
+   "confidence": "low"
+  }
+ ],
+ "sectionBeats": [
+  {
+   "section": "S1",
+   "beats": [
+    "courtyard [W ? W]",
+    "path + spirit lion (spin)",
+    "wall-run 1 with a prompt",
+    "boardwalk + spirit lion",
+    "wall-run, pad, wall-run, round pillar (crate), wall-run",
+    "dock [? x x x]",
+    "C1"
+   ],
+   "gaps": 4,
+   "enemies": 2,
+   "hazards": 0
+  },
+  {
+   "section": "S2",
+   "beats": [
+    "lily pads and stone pads with crates; flank wall-runs; splashes",
+    "floating water crate (slide-jump)",
+    "arched bridge",
+    "C2",
+    "crate right of C2",
+    "path with 2 spirit lions"
+   ],
+   "gaps": 7,
+   "enemies": 2,
+   "hazards": 1
+  },
+  {
+   "section": "S3",
+   "beats": [
+    "railed stair",
+    "broken wall: strong crate on TNT as the step (3 s)",
+    "wall top",
+    "tower-face shelf climb",
+    "alcove opens (4 crates)",
+    "balcony: first flame totem + [? ? x]",
+    "Akano"
+   ],
+   "gaps": 10,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S4",
+   "beats": [
+    "hover off the balcony",
+    "floating platforms between flame totems (tape)",
+    "round platform ?/T/? + spirit lion",
+    "dragons round the broken arch",
+    "C3 + 1 crate"
+   ],
+   "gaps": 6,
+   "enemies": 1,
+   "hazards": 3
+  },
+  {
+   "section": "S5",
+   "beats": [
+    "bonus pad + 3 crates"
+   ],
+   "gaps": 0,
+   "enemies": 0,
+   "hazards": 0
+  },
+  {
+   "section": "B",
+   "beats": [
+    "house deck",
+    "3x3 grid on TNT",
+    "TNT/iron row (keep moving)",
+    "floating pairs over the bridge arcs",
+    "pavilion [? on B] + [N N N]",
+    "green !"
+   ],
+   "gaps": 1,
+   "enemies": 0,
+   "hazards": 2
+  },
+  {
+   "section": "S6",
+   "beats": [
+    "plaza (Akano)",
+    "flamethrower corridor (crate above)",
+    "TNT pair",
+    "charging lion",
+    "square pillars over the void + spirit",
+    "C4"
+   ],
+   "gaps": 3,
+   "enemies": 2,
+   "hazards": 2
+  },
+  {
+   "section": "S7",
+   "beats": [
+    "Nitro-shelf climb",
+    "crumbling ledge",
+    "lion pair",
+    "red-carpet corridor + updraft",
+    "Nitro balcony",
+    "totem + dragon",
+    "lion on a ledge",
+    "wall jets + updraft",
+    "corridor jets (pass under)",
+    "flame shaft (death)",
+    "round platform: hidden-gem drop",
+    "Nitro blocks",
+    "high ledges 3 + 3 (2 T)",
+    "firetraps, Aku, C5"
+   ],
+   "gaps": 8,
+   "enemies": 4,
+   "hazards": 7
+  },
+  {
+   "section": "S8",
+   "beats": [
+    "plank bridge 1 u + dragons",
+    "floating platforms between totems",
+    "wall-run chain with a spirit in a gap; crates on posts",
+    "C6 + Lani-Loli"
+   ],
+   "gaps": 7,
+   "enemies": 1,
+   "hazards": 2
+  },
+  {
+   "section": "S9",
+   "beats": [
+    "phase row carrying W/W, phase TNT",
+    "base walkway with phase planks; spirit lion leaping",
+    "floating crates",
+    "wall top",
+    "C7"
+   ],
+   "gaps": 6,
+   "enemies": 1,
+   "hazards": 1
+  },
+  {
+   "section": "S10",
+   "beats": [
+    "C7 pad with 2 spirits",
+    "phase wall-runs (death)",
+    "red-mat landing: TNT springboard to an off-camera crate",
+    "C8",
+    "ledge above C8 (double jump)"
+   ],
+   "gaps": 5,
+   "enemies": 2,
+   "hazards": 1
+  },
+  {
+   "section": "S11",
+   "beats": [
+    "hover course: floating platforms and double flame jets",
+    "2 floating crates",
+    "exit stairs, sign 155/187"
+   ],
+   "gaps": 4,
+   "enemies": 0,
+   "hazards": 1
+  },
+  {
+   "section": "S12",
+   "beats": [
+    "green ! at the sign: +32 Nitro"
+   ],
+   "gaps": 0,
+   "enemies": 0,
+   "hazards": 0
+  }
+ ],
+ "geometryObservations": [
+  "Three traversal verbs are taught in order, each alone first: wall-run in S1 (with an on-screen prompt over water, G-S1-a), Akano hover in S4 (wide landings, G-S4-a) and Lani-Loli phase in S9 (side view, G-S9-a). Later they recombine: wall-runs with hover gaps and totems (S8), wall-runs with phase walls (S10), and hover with double jets (S11).",
+  "Wall-run rest spacing shrinks. In S1 a solid landing (pad, round pillar, dock) separates every wall. In S8 and S10 the walls run back to back over the void with only 1 x 1 posts between them, and S10 killed the player.",
+  "Flame totems are the level's metronome. They first cross a solid balcony before the mask (O-S4-a, wait-and-go on safe ground), then cross the hover gaps (S4), then line a vertical shaft (O-S7-f, the first death), and finally fire at two heights across every gap of the finale (O-S11-a).",
+  "Landing size shrinks across the level: round pillar 3 u (S1), pond pads 2-2.5 u (S2), square pillars 1.5 u (S6), crate posts 1 u (S8). The narrowest footing is a 1 u plank bridge under dragons (P-S8-a).",
+  "Enemies are mostly light. Spirit lions drift on the line and die to a spin, so they test attack timing between jumps (E-S1-a, E-S2-a). Heavier guardian lions appear only after the mask, as whirlwind gatekeepers in corridors and on landings (E-S6-a, E-S7-a).",
+  "Enemies are placed where a new verb lands. A spirit lion waits at the first wall-run landing (E-S1-b), one hovers in a gap of the wall-run chain (E-S8-a), one leaps through the phase walkway (E-S9-a), and two hover on the C7 pad before the phase wall-runs (E-S10-a).",
+  "The 32 Nitro are geometry. They line shelves and balconies (O-S7-a) and narrow the climbing line to 1-2 u, but never stand on the required line.",
+  "Crate puzzles double as terrain. The strong crate on TNT is the +3 u step up the broken wall (G-S3-a), the bonus TNT row is the floor (P-B-b), and a TNT is the springboard to an off-camera crate (G-S10-b).",
+  "The secret hangs off the void. The hidden-gem path is a drop from a round platform at the end of the flame shaft (G-S7-c), into the space the level has taught the player to fear.",
+  "Water appears only in S1-S2. Everything after the mask is a void, so falls become certain death as the level goes on. Pond lethality was not observed.",
+  "The camera follows the verb: into-screen for wall-runs and corridors, where wall length and the next wall read best, and side view for tower climbs and the phase wall, where both phase states and the shelf spacing show.",
+  "Every hazard appears alone before it is paired. Totems are alone at the balcony and then joined by dragons (O-S7-d), spirits (S6) and the TNT springboard (O-S10-a). Dragons appear alone at the arch (O-S4-c) before they cross the plank bridge (O-S8-b).",
+  "Checkpoints get denser where the verbs combine: C7 to C8 is about 20 s around the phase wall-runs, and C5 sits between two firetraps right before the wall-run course."
+ ],
+ "geometryTransfer": [
+  "Wall-run analogue. Use a `rail` along a wall (or a `vertramp` wall ride) 7-11 m long over a `pit`. In the first chain, put a 2.3 m landing pad after every rail. In the later chain, run the rails back to back with only 1.2 m posts between them, and place a checkpoint before it.",
+  "Totem metronome. Introduce the `firetiki` across a solid 3.5 m walkway (cycle 2-3 s), then across 5-7 m board gaps, then as a pair at two heights. Never pair it with a new enemy in its first appearance.",
+  "Phase walkway. A side-view stretch of 2.3 m `phasepad` planks over 2.3-4.6 m holes, with one `hopper` arcing between the wall top and the planks to set the beat.",
+  "Nitro as lane geometry. Put Nitro on the outer half of 1.2-2.3 m shelves so the line narrows to one crate, always off the required line, and pay them at the gate with the green `nitrobang`.",
+  "Strong crate on TNT as a step. Here a double jump plus a ledge grab reaches lips at about 7.0 m. To make the stack required, put the wall lip 7.2-9 m up with `multi-hit on tnt` below it. From the multi-hit top (2.30 m), a double jump and grab reach about 9.3 m, and the blast clears the multi-hit behind the player. With a lower lip the stack is optional, which still works when it only guards crates.",
+  "Hidden drop. A round platform (4-5 m) at the end of a hazard corridor with a lower floating path 3.5-6 m below for a secret. Mark it with two crates at the edge, as GR's 'two crates by the wind tunnel' does."
  ]
 }
