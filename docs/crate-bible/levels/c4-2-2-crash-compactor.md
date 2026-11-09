@@ -149,7 +149,7 @@ Sum 10 (29–38).
 | G-e | **overhead square grid frame: corners alternate W / N** | W×2 (+2 N at the end) | RING, explosive-alternating | walk the frame, skip the N corners | EXPLOSIVE-MIX EDGE-BAIT | a lap where every second corner kills | LP1 0:23:19–0:23:28 · medium |
 | G-f | floating row over the abyss: W W N, steel blocks below as footing | W×2 (+1 N at the end) | STEPPING FLOAT-LINE | bounce W → W, stop before N, drop to M | STEPPING EXPLOSIVE-MIX | the stepping rhythm is broken by a Nitro in the third slot | LP1 0:23:41–0:23:46 · medium |
 | G-g | singles on steel blocks after the row | W×2 (≈) | singles | jump | STEPPING | | LP1 0:23:44–0:23:46 · low |
-| G-h | (residual) path crates not resolved; Wumpa on the whole path is only +43, so most must be TNT | wood?/tnt?×10 | — | — | — | needed for 24 (GR 40 → 64) | GR 64 · low |
+| G-h | (residual) path crates not resolved; Wumpa on the whole path is only +43, so most must be TNT | W×4 + T×6 (split guessed) | — | — | — | needed for 24 (GR 40 → 64) | GR 64 · low |
 Sum 24. Nitros seen here (≈ 7: discs, frame corners, float row, floating, under a ⇑, beside the pillar's ⇑) are counted in ND.
 
 ### S6 — The rail (4 crates + C3; cumulative 69)
@@ -197,8 +197,9 @@ behind the brute then opens onto the hidden gem (LP 0:24:19–0:24:30; "hidden g
 | B-c | tricky crate floating above the small metal crate on the speaker tower's base | W×1 | single, high | bounce off the metal crate | HIGH TOOL | GR: the hardest crate in the room | GR 98 note; LP1 0:25:16–0:25:36 · medium |
 | B-d | float-line of single crates drifting right across the fog | W×3 | FLOAT-LINE / STEPPING | jump; keep them until the return | STEPPING SUPPORT-ORDER | stepping stones out and back: break them on the way out and the way home is gone | LP1 0:25:16–0:25:22 (seen), 0:25:34–0:25:38 and 0:25:52–0:25:56 (broken) · medium |
 | B-e | **inverted pyramid floating over the fog** (rows ≈ 5/4/3/2, several `?`) | W×10 + ?×3 (≈) | PYRAMID (inverted) | bounce on its top on the way out (Wumpa 4→18 with the counter stuck at 2/24); eat it row by row on the way back (6→18/24) | SUPPORT-ORDER REWARD BONUS | the pyramid is both a platform and the payout: eat it from the top while standing on what is left | LP1 0:25:04–0:25:22, 0:25:40–0:25:52 · medium |
-Sum 24 (75–98). GR: "go to the end, then backtrack, jumping over crates so you carry enough to return".
-GP adds that some bonus crates need a `!` first (the outline boxes); I did not see where that `!` is.
+Sum 24 (75–98). GR's advice amounts to: travel to the far end first and collect on the way back, leaving
+enough crates in place to stand on. GP adds that some bonus crates need a `!` first (the outline boxes); I did
+not see where that `!` is.
 
 ### S8 — Post-bonus courtyard → C4 (cumulative 109)
 ```

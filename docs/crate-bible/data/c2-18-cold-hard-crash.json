@@ -1,0 +1,1575 @@
+{
+ "id": "c2-18-cold-hard-crash",
+ "game": "Crash 2",
+ "stage": 18,
+ "name": "Cold Hard Crash",
+ "nameJa": "ゆきやまはつづくよ",
+ "sources": [
+  "F2 p067-p070",
+  "F2 p099L",
+  "F2 p015",
+  "D2 p059-p061",
+  "gamepressure N. Sane Cold Hard Crash (summary)"
+ ],
+ "camera": "into-screen (start, final climb) + side-scroll (C1-C4)",
+ "totalBoxes": 155,
+ "totalSource": "F2 p067L header (superscript 52 off-course); N. Sane 154",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 103,
+   "basis": "header 155 - 52 off-course",
+   "mapped": 76,
+   "unlocated": 27
+  },
+  {
+   "id": "bonus",
+   "boxes": 31,
+   "basis": "gamepressure N. Sane; D2 counters 1/5/7/23-24 before the final TNT stack",
+   "mapped": 31
+  },
+  {
+   "id": "death",
+   "boxes": 21,
+   "basis": "52 - 31 (inferred)",
+   "mapped": 18,
+   "note": "includes 3 outline frames of uncertain type"
+  }
+ ],
+ "specialCounts": {
+  "life": {
+   "total": 4,
+   "offCourse": 3
+  },
+  "aku": {
+   "total": 2,
+   "offCourse": 0,
+   "conflict": "D2 shot 53 claims an Aku crate in the death route"
+  },
+  "checkpoint": {
+   "total": 5,
+   "offCourse": 0
+  },
+  "switches": "porcupine-triggered ! (steel steps), 4 hidden ! behind ice pillars, route-end ! in the death route, green ! at C5",
+  "arrows": {
+   "wood": 1,
+   "steel": 1
+  }
+ },
+ "gems": [
+  {
+   "kind": "clear",
+   "condition": "all 155 boxes (incl. bonus and death route; green ! needed)"
+  },
+  {
+   "kind": "clear",
+   "condition": "finish the death route; skull platform appears only if C2 is reached without losing a life"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "elevator/C1",
+   "boxes": 14,
+   "cumulative": null,
+   "notes": "into-screen; Aku group, pillar field, penguin crate; mapped only",
+   "mapped": 14
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 16,
+   "cumulative": null,
+   "notes": "side-scroll; includes C1 and the W-W-C2 column; bonus door and death-route gate here",
+   "mapped": 16
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "C3",
+   "boxes": 16,
+   "cumulative": null,
+   "notes": "side-scroll descent; includes C3",
+   "mapped": 16
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "C3",
+   "to": "C4",
+   "boxes": 15,
+   "cumulative": null,
+   "notes": "hidden-! room, Nitro ledges, smasher dash; includes C4",
+   "mapped": 15
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C4",
+   "to": "C5",
+   "boxes": 11,
+   "cumulative": null,
+   "notes": "3D climb; includes C5 (green ! beside it)",
+   "mapped": 11
+  },
+  {
+   "id": "S6",
+   "route": "main",
+   "from": "C5",
+   "to": "goal",
+   "boxes": 4,
+   "cumulative": null,
+   "notes": "final climb past disc rocks",
+   "mapped": 4
+  },
+  {
+   "id": "BONUS",
+   "route": "bonus",
+   "from": "S2 bonus platform",
+   "to": "S2",
+   "boxes": 30,
+   "cumulative": null,
+   "notes": "total from gamepressure (N. Sane); split estimated from D2 counters",
+   "mapped": 30
+  },
+  {
+   "id": "DEATH",
+   "route": "death",
+   "from": "C2 skull platform",
+   "to": "gem drop / back to C2",
+   "boxes": 18,
+   "cumulative": null,
+   "notes": "17 counted incl. 3 uncertain outline frames; 21 implied by 52-31",
+   "mapped": 18
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "left bank beyond the first falling-stump pit, behind rocks",
+   "composition": {
+    "wood": 4,
+    "aku": 1
+   },
+   "count": 5,
+   "arrangement": "L-shaped pair of columns (3 high + 2 high)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "after-stump-pit",
+    "before-penguin-slide"
+   ],
+   "tags": [
+    "DETOUR",
+    "HIDDEN",
+    "STACK",
+    "AKU",
+    "TEACH"
+   ],
+   "why": "first mask, tucked off the line of travel before the first enemy gauntlet",
+   "evidence": "F2 p067R bubble; D2 p059 shot 1",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "pillar field: one crate on top of each of 8 steel posts (2-4 blocks tall)",
+   "composition": {
+    "wood": 8
+   },
+   "count": 8,
+   "arrangement": "single crates on posts",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "double-jump"
+   ],
+   "relations": [
+    "seals-patrol-floor"
+   ],
+   "tags": [
+    "HIGH",
+    "STEPPING",
+    "ENEMY-LINK",
+    "TEST"
+   ],
+   "why": "crates are the reason to climb unstable posts among sliding seals; F2 says clear the seals first",
+   "evidence": "F2 p067R POINT3 zoom; D2 shot 3; gamepressure (8 in total)",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "far bank of the second pit beside a spinning penguin (POINT4)",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "enemy-bounce"
+   ],
+   "relations": [
+    "penguin-spinner"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "EDGE-BAIT",
+    "SINGLE"
+   ],
+   "why": "landing next to the spinning penguin forces you to wait for it to stop",
+   "evidence": "F2 p067R POINT4 screenshot; D2 shot 4",
+   "confidence": "medium-low"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 1,
+   "where": "top of the elevator",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "section-start"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "ON-PATH"
+   ],
+   "why": "save before the side-scroll hazard run",
+   "evidence": "F2 p068L; D2 shot 7",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 2,
+   "where": "floating diagonal stair from the long bridge up to the bonus platform",
+   "composition": {
+    "striped": 4,
+    "question": 1
+   },
+   "count": 5,
+   "arrangement": "floating stair, ? on top",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce",
+    "striped"
+   ],
+   "relations": [
+    "leads-to-bonus"
+   ],
+   "tags": [
+    "FLOAT-LINE",
+    "STEPPING",
+    "TOOL",
+    "BONUS",
+    "ROUTE-SPLIT"
+   ],
+   "why": "only way up to the bonus platform; stomping pays fruit and keeps the steps intact",
+   "evidence": "F2 p068R strip A; D2 shot 10",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 3,
+   "where": "floor under hanging icicles (POINT7)",
+   "composition": {
+    "question": 1,
+    "tnt": 1
+   },
+   "count": 2,
+   "arrangement": "pair side by side",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "timed"
+   ],
+   "relations": [
+    "icicle-lights-tnt"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "PAIR"
+   ],
+   "why": "the falling icicle lights the TNT itself; retreat and let it blow",
+   "evidence": "F2 p068R POINT7 + screenshot; D2 shot 16",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 4,
+   "where": "raised ledge before the porcupine (POINT8); ! switch further back (uncounted)",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single; porcupine behind; ! behind him",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "slide"
+   ],
+   "relations": [
+    "releases-porcupine",
+    "porcupine-presses-switch"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "SWITCH",
+    "SINGLE"
+   ],
+   "why": "breaking it frees Nick; slide-kick him into the ! to materialise steel steps",
+   "evidence": "F2 p068R POINT8; D2 shot 17",
+   "confidence": "medium-high"
+  },
+  {
+   "id": "S2-e",
+   "section": "S2",
+   "order": 5,
+   "where": "under an overhang right after the ! room",
+   "composition": {
+    "wood": 1,
+    "aku": 1,
+    "striped": 2
+   },
+   "count": 4,
+   "arrangement": "4-high column (W, Aku, S, S from the top)",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "before-slides"
+   ],
+   "tags": [
+    "STACK",
+    "AKU",
+    "SUPPORT-ORDER"
+   ],
+   "why": "second mask before the descent; stomp from the top to get striped fruit before the column collapses",
+   "evidence": "D2 shot 18; F2 bubble (draws only 2)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-f",
+   "section": "S2",
+   "order": 6,
+   "where": "beside the red skull-platform outline",
+   "composition": {
+    "wood": 2,
+    "checkpoint": 1
+   },
+   "count": 3,
+   "arrangement": "3-high column, C at the bottom",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "walk"
+   ],
+   "relations": [
+    "death-route-gate"
+   ],
+   "tags": [
+    "STACK",
+    "CHECKPOINT",
+    "ROUTE-SPLIT"
+   ],
+   "why": "save point at the no-death gate; the C is buried under two crates",
+   "evidence": "D2 shots 20, 46; F2 p068R bubble",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 1,
+   "where": "ledge at the bottom of the zig-zag ice slides",
+   "composition": {
+    "wood": 4
+   },
+   "count": 4,
+   "arrangement": "tall single column (count inferred)",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "body-slam"
+   ],
+   "relations": [
+    "slide-landing"
+   ],
+   "tags": [
+    "STACK",
+    "ON-PATH",
+    "TEACH"
+   ],
+   "why": "one body slam from above clears the column",
+   "evidence": "F2 p068R (one slab); D2 shot 21",
+   "confidence": "low"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 2,
+   "where": "round a bend after a penguin, out of map view",
+   "composition": {
+    "wood": 2,
+    "striped": 2,
+    "question": 2,
+    "tnt": 1
+   },
+   "count": 7,
+   "arrangement": "stepped pile of 6 with TNT on the left",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bounce",
+    "spin"
+   ],
+   "relations": [
+    "hidden-by-bend"
+   ],
+   "tags": [
+    "HIDDEN",
+    "PYRAMID",
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER"
+   ],
+   "why": "stomp the striped first for fruit, then light the TNT and back away",
+   "evidence": "F2 p068R bubble; D2 shot 22",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 3,
+   "where": "between two penguins; ?/? on the next ledge",
+   "composition": {
+    "tnt": 1,
+    "question": 2
+   },
+   "count": 3,
+   "arrangement": "floor TNT + 2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bounce",
+    "walk"
+   ],
+   "relations": [
+    "tnt-kills-penguin"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "STACK"
+   ],
+   "why": "TNT offered as a weapon against the second penguin",
+   "evidence": "F2 p068R strip B; D2 shot 23",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 4,
+   "where": "after three smashers and a porcupine, beside a steel arrow",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single (+ steel arrow, uncounted)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "arrow"
+   ],
+   "relations": [
+    "after-smasher-corridor"
+   ],
+   "tags": [
+    "SINGLE",
+    "ON-PATH",
+    "TOOL"
+   ],
+   "why": "payout after the smasher corridor; the arrow is the exit up to the penguin ledge",
+   "evidence": "F2 p069L strip 1; D2 shot 26 (mentions crates)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S3-e",
+   "section": "S3",
+   "order": 5,
+   "where": "start of the hidden-switch room, next to a steel block",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "before-switch-hunt"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the switch hunt",
+   "evidence": "F2 p069R; D2 shot 27",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 1,
+   "where": "floor after the two ice pillars",
+   "composition": {
+    "outline": 3
+   },
+   "count": 3,
+   "arrangement": "low row of outline crates -> wood",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "needs-4-hidden-switches"
+   ],
+   "tags": [
+    "OUTLINE",
+    "SWITCH",
+    "HIDDEN",
+    "COUNT-TRAP"
+   ],
+   "why": "four ! blocks hidden behind ice pillars; Aku tip says all four are needed for the perfect",
+   "evidence": "F2 p069R POINT12 + Aku tip; D2 shot 28",
+   "confidence": "low"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 2,
+   "where": "landing ledge 1 beside a penguin",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single at the landing point",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "landing-spot"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "ENEMY-LINK",
+    "TEST"
+   ],
+   "why": "over-jumping lands in the Nitro; teaches controlled short jumps",
+   "evidence": "F2 p069L POINT13; D2 shot 29",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 3,
+   "where": "ledge 2: Nitro, penguin, ?",
+   "composition": {
+    "nitro": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "Nitro - penguin - ? on one ledge",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce",
+    "spin"
+   ],
+   "relations": [
+    "penguin-between"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK"
+   ],
+   "why": "spinning the penguin risks the Nitro; stomp it, then take the ?",
+   "evidence": "F2 p069L; D2 shot 30",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 4,
+   "where": "ledge 3 under an overhang",
+   "composition": {
+    "wood": 1,
+    "question": 2
+   },
+   "count": 3,
+   "arrangement": "single + 2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin",
+    "bounce"
+   ],
+   "relations": [
+    "fruit-grid-behind"
+   ],
+   "tags": [
+    "STACK",
+    "DETOUR"
+   ],
+   "why": "safe breather room between Nitro ledges",
+   "evidence": "F2 p069L; D2 shot 31",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 5,
+   "where": "ledge 4: wall hollow",
+   "composition": {
+    "nitro": 1,
+    "life": 1
+   },
+   "count": 2,
+   "arrangement": "Nitro in front of a life box in a recess",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "nitro-shield"
+   ],
+   "tags": [
+    "HIDDEN",
+    "LIFE",
+    "EXPLOSIVE-MIX",
+    "REWARD"
+   ],
+   "why": "jump-break only, never spin; the green ! blast will not destroy the life box",
+   "evidence": "F2 p069L POINT14; D2 shot 32",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-f",
+   "section": "S4",
+   "order": 6,
+   "where": "after the five-smasher dash (POINT15)",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "W single, then ? with W stepped behind",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "after-smasher-dash"
+   ],
+   "tags": [
+    "ROW",
+    "ON-PATH",
+    "REWARD"
+   ],
+   "why": "payout after the dash",
+   "evidence": "F2 p069R strip 2; D2 shot 33",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-g",
+   "section": "S4",
+   "order": 7,
+   "where": "landing back in 3D",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single on slope",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "camera-change"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "save before the Nitro path",
+   "evidence": "F2 p070L; D2 shot 34",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 1,
+   "where": "narrow footholds after the first pit (POINT16)",
+   "composition": {
+    "nitro": 3
+   },
+   "count": 3,
+   "arrangement": "2 adjacent + 1 further, on the path",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "narrow-ledge"
+   ],
+   "tags": [
+    "ON-PATH",
+    "EDGE-BAIT",
+    "TEST",
+    "NITRO-SWITCH"
+   ],
+   "why": "Nitro alley; cleared for the count only by the green ! at C5",
+   "evidence": "F2 p070L POINT16; D2 shot 35",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-b",
+   "section": "S5",
+   "order": 2,
+   "where": "behind a penguin (POINT17)",
+   "composition": {
+    "tnt": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 block: top TNT + ?, bottom TNT + TNT",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "penguin-in-front"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "CHAIN",
+    "SUPPORT-ORDER"
+   ],
+   "why": "stomp the penguin (a spin can knock you into the TNT), stomp the ?, then light a TNT and retreat",
+   "evidence": "F2 p070L POINT17; D2 shot 37",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-c",
+   "section": "S5",
+   "order": 3,
+   "where": "just beyond the TNT pile",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after-pile"
+   ],
+   "tags": [
+    "SINGLE",
+    "ON-PATH"
+   ],
+   "why": "tail crate",
+   "evidence": "F2 p070L",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-d",
+   "section": "S5",
+   "order": 4,
+   "where": "after two porcupines and a disc rock",
+   "composition": {
+    "striped": 2
+   },
+   "count": 2,
+   "arrangement": "ground striped + floating striped",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "disc-rock-wait"
+   ],
+   "tags": [
+    "SANDWICH",
+    "REWARD",
+    "TOOL"
+   ],
+   "why": "bounce between them for fruit while the rock passes, then break the lower one",
+   "evidence": "D2 shot 39; F2 p070R grey pair with red arrow (unclear)",
+   "confidence": "low-medium"
+  },
+  {
+   "id": "S5-e",
+   "section": "S5",
+   "order": 5,
+   "where": "island between rolling disc rocks, beside the green !",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single (+ green !, uncounted)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "green-switch-beside"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "NITRO-SWITCH",
+    "TIMED"
+   ],
+   "why": "the Nitro switch sits by the last checkpoint so every Nitro can be collected late",
+   "evidence": "F2 p070R POINT19; D2 shots 40-41",
+   "confidence": "high"
+  },
+  {
+   "id": "S6-a",
+   "section": "S6",
+   "order": 1,
+   "where": "after a disc rock and a penguin",
+   "composition": {
+    "question": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "2-stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "final-climb"
+   ],
+   "tags": [
+    "STACK",
+    "ON-PATH"
+   ],
+   "why": "pacing crate on the final climb",
+   "evidence": "F2 p070R; D2 shot 43",
+   "confidence": "medium-low"
+  },
+  {
+   "id": "S6-b",
+   "section": "S6",
+   "order": 2,
+   "where": "against the second steel stair",
+   "composition": {
+    "wood": 1,
+    "question": 1
+   },
+   "count": 2,
+   "arrangement": "column interleaved with a steel step",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "steel-stair"
+   ],
+   "tags": [
+    "STACK",
+    "TOOL"
+   ],
+   "why": "climb the steel and break crates on the way up",
+   "evidence": "F2 p070R zoom; D2 shot 44",
+   "confidence": "medium-low"
+  },
+  {
+   "id": "B-a",
+   "section": "BONUS",
+   "order": 1,
+   "where": "bonus entry platform",
+   "composition": {
+    "wood": 4,
+    "tnt": 1
+   },
+   "count": 5,
+   "arrangement": "row; TNT used as a springboard",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce"
+   ],
+   "relations": [
+    "springboard-tnt"
+   ],
+   "tags": [
+    "BONUS",
+    "ROW",
+    "EXPLOSIVE-MIX",
+    "TOOL"
+   ],
+   "why": "light the TNT and ride its bounce to the next platform",
+   "evidence": "D2 shots 12-13 (counter 1 to 5)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-b",
+   "section": "BONUS",
+   "order": 2,
+   "where": "second ledge; crates above the visible frame",
+   "composition": {
+    "striped": 2,
+    "wood": 2
+   },
+   "count": 4,
+   "arrangement": "striped launch + hidden high crates (count estimated)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "striped"
+   ],
+   "relations": [
+    "off-screen-high"
+   ],
+   "tags": [
+    "BONUS",
+    "HIGH",
+    "HIDDEN",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "p099L: long-jump to the striped and high-jump to reach hidden boxes",
+   "evidence": "F2 p099L; D2 shot 14 (counter 7)",
+   "confidence": "low"
+  },
+  {
+   "id": "B-c",
+   "section": "BONUS",
+   "order": 3,
+   "where": "bonus floor pyramid",
+   "composition": {
+    "question": 13,
+    "tnt": 2
+   },
+   "count": 15,
+   "arrangement": "stepped ? pyramid with TNT inside (count estimated)",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce"
+   ],
+   "relations": [
+    "fruit-before-tnt"
+   ],
+   "tags": [
+    "BONUS",
+    "PYRAMID",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "stomp the boxes for fruit before setting off the TNT",
+   "evidence": "F2 p099L screenshot; D2 shots 14-15",
+   "confidence": "low"
+  },
+  {
+   "id": "B-d",
+   "section": "BONUS",
+   "order": 4,
+   "where": "bonus exit",
+   "composition": {
+    "tnt": 4,
+    "life": 1,
+    "wood": 1
+   },
+   "count": 6,
+   "arrangement": "row of TNT, TNT, TNT-on-TNT, then 1UP (+1 remaining pile crate est.)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "bounce"
+   ],
+   "relations": [
+    "exit"
+   ],
+   "tags": [
+    "BONUS",
+    "CHAIN",
+    "LIFE",
+    "SUPPORT-ORDER"
+   ],
+   "why": "chain demolition in a fixed order so the life box survives",
+   "evidence": "D2 shot 15",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-a",
+   "section": "DEATH",
+   "order": 1,
+   "where": "first ice run after the skull elevator",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "jump"
+   ],
+   "relations": [
+    "ice"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "ON-PATH",
+    "TEST"
+   ],
+   "why": "Nitro on ice sets the theme",
+   "evidence": "D2 shot 48",
+   "confidence": "high"
+  },
+  {
+   "id": "D-b",
+   "section": "DEATH",
+   "order": 2,
+   "where": "floating beside an early platform",
+   "composition": {
+    "outline": 1
+   },
+   "count": 1,
+   "arrangement": "single outline -> 1UP",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "death-route",
+    "switch",
+    "backtrack"
+   ],
+   "relations": [
+    "route-end-switch"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "OUTLINE",
+    "SWITCH",
+    "LIFE",
+    "BACKTRACK",
+    "COUNT-TRAP"
+   ],
+   "why": "fills only from the ! at the end of the route; forces a second pass and a walk-back",
+   "evidence": "D2 shots 50 and 60",
+   "confidence": "high"
+  },
+  {
+   "id": "D-c",
+   "section": "DEATH",
+   "order": 3,
+   "where": "behind the outcrop",
+   "composition": {
+    "life": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "1UP floating above two wood crates in a fruit ring",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "death-route",
+    "jump"
+   ],
+   "relations": [
+    "behind-outcrop"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "HIDDEN",
+    "LIFE",
+    "DETOUR"
+   ],
+   "why": "compensation inside the hardest route; easy to miss",
+   "evidence": "D2 shots 50-51",
+   "confidence": "high"
+  },
+  {
+   "id": "D-d",
+   "section": "DEATH",
+   "order": 4,
+   "where": "before two smashers",
+   "composition": {
+    "arrowWood": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "arrow with a crate floating high above (Aku per D2)",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "death-route",
+    "arrow",
+    "body-slam"
+   ],
+   "relations": [
+    "catapult-to-smashers"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "SANDWICH",
+    "TOOL",
+    "TIMED",
+    "AKU"
+   ],
+   "why": "landing from the left launches you into the smashers; body-slam to stop",
+   "evidence": "D2 shot 53",
+   "confidence": "medium"
+  },
+  {
+   "id": "D-e",
+   "section": "DEATH",
+   "order": 5,
+   "where": "against the steel pile under icicles",
+   "composition": {
+    "outline": 3
+   },
+   "count": 3,
+   "arrangement": "stacked outline frames (crate or block unclear)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "death-route",
+    "switch"
+   ],
+   "relations": [
+    "steel-pile"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "OUTLINE"
+   ],
+   "why": "may be outline crates or blocks; gamepressure mentions two disabled crates",
+   "evidence": "D2 shot 55",
+   "confidence": "low"
+  },
+  {
+   "id": "D-f",
+   "section": "DEATH",
+   "order": 6,
+   "where": "after the steel pile",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "jump"
+   ],
+   "relations": [
+    "ice-speed"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TEST"
+   ],
+   "why": "speed control on ice",
+   "evidence": "D2 shot 56",
+   "confidence": "high"
+  },
+  {
+   "id": "D-g",
+   "section": "DEATH",
+   "order": 7,
+   "where": "under a smasher",
+   "composition": {
+    "nitro": 2
+   },
+   "count": 2,
+   "arrangement": "one low, one high",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "slide",
+    "jump",
+    "timed"
+   ],
+   "relations": [
+    "smasher"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TIMED",
+    "TEST"
+   ],
+   "why": "land past the first and beneath the second",
+   "evidence": "D2 shot 57",
+   "confidence": "high"
+  },
+  {
+   "id": "D-h",
+   "section": "DEATH",
+   "order": 8,
+   "where": "final Nitro field",
+   "composition": {
+    "nitro": 5
+   },
+   "count": 5,
+   "arrangement": "scattered field, 4 low + 1 floating",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "death-route",
+    "jump",
+    "slide"
+   ],
+   "relations": [
+    "aku-solution"
+   ],
+   "tags": [
+    "ROUTE-SPLIT",
+    "TEST",
+    "AKU"
+   ],
+   "why": "jump-slide-jump past three and jump the last, or set them off with an Aku",
+   "evidence": "D2 shot 58",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "penguin",
+   "count": 3,
+   "where": "downhill slide after the Aku group",
+   "role": "bowling-pin sliders; spin the first"
+  },
+  {
+   "section": "S1",
+   "kind": "seal",
+   "count": 4,
+   "where": "between the steel posts",
+   "role": "floor guards under the post crates"
+  },
+  {
+   "section": "S1",
+   "kind": "penguin",
+   "count": 1,
+   "where": "far bank of the second pit",
+   "role": "spinner; wait for it to stop"
+  },
+  {
+   "section": "S1",
+   "kind": "seal",
+   "count": 3,
+   "where": "slope before the elevator",
+   "role": "sliding obstacles"
+  },
+  {
+   "section": "S2",
+   "kind": "porcupine",
+   "count": 1,
+   "where": "released from behind the S2-d crate",
+   "role": "slide him into the ! switch"
+  },
+  {
+   "section": "S2",
+   "kind": "penguin",
+   "count": 3,
+   "where": "ledges near the skull outline",
+   "role": "ledge guards"
+  },
+  {
+   "section": "S3",
+   "kind": "penguin",
+   "count": 3,
+   "where": "bend pile and TNT ledge",
+   "role": "TNT kill target"
+  },
+  {
+   "section": "S3",
+   "kind": "porcupine",
+   "count": 1,
+   "where": "narrow passage after the smashers (POINT11)",
+   "role": "lure out, hit before quills"
+  },
+  {
+   "section": "S4",
+   "kind": "penguin",
+   "count": 3,
+   "where": "Nitro ledges and C3 room",
+   "role": "stomp beside Nitros"
+  },
+  {
+   "section": "S4",
+   "kind": "porcupine",
+   "count": 1,
+   "where": "C3 room step",
+   "role": "obstacle"
+  },
+  {
+   "section": "S5",
+   "kind": "porcupine",
+   "count": 4,
+   "where": "pits along the climb (POINT18)",
+   "role": "cross while he faces away"
+  },
+  {
+   "section": "S5",
+   "kind": "penguin",
+   "count": 2,
+   "where": "before the TNT pile",
+   "role": "stomp, don't spin (TNT behind)"
+  },
+  {
+   "section": "S6",
+   "kind": "penguin",
+   "count": 1,
+   "where": "after a disc rock",
+   "role": "obstacle"
+  },
+  {
+   "section": "S6",
+   "kind": "porcupine",
+   "count": 1,
+   "where": "POINT20",
+   "role": "slide from behind"
+  },
+  {
+   "section": "DEATH",
+   "kind": "porcupine",
+   "count": 2,
+   "where": "D2 52",
+   "role": "quill timing"
+  },
+  {
+   "section": "DEATH",
+   "kind": "seal",
+   "count": 1,
+   "where": "steel pile",
+   "role": "spin after icicle"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "pit with falling stump",
+   "where": "start (POINT1) and before POINT4",
+   "crates": [
+    "S1-a",
+    "S1-c"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "smashers + icicles + collapsing bridges",
+   "where": "C1 to the striped stair",
+   "crates": []
+  },
+  {
+   "section": "S3",
+   "kind": "zig-zag ice slides",
+   "where": "after C2",
+   "crates": [
+    "S3-a"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "smasher corridor on ice (POINT10)",
+   "where": "before S3-d",
+   "crates": [
+    "S3-d"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "ledge gaps with Nitros at landings",
+   "where": "strip 2",
+   "crates": [
+    "S4-b",
+    "S4-c",
+    "S4-e"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "smasher dash (POINT15)",
+   "where": "before S4-f",
+   "crates": [
+    "S4-f"
+   ]
+  },
+  {
+   "section": "S5",
+   "kind": "narrow Nitro footholds",
+   "where": "after C4",
+   "crates": [
+    "S5-a"
+   ]
+  },
+  {
+   "section": "S5",
+   "kind": "rolling disc rocks + stump",
+   "where": "before C5",
+   "crates": [
+    "S5-d",
+    "S5-e"
+   ]
+  },
+  {
+   "section": "S6",
+   "kind": "twin crossing disc rocks (POINT21)",
+   "where": "before the goal",
+   "crates": []
+  },
+  {
+   "section": "DEATH",
+   "kind": "slippery ice with smashers",
+   "where": "whole route",
+   "crates": [
+    "D-a",
+    "D-d",
+    "D-f",
+    "D-g",
+    "D-h"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S2-d"
+   ],
+   "summary": "crate releases a porcupine; the ! switch lies behind him",
+   "solution": "hug the left wall, slide-kick Nick into the ! block",
+   "wrongOrder": "spin him early or get quilled",
+   "loss": "the steel steps toward C2 / death-route gate"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S4-a"
+   ],
+   "summary": "four ! blocks hidden behind two ice pillars fill an outline row",
+   "solution": "walk behind both pillars and hit all four",
+   "wrongOrder": "run past; the route still clears",
+   "loss": "all-box only (~3 boxes)"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "S4-e"
+   ],
+   "summary": "1UP behind a Nitro in a wall hollow",
+   "solution": "step into the hollow and jump-break",
+   "wrongOrder": "spin (Nitro chain)",
+   "loss": "life; green ! does not break the life box"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S5-b"
+   ],
+   "summary": "2x2 TNT/? pile behind a penguin",
+   "solution": "stomp the penguin, stomp the ?, light a TNT and retreat",
+   "wrongOrder": "spin the penguin into the pile",
+   "loss": "life (the ? still counts if blasted)"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "D-b"
+   ],
+   "summary": "outline 1UP at the death-route start fills only from the route-end !",
+   "solution": "reach the end, spin the !, walk back, break the 1UP, ride back to C2 and finish",
+   "wrongOrder": "drop to the gem at the end",
+   "loss": "all-box (one life box); the gem drop exits the route"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "B-a",
+    "B-b",
+    "B-c",
+    "B-d"
+   ],
+   "summary": "bonus demolition: TNT springboard, hidden high crates, pyramid, exit TNT chain",
+   "solution": "stomp boxes 2 and 4 then the TNT; striped high-jump for hidden crates; stomp normal boxes before TNTs; exit TNTs first, second, top",
+   "wrongOrder": "lighting TNT first",
+   "loss": "fruit, hidden crates, the life"
+  }
+ ],
+ "observations": [
+  "Crate density spikes in small rooms and drops to zero in timing corridors (smashers, icicles, bridges, disc rocks).",
+  "The 8 post-top crates exist only to make the player climb unstable footing among seals.",
+  "Explosives escalate from environment-lit TNT to TNT as weapon/springboard to Nitro on ice.",
+  "Switches are perception puzzles: an enemy kicked into a !, and four ! blocks hidden behind pillars.",
+  "Masks precede gauntlets; the death route recommends bringing one.",
+  "Checkpoints sit at camera-mode changes and at the death-route gate.",
+  "The perfect requires bonus, death route twice with a walk-back, hidden switches and the green ! last.",
+  "Main-route count unresolved: F2 drawing accounts for 76 of 103 implied boxes."
+ ]
+}

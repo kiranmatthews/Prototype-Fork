@@ -1,0 +1,2494 @@
+{
+ "id": "c4-2-1-a-real-grind",
+ "game": "Crash 4",
+ "stage": "2-1",
+ "name": "A Real Grind",
+ "sources": [
+  "GR 2-1 (gameranx.com feature id 210285)",
+  "GP 2-1 (gamepressure.com Crash 4 walkthrough: A Real Grind)",
+  "LP1 0:14:47-0:20:26 (archive.org PS4 longplay part 1; frames every 0.5 s)"
+ ],
+ "camera": "into-screen on foot; rail 1 side-on; rail 2 into-screen twin rails then side-scroll legs; bonus side-scroll; finale vertical",
+ "totalBoxes": 153,
+ "totalSource": "GR 2-1 final tally; GP 153 boxes; HUD x/153 (LP1 0:14:48, 0:18:41)",
+ "hudReadings": [
+  "0/153 @ LP1 0:14:48",
+  "1/153 @ 0:14:50",
+  "2/153 @ 0:14:51",
+  "bonus 1/22..22/22 @ 0:17:48.5-0:18:31.5",
+  "102/153 (+9 transferring) then 111/153 @ 0:18:33.5-0:18:41 (C4 still unbroken: 111 = GR 112 - 1)"
+ ],
+ "checkpoints": [
+  "C1 path before the barrels LP1 0:15:19.5",
+  "C2 cliff ledge right before rail 1 0:16:02.5",
+  "C3 landing after rail 1's launch 0:16:39",
+  "C4 end of rail 2 beside the bonus pad (broken 0:18:42.5)",
+  "C5 at the Lani-Loli pickup before the finale 0:19:44.5"
+ ],
+ "gems": [
+  "40% Wumpa",
+  "60% Wumpa",
+  "80% Wumpa",
+  "all 153 boxes",
+  "die <= 3 times",
+  "hidden gem: top of the lattice tower near the exit, two crates as steps"
+ ],
+ "quantumMask": "Lani-Loli (phase): start -> lost ~0:16:00 before rail 1; in the bonus; again from C5 (0:19:42)",
+ "railVerbs": [
+  "HANG/UNHANG (prompt 0:16:17)",
+  "SWITCH RAIL (prompt 0:17:07.5)",
+  "SWING (prompt 0:17:18.5)",
+  "jump off and land back on the rail; cannot fall off (GP)"
+ ],
+ "typeLegend": {
+  "wood": "basic crate",
+  "question": "? crate (also a springboard; hold jump for height)",
+  "bounceWumpa": "slatted bounce crate: Wumpa every bounce, breaks after several",
+  "arrowWood": "wooden arrow crate",
+  "ironBound": "reinforced/'strong' crate: body slam only; survives TNT",
+  "tnt": "TNT",
+  "nitro": "Nitro: counted only when the exit detonator destroys it",
+  "phase": "Lani-Loli phase crate (wood type) existing in one phase only",
+  "phaseNitro": "phase Nitro",
+  "checkpoint": "checkpoint crate",
+  "aku": "Aku Aku crate",
+  "uncounted": "steel blocks (M), ! switch, green ! detonator are unbreakable and not in the count"
+ },
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 123,
+   "basis": "153 - bonus 22 - optional left path 8; includes 6 Nitros counted at the exit"
+  },
+  {
+   "id": "optional",
+   "boxes": 8,
+   "basis": "GR 114-121: Aku crate + 7 on the hidden left path"
+  },
+  {
+   "id": "bonus",
+   "boxes": 22,
+   "basis": "GR 91-112; bonus HUD 22/22"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "crate above a tall barrel (GR 24)",
+   "boxes": 24,
+   "cumulative": 24,
+   "notes": "phase tutorial; C1 at 0:15:19.5; TNT+phase; phase-Nitro pyramids"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "GR 25",
+   "to": "C2 (GR 32)",
+   "boxes": 8,
+   "cumulative": 32,
+   "notes": "high phase-barrel crate; crouch-jump float-line of 6; C2; mask leaves"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "rail 1 start",
+   "boxes": 8,
+   "cumulative": 40,
+   "notes": "bounce-on-arrow tool stack under a high crate"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "rail 1",
+   "to": "C3 (landing)",
+   "boxes": 13,
+   "cumulative": 53,
+   "notes": "12 rail crates above/at/below the rail + C3"
+  },
+  {
+   "id": "S5",
+   "route": "main",
+   "from": "C3",
+   "to": "high crate above the pyramid (GR 68)",
+   "boxes": 15,
+   "cumulative": 68,
+   "notes": "slam lesson + slam/TNT pyramid"
+  },
+  {
+   "id": "S6",
+   "route": "main",
+   "from": "! switch",
+   "to": "rail 2 start",
+   "boxes": 6,
+   "cumulative": 74,
+   "notes": "outline bridge: steel + 6 wood"
+  },
+  {
+   "id": "S7",
+   "route": "main",
+   "from": "rail 2",
+   "to": "C4 (rail end)",
+   "boxes": 15,
+   "cumulative": 89,
+   "notes": "twin rails, switch, swing, side-scroll legs; 14 + C4"
+  },
+  {
+   "id": "S8",
+   "route": "main",
+   "from": "tyres left of the bonus pad",
+   "to": "tyres right of the bonus pad",
+   "boxes": 2,
+   "cumulative": null,
+   "notes": "GR 90 (before bonus) and GR 113 (after bonus)"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "bonus pad",
+   "to": "bonus exit",
+   "boxes": 22,
+   "cumulative": 112,
+   "notes": "phase sandbox over a sand sea; TNTs count"
+  },
+  {
+   "id": "S9",
+   "route": "optional",
+   "from": "Aku crate (GR 114)",
+   "to": "drop back to main (GR 121)",
+   "boxes": 8,
+   "cumulative": 121,
+   "notes": "hidden left path signposted by the Aku crate"
+  },
+  {
+   "id": "S10",
+   "route": "main",
+   "from": "drop-down",
+   "to": "C5 (GR 136)",
+   "boxes": 15,
+   "cumulative": 136,
+   "notes": "W W ? T row; ?/? stack; TNT on 3 iron-bound; C5 + mask"
+  },
+  {
+   "id": "S11",
+   "route": "main",
+   "from": "C5",
+   "to": "hidden gem (GR 147)",
+   "boxes": 11,
+   "cumulative": 147,
+   "notes": "phase bounce to a high ledge; phase rows; gem tower with 2 step crates"
+  },
+  {
+   "id": "ND",
+   "route": "main",
+   "from": "Nitro detonator at the exit",
+   "to": "exit",
+   "boxes": 6,
+   "cumulative": 153,
+   "notes": "6 Nitros destroyed and counted at the end; physical positions given per cluster"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "beside the path, right, just after the start",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "near-start",
+    "phase-objects"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TEACH"
+   ],
+   "why": "first crate among phase objects",
+   "evidence": "HUD 1/153 LP1 0:14:50",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "a few steps on",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "rhythm",
+   "evidence": "HUD 2/153 LP1 0:14:51",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "one crate on each side of the path at a plank-bridge head",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair (flanking)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "bridge-head"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR"
+   ],
+   "why": "gateway marker",
+   "evidence": "LP1 0:14:55",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "lower ledge to the right",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "edge"
+   ],
+   "tags": [
+    "DETOUR",
+    "EDGE-BAIT"
+   ],
+   "why": "first off-line crates over a drop",
+   "evidence": "LP1 0:14:57-0:14:58",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-e",
+   "section": "S1",
+   "order": 5,
+   "where": "raised mesa: ? on top; W on the ground right; a phase crate",
+   "composition": {
+    "question": 1,
+    "wood": 1,
+    "phase": 1
+   },
+   "count": 3,
+   "arrangement": "scattered",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "switch"
+   ],
+   "relations": [
+    "phase-crate"
+   ],
+   "tags": [
+    "TEACH"
+   ],
+   "why": "first phase crate: breakable only in its world",
+   "evidence": "LP1 0:14:59-0:15:02",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-f",
+   "section": "S1",
+   "order": 6,
+   "where": "ground, then the cliff path",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "rhythm",
+   "evidence": "LP1 0:15:02-0:15:03.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-g",
+   "section": "S1",
+   "order": 7,
+   "where": "ledge left beside a phase platform",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "phase-platform"
+   ],
+   "tags": [
+    "DETOUR"
+   ],
+   "why": "phase platform is the bridge to it",
+   "evidence": "LP1 0:15:04",
+   "confidence": "low"
+  },
+  {
+   "id": "S1-h",
+   "section": "S1",
+   "order": 8,
+   "where": "ground just before C1",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:15:19",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-i",
+   "section": "S1",
+   "order": 9,
+   "where": "path after the phase-platform gap",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves the first platforming",
+   "evidence": "LP1 0:15:19.5",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-j",
+   "section": "S1",
+   "order": 10,
+   "where": "barrel-section ledge: TNT with a phase crate beside it, shark nearby",
+   "composition": {
+    "tnt": 1,
+    "phase": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk",
+    "switch"
+   ],
+   "relations": [
+    "enemy:sand-shark"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "ENEMY-LINK"
+   ],
+   "why": "fuse runs alongside a shark's surfacing cycle",
+   "evidence": "LP1 0:15:23-0:15:28",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-k",
+   "section": "S1",
+   "order": 11,
+   "where": "pyramid around a phase Nitro: bottom W-phaseN-W, top W resting on the Nitro",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "pyramid",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "switch",
+    "spin"
+   ],
+   "relations": [
+    "on:phaseNitro N-1",
+    "prompt:Nitro"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "SUPPORT-ORDER",
+    "TEACH"
+   ],
+   "why": "in the phase where the Nitro is absent the top crate drops; wood taken without touching the Nitro (inferred)",
+   "evidence": "LP1 0:15:35.5-0:15:36 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-l",
+   "section": "S1",
+   "order": 12,
+   "where": "next ledge: W resting on a phase Nitro",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "sandwich on an explosive",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "switch",
+    "spin"
+   ],
+   "relations": [
+    "on:phaseNitro N-2"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TEST"
+   ],
+   "why": "same idea, nothing to hide behind",
+   "evidence": "LP1 0:15:38.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-m",
+   "section": "S1",
+   "order": 13,
+   "where": "next platforms right/lower",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "REWARD"
+   ],
+   "why": "payoff after the Nitro room",
+   "evidence": "LP1 0:15:39-0:15:41",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-n",
+   "section": "S1",
+   "order": 14,
+   "where": "above a tall barrel platform (GR 24)",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "barrel-platform"
+   ],
+   "tags": [
+    "HIGH"
+   ],
+   "why": "height lesson on barrels",
+   "evidence": "GR 24",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-o",
+   "section": "S1",
+   "order": 15,
+   "where": "(residual) phase-platform gap",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [],
+   "why": "needed for GR 24",
+   "evidence": "GR 24",
+   "confidence": "low"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 16,
+   "where": "raised phase-barrel platform taller than the rest, after a Nitro",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "after:Nitro"
+   ],
+   "tags": [
+    "HIGH",
+    "COUNT-TRAP"
+   ],
+   "why": "above eye line; easy to miss",
+   "evidence": "GR 25; LP1 0:15:41-0:15:45",
+   "confidence": "medium"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 17,
+   "where": "line of 6 floating high over the path: W W W W phaseW ?",
+   "composition": {
+    "wood": 4,
+    "phase": 1,
+    "question": 1
+   },
+   "count": 6,
+   "arrangement": "float-line",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "double-jump"
+   ],
+   "relations": [
+    "prompt:crouch + double jump",
+    "steel-step"
+   ],
+   "tags": [
+    "FLOAT-LINE",
+    "HIGH",
+    "TEACH"
+   ],
+   "why": "teaches the new high jump with a chainable row",
+   "evidence": "LP1 0:15:45.5-0:15:52; GR 32",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 18,
+   "where": "cliff ledge before rail 1",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "rail:before-entry"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves everything before the rail",
+   "evidence": "LP1 0:16:00.5-0:16:02.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 19,
+   "where": "upper ledges along the cliff path after C2",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "HIGH"
+   ],
+   "why": "rhythm after the save",
+   "evidence": "LP1 0:16:02-0:16:03",
+   "confidence": "low"
+  },
+  {
+   "id": "S3-b",
+   "section": "S3",
+   "order": 20,
+   "where": "mid ledge",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:16:01-0:16:02",
+   "confidence": "low"
+  },
+  {
+   "id": "S3-c",
+   "section": "S3",
+   "order": 21,
+   "where": "2-stack under a rock column: bounce crate on a wooden arrow; W on top of the column",
+   "composition": {
+    "bounceWumpa": 1,
+    "arrowWood": 1,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "sandwich/stack + high target",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bounce",
+    "arrow"
+   ],
+   "relations": [
+    "tool",
+    "rail:approach"
+   ],
+   "tags": [
+    "TOOL",
+    "SUPPORT-ORDER",
+    "HIGH",
+    "COUNT-TRAP"
+   ],
+   "why": "keep the lower crates intact; spinning the stack strands the high crate",
+   "evidence": "LP1 0:16:03.5-0:16:08.5 zoom; GR 40",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-d",
+   "section": "S3",
+   "order": 22,
+   "where": "(residual) near the rail start",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "rail:approach"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "Wumpa 117->129",
+   "evidence": "GR 40",
+   "confidence": "low"
+  },
+  {
+   "id": "R1-a",
+   "section": "S4",
+   "order": 23,
+   "where": "first stretch, floating above the open rail",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:above"
+   ],
+   "tags": [
+    "HIGH",
+    "SPEED-LINE",
+    "TEACH"
+   ],
+   "why": "jumping from the rail is safe",
+   "evidence": "LP1 0:16:14-0:16:16.5",
+   "confidence": "high"
+  },
+  {
+   "id": "R1-b",
+   "section": "S4",
+   "order": 24,
+   "where": "row just below rail level directly under a spiked board and a spiked post",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "row at hang height",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:below",
+    "under:spiked-board+post",
+    "prompt:HANG"
+   ],
+   "tags": [
+    "LOW",
+    "ROW",
+    "TEACH",
+    "TIMED",
+    "SPEED-LINE"
+   ],
+   "why": "the hang that dodges the obstacle also breaks the row",
+   "evidence": "LP1 0:16:17, 0:16:19.5-0:16:21 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "R1-c",
+   "section": "S4",
+   "order": 25,
+   "where": "floating high above the rail",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:above"
+   ],
+   "tags": [
+    "HIGH",
+    "SPEED-LINE"
+   ],
+   "why": "back to top posture",
+   "evidence": "LP1 0:16:22.5-0:16:24",
+   "confidence": "high"
+  },
+  {
+   "id": "R1-d",
+   "section": "S4",
+   "order": 26,
+   "where": "below the rail, right",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:below"
+   ],
+   "tags": [
+    "LOW"
+   ],
+   "why": "",
+   "evidence": "LP1 0:16:24.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "R1-e",
+   "section": "S4",
+   "order": 27,
+   "where": "above, before a rock pillar on the rail",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:above",
+    "obstacle:rock"
+   ],
+   "tags": [
+    "HIGH",
+    "TIMED"
+   ],
+   "why": "jump also clears the rock",
+   "evidence": "LP1 0:16:26.5-0:16:27.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "R1-f",
+   "section": "S4",
+   "order": 28,
+   "where": "floating above the rail just past a spiked board",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "timed",
+    "jump"
+   ],
+   "relations": [
+    "rail:above",
+    "after:spiked-board"
+   ],
+   "tags": [
+    "HIGH",
+    "TEST",
+    "SPEED-LINE"
+   ],
+   "why": "crate on the far side of the obstacle from the safe posture: hang, unhang, jump",
+   "evidence": "LP1 0:16:29-0:16:31 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "R1-g",
+   "section": "S4",
+   "order": 29,
+   "where": "above-right after a spiked board + spiked post pair",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "timed",
+    "jump"
+   ],
+   "relations": [
+    "rail:above",
+    "after:spiked-board+post"
+   ],
+   "tags": [
+    "HIGH",
+    "TEST"
+   ],
+   "why": "same test, faster",
+   "evidence": "LP1 0:16:32-0:16:33.5",
+   "confidence": "high"
+  },
+  {
+   "id": "R1-h",
+   "section": "S4",
+   "order": 30,
+   "where": "near rail level, last stretch",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:at"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "cool-down",
+   "evidence": "LP1 0:16:35",
+   "confidence": "medium"
+  },
+  {
+   "id": "R1-i",
+   "section": "S4",
+   "order": 31,
+   "where": "small metal platform where the rail ends, before the launch",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "rail:exit"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "dismount marker",
+   "evidence": "LP1 0:16:37.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "R1-j",
+   "section": "S4",
+   "order": 32,
+   "where": "(residual) probably a 4th crate in the R1-b row",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:below"
+   ],
+   "tags": [
+    "LOW"
+   ],
+   "why": "needed for 12 on the rail",
+   "evidence": "GR 53",
+   "confidence": "low"
+  },
+  {
+   "id": "R1-k",
+   "section": "S4",
+   "order": 33,
+   "where": "landing after the launch and fruit arc",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "rail:after-exit"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves the whole rail",
+   "evidence": "LP1 0:16:39",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-a",
+   "section": "S5",
+   "order": 34,
+   "where": "small metal platform right after C3",
+   "composition": {
+    "ironBound": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "body-slam"
+   ],
+   "relations": [
+    "prompt:SLAM"
+   ],
+   "tags": [
+    "REINFORCED",
+    "TEACH",
+    "SINGLE"
+   ],
+   "why": "slam taught on a harmless lone crate",
+   "evidence": "LP1 0:16:39-0:16:40 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-b",
+   "section": "S5",
+   "order": 35,
+   "where": "pyramid on the hazard deck: ? top; W W W middle; bottom W(left) R TNT R",
+   "composition": {
+    "question": 1,
+    "wood": 4,
+    "ironBound": 2,
+    "tnt": 1
+   },
+   "count": 8,
+   "arrangement": "pyramid",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "bounce",
+    "spin",
+    "body-slam",
+    "jump"
+   ],
+   "relations": [
+    "tool:? springboard"
+   ],
+   "tags": [
+    "PYRAMID",
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "REINFORCED",
+    "TOOL",
+    "TEST"
+   ],
+   "why": "? is the springboard, TNT clears wood but not R, R needs the slam just taught",
+   "evidence": "LP1 0:16:40-0:16:46.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-c",
+   "section": "S5",
+   "order": 36,
+   "where": "floating high above the pyramid",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "needs:intact ?"
+   ],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "reachable only while the ? is intact",
+   "evidence": "GR 68; LP1 0:16:42.5-0:16:44.5",
+   "confidence": "high"
+  },
+  {
+   "id": "S5-d",
+   "section": "S5",
+   "order": 37,
+   "where": "(residual) hidden by the side camera; a back row of the pyramid is likely",
+   "composition": {
+    "wood": 5
+   },
+   "count": 5,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [],
+   "why": "needed for GR 68",
+   "evidence": "GR 53->68",
+   "confidence": "low"
+  },
+  {
+   "id": "S6-a",
+   "section": "S6",
+   "order": 38,
+   "where": "outline bridge from the ! beside the warning sign; wood set into a steel walkway with an L-turn",
+   "composition": {
+    "wood": 6
+   },
+   "count": 6,
+   "arrangement": "bridge with embedded crates",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "switch-materialised",
+    "rail:approach"
+   ],
+   "tags": [
+    "SWITCH",
+    "OUTLINE",
+    "BRIDGE",
+    "STEPPING"
+   ],
+   "why": "the ! turns a gap into a bridge and the bridge into a crate row",
+   "evidence": "LP1 0:16:55.5, 0:16:49.5-0:17:04 zoom; GR 74",
+   "confidence": "high",
+   "uncounted": {
+    "switch": 1,
+    "steel": 8
+   }
+  },
+  {
+   "id": "R2-a",
+   "section": "S7",
+   "order": 39,
+   "where": "? on a rusty car hood beside the rail start, at rail height",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "rail:beside-entry"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TEACH",
+    "SPEED-LINE"
+   ],
+   "why": "entrance marked with a no-input reward",
+   "evidence": "LP1 0:17:06 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "R2-b",
+   "section": "S7",
+   "order": 40,
+   "where": "twin rails: crates beside the rail without a spiked board",
+   "composition": {
+    "wood": 3
+   },
+   "count": 3,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:safe-twin",
+    "prompt:SWITCH RAIL"
+   ],
+   "tags": [
+    "TIMED",
+    "SPEED-LINE",
+    "TEACH"
+   ],
+   "why": "the switch that dodges also lines up the crate",
+   "evidence": "LP1 0:17:07.5, 0:17:08-0:17:11",
+   "confidence": "medium"
+  },
+  {
+   "id": "R2-c",
+   "section": "S7",
+   "order": 41,
+   "where": "floating beside/above the rail",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "rail:above"
+   ],
+   "tags": [
+    "HIGH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:17:12 zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "R2-d",
+   "section": "S7",
+   "order": 42,
+   "where": "sitting on the rail line (single-rail canyon)",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single, on the rail",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "rail:on-line"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SPEED-LINE"
+   ],
+   "why": "the rail line itself collects",
+   "evidence": "LP1 0:17:16.5-0:17:17.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "R2-e",
+   "section": "S7",
+   "order": 43,
+   "where": "beside the rail",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "vehicle"
+   ],
+   "relations": [
+    "rail:beside"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:17:18",
+   "confidence": "medium"
+  },
+  {
+   "id": "R2-f",
+   "section": "S7",
+   "order": 44,
+   "where": "at the sides of the rail, reached by swinging",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:side",
+    "prompt:SWING"
+   ],
+   "tags": [
+    "TEACH",
+    "SPEED-LINE"
+   ],
+   "why": "new verb paid immediately",
+   "evidence": "LP1 0:17:18.5-0:17:20.5",
+   "confidence": "high"
+  },
+  {
+   "id": "R2-g",
+   "section": "S7",
+   "order": 45,
+   "where": "two crates hanging below the rail at a red lattice tower; striped barrier on the tower top",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair at hang height",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:below",
+    "under:barrier"
+   ],
+   "tags": [
+    "LOW",
+    "TIMED"
+   ],
+   "why": "dodge = collect again, in side view",
+   "evidence": "LP1 0:17:21.5-0:17:23.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "R2-h",
+   "section": "S7",
+   "order": 46,
+   "where": "below the rail on the leftward side-scroll leg",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "timed"
+   ],
+   "relations": [
+    "rail:below"
+   ],
+   "tags": [
+    "LOW"
+   ],
+   "why": "",
+   "evidence": "LP1 0:17:26.5-0:17:27.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "R2-i",
+   "section": "S7",
+   "order": 47,
+   "where": "ledge at the rail end",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "rail:exit"
+   ],
+   "tags": [
+    "ON-PATH"
+   ],
+   "why": "dismount marker",
+   "evidence": "LP1 0:17:29.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "R2-j",
+   "section": "S7",
+   "order": 48,
+   "where": "(residual)",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [],
+   "relations": [
+    "rail"
+   ],
+   "tags": [],
+   "why": "needed for 14 on the rail",
+   "evidence": "GR 89",
+   "confidence": "low"
+  },
+  {
+   "id": "R2-k",
+   "section": "S7",
+   "order": 49,
+   "where": "rail end beside the bonus pad",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "rail:after-exit",
+    "bonus-pad"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "BONUS",
+    "COUNT-TRAP"
+   ],
+   "why": "LP skipped it for the pad; broke it at 0:18:42.5",
+   "evidence": "LP1 0:17:29.5-0:17:30.5, 0:18:42.5; HUD 89",
+   "confidence": "high"
+  },
+  {
+   "id": "T-a",
+   "section": "S8",
+   "order": 50,
+   "where": "inside the tyre stack left of the bonus pad",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single, concealed",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "bonus-pad",
+    "tyres"
+   ],
+   "tags": [
+    "HIDDEN",
+    "COUNT-TRAP"
+   ],
+   "why": "'impossible to spot'; the pad pulls you away",
+   "evidence": "GR 90; LP1 0:17:31-0:17:34; HUD arithmetic",
+   "confidence": "high"
+  },
+  {
+   "id": "T-b",
+   "section": "S8",
+   "order": 51,
+   "where": "inside the tyres right of the pad, below where the bonus platform stood",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single, concealed",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "backtrack"
+   ],
+   "relations": [
+    "bonus-pad",
+    "tyres"
+   ],
+   "tags": [
+    "HIDDEN",
+    "BACKTRACK",
+    "COUNT-TRAP"
+   ],
+   "why": "placed where you land on return",
+   "evidence": "GR 113; LP1 0:18:44-0:18:46.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "B1",
+   "section": "B",
+   "order": 52,
+   "where": "high W above a phase column + 2 TNT stacked on a rock pillar",
+   "composition": {
+    "wood": 1,
+    "tnt": 2
+   },
+   "count": 3,
+   "arrangement": "stack + high target",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "phase-column"
+   ],
+   "tags": [
+    "TOOL",
+    "EXPLOSIVE-MIX",
+    "BONUS"
+   ],
+   "why": "TNTs count as crates",
+   "evidence": "LP1 0:17:41-0:17:49 (1/22->3/22)",
+   "confidence": "high"
+  },
+  {
+   "id": "B2",
+   "section": "B",
+   "order": 53,
+   "where": "? on 3 steel blocks, high W on the right cliff, floating phase-TNT pair, TNT row with phase ends",
+   "composition": {
+    "question": 1,
+    "wood": 1,
+    "tnt": 4
+   },
+   "count": 6,
+   "arrangement": "mixed",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "phase-TNT"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "BONUS"
+   ],
+   "why": "only the solid-phase TNT detonates",
+   "evidence": "LP1 0:17:50-0:18:00 (4/22->9/22)",
+   "confidence": "medium",
+   "uncounted": {
+    "steel": 3
+   }
+  },
+  {
+   "id": "B3",
+   "section": "B",
+   "order": 54,
+   "where": "high W on the cliff, from an arrow inside a 2x2 iron-bound block",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "arrow"
+   ],
+   "relations": [
+    "tool:arrow inside R block"
+   ],
+   "tags": [
+    "TOOL",
+    "HIGH"
+   ],
+   "why": "use the arrow before slamming the block",
+   "evidence": "LP1 0:18:08.5-0:18:09.5 (10/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B4",
+   "section": "B",
+   "order": 55,
+   "where": "top centre",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "",
+   "evidence": "LP1 0:18:12 (11/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B5",
+   "section": "B",
+   "order": 56,
+   "where": "TNT on a pillar",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "",
+   "evidence": "LP1 0:18:13-0:18:16.5 (12/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B6",
+   "section": "B",
+   "order": 57,
+   "where": "floating W",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "",
+   "evidence": "LP1 0:18:18 (13/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B7",
+   "section": "B",
+   "order": 58,
+   "where": "2x2 iron-bound block with a phase crate (and the arrow)",
+   "composition": {
+    "ironBound": 4,
+    "phase": 1
+   },
+   "count": 5,
+   "arrangement": "grid 2x2 + phase",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "body-slam"
+   ],
+   "relations": [],
+   "tags": [
+    "REINFORCED",
+    "BONUS"
+   ],
+   "why": "one slam takes four: payoff for S5",
+   "evidence": "LP1 0:18:18.5-0:18:20.5 (13->18/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "B8",
+   "section": "B",
+   "order": 59,
+   "where": "bounce crate high in the sky above a wooden arrow",
+   "composition": {
+    "bounceWumpa": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce"
+   ],
+   "relations": [
+    "tool:arrowWood"
+   ],
+   "tags": [
+    "TOOL",
+    "HIGH",
+    "REWARD"
+   ],
+   "why": "pays repeatedly once reached",
+   "evidence": "LP1 0:18:22-0:18:24 (19/22; Wumpa 79->96)",
+   "confidence": "high"
+  },
+  {
+   "id": "B9",
+   "section": "B",
+   "order": 60,
+   "where": "? over W floating high; last crate by the exit pad",
+   "composition": {
+    "question": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "singles",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "exit-pad"
+   ],
+   "tags": [
+    "BONUS",
+    "COUNT-TRAP"
+   ],
+   "why": "last crate at the exit",
+   "evidence": "LP1 0:18:28-0:18:31.5 (20->22/22)",
+   "confidence": "medium"
+  },
+  {
+   "id": "S9-a",
+   "section": "S9",
+   "order": 61,
+   "where": "past the bonus after the first mutant; marks the hidden left path",
+   "composition": {
+    "aku": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [
+    "signpost:hidden-path"
+   ],
+   "tags": [
+    "AKU",
+    "ROUTE-SPLIT",
+    "DETOUR"
+   ],
+   "why": "mask crate = 'turn left here' and protection on the bomb-heavy detour",
+   "evidence": "GR 114",
+   "confidence": "medium"
+  },
+  {
+   "id": "S9-b",
+   "section": "S9",
+   "order": 62,
+   "where": "stair stack on the scaffold left of the path + crate behind a skull-faced minion on the upper walkway",
+   "composition": {
+    "wood": 5,
+    "question": 2
+   },
+   "count": 7,
+   "arrangement": "stack (stair) + single",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "enemy:skull-minion",
+    "enemy:bomber"
+   ],
+   "tags": [
+    "DETOUR",
+    "STACK",
+    "ENEMY-LINK",
+    "COUNT-TRAP"
+   ],
+   "why": "detour crates guarded by its enemies",
+   "evidence": "GR 115-121; LP1 0:18:54-0:18:58.5 zoom, 0:19:07.5",
+   "confidence": "low"
+  },
+  {
+   "id": "S10-a",
+   "section": "S10",
+   "order": 63,
+   "where": "metal platform at the landing: W, W, ?, TNT in a row",
+   "composition": {
+    "wood": 2,
+    "question": 1,
+    "tnt": 1
+   },
+   "count": 4,
+   "arrangement": "row",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin",
+    "jump",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ROW",
+    "EXPLOSIVE-MIX"
+   ],
+   "why": "work from the safe end of a row ending in TNT",
+   "evidence": "LP1 0:19:11-0:19:13 zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S10-b",
+   "section": "S10",
+   "order": 64,
+   "where": "two ? stacked on a rock to the right",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "stack",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK"
+   ],
+   "why": "",
+   "evidence": "LP1 0:19:11-0:19:18",
+   "confidence": "medium"
+  },
+  {
+   "id": "S10-c",
+   "section": "S10",
+   "order": 65,
+   "where": "(residual) drop-down area",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [],
+   "relations": [],
+   "tags": [],
+   "why": "needed for GR 129",
+   "evidence": "GR 129",
+   "confidence": "low"
+  },
+  {
+   "id": "S10-d",
+   "section": "S10",
+   "order": 66,
+   "where": "TNT on top of three iron-bound crates under the jetpack bomber",
+   "composition": {
+    "tnt": 1,
+    "ironBound": 3
+   },
+   "count": 4,
+   "arrangement": "stack (TNT capping an R row)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump",
+    "walk",
+    "body-slam"
+   ],
+   "relations": [
+    "enemy:jetpack-bomber"
+   ],
+   "tags": [
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "REINFORCED",
+    "TIMED"
+   ],
+   "why": "TNT must go first and cannot finish the job",
+   "evidence": "LP1 0:19:25.5-0:19:33.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S10-e",
+   "section": "S10",
+   "order": 67,
+   "where": "high shelf near the round door",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "HIGH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:19:39-0:19:40.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "S10-f",
+   "section": "S10",
+   "order": 68,
+   "where": "(residual)",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "unresolved",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [],
+   "relations": [],
+   "tags": [],
+   "why": "needed for GR 136",
+   "evidence": "GR 136",
+   "confidence": "low"
+  },
+  {
+   "id": "S10-g",
+   "section": "S10",
+   "order": 69,
+   "where": "beside the Lani-Loli pickup",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "saves before the finale",
+   "evidence": "LP1 0:19:44.5",
+   "confidence": "high"
+  },
+  {
+   "id": "F-a",
+   "section": "S11",
+   "order": 70,
+   "where": "single crate on a high ledge beside the start of the finale",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "bounce"
+   ],
+   "relations": [
+    "tool:phase bounce crate"
+   ],
+   "tags": [
+    "HIGH",
+    "TOOL",
+    "COUNT-TRAP"
+   ],
+   "why": "newly returned mask is the key",
+   "evidence": "GR 137; LP1 0:19:45-0:19:52",
+   "confidence": "medium"
+  },
+  {
+   "id": "F-b",
+   "section": "S11",
+   "order": 71,
+   "where": "two Wumpa crates incl. the phase bounce crate",
+   "composition": {
+    "bounceWumpa": 1,
+    "wood": 1
+   },
+   "count": 2,
+   "arrangement": "pair",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bounce"
+   ],
+   "relations": [
+    "phase"
+   ],
+   "tags": [
+    "TOOL"
+   ],
+   "why": "",
+   "evidence": "GR 139; LP1 0:19:47.5-0:19:54.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "F-c",
+   "section": "S11",
+   "order": 72,
+   "where": "phase-platform path: phase W W W row on a hazard platform + climb crates",
+   "composition": {
+    "phase": 1,
+    "wood": 5
+   },
+   "count": 6,
+   "arrangement": "row + singles",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch",
+    "jump"
+   ],
+   "relations": [
+    "enemy:sign-mutant"
+   ],
+   "tags": [
+    "ON-PATH",
+    "TIMED"
+   ],
+   "why": "",
+   "evidence": "GR 145; LP1 0:19:55-0:20:10.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "F-d",
+   "section": "S11",
+   "order": 73,
+   "where": "two crates under the hidden-gem platform at the lattice tower top",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "stack/stepping",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "gem"
+   ],
+   "tags": [
+    "TOOL",
+    "HIDDEN"
+   ],
+   "why": "crates as a ladder to the gem",
+   "evidence": "GR 147; LP1 0:20:11-0:20:14",
+   "confidence": "medium"
+  },
+  {
+   "id": "N-1",
+   "section": "ND",
+   "order": 74,
+   "where": "S1 pyramid: phase Nitro under the top W (Nitro tutorial)",
+   "composition": {
+    "phaseNitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "detonator"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH"
+   ],
+   "why": "counted at the exit detonator",
+   "evidence": "LP1 0:15:35.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "N-2",
+   "section": "ND",
+   "order": 75,
+   "where": "S1 next ledge: phase Nitro under a W",
+   "composition": {
+    "phaseNitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "detonator"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "NITRO-SWITCH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:15:38.5 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "N-3",
+   "section": "ND",
+   "order": 76,
+   "where": "S1 far-left phase Nitro",
+   "composition": {
+    "phaseNitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "detonator"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:15:38.5-0:15:39",
+   "confidence": "medium"
+  },
+  {
+   "id": "N-4",
+   "section": "ND",
+   "order": 77,
+   "where": "S2 rock pillar between two phase crates",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "detonator"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:15:53.5",
+   "confidence": "medium"
+  },
+  {
+   "id": "N-5",
+   "section": "ND",
+   "order": 78,
+   "where": "S2 left platform",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "detonator"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "may be N-4 seen again",
+   "evidence": "LP1 0:15:55-0:15:56.5",
+   "confidence": "low"
+  },
+  {
+   "id": "N-6",
+   "section": "ND",
+   "order": 79,
+   "where": "S11 ground beside the detonator",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "switch"
+   ],
+   "relations": [
+    "detonator"
+   ],
+   "tags": [
+    "NITRO-SWITCH"
+   ],
+   "why": "",
+   "evidence": "LP1 0:20:19",
+   "confidence": "medium"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "sand shark",
+   "count": 3,
+   "where": "erupts between oil-drum platforms on a delay",
+   "role": "times the TNT S1-j and the barrel hops"
+  },
+  {
+   "section": "S3",
+   "kind": "rat-like critter",
+   "count": 1,
+   "where": "cliff path",
+   "role": "none"
+  },
+  {
+   "section": "S4",
+   "kind": "rail obstacles: spiked teal boards, spiked posts, rock pillar",
+   "count": 6,
+   "where": "on rail 1",
+   "role": "decide the posture; crates at the dodge posture, then on the far side"
+  },
+  {
+   "section": "S7",
+   "kind": "rail obstacles: alternating spiked boards, spiked yellow rail-cart, hanging lamp, tower barriers",
+   "count": 6,
+   "where": "rail 2",
+   "role": "crates by the safe rail; hang crates under barriers"
+  },
+  {
+   "section": "S9",
+   "kind": "bomb-throwing minion, skull-faced minion, hammer mutant",
+   "count": 3,
+   "where": "doorway, scaffold, upper walkway",
+   "role": "guard the detour stack and walkway crate"
+  },
+  {
+   "section": "S10",
+   "kind": "jetpack bomber (target rings)",
+   "count": 1,
+   "where": "over the TNT-on-iron-bound platform",
+   "role": "second timer on top of the TNT fuse"
+  },
+  {
+   "section": "S11",
+   "kind": "big sign-carrying mutant",
+   "count": 1,
+   "where": "hazard platform with the phase W W W row",
+   "role": "guards F-c"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "abyss between oil drums / phase platforms",
+   "where": "barrel section",
+   "crates": [
+    "S1-j",
+    "S1-n"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "abyss below the float-line",
+   "where": "crouch-jump stretch",
+   "crates": [
+    "S2-b"
+   ]
+  },
+  {
+   "section": "S4",
+   "kind": "rail 1 (cannot fall off; obstacles only)",
+   "where": "rail 1",
+   "crates": [
+    "R1-b",
+    "R1-f",
+    "R1-g"
+   ]
+  },
+  {
+   "section": "S6",
+   "kind": "gap bridged by the outline bridge",
+   "where": "after the pyramid",
+   "crates": [
+    "S6-a"
+   ]
+  },
+  {
+   "section": "S7",
+   "kind": "twin rails over a canyon",
+   "where": "rail 2",
+   "crates": [
+    "R2-b",
+    "R2-d"
+   ]
+  },
+  {
+   "section": "B",
+   "kind": "sand sea",
+   "where": "bonus",
+   "crates": [
+    "B1",
+    "B8"
+   ]
+  },
+  {
+   "section": "S11",
+   "kind": "final abyss crossed on phase platforms",
+   "where": "finale",
+   "crates": [
+    "F-c"
+   ]
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-k",
+    "S1-l",
+    "N-1",
+    "N-2"
+   ],
+   "summary": "wood crates resting on phase Nitros",
+   "solution": "phase the Nitro out so the top crate drops; then break the side crates (inferred)",
+   "wrongOrder": "spinning beside a solid Nitro",
+   "loss": "a life; the Nitros count at the exit anyway"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "S3-c"
+   ],
+   "summary": "bounce crate on a wooden arrow under a high crate",
+   "solution": "bounce the B until it breaks, ride the arrow to the high W, then break the arrow",
+   "wrongOrder": "spinning the stack from the side",
+   "loss": "the high crate (all-box) unless you reload C2"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "R1-a",
+    "R1-b",
+    "R1-f",
+    "R1-g"
+   ],
+   "summary": "rail-1 posture chain",
+   "solution": "jump for above crates; hang under obstacles (collects the row); hang->unhang->jump when the crate is past the obstacle",
+   "wrongOrder": "staying in hang after a board",
+   "loss": "crates only (you cannot fall off)"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "S5-a",
+    "S5-b",
+    "S5-c"
+   ],
+   "summary": "slam lesson then a ?/WWW/W-R-TNT-R pyramid with a high crate",
+   "solution": "held bounce on the ? for the high crate; break the middle row; stomp the TNT and back off; slam the R",
+   "wrongOrder": "breaking the ? another way first; slamming beside the lit TNT",
+   "loss": "the high crate; or a life"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "S6-a"
+   ],
+   "summary": "! materialises a steel bridge with 6 wood crates",
+   "solution": "hit !, stomp each W while crossing",
+   "wrongOrder": "n/a",
+   "loss": "none (the bridge is the route)"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "R2-b",
+    "R2-f"
+   ],
+   "summary": "twin-rail choice and swing",
+   "solution": "switch to the board-free rail where the crate is; swing when prompted",
+   "wrongOrder": "staying on the spiked rail",
+   "loss": "a life"
+  },
+  {
+   "id": "P7",
+   "clusters": [
+    "T-a",
+    "R2-k",
+    "T-b"
+   ],
+   "summary": "three count traps orbit the bonus pad",
+   "solution": "spin the left tyres, break C4, spin the right tyres after the bonus",
+   "wrongOrder": "riding the pad straight from the rail",
+   "loss": "all-box gem"
+  },
+  {
+   "id": "P8",
+   "clusters": [
+    "S10-d"
+   ],
+   "summary": "TNT capping three iron-bound crates",
+   "solution": "light the TNT, retreat, slam the survivors",
+   "wrongOrder": "slamming first",
+   "loss": "a life"
+  },
+  {
+   "id": "P9",
+   "clusters": [
+    "F-d"
+   ],
+   "summary": "crates under the gem platform",
+   "solution": "use them as steps, then break the second",
+   "wrongOrder": "breaking both before climbing",
+   "loss": "gem becomes harder to reach"
+  }
+ ],
+ "observations": [
+  "Rails are the densest crate terrain: 12 crates in ~25 s on rail 1, 14 in ~24 s on rail 2 (about one per 2 s vs one per 4-5 s on foot).",
+  "Rail crates live at three heights (above, at, below the rail); the obstacle decides the posture, the first crate of each posture sits where the dodge puts you, tests put it on the far side of the obstacle.",
+  "No TNT or Nitro ever sits on a rail; rail lethality comes only from authored obstacles, so rail crates are pure reward.",
+  "Each rail verb (HANG, SWITCH RAIL, SWING) is prompted once and paid immediately with crates only that verb reaches.",
+  "Checkpoints bracket the rails and never sit on them: C2 on the entry ledge, C3 at rail 1's landing, C4 at rail 2's dismount.",
+  "Slow puzzle rooms (slam lesson, slam pyramid, ! bridge) sit between the two speed sections; the ! bridge leads straight onto rail 2.",
+  "Explosives teach immunity: TNT clears wood but not iron-bound (S5-b, S10-d); TNT counts, so the bonus uses TNT stacks as crates.",
+  "The phase mask is taught at the start, removed for the rails, and returned for the bonus and finale.",
+  "Count traps orbit the bonus pad (left tyres, checkpoint, right tyres); high crates guarded by a tool are the other trap family (S2-a, S3-c, S5-c, F-a).",
+  "All 6 Nitros sit in the phase sections and count only when the exit detonator fires.",
+  "Crates signpost routes: the Aku crate marks the hidden left path, a ? on a car hood marks rail 2's entrance, a W on a metal platform marks rail 1's exit."
+ ]
+}

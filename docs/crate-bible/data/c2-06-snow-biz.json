@@ -1,0 +1,1350 @@
+{
+ "id": "c2-06-snow-biz",
+ "game": "Crash 2",
+ "stage": 6,
+ "name": "Snow Biz",
+ "nameJa": "ゆきやまにえんばん!?",
+ "sources": [
+  "F2 p034L (header)",
+  "F2 p034R-p036L (map, POINT 1-14)",
+  "F2 p094L (perfect order, bonus and gem cautions)",
+  "D2 p018-p021 (shots 1-64)",
+  "gamepressure N. Sane Snow Biz (summary)"
+ ],
+ "camera": "mixed: into-screen start, side-scroll middle and bonus, into-screen finale; gem course side-scroll",
+ "totalBoxes": 124,
+ "totalSource": "F2 p034L header (superscript 79)",
+ "routes": [
+  {
+   "id": "main",
+   "boxes": 37,
+   "basis": "observed: every F2 icon on the course, confirmed by D2; header split implies 45 (unreconciled by 8)"
+  },
+  {
+   "id": "bonus",
+   "boxes": 18,
+   "basis": "gamepressure (N. Sane) 18; D2 counters 0->2->7->11 + 7-crate wall consistent; partly reconstructed"
+  },
+  {
+   "id": "gem",
+   "boxes": 47,
+   "basis": "seen in D2 s38-s64 only; not countable; by subtraction 69 (124-37-18) or 61 (header split)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "S1",
+   "route": "main",
+   "from": "start",
+   "to": "C1 (start of side-scroll)",
+   "boxes": 11,
+   "cumulative": 11,
+   "notes": "3D ice cave; elevator into the side-scroll"
+  },
+  {
+   "id": "S2",
+   "route": "main",
+   "from": "C1",
+   "to": "C2",
+   "boxes": 11,
+   "cumulative": 22,
+   "notes": "side-scroll row 1; gem platform between S2-a and S2-b"
+  },
+  {
+   "id": "S3",
+   "route": "main",
+   "from": "C2",
+   "to": "bonus pit",
+   "boxes": 3,
+   "cumulative": 25,
+   "notes": "side-scroll row 2"
+  },
+  {
+   "id": "B",
+   "route": "bonus",
+   "from": "? platform at the bottom of a pit (row 2)",
+   "to": "elevator back to row 2",
+   "boxes": 18,
+   "cumulative": null,
+   "notes": "green cave side-scroll"
+  },
+  {
+   "id": "S4",
+   "route": "main",
+   "from": "bonus exit / C3",
+   "to": "goal",
+   "boxes": 12,
+   "cumulative": 37,
+   "notes": "3D finale with rolling disc stones; main-only cumulative"
+  },
+  {
+   "id": "G",
+   "route": "gem",
+   "from": "gem platform (row 1)",
+   "to": "elevator back to just before the gem platform",
+   "boxes": 47,
+   "cumulative": null,
+   "notes": "observed only; remainder 14-22 unseen"
+  }
+ ],
+ "clusters": [
+  {
+   "id": "S1-a",
+   "section": "S1",
+   "order": 1,
+   "where": "first ice cave, on the line of travel",
+   "composition": {
+    "wood": 6
+   },
+   "count": 6,
+   "arrangement": "staircase 3/2/1, single depth",
+   "stackHeight": 3,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "seal and penguin before it"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PYRAMID",
+    "STACK",
+    "TEACH",
+    "REWARD"
+   ],
+   "why": "first crates double as stairs and a fruit burst",
+   "evidence": "F2 p034R bubble + POINT 1 photo; D2 p018L s1-s2",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-b",
+   "section": "S1",
+   "order": 2,
+   "where": "ledge reached by the steel-arrow bounce, before a pit",
+   "composition": {
+    "tnt": 2,
+    "life": 1
+   },
+   "count": 3,
+   "arrangement": "row TNT, TNT, 1UP at the far right",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "jump",
+    "arrow"
+   ],
+   "relations": [
+    "pit beyond",
+    "steel arrow block below the ledge (uncounted)"
+   ],
+   "tags": [
+    "ROW",
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "LIFE",
+    "TEACH",
+    "SUPPORT-ORDER",
+    "EDGE-BAIT"
+   ],
+   "why": "take the life with a jump (no spin), then light one TNT and step back so the pair chains",
+   "evidence": "F2 p034R POINT 2; D2 p018L s3-s4",
+   "confidence": "medium"
+  },
+  {
+   "id": "S1-c",
+   "section": "S1",
+   "order": 3,
+   "where": "far ledge after the first pit",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE"
+   ],
+   "why": "landing reward after the first pit",
+   "evidence": "F2 p034R; D2 s4",
+   "confidence": "high"
+  },
+  {
+   "id": "S1-d",
+   "section": "S1",
+   "order": 4,
+   "where": "start of the side-scroll after the elevator ride",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [
+    "after penguins x3 and seals x3"
+   ],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "checkpoint at the camera-mode change",
+   "evidence": "F2 p035L row 1; D2 p018R s9",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-a",
+   "section": "S2",
+   "order": 5,
+   "where": "between the first two hedgehogs",
+   "composition": {
+    "wood": 2,
+    "aku": 1
+   },
+   "count": 3,
+   "arrangement": "two crates on the floor, mask crate floating above",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "hedgehogs before and after",
+    "gaps ahead"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PAIR",
+    "AKU",
+    "HIGH",
+    "ENEMY-LINK"
+   ],
+   "why": "mask handed out where invincible-while-spiked hedgehogs begin",
+   "evidence": "F2 p035L row 1 zoom; D2 p018R s9-s10",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-b",
+   "section": "S2",
+   "order": 6,
+   "where": "past the gem platform, around a rock column into the screen",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "2 on the floor + 1 on top",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump"
+   ],
+   "relations": [
+    "off the side-scroll plane"
+   ],
+   "tags": [
+    "DETOUR",
+    "HIDDEN",
+    "STACK",
+    "COUNT-TRAP"
+   ],
+   "why": "side-scroll camera hides a pocket that leads into the screen",
+   "evidence": "F2 p035L bubble; D2 s13",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-c",
+   "section": "S2",
+   "order": 7,
+   "where": "floating over an icy downhill after a wooden pillar",
+   "composition": {
+    "wood": 3,
+    "question": 1
+   },
+   "count": 4,
+   "arrangement": "descending diagonal float line W W ? W",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump",
+    "slide",
+    "backtrack"
+   ],
+   "relations": [
+    "ice slope",
+    "wooden smasher before"
+   ],
+   "tags": [
+    "FLOAT-LINE",
+    "SPEED-LINE",
+    "HIGH",
+    "BACKTRACK",
+    "COUNT-TRAP"
+   ],
+   "why": "taken mid-slide; a miss means climbing back with chained slides",
+   "evidence": "F2 p035R POINT 6; D2 p019L s15",
+   "confidence": "high"
+  },
+  {
+   "id": "S2-d",
+   "section": "S2",
+   "order": 8,
+   "where": "after the green dropping slabs and a hedgehog",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "rest after the smasher sprint",
+   "evidence": "F2 p035R; D2 s16",
+   "confidence": "high"
+  },
+  {
+   "id": "S3-a",
+   "section": "S3",
+   "order": 9,
+   "where": "between two smasher pillars, partly behind foreground rock",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "two high floating crates behind rock columns + ? on a ledge",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "jump"
+   ],
+   "relations": [
+    "foreground rock hides them"
+   ],
+   "tags": [
+    "HIDDEN",
+    "HIGH",
+    "COUNT-TRAP"
+   ],
+   "why": "camera-plane concealment; both guides warn it costs the perfect",
+   "evidence": "F2 p035 gutter + POINT 10; D2 p019L s20",
+   "confidence": "high"
+  },
+  {
+   "id": "B-a",
+   "section": "B",
+   "order": 10,
+   "where": "bonus start, hanging far overhead",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single floating (gives a life)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bonus",
+    "slide",
+    "jump"
+   ],
+   "relations": [
+    "slide-jump needed"
+   ],
+   "tags": [
+    "HIGH",
+    "SINGLE",
+    "LIFE",
+    "TEACH",
+    "BONUS"
+   ],
+   "why": "teaches the slide-jump height with a life as reward",
+   "evidence": "D2 p019R s23",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-b",
+   "section": "B",
+   "order": 11,
+   "where": "before the iced platforms",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single (type unseen)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus",
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "BONUS"
+   ],
+   "why": "counter shows 2 by s24",
+   "evidence": "D2 s24 counter",
+   "confidence": "low"
+  },
+  {
+   "id": "B-c",
+   "section": "B",
+   "order": 12,
+   "where": "floor and air beyond the iced platforms",
+   "composition": {
+    "outline": 5
+   },
+   "count": 5,
+   "arrangement": "1 floating outline + ~4 clustered; solid after the steel ! under the rock",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "bonus",
+    "switch",
+    "backtrack",
+    "jump"
+   ],
+   "relations": [
+    "steel ! placed after them"
+   ],
+   "tags": [
+    "OUTLINE",
+    "SWITCH",
+    "BACKTRACK",
+    "HIGH",
+    "BONUS",
+    "COUNT-TRAP"
+   ],
+   "why": "switch placed after its outlines forces a turn back; fruit and a life inside",
+   "evidence": "D2 s25-s26; F2 p094L caution 1",
+   "confidence": "low"
+  },
+  {
+   "id": "B-d",
+   "section": "B",
+   "order": 13,
+   "where": "next platform after a dash-jump",
+   "composition": {
+    "wood": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "L of three (W on ?, W beside)",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "bonus",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "ON-PATH",
+    "BONUS"
+   ],
+   "why": "stepping stones and reward",
+   "evidence": "D2 s27",
+   "confidence": "medium"
+  },
+  {
+   "id": "B-e",
+   "section": "B",
+   "order": 14,
+   "where": "between B-d and the wall",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "single (unseen)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "bonus"
+   ],
+   "relations": [],
+   "tags": [
+    "BONUS"
+   ],
+   "why": "counter 10 -> 11 before the wall",
+   "evidence": "D2 s27-s28 counters",
+   "confidence": "low"
+  },
+  {
+   "id": "B-f",
+   "section": "B",
+   "order": 15,
+   "where": "last platform before the exit elevator",
+   "composition": {
+    "wood": 5,
+    "tnt": 2
+   },
+   "count": 7,
+   "arrangement": "wall of two columns (3 and 4 high) with two TNT inside",
+   "stackHeight": 4,
+   "floating": false,
+   "access": [
+    "bonus",
+    "spin"
+   ],
+   "relations": [
+    "wait at the left edge",
+    "falling TNT kills"
+   ],
+   "tags": [
+    "WALL",
+    "STACK",
+    "EXPLOSIVE-MIX",
+    "CHAIN",
+    "SUPPORT-ORDER",
+    "REWARD",
+    "BONUS"
+   ],
+   "why": "one side-spin lights a TNT that clears the wall; spin moving left so a loose TNT does not land on you",
+   "evidence": "D2 s28; F2 p094L caution 2; GP",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-a",
+   "section": "S4",
+   "order": 16,
+   "where": "start of the 3D finale",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT"
+   ],
+   "why": "restart for the disc gauntlet",
+   "evidence": "F2 p036L; D2 s31",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-b",
+   "section": "S4",
+   "order": 17,
+   "where": "first ledge by disc stone 1",
+   "composition": {
+    "wood": 4,
+    "question": 1
+   },
+   "count": 5,
+   "arrangement": "plus of four W with ? on top",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin",
+    "jump"
+   ],
+   "relations": [
+    "rolling disc lane"
+   ],
+   "tags": [
+    "ON-PATH",
+    "PYRAMID",
+    "STACK",
+    "TIMED"
+   ],
+   "why": "pile in a disc lane; collect between passes",
+   "evidence": "F2 p036L bubble; D2 s31 zoom",
+   "confidence": "medium"
+  },
+  {
+   "id": "S4-c",
+   "section": "S4",
+   "order": 18,
+   "where": "next ledge beside a penguin",
+   "composition": {
+    "wood": 2,
+    "question": 1,
+    "aku": 1
+   },
+   "count": 4,
+   "arrangement": "2x2 block: W W over ? + Aku",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "walk",
+    "jump",
+    "spin"
+   ],
+   "relations": [
+    "disc stones ahead"
+   ],
+   "tags": [
+    "STACK",
+    "AKU",
+    "TIMED",
+    "SUPPORT-ORDER"
+   ],
+   "why": "mask at the start of the disc gauntlet, under two crates",
+   "evidence": "F2 p036L bubble; D2 p020L s32 zoom",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-d",
+   "section": "S4",
+   "order": 19,
+   "where": "crystal spot, above a steel arrow block",
+   "composition": {
+    "wood": 1
+   },
+   "count": 1,
+   "arrangement": "crate floating over a steel arrow (uncounted)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "arrow",
+    "bounce"
+   ],
+   "relations": [
+    "crystal beside"
+   ],
+   "tags": [
+    "SANDWICH",
+    "TOOL",
+    "HIGH",
+    "REWARD"
+   ],
+   "why": "arrow-to-crate bounce where the player stops for the crystal",
+   "evidence": "F2 p036L; D2 s33-s34",
+   "confidence": "high"
+  },
+  {
+   "id": "S4-e",
+   "section": "S4",
+   "order": 20,
+   "where": "before the twin discs, beside three penguins",
+   "composition": {
+    "question": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "walk",
+    "spin"
+   ],
+   "relations": [
+    "penguins x3",
+    "twin disc stones"
+   ],
+   "tags": [
+    "ON-PATH",
+    "SINGLE",
+    "ENEMY-LINK",
+    "TIMED"
+   ],
+   "why": "last crate puts you in front of penguins and paired discs",
+   "evidence": "F2 p036L; D2 s36",
+   "confidence": "high"
+  },
+  {
+   "id": "G-a",
+   "section": "G",
+   "order": 21,
+   "where": "gem course arrival",
+   "composition": {
+    "checkpoint": 1
+   },
+   "count": 1,
+   "arrangement": "single",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "CHECKPOINT",
+    "ROUTE-SPLIT"
+   ],
+   "why": "saves the gem run at its start",
+   "evidence": "D2 p020L s39",
+   "confidence": "high"
+  },
+  {
+   "id": "G-b",
+   "section": "G",
+   "order": 22,
+   "where": "first room of the gem course",
+   "composition": {
+    "arrowWood": 1,
+    "wood": 2
+   },
+   "count": 3,
+   "arrangement": "wood arrow on the floor, crates floating overhead (types unseen)",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "arrow"
+   ],
+   "relations": [],
+   "tags": [
+    "SANDWICH",
+    "TOOL",
+    "HIGH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "opens with the arrow-to-overhead pattern",
+   "evidence": "D2 s40",
+   "confidence": "low"
+  },
+  {
+   "id": "G-c",
+   "section": "G",
+   "order": 23,
+   "where": "after a fruit nook",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "stacked pair floating overhead",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "STACK",
+    "HIGH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "overhead reward",
+   "evidence": "D2 s42",
+   "confidence": "high"
+  },
+  {
+   "id": "G-d",
+   "section": "G",
+   "order": 24,
+   "where": "next ledge",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "single on a ledge, fruit above",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "gem-path"
+   ],
+   "relations": [
+    "fruit bait above"
+   ],
+   "tags": [
+    "SINGLE",
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT",
+    "TEACH"
+   ],
+   "why": "first, readable Nitro of the stage",
+   "evidence": "D2 s43",
+   "confidence": "high"
+  },
+  {
+   "id": "G-e",
+   "section": "G",
+   "order": 25,
+   "where": "after the porcupine",
+   "composition": {
+    "wood": 2,
+    "tnt": 1
+   },
+   "count": 3,
+   "arrangement": "crates to body-slam from above + TNT perched on a steel arrow; steel ! drops after the blast",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "gem-path",
+    "body-slam",
+    "arrow",
+    "switch"
+   ],
+   "relations": [
+    "steel ! (uncounted) released by the TNT blast"
+   ],
+   "tags": [
+    "TOOL",
+    "SWITCH",
+    "SUPPORT-ORDER",
+    "EXPLOSIVE-MIX",
+    "HIGH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "TNT blast is the key that releases the outline switch",
+   "evidence": "D2 s45; F2 p094L gem caution 1",
+   "confidence": "low"
+  },
+  {
+   "id": "G-f",
+   "section": "G",
+   "order": 26,
+   "where": "beyond the switch",
+   "composition": {
+    "outline": 2,
+    "question": 1,
+    "wood": 2,
+    "tnt": 1
+   },
+   "count": 6,
+   "arrangement": "filled outlines + overhead crates above three mid-air steel arrows + a TNT",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "switch",
+    "arrow",
+    "bounce"
+   ],
+   "relations": [
+    "penguin below",
+    "one crate gives a life"
+   ],
+   "tags": [
+    "OUTLINE",
+    "HIGH",
+    "COLUMN-BOUNCE",
+    "EXPLOSIVE-MIX",
+    "ENEMY-LINK",
+    "ROUTE-SPLIT"
+   ],
+   "why": "switch payoff reached by bounce blocks",
+   "evidence": "D2 s46",
+   "confidence": "low"
+  },
+  {
+   "id": "G-g",
+   "section": "G",
+   "order": 27,
+   "where": "before a steel walkway",
+   "composition": {
+    "tnt": 1
+   },
+   "count": 1,
+   "arrangement": "single beside 4 steel blocks",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "gem-path",
+    "timed"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "ROUTE-SPLIT"
+   ],
+   "why": "fuse as a timer for the crossing",
+   "evidence": "D2 s47",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-h",
+   "section": "G",
+   "order": 28,
+   "where": "seal ledge",
+   "composition": {
+    "question": 2,
+    "wood": 1
+   },
+   "count": 3,
+   "arrangement": "floating row ? W ?",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "jump"
+   ],
+   "relations": [
+    "seal"
+   ],
+   "tags": [
+    "ROW",
+    "HIGH",
+    "ENEMY-LINK",
+    "ROUTE-SPLIT"
+   ],
+   "why": "reward after the seal",
+   "evidence": "D2 s48",
+   "confidence": "high"
+  },
+  {
+   "id": "G-i",
+   "section": "G",
+   "order": 29,
+   "where": "before a porcupine corner",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair (types unseen)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "gem-path"
+   ],
+   "relations": [
+    "porcupine"
+   ],
+   "tags": [
+    "PAIR",
+    "ROUTE-SPLIT"
+   ],
+   "why": "pacing pair",
+   "evidence": "D2 s49",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-j",
+   "section": "G",
+   "order": 30,
+   "where": "ledge before a drop",
+   "composition": {
+    "nitro": 2,
+    "question": 1
+   },
+   "count": 3,
+   "arrangement": "Nitro on the take-off edge, ? floating ahead",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "gem-path",
+    "jump"
+   ],
+   "relations": [
+    "checkpoint just ahead"
+   ],
+   "tags": [
+    "EDGE-BAIT",
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "forces a clean jump off the edge",
+   "evidence": "D2 s50",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-k",
+   "section": "G",
+   "order": 31,
+   "where": "second gem checkpoint",
+   "composition": {
+    "checkpoint": 1,
+    "wood": 2,
+    "question": 1,
+    "arrowWood": 1
+   },
+   "count": 5,
+   "arrangement": "C among floating crates in a fruit field",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "arrow",
+    "jump"
+   ],
+   "relations": [
+    "break crates before the C"
+   ],
+   "tags": [
+    "CHECKPOINT",
+    "SUPPORT-ORDER",
+    "REWARD",
+    "ROUTE-SPLIT"
+   ],
+   "why": "checkpoint stores broken-crate state, so hit it last",
+   "evidence": "D2 s51; F2 p094L gem caution 2",
+   "confidence": "high"
+  },
+  {
+   "id": "G-l",
+   "section": "G",
+   "order": 32,
+   "where": "after a slope and gap",
+   "composition": {
+    "question": 2
+   },
+   "count": 2,
+   "arrangement": "floating pair",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "jump"
+   ],
+   "relations": [],
+   "tags": [
+    "PAIR",
+    "HIGH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "reward after a gap",
+   "evidence": "D2 s53",
+   "confidence": "high"
+  },
+  {
+   "id": "G-m",
+   "section": "G",
+   "order": 33,
+   "where": "far ledge of a maximum dash-jump",
+   "composition": {
+    "question": 1,
+    "arrowWood": 1,
+    "wood": 2
+   },
+   "count": 4,
+   "arrangement": "arrow + ? on the ledge, two crates high above",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "arrow"
+   ],
+   "relations": [],
+   "tags": [
+    "TOOL",
+    "HIGH",
+    "ROUTE-SPLIT"
+   ],
+   "why": "arrow is the only way to the high pair",
+   "evidence": "D2 s54-s55",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-n",
+   "section": "G",
+   "order": 34,
+   "where": "before smashers",
+   "composition": {
+    "wood": 2
+   },
+   "count": 2,
+   "arrangement": "pair (types unseen)",
+   "stackHeight": 1,
+   "floating": false,
+   "access": [
+    "gem-path",
+    "timed"
+   ],
+   "relations": [
+    "smashers"
+   ],
+   "tags": [
+    "PAIR",
+    "TIMED",
+    "ROUTE-SPLIT"
+   ],
+   "why": "pacing before a slide",
+   "evidence": "D2 s56",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-o",
+   "section": "G",
+   "order": 35,
+   "where": "floor after the automatic smashers",
+   "composition": {
+    "nitro": 4
+   },
+   "count": 4,
+   "arrangement": "three on the floor + one on top, with a lane between",
+   "stackHeight": 2,
+   "floating": false,
+   "access": [
+    "gem-path"
+   ],
+   "relations": [],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "looks like a wall but has a walkable lane",
+   "evidence": "D2 s60",
+   "confidence": "medium"
+  },
+  {
+   "id": "G-p",
+   "section": "G",
+   "order": 36,
+   "where": "collapsing wooden bridge",
+   "composition": {
+    "nitro": 4
+   },
+   "count": 4,
+   "arrangement": "deck Nitro, two hanging stacked, deck Nitro",
+   "stackHeight": 2,
+   "floating": true,
+   "access": [
+    "gem-path",
+    "jump",
+    "slide",
+    "timed"
+   ],
+   "relations": [
+    "bridge collapses if you hesitate"
+   ],
+   "tags": [
+    "EXPLOSIVE-MIX",
+    "TIMED",
+    "TEST",
+    "ROUTE-SPLIT"
+   ],
+   "why": "Nitro as a jump/slide rhythm on a timed floor",
+   "evidence": "D2 s61",
+   "confidence": "high"
+  },
+  {
+   "id": "G-q",
+   "section": "G",
+   "order": 37,
+   "where": "steel blocks after icicles",
+   "composition": {
+    "nitro": 1
+   },
+   "count": 1,
+   "arrangement": "hanging above the steel; porcupine below",
+   "stackHeight": 1,
+   "floating": true,
+   "access": [
+    "gem-path"
+   ],
+   "relations": [
+    "porcupine approaches"
+   ],
+   "tags": [
+    "ENEMY-LINK",
+    "EXPLOSIVE-MIX",
+    "ROUTE-SPLIT"
+   ],
+   "why": "punishes the reflex jump at an approaching enemy",
+   "evidence": "D2 s63",
+   "confidence": "high"
+  }
+ ],
+ "enemies": [
+  {
+   "section": "S1",
+   "kind": "seal",
+   "count": 4,
+   "where": "after the start (1) and on the ice field before the elevator (3)",
+   "role": "slide target; ice-field test"
+  },
+  {
+   "section": "S1",
+   "kind": "penguin",
+   "count": 4,
+   "where": "after the start (1) and a line of three",
+   "role": "spin the leader to bowl over the rest"
+  },
+  {
+   "section": "S2",
+   "kind": "hedgehog",
+   "count": 4,
+   "where": "around S2-a, on a pillar, before C2",
+   "role": "invincible while spiked; mask S2-a precedes them"
+  },
+  {
+   "section": "S3",
+   "kind": "seal",
+   "count": 5,
+   "where": "row 2 slopes and the bonus exit slope",
+   "role": "spin on slopes"
+  },
+  {
+   "section": "S4",
+   "kind": "penguin",
+   "count": 4,
+   "where": "beside S4-c and three beside S4-e",
+   "role": "crowd the crate stops in the disc gauntlet"
+  },
+  {
+   "section": "G",
+   "kind": "porcupine/seal/penguin",
+   "count": 5,
+   "where": "gem course",
+   "role": "G-q links a porcupine to a hanging Nitro"
+  }
+ ],
+ "gaps": [
+  {
+   "section": "S1",
+   "kind": "pits between ice ledges",
+   "where": "after the steel arrow",
+   "crates": [
+    "S1-b",
+    "S1-c"
+   ]
+  },
+  {
+   "section": "S2",
+   "kind": "gaps between pillars",
+   "where": "row 1",
+   "crates": [
+    "S2-a"
+   ]
+  },
+  {
+   "section": "S3",
+   "kind": "bonus pit",
+   "where": "row 2",
+   "crates": []
+  },
+  {
+   "section": "G",
+   "kind": "gaps, collapsing bridges",
+   "where": "gem course",
+   "crates": [
+    "G-j",
+    "G-m",
+    "G-p"
+   ]
+  }
+ ],
+ "hazards": [
+  {
+   "section": "S2-S3",
+   "kind": "wooden up-down pillars and green dropping slabs",
+   "role": "timed crossings; crates placed just after"
+  },
+  {
+   "section": "S3",
+   "kind": "falling icicles",
+   "role": "stop and let them drop"
+  },
+  {
+   "section": "S4",
+   "kind": "rolling disc stones x5",
+   "role": "every finale crate sits in or beside a disc lane"
+  },
+  {
+   "section": "G",
+   "kind": "faster smashers, collapsing bridges, Nitro gauntlets",
+   "role": "rhythm tests"
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "P1",
+   "clusters": [
+    "S1-b"
+   ],
+   "summary": "TNT, TNT, 1UP row",
+   "solution": "jump at the 1UP, then light a TNT and step away",
+   "wrongOrder": "spinning the nearest crate or blasting while beside the 1UP",
+   "loss": "death or the life (count kept)"
+  },
+  {
+   "id": "P2",
+   "clusters": [
+    "B-c"
+   ],
+   "summary": "bonus outlines before their switch",
+   "solution": "hit the steel ! then go back left",
+   "wrongOrder": "moving on after the switch",
+   "loss": "~5 crates and a life"
+  },
+  {
+   "id": "P3",
+   "clusters": [
+    "B-f"
+   ],
+   "summary": "self-clearing TNT wall",
+   "solution": "spin a lower crate moving left, wait at the left edge",
+   "wrongOrder": "standing under the wall or stomping from the top",
+   "loss": "death and the bonus tally"
+  },
+  {
+   "id": "P4",
+   "clusters": [
+    "G-e",
+    "G-f"
+   ],
+   "summary": "TNT on a steel arrow releases the outline switch",
+   "solution": "hit the TNT once, drop, wait; hit the dropped !, bounce to the filled crates",
+   "wrongOrder": "leaving before the blast or skipping the !",
+   "loss": "outline crates (all-box only)"
+  },
+  {
+   "id": "P5",
+   "clusters": [
+    "G-k"
+   ],
+   "summary": "checkpoint among crates",
+   "solution": "break crates first, checkpoint last",
+   "wrongOrder": "checkpoint first",
+   "loss": "crates respawn after a death"
+  },
+  {
+   "id": "P6",
+   "clusters": [
+    "G-d",
+    "G-j",
+    "G-o",
+    "G-p",
+    "G-q"
+   ],
+   "summary": "Nitro gauntlet with the green ! at the end",
+   "solution": "avoid every Nitro, hit the green ! last",
+   "wrongOrder": "touching any Nitro",
+   "loss": "death; Nitros count only after the green !"
+  }
+ ],
+ "observations": [
+  "about 30 % of the crates are on the normal course; the perfect lives in the red-gem course and the bonus",
+  "the gem course needs a key from another stage (Snow Go red gem, reached via Air Crash's secret warp)",
+  "each camera mode gets its own crate trick: stair pile, into-the-screen pocket, crates behind foreground rock, float line over an ice slope, crates in disc lanes",
+  "Aku crates precede new hazards (hedgehogs, disc gauntlet)",
+  "explosives are taught in order: TNT with a life, self-clearing TNT wall, TNT as key/timer, single Nitro, Nitro rhythm on collapsing bridges, Nitro linked to an enemy, green ! last",
+  "on ice, misses cost a climb back instead of a death",
+  "switches are placed after their outlines so rooms are used twice",
+  "checkpoints sit at camera-mode changes",
+  "both guides name the count traps (into-screen pocket, hidden trio, bonus outlines)",
+  "lives come from height and secrets"
+ ],
+ "openQuestions": [
+  "main 37 observed vs 45 implied by the header",
+  "header Aku subscript 2 vs 2 Aku observed on the normal course",
+  "D2 s29 HUD 35 vs 25 crates before the bonus",
+  "bonus 18 from N. Sane source",
+  "gem course exact count/composition"
+ ],
+ "observedTotal": 102,
+ "unobservedRemainder": {
+  "boxes": 22,
+  "note": "between D2 gem-course screenshots and/or undrawn normal-course crates (header implies main 45)"
+ }
+}
