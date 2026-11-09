@@ -79,6 +79,8 @@ let lastSwitch = {positionDelta: 0, verticalVelocityDelta: 0, speedDelta: 0};
 let sourceModel: THREE.Group | null = null, sourceMixer: THREE.AnimationMixer | null = null;
 const sourceActions = new Map<string, THREE.AnimationAction>();
 const sourceOffset = new THREE.Vector3();
+const sourceContactMeshes:{mesh:THREE.Mesh;indices:number[]}[]=[];
+const sourceContactPoint=new THREE.Vector3();
 async function loadSource() {
   if (sourceModel) return;
   sourceNote.textContent = 'Loading Jak reference…';
@@ -91,6 +93,13 @@ async function loadSource() {
       if (node instanceof THREE.Mesh) {
         node.frustumCulled = false;
         if (node instanceof THREE.SkinnedMesh) node.boundingSphere = new THREE.Sphere(new THREE.Vector3(0,1,0),5);
+        // Ignore the export's unused shared-buffer vertices. These actual
+        // rendered vertices supply the original flop's missing floor alignment.
+        const index=node.geometry.index,range=node.geometry.drawRange;
+        const start=range.start,end=Math.min(index?.count??node.geometry.attributes.position.count,start+range.count);
+        const indices=new Set<number>();
+        for(let i=start;i<end;i++)indices.add(index?index.getX(i):i);
+        sourceContactMeshes.push({mesh:node,indices:[...indices]});
       }
     });
     g.scene.add(sourceModel); sourceMixer = new THREE.AnimationMixer(sourceModel);
@@ -160,6 +169,19 @@ function updateSource() {
   // This scene skips automatic matrix traversal. SkinnedMesh's override must
   // refresh bindMatrixInverse after placement, not just Object3D world frames.
   sourceModel.updateMatrixWorld(true);
+  if(clip?.metadata?.pancakeSlam&&p.grounded){
+    // GOAL aligns the flop recovery to its support surface each tick. Raw
+    // source keys alone put the head below this viewer's plane during the roll.
+    let floor=Infinity;
+    for(const {mesh,indices}of sourceContactMeshes)for(const index of indices){
+      mesh.getVertexPosition(index,sourceContactPoint).applyMatrix4(mesh.matrixWorld);
+      floor=Math.min(floor,sourceContactPoint.y);
+    }
+    if(Number.isFinite(floor)&&floor<p.pos.y+.006){
+      sourceModel.position.y+=p.pos.y+.006-floor;
+      sourceModel.updateMatrixWorld(true);
+    }
+  }
   return true;
 }
 const visited = new Set<string>(), soundPlays = {old: 0, new: 0};
