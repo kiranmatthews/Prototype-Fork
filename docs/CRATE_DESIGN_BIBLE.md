@@ -61,10 +61,13 @@ These are distilled from 36 level maps (Part I). Each law links to its evidence.
    density falls as speed rises, boost gates stay clear, landings are marked by single crates, and
    no explosive sits on a rail. → VIII
 10. **Optional routes carry the hard recombinations** — bonus rounds, secret routes, gem paths —
-    and a large share of the boxes. The all-box goal must never require surviving the no-death
-    route. → VI.4
+    and a large share of the boxes. Decide deliberately whether the all-box goal requires the
+    no-death route: Crash 2 sometimes couples them (boxes or the only green `!` on the death route,
+    forcing a deathless reverse run), Crash 3 and 4 decouple them (death-route Nitro is credited
+    remotely). Default to decoupling. → VI.4
 11. **Count traps live at attractors**: right after checkpoints, right before exits, behind an
-    obstacle you just jumped, under ledges, toward the camera. Never in arbitrary corners. → IV.7
+    obstacle you just jumped, behind the start, where momentum carries you past, under ledges,
+    toward the camera — and in the switches themselves. Never in arbitrary corners. → IV.7
 12. **Re-measure everything in this engine.** A crate is 1.152 m, the double jump reaches a 3-stack,
     the board smashes crates only at ≥ 12.5 m/s, and a crate row is a rail that breaks as you ride
     it. Copy Crash's *relationships*, never its raw distances. → IX, X
@@ -548,10 +551,11 @@ Crash 2. Crash 3 time trials convert three Aku crates into timed invincibility.
   side-view rooms whose geometry changes after a switch and forces a return sweep
   ([Stowing Away](crate-bible/levels/c4-8-2-stowing-away.md) B-a…f; [Crash Compactor](crate-bible/levels/c4-2-2-crash-compactor.md):
   floating crates are your footing home); they hold the dense vertical puzzles and usually the life crate.
-- **Decouple the no-death goal from the all-box goal on purpose.** Road to Ruin's death route holds
+- **Couple or decouple the no-death and all-box goals on purpose.** Road to Ruin's death route holds
   0 boxes (the perfect run never needs it); Diggin' It's holds 12 and bypasses half the normal
   course, so a perfect run sweeps that half *backwards*, with checkpoints placed for the loop
-  ([Diggin' It](crate-bible/levels/c2-17-diggin-it.md)). Secret routes may hold no crates at all
+  ([Diggin' It](crate-bible/levels/c2-17-diggin-it.md)); Cold Hard Crash's death route holds ≈ 21 and Piston
+  It Away's holds the only green `!`, so both demand a deathless run for the gem. Secret routes may hold no crates at all
   ([Bone Yard](crate-bible/levels/c3-04-bone-yard.md) red-gem course) or only Nitro credited
   remotely ([The Eel Deal](crate-bible/levels/c2-10-the-eel-deal.md)).
 - **Three ways to tie a colored-gem route to the all-box goal** ([Tomb Time](crate-bible/levels/c3-09-tomb-time.md),
@@ -1334,7 +1338,8 @@ Run per cluster, per section and per level. A level fails review on any unchecke
 - [ ] The clear route and the all-box route are both designed; their difference is visible (VI.4).
 - [ ] Teaching order follows VI.2: vocabulary first, tools and explosives in the first third, tests
   and count traps mid-route, switch structures in the second half, green `!` last.
-- [ ] Optional routes hold the hard recombinations; the all-box goal never requires the no-death route.
+- [ ] Optional routes hold the hard recombinations; whether the all-box goal needs the no-death route
+  is a stated decision (default: it does not).
 - [ ] Every arrow has a target; every multi-hit crate supports something; every switch's outlines are
   visible (or deliberately hidden with a signpost).
 - [ ] Count traps sit at attractors (IV.7), not in arbitrary corners.
