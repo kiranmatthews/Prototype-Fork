@@ -244,6 +244,169 @@ C3 ═╦═ green-gem pads ─ GREEN COURSE: 3W+2TNT(5) · 4W diamond(4) · WW?
 6. **Loop course.** An optional gem course whose last switch materialises crates in an earlier hub and returns the player
    there (transfer pad), turning the second half into a revisit.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: F3 p089–p091 maps (half-page overviews; zooms of the S1 slab chain, the S2 tower/hub area and enemy icons compared with the monster-list art); F3 p086 (book p.165: near-future strategy points and monster list — BKBK, saucer researcher, MTAT, metalnic); F3 p094L (21/29 bonus strip and hint); F3 p111L (time-trial frames 01–32); P3 p041L–p043L shots 2–28. Unit u = one crate; walkway widths from P3's into-screen shots (three floor lanes ≈ 3 u), side-scroll spacing from the map. **Identification notes:** the orange glowing robots drawn on the S1 slabs match F3 p086's lit BKBK, and the green walker on ring pads matches its MTAT (the first-wave map called the slab robots MTATs and the walker a gun robot); the red rods with blue end caps that the first wave called rollers use the icon that F3 p088R (callout 6) uses for stage 19's beam fences; P3's "shell robots" (s10: they play dead when shot, then revive) match the metalnic, which a bazooka only stuns (F3 p086). The "why" column is design inference.
+
+### Camera and route shape
+- **Into-screen S1–S2 on separate pieces.** Unlike stage 19's continuous fence walkways, the route is a chain of slabs, small stepping blocks and ring pads with gaps between them (F3 p089), matching F3 p086 point 1's "many floor breaks". Walkways are ≈3 u wide (P3 s2, s3, s6) with open edges.
+- **A loop through a hub.** The hub ring pad in S2 is where the green course returns ("P.175より", F3 p089R). The all-box route plays S2's second half and the S3 side-scroll twice: first with outlines empty, then filled (P3 s18–s20).
+- **Side-scroll S3 and the start of S4** (F3 p090): a stepped profile of separate blocks, backward belts and beam fences; a pod then switches back to an into-screen finale whose last belt runs backward toward an MTAT (F3 p091L callout 8, TA7).
+- Bonus: side view on outline bridges (F3 p094L).
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — start → C1 (into-screen)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | start ring pad + walkway (stopwatch); a saucer researcher at the far end (open edges) | walkway ≈3 wide (P3 s2) | 0 | — | — | REST, TEACH | The first target of the new weapon stands at the end of an empty walkway (TA1: shoot it before taking the stopwatch) | F3 p089L TA1; P3 s2; F3 p111L 01 · medium |
+| G-S1-a | S1 | two gaps around a small blue-striped block (lethal) | gap ≈1.5 · block ≈1.5 · gap ≈1.5 (map); landing ring bend pad ≈3; run-up walkway | 0 | plain + plain | none / death | STEPPING | The first floor break: two short hops with a stepping block, before any enemy. Nearby: S1-a. | F3 p089L zoom · medium |
+| P-S1-b | S1 | small blue-striped block (open) | ≈1.5 × 1.5 | 0 | — | — | STEPPING | A single stepping stone | F3 p089L zoom · medium |
+| P-S1-c | S1 | ring bend pad with S1-a (open) | ≈3 × 3 | 0 | — | — | REST | Safe opener before the first robots | F3 p089L zoom · medium |
+| P-S1-d | S1 | slabs (grey walkway, green belt slab) with lit BKBKs, ring pad S1-b between them (open) | slabs ≈3 wide × 4–6 | 0 to +0.5 | — | MTAT volleys down the walkways (TA2: run the right edge; TT 05: a small straight hop passes the MTAT) | TIMING-STEP | Each crate pad sits between robot slabs | F3 p089L zoom; P3 s3 · medium |
+| G-S1-b | S1 | short gaps between slabs and ring pads (lethal) | ≈1 (map); landing ring pads ≈3; run-up slab | 0 | plain | robots on the take-off slabs / death | — | Gaps are short; the risk is jumping while dodging missiles. Nearby: S1-b, S1-c. | F3 p089L–R zoom · low |
+| P-S1-e | S1 | ring pad with the S1-c column, a saucer beside it (open) | ≈3 × 3 | +0.5 | — | — | REST | TT 06: one spin breaks the bottom two crates, the top two drop, spin again | F3 p089 gutter; F3 p111L 06 · medium |
+| P-S1-f | S1 | ring pad with C1 at a junction: a backward blue belt (saucer above) and a long green walkway leave it (open) | ≈3 × 3 | 0 | — | — | CHECKPOINT-PAD | The checkpoint opens onto the bazooka area | F3 p089R · high |
+
+**S2 — C1 → C2 (into-screen, hub)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | backward blue belt with a saucer researcher above it (open); conveyor against travel | ≈3 wide × ≈4 | 0 | — | — | TIMING-STEP | TT 07–08: high-jump off the saucer to cross the backward belt in one move | F3 p089R; F3 p111L 07–08 · medium |
+| P-S2-b | S2 | long green walkway up to a ring pad with an MTAT (open) | ≈3 wide × ≈8 | +1 to +2 (rising) | — | — | TIMING-STEP | A projectile lane: the MTAT fires down the walkway as you climb (TT 09) | F3 p089R zoom; F3 p111L 09 · medium |
+| G-S2-a | S2 | two gaps: ring pad → small pad with a BKBK → piston lift (lethal) | gap ≈1.5 · pad ≈1.5 · gap ≈1.5 (map); landing lift base; run-up ring pad | 0 to +1 | plain + plain | BKBK on the middle pad; the lift moves / death | STEPPING | The floating pair hangs over the void beside the lift: callout 2 says shoot it rather than jump. Nearby: S2-a, E-S2-c. | F3 p089R zoom; callout 2; P3 s4 · medium |
+| P-S2-c | S2 | moving platform: piston lift (cross-shaped tower with blue pistons), a BKBK on top (open); rises and falls (timing not stated) | ≈2 × 2 | travel not stated | TT 11–13: avoid the BKBK and long-jump high to take the 3-s crate in mid-air (a double jump loses time; a high jump falls short) | — | TIMING-STEP | A vertical mover next to floating crates: the crates are at lift-top height | F3 p089R zoom; P3 s4 · low |
+| G-S2-b | S2 | gaps from the lift top to a walkway, a small green block and a slab (saucer above) before the hub (lethal) | ≈1–1.5 each (map); landing hub ring pad; run-up lift top | 0 to −1 | plain + plain + plain | saucer over the last slab / death | STEPPING | A stepping chain down to the hub. Nearby: E-S2-d. | F3 p089R zoom · low |
+| P-S2-d | S2 | hub ring pad (octagonal) — loop junction; the green course returns here (open) | ≈4 × 4 | 0 | — | — | ARENA, PERCH | From the hub you see the column, the arrow and the outlines you cannot finish yet (callout 4) | F3 p089R · high |
+| P-S2-e | S2 | lower apron beside the hub: steel !, wooden arrow, ? on the ground; the S2-c column floats above the arrow; 2×2 outlines low right; wall switches high (open) | ≈4 × 2 | ≈−1 below the hub (column top ≈+4–5) | TT 16–17: hop onto the ! and high-jump, spinning each floating crate | — | STEPPING | The level's vertical puzzle axis: what is above the arrow is only reachable from it | F3 p089R zoom; P3 s5–s6, s12, s18; F3 p111L 16–17 · medium |
+| P-S2-f | S2 | long walkway with a BKBK pair, then a pad and the pod (open) | ≈3 wide × ≈8 | 0 | — | — | TIMING-STEP | P3 s6 shows two lit BKBKs side by side: the swapping pair of F3 p086 | F3 p089R; P3 s6 · medium |
+
+**S3 — C2 → C3 (side-scroll)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | stepped profile: C2 walkway, raised blocks and belts; the crystal floats over the first belt (open) | blocks ≈3–5 long; steps ≈1 | ±1 steps | — | — | TIMING-STEP | Small height changes keep you hopping | F3 p090L · medium |
+| P-S3-b | S3 | blue belts moving left (against travel), with beam fences and BKBKs on them (open); conveyor against travel | ≈4–5 each | 0 | — | — | TIMING-STEP | TA4: on a belt moving left it is faster to advance while jumping; TT 20: small hops, sometimes a dash or high jump through | F3 p090L TA4; F3 p111L 20 · high |
+| G-S3-a | S3 | short gaps between side-scroll blocks (lethal) | ≈1–1.5 (map); landing next block; run-up block | 0 to +1 | plain | belts push you back toward the take-off / death | — | Backward belts shorten the run-up for each hop. Nearby: S3-a, S3-b. | F3 p090L map · low |
+| G-S3-b | S3 | gap with a metalnic on the far side (callout 5) (lethal) | ≈2; landing pad with the S3-d 2×2; run-up block | 0 | plain | metalnic spike cycle / death | TEST | Callout 5: before jumping, check that the metalnic across the gap has its spikes in — the enemy owns the landing. Nearby: S3-d, E-S3-c. | F3 p090R callout 5 · high |
+| G-S3-c | S3 | gap to the glass step carrying the TNT key stack (S3-c), outlines under the step (lethal) | ≈2 (screenshot); landing glass step ≈3; run-up pad with S3-d | +1 | plain + held/high | none / death | TEST | P3 s13: break the stack in front, but jump completely over the next one — the gap and the step are where restraint is tested. Nearby: S3-c, R-d. | P3 s9, s13, s20 · medium |
+| P-S3-c | S3 | green pad with the bonus entrance, then a step pad with a beam fence and a saucer, then a slope up (open) | pads ≈3–4; slope ≈5 | +1 to +2 (slope) | — | — | BONUS-PAD | The bonus is reached off the line before the climb to C3 | F3 p090R; P3 s14 · medium |
+| P-S3-d | S3 | two-level C3 pad: lower pad with the pyramid and two steel arrows, an upper platform above (open) | ≈4; upper level ≈+2–3 | +2–3 | — | — | CHECKPOINT-PAD | TT 23: jump on a steel arrow and rebound straight onto the upper platform — an unbreakable spring as the lift | F3 p090R; F3 p111L 23 · medium |
+| P-S3-e | S3 | green-gem pads on the slope after C3 (green course entrance) (open); appear only with the green gem | ≈2 | 0 | — | — | BONUS-PAD | The optional course leaves right after a checkpoint | F3 p090R ("P.174 B"); P3 s14 · medium |
+
+**S4 — C3 → goal (side view, then into-screen)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | side-scroll walkway with three metalnics and two BKBKs; S4-a floats above the metalnics (open) | ≈10 long | 0 | — | — | TIMING-STEP | Jump-spin for the crates when the spikes are in | F3 p090R · medium |
+| G-S4-a | S4 | last side-scroll gap, a crate (S4-b) floating over it (lethal) | ≈2–3 (map); landing pod pad; run-up walkway end | 0 | plain + crate-bounce — TT 25: small hop onto the 2-s crate, another small hop on top | none / death (falling) | TEST | Callout 7: stomp the crate from above if you dare, shoot it if you fear falling — the bazooka as a safety net. Nearby: S4-b. | F3 p090R callout 7, TA5; F3 p111L 25 · high |
+| P-S4-b | S4 | pod pad, then an into-screen ring pad with S4-c and an upright beam-fence gate on a green grated walkway (open) | ≈3 × 3 | 0 | — | — | TIMING-STEP | The finale starts with a gate | F3 p091L · medium |
+| P-S4-c | S4 | hex ring pad with a metalnic; the S4-d row floats above (open) | ≈3 × 3 | 0 | — | — | TIMING-STEP | Crates over a spike robot again | F3 p091L · medium |
+| P-S4-d | S4 | long backward belt rising to an MTAT on the goal approach (open); conveyor against travel (toward the camera) | ≈3 wide × ≈10 | +2–3 (rising) | — | — | TIMING-STEP | Callout 8: the belt carries you away from the MTAT, so walking up gives time to shoot; TA7: small hops forward | F3 p091L callout 8, TA7; P3 s21 · high |
+
+**G — green-gem course (into-screen)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-G-a | G | ring pads and slabs with blue and green belts; a ring pad with a beam-fence gate and G-a (open); static / conveyors | pads ≈3; belts ≈3 × 5–8 | 0 | — | — | TIMING-STEP | Same grammar as S1–S2, denser | F3 p091L–R · low |
+| P-G-b | G | long green belt carrying you toward an MTAT on a ring pad (G-b floats beside) (open); conveyor toward the MTAT | ≈3 × 8 | 0 | — | — | TEST | Callout A: the belt carries you toward the MTAT, no time for the bazooka — spin it | F3 p091R callout A · high |
+| P-G-c | G | beam-fence frames (rods on upright posts) with a BKBK between them; G-c beside (open) | ≈3 | 0 | — | — | TIMING-STEP | P3 s16: the bazooka will not reach here; jump over and spin the hoverbot when it is not glowing | F3 p091R; P3 s16 · low |
+| P-G-d | G | ring pad with the secret gem, a long walkway, and the ring pad with the ! (G-e) that returns you to the hub (open) | ≈3 | 0 | — | — | CHECKPOINT-PAD | The course ends at a switch and a transfer back to the start of the hub area (P3 s17) | F3 p091R callout B; P3 s17 · high |
+
+**BONUS — side view (F3 p094L)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | BONUS | start slab, then a floating steel slab carrying a TNT with a steel ! hanging below it (open) | slab ≈2.5; steel slab ≈3 | +1 | — | — | STEPPING | The TNT's blast presses the ! below it (P3 s23; gamepressure) | F3 p094L; P3 s23 · medium |
+| G-B-a | BONUS | gaps bridged by outline crates: a cross (green ! on top), a row of five carrying crates, a second row of five (high !) (not lethal) | gaps ≈0.5–1.5 between outline bridges (rows of five); landing Nitro slab; run-up slab | 0 | plain + double + spin-extended | each bridge exists only after its switch / bonus ends | — | F3 hint: double jump + tornado spin extends airtime, a slide run-up adds distance. Nearby: B-c, B-d, B-e. | F3 p094L hint; P3 s24–s25 · medium |
+| P-B-b | BONUS | slab with the seven-Nitro stack, then the exit slab with four crates (open) | ≈4 and ≈6 | 0 | — | — | ARENA | Detonated remotely by the green ! | F3 p094L · medium |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | widest gap | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 2 | plain | even | ≈1.5 | P-S1-c | no | The first floor break: two hops with a stepping block, before any enemy | F3 p089L |
+| J-S2-a | S2 | 1 | enemy-bounce + held/high | single | belt ≈4 | C1 junction / green walkway | no | TT 07–08: high jump off the saucer clears the backward belt in one move | F3 p111L 07–08 |
+| J-S2-b | S2 | 3 | plain + plain + held/high | syncopated | ≈1.5 | lift top | no | Two hops to the lift past a BKBK; TT adds a long high jump for the floating 3-s crate (11–13) | F3 p089R; F3 p111L 11–13 |
+| J-S2-c | S2 | 3 | plain | even | ≈1–1.5 | P-S2-d hub | no | Stepping chain down to the hub | F3 p089R |
+| J-S2-d | S2, R | 2 | crate-bounce + held/high + spin-extended | single | — (column ≈4–5 high above the apron) | P-S2-e apron | no | TT 16–17: from the ! a high jump and spins take the column; on the return pass the wooden arrow bounce reaches the top crate (P3 s18) | F3 p111L 16–17; P3 s18 |
+| J-S3-a | S3 | 6 | plain | even (small hops against the belts) | ≈1.5 | C3 pad | no | TA4/TT 20: hop rhythm on backward belts and stepped blocks | F3 p090L TA4; F3 p111L 20 |
+| J-S3-b | S3 | 2 | plain + held/high | syncopated (wait for the spikes) | ≈2 | glass step | no | Gap with a metalnic on the landing (callout 5), then the gap to the TNT-key step | F3 p090R callout 5; P3 s13 |
+| J-S3-c | S3 | 1 | arrow | single | — (upper platform ≈2–3 high) | upper C3 platform | no | Steel-arrow rebound to the upper platform (TT 23) | F3 p111L 23 |
+| J-S4-a | S4 | 2 | crate-bounce + plain | even | ≈2–3 | pod pad | yes | Hop onto the floating crate over the gap and hop again (TT 25) | F3 p111L 25; callout 7 |
+| J-S4-b | S4 | 6 | plain | even | — | goal pad | no | TA7: small hops forward up the backward belt | F3 p091L TA7 |
+| J-B-a | BONUS | 6 | plain + double + spin-extended | even | ≈1.5 | exit slab | no | Hops across switch-built bridges; the hint recommends double jump + tornado with a slide run-up | F3 p094L hint |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1, S2, S3, S4, G | belts running against travel (backward belts) (not lethal) | on path | continuous (F3 p086 point 2: belts carry you forward or backward, into monsters or off the end) | hop forward (TA4, TA7), enemy-bounce over (TT 07–08) | MTATs at belt ends, BKBKs on belts | TIMING-GATE, TEST | They lengthen exposure to missiles and decide whether you have time to shoot (callout 8) or must spin (callout A) | F3 p086; F3 p090L TA4; F3 p091L TA7, callout 8; F3 p091R callout A |
+| O-S2-a | S2 | piston lift (vertical mover) (not lethal) | on path | rises and falls (cycle not stated) | ride, time the jump | BKBK on top, floating pair | TIMING-GATE | A moving tower beside crates meant to be shot | F3 p089R; P3 s4 |
+| O-S3-a | S3, S4, G | beam fences (≈3 in the side-scroll, an upright gate in the finale, 2–3 frames in the green course) (lethal) | across path | periodic (cycle not stated); TT21 intro: fewer than in stage 19 | wait-and-go, crouch or slide (as stage 19 callout 6) | belts, BKBKs | TIMING-GATE | The stage-19 mechanic reused as seasoning | F3 p090–p091 maps (stage-19 fence icon); F3 p111L intro; P3 s8, s16 |
+| O-S3-b | S3, R | TNT key stack on the glass step (W over TNT) (lethal) | on path | 3-s fuse; blast reaches the outline crates under the step | jump completely over it on the gem run (P3 s13), detonate it after the outlines fill (P3 s20) | outline crates R-d | TOOL, TEST | An obstacle you must not use yet | P3 s9, s13, s20 |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | saucer researcher (円盤研究員) | flier | hovers at the end of the start walkway (low or high kind, F3 p086) | bazooka (TA1), stomp (fails: spin) | end of the start walkway | TEACH | yes | The first bazooka target, on an empty lane | F3 p089L TA1; F3 p086; F3 p111L 01 · medium |
+| E-S1-b | S1 | MTAT (マトアテ) missile robot | projectile | as Crash approaches it fires missiles from alternate arms — right, left, right — then shows a green target (F3 p086; P3 s3: dodge from the centre) | spin or bazooka while the target shows, shoot the missiles down (callout 1), run the right edge and hop straight past (TA2, TT 05) (fails: jump, body slam, standing in the lane during the volley) | end of the S1 walkways (P3 s2–s3) | GATEKEEPER, PROJECTILE | yes | A readable volley with a fixed punish window | F3 p089L callout 1; F3 p089R TA2; F3 p086; P3 s2–s3; F3 p111L 05 · medium (count and exact pads) |
+| E-S1-c | S1 | BKBK (ビカビカ) hoverbot, lit | shielded/armored | hovers on a slab and glows periodically; while lit only the bazooka or super body slam hurt it; pairs swap places (F3 p086) | bazooka (works even when lit), jump, spin or slam while unlit (fails: melee while lit) | on the slabs between crate pads (three icons) | TIMING-GATE | no | The stage-19 blocker, now trivial with the bazooka | F3 p089L zoom; F3 p086 · medium |
+| E-S1-d | S1 | saucer researcher | flier | hovers beside the S1-c column / over the backward belt at C1 | stomp, use as footing (TT 07–08) (fails: spin) | beside the C1 belt | TOOL/STEP | no | A foothold over a backward belt | F3 p089R; F3 p111L 07–08 · medium |
+| E-S2-a | S2 | MTAT | projectile | as E-S1-b, on the ring pad at the top of the green walkway | spin or bazooka at the target (fails: standing in the lane) | end of a rising walkway | GATEKEEPER, PROJECTILE | no | Fires down the climb | F3 p089R zoom (walker icon); F3 p111L 09 · medium |
+| E-S2-b | S2 | BKBK | shielded/armored | as E-S1-c | bazooka, unlit melee (fails: melee while lit) | small pad before the lift | GUARD | no | Guards a stepping pad | F3 p089R zoom · medium |
+| E-S2-c | S2 | BKBK | shielded/armored | as E-S1-c, on top of the piston lift | bazooka, avoid (TT 11) (fails: melee while lit) | moving platform (lift top) | GUARD | no | Sits on the lift next to the floating pair | F3 p089R zoom; F3 p111L 11–13 · medium |
+| E-S2-d | S2 | saucer researcher | flier | hovers over the slab before the hub | stomp, bazooka (fails: spin) | above the last stepping slab | HURDLE | no | Hovering hurdle at a landing | F3 p089R zoom · medium |
+| E-S2-e | S2 | BKBK pair | shielded/armored | side by side on the walkway after the hub; they swap places periodically (F3 p086) | bazooka, pass when the swap opens a lane (fails: melee while lit) | on line, walkway after the hub | TIMING-GATE | no | P3 s6 shows the pair beside the wall switches | F3 p089R; P3 s6; F3 p086 · medium |
+| E-S3-a | S3 | BKBKs on side-scroll blocks and belts | shielded/armored | as E-S1-c | bazooka, unlit melee (fails: melee while lit) | on blocks and belts (≈4 icons) | GUARD | no | Blockers on a backward-belt profile | F3 p090L–R map · medium |
+| E-S3-c | S3 | metalnic (P3's "shell robot") | static | spike robot; dangerous while its spikes are out; a bazooka hit only stuns it ("plays dead, then comes back", P3 s10) | jump or spin when the spikes are in (fails: touching it with the spikes out, relying on the bazooka) | landing side of a gap, beside the S3-d 2×2 | GATEKEEPER | no | Callout 5: read its spikes before you jump — the enemy owns the landing | F3 p090R callout 5; F3 p086; P3 s10 · high |
+| E-S3-d | S3 | saucer researcher | flier | hovers over the step pad before the slope | stomp, bazooka (fails: spin) | above a step pad with a beam fence | HURDLE | no | Last hurdle before C3 | F3 p090R map · medium |
+| E-S4-a | S4 | metalnics ×3 | static | as E-S3-c | jump-spin over them when the spikes are in (fails: touching them with the spikes out) | under the floating S4-a pair | HURDLE | no | Crates hung above a row of spike robots | F3 p090R map · medium |
+| E-S4-b | S4 | BKBKs ×2 | shielded/armored | as E-S1-c | bazooka, unlit melee (fails: melee while lit) | on the side-scroll walkway | GUARD | no | Blockers between the metalnics | F3 p090R map · medium |
+| E-S4-c | S4 | metalnic | static | as E-S3-c | jump over, ignore if invincible (TA5) (fails: touching it with the spikes out) | hex pad under the S4-d row | HURDLE | no | Crates over a spike robot once more | F3 p091L; F3 p090R TA5 · medium |
+| E-S4-d | S4 | MTAT | projectile | as E-S1-b, at the top of the backward belt before the goal | bazooka while walking up (callout 8), spin at the target (fails: standing still on the belt) | end of the final belt | GATEKEEPER | no | P3 s21: "match cannons against this guy once again" — the first enemy type closes the level | F3 p091L callout 8; P3 s21 · high |
+| E-G-a | G | BKBKs | shielded/armored | as E-S1-c | bazooka, jump over and spin when not glowing where the bazooka cannot reach (P3 s16) (fails: melee while lit) | on belts and between beam-fence frames | GUARD, TIMING-GATE | no | P3 s16 forces the old unlit-window answer | F3 p091L–R; P3 s16 · medium |
+| E-G-b | G | MTAT | projectile | as E-S1-b, at the end of a belt that carries you toward it | spin (callout A) (fails: trying to shoot it (no time)) | end of the green belt | GATEKEEPER | no | Geometry picks the counter: belt toward the MTAT means melee | F3 p091R callout A · high |
+
+### Section beats
+
+| section | beats | gaps | enemies | hazards |
+|---|---|---|---|---|
+| S1 | start walkway → saucer (first bazooka target) → two hops via a stepping block → ring pad (S1-a) → BKBK slab + MTAT lane → ring pad (S1-b) → BKBK slab + MTAT lane → ring pad (4-stack column) → saucer → C1 | 2 | 7 | 1 |
+| S2 | backward belt (saucer bounce) → rising walkway into an MTAT → BKBK pad → piston lift (BKBK, floating pair to shoot) → stepping chain → saucer → hub ring pad (loop junction) → lower apron: !, arrow, column above → wall switches → BKBK pair → pod → C2 | 2 | 6 | 2 |
+| S3 | crystal over a backward belt → BKBK + beam fence (S3-a above) → stepped blocks and backward belts → high ? on the wall → gap with a metalnic on the landing (2×2) → gap to the TNT-key step → green pad (bonus) → fence + saucer → slope → two-level C3 pad (steel arrows) → green-gem pads | 3 | 6 | 3 |
+| S4 | metalnic ×3 walkway under a floating pair → BKBK ×2 → crate over the last gap (stomp or shoot) → pod → ring pad with a fence gate (S4-c) → hex pad metalnic under a floating row → backward belt up to an MTAT → goal | 1 | 7 | 2 |
+| G | belt with a BKBK → fence gate + TNT-lid row → green belt toward an MTAT (spin) → floating diamond → fence frames with a BKBK (no bazooka reach) → secret gem → ! that fills every outline → back to the hub | 0 | 4 | 2 |
+| R | hub: arrow bounce to the filled top crate → pod → side-scroll: bridge ! + 5 outlines over a gap → TNT key detonated over the filled outlines → C3 → S4 | 0 | 0 | 1 |
+| BONUS | TNT on a steel slab presses the ! below → Nitro on a second ledge → outline cross with the green ! → crate row on outlines → high ! → second row → Nitro stack → exit crates | 1 | 0 | 0 |
+
+Counts are computed from the records above (gaps = G records; enemies = individuals; hazards = obstacle records active in the section). R replays S2–S3 geometry, so its own records are only the TNT key.
+
+### Geometry and enemy design logic
+1. **Distance is the design material of the weapon level.** Targets sit out of reach — a floating pair beside the piston lift, switches high on both walls, a ? high on the side-scroll wall, a crate over the last gap — so the bazooka replaces a risky jump (callout 2: safer than jumping; callout 7: shoot it if you fear falling), while experts keep the jump line (TT 11–13; TA5).
+2. **Real floor breaks, unlike stage 19.** The into-screen half is a chain of slabs, stepping blocks and ring pads with ≈1–1.5 u gaps (F3 p089), the "many floor breaks" of F3 p086. The first gap pair comes before any enemy.
+3. **The MTAT is a projectile gatekeeper at the end of a lane:** a right–left–right volley, then a green target window (F3 p086; P3 s3: dodge from the centre). It always faces down a walkway or belt toward you.
+4. **Geometry chooses the counter.** A belt carrying you away from an MTAT gives time to shoot (callout 8); a belt carrying you toward it leaves no time, so spin (callout A). The same enemy is answered differently because of the floor.
+5. **The BKBK becomes trivial — on purpose.** Its periodic invulnerability (lit: bazooka or super slam only) was the stage-19 timing test; the bazooka now works even when it is lit, so pairs on slabs are cleared from range. The green course then puts BKBKs where the bazooka cannot reach (P3 s16), forcing the old unlit-window answer.
+6. **Metalnics own landings.** Callout 5 puts one on the far side of a side-scroll gap (check its spikes before jumping); three more sit under a floating crate pair and one under the finale's floating row. The bazooka only stuns them (F3 p086), so the weapon does not solve them.
+7. **Saucers are footing.** TT bounces off one to clear the backward belt at C1 (07–08).
+8. **Backward belts everywhere** (C1, the side-scroll belts, the finale, the green course): they lengthen exposure to missiles and make small hops the efficient gait (TA4, TA7).
+9. **Height as a puzzle axis.** The piston lift, the hub's lower apron with a column floating above the wooden arrow, and C3's steel arrows that rebound to an upper platform (TT 23): vertical structure hides crates and keys.
+10. **Loop topology.** The green course returns to the hub; the second pass replays the hub and the side-scroll with the outlines filled (P3 s18–s20) — the same geometry carries two crate states.
+11. **A stepped side-scroll profile.** S3 is separate blocks at different heights with backward belts and beam fences; its test is a gap whose landing a metalnic owns, followed by a gap onto a step whose stack must be left alone (P3 s13).
+12. **Beam fences as seasoning.** Fewer than in stage 19 (TT intro), they appear as side-scroll rods, a finale gate and green-course frames — an old mechanic reused at low density beside the new weapon.
+13. **Bonus made of switch-built bridges.** A TNT presses the ! below its slab, a green ! is shot from range, and a high ! adds the last outline row; falling only ends the bonus.
+
+### Geometry transfer to the skate game
+1. **Projectile lane.** A `sentry` at the far end of a 3.5 m (3 u) wide, 8–10 m long walkway firing alternately left–right–left, then pausing (its exposed window); riders dodge by holding one edge, as TA2 does.
+2. **Floor picks the counter.** Put one `sentry` at the end of a `speedpad` that pushes toward it (no time to react: ram or spin on arrival) and another behind a strip that pushes away from it (time to line up) — the callout 8 / callout A pair.
+3. **Spinner on the landing.** A `spinner` on the far pad of a 2–2.5 m side-scroll gap, so the jump must be timed to its safe phase (callout 5); later hang a crate row 2.3 m above three `spinner`s.
+4. **Slab chain with real gaps.** Into-screen 3.5 × 4–6 m slabs separated by 1.2–1.7 m gaps, with a single 1.7 m stepping block in the first gap and no enemy until the third slab.
+5. **Two-level checkpoint pad.** A checkpoint pad with an upper platform 2.3–3.5 m above it, reached by a steel `trampoline` (unbreakable spring) — the C3 rebound of TT 23 — with a crate floating at the upper level.
+6. **Loop through a hub.** End the optional course at a switch and a transfer pad back to the hub, with ordered `camnode`s for the second pass through the hub and the side-scroll.
+
 ## Open questions / uncertainties
 - S1-c: the lowest crate of the 4-stack is hidden in the binding (count certain, type unread).
 - Bonus: 17 in game vs 16 in F3's drawing (F3 lacks the ledge Nitro and draws the first-slab TNT as a plain crate); F3's
@@ -253,3 +416,8 @@ C3 ═╦═ green-gem pads ─ GREEN COURSE: 3W+2TNT(5) · 4W diamond(4) · WW?
 - Green course counts (5/4/3) come from small drawings.
 - Whether the arrow box counts toward the total (it is a breakable wooden arrow crate; assumed yes, as in Crash 2/3
   generally).
+- **Geometry:** S1 robots: F3's slab icons are lit BKBKs, yet F3 callout 1/TA2, TT 05 and P3 s2–s3 describe MTATs in S1; the records keep both (MTAT count 2 is the first wave's, low confidence).
+- **Geometry:** the red rods with blue end caps (first wave: rollers) are read as beam fences from the stage-19 icon (F3 p088R callout 6) and P3 s16's wall emitters; neither guide names them in stage 21.
+- **Geometry:** P3 s13 ("bust up the stack in front … jump completely over the next stack") implies the 2×2 (S3-d) comes before the TNT-key stack (S3-c) in travel order; the crate map above lists S3-c first.
+- **Geometry:** the piston lift's travel and cycle are not stated; P3 s4 only shows it raised.
+- **Geometry:** green-course layout order (belts, fence frames, MTAT pad) is read from small art (low confidence).

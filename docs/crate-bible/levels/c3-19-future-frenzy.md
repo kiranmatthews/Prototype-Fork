@@ -250,6 +250,162 @@ side view the camera shows everything, so the designers hide crates *vertically*
 7. **Green ! under the final platform.** Hide the level's `nitrobang` one drop below the last platform before the gate
    so the all-box goal costs one deliberate detour at the end.
 
+## Geometry, obstacles and enemies
+
+Sources for this block: F3 p087–p088 maps (half-page overviews; zooms of the S1 route across the gutter, the S3 checkpoint junction and the S4 run-out); F3 p086 (book p.165: near-future strategy points — floor breaks and belts that run either way — and the monster list: BKBK, saucer researcher, metalnic); F3 p094L (bonus strip); F3 p110L (time-trial frames 01–32, zoomed 13–20 and 25–30); P3 p034R–p037L shots 56–84. Unit u = one crate; walkway widths come from P3's into-screen shots (three floor lanes ≈ 3 u), side-scroll lengths from the map. Saucer = 円盤研究員 (saucer lab assistant); metalnic = メタルニック (spike robot). The "why" column is design inference.
+
+### Camera and route shape
+- **Two camera halves.** S1 is into-screen: ≈3 u wide walkways (three floor lanes in P3 s56/s58), ring pads and green treadmills with open edges over the city void. A transfer pod (P3 s63–s64: "this ledge is very small") switches to a left-to-right side-scroll for S2–S4, and C1 sits a few steps right of the pod (P3 s66).
+- **The into-screen half has no forced jumps:** F3 TA1 says the beam-fence areas have many small steps but can be run through without jumping. Its dangers are the fence cycle, the belts and the open edges. The side-scroll half is where the gaps, flip discs, metalnics and saucers are.
+- **Two-direction use:** Future Tense enters at C2 and runs S2 and S1 backwards (F3 p092–p093), so every pad must read from both sides; P3 s57, s61, s63, s64 tell the player to memorise the layout for that reverse run.
+- Bonus: a side-view room entered from the S3 TNT platform (P3 s70).
+
+### Platforms and gaps (section by section; table per section)
+
+**S1 — start → pod → C1 (into-screen)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S1-a | S1 | start ring pad + walkway with small steps (open edges) | walkway ≈3 wide (three floor lanes, P3 s56) | small steps, +≈0.5 each | run through without jumping (TA1) | first beam fence (O-S1-a) | REST, TEACH | The first fence is met on a plain walkway, so the cycle is learned with nothing else to do | F3 p087L; TA1; P3 s56 · medium |
+| P-S1-b | S1 | ring bend pad (stationary) with S1-a (open edges) | ≈3 × 3 | 0 | — | — | REST | A still pad between a fence and a belt: the place to stop | F3 p087L · medium |
+| P-S1-c | S1 | green treadmill (belt) with three floating/edge crates (open edges); conveyor (direction not stated; F3 p086 point 2: belts carry you forward or backward, into monsters or off the end) | ≈3 wide × ≈8–10 long | 0 | lead every jump; TT: high jump from an S1-a crate + tornado spin for the two floating crates (TT 02–04) | — | TIMING-STEP | A moving floor under floating crates: a straight-up jump drifts, so every pickup needs a lead | F3 p087L; P3 s58; F3 p086 point 2; F3 p087L header · medium |
+| P-S1-d | S1 | round pad at the treadmill end with the TNT-lid stack S1-e (open edges) | ≈2.5 round | 0 | — | — | LANDING | The belt delivers you onto a TNT lid | F3 p087L; P3 s57 · medium |
+| P-S1-e | S1 | bend pad with the Nitro-corner 2×2 (S1-f) (open edges) | ≈3 × 3 | 0 | — | — | CHOKE | A small pad where the Nitro corner must be read before spinning | F3 p087R; P3 s80 · medium |
+| P-S1-f | S1 | walkway with a BKBK, then a pad with two singles (S1-g) (open edges) | ≈3 wide | 0 | — | BKBK E-S1-a; saucer E-S1-c | TIMING-STEP | Hoverbot timing on a lane wide enough to pass beside it (callout 2) | F3 p087R; callout 2; P3 s59 · medium |
+| P-S1-g | S1 | curved pad just past a fence, with the Nitro ring S1-h (open edges) | ≈3 × 2 | 0 | — | — | CHOKE | The fence before it makes you hurry exactly where you must stop short | F3 p087R; callout 3 · medium |
+| P-S1-h | S1 | ring pad (stationary) with the iron cube S1-i (open edges) | ≈3 × 3 | 0 | — | — | REST | Safe ground for repeated body slams between fence groups | F3 p087R; P3 s62 · medium |
+| G-S1-a | S1 | open side drops along every walkway, pad and belt (no gap on the line) (lethal) | n/a (edges); landing —; run-up — | drop into the void | plain — none required | belts push along the lane; fences and BKBKs make you dodge sideways / death | — | TA1: no jump is needed, so the open edge is the only fall risk; the edge crate S1-c sits right on it. Nearby: S1-c. | F3 p087; TA1; F3 p086 point 1; P3 s56–s58 · medium |
+| P-S1-i | S1 | transfer-pod ledge (open edges) | small (≈1.5) | 0 | — | — | CHECKPOINT-PAD | "This ledge is very small" (P3 s64): a tight landing after two fences and a treadmill; C1 follows the camera switch | P3 s63–s64; F3 p087R · medium |
+
+**S2 — C1 → C2 (side-scroll)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S2-a | S2 | long walkway (C1) under a steel-block ceiling slot, then a jog (step down, step up) (open front/back) | ≈10–12 long | −0.5 / +0.5 (jog); ceiling ≈1 u above the floor over S2-a | slide under the steel blocks (TT 10) | two low saucers over the jog; a beam fence on the next step | CHECKPOINT-PAD | Hanging spikes overhead at the Future-Tense entry (P3 s65) and a steel ceiling over S2-a: the side-scroll opens by limiting jump height | F3 p088L; P3 s65–s66; F3 p110L 10 · medium |
+| G-S2-a | S2 | pit crossed on a flip disc (callout 4) (lethal) | ≈4–5 overall; disc ≈1.5; landing arch pad ≈3; run-up walkway end | 0 | plain + plain — board only while it is horizontal; then a small hop at once to the next foothold (TT 15) | the disc turns vertical and horizontal at fixed intervals; green = safe, red flashing = about to flip / death | TIMING-STEP | A phase platform with a colour telegraph, first met alone over a pit. Nearby: S2-b, E-S2-c. | F3 p088L callout 4; F3 p110L 15 · high |
+| P-S2-b | S2 | arch pad with a metalnic (S2-c hangs below its edge) (open) | ≈3 | +0.5 | — | — | LANDING | The disc lands you next to a spike robot: one high jump clears it (TT 16) | F3 p088L; F3 p110L 16 · medium |
+| P-S2-c | S2 | pad with the S2-d 2×2 (open) | ≈3 | +0.5 | — | — | REST | Rest beat after the disc and the metalnic | F3 p088L · medium |
+| P-S2-d | S2 | green treadmill pad under hanging ceiling spikes, a saucer above it, a beam fence and a spin-jump disc at its end (open); conveyor (direction not stated) | ≈5–6 long | 0 | — | TA5: never ride the spin-jump disc in time trial (a long detour) | TIMING-STEP | Belt + overhead spikes + saucer: a high bounce off the saucer is capped by the spikes (TT 17–18) | F3 p088L; F3 p110L 17–18 · medium |
+| P-S2-e | S2 | bouncy (spin-jump stand) at the treadmill end (open); launches higher and longer | ≈1.5 | 0 | — | — | — | An optional launcher that the time trial must ignore (TA5) — the object is introduced as a trap for speed | F3 p088L TA5 · medium |
+| G-S2-b | S2 | two gaps around a small stepping block, then a pad with a metalnic and a beam fence (lethal) | gap ≈1.5 · block ≈1.5 · gap ≈1.5; landing metalnic pad ≈3; run-up treadmill | 0 | plain + held/high | metalnic at the hole edge; fence on the landing pad / death | STEPPING | TT 19–20: run to the very edge of the hole and high-jump, clearing hole and metalnic together. Nearby: E-S2-f. | F3 p088L; F3 p110L 19–20 · medium |
+| P-S2-f | S2 | cross-shaped pad with C2 (open) | ≈3 × 3 | +0.5 | — | — | CHECKPOINT-PAD | Future Tense enters here | F3 p088L; F3 p093L · high |
+
+**S3 — C2 → C3 (side-scroll)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S3-a | S3 | two pads with a BKBK each (the second a raised step with the S3-b TNT below) (open) | ≈3 each | +1 (step) | — | — | TIMING-STEP | Hoverbots on small pads: wait for the light (P3 s67) or blow one up with the TNT (P3 s68) | F3 p088L; P3 s67–s68 · medium |
+| P-S3-b | S3 | arch pad with a metalnic; S3-d below its edge, S3-e floating above (open) | ≈3 | 0 | — | — | LANDING | Spike robot under a floating column: jump timing doubles as crate timing | F3 p088R zoom · medium |
+| G-S3-a | S3 | pit crossed on three small green discs (same icon as callout 4's flip disc) (lethal) | ≈5–6 overall; discs ≈1; landing long TNT platform; run-up arch pad ≈3 | 0 | plain + plain + plain + plain | disc phase (if they flip like callout 4's) / death | TIMING-STEP | The flip disc returns as a three-step chain. Nearby: S3-f. | F3 p088R zoom · low |
+| P-S3-c | S3 | long platform: spin-jump stand at its left end, the 6-TNT stepped wall, the bonus pad (open) | ≈12 long | 0 | ride the stand over the wall, or detonate the wall | — | BONUS-PAD, CHOKE | The wall blocks the platform; the stand is the intended way over (callout 5) | F3 p088R; callout 5; P3 s69–s70 · high |
+| P-S3-d | S3 | walkway end at a belt junction: a beam fence, a metalnic, then (per F3's pointer) C3 (open) | ≈3 | 0 | — | — | CHECKPOINT-PAD, PERCH | A checkpoint right before the hardest timing test (see open questions for the C3 position) | F3 p088R zoom · low |
+| P-S3-e | S3 | green belt (right-moving) under three beam fences (open); conveyor toward travel | ≈6 long | 0 | crouch while riding (callout 6); TT slides the third fence after invincibility ends (22) | — | TIMING-STEP | Callout 6: ride the belt and stay crouched — the answer becomes posture, not timing | F3 p088R callout 6; F3 p110L 22 · high |
+
+**S4 — C3 → goal (side-scroll)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-S4-a | S4 | pad with S4-a; the crystal sits on a lower pad below-right; a black post (function not stated) (open) | ≈3 | 0 / −1 (crystal pad) | — | — | REST | A detour down to the crystal | F3 p088R; P3 s71 · medium |
+| P-S4-b | S4 | bouncy (spin-jump stand) on a pad with a BKBK (open); launches over the next gap | ≈3 pad, stand ≈1.5 | 0 | hold right while riding the stand (TT 25) | — | STEPPING | The third stand is the required launcher: it carries you over a gap past S4-c (P3 s72: "spin over to the other side") | F3 p088R; P3 s72; F3 p110L 24–25 · medium |
+| G-S4-a | S4 | gap crossed by the spin-jump launch, past three descending floating crates (S4-c) (lethal) | ≈5–7 (map); landing green belt; run-up stand | ≈0 to −1 | arrow | BKBK on the launch pad (TT 24) / death | — | A forced launch: the crates are a stair for anyone who misses the arc. Nearby: S4-c, E-S4-a. | F3 p088R zoom; P3 s72; F3 p110L 25 · medium |
+| P-S4-c | S4 | green belt with a metalnic at its end; S4-d floats above (open); conveyor (direction not stated) | ≈5 long | 0 | — | — | TIMING-STEP | TT takes the floating pair with small jump-spins and accepts a metalnic hit (26–27) | F3 p088R zoom; F3 p110L 26–27 · medium |
+| G-S4-b | S4 | hole bridged by a saucer researcher (callout 7) (lethal) | ≈3–4; landing last pad (metalnic); run-up belt end | 0 | enemy-bounce + double — stomp the saucer and double jump (callout 7); TT dashes across using it as footing | saucer drifts over the hole; metalnic on the landing / death | — | The enemy is the bridge; the double jump off it clears the landing metalnic's spikes (callout 7). Nearby: S4-d, E-S4-c, E-S4-d. | F3 p088R callout 7; F3 p110L 28–30 · high |
+| P-S4-d | S4 | last pad with a metalnic; the green ! hangs below it; goal beyond (open) | ≈3 | 0 | — | — | LANDING | Final landing with one more spike robot | F3 p088R zoom · medium |
+
+**BONUS — side view (F3 p094L)**
+
+| id | section | kind | size / width (u) | height Δ (u) | required move | coupling / failure | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| P-B-a | BONUS | start slab (open) | ≈2 | 0 | — | — | REST | — | F3 p094L strip · medium |
+| P-B-b | BONUS | slab with a tall steel pillar (top ≈5 high) and the B-b stack beside it (open) | ≈6 | pillar +5 | — | — | STEPPING | The crate stack is the stair to the pillar top | F3 p094L strip · medium |
+| G-B-a | BONUS | pit with B-c (W over 1UP) floating in it (not lethal) | ≈1.5–2; landing Z-shaped steel ledge; run-up slab | 0 | plain | none / bonus ends | — | A life floats over the gap: the risk is only the bonus. Nearby: B-c. | F3 p094L strip · medium |
+| P-B-c | BONUS | Z-shaped steel ledges (high-low) and a low slab; B-d column and B-e float above, B-f pyramid on the low part (open) | ≈3 + ≈5 | +1 / −1 | — | — | STEPPING | Height changes set up the column bounce and the final jump | F3 p094L strip · medium |
+| G-B-b | BONUS | long final gap under the floating row (B-h) and the 1UP at the peak (B-g) (not lethal) | ≈6 (map); landing exit slab ≈2.5; run-up ledge top | ≈0 | double + spin-extended — double jump at the peak of the first jump, then spin repeatedly (P3 s77) | none / bonus ends | — | Signed double jump + tornado spin (P3 s73, s75, s77): the widest gap of the level, used as an airborne pickup line. Nearby: B-g, B-h. | F3 p094L strip; P3 s73–s77 · medium |
+
+### Jump sequences
+
+| id | section | count | moves | rhythm | widest gap | rest | no-stop | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| J-S1-a | S1 | 3 | crate-bounce + held/high + spin-extended + plain | syncopated | — (crates float ≈2 high over the belt) | P-S1-d | no | TT uses an S1-a crate as a step to reach the floating crates over the treadmill; ordinary play has no forced jump in S1 (TA1) | F3 p110L 02–04; TA1 |
+| J-S2-a | S2 | 3 | plain + enemy-bounce + double | syncopated | step lip | P-S2-a jog | no | TT 11–14: big jump to the Aku box below the step, use it as footing, double jump to stomp the saucer | F3 p110L 11–14 |
+| J-S2-b | S2 | 2 | plain + plain | syncopated (wait for the disc) | ≈4–5 overall | P-S2-b | no | Board the disc only when horizontal and leave at once (TT 15) | F3 p088L callout 4; F3 p110L 15 |
+| J-S2-c | S2 | 3 | plain + plain + held/high | even | ≈1.5 | P-S2-f (C2) | no | Two hops around the stepping block, then a high jump over the hole-edge metalnic (TT 19–20) | F3 p088L; F3 p110L 19–20 |
+| J-S3-a | S3 | 4 | plain | even (if the discs flip, syncopated) | ≈1–1.5 | P-S3-c | no | Three small discs over a pit to the long platform | F3 p088R zoom |
+| J-S3-b | S3 | 1 | arrow | single launch | — (TNT wall one to two crates high) | far end of P-S3-c | no | Standing on the stand alone gives a higher, longer jump that clears the whole TNT group (callout 5) | F3 p088R callout 5; P3 s69 |
+| J-S4-a | S4 | 3 | arrow + plain + plain | accelerating | ≈5–7 | P-S4-c belt | yes | Launch over the gap, land on the belt, small jump-spins for the floating pair (TT 25–27) | F3 p110L 25–27 |
+| J-S4-b | S4 | 2 | enemy-bounce + double | even | ≈3–4 | P-S4-d | yes | Saucer bounce then double jump over the landing metalnic (callout 7) | F3 p088R callout 7; F3 p110L 28–30 |
+| J-B-a | BONUS | 5 | plain + crate-bounce + double + spin-extended | accelerating | ≈6 | exit slab | yes | Stack-climb, column bounce, then the signed double jump + tornado spin through the high row | F3 p094L; P3 s73–s77 |
+
+### Obstacles and hazards
+
+| id | section | kind | placement | timing / telegraph | counter | combined with | role | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| O-S1-a | S1 | beam fences (laser gates), ≈8 in S1: two beams (low and high) between posts on both sides of the walkway (lethal) | across path (singles, a diagonal pair, two in a row) | fire at fixed intervals (callout 1); all synchronised from the start — the timing at the first fence carries to the later ones (TT intro); TT 01 starts the run right after the first fence has fired three times | wait-and-go, jump in from the side edge and twist through at the apex (TA3, TT 07) | crates before/after fences (S1-g, S1-h), BKBKs | TIMING-GATE, RHYTHM | The fence is the metronome of the into-screen half; crates sit where a stop already happens | F3 p087L callout 1, TA3; F3 p110L intro, 01, 07; P3 s56, s61 |
+| O-S1-b | S1, S2, S3, S4 | treadmills (belt-ways) (not lethal) | on path | continuous; direction varies (F3 p086 point 2: they carry you forward or backward, into monsters or off the end) | lead jumps, ride (callout 6) | floating crates S1-b/c/d, saucer and hanging spikes (S2), three fences (S3) | TEACH, TEST | Moving floors make depth hard to read (F3 p087L header) and turn every pickup into a lead | F3 p086 point 2; F3 p087L header; P3 s58 |
+| O-S2-a | S2 | steel-block ceiling (two floating rows of three) (not lethal) | overhead, over S2-a | — | slide under, break the crates below and slide | S2-a time crates | TEACH | Opens the side-scroll by taking the jump away | F3 p088L; F3 p110L 10 |
+| O-S2-b | S2, S3 | flip discs (vertical/horizontal on a cycle) (lethal) | on path, over pits | fixed interval; green = safe, red flashing = about to turn vertical (callout 4) | wait-and-go, board only when horizontal | pit, metalnic on the landing (S2) | TIMING-GATE, TEACH | A telegraphed phase platform, met alone first | F3 p088L callout 4; F3 p110L 15 |
+| O-S2-c | S2 | hanging ceiling spikes (lethal) | overhead: at the C1 entry and over the saucer treadmill | static | keep jumps low, avoid over-high saucer bounces | saucer E-S2-e, treadmill | AREA-DENIAL | Caps the jump height exactly where an enemy bounce would launch you high | P3 s65; F3 p110L 17–18 |
+| O-S2-d | S2, S3 | beam fences on side-scroll pads (≈3: on the step before S2-b, at the treadmill end, on the metalnic pad before C2, plus one before the S3 junction) (lethal) | across the walkway depth | periodic (cycle not stated) | wait-and-go | metalnics, treadmill | TIMING-GATE | The fence returns in side view as a pad hazard | F3 p088L–R map |
+| O-S3-a | S3 | TNT wall (six TNT stepped 1-2-2-1) (lethal) | across path on the long platform | 3-s fuse when stomped | jump over with the spin-jump stand (callout 5), stomp one and retreat (chains all six) | spin-jump stand, bonus pad | LANE-BLOCK, TEACH | One object, two answers: clear it with the new device, or blow it up for the count | F3 p088R callout 5; P3 s69 |
+| O-S3-b | S3 | three beam fences in a row over a right-moving belt (lethal) | across path | periodic; the belt sets your speed | stay crouched while riding (callout 6), slide (TT 22) | metalnic at the junction, C3 | TEST | The fence finale: belt + fences, answered by posture | F3 p088R callout 6; F3 p110L 22 |
+
+### Enemies (detailed)
+
+| id | section | kind | archetype | behaviour | counter (what fails) | placement | role | first alone? | why | evidence |
+|---|---|---|---|---|---|---|---|---|---|---|
+| E-S1-a | S1 | BKBK (ビカビカ) hoverbot | shielded/armored | hovers on the path and lights up periodically; while lit only the bazooka or super body slam hurt it; in into-screen areas a left-right pair swaps places periodically (F3 p086) | jump, spin, body slam while unlit, pass beside it (callout 2) (fails: attacking while lit (no bazooka on the first visit)) | on line, on a 3-wide walkway | TIMING-GATE | yes | A blocker you are told not to fight: the lesson is to read its light and pass | F3 p087R callout 2; F3 p086; P3 s59 · high |
+| E-S1-b | S1 | BKBK hoverbot | shielded/armored | as E-S1-a | as E-S1-a (fails: attacking while lit) | on line before the iron cube, among diagonal fences | TIMING-GATE | no | Second meeting, now coupled with fences | F3 p087R map · medium |
+| E-S1-c | S1 | saucer researcher (円盤研究員) | flier | hovers over the walkway; two kinds: a low one (high jump to stomp) and a high one that drifts left and right firing a beam (double-jump stomp only) — F3 p086 | stomp (jump) (fails: spin, slide) | on line near the fences | TOOL/STEP | yes | P3 s60: "you can jump on this thing or pass it by" — optional, a preview of the side-scroll's footholds | P3 s60; F3 p086 · medium |
+| E-S2-a | S2 | saucer researchers ×2 (low) | flier | float over the C1 walkway jog | stomp (high jump) (fails: spin, slide) | on line | HURDLE | no | Two hovering hurdles on the first side-scroll walkway | F3 p088L map · medium |
+| E-S2-c | S2 | saucer researcher | flier | hovers at the walkway end before the flip disc | double-jump stomp (TT 13–14) (fails: spin) | take-off edge of G-S2-a | TOOL/STEP | no | TT bounces from the Aku box onto it: enemy as footing | F3 p088L; F3 p110L 13–14 · medium |
+| E-S2-d | S2 | metalnic (メタルニック) | static | spike robot that shows and hides its spikes; dangerous while the spikes are out; a bazooka hit only stuns it (F3 p086) | high jump over it (TT 16), spin or jump when the spikes are in (fails: touching it while the spikes are out) | landing pad of the flip disc | HURDLE | no | Spike robot placed exactly where the disc lands you | F3 p086; F3 p088L; F3 p110L 16 · high |
+| E-S2-e | S2 | saucer researcher | flier | hovers over the treadmill under hanging spikes | stomp (fails: bouncing too high (spikes)) | above a moving belt | TOOL/STEP | no | The bounce is capped by the ceiling spikes | F3 p088L; F3 p110L 17–18 · medium |
+| E-S2-f | S2 | metalnic | static | as E-S2-d | high jump from the hole's edge (TT 19–20) (fails: touching it while the spikes are out) | at a hole edge, on the pad before C2 | HURDLE | no | Hole and enemy cleared in one jump | F3 p088L; F3 p110L 19–20 · medium |
+| E-S3-a | S3 | BKBK | shielded/armored | as E-S1-a, now in side view | wait for the light to go out, then jump or spin (fails: attacking while lit) | on the pad after C2 | TIMING-GATE | no | P3 s67: "wait and check out his movement pattern before taking him on" | F3 p088L; P3 s67 · medium |
+| E-S3-b | S3 | BKBK | shielded/armored | as E-S1-a | TNT/blast (S3-b TNT below its pad), unlit spin (fails: attacking while lit) | raised step pad above the S3-b TNT | GUARD | no | Before the bazooka exists the TNT is the tool for an invulnerable enemy (P3 s68) | F3 p088L; P3 s68 · high |
+| E-S3-c | S3 | metalnic | static | as E-S2-d | jump over, spin when the spikes are in (fails: touching it while the spikes are out) | arch pad under S3-e | HURDLE | no | Crate timing and spike timing coincide | F3 p088R zoom · medium |
+| E-S3-d | S3 | saucer researcher | flier | hovers over the right end of the TNT platform | stomp (fails: spin) | above the platform before the fence belt | HURDLE | no | A last hovering hurdle before the fence finale | F3 p088R zoom · medium |
+| E-S3-e | S3 | metalnic | static | as E-S2-d | jump over, spin when the spikes are in (fails: touching it while the spikes are out) | walkway/belt junction at C3 | GATEKEEPER | no | Guards the entry to the three-fence belt | F3 p088R zoom · medium |
+| E-S4-a | S4 | BKBK | shielded/armored | as E-S1-a | unlit spin or jump (TT 24 arrives just as it can be beaten) (fails: attacking while lit) | on the spin-jump launch pad | GUARD | no | Guards the required launcher | F3 p088R; F3 p110L 24 · medium |
+| E-S4-b | S4 | metalnic | static | as E-S2-d | jump over, with an Aku mask, ram it (TT 26–27) (fails: touching it unmasked while the spikes are out) | end of the green belt | HURDLE | no | Belt delivers you onto it | F3 p088R; F3 p110L 26–27 · medium |
+| E-S4-c | S4 | saucer researcher | flier | drifts over the last hole | stomp, then double jump (callout 7) (fails: spin) | in the hole (as a bridge) | TOOL/STEP | no | The enemy is the bridge | F3 p088R callout 7; F3 p110L 28–30 · high |
+| E-S4-d | S4 | metalnic | static | as E-S2-d | double jump over it from the saucer (callout 7), masked: ram it (TT 30) (fails: touching it unmasked while the spikes are out) | landing pad of the last hole | HURDLE | no | Spike robot on the landing | F3 p088R callout 7 · high |
+
+### Section beats
+
+| section | beats | gaps | enemies | hazards |
+|---|---|---|---|---|
+| S1 | start pad → beam fence (2 beams) → 2×2 on a still pad → treadmill with 3 floating/edge crates → TNT lid on a round pad → Nitro-corner 2×2 → BKBK (pass beside) → saucer (optional) → pad pair → fence → Nitro ring on a curved pad → BKBK + diagonal fences → iron cube on a still pad → two fences → treadmill → small pod ledge | 1 | 3 | 2 |
+| S2 | C1 under a steel ceiling (slide) → two low saucers over a jog → fence on a step (Aku below) → saucer at the edge → flip disc over a pit → metalnic on the landing → 2×2 pad → treadmill under hanging spikes with a saucer, fence and spin-jump disc → stepping block → metalnic at the hole edge + fence → C2 | 2 | 6 | 5 |
+| S3 | S3-a on the C2 pad → BKBK → BKBK above a TNT → post → pyramid → metalnic under a floating column → three discs over a pit → spin-jump stand → TNT wall (bonus pad) → saucer → fence → metalnic at the junction → C3 (per F3 pointer) → three fences over a right-moving belt (crouch) | 1 | 5 | 5 |
+| S4 | Nitro-base stack → crystal below → BKBK on the launch pad → spin-jump launch over a gap past 3 floating crates → belt with a floating pair → metalnic → saucer bridge over a hole → metalnic on the last pad → green ! below → goal | 2 | 4 | 1 |
+| BONUS | start slab → stack-stair to a pillar-top crate → life over a gap → Z-ledges → floating column bounce → pyramid → signed double jump + tornado over a ≈6 u gap through a high row and a 1UP → exit | 2 | 0 | 0 |
+
+Counts are computed from the records above (gaps = G records; enemies = individuals; hazards = obstacle records active in the section).
+
+### Geometry and enemy design logic
+1. **Two halves, two problem types.** The into-screen S1 has no forced jump (TA1): its content is timing (fences, belts, BKBKs) on open-edged ≈3 u walkways. The side-scroll S2–S4 is platforming: flip discs, holes with metalnics, saucer bridges, launchers. The pod and C1 mark the switch.
+2. **The beam fence is the metronome.** About eight fences in S1 fire on one schedule from the start (TT intro: the first fence's timing carries to the rest). They escalate from a single fence to a diagonal pair to two in a row, then return in side view on pads, and end as three in a row over a moving belt, where the answer changes from waiting to crouching (callout 6).
+3. **Open edges replace gaps in S1.** With no gap on the line, the only fall is sideways off a walkway or belt, which is exactly where dodging a fence or a BKBK pushes you; the edge crate S1-c sits on that line.
+4. **Belts make depth unreadable.** F3 warns that belt-ways running both ways confuse depth (p087L) and carry you into monsters or off the end (p086). Crates float over the first belt so that every pickup needs a lead.
+5. **Periodic enemies, not chasers.** BKBKs are invulnerable while lit (pass beside, or wait for the light — callout 2, P3 s67), metalnics are dangerous while their spikes are out, saucers drift. Every enemy has a cycle to read, matching the fence rhythm; none chases.
+6. **Before the bazooka, explosives kill the invulnerable.** On the first visit the player has no bazooka (it comes from N. Gin after stage 20), so a lit BKBK can only be removed by a blast: the S3-b TNT sits under its pad (P3 s68).
+7. **Metalnics on hole edges and landings.** The disc lands you beside one (TT 16), another stands at a hole edge (TT 19–20: run to the edge and high-jump both), another on the last landing (callout 7). One high jump clears hole and enemy together.
+8. **Enemies as footing.** The side-scroll's saucers are platforms: TT bounces from the Aku box onto one (13–14), and callout 7 crosses the last hole by stomping a saucer and double-jumping over a metalnic. Hanging spikes over the treadmill cap the height of that bounce.
+9. **A telegraphed phase platform, introduced alone.** The first flip disc (callout 4: board only when horizontal; green safe, red flashing danger) sits over a plain pit; it returns later as a chain of three small discs.
+10. **One device, three meanings.** The spin-jump stand is first an optional detour that the time trial must refuse (TA5), then the tool that clears a TNT wall (callout 5), then the required launcher over a gap (P3 s72, TT 25).
+11. **Ceilings shape the jump.** A steel-block ceiling forces the slide at the start of S2 (TT 10), hanging spikes cap bounces over the treadmill, and the last fence trio is passed crouching.
+12. **Checkpoint placement follows the camera and the hardest test:** C1 right after the pod, C2 at the Future-Tense merge pad, and C3 (by F3's pointer) at the start of the three-fence belt.
+13. **Bonus as a signposted long jump.** Signs show the double jump + tornado spin (P3 s73), and the room ends with the widest gap of the stage (≈6 u) crossed through a floating row with a 1UP at the peak.
+
+### Geometry transfer to the skate game
+1. **Fence corridor without gaps.** An into-screen run of open-edged walkways ≈3.5 m (3 u) wide with a timed gate every 8–12 m (a `crusher` or `firetiki` across the lane plays the beam fence), all on one global clock and no jump needed; place crate pairs where riders stop for a cycle.
+2. **Telegraphed phase platform.** A `phasepad` over a 4.6–5.8 m (4–5 u) pit, first alone, then as a chain of three 1.2 m pads; give it a colour telegraph (green = solid, flashing red = about to drop) like callout 4's disc.
+3. **Spike robot at the hole edge.** A `spinner` on the take-off or landing edge of a 1.7–2.3 m gap, so one full jump (≈2.85 m high, ≈5.6 m long at 9 m/s) or one ollie clears both; a second `spinner` on the landing of the final gap.
+4. **Enemy bridge.** Over a 3.5–4.6 m hole, a stompable hover enemy on a `mover` (a `grunt` on a moving pad — not a `floater`, which cannot be stomped) as the footing, with a `spinner` on the far pad; cap the bounce with an overhead hazard so only a double jump (+1.74 m), not an extra-high bounce, is safe.
+5. **Launcher with three meanings.** Use a `trampoline` three times: an optional detour early (a slower line), a tool that clears a 1-2-2-1 TNT wall (1.15/2.3 m tops), and finally the only way over a 6–8 m gap.
+6. **Fence trio over a speed strip.** End the fence half with three gates over a `speedpad` strip whose answer is the slide or a low tuck rather than timing — the posture twist of callout 6.
+
 ## Open questions / uncertainties
 - Stage 19's own counter total (87 incl. Nitros) is inferred; F3 prints no counts for this stage. All section deltas
   are confirmed through stage 29's counts and gamepressure's 133 for the stage-29 total.
@@ -258,3 +414,8 @@ side view the camera shows everything, so the designers hide crates *vertically*
 - Order of the six low bubbles in the side-scroll (counts certain).
 - For the Future Tense mapper: F3 p094L lists stage 29 under the shared 17-box bonus (with stage 21), yet F3's
   stage-29 C72→C111 delta (39 = 20 + 19) and gamepressure's 133 imply the 19-box room. Not resolved here.
+- **Geometry:** C3 position: F3 p088R's C3 pointer lands at the walkway/belt junction (beside a metalnic) before the three-fence belt, while the crate map above draws C3 after the belt; P3 does not show it. The geometry records follow the pointer (low confidence).
+- **Geometry:** S1 belt directions are not stated (F3 only says belts run either way); P3 s58 shows Crash facing the camera on a treadmill, which may mean a backward belt.
+- **Geometry:** S3's three small green discs use the flip-disc icon; whether they flip like callout 4's disc is not stated.
+- **Geometry:** The first wave's "orange rolling/spinning robots" in S3 are BKBKs by F3's icon and P3 s67–s68 (lit hoverbots); its "spike mines" are metalnics.
+- **Geometry:** Beam-fence count in S1 (≈8) and in S2–S3 (≈4 plus the trio) is approximate.
