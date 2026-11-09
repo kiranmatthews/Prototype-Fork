@@ -1133,6 +1133,74 @@
     "doubled": true
   },
   {
+    "scenario": "enemy-bounce",
+    "lane": "turtle-stomp",
+    "speed": 0,
+    "topY": 0.87,
+    "apexAboveTop": 4.296,
+    "apexAboveFloor": 5.166,
+    "defeated": true,
+    "leftShell": true,
+    "leftCarcass": false,
+    "died": false
+  },
+  {
+    "scenario": "enemy-bounce",
+    "lane": "turtle-shell",
+    "speed": 0,
+    "topY": 1.4,
+    "apexAboveTop": 3.766,
+    "apexAboveFloor": 5.166,
+    "doubled": false,
+    "died": false,
+    "shellStill": true
+  },
+  {
+    "scenario": "enemy-bounce",
+    "lane": "turtle-shell-held",
+    "speed": 0,
+    "topY": 1.4,
+    "apexAboveTop": 5.915,
+    "apexAboveFloor": 7.315,
+    "doubled": false,
+    "died": false,
+    "shellStill": true
+  },
+  {
+    "scenario": "enemy-bounce",
+    "lane": "turtle-shell-plus-double",
+    "speed": 0,
+    "topY": 1.4,
+    "apexAboveTop": 5.507,
+    "apexAboveFloor": 6.907,
+    "doubled": true,
+    "died": false,
+    "shellStill": true
+  },
+  {
+    "scenario": "enemy-bounce",
+    "lane": "turtle-shell-held-plus-double",
+    "speed": 0,
+    "topY": 1.4,
+    "apexAboveTop": 7.653,
+    "apexAboveFloor": 9.053,
+    "doubled": true,
+    "died": false,
+    "shellStill": true
+  },
+  {
+    "scenario": "enemy-bounce",
+    "lane": "grunt-stomp",
+    "speed": 0,
+    "topY": 1.1,
+    "apexAboveTop": 2.674,
+    "apexAboveFloor": 3.774,
+    "defeated": true,
+    "leftShell": false,
+    "leftCarcass": true,
+    "died": false
+  },
+  {
     "scenario": "range",
     "lane": "run-tap-jump",
     "speed": 0,

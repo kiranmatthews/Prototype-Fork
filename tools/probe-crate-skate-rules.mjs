@@ -1,4 +1,5 @@
-// Measures how the real Player/Level treat crates on the skateboard, so the
+// Measures how the real Player/Level treat crates on the skateboard (plus jump
+// reach and range, and enemy stomp and shell bounces), so the
 // design bible (docs/GAMEPLAY_DESIGN_BIBLE.md) states engine facts, not
 // guesses. Read-only: builds a throwaway flat test level, changes no tuning.
 //
@@ -46,6 +47,9 @@ lane('board-stomp-arrow', [{ kind: 'bouncy', z: -12 }]);
 lane('launch-wood', [{ kind: 'wood', z: -12 }]);
 lane('launch-arrow', [{ kind: 'bouncy', z: -12 }]);
 lane('launch-steel-arrow', [{ kind: 'metalbounce', z: -12 }]);
+// Enemies to stomp: a stationary turtle (whose shell is then landed on) and a crab.
+lane('enemy-turtle', [], [{ t: 'enemy', foe: 'turtle', p: [0, 0, -12], range: 0, speed: 0 }]);
+lane('enemy-grunt', [], [{ t: 'enemy', foe: 'grunt', p: [0, 0, -12], range: 0, speed: 0 }]);
 // Cut the floor out under the bridge lane: replace the shared platform there.
 const bx = LANES['bridge-over-pit'];
 components.push({ t: 'pit', p: [bx, -0.4, -15.5], s: [10, 1, 8.5] });
@@ -208,6 +212,49 @@ await withSkateRuntime(async ({ THREE, player: p, level, step, TUNING, CONST }) 
     ['arrow-plus-double', lidOf('launch-arrow'), { doubleAtApex: true }],
     ['held-arrow-plus-double', lidOf('launch-arrow'), { doubleAtApex: true, held: true }],
   ]) results.push({ scenario: 'reach', lane: label, speed: 0, ...reach(setup, opts) });
+
+  // 4d. Enemy bounces: drop onto a live enemy from 0.6 m above its box top and
+  // record the bounce apex; then land on the turtle's shell (plain, Jump held,
+  // with a double jump at the apex). The shell drops place the rider directly,
+  // because respawn() resets the level and would remove the shell.
+  const enemyIn = name => level.enemies.find(e => Math.abs(e.group.position.x - LANES[name]) < 4);
+  const dropOnto = (top, x, z, { held = false, doubleAtApex = false, viaRespawn = false } = {}) => {
+    const pos = new THREE.Vector3(x, top + 0.6, z);
+    if (viaRespawn) p.respawn(level, true, true, { position: pos, heading: fwd });
+    p.pos.copy(pos); p.prevPos.copy(pos); p.freeSkate = false; p.airFromSkate = false;
+    p.state = 'air'; p.grounded = false; p.speed = 0; p.vVel = -3;
+    let apex = -Infinity, rising = false, doubled = false, releaseAt = -1;
+    for (let i = 0; i < 240 && p.state !== 'dead'; i++) {
+      let input;
+      if (doubleAtApex && rising && !doubled && p.vVel <= 2.5) { input = makeInput({ jumpPressed: true, jumpHeld: true }); doubled = true; releaseAt = i + 3; }
+      else if (i === releaseAt) input = makeInput({ jumpReleased: true });
+      else if (doubled && i < releaseAt) input = makeInput({ jumpHeld: true });
+      else input = makeInput({ jumpHeld: held && !doubled });
+      step(input);
+      if (p.vVel > 0) rising = true;
+      if (rising) apex = Math.max(apex, p.pos.y);
+      if (rising && p.grounded) break;
+    }
+    return { apex, doubled, died: p.state === 'dead' };
+  };
+  for (const [name, foe] of [['enemy-turtle', 'turtle'], ['enemy-grunt', 'grunt']]) {
+    reset();
+    const e = enemyIn(name);
+    const top = e.box.max.y, x = e.group.position.x, z = e.group.position.z;
+    const r = dropOnto(top, x, z, { viaRespawn: true });
+    results.push({ scenario: 'enemy-bounce', lane: `${foe}-stomp`, speed: 0, topY: +top.toFixed(3),
+      apexAboveTop: Number.isFinite(r.apex) ? +(r.apex - top).toFixed(3) : null, apexAboveFloor: Number.isFinite(r.apex) ? +r.apex.toFixed(3) : null,
+      defeated: !e.alive, leftShell: !!e.shell, leftCarcass: !!e.crabCarcass, died: r.died });
+    if (foe !== 'turtle' || !e.shell) continue;
+    for (const opts of [{}, { held: true }, { doubleAtApex: true }, { held: true, doubleAtApex: true }]) {
+      for (let i = 0; i < 30; i++) step(makeInput()); // settle on the floor before the next drop
+      const belly = e.shell.box.max.y;
+      const s = dropOnto(belly, x, z, opts);
+      results.push({ scenario: 'enemy-bounce', lane: `turtle-shell${opts.held ? '-held' : ''}${opts.doubleAtApex ? '-plus-double' : ''}`, speed: 0,
+        topY: +belly.toFixed(3), apexAboveTop: Number.isFinite(s.apex) ? +(s.apex - belly).toFixed(3) : null,
+        apexAboveFloor: Number.isFinite(s.apex) ? +s.apex.toFixed(3) : null, doubled: s.doubled, died: s.died, shellStill: !!e.shell });
+    }
+  }
 
   // 4c. Horizontal range on flat ground with real inputs: take-off to touchdown
   // distance and apex for running jumps (tap / full / + double jump) and board
