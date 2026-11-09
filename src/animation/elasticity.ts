@@ -39,7 +39,8 @@ const PROFILES:Record<string,Amplitudes> = {
   hang:[0,0,0,.035,.050], climb:[0,0,0,.030,.050],
   rope:[.025,0,0,.035,.050], 'rope-climb':[.025,0,0,.040,.050],
   'rope-release':[.080,.070,.10,.070,.10], 'rope-release-charged':[.080,.070,.10,.070,.10],
-  slam:[.065,.030,.050,.045,.060], bail:[.045,.045,.060,.060,.080],
+  slam:[.065,.030,.050,.045,.060], 'pancake-slam':[.28,.12,.18,.18,.25],
+  bail:[.045,.045,.060,.060,.080],
   death:[.040,.020,.030,.025,.035], spin:[.045,.030,.045,.025,.040],
 };
 /** Shared segment amplitudes for imported creature rigs as well as player clips.

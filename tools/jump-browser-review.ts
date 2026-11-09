@@ -41,6 +41,7 @@ try {
 } catch (error) { console.warn('Jak motion unavailable', error); }
 let variant: 'A' | 'B' | 'C' | 'D' = 'B';
 let before = false, inspect = false, jakSounds = true, jumpFlip = true;
+let replayReview=false;
 let skateMotion: PlayableSkateMotion | null = null, boardInk: BoardScribbleEffect | null = null;
 let skateEnabled=true, inkEnabled=true;
 const inkSupport=new THREE.Plane();
@@ -78,6 +79,8 @@ let lastSwitch = {positionDelta: 0, verticalVelocityDelta: 0, speedDelta: 0};
 let sourceModel: THREE.Group | null = null, sourceMixer: THREE.AnimationMixer | null = null;
 const sourceActions = new Map<string, THREE.AnimationAction>();
 const sourceOffset = new THREE.Vector3();
+const sourceContactMeshes:{mesh:THREE.Mesh;indices:number[]}[]=[];
+const sourceContactPoint=new THREE.Vector3();
 async function loadSource() {
   if (sourceModel) return;
   sourceNote.textContent = 'Loading Jak reference…';
@@ -90,6 +93,13 @@ async function loadSource() {
       if (node instanceof THREE.Mesh) {
         node.frustumCulled = false;
         if (node instanceof THREE.SkinnedMesh) node.boundingSphere = new THREE.Sphere(new THREE.Vector3(0,1,0),5);
+        // Ignore the export's unused shared-buffer vertices. These actual
+        // rendered vertices supply the original flop's missing floor alignment.
+        const index=node.geometry.index,range=node.geometry.drawRange;
+        const start=range.start,end=Math.min(index?.count??node.geometry.attributes.position.count,start+range.count);
+        const indices=new Set<number>();
+        for(let i=start;i<end;i++)indices.add(index?index.getX(i):i);
+        sourceContactMeshes.push({mesh:node,indices:[...indices]});
       }
     });
     g.scene.add(sourceModel); sourceMixer = new THREE.AnimationMixer(sourceModel);
@@ -117,6 +127,14 @@ function updateSource() {
     time += (Number(clip.metadata.jakSourceTailFrame) - Number(clip.metadata.jakSourceTailAt)) / 60;
   }
   time += Number(clip?.metadata?.jakSourceStartFrame ?? 0) / 60;
+  if(clip?.metadata?.pancakeSlam){
+    // The reference is the original moving flop recovery, aligned by action
+    // phase rather than pretending the adapted pancake uses identical keys.
+    name=p.slamActive?(p.slamHangT>0?'flop-down':'flop-down-loop'):'moving-flop-down-land';
+    time=p.slamActive?(p.slamHangT>0?(1-p.slamHangT/CONST.slamHang)*.25:0):
+      (1-p.slamFlatT/CONST.slamFlat)*.65;
+    sourceNote.textContent='Bone Man left · pancake adaptation · original Jak flop right';
+  }
   const poseFrame = runtime.diagnostics.motionContext?.inputs?.jakFrame ?? p.footStudyFrame;
   if (name === 'jump' && poseFrame > 40) {name = 'jump-loop'; time = ((poseFrame - 40) / 60) % (28 / 60);}
   for (const action of sourceActions.values()) action.weight = 0;
@@ -151,6 +169,19 @@ function updateSource() {
   // This scene skips automatic matrix traversal. SkinnedMesh's override must
   // refresh bindMatrixInverse after placement, not just Object3D world frames.
   sourceModel.updateMatrixWorld(true);
+  if(clip?.metadata?.pancakeSlam&&p.grounded){
+    // GOAL aligns the flop recovery to its support surface each tick. Raw
+    // source keys alone put the head below this viewer's plane during the roll.
+    let floor=Infinity;
+    for(const {mesh,indices}of sourceContactMeshes)for(const index of indices){
+      mesh.getVertexPosition(index,sourceContactPoint).applyMatrix4(mesh.matrixWorld);
+      floor=Math.min(floor,sourceContactPoint.y);
+    }
+    if(Number.isFinite(floor)&&floor<p.pos.y+.006){
+      sourceModel.position.y+=p.pos.y+.006-floor;
+      sourceModel.updateMatrixWorld(true);
+    }
+  }
   return true;
 }
 const visited = new Set<string>(), soundPlays = {old: 0, new: 0};
@@ -298,6 +329,23 @@ p.step = (dt: number, input: any, level: Level) => {
       stopAt==='Release'&&runtime.activeClipId==='player.jak-ledge-off'&&(runtime.diagnostics.timelineTime??0)>=.17)frozen=true;
     if(frame>400)resetInspector();return;
   }
+  if(mode==='Pancake slam'||mode==='Slam and run'){
+    p.camDir.set(0,0,-1);
+    const slam=frame===48;
+    nativeStep(dt,{moveX:0,moveY:mode==='Slam and run'&&frame>48?1:0,
+      jumpHeld:frame>=20&&frame<30,jumpPressed:frame===20,jumpReleased:frame===30,
+      grabHeld:slam,grabPressed:slam},reviewLevel);
+    reviewLevel.update(dt);frame++;visited.add(runtime.activeClipId??'legacy');
+    const age=p.slamFlatT>0?CONST.slamFlat-p.slamFlatT:-1;
+    if(stopAt==='Slam gather'&&p.slamActive&&p.slamHangT<.23&&p.slamHangT>.15 ||
+      stopAt==='Slam spread'&&p.slamActive&&p.slamHangT<=0 ||
+      stopAt==='Slam impact'&&age>=.04&&age<.08 ||
+      stopAt==='Slam rebound'&&age>=.14&&age<.18 ||
+      stopAt==='Slam inversion'&&age>=.18&&age<.22 ||
+      stopAt==='Slam feet down'&&age>=.35&&age<.39 ||
+      stopAt==='Slam settle'&&age>=.43 ||stopAt==='Run exit'&&frame>=140)frozen=true;
+    if(frame>=210)resetInspector();return;
+  }
   if (mode === 'Walk, run and turn') {
     p.camDir.set(0,0,-1);
     const demo = {moveX:frame>=210&&frame<285?-1:0,moveY:frame<90?.3:frame<210?1:0,
@@ -346,7 +394,7 @@ p.step = (dt: number, input: any, level: Level) => {
 const nativeRender = g.renderer.render.bind(g.renderer);
 g.renderer.render = (...args: any[]) => {
   const alongside = args[1] === g.camera && updateSource();
-  if (inspect && args[1] === g.camera) {
+  if ((inspect||replayReview) && args[1] === g.camera) {
     const target = p.pos.clone().add(new THREE.Vector3(0, 1.4, 0));
     if (alongside) target.addScaledVector(sourceOffset,.5);
     const distance = alongside ? 8.2 : 6.4;
@@ -391,6 +439,47 @@ const directHint = document.createElement('p');
 directHint.textContent = 'D pairs Bone Man’s idle and hybrid run with Jak’s jumps and ledges, plus the new Skate mounts, riding and pickups. Release to jump; hold X / Space + direction to skate. Q brakes and steps off.';
 panel.append(directHint);
 const options = document.createElement('details'); options.innerHTML = '<summary>Playtest options</summary>';
+// Opt-in local replay inspection uses the real level and recorded controller
+// input. Advance the complete game clock one fixed tick per rendered frame,
+// so pausing never leaves the world running around a frozen player.
+if(import.meta.env.DEV&&g.launchReview){
+  const review=document.createElement('fieldset'),legend=document.createElement('legend');
+  legend.textContent='Local replay review';review.append(legend);options.append(review);
+  const file=document.createElement('input');file.type='file';file.accept='.json';
+  file.setAttribute('aria-label','Replay file');review.append(file);
+  const target=document.createElement('input');target.type='number';target.min='0';target.value='1430';
+  target.setAttribute('aria-label','Pause replay at frame');review.append(target);
+  const note=document.createElement('output');note.setAttribute('aria-label','Replay review status');review.append(note);
+  let data:unknown=null,playing=false;
+  const start=()=>{
+    if(!data)return;
+    setInspect(false);g.launchReview.rate=1;g.loadReplay(data);replayReview=true;playing=true;
+  };
+  file.onchange=async()=>{if(file.files?.[0]){
+    try{data=JSON.parse(await file.files[0].text());start();}catch{note.textContent='Invalid replay JSON';}
+  }};
+  button(review,'Replay from start',start);
+  button(review,'Continue replay',()=>{playing=true;});
+  button(review,'Pause replay',()=>{playing=false;});
+  button(review,'Step replay',()=>{playing=false;g.launchReview.advance=CONST.fixedStep;});
+  button(review,'End replay review',()=>{replayReview=playing=false;g.launchReview.rate=1;});
+  const render=document.createElement('select');render.setAttribute('aria-label','Replay render quality');
+  render.add(new Option('Normal','normal'));render.add(new Option('MAX / native','max'));
+  render.onchange=()=>{g.renderQualitySettings.setRegularResolution(render.value==='max'?null:720);render.blur();};
+  review.append(render);
+  const tick=()=>{
+    if(replayReview){
+      if(g.gameFlow.blocksGameplay)g.launchReview.rate=1;
+      else{
+        g.launchReview.rate=0;
+        if(g.replayer.frame>=Number(target.value))playing=false;
+        if(playing&&g.replayer.active)g.launchReview.advance=CONST.fixedStep;
+      }
+      note.textContent=`${playing?'Playing':'Paused'} replay ${g.replayer.frame} / ${g.replayer.total}`;
+    }
+    requestAnimationFrame(tick);
+  };tick();
+}
 const skateOptions=document.createElement('div');options.append(skateOptions);
 const skateLabel=document.createElement('label'),skateBox=document.createElement('input');
 skateBox.type='checkbox';skateBox.checked=true;skateBox.disabled=!skateMotion;
@@ -457,7 +546,7 @@ const select=(label:string,values:string[],change:(value:string)=>void)=>{
   control.setAttribute('aria-label',label);for(const value of values)control.add(new Option(value,value));
   control.onchange=()=>{change(control.value);control.blur();};row.append(label+' ',control);inspectorControls.append(row);return control;
 };
-const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart',
+const motionSelect=select('Motion',['Idle','Idle and stops','Tap jump','Full jump','Precision jump','Double jump','Running jump','Coasting jump','Running double jump','Run and stop','Walk, run and turn','Reverse and restart','Pancake slam','Slam and run',
   'Skate flow','Mount cancel','Abandon ship','Skating spin','Air spin','Grab release','Ice stance','Fakie ice stance','Ledge catch','Catch left','Catch right','Climb ledge','Climb ledge and run','Ledge hold to climb','Ledge release and climb','Release ledge','Shimmy ledge','Play ledges'],value=>{mode=value;resetInspector();});
 motionSelect.value=mode;
 const viewSelect=select('View',['Front','Side','Behind','Oblique'],value=>angle=({Front:Math.PI,Side:Math.PI/2,Behind:0,Oblique:.7}[value]??0));
@@ -474,7 +563,7 @@ button(inspectorControls, 'Control this ledge', () => {
 const ledgeHint=document.createElement('small');
 ledgeHint.textContent='On ledges: move along the edge to shimmy and away to drop. Climb with a fresh direction toward the ledge or a new Space press; an existing hold needs 0.75 seconds after the catch.';
 inspectorControls.append(ledgeHint);
-select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart',
+select('Pause at',['None','Charge','Reach','Apex','Roll complete','Second boost','Catch','Rebound','Settled','Pull-up','Release','Turn','Restart','Slam gather','Slam spread','Slam impact','Slam rebound','Slam inversion','Slam feet down','Slam settle',
   'Mount hold','Cancel unwind','Board appears','Board disappears','Mount','Dismount','Abandon flip','Landing roll','Spin','Grab release','Ice approach','Ice blend in','On ice','Ice blend out','After ice','Before climb','Catch rebound','Climb rebound','Run exit'],value=>{stopAt=value;resetInspector();});
 const diagnostics = document.createElement('details'); diagnostics.innerHTML = '<summary>Diagnostics</summary>';
 const status = document.createElement('pre'); status.dataset.testid = 'jump-review-status'; diagnostics.append(status);

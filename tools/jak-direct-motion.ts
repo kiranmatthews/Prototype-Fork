@@ -3,6 +3,7 @@ import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS, createProcedura
 import type { AnimationClip, AnimationSuiteDocument, AnimationTrack, RigDefinition, QuaternionTuple, Vec3Tuple } from '../src/animation';
 import type { OnFootJumpStudy } from '../src/onFootJumpStudy';
 import { JAK_LEDGE_MOTION, ledgeRebound } from '../src/animation/ledgeMotion';
+import {createPancakeSlamClip} from '../src/animation/pancakeSlam';
 
 type JointSample = {p: Vec3Tuple; q: QuaternionTuple};
 type Frame = Record<string, JointSample>;
@@ -280,5 +281,6 @@ export function createJakDirectSuite(base:AnimationSuiteDocument, rig:RigDefinit
     }
     const index=suite.clips.findIndex(c=>c.id===id);if(index>=0)suite.clips[index]=clip;else suite.clips.push(clip);
   }
+  suite.clips=suite.clips.map(clip=>clip.id==='player.slam'?createPancakeSlamClip(clip,rig):clip);
   return suite;
 }
