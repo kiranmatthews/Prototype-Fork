@@ -14628,6 +14628,11 @@ export class Player {
       }
     }
 
+    // Exact canyon cactus contact and the exposed valley drop are fatal even
+    // during a spin/grind or temporary protection. Soft dry weeds stay soft.
+    if(level.desertContacts?.fatal(this.prevPos,this.pos,this.hitboxHalf)){
+      this.die('contact');return;
+    }
     // Swinging blades and other touch-kill hazards: same rules as stones.
     // Death pits use the body box WITHOUT the grind reach-down — grinding a
     // rail strung over lava is a THPS staple, only real feet contact burns.
@@ -14704,11 +14709,19 @@ export class Player {
         this.ledgeEnvelope,
       );
       const meshContactX = this.pos.x, meshContactY = this.pos.y, meshContactZ = this.pos.z;
+      if(this.state!=='hang'&&level.desertContacts?.resolve(this.prevPos,this.pos,this.hitboxHalf,ROCK_CONTACT,this.grounded)){
+        const inward=this.walkVelocity.dot(ROCK_CONTACT);
+        if(inward<0)this.walkVelocity.addScaledVector(ROCK_CONTACT,-inward);
+        if(this.freeSkate&&this.axisF.dot(ROCK_CONTACT)<-.25)this.speed=0;
+        if(ROCK_CONTACT.y<-.65&&this.vVel>0)this.vVel=0;
+        this.translateCollisionBoxes(this.pos.x-meshContactX,this.pos.y-meshContactY,this.pos.z-meshContactZ);
+      }
+      const sideContactX=this.pos.x,sideContactY=this.pos.y,sideContactZ=this.pos.z;
       if (this.state !== 'hang' && level.meshSideCollisions?.resolve(this.prevPos, this.pos, this.hitboxHalf, ROCK_CONTACT)) {
         const inward = this.walkVelocity.dot(ROCK_CONTACT);
         if (inward < 0) this.walkVelocity.addScaledVector(ROCK_CONTACT, -inward);
         if (this.freeSkate && this.axisF.dot(ROCK_CONTACT) < -.25) this.speed = 0;
-        this.translateCollisionBoxes(this.pos.x - meshContactX, this.pos.y - meshContactY, this.pos.z - meshContactZ);
+        this.translateCollisionBoxes(this.pos.x - sideContactX, this.pos.y - sideContactY, this.pos.z - sideContactZ);
       }
       for (const w of level.walls) {
         if (this.passesTripObstacle(w)) continue;
@@ -17343,6 +17356,7 @@ export class Player {
   // of you; bare-handed, it's a death like any other. Returns true if the
   // hang ended (dead or knocked off).
   private hangHazards(level: Level): boolean {
+    if(level.desertContacts?.fatal(this.prevPos,this.pos,this.hitboxHalf)){this.die('contact');return true;}
     const cx = this.pos.x;
     const cy = this.pos.y + this.hitboxHalf.y;
     const cz = this.pos.z;

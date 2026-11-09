@@ -1,5 +1,5 @@
 import type {CustomComponent,DecorKind} from '../level';
-import {desertPlantSize,type DesertPlantKind} from '../desertPlants';
+import {desertPlantSize,isDesertCactus,type DesertPlantKind} from '../desertPlants';
 import {DESERT_CANYON_LEVEL} from './desert-canyon';
 import {makeBonusCourse} from './bonus-course-kit';
 
@@ -40,7 +40,7 @@ for(const component of C){
   if(component.t==='camnode'&&component.cameraView){component.cameraFollowDistance=20.5;component.cameraFollowTargetHeight=4.8;}
 }
 const prop=(dkind:DecorKind,p:P,s:P,yaw:number,nm:string)=>
-  C.push({t:'decor',dkind,p,s,yaw,solid:false,scenerySolid:false,grp:90,nm});
+  C.push({t:'decor',dkind,p,s,yaw,scenerySolid:isDesertCactus(dkind)||dkind.startsWith('deserthoodoo'),grp:90,nm});
 const plant=(kind:DesertPlantKind,p:P,height:number,yaw=0)=>
   prop(kind,p,desertPlantSize(kind,height),yaw,'Cactus Cache · rooted '+kind);
 
@@ -65,9 +65,6 @@ plant('canyonbarrel',[-12,-1,4.8],3,24);
 plant('canyonpricklypear',[104,-1,4.4],4.5,60);
 Object.assign(data,{startWarpPad:false,keepPlayFog:true,hugeDropBail:false,
   atmosphere:{...DESERT_CANYON_LEVEL.atmosphere,fogNear:85,fogFar:360,drawDistance:480}});
-// Viewed side-on, between the close pillars and the sunlit canyon wall.
-// The entire playable shelf, crates and plants remain in front of these bands.
-data.desertHeat=Array.from({length:7},(_,i)=>({p:[-22+i*23,1.8+(i%2)*1.1,-39-(i%2)*9],
-  size:[19,3.3],strength:1.3}));
+data.desertHeat=[];
 data.groups!.push({id:90,nm:'Painted hoodoos and oversized desert plants',editorOnly:true});
 export const DUSTY_ROAD_BONUS_LEVEL=data;

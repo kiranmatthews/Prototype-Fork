@@ -23,6 +23,7 @@ type Role='mesh'|'trunk'|'none';
 interface SceneSources {
   ground:()=>THREE.Mesh[];
   sceneryGround?:boolean;
+  sceneryGroundFor?:(mesh:THREE.Mesh)=>boolean;
   active?:(mesh:THREE.Mesh)=>boolean;
   walls:()=>THREE.Box3[];
   wallPath?:(box:THREE.Box3)=>unknown;
@@ -134,7 +135,7 @@ export class WorldSurfaceBinding {
     const instances=(mesh as THREE.InstancedMesh).isInstancedMesh?(mesh as THREE.InstancedMesh).count:1;
     for(let instance=0;instance<instances;instance++){
       const surface=this.solids.add(mesh,{geometry,instance:(mesh as THREE.InstancedMesh).isInstancedMesh?instance:undefined,dynamic,active,name:c?.nm??mesh.name,owner:c});record.surfaces.push(surface);
-      if((this.sources.sceneryGround!==false||mesh.userData.authoredGround===true)&&!native&&!c?.invisible&&!mesh.userData.editorGhost){
+      if((this.sources.sceneryGround!==false||mesh.userData.authoredGround===true||this.sources.sceneryGroundFor?.(mesh))&&!native&&!c?.invisible&&!mesh.userData.editorGhost){
         const proxy=new THREE.Mesh(geometry,this.material);proxy.name=c?.nm??mesh.name;proxy.matrixAutoUpdate=false;proxy.matrixWorldAutoUpdate=false;proxy.matrix.copy(surface.matrix);proxy.matrixWorld.copy(surface.matrix);
         proxy.userData={worldSolidProxy:true,decorComponent:true,edgeGrinding:false,vert:false,
           ...(mesh.userData.authoredGround?{smoothCollision:true}:{}),...(c?.slip?{slippy:true,iceGrip:c.iceGrip}:{} )};
